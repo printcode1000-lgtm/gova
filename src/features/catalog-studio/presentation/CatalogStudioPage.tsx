@@ -315,7 +315,7 @@ export function CatalogStudioPage() {
     }
   }, [authHeaders, changedFiles.length, draftPayload]);
 
-  useCatalogStudioPageSave({
+  const studioOperations = useCatalogStudioPageSave({
     enabled: authorized && desktopWeb === true,
     changedFiles,
     drafts,
@@ -453,15 +453,14 @@ export function CatalogStudioPage() {
   const deleteItem = React.useCallback(() => {
     if (!currentItem || !selectedData || !selectedFile?.itemKey) return;
     const relationCount = itemRelations.length;
-    const confirmed = window.confirm(
-      relationCount > 0
-        ? `العنصر مرتبط بـ ${relationCount} علاقة. يجب تعديل العلاقات في المسودة نفسها وإلا سيرفض التحقق الحفظ. متابعة الحذف من المسودة؟`
-        : "حذف العنصر من المسودة؟ لن يتغير الملف الأصلي قبل الحفظ الآمن.",
-    );
-    if (!confirmed) return;
     const nextItems = selectedItems.filter((_, index) => index !== selectedIndex);
     replaceData({ ...selectedData, [selectedFile.itemKey]: nextItems });
     setSelectedIndex(Math.max(0, selectedIndex - 1));
+    setNotice(
+      relationCount > 0
+        ? `أُزيل العنصر من المسودة وهو مرتبط بـ ${relationCount} علاقة؛ عدّل العلاقات وإلا سيرفض التحقق الكتابة.`
+        : "أُزيل العنصر من المسودة ولم يتغير الملف الأصلي.",
+    );
   }, [currentItem, itemRelations.length, replaceData, selectedData, selectedFile, selectedIndex, selectedItems]);
 
   const resetFile = React.useCallback(() => {
@@ -474,25 +473,30 @@ export function CatalogStudioPage() {
     setValidation(null);
   }, [selectedFile]);
 
-  const trashImage = React.useCallback(
-    async (relativePath: string) => {
-      if (!authHeaders || !window.confirm("نقل الصورة غير المستخدمة إلى سلة المطور القابلة للاستعادة؟")) return;
-      setBusy(`trash:${relativePath}`);
-      setError("");
-      try {
-        await asolApi.delete(
-          `${CATALOG_STUDIO_IMAGES_API}?path=${encodeURIComponent(relativePath)}`,
-          { headers: authHeaders },
-        );
-        setNotice("نُقلت الصورة إلى سلة المطور ولم تُحذف نهائيًا.");
-        await loadSnapshot();
-      } catch (trashError) {
-        setError(errorText(trashError));
-      } finally {
-        setBusy("");
-      }
+  const stageImageTrash = React.useCallback(
+    (relativePath: string) => {
+      if (!authHeaders) return;
+      studioOperations.stage({
+        itemId: `catalog-image-trash:${relativePath}`,
+        kind: "delete",
+        label: `نقل صورة إلى سلة المطور: ${relativePath}`,
+        execute: async () => {
+          setError("");
+          try {
+            await asolApi.delete(
+              `${CATALOG_STUDIO_IMAGES_API}?path=${encodeURIComponent(relativePath)}`,
+              { headers: authHeaders },
+            );
+            await loadSnapshot();
+            return true;
+          } catch (trashError) {
+            setError(errorText(trashError));
+            return false;
+          }
+        },
+      });
     },
-    [authHeaders, loadSnapshot],
+    [authHeaders, loadSnapshot, studioOperations],
   );
 
   if (sessionLoading || desktopWeb === null) {
@@ -777,8 +781,8 @@ export function CatalogStudioPage() {
                 <div className="flex items-center justify-between gap-2">
                   <div><p className="text-xs text-muted-foreground">العنصر المحدد</p><p className="font-mono font-bold" dir="ltr">{identityFor(currentItem)}</p></div>
                   <div className="flex gap-1">
-                    <Button size="icon" variant="ghost" onClick={cloneItem} title="نسخ"><Copy className="h-4 w-4" /></Button>
-                    <Button size="icon" variant="ghost" onClick={deleteItem} title="حذف من المسودة"><Trash2 className="h-4 w-4 text-red-600" /></Button>
+                    <Button size="icon" variant="ghost" onClick={cloneItem} aria-label="نسخ"><Copy className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" onClick={deleteItem} aria-label="إزالة من المسودة"><Trash2 className="h-4 w-4 text-red-600" /></Button>
                   </div>
                 </div>
                 {currentItem.name && typeof currentItem.name === "object" ? (
@@ -831,7 +835,7 @@ export function CatalogStudioPage() {
               <select value={uploadRoot} onChange={(event) => setUploadRoot(event.target.value as CatalogStudioImageRoot)} className="w-full rounded-lg border bg-background px-3 py-2">{Object.entries(imageRootLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select>
               <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)} className="block w-full rounded-lg border p-2 text-sm" />
               <label className="flex items-center justify-between rounded-lg border p-3 text-sm"><span>استبدال إذا كان الاسم موجودًا</span><Switch checked={replaceImage} onCheckedChange={setReplaceImage} /></label>
-              <p className="text-xs text-muted-foreground">حد أقصى 10 MB. يتم فحص توقيع PNG/JPG/WEBP. عند الاستبدال تُحفظ نسخة استعادة خارج public. استخدم أيقونة الحفظ في الشريط العلوي لرفع الصورة المختارة.</p>
+              <p className="text-xs text-muted-foreground">حد أقصى 10 MB. يتم فحص توقيع PNG/JPG/WEBP. عند الاستبدال تُنشأ نسخة استعادة خارج public.</p>
             </aside>
             <div className="grid max-h-[72vh] gap-3 overflow-auto sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {filteredImages.map((image) => (
@@ -842,7 +846,7 @@ export function CatalogStudioPage() {
                     <div className="flex flex-wrap gap-1 text-[11px]"><span className="rounded bg-muted px-2 py-1">{humanSize(image.size)}</span><span className={cn("rounded px-2 py-1", image.references.length ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800")}>{image.references.length} مرجع</span></div>
                     <p className="truncate font-mono text-[10px] text-muted-foreground" dir="ltr">SHA {image.hash.slice(0, 16)}…</p>
                     {image.references.length ? <details className="text-xs"><summary className="">العلاقات</summary><div className="mt-1 space-y-1">{image.references.map((reference) => <p key={reference} className="break-all font-mono" dir="ltr">{reference}</p>)}</div></details> : null}
-                    <Button variant="outline" size="sm" className="w-full" disabled={image.references.length > 0 || Boolean(busy)} onClick={() => void trashImage(image.path)}><Trash2 className="me-1 h-4 w-4" /> نقل للسلة</Button>
+                    <Button variant="outline" size="sm" className="w-full" disabled={image.references.length > 0 || Boolean(busy)} onClick={() => stageImageTrash(image.path)}><Trash2 className="me-1 h-4 w-4" /> نقل للسلة</Button>
                   </div>
                 </article>
               ))}
@@ -888,7 +892,7 @@ export function CatalogStudioPage() {
       {changedFiles.length > 0 ? (
         <div className="sticky bottom-3 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50/95 p-3 shadow-xl backdrop-blur dark:border-amber-900 dark:bg-amber-950/90">
           <div className="flex items-center gap-2 text-sm text-amber-900 dark:text-amber-100"><AlertTriangle className="h-5 w-5" /><span>{changedFiles.length} ملفًا في المسودة ولم تُكتب على المصدر بعد.</span></div>
-          <div className="flex gap-2"><Button variant="outline" size="sm" onClick={() => { if (window.confirm("مسح كل تعديلات المسودة؟")) setDrafts({}); }}><CircleOff className="me-1 h-4 w-4" />مسح المسودة</Button></div>
+          <div className="flex gap-2"><Button variant="outline" size="sm" onClick={() => setDrafts({})}><CircleOff className="me-1 h-4 w-4" />مسح المسودة</Button></div>
         </div>
       ) : null}
     </main>

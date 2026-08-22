@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from '@/lib/i18n';
-export { BlobImageUpload } from './BlobImageUpload';
 
 interface FormFieldProps {
   label: string;

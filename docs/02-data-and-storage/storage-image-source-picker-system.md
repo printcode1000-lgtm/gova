@@ -29,7 +29,7 @@ ios/App/App/Info.plist
 3. The user chooses either "Choose from device" or "Take a photo".
 4. The selected or captured image is converted to a browser `File`.
 5. `StorageImageManager` shows the project spinner with localized reading/conversion/preview stages.
-6. The image `Blob` is saved in the project IndexedDB database before the preview appears with an Upload button; no local filesystem or cloud-provider write has occurred.
+6. The image `Blob` is saved in the project IndexedDB database before the preview appears; no local filesystem or cloud-provider write has occurred. The slot carries no upload button — `@asol/page-save-core` runs the upload from the header save dialog.
 7. Pressing Upload opens the localized application confirmation dialog.
 8. The spinner describes compression, upload, saving, and final-image loading until the stored image renders.
 

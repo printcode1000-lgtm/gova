@@ -4,9 +4,11 @@ import * as React from "react";
 
 import { asolApi } from "@/core/api";
 import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
+import {
+  usePageSaveOperations,
+  type PageSaveOperations,
+} from "@/features/page-save/hooks/use-page-save-operations";
 import { buildImageUploadPageSaveItem } from "@/features/page-save/utils/page-save-image-items";
-import { useTranslation } from "@/lib/i18n";
 import {
   CATALOG_STUDIO_API,
   CATALOG_STUDIO_IMAGES_API,
@@ -55,8 +57,8 @@ export function useCatalogStudioPageSave({
   setNotice,
   setValidation,
   clearUpload,
-}: UseCatalogStudioPageSaveInput): void {
-  const { t } = useTranslation();
+}: UseCatalogStudioPageSaveInput): PageSaveOperations {
+  const operations = usePageSaveOperations("catalog-studio");
 
   const saveJsonFiles = React.useCallback(
     async (selectedPaths: string[]) => {
@@ -78,9 +80,6 @@ export function useCatalogStudioPageSave({
           setNotice("فشل التحقق؛ لم يتغير أي ملف أصلي.");
           return false;
         }
-        setNotice(
-          `تم حفظ ${result.changedFiles.length} ملفًا بعد التحقق والـ rollback guard.`,
-        );
         await onSaved();
         return true;
       } catch (saveError) {
@@ -114,7 +113,6 @@ export function useCatalogStudioPageSave({
         headers: authHeaders,
       });
       clearUpload();
-      setNotice("تم رفع الصورة ذريًا وتحديث سجل العمليات.");
       await onSaved();
       return true;
     } catch (uploadError) {
@@ -137,12 +135,12 @@ export function useCatalogStudioPageSave({
 
   const items = React.useMemo(
     () => [
+      ...operations.items,
       ...changedFiles.map((filePath) => ({
         id: `file:${filePath}`,
         label: filePath,
         isDirty: true,
         canSave: Boolean(drafts[filePath] && filesByPath.get(filePath)),
-        description: buildPageSaveOperationDescription(t, ["save"]),
       })),
       ...(uploadFile
         ? [
@@ -150,12 +148,11 @@ export function useCatalogStudioPageSave({
               id: "catalog-studio-image",
               label: "رفع صورة الكتالوج",
               hasPending: true,
-              t,
             }),
           ]
         : []),
     ],
-    [changedFiles, drafts, filesByPath, t, uploadFile],
+    [changedFiles, drafts, filesByPath, operations.items, uploadFile],
   );
 
   usePageSaveRegistration({
@@ -171,11 +168,14 @@ export function useCatalogStudioPageSave({
       return uploadStagedImage();
     },
     save: async (selectedItemIds) => {
+      const operationsSaved = await operations.run(selectedItemIds);
       const filePaths = selectedItemIds
         .filter((id) => id.startsWith("file:"))
         .map((id) => id.slice("file:".length));
-      if (filePaths.length === 0) return true;
-      return saveJsonFiles(filePaths);
+      if (filePaths.length === 0) return operationsSaved;
+      return (await saveJsonFiles(filePaths)) && operationsSaved;
     },
   });
+
+  return operations;
 }

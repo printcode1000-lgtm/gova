@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { RotateCcw, Trash2, Upload } from "lucide-react";
+import { ListPlus, RotateCcw, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,7 +37,7 @@ export function StoreImagesTab() {
       </div>
       {store.stagedUploads.length > 0 ? (
         <p className="text-sm text-on-surface-variant">
-          {store.stagedUploads.length} صورة جاهزة للرفع عبر أيقونة الحفظ.
+          {store.stagedUploads.length} صورة مجهزة.
         </p>
       ) : null}
       <div className="grid gap-3 md:grid-cols-2">
@@ -58,10 +58,10 @@ export function StoreImagesTab() {
                     className="w-full"
                     size="sm"
                     variant="ghost"
-                    onClick={() => void store.removeImage(item.id, group.language, group.imageType)}
+                    onClick={() => store.stageImageDelete(item.id, group.language, group.imageType)}
                   >
-                    <Trash2 className="h-3 w-3" />
-                    {t("releaseConsole.actions.delete")}
+                    <ListPlus className="h-3 w-3" />
+                    {t("releaseConsole.actions.stageDelete")}
                   </Button>
                 </figure>
               ))}
@@ -81,7 +81,11 @@ export function StoreImagesTab() {
           {(store.snapshot.backups ?? []).map((backup) => (
             <div key={backup.name} className="flex items-center justify-between gap-2 rounded-md border p-2 text-sm">
               <span className="min-w-0 truncate" dir="ltr">{backup.name}</span>
-              <Button size="sm" variant="outline" onClick={() => void store.restore(backup.name)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => store.stageBackupRestore(backup.name)}
+              >
                 <RotateCcw className="h-4 w-4" />
                 {t("releaseConsole.images.restore")}
               </Button>

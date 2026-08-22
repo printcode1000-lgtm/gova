@@ -56,7 +56,7 @@
     "test:featured-marquee-core": "npx tsx packages/featured-marquee-core/src/tests/index.test.ts",
     "test:trending-ribbon-core": "npx tsx packages/trending-ribbon-core/src/tests/index.test.ts",
     "test:page-snapshot-core": "npx tsx packages/page-snapshot-core/src/tests/index.test.ts",
-    "test:page-save-core": "npx tsx packages/page-save-core/src/tests/index.test.ts",
+    "test:page-save-core": "npx tsx packages/page-save-core/src/tests/index.test.ts && npx tsx packages/page-save-core/src/tests/header-visibility.test.ts && npx tsx packages/page-save-core/src/tests/journal-recovery.test.ts && npx tsx src/features/page-save/tests/page-save-ownership.test.ts && npx tsx src/features/page-save/tests/page-save-write-surface.test.ts",
     "test:dev-core": "npx tsx packages/dev-core/src/tests/index.test.ts",
     "test:service-mirror-core": "npx tsx packages/service-mirror-core/src/tests/index.test.ts",
     "test:vercel-deploy-core": "npx tsx packages/vercel-deploy-core/src/tests/index.test.ts",

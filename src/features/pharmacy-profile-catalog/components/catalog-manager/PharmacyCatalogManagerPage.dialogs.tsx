@@ -44,7 +44,7 @@ export const text = {
   subNamePlaceholder:
     "\u0627\u0633\u0645 \u0627\u0644\u062a\u0635\u0646\u064a\u0641 \u0627\u0644\u0641\u0631\u0639\u064a",
   cancel: "\u0625\u0644\u063a\u0627\u0621",
-  save: "\u062d\u0641\u0638",
+  stageForSave: "\u0625\u0636\u0627\u0641\u0629 \u0644\u0644\u062d\u0641\u0638",
   edit: "\u062a\u0639\u062f\u064a\u0644",
   emptyProducts:
     "\u0644\u0627 \u062a\u0648\u062c\u062f \u0645\u0646\u062a\u062c\u0627\u062a \u0641\u064a \u0647\u0630\u0627 \u0627\u0644\u062a\u0635\u0646\u064a\u0641 \u0627\u0644\u0641\u0631\u0639\u064a.",
@@ -120,7 +120,7 @@ export function CreateCategoryDialog({
             disabled={disabled || !value.trim()}
             className="h-9 rounded-lg bg-primary px-4 text-xs font-semibold text-on-primary disabled:opacity-60"
           >
-            {text.save}
+            {text.stageForSave}
           </button>
         </div>
       </form>

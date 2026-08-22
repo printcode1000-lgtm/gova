@@ -24,8 +24,14 @@ const manifest = JSON.parse(readFileSync(path.join(ROOT, 'packages/release-core/
 };
 assert.deepEqual(
   Object.keys(manifest.exports),
-  ['.', './console', './console-server', './console-artifacts'],
-  'Four load-time contracts: pipeline, browser vocabulary, process runner, and artifact tools.',
+  [
+    '.',
+    './console',
+    './console-server',
+    './console-artifacts',
+    './console/android-release-runbook',
+  ],
+  'Five load-time contracts: pipeline, browser vocabulary, process runner, artifact tools, and the Android release runbook.',
 );
 
 assert.ok(BUILD_COMMAND_CATALOG.length > 0, 'The console command catalog must not become empty.');

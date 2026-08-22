@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T00:16:08.122Z",
+  "generatedAt": "2026-08-21T21:52:30.467Z",
   "entryPoints": [
     "features/product-search/services/product-search-service.server.ts",
     "features/product-search/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 350,
+  "fileCount": 351,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -136,6 +136,7 @@
     "packages/data-core/src/domains/profile/operations/queries/get-profile-specialties.query.ts",
     "packages/data-core/src/domains/profile/operations/queries/get-store-details.query.ts",
     "packages/data-core/src/domains/profile/operations/queries/get-users-by-specialty.query.ts",
+    "packages/data-core/src/domains/profile/profile-cover-limits.ts",
     "packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-01.ts",
     "packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-02.ts",
     "packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-03.ts",

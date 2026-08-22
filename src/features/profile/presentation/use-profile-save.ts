@@ -38,7 +38,6 @@ interface UseProfileSaveReturn {
   sectionStatuses: Record<ProfileEditTab, ProfileSectionStatus | null>;
   saveError: string | null;
   isUnifiedSaving: boolean;
-  saveDialog: { type: 'success' | 'error', message: string } | null;
   updateSectionStatus: (section: ProfileEditTab, status: ProfileSectionStatus) => void;
   handleRegistrationStatus: (status: ProfileSectionStatus) => void;
   handleSpecialtiesStatus: (status: ProfileSectionStatus) => void;
@@ -58,7 +57,6 @@ interface UseProfileSaveReturn {
     fulfillmentController: ProfileFulfillmentController | null,
     discountsController: ProfileDiscountsController | null
   ) => Promise<boolean>;
-  setSaveDialog: React.Dispatch<React.SetStateAction<{ type: 'success' | 'error', message: string } | null>>;
 }
 
 export function useProfileSave({
@@ -84,7 +82,6 @@ export function useProfileSave({
   });
   const [saveError, setSaveError] = React.useState<string | null>(null);
   const [isUnifiedSaving, setIsUnifiedSaving] = React.useState(false);
-  const [saveDialog, setSaveDialog] = React.useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   const updateSectionStatus = React.useCallback(
     (section: ProfileEditTab, status: ProfileSectionStatus) => {
@@ -285,10 +282,6 @@ export function useProfileSave({
         router.push(returnTo);
         return true;
       }
-      setSaveDialog({
-        type: 'success',
-        message: locale === 'ar' ? 'تم حفظ التغييرات بنجاح' : 'Changes saved successfully'
-      });
       return true;
     } catch (error) {
       if (!isExpectedProfileSaveRejection(error)) {
@@ -313,10 +306,6 @@ export function useProfileSave({
         setSaveError(t("auth.validation.emailAlreadyRegistered"));
       } else {
         setSaveError(message);
-        setSaveDialog({
-          type: 'error',
-          message: locale === 'ar' ? 'فشل حفظ التغييرات' : 'Failed to save changes'
-        });
       }
       return false;
     } finally {
@@ -328,7 +317,6 @@ export function useProfileSave({
     sectionStatuses,
     saveError,
     isUnifiedSaving,
-    saveDialog,
     updateSectionStatus,
     handleRegistrationStatus,
     handleSpecialtiesStatus,
@@ -339,6 +327,5 @@ export function useProfileSave({
     handleFulfillmentStatus,
     handleDiscountsStatus,
     handleSaveChangedSections,
-    setSaveDialog,
   };
 }

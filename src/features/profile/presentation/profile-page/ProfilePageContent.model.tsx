@@ -33,6 +33,7 @@ StoreDetailsController,
 import { useProfileNavigation } from "../use-profile-navigation";
 import { useProfileSave } from "../use-profile-save";
 import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { usePageSaveOperations } from "@/features/page-save/hooks/use-page-save-operations";
 import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
 import { useProfileShowcaseModel } from "./ProfilePageContent.showcase-model";
 
@@ -128,7 +129,7 @@ const {
     sectionStatuses,
     saveError,
     isUnifiedSaving,
-    saveDialog,
+    
     handleRegistrationStatus,
     handleSpecialtiesStatus,
     handleProductsStatus,
@@ -138,7 +139,7 @@ const {
     handleFulfillmentStatus,
     handleDiscountsStatus,
     handleSaveChangedSections,
-    setSaveDialog,
+    
   } = useProfileSave({
     session,
     locale,
@@ -285,9 +286,11 @@ const saveProfileChanges = React.useCallback(
     [handleSaveChangedSections],
   );
 
+const profileOperations = usePageSaveOperations("profile-edit");
+
 const pageSaveItems = React.useMemo(
-  () =>
-    dirtySections.map(([section, status]) => ({
+  () => [
+    ...dirtySections.map(([section, status]) => ({
       id: section,
       label: status?.label ?? section,
       description:
@@ -295,7 +298,9 @@ const pageSaveItems = React.useMemo(
       isDirty: true,
       canSave: status?.canSave ?? true,
     })),
-  [dirtySections, t],
+    ...profileOperations.items,
+  ],
+  [dirtySections, profileOperations.items, t],
 );
 
 usePageSaveRegistration({
@@ -305,7 +310,9 @@ usePageSaveRegistration({
   enabled: showEditCard,
   items: pageSaveItems,
   isSaving: isUnifiedSaving,
-  canSave: !isSaveBlocked && dirtySections.length > 0,
+  canSave:
+    !isSaveBlocked &&
+    (dirtySections.length > 0 || profileOperations.items.length > 0),
   prepareForSave: async (selectedItemIds) => {
     if (
       selectedItemIds.includes("store") &&
@@ -316,8 +323,20 @@ usePageSaveRegistration({
     }
     return true;
   },
-  save: async (selectedItemIds) =>
-    saveProfileChanges(selectedItemIds as ProfileEditTab[]),
+  save: async (selectedItemIds) => {
+    const operationIds = profileOperations.items
+      .map((item) => item.id)
+      .filter((id) => selectedItemIds.includes(id));
+    const sectionIds = selectedItemIds.filter(
+      (id) => !operationIds.includes(id),
+    );
+    const operationsSaved = await profileOperations.run(operationIds);
+    const sectionsSaved =
+      sectionIds.length === 0
+        ? true
+        : await saveProfileChanges(sectionIds as ProfileEditTab[]);
+    return operationsSaved && sectionsSaved !== false;
+  },
 });
 
 const earlyView = isLoading ? (
@@ -337,7 +356,7 @@ const earlyView = isLoading ? (
       </div>
     ) : null;
 
-return { initialPublicProfile, t, locale, router, session, isLoggedIn, isLoading, setSession, superAdmin, searchParams, mode, uid, isViewingOtherProfile, showEditCard, showPreviewCard, matchingInitialProfile, storeImages, isLoadingStoreImages, storeDetails, isLoadingStoreDetails, previewUid, isPreviewOwner, previewContacts, isLoadingPreviewContacts, previewFulfillment, isLoadingPreviewFulfillment, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, carouselRef, tabsScrollRef, panelRefs, navButtonRefs, activeSectionIndex, handleCarouselScroll, selectSection, resyncScrollToActiveTab, goToAdjacentSection, sectionStatuses, saveError, isUnifiedSaving, saveDialog, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus, handleSaveChangedSections, setSaveDialog, editSnapshotReady, restoreEditSnapshot, restoredEditSnapshotRef, featuredProducts, setFeaturedProducts, isLoadingFeaturedProducts, setIsLoadingFeaturedProducts, heroSliderConfig, profileFeaturedConfig, profileTrendingConfig, dirtySections, dirtyLabels, isSaveBlocked, saveProfileChanges, earlyView };
+return { initialPublicProfile, t, locale, router, session, isLoggedIn, isLoading, setSession, superAdmin, searchParams, mode, uid, isViewingOtherProfile, showEditCard, showPreviewCard, matchingInitialProfile, storeImages, isLoadingStoreImages, storeDetails, isLoadingStoreDetails, previewUid, isPreviewOwner, previewContacts, isLoadingPreviewContacts, previewFulfillment, isLoadingPreviewFulfillment, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, carouselRef, tabsScrollRef, panelRefs, navButtonRefs, activeSectionIndex, handleCarouselScroll, selectSection, resyncScrollToActiveTab, goToAdjacentSection, sectionStatuses, saveError, isUnifiedSaving,  handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus, handleSaveChangedSections,  editSnapshotReady, restoreEditSnapshot, restoredEditSnapshotRef, featuredProducts, setFeaturedProducts, isLoadingFeaturedProducts, setIsLoadingFeaturedProducts, heroSliderConfig, profileFeaturedConfig, profileTrendingConfig, dirtySections, dirtyLabels, isSaveBlocked, saveProfileChanges, earlyView };
 }
 
 

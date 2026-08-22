@@ -1,9 +1,7 @@
 "use client";
 
 import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
 import type { useStoreAssets } from "./use-store-assets";
-import { useTranslation } from "@/lib/i18n";
 
 type StoreAssets = ReturnType<typeof useStoreAssets>;
 
@@ -12,7 +10,6 @@ export function useStoreTextPageSave(
   active: boolean,
   acknowledged: boolean,
 ): void {
-  const { t } = useTranslation();
 
   usePageSaveRegistration({
     id: "release-console-store-text",
@@ -25,7 +22,6 @@ export function useStoreTextPageSave(
         label: "تفاصيل المتجر والقوائم",
         isDirty: store.isTextDirty,
         canSave: store.isTextDirty && acknowledged && store.busy !== "save",
-        description: buildPageSaveOperationDescription(t, ["save"]),
       },
     ],
     isSaving: store.busy === "save",

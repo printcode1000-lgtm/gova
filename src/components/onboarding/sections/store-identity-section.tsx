@@ -178,8 +178,6 @@ export function StoreIdentitySection() {
                 maxItems: 1,
                 aspectRatio: 'square',
                 allowReplace: true,
-                confirmUpload: true,
-                confirmRemove: true,
               }}
               value={
                 storeIdentity.storeLogo?.url ||
@@ -210,8 +208,6 @@ export function StoreIdentitySection() {
                 maxItems: 1,
                 aspectRatio: 'wide',
                 allowReplace: true,
-                confirmUpload: true,
-                confirmRemove: true,
               }}
               value={
                 storeIdentity.coverImage?.url ||

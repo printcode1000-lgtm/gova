@@ -212,12 +212,12 @@ async function main() {
   assert.doesNotMatch(
     managerSource,
     /uploadSelected/,
-    "per-slot upload buttons are forbidden when confirmUpload defers to page-save",
+    "per-slot upload buttons are forbidden; uploads run through page-save",
   );
-  assert.match(
+  assert.doesNotMatch(
     managerSource,
-    /if \(!config\.confirmRemove \|\| config\.confirmUpload\) return action\(\)/,
-    "page-save deferred uploads must not show separate remove confirmations",
+    /confirmUpload|confirmRemove/,
+    "image slots must not confirm uploads or deletions outside page-save",
   );
   assert.match(appManagerSource, /CoreStorageImageManager/);
   assert.match(appManagerSource, /draftOwnerId=\{draftOwnerId\}/);

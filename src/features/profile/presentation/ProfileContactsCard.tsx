@@ -25,10 +25,8 @@ export const ProfileContactsCard = React.forwardRef<
     isLoading,
     isSaving,
     error,
-    save,
     saveAsync,
     applySaved,
-    saved,
   } = useProfileContacts();
   const label = t('onboarding.contactInfo.additionalContact');
 
@@ -65,12 +63,6 @@ export const ProfileContactsCard = React.forwardRef<
           {error}
         </div>
       ) : null}
-      {saved && !isDirty ? (
-        <div className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success">
-          {t('profile.saved')}
-        </div>
-      ) : null}
-
       <ContactInfoCard
         data={contacts}
         onChange={updateContacts}

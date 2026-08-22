@@ -59,9 +59,7 @@ Every config file must use this exact shape:
   "storageProfileId": "avatar",
   "maxItems": 1,
   "aspectRatio": "square",
-  "allowReplace": true,
-  "confirmUpload": true,
-  "confirmRemove": true
+  "allowReplace": true
 }
 ```
 
@@ -75,8 +73,6 @@ Every config file must use this exact shape:
 | `maxItems`         | Number of slots rendered by this config. Use `1` for normal one-image instances. |
 | `aspectRatio`      | `square`, `landscape`, `portrait`, or `wide`                                     |
 | `allowReplace`     | Legacy compatibility flag. An uploaded image is replaced by deleting it first.   |
-| `confirmUpload`    | Stages uploads until `@asol/page-save-core` runs `uploadPending()` via the header save dialog |
-| `confirmRemove`    | Shows confirmation before clearing/removing when `confirmUpload` is `false`. When `confirmUpload` is `true`, remove/clear runs immediately and the page-save dialog describes the pending delete. |
 | `deleteFromStorageOnRemove` | Optional; defaults to `true`. When `false`, removal only clears the UI value and leaves provider deletion to the feature. |
 
 `storageScope` is optional only for profiles without a dynamic folder strategy. It is required when the selected storage profile declares:
@@ -123,8 +119,6 @@ Product images use the main category as their storage scope:
     maxItems: 1,
     aspectRatio: "square",
     allowReplace: true,
-    confirmUpload: false,
-    confirmRemove: true,
   }}
   value={image ? [image] : []}
   onChange={setImages}
@@ -145,8 +139,6 @@ Custom marketplace requests use the dedicated `spicialOrder` profile. The spelli
     maxItems: 5,
     aspectRatio: "square",
     allowReplace: true,
-    confirmUpload: true,
-    confirmRemove: true,
   }}
   value={images}
   onChange={setImages}
@@ -199,7 +191,7 @@ Selecting an image prepares it for upload:
 4. Show the project `LoadingSpinner` and a localized description while reading, detecting, converting, and preparing the preview.
 5. Keep the selected image visible without changing the stored image reference.
 6. Persist the original image `Blob` and metadata in the `imageUploadDrafts` AsolDB store before displaying the preview. No local filesystem or cloud provider write occurs yet.
-7. When `confirmUpload` is enabled, the slot stages the file locally and marks the page dirty. Upload runs only through `@asol/page-save-core` (`prepareForSave` / `uploadPending()` from the header save icon). The per-slot upload button is not rendered.
+7. The slot always stages the file locally and marks the page dirty. Upload runs only through `@asol/page-save-core` (`prepareForSave` / `uploadPending()` from the header save icon). There is no per-slot upload button.
 8. Show the spinner through profile loading, compression, upload, persistence, and final-image loading when upload is triggered from the page-save flow.
 9. Compress and convert the image for the selected storage profile.
 10. Send multipart data to the upload API.
@@ -210,11 +202,11 @@ Navigating away and returning restores the selected preview and its `ready`, `qu
 
 Draft keys include the authenticated `uid` (or `guest`), current pathname, manager id, slot index, storage profile, and storage scope. Removing a selected image deletes its draft. Logout cancels the queue and clears the draft store before the session is removed.
 
-If confirmation is declined on legacy surfaces (`confirmUpload: false`), the selected preview remains visible until the user clears it or saves through the header dialog. When `confirmUpload: true`, upload/delete confirmations live in `@asol/page-save-core`'s save dialog instead of per-slot dialogs.
+Upload and delete confirmations live in `@asol/page-save-core`'s save dialog. The slot itself never confirms; removing a slot value clears it immediately and the page-save dialog carries the delete wording.
 
 An owning page calls the manager handle's `uploadPending()` from `@asol/page-save-core` (`prepareForSave` / `executePageSave`). Pages with several independent managers must keep a synchronous ref to the latest combined image collection while awaiting managers sequentially.
 
-There is no Replace button after upload. The user deletes the stored image and then selects a new one. Confirmation and error messages use translated application dialogs; browser `alert`/`confirm` messages are forbidden in this component.
+There is no Replace button after upload. The user removes the stored image and then selects a new one. Only permission and error dialogs remain in the component; browser `alert`/`confirm` messages are forbidden everywhere in the project.
 
 ## Removal
 
@@ -295,9 +287,7 @@ The document contains a schema version and independent slot definitions:
       "storageProfileId": "cover",
       "maxItems": 1,
       "aspectRatio": "landscape",
-      "allowReplace": true,
-      "confirmUpload": true,
-      "confirmRemove": true
+      "allowReplace": true
     }
   ]
 }

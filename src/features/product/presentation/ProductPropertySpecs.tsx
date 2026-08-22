@@ -69,7 +69,7 @@ export function ProductPropertySpecs({
         locationLatitude: String(nextLatitude),
         locationLongitude: String(nextLongitude),
       });
-      setMapMessage("تم اختيار الموقع. احفظ المنتج لتثبيت التغيير.");
+      setMapMessage("تم اختيار الموقع.");
     },
     [onChange, specs],
   );

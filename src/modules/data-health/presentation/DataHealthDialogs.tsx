@@ -1,5 +1,3 @@
-import { Trash2 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,13 +25,13 @@ export function DataHealthDialogs(props: {
   confirmationText: string;
   setConfirmationText: (value: string) => void;
   cleaning: boolean;
-  executePlan: () => Promise<void>;
+  stagePlanExecution: () => void;
   orderPurgePlan: DataHealthOrderPurgePlan | null;
   setOrderPurgePlan: (plan: DataHealthOrderPurgePlan | null) => void;
   orderPurgeConfirmation: string;
   setOrderPurgeConfirmation: (value: string) => void;
   orderPurgeBusy: boolean;
-  executeOrderPurge: () => Promise<void>;
+  stageOrderPurge: () => void;
 }) {
   return (
     <>
@@ -44,7 +42,7 @@ export function DataHealthDialogs(props: {
         confirmationText={props.confirmationText}
         setConfirmationText={props.setConfirmationText}
         cleaning={props.cleaning}
-        executePlan={props.executePlan}
+        stagePlanExecution={props.stagePlanExecution}
       />
       <OrderPurgeDialog
         orderPurgePlan={props.orderPurgePlan}
@@ -52,7 +50,7 @@ export function DataHealthDialogs(props: {
         orderPurgeConfirmation={props.orderPurgeConfirmation}
         setOrderPurgeConfirmation={props.setOrderPurgeConfirmation}
         orderPurgeBusy={props.orderPurgeBusy}
-        executeOrderPurge={props.executeOrderPurge}
+        stageOrderPurge={props.stageOrderPurge}
       />
     </>
   );
@@ -98,14 +96,14 @@ function CleanupPlanDialog({
   confirmationText,
   setConfirmationText,
   cleaning,
-  executePlan,
+  stagePlanExecution,
 }: {
   plan: DataHealthCleanupPlan | null;
   setPlan: (plan: DataHealthCleanupPlan | null) => void;
   confirmationText: string;
   setConfirmationText: (value: string) => void;
   cleaning: boolean;
-  executePlan: () => Promise<void>;
+  stagePlanExecution: () => void;
 }) {
   return (
     <Dialog open={Boolean(plan)} onOpenChange={(open) => !open && setPlan(null)}>
@@ -143,12 +141,10 @@ function CleanupPlanDialog({
             إلغاء
           </Button>
           <Button
-            variant="destructive"
             disabled={cleaning || !plan || confirmationText !== plan.confirmationText}
-            onClick={() => void executePlan()}
+            onClick={stagePlanExecution}
           >
-            <Trash2 className="h-4 w-4" />
-            {cleaning ? "جاري التنفيذ" : "تنفيذ الخطة"}
+            {cleaning ? "جاري التنفيذ" : "إضافة الخطة إلى الحفظ"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -162,14 +158,14 @@ function OrderPurgeDialog({
   orderPurgeConfirmation,
   setOrderPurgeConfirmation,
   orderPurgeBusy,
-  executeOrderPurge,
+  stageOrderPurge,
 }: {
   orderPurgePlan: DataHealthOrderPurgePlan | null;
   setOrderPurgePlan: (plan: DataHealthOrderPurgePlan | null) => void;
   orderPurgeConfirmation: string;
   setOrderPurgeConfirmation: (value: string) => void;
   orderPurgeBusy: boolean;
-  executeOrderPurge: () => Promise<void>;
+  stageOrderPurge: () => void;
 }) {
   return (
     <Dialog
@@ -222,16 +218,14 @@ function OrderPurgeDialog({
             إلغاء
           </Button>
           <Button
-            variant="destructive"
             disabled={
               orderPurgeBusy ||
               !orderPurgePlan ||
               orderPurgeConfirmation !== orderPurgePlan.confirmationText
             }
-            onClick={() => void executeOrderPurge()}
+            onClick={stageOrderPurge}
           >
-            <Trash2 className="h-4 w-4" />
-            {orderPurgeBusy ? "جاري الحذف" : "حذف جميع الطلبات نهائيًا"}
+            {orderPurgeBusy ? "جاري الحذف" : "إضافة الخطة إلى الحفظ"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -34,11 +34,9 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
     isLoading,
     isSaving,
     error,
-    save,
     saveAsync,
     prepareSnapshot,
     applySaved,
-    saved,
   } = useProfileRegistration();
   const [isPasswordOpen, setIsPasswordOpen] = React.useState(false);
   const label = t("onboarding.contactInfo.primaryContact");
@@ -98,12 +96,6 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
             {error}
           </div>
         ) : null}
-        {saved && !isDirty ? (
-          <div className="rounded-lg bg-success/15 px-3 py-2 text-xs sm:text-sm text-success">
-            {t("profile.saved")}
-          </div>
-        ) : null}
-
         <PhoneVerification
           phone={form.phone}
           verified={phoneVerified}

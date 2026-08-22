@@ -1,3 +1,9 @@
+import type { PageSaveOperationKind } from "./page-save-operation.types";
+import type {
+  PageSaveJournalEntry,
+  PageSaveRecoveredOperation,
+} from "./page-save-journal.types";
+
 export type PageSaveScopeId = string;
 
 export const PAGE_SAVE_PENDING_SCHEMA_VERSION = 1 as const;
@@ -6,12 +12,26 @@ export interface PageSaveItemState {
   id: string;
   label: string;
   description?: string;
+  operation: PageSaveOperationKind;
+  /**
+   * True when the item's work lives only in memory (a staged operation holds a
+   * closure). Such items drive the header while mounted but are never written
+   * to the pending store, so a force-close cannot resurrect an unrunnable item.
+   */
+  ephemeral?: boolean;
   isDirty: boolean;
   canSave: boolean;
   selected: boolean;
 }
 
-export type PageSaveItemInput = Omit<PageSaveItemState, "selected">;
+export type PageSaveItemInput = Omit<
+  PageSaveItemState,
+  "selected" | "operation"
+> & {
+  operation?: PageSaveOperationKind;
+};
+
+export type PageSaveResult = "success" | "failure";
 
 export interface PageSaveHandle {
   save: (selectedItemIds: string[]) => Promise<boolean>;
@@ -50,6 +70,9 @@ export interface PageSaveSnapshot {
   hasPersistedPending: boolean;
   dialogOpen: boolean;
   dialog: PageSaveDialogState | null;
+  lastResult: PageSaveResult | null;
+  /** Operations a previous session left unfinished, awaiting the user's call. */
+  interrupted: PageSaveRecoveredOperation[];
 }
 
 export type PageSaveStatusPatch = Pick<
@@ -71,6 +94,10 @@ export interface PageSaveStoragePort {
   setPending(record: PageSavePendingRecord): Promise<void>;
   deletePending(id: PageSaveScopeId): Promise<void>;
   listPending(): Promise<PageSavePendingRecord[]>;
+  getJournalEntry(operationId: string): Promise<PageSaveJournalEntry | undefined>;
+  setJournalEntry(entry: PageSaveJournalEntry): Promise<void>;
+  deleteJournalEntry(operationId: string): Promise<void>;
+  listJournalEntries(): Promise<PageSaveJournalEntry[]>;
 }
 
 export interface PageSaveRuntimeConfig {

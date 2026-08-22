@@ -5,7 +5,7 @@ import {
   FileArchive,
   GitCompareArrows,
   RefreshCw,
-  Trash2,
+  ListPlus,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -204,12 +204,12 @@ function SavedBackupRow({
         <Button
           type="button"
           size="sm"
-          variant="destructive"
+          variant="outline"
           disabled={!devAllowed || busy === `delete:${backup.fileName}` || savedOperationBusy}
           onClick={() => onDelete(backup.fileName)}
         >
-          <Trash2 className="h-4 w-4" />
-          {busy === `delete:${backup.fileName}` ? "جاري الحذف" : "حذف"}
+          <ListPlus className="h-4 w-4" />
+          {busy === `delete:${backup.fileName}` ? "جاري الحذف" : "إضافة الحذف للحفظ"}
         </Button>
       </div>
     </div>

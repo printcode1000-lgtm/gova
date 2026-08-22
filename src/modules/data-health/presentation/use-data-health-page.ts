@@ -7,6 +7,7 @@ import { ApiError } from "@/core/api/api-error";
 import { publicEnv } from "@/core/config/public-env";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
 
 import { DATA_HEALTH_API } from "../config";
 import { exportDataHealthReport } from "./data-health-export";
@@ -54,6 +55,13 @@ export function useDataHealthPage() {
   const [orderPurgeConfirmation, setOrderPurgeConfirmation] =
     React.useState("");
   const [orderPurgeBusy, setOrderPurgeBusy] = React.useState(false);
+
+  const operations = usePageSaveOperationScope({
+    id: "data-health",
+    label: "صحة البيانات",
+    returnPath: "/super-admin/data-health",
+    enabled: allowed,
+  });
 
   const authHeaders = React.useMemo(
     () =>
@@ -224,35 +232,44 @@ export function useDataHealthPage() {
     }
   };
 
-  const executePlan = async () => {
+  const stagePlanExecution = () => {
     if (!authHeaders || !plan || confirmationText !== plan.confirmationText) {
       return;
     }
-    setCleaning(true);
-    setError("");
-    try {
-      const result = await asolApi.post<DataHealthCleanupResult>(
-        DATA_HEALTH_API.cleanup,
-        { planId: plan.id, confirmationText },
-        { headers: authHeaders },
-      );
-      setReport(result.report);
-      setPlan(null);
-      setConfirmationText("");
-      setSelectedIds(new Set());
-      setNotice(
-        `تم تنفيذ ${result.cleaned.length} إجراء، وتجاوز ${result.skipped.length} عنصر تغير أو لم يعد صالحًا للتنظيف.`,
-      );
-      await loadHistory();
-    } catch (cleanupError) {
-      setError(
-        cleanupError instanceof Error
-          ? cleanupError.message
-          : "تعذر تنفيذ خطة التنظيف",
-      );
-    } finally {
-      setCleaning(false);
-    }
+    const planId = plan.id;
+    const planConfirmation = confirmationText;
+    const actionCount = plan.preview.length;
+    setPlan(null);
+    setConfirmationText("");
+    operations.stage({
+      itemId: `data-health-cleanup:${planId}`,
+      kind: "delete",
+      label: `تنفيذ خطة تنظيف (${actionCount} إجراء)`,
+      execute: async () => {
+        setCleaning(true);
+        setError("");
+        try {
+          const result = await asolApi.post<DataHealthCleanupResult>(
+            DATA_HEALTH_API.cleanup,
+            { planId, confirmationText: planConfirmation },
+            { headers: authHeaders },
+          );
+          setReport(result.report);
+          setSelectedIds(new Set());
+          await loadHistory();
+          return true;
+        } catch (cleanupError) {
+          setError(
+            cleanupError instanceof Error
+              ? cleanupError.message
+              : "تعذر تنفيذ خطة التنظيف",
+          );
+          return false;
+        } finally {
+          setCleaning(false);
+        }
+      },
+    });
   };
 
   const createOrderPurgePlan = async () => {
@@ -286,7 +303,7 @@ export function useDataHealthPage() {
     }
   };
 
-  const executeOrderPurge = async () => {
+  const stageOrderPurge = () => {
     if (
       !authHeaders ||
       !orderPurgePlan ||
@@ -294,30 +311,36 @@ export function useDataHealthPage() {
     ) {
       return;
     }
-    setOrderPurgeBusy(true);
-    setError("");
-    try {
-      const result = await asolApi.post<DataHealthOrderPurgeResult>(
-        DATA_HEALTH_API.orderPurge,
-        {
-          planId: orderPurgePlan.id,
-          confirmationText: orderPurgeConfirmation,
-        },
-        { headers: authHeaders },
-      );
-      setOrderPurgePlan(null);
-      setOrderPurgeConfirmation("");
-      setNotice(
-        `تم حذف ${result.deletedOrders} طلب و${result.deletedImages} صورة نهائيًا بدون أرشفة أو جدولة حذف.`,
-      );
-      await scan();
-    } catch (purgeError) {
-      setError(
-        purgeError instanceof Error ? purgeError.message : "تعذر حذف الطلبات",
-      );
-    } finally {
-      setOrderPurgeBusy(false);
-    }
+    const planId = orderPurgePlan.id;
+    const planConfirmation = orderPurgeConfirmation;
+    const orderCount = orderPurgePlan.orderCount;
+    setOrderPurgePlan(null);
+    setOrderPurgeConfirmation("");
+    operations.stage({
+      itemId: `data-health-order-purge:${planId}`,
+      kind: "delete",
+      label: `حذف ${orderCount} طلب نهائيًا`,
+      execute: async () => {
+        setOrderPurgeBusy(true);
+        setError("");
+        try {
+          await asolApi.post<DataHealthOrderPurgeResult>(
+            DATA_HEALTH_API.orderPurge,
+            { planId, confirmationText: planConfirmation },
+            { headers: authHeaders },
+          );
+          await scan();
+          return true;
+        } catch (purgeError) {
+          setError(
+            purgeError instanceof Error ? purgeError.message : "تعذر حذف الطلبات",
+          );
+          return false;
+        } finally {
+          setOrderPurgeBusy(false);
+        }
+      },
+    });
   };
 
   const exportReport = (format: "json" | "csv") => {
@@ -344,133 +367,129 @@ export function useDataHealthPage() {
     }
   };
 
-  const deleteQuarantinedImage = async (quarantineId: string) => {
-    if (
-      !authHeaders ||
-      !window.confirm(
-        "سيُحذف ملف الصورة فعليًا بعد إعادة التحقق من أنه ما زال بلا مرجع. هل تريد المتابعة؟",
-      )
-    ) {
-      return;
-    }
-    setError("");
-    try {
-      const result = await asolApi.post<{ report: DataHealthReport }>(
-        DATA_HEALTH_API.quarantineDelete,
-        { quarantineId, confirm: "DELETE_QUARANTINED_IMAGE" },
-        { headers: authHeaders },
-      );
-      setReport(result.report);
-      await loadHistory();
-      setNotice("تم حذف ملف الصورة اليتيم بعد إعادة التحقق.");
-    } catch (deleteError) {
-      setError(
-        deleteError instanceof Error
-          ? deleteError.message
-          : "تعذر حذف ملف الصورة المحجور",
-      );
-    }
+  const stageQuarantinedImageDelete = (quarantineId: string) => {
+    if (!authHeaders) return;
+    operations.stage({
+      itemId: `data-health-quarantine-image:${quarantineId}`,
+      kind: "delete",
+      label: "حذف ملف صورة محجور",
+      execute: async () => {
+        setError("");
+        try {
+          const result = await asolApi.post<{ report: DataHealthReport }>(
+            DATA_HEALTH_API.quarantineDelete,
+            { quarantineId, confirm: "DELETE_QUARANTINED_IMAGE" },
+            { headers: authHeaders },
+          );
+          setReport(result.report);
+          await loadHistory();
+          return true;
+        } catch (deleteError) {
+          setError(
+            deleteError instanceof Error
+              ? deleteError.message
+              : "تعذر حذف ملف الصورة المحجور",
+          );
+          return false;
+        }
+      },
+    });
   };
 
-  const clearQuarantine = async () => {
-    if (
-      !authHeaders ||
-      !window.confirm(
-        "سيتم حذف كل عناصر الحجر مع ملفات التخزين والسجلات الأصلية المرتبطة بها. العناصر التي يفشل حذفها ستبقى في الحجر. هل تريد المتابعة؟",
-      )
-    ) {
-      return;
-    }
-    setError("");
-    try {
-      const result = await asolApi.post<{
-        cleared: number;
-        clearedAt: string;
-        deletedStorageObjects: number;
-        deletedRecords: number;
-        skipped: Array<{ id: string; reason: string }>;
-      }>(
-        DATA_HEALTH_API.quarantineClear,
-        { confirm: "CLEAR_DATA_HEALTH_QUARANTINE" },
-        { headers: authHeaders },
-      );
-      await loadHistory();
-      await scan();
-      setNotice(
-        `تم تنظيف ${result.cleared} عنصر من الحجر، وحذف ${result.deletedStorageObjects} ملف تخزين و${result.deletedRecords} سجل أصلي${
-          result.skipped.length > 0
-            ? `، وتعذر تنظيف ${result.skipped.length} عنصر`
-            : ""
-        }.`,
-      );
-    } catch (clearError) {
-      setError(
-        clearError instanceof Error ? clearError.message : "تعذر تنظيف الحجر",
-      );
-    }
+  const stageQuarantineClear = () => {
+    if (!authHeaders) return;
+    operations.stage({
+      itemId: "data-health-quarantine-clear",
+      kind: "delete",
+      label: "تنظيف الحجر بالكامل مع ملفات التخزين والسجلات الأصلية",
+      execute: async () => {
+        setError("");
+        try {
+          await asolApi.post<{
+            cleared: number;
+            clearedAt: string;
+            deletedStorageObjects: number;
+            deletedRecords: number;
+            skipped: Array<{ id: string; reason: string }>;
+          }>(
+            DATA_HEALTH_API.quarantineClear,
+            { confirm: "CLEAR_DATA_HEALTH_QUARANTINE" },
+            { headers: authHeaders },
+          );
+          await loadHistory();
+          await scan();
+          return true;
+        } catch (clearError) {
+          setError(
+            clearError instanceof Error ? clearError.message : "تعذر تنظيف الحجر",
+          );
+          return false;
+        }
+      },
+    });
   };
 
-  const clearRunHistory = async () => {
-    if (
-      !authHeaders ||
-      !window.confirm(
-        "سيتم حذف سجل الفحوصات ونتائج الفحوصات السابقة فقط. لن يتم حذف الحجر أو البيانات الفعلية. هل تريد المتابعة؟",
-      )
-    ) {
-      return;
-    }
-    setError("");
-    try {
-      const result = await asolApi.post<{
-        runs: number;
-        findings: number;
-        clearedAt: string;
-      }>(
-        DATA_HEALTH_API.historyRunsClear,
-        { confirm: "CLEAR_DATA_HEALTH_RUN_HISTORY" },
-        { headers: authHeaders },
-      );
-      await loadHistory();
-      setNotice(
-        `تم حذف ${result.runs} فحص و${result.findings} نتيجة فحص من السجل.`,
-      );
-    } catch (clearError) {
-      setError(
-        clearError instanceof Error
-          ? clearError.message
-          : "تعذر حذف سجل الفحوصات",
-      );
-    }
+  const stageRunHistoryClear = () => {
+    if (!authHeaders) return;
+    operations.stage({
+      itemId: "data-health-run-history-clear",
+      kind: "delete",
+      label: "حذف سجل الفحوصات ونتائجها",
+      execute: async () => {
+        setError("");
+        try {
+          await asolApi.post<{
+            runs: number;
+            findings: number;
+            clearedAt: string;
+          }>(
+            DATA_HEALTH_API.historyRunsClear,
+            { confirm: "CLEAR_DATA_HEALTH_RUN_HISTORY" },
+            { headers: authHeaders },
+          );
+          await loadHistory();
+          return true;
+        } catch (clearError) {
+          setError(
+            clearError instanceof Error
+              ? clearError.message
+              : "تعذر حذف سجل الفحوصات",
+          );
+          return false;
+        }
+      },
+    });
   };
 
-  const clearCleanupAudit = async () => {
-    if (
-      !authHeaders ||
-      !window.confirm(
-        "سيتم حذف سجلات تدقيق التنظيف فقط. لن يتم حذف الحجر أو البيانات الفعلية. هل تريد المتابعة؟",
-      )
-    ) {
-      return;
-    }
-    setError("");
-    try {
-      const result = await asolApi.post<{
-        audit: number;
-        clearedAt: string;
-      }>(
-        DATA_HEALTH_API.historyAuditClear,
-        { confirm: "CLEAR_DATA_HEALTH_CLEANUP_AUDIT" },
-        { headers: authHeaders },
-      );
-      await loadHistory();
-      setNotice(`تم حذف ${result.audit} سجل من تدقيق التنظيف.`);
-    } catch (clearError) {
-      setError(
-        clearError instanceof Error
-          ? clearError.message
-          : "تعذر حذف سجلات تدقيق التنظيف",
-      );
-    }
+  const stageCleanupAuditClear = () => {
+    if (!authHeaders) return;
+    operations.stage({
+      itemId: "data-health-cleanup-audit-clear",
+      kind: "delete",
+      label: "حذف سجلات تدقيق التنظيف",
+      execute: async () => {
+        setError("");
+        try {
+          await asolApi.post<{
+            audit: number;
+            clearedAt: string;
+          }>(
+            DATA_HEALTH_API.historyAuditClear,
+            { confirm: "CLEAR_DATA_HEALTH_CLEANUP_AUDIT" },
+            { headers: authHeaders },
+          );
+          await loadHistory();
+          return true;
+        } catch (clearError) {
+          setError(
+            clearError instanceof Error
+              ? clearError.message
+              : "تعذر حذف سجلات تدقيق التنظيف",
+          );
+          return false;
+        }
+      },
+    });
   };
 
   return {
@@ -478,19 +497,19 @@ export function useDataHealthPage() {
     category,
     cleanableOnly,
     cleaning,
-    clearCleanupAudit,
-    clearQuarantine,
-    clearRunHistory,
+    stageCleanupAuditClear,
+    stageQuarantineClear,
+    stageRunHistoryClear,
     confirmationText,
     createOrderPurgePlan,
     createPlan,
     database,
     databases,
-    deleteQuarantinedImage,
+    stageQuarantinedImageDelete,
     detail,
     error,
-    executeOrderPurge,
-    executePlan,
+    stageOrderPurge,
+    stagePlanExecution,
     exportReport,
     filtered,
     history,

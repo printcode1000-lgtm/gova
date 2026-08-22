@@ -2,13 +2,19 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, ImagePlus, Loader2, Send } from "lucide-react";
+import { ArrowLeft, ImagePlus, Loader2 } from "lucide-react";
 
 import { ASOL_API_ROUTES, asolApi } from "@/core/api";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { StorageProfiles, type StoredImage } from "@asol/storage-core";
-import { StorageImageManager } from "@/features/storage/components/StorageImageManager";
+import {
+  StorageImageManager,
+  type StorageImageManagerHandle,
+} from "@/features/storage/components/StorageImageManager";
+import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { buildImageUploadPageSaveItem } from "@/features/page-save/utils/page-save-image-items";
+import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "@/lib/i18n";
@@ -56,7 +62,9 @@ export function CustomRequestPageContent() {
     descriptionLabel: "وصف الطلب",
     descriptionPlaceholder: "اكتب تفاصيل الطلب المطلوب...",
     images: "الصور",
-    submit: "إرسال الطلب",
+    pageLabel: "طلب خاص",
+    requestItem: "إرسال الطلب الخاص",
+    imagesItem: "صور الطلب الخاص",
     validation: "اكتب وصف الطلب أو أضف صورة واحدة على الأقل.",
     failure: "تعذر إرسال الطلب الخاص. حاول مرة أخرى.",
     invalidSeller: "رابط الطلب غير صالح.",
@@ -70,7 +78,9 @@ export function CustomRequestPageContent() {
     descriptionLabel: "Request description",
     descriptionPlaceholder: "Describe exactly what you need...",
     images: "Images",
-    submit: "Send request",
+    pageLabel: "Custom request",
+    requestItem: "Send custom request",
+    imagesItem: "Custom request images",
     validation: "Write a description or add at least one image.",
     failure: "Unable to send the request. Try again.",
     invalidSeller: "This request link is invalid.",
@@ -83,9 +93,23 @@ export function CustomRequestPageContent() {
   const sellerName =
     sellerDetails.storeName || t("profilePreview.sellerFallback");
 
-  const submit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!session?.uid || !sellerUid || busy || !canSubmit) return;
+  const imageManagerRefs = React.useRef<(StorageImageManagerHandle | null)[]>([]);
+  const imagesRef = React.useRef(images);
+  imagesRef.current = images;
+
+  const uploadStagedImages = React.useCallback(async () => {
+    const pending = imageManagerRefs.current.filter(
+      (manager): manager is StorageImageManagerHandle =>
+        Boolean(manager?.hasPending()),
+    );
+    for (const manager of pending) {
+      if (!(await manager.uploadPending())) return false;
+    }
+    return true;
+  }, []);
+
+  const submitRequest = React.useCallback(async () => {
+    if (!session?.uid || !sellerUid) return false;
     setBusy(true);
     setResult(null);
     try {
@@ -97,7 +121,7 @@ export function CustomRequestPageContent() {
           sellerUid,
           title: title.trim(),
           description: description.trim(),
-          images: images.map((image) => ({
+          images: imagesRef.current.map((image) => ({
             imageKey: image.imageKey,
             url: image.url,
           })),
@@ -107,15 +131,59 @@ export function CustomRequestPageContent() {
       router.push(
         `/orders/details?orderId=${encodeURIComponent(response.orderId)}&role=buyer`,
       );
+      return true;
     } catch (error) {
       setResult({
         kind: "error",
         message: error instanceof Error ? error.message : copy.failure,
       });
+      return false;
     } finally {
       setBusy(false);
     }
-  };
+  }, [copy.failure, description, router, sellerUid, session?.phone, session?.uid, title]);
+
+  const [pendingImageSlots, setPendingImageSlots] = React.useState<boolean[]>([]);
+  const hasStagedImages = pendingImageSlots.some(Boolean);
+
+  const pageSaveItems = React.useMemo(
+    () => [
+      ...(hasStagedImages
+        ? [
+            buildImageUploadPageSaveItem({
+              id: "custom-request-images",
+              label: copy.imagesItem,
+              hasPending: true,
+              t,
+            }),
+          ]
+        : []),
+      {
+        id: "custom-request",
+        label: copy.requestItem,
+        operation: "save" as const,
+        isDirty: canSubmit,
+        canSave: canSubmit,
+        description: buildPageSaveOperationDescription(t, ["save"]),
+      },
+    ],
+    [canSubmit, copy.imagesItem, copy.requestItem, hasStagedImages, t],
+  );
+
+  usePageSaveRegistration({
+    id: "custom-request",
+    label: copy.pageLabel,
+    returnPath: `/custom-request?sellerUid=${encodeURIComponent(sellerUid)}`,
+    enabled: Boolean(sellerUid && session?.uid),
+    items: pageSaveItems,
+    isSaving: busy,
+    canSave: canSubmit,
+    prepareForSave: uploadStagedImages,
+    save: async (selectedItemIds) => {
+      if (!selectedItemIds.includes("custom-request")) return true;
+      return submitRequest();
+    },
+  });
 
   if (isLoading) {
     return (
@@ -175,10 +243,7 @@ export function CustomRequestPageContent() {
         </div>
       </div>
 
-      <form
-        onSubmit={submit}
-        className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6"
-      >
+      <div className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
         <fieldset disabled={busy} className="min-w-0 space-y-6 disabled:opacity-70">
           <div className="space-y-2">
             <label className="text-sm font-bold" htmlFor="custom-request-title">
@@ -217,6 +282,17 @@ export function CustomRequestPageContent() {
               {Array.from({ length: 4 }, (_, index) => (
                 <StorageImageManager
                   key={index}
+                  ref={(handle) => {
+                    imageManagerRefs.current[index] = handle;
+                  }}
+                  onPendingChange={(pending) => {
+                    setPendingImageSlots((current) => {
+                      if (current[index] === pending) return current;
+                      const next = [...current];
+                      next[index] = pending;
+                      return next;
+                    });
+                  }}
                   config={{
                     id: `custom-request-image-${index + 1}`,
                     storageProfileId: StorageProfiles.SpicialOrder,
@@ -224,8 +300,6 @@ export function CustomRequestPageContent() {
                     maxItems: 1,
                     aspectRatio: "square",
                     allowReplace: true,
-                    confirmUpload: false,
-                    confirmRemove: true,
                     deleteFromStorageOnRemove: true,
                   }}
                   value={images[index] ? [images[index]] : []}
@@ -252,20 +326,7 @@ export function CustomRequestPageContent() {
         ) : !canSubmit ? (
           <p className="text-xs text-on-surface-variant">{copy.validation}</p>
         ) : null}
-
-        <button
-          type="submit"
-          disabled={busy || !canSubmit}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-4 text-lg font-bold text-on-primary disabled:opacity-50"
-        >
-          {busy ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
-          ) : (
-            <Send className="h-5 w-5" />
-          )}
-          {copy.submit}
-        </button>
-      </form>
+      </div>
     </main>
   );
 }

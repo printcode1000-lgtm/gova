@@ -16,6 +16,8 @@ import type { StorageImageManagerHandle } from "@/features/storage/components/St
 import { reportSystemIssue } from "@asol/system-logs-core";
 import {
   heroSliderFingerprint,
+  heroSliderHasRemovedImages,
+  heroSliderImagesFingerprint,
   isHeroSliderConfigReadyToPersist,
 } from "./super-admin-hero-slider-save-model";
 
@@ -24,15 +26,19 @@ const saveErrorMessages: Record<string, string> = {
   invalidHeroSliderConfig: "إعداد الشرائح غير صالح، يرجى مراجعة البيانات.",
 };
 
-function formatSaveSuccess(saved: HomeHeroRecord): string {
+/**
+ * Only the storage warning is worth surfacing here; the page-save dialog owns
+ * the generic success and failure wording.
+ */
+function formatSaveWarning(saved: HomeHeroRecord): string | null {
   return saved.storageWarning === "imageDeleteFailed"
-    ? "تم حفظ التعديلات، لكن تعذر حذف ملف صورة قديم من التخزين."
-    : "تم حفظ التعديلات وتطبيقها على الصفحة الرئيسية.";
+    ? "تعذر حذف ملف صورة قديم من التخزين."
+    : null;
 }
 
-function formatSaveError(error: unknown): string {
+function formatSaveError(error: unknown): string | null {
   const rawMessage = error instanceof Error ? error.message : "";
-  return saveErrorMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ التعديلات.";
+  return saveErrorMessages[rawMessage] ?? rawMessage ?? null;
 }
 
 function hasPendingUploads(
@@ -65,6 +71,9 @@ export function useSuperAdminHeroSliderSave({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [savedFingerprint, setSavedFingerprint] = useState<string | null>(null);
+  const [savedImagesFingerprint, setSavedImagesFingerprint] = useState<
+    string | null
+  >(null);
   const persistInFlightRef = useRef(false);
 
   useEffect(() => {
@@ -72,17 +81,28 @@ export function useSuperAdminHeroSliderSave({
     setSavedFingerprint(
       heroSliderFingerprint(record.config, record.checkIntervalMinutes),
     );
+    setSavedImagesFingerprint(heroSliderImagesFingerprint(record.config));
   }, [record?.version, record?.checkIntervalMinutes]);
 
   const uploadPendingImages = useCallback(async (): Promise<boolean> => {
-    if (!hasPendingUploads(imageUploadRef)) return true;
-    const uploaded = await imageUploadRef.current!.uploadPending();
-    if (!uploaded) {
-      setMessage("تعذر إكمال رفع الصور. أعد المحاولة ثم احفظ.");
+    if (hasPendingUploads(imageUploadRef)) {
+      const uploaded = await imageUploadRef.current!.uploadPending();
+      if (!uploaded) {
+        setMessage("تعذر إكمال رفع الصور.");
+        return false;
+      }
+    }
+    if (imageUploadRef.current?.hasPending()) {
+      setMessage("لا تزال هناك صور بانتظار الرفع.");
+      return false;
+    }
+    const configToSave = getConfig();
+    if (configToSave && !isHeroSliderConfigReadyToPersist(configToSave)) {
+      setMessage("أكمل رفع الصور لكل الشرائح.");
       return false;
     }
     return true;
-  }, [imageUploadRef]);
+  }, [getConfig, imageUploadRef]);
 
   const persistConfig = useCallback(async () => {
     if (!session || !record || persistInFlightRef.current) {
@@ -98,7 +118,7 @@ export function useSuperAdminHeroSliderSave({
       if (!configToSave) return false;
 
       if (!isHeroSliderConfigReadyToPersist(configToSave)) {
-        setMessage("أكمل رفع الصور لكل الشرائح ثم احفظ.");
+        setMessage("أكمل رفع الصور لكل الشرائح.");
         return false;
       }
 
@@ -121,8 +141,9 @@ export function useSuperAdminHeroSliderSave({
       setSavedFingerprint(
         heroSliderFingerprint(saved.config, saved.checkIntervalMinutes),
       );
+      setSavedImagesFingerprint(heroSliderImagesFingerprint(saved.config));
       notifyHomeHeroSliderUpdated();
-      setMessage(formatSaveSuccess(saved));
+      setMessage(formatSaveWarning(saved));
       return true;
     } catch (error) {
       reportSystemIssue({
@@ -152,8 +173,26 @@ export function useSuperAdminHeroSliderSave({
     savedFingerprint !== null &&
     heroSliderFingerprint(config!, intervalMinutes) !== savedFingerprint;
 
+  const imagesConfigDirty =
+    Boolean(config) &&
+    savedImagesFingerprint !== null &&
+    heroSliderImagesFingerprint(config!) !== savedImagesFingerprint;
+
+  const imagesRemoved =
+    Boolean(config) &&
+    Boolean(record) &&
+    heroSliderHasRemovedImages(record!.config, config!);
+
+  const imagesDirty = imagesPending || imagesConfigDirty || imagesRemoved;
+  const configReady = config ? isHeroSliderConfigReadyToPersist(config) : false;
   const hasUnpublishedDraft = isDirty || imagesPending;
   const canPersist = Boolean(config) && hasUnpublishedDraft && !busy;
+  const imagesItemCanSave =
+    Boolean(config) &&
+    imagesDirty &&
+    !busy &&
+    (imagesPending || configReady);
+  const configItemCanSave = Boolean(config) && isDirty && !busy && configReady;
 
   return {
     busy,
@@ -163,7 +202,13 @@ export function useSuperAdminHeroSliderSave({
     uploadPendingImages,
     persistConfig,
     isDirty,
+    imagesDirty,
+    imagesConfigDirty,
+    imagesRemoved,
+    configReady,
     canPersist,
+    imagesItemCanSave,
+    configItemCanSave,
     hasUnpublishedDraft,
   };
 }

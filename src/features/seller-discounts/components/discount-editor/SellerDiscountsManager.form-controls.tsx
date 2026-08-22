@@ -124,7 +124,7 @@ export function DiscountEditor({
             type="button"
             onClick={onRemove}
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-error/30 text-error"
-            aria-label={ar ? "حذف الخصم" : "Delete discount"}
+            aria-label={ar ? "إزالة الخصم" : "Delete discount"}
           >
             <Trash2 className="h-4 w-4" />
           </button>

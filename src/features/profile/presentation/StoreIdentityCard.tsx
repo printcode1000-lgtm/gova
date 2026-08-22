@@ -54,7 +54,6 @@ export const StoreIdentityCard = React.forwardRef<
     error,
     saveAsync,
     applySaved,
-    saved,
   } = useStoreDetails();
   const [imageTab, setImageTab] = React.useState<"logo" | "hero">("logo");
   const [logoImage, setLogoImage] = React.useState<StoredImage | null>(null);
@@ -257,12 +256,6 @@ export const StoreIdentityCard = React.forwardRef<
           {error ?? imagesError}
         </div>
       ) : null}
-      {saved && !isDirty ? (
-        <div className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success">
-          {t("profile.saved")}
-        </div>
-      ) : null}
-
       {!readOnly ? (
         <StoreIdentityImagesEditor
           imageTab={imageTab}

@@ -5,6 +5,7 @@ import {
   type PageSaveItemState,
   type PageSavePendingRecord,
   type PageSaveRegistrationInput,
+  type PageSaveResult,
   type PageSaveSnapshot,
   type PageSaveStatusPatch,
 } from "../domain/page-save.types";
@@ -13,6 +14,16 @@ import {
   loadPageSavePendingRecords,
   persistPageSavePendingRecord,
 } from "./page-save-persistence";
+import {
+  acknowledgePageSaveJournalEntry,
+  openPageSaveJournalEntry,
+  recoverPageSaveJournal,
+  settlePageSaveJournalEntry,
+} from "./page-save-journal";
+import type {
+  PageSaveJournalEntry,
+  PageSaveRecoveredOperation,
+} from "../domain/page-save-journal.types";
 
 interface StoredRegistration extends PageSaveRegistrationInput {
   items: PageSaveItemState[];
@@ -23,7 +34,62 @@ const persistedRecords = new Map<string, PageSavePendingRecord>();
 let activeRegistrationId: string | null = null;
 let dialogOpen = false;
 let hydrated = false;
+let activeSaveExecutionId: string | null = null;
+let lastResult: PageSaveResult | null = null;
+let interrupted: PageSaveRecoveredOperation[] = [];
+let recoveryHydrated = false;
+const heldCleanPasses = new Map<string, Map<string, number>>();
 const listeners = new Set<() => void>();
+
+function markItemsHeldClean(registrationId: string, itemIds: string[]): void {
+  heldCleanPasses.set(
+    registrationId,
+    new Map(itemIds.map((itemId) => [itemId, 0])),
+  );
+}
+
+function applyHeldClean(
+  registrationId: string,
+  items: PageSaveItemState[],
+): PageSaveItemState[] {
+  const passes = heldCleanPasses.get(registrationId);
+  if (!passes || passes.size === 0) return items;
+
+  // An item that left the list (a staged operation that ran) must not keep a
+  // pending pass, or re-staging the same id would be swallowed as stale.
+  const present = new Set(items.map((item) => item.id));
+  passes.forEach((_pass, itemId) => {
+    if (!present.has(itemId)) passes.delete(itemId);
+  });
+  if (passes.size === 0) {
+    heldCleanPasses.delete(registrationId);
+    return items;
+  }
+
+  return items.map((item) => {
+    const pass = passes.get(item.id);
+    if (pass === undefined) return item;
+    if (!item.isDirty) {
+      passes.delete(item.id);
+      if (passes.size === 0) heldCleanPasses.delete(registrationId);
+      return item;
+    }
+    if (pass === 0) {
+      passes.set(item.id, 1);
+      return { ...item, isDirty: false, selected: item.selected };
+    }
+    passes.delete(item.id);
+    if (passes.size === 0) heldCleanPasses.delete(registrationId);
+    return item;
+  });
+}
+
+function isRegistrationSaving(registration: StoredRegistration | null): boolean {
+  if (!registration) return false;
+  return (
+    activeSaveExecutionId === registration.id || registration.isSaving === true
+  );
+}
 
 const IDLE_SNAPSHOT: PageSaveSnapshot = {
   phase: "idle",
@@ -35,6 +101,8 @@ const IDLE_SNAPSHOT: PageSaveSnapshot = {
   hasPersistedPending: false,
   dialogOpen: false,
   dialog: null,
+  lastResult: null,
+  interrupted: [],
 };
 
 let cachedSnapshot: PageSaveSnapshot = IDLE_SNAPSHOT;
@@ -47,6 +115,7 @@ function itemsEqual(a: PageSaveItemState[], b: PageSaveItemState[]): boolean {
       item.id === other?.id &&
       item.label === other?.label &&
       item.description === other?.description &&
+      item.operation === other?.operation &&
       item.isDirty === other?.isDirty &&
       item.canSave === other?.canSave &&
       item.selected === other?.selected
@@ -84,6 +153,8 @@ function snapshotsEqual(
     left.registrationId === right.registrationId &&
     left.hasPersistedPending === right.hasPersistedPending &&
     left.dialogOpen === right.dialogOpen &&
+    left.lastResult === right.lastResult &&
+    left.interrupted === right.interrupted &&
     dialogStatesEqual(left.dialog, right.dialog)
   );
 }
@@ -98,7 +169,7 @@ function refreshPageSaveSnapshot(): void {
   const persisted = resolvePrimaryPersisted();
   const activeDirty = active ? hasDirtyItems(active.items) : false;
   const isDirty = activeDirty || persisted !== null;
-  const isSaving = active?.isSaving ?? false;
+  const isSaving = isRegistrationSaving(active);
   const selectedDirty = active ? selectedDirtyItems(active.items) : [];
   const blockedSelected = selectedDirty.some((item) => !item.canSave);
 
@@ -121,6 +192,8 @@ function refreshPageSaveSnapshot(): void {
     hasPersistedPending: persisted !== null,
     dialogOpen,
     dialog: dialogOpen ? buildDialogState() : null,
+    lastResult,
+    interrupted,
   };
 
   if (!snapshotsEqual(cachedSnapshot, next)) {
@@ -136,6 +209,7 @@ function normalizeItems(items: PageSaveItemInput[], previous?: PageSaveItemState
   const previousById = new Map(previous?.map((item) => [item.id, item]) ?? []);
   return items.map((item) => ({
     ...item,
+    operation: item.operation ?? "save",
     selected: previousById.get(item.id)?.selected ?? true,
   }));
 }
@@ -148,9 +222,21 @@ function selectedDirtyItems(items: PageSaveItemState[]): PageSaveItemState[] {
   return items.filter((item) => item.isDirty && item.selected);
 }
 
+/**
+ * Pages may mount several scopes at once (an editor plus a reviews surface).
+ * The header drives whichever scope actually has work, falling back to the most
+ * recently registered one.
+ */
 function resolveActiveRegistration(): StoredRegistration | null {
-  if (!activeRegistrationId) return null;
-  return registrations.get(activeRegistrationId) ?? null;
+  const current = activeRegistrationId
+    ? (registrations.get(activeRegistrationId) ?? null)
+    : null;
+  if (current && hasDirtyItems(current.items)) return current;
+
+  const dirty = [...registrations.values()]
+    .reverse()
+    .find((registration) => hasDirtyItems(registration.items));
+  return dirty ?? current;
 }
 
 function resolvePrimaryPersisted(): PageSavePendingRecord | null {
@@ -160,25 +246,33 @@ function resolvePrimaryPersisted(): PageSavePendingRecord | null {
   return [...persistedRecords.values()].at(-1) ?? null;
 }
 
-function buildPendingRecord(registration: StoredRegistration): PageSavePendingRecord {
+function persistableItems(items: PageSaveItemState[]): PageSaveItemState[] {
+  return items.filter((item) => !item.ephemeral);
+}
+
+function buildPendingRecord(
+  registration: StoredRegistration,
+  items: PageSaveItemState[],
+): PageSavePendingRecord {
   return {
     schemaVersion: PAGE_SAVE_PENDING_SCHEMA_VERSION,
     id: registration.id,
     pageLabel: registration.label,
     returnPath: registration.returnPath,
-    items: registration.items.map((item) => ({ ...item })),
+    items: items.map((item) => ({ ...item })),
     updatedAt: nowIso(),
   };
 }
 
 async function syncPersistedRegistration(registration: StoredRegistration): Promise<void> {
-  if (!hasDirtyItems(registration.items)) {
+  const persistable = persistableItems(registration.items);
+  if (!hasDirtyItems(persistable)) {
     persistedRecords.delete(registration.id);
     await deletePageSavePendingRecord(registration.id);
     return;
   }
 
-  const record = buildPendingRecord(registration);
+  const record = buildPendingRecord(registration, persistable);
   persistedRecords.set(registration.id, record);
   await persistPageSavePendingRecord(record);
 }
@@ -198,8 +292,8 @@ function buildDialogState(): PageSaveDialogState | null {
     pageLabel: active?.label ?? persisted!.pageLabel,
     returnPath: active?.returnPath ?? persisted!.returnPath,
     items,
-    isSaving: active?.isSaving ?? false,
-    canSave: selectedDirty.length > 0 && !blockedSelected && !(active?.isSaving ?? false),
+    isSaving: isRegistrationSaving(active),
+    canSave: selectedDirty.length > 0 && !blockedSelected && !isRegistrationSaving(active),
     requiresNavigation: !active,
   };
 }
@@ -254,12 +348,16 @@ export function updatePageSaveRegistration(
   const current = registrations.get(id);
   if (!current) return;
 
-  const nextItems = patch.items
-    ? normalizeItems(patch.items, current.items)
-    : current.items;
+  const nextItems = applyHeldClean(
+    id,
+    patch.items ? normalizeItems(patch.items, current.items) : current.items,
+  );
   const nextLabel = patch.label ?? current.label;
   const nextReturnPath = patch.returnPath ?? current.returnPath;
-  const nextIsSaving = patch.isSaving ?? current.isSaving;
+  const nextIsSaving =
+    activeSaveExecutionId === id
+      ? current.isSaving
+      : (patch.isSaving ?? current.isSaving);
   const nextCanSave = patch.canSave ?? current.canSave;
 
   if (
@@ -320,14 +418,100 @@ export function setPageSaveItemSelected(
   }
 }
 
+/**
+ * Forgets specific items whose work cannot outlive the page — staged operations
+ * hold in-memory executors, so a persisted record would point at nothing. Other
+ * dirty items in the same scope keep their pending record.
+ */
+export function dropPageSaveItems(
+  registrationId: string,
+  itemIds: string[],
+): void {
+  if (itemIds.length === 0) return;
+  const dropped = new Set(itemIds);
+  let changed = false;
+
+  const current = registrations.get(registrationId);
+  if (current) {
+    const items = current.items.filter((item) => !dropped.has(item.id));
+    if (items.length !== current.items.length) {
+      registrations.set(registrationId, { ...current, items });
+      changed = true;
+    }
+  }
+
+  const persisted = persistedRecords.get(registrationId);
+  if (persisted) {
+    const items = persisted.items.filter((item) => !dropped.has(item.id));
+    if (items.length !== persisted.items.length) {
+      if (items.some((item) => item.isDirty)) {
+        const nextRecord = { ...persisted, items, updatedAt: nowIso() };
+        persistedRecords.set(registrationId, nextRecord);
+        void persistPageSavePendingRecord(nextRecord);
+      } else {
+        persistedRecords.delete(registrationId);
+        void deletePageSavePendingRecord(registrationId);
+      }
+      changed = true;
+    }
+  }
+
+  if (changed) emit();
+}
+
+/**
+ * Reads and clears the last execution result. The header consumes it to show
+ * one check mark; leaving it set would flash a stale confirmation on the next
+ * page the user opens.
+ */
+export function acknowledgePageSaveResult(): PageSaveResult | null {
+  const result = lastResult;
+  if (result === null) return null;
+  lastResult = null;
+  emit();
+  return result;
+}
+
+/**
+ * Reads what a previous session left unfinished. Anything whose outcome the
+ * client cannot know is surfaced for the user to confirm; nothing is replayed.
+ */
+export async function hydratePageSaveRecoveryFromStorage(): Promise<void> {
+  if (recoveryHydrated) return;
+  recoveryHydrated = true;
+  const recovered = await recoverPageSaveJournal();
+  const unresolved = recovered.filter(
+    (operation) =>
+      operation.verdict === "needsConfirmation" || operation.verdict === "failed",
+  );
+  if (unresolved.length === 0) return;
+  interrupted = unresolved;
+  emit();
+}
+
+export function acknowledgePageSaveInterruption(operationId: string): void {
+  const next = interrupted.filter(
+    (operation) => operation.entry.operationId !== operationId,
+  );
+  if (next.length === interrupted.length) return;
+  interrupted = next;
+  void acknowledgePageSaveJournalEntry(operationId);
+  emit();
+}
+
 export function openPageSaveDialog(): void {
-  if (!getPageSaveSnapshot().isDirty && !getPageSaveSnapshot().isSaving) return;
+  const snapshot = getPageSaveSnapshot();
+  if (!snapshot.isDirty && !snapshot.isSaving && snapshot.interrupted.length === 0) {
+    return;
+  }
   dialogOpen = true;
+  lastResult = null;
   emit();
 }
 
 export function closePageSaveDialog(): void {
   dialogOpen = false;
+  lastResult = null;
   emit();
 }
 
@@ -344,6 +528,26 @@ export function consumePageSaveExecuteAfterNavigation(
 export function markPageSaveExecuteAfterNavigation(registrationId: string): void {
   if (typeof window === "undefined") return;
   window.sessionStorage.setItem(`page-save:execute:${registrationId}`, "1");
+}
+
+async function openJournalForSelection(
+  registration: StoredRegistration,
+  selectedIds: string[],
+): Promise<PageSaveJournalEntry[]> {
+  const selected = new Set(selectedIds);
+  return Promise.all(
+    registration.items
+      .filter((item) => selected.has(item.id))
+      .map((item) =>
+        openPageSaveJournalEntry({
+          scopeId: registration.id,
+          itemId: item.id,
+          kind: item.operation,
+          label: item.label,
+          returnPath: registration.returnPath,
+        }),
+      ),
+  );
 }
 
 export async function executePageSave(): Promise<boolean> {
@@ -365,29 +569,74 @@ export async function executePageSave(): Promise<boolean> {
 
   if (active.isSaving || !dialog.canSave) return false;
 
-  if (active.handle.prepareForSave) {
-    const prepared = await active.handle.prepareForSave(selectedIds);
-    if (!prepared) return false;
-  }
-
-  const saved = await active.handle.save(selectedIds);
-  if (saved) {
-    const cleanedItems = active.items.map((item) =>
-      selectedIds.includes(item.id)
-        ? { ...item, isDirty: false, selected: true }
-        : item,
-    );
-    registrations.set(active.id, {
-      ...active,
-      items: cleanedItems,
-      isSaving: false,
-    });
-    persistedRecords.delete(active.id);
-    await deletePageSavePendingRecord(active.id);
-    closePageSaveDialog();
+  activeSaveExecutionId = active.id;
+  const markSaving = (saving: boolean): void => {
+    const current = resolveActiveRegistration();
+    if (!current || current.id !== active.id) return;
+    registrations.set(current.id, { ...current, isSaving: saving });
     emit();
+  };
+
+  markSaving(true);
+  lastResult = null;
+
+  // The journal opens before the first request leaves the device, so an
+  // interruption anywhere below is recoverable instead of silent.
+  const journalled = await openJournalForSelection(active, selectedIds);
+  const settle = (status: "succeeded" | "failed", error?: unknown) =>
+    Promise.all(
+      journalled.map((entry) => settlePageSaveJournalEntry(entry, status, error)),
+    );
+
+  try {
+    if (active.handle.prepareForSave) {
+      const prepared = await active.handle.prepareForSave(selectedIds);
+      if (!prepared) {
+        await settle("failed");
+        lastResult = "failure";
+        markSaving(false);
+        return false;
+      }
+    }
+
+    const saved = await active.handle.save(selectedIds);
+    await settle(saved ? "succeeded" : "failed");
+    if (saved) {
+      const current = resolveActiveRegistration();
+      if (current && current.id === active.id) {
+        const cleanedItems = current.items.map((item) =>
+          selectedIds.includes(item.id)
+            ? { ...item, isDirty: false, selected: true }
+            : item,
+        );
+        registrations.set(current.id, {
+          ...current,
+          items: cleanedItems,
+          isSaving: false,
+        });
+        markItemsHeldClean(active.id, selectedIds);
+      }
+      persistedRecords.delete(active.id);
+      await deletePageSavePendingRecord(active.id);
+      dialogOpen = false;
+      lastResult = "success";
+      emit();
+    } else {
+      lastResult = "failure";
+      markSaving(false);
+    }
+    return saved;
+  } catch (error) {
+    await settle("failed", error);
+    lastResult = "failure";
+    markSaving(false);
+    throw error;
+  } finally {
+    if (activeSaveExecutionId === active.id) {
+      activeSaveExecutionId = null;
+      emit();
+    }
   }
-  return saved;
 }
 
 export function resetPageSaveRegistryForTests(): void {
@@ -396,6 +645,11 @@ export function resetPageSaveRegistryForTests(): void {
   activeRegistrationId = null;
   dialogOpen = false;
   hydrated = false;
+  activeSaveExecutionId = null;
+  lastResult = null;
+  interrupted = [];
+  recoveryHydrated = false;
+  heldCleanPasses.clear();
   listeners.clear();
   cachedSnapshot = IDLE_SNAPSHOT;
 }

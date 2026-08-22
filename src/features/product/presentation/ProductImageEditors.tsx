@@ -83,8 +83,6 @@ export const ProductImageEditors = React.forwardRef<
               maxItems: 1,
               aspectRatio: "square",
               allowReplace: true,
-              confirmUpload: true,
-              confirmRemove: true,
               deleteFromStorageOnRemove: !deferStorageDeletion,
             }}
             value={slotImage ? [slotImage] : []}

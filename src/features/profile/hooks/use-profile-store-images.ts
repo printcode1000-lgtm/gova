@@ -96,7 +96,6 @@ export function useProfileStoreImages(
     isLoading: storeImagesQuery.isLoading,
     isSaving: saveMutation.isPending,
     error,
-    saveStoreImages: saveMutation.mutate,
     saveStoreImagesAsync: saveMutation.mutateAsync,
   };
 }

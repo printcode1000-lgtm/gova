@@ -21,14 +21,12 @@ import {
 interface ProductFormProps {
   product: Product;
   onChange: (product: Partial<Product>) => void;
-  onSave: () => void;
   onCancel: () => void;
 }
 
 export function ProductForm({
   product,
   onChange,
-  onSave,
   onCancel,
 }: ProductFormProps) {
   const { t } = useTranslation();
@@ -148,8 +146,6 @@ export function ProductForm({
           maxItems: 1,
           aspectRatio: "square",
           allowReplace: true,
-          confirmUpload: true,
-          confirmRemove: true,
         }}
         value={
           product.image?.url ||

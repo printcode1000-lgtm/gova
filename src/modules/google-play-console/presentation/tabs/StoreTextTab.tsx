@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, ListPlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
@@ -36,9 +36,10 @@ export function StoreTextTab() {
           <section key={`${listing.language}:${index}`} className="rounded-md border bg-surface p-4">
             <div className="mb-3 flex justify-between gap-2">
               <strong>{listing.language || t("releaseConsole.text.newLanguage")}</strong>
-              <Button size="icon" variant="outline" title={t("releaseConsole.actions.delete")}
-                onClick={() => void store.removeListing(listing.language)}>
-                <Trash2 className="h-4 w-4" />
+              <Button size="icon" variant="outline"
+                aria-label={t("releaseConsole.actions.stageDelete")}
+                onClick={() => store.stageListingDelete(listing.language)}>
+                <ListPlus className="h-4 w-4" />
               </Button>
             </div>
             <div className="grid gap-3 md:grid-cols-2">

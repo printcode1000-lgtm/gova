@@ -2,6 +2,10 @@ import assert from "node:assert/strict";
 
 import type { HeroSliderConfig } from "@/components/ui/hero-slider.types";
 import { isHomeHeroConfigReadyToPersist } from "@asol/hero-slider-core";
+import {
+  heroSliderHasRemovedImages,
+  heroSliderImagesFingerprint,
+} from "./super-admin-hero-slider-save-model";
 
 const sampleSlide = {
   priority: 100,
@@ -47,6 +51,16 @@ assert.equal(
     ],
   }),
   true,
+);
+
+assert.equal(heroSliderImagesFingerprint(sampleConfig), JSON.stringify(["a.webp"]));
+assert.equal(
+  heroSliderHasRemovedImages(sampleConfig, { ...sampleConfig, slides: [] }),
+  true,
+);
+assert.equal(
+  heroSliderHasRemovedImages(sampleConfig, sampleConfig),
+  false,
 );
 
 console.log("✅ super-admin hero slider save model passed");

@@ -7,7 +7,6 @@ import {
   PackagePlus,
   Percent,
   Plus,
-  Save,
   Ticket,
   Trash2,
   Truck,
@@ -162,15 +161,6 @@ export const SellerDiscountsManager = React.forwardRef<
           />
         ))}
       </div>
-
-      {dirty ? (
-        <p className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-          <Save className="h-3.5 w-3.5" />
-          {ar
-            ? "لديك تغييرات غير محفوظة. استخدم زر حفظ الملف بالأعلى."
-            : "You have unsaved offer changes. Use the profile save button."}
-        </p>
-      ) : null}
     </div>
   );
 });

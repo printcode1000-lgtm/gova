@@ -19,7 +19,7 @@ import type {
 } from './profile-save-controller';
 import { useTranslation } from '@/lib/i18n';
 import { cloneShowcase, isShowcaseDirty } from './products-card-model';
-import { ProductDeleteDialog } from './ProductDeleteDialog';
+import { usePageSaveOperations } from '@/features/page-save/hooks/use-page-save-operations';
 
 interface ProductsCardProps {
   uid: string;
@@ -34,8 +34,7 @@ export const ProductsCard = React.forwardRef<
 >(function ProductsCard({ uid, onStatusChange, readOnly = false }, ref) {
   const { t, locale } = useTranslation();
   const router = useRouter();
-  const [pendingDelete, setPendingDelete] = React.useState<ProductRecord | null>(null);
-  const [isDeletingProduct, setIsDeletingProduct] = React.useState(false);
+  const productDeletions = usePageSaveOperations('profile-edit');
   const [newTrendingText, setNewTrendingText] = React.useState('');
   const [featuredProducts, setFeaturedProducts] = React.useState<ProductRecord[]>([]);
   const [isLoadingFeaturedProducts, setIsLoadingFeaturedProducts] = React.useState(false);
@@ -153,16 +152,20 @@ export const ProductsCard = React.forwardRef<
     router.push(`/product?${query.toString()}`);
   };
 
-  const confirmDeleteProduct = async () => {
-    if (!pendingDelete || !uid) return;
-    setIsDeletingProduct(true);
-    try {
-      await productApiService.delete(pendingDelete.id, uid);
-      productsTabs.removeProductFromCurrentBucket(pendingDelete.id);
-      setPendingDelete(null);
-    } finally {
-      setIsDeletingProduct(false);
-    }
+  const stageProductDeletion = (product: ProductRecord) => {
+    if (!uid) return;
+    productDeletions.stage({
+      itemId: `product-delete:${product.id}`,
+      kind: 'delete',
+      label:
+        locale === 'ar'
+          ? `حذف المنتج: ${product.mainData.name}`
+          : `Delete product: ${product.mainData.name}`,
+      execute: async () => {
+        await productApiService.delete(product.id, uid);
+        productsTabs.removeProductFromCurrentBucket(product.id);
+      },
+    });
   };
 
   const toggleFeaturedProduct = (product: ProductRecord) => {
@@ -248,7 +251,7 @@ export const ProductsCard = React.forwardRef<
               : 'No products in this category yet',
           view: locale === 'ar' ? 'عرض' : 'View',
           edit: locale === 'ar' ? 'تعديل' : 'Edit',
-          delete: locale === 'ar' ? 'حذف' : 'Delete',
+          delete: locale === 'ar' ? 'إضافة الحذف للحفظ' : 'Stage delete',
           addProduct: locale === 'ar' ? 'إضافة منتج' : 'Add product',
           addFeatured: locale === 'ar' ? 'إضافة للمميزة' : 'Add featured',
           removeFeatured: locale === 'ar' ? 'إزالة من المميزة' : 'Remove featured',
@@ -262,7 +265,7 @@ export const ProductsCard = React.forwardRef<
         onFiltersChange={productsTabs.updateFilters}
         onViewProduct={viewProduct}
         onEditProduct={!readOnly ? editProduct : undefined}
-        onDeleteProduct={!readOnly ? setPendingDelete : undefined}
+        onDeleteProduct={!readOnly ? stageProductDeletion : undefined}
         onAddProduct={!readOnly ? addProduct : undefined}
         onToggleFeatured={!readOnly ? toggleFeaturedProduct : undefined}
         onRefreshProducts={productsTabs.refetchActiveProducts}
@@ -332,7 +335,7 @@ export const ProductsCard = React.forwardRef<
                       type="button"
                       onClick={() => removeTrendingItem(item.id)}
                       className="text-destructive"
-                      aria-label={locale === 'ar' ? 'حذف النص' : 'Remove text'}
+                      aria-label={locale === 'ar' ? 'إزالة النص' : 'Remove text'}
                     >
                       ×
                     </button>
@@ -371,15 +374,6 @@ export const ProductsCard = React.forwardRef<
             <span className="relative h-7 w-12 shrink-0 rounded-full bg-outline-variant transition peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 after:absolute after:start-1 after:top-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5" />
           </label>
         </section>
-      ) : null}
-
-      {pendingDelete ? (
-        <ProductDeleteDialog
-          locale={locale}
-          isDeleting={isDeletingProduct}
-          onCancel={() => setPendingDelete(null)}
-          onConfirm={() => void confirmDeleteProduct()}
-        />
       ) : null}
     </div>
   );

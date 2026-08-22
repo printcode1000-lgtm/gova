@@ -175,12 +175,6 @@ export function useProfileRegistration() {
     return true;
   };
 
-  const save = () => {
-    void saveAsync().catch((error) => {
-      reportPreAuthFailure('save-registration-info', error);
-    });
-  };
-
   return {
     form,
     updateField,
@@ -191,7 +185,6 @@ export function useProfileRegistration() {
     isLoading: !session,
     isSaving: saveMutation.isPending,
     error,
-    save,
     saveAsync,
     prepareSnapshot,
     applySaved,

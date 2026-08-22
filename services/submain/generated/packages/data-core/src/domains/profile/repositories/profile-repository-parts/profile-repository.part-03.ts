@@ -11,6 +11,7 @@ import type {
   ProfileWorkingHourRow,
 } from "../../../../core/database/profile/profile.schema";
 import type { ProfileContactsData } from "@/features/profile/entities/profile-contacts.entity";
+import { MAX_PROFILE_COVER_IMAGES } from "../../profile-cover-limits";
 import {
   EMPTY_PROFILE_SHOWCASE,
   EMPTY_STORE_DETAILS,
@@ -92,7 +93,7 @@ export abstract class ProfilePart3 extends ProfilePart2 {
     const timestamp = nowIso();
     const coverImageKeys = Array.from(
       new Set(keys.coverImageKeys.map((key) => key.trim()).filter(Boolean)),
-    ).slice(0, 3);
+    ).slice(0, MAX_PROFILE_COVER_IMAGES);
     await this.database.execute("DELETE FROM profile_images WHERE uid = ?", [
       uid,
     ]);

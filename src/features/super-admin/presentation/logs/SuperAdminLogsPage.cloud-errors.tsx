@@ -130,7 +130,7 @@ export function CloudErrorsContainer({
             disabled={loadState === "loading"}
             onClick={onRefresh}
             aria-label="تحديث أخطاء السحابة"
-            title="تحديث أخطاء السحابة"
+
           >
             <RefreshCw
               className={cn(

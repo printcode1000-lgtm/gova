@@ -29,7 +29,6 @@ import {
   ProfileEditSaveFeedback,
   ProfileEditTabsBar,
 } from "./ProfileEditWorkspaceChrome";
-import { ProfileSaveDialog } from "./ProfileSaveDialog";
 
 export function ProfileEditWorkspaceView({ model }: { model: ProfilePageContentModel }) {
 const { t, locale, session, superAdmin, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, carouselRef, panelRefs, handleCarouselScroll, sectionStatuses, saveError, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus } = model;
@@ -255,7 +254,6 @@ return (
                 </div>
               ) : null}
 
-              <ProfileSaveDialog model={model} />
             </CardContent>
           </Card>
         </div>

@@ -27,7 +27,9 @@ Next.js files under `src/app` are thin entry points. Business logic, UI, policie
 - `presentation`: Super Admin interface split by responsibility. `DataHealthPage.tsx`
   composes the screen, `use-data-health-page.ts` owns client state and API
   actions, and the panel/dialog files own rendering for findings, topology,
-  schema comparison, history, and confirmation dialogs.
+  schema comparison, history, and plan-preview dialogs. Every destructive action
+  is staged through `@asol/page-save-core` (`data-health` scope) instead of
+  running on tap; see `docs/05-platform-features/page-save-system.md`.
 - `tests`: Policy contracts, signatures, and module table schema tests.
 
 ## Inspection Scope
@@ -97,11 +99,11 @@ Direct automated actions are strictly limited to archiving products, archiving o
 
 - Default quarantine duration is 30 days.
 - Super Admin can release an item from quarantine at any time.
-- The actual file deletion button appears for an image file only after the quarantine period expires.
+- The stage-for-save control on an image file appears only after the quarantine period expires. It does not delete; it queues the deletion in `@asol/page-save-core`, and the header save dialog runs it.
 - Before deleting a file, inspection re-runs and requires zero references across all databases.
 - Deletion targets the correct storage profile before writing to the audit log.
 - Automated deletion of R2 files or local files does not exist.
-- The `Clean Quarantine` button is a manual, explicit, and confirmed operation. It deletes all active quarantined items and corresponding image files from R2 or local storage, then removes the associated primary records. Any failed file deletion remains in quarantine with an audit log detailing the cause.
+- Clearing the quarantine is a manual, explicit operation staged through `@asol/page-save-core` and confirmed in the header save dialog. It deletes all active quarantined items and corresponding image files from R2 or local storage, then removes the associated primary records. Any failed file deletion remains in quarantine with an audit log detailing the cause.
 - The results tab presents quarantined items in a read-only state; they cannot be re-selected or have quarantine restarted from a new cleanup plan.
 
 ## Order Policy
@@ -168,6 +170,6 @@ The `static out` build verifies all `pharmacy/ingredients.json` references and h
 The hazard section on the page provides a dry-run preview for deleting all standard, custom, and hybrid orders.
 The preview automatically detects child tables dependent on `orders` via foreign keys and `order_id` fields, displaying row counts per table and custom order image counts.
 
-The plan is valid for 10 minutes, bound to the Super Admin session, environment, and record/image count hash, requiring typing a confirmation string that includes the count and environment name. Re-extracting the hash occurs before execution, and an independent concurrency lock prevents running two deletion jobs simultaneously.
+The plan is valid for 10 minutes, bound to the Super Admin session, environment, and record/image count hash, requiring typing a confirmation string that includes the count and environment name. Typing the phrase stages the purge as a `delete` operation in `@asol/page-save-core`; the header save dialog is what actually runs it. Re-extracting the hash occurs before execution, and an independent concurrency lock prevents running two deletion jobs simultaneously.
 
 Order rows are deleted within a single database transaction in dependency order. Upon transaction success, custom order images are deleted from LocalStorage or R2 depending on the environment. Any image deletion failure is logged in `data_health_storage_deletion_tasks` for retry from the page. Administrative operation logs are persisted outside the orders database, ensuring they persist after deleting internal order audit trails.

@@ -1,25 +1,25 @@
 import type { ProductReview } from "@/features/product/entities/product-review.entity";
 
+/**
+ * Composition surfaces only. Persisting a review or a seller reply is staged
+ * work owned by `@asol/page-save-core`, so neither dialog carries a save button.
+ */
 export function ProductReviewDialog({
-  busy,
   comment,
   commentsEnabled,
   editing,
   rating,
-  onCancel,
+  onClose,
   onCommentChange,
   onRatingChange,
-  onSubmit,
 }: {
-  busy: boolean;
   comment: string;
   commentsEnabled: boolean;
   editing: ProductReview | null;
   rating: number;
-  onCancel: () => void;
+  onClose: () => void;
   onCommentChange: (value: string) => void;
   onRatingChange: (value: number) => void;
-  onSubmit: () => void;
 }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
@@ -54,18 +54,10 @@ export function ProductReviewDialog({
         <div className="mt-4 flex gap-2">
           <button
             type="button"
-            disabled={busy || rating < 1}
-            onClick={onSubmit}
-            className="flex-1 rounded-xl bg-primary px-4 py-2 text-on-primary"
+            onClick={onClose}
+            className="flex-1 rounded-xl border px-4 py-2"
           >
-            {editing ? "حفظ" : "إرسال"}
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-xl border px-4 py-2"
-          >
-            إلغاء
+            تم
           </button>
         </div>
       </div>
@@ -74,17 +66,13 @@ export function ProductReviewDialog({
 }
 
 export function ProductReviewReplyDialog({
-  busy,
   replyText,
-  onCancel,
+  onClose,
   onReplyTextChange,
-  onSave,
 }: {
-  busy: boolean;
   replyText: string;
-  onCancel: () => void;
+  onClose: () => void;
   onReplyTextChange: (value: string) => void;
-  onSave: () => void;
 }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
@@ -102,18 +90,10 @@ export function ProductReviewReplyDialog({
         <div className="mt-4 flex gap-2">
           <button
             type="button"
-            disabled={busy || !replyText.trim()}
-            onClick={onSave}
-            className="flex-1 rounded-xl bg-primary px-4 py-2 text-on-primary"
+            onClick={onClose}
+            className="flex-1 rounded-xl border px-4 py-2"
           >
-            حفظ
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-xl border px-4 py-2"
-          >
-            إلغاء
+            تم
           </button>
         </div>
       </div>

@@ -4,21 +4,42 @@ import type {
   PageSaveScopeId,
   PageSaveStoragePort,
 } from "../domain/page-save.types";
+import type { PageSaveJournalEntry } from "../domain/page-save-journal.types";
 
 let runtimeConfig: PageSaveRuntimeConfig | null = null;
-const memoryStore = new Map<PageSaveScopeId, PageSavePendingRecord>();
+const memoryPending = new Map<PageSaveScopeId, PageSavePendingRecord>();
+const memoryJournal = new Map<string, PageSaveJournalEntry>();
 
+/**
+ * The host wires a durable port at boot. Until then — server rendering, tests —
+ * an in-memory store keeps the registry working without pretending anything was
+ * persisted.
+ */
 function requireStorage(): PageSaveStoragePort {
-  return runtimeConfig?.storage ?? {
-    getPending: async (id) => memoryStore.get(id),
-    setPending: async (record) => {
-      memoryStore.set(record.id, record);
-    },
-    deletePending: async (id) => {
-      memoryStore.delete(id);
-    },
-    listPending: async () => [...memoryStore.values()],
-  };
+  return (
+    runtimeConfig?.storage ?? {
+      getPending: async (id) => memoryPending.get(id),
+      setPending: async (record) => {
+        memoryPending.set(record.id, record);
+      },
+      deletePending: async (id) => {
+        memoryPending.delete(id);
+      },
+      listPending: async () => [...memoryPending.values()],
+      getJournalEntry: async (operationId) => memoryJournal.get(operationId),
+      setJournalEntry: async (entry) => {
+        memoryJournal.set(entry.operationId, entry);
+      },
+      deleteJournalEntry: async (operationId) => {
+        memoryJournal.delete(operationId);
+      },
+      listJournalEntries: async () => [...memoryJournal.values()],
+    }
+  );
+}
+
+export function requirePageSaveStorage(): PageSaveStoragePort {
+  return requireStorage();
 }
 
 export function configurePageSaveCore(config: PageSaveRuntimeConfig): void {
@@ -45,5 +66,6 @@ export async function loadPageSavePendingRecords(): Promise<
 
 export function resetPageSavePersistenceForTests(): void {
   runtimeConfig = null;
-  memoryStore.clear();
+  memoryPending.clear();
+  memoryJournal.clear();
 }

@@ -1,9 +1,7 @@
 "use client";
 
 import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
 import type { usePlayTracks } from "./use-play-tracks";
-import { useTranslation } from "@/lib/i18n";
 
 type PlayTracks = ReturnType<typeof usePlayTracks>;
 
@@ -19,7 +17,6 @@ export function usePlayTracksPageSave(
     onUpdate: () => Promise<boolean>;
   },
 ): void {
-  const { t } = useTranslation();
   const isDirty = Boolean(
     input.versionCode.trim() ||
       input.notes.trim() ||
@@ -38,7 +35,6 @@ export function usePlayTracksPageSave(
         label: `تحديث مسار ${input.track}`,
         isDirty,
         canSave: isDirty && !tracks.busy,
-        description: buildPageSaveOperationDescription(t, ["save"]),
       },
     ],
     isSaving: Boolean(tracks.busy),

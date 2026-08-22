@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
 import { useTranslation } from "@/lib/i18n";
 import { pharmacyProfileCatalogApi } from "../services/pharmacy-profile-catalog-api";
 import {
@@ -41,6 +42,13 @@ export function PharmacyCatalogManagerPage() {
   const [error, setError] = React.useState("");
   const [editDialog, setEditDialog] = React.useState<PharmacyCatalogEditDialog | null>(null);
   const [editName, setEditName] = React.useState("");
+
+  const catalogOperations = usePageSaveOperationScope({
+    id: "pharmacy-catalog-manager",
+    label: text.title,
+    returnPath: `/profile/pharmacy-catalog?uid=${encodeURIComponent(uid)}`,
+    enabled: allowed && Boolean(uid),
+  });
 
   const load = React.useCallback(async () => {
     if (!uid || !allowed) return;
@@ -90,13 +98,33 @@ export function PharmacyCatalogManagerPage() {
     }
   }, [activeSubcategoryId, subcategories]);
 
-  async function run(action: () => Promise<PharmacyProfileCatalogView>) {
-    setBusy(true);
-    try {
-      setCatalog(await action());
-    } finally {
-      setBusy(false);
-    }
+  /**
+   * Every catalog write is staged; `@asol/page-save-core` runs it from the
+   * header save dialog so this page owns no save button.
+   */
+  function stage(
+    itemId: string,
+    label: string,
+    action: () => Promise<PharmacyProfileCatalogView>,
+  ) {
+    catalogOperations.stage({
+      itemId,
+      kind: "save",
+      label,
+      execute: async () => {
+        setBusy(true);
+        setError("");
+        try {
+          setCatalog(await action());
+          return true;
+        } catch (actionError) {
+          setError(formatApiError(actionError));
+          return false;
+        } finally {
+          setBusy(false);
+        }
+      },
+    });
   }
 
   function openCreateCategory() {
@@ -120,71 +148,90 @@ export function PharmacyCatalogManagerPage() {
     setEditDialog({ mode: "edit", kind: "subcategory", item: subcategory });
   }
 
-  async function submitEditDialog() {
+  function stageEditDialog() {
     const nameAr = editName.trim();
     if (!nameAr || !editDialog) return;
-    if (editDialog.mode === "create" && editDialog.kind === "category") {
-      await run(() => pharmacyProfileCatalogApi.createCategory(uid, nameAr));
-      setEditDialog(null);
-      setEditName("");
-      return;
-    }
-    if (editDialog.mode === "create" && editDialog.kind === "subcategory") {
-      if (!activeCategoryId) return;
-      await run(() =>
-        pharmacyProfileCatalogApi.createSubcategory(uid, activeCategoryId, nameAr),
-      );
-      setEditDialog(null);
-      setEditName("");
-      return;
-    }
-    if (editDialog.mode !== "edit") return;
-    if (editDialog.kind === "category") {
-      await run(() =>
-        pharmacyProfileCatalogApi.updateCategory(uid, editDialog.item.id, nameAr),
+    if (editDialog.mode === "create") {
+      if (editDialog.kind === "category") {
+        stage(
+          `pharmacy-create-category:${nameAr}`,
+          `${text.addMainTitle}: ${nameAr}`,
+          () => pharmacyProfileCatalogApi.createCategory(uid, nameAr),
+        );
+      } else {
+        if (!activeCategoryId) return;
+        const parentCategoryId = activeCategoryId;
+        stage(
+          `pharmacy-create-subcategory:${parentCategoryId}:${nameAr}`,
+          `${text.addSubTitle}: ${nameAr}`,
+          () =>
+            pharmacyProfileCatalogApi.createSubcategory(
+              uid,
+              parentCategoryId,
+              nameAr,
+            ),
+        );
+      }
+    } else if (editDialog.kind === "category") {
+      const categoryId = editDialog.item.id;
+      stage(
+        `pharmacy-rename-category:${categoryId}`,
+        `${text.editMainTitle}: ${nameAr}`,
+        () => pharmacyProfileCatalogApi.updateCategory(uid, categoryId, nameAr),
       );
     } else {
-      await run(() =>
-        pharmacyProfileCatalogApi.updateSubcategory(
-          uid,
-          editDialog.item.id,
-          editDialog.item.parentCategoryId,
-          nameAr,
-        ),
+      const { id: subcategoryId, parentCategoryId } = editDialog.item;
+      stage(
+        `pharmacy-rename-subcategory:${subcategoryId}`,
+        `${text.editSubTitle}: ${nameAr}`,
+        () =>
+          pharmacyProfileCatalogApi.updateSubcategory(
+            uid,
+            subcategoryId,
+            parentCategoryId,
+            nameAr,
+          ),
       );
     }
     setEditDialog(null);
     setEditName("");
   }
 
-  async function toggleCategory(category: PharmacyProfileCatalogCategoryView) {
-    await run(() =>
-      pharmacyProfileCatalogApi.setCategoryStatus(
-        uid,
-        category.id,
-        category.status === "hidden" ? "visible" : "hidden",
-      ),
+  function statusLabel(status: string): string {
+    return status === "hidden" ? text.restore : text.hide;
+  }
+
+  function toggleCategory(category: PharmacyProfileCatalogCategoryView) {
+    const nextStatus = category.status === "hidden" ? "visible" : "hidden";
+    stage(
+      `pharmacy-category-status:${category.id}`,
+      `${statusLabel(category.status)}: ${category.nameAr}`,
+      () =>
+        pharmacyProfileCatalogApi.setCategoryStatus(uid, category.id, nextStatus),
     );
   }
 
-  async function toggleSubcategory(subcategory: PharmacyProfileCatalogSubcategoryView) {
-    await run(() =>
-      pharmacyProfileCatalogApi.setSubcategoryStatus(
-        uid,
-        subcategory.id,
-        subcategory.parentCategoryId,
-        subcategory.status === "hidden" ? "visible" : "hidden",
-      ),
+  function toggleSubcategory(subcategory: PharmacyProfileCatalogSubcategoryView) {
+    const nextStatus = subcategory.status === "hidden" ? "visible" : "hidden";
+    stage(
+      `pharmacy-subcategory-status:${subcategory.id}`,
+      `${statusLabel(subcategory.status)}: ${subcategory.nameAr}`,
+      () =>
+        pharmacyProfileCatalogApi.setSubcategoryStatus(
+          uid,
+          subcategory.id,
+          subcategory.parentCategoryId,
+          nextStatus,
+        ),
     );
   }
 
-  async function toggleProduct(product: PharmacyProfileCatalogProductView) {
-    await run(() =>
-      pharmacyProfileCatalogApi.setProductStatus(
-        uid,
-        product.id,
-        product.status === "hidden" ? "visible" : "hidden",
-      ),
+  function toggleProduct(product: PharmacyProfileCatalogProductView) {
+    const nextStatus = product.status === "hidden" ? "visible" : "hidden";
+    stage(
+      `pharmacy-product-status:${product.id}`,
+      `${statusLabel(product.status)}: ${product.nameAr}`,
+      () => pharmacyProfileCatalogApi.setProductStatus(uid, product.id, nextStatus),
     );
   }
 
@@ -273,7 +320,7 @@ export function PharmacyCatalogManagerPage() {
                   <VisibilityButton
                     hidden={category.status === "hidden"}
                     disabled={busy}
-                    onClick={() => void toggleCategory(category)}
+                    onClick={() => toggleCategory(category)}
                   />
                 </div>
               ))}
@@ -313,7 +360,7 @@ export function PharmacyCatalogManagerPage() {
                   <VisibilityButton
                     hidden={subcategory.status === "hidden"}
                     disabled={busy}
-                    onClick={() => void toggleSubcategory(subcategory)}
+                    onClick={() => toggleSubcategory(subcategory)}
                   />
                 </div>
               ))}
@@ -331,7 +378,7 @@ export function PharmacyCatalogManagerPage() {
                       key={product.id}
                       product={product}
                       disabled={busy}
-                      onToggle={() => void toggleProduct(product)}
+                      onToggle={() => toggleProduct(product)}
                     />
                   ))}
                 </div>
@@ -350,7 +397,7 @@ export function PharmacyCatalogManagerPage() {
             setEditDialog(null);
             setEditName("");
           }}
-          onSubmit={() => void submitEditDialog()}
+          onSubmit={stageEditDialog}
         />
       ) : null}
     </main>

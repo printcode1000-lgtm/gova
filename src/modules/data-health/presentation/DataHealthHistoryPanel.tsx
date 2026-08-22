@@ -1,4 +1,4 @@
-import { History, ShieldCheck, Trash2 } from "lucide-react";
+import { History, ListPlus, ShieldCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -15,10 +15,10 @@ export function DataHealthHistoryPanel({
 }: {
   history: HistoryResponse;
   onRelease: (id: string) => Promise<void>;
-  onDeleteImage: (id: string) => Promise<void>;
-  onClearQuarantine: () => Promise<void>;
-  onClearRunHistory: () => Promise<void>;
-  onClearCleanupAudit: () => Promise<void>;
+  onDeleteImage: (id: string) => void;
+  onClearQuarantine: () => void;
+  onClearRunHistory: () => void;
+  onClearCleanupAudit: () => void;
 }) {
   return (
     <div className="grid gap-4 xl:grid-cols-2">
@@ -31,12 +31,12 @@ export function DataHealthHistoryPanel({
           <Button
             type="button"
             size="sm"
-            variant="destructive"
+            variant="outline"
             disabled={history.runs.length === 0}
-            onClick={() => void onClearRunHistory()}
+            onClick={onClearRunHistory}
           >
-            <Trash2 className="h-4 w-4" />
-            حذف السجل
+            <ListPlus className="h-4 w-4" />
+            إضافة حذف السجل للحفظ
           </Button>
         </div>
         <div className="divide-y">
@@ -67,12 +67,12 @@ export function DataHealthHistoryPanel({
           <Button
             type="button"
             size="sm"
-            variant="destructive"
+            variant="outline"
             disabled={history.audit.length === 0}
-            onClick={() => void onClearCleanupAudit()}
+            onClick={onClearCleanupAudit}
           >
-            <Trash2 className="h-4 w-4" />
-            حذف التدقيق
+            <ListPlus className="h-4 w-4" />
+            إضافة حذف التدقيق للحفظ
           </Button>
         </div>
         <div className="divide-y">
@@ -108,12 +108,12 @@ export function DataHealthHistoryPanel({
           <Button
             type="button"
             size="sm"
-            variant="destructive"
+            variant="outline"
             disabled={history.quarantine.length === 0}
-            onClick={() => void onClearQuarantine()}
+            onClick={onClearQuarantine}
           >
-            <Trash2 className="h-4 w-4" />
-            تنظيف الحجر
+            <ListPlus className="h-4 w-4" />
+            إضافة تنظيف الحجر للحفظ
           </Button>
         </div>
         <div className="divide-y">
@@ -137,12 +137,12 @@ export function DataHealthHistoryPanel({
                 {entry.resourceType === "image" ? (
                   <Button
                     size="sm"
-                    variant="destructive"
+                    variant="outline"
                     disabled={!entry.eligible}
-                    onClick={() => void onDeleteImage(entry.id)}
+                    onClick={() => onDeleteImage(entry.id)}
                   >
-                    <Trash2 className="h-4 w-4" />
-                    حذف فعلي
+                    <ListPlus className="h-4 w-4" />
+                    إضافة للحفظ
                   </Button>
                 ) : null}
               </div>

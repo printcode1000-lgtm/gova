@@ -293,7 +293,7 @@ export function CartPageContent() {
                               type="button"
                               onClick={() => void removeCartItem(item.id)}
                               className="rounded-full p-2 text-muted-foreground transition"
-                              aria-label="حذف من السلة"
+                              aria-label="إزالة من السلة"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>

@@ -109,10 +109,6 @@ export function useStoreDetails(
     return true;
   };
 
-  const save = () => {
-    void saveAsync();
-  };
-
   return {
     details,
     updateField,
@@ -120,7 +116,6 @@ export function useStoreDetails(
     isLoading: (!session && !targetUid) || detailsQuery.isLoading,
     isSaving: saveMutation.isPending,
     error,
-    save,
     saveAsync,
     applySaved,
     saved: saveMutation.isSuccess && !isDirty,

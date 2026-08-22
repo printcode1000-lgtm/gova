@@ -28,11 +28,9 @@ import {
   selectableSubcategoryIdsForCategory,
 } from "./specialties-selection";
 import {
-  SpecialtiesDeleteDialog,
-  type SpecialtyDeleteDialogState,
-  type SpecialtyDeleteProductWarning,
-} from "./SpecialtiesDeleteDialog";
-import { specialtyDeleteImpactPairs } from "./specialties-delete-impact";
+  specialtyDeleteImpactPairs,
+  type SpecialtyRemoval,
+} from "./specialties-delete-impact";
 import { SpecialtiesToast } from "./SpecialtiesToast";
 
 /**
@@ -92,14 +90,8 @@ export const SpecialtiesCard = React.forwardRef<
   const [isLoadingSubcategories, setIsLoadingSubcategories] =
     React.useState(false);
   const [toastMessage, setToastMessage] = React.useState<string | null>(null);
-  const [deleteDialog, setDeleteDialog] =
-    React.useState<SpecialtyDeleteDialogState | null>(null);
-  const [deleteProductWarning, setDeleteProductWarning] =
-    React.useState<SpecialtyDeleteProductWarning>({
-      isLoading: false,
-      count: 0,
-      names: [],
-    });
+  const [removals, setRemovals] = React.useState<SpecialtyRemoval[]>([]);
+  const [impactedProductCount, setImpactedProductCount] = React.useState(0);
   const label = t("onboarding.storeIdentity.specialties");
 
   const applySelection = React.useCallback(
@@ -115,6 +107,7 @@ export const SpecialtiesCard = React.forwardRef<
         ),
       );
       setIsDirty(false);
+      setRemovals([]);
     },
     [],
   );
@@ -176,29 +169,25 @@ export const SpecialtiesCard = React.forwardRef<
     ],
   );
 
-  React.useEffect(() => {
-    onStatusChange?.({ isDirty, isSaving: false, canSave: true, label });
-  }, [isDirty, label, onStatusChange]);
+
 
   React.useEffect(() => {
-    if (!deleteDialog || !uid) {
-      setDeleteProductWarning({ isLoading: false, count: 0, names: [] });
+    if (removals.length === 0 || !uid) {
+      setImpactedProductCount(0);
       return;
     }
 
     let cancelled = false;
-    const pairs = specialtyDeleteImpactPairs({
-      deleteDialog,
-      selectedSubcategories,
-    });
+    const pairs = removals.flatMap((removal) =>
+      specialtyDeleteImpactPairs({ removal, selectedSubcategories }),
+    );
 
     if (pairs.length === 0) {
-      setDeleteProductWarning({ isLoading: false, count: 0, names: [] });
+      setImpactedProductCount(0);
       return;
     }
 
-    setDeleteProductWarning({ isLoading: true, count: 0, names: [] });
-    Promise.all(
+    void Promise.all(
       pairs.map(([categoryId, subcategoryId]) =>
         productApiService
           .listByOwnerAndCategory(uid, categoryId, subcategoryId, {
@@ -208,25 +197,25 @@ export const SpecialtiesCard = React.forwardRef<
       ),
     ).then((groups) => {
       if (cancelled) return;
-      const products = groups.flat();
-      const names = Array.from(
-        new Set(
-          products
-            .map((product) => product.mainData.name.trim())
-            .filter(Boolean),
-        ),
-      ).slice(0, 3);
-      setDeleteProductWarning({
-        isLoading: false,
-        count: products.length,
-        names,
-      });
+      setImpactedProductCount(groups.flat().length);
     });
 
     return () => {
       cancelled = true;
     };
-  }, [deleteDialog, selectedSubcategories, uid]);
+  }, [removals, selectedSubcategories, uid]);
+
+  const removalDescription = React.useMemo(() => {
+    if (removals.length === 0) return undefined;
+    if (impactedProductCount === 0) {
+      return locale === "ar"
+        ? "سيتم إلغاء الاشتراك في التخصصات المحذوفة"
+        : "Removed specialties will be unsubscribed";
+    }
+    return locale === "ar"
+      ? `سيتم إلغاء الاشتراك في التخصصات المحذوفة. ${impactedProductCount} منتج مرتبط بها سيبقى خارج تخصصاتك المختارة.`
+      : `Removed specialties will be unsubscribed. ${impactedProductCount} linked product(s) will fall outside your selected specialties.`;
+  }, [impactedProductCount, locale, removals.length]);
 
   const handleSpecialtyToggle = (categoryId: string) => {
     setSelectedSpecialties((prev) => {
@@ -431,15 +420,24 @@ export const SpecialtiesCard = React.forwardRef<
     return subcategoryId;
   };
 
-  const handleDelete = () => {
-    if (!deleteDialog) return;
+  React.useEffect(() => {
+    onStatusChange?.({
+      isDirty,
+      isSaving: false,
+      canSave: true,
+      label,
+      description: removalDescription,
+    });
+  }, [isDirty, label, onStatusChange, removalDescription]);
 
-    if (deleteDialog.type === "main") {
-      handleSpecialtyToggle(deleteDialog.categoryId);
-    } else if (deleteDialog.type === "sub" && deleteDialog.subcategoryId) {
-      handleSubcategoryToggle(deleteDialog.subcategoryId);
-    }
-    setDeleteDialog(null);
+  const removeMainSpecialty = (categoryId: string) => {
+    setRemovals((current) => [...current, { categoryId }]);
+    handleSpecialtyToggle(categoryId);
+  };
+
+  const removeSubSpecialty = (categoryId: string, subcategoryId: string) => {
+    setRemovals((current) => [...current, { categoryId, subcategoryId }]);
+    handleSubcategoryToggle(subcategoryId);
   };
 
   if (isLoading) {
@@ -489,7 +487,7 @@ export const SpecialtiesCard = React.forwardRef<
                       checked={selectedSpecialties.includes(categoryId)}
                       onCheckedChange={() => {
                         if (selectedSpecialties.includes(categoryId)) {
-                          setDeleteDialog({ type: "main", categoryId });
+                          removeMainSpecialty(categoryId);
                         } else {
                           handleCategoryClick(category);
                         }
@@ -529,11 +527,9 @@ export const SpecialtiesCard = React.forwardRef<
                   </span>
                   <button
                     type="button"
-                    onClick={() =>
-                      setDeleteDialog({ type: "main", categoryId })
-                    }
+                    onClick={() => removeMainSpecialty(categoryId)}
                     className="p-0.5 rounded transition-colors"
-                    aria-label={locale === "ar" ? "حذف" : "Delete"}
+                    aria-label={locale === "ar" ? "إزالة" : "Remove"}
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -550,14 +546,10 @@ export const SpecialtiesCard = React.forwardRef<
                           <button
                             type="button"
                             onClick={() =>
-                              setDeleteDialog({
-                                type: "sub",
-                                categoryId,
-                                subcategoryId: subId,
-                              })
+                              removeSubSpecialty(categoryId, subId)
                             }
                             className="p-0.5 rounded transition-colors"
-                            aria-label={locale === "ar" ? "حذف" : "Delete"}
+                            aria-label={locale === "ar" ? "إزالة" : "Remove"}
                           >
                             <X className="h-2.5 w-2.5" />
                           </button>
@@ -713,15 +705,13 @@ export const SpecialtiesCard = React.forwardRef<
                         <button
                           type="button"
                           onClick={() =>
-                            setDeleteDialog({
-                              type: "sub",
-                              categoryId:
-                                selectedCategoryForDialog.id.toString(),
-                              subcategoryId: subId,
-                            })
+                            removeSubSpecialty(
+                              selectedCategoryForDialog.id.toString(),
+                              subId,
+                            )
                           }
                           className="p-0.5 rounded transition-colors"
-                          aria-label={locale === "ar" ? "حذف" : "Delete"}
+                          aria-label={locale === "ar" ? "إزالة" : "Remove"}
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -743,18 +733,6 @@ export const SpecialtiesCard = React.forwardRef<
         </div>
       )}
       <SpecialtiesToast message={toastMessage} />
-
-      {deleteDialog && (
-        <SpecialtiesDeleteDialog
-          dialog={deleteDialog}
-          warning={deleteProductWarning}
-          locale={locale}
-          getCategoryName={getCategoryName}
-          getSubcategoryName={getSubcategoryName}
-          onCancel={() => setDeleteDialog(null)}
-          onDelete={handleDelete}
-        />
-      )}
     </>
   );
 });

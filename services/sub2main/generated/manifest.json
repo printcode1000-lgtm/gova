@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T00:16:11.999Z",
+  "generatedAt": "2026-08-21T21:52:34.479Z",
   "entryPoints": [
     "features/product/services/product-service.server.ts",
     "features/profile/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 352,
+  "fileCount": 353,
   "files": [
     "packages/auth-core/src/domain/account-deletion-registry.ts",
     "packages/auth-core/src/domain/constants.ts",
@@ -142,6 +142,7 @@
     "packages/data-core/src/domains/profile/operations/queries/get-profile-specialties.query.ts",
     "packages/data-core/src/domains/profile/operations/queries/get-store-details.query.ts",
     "packages/data-core/src/domains/profile/operations/queries/get-users-by-specialty.query.ts",
+    "packages/data-core/src/domains/profile/profile-cover-limits.ts",
     "packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-01.ts",
     "packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-02.ts",
     "packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-03.ts",

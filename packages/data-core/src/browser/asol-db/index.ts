@@ -4,7 +4,7 @@ import type { StateStorage } from 'zustand/middleware';
 import { traceBrowserDatabaseOperation } from '../../ports/telemetry';
 
 const DB_NAME = 'AsolDB';
-const DB_VERSION = 10;
+const DB_VERSION = 11;
 
 export const ASOL_DB_STORES = {
   GUEST_SESSIONS: 'guestSessions',
@@ -20,6 +20,7 @@ export const ASOL_DB_STORES = {
   NOTIFICATION_OFFLINE_QUEUE: 'notificationOfflineQueue',
   PAGE_SNAPSHOTS: 'pageSnapshots',
   PAGE_SAVE_PENDING: 'pageSavePending',
+  PAGE_SAVE_JOURNAL: 'pageSaveJournal',
   FAVORITES: 'favorites',
   CART: 'cart',
   IMAGE_UPLOAD_DRAFTS: 'imageUploadDrafts',

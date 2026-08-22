@@ -31,14 +31,11 @@ import { productApiService } from "@/features/product/services/product-api-servi
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
-import { useTranslation } from "@/lib/i18n";
 
 import { ResolvedItem, getProductName, getProductPrice, getProductImage, buildProductAction } from "./featured-marquee/SuperAdminFeaturedMarqueePage.product-display";
 
 export function SuperAdminFeaturedMarqueePage() {
   const router = useRouter();
-  const { t } = useTranslation();
   const { session, isLoading: sessionLoading } = useSession();
   const authorized = isSuperAdmin(session);
 
@@ -49,9 +46,6 @@ export function SuperAdminFeaturedMarqueePage() {
   const [busy, setBusy] = useState(false);
   const [saveBusy, setSaveBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [messageType, setMessageType] = useState<"success" | "error">(
-    "success",
-  );
   const dragIndex = useRef<number | null>(null);
 
   useEffect(() => {
@@ -109,7 +103,6 @@ export function SuperAdminFeaturedMarqueePage() {
       setMessage(
         error instanceof Error ? error.message : "تعذر تحميل الإعدادات.",
       );
-      setMessageType("error");
     } finally {
       setBusy(false);
     }
@@ -124,7 +117,6 @@ export function SuperAdminFeaturedMarqueePage() {
     if (!trimmed) return;
     if (items.some((item) => item.productId === trimmed)) {
       setMessage("هذا المنتج مضاف بالفعل.");
-      setMessageType("error");
       return;
     }
 
@@ -193,8 +185,6 @@ export function SuperAdminFeaturedMarqueePage() {
       }
 
       setRecord(saved);
-      setMessage("تم حفظ التعديلات وتطبيقها على الصفحة الرئيسية.");
-      setMessageType("success");
       return true;
     } catch (error) {
       reportSystemIssue({
@@ -208,8 +198,7 @@ export function SuperAdminFeaturedMarqueePage() {
         invalidFeaturedMarqueeConfig:
           "إعداد الشريط غير صالح، يرجى مراجعة البيانات.",
       };
-      setMessage(arabicMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ الإعدادات.");
-      setMessageType("error");
+      setMessage(arabicMessages[rawMessage] ?? rawMessage ?? "");
       return false;
     } finally {
       setSaveBusy(false);
@@ -238,7 +227,6 @@ export function SuperAdminFeaturedMarqueePage() {
         isDirty: isMarqueeDirty,
         canSave:
           isMarqueeDirty && !saveBusy && items.some((item) => item.product),
-        description: buildPageSaveOperationDescription(t, ["save"]),
       },
     ],
     isSaving: saveBusy,
@@ -348,11 +336,7 @@ export function SuperAdminFeaturedMarqueePage() {
 
       {message ? (
         <div
-          className={`mb-4 rounded-lg border px-4 py-3 text-sm ${
-            messageType === "success"
-              ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"
-              : "border-destructive/30 bg-destructive/10 text-destructive"
-          }`}
+          className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
           role="status"
         >
           {message}
@@ -484,7 +468,7 @@ export function SuperAdminFeaturedMarqueePage() {
                   size="sm"
                   className="shrink-0 text-destructive"
                   onClick={() => removeProduct(item.productId)}
-                  aria-label="حذف المنتج من الشريط"
+                  aria-label="إزالة المنتج من الشريط"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

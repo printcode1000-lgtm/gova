@@ -17,8 +17,10 @@ components own rendering only.
 
 The page is command-driven only. Operators do not upload or edit zip files
 manually. Backups are created by the module, stored under `.backups/dev-cloud/`,
-then inspected, compared, updated, downloaded, or deleted through buttons on the
-saved backup row.
+then inspected, compared, updated, or downloaded through buttons on the saved
+backup row. Deleting a saved backup has no button of its own: the row stages a
+`delete` operation in `@asol/page-save-core` (`dev-cloud-backup` scope) and the
+header save dialog runs it.
 
 The backup policy is strict: if any configured Turso source is missing or R2
 cannot be listed/downloaded, the operation fails and no partial zip is treated as

@@ -157,6 +157,11 @@ logs.
 Persisted entries are marked as saved. The floating error button deduplicates
 live and persisted counts by fingerprint.
 
+Neither the page nor the floating button clears logs on tap. Both stage a
+`delete` operation in `@asol/page-save-core` (`super-admin-logs` and
+`system-logs-floating` scopes) and the header save dialog runs it; see
+`docs/05-platform-features/page-save-system.md`.
+
 ## Platforms
 
 | Platform | Capture path |

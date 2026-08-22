@@ -10,6 +10,7 @@ import type {
 } from "@asol/google-play-store-assets-core";
 import { storeAssetsApiService } from "../services/store-assets-api-service";
 import { useAuthHeaders } from "./use-auth-headers";
+import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
 
 export interface StagedStoreImageUpload {
   id: string;
@@ -28,6 +29,11 @@ export function useStoreAssets() {
   const [stagedUploads, setStagedUploads] = React.useState<StagedStoreImageUpload[]>([]);
   const [busy, setBusy] = React.useState("");
   const [error, setError] = React.useState("");
+  const assetOperations = usePageSaveOperationScope({
+    id: "release-console-store-assets",
+    label: "أصول متجر Google Play",
+    returnPath: "/super-admin/release-console",
+  });
   const apply = React.useCallback((next: GooglePlayStoreAssetsSnapshot) => {
     setSnapshot(next);
     setDetails(next.details);
@@ -108,21 +114,45 @@ export function useStoreAssets() {
     }
   };
 
-  const removeImage = async (id: string, itemLanguage: string, type: GooglePlayImageType) => {
-    if (headers) apply((await storeAssetsApiService.deleteImage({
-      imageId: id, language: itemLanguage, imageType: type,
-    }, headers)).snapshot);
+  const stageImageDelete = (id: string, itemLanguage: string, type: GooglePlayImageType) => {
+    if (!headers) return;
+    assetOperations.stage({
+      itemId: `store-image-delete:${id}`,
+      kind: "delete",
+      label: `حذف صورة المتجر: ${itemLanguage} / ${type}`,
+      execute: async () => {
+        apply((await storeAssetsApiService.deleteImage({
+          imageId: id, language: itemLanguage, imageType: type,
+        }, headers)).snapshot);
+      },
+    });
   };
-  const removeListing = async (itemLanguage: string) => {
-    if (headers) apply((await storeAssetsApiService.deleteListing(itemLanguage, headers)).snapshot);
+  const stageListingDelete = (itemLanguage: string) => {
+    if (!headers) return;
+    assetOperations.stage({
+      itemId: `store-listing-delete:${itemLanguage}`,
+      kind: "delete",
+      label: `حذف بيانات المتجر للغة: ${itemLanguage}`,
+      execute: async () => {
+        apply((await storeAssetsApiService.deleteListing(itemLanguage, headers)).snapshot);
+      },
+    });
   };
-  const restore = async (name: string) => {
-    if (headers) apply((await storeAssetsApiService.restoreBackup(name, headers)).snapshot);
+  const stageBackupRestore = (name: string) => {
+    if (!headers) return;
+    assetOperations.stage({
+      itemId: `store-backup-restore:${name}`,
+      kind: "save",
+      label: `استعادة نسخة صور المتجر: ${name}`,
+      execute: async () => {
+        apply((await storeAssetsApiService.restoreBackup(name, headers)).snapshot);
+      },
+    });
   };
   return {
     snapshot, details, setDetails, listings, setListings, language, setLanguage, imageType,
     setImageType, stagedUploads, isTextDirty, busy, error, load, save, queueUpload,
-    flushStagedUploads, removeImage, removeListing, restore,
+    flushStagedUploads, stageImageDelete, stageListingDelete, stageBackupRestore,
   };
 }
 

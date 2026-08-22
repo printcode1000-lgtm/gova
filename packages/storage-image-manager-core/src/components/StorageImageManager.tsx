@@ -207,12 +207,6 @@ export function parseStorageImageManagerConfig(
   if (typeof config.allowReplace !== "boolean") {
     throw new Error(`Invalid allowReplace for ${config.id}`);
   }
-  if (typeof config.confirmUpload !== "boolean") {
-    throw new Error(`Invalid confirmUpload for ${config.id}`);
-  }
-  if (typeof config.confirmRemove !== "boolean") {
-    throw new Error(`Invalid confirmRemove for ${config.id}`);
-  }
   if (
     config.storageScope !== undefined &&
     (typeof config.storageScope !== "string" ||
@@ -227,8 +221,6 @@ export function parseStorageImageManagerConfig(
     maxItems: config.maxItems,
     aspectRatio: config.aspectRatio as StorageImageAspectRatio,
     allowReplace: config.allowReplace,
-    confirmUpload: config.confirmUpload,
-    confirmRemove: config.confirmRemove,
     deleteFromStorageOnRemove: config.deleteFromStorageOnRemove !== false,
     storageScope:
       typeof config.storageScope === "string" ? config.storageScope : undefined,
@@ -866,16 +858,9 @@ const StorageImageSlot = React.forwardRef<
       if (config.deleteFromStorageOnRemove === false) onRemoved(index);
       else void removeImage();
     };
-    const action = selectedFile ? clearSelected : removeStored;
-    if (!config.confirmRemove || config.confirmUpload) return action();
-    setDialog({
-      kind: "confirm",
-      title: t("storage.imageManager.removeTitle"),
-      message: selectedFile
-        ? t("storage.imageManager.confirmClearSelected")
-        : t("storage.imageManager.confirmRemove"),
-      onConfirm: action,
-    });
+    // Removal is staged work: the page-save dialog carries the delete copy.
+    if (selectedFile) clearSelected();
+    else removeStored();
   };
 
   return (

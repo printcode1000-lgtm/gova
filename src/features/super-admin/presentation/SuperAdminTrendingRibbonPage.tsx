@@ -29,8 +29,6 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
-import { useTranslation } from "@/lib/i18n";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -43,7 +41,6 @@ interface FormItem {
 
 export function SuperAdminTrendingRibbonPage() {
   const router = useRouter();
-  const { t } = useTranslation();
   const { session, isLoading: sessionLoading } = useSession();
   const authorized = isSuperAdmin(session);
 
@@ -56,7 +53,6 @@ export function SuperAdminTrendingRibbonPage() {
   const [busy, setBusy] = useState(false);
   const [saveBusy, setSaveBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [messageType, setMessageType] = useState<"success" | "error">("success");
 
   const dragIndex = useRef<number | null>(null);
 
@@ -89,7 +85,6 @@ export function SuperAdminTrendingRibbonPage() {
       setMessage(
         error instanceof Error ? error.message : "تعذر تحميل الإعدادات.",
       );
-      setMessageType("error");
     } finally {
       setBusy(false);
     }
@@ -106,7 +101,6 @@ export function SuperAdminTrendingRibbonPage() {
     const actionTrimmed = newItemAction.trim();
     if (!labelTrimmed || !actionTrimmed) {
       setMessage("يرجى ملء كلا الحقلين: النص والإجراء.");
-      setMessageType("error");
       return;
     }
     setItems((prev) => [...prev, { label: labelTrimmed, action: actionTrimmed }]);
@@ -169,8 +163,6 @@ export function SuperAdminTrendingRibbonPage() {
         console.error("Failed to delete local trending ribbon cache:", err);
       }
       setRecord(saved);
-      setMessage("تم حفظ التعديلات وتطبيقها على الصفحة الرئيسية.");
-      setMessageType("success");
       return true;
     } catch (error) {
       reportSystemIssue({
@@ -184,9 +176,8 @@ export function SuperAdminTrendingRibbonPage() {
         invalidTrendingRibbonConfig: "إعداد شريط النصوص غير صالح، يرجى مراجعة البيانات.",
       };
       setMessage(
-        arabicMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ الإعدادات.",
+        arabicMessages[rawMessage] ?? rawMessage ?? "",
       );
-      setMessageType("error");
       return false;
     } finally {
       setSaveBusy(false);
@@ -222,7 +213,6 @@ export function SuperAdminTrendingRibbonPage() {
         label: "عناصر الشريط",
         isDirty: isRibbonDirty,
         canSave: isRibbonDirty && !saveBusy && items.length > 0,
-        description: buildPageSaveOperationDescription(t, ["save"]),
       },
     ],
     isSaving: saveBusy,
@@ -330,11 +320,7 @@ export function SuperAdminTrendingRibbonPage() {
       {/* ── Message ── */}
       {message && (
         <div
-          className={`mb-4 rounded-lg border px-4 py-3 text-sm ${
-            messageType === "success"
-              ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"
-              : "border-destructive/30 bg-destructive/10 text-destructive"
-          }`}
+          className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
           role="status"
         >
           {message}
@@ -459,7 +445,7 @@ export function SuperAdminTrendingRibbonPage() {
 
         {items.length > 0 && (
           <p className="mt-3 text-xs text-muted-foreground">
-            اسحب العناصر لإعادة الترتيب. لا تنس الضغط على زر الحفظ لتطبيق التغييرات.
+            اسحب العناصر لإعادة الترتيب.
           </p>
         )}
       </section>

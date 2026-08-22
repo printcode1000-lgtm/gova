@@ -33,7 +33,7 @@ The page exposes these top-level views:
 
 Each editable file supports structured, raw JSON, relation and diff views. Structured editing
 includes search, localized names, global `display.order`, global `display.hidden`, sibling reorder,
-add, clone, delete and full-item JSON inspection. Relationship views expose parents, collection
+add, clone, remove-from-draft and full-item JSON inspection. Relationship views expose parents, collection
 members, pharmacy forms and strengths, vehicle option files, image references, and the static
 `user_specialties` column mapping.
 
@@ -69,10 +69,11 @@ Uploads accept PNG, JPEG and WebP files up to 10 MB, validate both extension and
 reject traversal or replacement unless replacement was explicitly requested. Replacement first
 stores a recovery copy outside `public`.
 
-Removal is allowed only when the current complete catalog has no reference to the image. The file is
-moved to `.catalog-studio/trash/images` and its recovery path is recorded; the editor never performs
-an irreversible image delete. Referenced images display their owning JSON identities and cannot be
-removed.
+Removal is allowed only when the current complete catalog has no reference to the image. Removal is
+staged as a `delete` operation in `@asol/page-save-core` (`catalog-studio` scope) and only runs from
+the header save dialog. The file is then moved to `.catalog-studio/trash/images` and its recovery
+path is recorded; the editor never performs an irreversible image delete. Referenced images display
+their owning JSON identities and cannot be removed.
 
 ## Ownership
 

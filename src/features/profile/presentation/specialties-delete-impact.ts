@@ -1,16 +1,19 @@
-import type { SpecialtyDeleteDialogState } from "./SpecialtiesDeleteDialog";
+export interface SpecialtyRemoval {
+  categoryId: string;
+  subcategoryId?: string;
+}
 
 export function specialtyDeleteImpactPairs({
-  deleteDialog,
+  removal,
   selectedSubcategories,
 }: {
-  deleteDialog: SpecialtyDeleteDialogState;
+  removal: SpecialtyRemoval;
   selectedSubcategories: Record<string, string[]>;
 }) {
-  return deleteDialog.subcategoryId
-    ? [[deleteDialog.categoryId, deleteDialog.subcategoryId]]
-    : (selectedSubcategories[deleteDialog.categoryId] ?? []).map((subId) => [
-        deleteDialog.categoryId,
+  return removal.subcategoryId
+    ? [[removal.categoryId, removal.subcategoryId]]
+    : (selectedSubcategories[removal.categoryId] ?? []).map((subId) => [
+        removal.categoryId,
         subId,
       ]);
 }

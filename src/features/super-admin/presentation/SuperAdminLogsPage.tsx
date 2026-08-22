@@ -14,7 +14,7 @@ import {
   RefreshCw,
   Search,
   ShieldCheck,
-  Trash2,
+  ListPlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
@@ -22,6 +22,7 @@ import { NativeCore } from "@asol/native-core";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
 import {
   clearAllSystemLogs,
   clearSystemLogs,
@@ -75,6 +76,59 @@ export function SuperAdminLogsPage() {
   >("loading");
   const [cloudLastUpdatedAt, setCloudLastUpdatedAt] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
+  const logOperations = usePageSaveOperationScope({
+    id: "super-admin-logs",
+    label: "سجلات النظام",
+    returnPath: "/super-admin/logs",
+    enabled: authorized,
+  });
+
+  const stageClearAllLogs = () => {
+    logOperations.stage({
+      itemId: "system-logs-clear-all",
+      kind: "delete",
+      label: "حذف السجل المحلي المباشر وكل السجلات المحفوظة",
+      execute: async () => {
+        clearAllSystemLogs();
+        if (!session?.sessionToken) return true;
+        try {
+          await persistentSystemLogApiService.clear(session.sessionToken);
+          setPersistentLogs([]);
+          setCloudLogs([]);
+          return true;
+        } catch (error) {
+          console.warn("[SystemLogs] Failed to clear persistent logs.", error);
+          return false;
+        }
+      },
+    });
+  };
+
+  const stageClearLogSection = (level: SystemLogLevel) => {
+    logOperations.stage({
+      itemId: `system-logs-clear:${level}`,
+      kind: "delete",
+      label: `حذف سجلات القسم: ${level}`,
+      execute: async () => {
+        clearSystemLogs(level);
+        if (!session?.sessionToken) return true;
+        try {
+          await persistentSystemLogApiService.clear(session.sessionToken, level);
+          setPersistentLogs((items) =>
+            items.filter((item) => item.level !== level),
+          );
+          if (level === "error") setCloudLogs([]);
+          return true;
+        } catch (error) {
+          console.warn(
+            "[SystemLogs] Failed to clear persistent log section.",
+            error,
+          );
+          return false;
+        }
+      },
+    });
+  };
   const [query, setQuery] = useState("");
   const [platform, setPlatform] = useState("all");
   const [summary, setSummary] = useState<{
@@ -233,7 +287,6 @@ export function SuperAdminLogsPage() {
             variant={captureEnabled ? "secondary" : "outline"}
             onClick={() => setSystemLogCaptureEnabled(!captureEnabled)}
             aria-label={captureEnabled ? "إيقاف الالتقاط" : "تشغيل الالتقاط"}
-            title={captureEnabled ? "إيقاف الالتقاط" : "تشغيل الالتقاط"}
           >
             {captureEnabled ? (
               <Pause className="h-4 w-4" />
@@ -244,29 +297,12 @@ export function SuperAdminLogsPage() {
           <Button
             type="button"
             size="icon"
-            variant="destructive"
-            onClick={() => {
-              clearAllSystemLogs();
-              if (session?.sessionToken) {
-                void persistentSystemLogApiService
-                  .clear(session.sessionToken)
-                  .then(() => {
-                    setPersistentLogs([]);
-                    setCloudLogs([]);
-                  })
-                  .catch((error) => {
-                    console.warn(
-                      "[SystemLogs] Failed to clear persistent logs.",
-                      error,
-                    );
-                  });
-              }
-            }}
+            variant="outline"
+            onClick={stageClearAllLogs}
             disabled={!allLogs.length}
-            aria-label="مسح جميع السجلات"
-            title="مسح جميع السجلات"
+            aria-label="إضافة حذف جميع السجلات إلى الحفظ"
           >
-            <Trash2 className="h-4 w-4" />
+            <ListPlus className="h-4 w-4" />
           </Button>
         </div>
       </header>
@@ -375,38 +411,18 @@ export function SuperAdminLogsPage() {
               disabled={!current.length}
               onClick={() => void copySection()}
               aria-label="نسخ القسم"
-              title={copied === active ? "تم النسخ" : "نسخ القسم"}
             >
               <ClipboardCopy className="h-4 w-4" />
             </Button>
             <Button
               type="button"
               size="icon"
-              variant="destructive"
+              variant="outline"
               disabled={!current.length}
-              onClick={() => {
-                clearSystemLogs(active);
-                if (session?.sessionToken) {
-                  void persistentSystemLogApiService
-                    .clear(session.sessionToken, active)
-                    .then(() => {
-                      setPersistentLogs((items) =>
-                        items.filter((item) => item.level !== active),
-                      );
-                      if (active === "error") setCloudLogs([]);
-                    })
-                    .catch((error) => {
-                      console.warn(
-                        "[SystemLogs] Failed to clear persistent log section.",
-                        error,
-                      );
-                    });
-                }
-              }}
-              aria-label="مسح القسم"
-              title="مسح القسم"
+              onClick={() => stageClearLogSection(active)}
+              aria-label="إضافة حذف القسم إلى الحفظ"
             >
-              <Trash2 className="h-4 w-4" />
+              <ListPlus className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -450,8 +466,7 @@ export function SuperAdminLogsPage() {
                       variant="ghost"
                       onClick={() => void copyEntry(entry)}
                       aria-label="نسخ هذا السجل"
-                      title="نسخ هذا السجل"
-                    >
+                            >
                       <ClipboardCopy className="h-4 w-4" />
                     </Button>
                   </div>

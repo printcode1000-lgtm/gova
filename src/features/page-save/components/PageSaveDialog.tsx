@@ -1,7 +1,7 @@
 "use client";
 
-import { Loader2, Save } from "lucide-react";
-import { useCallback, useSyncExternalStore } from "react";
+import { Save } from "lucide-react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -14,16 +14,21 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  acknowledgePageSaveInterruption,
   closePageSaveDialog,
   executePageSave,
   getPageSaveSnapshot,
   setPageSaveItemSelected,
   subscribePageSave,
 } from "@asol/page-save-core";
+import { reportSystemIssue } from "@asol/system-logs-core";
 import { useTranslation } from "@/lib/i18n";
+
+import { describePageSaveItem } from "../utils/page-save-operation-description";
 
 export function PageSaveDialog() {
   const { t } = useTranslation();
+  const [isExecuting, setIsExecuting] = useState(false);
   const snapshot = useSyncExternalStore(
     subscribePageSave,
     getPageSaveSnapshot,
@@ -31,21 +36,48 @@ export function PageSaveDialog() {
   );
 
   const dialog = snapshot.dialog;
+
+  useEffect(() => {
+    if (!snapshot.dialogOpen) {
+      setIsExecuting(false);
+    }
+  }, [snapshot.dialogOpen]);
+
   const handleClose = useCallback(() => {
+    if (isExecuting || snapshot.isSaving) return;
     closePageSaveDialog();
-  }, []);
+  }, [isExecuting, snapshot.isSaving]);
 
   const handleSave = useCallback(() => {
-    void executePageSave();
-  }, []);
+    if (isExecuting || snapshot.isSaving) return;
+    setIsExecuting(true);
+    void executePageSave()
+      .catch((error) => {
+        reportSystemIssue({
+          level: "error",
+          feature: "PageSave",
+          operation: "execute-page-save",
+          error,
+        });
+      })
+      .finally(() => {
+        setIsExecuting(false);
+      });
+  }, [isExecuting, snapshot.isSaving]);
 
-  if (!snapshot.dialogOpen || !dialog) return null;
+  if (!snapshot.dialogOpen) return null;
+
+  const isSaving =
+    isExecuting ||
+    Boolean(dialog?.isSaving) ||
+    snapshot.isSaving ||
+    snapshot.phase === "saving";
 
   return (
     <Dialog
       open={snapshot.dialogOpen}
       onOpenChange={(next) => {
-        if (!next) handleClose();
+        if (!next && !isSaving) handleClose();
       }}
     >
       <DialogContent className="z-[100] w-[calc(100%-2rem)] max-w-md overflow-hidden rounded-[1.75rem] border-primary/20 p-0 shadow-2xl duration-300 data-[state=closed]:zoom-out-50 data-[state=open]:zoom-in-50 [&>button.absolute]:hidden">
@@ -59,16 +91,48 @@ export function PageSaveDialog() {
               {t("pageSave.dialogTitle")}
             </DialogTitle>
             <DialogDescription className="pt-2 text-sm leading-6 text-on-surface-variant">
-              {dialog.pageLabel}
+              {dialog?.pageLabel ?? t("pageSave.interrupted.heading")}
             </DialogDescription>
           </DialogHeader>
         </div>
 
         <div className="max-h-[min(50vh,20rem)] space-y-2 overflow-y-auto px-6 py-4">
-          <p className="text-xs font-semibold text-on-surface-variant">
-            {t("pageSave.itemsHeading")}
-          </p>
-          {dialog.items
+          {snapshot.interrupted.length > 0 ? (
+            <section className="space-y-2 rounded-2xl border border-warning/40 bg-warning/10 p-3">
+              <p className="text-xs font-semibold text-on-surface">
+                {t("pageSave.interrupted.heading")}
+              </p>
+              {snapshot.interrupted.map((operation) => (
+                <div key={operation.entry.operationId} className="space-y-1">
+                  <p className="text-sm font-semibold text-on-surface">
+                    {operation.entry.label}
+                  </p>
+                  <p className="text-xs leading-5 text-on-surface-variant">
+                    {operation.verdict === "needsConfirmation"
+                      ? t("pageSave.interrupted.needsConfirmation")
+                      : t("pageSave.interrupted.failed")}
+                  </p>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="rounded-xl"
+                    onClick={() =>
+                      acknowledgePageSaveInterruption(operation.entry.operationId)
+                    }
+                  >
+                    {t("pageSave.interrupted.acknowledge")}
+                  </Button>
+                </div>
+              ))}
+            </section>
+          ) : null}
+          {dialog ? (
+            <p className="text-xs font-semibold text-on-surface-variant">
+              {t("pageSave.itemsHeading")}
+            </p>
+          ) : null}
+          {(dialog?.items ?? [])
             .filter((item) => item.isDirty)
             .map((item) => (
               <label
@@ -77,10 +141,10 @@ export function PageSaveDialog() {
               >
                 <Checkbox
                   checked={item.selected}
-                  disabled={!item.canSave || dialog.isSaving}
+                  disabled={!item.canSave || isSaving}
                   onCheckedChange={(checked) => {
                     setPageSaveItemSelected(
-                      dialog.registrationId,
+                      dialog!.registrationId,
                       item.id,
                       checked === true,
                     );
@@ -91,11 +155,9 @@ export function PageSaveDialog() {
                   <span className="block text-sm font-semibold text-on-surface">
                     {item.label}
                   </span>
-                  {item.description ? (
-                    <span className="mt-1 block text-xs leading-5 text-on-surface-variant">
-                      {item.description}
-                    </span>
-                  ) : null}
+                  <span className="mt-1 block text-xs leading-5 text-on-surface-variant">
+                    {describePageSaveItem(t, item)}
+                  </span>
                   {!item.canSave ? (
                     <span className="mt-1 block text-xs text-error">
                       {t("pageSave.itemBlocked")}
@@ -106,9 +168,22 @@ export function PageSaveDialog() {
             ))}
         </div>
 
-        {dialog.requiresNavigation ? (
+        {dialog?.requiresNavigation ? (
           <p className="px-6 text-xs leading-5 text-on-surface-variant">
             {t("pageSave.navigationHint")}
+          </p>
+        ) : null}
+
+        {isSaving ? (
+          <p className="px-6 pb-2 text-center text-xs font-medium text-on-surface-variant">
+            {t("pageSave.saving")}
+          </p>
+        ) : snapshot.lastResult === "failure" ? (
+          <p
+            role="alert"
+            className="px-6 pb-2 text-center text-xs font-medium text-error"
+          >
+            {t("pageSave.failure")}
           </p>
         ) : null}
 
@@ -117,15 +192,11 @@ export function PageSaveDialog() {
             type="button"
             size="lg"
             className="w-full rounded-xl"
-            disabled={!dialog.canSave || dialog.isSaving}
+            disabled={!dialog?.canSave || isSaving}
             onClick={handleSave}
           >
-            {dialog.isSaving ? (
-              <Loader2 className="me-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="me-2 h-4 w-4" />
-            )}
-            {dialog.isSaving ? t("pageSave.saving") : t("pageSave.confirmSave")}
+            <Save className="me-2 h-4 w-4" />
+            {isSaving ? t("pageSave.saving") : t("pageSave.confirmSave")}
           </Button>
           <Button
             type="button"
@@ -133,7 +204,7 @@ export function PageSaveDialog() {
             variant="ghost"
             onClick={handleClose}
             className="w-full rounded-xl"
-            disabled={dialog.isSaving}
+            disabled={isSaving}
           >
             {t("pageSave.cancel")}
           </Button>

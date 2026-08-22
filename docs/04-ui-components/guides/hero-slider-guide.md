@@ -264,6 +264,7 @@ The `PUT` payload contains only `identity`, `config`, and `checkIntervalMinutes`
   -> receives changes through onChange
   -> receives changes through onChange (draft only; Home unchanged)
   -> Save uploads pending slide images, persists config, increments version
+  -> Page-save runs upload in `prepareForSave` and always calls `persistConfig` when either `hero-slider-images` or `hero-slider-config` is selected, so image-only saves still reach the database
   -> invalidates the Home cache and broadcasts `asol:home-hero-slider-updated`
 ```
 

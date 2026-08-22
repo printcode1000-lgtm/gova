@@ -106,7 +106,7 @@ export function DevCloudBackupPage() {
         onCompare={(fileName) => void page.compareSavedBackup(fileName)}
         onUpdate={(fileName) => void page.updateSavedBackup(fileName)}
         onRestore={(fileName, mode) => void page.restoreSavedBackup(fileName, mode)}
-        onDelete={(fileName) => void page.deleteSavedBackup(fileName)}
+        onDelete={page.stageSavedBackupDelete}
       />
     </main>
   );

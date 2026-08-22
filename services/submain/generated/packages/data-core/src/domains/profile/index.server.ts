@@ -1,3 +1,4 @@
+export * from "./profile-cover-limits";
 export * from "./repositories/profile-repository";
 export * from "./repositories/profile-repository.interface";
 export * from "./repositories/profile-review-repository";

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import {
   AlertTriangle,
   LockKeyhole,
@@ -16,6 +16,7 @@ import {
   isAccountDeletionPhraseValid,
 } from "@asol/auth-core";
 import { useSession } from "@/features/auth/components/SessionProvider";
+import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { clearAllClientStorage } from '@/features/app-reset/client-storage';
 import { useTranslation } from "@/lib/i18n";
@@ -90,12 +91,35 @@ export function AccountDeletionPageContent() {
   const [state, setState] = useState<"idle" | "deleting" | "error">("idle");
   const [errorKind, setErrorKind] = useState<ErrorKind>("generic");
 
-  async function submit(event: FormEvent) {
-    event.preventDefault();
+  const canDelete =
+    Boolean(session?.sessionToken) &&
+    accepted &&
+    isAccountDeletionPhraseValid(phrase);
+
+  usePageSaveRegistration({
+    id: "account-deletion",
+    label: c.title,
+    returnPath: "/delete-account",
+    enabled: Boolean(session),
+    items: [
+      {
+        id: "account-deletion",
+        label: c.submit,
+        operation: "delete",
+        isDirty: accepted || phrase.length > 0,
+        canSave: canDelete,
+      },
+    ],
+    isSaving: state === "deleting",
+    canSave: canDelete,
+    save: () => runDeletion(),
+  });
+
+  async function runDeletion(): Promise<boolean> {
     if (!session?.sessionToken || !accepted || !isAccountDeletionPhraseValid(phrase)) {
       setErrorKind(!session?.sessionToken ? "session" : "phrase");
       setState("error");
-      return;
+      return false;
     }
     setState("deleting");
     try {
@@ -108,6 +132,7 @@ export function AccountDeletionPageContent() {
       });
       await clearAllClientStorage();
       window.location.replace("/");
+      return true;
     } catch (error) {
       const message = error instanceof Error ? error.message : "";
       if (message === "invalidCurrentPassword") setErrorKind("password");
@@ -116,6 +141,7 @@ export function AccountDeletionPageContent() {
         setErrorKind("session");
       } else setErrorKind("generic");
       setState("error");
+      return false;
     }
   }
 
@@ -190,10 +216,7 @@ export function AccountDeletionPageContent() {
           {c.shared}
         </p>
       </section>
-      <form
-        onSubmit={submit}
-        className="space-y-5 rounded-3xl border border-outline/30 bg-surface p-7"
-      >
+      <div className="space-y-5 rounded-3xl border border-outline/30 bg-surface p-7">
         <label className="block space-y-2 font-semibold">
           {c.password}
           <input
@@ -235,16 +258,7 @@ export function AccountDeletionPageContent() {
         {state === "error" && (
           <p className="rounded-xl bg-red-100 p-3 text-red-800">{errorMessage}</p>
         )}
-        <button
-          disabled={
-            !accepted || !isAccountDeletionPhraseValid(phrase) || state === "deleting"
-          }
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-error px-5 py-3 font-bold text-on-error disabled:opacity-50"
-        >
-          <Trash2 className="h-5 w-5" />
-          {state === "deleting" ? c.deleting : c.submit}
-        </button>
-      </form>
+      </div>
       <Link href="/contact-us" className="block text-center font-semibold text-primary">
         {c.contact}
       </Link>

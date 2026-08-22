@@ -330,7 +330,7 @@ return (
                             size="icon"
                             onClick={() => removeLocation(loc.id)}
                             className="h-8 w-8 text-destructive"
-                            aria-label={locale === 'ar' ? 'حذف الموقع' : 'Remove location'}
+                            aria-label={locale === 'ar' ? 'إزالة الموقع' : 'Remove location'}
                           >
                             <X className="h-4 w-4" />
                           </Button>

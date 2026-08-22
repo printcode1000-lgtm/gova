@@ -1,9 +1,7 @@
 {
   "releaseConsole.actions.cancel": "إلغاء",
-  "releaseConsole.actions.delete": "حذف",
+  "releaseConsole.actions.stageDelete": "إضافة الحذف للحفظ",
   "releaseConsole.actions.refresh": "تحديث",
-  "releaseConsole.actions.save": "حفظ النصوص",
-  "releaseConsole.actions.saving": "جاري الحفظ",
   "releaseConsole.analysis.analyze": "تحليل",
   "releaseConsole.analysis.archive": "حجم الملف على القرص",
   "releaseConsole.analysis.archiveBytes": "حجم الأرشيف",

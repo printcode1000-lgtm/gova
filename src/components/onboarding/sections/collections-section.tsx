@@ -111,8 +111,6 @@ export function CollectionsSection() {
                     maxItems: 1,
                     aspectRatio: 'landscape',
                     allowReplace: true,
-                    confirmUpload: true,
-                    confirmRemove: true,
                   }}
                   value={newCollection.coverImage ? [newCollection.coverImage] : []}
                   onChange={(images: StoredImage[]) =>

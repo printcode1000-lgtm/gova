@@ -14,8 +14,6 @@ export interface StorageImageManagerConfig {
   maxItems: number;
   aspectRatio: StorageImageAspectRatio;
   allowReplace: boolean;
-  confirmUpload: boolean;
-  confirmRemove: boolean;
   deleteFromStorageOnRemove?: boolean;
   storageScope?: string;
 }

@@ -4,7 +4,7 @@ import { formatDateTimeDefault } from "@asol/format-core";
 
 import { Eye, RefreshCw, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
@@ -18,9 +18,6 @@ import { reportSystemIssue } from '@asol/system-logs-core';
 import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
 import { useSuperAdminHeroSliderSave } from "./use-super-admin-hero-slider-save";
 import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
-import { buildImageUploadPageSaveItem } from "@/features/page-save/utils/page-save-image-items";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
-import { useTranslation } from "@/lib/i18n";
 
 const quickIntervals = [5, 15, 30, 60];
 
@@ -35,7 +32,6 @@ function formatLoadError(error: unknown): string {
 
 export function SuperAdminHeroSliderPage() {
   const router = useRouter();
-  const { t } = useTranslation();
   const { session, isLoading } = useSession();
   const authorized = isSuperAdmin(session);
   const [record, setRecord] = useState<HomeHeroRecord | null>(null);
@@ -71,7 +67,12 @@ export function SuperAdminHeroSliderPage() {
     uploadPendingImages,
     persistConfig,
     isDirty,
+    imagesDirty,
+    imagesRemoved,
+    imagesConfigDirty,
     canPersist,
+    imagesItemCanSave,
+    configItemCanSave,
   } = useSuperAdminHeroSliderSave({
     session: authorized ? session : null,
     record,
@@ -84,35 +85,52 @@ export function SuperAdminHeroSliderPage() {
     onSaved: handleSaved,
   });
 
+  // This console is Arabic-only, so its copy is written here rather than pulled
+  // from the public dictionaries. One slide change can mix several operations.
+  const imageSaveDescription = useMemo(() => {
+    const parts: string[] = [];
+    if (imagesPending) parts.push("ترفع الصور المجهزة إلى التخزين");
+    if (imagesRemoved) parts.push("تُحذف الصور المزالة من التخزين");
+    if (imagesConfigDirty || imagesRemoved || (parts.length === 0 && imagesDirty)) {
+      parts.push("تُحفظ إعدادات الشرائح");
+    }
+    return parts.join(" · ");
+  }, [imagesConfigDirty, imagesDirty, imagesPending, imagesRemoved]);
+
   usePageSaveRegistration({
     id: "super-admin-hero-slider",
     label: "سلايدر الواجهة الرئيسية",
     returnPath: "/super-admin/hero-slider",
     enabled: authorized && !loadFailed && Boolean(record),
     items: [
-      buildImageUploadPageSaveItem({
+      {
         id: "hero-slider-images",
         label: "صور السلايدر",
-        hasPending: imagesPending,
-        canSave: canPersist,
-        t,
-      }),
+        isDirty: imagesDirty,
+        canSave: imagesItemCanSave,
+        description: imageSaveDescription,
+      },
       {
         id: "hero-slider-config",
         label: "إعدادات السلايدر",
         isDirty,
-        canSave: canPersist,
-        description: buildPageSaveOperationDescription(t, ["save"]),
+        canSave: configItemCanSave,
       },
     ],
     isSaving: saveBusy,
     canSave: canPersist,
     prepareForSave: async (selectedItemIds) => {
-      if (!selectedItemIds.includes("hero-slider-images")) return true;
+      const shouldUpload =
+        selectedItemIds.includes("hero-slider-images") ||
+        selectedItemIds.includes("hero-slider-config");
+      if (!shouldUpload) return true;
       return uploadPendingImages();
     },
     save: async (selectedItemIds) => {
-      if (!selectedItemIds.includes("hero-slider-config")) return true;
+      const shouldPersist =
+        selectedItemIds.includes("hero-slider-config") ||
+        selectedItemIds.includes("hero-slider-images");
+      if (!shouldPersist) return true;
       return persistConfig();
     },
   });
@@ -262,8 +280,8 @@ export function SuperAdminHeroSliderPage() {
           ))}
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          المعاينة تعرض كل التعديلات والصور محلياً. استخدم أيقونة الحفظ في الشريط
-          العلوي لتطبيق التغييرات على الصفحة الرئيسية.
+          المعاينة تعرض كل التعديلات والصور محلياً قبل تطبيقها على الصفحة
+          الرئيسية.
         </p>
       </section>
 

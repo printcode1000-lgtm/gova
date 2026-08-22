@@ -1,19 +1,11 @@
 "use client";
 
-import { Bug, ChevronLeft, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Bug, ChevronLeft, ListPlus } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { mergeLiveAndPersistentCounts } from "@asol/system-logs-core";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
@@ -37,8 +29,13 @@ export function SuperAdminErrorFloatingButton() {
     getSystemLogsSnapshot,
   );
   const [persistentLogs, setPersistentLogs] = useState<PersistentSystemLogEntry[]>([]);
-  const [confirmClear, setConfirmClear] = useState(false);
-  const [clearing, setClearing] = useState(false);
+  const pathname = usePathname();
+  const logOperations = usePageSaveOperationScope({
+    id: "system-logs-floating",
+    label: "سجل الأخطاء",
+    returnPath: pathname || LOGS_ROUTE,
+    enabled: authorized,
+  });
 
   useEffect(() => {
     const sessionToken = session?.sessionToken;
@@ -81,20 +78,28 @@ export function SuperAdminErrorFloatingButton() {
     return mergeLiveAndPersistentCounts(liveErrorCount, persistentLogs, liveFingerprints);
   }, [liveLogs, persistentLogs]);
 
-  const clearAllLogs = async () => {
-    setClearing(true);
-    clearAllSystemLogs();
-    setPersistentLogs([]);
-    try {
-      if (session?.sessionToken) {
-        await persistentSystemLogApiService.clear(session.sessionToken);
-      }
-    } catch (error) {
-      console.warn("[SystemLogs] Failed to clear all logs from floating button.", error);
-    } finally {
-      setClearing(false);
-      setConfirmClear(false);
-    }
+  const stageClearAllLogs = () => {
+    logOperations.stage({
+      itemId: "system-logs-clear-all",
+      kind: "delete",
+      label: "حذف السجل المحلي المباشر وكل السجلات المحفوظة",
+      execute: async () => {
+        clearAllSystemLogs();
+        setPersistentLogs([]);
+        try {
+          if (session?.sessionToken) {
+            await persistentSystemLogApiService.clear(session.sessionToken);
+          }
+          return true;
+        } catch (error) {
+          console.warn(
+            "[SystemLogs] Failed to clear all logs from floating button.",
+            error,
+          );
+          return false;
+        }
+      },
+    });
   };
 
   if (!authorized || errorCount === 0) return null;
@@ -127,33 +132,13 @@ export function SuperAdminErrorFloatingButton() {
         <span className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
         <button
           type="button"
-          onClick={() => setConfirmClear(true)}
+          onClick={stageClearAllLogs}
           className="rounded-full px-1.5 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
-          aria-label="مسح جميع السجلات"
+          aria-label="إضافة حذف جميع السجلات إلى الحفظ"
         >
-          <Trash2 className="h-3.5 w-3.5 shrink-0" />
+          <ListPlus className="h-3.5 w-3.5 shrink-0" />
         </button>
       </div>
-
-      <Dialog open={confirmClear} onOpenChange={setConfirmClear}>
-        <DialogContent dir="rtl">
-          <DialogHeader>
-            <DialogTitle>مسح جميع السجلات؟</DialogTitle>
-            <DialogDescription>
-              سيتم حذف السجل المحلي المباشر وجميع السجلات المحفوظة على الخادم. لا يمكن التراجع عن
-              هذا الإجراء.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" disabled={clearing} onClick={() => setConfirmClear(false)}>
-              إلغاء
-            </Button>
-            <Button variant="destructive" disabled={clearing} onClick={() => void clearAllLogs()}>
-              {clearing ? "جار المسح…" : "مسح الكل"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

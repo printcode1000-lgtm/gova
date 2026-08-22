@@ -91,8 +91,8 @@ export const HeroSliderEditor = React.forwardRef<
           <h2 className="font-semibold">إعدادات العرض الرئيسي</h2>
           <p className="text-sm text-muted-foreground">
             تظهر التغييرات والصور المختارة مباشرة في المعاينة أعلاه حتى قبل
-            الرفع. الصفحة الرئيسية لا تتغير إلا بعد الضغط على حفظ. التشغيل
-            التلقائي ومدة كل شريحة والتكرار تعمل كما في Home. لكل شريحة انتقال
+            الرفع، بينما تبقى الصفحة الرئيسية كما هي. التشغيل التلقائي ومدة كل
+            شريحة والتكرار تعمل كما في Home. لكل شريحة انتقال
             خاص عند الدخول إليها. أضف شريحتين على الأقل لمعاينة الانتقالات.
             النقر على الشريحة معطّل أثناء التحرير.
           </p>
@@ -217,7 +217,7 @@ export const HeroSliderEditor = React.forwardRef<
                 type="button"
                 variant="ghost"
                 size="icon"
-                aria-label="حذف الشريحة"
+                aria-label="إزالة الشريحة"
                 onClick={() =>
                   onChange({
                     ...value,
@@ -243,8 +243,6 @@ export const HeroSliderEditor = React.forwardRef<
                     maxItems: 1,
                     aspectRatio: "wide",
                     allowReplace: true,
-                    confirmUpload: true,
-                    confirmRemove: true,
                     deleteFromStorageOnRemove: false,
                   }}
                   value={

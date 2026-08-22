@@ -102,7 +102,7 @@ function CompletionScreen({
 
 export function OnboardingPage() {
   const { t } = useTranslation();
-  const { currentStep, completedSteps, isDirty } = useOnboardingStore();
+  const { currentStep, completedSteps } = useOnboardingStore();
   const stepConfig = useStepConfig();
   const [isTransitioning, setIsTransitioning] = React.useState(false);
   const [showCompletion, setShowCompletion] = React.useState(false);
@@ -178,12 +178,6 @@ export function OnboardingPage() {
                 </Button>
               )}
 
-              {isDirty && (
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <div className="h-2 w-2 rounded-full bg-merchant-warning animate-pulse" />
-                  {t('onboarding.page.unsavedChanges')}
-                </div>
-              )}
             </div>
           </aside>
 

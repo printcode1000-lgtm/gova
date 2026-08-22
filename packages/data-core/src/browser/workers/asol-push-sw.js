@@ -1,5 +1,5 @@
 const ASOL_DB_NAME = 'AsolDB';
-const ASOL_DB_VERSION = 9;
+const ASOL_DB_VERSION = 11;
 const ASOL_NOTIFICATION_STORES = [
   'guestSessions',
   'appSettings',
@@ -13,6 +13,8 @@ const ASOL_NOTIFICATION_STORES = [
   'notificationAnalytics',
   'notificationOfflineQueue',
   'pageSnapshots',
+  'pageSavePending',
+  'pageSaveJournal',
   'favorites',
   'cart',
   'imageUploadDrafts',

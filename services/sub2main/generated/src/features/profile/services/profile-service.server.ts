@@ -12,6 +12,7 @@ import type { GetUsersBySpecialtyQuery } from "@asol/data-core/profile";
 import type { GetProfileFulfillmentSettingsQuery } from "@asol/data-core/profile";
 import type { UpsertProfileFulfillmentSettingsCommand } from "@asol/data-core/profile";
 import type { GetUserByUidQuery } from "@asol/data-core/auth";
+import { MAX_PROFILE_COVER_IMAGES } from "@asol/data-core/profile";
 import { authOperationsService } from "@/features/auth/server/auth-core-bootstrap.server";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import type {
@@ -46,7 +47,6 @@ import { categoryService, CATEGORY_CONSTANTS } from "@/features/categories";
 
 const AVATAR_PROFILE_ID = StorageProfiles.Avatar;
 const COVER_PROFILE_ID = StorageProfiles.Cover;
-const MAX_COVER_IMAGES = 3;
 const PRIMARY_PHONE_ID = "primary-whatsapp";
 const PRIMARY_EMAIL_ID = "primary";
 
@@ -104,7 +104,7 @@ function normalizeCoverImageKeys(keys: string[]): string[] {
         .map((key) => key.trim())
         .filter(Boolean),
     ),
-  ).slice(0, MAX_COVER_IMAGES);
+  ).slice(0, MAX_PROFILE_COVER_IMAGES);
 }
 
 function isIntegerId(value: unknown): value is number {

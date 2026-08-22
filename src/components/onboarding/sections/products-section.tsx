@@ -95,7 +95,6 @@ export function ProductsSection() {
             <ProductForm
               product={editingProduct}
               onChange={(updates) => setEditingProduct({ ...editingProduct, ...updates })}
-              onSave={handleSaveProduct}
               onCancel={() => {
                 setShowForm(false);
                 setEditingProduct(null);

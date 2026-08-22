@@ -10,6 +10,7 @@ import type {
 } from "@/features/product/entities/product-review.entity";
 import { productReviewApiService } from "@/features/product/services/product-review-api-service";
 import { profileApiService } from "@/features/profile/services/profile-api-service";
+import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
 
 import { PAGE_SIZE, emptyReviewsResult, Stars, relativeDate } from "./product-reviews/ProductReviews.review-formatting";
 import {
@@ -45,7 +46,11 @@ export function ProductReviews({
   const [editing, setEditing] = React.useState<ProductReview | null>(null);
   const [rating, setRating] = React.useState(0);
   const [comment, setComment] = React.useState("");
-  const [busy, setBusy] = React.useState(false);
+  const [reviewsPath] = React.useState(() =>
+    typeof window === "undefined"
+      ? "/"
+      : `${window.location.pathname}${window.location.search}`,
+  );
   const [replyReview, setReplyReview] = React.useState<ProductReview | null>(
     null,
   );
@@ -106,86 +111,125 @@ export function ProductReviews({
     setModal(true);
   };
   const refresh = () => load(0, false);
-  const submit = async () => {
-    if (!session || rating < 1) return;
-    setBusy(true);
-    try {
-      if (type === "product") {
-        if (editing)
-          await productReviewApiService.update({
-            reviewId: editing.id,
-            uid: session.uid,
-            rating,
-            comment,
-            styleMode: commentsEnabled ? "stars-comments" : "stars",
-          });
-        else
-          await productReviewApiService.create({
-            productId: productId!,
-            uid: session.uid,
-            rating,
-            comment,
-            styleMode: commentsEnabled ? "stars-comments" : "stars",
-          });
-      } else {
-        if (editing)
+
+  const reviewOperations = usePageSaveOperationScope({
+    id: `product-reviews:${type}:${productId ?? targetUid ?? "unknown"}`,
+    label: type === "product" ? "تقييمات المنتج" : "تقييمات المتجر",
+    returnPath: reviewsPath,
+    enabled: isLoggedIn,
+  });
+
+  const stageReviewSave = (nextRating: number, nextComment: string) => {
+    if (!session || nextRating < 1) {
+      reviewOperations.unstage("review-save");
+      return;
+    }
+    const editedId = editing?.id ?? null;
+    reviewOperations.stage({
+      itemId: "review-save",
+      kind: "save",
+      label: editedId ? "تعديل التقييم" : "إضافة تقييم",
+      execute: async () => {
+        if (type === "product") {
+          if (editedId)
+            await productReviewApiService.update({
+              reviewId: editedId,
+              uid: session.uid,
+              rating: nextRating,
+              comment: nextComment,
+              styleMode: commentsEnabled ? "stars-comments" : "stars",
+            });
+          else
+            await productReviewApiService.create({
+              productId: productId!,
+              uid: session.uid,
+              rating: nextRating,
+              comment: nextComment,
+              styleMode: commentsEnabled ? "stars-comments" : "stars",
+            });
+        } else if (editedId)
           await profileApiService.updateReview({
-            reviewId: editing.id,
+            reviewId: editedId,
             uid: session.uid,
-            rating,
-            comment,
+            rating: nextRating,
+            comment: nextComment,
           });
         else
           await profileApiService.createReview({
             targetUid: targetUid!,
             uid: session.uid,
-            rating,
-            comment,
+            rating: nextRating,
+            comment: nextComment,
           });
-      }
-      setModal(false);
-      await refresh();
-    } finally {
-      setBusy(false);
+        setModal(false);
+        await refresh();
+      },
+    });
+  };
+
+  const changeRating = (nextRating: number) => {
+    setRating(nextRating);
+    stageReviewSave(nextRating, comment);
+  };
+
+  const changeComment = (nextComment: string) => {
+    setComment(nextComment);
+    stageReviewSave(rating, nextComment);
+  };
+
+  const stageReviewDelete = (reviewId: string) => {
+    if (!session) return;
+    reviewOperations.stage({
+      itemId: `review-delete:${reviewId}`,
+      kind: "delete",
+      label: "حذف التقييم",
+      execute: async () => {
+        if (type === "product")
+          await productReviewApiService.delete(reviewId, session.uid);
+        else await profileApiService.deleteReview(reviewId, session.uid);
+        await refresh();
+      },
+    });
+  };
+
+  const changeReplyText = (nextText: string) => {
+    setReplyText(nextText);
+    if (!session || !replyReview || !nextText.trim()) {
+      reviewOperations.unstage("reply-save");
+      return;
     }
+    const reviewId = replyReview.id;
+    reviewOperations.stage({
+      itemId: "reply-save",
+      kind: "save",
+      label: "رد البائع",
+      execute: async () => {
+        if (type === "product")
+          await productReviewApiService.reply(reviewId, session.uid, nextText);
+        else
+          await profileApiService.replyReview(reviewId, session.uid, nextText);
+        setReplyReview(null);
+        setReplyText("");
+        await refresh();
+      },
+    });
   };
-  const remove = async (reviewId: string) => {
-    if (!session || !window.confirm("حذف التقييم؟")) return;
-    if (type === "product")
-      await productReviewApiService.delete(reviewId, session.uid);
-    else await profileApiService.deleteReview(reviewId, session.uid);
-    await refresh();
+
+  const stageReplyDelete = (reviewId: string) => {
+    if (!session) return;
+    reviewOperations.stage({
+      itemId: `reply-delete:${reviewId}`,
+      kind: "delete",
+      label: "حذف رد البائع",
+      execute: async () => {
+        if (type === "product")
+          await productReviewApiService.deleteReply(reviewId, session.uid);
+        else await profileApiService.deleteReplyReview(reviewId, session.uid);
+        await refresh();
+      },
+    });
   };
-  const saveReply = async () => {
-    if (!session || !replyReview) return;
-    setBusy(true);
-    try {
-      if (type === "product")
-        await productReviewApiService.reply(
-          replyReview.id,
-          session.uid,
-          replyText,
-        );
-      else
-        await profileApiService.replyReview(
-          replyReview.id,
-          session.uid,
-          replyText,
-        );
-      setReplyReview(null);
-      setReplyText("");
-      await refresh();
-    } finally {
-      setBusy(false);
-    }
-  };
-  const deleteReply = async (reviewId: string) => {
-    if (!session || !window.confirm("حذف الرد؟")) return;
-    if (type === "product")
-      await productReviewApiService.deleteReply(reviewId, session.uid);
-    else await profileApiService.deleteReplyReview(reviewId, session.uid);
-    await refresh();
-  };
+
   const targetId = type === "product" ? productId : targetUid;
   const canRate =
     Boolean(targetId) &&
@@ -347,7 +391,7 @@ export function ProductReviews({
                           </button>
                           <button
                             type="button"
-                            onClick={() => remove(review.id)}
+                            onClick={() => stageReviewDelete(review.id)}
                             className="text-destructive"
                           >
                             حذف
@@ -374,7 +418,7 @@ export function ProductReviews({
                         {isSeller ? (
                           <button
                             type="button"
-                            onClick={() => deleteReply(review.id)}
+                            onClick={() => stageReplyDelete(review.id)}
                             className="mt-2 text-sm text-destructive"
                           >
                             حذف الرد
@@ -401,24 +445,20 @@ export function ProductReviews({
       </section>
       {modal ? (
         <ProductReviewDialog
-          busy={busy}
           comment={comment}
           commentsEnabled={commentsEnabled}
           editing={editing}
           rating={rating}
-          onCancel={() => setModal(false)}
-          onCommentChange={setComment}
-          onRatingChange={setRating}
-          onSubmit={submit}
+          onClose={() => setModal(false)}
+          onCommentChange={changeComment}
+          onRatingChange={changeRating}
         />
       ) : null}
       {replyReview ? (
         <ProductReviewReplyDialog
-          busy={busy}
           replyText={replyText}
-          onCancel={() => setReplyReview(null)}
-          onReplyTextChange={setReplyText}
-          onSave={saveReply}
+          onClose={() => setReplyReview(null)}
+          onReplyTextChange={changeReplyText}
         />
       ) : null}
     </div>

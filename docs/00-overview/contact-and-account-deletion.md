@@ -16,6 +16,7 @@
 - Core deletion logic lives in `@asol/auth-core/server` (`AccountDeletionService`).
 - Requires authentication, a signed `sessionToken` header, current password, exact confirmation text matching either `DELETE ASOL ACCOUNT` or `احذف حساب أصول نهائيا`, and approval of the final warning.
 - Super Admin account cannot be deleted from this page.
+- The page has no delete button. It registers the `account-deletion` scope in `@asol/page-save-core`; the password, confirmation phrase, and final-warning checkbox gate `canSave`, and the header save icon runs the deletion. See `docs/05-platform-features/page-save-system.md`.
 - Endpoint: `POST /api/account/delete`.
 
 ### Permanently Deleted Data

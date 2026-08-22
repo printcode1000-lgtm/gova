@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ASOL_API_ROUTES, asolApi } from "@/core/api";
+import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
 import {
   PRODUCT_DEMO_DETAILS,
   PRODUCT_DEMO_IMAGES,
@@ -75,6 +76,7 @@ export function DeveloperCategorySelector() {
       createDefaultProductStyleComponents,
     );
   const [isStyleLoaded, setIsStyleLoaded] = React.useState(false);
+  const [savedComponentsJson, setSavedComponentsJson] = React.useState("");
   const [styleStatus, setStyleStatus] = React.useState<
     "idle" | "loading" | "saving" | "saved" | "error"
   >("idle");
@@ -224,7 +226,11 @@ export function DeveloperCategorySelector() {
       )
       .then((response) => {
         if (cancelled) return;
-        setComponents(normalizeProductStyleComponents(response.settings?.components));
+        const loaded = normalizeProductStyleComponents(
+          response.settings?.components,
+        );
+        setComponents(loaded);
+        setSavedComponentsJson(JSON.stringify(loaded));
         setIsStyleLoaded(true);
         setStyleStatus(response.exists ? "saved" : "idle");
       })
@@ -237,25 +243,49 @@ export function DeveloperCategorySelector() {
     };
   }, [mainCategoryId, subcategoryId]);
 
-  React.useEffect(() => {
-    if (!mainCategoryId || !subcategoryId || !isStyleLoaded) return;
+  const isStyleDirty =
+    isStyleLoaded &&
+    Boolean(mainCategoryId) &&
+    Boolean(subcategoryId) &&
+    JSON.stringify(components) !== savedComponentsJson;
 
-    const timeout = window.setTimeout(() => {
+  usePageSaveRegistration({
+    id: "developer-product-style",
+    label: "محدد التصنيفات",
+    returnPath: "/dev/category-selector",
+    enabled: isStyleLoaded,
+    items: [
+      {
+        id: "product-style",
+        label: "إعدادات مكونات المنتج",
+        operation: "save",
+        isDirty: isStyleDirty,
+        canSave: true,
+      },
+    ],
+    isSaving: styleStatus === "saving",
+    canSave: isStyleDirty,
+    save: async () => {
       setStyleStatus("saving");
       const settings: ProductStyleSettings = {
         mainCategoryId,
         subcategoryId,
         components,
       };
-
-      asolApi
-        .put<{ saved: boolean }>(ASOL_API_ROUTES.dev.productStyle, settings)
-        .then(() => setStyleStatus("saved"))
-        .catch(() => setStyleStatus("error"));
-    }, 350);
-
-    return () => window.clearTimeout(timeout);
-  }, [components, isStyleLoaded, mainCategoryId, subcategoryId]);
+      try {
+        await asolApi.put<{ saved: boolean }>(
+          ASOL_API_ROUTES.dev.productStyle,
+          settings,
+        );
+        setSavedComponentsJson(JSON.stringify(components));
+        setStyleStatus("saved");
+        return true;
+      } catch {
+        setStyleStatus("error");
+        return false;
+      }
+    },
+  });
 
   const previewStyleComponents = toProductStyleComponents(components);
   const controlsDisabled = !isStyleLoaded;
@@ -358,10 +388,7 @@ export function DeveloperCategorySelector() {
                     <h2 className="font-bold">إعدادات المكونات</h2>
                     <span className="text-xs text-muted-foreground">
                       {styleStatus === "loading" && "جاري تحميل الإعدادات..."}
-                      {styleStatus === "saving" && "جاري الحفظ..."}
-                      {styleStatus === "saved" && "تم الحفظ"}
-                      {styleStatus === "error" && "تعذر الحفظ أو التحميل"}
-                      {styleStatus === "idle" && "سيتم الحفظ تلقائيًا"}
+                      {styleStatus === "error" && "تعذر تحميل الإعدادات"}
                     </span>
                   </div>
                   <div className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">

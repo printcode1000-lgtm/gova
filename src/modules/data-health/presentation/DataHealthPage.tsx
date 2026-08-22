@@ -166,10 +166,10 @@ export function DataHealthPage() {
           <DataHealthHistoryPanel
             history={page.history}
             onRelease={page.releaseQuarantine}
-            onDeleteImage={page.deleteQuarantinedImage}
-            onClearQuarantine={page.clearQuarantine}
-            onClearRunHistory={page.clearRunHistory}
-            onClearCleanupAudit={page.clearCleanupAudit}
+            onDeleteImage={page.stageQuarantinedImageDelete}
+            onClearQuarantine={page.stageQuarantineClear}
+            onClearRunHistory={page.stageRunHistoryClear}
+            onClearCleanupAudit={page.stageCleanupAuditClear}
           />
         </TabsContent>
       </Tabs>
@@ -182,13 +182,13 @@ export function DataHealthPage() {
         confirmationText={page.confirmationText}
         setConfirmationText={page.setConfirmationText}
         cleaning={page.cleaning}
-        executePlan={page.executePlan}
+        stagePlanExecution={page.stagePlanExecution}
         orderPurgePlan={page.orderPurgePlan}
         setOrderPurgePlan={page.setOrderPurgePlan}
         orderPurgeConfirmation={page.orderPurgeConfirmation}
         setOrderPurgeConfirmation={page.setOrderPurgeConfirmation}
         orderPurgeBusy={page.orderPurgeBusy}
-        executeOrderPurge={page.executeOrderPurge}
+        stageOrderPurge={page.stageOrderPurge}
       />
     </main>
   );

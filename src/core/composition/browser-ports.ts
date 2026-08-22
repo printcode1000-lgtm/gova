@@ -4,6 +4,7 @@ import { configureObservabilityCore } from '@asol/observability-core';
 
 import { isDevelopment } from '@/core/config';
 import { registerOtaCorePorts } from '@/features/ota/ota-core-ports';
+import { registerPageSaveCorePorts } from '@/features/page-save/page-save-core-bootstrap';
 import { registerPageSnapshotCorePorts } from '@/features/page-snapshot/services/page-snapshot-service';
 import { registerSystemLogsCoreBrowserPorts } from '@/features/system-logs/system-logs-core-bootstrap';
 
@@ -31,6 +32,7 @@ export function registerBrowserPorts(): void {
   // the runtime context knows about static export and the native container too.
   configureObservabilityCore({ isDevelopment: () => isDevelopment });
   registerOtaCorePorts();
+  registerPageSaveCorePorts();
   registerPageSnapshotCorePorts();
   registerSystemLogsCoreBrowserPorts();
 }

@@ -35,6 +35,14 @@ import { productPageClipboard } from "./product-page-clipboard";
 import { productPageRouteModel } from "./product-page-route-model";
 import { useProductPageLoader } from "./use-product-page-loader";
 
+function getProductImageKeysFingerprint(
+  images: ProductDetails["images"],
+): string {
+  return JSON.stringify(
+    images.map((image) => image.imageKey).filter(Boolean),
+  );
+}
+
 export function ProductPageContent({
   initialProduct = null,
 }: {
@@ -237,13 +245,34 @@ export function ProductPageContent({
     [details, savedBaseline],
   );
 
+  const imageKeysDirty = React.useMemo(() => {
+    if (!savedBaseline) return imagesPending;
+    try {
+      const baseline = JSON.parse(savedBaseline) as ProductDetails;
+      return (
+        getProductImageKeysFingerprint(details.images) !==
+        getProductImageKeysFingerprint(baseline.images)
+      );
+    } catch {
+      return imagesPending;
+    }
+  }, [details.images, imagesPending, savedBaseline]);
+
   const uploadProductImages = async (): Promise<boolean> => {
     const imagesUploaded = await imageUploadRef.current?.uploadPending();
     if (imagesUploaded === false) {
       setError(
         locale === "ar"
-          ? "تعذر رفع إحدى الصور. أعد المحاولة قبل الحفظ."
-          : "An image could not be uploaded. Retry before saving.",
+          ? "تعذر رفع إحدى الصور."
+          : "An image could not be uploaded.",
+      );
+      return false;
+    }
+    if (imageUploadRef.current?.hasPending()) {
+      setError(
+        locale === "ar"
+          ? "لا تزال هناك صور بانتظار الرفع."
+          : "Some images are still pending upload.",
       );
       return false;
     }
@@ -307,31 +336,39 @@ export function ProductPageContent({
   };
 
   const imageChanges = React.useMemo(() => {
-    if (!savedBaseline) {
-      return { hasUpload: imagesPending, hasDelete: false };
-    }
-    try {
-      const baseline = JSON.parse(savedBaseline) as ProductDetails;
-      const baselineKeys = baseline.images
-        .map((image) => image.imageKey)
-        .filter(Boolean);
-      const currentKeys = details.images
-        .map((image) => image.imageKey)
-        .filter(Boolean);
-      const hasDelete = baselineKeys.some((key) => !currentKeys.includes(key));
-      return { hasUpload: imagesPending, hasDelete };
-    } catch {
-      return { hasUpload: imagesPending, hasDelete: false };
-    }
-  }, [details.images, imagesPending, savedBaseline]);
+    const hasUpload = imagesPending;
+    const hasDelete = (() => {
+      if (!savedBaseline) return false;
+      try {
+        const baseline = JSON.parse(savedBaseline) as ProductDetails;
+        const baselineKeys = baseline.images
+          .map((image) => image.imageKey)
+          .filter(Boolean);
+        const currentKeys = details.images
+          .map((image) => image.imageKey)
+          .filter(Boolean);
+        return baselineKeys.some((key) => !currentKeys.includes(key));
+      } catch {
+        return false;
+      }
+    })();
+    return {
+      hasUpload,
+      hasDelete,
+      hasUnsavedKeys: imageKeysDirty && !hasUpload,
+    };
+  }, [details.images, imageKeysDirty, imagesPending, savedBaseline]);
 
   const pageSaveItems = React.useMemo(
     () => [
       buildImageUploadPageSaveItem({
         id: "product-images",
         label: locale === "ar" ? "صور المنتج" : "Product images",
-        hasPending: imageChanges.hasUpload || imageChanges.hasDelete,
-        hasPendingUpload: imageChanges.hasUpload,
+        hasPending:
+          imageChanges.hasUpload ||
+          imageChanges.hasDelete ||
+          imageChanges.hasUnsavedKeys,
+        hasPendingUpload: imageChanges.hasUpload || imageChanges.hasUnsavedKeys,
         hasPendingDelete: imageChanges.hasDelete,
         t,
       }),
@@ -360,13 +397,17 @@ export function ProductPageContent({
     enabled: editable && ownerAllowed,
     items: pageSaveItems,
     isSaving: saving,
-    canSave: (isProductDirty || imagesPending) && !saving,
+    canSave:
+      (isProductDirty || imagesPending || imageKeysDirty) && !saving,
     prepareForSave: async (selectedItemIds) => {
       if (!selectedItemIds.includes("product-images")) return true;
       return uploadProductImages();
     },
     save: async (selectedItemIds) => {
-      if (!selectedItemIds.includes("product-details")) return true;
+      const shouldPersistDetails =
+        selectedItemIds.includes("product-details") ||
+        (selectedItemIds.includes("product-images") && imageKeysDirty);
+      if (!shouldPersistDetails) return true;
       return saveProductDetails();
     },
   });

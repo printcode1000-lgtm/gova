@@ -24,6 +24,7 @@ export function buildImageUploadPageSaveItem(input: {
   return {
     id: input.id,
     label: input.label,
+    operation: hasUpload ? "upload" : hasDelete ? "delete" : "save",
     isDirty: input.hasPending || hasDelete,
     canSave: input.canSave ?? true,
     description:

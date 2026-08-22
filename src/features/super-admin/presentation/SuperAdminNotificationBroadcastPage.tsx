@@ -35,6 +35,7 @@ export function SuperAdminNotificationBroadcastPage() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [busy, setBusy] = useState(false);
+  const [armedTarget, setArmedTarget] = useState<"selected" | "all" | null>(null);
   const [message, setMessage] = useState("");
   const [result, setResult] = useState<BroadcastNotificationResult | null>(
     null,
@@ -91,13 +92,18 @@ export function SuperAdminNotificationBroadcastPage() {
     });
   };
 
+  /**
+   * Broadcasting is irreversible, so the button arms first and sends on the
+   * second tap; a native browser dialog has no place in a touch-only app.
+   */
   const send = async (sendToAll: boolean) => {
     if (!session || sendInFlightRef.current) return;
-    const count = sendToAll ? (data?.userCount ?? 0) : selected.size;
-    const confirmed = window.confirm(
-      `سيتم إرسال الإشعار إلى ${count} مستخدم. هل تريد المتابعة؟`,
-    );
-    if (!confirmed) return;
+    const target = sendToAll ? "all" : "selected";
+    if (armedTarget !== target) {
+      setArmedTarget(target);
+      return;
+    }
+    setArmedTarget(null);
     sendInFlightRef.current = true;
     setBusy(true);
     setMessage("");
@@ -225,7 +231,9 @@ export function SuperAdminNotificationBroadcastPage() {
               ) : (
                 <Send className="me-2 h-4 w-4" />
               )}
-              إرسال للمحدد
+              {armedTarget === "selected"
+                ? `تأكيد الإرسال إلى ${selected.size} مستخدم`
+                : "إرسال للمحدد"}
             </Button>
             <Button
               type="button"
@@ -240,7 +248,9 @@ export function SuperAdminNotificationBroadcastPage() {
               ) : (
                 <BellRing className="me-2 h-4 w-4" />
               )}
-              إرسال للجميع
+              {armedTarget === "all"
+                ? `تأكيد الإرسال إلى ${data?.userCount ?? 0} مستخدم`
+                : "إرسال للجميع"}
             </Button>
           </div>
         </div>

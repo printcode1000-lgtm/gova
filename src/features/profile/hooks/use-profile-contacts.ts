@@ -97,10 +97,6 @@ export function useProfileContacts() {
     return true;
   };
 
-  const save = () => {
-    void saveAsync();
-  };
-
   return {
     contacts,
     updateContacts,
@@ -108,7 +104,6 @@ export function useProfileContacts() {
     isLoading: !session || contactsQuery.isLoading,
     isSaving: saveMutation.isPending,
     error,
-    save,
     saveAsync,
     applySaved,
     saved: saveMutation.isSuccess && !isDirty,

@@ -5,6 +5,7 @@ import * as React from "react";
 import { asolApi } from "@/core/api";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
 import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 
 import { DEV_CLOUD_BACKUP_API } from "../config";
@@ -37,6 +38,13 @@ export function useDevCloudBackupPage() {
   const [operationStatus, setOperationStatus] =
     React.useState<BackupOperationStatus | null>(null);
   const [busy, setBusy] = React.useState("");
+
+  const operations = usePageSaveOperationScope({
+    id: "dev-cloud-backup",
+    label: "النسخ السحابي للمطور",
+    returnPath: "/dev/cloud-backup",
+    enabled: allowedUser,
+  });
   const [error, setError] = React.useState("");
   const [notice, setNotice] = React.useState("");
 
@@ -245,28 +253,32 @@ export function useDevCloudBackupPage() {
     }
   };
 
-  const deleteSavedBackup = async (fileName: string) => {
+  const stageSavedBackupDelete = (fileName: string) => {
     if (!authHeaders) return;
-    const confirmed = window.confirm(
-      `سيتم حذف النسخة المحلية فقط:\n${fileName}\nهل تريد المتابعة؟`,
-    );
-    if (!confirmed) return;
-    setBusy(`delete:${fileName}`);
-    setError("");
-    setNotice("");
-    try {
-      await asolApi.post<{ deleted: true; fileName: string }>(
-        DEV_CLOUD_BACKUP_API.deleteSaved,
-        { fileName },
-        { headers: authHeaders },
-      );
-      setNotice(`تم حذف النسخة المحلية ${fileName}.`);
-      await load();
-    } catch (deleteError) {
-      setError(formatApiError(deleteError));
-    } finally {
-      setBusy("");
-    }
+    operations.stage({
+      itemId: `dev-cloud-backup-delete:${fileName}`,
+      kind: "delete",
+      label: `حذف النسخة المحلية: ${fileName}`,
+      execute: async () => {
+        setBusy(`delete:${fileName}`);
+        setError("");
+        setNotice("");
+        try {
+          await asolApi.post<{ deleted: true; fileName: string }>(
+            DEV_CLOUD_BACKUP_API.deleteSaved,
+            { fileName },
+            { headers: authHeaders },
+          );
+          await load();
+          return true;
+        } catch (deleteError) {
+          setError(formatApiError(deleteError));
+          return false;
+        } finally {
+          setBusy("");
+        }
+      },
+    });
   };
 
   const restoreSavedBackup = async (
@@ -316,7 +328,7 @@ export function useDevCloudBackupPage() {
     compareSavedBackup,
     createBackup,
     created,
-    deleteSavedBackup,
+    stageSavedBackupDelete,
     diff,
     downloadBackup,
     error,

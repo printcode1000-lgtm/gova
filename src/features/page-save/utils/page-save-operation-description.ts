@@ -1,4 +1,6 @@
-export type PageSaveOperation = "upload" | "delete" | "save";
+import type { PageSaveItemState, PageSaveOperationKind } from "@asol/page-save-core";
+
+export type PageSaveOperation = PageSaveOperationKind;
 
 export function buildPageSaveOperationDescription(
   t: (key: string) => string,
@@ -12,4 +14,14 @@ export function buildPageSaveOperationDescription(
       return t("pageSave.operation.save");
     })
     .join(" · ");
+}
+
+/** Falls back to the item's operation kind so pages never author save copy. */
+export function describePageSaveItem(
+  t: (key: string) => string,
+  item: Pick<PageSaveItemState, "description" | "operation">,
+): string {
+  return (
+    item.description ?? buildPageSaveOperationDescription(t, [item.operation])
+  );
 }
