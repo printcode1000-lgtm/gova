@@ -8,6 +8,8 @@ Client login state in ASOL is local-first and cryptographically verifiable for p
 
 The login response includes a 30-day HMAC-signed `sessionToken`. It is persisted only in AsolDB with the local session, is removed on logout/reset, and has no server session table.
 
+Having no server session table means **no session can be revoked**. A token verifies until it expires, whatever happened to the account behind it — including deletion by a super admin, which never reaches the target's device. See [contact-and-account-deletion.md](../00-overview/contact-and-account-deletion.md) § "Sessions Outlive Deletion".
+
 See [data-layers/README.md](../01-architecture/data-layers/README.md) for full layer architecture.
 
 ---

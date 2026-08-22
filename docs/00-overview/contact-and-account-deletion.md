@@ -28,6 +28,40 @@
 - Authenticated via super-admin signed session token.
 - Cannot delete a Super Admin account (`accountDeletionSuperAdminForbidden`).
 - Executes the full 6-step deletion orchestration (`ACCOUNT_DELETION_STEP_ORDER`) and logs the operation to `persistentSystemLogService`.
+- Covered by `npm run test:super-admin-users`, which runs in `build`, `build:static`, and `test`.
+
+#### Confirmation Gate
+
+The dialog's destructive button stays disabled until the admin retypes the
+target's own phone number — its UID when a profile-only record carries no phone.
+
+A super admin works down a list of rows, so the realistic mistake is deleting
+the wrong account rather than not meaning it. A fixed phrase like the
+self-service page's `DELETE ASOL ACCOUNT` is identical for every row and would
+catch nothing; retyping the identifier forces a look at which account is about
+to go.
+
+This is a mis-tap guard only. Authority is the super-admin signed session that
+`runSuperAdminJsonRoute` verifies — the route accepts no confirmation field, and
+a value the client types could never be one.
+
+#### Sessions Outlive Deletion
+
+Session tokens are stateless 30-day HMAC envelopes and there is no server
+session table (see [session-system.md](../05-platform-features/session-system.md)).
+Nothing revokes them, so a deleted user's device keeps a token that still
+verifies until it expires.
+
+Self-service deletion hides this: the same client that succeeds immediately
+clears its own session, cart, favorites, IndexedDB, and cookies. Super-admin
+deletion has no such moment — the target's device is never told. Their data is
+gone from every database, but the token still passes `assertSignedInRequest`.
+
+Push stops at once, because `delete_main` removes the account's rows from
+`user_notification_tokens`.
+
+Closing this needs a server-side check that the uid still exists, which today
+no request performs.
 
 ### Permanently Deleted Data
 

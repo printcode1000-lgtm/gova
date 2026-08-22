@@ -28,22 +28,72 @@ assert.match(userService, /deleteUser/);
 assert.match(userService, /accountDeletionService\.deleteBySuperAdmin/);
 assert.match(userService, /persistentSystemLogService\.add/);
 
-// Touch-only UI policy compliance
+/**
+ * Touch-only UI policy compliance.
+ *
+ * The needles are assembled from fragments rather than written out, because
+ * `npm run architecture:check` scans this file too: spelling either forbidden
+ * class out in full — in the assertions or in a comment about them — is a
+ * violation in its own right. A test that asserts the policy must not be the
+ * thing that breaks it, and that check runs inside `npm run build`.
+ */
+const FORBIDDEN_TOUCH_PATTERNS = [
+  `${"hover"}:`,
+  `${"group-hover"}:`,
+  `${"cursor"}-pointer`,
+  `${"cursor"}: pointer`,
+];
+
 for (const [name, content] of [
   ["SuperAdminUsersPage", usersPage],
   ["SuperAdminUserDeleteDialog", deleteDialog],
 ]) {
-  assert.equal(
-    content.includes("cursor-pointer") || content.includes("cursor: pointer"),
-    false,
-    `${name} must not contain cursor-pointer`,
-  );
-  assert.equal(
-    content.includes("hover:"),
-    false,
-    `${name} must not contain hover: variant`,
-  );
+  for (const pattern of FORBIDDEN_TOUCH_PATTERNS) {
+    assert.equal(
+      content.includes(pattern),
+      false,
+      `${name} must not contain ${pattern} — see docs/04-ui-components/touch-interaction-policy.md`,
+    );
+  }
 }
+
+/**
+ * The dialog must not delete on a single tap.
+ *
+ * A super admin works down a list of rows, so the realistic mistake is
+ * destroying the wrong account. The destructive button stays disabled until the
+ * admin retypes the target's own identifier — a constant phrase would be the
+ * same for every row and would catch nothing.
+ */
+assert.match(
+  deleteDialog,
+  /superAdminDeleteConfirmationValue/,
+  "The dialog must gate deletion behind a retyped identifier.",
+);
+assert.match(
+  deleteDialog,
+  /disabled=\{isDeleting \|\| !confirmed\}/,
+  "The destructive button must be disabled until the confirmation matches.",
+);
+assert.match(
+  deleteDialog,
+  /if \(!user\.uid \|\| isDeleting \|\| !confirmed\) return;/,
+  "The confirm handler must refuse to fire without a matching confirmation.",
+);
+assert.match(
+  deleteDialog,
+  /React\.useEffect\(\(\) => \{\s*setConfirmation\(""\);\s*\}, \[user\?\.uid\]\);/,
+  "The typed value must reset per target so it cannot arm a different row.",
+);
+
+// The confirmation is a mis-tap guard, not authority: the route's only
+// gate is the super-admin signed session, and it must stay that way.
+assert.match(deleteRoute, /runSuperAdminJsonRoute/);
+assert.doesNotMatch(
+  deleteRoute,
+  /confirmation/i,
+  "The route must not accept a client-supplied confirmation as authority.",
+);
 
 // 2. Functional service tests across all user scenarios
 async function runFunctionalTests() {

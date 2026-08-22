@@ -201,6 +201,28 @@ When a command or test fails:
 
 Do not repeatedly retry the same failing action without changing anything.
 
+## Cloud Servers
+
+This applies to every ephemeral remote workspace: Cursor Cloud, Claude Code on
+the web, Codex Cloud, GitHub Actions runners, Codespaces, any remote container.
+
+The workspace is reclaimed when the session ends, and anything not pushed is
+gone for good — nobody can recover it. So the final step of every finished task
+is the push itself:
+
+```bash
+git push -u origin HEAD:main
+```
+
+* push as each task completes
+* never batch a session's tasks into a single push at the end
+* never leave a commit unpushed while waiting for the next instruction
+* `main` is the only target; never push another ref
+* if the push is refused, say so at once and state that the work exists only
+  inside the container
+
+Never end a turn implying that pushed work exists when it does not.
+
 ## Completion
 
 Before declaring the task complete:
@@ -213,6 +235,7 @@ Before declaring the task complete:
 6. run relevant tests
 7. run the build when appropriate
 8. ensure documentation remains accurate
+9. on a cloud server, push to `main` — see Cloud Servers
 
 Report:
 

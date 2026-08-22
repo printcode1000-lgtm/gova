@@ -11,6 +11,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export interface SuperAdminDeleteTargetUser {
   uid: string;
@@ -28,6 +29,25 @@ interface SuperAdminUserDeleteDialogProps {
   onConfirm: (targetUid: string) => Promise<void> | void;
 }
 
+/**
+ * What the admin must retype to arm the button.
+ *
+ * The account's own phone, not a fixed phrase. A super admin deletes *other*
+ * people from a list of rows, so the mistake this guards against is destroying
+ * the wrong account, not failing to mean it — and a constant phrase is
+ * identical for every row, so it catches nothing. Retyping the identifier
+ * forces a look at *which* account is about to go. The UID is the fallback for
+ * a profile-only record that carries no phone.
+ *
+ * This is a mis-tap guard and nothing more. Authority is the super-admin signed
+ * session the route verifies; a value the client types could never be one.
+ */
+export function superAdminDeleteConfirmationValue(
+  user: SuperAdminDeleteTargetUser,
+): string {
+  return user.phone?.trim() || user.uid;
+}
+
 export function SuperAdminUserDeleteDialog({
   user,
   isOpen,
@@ -35,12 +55,21 @@ export function SuperAdminUserDeleteDialog({
   onClose,
   onConfirm,
 }: SuperAdminUserDeleteDialogProps) {
+  const [confirmation, setConfirmation] = React.useState("");
+
+  // Cleared per target, so a value typed for one row can never arm another.
+  React.useEffect(() => {
+    setConfirmation("");
+  }, [user?.uid]);
+
   if (!user) return null;
 
   const displayName = user.storeName || user.email || user.phone || user.uid;
+  const expected = superAdminDeleteConfirmationValue(user);
+  const confirmed = confirmation.trim() === expected;
 
   const handleConfirm = async () => {
-    if (!user.uid || isDeleting) return;
+    if (!user.uid || isDeleting || !confirmed) return;
     await onConfirm(user.uid);
   };
 
@@ -88,6 +117,37 @@ export function SuperAdminUserDeleteDialog({
               <li>حذف الحساب الدائم من قاعدة البيانات.</li>
             </ul>
           </div>
+
+          <div className="space-y-1.5">
+            <label
+              htmlFor="super-admin-delete-confirmation"
+              className="block text-xs font-medium text-on-surface"
+            >
+              للتأكيد، اكتب {user.phone?.trim() ? "رقم هاتف الحساب" : "معرّف الحساب"}:{" "}
+              <span className="font-mono" dir="ltr">
+                {expected}
+              </span>
+            </label>
+            <Input
+              id="super-admin-delete-confirmation"
+              value={confirmation}
+              onChange={(event) => setConfirmation(event.target.value)}
+              disabled={isDeleting}
+              autoComplete="off"
+              inputMode={user.phone?.trim() ? "tel" : "text"}
+              dir="ltr"
+              className="font-mono text-sm"
+              aria-describedby="super-admin-delete-confirmation-hint"
+            />
+            <p
+              id="super-admin-delete-confirmation-hint"
+              className="text-xs text-on-surface-variant"
+            >
+              {confirmed
+                ? "تم التأكيد. زر الحذف مفعّل الآن."
+                : "زر الحذف يبقى معطّلاً حتى تطابق القيمة."}
+            </p>
+          </div>
         </div>
 
         <DialogFooter className="flex-row items-center justify-end gap-2 pt-2">
@@ -103,7 +163,7 @@ export function SuperAdminUserDeleteDialog({
             type="button"
             variant="destructive"
             onClick={handleConfirm}
-            disabled={isDeleting}
+            disabled={isDeleting || !confirmed}
             className="gap-1.5"
           >
             {isDeleting ? (
