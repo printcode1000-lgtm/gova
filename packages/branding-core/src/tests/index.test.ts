@@ -28,6 +28,28 @@ function read(relativePath: string): string {
   return readFileSync(path.join(root, relativePath), "utf8");
 }
 
+/**
+ * The native store shells are not on every machine that runs this suite.
+ *
+ * `.vercelignore` keeps `/android/` and `/ios/` out of the upload on purpose —
+ * they are store shells rebuilt by the Capacitor pipeline, not inputs to the
+ * hosted build. Reading them unconditionally failed `npm run build` on Vercel
+ * with `ENOENT: android/app/src/main/AndroidManifest.xml`, which took the whole
+ * production deployment of the main app down on a machine where nothing was
+ * wrong.
+ *
+ * The generated sources under `packages/native-core/**` are always present and
+ * are still asserted unconditionally; only the shell copies are conditional, and
+ * the skips are printed so a shell that vanishes locally stays visible.
+ */
+const skippedNativeShellChecks: string[] = [];
+
+function nativeShellPresent(relativePath: string): boolean {
+  if (existsSync(path.join(root, relativePath))) return true;
+  skippedNativeShellChecks.push(relativePath);
+  return false;
+}
+
 function filesBelow(directory: string): string[] {
   return readdirSync(directory).flatMap((name) => {
     const target = path.join(directory, name);
@@ -198,14 +220,18 @@ async function main(): Promise<void> {
     "packages/native-core/android/src/main/res/drawable-nodpi/asol_notification_large_icon.png",
     256,
   );
-  assert.match(
-    read("android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"),
-    /<monochrome android:drawable="@drawable\/ic_launcher_monochrome"\/>/,
-  );
-  assert.match(
-    read("android/app/src/main/AndroidManifest.xml"),
-    /default_notification_icon"[\s\S]*?@drawable\/ic_stat_asol_notification/,
-  );
+  if (nativeShellPresent("android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml")) {
+    assert.match(
+      read("android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"),
+      /<monochrome android:drawable="@drawable\/ic_launcher_monochrome"\/>/,
+    );
+  }
+  if (nativeShellPresent("android/app/src/main/AndroidManifest.xml")) {
+    assert.match(
+      read("android/app/src/main/AndroidManifest.xml"),
+      /default_notification_icon"[\s\S]*?@drawable\/ic_stat_asol_notification/,
+    );
+  }
   const nativeReceiver = read(
     "packages/native-core/android/src/main/java/hgh/asol/app/AsolPushMessagingService.java",
   );
@@ -237,15 +263,19 @@ async function main(): Promise<void> {
     );
   }
 
-  await assertPng(
-    "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
-    1024,
-  );
-  assert.match(
-    read("ios/App/App.xcodeproj/project.pbxproj"),
-    /ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;/,
-    "iOS notifications inherit the signed application's generated AppIcon",
-  );
+  if (nativeShellPresent("ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png")) {
+    await assertPng(
+      "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
+      1024,
+    );
+  }
+  if (nativeShellPresent("ios/App/App.xcodeproj/project.pbxproj")) {
+    assert.match(
+      read("ios/App/App.xcodeproj/project.pbxproj"),
+      /ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;/,
+      "iOS notifications inherit the signed application's generated AppIcon",
+    );
+  }
   const worker = read("packages/data-core/src/browser/workers/asol-push-sw.js");
   assert.match(worker, /'icons\/asol-app-icon-192\.png'/);
   assert.match(worker, /'icons\/asol-notification-badge-96\.png'/);
@@ -285,7 +315,13 @@ async function main(): Promise<void> {
     .join("\n");
   assert.doesNotMatch(packageSource, /@\/|@asol\/(?!branding-core)/);
 
-  console.log("branding-core tests passed.");
+  if (skippedNativeShellChecks.length > 0) {
+  console.log(
+    `branding-core: skipped ${skippedNativeShellChecks.length} native shell check(s) not on disk (android/ and ios/ are excluded from hosted builds): ${skippedNativeShellChecks.join(", ")}`,
+  );
+}
+
+console.log("branding-core tests passed.");
 }
 
 void main();

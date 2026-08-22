@@ -126,3 +126,17 @@ After generation:
 - iOS AppIcon and Splash must show ASOL, not the Capacitor placeholder;
 - `public/logo.png` must be derived from the same SSOT;
 - `cap:build` must synchronize Android and iOS without creating an APK or IPA.
+
+## The native shells are not on every machine
+
+`.vercelignore` keeps `/android/` and `/ios/` out of the upload: they are store shells
+rebuilt by the Capacitor pipeline, not inputs to the hosted build. `test:branding-core`
+read `android/app/src/main/AndroidManifest.xml` unconditionally and failed the Vercel
+build with `ENOENT`, taking the main application's production deployment down on a
+machine where nothing was wrong.
+
+Shell assertions are now conditional and print what they skipped. The generated sources
+under `packages/native-core/**` are always present and stay unconditional — those are
+what the contract is really about; the shell copies are a mirror of them.
+
+Any new assertion against `android/` or `ios/` must go through the same guard.
