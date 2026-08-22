@@ -170,6 +170,7 @@ profile overrides.
 |---|---|---|---|---|
 | Variables | `R2_*` | `PRODUCT_R2_*` | `APPAREL_PETS_R2_*` | `ASOL_OTA_R2_*` |
 | Account ID | `8486fdbb…3e043` | `166409f3…d3e08` | `f08cd5b7…f2642` | `21fce63d…1810` |
+| Email | `print.code.1000@gmail.com` | `bids.stories@gmail.com` | `hesham.gaber@gmail.com` | `tenderx.engineer100@gmail.com` |
 | Bucket | `pic1` | `gova-storage` | `productcat1` | `ota` |
 | Target / Provider | `CloudflareR2` | `CloudflareR2Products` | `CloudflareR2_products-apparel-pets` | `ota` (in `R2_STORAGE_TARGETS`) |
 | Public Base URL | `https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev` | `https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev` | `https://pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev` | `https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev` |

@@ -414,7 +414,7 @@ export function SuperAdminCloudAccountsContent() {
             <td className="p-3">البريد الإلكتروني</td>
             <td className="p-3" dir="ltr">print.code.1000@gmail.com</td>
             <td className="p-3" dir="ltr">bids.stories@gmail.com</td>
-            <td className="p-3" dir="ltr">—</td>
+            <td className="p-3" dir="ltr">hesham.gaber@gmail.com</td>
             <td className="p-3" dir="ltr">tenderx.engineer100@gmail.com</td>
           </tr>
           <tr className="border-t align-top">
