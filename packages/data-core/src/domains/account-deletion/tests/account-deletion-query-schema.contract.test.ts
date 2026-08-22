@@ -125,6 +125,7 @@ assert.deepEqual(
 
 let checked = 0;
 const skipped = new Set<string>();
+const present = new Set<string>();
 for (const reference of references) {
   const fileName = databaseFileFor(reference.table);
   const databasePath = path.join(sqliteDirectory, fileName);
@@ -132,6 +133,7 @@ for (const reference of references) {
     skipped.add(fileName);
     continue;
   }
+  present.add(fileName);
 
   const database = new Database(databasePath, {
     readonly: true,
@@ -167,8 +169,32 @@ for (const reference of references) {
   }
 }
 
-assert.ok(checked > 0, "The account-deletion schema contract checked no columns.");
-if (skipped.size > 0) {
-  console.log(`Skipped absent account-deletion shard(s): ${[...skipped].sort().join(", ")}`);
+/**
+ * Nothing on disk is a skip; something on disk that yielded nothing is a bug.
+ *
+ * The two cases have to be told apart, and conflating them broke a production
+ * deployment: a cloud build machine is a fresh clone whose shards do not exist
+ * yet — `db:ensure` runs later in the `build` chain, and the deployment reads
+ * Turso anyway — so every shard was skipped, `checked` stayed at 0, and a
+ * blanket `checked > 0` failed the whole build on a machine where nothing was
+ * wrong.
+ *
+ * The guard is still worth having: with shards present, zero checked columns
+ * means the SELECT parser stopped matching and the contract has quietly become
+ * a no-op.
+ */
+if (present.size === 0) {
+  console.log(
+    "Account-deletion query schema contract skipped: no local SQLite shard is on disk " +
+      `(${[...skipped].sort().join(", ")}). Run db:ensure to create them; a cloud build has none.`,
+  );
+} else {
+  assert.ok(
+    checked > 0,
+    `The account-deletion schema contract checked no columns, though ${present.size} shard(s) were readable — the SELECT parser has stopped matching.`,
+  );
+  if (skipped.size > 0) {
+    console.log(`Skipped absent account-deletion shard(s): ${[...skipped].sort().join(", ")}`);
+  }
+  console.log(`Account-deletion query schema contract passed (${checked} columns checked).`);
 }
-console.log(`Account-deletion query schema contract passed (${checked} columns checked).`);
