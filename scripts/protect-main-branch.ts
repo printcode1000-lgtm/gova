@@ -27,6 +27,27 @@ dotenv.config({ path: '.env', quiet: true });
 
 const DRY_RUN = process.argv.includes('--dry-run');
 
+/**
+ * `--remove` deletes the protection rule instead of applying it, and is the state this
+ * repository currently runs in.
+ *
+ * The protection below was never enforced. `enforce_admins` is false because `deploy:all`
+ * pushes to main directly, and the sole collaborator is the owner — so every real push
+ * bypassed every rule and said so: `Bypassed rule violations for refs/heads/main`. A
+ * required review no one can satisfy and a required check that is skipped on every push
+ * are not protection, they are a warning printed during releases.
+ *
+ * What actually holds the repository's shape is the `main-only` ruleset from
+ * `block-branch-creation.ts`, which has no bypass actors and stops branch creation for
+ * everyone including the owner. That one is enforcement. This one was ceremony, and
+ * removing it is what makes "pushing to main is unrestricted" true rather than
+ * true-in-practice.
+ *
+ * Running this script without `--remove` puts the rule back. Do that only if the
+ * repository gains a second developer and releases start going through pull requests.
+ */
+const REMOVE = process.argv.includes('--remove');
+
 function resolveRepository(): string {
   const configured = process.env.GITHUB_REPOSITORY?.trim();
   if (configured) return configured;
@@ -108,8 +129,63 @@ function buildPayload(): ProtectionPayload {
   };
 }
 
+/** Deletes the protection rule and reads back to confirm GitHub no longer reports one. */
+async function removeProtection(repository: string, token: string): Promise<void> {
+  const response = await fetch(
+    `https://api.github.com/repos/${repository}/branches/main/protection`,
+    { method: 'DELETE', headers: apiHeaders(token) },
+  );
+  if (!response.ok && response.status !== 404) {
+    throw new Error(`GitHub refused the delete: ${response.status} ${await response.text()}`);
+  }
+
+  const verify = await fetch(
+    `https://api.github.com/repos/${repository}/branches/main/protection`,
+    { headers: apiHeaders(token) },
+  );
+  console.log(
+    verify.status === 404
+      ? 'Branch protection removed. Nothing restricts a push to main.'
+      : `WARNING: protection still reported (${verify.status}). Check it on GitHub.`,
+  );
+}
+
+function apiHeaders(token: string): Record<string, string> {
+  return {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+}
+
+function requireToken(): string {
+  const token = process.env.GITHUB_ADMIN_TOKEN;
+  if (!token) {
+    console.error(
+      '\nGITHUB_ADMIN_TOKEN is missing from .env.local / .env.\n' +
+        'Create a fine-grained token scoped to this repository with\n' +
+        '"Administration: Read and write" — see .env.example for the exact settings.\n' +
+        'Run with --dry-run to review the payload without a token.',
+    );
+    process.exit(1);
+  }
+  return token;
+}
+
 async function main(): Promise<void> {
   const repository = resolveRepository();
+
+  if (REMOVE) {
+    console.log(`Repository : ${repository}`);
+    console.log(`Branch     : main`);
+    if (DRY_RUN) {
+      console.log('\n--dry-run: would delete branch protection on main. Nothing sent.');
+      return;
+    }
+    await removeProtection(repository, requireToken());
+    return;
+  }
+
   const payload = buildPayload();
 
   console.log(`Repository : ${repository}`);
@@ -128,16 +204,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const token = process.env.GITHUB_ADMIN_TOKEN;
-  if (!token) {
-    console.error(
-      '\nGITHUB_ADMIN_TOKEN is missing from .env.local / .env.\n' +
-        'Create a fine-grained token scoped to this repository with\n' +
-        '"Administration: Read and write" — see .env.example for the exact settings.\n' +
-        'Run with --dry-run to review the payload without a token.',
-    );
-    process.exit(1);
-  }
+  const token = requireToken();
 
   const response = await fetch(
     `https://api.github.com/repos/${repository}/branches/main/protection`,

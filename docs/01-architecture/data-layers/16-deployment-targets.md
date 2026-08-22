@@ -118,9 +118,11 @@ waits until it is `READY`.
 Only then does it create or verify the encrypted secret backup, stage the
 complete working tree, and create a main deployment commit named
 `deploy(main): <ISO timestamp>`. It pushes `main` to GitHub, which lets the one
-GitHub-linked Vercel project auto-deploy. When branch protection rejects a plain
-`git push origin main`, `deploy:all` and `deploy:push` retry once using
-`GITHUB_ADMIN_TOKEN` from `.env.local` (same credential as `npm run github:protect`).
+GitHub-linked Vercel project auto-deploy. The retry path — a second `git push`
+using `GITHUB_ADMIN_TOKEN` from `.env.local` when the plain push is rejected —
+is now dead code in practice: `main` carries no branch protection and no ruleset,
+so nothing rejects the first attempt. It is kept because it costs nothing and
+covers the case where protection is put back.
 existing GitHub integration update `gova`. The other six projects remain
 disconnected from GitHub and deploy sequentially through their dedicated
 tokens. Each account receives its own visible comment, for example

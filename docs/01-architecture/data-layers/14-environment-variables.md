@@ -350,7 +350,11 @@ Server-only, and `.env.local` only — never `.env.example`, which is committed.
 unset.
 
 Used by `npm run github:protect` (`scripts/protect-main-branch.ts`) to configure
-branch protection on `main`. This is rule 6 of
+branch protection on `main`, by `--remove` to take it off — the state the
+repository currently runs in, see
+[22. Scripts & Workflows](./22-scripts-and-workflows.md#branch-protection) — and by
+`npm run github:block-branches` to apply the `main-only` ruleset that makes `main`
+the only branch that can exist. This is rule 6 of
 [the module isolation rules](../module-isolation-rules.md) — the one
 rule that cannot be satisfied from the repository tree, because the enforcement
 lives in GitHub's settings rather than in a file.

@@ -213,17 +213,29 @@ resolved by path. It is in `deploy:all` preflight, in `verify:all`, and in CI.
 
 ## Branch protection
 
-`npm run github:protect` (`scripts/protect-main-branch.ts`) applies branch
-protection to `main` and then reads it back to verify, rather than trusting the
-response code. `--dry-run` prints the full payload and sends nothing.
+**There is no branch protection on `main`, deliberately.**
+`GET /repos/{repo}/branches/main/protection` returns `404`.
 
-It needs `GITHUB_ADMIN_TOKEN` in `.env.local` — see
-[14. Environment Variables](./14-environment-variables.md#github-repository-administration)
-for the token's scope, what it can currently do, and what it should be narrowed
-to.
+`npm run github:protect` (`scripts/protect-main-branch.ts`) still applies it, and
+`npm run github:protect -- --remove` takes it off again — the state the repository
+runs in. Both read back to verify rather than trusting the response code, and
+`--dry-run` sends nothing. The credential is `GITHUB_ADMIN_TOKEN` in `.env.local`
+— see [14. Environment Variables](./14-environment-variables.md#github-repository-administration).
 
-`enforce_admins` is deliberately off: `deploy:all` and `deploy:push` push to
-`main` directly and are the supported release paths.
+The rule was removed because it never enforced anything. `enforce_admins` was off
+so that `deploy:all` could push to `main` directly, and the owner is the only
+collaborator — so every real push bypassed every rule and announced it:
+`Bypassed rule violations for refs/heads/main`. A required review that no one can
+satisfy and a required check that is skipped on every push are not protection;
+they are a warning printed during releases.
+
+A push must succeed regardless of what the code does. `verify` still runs in CI on
+every push, and its result is reporting, not a gate — pushing broken code to `main`
+is allowed on purpose, because the alternative is a release path that can be
+blocked by a failing check no one can override.
+
+Put it back only if the repository gains a second developer and releases start
+going through pull requests.
 
 ## main is the only branch
 
@@ -269,12 +281,31 @@ a push to `main` at all.
 
 ### What is unrestricted on `main`
 
-Deliberately, nothing blocks a push to `main` in any form. Branch protection sets
-`required_status_checks: ['verify']` and a pull-request requirement, but
-`enforce_admins` is `false`, so the owner's direct pushes bypass both — a real
-push reports `Bypassed rule violations for refs/heads/main` and succeeds. That is
-the supported release path for `deploy:all` and `deploy:push`, and both the
-ruleset and the one remaining hook were written not to touch it.
+Nothing blocks a push to `main`, in any form, from any credential. Not
+"blocked but bypassed" — absent:
+
+| Checked | Result |
+| :--- | :--- |
+| `GET /rules/branches/main` | `[]` — the `main-only` ruleset excludes it |
+| `GET /branches/main/protection` | `404` — no protection rule exists |
+| Local hooks | only `10-main-only`, which never inspects a push to `main` |
+| CI | `verify` reports; it gates nothing |
+
+Force pushes, non-fast-forward pushes, and pushes carrying failing code all
+succeed. That last one is deliberate: a release path that a failing check can
+block is a release path that can be lost.
+
+### Vercel picks up every push
+
+The `gova` project is linked by GitHub App — `link.type: github`,
+`link.repoId: 1276783681`, `link.productionBranch: main` — and every push to
+`main` produces a production deployment with `meta.githubDeployment: 1`. Verified
+by matching eight consecutive commits against their deployments, all `READY`.
+
+The link is stored by numeric repo id, so renaming the *repository* would not
+break it. `productionBranch` is the literal string `main`, so **renaming the
+branch would**. That is the concrete reason `main` is never renamed, on top of
+being the only branch this repository allows.
 
 Nothing in `deploy:all`, `deploy:push`, or `.github/workflows/native-core.yml`
 creates a branch, so no release or CI path is affected either way.
