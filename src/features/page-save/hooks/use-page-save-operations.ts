@@ -46,12 +46,24 @@ export function usePageSaveOperations(scopeId: string): PageSaveOperations {
     () => EMPTY_ITEMS,
   );
 
-  React.useEffect(
-    () => () => {
-      dropPageSaveItems(scopeId, clearPageSaveOperations(scopeId));
-    },
-    [scopeId],
-  );
+  /**
+   * `dropPageSaveItems` writes to IndexedDB, so it is async. React cleanup
+   * cannot await, and neither can a caller that only wants the items gone —
+   * but an ignored promise turns a storage rejection into an unhandled one, so
+   * the failure is caught and reported here instead of crossing the boundary.
+   */
+  const forgetStagedItems = React.useCallback(() => {
+    void dropPageSaveItems(scopeId, clearPageSaveOperations(scopeId)).catch(
+      (error: unknown) => {
+        console.warn(
+          `[Asol][PageSave] Failed to forget staged items for "${scopeId}".`,
+          error,
+        );
+      },
+    );
+  }, [scopeId]);
+
+  React.useEffect(() => () => forgetStagedItems(), [forgetStagedItems]);
 
   const stage = React.useCallback(
     (operation: StagePageSaveOperationInput) => {
@@ -65,9 +77,7 @@ export function usePageSaveOperations(scopeId: string): PageSaveOperations {
     [scopeId],
   );
 
-  const clear = React.useCallback(() => {
-    dropPageSaveItems(scopeId, clearPageSaveOperations(scopeId));
-  }, [scopeId]);
+  const clear = forgetStagedItems;
 
   const run = React.useCallback(
     (selectedItemIds: string[]) => runPageSaveOperations(scopeId, selectedItemIds),

@@ -130,6 +130,21 @@ tokens. Each account receives its own visible comment, for example
 This avoids ambiguous CLI deployments and concurrent downloads sharing one npm
 cache.
 
+### Function size
+
+Vercel rejects a serverless function over 250MB uncompressed, and the rejection
+lands *after* a successful build, reported as
+`BUILD_UTILS_SPAWN_1: Command "npm run build" exited with 1`. The message names
+the build; the cause is the upload. Read `vercel inspect --logs` before
+diagnosing.
+
+`next.config.ts` keeps `outputFileTracingExcludes` for
+`/api/super-admin/build-jobs/**`: those routes read Android build artifacts off
+the local filesystem, so Next's tracer cannot bound what they touch and sweeps
+the repository into the function. They refuse to run outside local development
+anyway (`assertGooglePlayConsoleAllowed`). See
+[vercel-function-size-release-console.md](../../08-troubleshooting/problems/vercel-function-size-release-console.md).
+
 ### Escape hatches
 
 Each is opt-in, and none is the default:

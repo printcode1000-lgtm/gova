@@ -56,6 +56,34 @@ const nextConfig: NextConfig = {
     '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
   },
 
+  /**
+   * The release console reads build artifacts off the local filesystem, so Next
+   * traces it as "might read anything" and sweeps the repository into the
+   * function: 362MB across 8804 files, against Vercel's 250MB limit. It failed
+   * every production deployment of the main app with
+   * `BUILD_UTILS_SPAWN_1` on
+   * `api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis`.
+   *
+   * Nothing here is needed at runtime. Every one of these routes calls
+   * `assertGooglePlayConsoleAllowed()`, which throws
+   * `googlePlayConsoleDevelopmentOnly` outside a local development runtime — a
+   * deployment has no Android build artifacts to analyse in the first place.
+   * Excluding the payload keeps the guard's honest refusal and drops the weight.
+   *
+   * Static assets are excluded, never code: `out/` and `public/` are served by
+   * the CDN, `ios/` and `android/` are native shells, and `test_profile/` is a
+   * gitignored local Chrome profile that has no business in a build at all.
+   */
+  outputFileTracingExcludes: {
+    '/api/super-admin/build-jobs/**': [
+      './test_profile/**',
+      './out/**',
+      './ios/**',
+      './android/**',
+      './public/**',
+    ],
+  },
+
   images: {
     unoptimized: isStatic,
     formats: ['image/avif', 'image/webp'],
