@@ -31,7 +31,9 @@ export async function DELETE(request: Request) {
         const claims = assertSignedInRequest(request);
         const deviceId =
           new URL(request.url).searchParams.get("deviceId")?.trim() ?? "";
-        if (!deviceId) throw new Error("notificationDeviceIdInvalid");
+        // A mapped business code: an unmapped one falls through as a 500,
+        // which would report a malformed request as a server fault.
+        if (!deviceId) throw new Error("notificationTokenIdentifierRequired");
         await notificationsServer.removeDeviceToken({
           uid: claims.uid,
           phone: claims.phone,

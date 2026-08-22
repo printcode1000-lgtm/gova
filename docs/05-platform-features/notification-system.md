@@ -979,6 +979,14 @@ alone would leave this browser holding a live Web Push subscription — and a
 native shell holding a stored enabled flag — that both claim a registration the
 server no longer has.
 
+Revoking a *remote* device stops delivery to it immediately, and lasts until
+that device registers again on its own: `DeviceTokenService.register` runs when
+it signs in, changes the UI language, or turns its own switch on, and the token
+rotation handler re-registers only while that device's stored enabled flag is
+still true. This is inherent to a per-device token — the account cannot reach
+into another device's local store — and it is why the control is described as
+"stops receiving" rather than "signs that device out".
+
 ### The account's own delivery test
 
 `POST /api/notifications/test/self` sends the caller a single fixed
