@@ -119,6 +119,13 @@ src/app/api/auth/profile/route.ts
 src/app/api/account/delete/route.ts
 ```
 
+### Registration UI
+
+The optional email field is inside a native collapsible section labeled
+`Optional` and is collapsed by default. Expanding it reveals the email input
+and its password-recovery explanation; the field remains part of the same
+registration form and validation contract.
+
 ### Logout simplification
 
 `AppSidebar` logout now calls only `useLogout()` (clear IDB session + React context). It no longer duplicates device unregister, theme resets, or `clearAllClientStorage()`.
