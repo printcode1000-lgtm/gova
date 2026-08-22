@@ -51,10 +51,47 @@ assert.match(
   /\.stage\(\{[\s\S]*?kind: "delete"[\s\S]*?execute:/,
   "Deletion must be queued through stage({ kind: \"delete\", execute }) — never run on tap.",
 );
+/**
+ * `isStaged` must gate the row control itself, not merely appear somewhere in
+ * the file. A file-wide match passed while the `disabled` prop had been reverted
+ * to a constant, because the label ternary still mentioned `isStaged` — so the
+ * button was tappable again and the assertion never noticed.
+ */
+{
+  const buttonAt = usersPage.indexOf('variant="destructive"');
+  assert.ok(buttonAt >= 0, "The row must still carry the destructive staging control.");
+
+  // The prop's own braces, matched by counting. A loose `[\s\S]*?` reached past
+  // `className` into the button's label — which also mentions `isStaged` — so a
+  // `disabled` prop reverted to a constant still matched and the button was
+  // tappable again with the assertion none the wiser.
+  const propAt = usersPage.indexOf("disabled={", buttonAt);
+  assert.ok(propAt >= 0, "The row control must carry a disabled prop.");
+  let depth = 0;
+  let end = propAt;
+  for (let at = propAt + "disabled=".length; at < usersPage.length; at += 1) {
+    if (usersPage[at] === "{") depth += 1;
+    else if (usersPage[at] === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        end = at;
+        break;
+      }
+    }
+  }
+  assert.ok(end > propAt, "The row control's disabled prop is unbalanced.");
+
+  assert.match(
+    usersPage.slice(propAt, end),
+    /isStaged\(/,
+    "The row control's disabled prop must consult isStaged, so a second tap cannot stack a duplicate.",
+  );
+}
+
 assert.match(
   usersPage,
   /isStaged\(\s*`super-admin-user-delete:\$\{user\.uid\}`\s*,?\s*\)/,
-  "The row control must reflect isStaged so a second tap restages instead of stacking.",
+  "The staged-state lookup must be keyed by the same uid-scoped item id.",
 );
 assert.match(
   usersPage,
@@ -62,19 +99,43 @@ assert.match(
   "The row control must read as staging, not as a delete that already happened.",
 );
 
-// The delete API may appear only inside the staged executor. A top-level
-// asolApi.post in a click handler would bypass page-save while staying
-// invisible to page-save-write-surface.test.ts (which allowlists named
-// services, not raw asolApi calls).
+/**
+ * The delete API may appear only inside the staged executor. A raw
+ * `asolApi.post` in a click handler bypasses page-save while staying invisible
+ * to `page-save-write-surface.test.ts`, which allowlists named services rather
+ * than raw `asolApi` calls.
+ *
+ * Every occurrence is checked, not just the first. Validating only the first
+ * one let the exact bypass through: a second, unstaged call added *after* the
+ * compliant one left the first occurrence still sitting inside the executor,
+ * so the assertion passed while the page deleted on tap.
+ *
+ * The route is also required to appear exactly once. A second call site — even
+ * a compliant one — has to be a deliberate edit here, because "is this
+ * occurrence inside an executor?" is a positional heuristic, and one call site
+ * is the only shape it can judge honestly.
+ */
 {
-  const deleteCall = usersPage.indexOf('"/api/super-admin/users/delete"');
-  assert.ok(deleteCall >= 0, "The page must still call the delete route from the executor.");
-  const executeAt = usersPage.lastIndexOf("execute:", deleteCall);
-  const stageAt = usersPage.lastIndexOf(".stage(", deleteCall);
-  assert.ok(
-    executeAt >= 0 && stageAt >= 0 && stageAt < executeAt && executeAt < deleteCall,
-    "POST /api/super-admin/users/delete must live inside stage(...).execute, not a row onClick.",
+  const ROUTE = '"/api/super-admin/users/delete"';
+  const occurrences: number[] = [];
+  for (let at = usersPage.indexOf(ROUTE); at !== -1; at = usersPage.indexOf(ROUTE, at + 1)) {
+    occurrences.push(at);
+  }
+
+  assert.equal(
+    occurrences.length,
+    1,
+    `The page must call the delete route exactly once, from inside stage(...).execute — found ${occurrences.length}.`,
   );
+
+  for (const deleteCall of occurrences) {
+    const executeAt = usersPage.lastIndexOf("execute:", deleteCall);
+    const stageAt = usersPage.lastIndexOf(".stage(", deleteCall);
+    assert.ok(
+      executeAt >= 0 && stageAt >= 0 && stageAt < executeAt && executeAt < deleteCall,
+      "POST /api/super-admin/users/delete must live inside stage(...).execute, not a row onClick.",
+    );
+  }
 }
 
 // No page-authored confirmation or result surface. The dialog the package owns
