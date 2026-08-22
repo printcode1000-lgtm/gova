@@ -132,3 +132,7 @@ tmp/
 # Runtime system-ops shard: generated locally by db:ensure and holds system logs /
 # data-health records. Schema sync uses Turso; do not commit this SQLite file.
 public/sync_data/sync_sqlite/system-ops.db
+
+# A local Chrome profile directory, not project source. Three .lnk shortcuts from it were
+# swept into a commit by a `git add -A`; the files stay on disk, out of Git.
+test_profile/
