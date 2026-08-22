@@ -224,3 +224,52 @@ to.
 
 `enforce_admins` is deliberately off: `deploy:all` and `deploy:push` push to
 `main` directly and are the supported release paths.
+
+## main is the only branch
+
+`main` is the sole branch of this repository. Ten others existed at one point and
+every one of them was created automatically — Claude Code sessions under
+`claude/*`, Cursor cloud agents under `cursor/*`. None held work that `main` did
+not already have; the largest diff among them was an empty commit pushed to
+retrigger CI. They were deleted in one sweep, and the rule is enforced locally
+from that point on.
+
+**`.githooks/pre-push`** rejects any push whose remote ref is not
+`refs/heads/main`. Branch *deletions* pass through — removing a stray branch is
+the outcome the hook protects, not something to block. The hook lives in a
+tracked directory rather than `.git/hooks` so it ships with the repository;
+`core.hooksPath` is pointed at it by the `prepare` npm script, which npm runs on
+install. `git push --no-verify` bypasses it, deliberately, for the one-off case.
+
+This is the enforcement layer, and its limit is worth stating plainly: it runs
+only in a checkout that has `core.hooksPath` set. A Cursor cloud agent, a Claude
+Code cloud session, or the GitHub web UI can still create a branch. Agents
+working in this repository are told not to by rule 10 of `CLAUDE.md`; the hook
+covers the local path and nothing beyond it.
+
+### The server-side option, and why it is off
+
+`npm run github:block-branches` (`scripts/block-branch-creation.ts`) applies a
+repository ruleset named `main-only` that restricts creation for `~ALL` refs
+except `refs/heads/main`, reads it back to verify, and refuses branch creation at
+GitHub with `GH013 ... creations being restricted`.
+
+**It is deliberately not applied.** A ruleset with no bypass actors refuses the
+owner's own pushes too, and there is no useful middle setting: the automation
+that created those ten branches pushes with an owner-scoped token, so any bypass
+actor broad enough to keep the owner unblocked also unblocks the automation.
+Between a block that stops the developer and no server-side block at all, this
+repository takes the second — the hook plus the agent rule carry it.
+
+The script stays because the decision may not be permanent. `--dry-run` prints
+the payload without sending, and `--remove` deletes the ruleset if it is ever
+applied and then unwanted. It reads `GITHUB_ADMIN_TOKEN` from `.env.local`, the
+same token as `github:protect`.
+
+Note that a ruleset is a separate GitHub system from the branch protection
+described above: `github:protect` governs how `main` may move,
+`github:block-branches` would govern whether any other branch may exist. Neither
+replaces the other.
+
+Nothing in `deploy:all`, `deploy:push`, or `.github/workflows/native-core.yml`
+creates a branch, so no release or CI path is affected either way.

@@ -11,6 +11,7 @@
     "npm": ">=11 <12"
   },
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || exit 0",
     "dev": "next dev --turbo --port 3001",
     "dev:checked": "npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --turbo --port 3001",
     "build": "npm run branding:generate && npm run app:init && npm run catalog:validate && npm run test:catalog-studio && npm run architecture:check && npm run services:sync && npm run test:notifications && npm run test:native-core && npm run test:ota-core && npm run test:orders-core && npm run test:data-core && npm run test:backup-core && npm run test:data-health-core && npm run test:storage-core && npm run test:storage-image-manager-core && npm run test:auth-core && npm run test:account-deletion-registry && npm run test:catalog-core && npm run test:format-core && npm run test:google-play-store-assets-core && npm run test:signed-token-core && npm run test:service-runtime-core && npm run test:architecture-core && npm run test:observability-core && npm run test:env-core && npm run test:release-core && npm run test:secrets-core && npm run test:map-core && npm run test:product-style-core && npm run test:product-core && npm run test:dev-core && npm run test:system-logs-core && npm run test:hero-slider-core && npm run test:featured-marquee-core && npm run test:trending-ribbon-core && npm run test:page-snapshot-core && npm run test:page-save-core && npm run ios:push:validate && npm run test:notifications-core && npm run test:account-declarations && npm run test:vercel-deploy-core && npm run test:service-mirror-core && npm run test:account-bridge && npm run test:compositions && npm run db:ensure && npm run db:schema:sync && next build",
@@ -207,6 +208,7 @@
     "services:build": "npx tsx scripts/build-all-services.ts",
     "test:account-declarations": "npx tsx packages/account-declarations/src/tests/index.test.ts",
     "github:protect": "npx tsx scripts/protect-main-branch.ts",
+    "github:block-branches": "npx tsx scripts/block-branch-creation.ts",
     "test:notifications-core": "cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/notifications-core/src/tests/index.test.ts",
     "test:data-core": "npm run test:data-health-core && npm run test:backup-core && npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts",
     "test:backup-core": "cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/backup-core/src/tests/index.test.ts",

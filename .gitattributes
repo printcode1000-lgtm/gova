@@ -1,0 +1,11 @@
+# Git hooks must keep LF endings.
+#
+# This repository is developed on Windows with `core.autocrlf=true`, which rewrites
+# checked-out text files to CRLF. A shell script with CRLF endings fails at its shebang
+# line — `/bin/sh^M: bad interpreter` — so `.githooks/pre-push` would silently stop
+# refusing non-main pushes on the next fresh clone, which is the exact moment the rule
+# matters most.
+#
+# Scoped to `.githooks/` on purpose: a repository-wide eol setting would rewrite every
+# tracked text file in one commit.
+.githooks/** text eol=lf
