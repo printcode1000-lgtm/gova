@@ -24,6 +24,14 @@ coverage/
 /ios/
 /fastlane/
 
+# ── Local browser profiles used to test signed-in flows by hand ───────────
+# Gitignored, so normally absent. Listed anyway as a second, independent line
+# of defence: 170MB of Chrome cache, Safe Browsing databases, and on-device ML
+# models. Next traced it into the release-console function and pushed it past
+# Vercel's 250MB limit, failing every production deploy of the main app. If it
+# is ever committed again, it still must not reach a build machine.
+test_profile/
+
 # ── Documentation, CI, editor, and local tooling ───────────────────────────
 docs/
 .github/

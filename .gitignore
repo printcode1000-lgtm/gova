@@ -28,6 +28,13 @@ tsconfig.tsbuildinfo
 .env*.local
 .env
 
+# Local Chrome profiles used to test signed-in flows by hand. Not project
+# source: 170MB of browser cache, Safe Browsing databases, and on-device ML
+# models across three personal Google accounts. Tracking it also fed
+# `outputFileTracingExcludes` work — Next swept it into a serverless function
+# and pushed it past Vercel's 250MB limit, blocking every production deploy.
+test_profile/
+
 # Ephemeral agent worktrees. Never tracked: they carry a full checkout plus
 # whatever secrets a session restored into it, including the Android signing
 # keystore. `secrets:restore` refuses to write into a path Git does not ignore,

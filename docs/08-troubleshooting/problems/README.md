@@ -13,3 +13,4 @@ A log of project problems and their solutions for recurrence and environment set
 | 8 | Super-admin hero slider live preview stuck on skeleton after image upload | [hero-slider-admin-preview-skeleton.md](./hero-slider-admin-preview-skeleton.md) |
 | 9 | Hero slider images missing after page refresh (broken `imageKey` / deleted files) | [hero-slider-images-missing-after-refresh.md](./hero-slider-images-missing-after-refresh.md) |
 | 10 | Android Gradle fails: invalid `JAVA_HOME` on Windows | [invalid-java-home-windows.md](./invalid-java-home-windows.md) |
+| 11 | Main app deploy fails: release-console function exceeds Vercel's 250MB limit | [vercel-function-size-release-console.md](./vercel-function-size-release-console.md) |
