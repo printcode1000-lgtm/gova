@@ -111,10 +111,10 @@ foreach ($email in $TargetEmails) {
     $prof = Get-ProfileDir -Email $email
     if ($prof) {
         Write-Host "[✔] Launching profile '$prof' for: $email" -ForegroundColor Green
-        Start-Process -FilePath $chrome -ArgumentList "--profile-directory=`"$prof`""
+        Start-Process -FilePath $chrome -ArgumentList "--new-window", "--profile-directory=`"$prof`""
     } else {
         Write-Host "[!] Profile not found for: $email. Opening Sign-In..." -ForegroundColor Yellow
-        Start-Process -FilePath $chrome -ArgumentList "https://accounts.google.com/AddSession?Email=$email"
+        Start-Process -FilePath $chrome -ArgumentList "--new-window", "https://accounts.google.com/AddSession?Email=$email"
     }
     Start-Sleep -Milliseconds 400
 }

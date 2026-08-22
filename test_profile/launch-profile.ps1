@@ -107,7 +107,7 @@ if (-not $chromePath) {
 foreach ($target in $Email) {
     $profileDir = Find-ChromeProfileDirectory -TargetEmail $target
 
-    $argList = @()
+    $argList = @("--new-window")
     $targetUrl = $Url
 
     if ($profileDir) {

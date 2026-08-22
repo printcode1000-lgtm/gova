@@ -70,14 +70,14 @@ foreach ($file in $cmdFiles) {
     $sc.WorkingDirectory = Split-Path -Path $chromePath -Parent
 
     if ($profileDir) {
-        $sc.Arguments = "--profile-directory=`"$profileDir`""
+        $sc.Arguments = "--new-window --profile-directory=`"$profileDir`""
         $iconCandidate = Join-Path "$env:LOCALAPPDATA\Google\Chrome\User Data\$profileDir" "Google Profile.ico"
         if (Test-Path -Path $iconCandidate) {
             $sc.IconLocation = "$iconCandidate,0"
         }
         Write-Host "[OK] Created shortcut for $email -> $profileDir ($shortcutPath)"
     } else {
-        $sc.Arguments = "https://accounts.google.com/AddSession?Email=$email"
+        $sc.Arguments = "--new-window `"https://accounts.google.com/AddSession?Email=$email`""
         Write-Host "[WARN] Profile for $email not found locally. Shortcut set to Google Sign-in."
     }
 
