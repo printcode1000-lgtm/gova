@@ -101,10 +101,9 @@ ASOL_OTA_R2_WAREHOUSE_NAME=21fce63d15897aaa0b68fae1360a1810_ota
 ASOL_OTA_R2_PREFIX=app-updates
 ```
 
-These never fall back to `PRODUCT_R2_*` or `R2_*`. **A fallback across an account boundary is a silent redirect, not a default** — it writes somewhere else instead of failing. Every target requires its own values and throws without them.
+These never fall back to `PRODUCT_R2_*`, `APPAREL_PETS_R2_*`, or `R2_*`. **A fallback across an account boundary is a silent redirect, not a default** — it writes somewhere else instead of failing. Every target requires its own values and throws without them.
 
-`R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` are Cloudflare **account** credentials — they create buckets and manage CORS policy. Reading an image needs none of that, so read paths take the S3 pair and the public URL only: `getR2PublicUrl()` / `getProductR2PublicUrl()` / `getOtaR2PublicUrl()`.
-
+`R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, `APPAREL_PETS_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` are Cloudflare **account** credentials — they create buckets and manage CORS policy. Reading an image needs none of that, so read paths take the S3 pair and the public URL only.
 See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
 Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS`:
