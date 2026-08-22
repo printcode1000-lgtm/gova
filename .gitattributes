@@ -9,3 +9,17 @@
 # Scoped to `.githooks/` on purpose: a repository-wide eol setting would rewrite every
 # tracked text file in one commit.
 .githooks/** text eol=lf
+
+# The portable secrets backup must survive the trip byte for byte.
+#
+# The goal is that downloading this repository as a ZIP onto a clean machine and running
+# `secrets:restore` works with only the passphrase. `core.autocrlf=true` here, and the
+# recovery key is PEM — plain text as far as Git is concerned — so without `-text` it is
+# checked out with CRLF endings that never existed in the blob. Node's PEM parser happens
+# to tolerate that, which is worse than if it did not: the corruption would be invisible
+# until a restore on a machine that mattered.
+#
+# `-text` disables end-of-line conversion in both directions, for checkout and for the
+# `git archive` export GitHub's "Download ZIP" serves.
+config/secret-archive-latest.zip.enc -text
+config/secret-archive-latest.zip.enc.private-key.pem -text

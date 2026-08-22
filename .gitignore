@@ -9,13 +9,11 @@ out/
 .secret-archive/
 asol-secrets-manifest.json
 
-# The recovery key for the portable secrets archive. `secrets:backup` writes it beside
-# `config/secret-archive-latest.zip.enc`, and it was tracked alongside it until now — on a
-# public repository, which put the ciphertext and the key that opens it in the same place.
-# The key file is itself passphrase-encrypted, so this was never a plaintext leak, but
-# publishing both reduced the whole archive to one offline passphrase guess.
-# The encrypted archive stays tracked; the key travels out of band.
-config/secret-archive-latest.zip.enc.private-key.pem
+# NOT ignored, on purpose — do not add it here:
+#   config/secret-archive-latest.zip.enc.private-key.pem
+# It is tracked so that downloading this repository as a ZIP onto a clean machine and
+# running `secrets:restore` works with nothing but the passphrase. See
+# docs/01-architecture/release-and-secrets-modules.md § "What is committed, and what is not".
 
 
 # Debug logs

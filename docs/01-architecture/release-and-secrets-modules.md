@@ -79,21 +79,41 @@ test at all.
 The CLIs — `secrets:backup`, `secrets:restore`, `secrets:key:init` — decide *when*; the package
 decides *how*, and the test fails if a CLI starts doing its own cryptography.
 
-### What is committed, and what is not
+### What is committed, and why both files are
 
 `secrets:backup` publishes two files into `config/` — `PORTABLE_ARCHIVE_PATH`
 (`secret-archive-latest.zip.enc`) and `PORTABLE_RECOVERY_KEY_PATH` (that path plus
-`.private-key.pem`). Only the **archive** is tracked. The recovery key is git-ignored and must
-travel out of band.
+`.private-key.pem`). **Both are tracked, and both must stay tracked.**
 
-Both were tracked until 2026-08-22, on a public repository, which put the ciphertext and the key
-that opens it in the same download. The key file is itself passphrase-encrypted PKCS#8 — the
-restore CLI prompts for that passphrase — so nothing was ever exposed in plaintext, but publishing
-both reduced the archive's security to a single offline passphrase guess, which is not what the
-envelope was designed to rest on.
+The requirement they serve is exact: download this repository as a ZIP onto a clean machine, run
+`npm run secrets:restore`, type the passphrase, and every secret returns to its place. Nothing else
+is carried to that machine. Each piece of the chain has to already be in the ZIP:
 
-Untracking it does not unpublish it: the key remains reachable in this repository's history, and the
-archive it opens is in there too. The remediation that actually closes it is rotation —
-`secrets:key:init` for a new keypair, `secrets:backup` to re-encrypt, and new credentials at each
-provider for anything the old archive held. Deleting the file from `HEAD` only stops the exposure
-from being extended.
+- `resolveRestoreArchivePath()` looks only at `config/secret-archive-latest.zip.enc`.
+- `decryptArchiveToZip` prefers the sidecar `<archive>.private-key.pem` and falls back to
+  `.secret-archive/private-key.pem` — which is git-ignored and therefore absent from a fresh
+  download. The sidecar is the only copy that travels.
+- The passphrase the CLI prompts for unwraps that PKCS#8 key. It is not a ZIP password: the inner
+  archive is built with `7z a -tzip` and no `-p`, so all of the protection is the RSA + AES-256-GCM
+  envelope around it.
+
+Remove either file from Git and the restore fails on a clean machine — the archive with
+`No current secret archive exists`, the key with `Encrypted recovery key missing`.
+
+`.gitattributes` marks both `-text`. `core.autocrlf` is on here and the key is PEM, so without it
+the file arrives with CRLF endings that were never in the blob. Node's PEM parser tolerates that,
+which is worse than if it did not — the corruption would stay invisible until a restore that
+mattered.
+
+### What this costs, plainly
+
+This repository is public. The archive and the key that opens it are in the same download, so the
+whole of the project's secrets rest on one thing: the strength of the passphrase on that PKCS#8
+key. That is a deliberate trade for a restore that needs nothing but a ZIP and a password, not an
+oversight — but it means the passphrase carries weight a passphrase does not usually carry, and it
+is exposed to unlimited offline guessing by anyone who clones.
+
+Two things follow. The passphrase should be long and random, not memorable. And because both files
+have been public since they were first committed, the current passphrase should be treated as
+already spent: `secrets:key:init` for a new keypair, `secrets:backup` to re-encrypt under it, and
+new credentials at each provider for anything the old archive held.
