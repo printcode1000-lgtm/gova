@@ -172,14 +172,14 @@ hop without removing a decision.
 
 ## What was deliberately not done
 
-**A `@asol/domain-contracts` types package.** `@asol/data-core` reaches 18 `@/features/*/entities/*`
-modules, and gathering them into a dependency-free types package would remove those edges. It was
-considered and rejected: the edges are budgeted, pinned by a contract test that fails in both
-directions, and documented in [data-core-module.md](./data-core-module.md) with the reason each is
-layering. They are the row shapes the UI renders directly. Moving them would relocate the coupling
-rather than remove it, and would put a package between the application and its own vocabulary. The
-budget shrank on its own here — 33 edges to 30 — by removing the two normalization shims and the
-storage-profile import, which is the direction the list is supposed to move.
+**Domain entity ownership inside `@asol/data-core` (updated).** A separate
+`@asol/domain-contracts` types package was rejected: it would relocate coupling without an owner.
+Instead, type-level entity modules (profile contacts/store-details/specialties/fulfillment/reviews,
+auth user/profile, product review, follow, seller discount, pharmacy catalog, product-search,
+profile working hours) now live under the owning domain's `entities/` door inside `data-core`.
+App `src/features/**/entities` files re-export from those doors so existing imports keep working.
+Remaining budgeted app edges are categories, product-search field config, an advertisements seed,
+and designated `@/core` leaves — see [data-core-module.md](./data-core-module.md).
 
 **Inline Arabic strings.** 157 files in `src/` and dozens inside sealed packages carry Arabic
 copy outside `src/locales/`. It is a real dispersion, it is not a *structural* one, and it touches

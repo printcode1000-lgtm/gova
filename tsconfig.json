@@ -325,6 +325,27 @@
       ],
       "@asol/vercel-deploy-core": [
         "./packages/vercel-deploy-core/src/index.ts"
+      ],
+      "@asol/data-core/auth/entities": [
+        "./packages/data-core/src/domains/auth/entities/index.ts"
+      ],
+      "@asol/data-core/follow/entities": [
+        "./packages/data-core/src/domains/follow/entities/index.ts"
+      ],
+      "@asol/data-core/pharmacy-profile-catalog/entities": [
+        "./packages/data-core/src/domains/pharmacy-profile-catalog/entities/index.ts"
+      ],
+      "@asol/data-core/product/entities": [
+        "./packages/data-core/src/domains/product/entities/index.ts"
+      ],
+      "@asol/data-core/product-search/entities": [
+        "./packages/data-core/src/domains/product-search/entities/index.ts"
+      ],
+      "@asol/data-core/profile/entities": [
+        "./packages/data-core/src/domains/profile/entities/index.ts"
+      ],
+      "@asol/data-core/seller-discounts/entities": [
+        "./packages/data-core/src/domains/seller-discounts/entities/index.ts"
       ]
     }
   },

@@ -101,6 +101,34 @@
     "./system-logs": {
       "types": "./src/domains/system-logs/index.server.ts",
       "default": "./src/domains/system-logs/index.server.ts"
+    },
+    "./auth/entities": {
+      "types": "./src/domains/auth/entities/index.ts",
+      "default": "./src/domains/auth/entities/index.ts"
+    },
+    "./follow/entities": {
+      "types": "./src/domains/follow/entities/index.ts",
+      "default": "./src/domains/follow/entities/index.ts"
+    },
+    "./pharmacy-profile-catalog/entities": {
+      "types": "./src/domains/pharmacy-profile-catalog/entities/index.ts",
+      "default": "./src/domains/pharmacy-profile-catalog/entities/index.ts"
+    },
+    "./product/entities": {
+      "types": "./src/domains/product/entities/index.ts",
+      "default": "./src/domains/product/entities/index.ts"
+    },
+    "./product-search/entities": {
+      "types": "./src/domains/product-search/entities/index.ts",
+      "default": "./src/domains/product-search/entities/index.ts"
+    },
+    "./profile/entities": {
+      "types": "./src/domains/profile/entities/index.ts",
+      "default": "./src/domains/profile/entities/index.ts"
+    },
+    "./seller-discounts/entities": {
+      "types": "./src/domains/seller-discounts/entities/index.ts",
+      "default": "./src/domains/seller-discounts/entities/index.ts"
     }
   },
   "scripts": {

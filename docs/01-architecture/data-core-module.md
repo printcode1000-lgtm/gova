@@ -29,7 +29,7 @@ Vercel project — a different layer entirely, untouched by this migration.
 
 ## The doors
 
-Twenty-four, and the count is evidence of how many distinct load-time contracts this package
+The door count is evidence of how many distinct load-time contracts this package
 has rather than a lapse in rule 2. Every one is in the `exports` map that `architecture:check`
 reads; there is no `"./*"` wildcard, and no `"@asol/data-core/*"` path in `tsconfig.json` — that
 single wildcard silently defeated the `native-core` seal once and must never reappear.
@@ -94,7 +94,7 @@ returns its value, the drizzle logger is absent rather than a stub, and a failur
 propagates. A forgotten registration costs trace lines in `/dev/monitor` — never a query, never
 a write.
 
-**Budgeted — 25 edges that remain**, pinned in `packages/data-core/src/tests/index.test.ts` with
+**Budgeted — remaining app edges**, pinned in `packages/data-core/src/tests/index.test.ts` with
 the reason each one is layering rather than a violation. The count fell from 34 during the
 2026-08 consolidation: the two `auth/utils/*-normalization` shims became real functions in
 `@asol/auth-core/server`, and the storage profile file moved into the package that validates it.
@@ -102,9 +102,10 @@ Package doors replaced them, which is the direction this list is meant to move:
 
 | Group | Why it stays |
 | :-- | :-- |
-| `@/features/*` entity/search contracts (19) | Feature contracts the UI renders directly. Moving them here would give this package a second reason to change and break rule 8. |
-| `@/features/categories` (1) | Build-time catalog data. A port would default to an empty asset set — a silently wrong artifact. |
-| `@/core/config/*`, `@/core/api/asol-http-transport` (5) | Designated leaves: the config module and the single approved HTTP transport. |
+| Domain entity contracts | Owned under each domain's `entities/` door (`./profile/entities`, `./auth/entities`, `./product/entities`, `./follow/entities`, `./seller-discounts/entities`, `./pharmacy-profile-catalog/entities`, `./product-search/entities`). App `src/features/**/entities` files re-export from those doors so existing imports keep working. |
+| `@/features/product-search/config/product-search-fields` (1) | Field catalog still depends on feature-owned search field config. |
+| `@/features/advertisements` seed JSON (1) | Tooling seed fixture owned by the advertisements feature. |
+| `@/core/config/runtime-context` (1) | Designated config leaf used by database runtime policy. |
 
 Driving the count to zero was never the goal; naming which edges are real is. **The list should
 only ever shrink**, and the test fails both when a new edge appears and when a budgeted one

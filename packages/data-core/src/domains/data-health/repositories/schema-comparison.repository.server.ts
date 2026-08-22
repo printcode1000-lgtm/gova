@@ -6,7 +6,7 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { createClient } from "@libsql/client";
 
-import { readOptionalEnv } from "@/core/config/server-env.values";
+import { readOptionalEnv } from '../../../ports/runtime-config';
 import {
   DATABASE_SHARD_NAMES,
   envPrefixForShard,

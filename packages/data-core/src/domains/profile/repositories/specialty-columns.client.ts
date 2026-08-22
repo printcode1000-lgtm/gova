@@ -1,7 +1,7 @@
-import { categoryService } from "@/features/categories";
+import { categoryService } from '../../../ports/runtime-config';
 
-const items = categoryService.getSpecialtyColumnItems();
-const doctorAppointmentItems = categoryService.getDoctorAppointmentItems();
+const items = categoryService().getSpecialtyColumnItems();
+const doctorAppointmentItems = categoryService().getDoctorAppointmentItems();
 const doctorColumns = new Map(
   items
     .filter((item) => item.kind === "doctor-specialty")

@@ -5,7 +5,7 @@ import { createClient, type Client } from "@libsql/client";
 import {
   listLibsqlDatabaseUrlKeys,
   readOptionalEnv,
-} from "@/core/config/server-env.values";
+} from '../../../ports/runtime-config';
 import { DATABASE_SHARD_NAMES, envPrefixForShard } from "../../../core/database/database-shards";
 
 import type { DevCloudBackupDatabaseManifest } from "@asol/backup-core";

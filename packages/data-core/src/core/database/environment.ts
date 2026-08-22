@@ -10,7 +10,7 @@ import {
 } from "@asol/dev-core/server";
 import {
   getServerRuntimeContext,
-} from "@/core/config/runtime-context.server";
+} from '../../ports/runtime-config';
 import {
   resolveServerDatabaseBackend,
   type ServerDatabaseBackend,

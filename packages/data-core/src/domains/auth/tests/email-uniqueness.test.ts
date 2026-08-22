@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import Database from 'better-sqlite3';
 
-import type { User } from '@/features/auth/entities/user.entity';
+import type { User } from '../entities';
 import { normalizeAuthEmail } from '@asol/auth-core/server';
 import { CreateUserCommand } from '../operations/commands/create-user.command';
 import { UpdateUserProfileCommand } from '../operations/commands/update-user-profile.command';

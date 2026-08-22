@@ -10,12 +10,12 @@ import type {
   ProfileTrendingItemRow,
   ProfileWorkingHourRow,
 } from "../../../../core/database/profile/profile.schema";
-import type { ProfileContactsData } from "@/features/profile/entities/profile-contacts.entity";
+import type { ProfileContactsData } from "../../entities";
 import {
   EMPTY_PROFILE_SHOWCASE,
   EMPTY_STORE_DETAILS,
   type StoreDetailsData,
-} from "@/features/profile/entities/store-details.entity";
+} from "../../entities";
 import type {
   ProfileImageKeys,
   IProfileRepository,
@@ -23,17 +23,17 @@ import type {
 import {
   EMPTY_PROFILE_SPECIALTIES,
   type ProfileSpecialtiesSelection,
-} from "@/features/profile/entities/profile-specialties.entity";
+} from "../../entities";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   type ProfileFulfillmentSettings,
-} from "@/features/profile/entities/profile-fulfillment-settings.entity";
+} from "../../entities";
 import {
   EMPTY_PROFILE_WORKING_HOURS,
   WORKING_DAY_LABELS,
   normalizeProfileWorkingHours,
   type WorkingDayId,
-} from "@/features/profile-working-hours";
+} from "../../entities";
 import {
   SPECIALTY_COLUMN_NAMES,
   selectedSpecialtyColumns,

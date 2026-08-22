@@ -3,7 +3,7 @@ import "server-only";
 import type {
   ProfileFulfillmentSettings,
   SaveProfileFulfillmentSettingsInput,
-} from "@/features/profile/entities/profile-fulfillment-settings.entity";
+} from "../../entities";
 import type { IProfileRepository } from "../../repositories/profile-repository.interface";
 
 function normalizeCarrierUids(value: unknown): string[] {

@@ -1,10 +1,10 @@
 import "server-only";
 
-import { categoryService } from "@/features/categories";
-import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
+import { categoryService } from '../../../ports/runtime-config';
+import type { ProfileSpecialtiesSelection } from "../entities";
 
-const items = categoryService.getSpecialtyColumnItems();
-const doctorAppointmentItems = categoryService.getDoctorAppointmentItems();
+const items = categoryService().getSpecialtyColumnItems();
+const doctorAppointmentItems = categoryService().getDoctorAppointmentItems();
 const doctorColumns = new Map(
   items
     .filter((item) => item.kind === "doctor-specialty")

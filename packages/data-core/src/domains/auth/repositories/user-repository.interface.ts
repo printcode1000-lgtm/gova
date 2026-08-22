@@ -1,4 +1,4 @@
-import type { User } from '@/features/auth/entities/user.entity';
+import type { User } from '../entities';
 
 export interface IUserRepository {
   create(user: Omit<User, 'id'>): Promise<void>;

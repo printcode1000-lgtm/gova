@@ -11,7 +11,7 @@ import {
   writeTursoProductRuntimeCredentials,
   writeTursoRuntimeCredentials,
   readOptionalEnv,
-} from '@/core/config/server-env.values';
+} from '../../ports/runtime-config';
 import type { TursoProvisionResult } from './types';
 
 const DEFAULT_USERS_DB_NAME = 'allusers';

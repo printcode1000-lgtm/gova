@@ -3,8 +3,8 @@
  * Used exclusively during build/deployment provisioning, never at runtime.
  */
 
-import { asolHttpFetch } from '@/core/api/asol-http-transport';
-import { getTursoPlatformCredentials } from '@/core/config/server-env.values';
+import { asolHttpFetch } from '../../ports/runtime-config';
+import { getTursoPlatformCredentials } from '../../ports/runtime-config';
 
 const PLATFORM_API_BASE = 'https://api.turso.tech/v1';
 
