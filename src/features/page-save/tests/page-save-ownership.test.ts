@@ -132,6 +132,15 @@ function testDialogExecuteContract() {
     "the change handler must also reject form-item selection changes",
   );
   assert.match(dialog, /pageSave\.itemAlwaysIncluded/);
+
+  // Execute can discard as well as save, so the button must not wear a save
+  // icon. The hero mark above the title stays `Save` — that one names the
+  // dialog, not the action.
+  assert.match(
+    dialog,
+    /<Check className="me-2 h-4 w-4" \/>/,
+    "the Execute button must not be labelled with a save icon",
+  );
   assert.match(arabic, /"pageSave\.confirmSave": "تنفيذ"/);
   assert.match(arabic, /"pageSave\.cancel": "غلق"/);
   assert.match(english, /"pageSave\.confirmSave": "Execute"/);

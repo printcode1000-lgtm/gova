@@ -31,7 +31,7 @@ The generated push service worker mirrors the same database name, version, and s
 | `acknowledgePageSaveResult()` | Read and clear `lastResult` (the header consumes it for one check mark) |
 | `subscribePageSave()` | React external store subscription |
 | `hydratePageSavePendingFromStorage()` | Restore pending icon state after app restart |
-| `dropPageSaveItems()` | Forget items whose executors cannot outlive the page |
+| `dropPageSaveItems()` | Forget items whose executors cannot outlive the page. Async — it writes the pending record, so a caller that cannot await must still catch, or a storage rejection becomes an unhandled one |
 | `configurePageSaveCore()` | Wire IndexedDB storage port (bootstrap only) |
 
 ### Operation journal

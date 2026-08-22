@@ -444,7 +444,7 @@ export function setPageSaveItemSelected(
  * hold in-memory executors, so a persisted record would point at nothing. Other
  * dirty items in the same scope keep their pending record.
  */
-async function removePageSaveItems(
+export async function dropPageSaveItems(
   registrationId: string,
   itemIds: string[],
 ): Promise<void> {
@@ -482,12 +482,6 @@ async function removePageSaveItems(
   await Promise.all(persistence);
 }
 
-export async function dropPageSaveItems(
-  registrationId: string,
-  itemIds: string[],
-): Promise<void> {
-  await removePageSaveItems(registrationId, itemIds);
-}
 
 /**
  * Reads and clears the last execution result. The header consumes it to show

@@ -1,6 +1,11 @@
 "use client";
 
-import { Save } from "lucide-react";
+// `Save` stays the dialog's own hero mark — this is still the page-save dialog.
+// The Execute button takes `Check` instead: it now runs the checked work *and*
+// permanently discards the unchecked staged operations, so a floppy disk would
+// describe half of what it does. A check mark reads as "carry out this
+// selection".
+import { Check, Save } from "lucide-react";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -202,7 +207,7 @@ export function PageSaveDialog() {
             disabled={!dialog?.canSave || isSaving}
             onClick={handleExecute}
           >
-            <Save className="me-2 h-4 w-4" />
+            <Check className="me-2 h-4 w-4" />
             {isSaving ? t("pageSave.saving") : t("pageSave.confirmSave")}
           </Button>
           <Button
