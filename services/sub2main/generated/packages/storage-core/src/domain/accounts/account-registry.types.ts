@@ -11,4 +11,4 @@ export interface StorageAccountDefinition {
   warehouseNameKey?: string;
 }
 
-export type BuiltInStorageAccountId = 'general' | 'products';
+export type BuiltInStorageAccountId = 'general' | 'products' | 'products-apparel-pets';

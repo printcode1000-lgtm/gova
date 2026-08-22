@@ -1,5 +1,10 @@
 export interface DeletionImage {
-  profileId: 'avatar' | 'cover' | 'product-default' | 'spicialOrder';
+  profileId:
+    | 'avatar'
+    | 'cover'
+    | 'product-default'
+    | 'product-apparel-pets'
+    | 'spicialOrder';
   key: string;
 }
 

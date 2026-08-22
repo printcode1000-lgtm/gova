@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T21:52:34.479Z",
+  "generatedAt": "2026-08-22T00:45:18.876Z",
   "entryPoints": [
     "features/product/services/product-service.server.ts",
     "features/profile/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 353,
+  "fileCount": 354,
   "files": [
     "packages/auth-core/src/domain/account-deletion-registry.ts",
     "packages/auth-core/src/domain/constants.ts",
@@ -240,6 +240,7 @@
     "packages/storage-core/src/domain/images/image-rules.ts",
     "packages/storage-core/src/domain/images/output-format.registry.ts",
     "packages/storage-core/src/domain/images/stored-image.types.ts",
+    "packages/storage-core/src/domain/profiles/product-category-storage-routing.ts",
     "packages/storage-core/src/domain/profiles/storage-profile-path.ts",
     "packages/storage-core/src/domain/profiles/storage-profile-validator.ts",
     "packages/storage-core/src/domain/profiles/storage-profile.types.ts",

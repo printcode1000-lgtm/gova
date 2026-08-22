@@ -7,6 +7,7 @@ export * from './domain/profiles/storage-profile.types';
 export * from './domain/profiles/storage-profile-validator';
 export * from './domain/profiles/storage-profile-path';
 export * from './domain/profiles/storage-profiles.constants';
+export * from './domain/profiles/product-category-storage-routing';
 
 export * from './domain/images/image-rules';
 export * from './domain/images/image-key-generator';

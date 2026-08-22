@@ -63,10 +63,19 @@ export class AccountDeletionRepository {
 
     for (const row of productRows) {
       try {
-        const images = JSON.parse(row.images_json) as { imageKey?: string }[];
+        const images = JSON.parse(row.images_json) as {
+          imageKey?: string;
+          storageProfileId?: string;
+        }[];
         for (const image of images) {
           if (image.imageKey) {
-            result.push({ profileId: "product-default", key: image.imageKey });
+            result.push({
+              profileId:
+                image.storageProfileId === "product-apparel-pets"
+                  ? "product-apparel-pets"
+                  : "product-default",
+              key: image.imageKey,
+            });
           }
         }
       } catch {
