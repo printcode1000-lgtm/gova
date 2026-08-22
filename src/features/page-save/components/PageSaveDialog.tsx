@@ -48,7 +48,7 @@ export function PageSaveDialog() {
     closePageSaveDialog();
   }, [isExecuting, snapshot.isSaving]);
 
-  const handleSave = useCallback(() => {
+  const handleExecute = useCallback(() => {
     if (isExecuting || snapshot.isSaving) return;
     setIsExecuting(true);
     void executePageSave()
@@ -140,9 +140,11 @@ export function PageSaveDialog() {
                 className="flex items-start gap-3 rounded-2xl border border-outline-variant/40 bg-surface/80 px-3 py-3"
               >
                 <Checkbox
-                  checked={item.selected}
-                  disabled={!item.canSave || isSaving}
+                  checked={item.ephemeral ? item.selected : true}
+                  disabled={!item.ephemeral || !item.canSave || isSaving}
+                  aria-disabled={!item.ephemeral || !item.canSave || isSaving}
                   onCheckedChange={(checked) => {
+                    if (!item.ephemeral) return;
                     setPageSaveItemSelected(
                       dialog!.registrationId,
                       item.id,
@@ -161,6 +163,11 @@ export function PageSaveDialog() {
                   {!item.canSave ? (
                     <span className="mt-1 block text-xs text-error">
                       {t("pageSave.itemBlocked")}
+                    </span>
+                  ) : null}
+                  {!item.ephemeral ? (
+                    <span className="mt-1 block text-xs text-on-surface-variant">
+                      {t("pageSave.itemAlwaysIncluded")}
                     </span>
                   ) : null}
                 </span>
@@ -187,13 +194,13 @@ export function PageSaveDialog() {
           </p>
         ) : null}
 
-        <DialogFooter className="gap-2 px-6 pb-6 pt-2 sm:flex-col sm:space-x-0">
+        <DialogFooter className="flex-row flex-nowrap gap-2 px-6 pb-6 pt-2 sm:flex-row sm:space-x-0">
           <Button
             type="button"
             size="lg"
-            className="w-full rounded-xl"
+            className="min-w-0 flex-1 rounded-xl"
             disabled={!dialog?.canSave || isSaving}
-            onClick={handleSave}
+            onClick={handleExecute}
           >
             <Save className="me-2 h-4 w-4" />
             {isSaving ? t("pageSave.saving") : t("pageSave.confirmSave")}
@@ -203,7 +210,7 @@ export function PageSaveDialog() {
             size="lg"
             variant="ghost"
             onClick={handleClose}
-            className="w-full rounded-xl"
+            className="min-w-0 flex-1 rounded-xl"
             disabled={isSaving}
           >
             {t("pageSave.cancel")}

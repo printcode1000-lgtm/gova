@@ -20,6 +20,7 @@ import {
   recoverPageSaveJournal,
   settlePageSaveJournalEntry,
 } from "./page-save-journal";
+import { unstagePageSaveOperation } from "./page-save-operation-queue";
 import type {
   PageSaveJournalEntry,
   PageSaveRecoveredOperation,
@@ -171,6 +172,10 @@ function refreshPageSaveSnapshot(): void {
   const isDirty = activeDirty || persisted !== null;
   const isSaving = isRegistrationSaving(active);
   const selectedDirty = active ? selectedDirtyItems(active.items) : [];
+  const discardableDirty =
+    active?.items.some(
+      (item) => item.isDirty && item.ephemeral && !item.selected,
+    ) ?? false;
   const blockedSelected = selectedDirty.some((item) => !item.canSave);
 
   let phase: PageSaveSnapshot["phase"] = "idle";
@@ -183,7 +188,7 @@ function refreshPageSaveSnapshot(): void {
     isSaving,
     canSave:
       activeDirty &&
-      selectedDirty.length > 0 &&
+      (selectedDirty.length > 0 || discardableDirty) &&
       !blockedSelected &&
       !isSaving &&
       (active?.canSave ?? false),
@@ -210,7 +215,12 @@ function normalizeItems(items: PageSaveItemInput[], previous?: PageSaveItemState
   return items.map((item) => ({
     ...item,
     operation: item.operation ?? "save",
-    selected: previousById.get(item.id)?.selected ?? true,
+    // Form-derived work cannot be abandoned independently from the form state:
+    // its edited values are still mounted and would immediately make it dirty
+    // again. Only staged operations own an executor that can be discarded.
+    selected: item.ephemeral
+      ? (previousById.get(item.id)?.selected ?? true)
+      : true,
   }));
 }
 
@@ -285,6 +295,9 @@ function buildDialogState(): PageSaveDialogState | null {
 
   const items = active?.items ?? persisted!.items;
   const selectedDirty = selectedDirtyItems(items);
+  const discardableDirty = items.some(
+    (item) => item.isDirty && item.ephemeral && !item.selected,
+  );
   const blockedSelected = selectedDirty.some((item) => !item.canSave);
 
   return {
@@ -293,7 +306,10 @@ function buildDialogState(): PageSaveDialogState | null {
     returnPath: active?.returnPath ?? persisted!.returnPath,
     items,
     isSaving: isRegistrationSaving(active),
-    canSave: selectedDirty.length > 0 && !blockedSelected && !isRegistrationSaving(active),
+    canSave:
+      (selectedDirty.length > 0 || discardableDirty) &&
+      !blockedSelected &&
+      !isRegistrationSaving(active),
     requiresNavigation: !active,
   };
 }
@@ -316,7 +332,10 @@ export async function hydratePageSavePendingFromStorage(): Promise<void> {
   const records = await loadPageSavePendingRecords();
   persistedRecords.clear();
   records.forEach((record) => {
-    persistedRecords.set(record.id, record);
+    persistedRecords.set(record.id, {
+      ...record,
+      items: record.items.map((item) => ({ ...item, selected: true })),
+    });
   });
   emit();
 }
@@ -393,6 +412,7 @@ export function setPageSaveItemSelected(
 
   if (current) {
     const existing = current.items.find((item) => item.id === itemId);
+    if (!existing?.ephemeral) return;
     if (existing?.selected === selected) return;
 
     const items = current.items.map((item) =>
@@ -406,6 +426,7 @@ export function setPageSaveItemSelected(
 
   if (persisted) {
     const existing = persisted.items.find((item) => item.id === itemId);
+    if (!existing?.ephemeral) return;
     if (existing?.selected === selected) return;
 
     const items = persisted.items.map((item) =>
@@ -423,13 +444,14 @@ export function setPageSaveItemSelected(
  * hold in-memory executors, so a persisted record would point at nothing. Other
  * dirty items in the same scope keep their pending record.
  */
-export function dropPageSaveItems(
+async function removePageSaveItems(
   registrationId: string,
   itemIds: string[],
-): void {
+): Promise<void> {
   if (itemIds.length === 0) return;
   const dropped = new Set(itemIds);
   let changed = false;
+  const persistence: Promise<void>[] = [];
 
   const current = registrations.get(registrationId);
   if (current) {
@@ -447,16 +469,24 @@ export function dropPageSaveItems(
       if (items.some((item) => item.isDirty)) {
         const nextRecord = { ...persisted, items, updatedAt: nowIso() };
         persistedRecords.set(registrationId, nextRecord);
-        void persistPageSavePendingRecord(nextRecord);
+        persistence.push(persistPageSavePendingRecord(nextRecord));
       } else {
         persistedRecords.delete(registrationId);
-        void deletePageSavePendingRecord(registrationId);
+        persistence.push(deletePageSavePendingRecord(registrationId));
       }
       changed = true;
     }
   }
 
   if (changed) emit();
+  await Promise.all(persistence);
+}
+
+export async function dropPageSaveItems(
+  registrationId: string,
+  itemIds: string[],
+): Promise<void> {
+  await removePageSaveItems(registrationId, itemIds);
 }
 
 /**
@@ -554,9 +584,7 @@ export async function executePageSave(): Promise<boolean> {
   const dialog = buildDialogState();
   if (!dialog) return false;
 
-  const active = resolveActiveRegistration();
-  const selectedIds = selectedDirtyItems(dialog.items).map((item) => item.id);
-  if (selectedIds.length === 0) return false;
+  let active = resolveActiveRegistration();
 
   if (!active || active.id !== dialog.registrationId) {
     markPageSaveExecuteAfterNavigation(dialog.registrationId);
@@ -568,6 +596,33 @@ export async function executePageSave(): Promise<boolean> {
   }
 
   if (active.isSaving || !dialog.canSave) return false;
+
+  // Unchecked staged operations are deliberately abandoned when Execute is
+  // pressed. They never run, and both their in-memory executors and any stale
+  // pending representation are removed before selected work starts.
+  const discardedIds = dialog.items
+    .filter((item) => item.isDirty && item.ephemeral && !item.selected)
+    .map((item) => item.id);
+  for (const itemId of discardedIds) {
+    unstagePageSaveOperation(dialog.registrationId, itemId);
+  }
+  await dropPageSaveItems(dialog.registrationId, discardedIds);
+
+  active = resolveActiveRegistration();
+  if (!active || active.id !== dialog.registrationId) {
+    dialogOpen = false;
+    lastResult = "success";
+    emit();
+    return true;
+  }
+
+  const selectedIds = selectedDirtyItems(active.items).map((item) => item.id);
+  if (selectedIds.length === 0) {
+    dialogOpen = false;
+    lastResult = "success";
+    emit();
+    return true;
+  }
 
   activeSaveExecutionId = active.id;
   const markSaving = (saving: boolean): void => {

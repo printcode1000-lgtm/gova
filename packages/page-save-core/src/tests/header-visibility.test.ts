@@ -157,40 +157,67 @@ async function testIconStaysAfterAFailedSave() {
   closePageSaveDialog();
 }
 
-async function testIconStaysWhenOnlyPartOfThePageIsSaved() {
+async function testExecuteDiscardsUncheckedStagedWork() {
   reset();
-  const saved: string[][] = [];
+  const executed: string[] = [];
+  for (const itemId of ["delete:first", "delete:second"]) {
+    stagePageSaveOperation({
+      scopeId: "super-admin-users",
+      itemId,
+      kind: "delete",
+      label: itemId,
+      execute: async () => {
+        executed.push(itemId);
+        return true;
+      },
+    });
+  }
   formScope(
-    "profile-edit",
-    [
-      { id: "registration", label: "Registration", isDirty: true, canSave: true },
-      { id: "store", label: "Store", isDirty: true, canSave: true },
-    ],
-    async (selectedItemIds) => {
-      saved.push(selectedItemIds);
-      return true;
-    },
+    "super-admin-users",
+    buildPageSaveOperationItems("super-admin-users"),
+    async (selectedItemIds) =>
+      runPageSaveOperations("super-admin-users", selectedItemIds),
   );
 
   openPageSaveDialog();
-  setPageSaveItemSelected("profile-edit", "store", false);
+  setPageSaveItemSelected("super-admin-users", "delete:second", false);
   assert.equal(await executePageSave(), true);
 
-  assert.deepEqual(saved, [["registration"]], "only the checked item is saved");
-  assert.equal(headerState(), "dirty", "the unchecked item keeps the icon visible");
-  closePageSaveDialog();
+  assert.deepEqual(executed, ["delete:first"], "only checked work executes");
+  assert.deepEqual(
+    buildPageSaveOperationItems("super-admin-users"),
+    [],
+    "unchecked staged work is discarded rather than left for later",
+  );
+  assert.equal(headerState(), "hidden", "nothing remains after execute");
 }
 
-async function testAllItemsUnselectedBlocksSaving() {
+async function testExecuteCanDiscardAllStagedWork() {
   reset();
-  formScope("profile-edit", [dirtyItem], async () => true);
+  let executed = false;
+  stagePageSaveOperation({
+    scopeId: "data-health",
+    itemId: "purge",
+    kind: "delete",
+    label: "Purge",
+    execute: async () => {
+      executed = true;
+      return true;
+    },
+  });
+  formScope(
+    "data-health",
+    buildPageSaveOperationItems("data-health"),
+    async (selectedItemIds) =>
+      runPageSaveOperations("data-health", selectedItemIds),
+  );
   openPageSaveDialog();
-  setPageSaveItemSelected("profile-edit", "details", false);
+  setPageSaveItemSelected("data-health", "purge", false);
 
-  assert.equal(getPageSaveSnapshot().canSave, false, "nothing selected blocks save");
-  assert.equal(await executePageSave(), false);
-  assert.equal(headerState(), "dirty", "the icon still points at unsaved work");
-  closePageSaveDialog();
+  assert.equal(getPageSaveSnapshot().canSave, true, "Execute can discard all staged work");
+  assert.equal(await executePageSave(), true);
+  assert.equal(executed, false, "discarded work never runs");
+  assert.equal(headerState(), "hidden");
 }
 
 async function testOnlyTheDirtyScopeDrivesTheHeader() {
@@ -213,30 +240,24 @@ async function testOnlyTheDirtyScopeDrivesTheHeader() {
   closePageSaveDialog();
 }
 
-async function testSavingAStagedOperationLeavesFormWorkVisible() {
+async function testFormWorkCannotBeUnchecked() {
   reset();
-  stagePageSaveOperation({
-    scopeId: "profile-edit",
-    itemId: "product-delete:1",
-    kind: "delete",
-    label: "Delete product",
-    execute: async () => true,
-  });
-
-  const items = () => [dirtyItem, ...buildPageSaveOperationItems("profile-edit")];
-  formScope("profile-edit", items(), async (selectedItemIds) => {
-    await runPageSaveOperations("profile-edit", selectedItemIds);
+  const saved: string[][] = [];
+  formScope("profile-edit", [dirtyItem], async (selectedItemIds) => {
+    saved.push(selectedItemIds);
     return true;
   });
 
   openPageSaveDialog();
   setPageSaveItemSelected("profile-edit", "details", false);
+  assert.equal(
+    getPageSaveSnapshot().dialog?.items[0]?.selected,
+    true,
+    "form-derived work remains locked on",
+  );
   assert.equal(await executePageSave(), true);
-  syncItems("profile-edit", items());
-
-  assert.deepEqual(buildPageSaveOperationItems("profile-edit"), []);
-  assert.equal(headerState(), "dirty", "the untouched form section stays pending");
-  closePageSaveDialog();
+  assert.deepEqual(saved, [["details"]]);
+  assert.equal(headerState(), "hidden");
 }
 
 async function testUnmountingAStagingSurfaceHidesTheIcon() {
@@ -278,7 +299,7 @@ async function testHydratedPendingRecordKeepsTheIconAndAsksForNavigation() {
           operation: "save",
           isDirty: true,
           canSave: true,
-          selected: true,
+          selected: false,
         },
       ],
       updatedAt: new Date().toISOString(),
@@ -292,6 +313,11 @@ async function testHydratedPendingRecordKeepsTheIconAndAsksForNavigation() {
   const dialog = getPageSaveSnapshot().dialog;
   assert.equal(dialog?.requiresNavigation, true);
   assert.equal(dialog?.returnPath, "/profile?mode=edit");
+  assert.equal(
+    dialog?.items[0]?.selected,
+    true,
+    "restart normalizes old form records to always included",
+  );
   closePageSaveDialog();
 }
 
@@ -300,10 +326,10 @@ async function main() {
   await testSuccessIsAcknowledgedOnlyOnce();
   await testIconHidesWhenTheUserUndoesTheEdit();
   await testIconStaysAfterAFailedSave();
-  await testIconStaysWhenOnlyPartOfThePageIsSaved();
-  await testAllItemsUnselectedBlocksSaving();
+  await testExecuteDiscardsUncheckedStagedWork();
+  await testExecuteCanDiscardAllStagedWork();
   await testOnlyTheDirtyScopeDrivesTheHeader();
-  await testSavingAStagedOperationLeavesFormWorkVisible();
+  await testFormWorkCannotBeUnchecked();
   await testUnmountingAStagingSurfaceHidesTheIcon();
   await testHydratedPendingRecordKeepsTheIconAndAsksForNavigation();
   console.log("page-save header visibility tests passed.");

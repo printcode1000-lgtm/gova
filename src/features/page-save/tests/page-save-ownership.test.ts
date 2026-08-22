@@ -108,6 +108,36 @@ function testPackageOwnsOperationQueue() {
   );
 }
 
+/** The shared dialog exposes one execute contract on every page-save surface. */
+function testDialogExecuteContract() {
+  const dialog = read(
+    "src/features/page-save/components/PageSaveDialog.tsx",
+  );
+  const arabic = read("src/locales/ar.json");
+  const english = read("src/locales/en.json");
+
+  assert.match(
+    dialog,
+    /DialogFooter className="[^"]*flex-row[^"]*flex-nowrap/,
+    "Close and Execute must stay on one non-wrapping row",
+  );
+  assert.match(
+    dialog,
+    /disabled=\{!item\.ephemeral \|\| !item\.canSave \|\| isSaving\}/,
+    "form-derived checkboxes must be visibly locked",
+  );
+  assert.match(
+    dialog,
+    /if \(!item\.ephemeral\) return;/,
+    "the change handler must also reject form-item selection changes",
+  );
+  assert.match(dialog, /pageSave\.itemAlwaysIncluded/);
+  assert.match(arabic, /"pageSave\.confirmSave": "تنفيذ"/);
+  assert.match(arabic, /"pageSave\.cancel": "غلق"/);
+  assert.match(english, /"pageSave\.confirmSave": "Execute"/);
+  assert.match(english, /"pageSave\.cancel": "Close"/);
+}
+
 /**
  * The registry is the only importer allowed to reach the queue internals; every
  * feature goes through the package door.
@@ -234,6 +264,7 @@ function main() {
   testImageManagerHasNoOwnActionButtons();
   testSuccessFlashOwnsItsTimer();
   testPackageOwnsOperationQueue();
+  testDialogExecuteContract();
   testNoDeepImports();
   testNoPageOwnedSaveMessages();
   testLocalRemovalsAreNotLabelledAsDeletes();

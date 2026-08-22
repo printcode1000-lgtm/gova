@@ -125,10 +125,24 @@ async function testPrepareForSaveGate() {
   assert.equal(await executePageSave(), false);
 }
 
-async function testItemSelection() {
+async function testOnlyStagedItemsCanBeUnselected() {
   resetPageSaveRegistryForTests();
   resetPageSavePersistenceForTests();
+  resetPageSaveOperationsForTests();
+  const storage = createMemoryStorage();
+  configurePageSaveCore({ storage });
 
+  const executed: string[] = [];
+  stagePageSaveOperation({
+    scopeId: "profile-edit",
+    itemId: "product-delete:1",
+    kind: "delete",
+    label: "Delete product",
+    execute: async () => {
+      executed.push("product-delete:1");
+      return true;
+    },
+  });
   registerPageSave({
     id: "profile-edit",
     label: "Profile",
@@ -141,22 +155,63 @@ async function testItemSelection() {
         canSave: true,
       },
       {
-        id: "store",
-        label: "Store",
-        isDirty: true,
-        canSave: true,
+        ...buildPageSaveOperationItems("profile-edit")[0]!,
       },
     ],
     isSaving: false,
     canSave: true,
     handle: {
-      save: async (selectedItemIds) => selectedItemIds.length === 1,
+      save: async (selectedItemIds) => {
+        executed.push(...selectedItemIds);
+        return runPageSaveOperations("profile-edit", selectedItemIds);
+      },
     },
   });
 
-  setPageSaveItemSelected("profile-edit", "store", false);
   openPageSaveDialog();
+  setPageSaveItemSelected("profile-edit", "registration", false);
+  assert.equal(
+    getPageSaveSnapshot().dialog?.items.find((item) => item.id === "registration")
+      ?.selected,
+    true,
+    "form-derived items stay selected",
+  );
+  setPageSaveItemSelected("profile-edit", "product-delete:1", false);
+  closePageSaveDialog();
+  assert.deepEqual(executed, [], "Close executes nothing");
+  assert.equal(
+    listPageSaveOperations("profile-edit").length,
+    1,
+    "Close discards nothing",
+  );
+  openPageSaveDialog();
+  assert.equal(
+    getPageSaveSnapshot().dialog?.items.find(
+      (item) => item.id === "product-delete:1",
+    )?.selected,
+    false,
+    "Close preserves staged checkbox state",
+  );
   assert.equal(await executePageSave(), true);
+  assert.deepEqual(
+    executed,
+    ["registration"],
+    "Execute saves the form item and never runs the discarded operation",
+  );
+  assert.deepEqual(
+    listPageSaveOperations("profile-edit"),
+    [],
+    "the unchecked staged operation is permanently unstaged",
+  );
+  assert.equal(storage.store.size, 0, "no pending record survives Execute");
+
+  resetPageSaveRegistryForTests();
+  await hydratePageSavePendingFromStorage();
+  assert.equal(
+    getPageSaveSnapshot().isDirty,
+    false,
+    "discarded work does not return after restart hydration",
+  );
 }
 
 async function testPersistenceHydration() {
@@ -633,7 +688,7 @@ async function testStagedOperationsAreNeverPersisted() {
 async function main() {
   await testRegistryLifecycle();
   await testPrepareForSaveGate();
-  await testItemSelection();
+  await testOnlyStagedItemsCanBeUnselected();
   await testDefaultSelectedTrue();
   await testMarkCleanAfterSave();
   await testHeldCleanAfterSave();

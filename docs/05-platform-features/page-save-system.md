@@ -25,8 +25,8 @@ The generated push service worker mirrors the same database name, version, and s
 | `registerPageSave()` | Mount a page save scope with save items |
 | `updatePageSaveRegistration()` | Sync label, return path, items, saving, canSave |
 | `openPageSaveDialog()` / `closePageSaveDialog()` | Header dialog lifecycle |
-| `setPageSaveItemSelected()` | Toggle per-item checkbox selection |
-| `executePageSave()` | Save only selected dirty items from the open dialog |
+| `setPageSaveItemSelected()` | Toggle staged-operation selection; form-derived items reject selection changes |
+| `executePageSave()` | Execute checked work and permanently discard unchecked staged operations |
 | `getPageSaveSnapshot()` | Read header + dialog state, including `lastResult` |
 | `acknowledgePageSaveResult()` | Read and clear `lastResult` (the header consumes it for one check mark) |
 | `subscribePageSave()` | React external store subscription |
@@ -78,7 +78,10 @@ Deletes, uploads, and one-shot saves that used to sit behind their own button ar
 | `buildPageSaveOperationItems()` | Convert staged operations into registration items (referentially stable) |
 | `runPageSaveOperations()` | Execute the selected staged operations, in stage order |
 
-A staged operation that fails **stays staged**, so the dialog can list it again on the next attempt, and `executePageSave()` reports failure.
+A staged operation that fails **stays staged**, so the dialog can list it again
+on the next attempt, and `executePageSave()` reports failure. An unchecked
+staged operation is different: pressing **Execute** unstages and drops it
+without calling its executor. Closing the dialog alone never removes it.
 
 ### Item shape
 
@@ -86,7 +89,13 @@ A staged operation that fails **stays staged**, so the dialog can list it again 
 { id, label, operation, isDirty, canSave, description?, ephemeral? }
 ```
 
-`operation` is `"save" | "upload" | "delete"` and defaults to `"save"`. `ephemeral` marks an item whose work lives only in memory (a staged operation's closure); such items drive the header while mounted but are never written to the pending store, so a force-close cannot resurrect an item that can no longer run.
+`operation` is `"save" | "upload" | "delete"` and defaults to `"save"`.
+`ephemeral` marks an item whose work lives only in memory (a staged operation's
+closure); such items drive the header while mounted but are never written to the
+pending store, so a force-close cannot resurrect an item that can no longer
+run. Only these staged, ephemeral items may be unchecked. Form-derived items
+are always selected because their edited values remain in the mounted form and
+would immediately make a discarded item dirty again.
 
 The dialog derives the per-item wording from `operation` (`pageSave.operation.*`), so **pages never author save/upload/delete copy**. `description` is an optional override for surface-specific context, such as the number of products affected by removing a specialty.
 
@@ -120,9 +129,16 @@ Several scopes can be mounted at once (a product page shows both the editor and 
 
 - Page name (`label` / `pageLabel`)
 - Dirty items with checkboxes (**selected by default**)
+- Staged-operation checkboxes are interactive; form-derived checkboxes are
+  visibly disabled, remain checked, carry `aria-disabled`, and explain that
+  they are always included because they come from the open page
 - A per-item description derived from `operation`, or the item's own `description`
 - Blocked items when `canSave` is false for that item
-- Confirm saves only checked dirty items via `executePageSave()`
+- **Execute** runs checked dirty items in stage order and permanently discards
+  unchecked staged operations without running them
+- **Close** only closes the dialog; it preserves items and their staged
+  checked/unchecked state exactly
+- Execute and Close remain on one non-wrapping footer row at every viewport
 - While save runs, controls are disabled and a short saving label appears
 - On failure the dialog stays open and shows `pageSave.failure`; `snapshot.lastResult` carries `"success" | "failure"`
 
@@ -142,7 +158,13 @@ Onboarding image handles can register through `registerPageSaveImageUploadHandle
 
 ## Persistence
 
-While any item stays dirty, the registry writes a `PageSavePendingRecord` to IndexedDB. After app close/reopen, `hydratePageSavePendingFromStorage()` keeps the header icon visible until the user saves or all items become clean. Checkbox selection is persisted with the pending record.
+While any item stays dirty, the registry writes a `PageSavePendingRecord` to
+IndexedDB. After app close/reopen, `hydratePageSavePendingFromStorage()` keeps
+the header icon visible until the user executes or all items become clean.
+Persisted form items are normalized to selected on hydration. Execute removes
+completed form items from the pending record; discarded staged operations are
+unstaged and dropped through the package APIs and therefore cannot return after
+navigation or restart.
 
 Staged operations keep their durability in the journal, not the pending record: their executors are in-memory closures, so their items carry `ephemeral: true` and are filtered out of `PageSavePendingRecord`. A pending record must only ever describe work the app can still run. Their items are dropped when the staging surface unmounts or the scope becomes disabled (sign-out, leaving edit mode).
 
@@ -186,6 +208,15 @@ Every user-triggered save surface must:
 | `release-console-ota-rollout` | OTA rollout percentage | — |
 | `onboarding` | Seller onboarding wizard | — |
 | `onboarding-product-form` | Onboarding product draft while the form is open | — |
+
+The registrations above were audited for Execute/discard semantics. Form-only
+and form-derived upload scopes use locked checkboxes. Mixed scopes keep their
+form items locked and allow only their staged operations to be unchecked.
+Operation-only scopes (`product-reviews:*`, `super-admin-users`, logs,
+data-health, dev-cloud-backup, and store-asset deletion scopes) may discard an
+unchecked staged operation. No integration calls `setPageSaveItemSelected`
+outside the shared dialog, and no scope relies on an unchecked operation
+surviving Execute for a later run.
 
 ## What this package does not own
 
