@@ -18,6 +18,10 @@ import {
   checkSystemLogsBootstrapContract,
   checkSystemLogsContract,
 } from './checks/system-logs-contract';
+import { checkCapabilityOwnershipContract } from './checks/capability-ownership-contract';
+import { checkPackageAppImportContract } from './checks/package-app-import-contract';
+import { checkVendorOwnershipContract } from './checks/vendor-ownership-contract';
+import { checkPageSaveGatewayContract } from './checks/page-save-gateway-contract';
 import { printReport, reportNativeSurface } from './checks/file-analysis';
 
 /**
@@ -47,11 +51,15 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
     }
   }
 
+  checkCapabilityOwnershipContract();
+  checkPageSaveGatewayContract();
+
   for (const file of walk(SRC)) {
     const content = readFileSync(file, 'utf8');
     checkFile(file);
     checkPackageSealContract(file, content);
     checkSystemLogsContract(file, content);
+    checkVendorOwnershipContract(file, content);
   }
 
   // `packages/` was never walked by this check. Every sealed package's own source was
@@ -64,15 +72,21 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
       // This package holds the rules, so its own contract files quote every pattern the scan
       // looks for. Scanning them reports the rule text itself as a violation.
       if (normalizePath(file).includes('packages/architecture-core/src/contracts/')) continue;
-      checkPackageSealContract(file, readFileSync(file, 'utf8'));
+      if (normalizePath(file).includes('packages/architecture-core/src/registry/')) continue;
+      const content = readFileSync(file, 'utf8');
+      checkPackageSealContract(file, content);
+      checkPackageAppImportContract(file, content);
+      checkVendorOwnershipContract(file, content);
     }
   }
 
   for (const file of walk(SCRIPTS)) {
     if (rel(file) === 'scripts/architecture-check.ts') continue;
+    const content = readFileSync(file, 'utf8');
     checkExternalDataAccessOwnership(file);
-    checkAccountBridgeContract(file, readFileSync(file, 'utf8'));
-    checkPackageSealContract(file, readFileSync(file, 'utf8'));
+    checkAccountBridgeContract(file, content);
+    checkPackageSealContract(file, content);
+    checkVendorOwnershipContract(file, content);
   }
   checkTouchInteractionContract();
   checkMapLibreWorkerContract();
@@ -92,9 +106,11 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   if (existsSync(servicesDir)) {
     for (const file of walk(servicesDir)) {
       if (file.includes('node_modules')) continue;
+      if (file.includes('/generated/')) continue;
       const content = readFileSync(file, 'utf8');
       checkAccountBridgeContract(file, content);
       checkPackageSealContract(file, content);
+      checkVendorOwnershipContract(file, content);
       if (file.includes('services/notifications/src')) {
         checkNotificationModuleContract(file, content);
       }

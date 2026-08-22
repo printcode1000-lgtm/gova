@@ -92,20 +92,16 @@ Rules 2, 5, and 7 are enforced by four independent layers, because any one of th
    wildcard. Deep imports fail at resolution time.
 2. **ESLint `no-restricted-imports`** — bans deep paths and vendor dependencies outside the adapter
    layer.
-3. **`packages/architecture-core/src/checks/package-seal-contract.ts`** — walks the whole
-   repository during `architecture:check`, which runs inside `build` and `build:static`. It reads
-   each package's own `exports` map, so it covers every package automatically rather than only the
-   ones someone wrote a contract file for. It rejects two things: an import through an undeclared
-   door, and **any relative path that reaches into `packages/`**.
-
-   The second is the one that actually happened. Nineteen imports of the form
-   `../packages/vercel-deploy-core/src/index` made the seal decorative while every declared door
-   looked correct — a relative path never consults `exports`, so layers 1 and 2 above are both blind
-   to it.
-
-   Note also that `packages/` itself was not walked by `architecture:check` for a long time, which
-   exempted every sealed package's own source from the scan that rule 5 leans on. It is walked now.
+3. **`packages/architecture-core` repository-wide scan** (`architecture:check`) — walks the whole
+   repository. It reads each package's own `exports` map, rejects relative paths into `packages/`,
+   and additionally enforces the **capability ownership registry**
+   (`src/registry/capability-registry.ts`): every sealed package must be registered with one owner,
+   vendor SDKs may only be imported by their owning package, capability packages may not import
+   `@/`, and mandatory gateways such as `@asol/page-save-core` stay single-door.
 4. **Contract tests inside the package** — pin the exported surface and the module's own shape.
+
+See [repository-architecture-enforcement.md](./repository-architecture-enforcement.md) for the
+ownership inventory and the final invariant.
 
 **The `tsconfig.json` caveat:** a `"@asol/<name>/*"` path wildcard silently defeats layer 1. It was
 added once to `native-core` and made the `exports` seal non-functional until removed. Never reintroduce

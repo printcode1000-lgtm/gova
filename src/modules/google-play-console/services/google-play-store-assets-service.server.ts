@@ -4,8 +4,6 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { GoogleAuth } from "google-auth-library";
-
 import {
   assertGooglePlayConsoleAllowed,
   googlePlayFastlaneEnvironment,
@@ -30,11 +28,9 @@ import {
   type GooglePlayTrackSnapshot,
 } from "@asol/google-play-store-assets-core";
 import { readImageDimensions, validateGooglePlayImage } from "@asol/google-play-store-assets-core/images";
-import { resolveGooglePlayCredentials } from "./google-play-credentials.server";
+import { createGooglePlayAuthClient, resolveGooglePlayCredentials } from "./google-play-credentials.server";
 import { withGooglePlayEditLock } from "./google-play-edit-lock.server";
 
-const ANDROID_PUBLISHER_SCOPE =
-  "https://www.googleapis.com/auth/androidpublisher";
 const API_ROOT = "https://androidpublisher.googleapis.com/androidpublisher/v3";
 const UPLOAD_ROOT =
   "https://androidpublisher.googleapis.com/upload/androidpublisher/v3";
@@ -288,7 +284,7 @@ export class GooglePlayStoreAssetsService {
 
   private async withEdit<T>(
     operation: (context: {
-      client: Awaited<ReturnType<GoogleAuth["getClient"]>>;
+      client: Awaited<ReturnType<typeof createGooglePlayAuthClient>>["client"];
       packageName: string;
       editId: string;
     }) => Promise<T>,
@@ -299,22 +295,14 @@ export class GooglePlayStoreAssetsService {
 
   private async withExclusiveEdit<T>(
     operation: (context: {
-      client: Awaited<ReturnType<GoogleAuth["getClient"]>>;
+      client: Awaited<ReturnType<typeof createGooglePlayAuthClient>>["client"];
       packageName: string;
       editId: string;
     }) => Promise<T>,
     deleteAfter: boolean,
   ): Promise<T> {
     assertGooglePlayConsoleAllowed();
-    const config = resolveGooglePlayConsoleConfig();
-    const credentials = await resolveGooglePlayCredentials();
-    if (!credentials.credentials) throw new Error("googlePlayConsoleCredentialsMissing");
-    const auth = new GoogleAuth({
-      credentials: credentials.credentials,
-      scopes: [ANDROID_PUBLISHER_SCOPE],
-    });
-    const client = await auth.getClient();
-    const packageName = encodeURIComponent(config.packageName);
+    const { client, packageName } = await createGooglePlayAuthClient();
     const edit = await client.request<{ id?: string }>({
       method: "POST",
       url: `${API_ROOT}/applications/${packageName}/edits`,
@@ -339,7 +327,7 @@ export class GooglePlayStoreAssetsService {
   }
 
   private async readSnapshot(
-    client: Awaited<ReturnType<GoogleAuth["getClient"]>>,
+    client: Awaited<ReturnType<typeof createGooglePlayAuthClient>>["client"],
     packageName: string,
     editId: string,
   ): Promise<GooglePlayStoreAssetsSnapshot> {
@@ -422,7 +410,7 @@ export class GooglePlayStoreAssetsService {
   }
 
   private async readImagesForType(
-    client: Awaited<ReturnType<GoogleAuth["getClient"]>>,
+    client: Awaited<ReturnType<typeof createGooglePlayAuthClient>>["client"],
     packageName: string,
     editId: string,
     language: string,
@@ -443,7 +431,7 @@ export class GooglePlayStoreAssetsService {
   }
 
   private async commit(
-    client: Awaited<ReturnType<GoogleAuth["getClient"]>>,
+    client: Awaited<ReturnType<typeof createGooglePlayAuthClient>>["client"],
     packageName: string,
     editId: string,
   ) {

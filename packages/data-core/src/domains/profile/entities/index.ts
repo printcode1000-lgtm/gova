@@ -7,6 +7,5 @@ export { EMPTY_PROFILE_SPECIALTIES } from "./profile-specialties.entity";
 export type { ProfileReturnPolicy, ProfileFulfillmentSettings, SaveProfileFulfillmentSettingsInput, ReturnShippingPayer, ShippingPricingMode } from "./profile-fulfillment-settings.entity";
 export { EMPTY_PROFILE_FULFILLMENT_SETTINGS, normalizeProfileFulfillmentSettings } from "./profile-fulfillment-settings.entity";
 export type { ProfileReview, ProfileReviewsResult, SaveProfileReviewInput, UpdateProfileReviewInput, ProfileRatingSettings } from "./profile-review.entity";
-export type { UserProfileRow } from "./user-profile-row.entity";
 export type { WorkingHoursPeriod, WorkingHoursDay, ProfileWorkingHours, WorkingDayLabel, WorkingDayId } from "./profile-working-hours.types";
 export { WORKING_DAY_LABELS, EMPTY_PROFILE_WORKING_HOURS, createDefaultWorkingPeriod, normalizeProfileWorkingHours, hasWorkingHours, getWorkingHoursDayLabel, getCurrentWorkingHoursStatus } from "./profile-working-hours";

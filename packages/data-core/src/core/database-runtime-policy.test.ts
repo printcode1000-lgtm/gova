@@ -1,42 +1,52 @@
 import assert from "node:assert/strict";
 
 import {
-  resolveClientRuntime,
-  resolveServerRuntime,
-} from "@/core/config/runtime-context";
-import { resolveServerDatabaseBackend } from "./database-runtime-policy";
+  resolveServerDatabaseBackend,
+  type DatabaseRuntimeContext,
+} from "./database-runtime-policy";
 
-assert.equal(
-  resolveServerDatabaseBackend(resolveServerRuntime({ nodeEnv: "development" }), false),
-  "sqlite",
-);
-assert.equal(
-  resolveServerDatabaseBackend(
-    resolveServerRuntime({ nodeEnv: "production", vercel: "1" }),
-    false,
-  ),
-  "turso",
-);
-assert.throws(() =>
-  resolveServerDatabaseBackend(
-    resolveClientRuntime({ mode: "static", apiBaseUrl: "https://api.example.test" }),
-    false,
-  ),
-);
-assert.throws(() =>
-  resolveServerDatabaseBackend(
-    resolveClientRuntime({ mode: "production", platform: "android", native: true }),
-    false,
-  ),
-);
-assert.throws(() =>
-  resolveServerDatabaseBackend(
-    resolveClientRuntime({ mode: "production", platform: "ios", native: true }),
-    false,
-  ),
-);
-assert.throws(() =>
-  resolveServerDatabaseBackend(resolveServerRuntime({ nodeEnv: "production" }), true),
-);
+const webDev: DatabaseRuntimeContext = {
+  isNative: false,
+  platform: "web",
+  isStatic: false,
+  supportsServerApi: true,
+  dataSource: "local",
+};
 
-console.log("data access runtime policy: local SQLite, cloud Turso, static, Android, iOS, and browser guards verified");
+const webProd: DatabaseRuntimeContext = {
+  isNative: false,
+  platform: "web",
+  isStatic: false,
+  supportsServerApi: true,
+  dataSource: "remote",
+};
+
+assert.equal(resolveServerDatabaseBackend(webDev, false), "sqlite");
+assert.equal(resolveServerDatabaseBackend(webProd, false), "turso");
+assert.throws(() =>
+  resolveServerDatabaseBackend(
+    {
+      isNative: false,
+      platform: "web",
+      isStatic: true,
+      supportsServerApi: false,
+      dataSource: "remote",
+    },
+    false,
+  ),
+);
+assert.throws(() =>
+  resolveServerDatabaseBackend(
+    {
+      isNative: true,
+      platform: "android",
+      isStatic: false,
+      supportsServerApi: false,
+      dataSource: "local",
+    },
+    false,
+  ),
+);
+assert.throws(() => resolveServerDatabaseBackend(webDev, true));
+
+console.log("database-runtime-policy.test: ok");

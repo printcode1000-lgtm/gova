@@ -1,1 +1,1 @@
-export type { UserProfileRow } from "@asol/data-core/profile/entities";
+export type { UserProfileRow } from "@asol/data-core/profile";

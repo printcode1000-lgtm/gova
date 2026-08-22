@@ -26,13 +26,29 @@ assert.deepEqual(Object.keys(manifest.exports), ['.'], 'One door: the contract a
 // asserts the split cannot come back by re-adding such an import.
 function sources(dir: string): string[] {
   const out: string[] = [];
-  for (const entry of readdirSync(path.join(ROOT, PACKAGE, 'src', dir), { withFileTypes: true })) {
-    if (entry.isFile() && entry.name.endsWith('.ts')) out.push(path.join(dir, entry.name));
+  const root = path.join(ROOT, PACKAGE, 'src', dir);
+  function walk(current: string, prefix: string): void {
+    for (const entry of readdirSync(current, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        walk(path.join(current, entry.name), path.join(prefix, entry.name));
+        continue;
+      }
+      if (entry.isFile() && entry.name.endsWith('.ts')) {
+        out.push(path.join(prefix, entry.name));
+      }
+    }
   }
+  walk(root, dir);
   return out;
 }
 
-const files = [...sources('contracts'), ...sources('checks'), 'runner.ts', 'index.ts'];
+const files = [
+  ...sources('contracts'),
+  ...sources('checks'),
+  ...sources('registry'),
+  'runner.ts',
+  'index.ts',
+];
 assert.ok(files.length > 12, `Expected the contracts and the checks, found ${files.length}`);
 
 /**

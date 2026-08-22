@@ -153,15 +153,22 @@ export function matchesAny(path: string, patterns: RegExp[]): boolean {
 }
 
 export function extractImports(content: string): string[] {
+  // Strip comments and template literals first so sample code inside tests
+  // (e.g. a string containing an application-alias import) is not treated as a real import.
+  const stripped = content
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|[^:])\/\/.*$/gm, '$1')
+    .replace(/`(?:\\.|[^`\\])*`/g, '``');
+
   const imports: string[] = [];
   const importRegex = /import\s+(?:type\s+)?(?:[^'"]+\s+from\s+)?['"]([^'"]+)['"]/g;
   const requireRegex = /require\(\s*['"]([^'"]+)['"]\s*\)/g;
   const dynamicRegex = /import\(\s*['"]([^'"]+)['"]\s*\)/g;
 
   let match: RegExpExecArray | null;
-  while ((match = importRegex.exec(content))) imports.push(match[1]);
-  while ((match = requireRegex.exec(content))) imports.push(match[1]);
-  while ((match = dynamicRegex.exec(content))) imports.push(match[1]);
+  while ((match = importRegex.exec(stripped))) imports.push(match[1]!);
+  while ((match = requireRegex.exec(stripped))) imports.push(match[1]!);
+  while ((match = dynamicRegex.exec(stripped))) imports.push(match[1]!);
 
   return imports;
 }

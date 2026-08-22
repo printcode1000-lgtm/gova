@@ -242,4 +242,32 @@ module.exports = [
       ],
     },
   },
+
+  // ── Repository-wide deep-import ban for every sealed @asol package ─────────
+  {
+    files: ['src/**/*.{ts,tsx}', 'scripts/**/*.ts', 'services/**/*.{ts,tsx}', 'packages/**/*.{ts,tsx}'],
+    ignores: [
+      'services/*/generated/**',
+      'scripts/architecture-check.ts',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@asol/*/src', '@asol/*/src/**', '**/packages/*/src/**'],
+              message:
+                'Deep import into a sealed @asol package is forbidden. Use a declared package door only.',
+            },
+            {
+              group: ['web-push', 'firebase-admin', 'better-sqlite3', '@libsql/client', 'drizzle-orm', 'drizzle-orm/*'],
+              message:
+                'This vendor SDK is owned by a sealed package. Import through that package public door.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];
