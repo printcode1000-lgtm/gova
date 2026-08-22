@@ -168,6 +168,7 @@ Every user-triggered save surface must:
 | `product-reviews:*` | Product/store reviews and seller replies | Review save/delete, reply save/delete |
 | `custom-request` | `/custom-request` special order | Image upload + request submit |
 | `account-deletion` | `/delete-account` | Account deletion (phrase gate stays on the page) |
+| `super-admin-users` | `/super-admin/users` | Super-admin deletion of a user account, one staged item per row |
 | `super-admin-hero-slider` | Home hero slider admin | — |
 | `super-admin-featured-marquee` | Featured products marquee admin | — |
 | `super-admin-trending-ribbon` | Trending ribbon admin | — |

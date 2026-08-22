@@ -22,7 +22,7 @@
 ## Super Admin User Deletion
 
 - Super Admin Route: `/super-admin/users`.
-- UI lives in `src/features/super-admin/presentation/SuperAdminUsersPage.tsx` with dialog `SuperAdminUserDeleteDialog.tsx`.
+- UI lives in `src/features/super-admin/presentation/SuperAdminUsersPage.tsx`. The page has no delete dialog of its own.
 - Core deletion method: `AccountDeletionService.deleteBySuperAdmin(targetUid)` in `@asol/auth-core/server`.
 - Protected endpoint: `POST /api/super-admin/users/delete`.
 - Authenticated via super-admin signed session token.
@@ -30,20 +30,43 @@
 - Executes the full 6-step deletion orchestration (`ACCOUNT_DELETION_STEP_ORDER`) and logs the operation to `persistentSystemLogService`.
 - Covered by `npm run test:super-admin-users`, which runs in `build`, `build:static`, and `test`.
 
-#### Confirmation Gate
+#### Staged Through Page Save
 
-The dialog's destructive button stays disabled until the admin retypes the
-target's own phone number — its UID when a profile-only record carries no phone.
+The row button stages the deletion; it does not delete. `@asol/page-save-core`
+is the only place ASOL performs a user-triggered delete, so the page registers
+the `super-admin-users` scope through `usePageSaveOperationScope` and carries no
+delete button, confirmation, or result message of its own — see
+[page-save-system.md](../05-platform-features/page-save-system.md).
 
-A super admin works down a list of rows, so the realistic mistake is deleting
-the wrong account rather than not meaning it. A fixed phrase like the
-self-service page's `DELETE ASOL ACCOUNT` is identical for every row and would
-catch nothing; retyping the identifier forces a look at which account is about
-to go.
+The header save icon and `PageSaveDialog` execute it. That is also the
+confirmation: the dialog lists each staged account by name, phone, UID, and
+product count as its own checkbox, so a super admin working down a list sees
+exactly which accounts are about to go before confirming, and can uncheck one.
 
-This is a mis-tap guard only. Authority is the super-admin signed session that
-`runSuperAdminJsonRoute` verifies — the route accepts no confirmation field, and
-a value the client types could never be one.
+Each staged item is keyed `super-admin-user-delete:<uid>`, so re-tapping a row
+restages rather than queueing a second delete. A failed deletion stays staged
+and the dialog reports the failure.
+
+Authority is unchanged and unrelated to any of this: the super-admin signed
+session that `runSuperAdminJsonRoute` verifies. The route accepts no
+confirmation field, and a value the client sends could never be one.
+
+#### Cloud or Local, by Runtime
+
+The deletion names logical data sources only — `usersDataSource`,
+`profilesDataSource`, `productsDataSource`, `notificationsDataSource`, and the
+sharded marketplace-orders client. `DataSourceRegistry` resolves each one
+through `getServerDatabaseBackend()`, and the sharded client branches on
+`isDevRuntime()`.
+
+So `next dev` deletes out of the local SQLite shards under
+`public/sync_data/sync_sqlite/`, and a deployment deletes out of Turso, with no
+environment branch in the deletion code itself. Image removal is R2 in both,
+because there is no local blob store.
+
+`npm run test:super-admin-users` fails if the repository ever names a concrete
+client — pinning it to one backend would silently delete from the wrong database
+in the other.
 
 #### Sessions Outlive Deletion
 
