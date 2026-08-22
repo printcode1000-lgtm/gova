@@ -10,7 +10,7 @@ import { Cloud } from "lucide-react";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mt-8 text-xl font-semibold text-on-surface">{children}</h2>
+    <h2 className="mt-8 text-lg font-semibold text-on-surface sm:text-xl">{children}</h2>
   );
 }
 
@@ -32,8 +32,16 @@ function Note({ children }: { children: React.ReactNode }) {
 
 function TableWrap({ children }: { children: React.ReactNode }) {
   return (
+    // `min-w` sets the width the table is allowed to scroll to; it does not stop cells
+    // from pushing past it. Account ids, S3 endpoints and r2.dev URLs are single
+    // unbroken tokens of 30–50 characters, so without `break-words` every table here
+    // laid itself out around two thousand pixels wide and the horizontal scroll became
+    // the only way to read any of it. Wrapping them brings each table back to its
+    // declared width, and the scroll back to the short nudge it was meant to be.
     <div className="mt-3 overflow-x-auto rounded-lg border bg-surface">
-      <table className="w-full min-w-[640px] text-sm">{children}</table>
+      <table className="w-full min-w-[520px] text-xs [&_td]:break-words [&_th]:break-words sm:min-w-[640px] sm:text-sm">
+        {children}
+      </table>
     </div>
   );
 }
@@ -44,7 +52,7 @@ export function SuperAdminCloudAccountsContent() {
       <header className="flex flex-wrap items-center gap-3">
         <Cloud className="h-6 w-6 text-primary" />
         <div>
-          <h1 className="text-2xl font-semibold text-on-surface">
+          <h1 className="text-xl font-semibold text-on-surface sm:text-2xl">
             الحسابات السحابية
           </h1>
           <p className="text-sm text-on-surface-variant">
@@ -67,26 +75,26 @@ export function SuperAdminCloudAccountsContent() {
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
-            <th className="p-3 text-start">المزوّد</th>
-            <th className="p-3 text-start">عدد الحسابات</th>
-            <th className="p-3 text-start">يحتوي على</th>
+            <th className="p-2 text-start sm:p-3">المزوّد</th>
+            <th className="p-2 text-start sm:p-3">عدد الحسابات</th>
+            <th className="p-2 text-start sm:p-3">يحتوي على</th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-t">
-            <td className="p-3">Vercel</td>
-            <td className="p-3">7</td>
-            <td className="p-3">نشرة واحدة لكل حساب</td>
+            <td className="p-2 sm:p-3">Vercel</td>
+            <td className="p-2 sm:p-3">7</td>
+            <td className="p-2 sm:p-3">نشرة واحدة لكل حساب</td>
           </tr>
           <tr className="border-t">
-            <td className="p-3">Turso</td>
-            <td className="p-3">5</td>
-            <td className="p-3">21 قاعدة بيانات، 70 جدول تطبيق</td>
+            <td className="p-2 sm:p-3">Turso</td>
+            <td className="p-2 sm:p-3">5</td>
+            <td className="p-2 sm:p-3">21 قاعدة بيانات، 70 جدول تطبيق</td>
           </tr>
           <tr className="border-t">
-            <td className="p-3">Cloudflare R2</td>
-            <td className="p-3">4</td>
-            <td className="p-3">4 حاويات منفصلة تماماً</td>
+            <td className="p-2 sm:p-3">Cloudflare R2</td>
+            <td className="p-2 sm:p-3">4</td>
+            <td className="p-2 sm:p-3">4 حاويات منفصلة تماماً</td>
           </tr>
         </tbody>
       </TableWrap>
@@ -104,87 +112,87 @@ export function SuperAdminCloudAccountsContent() {
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
-            <th className="p-3 text-start">الحساب</th>
-            <th className="p-3 text-start">المشروع</th>
-            <th className="p-3 text-start">البريد الإلكتروني</th>
-            <th className="p-3 text-start">يخدم</th>
-            <th className="p-3 text-start">GitHub</th>
-            <th className="p-3 text-start">يُحدَّث بواسطة</th>
+            <th className="p-2 text-start sm:p-3">الحساب</th>
+            <th className="p-2 text-start sm:p-3">المشروع</th>
+            <th className="p-2 text-start sm:p-3">البريد الإلكتروني</th>
+            <th className="p-2 text-start sm:p-3">يخدم</th>
+            <th className="p-2 text-start sm:p-3">GitHub</th>
+            <th className="p-2 text-start sm:p-3">يُحدَّث بواسطة</th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">hesham-101</td>
-            <td className="p-3" dir="ltr">gova</td>
-            <td className="p-3" dir="ltr">print.code.1000@gmail.com</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">hesham-101</td>
+            <td className="p-2 sm:p-3" dir="ltr">gova</td>
+            <td className="p-2 sm:p-3" dir="ltr">print.code.1000@gmail.com</td>
+            <td className="p-2 sm:p-3">
               التطبيق الكامل: كل ما لم يُوجَّه للجسر — تفاصيل الطلب{" "}
               <span dir="ltr">GET /api/orders/:id</span>، تقييمات البروفايل،
               ولوحة السوبر أدمن
             </td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3">
               <strong>متصل</strong> — كل push يعيد النشر
             </td>
-            <td className="p-3">push إلى GitHub</td>
+            <td className="p-2 sm:p-3">push إلى GitHub</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">submain</td>
-            <td className="p-3" dir="ltr">asol-submain</td>
-            <td className="p-3" dir="ltr">groupstenderximages@gmail.com</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">submain</td>
+            <td className="p-2 sm:p-3" dir="ltr">asol-submain</td>
+            <td className="p-2 sm:p-3" dir="ltr">groupstenderximages@gmail.com</td>
+            <td className="p-2 sm:p-3">
               البحث في المنتجات والبائعين، إنشاء الطلب من السلة أو من
               البروفايل —{" "}
               <span dir="ltr">/api/search/*</span>،{" "}
               <span dir="ltr">POST /api/orders/from-cart</span>،{" "}
               <span dir="ltr">POST /api/orders/custom-request-from-profile</span>
             </td>
-            <td className="p-3">غير متصل</td>
-            <td className="p-3" dir="ltr">npm run submain:deploy</td>
+            <td className="p-2 sm:p-3">غير متصل</td>
+            <td className="p-2 sm:p-3" dir="ltr">npm run submain:deploy</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">sub2main</td>
-            <td className="p-3" dir="ltr">asol-sub2main</td>
-            <td className="p-3" dir="ltr">tenderx.engineer100@gmail.com</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">sub2main</td>
+            <td className="p-2 sm:p-3" dir="ltr">asol-sub2main</td>
+            <td className="p-2 sm:p-3" dir="ltr">tenderx.engineer100@gmail.com</td>
+            <td className="p-2 sm:p-3">
               كتابات البائع: إنشاء/تعديل/حذف المنتجات، تحديث البروفايل
               والخصومات، رفع الصور، كتالوج الصيدلية — عبر جسر المتصفح فقط
             </td>
-            <td className="p-3">غير متصل</td>
-            <td className="p-3" dir="ltr">npm run sub2main:deploy</td>
+            <td className="p-2 sm:p-3">غير متصل</td>
+            <td className="p-2 sm:p-3" dir="ltr">npm run sub2main:deploy</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">101-0902</td>
-            <td className="p-3" dir="ltr">asol-notifications</td>
-            <td className="p-3" dir="ltr">bs.bid.story@gmail.com</td>
-            <td className="p-3">توزيع الإشعارات فقط</td>
-            <td className="p-3">غير متصل</td>
-            <td className="p-3" dir="ltr">npm run notifications:deploy</td>
+            <td className="p-2 sm:p-3" dir="ltr">101-0902</td>
+            <td className="p-2 sm:p-3" dir="ltr">asol-notifications</td>
+            <td className="p-2 sm:p-3" dir="ltr">bs.bid.story@gmail.com</td>
+            <td className="p-2 sm:p-3">توزيع الإشعارات فقط</td>
+            <td className="p-2 sm:p-3">غير متصل</td>
+            <td className="p-2 sm:p-3" dir="ltr">npm run notifications:deploy</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">حساب المنتجات</td>
-            <td className="p-3" dir="ltr">asol-products</td>
-            <td className="p-3" dir="ltr">gnagnahesham@gmail.com</td>
-            <td className="p-3">قراءة المنتجات</td>
-            <td className="p-3">غير متصل</td>
-            <td className="p-3" dir="ltr">npm run products:deploy</td>
+            <td className="p-2 sm:p-3">حساب المنتجات</td>
+            <td className="p-2 sm:p-3" dir="ltr">asol-products</td>
+            <td className="p-2 sm:p-3" dir="ltr">gnagnahesham@gmail.com</td>
+            <td className="p-2 sm:p-3">قراءة المنتجات</td>
+            <td className="p-2 sm:p-3">غير متصل</td>
+            <td className="p-2 sm:p-3" dir="ltr">npm run products:deploy</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">حساب الطلبات</td>
-            <td className="p-3" dir="ltr">asol-orders</td>
-            <td className="p-3" dir="ltr">tenderx10@gmail.com</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3">حساب الطلبات</td>
+            <td className="p-2 sm:p-3" dir="ltr">asol-orders</td>
+            <td className="p-2 sm:p-3" dir="ltr">tenderx10@gmail.com</td>
+            <td className="p-2 sm:p-3">
               <span dir="ltr">GET /api/orders</span> (القائمة فقط)
             </td>
-            <td className="p-3">غير متصل</td>
-            <td className="p-3" dir="ltr">npm run orders:deploy</td>
+            <td className="p-2 sm:p-3">غير متصل</td>
+            <td className="p-2 sm:p-3" dir="ltr">npm run orders:deploy</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">حساب البروفايلات</td>
-            <td className="p-3" dir="ltr">asol-profiles</td>
-            <td className="p-3" dir="ltr">hesham10125@gmail.com</td>
-            <td className="p-3">خمس قراءات بروفايل</td>
-            <td className="p-3">غير متصل</td>
-            <td className="p-3" dir="ltr">npm run profiles:deploy</td>
+            <td className="p-2 sm:p-3">حساب البروفايلات</td>
+            <td className="p-2 sm:p-3" dir="ltr">asol-profiles</td>
+            <td className="p-2 sm:p-3" dir="ltr">hesham10125@gmail.com</td>
+            <td className="p-2 sm:p-3">خمس قراءات بروفايل</td>
+            <td className="p-2 sm:p-3">غير متصل</td>
+            <td className="p-2 sm:p-3" dir="ltr">npm run profiles:deploy</td>
           </tr>
         </tbody>
       </TableWrap>
@@ -196,7 +204,7 @@ export function SuperAdminCloudAccountsContent() {
         وحدة جسر (bridge) لا تُنشر على أي حساب إطلاقًا — بل تعمل داخل متصفح
         المستخدم:
       </Note>
-      <pre className="mt-3 overflow-x-auto rounded-lg border bg-surface p-4 text-xs leading-6" dir="ltr">
+      <pre className="mt-3 overflow-x-auto rounded-lg border bg-surface p-3 text-[10px] leading-5 sm:p-4 sm:text-xs sm:leading-6" dir="ltr">
 {`                          browser
         ╱───────────────────┼───────────────────╲
        ╱                    │                    ╲
@@ -218,50 +226,50 @@ export function SuperAdminCloudAccountsContent() {
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
-            <th className="p-3 text-start">الحساب</th>
-            <th className="p-3 text-start">قواعد البيانات</th>
-            <th className="p-3 text-start">البريد الإلكتروني</th>
-            <th className="p-3 text-start">النطاق</th>
-            <th className="p-3 text-start">يُقرأ بواسطة</th>
+            <th className="p-2 text-start sm:p-3">الحساب</th>
+            <th className="p-2 text-start sm:p-3">قواعد البيانات</th>
+            <th className="p-2 text-start sm:p-3">البريد الإلكتروني</th>
+            <th className="p-2 text-start sm:p-3">النطاق</th>
+            <th className="p-2 text-start sm:p-3">يُقرأ بواسطة</th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">hesham101</td>
-            <td className="p-3">3</td>
-            <td className="p-3" dir="ltr">print.code.1000@gmail.com</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">hesham101</td>
+            <td className="p-2 sm:p-3">3</td>
+            <td className="p-2 sm:p-3" dir="ltr">print.code.1000@gmail.com</td>
+            <td className="p-2 sm:p-3">
               المستخدمون والمصادقة، الإعلانات، عمليات النظام
             </td>
-            <td className="p-3" dir="ltr">gova + submain + sub2main</td>
+            <td className="p-2 sm:p-3" dir="ltr">gova + submain + sub2main</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">hesham102</td>
-            <td className="p-3">1</td>
-            <td className="p-3" dir="ltr">bs.bid.story@gmail.com</td>
-            <td className="p-3">الإشعارات</td>
-            <td className="p-3" dir="ltr">gova + asol-notifications</td>
+            <td className="p-2 sm:p-3" dir="ltr">hesham102</td>
+            <td className="p-2 sm:p-3">1</td>
+            <td className="p-2 sm:p-3" dir="ltr">bs.bid.story@gmail.com</td>
+            <td className="p-2 sm:p-3">الإشعارات</td>
+            <td className="p-2 sm:p-3" dir="ltr">gova + asol-notifications</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">hesham103</td>
-            <td className="p-3">1</td>
-            <td className="p-3" dir="ltr">gnagnahesham@gmail.com</td>
-            <td className="p-3">المنتجات</td>
-            <td className="p-3" dir="ltr">gova + asol-products + sub2main</td>
+            <td className="p-2 sm:p-3" dir="ltr">hesham103</td>
+            <td className="p-2 sm:p-3">1</td>
+            <td className="p-2 sm:p-3" dir="ltr">gnagnahesham@gmail.com</td>
+            <td className="p-2 sm:p-3">المنتجات</td>
+            <td className="p-2 sm:p-3" dir="ltr">gova + asol-products + sub2main</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">hesham104</td>
-            <td className="p-3">9</td>
-            <td className="p-3" dir="ltr">tenderx10@gmail.com</td>
-            <td className="p-3">شظايا طلبات السوق (marketplace order shards)</td>
-            <td className="p-3" dir="ltr">gova + asol-orders + submain</td>
+            <td className="p-2 sm:p-3" dir="ltr">hesham104</td>
+            <td className="p-2 sm:p-3">9</td>
+            <td className="p-2 sm:p-3" dir="ltr">tenderx10@gmail.com</td>
+            <td className="p-2 sm:p-3">شظايا طلبات السوق (marketplace order shards)</td>
+            <td className="p-2 sm:p-3" dir="ltr">gova + asol-orders + submain</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">hesham105</td>
-            <td className="p-3">7</td>
-            <td className="p-3" dir="ltr">hesham10125@gmail.com</td>
-            <td className="p-3">شظايا البروفايل (profile shards)</td>
-            <td className="p-3" dir="ltr">gova + asol-profiles + sub2main</td>
+            <td className="p-2 sm:p-3" dir="ltr">hesham105</td>
+            <td className="p-2 sm:p-3">7</td>
+            <td className="p-2 sm:p-3" dir="ltr">hesham10125@gmail.com</td>
+            <td className="p-2 sm:p-3">شظايا البروفايل (profile shards)</td>
+            <td className="p-2 sm:p-3" dir="ltr">gova + asol-profiles + sub2main</td>
           </tr>
         </tbody>
       </TableWrap>
@@ -276,31 +284,31 @@ export function SuperAdminCloudAccountsContent() {
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
-            <th className="p-3 text-start">قاعدة البيانات</th>
-            <th className="p-3 text-start">الجداول</th>
-            <th className="p-3 text-start">المحتوى</th>
+            <th className="p-2 text-start sm:p-3">قاعدة البيانات</th>
+            <th className="p-2 text-start sm:p-3">الجداول</th>
+            <th className="p-2 text-start sm:p-3">المحتوى</th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">allusers</td>
-            <td className="p-3">6</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">allusers</td>
+            <td className="p-2 sm:p-3">6</td>
+            <td className="p-2 sm:p-3">
               <span dir="ltr">users</span>، استرجاع كلمة المرور، أعلام
               الميزات (feature flags)، إصدارات OTA وسجل التدقيق
             </td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">advertisements</td>
-            <td className="p-3">4</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">advertisements</td>
+            <td className="p-2 sm:p-3">4</td>
+            <td className="p-2 sm:p-3">
               شريط البطل (hero slider)، الشريط المميز، شريط الأكثر رواجًا
             </td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">system-ops</td>
-            <td className="p-3">9</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">system-ops</td>
+            <td className="p-2 sm:p-3">9</td>
+            <td className="p-2 sm:p-3">
               <span dir="ltr">system_logs</span>،{" "}
               <span dir="ltr">data_health_*</span>
             </td>
@@ -388,55 +396,55 @@ export function SuperAdminCloudAccountsContent() {
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
-            <th className="p-3 text-start"> </th>
-            <th className="p-3 text-start">عام</th>
-            <th className="p-3 text-start">المنتجات</th>
-            <th className="p-3 text-start">ملابس وحيوانات</th>
-            <th className="p-3 text-start">تحديثات OTA</th>
+            <th className="p-2 text-start sm:p-3"> </th>
+            <th className="p-2 text-start sm:p-3">عام</th>
+            <th className="p-2 text-start sm:p-3">المنتجات</th>
+            <th className="p-2 text-start sm:p-3">ملابس وحيوانات</th>
+            <th className="p-2 text-start sm:p-3">تحديثات OTA</th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-t align-top">
-            <td className="p-3">المتغيرات</td>
-            <td className="p-3" dir="ltr">R2_*</td>
-            <td className="p-3" dir="ltr">PRODUCT_R2_*</td>
-            <td className="p-3" dir="ltr">APPAREL_PETS_R2_*</td>
-            <td className="p-3" dir="ltr">ASOL_OTA_R2_*</td>
+            <td className="p-2 sm:p-3">المتغيرات</td>
+            <td className="p-2 sm:p-3" dir="ltr">R2_*</td>
+            <td className="p-2 sm:p-3" dir="ltr">PRODUCT_R2_*</td>
+            <td className="p-2 sm:p-3" dir="ltr">APPAREL_PETS_R2_*</td>
+            <td className="p-2 sm:p-3" dir="ltr">ASOL_OTA_R2_*</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">الحساب</td>
-            <td className="p-3" dir="ltr">8486fdbb…3e043</td>
-            <td className="p-3" dir="ltr">166409f3…d3e08</td>
-            <td className="p-3" dir="ltr">f08cd5b7…f2642</td>
-            <td className="p-3" dir="ltr">21fce63d…1810</td>
+            <td className="p-2 sm:p-3">الحساب</td>
+            <td className="p-2 sm:p-3" dir="ltr">8486fdbb…3e043</td>
+            <td className="p-2 sm:p-3" dir="ltr">166409f3…d3e08</td>
+            <td className="p-2 sm:p-3" dir="ltr">f08cd5b7…f2642</td>
+            <td className="p-2 sm:p-3" dir="ltr">21fce63d…1810</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">البريد الإلكتروني</td>
-            <td className="p-3" dir="ltr">print.code.1000@gmail.com</td>
-            <td className="p-3" dir="ltr">bids.stories@gmail.com</td>
-            <td className="p-3" dir="ltr">hesham.gaber@gmail.com</td>
-            <td className="p-3" dir="ltr">tenderx.engineer100@gmail.com</td>
+            <td className="p-2 sm:p-3">البريد الإلكتروني</td>
+            <td className="p-2 sm:p-3" dir="ltr">print.code.1000@gmail.com</td>
+            <td className="p-2 sm:p-3" dir="ltr">bids.stories@gmail.com</td>
+            <td className="p-2 sm:p-3" dir="ltr">hesham.gaber@gmail.com</td>
+            <td className="p-2 sm:p-3" dir="ltr">tenderx.engineer100@gmail.com</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">الحاوية (Bucket)</td>
-            <td className="p-3" dir="ltr">pic1</td>
-            <td className="p-3" dir="ltr">gova-storage</td>
-            <td className="p-3" dir="ltr">productcat1</td>
-            <td className="p-3" dir="ltr">ota</td>
+            <td className="p-2 sm:p-3">الحاوية (Bucket)</td>
+            <td className="p-2 sm:p-3" dir="ltr">pic1</td>
+            <td className="p-2 sm:p-3" dir="ltr">gova-storage</td>
+            <td className="p-2 sm:p-3" dir="ltr">productcat1</td>
+            <td className="p-2 sm:p-3" dir="ltr">ota</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">معرّف المزوّد / الهدف</td>
-            <td className="p-3" dir="ltr">CloudflareR2</td>
-            <td className="p-3" dir="ltr">CloudflareR2Products</td>
-            <td className="p-3" dir="ltr">CloudflareR2_products-apparel-pets</td>
-            <td className="p-3" dir="ltr">ota (R2_STORAGE_TARGETS)</td>
+            <td className="p-2 sm:p-3">معرّف المزوّد / الهدف</td>
+            <td className="p-2 sm:p-3" dir="ltr">CloudflareR2</td>
+            <td className="p-2 sm:p-3" dir="ltr">CloudflareR2Products</td>
+            <td className="p-2 sm:p-3" dir="ltr">CloudflareR2_products-apparel-pets</td>
+            <td className="p-2 sm:p-3" dir="ltr">ota (R2_STORAGE_TARGETS)</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">العنوان العام</td>
-            <td className="p-3" dir="ltr">pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev</td>
-            <td className="p-3" dir="ltr">pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev</td>
-            <td className="p-3" dir="ltr">pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev</td>
-            <td className="p-3" dir="ltr">pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev</td>
+            <td className="p-2 sm:p-3">العنوان العام</td>
+            <td className="p-2 sm:p-3" dir="ltr">pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev</td>
+            <td className="p-2 sm:p-3" dir="ltr">pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev</td>
+            <td className="p-2 sm:p-3" dir="ltr">pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev</td>
+            <td className="p-2 sm:p-3" dir="ltr">pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev</td>
           </tr>
         </tbody>
       </TableWrap>
@@ -449,52 +457,52 @@ export function SuperAdminCloudAccountsContent() {
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
-            <th className="p-3 text-start">الملف الشخصي (Profile) / الوحدة</th>
-            <th className="p-3 text-start">الحساب</th>
-            <th className="p-3 text-start">مجلد السحابة</th>
+            <th className="p-2 text-start sm:p-3">الملف الشخصي (Profile) / الوحدة</th>
+            <th className="p-2 text-start sm:p-3">الحساب</th>
+            <th className="p-2 text-start sm:p-3">مجلد السحابة</th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">avatar</td>
-            <td className="p-3">عام</td>
-            <td className="p-3" dir="ltr">images/profile/avatars</td>
+            <td className="p-2 sm:p-3" dir="ltr">avatar</td>
+            <td className="p-2 sm:p-3">عام</td>
+            <td className="p-2 sm:p-3" dir="ltr">images/profile/avatars</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">cover</td>
-            <td className="p-3">عام</td>
-            <td className="p-3" dir="ltr">images/profile/covers</td>
+            <td className="p-2 sm:p-3" dir="ltr">cover</td>
+            <td className="p-2 sm:p-3">عام</td>
+            <td className="p-2 sm:p-3" dir="ltr">images/profile/covers</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">home-hero-slider</td>
-            <td className="p-3">عام</td>
-            <td className="p-3" dir="ltr">images/content/advertisements/…</td>
+            <td className="p-2 sm:p-3" dir="ltr">home-hero-slider</td>
+            <td className="p-2 sm:p-3">عام</td>
+            <td className="p-2 sm:p-3" dir="ltr">images/content/advertisements/…</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">spicialOrder</td>
-            <td className="p-3">عام</td>
-            <td className="p-3" dir="ltr">images/content/spicialOrder</td>
+            <td className="p-2 sm:p-3" dir="ltr">spicialOrder</td>
+            <td className="p-2 sm:p-3">عام</td>
+            <td className="p-2 sm:p-3" dir="ltr">images/content/spicialOrder</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">product-default</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">product-default</td>
+            <td className="p-2 sm:p-3">
               <strong>المنتجات</strong>
             </td>
-            <td className="p-3" dir="ltr">images/products</td>
+            <td className="p-2 sm:p-3" dir="ltr">images/products</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">product-apparel-pets</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">product-apparel-pets</td>
+            <td className="p-2 sm:p-3">
               <strong>ملابس وحيوانات</strong>
             </td>
-            <td className="p-3" dir="ltr">images/products-apparel-pets</td>
+            <td className="p-2 sm:p-3" dir="ltr">images/products-apparel-pets</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3" dir="ltr">@asol/ota-core</td>
-            <td className="p-3">
+            <td className="p-2 sm:p-3" dir="ltr">@asol/ota-core</td>
+            <td className="p-2 sm:p-3">
               <strong>تحديثات OTA</strong>
             </td>
-            <td className="p-3" dir="ltr">app-updates/</td>
+            <td className="p-2 sm:p-3" dir="ltr">app-updates/</td>
           </tr>
         </tbody>
       </TableWrap>
@@ -516,34 +524,34 @@ export function SuperAdminCloudAccountsContent() {
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
-            <th className="p-3 text-start">الحاوية</th>
-            <th className="p-3 text-start">الاستخدام</th>
+            <th className="p-2 text-start sm:p-3">الحاوية</th>
+            <th className="p-2 text-start sm:p-3">الاستخدام</th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-t align-top">
-            <td className="p-3">
+            <td className="p-2 sm:p-3">
               <span dir="ltr">pic1</span> (عام)
             </td>
-            <td className="p-3">صور المستخدمين (أفاتار، غلاف) والإعلانات والطلبات الخاصة</td>
+            <td className="p-2 sm:p-3">صور المستخدمين (أفاتار، غلاف) والإعلانات والطلبات الخاصة</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">
+            <td className="p-2 sm:p-3">
               <span dir="ltr">gova-storage</span> (منتجات)
             </td>
-            <td className="p-3">صور المنتجات القديمة وكل التصنيفات عدا الرفع الجديد للملابس/الحيوانات</td>
+            <td className="p-2 sm:p-3">صور المنتجات القديمة وكل التصنيفات عدا الرفع الجديد للملابس/الحيوانات</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">
+            <td className="p-2 sm:p-3">
               <span dir="ltr">productcat1</span> (ملابس وحيوانات)
             </td>
-            <td className="p-3">صور المنتجات الجديدة لتصنيفي الملابس (1) والحيوانات (12) وشرائح أزياء onboarding</td>
+            <td className="p-2 sm:p-3">صور المنتجات الجديدة لتصنيفي الملابس (1) والحيوانات (12) وشرائح أزياء onboarding</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">
+            <td className="p-2 sm:p-3">
               <span dir="ltr">ota</span> (تحديثات التطبيق)
             </td>
-            <td className="p-3">بيان الإصدار (manifest.json) وشجرة الملفات وحزم التحديثات وحالات الإلغاء</td>
+            <td className="p-2 sm:p-3">بيان الإصدار (manifest.json) وشجرة الملفات وحزم التحديثات وحالات الإلغاء</td>
           </tr>
         </tbody>
       </TableWrap>
@@ -565,38 +573,38 @@ export function SuperAdminCloudAccountsContent() {
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
-            <th className="p-3 text-start">النطاق</th>
-            <th className="p-3 text-start">المتغيرات</th>
+            <th className="p-2 text-start sm:p-3">النطاق</th>
+            <th className="p-2 text-start sm:p-3">المتغيرات</th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-t align-top">
-            <td className="p-3">تشغيل Turso</td>
-            <td className="p-3" dir="ltr">
+            <td className="p-2 sm:p-3">تشغيل Turso</td>
+            <td className="p-2 sm:p-3" dir="ltr">
               متغيرات قاعدة بيانات Turso للاتصال بقواعد البيانات المختلفة
             </td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">منصة Turso</td>
-            <td className="p-3" dir="ltr">
+            <td className="p-2 sm:p-3">منصة Turso</td>
+            <td className="p-2 sm:p-3" dir="ltr">
               رموز وصول منصة Turso للسكربتات فقط
             </td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">Vercel</td>
-            <td className="p-3" dir="ltr">
+            <td className="p-2 sm:p-3">Vercel</td>
+            <td className="p-2 sm:p-3" dir="ltr">
               رموز وصول Vercel للنشر والتكامل مع الخدمات المختلفة
             </td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">R2</td>
-            <td className="p-3" dir="ltr">
+            <td className="p-2 sm:p-3">R2</td>
+            <td className="p-2 sm:p-3" dir="ltr">
               متغيرات التخزين على Cloudflare R2
             </td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">نطاقات آمنة للعميل</td>
-            <td className="p-3" dir="ltr">
+            <td className="p-2 sm:p-3">نطاقات آمنة للعميل</td>
+            <td className="p-2 sm:p-3" dir="ltr">
               عناوين URL العامة للخدمات المختلفة
             </td>
           </tr>

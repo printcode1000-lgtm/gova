@@ -45,6 +45,34 @@ removes the desktop affordances the browser adds by itself:
 Add `.asol-selectable` to any element whose text the user must be able to copy
 (order numbers, tracking codes, error identifiers).
 
+### Wide tables, given that the scrollbar is gone
+
+Hiding the scrollbar removes the only signal a desktop page gives that content
+continues past the right edge. On a phone that signal was never there to begin
+with — a horizontal drag is discovered by trying it — but it does mean a table
+that overflows badly reads as a table that is simply cut off.
+
+So a wide table must be wide *by design*, not by accident:
+
+- `overflow-x-auto` on the wrapper and `min-w-[…]` on the table declares the width
+  the table is allowed to scroll to.
+- `min-w` does not stop cells from pushing past it. A single unbroken token — an
+  account id, an S3 endpoint, a bucket URL — will widen a column until it fits,
+  and no `min-w` prevents it. Pair it with `break-words` on cells (`[&_td]:break-words`)
+  so the declared width is the real one.
+- Scale the grid rather than the content: `p-2 sm:p-3` on cells and
+  `text-xs sm:text-sm` on the table. Twelve pixels of padding per side costs
+  24px per column, which on a five-column table is a fifth of a phone's width
+  spent on gutters.
+
+`/super-admin/cloud-accounts` is the worked example. Its tables carried 30–50
+character ids and `r2.dev` URLs with no `break-words`, so each one laid itself out
+around 2000px wide against a declared `min-w-[640px]`, and the horizontal drag was
+the only way to reach any column but the first.
+
+ASCII diagrams are the exception: they must not wrap, so they keep
+`overflow-x-auto` and scroll. Scale their type down instead.
+
 ## Hover Tooltips
 
 The browser paints its own tooltip for any DOM element carrying a `title`
