@@ -2,9 +2,11 @@
 
 import { Bell } from "lucide-react";
 
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { cn } from "@/lib/utils";
 
+import { ChatMessagePreferencesSection } from "./ChatMessagePreferencesSection";
+import { NotificationDeviceToggleSection } from "./NotificationDeviceToggleSection";
+import { SystemNotificationSettingsButton } from "./SystemNotificationSettingsButton";
 import { useNotificationDeviceSettingsCard } from "./use-notification-device-settings-card";
 
 /**
@@ -46,127 +48,22 @@ export function NotificationDeviceSettingsCard() {
 
       {state.statusText ? (
         <p
-          className="rounded-xl bg-primary/10 px-3 py-2 text-sm font-medium text-primary"
-          role="status"
+          className={cn(
+            "rounded-xl px-3 py-2 text-sm font-medium",
+            state.statusTone === "error"
+              ? "bg-error/10 text-error"
+              : "bg-primary/10 text-primary",
+          )}
+          role={state.statusTone === "error" ? "alert" : "status"}
         >
           {state.statusText}
         </p>
       ) : null}
 
       <div className="space-y-4 rounded-2xl asol-surface-neutral p-3 sm:p-4">
-        {state.permissionBlocked ? (
-          <div className="space-y-3">
-            <div
-              className={cn(
-                "grid gap-2",
-                state.canOpenSettings && "sm:grid-cols-2",
-              )}
-            >
-              <button
-                type="button"
-                disabled={state.deviceBusy}
-                onClick={() => void state.recheckPermission()}
-                className="asol-control w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary disabled:opacity-60"
-              >
-                {state.t("notifications.permissionPrompt.recheck")}
-              </button>
-              {state.canOpenSettings ? (
-                <button
-                  type="button"
-                  disabled={state.deviceBusy}
-                  onClick={() => void state.openNotificationSettings()}
-                  className="asol-control w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm font-semibold text-on-surface disabled:opacity-60"
-                >
-                  {state.t("notifications.permissionPrompt.openSettings")}
-                </button>
-              ) : null}
-            </div>
-            <p className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">
-              {state.blockedNotice(state.canOpenSettings)}
-            </p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-3 rounded-xl border-2 border-primary/30 bg-primary/5 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4">
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-on-surface">
-                {state.t("notifications.deviceCard.toggleTitle")}
-              </p>
-              <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
-                {state.t("notifications.deviceCard.toggleDescription")}
-              </p>
-            </div>
-            <ToggleSwitch
-              checked={state.deviceEnabled}
-              onChange={(enabled) =>
-                void state.updateDeviceNotifications(enabled)
-              }
-              label={state.t("notifications.deviceCard.toggleTitle")}
-              disabled={
-                state.deviceBusy ||
-                !state.notificationRuntimeReady ||
-                !state.pushSupported ||
-                !state.session?.uid
-              }
-            />
-          </div>
-        )}
-
-        {state.permissionNotice ? (
-          <p className="rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
-            {state.permissionNotice}
-          </p>
-        ) : null}
-
-        {state.session?.sessionToken ? (
-          <div className="grid gap-3">
-            <div className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4">
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-on-surface">
-                  {state.t("notifications.deviceCard.specialtyRequestsTitle")}
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
-                  {state.t(
-                    "notifications.deviceCard.specialtyRequestsDescription",
-                  )}
-                </p>
-              </div>
-              <ToggleSwitch
-                checked={state.specialtyRequestsEnabled}
-                onChange={(enabled) =>
-                  void state.updateSpecialtyRequests(enabled)
-                }
-                label={state.t(
-                  "notifications.deviceCard.specialtyRequestsTitle",
-                )}
-                disabled={state.specialtyPreferenceBusy}
-              />
-            </div>
-            <div className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4">
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-on-surface">
-                  {state.t(
-                    "notifications.deviceCard.productConversationsTitle",
-                  )}
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
-                  {state.t(
-                    "notifications.deviceCard.productConversationsDescription",
-                  )}
-                </p>
-              </div>
-              <ToggleSwitch
-                checked={state.productConversationsEnabled}
-                onChange={(enabled) =>
-                  void state.updateProductConversations(enabled)
-                }
-                label={state.t(
-                  "notifications.deviceCard.productConversationsTitle",
-                )}
-                disabled={state.productConversationsBusy}
-              />
-            </div>
-          </div>
-        ) : null}
+        <NotificationDeviceToggleSection state={state} />
+        <SystemNotificationSettingsButton state={state} />
+        <ChatMessagePreferencesSection state={state} />
       </div>
     </div>
   );

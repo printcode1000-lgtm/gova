@@ -32,4 +32,19 @@ export const permissionsApi = {
       return err(toNativeCoreError(MODULE, e));
     }
   },
+
+  /** This application's notification settings screen, app settings as fallback. */
+  async openNotificationSettings(): Promise<Result<boolean, NativeCoreError>> {
+    try {
+      const res = await permissionsAdapter.openNotificationSettings();
+      return ok(res);
+    } catch (e) {
+      return err(toNativeCoreError(MODULE, e));
+    }
+  },
+
+  /** Whether this host has an application settings screen to open at all. */
+  canOpenNotificationSettings(): boolean {
+    return permissionsAdapter.canOpenNotificationSettings();
+  },
 };
