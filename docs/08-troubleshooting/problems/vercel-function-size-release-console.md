@@ -80,6 +80,12 @@ unchanged; only the dead weight is gone. The excluded paths are static assets
 
 ## Prevention
 
+`npm run vercel:function-size:check` now runs inside `deploy:all` preflight, between
+`build` and `build:static`. It reads the same traces this page shows you how to read
+manually and fails before the deployment commit exists, naming the route and its
+largest contributors. It honours `.vercelignore`, so it measures what Vercel actually
+uploads rather than what happens to sit in the working tree.
+
 - A new API route that reads the filesystem inflates its function by whatever
   the tracer cannot rule out. Check `.next/server/**/<route>.nft.json` after
   `npm run build` when adding one.

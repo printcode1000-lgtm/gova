@@ -71,6 +71,28 @@ an in-memory database in tests.
 `createRequire(...)("pkg")`, so lazy driver loading cannot hide a vendor import inside
 a string fixture or an alias require.
 
+## No circular package dependencies
+
+`checkPackageCycleContract` builds the package import graph from production sources
+under `packages/*/src` (tests excluded — a package's tests may reach for another
+package's fixtures, and that never ships) and rejects any cycle.
+
+**`import type` edges count.** They are erased at runtime, so a type cycle carries no
+module-loading hazard, but two packages joined by one still cannot be reasoned about,
+extracted, or tested apart, and they are one refactor away from the edge carrying a
+value.
+
+Two cycles existed before this check and would have passed unnoticed:
+
+| Cycle | Broken by |
+| --- | --- |
+| `notifications-core ⇄ data-core` | `NotificationTokenStorePort` — delivery names three persistence operations; the application and the notifications deployment each wire data-core's queries at their composition root |
+| `data-core ⇄ ota-core` | `OtaReleaseSummary` and `OtaReleaseAuditEntry` are row projections, so they moved to data-core; ota-core re-exports them, keeping one definition and an unchanged public surface |
+
+When a cycle appears, invert one edge — name a port in the package that needs the
+capability and wire the implementation in a composition root — or move the shared type
+down to the package that owns the data. Do not add an exception.
+
 ## Page-save write surface
 
 `checkPageSaveGatewayContract` freezes the write-surface `skippedDirectories` set to
@@ -91,9 +113,16 @@ must not import `@/`.
 1. Package `exports` maps (no deep doors).
 2. ESLint `no-restricted-imports` (vendors + deep `@asol/*/src/**`, including Capacitor
    bans in packages other than `native-core`).
+
+   The ESLint vendor list is the editor-time echo of the capability registry, and the
+   two must name the same owners. It has to `ignores` the owning folders — a rule that
+   fires inside the package that owns the SDK is not enforcement, it is a broken build.
+   Bare vendor names belong in `paths`, not `patterns`: as a pattern, `web-push` also
+   matched the relative import `../infrastructure/web-push/web-push-browser.service`
+   and flagged a module for importing its own adapter.
 3. `npm run architecture:check` — registry ownership, package seal, vendor ownership
-   (including tests and root owned files), package↔app import boundary, page-save gateway,
-   plus existing layer contracts.
+   (including tests and root owned files), package↔app import boundary, package cycles,
+   page-save gateway, plus existing layer contracts.
 4. Per-package `test:*-core` gates (including page-save ownership / write-surface).
 
 ## Adding a package
@@ -102,3 +131,40 @@ must not import `@/`.
 2. Register it in `capability-registry.ts` with layer, ownership statement, and vendors.
 3. Keep `mayImportApp: true` only for `*-composition` packages.
 4. Run `npm run architecture:check` and the package's `test:*-core`.
+
+## Ports are only inverted if they resolve lazily
+
+A port read at module scope puts import order back into the contract: importing the
+file, not calling it, decides whether the process survives. `specialty-columns.server.ts`
+resolved the category-catalog port while the module evaluated, so
+`products-composition` — which never registers that port — died on
+`categoryCatalog.getSpecialtyColumnItems is not configured` the moment anything pulled
+the file in.
+
+Resolve inside the function that needs the value, memoise if the work is expensive, and
+expose a reset for tests.
+
+The same rule has a second half: anything that drives a composed service outside the
+running application has to compose it. `registerAppServerPorts()` runs from
+`src/instrumentation.ts` at server startup, so a test importing a service directly gets
+an unconfigured port. Three notification tests and the follow test now call
+`registerNotificationsCorePorts()` themselves, exactly as the follow test already did
+for the session signing secret.
+
+## Known gap: the page-save gateway is not yet mandatory
+
+`checkPageSaveGatewayContract` verifies the package exists, exposes a single door, keeps
+its two enforcement tests, and is not deep-imported. It does **not** verify that
+presentation code performs no write outside the gateway; it defers that to
+`page-save-write-surface.test.ts`, which matches an allowlist of named service calls
+(`productApiService.create`, …) and is therefore blind to a raw `asolApi.post(...)`.
+
+A page can still write directly and pass both `architecture:check` and
+`test:page-save-core`. `src/modules/dev-cloud-backup/presentation/use-dev-cloud-backup-page.ts`
+does exactly that today — a POST on tap, plus its own notice and error messages, both
+forbidden by the page-save policy.
+
+Closing this needs an AST rule that requires every mutating `asolApi` call in a
+presentation module to sit inside a staged executor or a `save()` handler, and the
+migration of the surfaces that currently do not. That migration changes how those admin
+pages behave, so it is a deliberate change rather than a silent one.

@@ -139,11 +139,24 @@ the build; the cause is the upload. Read `vercel inspect --logs` before
 diagnosing.
 
 `next.config.ts` keeps `outputFileTracingExcludes` for
-`/api/super-admin/build-jobs/**`: those routes read Android build artifacts off
-the local filesystem, so Next's tracer cannot bound what they touch and sweeps
-the repository into the function. They refuse to run outside local development
-anyway (`assertGooglePlayConsoleAllowed`). See
+`/api/super-admin/build-jobs/**` and `/api/super-admin/google-play-store-assets/**`:
+those routes read build artifacts and Play assets off the local filesystem, so
+Next's tracer cannot bound what they touch and sweeps the repository into the
+function. See
 [vercel-function-size-release-console.md](../../08-troubleshooting/problems/vercel-function-size-release-console.md).
+
+Preflight measures this before anything is published. `vercel:function-size:check`
+runs between `build` and `build:static`, reads the route traces Next writes during
+the build, and fails with the offending route and its largest contributors:
+
+```
+[vercel:function-size] api/super-admin/google-play-console is 260.5MB across 5791 files
+     237.2MB  test_profile/manageProfile
+```
+
+It honours `.vercelignore`, because a file that is never uploaded cannot be inside a
+function — without that it fails on the developer's machine over paths the deployment
+never sees, and a guard that cries wolf locally is one people learn to skip.
 
 ### Escape hatches
 
