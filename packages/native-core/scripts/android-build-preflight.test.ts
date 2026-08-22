@@ -21,7 +21,10 @@ assert.equal(isValidJavaHome("C:\\missing\\jdk"), false);
 
 const fakeJavaHome = tempRoot();
 mkdirSync(path.join(fakeJavaHome, "bin"), { recursive: true });
-writeFileSync(path.join(fakeJavaHome, "bin", "java.exe"), "");
+writeFileSync(
+  path.join(fakeJavaHome, "bin", process.platform === "win32" ? "java.exe" : "java"),
+  "",
+);
 writeFileSync(path.join(fakeJavaHome, "release"), 'JAVA_VERSION="21.0.12"\n');
 assert.equal(isValidJavaHome(fakeJavaHome), true);
 
