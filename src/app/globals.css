@@ -276,7 +276,10 @@ textarea,
   .splash-marquee-track--right,
   .splash-marquee-track--left,
   .home-marquee-cards-track,
-  .home-trending-track {
+  .home-trending-track,
+  .asol-profile-tab-wave,
+  .asol-page-save-wave,
+  .asol-phone-verify-wave {
     animation: none;
   }
 }
@@ -355,6 +358,49 @@ textarea,
   background-color: color-mix(in srgb, var(--color-on-primary-container) 8%, transparent);
   box-shadow: 0 0 0.5rem
     color-mix(in srgb, var(--color-on-primary-container) 32%, transparent);
+}
+
+@keyframes asol-phone-verify-wave {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.36);
+  }
+}
+
+.asol-phone-verify-wave {
+  animation: asol-phone-verify-wave 2s cubic-bezier(0.2, 0.8, 0.25, 1) infinite;
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--color-primary);
+  border-radius: 9999px !important;
+  background-color: color-mix(in srgb, var(--color-primary) 14%, transparent);
+  box-shadow: 0 0 0.5rem color-mix(in srgb, var(--color-primary) 40%, transparent);
+  will-change: opacity, transform;
+}
+
+.asol-phone-verify-wave--delayed {
+  animation-delay: -1s;
+}
+
+.asol-phone-verify-btn {
+  width: calc(var(--asol-control-min-height) * var(--asol-density-scale)) !important;
+  height: calc(var(--asol-control-min-height) * var(--asol-density-scale)) !important;
+  min-width: calc(var(--asol-control-min-height) * var(--asol-density-scale)) !important;
+  min-height: calc(var(--asol-control-min-height) * var(--asol-density-scale)) !important;
+  border-radius: 9999px !important;
+  padding: 0 !important;
+  aspect-ratio: 1 / 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
 }
 
 .home-marquee-cards-track {

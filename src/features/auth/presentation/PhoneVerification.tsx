@@ -33,7 +33,7 @@ export function PhoneVerification({
   useForm = false,
 }: PhoneVerificationProps = {}) {
   const { t } = useTranslation();
-  
+
   // Form mode (registration)
   const formContext = useForm ? useFormContext<RegistrationFormData>() : null;
   const formPhone = formContext?.watch('phone') ?? '';
@@ -115,6 +115,7 @@ export function PhoneVerification({
   };
 
   const canSend = canSendPhoneOtp(phone);
+  const isWaveActive = canSend && !otpSent && !isSending && !phoneVerified;
 
   if (isFormMode && formContext) {
     // Form mode (registration)
@@ -126,7 +127,7 @@ export function PhoneVerification({
           render={({ field, fieldState }) => (
             <div className="space-y-2">
               <span className="text-sm font-semibold text-on-surface">{t('auth.phone.label')}</span>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
                 <div className="relative flex-1">
                   <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
                     +20
@@ -160,10 +161,28 @@ export function PhoneVerification({
                   <button
                     type="button"
                     onClick={() => void handleSendOtpWrapper()}
-                    disabled={isSending || !phone || phone.length < 10}
-                    className="asol-control shrink-0 rounded-lg border border-outline asol-surface-neutral text-primary text-sm font-semibold disabled:opacity-50"
+                    disabled={isSending || !canSend}
+                    aria-label={otpSent ? t('auth.phone.resend') : t('auth.phone.verify')}
+                    className={cn(
+                      'asol-control asol-phone-verify-btn relative shrink-0 rounded-full border border-outline asol-surface-neutral text-primary text-xs font-bold disabled:opacity-50',
+                      isWaveActive && 'border-primary shadow-sm',
+                    )}
                   >
-                    {isSending ? '...' : otpSent ? t('auth.phone.resend') : t('auth.phone.verify')}
+                    {isWaveActive && (
+                      <>
+                        <span
+                          aria-hidden="true"
+                          className="asol-phone-verify-wave pointer-events-none absolute inset-0 rounded-full"
+                        />
+                        <span
+                          aria-hidden="true"
+                          className="asol-phone-verify-wave asol-phone-verify-wave--delayed pointer-events-none absolute inset-0 rounded-full"
+                        />
+                      </>
+                    )}
+                    <span className="relative z-10 text-center leading-none">
+                      {isSending ? '...' : otpSent ? t('auth.phone.resend') : t('auth.phone.verify')}
+                    </span>
                   </button>
                 )}
                 {phoneVerified && (
@@ -171,7 +190,7 @@ export function PhoneVerification({
                     type="button"
                     onClick={handleEditPhoneWrapper}
                     aria-label={t('auth.phone.edit')}
-                    className="asol-control-icon shrink-0 flex items-center justify-center rounded-lg border border-outline asol-surface-neutral"
+                    className="asol-control-icon asol-phone-verify-btn shrink-0 flex items-center justify-center rounded-full border border-outline asol-surface-neutral p-0"
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
@@ -241,7 +260,7 @@ export function PhoneVerification({
           <Smartphone className="h-4 w-4 text-primary" />
           {t('auth.login.phone')}
         </span>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <div className="relative min-w-0 flex-1">
             <span className="absolute start-3 top-1/2 -translate-y-1/2 select-none text-xs sm:text-sm text-on-surface-variant">
               +20
@@ -277,20 +296,38 @@ export function PhoneVerification({
               type="button"
               onClick={() => void handleSendOtpWrapper()}
               disabled={isSending || !canSend}
-              className="asol-control shrink-0 rounded-lg border border-outline asol-surface-neutral text-xs sm:text-sm font-semibold text-primary disabled:opacity-50 px-3 sm:px-4"
+              aria-label={otpSent ? t('auth.phone.resend') : t('auth.phone.verify')}
+              className={cn(
+                'asol-control asol-phone-verify-btn relative shrink-0 rounded-full border border-outline asol-surface-neutral text-xs font-bold text-primary disabled:opacity-50',
+                isWaveActive && 'border-primary shadow-sm',
+              )}
             >
-              {isSending
-                ? '...'
-                : otpSent
-                  ? t('auth.phone.resend')
-                  : t('auth.phone.verify')}
+              {isWaveActive && (
+                <>
+                  <span
+                    aria-hidden="true"
+                    className="asol-phone-verify-wave pointer-events-none absolute inset-0 rounded-full"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="asol-phone-verify-wave asol-phone-verify-wave--delayed pointer-events-none absolute inset-0 rounded-full"
+                  />
+                </>
+              )}
+              <span className="relative z-10 text-center leading-none">
+                {isSending
+                  ? '...'
+                  : otpSent
+                    ? t('auth.phone.resend')
+                    : t('auth.phone.verify')}
+              </span>
             </button>
           ) : (
             <button
               type="button"
               onClick={handleEditPhoneWrapper}
               aria-label={t('auth.phone.edit')}
-              className="asol-control-icon flex shrink-0 items-center justify-center rounded-lg border border-outline asol-surface-neutral h-9 w-9 sm:h-10 sm:w-10"
+              className="asol-control-icon asol-phone-verify-btn flex shrink-0 items-center justify-center rounded-full border border-outline asol-surface-neutral p-0"
             >
               <Pencil className="h-4 w-4" />
             </button>
@@ -299,7 +336,7 @@ export function PhoneVerification({
 
         {phoneVerified ? (
           <p className="mt-1 flex items-center gap-1 text-[10px] sm:text-xs text-success">
-            <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            <CheckCircle2 className="h-3.5 w-3.5" />
             {t('auth.phone.verified')}
           </p>
         ) : null}
@@ -359,4 +396,3 @@ export function PhoneVerification({
     </div>
   );
 }
-
