@@ -172,8 +172,23 @@ assert.match(
 );
 assert.match(
   devHandler,
-  /NODE_ENV\s*===\s*["']development["']/,
+  /isDevRuntime\(\)/,
   "The development send handler must refuse to run outside next dev.",
+);
+// The same predicate decides that the notifications database is local SQLite,
+// so the route can only ever fan out against the store the runtime chose. A
+// bare environment read is both an architecture violation and weaker: a
+// development NODE_ENV is also true of a Vercel build, where tokens live in
+// Turso and this route must stay a 404.
+assert.match(
+  devHandler,
+  /from\s+['"]@\/core\/config\/runtime-context\.server['"]/,
+  "The development gate must come from the Configuration layer.",
+);
+assert.doesNotMatch(
+  stripComments(devHandler),
+  /process\.env/,
+  "The development send handler must not read the environment directly.",
 );
 assert.match(
   devHandler,

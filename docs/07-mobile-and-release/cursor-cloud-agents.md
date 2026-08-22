@@ -27,6 +27,8 @@ For Web Push on `http://localhost:3001`, the dashboard (or `.env.local`) needs a
 
 Leave `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` empty in development unless you deliberately want the browser to post grants to the deployed notifications service instead of the local SQLite-backed fan-out route.
 
+Verify the whole chain with `npm run notifications:check:local`; see [the bridge module's preflight](../05-platform-features/notification-bridge-module.md#preflight).
+
 ## Starting a cloud run
 
 1. Commit and push any work the agent must see (Move to Cloud does not send local dirty files).

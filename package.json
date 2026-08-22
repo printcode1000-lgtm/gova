@@ -111,6 +111,7 @@
     "vercel:accounts:check": "npx tsx scripts/check-vercel-accounts.ts",
     "deploy:redeploy-main": "npx tsx scripts/redeploy-main-vercel.ts",
     "db:migrate:users": "npx tsx packages/data-core/src/tooling/apply-users-migrations.ts",
+    "notifications:check:local": "npx tsx scripts/check-localhost-notifications.ts",
     "notifications:deploy": "npx tsx scripts/deploy-notifications-service.ts",
     "notifications:tokens:dedupe": "npx tsx packages/data-core/src/tooling/enforce-notification-token-cardinality.ts",
     "deploy:all": "npx tsx scripts/deploy-all.ts",

@@ -1,5 +1,6 @@
 import "server-only";
 
+import { isDevRuntime } from "@/core/config/runtime-context.server";
 import {
   deliverNotificationGrants,
   readGrantsFromRequestBody,
@@ -13,11 +14,18 @@ import {
  * `next dev` the main app reads device tokens from SQLite, so pointing the
  * bridge at the remote service would never find registrations made on
  * localhost. This handler is the same send path the service runs, but only
- * while `NODE_ENV === "development"`.
+ * while the development runtime is in force.
+ *
+ * The gate is `isDevRuntime()` rather than a bare environment read — the
+ * Configuration layer owns those, and this is the same predicate that makes
+ * the notifications database resolve to local SQLite. Tying both to one value
+ * is what keeps the route fanning out against the store the runtime actually
+ * chose: a development `NODE_ENV` alone is also true of a Vercel build, where
+ * tokens come from Turso and this route must stay a 404.
  */
 
 export function isDevNotificationSendEnabled(): boolean {
-  return process.env.NODE_ENV === "development";
+  return isDevRuntime();
 }
 
 function corsHeaders(request: Request): Record<string, string> {

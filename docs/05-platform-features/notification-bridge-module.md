@@ -154,6 +154,34 @@ Web Push from localhost still needs `WEB_PUSH_VAPID_PRIVATE_KEY` in
 outbound messages. Grant signing needs `ASOL_NOTIFICATION_GRANT_SECRET`, or
 `ASOL_SESSION_SIGNING_SECRET` when the dedicated grant secret is unset.
 
+#### Preflight
+
+```bash
+npm run notifications:check:local
+```
+
+`scripts/check-localhost-notifications.ts` reports whether
+`http://localhost:3001` will behave like the deployed site, because every way
+that parity breaks is a configuration value and each one fails quietly:
+
+| Wrong value | What actually happens |
+|---|---|
+| No grant secret | `NotificationGrantCollector.issue` swallows the throw and yields zero grants. The order succeeds and nothing is ever sent. |
+| No `WEB_PUSH_VAPID_PRIVATE_KEY` | The provider answers `webPushNotConfigured` inside a delivery result nobody reads. |
+| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` set | Grants go to the deployed service, which resolves tokens from Turso and can only answer `no_tokens` for a device registered on localhost. |
+
+It also checks `notifications.db` and `public/asol-push-sw.js`, and — when a dev
+server is answering — signs a real grant for a uid that owns no device and posts
+it to `/api/notifications/send`. A `200` carrying `no_tokens` proves the
+signature verified and the local database was read, without pushing to anyone.
+It exits non-zero on the first blocker. `ASOL_LOCAL_ORIGIN` overrides the port.
+
+Nothing else differs. The browser subscribes with the same VAPID public key,
+registers through the same Business API, and carries the same signed grant to
+the same `deliverNotificationGrants`. Only the token store changes: local
+SQLite instead of Turso, so a device registered on the deployed site is not
+reachable from localhost and the reverse is equally true.
+
 | Variable | Where | Notes |
 |---|---|---|
 | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | main app, client-safe | Origin of the notifications service on production web and static builds. When unset in `next dev`, the bridge falls back to `window.location.origin` and posts to the main app's development-only `/api/notifications/send`, which fans out against local SQLite. Set explicitly to override (for example to exercise the deployed service from localhost). |
