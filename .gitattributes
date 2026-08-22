@@ -23,3 +23,11 @@
 # `git archive` export GitHub's "Download ZIP" serves.
 config/secret-archive-latest.zip.enc -text
 config/secret-archive-latest.zip.enc.private-key.pem -text
+
+# The public key is listed for the same reason, though it is not on the restore path.
+# It was checked out CRLF here (814 bytes) while the blob and every ZIP download carry LF
+# (800), and `keyId` in the archive header is a sha256 over those exact bytes — so the
+# committed key hashed to something no other machine could reproduce. Nothing broke,
+# because decryption never reads the public key or checks `keyId`, but a fingerprint that
+# depends on where it was read from is not a fingerprint.
+config/secret-archive-public.pem -text
