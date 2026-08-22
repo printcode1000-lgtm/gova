@@ -91,7 +91,7 @@ export interface DataHealthDatabaseTopologyItem {
 
 export interface DataHealthStorageTopologyItem {
   id: string;
-  kind: "primary-r2" | "product-r2" | "local-mirror";
+  kind: "primary-r2" | "product-r2" | "product-apparel-pets-r2" | "local-mirror";
   provider: string;
   profiles: string[];
   cloudFolders: string[];

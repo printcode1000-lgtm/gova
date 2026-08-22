@@ -36,6 +36,8 @@ export class GoogleDriveProvider implements IStorageProvider {
 
 export const googleDriveProvider = new GoogleDriveProvider();
 
+const dynamicR2Providers = new Map<string, R2AccountProvider>();
+
 export function isLocalDevelopmentRuntime(): boolean {
   return process.env.NODE_ENV === 'development' && !process.env.ASOL_PROVISIONING;
 }
@@ -50,7 +52,11 @@ export function resolveStorageProvider(profileProvider: StorageProviderId): ISto
 
   if (profileProvider.startsWith('CloudflareR2_')) {
     const accountId = profileProvider.replace(/^CloudflareR2_/, '');
-    return new R2AccountProvider(accountId);
+    const cached = dynamicR2Providers.get(accountId);
+    if (cached) return cached;
+    const provider = new R2AccountProvider(accountId);
+    dynamicR2Providers.set(accountId, provider);
+    return provider;
   }
 
   throw new Error(

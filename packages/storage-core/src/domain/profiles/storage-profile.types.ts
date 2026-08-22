@@ -11,6 +11,7 @@ export type StorageOutputFormat = 'webp';
 export type StorageProviderId =
   | 'CloudflareR2'
   | 'CloudflareR2Products'
+  | `CloudflareR2_${string}`
   | 'LocalStorage'
   | 'GoogleDrive';
 

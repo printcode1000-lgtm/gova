@@ -70,6 +70,19 @@ PRODUCT_R2_JURISDICTION=default
 PRODUCT_R2_PUBLIC_URL=https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev
 PRODUCT_R2_CATALOG_URI=https://catalog.cloudflarestorage.com/166409f3b449d8f1da0dee6d25ed3e08/gova-storage
 PRODUCT_R2_WAREHOUSE_NAME=166409f3b449d8f1da0dee6d25ed3e08_gova-storage
+
+# Server-only: apparel + pets product images (dedicated R2 account; no fallback)
+APPAREL_PETS_R2_ACCOUNT_ID=
+APPAREL_PETS_R2_API_TOKEN=
+APPAREL_PETS_R2_ACCESS_KEY_ID=
+APPAREL_PETS_R2_SECRET_ACCESS_KEY=
+APPAREL_PETS_R2_BUCKET_NAME=productcat1
+APPAREL_PETS_R2_ENDPOINT=https://f08cd5b705c3c57b1f65a220f7ef2642.r2.cloudflarestorage.com
+APPAREL_PETS_R2_LOCATION=WEUR
+APPAREL_PETS_R2_JURISDICTION=default
+APPAREL_PETS_R2_PUBLIC_URL=https://pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev
+APPAREL_PETS_R2_CATALOG_URI=https://catalog.cloudflarestorage.com/f08cd5b705c3c57b1f65a220f7ef2642/productcat1
+APPAREL_PETS_R2_WAREHOUSE_NAME=f08cd5b705c3c57b1f65a220f7ef2642_productcat1
 ```
 
 ```env
@@ -88,10 +101,9 @@ ASOL_OTA_R2_WAREHOUSE_NAME=21fce63d15897aaa0b68fae1360a1810_ota
 ASOL_OTA_R2_PREFIX=app-updates
 ```
 
-These never fall back to `PRODUCT_R2_*` or `R2_*`. **A fallback across an account boundary is a silent redirect, not a default** — it writes somewhere else instead of failing. Every target requires its own values and throws without them.
+These never fall back to `PRODUCT_R2_*`, `APPAREL_PETS_R2_*`, or `R2_*`. **A fallback across an account boundary is a silent redirect, not a default** — it writes somewhere else instead of failing. Every target requires its own values and throws without them.
 
-`R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` are Cloudflare **account** credentials — they create buckets and manage CORS policy. Reading an image needs none of that, so read paths take the S3 pair and the public URL only: `getR2PublicUrl()` / `getProductR2PublicUrl()` / `getOtaR2PublicUrl()`.
-
+`R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, `APPAREL_PETS_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` are Cloudflare **account** credentials — they create buckets and manage CORS policy. Reading an image needs none of that, so read paths take the S3 pair and the public URL only.
 See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
 Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS`:

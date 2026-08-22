@@ -6,6 +6,7 @@ import { runExternalImageTest } from './unit/external-image.test';
 import { runImageKeyGeneratorTest } from './unit/image-key-generator.test';
 import { runImagePathTest } from './unit/image-path.test';
 import { runOutputFormatTest } from './unit/output-format.test';
+import { runProductCategoryStorageRoutingTest } from './unit/product-category-storage-routing.test';
 import { runAddAccountTest } from './integration/add-account.test';
 import { runSplitAccountTest } from './integration/split-account.test';
 import { runParameterizedStoreTest } from './integration/parameterized-store.test';
@@ -27,6 +28,7 @@ async function main() {
   runImageKeyGeneratorTest();
   runImagePathTest();
   runOutputFormatTest();
+  runProductCategoryStorageRoutingTest();
   runAddAccountTest();
   runSplitAccountTest();
   await runParameterizedStoreTest();

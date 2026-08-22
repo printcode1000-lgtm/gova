@@ -21,6 +21,16 @@ const INITIAL_REGISTRY: Record<string, StorageAccountDefinition> = {
     jurisdiction: 'default',
     envPrefix: 'PRODUCT_R2',
   },
+  'products-apparel-pets': {
+    id: 'products-apparel-pets',
+    accountId: 'f08cd5b705c3c57b1f65a220f7ef2642',
+    endpoint: 'https://f08cd5b705c3c57b1f65a220f7ef2642.r2.cloudflarestorage.com',
+    bucketName: 'productcat1',
+    publicUrl: 'https://pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev',
+    location: 'WEUR',
+    jurisdiction: 'default',
+    envPrefix: 'APPAREL_PETS_R2',
+  },
 };
 
 const registry: Map<string, StorageAccountDefinition> = new Map(

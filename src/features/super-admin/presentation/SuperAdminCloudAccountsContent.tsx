@@ -384,13 +384,14 @@ export function SuperAdminCloudAccountsContent() {
         المطبّقة، لا يحمل أي بيانات تطبيق، ومستثنى من هذه القاعدة بالتصميم.
       </Note>
 
-      <SectionTitle>Cloudflare R2 — 3 حسابات</SectionTitle>
+      <SectionTitle>Cloudflare R2 — 4 حسابات</SectionTitle>
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
             <th className="p-3 text-start"> </th>
             <th className="p-3 text-start">عام</th>
             <th className="p-3 text-start">المنتجات</th>
+            <th className="p-3 text-start">ملابس وحيوانات</th>
             <th className="p-3 text-start">تحديثات OTA</th>
           </tr>
         </thead>
@@ -399,36 +400,42 @@ export function SuperAdminCloudAccountsContent() {
             <td className="p-3">المتغيرات</td>
             <td className="p-3" dir="ltr">R2_*</td>
             <td className="p-3" dir="ltr">PRODUCT_R2_*</td>
+            <td className="p-3" dir="ltr">APPAREL_PETS_R2_*</td>
             <td className="p-3" dir="ltr">ASOL_OTA_R2_*</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">الحساب</td>
             <td className="p-3" dir="ltr">8486fdbb…3e043</td>
             <td className="p-3" dir="ltr">166409f3…d3e08</td>
+            <td className="p-3" dir="ltr">f08cd5b7…f2642</td>
             <td className="p-3" dir="ltr">21fce63d…1810</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">البريد الإلكتروني</td>
             <td className="p-3" dir="ltr">print.code.1000@gmail.com</td>
             <td className="p-3" dir="ltr">bids.stories@gmail.com</td>
+            <td className="p-3" dir="ltr">—</td>
             <td className="p-3" dir="ltr">tenderx.engineer100@gmail.com</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">الحاوية (Bucket)</td>
             <td className="p-3" dir="ltr">pic1</td>
             <td className="p-3" dir="ltr">gova-storage</td>
+            <td className="p-3" dir="ltr">productcat1</td>
             <td className="p-3" dir="ltr">ota</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">معرّف المزوّد / الهدف</td>
             <td className="p-3" dir="ltr">CloudflareR2</td>
             <td className="p-3" dir="ltr">CloudflareR2Products</td>
+            <td className="p-3" dir="ltr">CloudflareR2_products-apparel-pets</td>
             <td className="p-3" dir="ltr">ota (R2_STORAGE_TARGETS)</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">العنوان العام</td>
             <td className="p-3" dir="ltr">pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev</td>
             <td className="p-3" dir="ltr">pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev</td>
+            <td className="p-3" dir="ltr">pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev</td>
             <td className="p-3" dir="ltr">pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev</td>
           </tr>
         </tbody>
@@ -476,6 +483,13 @@ export function SuperAdminCloudAccountsContent() {
             <td className="p-3" dir="ltr">images/products</td>
           </tr>
           <tr className="border-t align-top">
+            <td className="p-3" dir="ltr">product-apparel-pets</td>
+            <td className="p-3">
+              <strong>ملابس وحيوانات</strong>
+            </td>
+            <td className="p-3" dir="ltr">images/products-apparel-pets</td>
+          </tr>
+          <tr className="border-t align-top">
             <td className="p-3" dir="ltr">@asol/ota-core</td>
             <td className="p-3">
               <strong>تحديثات OTA</strong>
@@ -485,8 +499,12 @@ export function SuperAdminCloudAccountsContent() {
         </tbody>
       </TableWrap>
       <Note>
-        ملف تعريف واحد فقط لصور المنتجات، وحساب مخصص ومعزول بالكامل لتحديثات
-        OTA دون أي تداخل أو وراثة ضمنية.
+        بروفايل واحد لكل حساب منتجات:{" "}
+        <span dir="ltr">product-default</span> على الحاوية القديمة، و{" "}
+        <span dir="ltr">product-apparel-pets</span> لتصنيفي الملابس (1) والحيوانات
+        (12) وشرائح أزياء onboarding. الصور القديمة بلا{" "}
+        <span dir="ltr">storageProfileId</span> تبقى على الحاوية القديمة بلا ترحيل.
+        حساب OTA معزول بالكامل دون أي تداخل أو وراثة ضمنية.
       </Note>
       <Note>
         في بيئة التطوير لا يُستخدم أي من حسابات الوسائط: دالة{" "}

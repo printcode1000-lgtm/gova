@@ -1,6 +1,8 @@
 export interface ProductImage {
   imageKey: string;
   url: string;
+  /** Omitted on legacy rows → resolve as product-default (old bucket). */
+  storageProfileId?: string;
   isUploading?: boolean;
   error?: string;
 }

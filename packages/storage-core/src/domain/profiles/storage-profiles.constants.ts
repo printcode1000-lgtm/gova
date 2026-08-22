@@ -3,6 +3,7 @@ export const StorageProfiles = {
   Avatar: 'avatar',
   Cover: 'cover',
   ProductDefault: 'product-default',
+  ProductApparelPets: 'product-apparel-pets',
   HomeHeroSlider: 'home-hero-slider',
   SpicialOrder: 'spicialOrder',
 } as const;

@@ -7,6 +7,7 @@ import {
   normalizeProductDetails,
   normalizeProductStatus,
   type CreateProductInput,
+  type ProductImage,
   type ProductRecord,
   type UpdateProductInput,
 } from "@asol/product-core";
@@ -14,16 +15,31 @@ import {
   productRepository,
   type ProductRepository,
 } from "@asol/data-core/product";
+import { StorageProfiles } from "@asol/storage-core";
 import { categoryService } from "@/features/categories";
 import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
 import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server";
 
-const PRODUCT_STORAGE_PROFILE_ID = "product-default";
+function resolveStoredProductImageProfileId(image: ProductImage): string {
+  // Legacy rows omit storageProfileId and live on the original product bucket.
+  return image.storageProfileId || StorageProfiles.ProductDefault;
+}
 
-async function deleteProductImages(imageKeys: string[]): Promise<void> {
+async function deleteProductImages(images: ProductImage[]): Promise<void> {
+  const unique = new Map<string, ProductImage>();
+  for (const image of images) {
+    if (!image.imageKey) continue;
+    unique.set(
+      `${resolveStoredProductImageProfileId(image)}:${image.imageKey}`,
+      image,
+    );
+  }
   const results = await Promise.allSettled(
-    [...new Set(imageKeys)].map((imageKey) =>
-      imageStorageService.deleteImage(PRODUCT_STORAGE_PROFILE_ID, imageKey),
+    [...unique.values()].map((image) =>
+      imageStorageService.deleteImage(
+        resolveStoredProductImageProfileId(image),
+        image.imageKey,
+      ),
     ),
   );
   for (const result of results) {
@@ -39,7 +55,7 @@ function withImageUrls(product: ProductRecord): ProductRecord {
     images: product.images.map((image) => ({
       ...image,
       url: imageStorageService.resolveImageUrl(
-        PRODUCT_STORAGE_PROFILE_ID,
+        resolveStoredProductImageProfileId(image),
         image.imageKey,
       ),
     })),
@@ -130,10 +146,10 @@ export class ProductService {
     );
     if (!updated) throw new Error("productNotFound");
     const retainedKeys = new Set(normalizedDetails.images.map((image) => image.imageKey));
-    const removedKeys = existing.images
-      .map((image) => image.imageKey)
-      .filter((imageKey) => !retainedKeys.has(imageKey));
-    await deleteProductImages(removedKeys);
+    const removedImages = existing.images.filter(
+      (image) => !retainedKeys.has(image.imageKey),
+    );
+    await deleteProductImages(removedImages);
     return updated;
   }
 
@@ -143,7 +159,7 @@ export class ProductService {
     if (!uid || existing.uid !== uid) throw new Error("productForbidden");
     const deleted = await this.repository.delete(id, uid);
     if (!deleted) throw new Error("productNotFound");
-    await deleteProductImages(existing.images.map((image) => image.imageKey));
+    await deleteProductImages(existing.images);
   }
 }
 

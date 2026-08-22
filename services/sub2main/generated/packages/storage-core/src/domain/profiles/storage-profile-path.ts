@@ -7,7 +7,11 @@ export function storageFolderForProvider(
   profile: StorageProfile,
   providerId: StorageProviderId,
 ): string {
-  if (providerId === 'CloudflareR2' || providerId === 'CloudflareR2Products') {
+  if (
+    providerId === 'CloudflareR2' ||
+    providerId === 'CloudflareR2Products' ||
+    providerId.startsWith('CloudflareR2_')
+  ) {
     return profile.cloudFolder ?? profile.folder;
   }
   return profile.folder;

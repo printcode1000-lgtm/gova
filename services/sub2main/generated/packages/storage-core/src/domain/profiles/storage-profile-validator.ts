@@ -1,3 +1,4 @@
+import { getStorageAccountIds } from '../accounts/account-registry';
 import { STORAGE_IMAGES_ROOT } from './storage-profiles.constants';
 import { isAllowedOutputFormat } from '../images/output-format.registry';
 import type {
@@ -14,12 +15,21 @@ const REQUIRED_PROFILE_KEYS = [
   'outputFormat',
 ] as const;
 
-const ALLOWED_PROVIDERS = new Set([
+const STATIC_ALLOWED_PROVIDERS = new Set([
   'CloudflareR2',
   'CloudflareR2Products',
   'GoogleDrive',
   'LocalStorage',
 ]);
+
+const DYNAMIC_R2_PROVIDER = /^CloudflareR2_([a-z0-9-]+)$/;
+
+function isAllowedProvider(provider: string): boolean {
+  if (STATIC_ALLOWED_PROVIDERS.has(provider)) return true;
+  const match = DYNAMIC_R2_PROVIDER.exec(provider);
+  if (!match) return false;
+  return getStorageAccountIds().includes(match[1]);
+}
 
 function assertRequiredKeys(
   profile: Record<string, unknown>,
@@ -46,7 +56,7 @@ function validateProfile(profile: StorageProfile, seenIds: Set<string>): void {
     throw new Error(`Profile "${profile.id}": enabled must be boolean`);
   }
 
-  if (!ALLOWED_PROVIDERS.has(profile.provider)) {
+  if (!isAllowedProvider(profile.provider)) {
     throw new Error(
       `Profile "${profile.id}": invalid provider "${profile.provider}"`,
     );

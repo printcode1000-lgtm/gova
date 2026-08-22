@@ -39,6 +39,16 @@
       "outputFormat": "webp"
     },
     {
+      "id": "product-apparel-pets",
+      "enabled": true,
+      "provider": "CloudflareR2_products-apparel-pets",
+      "folder": "images/products-apparel-pets",
+      "cloudFolder": "images/products-apparel-pets",
+      "folderStrategy": "main-category",
+      "maxImageSizeKB": 30,
+      "outputFormat": "webp"
+    },
+    {
       "id": "spicialOrder",
       "enabled": true,
       "provider": "CloudflareR2",

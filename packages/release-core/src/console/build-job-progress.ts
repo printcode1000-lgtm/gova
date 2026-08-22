@@ -1,7 +1,7 @@
 import type { BuildJobStage } from "./build-job-types";
 
 const STAGE_ORDER: readonly BuildJobStage[] = [
-  "queued", "starting", "checking-compatibility", "testing", "building-web",
+  "queued", "starting", "preflight", "checking-compatibility", "testing", "building-web",
   "preparing-artifacts", "syncing-native", "building-android", "optimizing", "signing",
   "detecting-device", "wiping-device", "installing-device", "testing-on-device",
   "uploading", "publishing-manifest", "mirroring", "verifying", "finalizing-results", "completed",

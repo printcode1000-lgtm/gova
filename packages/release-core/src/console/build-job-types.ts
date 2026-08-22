@@ -4,6 +4,7 @@ export type BuildJobStatus = "queued" | "running" | "succeeded" | "failed" | "ca
 export type BuildJobStage =
   | "queued"
   | "starting"
+  | "preflight"
   | "checking-compatibility"
   | "building-web"
   | "preparing-artifacts"

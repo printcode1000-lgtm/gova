@@ -37,7 +37,7 @@ function allSourceFiles(dir: string): string[] {
  */
 const EXPECTED_KEY_COUNTS: Record<string, number> = {
   notifications: 11,
-  products: 8,
+  products: 13,
   orders: 18,
   profiles: 21,
 };
@@ -95,7 +95,7 @@ function runTests(): void {
     const overlap = declaration.requiredEnv.filter((key) => declaration.optionalEnv.includes(key));
     assert(overlap.length === 0, `${declaration.name}: no key is both required and optional`);
   }
-  console.log('  ✔ Env key counts unchanged: 11 / 8 / 18 / 21.');
+  console.log('  ✔ Env key counts unchanged: 11 / 13 / 18 / 21.');
 
   // ---------------------------------------------------------------- no cross-account knowledge
   // Rule 0 at the data layer: a declaration may name only its own account.

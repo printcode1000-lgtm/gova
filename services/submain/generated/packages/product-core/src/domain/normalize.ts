@@ -13,7 +13,15 @@ export function normalizeProductDetails(value: ProductDetails): ProductDetails {
   const images = Array.isArray(value?.images)
     ? value.images
         .filter((image) => image && typeof image.imageKey === "string")
-        .map((image) => ({ imageKey: image.imageKey, url: "" }))
+        .map((image) => ({
+          imageKey: image.imageKey,
+          url: "",
+          ...(typeof image.storageProfileId === "string" &&
+          image.storageProfileId &&
+          image.storageProfileId !== "product-default"
+            ? { storageProfileId: image.storageProfileId }
+            : {}),
+        }))
         .slice(0, 20)
     : [];
   return createEmptyProductDetails({

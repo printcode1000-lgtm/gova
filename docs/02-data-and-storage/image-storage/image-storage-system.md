@@ -8,7 +8,8 @@ Profile-driven multi-provider architecture. The UI passes only **storage profile
 | -------------------------------- | ------ | ------ | ---------------------------------------- | ------------------------------------------------ |
 | `StorageProfiles.Avatar`         | 20     | webp   | `images/avatars`                         | `images/profile/avatars`                         |
 | `StorageProfiles.Cover`          | 30     | webp   | `images/covers`                          | `images/profile/covers`                          |
-| `StorageProfiles.ProductDefault` | 30     | webp   | `images/products/<mainCategoryId>`       | `images/products/<mainCategoryId>` in the legacy product R2 bucket |
+| `StorageProfiles.ProductDefault` | 30     | webp   | `images/products/<mainCategoryId>`       | `images/products/<mainCategoryId>` in the legacy product R2 bucket (`gova-storage`) |
+| `StorageProfiles.ProductApparelPets` | 30 | webp | `images/products-apparel-pets/<scope>` | `images/products-apparel-pets/<scope>` in the apparel-pets R2 bucket (`productcat1`) |
 | `StorageProfiles.HomeHeroSlider` | 1024   | webp   | `images/advertisements/home-hero-slider` | `images/content/advertisements/home-hero-slider` |
 | `StorageProfiles.SpicialOrder`   | 500    | webp   | `images/spicialOrder`                    | `images/content/spicialOrder`                    |
 
@@ -25,12 +26,13 @@ Server: Storage Profile → Provider → Persistence
 
 **Development** (`NODE_ENV=development`): `LocalStorageProvider` → paths from `@asol/dev-core` under `public/sync_data/sync_file/images/...`
 
-**Production / Capacitor / static**: profile provider (Cloudflare R2). The general R2 bucket uses `images/profile/...` for avatar/cover and `images/content/...` for advertisements and order images. Product images use the separate product R2 account under `images/products/...`.
+**Production / Capacitor / static**: profile provider (Cloudflare R2). The general R2 bucket uses `images/profile/...` for avatar/cover and `images/content/...` for advertisements and order images. Product images use dedicated product R2 accounts: legacy `product-default` under `images/products/...` on `gova-storage`, and new apparel/pets uploads under `images/products-apparel-pets/...` on `productcat1`.
 
-`ProductDefault` is the **only** profile on the product account, and
-`npm run test:storage-core` asserts that list equals exactly that — the
-separation held in the code while being untrue in the live bucket for a long
-time. See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
+Callers pass a semantic `storageScope` (catalog main-category id, or an onboarding fashion slug). `resolveProductStorageProfileId(scope)` from `@asol/storage-core` selects `product-apparel-pets` for catalog ids `1` and `12` and all onboarding fashion slugs; every other scope stays on `product-default`. Persisted `images_json` entries may include `storageProfileId`; when omitted, readers treat the object as `product-default` so pre-split apparel/pets rows keep working without migration.
+
+`product-default` and `product-apparel-pets` are each the **only** profile on their product account, and
+`npm run test:storage-core` asserts those lists exactly — see
+[R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
 `StorageImageManager` performs no provider write during selection or preview preparation. Before a selected preview becomes visible, its `Blob` and metadata are committed to the `imageUploadDrafts` AsolDB store. Upload starts only after the user presses Upload and confirms the localized application dialog. Removal calls the DELETE API and waits for provider success before clearing the UI value.
 
@@ -51,7 +53,7 @@ after the uploaded image is delivered to the owning feature; failed drafts stay
 available for retry while the next queue item continues. Logout aborts the
 in-memory queue and clears every image draft on Web, Android, and iOS.
 
-`product-default` declares `folderStrategy: "main-category"`. Its local base folder is `images/products`, and its cloud base folder remains `images/products` on the product R2 account (`gova-storage`); callers provide only a validated main-category ID as `storageScope`. The server creates `<mainCategoryId>/<uuid>.webp` as the image key, so upload, URL resolution, replacement, and deletion all address the correct provider object without exposing folder construction to the UI.
+`product-default` and `product-apparel-pets` declare `folderStrategy: "main-category"`. Their local/cloud base folders are `images/products` and `images/products-apparel-pets` respectively (distinct on purpose so `referenceFromObjectPath` can reverse path → profile unambiguously). Callers provide only a validated scope id as `storageScope`. The server creates `<scope>/<uuid>.webp` as the image key, so upload, URL resolution, replacement, and deletion all address the correct provider object without exposing folder construction to the UI.
 
 ## Layers
 
@@ -100,14 +102,18 @@ import { StorageProfiles } from "@asol/storage-core";
 StorageProfiles.Avatar;
 StorageProfiles.Cover;
 StorageProfiles.ProductDefault;
+StorageProfiles.ProductApparelPets;
 StorageProfiles.SpicialOrder;
 ```
+
+Prefer `resolveProductStorageProfileId(scope)` over hard-coding a product profile
+when the upload belongs to a product category or onboarding fashion slug.
 
 ## Persistence
 
 Profile logo and storefront references are canonical rows in `profile_images` (`image_type`, `image_key`, `sort_order`). Product references remain in the product record's validated image collection.
 
-Any feature (Onboarding, Dashboard, Admin) uses `StorageProfiles.ProductDefault` + `StoredImage` — not onboarding-specific types.
+Any feature (Onboarding, Dashboard, Admin) uses `resolveProductStorageProfileId` + `StoredImage` (which may carry `storageProfileId`) — not onboarding-specific types.
 
 ## ImageKey
 
