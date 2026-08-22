@@ -15,3 +15,8 @@ export * from './server/providers/provider-resolver';
 export * from './server/processing/image-processor';
 export * from './server/profiles/storage-profile-loader';
 export * from './server/orchestration/image-storage-orchestrator';
+
+export {
+  configureStorageCoreHttpFetch,
+  resetStorageCoreHttpFetch,
+} from './ports/http-fetch';

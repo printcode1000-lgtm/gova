@@ -1,5 +1,5 @@
 /** Single responsibility: fetch and authenticate the compact OTA revocation list. */
-import { publicEnv } from "@/core/config/public-env";
+import { otaPublicEnv } from '../ports';
 import {
   asolDbGet,
   asolDbSet,
@@ -32,7 +32,7 @@ async function readPersistedState(): Promise<PersistedOtaRevocationState | null>
     if (!isPersistedOtaRevocationState(value)) return null;
     const verified = await verifyOtaRevocationDocument(
       value.document,
-      publicEnv.otaPublicKey,
+      otaPublicEnv().otaPublicKey,
     );
     return verified ? value : null;
   } catch {
@@ -52,19 +52,19 @@ export const otaRevocationService = {
   },
 
   async getDocument(signal?: AbortSignal): Promise<OtaRevocationDocument | null> {
-    if (!publicEnv.otaManifestUrl || !publicEnv.otaPublicKey) return null;
+    if (!otaPublicEnv().otaManifestUrl || !otaPublicEnv().otaPublicKey) return null;
     if (Date.now() - cachedAt < CACHE_MS) return cachedDocument;
     if (activeRequest) return activeRequest;
     activeRequest = (async () => {
       const persisted = await readPersistedState();
       try {
         const value = await otaApiService.getRevocationDocument(
-          otaRevocationsUrl(publicEnv.otaManifestUrl),
+          otaRevocationsUrl(otaPublicEnv().otaManifestUrl),
           signal,
         );
         const verified = await verifyOtaRevocationDocument(
           value,
-          publicEnv.otaPublicKey,
+          otaPublicEnv().otaPublicKey,
         );
         if (!verified) return cachedDocument ?? persisted?.document ?? null;
         const decision = acceptOtaRevocationDocument(persisted, verified);

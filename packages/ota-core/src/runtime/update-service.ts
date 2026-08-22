@@ -1,4 +1,4 @@
-import { publicEnv } from "@/core/config/public-env";
+import { otaPublicEnv } from '../ports';
 import { otaIdentity } from "../ports";
 import {
   capabilities,
@@ -160,10 +160,10 @@ function validateManifest(manifest: OtaManifest, remote: boolean): void {
 }
 
 async function verifyManifest(manifest: OtaManifest): Promise<boolean> {
-  if (!publicEnv.otaPublicKey) return false;
+  if (!otaPublicEnv().otaPublicKey) return false;
   const key = await crypto.subtle.importKey(
     "spki",
-    decodeBase64(publicEnv.otaPublicKey),
+    decodeBase64(otaPublicEnv().otaPublicKey),
     { name: "ECDSA", namedCurve: "P-256" },
     false,
     ["verify"],
@@ -536,7 +536,7 @@ let activeCheck: Promise<DownloadedOtaUpdate | null> | null = null;
 
 export const otaUpdateService = {
   isEnabled(): boolean {
-    return Boolean(publicEnv.otaManifestUrl && publicEnv.otaPublicKey && capacitorOtaAdapter.isAvailable());
+    return Boolean(otaPublicEnv().otaManifestUrl && otaPublicEnv().otaPublicKey && capacitorOtaAdapter.isAvailable());
   },
 
   getState: readOtaState,
@@ -565,7 +565,7 @@ export const otaUpdateService = {
       if (state.pending && revoked.has(state.pending.version)) {
         recordOtaOutcome({
           outcome: "revocation_applied",
-          localVersion: publicEnv.webBundleVersion,
+          localVersion: otaPublicEnv().webBundleVersion,
           targetVersion: state.pending.version,
           releaseId: state.pending.releaseId,
         });
@@ -574,15 +574,15 @@ export const otaUpdateService = {
         delete state.pending;
         state.lastStatusKey = "ota.revoked";
       }
-      if (!revoked.has(publicEnv.webBundleVersion)) {
+      if (!revoked.has(otaPublicEnv().webBundleVersion)) {
         await writeState(state);
         return false;
       }
 
       recordOtaOutcome({
         outcome: "revocation_applied",
-        localVersion: publicEnv.webBundleVersion,
-        targetVersion: publicEnv.webBundleVersion,
+        localVersion: otaPublicEnv().webBundleVersion,
+        targetVersion: otaPublicEnv().webBundleVersion,
       });
 
       if (state.download) await nativePlatform.backgroundDownload.remove(state.download.releaseId);
@@ -605,8 +605,8 @@ export const otaUpdateService = {
   async confirmRunningBundle(): Promise<void> {
     const state = await readOtaState();
     const activation = state.activation;
-    if (!activation || activation.version !== publicEnv.webBundleVersion) return;
-    const baseVersion = activation.baseVersion || publicEnv.webBundleVersion;
+    if (!activation || activation.version !== otaPublicEnv().webBundleVersion) return;
+    const baseVersion = activation.baseVersion || otaPublicEnv().webBundleVersion;
     await capacitorOtaAdapter.persistCurrentPath();
     await capacitorOtaAdapter.confirmActivation(
       activation.version,
@@ -657,7 +657,7 @@ export const otaUpdateService = {
     const state = await readOtaState();
     const pending = state.pending;
     if (!isReadyForOtaActivation(pending) || !pending) return;
-    const baseVersion = pending.baseVersion || publicEnv.webBundleVersion;
+    const baseVersion = pending.baseVersion || otaPublicEnv().webBundleVersion;
     if (!approvalAlreadyChecked) {
       const access = await otaApiService.getReleaseAccess({ releaseId: pending.releaseId, version: pending.version, identity });
       if (!access.allowed) {
@@ -708,7 +708,7 @@ export const otaUpdateService = {
         await updateStatus(state, { progress: 0, statusKey: "ota.checking", downloadedBytes: 0, totalBytes: 0 }, notify);
         let prefetchedRemote: OtaManifest | null = null;
         if (state.pending) {
-          prefetchedRemote = await otaApiService.getManifest(publicEnv.otaManifestUrl);
+          prefetchedRemote = await otaApiService.getManifest(otaPublicEnv().otaManifestUrl);
           validateManifest(prefetchedRemote, true);
           if (!(await verifyManifest(prefetchedRemote))) throw new Error("OTA manifest signature is invalid");
           if (await otaRevocationService.isVersionRevoked(prefetchedRemote.version)) {
@@ -738,7 +738,7 @@ export const otaUpdateService = {
           validateManifest(local, false);
           validateManifest(remote, true);
           if (!(await verifyManifest(remote))) throw new Error("Stored OTA manifest signature is invalid");
-          const liveRemote = await otaApiService.getManifest(publicEnv.otaManifestUrl);
+          const liveRemote = await otaApiService.getManifest(otaPublicEnv().otaManifestUrl);
           validateManifest(liveRemote, true);
           if (
             (await verifyManifest(liveRemote)) &&
@@ -782,7 +782,7 @@ export const otaUpdateService = {
             ? downloadNativeBundle(local, remote, stored.changedFiles, stored.deletedFiles, state, notify)
             : downloadPerFile(local, remote, stored.changedFiles, stored.deletedFiles, stored.totalBytes, state, notify);
         }
-        const remote = prefetchedRemote ?? await otaApiService.getManifest(publicEnv.otaManifestUrl);
+        const remote = prefetchedRemote ?? await otaApiService.getManifest(otaPublicEnv().otaManifestUrl);
         validateManifest(local, false);
         validateManifest(remote, true);
         if (!(await verifyManifest(remote))) throw new Error("OTA manifest signature is invalid");
@@ -907,7 +907,7 @@ export const otaUpdateService = {
         const reason = otaFailureReason(error);
         recordOtaOutcome({
           outcome: "download_failed",
-          localVersion: publicEnv.webBundleVersion,
+          localVersion: otaPublicEnv().webBundleVersion,
           targetVersion,
           releaseId,
           reason,
@@ -915,7 +915,7 @@ export const otaUpdateService = {
         if (reason === "verification") {
           recordOtaOutcome({
             outcome: "verification_failed",
-            localVersion: publicEnv.webBundleVersion,
+            localVersion: otaPublicEnv().webBundleVersion,
             targetVersion,
             releaseId,
             reason,
@@ -955,7 +955,7 @@ export const otaUpdateService = {
     if (!this.isEnabled()) return;
     const state = await readOtaState();
     if (state.activation) {
-      if (state.activation.version === publicEnv.webBundleVersion) return;
+      if (state.activation.version === otaPublicEnv().webBundleVersion) return;
       if (state.pending) state.failedReleaseId = state.pending.releaseId;
       const currentPath = await capacitorOtaAdapter.currentBasePath();
       if (currentPath !== state.activation.previousPath) {
@@ -967,7 +967,7 @@ export const otaUpdateService = {
       await capacitorOtaAdapter.rollbackDelta(state.activation.version);
       recordOtaOutcome({
         outcome: "rollback_performed",
-        localVersion: state.activation.baseVersion || publicEnv.webBundleVersion,
+        localVersion: state.activation.baseVersion || otaPublicEnv().webBundleVersion,
         targetVersion: state.activation.version,
         releaseId: state.activation.releaseId,
       });

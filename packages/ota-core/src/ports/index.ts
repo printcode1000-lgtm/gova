@@ -6,18 +6,15 @@
  * system-log telemetry and a super-admin predicate — which is feature *internals*, not a
  * designated boundary.
  *
- * Four other edges are deliberately **not** ports, because they are the repository's own
- * designed doors rather than violations:
+ * Package doors that remain (not application edges):
  *
  * - `@asol/data-core/browser` and `@asol/data-core/ota` —
  *   the central data-access module is where database code is required to live; the
  *   drizzle contract (`ALLOWED_DRIZZLE_ORM_FILES_PATTERN`) forbids moving it here, and
  *   `orders-composition` depends on the same layer.
- * - `@/core/api` — the designated HTTP transport, itself governed by `ALLOWED_FETCH_FILES`.
- * - `@/core/config/public-env` — a config leaf.
  *
- * Inverting those would trade one edge for another and break a different rule. Naming the
- * distinction matters more than driving a count to zero.
+ * Former `@/core/api`, `@/core/config/public-env`, `@/core/config/app-version`, and
+ * `@/features/categories` edges are now ports on this same module.
  *
  * ## Failure behaviour
  *
@@ -65,9 +62,73 @@ export interface OtaIdentityPort {
   isSuperAdmin(uid: string, phone: string): boolean;
 }
 
+
+export interface OtaHttpRequestOptions {
+  headers?: Record<string, string>;
+  signal?: AbortSignal;
+  cache?: RequestCache;
+  suppressErrorLog?: boolean;
+}
+
+/** Narrow HTTP surface the OTA runtime needs from the app's API client. */
+export interface OtaHttpApiPort {
+  getPublicJson<T>(assetPath: string, options?: OtaHttpRequestOptions): Promise<T>;
+  getPublicBinary(assetPath: string, options?: OtaHttpRequestOptions): Promise<ArrayBuffer>;
+  getAbsoluteJson<T>(url: string, options?: OtaHttpRequestOptions): Promise<T>;
+  getAbsoluteBinary(url: string, options?: OtaHttpRequestOptions): Promise<ArrayBuffer>;
+  get<T>(route: string, options?: OtaHttpRequestOptions): Promise<T>;
+  post<T>(route: string, body: unknown, options?: OtaHttpRequestOptions): Promise<T>;
+  put<T>(route: string, body: unknown, options?: OtaHttpRequestOptions): Promise<T>;
+}
+
+export interface OtaApiRoutesPort {
+  ota: {
+    access: string;
+    adminReleases: string;
+    adminReleaseDiff: string;
+  };
+}
+
+export interface OtaPublicEnvPort {
+  otaPublicKey: string;
+  otaManifestUrl: string;
+  webBundleVersion: string;
+}
+
+export interface OtaAppVersionsPort {
+  currentAndroidNativeVersion: string;
+  currentIosNativeVersion: string;
+  currentWebContentVersion: string;
+}
+
+export interface OtaCategoryCatalogPort {
+  getMainCategories(): readonly { id: number; [key: string]: unknown }[];
+  getCollections(): readonly {
+    items: readonly { id: number; [key: string]: unknown }[];
+    [key: string]: unknown;
+  }[];
+  getCategoryTree(categoryId: number): {
+    subcategories: readonly { originalId: number; [key: string]: unknown }[];
+    doctorAppointmentItems?: readonly { originalId?: number; [key: string]: unknown }[];
+    [key: string]: unknown;
+  } | null;
+}[];
+  getCollections(): readonly { items: readonly { id: number; [key: string]: unknown }[]; [key: string]: unknown }[];
+  getCategoryTree(categoryId: number): {
+    subcategories: readonly { originalId: number; [key: string]: unknown }[];
+    doctorAppointmentItems?: readonly { originalId?: number; [key: string]: unknown }[];
+    [key: string]: unknown;
+  } | null;
+}
+
 export interface OtaCorePorts {
   telemetry: OtaTelemetryPort;
   identity: OtaIdentityPort;
+  httpApi: OtaHttpApiPort;
+  apiRoutes: OtaApiRoutesPort;
+  publicEnv: OtaPublicEnvPort;
+  appVersions: OtaAppVersionsPort;
+  categories: OtaCategoryCatalogPort;
 }
 
 const noopTelemetry: OtaTelemetryPort = {
@@ -88,9 +149,67 @@ const closedIdentity: OtaIdentityPort = {
   },
 };
 
+
+const unsetHttpApi: OtaHttpApiPort = {
+  getPublicJson: async () => {
+    throw new Error('otaCorePort: httpApi is not configured');
+  },
+  getPublicBinary: async () => {
+    throw new Error('otaCorePort: httpApi is not configured');
+  },
+  getAbsoluteJson: async () => {
+    throw new Error('otaCorePort: httpApi is not configured');
+  },
+  getAbsoluteBinary: async () => {
+    throw new Error('otaCorePort: httpApi is not configured');
+  },
+  get: async () => {
+    throw new Error('otaCorePort: httpApi is not configured');
+  },
+  post: async () => {
+    throw new Error('otaCorePort: httpApi is not configured');
+  },
+  put: async () => {
+    throw new Error('otaCorePort: httpApi is not configured');
+  },
+};
+
+const unsetApiRoutes: OtaApiRoutesPort = {
+  ota: { access: '', adminReleases: '', adminReleaseDiff: '' },
+};
+
+const unsetPublicEnv: OtaPublicEnvPort = {
+  otaPublicKey: '',
+  otaManifestUrl: '',
+  webBundleVersion: '',
+};
+
+const unsetAppVersions: OtaAppVersionsPort = {
+  currentAndroidNativeVersion: '',
+  currentIosNativeVersion: '',
+  currentWebContentVersion: '',
+};
+
+const unsetCategories: OtaCategoryCatalogPort = {
+  getMainCategories: () => {
+    throw new Error('otaCorePort: categories is not configured');
+  },
+  getCollections: () => {
+    throw new Error('otaCorePort: categories is not configured');
+  },
+  getCategoryTree: () => {
+    throw new Error('otaCorePort: categories is not configured');
+  },
+};
+
 let ports: OtaCorePorts = {
   telemetry: noopTelemetry,
   identity: closedIdentity,
+  httpApi: unsetHttpApi,
+  apiRoutes: unsetApiRoutes,
+  publicEnv: unsetPublicEnv,
+  appVersions: unsetAppVersions,
+  categories: unsetCategories,
 };
 
 /**
@@ -103,6 +222,11 @@ export function configureOtaCore(next: Partial<OtaCorePorts>): void {
   ports = {
     telemetry: next.telemetry ?? ports.telemetry,
     identity: next.identity ?? ports.identity,
+    httpApi: next.httpApi ?? ports.httpApi,
+    apiRoutes: next.apiRoutes ?? ports.apiRoutes,
+    publicEnv: next.publicEnv ?? ports.publicEnv,
+    appVersions: next.appVersions ?? ports.appVersions,
+    categories: next.categories ?? ports.categories,
   };
 }
 
@@ -119,5 +243,30 @@ export function resetOtaCorePorts(): void {
   ports = {
     telemetry: noopTelemetry,
     identity: closedIdentity,
-    };
+    httpApi: unsetHttpApi,
+    apiRoutes: unsetApiRoutes,
+    publicEnv: unsetPublicEnv,
+    appVersions: unsetAppVersions,
+    categories: unsetCategories,
+  };
+}
+
+export function otaHttpApi(): OtaHttpApiPort {
+  return ports.httpApi;
+}
+
+export function otaApiRoutes(): OtaApiRoutesPort {
+  return ports.apiRoutes;
+}
+
+export function otaPublicEnv(): OtaPublicEnvPort {
+  return ports.publicEnv;
+}
+
+export function otaAppVersions(): OtaAppVersionsPort {
+  return ports.appVersions;
+}
+
+export function otaCategories(): OtaCategoryCatalogPort {
+  return ports.categories;
 }

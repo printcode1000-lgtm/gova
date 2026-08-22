@@ -1,4 +1,4 @@
-export { configureOtaCore, resetOtaCorePorts, type OtaCorePorts, type OtaTelemetryPort, type OtaIdentityPort, type OtaLogEntry } from "./ports";
+export { configureOtaCore, resetOtaCorePorts, otaHttpApi, otaApiRoutes, otaPublicEnv, otaAppVersions, otaCategories, type OtaCorePorts, type OtaTelemetryPort, type OtaIdentityPort, type OtaLogEntry } from "./ports";
 /**
  * Runtime entry for @asol/ota-core.
  * Browser and Next.js SSR safe.

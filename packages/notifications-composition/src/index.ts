@@ -1,3 +1,4 @@
+import { configureNotificationsCoreServerConfig } from '@asol/notifications-core/server';
 import { NOTIFICATIONS_DECLARATION } from '@asol/account-declarations/notifications';
 import * as serverEnv from '@/core/config/server-env';
 import {
@@ -75,6 +76,18 @@ export function assertNotificationsEnv(env: NodeJS.ProcessEnv = process.env): vo
 }
 
 /** Layer 2 for the notifications account — the connector between its tasks. */
+function wireNotificationsCoreServerConfig(): void {
+  // Composition root for the notifications deployment (no app instrumentation.ts).
+  configureNotificationsCoreServerConfig({
+    getWebPushServerConfig: serverEnv.getWebPushServerConfig,
+    getFirebaseAdminServiceAccount: serverEnv.getFirebaseAdminServiceAccount,
+    getApnsServerConfig: serverEnv.getApnsServerConfig,
+    getNotificationGrantSecret: serverEnv.getNotificationGrantSecret,
+  });
+}
+
+wireNotificationsCoreServerConfig();
+
 export function createNotificationsRuntime(
   _config?: NotificationsRuntimeConfig,
 ): NotificationsRuntime {

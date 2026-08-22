@@ -1,4 +1,4 @@
-import { publicEnv } from '@/core/config/public-env';
+import { accountBridgePublicEnv } from '../ports/app-bridge';
 
 export interface MobilePushCredentialBundle {
   projectId: string;
@@ -46,9 +46,9 @@ export interface RecipientTokensApiResponse {
 }
 
 export function resolveMainApiBaseUrl(): string {
-  if (publicEnv.apiBaseUrl) return publicEnv.apiBaseUrl.replace(/\/$/, '');
+  if (accountBridgePublicEnv().apiBaseUrl) return accountBridgePublicEnv().apiBaseUrl.replace(/\/$/, '');
   if (typeof window !== 'undefined') {
-    return `${window.location.origin}${publicEnv.basePath}`.replace(/\/$/, '');
+    return `${window.location.origin}${accountBridgePublicEnv().basePath}`.replace(/\/$/, '');
   }
   return '';
 }

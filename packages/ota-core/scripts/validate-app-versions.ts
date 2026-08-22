@@ -3,13 +3,41 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
+import { configureOtaCore, otaAppVersions } from "../src/ports";
 import {
-  CURRENT_ANDROID_NATIVE_VERSION,
-  CURRENT_IOS_NATIVE_VERSION,
-  CURRENT_WEB_CONTENT_VERSION,
-} from "@/core/config/app-version";
-import { androidVersionCodeFor, isOtaVersion, parseContentVersion } from "../src";
+  androidVersionCodeFor,
+  isOtaVersion,
+  parseContentVersion,
+} from "../src";
 
+// Tooling composition root: read version constants from the app leaf as text so this
+// package script never imports `@/`.
+{
+  const versionFile = readFileSync(
+    path.join(process.cwd(), "src/core/config/app-version.ts"),
+    "utf8",
+  );
+  const grab = (name: string): string => {
+    const match = versionFile.match(
+      new RegExp(`export const ${name}\\s*=\\s*["']([^"']+)["']`),
+    );
+    if (!match) throw new Error(`app-version.ts missing ${name}`);
+    return match[1]!;
+  };
+  configureOtaCore({
+    appVersions: {
+      currentAndroidNativeVersion: grab("CURRENT_ANDROID_NATIVE_VERSION"),
+      currentIosNativeVersion: grab("CURRENT_IOS_NATIVE_VERSION"),
+      currentWebContentVersion: grab("CURRENT_WEB_CONTENT_VERSION"),
+    },
+  });
+}
+
+const {
+  currentAndroidNativeVersion: CURRENT_ANDROID_NATIVE_VERSION,
+  currentIosNativeVersion: CURRENT_IOS_NATIVE_VERSION,
+  currentWebContentVersion: CURRENT_WEB_CONTENT_VERSION,
+} = otaAppVersions();
 const root = process.cwd();
 const read = (file: string) => readFileSync(path.join(root, file), "utf8");
 const expectedAndroidBuildNumber = androidVersionCodeFor(CURRENT_ANDROID_NATIVE_VERSION);

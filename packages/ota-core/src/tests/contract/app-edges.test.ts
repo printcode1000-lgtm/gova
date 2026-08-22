@@ -4,28 +4,12 @@ import path from 'path';
 /**
  * Pins every edge from `@asol/ota-core` into the application.
  *
- * Rule 7 runs both ways: other modules know nothing of this package's internals, and this
- * package must not know the application's. It reached into `@/` in ten places. Six of
- * them were feature *internals* — system-log telemetry and a super-admin predicate — and
- * those are now inverted: the package names ports in `src/ports/`, and the application
- * registers implementations through `src/features/ota/ota-core-ports.ts`.
+ * Rule 7 runs both ways. Application `@/` imports are fully inverted into ports
+ * (`telemetry`, `identity`, `httpApi`, `apiRoutes`, `publicEnv`, `appVersions`,
+ * `categories`). This file must stay at zero declared app edges.
  *
- * The two that remain are deliberate, and the distinction is the point of this file:
- *
- * | Edge | Why it stays |
- * | :-- | :-- |
- * | `@/core/api` | The designated HTTP transport, itself governed by `ALLOWED_FETCH_FILES` |
- * | `@/features/categories` | Build-time only (`publishing/build/out-public-assets.ts`) |
- *
- * Two former app edges are gone rather than budgeted: the OTA state reads used to point at
- * `@/modules/data-access/...` and now go through `@asol/data-core/browser` and
- * `@asol/data-core/ota`. Those are layer-1 → layer-1 package doors, not knowledge of the
- * application, so they are pinned separately in `DECLARED_PACKAGE_DOORS`.
- *
- * `@/features/categories` is the one judgement call. It could be a port, but a port needs
- * a safe default, and the safe default for build-time asset generation is an **empty**
- * asset set — a silently wrong build artifact. An import that fails loudly beats a
- * default that fails quietly, so it stays an import.
+ * Package doors (`@asol/data-core/*`, `@asol/native-core`) remain and are pinned
+ * separately in `DECLARED_PACKAGE_DOORS`.
  *
  * The list should only ever shrink.
  */
@@ -33,11 +17,7 @@ import path from 'path';
 const PACKAGE_SRC = path.join(process.cwd(), 'packages/ota-core/src');
 
 /** Every `@/` module `ota-core` is allowed to import. Shrink, never grow. */
-const DECLARED_APP_EDGES = new Set([
-  '@/core/api',
-  '@/core/config/public-env',
-  '@/features/categories',
-]);
+const DECLARED_APP_EDGES = new Set<string>([]);
 
 /** Sealed-package doors this package may reach, and only through a declared door. */
 const DECLARED_PACKAGE_DOORS = new Set([
@@ -52,6 +32,10 @@ const DECLARED_PACKAGE_DOORS = new Set([
  * "this was inverted on purpose" is worth more than one that says "not declared".
  */
 const INVERTED_AWAY = [
+  '@/features/categories',
+  '@/core/config/app-version',
+  '@/core/config/public-env',
+  '@/core/api',
   '@/features/auth/utils/super-admin',
   '@/features/system-logs/entities/persistent-system-log.entity',
   '@/features/system-logs/pre-auth-failure-reporter',

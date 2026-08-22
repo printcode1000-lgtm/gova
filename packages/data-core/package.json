@@ -129,6 +129,10 @@
     "./seller-discounts/entities": {
       "types": "./src/domains/seller-discounts/entities/index.ts",
       "default": "./src/domains/seller-discounts/entities/index.ts"
+    },
+    "./runtime-config": {
+      "types": "./src/ports/runtime-config.ts",
+      "default": "./src/ports/runtime-config.ts"
     }
   },
   "scripts": {

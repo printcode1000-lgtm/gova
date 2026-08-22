@@ -802,3 +802,22 @@ the least safe place in the repository to leave unchecked.
 
 Keep `scripts` out of `exclude`. A new script that does not typecheck is a release path that does
 not work yet.
+
+## Application `@/` ports (capability packages)
+
+Capability packages must not import `@/`. Application dependencies are registered through
+ports, following the same pattern as `orders-core` and the original `ota-core` telemetry /
+identity inversion:
+
+| Package | Port module | Wired from |
+| :-- | :-- | :-- |
+| `@asol/notifications-core` | `src/ports/server-config.ts` | `src/features/notifications/notifications-core-ports.ts` (+ notifications-composition) |
+| `@asol/storage-core` | `src/ports/http-fetch.ts` | `src/features/storage/storage-core-ports.ts` |
+| `@asol/ota-core` | `src/ports/index.ts` (`httpApi`, `apiRoutes`, `publicEnv`, `appVersions`, `categories`) | `src/features/ota/ota-core-ports.ts` / `server.ts` |
+| `@asol/account-bridge` | `src/ports/app-bridge.ts` | `src/features/account-bridge/account-bridge-ports.ts` |
+| `@asol/data-core` | `src/ports/runtime-config.ts` | `src/features/data/data-core-ports.ts` (+ browser half) |
+
+Composition roots: `src/core/composition/server-ports.ts` and `browser-ports.ts`.
+`*-composition` packages may keep `@/` imports — they are composition roots.
+
+`service-mirror-core` tests may mention `@/` only as sample strings for the mirror walker.

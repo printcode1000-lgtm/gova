@@ -41,4 +41,16 @@ export async function registerAppServerPorts(): Promise<void> {
 
   const { registerOtaCoreServerPorts } = await import('@/features/ota/server');
   registerOtaCoreServerPorts();
+
+  const { registerNotificationsCorePorts } = await import(
+    '@/features/notifications/notifications-core-ports'
+  );
+  registerNotificationsCorePorts();
+
+  const { registerStorageCorePorts } = await import('@/features/storage/storage-core-ports');
+  registerStorageCorePorts();
+
+  const { registerDataCorePorts } = await import('@/features/data/data-core-ports');
+  registerDataCorePorts();
 }
+

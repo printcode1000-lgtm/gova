@@ -1,6 +1,6 @@
 import { getPlatformName } from '@asol/native-core';
-import { publicEnv } from '@/core/config/public-env';
-import type { AppDeployment, AppPlatform } from '@/core/config/runtime-context';
+import { accountBridgePublicEnv } from './ports/app-bridge';
+import type { AppDeployment, AppPlatform } from './ports/app-bridge';
 
 export type ServiceKey = 'products' | 'orders' | 'profiles' | 'submain' | 'sub2main';
 
@@ -109,8 +109,8 @@ function detectPlatform(): AppPlatform {
 
 function detectDeployment(platform: AppPlatform): AppDeployment {
   if (isNativePlatform(platform)) return 'static-export';
-  if (publicEnv.mode.trim().toLowerCase() === 'static') return 'static-export';
-  return publicEnv.developmentBuild ? 'local-development' : 'web-production';
+  if (accountBridgePublicEnv().mode.trim().toLowerCase() === 'static') return 'static-export';
+  return accountBridgePublicEnv().developmentBuild ? 'local-development' : 'web-production';
 }
 
 export function resolveServiceOrigin(
@@ -120,15 +120,17 @@ export function resolveServiceOrigin(
   const platform = detectPlatform();
   return resolveServiceOriginForRuntime(method, route, {
     browser: isBrowser(),
-    developmentBuild: publicEnv.developmentBuild,
+    developmentBuild: accountBridgePublicEnv().developmentBuild,
     platform,
     deployment: detectDeployment(platform),
     origins: {
-      products: publicEnv.productsUrl,
-      orders: publicEnv.ordersUrl,
-      profiles: publicEnv.profilesUrl,
-      submain: publicEnv.submainUrl,
-      sub2main: publicEnv.sub2mainUrl,
+      products: accountBridgePublicEnv().productsUrl,
+      orders: accountBridgePublicEnv().ordersUrl,
+      profiles: accountBridgePublicEnv().profilesUrl,
+      submain: accountBridgePublicEnv().submainUrl,
+      sub2main: accountBridgePublicEnv().sub2mainUrl,
     },
   });
 }
+
+export { configureAccountBridge, resetAccountBridgePorts } from './ports/app-bridge';
