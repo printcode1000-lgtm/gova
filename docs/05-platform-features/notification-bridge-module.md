@@ -134,11 +134,29 @@ unchanged. Native delivery additionally parses the verified send payload returne
 by `recipient-tokens`; it cannot forge grants because it does not hold
 `ASOL_NOTIFICATION_GRANT_SECRET`.
 
-## Configuration
+### Local development (`next dev`)
+
+Production web posts grants to the notifications service, which resolves device
+tokens from Turso. A `next dev` browser registers tokens into local
+`notifications.db` instead, so pointing the bridge at the remote service would
+always report `no_tokens`.
+
+When `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` is unset and `NODE_ENV` is
+`development`, `getNotificationsPublicUrl()` returns the page origin
+(`http://localhost:3001` by default). The bridge then posts to
+`/api/notifications/send` on the main app. That route exists only in
+development builds: it answers `404` in production and calls
+`deliverNotificationGrants` from `@asol/notifications-core/server`, the same
+entry point the notifications service uses.
+
+Web Push from localhost still needs `WEB_PUSH_VAPID_PRIVATE_KEY` in
+`.env.local` (or Cloud Agent Secrets) so the Web Push provider can sign
+outbound messages. Grant signing needs `ASOL_NOTIFICATION_GRANT_SECRET`, or
+`ASOL_SESSION_SIGNING_SECRET` when the dedicated grant secret is unset.
 
 | Variable | Where | Notes |
 |---|---|---|
-| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | main app, client-safe | Origin of the notifications service. Empty means the **web** bridge delivers nothing. |
+| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | main app, client-safe | Origin of the notifications service on production web and static builds. When unset in `next dev`, the bridge falls back to `window.location.origin` and posts to the main app's development-only `/api/notifications/send`, which fans out against local SQLite. Set explicitly to override (for example to exercise the deployed service from localhost). |
 | `ASOL_MOBILE_PUSH_UNLOCK_KEY` | main app server only | 32-byte AES key (hex or base64). Decrypts the embedded blob at unlock. **Never** baked into client bundles. |
 | `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | main app server | Same ciphertext as the public blob; optional mismatch guard on unlock. |
 | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | main app, client-safe | AES-256-GCM blob baked into static/Capacitor bundles. Useless without the unlock key. |
@@ -188,7 +206,7 @@ knowable on the main app.
 
 | Suite | What it proves |
 |---|---|
-| `notifications-service-module-contract.test.ts` | Main app has no `/api/notifications/send`; service is self-contained |
+| `notifications-service-module-contract.test.ts` | Main-app dev send route is gated; notifications service stays self-contained |
 | `packages/account-bridge/src/tests/mobile-push.test.ts` | No server secrets in the channel graph; local credential encryption round-trip |
 | `mobile-push-unlock.service.test.ts` | Server unlock verifies identity and blob |
 | `mobile-push-contract.test.ts` | APIs and native branch wired |

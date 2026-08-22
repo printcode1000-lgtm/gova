@@ -223,10 +223,13 @@ export function getTursoNotificationsRuntimeCredentials(): {
 }
 
 export function getNotificationGrantSecret(): string {
-  const secret = process.env.ASOL_NOTIFICATION_GRANT_SECRET?.trim() ?? "";
-  if (secret.length < 32)
-    throw new Error("notificationGrantSecretNotConfigured");
-  return secret;
+  const grantSecret = process.env.ASOL_NOTIFICATION_GRANT_SECRET?.trim() ?? "";
+  if (grantSecret.length >= 32) return grantSecret;
+
+  const sessionSecret = process.env.ASOL_SESSION_SIGNING_SECRET?.trim() ?? "";
+  if (sessionSecret.length >= 32) return sessionSecret;
+
+  throw new Error("notificationGrantSecretNotConfigured");
 }
 
 export function getTursoAdvertisementsRuntimeCredentials(): {
