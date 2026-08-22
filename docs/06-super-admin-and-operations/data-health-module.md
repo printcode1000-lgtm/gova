@@ -61,10 +61,11 @@ tasks (not limited to files in R2).
 
 ### Image Storage Targets
 
-Displays three distinct storage targets:
+Displays four distinct storage targets:
 
 - `r2-primary`: New R2 bucket for profile images (`avatar` and `cover`), home hero slider (`home-hero-slider`), and custom order images (`spicialOrder`).
 - `r2-products`: Legacy R2 bucket for product images (`product-default`) exclusively.
+- `r2-products-apparel-pets`: Dedicated R2 bucket for new apparel/pets product images (`product-apparel-pets`) exclusively. Inventory keys references by `storageProfileId` so objects are not counted twice and new-bucket objects are not treated as orphans of `product-default`.
 - `local-sync-mirror`: Local unified mirror located under `public/sync_data/sync_file/images/...`, excluded from cloud operations.
 
 Storage bucket distribution and directory paths depend on `packages/storage-core/src/config/storage-profiles.json`. Account credentials, keys, and secret access tokens are never exposed on the user interface.

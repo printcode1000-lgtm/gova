@@ -531,7 +531,13 @@ export function SuperAdminCloudAccountsContent() {
             <td className="p-3">
               <span dir="ltr">gova-storage</span> (منتجات)
             </td>
-            <td className="p-3">صور منتجات المتجر فقط</td>
+            <td className="p-3">صور المنتجات القديمة وكل التصنيفات عدا الرفع الجديد للملابس/الحيوانات</td>
+          </tr>
+          <tr className="border-t align-top">
+            <td className="p-3">
+              <span dir="ltr">productcat1</span> (ملابس وحيوانات)
+            </td>
+            <td className="p-3">صور المنتجات الجديدة لتصنيفي الملابس (1) والحيوانات (12) وشرائح أزياء onboarding</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">
@@ -548,7 +554,10 @@ export function SuperAdminCloudAccountsContent() {
         وكتابة سياسة CORS. تحويل مفتاح إلى رابط هو معالجة نصوص بحتة، والتحقق
         من الوجود يحتاج فقط زوج S3 — لذا مسارات القراءة تستخدم أدوات وصول
         ضيقة، ولا يملك أي من <span dir="ltr">asol-products</span> أو{" "}
-        <span dir="ltr">asol-profiles</span> رمز دخول API.
+        <span dir="ltr">asol-profiles</span> رمز دخول API. خدمة{" "}
+        <span dir="ltr">asol-products</span> تستلم مفاتيح{" "}
+        <span dir="ltr">APPAREL_PETS_R2_*</span> العامة/S3 حتى تُحلّ روابط
+        صور الملابس والحيوانات.
       </Note>
 
       <SectionTitle>أين تعيش الاعتمادات (credentials)</SectionTitle>

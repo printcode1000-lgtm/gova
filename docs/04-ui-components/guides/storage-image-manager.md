@@ -68,7 +68,7 @@ Every config file must use this exact shape:
 | Field              | Purpose                                                                          |
 | ------------------ | -------------------------------------------------------------------------------- |
 | `id`               | Stable unique id for this component instance                                     |
-| `storageProfileId` | Storage profile id: `avatar`, `cover`, `product-default`, `spicialOrder`, etc.  |
+| `storageProfileId` | Storage profile id: `avatar`, `cover`, `product-default`, `product-apparel-pets`, `spicialOrder`, etc.  |
 | `storageScope`     | Optional validated scope required by profiles with a dynamic folder strategy.    |
 | `maxItems`         | Number of slots rendered by this config. Use `1` for normal one-image instances. |
 | `aspectRatio`      | `square`, `landscape`, `portrait`, or `wide`                                     |
@@ -83,7 +83,7 @@ Every config file must use this exact shape:
 }
 ```
 
-The current `product-default` profile uses this strategy, so every product image manager must supply a valid main-category ID. The accepted scope contains only letters, numbers, and hyphens.
+Both `product-default` and `product-apparel-pets` use this strategy, so every product image manager must supply a valid main-category ID (or an onboarding fashion slug). Prefer `resolveProductStorageProfileId(scope)` from `@asol/storage-core` over hard-coding a product profile. The accepted scope contains only letters, numbers, and hyphens.
 
 ## Usage
 
@@ -108,13 +108,13 @@ const config = parseStorageImageManagerConfig(imageConfig);
 
 ### Product image example
 
-Product images use the main category as their storage scope:
+Product images use the main category (or onboarding fashion slug) as their storage scope. Select the profile with `resolveProductStorageProfileId` so apparel/pets land on `product-apparel-pets`:
 
 ```tsx
 <StorageImageManager
   config={{
     id: "product-image-1",
-    storageProfileId: "product-default",
+    storageProfileId: resolveProductStorageProfileId(mainCategoryId),
     storageScope: mainCategoryId,
     maxItems: 1,
     aspectRatio: "square",
@@ -216,7 +216,7 @@ Storage deletion and feature-database persistence are two sequential operations,
 
 Feature owners must persist the resulting empty image reference from `onChange`. They must not optimistically remove the database reference before storage deletion succeeds.
 
-For `product-default`, `storageScope` is the main category ID. The storage layer validates it and returns an `imageKey` shaped as `<mainCategoryId>/<uuid>.webp`. UI code never supplies a folder path.
+For `product-default` and `product-apparel-pets`, `storageScope` is the catalog main-category ID or an onboarding fashion slug. The storage layer validates it and returns an `imageKey` shaped as `<scope>/<uuid>.webp`. UI code never supplies a folder path.
 
 The scope is forwarded through every layer:
 

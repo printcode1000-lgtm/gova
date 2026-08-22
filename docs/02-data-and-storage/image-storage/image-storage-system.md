@@ -128,6 +128,7 @@ public/sync_data/sync_file/
     covers/
     advertisements/home-hero-slider/
     products/<mainCategoryId>/
+    products-apparel-pets/<scope>/
     spicialOrder/
 ```
 

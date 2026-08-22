@@ -157,12 +157,18 @@ The image storage system returns `StoredImage` objects:
 type StoredImage = {
   imageKey: string;
   url: string;
+  storageProfileId?: string;
 };
 ```
 
-**Only the key is persisted.** `products.images_json` holds `[{ imageKey }]`,
-and `ProductService` fills in `url` on read through
-`imageStorageService.resolveImageUrl("product-default", imageKey)`.
+**Only the key (and optional profile) is persisted.** `products.images_json`
+holds `[{ imageKey }]` and, when the upload is not on `product-default`,
+`storageProfileId`. `ProductService` fills in `url` on read through
+`imageStorageService.resolveImageUrl(profileId, imageKey)`, where `profileId`
+is the stored `storageProfileId` or `product-default` when omitted. New
+apparel/pets uploads (catalog ids `1` and `12`, plus onboarding fashion slugs)
+store `product-apparel-pets`; legacy rows without the field stay on the original
+product bucket with no object migration.
 
 A stored URL baked the bucket's public hostname into every row, so moving the
 bucket meant rewriting the data — which this project has already had to do once.

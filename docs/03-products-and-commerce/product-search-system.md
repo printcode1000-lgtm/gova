@@ -52,9 +52,12 @@ The search scope is restricted by:
 
 This means a profile page never returns products from another seller.
 
-Search results resolve every stored product image key through the active
-`product-default` storage profile before returning cards. The compact search
-therefore preserves the same image URLs as the normal owner/category listing.
+Search results resolve every stored product image key through
+`image.storageProfileId` when present, otherwise `product-default`, before
+returning cards. Apparel/pets uploads that stored `product-apparel-pets` resolve
+against the dedicated bucket; legacy rows without the field stay on the original
+product account. The compact search therefore preserves the same image URLs as
+the normal owner/category listing.
 In profile edit mode, **Featured only** is a management view across all selected
 specialties rather than a filter limited to the currently active subcategory.
 

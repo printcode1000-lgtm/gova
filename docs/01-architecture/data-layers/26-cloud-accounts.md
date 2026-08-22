@@ -164,15 +164,15 @@ profile overrides.
 
 ---
 
-## Cloudflare R2 — three accounts
+## Cloudflare R2 — four accounts
 
-| | General | Products | OTA Updates |
-|---|---|---|---|
-| Variables | `R2_*` | `PRODUCT_R2_*` | `ASOL_OTA_R2_*` |
-| Account ID | `8486fdbb…3e043` | `166409f3…d3e08` | `21fce63d…1810` |
-| Bucket | `pic1` | `gova-storage` | `ota` |
-| Target / Provider | `CloudflareR2` | `CloudflareR2Products` | `ota` (in `R2_STORAGE_TARGETS`) |
-| Public Base URL | `https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev` | `https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev` | `https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev` |
+| | General | Products (legacy) | Apparel + Pets | OTA Updates |
+|---|---|---|---|---|
+| Variables | `R2_*` | `PRODUCT_R2_*` | `APPAREL_PETS_R2_*` | `ASOL_OTA_R2_*` |
+| Account ID | `8486fdbb…3e043` | `166409f3…d3e08` | `f08cd5b7…f2642` | `21fce63d…1810` |
+| Bucket | `pic1` | `gova-storage` | `productcat1` | `ota` |
+| Target / Provider | `CloudflareR2` | `CloudflareR2Products` | `CloudflareR2_products-apparel-pets` | `ota` (in `R2_STORAGE_TARGETS`) |
+| Public Base URL | `https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev` | `https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev` | `https://pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev` | `https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev` |
 
 ### What decides where a file goes
 
@@ -185,6 +185,13 @@ profile overrides.
 | `home-hero-slider` | general | `images/content/advertisements/…` |
 | `spicialOrder` | general | `images/content/spicialOrder` |
 | `product-default` | **products** | `images/products` |
+| `product-apparel-pets` | **products-apparel-pets** | `images/products-apparel-pets` |
+
+New product uploads choose a profile via `resolveProductStorageProfileId(scope)`:
+catalog ids `1` and `12` plus onboarding fashion slugs go to `product-apparel-pets`;
+everything else stays on `product-default`. `products.images_json` may store
+optional `storageProfileId`; omission means `product-default`, so pre-split
+apparel/pets rows stay on `gova-storage` with no object migration.
 
 OTA release storage is governed solely by `@asol/ota-core` targeting the dedicated `ota` bucket (`ASOL_OTA_R2_*`).
 
@@ -193,14 +200,15 @@ OTA release storage is governed solely by `@asol/ota-core` targeting the dedicat
 | Bucket | Objects | Size | Contents |
 |---|---:|---:|---|
 | `pic1` (general) | 8 | 0.82 MB | Profile images (avatars, covers), advertising banners, special orders |
-| `gova-storage` (products) | 2 | 0.05 MB | Product catalog images only (`images/products/...`) |
+| `gova-storage` (products) | 2 | 0.05 MB | Legacy product catalog images (`images/products/...`) |
+| `productcat1` (apparel + pets) | — | — | New apparel/pets product images (`images/products-apparel-pets/...`) |
 | `ota` (OTA releases) | 2,251 | 54.15 MB | Live release `0.2.4.1` (`manifest.json`, file tree, transport bundle) |
 
 The general and product buckets hold zero OTA objects; `images/` objects in both buckets remain 100% intact. OTA release artefacts are completely isolated in the `ota` bucket.
 
 ### Reading an image is not an account operation
 
-`R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` create buckets and manage CORS policy. Turning a key into a URL is string work and an existence check needs only the S3 pair, so the read paths take the narrow accessors — and neither `asol-products` nor `asol-profiles` holds an API token.
+`R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, `APPAREL_PETS_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` create buckets and manage CORS policy. Turning a key into a URL is string work and an existence check needs only the S3 pair, so the read paths take the narrow accessors — and neither `asol-products` nor `asol-profiles` holds an API token. `asol-products` does receive `APPAREL_PETS_R2_*` public/S3 keys so apparel/pets image URLs resolve.
 
 See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
