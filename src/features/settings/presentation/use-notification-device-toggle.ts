@@ -298,6 +298,7 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
     ),
     pushSupported,
     recheckPermission,
+    refreshDeviceState: loadNotificationState,
     updateDeviceNotifications,
   };
 }

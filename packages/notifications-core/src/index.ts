@@ -22,6 +22,7 @@ export * from './domain/defaults';
 export * from './domain/create-notification-id';
 export * from './domain/notification-sound';
 export * from './domain/notification-test-scenarios';
+export * from './domain/notification-self-test';
 export * from './domain/web-push-config';
 
 // Type-only, and on the browser door on purpose. A consumer that needs the provider

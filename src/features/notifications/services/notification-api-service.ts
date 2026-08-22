@@ -4,6 +4,7 @@ import {
   type NotificationBridgeRecipientResult,
 } from '@asol/account-bridge/notifications';
 import type {
+  AccountDevicesResult,
   DeleteNotificationTokenInput,
   DeviceToken,
   BroadcastNotificationInput,
@@ -14,6 +15,7 @@ import type {
   NotificationTestInput,
   NotificationTestResult,
   RegisterNotificationTokenInput,
+  SelfTestNotificationResult,
 } from "@asol/notifications-core";
 
 /**
@@ -97,6 +99,48 @@ export class NotificationApiService {
     return mergeBroadcastDeliveryResult(granted, delivery.recipientResults);
   }
 
+  /**
+   * Every device on the account, and revoking one of them.
+   *
+   * Both authorise with the signed session rather than a uid/phone pair in the
+   * query, because either one can reach a registration this browser does not
+   * own — the local token store cannot see another device at all.
+   */
+  listAccountDevices(sessionToken: string): Promise<AccountDevicesResult> {
+    return asolApi.get<AccountDevicesResult>(
+      ASOL_API_ROUTES.notifications.devices,
+      { headers: sessionHeaders(sessionToken), cache: "no-store" },
+    );
+  }
+
+  revokeAccountDevice(
+    sessionToken: string,
+    deviceId: string,
+  ): Promise<{ deleted: boolean }> {
+    const query = new URLSearchParams({ deviceId });
+    return asolApi.delete<{ deleted: boolean }>(
+      `${ASOL_API_ROUTES.notifications.devices}?${query}`,
+      { headers: sessionHeaders(sessionToken) },
+    );
+  }
+
+  /** The account's own delivery test: no content crosses the wire, only a locale. */
+  async sendSelfTest(
+    sessionToken: string,
+    locale: "ar" | "en",
+  ): Promise<SelfTestNotificationResult> {
+    const granted = await asolApi.post<SelfTestNotificationResult>(
+      ASOL_API_ROUTES.notifications.testSelf,
+      { locale },
+      {
+        headers: sessionHeaders(sessionToken),
+        notificationGrantDelivery: "manual",
+      },
+    );
+    const delivery = await deliverNotificationGrants(granted);
+    return mergeSelfTestDeliveryResult(granted, delivery.recipientResults);
+  }
+
   async sendTest(
     input: AuthenticatedNotificationTestInput,
   ): Promise<NotificationTestResult> {
@@ -119,6 +163,31 @@ export class NotificationApiService {
 }
 
 export const notificationApiService = new NotificationApiService();
+
+function sessionHeaders(sessionToken: string): Record<string, string> {
+  const token = sessionToken.trim();
+  if (!token) throw new Error("sessionTokenInvalid");
+  return { "x-asol-session-token": token };
+}
+
+/** Replace the grant placeholder with the notifications service's real outcome. */
+export function mergeSelfTestDeliveryResult(
+  granted: SelfTestNotificationResult,
+  delivered: NotificationBridgeRecipientResult[],
+): SelfTestNotificationResult {
+  const expectedUid = granted.results[0]?.uid;
+  const actual = delivered.find((result) => result.uid === expectedUid);
+  return {
+    ...granted,
+    results: actual
+      ? [actual]
+      : granted.results.map((placeholder) => ({
+          uid: placeholder.uid,
+          tokenCount: 0,
+          status: "failed" as const,
+        })),
+  };
+}
 
 /** Replace grant placeholders with the notifications service's real outcomes. */
 export function mergeBroadcastDeliveryResult(

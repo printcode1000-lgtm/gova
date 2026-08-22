@@ -20,6 +20,10 @@ const systemSettingsButton = source(
 const systemSettingsHook = source(
   `${presentation}/use-system-notification-settings.ts`,
 );
+const accountDevicesSection = source(`${presentation}/AccountDevicesSection.tsx`);
+const accountDevicesHook = source(`${presentation}/use-account-devices.ts`);
+const selfTestButton = source(`${presentation}/SelfTestNotificationButton.tsx`);
+const selfTestHook = source(`${presentation}/use-self-test-notification.ts`);
 
 // The status timer is owned, so a second message keeps its full duration and an
 // unmount never lands a setState on a gone component.
@@ -56,6 +60,24 @@ assert.match(systemSettingsHook, /React\.useEffect/);
 assert.match(systemSettingsHook, /NativeCore\.openAppNotificationSettings\(\)/);
 assert.match(card, /<SystemNotificationSettingsButton state=\{state\} \/>/);
 
+// The account's other devices are listed and revocable, and revoking the
+// device in hand goes through the local unregister so no stale subscription
+// outlives the server row.
+assert.match(accountDevicesHook, /notifications\.listAccountDevices/);
+assert.match(accountDevicesHook, /notifications\.revokeAccountDevice/);
+assert.match(accountDevicesHook, /localDeviceIds\.includes\(deviceId\)/);
+assert.match(accountDevicesHook, /notifications\.unregisterDevice/);
+assert.match(accountDevicesSection, /notifications\.accountDevices\.thisDevice/);
+assert.match(accountDevicesSection, /notifications\.accountDevices\.empty/);
+assert.match(card, /<AccountDevicesSection state=\{state\} \/>/);
+
+// The delivery test reports what happened, not that the request succeeded.
+assert.match(selfTestHook, /notifications\.sendSelfTest/);
+assert.match(selfTestHook, /outcome\.tokenCount === 0/);
+assert.match(selfTestHook, /notifications\.selfTest\.noDevices/);
+assert.match(selfTestButton, /notifications\.selfTest\.button/);
+assert.match(card, /<SelfTestNotificationButton state=\{state\} \/>/);
+
 // Every new string exists in both locales.
 const locales = ['src/locales/ar.json', 'src/locales/en.json'].map(
   (file) => JSON.parse(source(file)) as Record<string, string>,
@@ -68,6 +90,26 @@ for (const key of [
   'settings.notifications.systemSettings.description',
   'settings.notifications.systemSettings.button',
   'settings.notifications.systemSettings.error',
+  'notifications.accountDevices.title',
+  'notifications.accountDevices.description',
+  'notifications.accountDevices.thisDevice',
+  'notifications.accountDevices.lastSeen',
+  'notifications.accountDevices.platformAndroid',
+  'notifications.accountDevices.platformIos',
+  'notifications.accountDevices.platformWeb',
+  'notifications.accountDevices.refresh',
+  'notifications.accountDevices.revoke',
+  'notifications.accountDevices.revoked',
+  'notifications.accountDevices.revokeError',
+  'notifications.accountDevices.loadError',
+  'notifications.accountDevices.empty',
+  'notifications.selfTest.title',
+  'notifications.selfTest.description',
+  'notifications.selfTest.button',
+  'notifications.selfTest.sending',
+  'notifications.selfTest.sent',
+  'notifications.selfTest.noDevices',
+  'notifications.selfTest.failed',
 ]) {
   for (const locale of locales) {
     assert.ok(locale[key], `Missing translation: ${key}`);
