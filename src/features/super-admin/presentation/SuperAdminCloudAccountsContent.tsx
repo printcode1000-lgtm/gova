@@ -48,7 +48,7 @@ export function SuperAdminCloudAccountsContent() {
             الحسابات السحابية
           </h1>
           <p className="text-sm text-on-surface-variant">
-            سبعة حسابات Vercel وخمسة Turso وثلاثة R2.{" "}
+            سبعة حسابات Vercel وخمسة Turso وأربعة R2.{" "}
             <span dir="ltr">submain</span> للبحث والسلة وإنشاء الطلبات؛{" "}
             <span dir="ltr">sub2main</span> لكتابات البائع (بروفايل، منتجات،
             تخزين). الأسرار في <span dir="ltr">.env.local</span> والنسخ
@@ -85,8 +85,8 @@ export function SuperAdminCloudAccountsContent() {
           </tr>
           <tr className="border-t">
             <td className="p-3">Cloudflare R2</td>
-            <td className="p-3">3</td>
-            <td className="p-3">3 حاويات منفصلة تماماً</td>
+            <td className="p-3">4</td>
+            <td className="p-3">4 حاويات منفصلة تماماً</td>
           </tr>
         </tbody>
       </TableWrap>

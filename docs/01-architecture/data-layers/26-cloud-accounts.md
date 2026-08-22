@@ -13,7 +13,7 @@ variable carries what.
 |---|---:|---|
 | Vercel | 7 | one deployment each |
 | Turso | 5 | 21 databases, 70 application tables |
-| Cloudflare R2 | 3 | 3 buckets |
+| Cloudflare R2 | 4 | 4 buckets |
 
 The number seven is not a coincidence: **one Vercel account per deployment.**
 `gova` is the full GitHub-linked application; the other six are isolated CLI
