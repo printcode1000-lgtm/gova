@@ -90,6 +90,7 @@ export function SuperAdminUsersPage() {
 
   const impersonate = async (targetUid: string) => {
     if (!session?.sessionToken || !isSuperAdmin(session)) return;
+    const sessionToken = session.sessionToken;
     setImpersonatingUid(targetUid);
     setError("");
     const superAdminSession = session;
@@ -109,7 +110,7 @@ export function SuperAdminUsersPage() {
         {
           targetUid,
         },
-        { headers: { "x-asol-session-token": superAdminSession.sessionToken } },
+        { headers: { "x-asol-session-token": sessionToken } },
       );
       await clearImageUploadClientState();
       const stored = await sessionService.saveSession(next);

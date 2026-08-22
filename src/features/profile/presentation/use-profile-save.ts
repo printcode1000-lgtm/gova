@@ -55,7 +55,8 @@ interface UseProfileSaveReturn {
     specialtiesController: ProfileSpecialtiesController | null,
     productsController: ProfileSpecialtiesController | null,
     fulfillmentController: ProfileFulfillmentController | null,
-    discountsController: ProfileDiscountsController | null
+    discountsController: ProfileDiscountsController | null,
+    sectionsFilter?: ProfileEditTab[],
   ) => Promise<boolean>;
 }
 
