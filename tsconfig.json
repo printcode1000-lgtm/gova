@@ -68,11 +68,23 @@
       "@asol/auth-core/server": [
         "./packages/auth-core/src/server.ts"
       ],
+      "@asol/backup-core": [
+        "./packages/backup-core/src/index.ts"
+      ],
+      "@asol/backup-core/server": [
+        "./packages/backup-core/src/server.ts"
+      ],
       "@asol/catalog-core": [
         "./packages/catalog-core/src/index.ts"
       ],
       "@asol/catalog-core/server": [
         "./packages/catalog-core/src/server.ts"
+      ],
+      "@asol/data-health-core": [
+        "./packages/data-health-core/src/index.ts"
+      ],
+      "@asol/data-health-core/server": [
+        "./packages/data-health-core/src/server.ts"
       ],
       "@asol/data-core": [
         "./packages/data-core/src/index.ts"
@@ -259,6 +271,18 @@
       ],
       "@asol/release-core": [
         "./packages/release-core/src/index.ts"
+      ],
+      "@asol/release-core/console": [
+        "./packages/release-core/src/console.ts"
+      ],
+      "@asol/release-core/console-server": [
+        "./packages/release-core/src/console-server.ts"
+      ],
+      "@asol/release-core/console-artifacts": [
+        "./packages/release-core/src/console-artifacts.ts"
+      ],
+      "@asol/release-core/console/android-release-runbook": [
+        "./packages/release-core/src/console/android-release-runbook.ts"
       ],
       "@asol/secrets-core": [
         "./packages/secrets-core/src/index.ts"

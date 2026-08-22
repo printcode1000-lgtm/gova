@@ -100,6 +100,78 @@ export async function runImageDeletionRetryTest() {
   console.log('✅ auth-core image deletion retry test passed');
 }
 
+export async function runSuperAdminAccountDeletionTest() {
+  serverApi.registerSuperAdminIdentity(() => ({
+    uid: 'super-admin-uid',
+    phone: '01000000000',
+  }));
+
+  const executedSteps: string[] = [];
+  const fakeRepo = {
+    async getUser(uid: string) {
+      if (uid === 'user-123') {
+        return { uid: 'user-123', phone: '01111111111', password: 'hashed' };
+      }
+      if (uid === 'super-admin-uid') {
+        return { uid: 'super-admin-uid', phone: '01000000000', password: 'hashed' };
+      }
+      return undefined;
+    },
+    async collectImages(uid: string) {
+      executedSteps.push(`collect_images:${uid}`);
+      return [{ profileId: 'avatar' as const, key: 'avatar-1' }];
+    },
+    async anonymizeOrders(uid: string) {
+      executedSteps.push(`anonymize_orders:${uid}`);
+    },
+    async deleteProducts(uid: string) {
+      executedSteps.push(`delete_products:${uid}`);
+    },
+    async deleteProfile(uid: string) {
+      executedSteps.push(`delete_profile:${uid}`);
+    },
+    async deleteMain(uid: string) {
+      executedSteps.push(`delete_main:${uid}`);
+    },
+  };
+
+  const deletedKeys: string[] = [];
+  const fakeStorage = {
+    async deleteImage(profileId: string, key: string) {
+      deletedKeys.push(`${profileId}:${key}`);
+    },
+  };
+
+  const service = new serverApi.AccountDeletionService(fakeRepo, fakeStorage);
+
+  // 1. Super admin deletion forbidden
+  await assert.rejects(
+    () => service.deleteBySuperAdmin('super-admin-uid'),
+    /accountDeletionSuperAdminForbidden/,
+  );
+
+  // 2. Non-existent user
+  await assert.rejects(
+    () => service.deleteBySuperAdmin('non-existent'),
+    /userNotFound/,
+  );
+
+  // 3. Normal user deletion
+  const result = await service.deleteBySuperAdmin('user-123');
+  assert.equal(result.deleted, true);
+  assert.equal(result.imagesDeleted, 1);
+  assert.deepEqual(deletedKeys, ['avatar:avatar-1']);
+  assert.deepEqual(executedSteps, [
+    'collect_images:user-123',
+    'anonymize_orders:user-123',
+    'delete_products:user-123',
+    'delete_profile:user-123',
+    'delete_main:user-123',
+  ]);
+
+  console.log('✅ auth-core super admin account deletion test passed');
+}
+
 async function main() {
   console.log('🚀 Running @asol/auth-core test suite...\n');
   runConstantsTest();
@@ -108,6 +180,7 @@ async function main() {
   runSessionTokenTest();
   runPublicSurfaceTest();
   await runImageDeletionRetryTest();
+  await runSuperAdminAccountDeletionTest();
   console.log('\n🎉 All @asol/auth-core tests passed successfully!');
 }
 

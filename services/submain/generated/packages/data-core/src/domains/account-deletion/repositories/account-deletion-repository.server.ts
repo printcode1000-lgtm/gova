@@ -6,10 +6,25 @@ import type { DeletionImage } from "@asol/auth-core/server";
 
 export class AccountDeletionRepository {
   async getUser(uid: string) {
-    return (await usersDataSource.execute(
+    const userRow = (await usersDataSource.execute(
       "SELECT uid, phone, password FROM users WHERE uid = ? AND deleted_at IS NULL LIMIT 1",
       [uid],
     ))[0] as { uid: string; phone: string; password: string } | undefined;
+    if (userRow) return userRow;
+
+    const profileRow = (await profilesDataSource.execute(
+      "SELECT uid, primary_phone FROM user_profiles WHERE uid = ? LIMIT 1",
+      [uid],
+    ))[0] as { uid: string; primary_phone: string | null } | undefined;
+    if (profileRow) {
+      return {
+        uid: profileRow.uid,
+        phone: profileRow.primary_phone ?? "",
+        password: "",
+      };
+    }
+
+    return undefined;
   }
 
   async collectImages(uid: string): Promise<DeletionImage[]> {

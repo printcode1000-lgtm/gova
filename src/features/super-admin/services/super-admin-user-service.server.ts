@@ -3,6 +3,7 @@ import 'server-only';
 import '@/features/auth/server/auth-core-ports.server';
 import { createSignedSessionToken } from '@asol/auth-core/server';
 import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
+import { accountDeletionService } from "@/features/auth/server/auth-core-bootstrap.server";
 import {
   superAdminUserSearchRepository,
   type SuperAdminUserSearchFilters,
@@ -39,6 +40,25 @@ export class SuperAdminUserService {
       specialties: user.specialties,
       sessionToken: createSignedSessionToken(user.uid, user.phone),
     };
+  }
+
+  async deleteUser(input: { adminUid: string; targetUid: string }) {
+    const result = await accountDeletionService.deleteBySuperAdmin(input.targetUid);
+
+    await persistentSystemLogService.add({
+      level: "warning",
+      source: "server",
+      consoleMethod: "server.warn",
+      message: `Super admin deleted user account: ${input.adminUid} -> ${input.targetUid}`,
+      page: "/super-admin/users",
+      platform: "server",
+      feature: "SuperAdminUsers",
+      operation: "deleteUser",
+      routeName: "/api/super-admin/users/delete",
+      requestMethod: "POST",
+    });
+
+    return result;
   }
 }
 

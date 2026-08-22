@@ -19,6 +19,16 @@
 - The page has no delete button. It registers the `account-deletion` scope in `@asol/page-save-core`; the password, confirmation phrase, and final-warning checkbox gate `canSave`, and the header save icon runs the deletion. See `docs/05-platform-features/page-save-system.md`.
 - Endpoint: `POST /api/account/delete`.
 
+## Super Admin User Deletion
+
+- Super Admin Route: `/super-admin/users`.
+- UI lives in `src/features/super-admin/presentation/SuperAdminUsersPage.tsx` with dialog `SuperAdminUserDeleteDialog.tsx`.
+- Core deletion method: `AccountDeletionService.deleteBySuperAdmin(targetUid)` in `@asol/auth-core/server`.
+- Protected endpoint: `POST /api/super-admin/users/delete`.
+- Authenticated via super-admin signed session token.
+- Cannot delete a Super Admin account (`accountDeletionSuperAdminForbidden`).
+- Executes the full 6-step deletion orchestration (`ACCOUNT_DELETION_STEP_ORDER`) and logs the operation to `persistentSystemLogService`.
+
 ### Permanently Deleted Data
 
 - User record, password (scrypt), password recovery challenges, and device notification tokens.

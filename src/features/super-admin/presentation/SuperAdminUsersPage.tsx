@@ -4,7 +4,14 @@ import { formatAdminDate } from "@asol/format-core";
 
 import * as React from "react";
 import Link from "next/link";
-import { Search, ShieldAlert, UserCheck, UserRoundSearch } from "lucide-react";
+import {
+  CheckCircle2,
+  Search,
+  ShieldAlert,
+  Trash2,
+  UserCheck,
+  UserRoundSearch,
+} from "lucide-react";
 
 import { asolApi } from "@/core/api/asol-api-client";
 import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
@@ -21,6 +28,10 @@ import {
   asolDbDeleteSuperAdminOriginalSession,
   asolDbSetSuperAdminOriginalSession,
 } from "@asol/data-core/browser";
+import {
+  SuperAdminUserDeleteDialog,
+  type SuperAdminDeleteTargetUser,
+} from "../components/SuperAdminUserDeleteDialog";
 
 interface AdminUserResult {
   uid: string;
@@ -57,12 +68,16 @@ export function SuperAdminUsersPage() {
   const [results, setResults] = React.useState<AdminUserResult[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [successMessage, setSuccessMessage] = React.useState("");
   const [impersonatingUid, setImpersonatingUid] = React.useState("");
+  const [userToDelete, setUserToDelete] = React.useState<SuperAdminDeleteTargetUser | null>(null);
+  const [isDeleting, setIsDeleting] = React.useState(false);
 
   const search = React.useCallback(async () => {
     if (!session?.sessionToken || !isSuperAdmin(session)) return;
     setLoading(true);
     setError("");
+    setSuccessMessage("");
     try {
       const params = new URLSearchParams({
         q: query.trim(),
@@ -82,11 +97,32 @@ export function SuperAdminUsersPage() {
     } finally {
       setLoading(false);
     }
-  }, [maxProducts, minProducts, query, session, specialty, withProductsOnly]);
+  }, [formatApiError, maxProducts, minProducts, query, session, specialty, withProductsOnly]);
 
   React.useEffect(() => {
     if (allowed) void search();
   }, [allowed, search]);
+
+  const deleteUser = async (targetUid: string) => {
+    if (!session?.sessionToken || !isSuperAdmin(session)) return;
+    setIsDeleting(true);
+    setError("");
+    setSuccessMessage("");
+    try {
+      await asolApi.post(
+        "/api/super-admin/users/delete",
+        { targetUid },
+        { headers: { "x-asol-session-token": session.sessionToken } },
+      );
+      setResults((prev) => prev.filter((user) => user.uid !== targetUid));
+      setSuccessMessage("تم حذف حساب المستخدم بنجاح.");
+      setUserToDelete(null);
+    } catch (err) {
+      setError(formatApiError(err));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const impersonate = async (targetUid: string) => {
     if (!session?.sessionToken || !isSuperAdmin(session)) return;
@@ -150,7 +186,7 @@ export function SuperAdminUsersPage() {
             بحث المستخدمين
           </h1>
           <p className="text-sm text-on-surface-variant">
-            بحث بالاسم، الهاتف، عدد المنتجات، التخصصات، وفتح الحساب بصلاحيات صاحبه.
+            بحث بالاسم، الهاتف، عدد المنتجات، التخصصات، فتح الحساب بصلاحياته أو حذفه نهائياً.
           </p>
         </div>
         <div className="rounded-lg border bg-amber-50 px-3 py-2 text-sm text-amber-800">
@@ -211,6 +247,13 @@ export function SuperAdminUsersPage() {
       {error ? (
         <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {error}
+        </div>
+      ) : null}
+
+      {successMessage ? (
+        <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+          {successMessage}
         </div>
       ) : null}
 
@@ -300,7 +343,7 @@ export function SuperAdminUsersPage() {
                         type="button"
                         size="sm"
                         onClick={() => impersonate(user.uid)}
-                        disabled={Boolean(impersonatingUid)}
+                        disabled={Boolean(impersonatingUid) || isDeleting}
                       >
                         {impersonatingUid === user.uid ? (
                           "جاري الدخول..."
@@ -310,6 +353,21 @@ export function SuperAdminUsersPage() {
                             دخول كصاحب الحساب
                           </>
                         )}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          setError("");
+                          setSuccessMessage("");
+                          setUserToDelete(user);
+                        }}
+                        disabled={user.uid === session?.uid || Boolean(impersonatingUid) || isDeleting}
+                        className="gap-1"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        حذف الحساب
                       </Button>
                     </div>
                   </td>
@@ -329,8 +387,16 @@ export function SuperAdminUsersPage() {
 
       <div className="flex items-center gap-2 rounded-lg border bg-amber-50 p-3 text-sm text-amber-800">
         <ShieldAlert className="h-4 w-4" />
-        يتم تسجيل كل عملية انتحال في سجل النظام.
+        يتم تسجيل كل عملية انتحال أو حذف حساب في سجل النظام.
       </div>
+
+      <SuperAdminUserDeleteDialog
+        user={userToDelete}
+        isOpen={Boolean(userToDelete)}
+        isDeleting={isDeleting}
+        onClose={() => setUserToDelete(null)}
+        onConfirm={deleteUser}
+      />
     </main>
   );
 }

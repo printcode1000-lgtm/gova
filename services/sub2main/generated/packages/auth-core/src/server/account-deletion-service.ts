@@ -34,29 +34,46 @@ export class AccountDeletionService {
     const passwordValid = await verifyPassword(input.currentPassword, user.password);
     if (!passwordValid) throw new Error('invalidCurrentPassword');
 
+    return this.executeDeletionSteps(user.uid);
+  }
+
+  async deleteBySuperAdmin(targetUid: string): Promise<DeleteAccountResult> {
+    const trimmedUid = targetUid?.trim();
+    if (!trimmedUid) throw new Error('userNotFound');
+
+    const user = await this.repository.getUser(trimmedUid);
+    if (!user) throw new Error('userNotFound');
+    if (isSuperAdminIdentity(user.uid, user.phone)) {
+      throw new Error('accountDeletionSuperAdminForbidden');
+    }
+
+    return this.executeDeletionSteps(user.uid);
+  }
+
+  private async executeDeletionSteps(uid: string): Promise<DeleteAccountResult> {
     const stepsCompleted: string[] = [];
     let images = [] as Awaited<ReturnType<AccountDeletionRepositoryPort['collectImages']>>;
 
     for (const step of ACCOUNT_DELETION_STEP_ORDER) {
       switch (step) {
         case 'collect_images':
-          images = await this.repository.collectImages(user.uid);
+          images = await this.repository.collectImages(uid);
           stepsCompleted.push(step);
           break;
         case 'anonymize_orders':
-          await this.repository.anonymizeOrders(user.uid);
+          await this.repository.anonymizeOrders(uid);
           stepsCompleted.push(step);
           break;
         case 'delete_products':
-          await this.repository.deleteProducts(user.uid);
+          await this.repository.deleteProducts(uid);
           stepsCompleted.push(step);
           break;
         case 'delete_profile':
-          await this.repository.deleteProfile(user.uid);
+          await this.repository.deleteProfile(uid);
           stepsCompleted.push(step);
           break;
         case 'delete_main':
-          await this.repository.deleteMain(user.uid);
+          await this.repository.deleteMain(uid);
           stepsCompleted.push(step);
           break;
         case 'delete_images': {

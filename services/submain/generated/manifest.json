@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T00:45:18.484Z",
+  "generatedAt": "2026-08-22T15:42:16.100Z",
   "entryPoints": [
     "features/product-search/services/product-search-service.server.ts",
     "features/product-search/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 352,
+  "fileCount": 354,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -171,6 +171,7 @@
     "packages/notifications-core/src/domain/entities.ts",
     "packages/notifications-core/src/domain/enums.ts",
     "packages/notifications-core/src/domain/notification-builder.ts",
+    "packages/notifications-core/src/domain/notification-self-test.ts",
     "packages/notifications-core/src/domain/notification-sound.ts",
     "packages/notifications-core/src/domain/notification-template-loader.ts",
     "packages/notifications-core/src/domain/notification-test-scenarios.ts",
@@ -326,6 +327,7 @@
     "src/features/notifications/services/notification-broadcast-service.server.ts",
     "src/features/notifications/services/notification-grant-collector.server.ts",
     "src/features/notifications/services/notification-recipient-tokens.service.server.ts",
+    "src/features/notifications/services/notification-self-test.service.server.ts",
     "src/features/notifications/services/notification-service.bootstrap.server.ts",
     "src/features/notifications/services/notification-token-service.server.ts",
     "src/features/notifications/shared/notification-money.ts",

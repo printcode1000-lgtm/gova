@@ -2,6 +2,7 @@ import 'server-only';
 
 import { NotificationTokenService } from './notification-token-service.server';
 import { NotificationBroadcastService } from './notification-broadcast-service.server';
+import { NotificationSelfTestService } from './notification-self-test.service.server';
 
 /**
  * Server services the *main app* uses.
@@ -13,3 +14,4 @@ import { NotificationBroadcastService } from './notification-broadcast-service.s
  */
 export const notificationTokenService = new NotificationTokenService();
 export const notificationBroadcastService = new NotificationBroadcastService();
+export const notificationSelfTestService = new NotificationSelfTestService();

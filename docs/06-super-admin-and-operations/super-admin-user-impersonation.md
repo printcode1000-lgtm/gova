@@ -19,6 +19,18 @@ is `src/app/super-admin/users/page.tsx`.
    `auth/current`.
 
 Every impersonation start is logged through `persistentSystemLogService`.
+ 
+## User Account Deletion
+
+Super admins can delete user accounts permanently directly from `/super-admin/users`:
+
+1. The operator clicks **حذف الحساب** on any non-admin user row.
+2. A confirmation dialog (`SuperAdminUserDeleteDialog`) opens, detailing the permanent impact (profile, products, photos, and notification tokens deletion, plus order anonymization).
+3. Confirming sends `POST /api/super-admin/users/delete` with `{ targetUid }`.
+4. `AccountDeletionService.deleteBySuperAdmin` executes the 6-step deletion orchestration (`collect_images`, `anonymize_orders`, `delete_products`, `delete_profile`, `delete_main`, `delete_images`).
+5. The deletion action is logged to `persistentSystemLogService` (`Super admin deleted user account: <adminUid> -> <targetUid>`).
+6. The user row is immediately removed from the results table upon success.
+7. Attempting to delete a Super Admin account is blocked both in the UI and on the server (`accountDeletionSuperAdminForbidden`).
 
 ## Session and API identity
 

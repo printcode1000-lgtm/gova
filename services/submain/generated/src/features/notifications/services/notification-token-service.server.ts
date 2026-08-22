@@ -1,6 +1,8 @@
 import "server-only";
 
 import type {
+  AccountDevicesResult,
+  AccountDeviceSummary,
   DeleteNotificationTokenInput,
   NotificationDeliveryPreference,
   RegisteredNotificationToken,
@@ -22,6 +24,23 @@ import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications"
  */
 function trimmedText(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function toAccountDeviceSummary(
+  registration: RegisteredNotificationToken,
+): AccountDeviceSummary {
+  return {
+    id: registration.id,
+    deviceId: registration.deviceId,
+    platform: registration.platform,
+    provider: registration.provider,
+    ...(registration.locale ? { locale: registration.locale } : {}),
+    ...(registration.deviceLabel ? { deviceLabel: registration.deviceLabel } : {}),
+    enabled: registration.enabled,
+    ...(registration.lastSeenAt ? { lastSeenAt: registration.lastSeenAt } : {}),
+    createdAt: registration.createdAt,
+    updatedAt: registration.updatedAt,
+  };
 }
 
 export class NotificationTokenService {
@@ -81,6 +100,25 @@ export class NotificationTokenService {
 
   list(uid: string): Promise<RegisteredNotificationToken[]> {
     return this.listTokens.byUid(uid);
+  }
+
+  /**
+   * Every device currently registered on this account.
+   *
+   * The push token never leaves the server: a listing exists so a user can
+   * recognise and revoke a device, and the token is a delivery credential that
+   * answers neither question.
+   */
+  async listForAccount(identity: {
+    uid: string;
+    phone: string;
+  }): Promise<AccountDevicesResult> {
+    const user = await this.users.execute(trimmedText(identity?.uid));
+    if (!user || user.phone !== trimmedText(identity?.phone)) {
+      throw new Error("forbidden");
+    }
+    const tokens = await this.listTokens.byUid(user.uid);
+    return { devices: tokens.map(toAccountDeviceSummary) };
   }
 
   async getPushPreference(

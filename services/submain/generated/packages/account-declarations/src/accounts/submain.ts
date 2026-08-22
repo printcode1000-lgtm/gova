@@ -14,6 +14,7 @@ import {
 export const SUBMAIN_DECLARATION = {
   name: 'submain',
   project: 'asol-submain',
+  email: 'groupstenderximages@gmail.com',
   tokenEnvVar: 'VERCEL_SUBMAIN_TOKEN',
   teamIdEnvVar: 'VERCEL_SUBMAIN_ORG_ID',
   serviceDir: 'services/submain',

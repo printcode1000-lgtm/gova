@@ -22,3 +22,11 @@ configureReleaseConsolePorts({
 });
 
 export * from "@asol/release-core/console-server";
+export {
+  artifactsForJob,
+  cancelBuildJob,
+  readBuildJobLog,
+  buildCommandCatalogPayload,
+  listBuildJobs,
+  startBuildJob,
+} from "@asol/release-core/console-server";
