@@ -6,7 +6,7 @@ import { LocalNotifications } from "@capacitor/local-notifications";
 import { registerPlugin } from "@capacitor/core";
 import { createLazyPlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
-import { isAndroid, isIos, isNativePlatform, hasDom } from "./platform.adapter";
+import { isNativePlatform, hasDom } from "./platform.adapter";
 import {
   PermissionKinds,
   PermissionStates,
@@ -19,8 +19,18 @@ import {
 
 const MODULE = "Permissions";
 
+interface AppSettingsResult {
+  opened?: boolean;
+  target?: string;
+}
+
 interface NativeSettingsPlugin {
-  open: () => Promise<void>;
+  open: () => Promise<AppSettingsResult | void>;
+  /**
+   * Added to the shells after `open`. A shell that predates it answers the
+   * bridge with "not implemented", which is why every call is guarded.
+   */
+  openNotifications?: () => Promise<AppSettingsResult | void>;
 }
 
 const appSettingsPlugin = createLazyPlugin("AppSettings", async () => {
@@ -263,24 +273,72 @@ export const permissionsAdapter = {
     return toPermissionResult("notifications", await adapter.request());
   },
 
+  /**
+   * Every native shell has an application settings screen; a browser has none.
+   * The platform is not asked beyond that: `AppSettingsPlugin` implements
+   * `open` on both shells, so a per-platform answer here would only be able to
+   * disagree with what the plugin actually does.
+   */
   canOpenSettings(): boolean {
-    return isNativePlatform() && isAndroid();
+    return isNativePlatform();
   },
 
-  async openSettings(): Promise<boolean> {
+  /**
+   * Both native shells can reach this application's own notification settings:
+   * Android through `ACTION_APP_NOTIFICATION_SETTINGS`, iOS through
+   * `openNotificationSettingsURLString`. A browser has no system settings to
+   * open, so it reports false rather than offering a dead control.
+   */
+  canOpenNotificationSettings(): boolean {
+    return isNativePlatform();
+  },
+
+  /**
+   * Open this application's notification settings, falling back to its
+   * application settings screen.
+   *
+   * The fallback covers two different misses with one path: an older shell
+   * whose plugin has no `openNotifications` method, and a platform build whose
+   * settings app declines the notification destination.
+   */
+  async openNotificationSettings(): Promise<boolean> {
     if (!isNativePlatform()) return false;
     const app = (await appSettingsPlugin.optional())?.plugin ?? null;
     if (!app) return false;
     try {
-      if (isAndroid() && typeof app.open === "function") {
+      if (typeof app.openNotifications === "function") {
+        await app.openNotifications();
+        return true;
+      }
+    } catch (error) {
+      console.warn(
+        "[NativeCore:Permissions] openNotificationSettings failed; falling back to the app settings screen.",
+        error,
+      );
+    }
+    try {
+      if (typeof app.open === "function") {
         await app.open();
         return true;
       }
-      if (isIos()) return false;
     } catch (error) {
-      console.warn("[NativeCore:Permissions] openSettings failed.", error);
+      console.warn("[NativeCore:Permissions] openSettings fallback failed.", error);
     }
     return false;
+  },
+
+  /** This application's settings screen. True only when one actually opened. */
+  async openSettings(): Promise<boolean> {
+    if (!isNativePlatform()) return false;
+    const app = (await appSettingsPlugin.optional())?.plugin ?? null;
+    if (!app || typeof app.open !== "function") return false;
+    try {
+      await app.open();
+      return true;
+    } catch (error) {
+      console.warn("[NativeCore:Permissions] openSettings failed.", error);
+      return false;
+    }
   },
 };
 

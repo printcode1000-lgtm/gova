@@ -168,6 +168,9 @@ export class NativeCore {
   static readonly requestPermission = permissionsApi.requestPermission;
   static readonly openSettings = permissionsApi.openSettings;
   static readonly openAppSettings = permissionsApi.openSettings;
+  static readonly openAppNotificationSettings = permissionsApi.openNotificationSettings;
+  static readonly canOpenAppNotificationSettings =
+    permissionsApi.canOpenNotificationSettings;
 
   // Share
   static readonly share = shareApi.share;

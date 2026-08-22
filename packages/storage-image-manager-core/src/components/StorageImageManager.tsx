@@ -737,8 +737,10 @@ const StorageImageSlot = React.forwardRef<
             message: t("storage.imageSource.photoPermissionSettings"),
             actionLabel: t("storage.imageSource.openSettings"),
             onConfirm: () => {
-              void NativeCore.openAppSettings().then((openRes: { ok: boolean }) => {
-                if (!openRes.ok) {
+              // `ok` means the call completed, not that a screen appeared —
+              // a host with no settings screen answers `ok(false)`.
+              void NativeCore.openAppSettings().then((openRes: { ok: boolean; value?: boolean }) => {
+                if (!openRes.ok || !openRes.value) {
                   setSourceError(t("storage.imageSource.error"));
                 }
               });
@@ -807,8 +809,10 @@ const StorageImageSlot = React.forwardRef<
             message: t("storage.imageSource.cameraPermissionSettings"),
             actionLabel: t("storage.imageSource.openSettings"),
             onConfirm: () => {
-              void NativeCore.openAppSettings().then((openRes: { ok: boolean }) => {
-                if (!openRes.ok) {
+              // `ok` means the call completed, not that a screen appeared —
+              // a host with no settings screen answers `ok(false)`.
+              void NativeCore.openAppSettings().then((openRes: { ok: boolean; value?: boolean }) => {
+                if (!openRes.ok || !openRes.value) {
                   setSourceError(t("storage.imageSource.cameraError"));
                 }
               });

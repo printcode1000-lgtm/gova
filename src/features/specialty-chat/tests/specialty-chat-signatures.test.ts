@@ -45,11 +45,19 @@ const clientSource = readFileSync(
 );
 // The chat preferences live beside this device's notification state, which is
 // its own page now — `/settings/notifications` — rather than a section of the
-// general settings screen.
+// general settings screen. Presentation and state are separate files there, so
+// the labels and the action are asserted where each one lives.
 const settingsSource = readFileSync(
   path.join(
     process.cwd(),
-    "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
+    "src/features/settings/presentation/ChatMessagePreferencesSection.tsx",
+  ),
+  "utf8",
+);
+const settingsStateSource = readFileSync(
+  path.join(
+    process.cwd(),
+    "src/features/settings/presentation/use-chat-message-preferences.ts",
   ),
   "utf8",
 );
@@ -102,6 +110,7 @@ assert.equal(
 assert.match(settingsSource, /notifications\.deviceCard\.productConversationsTitle/);
 assert.match(arabicDictionarySource, /"notifications\.deviceCard\.productConversationsTitle":\s*"مراسلة صاحب الصفحة والمنتج"/);
 assert.match(settingsSource, /updateProductConversations/);
+assert.match(settingsStateSource, /updateProductConversations/);
 assert.match(notificationSchemaSource, /productConversationsEnabled/);
 
 console.log("Specialty chat signature tests passed.");

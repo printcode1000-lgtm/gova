@@ -1,6 +1,7 @@
 "use client";
 
 import type {
+  AccountDevicesResult,
   BroadcastNotificationInput,
   BroadcastNotificationResult,
   BroadcastRecipientsResult,
@@ -11,6 +12,7 @@ import type {
   NotificationEntity,
   NotificationEvent,
   NotificationTestResult,
+  SelfTestNotificationResult,
   TemplateNotificationInput,
 } from "@asol/notifications-core";
 import { NotificationTargets } from "@asol/notifications-core";
@@ -216,6 +218,41 @@ export class NotificationsFacade {
 
   listDevices(input: { uid: string }): Promise<DeviceToken[]> {
     return notificationDeviceTokenService.list(assertUid(input.uid));
+  }
+
+  /**
+   * Every device registered on the account, not just this one.
+   *
+   * `listDevices` reads this device's own store and can only ever describe the
+   * browser or handset it runs on; this one asks the server, which is the only
+   * place the account's other registrations exist.
+   */
+  listAccountDevices(input: {
+    sessionToken: string;
+  }): Promise<AccountDevicesResult> {
+    return notificationApiService.listAccountDevices(input.sessionToken);
+  }
+
+  /** Drop one device's registration by id — including one this device is not. */
+  async revokeAccountDevice(input: {
+    sessionToken: string;
+    deviceId: string;
+  }): Promise<void> {
+    await notificationApiService.revokeAccountDevice(
+      input.sessionToken,
+      assertString(input.deviceId, "deviceId", 200),
+    );
+  }
+
+  /** Send this account a fixed test push, to prove delivery end to end. */
+  sendSelfTest(input: {
+    sessionToken: string;
+    locale?: "ar" | "en";
+  }): Promise<SelfTestNotificationResult> {
+    return notificationApiService.sendSelfTest(
+      input.sessionToken,
+      input.locale === "en" ? "en" : "ar",
+    );
   }
 
   // ---- permission ----------------------------------------------------------

@@ -67,10 +67,12 @@ export const ASOL_API_ROUTES = {
     // No `send` entry: push fan-out lives only on the notifications service
     // (services/notifications), reached through NotificationSendService.
     deviceToken: "/api/notifications/device-token",
+    devices: "/api/notifications/devices",
     preferences: "/api/notifications/preferences",
     broadcastRecipients: "/api/notifications/broadcast/recipients",
     broadcastSend: "/api/notifications/broadcast/send",
     testSend: "/api/notifications/test/send",
+    testSelf: "/api/notifications/test/self",
     recipientTokens: "/api/notifications/recipient-tokens",
     mobilePushUnlock: "/api/notifications/mobile-push/unlock",
     // No web-push entries: the VAPID public key is a constant in the bundle
