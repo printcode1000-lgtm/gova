@@ -30,7 +30,7 @@ async function runTests(): Promise<void> {
   assert(NOTIFICATIONS_DECLARATION.requiredEnv.length === 4, 'Notifications required env = 4');
   assert(NOTIFICATIONS_DECLARATION.optionalEnv.length === 7, 'Notifications optional env = 7');
   assert(PRODUCTS_DECLARATION.requiredEnv.length === 2, 'Products required env = 2');
-  assert(PRODUCTS_DECLARATION.optionalEnv.length === 6, 'Products optional env = 6');
+  assert(PRODUCTS_DECLARATION.optionalEnv.length === 11, 'Products optional env = 11');
   assert(ORDERS_DECLARATION.requiredEnv.length === 18, 'Orders required env = 18');
   assert(ORDERS_DECLARATION.optionalEnv.length === 0, 'Orders optional env = 0');
   assert(PROFILES_DECLARATION.requiredEnv.length === 20, 'Profiles required env = 20');
