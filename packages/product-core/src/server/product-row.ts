@@ -157,11 +157,27 @@ function text(value: string | null | undefined) {
 
 export function parseProductImages(value: string): ProductImage[] {
   try {
-    const images = JSON.parse(value) as Array<{ imageKey?: unknown }>;
+    const images = JSON.parse(value) as Array<{
+      imageKey?: unknown;
+      storageProfileId?: unknown;
+    }>;
     return Array.isArray(images)
       ? images
           .filter((image) => image && typeof image.imageKey === "string")
-          .map((image) => ({ imageKey: image.imageKey as string, url: "" }))
+          .map((image) => {
+            const entry: ProductImage = {
+              imageKey: image.imageKey as string,
+              url: "",
+            };
+            if (
+              typeof image.storageProfileId === "string" &&
+              image.storageProfileId &&
+              image.storageProfileId !== "product-default"
+            ) {
+              entry.storageProfileId = image.storageProfileId;
+            }
+            return entry;
+          })
       : [];
   } catch {
     return [];
@@ -169,7 +185,21 @@ export function parseProductImages(value: string): ProductImage[] {
 }
 
 export function serializeProductImages(images: ProductImage[]): string {
-  return JSON.stringify(images.map((image) => ({ imageKey: image.imageKey })));
+  return JSON.stringify(
+    images.map((image) => {
+      const entry: { imageKey: string; storageProfileId?: string } = {
+        imageKey: image.imageKey,
+      };
+      if (
+        typeof image.storageProfileId === "string" &&
+        image.storageProfileId &&
+        image.storageProfileId !== "product-default"
+      ) {
+        entry.storageProfileId = image.storageProfileId;
+      }
+      return entry;
+    }),
+  );
 }
 
 export function mapProductRow(row: ProductRow): ProductRecord {

@@ -16,15 +16,35 @@ export function runCredentialIsolationTest() {
     process.env.PRODUCT_R2_BUCKET_NAME = 'gova-storage';
     process.env.PRODUCT_R2_PUBLIC_URL = 'https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev';
 
+    process.env.APPAREL_PETS_R2_ACCESS_KEY_ID = 'apparel-key';
+    process.env.APPAREL_PETS_R2_SECRET_ACCESS_KEY = 'apparel-secret';
+    process.env.APPAREL_PETS_R2_ENDPOINT = 'https://f08cd5b705c3c57b1f65a220f7ef2642.r2.cloudflarestorage.com';
+    process.env.APPAREL_PETS_R2_BUCKET_NAME = 'productcat1';
+    process.env.APPAREL_PETS_R2_PUBLIC_URL = 'https://pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev';
+
     // 1. Account B (Products) succeeds cleanly
     const prodCreds = getAccountS3Credentials('products');
     assert.equal(prodCreds.bucketName, 'gova-storage');
+
+    // 1b. Apparel/pets account succeeds independently
+    const apparelCreds = getAccountS3Credentials('products-apparel-pets');
+    assert.equal(apparelCreds.bucketName, 'productcat1');
+    assert.notEqual(apparelCreds.accessKeyId, prodCreds.accessKeyId);
 
     // 2. Account A (General) fails loudly naming "general" in error message
     assert.throws(
       () => getAccountS3Credentials('general'),
       (err: any) => err instanceof Error && err.message.includes('general'),
       'Account A (general) must fail loudly with account name in error when env is missing',
+    );
+
+    // 3. Missing apparel env fails without falling back to PRODUCT_R2_*
+    delete process.env.APPAREL_PETS_R2_BUCKET_NAME;
+    assert.throws(
+      () => getAccountS3Credentials('products-apparel-pets'),
+      (err: any) =>
+        err instanceof Error && err.message.includes('products-apparel-pets'),
+      'Apparel/pets must not fall back to PRODUCT_R2_* when its own env is missing',
     );
 
     console.log('✅ Integration test: credential isolation passed');

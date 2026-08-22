@@ -50,6 +50,7 @@ UI must never know: Provider, Cloudflare, Google Drive, Local Storage, Folder, B
 - No direct R2/filesystem/provider instantiation outside Provider Layer
 - No duplicate upload/compression/validation logic
 - Delete UI must wait for provider deletion success before clearing its stored-image value.
+- Product image rows may store optional `storageProfileId` beside `imageKey`; omission means the legacy `product-default` profile. UI selects the profile via `resolveProductStorageProfileId(scope)` for new uploads (apparel/pets → `product-apparel-pets`).
 - Orphan cleanup: independent maintenance service only (future)
 
 ## Final Rule

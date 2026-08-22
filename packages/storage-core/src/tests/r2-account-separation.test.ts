@@ -1,14 +1,15 @@
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
-import { getStorageAccount, getAllStorageAccounts } from '../domain/accounts/account-registry';
+import { getStorageAccount } from '../domain/accounts/account-registry';
 
 /**
- * Guards the three-account R2 split.
+ * Guards the four-account R2 split (three media + OTA).
  *
- * Account 1 (products): holds product images and nothing else.
- * Account 2 (general): holds profile images, covers, advertisements, and special orders.
- * Account 3 (ota): holds OTA release manifests, file trees, history, and transport bundles.
+ * Account 1 (products): legacy product catalog images.
+ * Account 2 (products-apparel-pets): apparel/fashion + pets product images.
+ * Account 3 (general): profile images, covers, advertisements, special orders.
+ * Account 4 (ota): OTA release manifests, file trees, history, and transport bundles.
  *
  * A fallback across an account boundary is the failure mode: it does not error,
  * it writes somewhere else. These assertions are about shape, not about live
@@ -22,7 +23,7 @@ export async function runR2AccountSeparationTest() {
   const stripComments = (source: string) =>
     source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
 
-  // ── 1. Exactly one storage profile may use the product account ───────────────
+  // ── 1. Exactly one storage profile per product account ───────────────────────
 
   interface StorageProfileEntry {
     id: string;
@@ -42,15 +43,31 @@ export async function runR2AccountSeparationTest() {
   assert.deepEqual(
     productProfiles,
     ['product-default'],
-    'The product R2 account serves product images and nothing else. ' +
+    'The legacy product R2 account serves product-default only. ' +
       `Profiles pointing at it: ${productProfiles.join(', ') || 'none'}.`,
   );
 
+  const apparelPetsProfiles = profiles
+    .filter((profile) => profile.provider === 'CloudflareR2_products-apparel-pets')
+    .map((profile) => profile.id);
+
+  assert.deepEqual(
+    apparelPetsProfiles,
+    ['product-apparel-pets'],
+    'The apparel-pets R2 account serves product-apparel-pets only. ' +
+      `Profiles pointing at it: ${apparelPetsProfiles.join(', ') || 'none'}.`,
+  );
+
+  const allowedProviders = new Set([
+    'CloudflareR2',
+    'CloudflareR2Products',
+    'CloudflareR2_products-apparel-pets',
+  ]);
+
   for (const profile of profiles) {
     assert.ok(
-      profile.provider === 'CloudflareR2' ||
-        profile.provider === 'CloudflareR2Products',
-      `Storage profile "${profile.id}" uses ${profile.provider}, which is neither R2 account.`,
+      allowedProviders.has(profile.provider),
+      `Storage profile "${profile.id}" uses ${profile.provider}, which is not a known R2 account.`,
     );
   }
 
@@ -109,7 +126,7 @@ export async function runR2AccountSeparationTest() {
     'resolvePublicUrl pulls full R2 config. Turning a key into a URL needs the public base URL alone.',
   );
 
-  // ── 4. Product images are stored as keys, never as URLs ──────────────────────
+  // ── 4. Product images are stored as keys (+ optional storageProfileId) ───────
 
   const productRowModule = stripComments(
     read('packages', 'product-core', 'src', 'server', 'product-row.ts'),
@@ -120,8 +137,18 @@ export async function runR2AccountSeparationTest() {
   assert.ok(serializeImages, 'serializeProductImages not found in @asol/product-core/server');
   assert.match(
     serializeImages[0],
-    /JSON\.stringify\(\s*images\.map\(\(image\) => \(\{ imageKey: image\.imageKey \}\)\)/,
-    'products.images_json must persist keys only.',
+    /imageKey:\s*image\.imageKey/,
+    'products.images_json must persist imageKey.',
+  );
+  assert.match(
+    serializeImages[0],
+    /storageProfileId/,
+    'serializeProductImages must be able to persist storageProfileId for non-default profiles.',
+  );
+  assert.doesNotMatch(
+    serializeImages[0],
+    /\burl:\s*image\.url\b/,
+    'products.images_json must never persist absolute urls.',
   );
 
   const parseProductImages = /export function parseProductImages\([\s\S]*?\n}/.exec(
@@ -149,15 +176,47 @@ export async function runR2AccountSeparationTest() {
     'product-repository must persist rows through @asol/product-core/server row mapping.',
   );
 
-  // ── 5. R2 Storage Accounts distinctness ───────────────────────────
+  // ── 5. Three media accounts are distinct (no shared identity fields) ─────────
 
   const general = getStorageAccount('general');
   const productsAcc = getStorageAccount('products');
+  const apparelPetsAcc = getStorageAccount('products-apparel-pets');
 
-  assert.notEqual(general.accountId, productsAcc.accountId, 'products accountId must not match general');
-  assert.notEqual(general.endpoint, productsAcc.endpoint, 'products endpoint must not match general');
-  assert.notEqual(general.bucketName, productsAcc.bucketName, 'products bucketName must not match general');
-  assert.notEqual(general.publicUrl, productsAcc.publicUrl, 'products publicUrl must not match general');
+  const mediaAccounts = [general, productsAcc, apparelPetsAcc];
+  for (let i = 0; i < mediaAccounts.length; i += 1) {
+    for (let j = i + 1; j < mediaAccounts.length; j += 1) {
+      const left = mediaAccounts[i];
+      const right = mediaAccounts[j];
+      assert.notEqual(
+        left.accountId,
+        right.accountId,
+        `${left.id} accountId must not match ${right.id}`,
+      );
+      assert.notEqual(
+        left.endpoint,
+        right.endpoint,
+        `${left.id} endpoint must not match ${right.id}`,
+      );
+      assert.notEqual(
+        left.bucketName,
+        right.bucketName,
+        `${left.id} bucketName must not match ${right.id}`,
+      );
+      assert.notEqual(
+        left.publicUrl,
+        right.publicUrl,
+        `${left.id} publicUrl must not match ${right.id}`,
+      );
+      assert.notEqual(
+        left.envPrefix,
+        right.envPrefix,
+        `${left.id} envPrefix must not match ${right.id}`,
+      );
+    }
+  }
+
+  assert.equal(apparelPetsAcc.envPrefix, 'APPAREL_PETS_R2');
+  assert.equal(apparelPetsAcc.bucketName, 'productcat1');
 
   // ── 6. No reference to ASOL_OTA_LEGACY_R2_ in codebase ────────────────────────
 

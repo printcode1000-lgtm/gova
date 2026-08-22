@@ -5,7 +5,10 @@ import {
   StorageImageManager,
   type StorageImageManagerHandle,
 } from "@/features/storage/components/StorageImageManager";
-import { StorageProfiles, type StoredImage } from "@asol/storage-core";
+import {
+  resolveProductStorageProfileId,
+  type StoredImage,
+} from "@asol/storage-core";
 
 function normalizeProductImages(images: Array<StoredImage | null | undefined>, maxImages: number): StoredImage[] {
   return images
@@ -40,6 +43,7 @@ export const ProductImageEditors = React.forwardRef<
   const managerRefs = React.useRef<Array<StorageImageManagerHandle | null>>([]);
   const pendingSlotsRef = React.useRef(new Set<number>());
   const imagesRef = React.useRef(images);
+  const storageProfileId = resolveProductStorageProfileId(mainCategoryId);
   const normalized = React.useMemo(
     () => normalizeProductImages(images, maxImages),
     [images, maxImages],
@@ -78,7 +82,7 @@ export const ProductImageEditors = React.forwardRef<
             }}
             config={{
               id: `product-image-${index}`,
-              storageProfileId: StorageProfiles.ProductDefault,
+              storageProfileId,
               storageScope: mainCategoryId,
               maxItems: 1,
               aspectRatio: "square",
@@ -90,7 +94,11 @@ export const ProductImageEditors = React.forwardRef<
               const nextSlotImage = nextSlotImages[0] ?? null;
               const next: StoredImage[] = [...imagesRef.current];
               if (nextSlotImage) {
-                next[index] = nextSlotImage;
+                next[index] = {
+                  ...nextSlotImage,
+                  storageProfileId:
+                    nextSlotImage.storageProfileId ?? storageProfileId,
+                };
               } else {
                 next.splice(index, 1);
               }

@@ -104,6 +104,16 @@ for (const profile of storageProfiles.profiles.filter(
       "Product images must stay on the legacy product R2 provider",
     );
     assert.equal(profile.cloudFolder ?? profile.folder, "images/products");
+  } else if (profile.id === "product-apparel-pets") {
+    assert.equal(
+      profile.provider,
+      "CloudflareR2_products-apparel-pets",
+      "Apparel/pets product images must use the dedicated apparel-pets R2 provider",
+    );
+    assert.equal(
+      profile.cloudFolder ?? profile.folder,
+      "images/products-apparel-pets",
+    );
   } else {
     assert.equal(
       profile.provider,
@@ -124,7 +134,18 @@ assert.deepEqual(
     )
     .map((profile) => profile.id),
   ["product-default"],
-  "Only product images may use the legacy product R2 provider",
+  "Only legacy product images may use the legacy product R2 provider",
+);
+assert.deepEqual(
+  storageProfiles.profiles
+    .filter(
+      (profile) =>
+        profile.enabled &&
+        profile.provider === "CloudflareR2_products-apparel-pets",
+    )
+    .map((profile) => profile.id),
+  ["product-apparel-pets"],
+  "Exactly one profile may use the apparel-pets product R2 provider",
 );
 assert.equal(
   storageProfiles.profiles.filter(

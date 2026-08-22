@@ -192,6 +192,11 @@ export abstract class DataHealthPart3 extends DataHealthPart2 {
           kind: "product-r2" as const,
           provider: "CloudflareR2Products",
         },
+        {
+          id: "r2-products-apparel-pets",
+          kind: "product-apparel-pets-r2" as const,
+          provider: "CloudflareR2_products-apparel-pets",
+        },
       ] as const
     ).map((store) => {
       const assigned = profiles.filter(

@@ -4,7 +4,8 @@
 
 `/super-admin/cloud-accounts` is a read-only reference for super admins. It lists
 every external account this project deploys to or stores data in: seven Vercel
-accounts, five Turso accounts, and three Cloudflare R2 accounts.
+accounts, five Turso accounts, and four Cloudflare R2 accounts (general,
+legacy products, apparel/pets products, OTA).
 
 The page shows account names, project names, login emails, and what each account
 holds. It never displays tokens, keys, or secret values.

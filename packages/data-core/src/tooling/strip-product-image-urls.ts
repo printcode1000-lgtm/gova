@@ -1,10 +1,13 @@
 /**
- * Rewrites `products.images_json` to hold image keys only.
+ * Rewrites `products.images_json` to hold image keys (and optional
+ * `storageProfileId`) only — never absolute URLs.
  *
  * Rows used to store `{ imageKey, url }`, which baked the bucket's public
  * hostname into the data — moving the bucket then meant rewriting every row,
  * which this project has already had to do once. The URL is now derived on read
- * from whichever bucket the `product-default` storage profile points at.
+ * from the image's `storageProfileId` when present, otherwise from the legacy
+ * `product-default` profile (original product R2 bucket). New apparel/pets
+ * uploads may also carry `storageProfileId: "product-apparel-pets"`.
  *
  * Idempotent: a row already in the new shape is left alone. Runs against the
  * local SQLite database and the Turso product database.
@@ -37,10 +40,22 @@ function stripped(imagesJson: string): string | null {
 
   const keys = parsed
     .filter(
-      (image): image is { imageKey: string } =>
+      (image): image is { imageKey: string; storageProfileId?: string } =>
         typeof (image as { imageKey?: unknown })?.imageKey === "string",
     )
-    .map((image) => ({ imageKey: image.imageKey }));
+    .map((image) => {
+      const entry: { imageKey: string; storageProfileId?: string } = {
+        imageKey: image.imageKey,
+      };
+      if (
+        typeof image.storageProfileId === "string" &&
+        image.storageProfileId &&
+        image.storageProfileId !== "product-default"
+      ) {
+        entry.storageProfileId = image.storageProfileId;
+      }
+      return entry;
+    });
 
   const next = JSON.stringify(keys);
   return next === imagesJson ? null : next;

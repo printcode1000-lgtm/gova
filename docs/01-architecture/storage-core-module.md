@@ -8,12 +8,14 @@
 
 ## 2. Account Inventory & Responsibilities
 
-The ecosystem utilizes three dedicated Cloudflare R2 storage accounts:
+The ecosystem utilizes three dedicated Cloudflare R2 storage accounts inside
+`@asol/storage-core`, plus a fourth OTA account owned by `@asol/ota-core`:
 
 | Account ID | Target Bucket | Environment Variable Prefix | Domain Owner | Primary Content |
 | :--- | :--- | :--- | :--- | :--- |
 | `general` | `pic1` | `R2_*` | `@asol/storage-core` | Application media, user avatars, store identity assets, custom request attachments. |
-| `products` | `gova-storage` | `PRODUCT_R2_*` | `@asol/storage-core` | Product catalog images, category banners, promotional slider assets. |
+| `products` | `gova-storage` | `PRODUCT_R2_*` | `@asol/storage-core` | Legacy product catalog images (all categories except new apparel/pets uploads). |
+| `products-apparel-pets` | `productcat1` | `APPAREL_PETS_R2_*` | `@asol/storage-core` | New apparel/fashion (catalog id `1` + onboarding fashion slugs) and pets (catalog id `12`) product images. |
 | `ota` | `ota` | `ASOL_OTA_R2_*` | `@asol/ota-core` | Over-The-Air static update bundles, release manifests, signed update payloads. |
 
 ### Why the `ota` Account Lives in `@asol/ota-core`
@@ -47,10 +49,10 @@ The unified provider class `R2AccountProvider` takes `accountId: StorageAccountI
 
 ## 5. Worked Examples
 
-### Worked Example A: Adding a Fourth Account (`marketing`)
+### Worked Example A: Adding another media account (`marketing`)
 To add a new storage account (e.g., `marketing` for standalone marketing assets), only data definitions change — zero modifications to providers, S3 adapters, or client components:
 
-1. **Register account in `account-registry.ts`**:
+1. **Register account in `account-registry.ts`** (and add the id to `BuiltInStorageAccountId` when it is a built-in):
 ```typescript
 registerStorageAccount({
   id: 'marketing',
@@ -63,7 +65,7 @@ registerStorageAccount({
   envPrefix: 'MARKETING_R2',
 });
 ```
-2. **Add storage profile in `storage-profiles.json`**:
+2. **Add storage profile in `storage-profiles.json`** using the dynamic provider form `CloudflareR2_<accountId>` (do not reuse another profile's `folder` / `cloudFolder` — `referenceFromObjectPath` reverses path → profile by longest folder match):
 ```json
 {
   "id": "marketingBanner",
@@ -85,6 +87,13 @@ MARKETING_R2_PUBLIC_URL=https://pub-marketing.r2.dev
 MARKETING_R2_ACCOUNT_ID=1234567890abcdef1234567890abcdef
 ```
 
+The live apparel/pets split follows this pattern with account id
+`products-apparel-pets`, provider `CloudflareR2_products-apparel-pets`, profile
+`product-apparel-pets`, folder `images/products-apparel-pets`, and env prefix
+`APPAREL_PETS_R2`. Product uploads route through
+`resolveProductStorageProfileId` exported from the browser door of
+`@asol/storage-core`. Existing `images_json` rows without `storageProfileId`
+continue to resolve against `product-default` (no object migration).
 ---
 
 ### Worked Example B: Splitting an Existing Account

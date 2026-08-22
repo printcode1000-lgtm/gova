@@ -144,7 +144,11 @@ export function useStorageProfileUpload({
         });
         uploadHandleRef.current = handle;
         const result = await handle.promise;
-        const uploadedImage = { imageKey: result.imageKey, url: result.url };
+        const uploadedImage = {
+          imageKey: result.imageKey,
+          url: result.url,
+          storageProfileId: result.storageProfileId || storageProfileId,
+        };
         let completionSaved = !draftKey;
         if (draftKey) {
           try {

@@ -6,6 +6,7 @@ import type {
   ProductSearchResult,
 } from "../entities/product-search.types";
 import { productSearchRepository } from "@asol/data-core/product-search";
+import { StorageProfiles } from "@asol/storage-core";
 import { getEnabledProductSearchFieldKeys } from "./product-search-fields.server";
 import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
 
@@ -49,7 +50,7 @@ export async function searchProducts(
       images: product.images.map((image) => ({
         ...image,
         url: imageStorageService.resolveImageUrl(
-          "product-default",
+          image.storageProfileId || StorageProfiles.ProductDefault,
           image.imageKey,
         ),
       })),

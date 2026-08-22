@@ -10,7 +10,7 @@ import { useTranslation } from "@/lib/i18n";
 import { useOnboardingStore } from "@/lib/onboarding";
 import type { Product, ProductVariant } from "@/lib/onboarding/types";
 import { nextSellerId } from "@/lib/onboarding/next-id";
-import { StorageProfiles } from "@asol/storage-core";
+import { resolveProductStorageProfileId } from "@asol/storage-core";
 import {
   FormField,
   FormInput,
@@ -139,7 +139,11 @@ export function ProductForm({
       <StorageImageManager
         config={{
           id: "onboarding-product-image",
-          storageProfileId: StorageProfiles.ProductDefault,
+          storageProfileId: resolveProductStorageProfileId(
+            categories.find(
+              (category) => category.name === product.category,
+            )?.id,
+          ),
           storageScope: categories.find(
             (category) => category.name === product.category,
           )?.id,
@@ -155,13 +159,31 @@ export function ProductForm({
                 {
                   imageKey: product.image.imageKey ?? "",
                   url: product.image.url,
+                  storageProfileId: product.image.storageProfileId,
                   isUploading: product.image.isUploading,
                   error: product.image.error,
                 },
               ]
             : []
         }
-        onChange={(images) => onChange({ image: images[0] ?? null })}
+        onChange={(images) => {
+          const uploaded = images[0] ?? null;
+          if (!uploaded) {
+            onChange({ image: null });
+            return;
+          }
+          const scopeId = categories.find(
+            (category) => category.name === product.category,
+          )?.id;
+          onChange({
+            image: {
+              ...uploaded,
+              storageProfileId:
+                uploaded.storageProfileId ??
+                resolveProductStorageProfileId(scopeId),
+            },
+          });
+        }}
         label={t("onboarding.products.productImage")}
       />
 

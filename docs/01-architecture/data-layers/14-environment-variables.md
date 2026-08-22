@@ -70,6 +70,19 @@ PRODUCT_R2_JURISDICTION=default
 PRODUCT_R2_PUBLIC_URL=https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev
 PRODUCT_R2_CATALOG_URI=https://catalog.cloudflarestorage.com/166409f3b449d8f1da0dee6d25ed3e08/gova-storage
 PRODUCT_R2_WAREHOUSE_NAME=166409f3b449d8f1da0dee6d25ed3e08_gova-storage
+
+# Server-only: apparel + pets product images (dedicated R2 account; no fallback)
+APPAREL_PETS_R2_ACCOUNT_ID=
+APPAREL_PETS_R2_API_TOKEN=
+APPAREL_PETS_R2_ACCESS_KEY_ID=
+APPAREL_PETS_R2_SECRET_ACCESS_KEY=
+APPAREL_PETS_R2_BUCKET_NAME=productcat1
+APPAREL_PETS_R2_ENDPOINT=https://f08cd5b705c3c57b1f65a220f7ef2642.r2.cloudflarestorage.com
+APPAREL_PETS_R2_LOCATION=WEUR
+APPAREL_PETS_R2_JURISDICTION=default
+APPAREL_PETS_R2_PUBLIC_URL=https://pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev
+APPAREL_PETS_R2_CATALOG_URI=https://catalog.cloudflarestorage.com/f08cd5b705c3c57b1f65a220f7ef2642/productcat1
+APPAREL_PETS_R2_WAREHOUSE_NAME=f08cd5b705c3c57b1f65a220f7ef2642_productcat1
 ```
 
 ```env
