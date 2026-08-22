@@ -259,6 +259,14 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
     if (dataCoreDoor === '') return 'shared';
     if (dataCoreDoor === 'core') return 'database-client';
     if (dataCoreDoor === 'browser') return 'shared';
+    // Port seams — browser-safe configure/getters with no DB drivers.
+    if (
+      dataCoreDoor === 'telemetry' ||
+      dataCoreDoor === 'runtime-config' ||
+      dataCoreDoor === 'product-search-fields'
+    ) {
+      return 'shared';
+    }
     if (dataCoreDoor === 'provisioning' || dataCoreDoor === 'tooling') return 'provisioning';
     if (dataCoreDoor === 'marketplace-orders') return 'server-services';
     return 'operations';

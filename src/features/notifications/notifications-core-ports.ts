@@ -1,5 +1,3 @@
-import 'server-only';
-
 import { configureNotificationsCoreServerConfig } from '@asol/notifications-core/server';
 import {
   getApnsServerConfig,

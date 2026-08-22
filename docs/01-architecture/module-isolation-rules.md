@@ -815,7 +815,7 @@ identity inversion:
 | `@asol/storage-core` | `src/ports/http-fetch.ts` | `src/features/storage/storage-core-ports.ts` |
 | `@asol/ota-core` | `src/ports/index.ts` (`httpApi`, `apiRoutes`, `publicEnv`, `appVersions`, `categories`) | `src/features/ota/ota-core-ports.ts` / `server.ts` |
 | `@asol/account-bridge` | `src/ports/app-bridge.ts` | `src/features/account-bridge/account-bridge-ports.ts` |
-| `@asol/data-core` | `src/ports/runtime-config.ts` | `src/features/data/data-core-ports.ts` (+ browser half) |
+| `@asol/data-core` | `src/ports/runtime-config.ts`, `src/ports/product-search-fields.ts` | `src/features/data/data-core-ports.ts` (+ browser half) |
 
 Composition roots: `src/core/composition/server-ports.ts` and `browser-ports.ts`.
 `*-composition` packages may keep `@/` imports — they are composition roots.

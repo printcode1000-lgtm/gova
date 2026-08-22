@@ -133,6 +133,10 @@
     "./runtime-config": {
       "types": "./src/ports/runtime-config.ts",
       "default": "./src/ports/runtime-config.ts"
+    },
+    "./product-search-fields": {
+      "types": "./src/ports/product-search-fields.ts",
+      "default": "./src/ports/product-search-fields.ts"
     }
   },
   "scripts": {

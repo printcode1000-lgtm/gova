@@ -9,7 +9,7 @@ import {
   getDefaultProductSearchFieldKeys,
   getProductSearchFieldByKey,
   getProductSearchFields,
-} from "@/features/product-search/config/product-search-fields";
+} from "../../../ports/product-search-fields";
 import type {
   ProductSearchRequest,
   ProductSearchResult,

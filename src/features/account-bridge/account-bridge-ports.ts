@@ -5,8 +5,10 @@ import {
   getNotificationsPublicUrl,
   publicEnv,
 } from '@/core/config/public-env';
-import { getNotificationGrantDeliveryIdentity } from '@/features/notifications/domain/notification-grant-delivery-context';
-import { readNotificationGrants } from '@/features/notifications/domain/notification-grant-envelope';
+import {
+  getNotificationGrantDeliveryIdentity,
+  readNotificationGrants,
+} from '@/features/notifications';
 
 /** Registers public-env and notification-grant helpers into `@asol/account-bridge`. */
 export function registerAccountBridgePorts(): void {

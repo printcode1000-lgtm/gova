@@ -102,22 +102,11 @@ export interface OtaAppVersionsPort {
 }
 
 export interface OtaCategoryCatalogPort {
-  getMainCategories(): readonly { id: number; [key: string]: unknown }[];
-  getCollections(): readonly {
-    items: readonly { id: number; [key: string]: unknown }[];
-    [key: string]: unknown;
-  }[];
+  getMainCategories(): readonly { id: number }[];
+  getCollections(): readonly { id: number; items: readonly { id: number }[] }[];
   getCategoryTree(categoryId: number): {
-    subcategories: readonly { originalId: number; [key: string]: unknown }[];
-    doctorAppointmentItems?: readonly { originalId?: number; [key: string]: unknown }[];
-    [key: string]: unknown;
-  } | null;
-}[];
-  getCollections(): readonly { items: readonly { id: number; [key: string]: unknown }[]; [key: string]: unknown }[];
-  getCategoryTree(categoryId: number): {
-    subcategories: readonly { originalId: number; [key: string]: unknown }[];
-    doctorAppointmentItems?: readonly { originalId?: number; [key: string]: unknown }[];
-    [key: string]: unknown;
+    subcategories: readonly { originalId?: number }[];
+    doctorAppointmentItems?: readonly { originalId?: number }[];
   } | null;
 }
 

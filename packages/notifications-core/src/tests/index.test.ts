@@ -39,8 +39,8 @@ function sourceFiles(dir: string): string[] {
 }
 
 /** Every `@/` module this package may import. Designated layers only. Shrink, never grow. */
-const DECLARED_APP_EDGES = new Set([
-  '@/core/config/server-env/server-env.values.turso-env',
+const DECLARED_APP_EDGES = new Set<string>([
+  // Empty: server env is registered via `src/ports/server-config.ts`.
 ]);
 
 /**

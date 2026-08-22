@@ -65,6 +65,8 @@ const EXPECTED_DOORS = [
   './product-search/entities',
   './profile/entities',
   './seller-discounts/entities',
+  './runtime-config',
+  './product-search-fields',
 ];
 
 assert.deepEqual(
@@ -209,12 +211,10 @@ await assert.rejects(
  * layering rather than a violation. Driving the count to zero was never the goal; naming which
  * edges are real is. **This list should only ever shrink.**
  */
-const ALLOWED_APP_EDGES = new Set([
-  // Remaining budgeted app edges after domain entity ownership moved into this package.
-  '@/core/config/runtime-context',
-  '@/features/advertisements/config/home-hero-slider.seed.json',
-  '@/features/product-search/config/product-search-fields',
-]);;
+const ALLOWED_APP_EDGES = new Set<string>([
+  // Empty: capability production sources must not import `@/`. Remaining
+  // runtime/config/catalog needs are registered via ports under `src/ports/`.
+]);
 
 /**
  * Sealed packages this one may reach, and only through a declared door. The order vocabulary

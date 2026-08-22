@@ -47,7 +47,15 @@ export interface DataCoreRuntimeConfigPort {
   isDevelopment: boolean;
   isDevRuntime(): boolean;
   isProvisioningContext(): boolean;
-  getServerRuntimeContext(): { isDevelopment: boolean; isStatic: boolean; isProvisioning: boolean; [key: string]: unknown };
+  getServerRuntimeContext(): {
+    isNative: boolean;
+    platform: string;
+    isStatic: boolean;
+    supportsServerApi: boolean;
+    dataSource: string;
+    isDevelopment: boolean;
+    isProvisioning: boolean;
+  };
   getTursoRuntimeCredentials(): TursoCredentials;
   getTursoProductRuntimeCredentials(): TursoCredentials;
   getTursoNotificationsRuntimeCredentials(): TursoCredentials;

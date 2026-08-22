@@ -1,5 +1,3 @@
-import 'server-only';
-
 import { configureStorageCoreHttpFetch } from '@asol/storage-core/server';
 import { asolHttpFetch } from '@/core/api/asol-http-transport';
 

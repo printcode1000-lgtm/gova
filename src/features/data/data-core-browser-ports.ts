@@ -1,6 +1,10 @@
 'use client';
 
-import { configureDataCoreRuntimeConfig } from '@asol/data-core/runtime-config';
+import {
+  configureDataCoreRuntimeConfig,
+  type DoctorAppointmentItem,
+  type SpecialtyColumnItem,
+} from '@asol/data-core/runtime-config';
 import { isDevelopment } from '@/core/config';
 import { categoryService } from '@/features/categories';
 
@@ -13,13 +17,9 @@ export function registerDataCoreBrowserPorts(): void {
     isDevelopment,
     categoryCatalog: {
       getSpecialtyColumnItems: () =>
-        categoryService.getSpecialtyColumnItems() as ReturnType<
-          typeof categoryService.getSpecialtyColumnItems
-        >,
+        categoryService.getSpecialtyColumnItems() as unknown as readonly SpecialtyColumnItem[],
       getDoctorAppointmentItems: () =>
-        categoryService.getDoctorAppointmentItems() as ReturnType<
-          typeof categoryService.getDoctorAppointmentItems
-        >,
+        categoryService.getDoctorAppointmentItems() as unknown as readonly DoctorAppointmentItem[],
     },
   });
 }
