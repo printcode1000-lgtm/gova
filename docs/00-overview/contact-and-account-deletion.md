@@ -36,7 +36,8 @@ The row button stages the deletion; it does not delete. `@asol/page-save-core`
 is the only place ASOL performs a user-triggered delete, so the page registers
 the `super-admin-users` scope through `usePageSaveOperationScope` and carries no
 delete button, confirmation, or result message of its own — see
-[page-save-system.md](../05-platform-features/page-save-system.md).
+[page-save-system.md](../05-platform-features/page-save-system.md). The row
+control only stages (`تجهيز الحذف`); `PageSaveDialog` is the confirmation.
 
 The header save icon and `PageSaveDialog` execute it. That is also the
 confirmation: the dialog lists each staged account by name, phone, UID, and

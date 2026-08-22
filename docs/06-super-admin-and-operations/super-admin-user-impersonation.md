@@ -22,15 +22,30 @@ Every impersonation start is logged through `persistentSystemLogService`.
  
 ## User Account Deletion
 
-Super admins can delete user accounts permanently directly from `/super-admin/users`:
+Super admins can delete user accounts permanently from `/super-admin/users`.
+Deletion is **staged**, never run on the row tap — `@asol/page-save-core` is
+the only place ASOL performs a user-triggered delete. Full detail:
+[contact-and-account-deletion.md](../00-overview/contact-and-account-deletion.md)
+and [page-save-system.md](../05-platform-features/page-save-system.md).
 
-1. The operator clicks **حذف الحساب** on any non-admin user row.
-2. A confirmation dialog (`SuperAdminUserDeleteDialog`) opens, detailing the permanent impact (profile, products, photos, and notification tokens deletion, plus order anonymization).
-3. Confirming sends `POST /api/super-admin/users/delete` with `{ targetUid }`.
-4. `AccountDeletionService.deleteBySuperAdmin` executes the 6-step deletion orchestration (`collect_images`, `anonymize_orders`, `delete_products`, `delete_profile`, `delete_main`, `delete_images`).
-5. The deletion action is logged to `persistentSystemLogService` (`Super admin deleted user account: <adminUid> -> <targetUid>`).
-6. The user row is immediately removed from the results table upon success.
-7. Attempting to delete a Super Admin account is blocked both in the UI and on the server (`accountDeletionSuperAdminForbidden`).
+1. The operator clicks **تجهيز الحذف** on a non-self row. That stages one
+   `delete` item on the `super-admin-users` page-save scope
+   (`super-admin-user-delete:<uid>`); it does not call the API.
+2. The header save icon opens `PageSaveDialog`, which lists each staged account
+   (name, phone, UID, product count) as its own checkbox — that dialog is the
+   confirmation. The page owns no delete dialog, success banner, or
+   delete-in-progress state.
+3. Confirming runs `POST /api/super-admin/users/delete` with `{ targetUid }`
+   from the staged executor.
+4. `AccountDeletionService.deleteBySuperAdmin` executes the 6-step deletion
+   orchestration (`collect_images`, `anonymize_orders`, `delete_products`,
+   `delete_profile`, `delete_main`, `delete_images`).
+5. The deletion is logged to `persistentSystemLogService`
+   (`Super admin deleted user account: <adminUid> -> <targetUid>`).
+6. On success the staged item clears and the row drops from the results table.
+   A failed deletion stays staged so the dialog can retry it.
+7. Deleting a Super Admin account is blocked in the UI and on the server
+   (`accountDeletionSuperAdminForbidden`).
 
 ## Session and API identity
 

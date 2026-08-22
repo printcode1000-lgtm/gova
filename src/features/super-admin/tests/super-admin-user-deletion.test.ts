@@ -46,6 +46,36 @@ assert.match(
   /itemId: `super-admin-user-delete:\$\{user\.uid\}`/,
   "Each staged item must be keyed by uid so a row cannot queue twice.",
 );
+assert.match(
+  usersPage,
+  /\.stage\(\{[\s\S]*?kind: "delete"[\s\S]*?execute:/,
+  "Deletion must be queued through stage({ kind: \"delete\", execute }) — never run on tap.",
+);
+assert.match(
+  usersPage,
+  /isStaged\(\s*`super-admin-user-delete:\$\{user\.uid\}`\s*,?\s*\)/,
+  "The row control must reflect isStaged so a second tap restages instead of stacking.",
+);
+assert.match(
+  usersPage,
+  /تجهيز الحذف/,
+  "The row control must read as staging, not as a delete that already happened.",
+);
+
+// The delete API may appear only inside the staged executor. A top-level
+// asolApi.post in a click handler would bypass page-save while staying
+// invisible to page-save-write-surface.test.ts (which allowlists named
+// services, not raw asolApi calls).
+{
+  const deleteCall = usersPage.indexOf('"/api/super-admin/users/delete"');
+  assert.ok(deleteCall >= 0, "The page must still call the delete route from the executor.");
+  const executeAt = usersPage.lastIndexOf("execute:", deleteCall);
+  const stageAt = usersPage.lastIndexOf(".stage(", deleteCall);
+  assert.ok(
+    executeAt >= 0 && stageAt >= 0 && stageAt < executeAt && executeAt < deleteCall,
+    "POST /api/super-admin/users/delete must live inside stage(...).execute, not a row onClick.",
+  );
+}
 
 // No page-authored confirmation or result surface. The dialog the package owns
 // is the only one allowed to name the operation and ask.
@@ -53,6 +83,9 @@ for (const forbidden of [
   ["SuperAdminUserDeleteDialog", "its own delete dialog"],
   ["successMessage", "its own result message"],
   ["setIsDeleting", "its own delete-in-progress state"],
+  ["window.confirm", "a native confirmation"],
+  ["تم الحذف", "a page-owned success message"],
+  ["فشل الحذف", "a page-owned failure banner keyed as deletion outcome"],
 ]) {
   assert.equal(
     usersPage.includes(forbidden[0]),

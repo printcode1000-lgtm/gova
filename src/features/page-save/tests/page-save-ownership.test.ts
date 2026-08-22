@@ -195,6 +195,10 @@ function testStagingSurfacesRegisterScopes() {
       /usePageSaveOperationScope\(/,
     ],
     [
+      "src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
+      /usePageSaveOperationScope\(\{\s*id:\s*"super-admin-users"/,
+    ],
+    [
       "src/features/system-logs/SuperAdminErrorFloatingButton.tsx",
       /usePageSaveOperationScope\(/,
     ],
