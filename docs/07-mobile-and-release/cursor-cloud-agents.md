@@ -20,6 +20,13 @@ Node/npm must match `package.json` `engines` (`node` `>=22 <25`, `npm` `>=11 <12
 
 Add credentials in the [Cloud Agents dashboard Secrets](https://cursor.com/dashboard/cloud-agents) so the VM can talk to Turso, R2, session signing, notification grants, and other runtime services. Do not commit `.env.local`.
 
+For Web Push on `http://localhost:3001`, the dashboard (or `.env.local`) needs at least:
+
+- `ASOL_SESSION_SIGNING_SECRET` or `ASOL_NOTIFICATION_GRANT_SECRET` — signs notification grants on the main app
+- `WEB_PUSH_VAPID_PRIVATE_KEY` — signs outbound Web Push from the development fan-out route
+
+Leave `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` empty in development unless you deliberately want the browser to post grants to the deployed notifications service instead of the local SQLite-backed fan-out route.
+
 ## Starting a cloud run
 
 1. Commit and push any work the agent must see (Move to Cloud does not send local dirty files).

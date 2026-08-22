@@ -80,11 +80,19 @@ export const publicEnv = {
 } as const;
 
 /**
- * Origin of the notifications deployment, or null when it is not configured —
- * in which case the browser bridge simply delivers nothing.
+ * Origin the browser bridge posts signed grants to.
+ *
+ * Static and native bundles must set `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL`
+ * explicitly. In `next dev`, an unset value falls back to the page origin so
+ * fan-out reads the same SQLite `notifications.db` that device registration
+ * wrote — the remote service only sees Turso and would report `no_tokens`.
  */
 export function getNotificationsPublicUrl(): string | null {
-  return publicEnv.notificationsUrl || null;
+  if (publicEnv.notificationsUrl) return publicEnv.notificationsUrl;
+  if (publicEnv.developmentBuild && typeof window !== "undefined") {
+    return window.location.origin;
+  }
+  return null;
 }
 
 export function getMobilePushCredentialBlob(): string | null {

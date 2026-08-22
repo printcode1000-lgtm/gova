@@ -136,11 +136,54 @@ for (const [label, code] of [
   );
 }
 
-// ── 3. The main app must own no fan-out route ────────────────────────────────
+// ── 3. The main app fan-out route is development-only ───────────────────────
 
+const mainSendRoutePath = path.join(
+  root,
+  "src",
+  "app",
+  "api",
+  "notifications",
+  "send",
+  "route.ts",
+);
 assert.ok(
-  !existsSync(path.join(root, "src", "app", "api", "notifications", "send")),
-  "The main app must not serve /api/notifications/send: fan-out belongs to the notifications service alone.",
+  existsSync(mainSendRoutePath),
+  "The main app must expose /api/notifications/send for local development fan-out.",
+);
+
+const mainSendRoute = readFileSync(mainSendRoutePath, "utf8");
+const devHandler = readFileSync(
+  path.join(
+    root,
+    "src",
+    "features",
+    "notifications",
+    "server",
+    "dev-notification-send-handler.server.ts",
+  ),
+  "utf8",
+);
+
+assert.match(
+  mainSendRoute,
+  /dev-notification-send-handler\.server/,
+  "The main-app send route must delegate to the development-only handler.",
+);
+assert.match(
+  devHandler,
+  /NODE_ENV\s*===\s*["']development["']/,
+  "The development send handler must refuse to run outside next dev.",
+);
+assert.match(
+  devHandler,
+  /from\s+['"]@asol\/notifications-core\/server['"]/,
+  "Local development fan-out must use @asol/notifications-core/server directly.",
+);
+assert.doesNotMatch(
+  stripComments(devHandler),
+  /\bsendToUsers\s*\(/,
+  "The development send handler must never call sendToUsers.",
 );
 
 // ── 4. generated/ must be reproducible from src/ ─────────────────────────────
