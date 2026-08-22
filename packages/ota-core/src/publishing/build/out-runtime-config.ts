@@ -203,7 +203,21 @@ export function auditStaticApiBaseUrl(outDirectory: string): void {
     throw new Error(`Static chunks are missing: ${chunkDirectory}`);
   }
 
+  // A port's unconfigured default is not a missing configuration.
+  //
+  // This used to fail on the first `apiBaseUrl: ""` in any chunk. Since the
+  // capability packages took ports, `account-bridge`'s `UNCONFIGURED_ENV`
+  // legitimately ships that literal as the value the application replaces at
+  // bootstrap — so a bare text match can no longer tell "nothing was baked"
+  // from "a port declares a default".
+  //
+  // The invariant that actually matters is unchanged: the bundle must carry a
+  // real absolute API base URL, or every request falls back to the app's own
+  // origin and is answered by the bundled assets. So an empty literal is only a
+  // failure when nothing baked a real one, and the error names where it was
+  // seen.
   let baked = false;
+  const emptyAt: string[] = [];
   const walk = (directory: string): void => {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       const entryPath = path.join(directory, entry.name);
@@ -214,15 +228,19 @@ export function auditStaticApiBaseUrl(outDirectory: string): void {
       if (!entry.name.endsWith(".js")) continue;
       const source = readFileSync(entryPath, "utf8");
       if (/apiBaseUrl:\s*""/.test(source)) {
-        throw new Error(
-          `Static bundle carries an empty API base URL (${path.relative(outDirectory, entryPath)}). ` +
-            "Every request would target the app's own origin and return HTML.",
-        );
+        emptyAt.push(path.relative(outDirectory, entryPath));
       }
       if (/apiBaseUrl:\s*"https?:\/\//.test(source)) baked = true;
     }
   };
   walk(chunkDirectory);
+
+  if (!baked && emptyAt.length > 0) {
+    throw new Error(
+      `Static bundle carries an empty API base URL and no baked one (${emptyAt.join(", ")}). ` +
+        "Every request would target the app's own origin and return HTML.",
+    );
+  }
 
   if (!baked) {
     throw new Error(

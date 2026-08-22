@@ -144,6 +144,14 @@ the file in.
 Resolve inside the function that needs the value, memoise if the work is expensive, and
 expose a reset for tests.
 
+The static release build had no composition root at all. `@asol/ota-core` audits the
+generated `out/` tree against the category registry through a port, and nothing
+registered it on that path, so `build:static` died on
+`otaCorePort: categories is not configured` after a successful `next build`.
+`scripts/build-static.ts` is now that root — an application-side entry that wires the
+port and hands off to `@asol/ota-core/publishing`. The audit stays in ota-core and the
+category logic stays in the feature that owns it; neither is reimplemented.
+
 The same rule has a second half: anything that drives a composed service outside the
 running application has to compose it. `registerAppServerPorts()` runs from
 `src/instrumentation.ts` at server startup, so a test importing a service directly gets
@@ -168,3 +176,20 @@ Closing this needs an AST rule that requires every mutating `asolApi` call in a
 presentation module to sit inside a staged executor or a `save()` handler, and the
 migration of the surfaces that currently do not. That migration changes how those admin
 pages behave, so it is a deliberate change rather than a silent one.
+
+## Ports change what old text-matching guards see
+
+Inverting a dependency introduces something that did not exist before: an
+*unconfigured default*. `account-bridge`'s `UNCONFIGURED_ENV` ships
+`apiBaseUrl: ''` as the value the application replaces at bootstrap.
+
+`auditStaticApiBaseUrl` grepped every static chunk for `apiBaseUrl: ""` and failed on
+the first hit. After the inversion it could no longer tell "nothing was baked" from
+"a port declares a default", and it failed a build whose bundle correctly carried
+`apiBaseUrl:"https://gova-swart.vercel.app"`.
+
+The audit now keeps the invariant that matters — the bundle must carry a real absolute
+URL — and treats an empty literal as a failure only when nothing baked a real one.
+
+When a refactor adds ports, re-read the guards that match on source text. They were
+written against a codebase that had no defaults to confuse them.
