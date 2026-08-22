@@ -850,17 +850,107 @@ left muted by the previous UI, enabling a device repairs a stored `false` back
 to `true` — otherwise a user would register a device and still receive nothing,
 with no control left to explain why.
 
+### Every disabled control explains itself
+
+A switch the user cannot move is a question the page has to answer, so the card
+never renders one silently:
+
+| State | What the page shows |
+|---|---|
+| Diagnostics not read yet (`notificationRuntimeReady === false`) | a skeleton — an off-looking switch would be indistinguishable from a device that is genuinely off |
+| `pushSupported === false` | the switch stays disabled and `deviceCard.pushUnsupported` says why (no push transport here — use the app, or a secure origin) |
+| No `sessionToken` for the chat preferences | the two chat switches render disabled with `deviceCard.chatPreferencesUnavailable`, instead of disappearing |
+| A blocked permission | the switch is replaced by re-check / open-settings, per the contract above |
+
+The card's two message surfaces carry a tone rather than one house colour: the
+transient status line and the permission notice both render in the error palette
+(`role="alert"`) for a failure and the neutral/primary palette (`role="status"`)
+for a confirmation. A failed save used to be indistinguishable from a successful
+one.
+
+The status line's timeout is owned by a ref in `useSettingsStatusBanner`: a
+second message cancels the first one's timer so it keeps its full duration, and
+unmounting cancels it instead of landing a `setState` on a gone component.
+
+### Opening the system's own notification settings
+
+The page carries a second, unconditional route into the OS: a
+**Notification settings** button that opens *this application's* notification
+page in the system settings — not a generic settings screen, and not tied to a
+blocked permission. It is the only way to reach the per-channel controls
+(sounds, importance, badges) that the OS owns and the app cannot set.
+
+It is deliberately separate from the blocked-permission **open app settings**
+action described above. That one is a recovery step and follows
+`permission.canOpenSettings`; this one is a shortcut that stands on its own, so
+neither path changed the other's behaviour.
+
+| Platform | Destination | Fallback |
+|---|---|---|
+| Android 8+ (API 26) | `Settings.ACTION_APP_NOTIFICATION_SETTINGS` + `EXTRA_APP_PACKAGE` | `ACTION_APPLICATION_DETAILS_SETTINGS` when the Settings app does not answer the intent (`ActivityNotFoundException`) |
+| Android 7 (API 24–25) | — the action is not public before API 26 | `ACTION_APPLICATION_DETAILS_SETTINGS`, whose notification entry is the closest official destination |
+| iOS 16+ | `UIApplication.openNotificationSettingsURLString` | `UIApplication.openSettingsURLString` when the URL cannot be opened |
+| iOS 15.4–15.x | `UIApplicationOpenNotificationSettingsURLString` (the pre-rename constant) | as above |
+| iOS 15.0–15.3 | — no notification URL exists | `UIApplication.openSettingsURLString` |
+| Browser | — | none: the button is not rendered at all, because no per-app system settings screen exists to open |
+
+One more fallback sits above all of these, in the web layer: a native shell
+built before this feature has no `openNotifications` method, so the bridge
+rejects the call with "not implemented" and
+`permissionsAdapter.openNotificationSettings()` falls through to the existing
+`open()` (the app settings screen). An OTA bundle can therefore ship this button
+to shells that predate it without the control ever becoming dead.
+
+```text
+packages/native-core/android/src/main/java/hgh/asol/app/AppSettingsPlugin.java  Android: both destinations
+packages/native-core/ios/Sources/AsolNativeCore/AppSettingsPlugin.swift         iOS: both destinations
+packages/native-core/src/adapters/permissions.adapter.ts                        openNotificationSettings + its fallback chain
+NativeCore.openAppNotificationSettings / canOpenAppNotificationSettings          the public door
+src/features/settings/presentation/SystemNotificationSettingsButton.tsx         the button
+src/features/settings/presentation/use-system-notification-settings.ts          its state
+```
+
+`packages/native-core/src/tests/contract/app-settings-plugin.test.ts` pins the
+native sources to their officially supported APIs and asserts the web host
+degrades to `false` instead of throwing.
+
 ### Files
 
 The settings surface lives outside the module, because it also renders account
-preferences the notifications module does not own:
+preferences the notifications module does not own. One file per concern:
 
 ```text
 src/app/settings/notifications/page.tsx                       the route
-src/features/settings/presentation/NotificationsSettingsPageContent.tsx  the page shell
-src/features/settings/presentation/NotificationDeviceSettingsCard.tsx    device + chat presentation
-src/features/settings/presentation/use-notification-device-settings-card.ts device + chat state/actions
+src/features/settings/presentation/NotificationsSettingsPageContent.tsx  the page shell + the login guard
+src/features/settings/presentation/NotificationDeviceSettingsCard.tsx    header, status line, section composition
+src/features/settings/presentation/NotificationDeviceToggleSection.tsx   this device's switch and blocked-permission actions
+src/features/settings/presentation/ChatMessagePreferencesSection.tsx     the account's chat intake switches
+src/features/settings/presentation/SettingsToggleRow.tsx                 one labelled switch row, shared by both sections
+src/features/settings/presentation/SystemNotificationSettingsButton.tsx  the system notification settings shortcut
+src/features/settings/presentation/use-system-notification-settings.ts   its availability and open action
+src/features/settings/presentation/use-notification-device-settings-card.ts  composes the hooks below into one view model
+src/features/settings/presentation/use-notification-device-toggle.ts     device + permission state/actions
+src/features/settings/presentation/use-chat-message-preferences.ts       account chat preference state/actions
+src/features/settings/presentation/use-settings-status-banner.ts         the transient status line and its timer
+src/features/settings/presentation/notification-device-settings-card-model.ts  the permission label/tone helpers
 ```
+
+The surface is gated by `npm run test:settings-notifications`
+(`src/features/settings/tests/`), which asserts the login guard, the tone split,
+the skeleton, the "explain every disabled control" rule, and locale parity for
+the strings above.
+
+### Not on this page yet
+
+Two things a user may reasonably expect are deliberately absent, because both
+need server work this surface does not have:
+
+- **A list of the account's other devices.** `notifications.listDevices` reads
+  this device's own AsolDB store, so it cannot enumerate another handset's
+  registration; a per-account listing needs a server route over
+  `user_notification_tokens`.
+- **A user-facing "send a test notification" button.** The test send exists only
+  behind the super-admin surface today.
 
 ## Device Token Flow
 

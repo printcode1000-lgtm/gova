@@ -22,8 +22,9 @@ You are tasked with executing the complete setup, native configuration, compilat
   1. `BackgroundDownloadPlugin.swift`: Background session download manager for OTA updates.
   2. `StorageCapacityPlugin.swift`: System disk volume check before OTA downloads.
   3. `ShareReceivePlugin.swift`: App Group bridge to receive shared content from the iOS Share Extension.
-  4. `AppDelegate.swift`: Remote notification forwarding to Capacitor, background URLSession coordinator, and deep linking.
-  5. `custom_notification.caf`: Bundled custom notification audio.
+  4. `AppSettingsPlugin.swift`: Opens this app's own Settings pages — its Notifications page on iOS 15.4+, the app settings page otherwise.
+  5. `AppDelegate.swift`: Remote notification forwarding to Capacitor, background URLSession coordinator, and deep linking.
+  6. `custom_notification.caf`: Bundled custom notification audio.
 
 ---
 

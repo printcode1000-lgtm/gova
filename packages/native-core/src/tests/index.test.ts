@@ -7,6 +7,7 @@ console.log("Running @asol/native-core test suite...\n");
 import "./contract/native-core-boundary.test";
 import "./contract/capability-registry.test";
 import "./contract/plugin-matrix.test";
+import "./contract/app-settings-plugin.test";
 import "./contract/native-core-ast-boundary.test";
 import "./unit/share-validator.test";
 import "./unit/share-queue.test";

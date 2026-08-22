@@ -49,7 +49,7 @@ export function NotificationsSettingsPageContent() {
     <div className="mx-auto w-full max-w-2xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
       <header className="mb-8 space-y-2 text-center sm:mb-12">
         <h1 className="text-2xl font-bold text-primary sm:text-3xl">
-          {t("sidebar.browserNotifications")}
+          {t("settings.notifications.title")}
         </h1>
       </header>
       <NotificationDeviceSettingsCard />

@@ -19,8 +19,18 @@ import {
 
 const MODULE = "Permissions";
 
+interface AppSettingsResult {
+  opened?: boolean;
+  target?: string;
+}
+
 interface NativeSettingsPlugin {
-  open: () => Promise<void>;
+  open: () => Promise<AppSettingsResult | void>;
+  /**
+   * Added to the shells after `open`. A shell that predates it answers the
+   * bridge with "not implemented", which is why every call is guarded.
+   */
+  openNotifications?: () => Promise<AppSettingsResult | void>;
 }
 
 const appSettingsPlugin = createLazyPlugin("AppSettings", async () => {
@@ -265,6 +275,50 @@ export const permissionsAdapter = {
 
   canOpenSettings(): boolean {
     return isNativePlatform() && isAndroid();
+  },
+
+  /**
+   * Both native shells can reach this application's own notification settings:
+   * Android through `ACTION_APP_NOTIFICATION_SETTINGS`, iOS through
+   * `openNotificationSettingsURLString`. A browser has no system settings to
+   * open, so it reports false rather than offering a dead control.
+   */
+  canOpenNotificationSettings(): boolean {
+    return isNativePlatform();
+  },
+
+  /**
+   * Open this application's notification settings, falling back to its
+   * application settings screen.
+   *
+   * The fallback covers two different misses with one path: an older shell
+   * whose plugin has no `openNotifications` method, and a platform build whose
+   * settings app declines the notification destination.
+   */
+  async openNotificationSettings(): Promise<boolean> {
+    if (!isNativePlatform()) return false;
+    const app = (await appSettingsPlugin.optional())?.plugin ?? null;
+    if (!app) return false;
+    try {
+      if (typeof app.openNotifications === "function") {
+        await app.openNotifications();
+        return true;
+      }
+    } catch (error) {
+      console.warn(
+        "[NativeCore:Permissions] openNotificationSettings failed; falling back to the app settings screen.",
+        error,
+      );
+    }
+    try {
+      if (typeof app.open === "function") {
+        await app.open();
+        return true;
+      }
+    } catch (error) {
+      console.warn("[NativeCore:Permissions] openSettings fallback failed.", error);
+    }
+    return false;
   },
 
   async openSettings(): Promise<boolean> {
