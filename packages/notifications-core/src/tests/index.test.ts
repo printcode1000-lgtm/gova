@@ -51,6 +51,9 @@ const DECLARED_APP_EDGES = new Set([
  * keeps a second one from appearing unnoticed.
  */
 const DECLARED_PACKAGE_DOORS = new Set([
+  // Resource names and the notification accent are one branding contract,
+  // shared with native and Web Push instead of repeated in each transport.
+  '@asol/branding-core',
   '@asol/data-core/notifications',
   '@asol/native-core',
   // Signing, not policy: the grant's envelope, constant-time comparison and rejection order are

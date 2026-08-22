@@ -5,6 +5,10 @@ import type {
 } from "./notification-provider.interface";
 import type { RegisteredNotificationToken } from "../../domain/entities";
 import {
+  BRANDING_ANDROID_NOTIFICATION_COLOR,
+  BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
+} from "@asol/branding-core";
+import {
   appleSoundFile,
   fcmSoundResource,
   resolveAndroidChannelId,
@@ -174,8 +178,8 @@ function buildMessage(
         collapse_key: input.payload.dedupeKey.slice(0, 64),
         notification: dataOnly || android ? undefined : {
           channel_id: channelId(input),
-          icon: "ic_stat_asol_notification",
-          color: "#006C4C",
+          icon: BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
+          color: BRANDING_ANDROID_NOTIFICATION_COLOR,
           // Only consulted below Android 8; from 8 upward the channel owns the
           // sound. Omitted when silent so old devices stay silent too.
           ...(sound ? { sound } : {}),

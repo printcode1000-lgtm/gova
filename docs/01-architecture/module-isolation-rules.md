@@ -115,7 +115,7 @@ it for any package.
 
 ## Current status
 
-Thirty-eight sealed packages, arranged in four layers. The layering is not decoration — see
+Forty-one sealed packages, arranged in four layers. The layering is not decoration — see
 [The four layers](#the-four-layers).
 
 Doors and app-edge counts below are measured, not intended. Re-measure with:
@@ -124,7 +124,7 @@ Doors and app-edge counts below are measured, not intended. Re-measure with:
 node -e "for(const p of require('fs').readdirSync('packages')) try{const m=require('./packages/'+p+'/package.json'); if(m.name?.startsWith('@asol/')) console.log(m.name, Object.keys(m.exports||{}).join(' '))}catch{}"
 ```
 
-### Full inventory (38 packages)
+### Full inventory (41 packages)
 
 The first consolidation wave is described in
 [consolidation-2026-08.md](./consolidation-2026-08.md); the repository-wide follow-up that added
@@ -151,6 +151,7 @@ without introducing new sealed packages is recorded in
 | `data-core` | 1 | `.` · `./telemetry` · `./core` · `./browser` · `./provisioning` · `./tooling` · per-domain (18) | `test:data-core` |
 | `data-health-core` | 1 | `.` · `./server` | `test:data-health-core` |
 | `backup-core` | 1 | `.` · `./server` | `test:backup-core` |
+| `branding-core` | 1 | `.` · `./tooling` | `test:branding-core` |
 | `native-core` | 1 | `.` · `./platform-globals` · `./scripts/validate-android-r8-policy` | `test:native-core` |
 | `ota-core` | 1 | `.` · `./publishing` · `./server` | `test:ota-core` |
 | `storage-core` | 1 | `.` · `./server` · `./profiles-config` | `test:storage-core` |
@@ -234,7 +235,7 @@ the contract rather than a matter of taste.
            system-logs-core, map-core, data-core, orders-core,
            format-core, signed-token-core, env-core, observability-core,
            architecture-core, release-core, secrets-core, data-health-core,
-           backup-core, hero-slider-core, featured-marquee-core,
+           backup-core, branding-core, hero-slider-core, featured-marquee-core,
            trending-ribbon-core, page-snapshot-core, storage-image-manager-core,
            google-play-store-assets-core
                                          capability logic, held once
@@ -249,7 +250,7 @@ Measured dependencies, rather than intended ones:
 | Package | Imports |
 | :-- | :-- |
 | `account-declarations` | **nothing** — asserted by its own test |
-| `native-core`, `service-mirror-core`, `service-runtime-core`, `catalog-core`, `product-style-core`, `product-core`, `hero-slider-core`, `featured-marquee-core`, `trending-ribbon-core`, `page-snapshot-core`, `google-play-store-assets-core`, `dev-core` | nothing |
+| `native-core`, `branding-core`, `service-mirror-core`, `service-runtime-core`, `catalog-core`, `product-style-core`, `product-core`, `hero-slider-core`, `featured-marquee-core`, `trending-ribbon-core`, `page-snapshot-core`, `google-play-store-assets-core`, `dev-core` | nothing |
 | `format-core`, `signed-token-core`, `env-core` | **nothing** — asserted by their own tests |
 | `auth-core` | `signed-token-core` (the envelope its session token travels in) |
 | `observability-core` | `data-core` (`./browser`, `./telemetry`) |
@@ -260,7 +261,7 @@ Measured dependencies, rather than intended ones:
 | `secrets-core` | **nothing** |
 | `orders-core` | **nothing** — asserted by its own test |
 | `data-core` | `orders-core`, `dev-core`, `storage-core`, `system-logs-core`, `product-core`, `auth-core`, `notifications-core`, `ota-core`, `data-health-core`, `backup-core`, `hero-slider-core`, `featured-marquee-core`, `trending-ribbon-core` |
-| `notifications-core` | `data-core` (one door: `./notifications`), `signed-token-core` |
+| `notifications-core` | `data-core` (one door: `./notifications`), `signed-token-core`, `branding-core` |
 | `map-core` | `native-core` (platform GPS and location permission) |
 | `storage-core` | `dev-core` (local path contract for `LocalStorageProvider`) |
 | `storage-image-manager-core` | `storage-core`, `data-core` (`./browser`), `native-core`, `system-logs-core` |
@@ -271,7 +272,7 @@ Measured dependencies, rather than intended ones:
 | `sub2main-composition` | `account-declarations` |
 | `notifications-composition` | `account-declarations`, `notifications-core` |
 | `ota-core` | `native-core`, `data-core` (`./browser`, `./ota`) |
-| `account-bridge` | `native-core` |
+| `account-bridge` | `native-core`, `branding-core` |
 
 Regenerate this table rather than editing it by hand:
 

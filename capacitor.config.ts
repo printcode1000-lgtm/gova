@@ -1,4 +1,8 @@
 import type { CapacitorConfig } from "@capacitor/cli";
+import {
+  BRANDING_ANDROID_NOTIFICATION_COLOR,
+  BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
+} from "@asol/branding-core";
 
 import nativeCorePackage from "./packages/native-core/package.json";
 
@@ -59,6 +63,10 @@ const config: CapacitorConfig = {
     },
     PushNotifications: {
       presentationOptions: ["badge", "sound", "banner", "list"],
+    },
+    LocalNotifications: {
+      smallIcon: BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
+      iconColor: BRANDING_ANDROID_NOTIFICATION_COLOR,
     },
   },
   server: liveReloadUrl

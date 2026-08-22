@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T15:42:16.100Z",
+  "generatedAt": "2026-08-22T19:44:45.608Z",
   "entryPoints": [
     "features/product-search/services/product-search-service.server.ts",
     "features/product-search/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 354,
+  "fileCount": 355,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -34,6 +34,7 @@
     "packages/auth-core/src/server/super-admin.ts",
     "packages/auth-core/src/validation/auth-schemas.ts",
     "packages/auth-core/src/validation/profile-schema.ts",
+    "packages/branding-core/src/index.ts",
     "packages/catalog-core/src/domain/catalog-v3.types.ts",
     "packages/catalog-core/src/index.ts",
     "packages/catalog-core/src/validation/catalog-display.ts",

@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -209,6 +211,12 @@ public class AsolPushMessagingService extends FirebaseMessagingService {
             // truncated for the Android tag, can become a second centre item.
             .addExtras(inboxIdentity)
             .setContentIntent(contentIntent);
+
+        Bitmap appIcon = BitmapFactory.decodeResource(
+            context.getResources(),
+            R.drawable.asol_notification_large_icon
+        );
+        if (appIcon != null) builder.setLargeIcon(appIcon);
 
         if (!record.groupKey.isEmpty()) builder.setGroup(record.groupKey);
 

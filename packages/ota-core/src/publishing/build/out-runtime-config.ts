@@ -289,6 +289,7 @@ export const STATIC_PUBLIC_ALLOW_FILES = [
 
 export const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
   "catagory",
+  "icons",
   "images/mainCategories",
   "images/pharmacy_fixed",
   "images/subCategories",

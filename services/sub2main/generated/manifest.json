@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T15:42:22.714Z",
+  "generatedAt": "2026-08-22T19:44:46.036Z",
   "entryPoints": [
     "features/product/services/product-service.server.ts",
     "features/profile/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 356,
+  "fileCount": 357,
   "files": [
     "packages/auth-core/src/domain/account-deletion-registry.ts",
     "packages/auth-core/src/domain/constants.ts",
@@ -40,6 +40,7 @@
     "packages/auth-core/src/server/super-admin.ts",
     "packages/auth-core/src/validation/auth-schemas.ts",
     "packages/auth-core/src/validation/profile-schema.ts",
+    "packages/branding-core/src/index.ts",
     "packages/catalog-core/src/domain/catalog-v3.types.ts",
     "packages/catalog-core/src/index.ts",
     "packages/catalog-core/src/validation/catalog-display.ts",

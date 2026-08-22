@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { BRANDING_WEB_APP_ICON_PATH } from "@asol/branding-core";
 import "./globals.css";
 import { AppInitScript } from "@/lib/app-init";
 import { THEME_COLOR_LIGHT } from "@/theme/runtime";
@@ -56,8 +57,8 @@ export const metadata: Metadata = {
   title: "Asol",
   description: "Asol — تطبيق Next.js",
   icons: {
-    icon: withBasePath("/logo.png"),
-    apple: withBasePath("/logo.png"),
+    icon: withBasePath(BRANDING_WEB_APP_ICON_PATH),
+    apple: withBasePath(BRANDING_WEB_APP_ICON_PATH),
   },
 };
 

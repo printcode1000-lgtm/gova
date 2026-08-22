@@ -38,6 +38,12 @@ complete file intact; do not copy it into `public/`, `out/`, or JavaScript env.
 - Foreground presentation uses badge, sound, banner, and notification-list
   options supported by Capacitor 8.
 
+iOS does not expose an Android-style custom small/status icon for a
+notification. The operating system displays the installed application's
+`AppIcon`; `@asol/branding-core` generates that AppIcon from the authoritative
+ASOL image. Notification payloads therefore carry no icon resource name on
+iOS—correct app identity comes from the signed application bundle.
+
 Run `npm run ios:push:validate` to verify that these settings, SPM dependencies,
 swizzling flags, and registered identities remain aligned. On Vercel (`VERCEL=1`)
 the script exits immediately because `GoogleService-Info.plist` is gitignored;

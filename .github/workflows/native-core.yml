@@ -145,6 +145,9 @@ jobs:
       - name: Page snapshot core tests
         run: npm run test:page-snapshot-core
 
+      - name: Branding core tests
+        run: npm run test:branding-core
+
       - name: Page save core tests
         run: npm run test:page-save-core
 

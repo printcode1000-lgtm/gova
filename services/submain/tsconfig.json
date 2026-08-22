@@ -56,6 +56,12 @@
       "@asol/auth-core/server": [
         "./generated/packages/auth-core/src/server.ts"
       ],
+      "@asol/branding-core": [
+        "./generated/packages/branding-core/src/index.ts"
+      ],
+      "@asol/branding-core/tooling": [
+        "./generated/packages/branding-core/src/tooling.ts"
+      ],
       "@asol/catalog-core": [
         "./generated/packages/catalog-core/src/index.ts"
       ],

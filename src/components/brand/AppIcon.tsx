@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { BRANDING_WEB_APP_ICON_PATH } from '@asol/branding-core';
 import { withBasePath } from '@/core/config/public-env';
 
 type AppIconSize = 'sm' | 'md' | 'lg';
@@ -20,7 +21,7 @@ export default function AppIcon({ size = 'lg', className = '' }: AppIconProps) {
   return (
     <div className={`relative ${className}`}>
       <Image
-        src={withBasePath('/logo.png')}
+        src={withBasePath(BRANDING_WEB_APP_ICON_PATH)}
         alt="Asol App Icon"
         width={sizes.imageWidth}
         height={sizes.imageHeight}

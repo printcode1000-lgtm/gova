@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cache } from "react";
+import { BRANDING_WEB_APP_ICON_PATH } from "@asol/branding-core";
 
 import { productService } from "@/features/product/services/product-service.server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
@@ -13,7 +14,7 @@ import {
 import type { PublicProfileShareRecord } from "./share-content";
 
 const DEFAULT_DESCRIPTION = "اكتشف المنتجات والمتاجر والخدمات على تطبيق ASOL.";
-const DEFAULT_IMAGE = `${PUBLIC_SHARE_ORIGIN}/logo.png`;
+const DEFAULT_IMAGE = `${PUBLIC_SHARE_ORIGIN}${BRANDING_WEB_APP_ICON_PATH}`;
 
 /**
  * A share landing page must open even when the prefetch fails: falling back to
