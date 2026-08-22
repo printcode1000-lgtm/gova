@@ -124,6 +124,47 @@ export interface RegisteredNotificationToken extends DeviceToken {
   deletedAt?: string | null;
 }
 
+/**
+ * A registration as its owning account may see it.
+ *
+ * Deliberately not `DeviceToken`: the push token is a delivery credential, and
+ * a listing exists to let a user recognise and revoke a device, which the
+ * device id, platform and timestamps already answer.
+ */
+export interface AccountDeviceSummary {
+  id: string;
+  deviceId: string;
+  platform: NotificationPlatform;
+  provider: string;
+  locale?: NotificationLocale;
+  deviceLabel?: string;
+  enabled: boolean;
+  lastSeenAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AccountDevicesResult {
+  devices: AccountDeviceSummary[];
+}
+
+/** A push the account sends to its own devices to prove delivery works. */
+export interface SelfTestNotificationInput {
+  identity: {
+    uid: string;
+    phone: string;
+  };
+  requestId?: string;
+  locale?: NotificationLocale;
+}
+
+export interface SelfTestNotificationResult extends SendNotificationToUsersResult {
+  /** Signed grant for the caller's own client to deliver. */
+  notificationGrants?: string[];
+  channelId: string;
+  dedupeKey: string;
+}
+
 export interface NotificationChatPreferences {
   specialtyRequestsEnabled: boolean;
   productConversationsEnabled: boolean;

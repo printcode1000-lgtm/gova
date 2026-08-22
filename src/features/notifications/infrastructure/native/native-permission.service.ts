@@ -34,9 +34,16 @@ export class NativePermissionService {
     return nativePlatformService.isNative();
   }
 
+  /**
+   * True only when a settings screen actually opened.
+   *
+   * `res.ok` answers "did the call complete", not "did anything open" — a
+   * shell that declines still completes, so returning it reported success for
+   * a screen that never appeared and the caller skipped its recovery step.
+   */
   async openSettings(): Promise<boolean> {
     const res = await NativeCore.openAppSettings();
-    return res.ok;
+    return res.ok && res.value;
   }
 
   async request(): Promise<NotificationPermission | "unsupported"> {

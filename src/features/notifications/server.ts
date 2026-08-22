@@ -1,6 +1,7 @@
 import "server-only";
 
 import type {
+  AccountDevicesResult,
   BroadcastNotificationInput,
   BroadcastNotificationResult,
   BroadcastRecipientsResult,
@@ -10,12 +11,15 @@ import type {
   NotificationTestInput,
   NotificationTestResult,
   RegisterNotificationTokenInput,
+  SelfTestNotificationInput,
+  SelfTestNotificationResult,
   SendNotificationToUsersInput,
 } from "@asol/notifications-core";
 import { withNotificationGrants } from "./domain/notification-grant-envelope";
 import { NotificationGrantCollector } from "./services/notification-grant-collector.server";
 import {
   notificationBroadcastService,
+  notificationSelfTestService,
   notificationTokenService,
 } from "./services/notification-service.bootstrap.server";
 import { notificationRecipientTokensService } from "./services/notification-recipient-tokens.service.server";
@@ -66,7 +70,9 @@ export type NotificationServerCommand =
   | { type: "removeDeviceToken"; payload: DeleteNotificationTokenInput }
   | { type: "listBroadcastRecipients"; payload: { uid: string; phone: string } }
   | { type: "sendBroadcast"; payload: BroadcastNotificationInput }
-  | { type: "sendTestNotification"; payload: NotificationTestInput };
+  | { type: "sendTestNotification"; payload: NotificationTestInput }
+  | { type: "listAccountDevices"; payload: { uid: string; phone: string } }
+  | { type: "sendSelfTestNotification"; payload: SelfTestNotificationInput };
 
 export interface NotificationServerCommandResults {
   registerDeviceToken: DeviceToken;
@@ -74,6 +80,8 @@ export interface NotificationServerCommandResults {
   listBroadcastRecipients: BroadcastRecipientsResult;
   sendBroadcast: BroadcastNotificationResult;
   sendTestNotification: NotificationTestResult;
+  listAccountDevices: AccountDevicesResult;
+  sendSelfTestNotification: SelfTestNotificationResult;
 }
 
 export type NotificationServerCommandResult<TCommand extends NotificationServerCommand> =
@@ -94,6 +102,9 @@ const handlers: NotificationServerHandlers = {
     notificationBroadcastService.listRecipients(command.payload),
   sendBroadcast: (command) => notificationBroadcastService.send(command.payload),
   sendTestNotification: (command) => notificationBroadcastService.sendTest(command.payload),
+  listAccountDevices: (command) => notificationTokenService.listForAccount(command.payload),
+  sendSelfTestNotification: (command) =>
+    notificationSelfTestService.send(command.payload),
 };
 
 const KNOWN_SERVER_COMMANDS: ReadonlySet<string> = new Set(Object.keys(handlers));
@@ -136,6 +147,21 @@ export const notificationsServer = {
 
   removeDeviceToken(input: DeleteNotificationTokenInput): Promise<void> {
     return notificationTokenService.remove(input);
+  },
+
+  /** Every device registered on one account. Never carries a push token. */
+  listAccountDevices(identity: {
+    uid: string;
+    phone: string;
+  }): Promise<AccountDevicesResult> {
+    return notificationTokenService.listForAccount(identity);
+  },
+
+  /** Sign a delivery test the caller's own client then delivers to itself. */
+  sendSelfTestNotification(
+    input: SelfTestNotificationInput,
+  ): Promise<SelfTestNotificationResult> {
+    return notificationSelfTestService.send(input);
   },
 
   getPushPreference(identity: {

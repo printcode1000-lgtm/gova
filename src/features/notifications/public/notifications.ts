@@ -52,6 +52,11 @@ const handlers: NotificationCommandHandlers = {
   unregisterDevice: (command) => notificationsFacade.unregisterDevice(command.payload),
   refreshDeviceLocale: (command) => notificationsFacade.refreshDeviceLocale(command.payload),
   listDevices: (command) => notificationsFacade.listDevices(command.payload),
+  listAccountDevices: (command) =>
+    notificationsFacade.listAccountDevices(command.payload),
+  revokeAccountDevice: (command) =>
+    notificationsFacade.revokeAccountDevice(command.payload),
+  sendSelfTest: (command) => notificationsFacade.sendSelfTest(command.payload),
   requestPermission: (command) => notificationsFacade.requestPermission(command.payload ?? {}),
   getPermissionState: () => notificationsFacade.getPermissionState(),
   openPermissionSettings: () => notificationsFacade.openPermissionSettings(),

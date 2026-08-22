@@ -6,7 +6,7 @@ import { LocalNotifications } from "@capacitor/local-notifications";
 import { registerPlugin } from "@capacitor/core";
 import { createLazyPlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
-import { isAndroid, isIos, isNativePlatform, hasDom } from "./platform.adapter";
+import { isNativePlatform, hasDom } from "./platform.adapter";
 import {
   PermissionKinds,
   PermissionStates,
@@ -273,8 +273,14 @@ export const permissionsAdapter = {
     return toPermissionResult("notifications", await adapter.request());
   },
 
+  /**
+   * Every native shell has an application settings screen; a browser has none.
+   * The platform is not asked beyond that: `AppSettingsPlugin` implements
+   * `open` on both shells, so a per-platform answer here would only be able to
+   * disagree with what the plugin actually does.
+   */
   canOpenSettings(): boolean {
-    return isNativePlatform() && isAndroid();
+    return isNativePlatform();
   },
 
   /**
@@ -321,20 +327,18 @@ export const permissionsAdapter = {
     return false;
   },
 
+  /** This application's settings screen. True only when one actually opened. */
   async openSettings(): Promise<boolean> {
     if (!isNativePlatform()) return false;
     const app = (await appSettingsPlugin.optional())?.plugin ?? null;
-    if (!app) return false;
+    if (!app || typeof app.open !== "function") return false;
     try {
-      if (isAndroid() && typeof app.open === "function") {
-        await app.open();
-        return true;
-      }
-      if (isIos()) return false;
+      await app.open();
+      return true;
     } catch (error) {
       console.warn("[NativeCore:Permissions] openSettings failed.", error);
+      return false;
     }
-    return false;
   },
 };
 

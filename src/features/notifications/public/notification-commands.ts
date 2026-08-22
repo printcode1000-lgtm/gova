@@ -1,4 +1,5 @@
 import type {
+  AccountDevicesResult,
   AuthenticatedNotificationTestInput,
   BroadcastNotificationInput,
   BroadcastNotificationResult,
@@ -9,6 +10,7 @@ import type {
   NotificationEntity,
   NotificationEvent,
   NotificationTestResult,
+  SelfTestNotificationResult,
   TemplateNotificationInput,
 } from "@asol/notifications-core";
 import type { RetryOperationKind } from "../domain/notification-validation";
@@ -40,6 +42,9 @@ export type NotificationCommand =
   | { type: "unregisterDevice"; payload: { uid: string; phone: string } }
   | { type: "refreshDeviceLocale"; payload: { uid: string; phone: string } }
   | { type: "listDevices"; payload: { uid: string } }
+  | { type: "listAccountDevices"; payload: { sessionToken: string } }
+  | { type: "revokeAccountDevice"; payload: { sessionToken: string; deviceId: string } }
+  | { type: "sendSelfTest"; payload: { sessionToken: string; locale?: "ar" | "en" } }
   | { type: "requestPermission"; payload?: { uid?: string; phone?: string } }
   | { type: "getPermissionState" }
   | { type: "openPermissionSettings" }
@@ -98,6 +103,9 @@ export interface NotificationCommandResults {
   unregisterDevice: void;
   refreshDeviceLocale: void;
   listDevices: DeviceToken[];
+  listAccountDevices: AccountDevicesResult;
+  revokeAccountDevice: void;
+  sendSelfTest: SelfTestNotificationResult;
   requestPermission: NotificationPermission | "unsupported";
   getPermissionState: NotificationPermissionState;
   openPermissionSettings: boolean;
@@ -154,6 +162,9 @@ export const NOTIFICATION_COMMAND_TYPES = [
   "unregisterDevice",
   "refreshDeviceLocale",
   "listDevices",
+  "listAccountDevices",
+  "revokeAccountDevice",
+  "sendSelfTest",
   "requestPermission",
   "getPermissionState",
   "openPermissionSettings",

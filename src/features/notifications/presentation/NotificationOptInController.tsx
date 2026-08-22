@@ -178,11 +178,17 @@ export function NotificationOptInController() {
           await enablePromptDevice(current);
           return;
         }
-        // In a browser this resolves false. The user re-checks after changing
-        // the site permission, so the dialog stays put rather than failing.
+        // Nothing opened is a recoverable state, not a failure: a browser has
+        // no settings screen at all, and a native shell that declines leaves
+        // the user to change the permission themselves — which the manual copy
+        // and the `visibilitychange` re-check already handle. The settings page
+        // answers the same result by re-checking, so failing here would make
+        // this the one surface that turns a recoverable state into an error.
         const opened = await notificationPermissionService.openSettings();
-        if (!opened && canOpenSettings) {
-          throw new Error("notificationSettingsUnavailable");
+        if (!opened) {
+          notificationLog.warn(
+            "The application settings screen did not open; the user re-checks instead.",
+          );
         }
         setPermissionPrompt((value) =>
           value ? { ...value, busy: false } : value,
@@ -211,7 +217,7 @@ export function NotificationOptInController() {
         value ? { ...value, busy: false, failed: true } : value,
       );
     }
-  }, [canOpenSettings, enablePromptDevice, permissionPrompt]);
+  }, [enablePromptDevice, permissionPrompt]);
 
   return (
     <NotificationPermissionPrompt

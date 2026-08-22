@@ -760,18 +760,23 @@ so the controller never branches on the platform itself:
 | `enable(uid, phone)` | registers the FCM/APNs token | subscribes to Web Push |
 
 The one place the platform still shows through is the blocked state, because
-only the Android shell can deep-link to its own settings screen. The dialog
+only a native shell can deep-link to its own settings screen. The dialog
 therefore takes `canOpenSettings`, read from
-`PermissionManager.canOpenSettings()` rather than inferred from "is this
-native" — `openSettings` is unimplemented on iOS and impossible in a browser,
-so both would otherwise get a button that always resolves `false`:
+`PermissionManager.canOpenSettings()`:
 
-| | Android | iOS and browser |
+| | Android and iOS | Browser |
 |---|---------|-----------------|
 | `canOpenSettings()` | `true` | `false` |
 | Blocked copy | `permissionPrompt.denied` | `permissionPrompt.deniedManual` |
 | Primary button | open app settings | re-check |
 | Recovery | `visibilitychange` re-checks on return from settings | the user re-checks after changing the permission themselves |
+
+iOS used to sit in the browser column, because `AppSettingsPlugin` had no iOS
+half and `openSettings()` short-circuited to `false` there. It has one now, so
+the split is simply native versus browser, and `openSettings()` reports whether
+a screen actually opened rather than whether the bridge call completed —
+`res.ok` answers only the latter, and returning it made the caller skip its
+recovery step for a screen that never appeared.
 
 In a browser, `Notification.permission === "denied"` is an origin-level block:
 the application cannot show the native permission prompt again or turn the
@@ -928,6 +933,11 @@ src/features/settings/presentation/ChatMessagePreferencesSection.tsx     the acc
 src/features/settings/presentation/SettingsToggleRow.tsx                 one labelled switch row, shared by both sections
 src/features/settings/presentation/SystemNotificationSettingsButton.tsx  the system notification settings shortcut
 src/features/settings/presentation/use-system-notification-settings.ts   its availability and open action
+src/features/settings/presentation/SelfTestNotificationButton.tsx        the account's delivery test
+src/features/settings/presentation/use-self-test-notification.ts         its send and its outcome reporting
+src/features/settings/presentation/AccountDevicesSection.tsx             the account's registered devices
+src/features/settings/presentation/account-devices-model.ts              their ordering and platform labels
+src/features/settings/presentation/use-account-devices.ts                their listing and revocation
 src/features/settings/presentation/use-notification-device-settings-card.ts  composes the hooks below into one view model
 src/features/settings/presentation/use-notification-device-toggle.ts     device + permission state/actions
 src/features/settings/presentation/use-chat-message-preferences.ts       account chat preference state/actions
@@ -940,17 +950,71 @@ The surface is gated by `npm run test:settings-notifications`
 the skeleton, the "explain every disabled control" rule, and locale parity for
 the strings above.
 
-### Not on this page yet
+### The account's other devices
 
-Two things a user may reasonably expect are deliberately absent, because both
-need server work this surface does not have:
+`notifications.listDevices` reads this device's own AsolDB store, so it can only
+ever describe the browser or handset it runs on. A lost or replaced device stays
+registered and receiving with no control anywhere in the app to stop it, so the
+page also lists the account's registrations from the server:
 
-- **A list of the account's other devices.** `notifications.listDevices` reads
-  this device's own AsolDB store, so it cannot enumerate another handset's
-  registration; a per-account listing needs a server route over
-  `user_notification_tokens`.
-- **A user-facing "send a test notification" button.** The test send exists only
-  behind the super-admin surface today.
+```text
+GET    /api/notifications/devices              list this account's registrations
+DELETE /api/notifications/devices?deviceId=    revoke one of them
+```
+
+Both authorise with the signed session (`x-asol-session-token`, verified by
+`assertSignedInRequest`) rather than a uid/phone pair in the query, because
+either one can reach a registration the calling device does not own. The uid and
+phone the service checks come from the verified claims; nothing identifying is
+read from the payload.
+
+The listing returns `AccountDeviceSummary`, never `DeviceToken`: the push token
+is a delivery credential, and recognising or revoking a device needs the device
+id, platform and timestamps instead. `notification-account-surface.test.ts` pins
+that mapping.
+
+Revoking the device in the user's hand takes the local path
+(`unregisterDevice`) rather than the server route, because deleting the row
+alone would leave this browser holding a live Web Push subscription — and a
+native shell holding a stored enabled flag — that both claim a registration the
+server no longer has.
+
+Revoking a *remote* device stops delivery to it immediately, and lasts until
+that device registers again on its own: `DeviceTokenService.register` runs when
+it signs in, changes the UI language, or turns its own switch on, and the token
+rotation handler re-registers only while that device's stored enabled flag is
+still true. This is inherent to a per-device token — the account cannot reach
+into another device's local store — and it is why the control is described as
+"stops receiving" rather than "signs that device out".
+
+### The account's own delivery test
+
+`POST /api/notifications/test/self` sends the caller a single fixed
+notification, so a user can find out whether push actually arrives without
+asking an administrator.
+
+It shares the grant model with every other send: the main app authorises, the
+caller's own client carries the signed grant to the notifications service, and
+that service is the only side that talks to a provider.
+
+It is not the super-admin test route with a weaker check. `sendTest` exists to
+let an administrator reach other people and every validation in it serves that;
+this one lives in its own service and differs where it matters:
+
+| | `POST /api/notifications/test/send` | `POST /api/notifications/test/self` |
+|---|---|---|
+| Who may call | super admin | any signed-in account |
+| Audience | the caller's uid, chosen from an admin surface | the caller's uid, and no other |
+| Content | admin-authored title, body, route, scenario | fixed in `domain/notification-self-test.ts`; only the locale is read |
+| Purpose | exercising channels, sounds, and priorities | proving delivery works at all |
+
+Fixing the content is what makes the route safe to expose: it is reachable by
+any signed-in user, so nothing about the push may be attacker-chosen.
+
+The button reports what happened rather than that the request succeeded — a send
+with no registered token completes cleanly and delivers nothing, which is
+exactly the case a user presses it to discover, so `tokenCount === 0` becomes
+"no device is registered" instead of a success line.
 
 ## Device Token Flow
 
@@ -962,6 +1026,11 @@ the same server APIs:
 POST   /api/notifications/device-token
 DELETE /api/notifications/device-token?uid=&phone=&deviceId=&tokenId=
 ```
+
+The account-facing pair — `GET`/`DELETE /api/notifications/devices` — is
+described under [The account's other devices](#the-accounts-other-devices); it
+authorises with the signed session instead, because it can reach a registration
+the calling device does not own.
 
 Native outbound push (Capacitor only) uses two additional main-app routes:
 

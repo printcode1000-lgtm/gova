@@ -4,8 +4,10 @@ import { Bell } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+import { AccountDevicesSection } from "./AccountDevicesSection";
 import { ChatMessagePreferencesSection } from "./ChatMessagePreferencesSection";
 import { NotificationDeviceToggleSection } from "./NotificationDeviceToggleSection";
+import { SelfTestNotificationButton } from "./SelfTestNotificationButton";
 import { SystemNotificationSettingsButton } from "./SystemNotificationSettingsButton";
 import { useNotificationDeviceSettingsCard } from "./use-notification-device-settings-card";
 
@@ -62,7 +64,9 @@ export function NotificationDeviceSettingsCard() {
 
       <div className="space-y-4 rounded-2xl asol-surface-neutral p-3 sm:p-4">
         <NotificationDeviceToggleSection state={state} />
+        <SelfTestNotificationButton state={state} />
         <SystemNotificationSettingsButton state={state} />
+        <AccountDevicesSection state={state} />
         <ChatMessagePreferencesSection state={state} />
       </div>
     </div>
