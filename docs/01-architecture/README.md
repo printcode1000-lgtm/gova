@@ -33,7 +33,7 @@ docs/01-architecture/
 ├── 03-dependencies/             ← dependency rules, ports, contracts
 ├── 04-composition/              ← wiring and composition roots
 ├── 05-capability-enforcement/   ← gateways, closure, infrastructure ownership
-├── 06-runtime-boundaries/       ← browser/server/native/service boundaries
+├── 06-runtime-boundaries/       ← the five runtime targets; browser/server/native/service boundaries
 ├── 07-enforcement/              ← architecture:check, sealing, exceptions
 ├── 08-reference/                ← capability map, package catalog, dependency map
 ├── 09-decisions/                ← ADRs (historical rationale)
@@ -60,6 +60,9 @@ docs/01-architecture/
 | Changing composition / port wiring | [composition-roots.md](./04-composition/composition-roots.md) → [ports-and-contracts.md](./03-dependencies/ports-and-contracts.md) |
 | Adding a new service deployment | [service-composition.md](./04-composition/service-composition.md) → [service-boundaries.md](./06-runtime-boundaries/service-boundaries.md) |
 | Changing runtime exports (browser vs server) | [browser-server-boundaries.md](./06-runtime-boundaries/browser-server-boundaries.md) → [package-exports.md](./02-packages/package-exports.md) |
+| **Adding or changing a page or route** | [runtime-targets.md](./06-runtime-boundaries/runtime-targets.md) — which of the five runtimes render it, and what each forbids |
+| **Adding an import to a `"use client"` module** | [runtime-targets.md](./06-runtime-boundaries/runtime-targets.md) — its import graph ships to Android and iOS |
+| **Adding a development-only surface** | [runtime-targets.md](./06-runtime-boundaries/runtime-targets.md) — needs the ignorelist entry *and* the `isDevelopment` guard |
 | `npm run architecture:check` fails | [architecture-check.md](./07-enforcement/architecture-check.md) → [enforcement-exceptions.md](./07-enforcement/enforcement-exceptions.md) |
 | Introducing a new capability | [capability-closure.md](./05-capability-enforcement/capability-closure.md) → [package-creation-rules.md](./02-packages/package-creation-rules.md) |
 | Understanding why a decision was made | [09-decisions/README.md](./09-decisions/README.md) |

@@ -116,6 +116,8 @@ New deployment accounts need: `@asol/account-declarations/<account>` door, `*-co
 
 ## Related Documents
 
+- [runtime-targets.md](../06-runtime-boundaries/runtime-targets.md) — the five runtimes a new package may end up shipping into
+
 - [Package Model](./package-model.md)
 - [Capability Closure](../05-capability-enforcement/capability-closure.md)
 - [Architecture Check](../07-enforcement/architecture-check.md)

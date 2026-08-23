@@ -8,6 +8,11 @@ Define execution contexts (browser, Node server, static export, native WebView, 
 
 Runtime context detection and isolation policies. Deployment targets: [docs/07-mobile-and-release/](../../07-mobile-and-release/).
 
+> Changing a page, a route, or a `"use client"` import? Read
+> [runtime-targets.md](./runtime-targets.md) first — it lists the five shipped
+> runtimes, what the static export forbids, and how a route is kept out of the
+> mobile bundle and out of production.
+
 ## Execution contexts
 
 | Context | Detection | DB | R2 write | Capacitor | Push send |
