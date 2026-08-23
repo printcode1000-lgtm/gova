@@ -36,12 +36,35 @@ import {
  * The main application registers this too, through `registerDataCorePorts`.
  * One definition, so the accounts and the app cannot drift.
  */
-export function registerDataCoreRuntimeConfigPorts(): void {
+export interface DataCoreRuntimeConfigPortOptions {
+  /**
+   * Pin the deployment to Turso regardless of what the environment says.
+   *
+   * The isolated accounts alias `better-sqlite3` to a stub that throws, because
+   * they never run against local SQLite and bundling the native driver would
+   * force a native build for unreachable code. That made the backend choice an
+   * environment question with only one valid answer: a stray `local` data
+   * source made the profiles service load a driver it does not ship, and every
+   * route that reached data answered 500 with a message about a different
+   * account entirely.
+   *
+   * An account that cannot run SQLite should not be asking. It states its own
+   * invariant here instead of trusting a variable it does not control.
+   */
+  readonly forceRemoteDataSource?: boolean;
+}
+
+export function registerDataCoreRuntimeConfigPorts(
+  options: DataCoreRuntimeConfigPortOptions = {},
+): void {
   configureDataCoreRuntimeConfig({
     isDevelopment,
     isDevRuntime,
     isProvisioningContext,
-    getServerRuntimeContext: () => getServerRuntimeContext(),
+    getServerRuntimeContext: () =>
+      options.forceRemoteDataSource
+        ? { ...getServerRuntimeContext(), dataSource: 'remote' }
+        : getServerRuntimeContext(),
     getTursoRuntimeCredentials,
     getTursoProductRuntimeCredentials,
     getTursoNotificationsRuntimeCredentials,
