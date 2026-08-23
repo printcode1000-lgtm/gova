@@ -34,7 +34,7 @@ Enforcement engine: `@asol/architecture-core` invoked by `npm run architecture:c
 
 ## Source Map
 
-- Rules: [module-isolation-rules.md](../02-packages/module-isolation-rules.md)
+- Rules: [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md)
 - Backup: `docs/01-architecture-backup/module-isolation-rules.md`
 - Registry: `capability-registry.ts` (41 packages)
 

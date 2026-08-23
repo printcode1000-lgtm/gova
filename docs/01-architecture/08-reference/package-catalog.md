@@ -27,7 +27,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:architecture-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/account-declarations
 
@@ -42,7 +42,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:account-declarations` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/account-bridge
 
@@ -57,7 +57,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:account-bridge` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/auth-core
 
@@ -72,7 +72,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:auth-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/backup-core
 
@@ -87,7 +87,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:backup-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/branding-core
 
@@ -102,7 +102,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | `sharp` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:branding-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/catalog-core
 
@@ -117,7 +117,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:catalog-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/data-core
 
@@ -132,7 +132,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `drizzle-orm/better-sqlite3`, `drizzle-orm/libsql` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:data-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/data-health-core
 
@@ -147,7 +147,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:data-health-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/dev-core
 
@@ -162,7 +162,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:dev-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/env-core
 
@@ -177,7 +177,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:env-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/featured-marquee-core
 
@@ -192,7 +192,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:featured-marquee-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/format-core
 
@@ -207,7 +207,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:format-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/google-play-store-assets-core
 
@@ -222,7 +222,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:google-play-store-assets-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/hero-slider-core
 
@@ -237,7 +237,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:hero-slider-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/map-core
 
@@ -252,7 +252,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | `maplibre-gl` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:map-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/native-core
 
@@ -267,7 +267,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | `@capacitor/cli`, `@capacitor/core`, `@capacitor/action-sheet`, `@capacitor/app`, `@capacitor/browser`, `@capacitor/camera`, `@capacitor/clipboard`, `@capacitor/device`, `@capacitor/dialog`, `@capacitor/filesystem`, `@capacitor/geolocation`, `@capacitor/haptics`, `@capacitor/keyboard`, `@capacitor/local-notifications`, `@capacitor/network`, `@capacitor/preferences`, `@capacitor/push-notifications`, `@capacitor/screen-orientation`, `@capacitor/share`, `@capacitor/splash-screen`, `@capacitor/status-bar`, `@capacitor/text-zoom`, `@capacitor/toast`, `@capacitor-mlkit/barcode-scanning`, `@capawesome/capacitor-file-picker`, `@capgo/capacitor-speech-recognition` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:native-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/notifications-core
 
@@ -282,7 +282,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | `web-push`, `google-auth-library` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:notifications-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/notifications-composition
 
@@ -297,7 +297,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
 | **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/observability-core
 
@@ -312,7 +312,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:observability-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/orders-core
 
@@ -327,7 +327,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:orders-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/orders-composition
 
@@ -342,7 +342,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
 | **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/ota-core
 
@@ -357,7 +357,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | `@aws-sdk/client-s3`, `google-auth-library` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:ota-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/page-save-core
 
@@ -372,7 +372,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:page-save-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/page-snapshot-core
 
@@ -387,7 +387,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:page-snapshot-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/product-core
 
@@ -402,7 +402,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:product-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/product-style-core
 
@@ -417,7 +417,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:product-style-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/products-composition
 
@@ -432,7 +432,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
 | **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/profiles-composition
 
@@ -447,7 +447,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
 | **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/release-core
 
@@ -462,7 +462,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:release-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/secrets-core
 
@@ -477,7 +477,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:secrets-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/service-mirror-core
 
@@ -492,7 +492,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:service-mirror-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/service-runtime-core
 
@@ -507,7 +507,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:service-runtime-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/signed-token-core
 
@@ -522,7 +522,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:signed-token-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/storage-core
 
@@ -537,7 +537,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:storage-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/storage-image-manager-core
 
@@ -552,7 +552,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:storage-image-manager-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/sub2main-composition
 
@@ -567,7 +567,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
 | **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/submain-composition
 
@@ -582,7 +582,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
 | **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/system-logs-core
 
@@ -597,7 +597,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:system-logs-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/trending-ribbon-core
 
@@ -612,7 +612,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:trending-ribbon-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ### @asol/vercel-deploy-core
 
@@ -627,7 +627,7 @@ This document is the canonical package inventory. Capability ownership statement
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:vercel-deploy-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
 
 ## Related Documents
 

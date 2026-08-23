@@ -1,0 +1,43 @@
+# Extending Features (Data Path)
+
+## Purpose
+
+Preserved operational and architectural detail from `docs/01-architecture-backup/`. Agents use this for implementation guidance.
+
+## Scope
+
+See sections below. Architectural relationships defer to [docs/01-architecture/README.md](../README.md) where applicable.
+
+---
+
+Example: adding a `Product` feature with a new table.
+
+## Server
+
+1. **Entity** — `src/features/product/entities/product.entity.ts`
+2. **Schema** — table in `packages/data-core/src/core/database/` (or dedicated `.db`), `npm run db:drizzle -- generate`
+3. **Repository** — `packages/data-core/src/domains/product/repositories/` (server-only)
+4. **Operations** — `commands/`, `queries/`, `instances.ts`
+5. **Server Service** — `product-service.server.ts` + `product-service.bootstrap.server.ts`
+6. **API Routes** — `src/app/api/products/route.ts`
+
+## Client
+
+7. **Routes** — add to `ASOL_API_ROUTES`
+8. **API Service** — `product-api-service.ts` using `asolApi`
+9. **Client export** — `product-service.ts` re-exports adapter
+10. **Query keys** — stable constants in hooks
+11. **Hooks** — `useQuery` / `useMutation` + invalidation
+12. **UI** — consume hooks only
+
+## New database?
+
+If the feature needs its own SQLite/Turso pair:
+
+- Dedicated `*DbClient`, env vars, schema sync — see [current-databases.md](../../02-data-and-storage/current-databases.md)
+
+## Contract
+
+Run `npm run architecture:check` before PR — see [layer-stack.md](../10-application-layers/layer-stack.md).
+
+No changes to `AsolApiClient` internals required for a normal feature.

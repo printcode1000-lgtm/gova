@@ -31,6 +31,11 @@ No shortcut paths. Architecture scan and ESLint enforce the matrix in `packages/
 | Operations (query/command) | [operations-layer.md](./operations-layer.md) |
 | Repository | [repository-layer.md](./repository-layer.md) |
 | Database client | [database-client-layer.md](./database-client-layer.md) |
+| Input validation | [input-validation.md](./input-validation.md) |
+| Configuration | [configuration-layer.md](./configuration-layer.md) |
+| Security rules | [security-rules.md](./security-rules.md) |
+| Extending features | [extending-features.md](./extending-features.md) |
+| Testability | [testability.md](./testability.md) |
 
 ## Package boundary
 

@@ -35,7 +35,7 @@ ADRs here are agent-first summaries; backup retains migration detail.
 | `capability-consolidation-2026-08-follow-up.md` | HISTORICAL → ADR | [ADR-0002](./ADR-0002-capability-consolidation-follow-up.md) |
 | `srp-file-splits-2026-08.md` | HISTORICAL → ADR | [ADR-0003](./ADR-0003-srp-file-splits-2026-08.md) |
 | `ui-capability-core-packages-2026-08.md` | HISTORICAL → ADR | [ADR-0004](./ADR-0004-ui-capability-packages-2026-08.md) |
-| `*-core-module.md` (per-package) | MERGED | [08-reference/package-catalog.md](../08-reference/package-catalog.md) + [capability-map.md](../08-reference/capability-map.md) |
+| `*-core-module.md` (per-package detail) | MOVED | [docs/05-platform-features/sealed-packages/](../../05-platform-features/sealed-packages/) (12 packages) + [08-reference/](../08-reference/) summaries |
 | `data-layers/01-09`, `19` | PRESERVED | [10-application-layers/](../10-application-layers/) |
 | `data-layers/10-cache-rules-and-data-flow.md` | MOVED | [docs/02-data-and-storage/cache-rules-and-data-flow.md](../../02-data-and-storage/cache-rules-and-data-flow.md) |
 | `data-layers/11-current-databases.md` | MOVED | [docs/02-data-and-storage/current-databases.md](../../02-data-and-storage/current-databases.md) |
@@ -49,9 +49,20 @@ ADRs here are agent-first summaries; backup retains migration detail.
 | `auth-core-module.md` | MOVED | [docs/05-platform-features/auth-core-module.md](../../05-platform-features/auth-core-module.md) |
 | `native-core-module.md` | MOVED | [docs/07-mobile-and-release/capacitor/native-core-module.md](../../07-mobile-and-release/capacitor/native-core-module.md) |
 | `branding-core-module.md` | MOVED | [docs/07-mobile-and-release/capacitor/branding-core-module.md](../../07-mobile-and-release/capacitor/branding-core-module.md) |
-| Remaining `data-layers/*` (12-18, 20-21, 23-24, profile-system) | MOVED/SPLIT | Operational detail in domain docs; layer rules in [10-application-layers/](../10-application-layers/) |
-| `asol-db-system.md` | MERGED | [infrastructure-ownership.md](../05-capability-enforcement/infrastructure-ownership.md) + [central-data-access.md](../../02-data-and-storage/central-data-access.md) |
-| `architecture-core-module.md` | MERGED | [07-enforcement/architecture-check.md](../07-enforcement/architecture-check.md) |
+| Remaining `*-core-module.md` (13 packages) | MERGED | [08-reference/package-catalog.md](../08-reference/package-catalog.md) + [capability-map.md](../08-reference/capability-map.md) |
+| `data-layers/12-input-validation.md` | PRESERVED | [10-application-layers/input-validation.md](../10-application-layers/input-validation.md) |
+| `data-layers/13-configuration-layer.md` | PRESERVED | [10-application-layers/configuration-layer.md](../10-application-layers/configuration-layer.md) |
+| `data-layers/15-security-rules.md` | PRESERVED | [10-application-layers/security-rules.md](../10-application-layers/security-rules.md) |
+| `data-layers/17-extending-features.md` | PRESERVED | [10-application-layers/extending-features.md](../10-application-layers/extending-features.md) |
+| `data-layers/18-testability.md` | PRESERVED | [10-application-layers/testability.md](../10-application-layers/testability.md) |
+| `data-layers/20-schema-provisioning.md` | MOVED | [docs/02-data-and-storage/schema-provisioning.md](../../02-data-and-storage/schema-provisioning.md) |
+| `data-layers/21-operation-monitor.md` | MOVED | [docs/06-super-admin-and-operations/operation-monitor.md](../../06-super-admin-and-operations/operation-monitor.md) |
+| `data-layers/23-file-map.md` | PRESERVED | [08-reference/file-map.md](../08-reference/file-map.md) |
+| `data-layers/24-runtime-context.md` | PRESERVED | [06-runtime-boundaries/runtime-context.md](../06-runtime-boundaries/runtime-context.md) |
+| `data-layers/profile-system.md` | MOVED | [docs/02-data-and-storage/profile-system.md](../../02-data-and-storage/profile-system.md) |
+| `architecture-core-module.md` | MERGED | [07-enforcement/architecture-core-module.md](../07-enforcement/architecture-core-module.md) |
+| `asol-db-system.md` | MOVED | [docs/02-data-and-storage/asol-db-system.md](../../02-data-and-storage/asol-db-system.md) |
+| `dev-core-module.md` | MOVED | [docs/02-data-and-storage/dev-core-module.md](../../02-data-and-storage/dev-core-module.md) |
 
 ## When to add an ADR
 

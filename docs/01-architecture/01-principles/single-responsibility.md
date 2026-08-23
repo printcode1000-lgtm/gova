@@ -20,7 +20,7 @@ Applies to every file under `src/`, `packages/`, `scripts/`, `services/`, and `d
 Enforced by:
 
 - Code review convention (AGENTS.md §3a)
-- Module isolation rule 8 in [module-isolation-rules.md](../02-packages/module-isolation-rules.md)
+- Module isolation rule 8 in [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md)
 - Historical SRP splits recorded in [ADR-0003](../09-decisions/ADR-0003-srp-file-splits-2026-08.md)
 
 ## Forbidden Bypasses
