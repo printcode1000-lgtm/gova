@@ -1,13 +1,15 @@
 import assert from 'node:assert/strict';
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
   ALLOWED_PROCESS_ENV_FILES,
   LAYER_LABELS,
+  checkFeatureDoorContract,
   classifyLayer,
   normalizePath,
   runArchitectureCheck,
+  violations,
 } from '../index';
 
 const ROOT = process.cwd();
@@ -106,6 +108,43 @@ assert.ok(
   'The CLI must not reach back into a second copy of the contract.',
 );
 
+// ── Composition packages are not a feature-door bypass ────────────────────
+// mayImportApp permits composition roots to reach the application, but only
+// through declared feature doors. A deep alias — including `/index` as an
+// undeclared alternate spelling of the `.` door — must be rejected.
+{
+  const probe = path.join(
+    ROOT,
+    'packages/notifications-composition/src/__architecture_feature_door_attack.ts',
+  );
+  const source = [
+    "import type { Session } from '",
+    '@/features/auth/domain/session.entity',
+    "';\n",
+    "import type { AuthDoor } from '",
+    '@/features/auth/index',
+    "';\n",
+    'export type Attack = Session | AuthDoor;\n',
+  ].join('');
+  writeFileSync(probe, source);
+  try {
+    violations.length = 0;
+    checkFeatureDoorContract();
+    const messages = violations.map((v) => `${v.layer} ${v.violation} ${v.file}`);
+    assert.ok(
+      messages.some((message) => /auth\/domain\/session\.entity|Deep cross-feature import/i.test(message)),
+      'Composition package deep feature import must fail.',
+    );
+    assert.ok(
+      messages.some((message) => /auth\/index|Deep cross-feature import/i.test(message)),
+      'Undeclared /index feature alias must fail.',
+    );
+  } finally {
+    rmSync(probe, { force: true });
+    violations.length = 0;
+  }
+}
+
 // ── The contract still answers ──────────────────────────────────────────────
 assert.equal(classifyLayer('src/app/api/orders/route.ts'), 'business-api');
 assert.equal(classifyLayer('src/core/api/traced-route.ts'), 'business-api');
@@ -127,5 +166,5 @@ for (const file of ALLOWED_PROCESS_ENV_FILES) {
 assert.equal(typeof runArchitectureCheck, 'function');
 
 console.log(
-  `@asol/architecture-core contract: 1 door, ${files.length} rule and check modules, no import of the application.`,
+  `@asol/architecture-core contract: 1 door, ${files.length} rule and check modules, no import of the application; composition imports sealed.`,
 );
