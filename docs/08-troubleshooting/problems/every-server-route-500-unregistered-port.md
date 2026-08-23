@@ -95,6 +95,44 @@ reason before rejecting. See `16-deployment-targets.md` § "What each account is
 asked, and why" for what each probe asks and why the obvious probe was wrong for
 two of the six accounts.
 
+## A third cause the gate found: the environment picked SQLite
+
+Once the gate ran inside a real `deploy:all`, the profiles account answered
+500 on every route reaching data:
+
+```
+better-sqlite3 is not available in the notifications service:
+this deployment is Turso-only.
+```
+
+Two separate faults in one line.
+
+**The message named the wrong account.** Five of the six stubs were
+copy-pasted and reported a different service than the one they ran in, which
+made a profiles failure read as a notifications problem. Each now names
+itself.
+
+**The real fault:** all six isolated accounts alias `better-sqlite3` to a stub
+that throws — they never run against local SQLite, and bundling the native
+driver would force a native build for unreachable code. But they still let
+`resolveServerDatabaseBackend` decide from the environment, and a data source
+of `local` selects sqlite. The deployment then loaded a driver it does not
+ship.
+
+On Vercel, one misconfigured variable reproduces this exactly: every data
+route down, health still green. Same shape as the original outage.
+
+**Fix:** an account that cannot run SQLite must not ask. Each composition root
+states its own invariant:
+
+```ts
+registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
+```
+
+The general rule: when a deployment physically cannot serve one branch of a
+runtime choice, it pins that choice in code. Leaving it to configuration turns
+a guaranteed invariant into a variable that can be set wrong.
+
 ## If you see this again
 
 1. Read the response body, not just the status: it names the missing port.

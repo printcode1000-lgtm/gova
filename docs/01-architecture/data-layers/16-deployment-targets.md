@@ -223,6 +223,19 @@ A probe that accepts a rejection prints the reason the account gave, so a green
 run still says which refusal it accepted. `ASOL_SERVICE_SMOKE_ONLY=<accounts>`
 restricts a run to named accounts while debugging one.
 
+#### A deployment pins what it cannot serve
+
+Every isolated account is Turso-only and aliases `better-sqlite3` to a stub
+that throws. Each therefore registers its runtime-config port with
+`forceRemoteDataSource: true`, rather than letting the environment choose a
+backend it cannot load. The gate found this the first time it ran inside a
+real deploy: the profiles account answered 500 on every data route because the
+environment said `local`.
+
+When a deployment physically cannot serve one branch of a runtime choice, pin
+it in code. Configuration can be set wrong; an invariant stated in the
+composition root cannot.
+
 #### Never let a catch hide which failure happened
 
 `/api/notifications/send` wrapped a malformed body, missing credentials, and a
