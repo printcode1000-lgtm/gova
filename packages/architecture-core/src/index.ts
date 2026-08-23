@@ -48,6 +48,12 @@ export {
   diffArchitectureDocs,
   type ArchitectureDocId,
 } from './docs/generate-architecture-docs';
+export {
+  GENERATED_FEATURE_SEAMS_DOC,
+  renderFeatureSeamsDoc,
+  writeFeatureSeamsDoc,
+  diffFeatureSeamsDoc,
+} from './docs/generate-feature-seams-doc';
 export { violations } from './checks/architecture-types';
 export { checkApplicationFeatureRegistryContract } from './checks/application-features-contract';
 export { checkFeatureDoorContract } from './checks/feature-door-contract';
