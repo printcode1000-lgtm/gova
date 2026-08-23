@@ -1,0 +1,112 @@
+# Every server route returns 500: `… is not configured`
+
+## Symptom
+
+Every server route answers `internalServerError`. The server log carries:
+
+```
+dataCoreRuntimeConfig: getServerRuntimeContext is not configured
+```
+
+with `executionTimeMs: 1` — it fails before doing any work. Meanwhile:
+
+- `/api/health` returns **200**, because it touches no shard;
+- `deploy:all` reports every target **READY**;
+- `typecheck`, `architecture:check` and the full test suite are **green**.
+
+The application is completely broken and every signal says it is fine.
+
+## Two independent causes, and they hide each other
+
+### 1. One module, two instances
+
+`@asol/data-core`'s runtime-config port kept its registration in module scope:
+
+```ts
+let port: DataCoreRuntimeConfigPort = { ...DEFAULTS };
+```
+
+A bundler is free to give one source file more than one instance. Next builds
+`instrumentation` and each route into separate chunks, and Turbopack did exactly
+that. Proven with two probes in a real production build:
+
+```
+[PROBE] instrumentation: registering
+[PROBE] runtime-config module instance 9vkmq0   <- configured here
+[PROBE] instrumentation: done
+[PROBE] runtime-config module instance pk0riz   <- routes read here
+```
+
+`src/instrumentation.ts` configured one copy; every route handler read the
+other, which still held defaults that throw.
+
+**Fix:** key the registration on `globalThis` through `Symbol.for`, so it is the
+same value from whichever instance asks. Eight port modules carried this shape;
+all were converted.
+
+### 2. The isolated accounts never registered the port at all
+
+The main application registers from `src/instrumentation.ts`. An isolated
+service deployment has no application instrumentation, and **none of the six
+composition roots registered it**. Every route reaching a repository threw while
+`/api/health` stayed 200 — so all six deployed READY and the profiles account
+served errors to the browser.
+
+**Fix:** each composition root registers what its account actually reads. See
+`repository-architecture-enforcement.md` § "Every deployment is a composition
+root".
+
+`submain`'s route files import their composition package, so its module-scope
+registration ran on import — which is why it kept working and masked the
+problem. `sub2main`'s routes re-export handlers from the mirror and import no
+composition, so its registration was dead code. Both now have
+`services/<account>/src/instrumentation.ts`.
+
+## Why nothing caught it
+
+No static analysis can see either cause.
+
+Node resolves one path to one module instance, so the duplication exists **only
+in a bundled build**. `tsx`-based tests, `typecheck`, `architecture:check`, and
+even the `import-without-composition` contract all pass while production is
+down.
+
+`deploy:all` built, uploaded and polled Vercel until it answered READY — but
+READY means the deployment exists, not that a request succeeds. Nothing in the
+repository started a server and asked it a question.
+
+## What now prevents it
+
+| Gate | Runs | Asks |
+| --- | --- | --- |
+| `smoke:production` | after `build` | five routes on the main app, each crossing a different composition root |
+| `smoke:services` | after `services:build` | one route per isolated account that reaches **that account's own data** |
+
+Health is deliberately not the probe: the fault leaves health green.
+
+Both scan the server's output as well as the status code, because a route can
+answer 200 while a port quietly falls back to a default — any `is not
+configured` line fails the check.
+
+## If you see this again
+
+1. Read the response body, not just the status: it names the missing port.
+2. Reproduce with `npx next build && npx next start`, not `next dev` — the fault
+   does not exist in dev.
+3. If the port is unconfigured in the main app, look for module duplication:
+   log a random id at module scope in the port file and see if it prints twice.
+4. If it is unconfigured in one service only, that account's composition root is
+   missing the registration.
+
+## What not to do
+
+Do not narrow a package door by rewriting internal imports. An attempt to close
+`@asol/data-core`'s `./core` door also moved thirty-nine repository imports from
+the barrel to the registry path; that changes which module instance a bundler
+returns, and this package's port state is per instance. Narrow the door, leave
+the internals alone.
+
+Do not assume a correlated push is the cause. During this incident a healthy
+commit was reverted on timing alone, before checking whether production
+recovered. It had not, because that commit was never the cause, and the revert
+cost time while the real fault stayed live.

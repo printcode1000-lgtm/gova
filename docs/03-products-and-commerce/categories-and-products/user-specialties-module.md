@@ -263,7 +263,7 @@ requires complete set equality between the mapping file and `profile-core.user_s
 
 ### Type Propagation
 - `UserProfileRow` is exported from `profile-repository.interface.ts` and re-exported from `profile-service.interface.ts`
-- The Query and Client Service layers import the type from their own adjacent interfaces — not from `@asol/data-core/core` — to avoid architecture violations
+- The Query and Client Service layers import the type from their own adjacent interfaces. The `@asol/data-core/core` door no longer exists — `core/` is sealed package-internal, reachable only through the narrow `./composition` door
 
 ### Pagination
 - Default limit: 10 users per page
