@@ -429,9 +429,16 @@ Registration is split by what each account actually reads:
 
 | Registrar | Registered by |
 | --- | --- |
-| `registerDataCoreRuntimeConfigPorts` — env and Turso credentials | all six accounts and the main app |
+| `registerDataCoreRuntimeConfigPorts` — env and Turso credentials | all six accounts and the main app; the six pass `forceRemoteDataSource: true` |
 | `registerDataCoreSpecialtyCatalogPort` — the specialty-column catalog | the four accounts carrying profile repositories: profiles, products, submain, sub2main |
 | `configureDataCoreProductSearchFields` | the main app, where search runs |
+
+The six pass `forceRemoteDataSource: true` and the main app does not. Each
+isolated account aliases `better-sqlite3` to a stub that throws — it cannot run
+local SQLite — so it must not let the environment choose that backend. The main
+app ships the real driver and needs the local branch for development. A
+deployment that physically cannot serve one branch of a runtime choice pins that
+choice in its composition root; only a deployment that can serve both may ask.
 
 The split is not tidiness. Calling one shared registrar from all six dragged
 `@asol/catalog-core` and its schema validation into the notifications mirror,
