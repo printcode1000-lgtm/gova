@@ -120,13 +120,14 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   const servicesDir = join(ROOT, 'services');
   if (existsSync(servicesDir)) {
     for (const file of walk(servicesDir)) {
-      if (file.includes('node_modules')) continue;
-      if (file.includes('/generated/')) continue;
+      const normalized = normalizePath(file);
+      if (normalized.includes('node_modules')) continue;
+      if (normalized.includes('/generated/')) continue;
       const content = readFileSync(file, 'utf8');
       checkAccountBridgeContract(file, content);
       checkPackageSealContract(file, content);
       checkVendorOwnershipContract(file, content);
-      if (file.includes('services/notifications/src')) {
+      if (normalized.includes('services/notifications/src')) {
         checkNotificationModuleContract(file, content);
       }
     }
