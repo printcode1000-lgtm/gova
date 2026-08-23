@@ -37,16 +37,45 @@ const UNCONFIGURED: NotificationTokenStorePort = {
   },
 };
 
-let store: NotificationTokenStorePort = UNCONFIGURED;
+/**
+ * The registration lives on `globalThis`, not in this module's scope.
+ *
+ * A bundler may give one source file more than one instance: Next builds
+ * `instrumentation` and each route into separate chunks, and Turbopack emitted
+ * two copies of `data-core`'s runtime-config port — the composition root
+ * configured one while every route read the other, and production answered 500
+ * on every server route. Static checks and `tsx` tests cannot see it, because
+ * Node resolves one path to one instance.
+ *
+ * A `Symbol.for` key on the global object is the same value from whichever
+ * instance asks, which is what "configure once at startup" has to mean here.
+ */
+const STORE_KEY = Symbol.for('@asol/notifications-core/token-store');
+
+interface NotificationTokenStorePortCarrier {
+  [STORE_KEY]?: NotificationTokenStorePort;
+}
+
+const storeDefaults = (): NotificationTokenStorePort => (UNCONFIGURED);
+
+function storeState(): NotificationTokenStorePort {
+  const carrier = globalThis as NotificationTokenStorePortCarrier;
+  carrier[STORE_KEY] ??= storeDefaults();
+  return carrier[STORE_KEY]!;
+}
+
+function setStoreState(next: NotificationTokenStorePort): void {
+  (globalThis as NotificationTokenStorePortCarrier)[STORE_KEY] = next;
+}
 
 export function configureNotificationTokenStore(
   next: NotificationTokenStorePort,
 ): void {
-  store = next;
+  setStoreState(next);
 }
 
 export function resetNotificationTokenStore(): void {
-  store = UNCONFIGURED;
+  setStoreState(UNCONFIGURED);
 }
 
 /**
@@ -54,5 +83,5 @@ export function resetNotificationTokenStore(): void {
  * evaluates would put import order back into the contract.
  */
 export function notificationTokenStore(): NotificationTokenStorePort {
-  return store;
+  return storeState();
 }

@@ -47,30 +47,59 @@ const UNCONFIGURED: NotificationsCoreServerConfigPort = {
   },
 };
 
-let port: NotificationsCoreServerConfigPort = UNCONFIGURED;
+/**
+ * The registration lives on `globalThis`, not in this module's scope.
+ *
+ * A bundler may give one source file more than one instance: Next builds
+ * `instrumentation` and each route into separate chunks, and Turbopack emitted
+ * two copies of `data-core`'s runtime-config port — the composition root
+ * configured one while every route read the other, and production answered 500
+ * on every server route. Static checks and `tsx` tests cannot see it, because
+ * Node resolves one path to one instance.
+ *
+ * A `Symbol.for` key on the global object is the same value from whichever
+ * instance asks, which is what "configure once at startup" has to mean here.
+ */
+const PORT_KEY = Symbol.for('@asol/notifications-core/server-config');
+
+interface NotificationsCoreServerConfigPortCarrier {
+  [PORT_KEY]?: NotificationsCoreServerConfigPort;
+}
+
+const portDefaults = (): NotificationsCoreServerConfigPort => (UNCONFIGURED);
+
+function portState(): NotificationsCoreServerConfigPort {
+  const carrier = globalThis as NotificationsCoreServerConfigPortCarrier;
+  carrier[PORT_KEY] ??= portDefaults();
+  return carrier[PORT_KEY]!;
+}
+
+function setPortState(next: NotificationsCoreServerConfigPort): void {
+  (globalThis as NotificationsCoreServerConfigPortCarrier)[PORT_KEY] = next;
+}
 
 export function configureNotificationsCoreServerConfig(
   next: Partial<NotificationsCoreServerConfigPort>,
 ): void {
-  port = { ...port, ...next };
+  setPortState({ ...portState(), ...next });
 }
 
 export function resetNotificationsCoreServerConfig(): void {
-  port = UNCONFIGURED;
+  setPortState(UNCONFIGURED);
 }
 
 export function getWebPushServerConfig(): WebPushServerConfig | null {
-  return port.getWebPushServerConfig();
+  return portState().getWebPushServerConfig();
 }
 
 export function getFirebaseAdminServiceAccount(): FirebaseAdminServiceAccountConfig {
-  return port.getFirebaseAdminServiceAccount();
+  return portState().getFirebaseAdminServiceAccount();
 }
 
 export function getApnsServerConfig(): ApnsServerConfig | null {
-  return port.getApnsServerConfig();
+  return portState().getApnsServerConfig();
 }
 
 export function getNotificationGrantSecret(): string {
-  return port.getNotificationGrantSecret();
+  return portState().getNotificationGrantSecret();
 }

@@ -191,7 +191,26 @@ const unsetCategories: OtaCategoryCatalogPort = {
   },
 };
 
-let ports: OtaCorePorts = {
+/**
+ * The registration lives on `globalThis`, not in this module's scope.
+ *
+ * A bundler may give one source file more than one instance: Next builds
+ * `instrumentation` and each route into separate chunks, and Turbopack emitted
+ * two copies of `data-core`'s runtime-config port — the composition root
+ * configured one while every route read the other, and production answered 500
+ * on every server route. Static checks and `tsx` tests cannot see it, because
+ * Node resolves one path to one instance.
+ *
+ * A `Symbol.for` key on the global object is the same value from whichever
+ * instance asks, which is what "configure once at startup" has to mean here.
+ */
+const PORTS_KEY = Symbol.for('@asol/ota-core/ports');
+
+interface OtaCorePortsCarrier {
+  [PORTS_KEY]?: OtaCorePorts;
+}
+
+const portsDefaults = (): OtaCorePorts => ({
   telemetry: noopTelemetry,
   identity: closedIdentity,
   httpApi: unsetHttpApi,
@@ -199,7 +218,17 @@ let ports: OtaCorePorts = {
   publicEnv: unsetPublicEnv,
   appVersions: unsetAppVersions,
   categories: unsetCategories,
-};
+});
+
+function portsState(): OtaCorePorts {
+  const carrier = globalThis as OtaCorePortsCarrier;
+  carrier[PORTS_KEY] ??= portsDefaults();
+  return carrier[PORTS_KEY]!;
+}
+
+function setPortsState(next: OtaCorePorts): void {
+  (globalThis as OtaCorePortsCarrier)[PORTS_KEY] = next;
+}
 
 /**
  * Registers the application's implementations. Call once, early.
@@ -208,28 +237,28 @@ let ports: OtaCorePorts = {
  * also owning the browser half.
  */
 export function configureOtaCore(next: Partial<OtaCorePorts>): void {
-  ports = {
-    telemetry: next.telemetry ?? ports.telemetry,
-    identity: next.identity ?? ports.identity,
-    httpApi: next.httpApi ?? ports.httpApi,
-    apiRoutes: next.apiRoutes ?? ports.apiRoutes,
-    publicEnv: next.publicEnv ?? ports.publicEnv,
-    appVersions: next.appVersions ?? ports.appVersions,
-    categories: next.categories ?? ports.categories,
-  };
+  setPortsState({
+    telemetry: next.telemetry ?? portsState().telemetry,
+    identity: next.identity ?? portsState().identity,
+    httpApi: next.httpApi ?? portsState().httpApi,
+    apiRoutes: next.apiRoutes ?? portsState().apiRoutes,
+    publicEnv: next.publicEnv ?? portsState().publicEnv,
+    appVersions: next.appVersions ?? portsState().appVersions,
+    categories: next.categories ?? portsState().categories,
+  });
 }
 
 export function otaTelemetry(): OtaTelemetryPort {
-  return ports.telemetry;
+  return portsState().telemetry;
 }
 
 export function otaIdentity(): OtaIdentityPort {
-  return ports.identity;
+  return portsState().identity;
 }
 
 /** Test helper: restores the safe defaults. */
 export function resetOtaCorePorts(): void {
-  ports = {
+  setPortsState({
     telemetry: noopTelemetry,
     identity: closedIdentity,
     httpApi: unsetHttpApi,
@@ -237,25 +266,25 @@ export function resetOtaCorePorts(): void {
     publicEnv: unsetPublicEnv,
     appVersions: unsetAppVersions,
     categories: unsetCategories,
-  };
+  });
 }
 
 export function otaHttpApi(): OtaHttpApiPort {
-  return ports.httpApi;
+  return portsState().httpApi;
 }
 
 export function otaApiRoutes(): OtaApiRoutesPort {
-  return ports.apiRoutes;
+  return portsState().apiRoutes;
 }
 
 export function otaPublicEnv(): OtaPublicEnvPort {
-  return ports.publicEnv;
+  return portsState().publicEnv;
 }
 
 export function otaAppVersions(): OtaAppVersionsPort {
-  return ports.appVersions;
+  return portsState().appVersions;
 }
 
 export function otaCategories(): OtaCategoryCatalogPort {
-  return ports.categories;
+  return portsState().categories;
 }

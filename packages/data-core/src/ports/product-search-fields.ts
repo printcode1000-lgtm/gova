@@ -30,32 +30,61 @@ const DEFAULTS: DataCoreProductSearchFieldsPort = {
   getDefaultProductSearchFieldKeys: () => missing('getDefaultProductSearchFieldKeys'),
 };
 
-let port: DataCoreProductSearchFieldsPort = { ...DEFAULTS };
+/**
+ * The registration lives on `globalThis`, not in this module's scope.
+ *
+ * A bundler may give one source file more than one instance: Next builds
+ * `instrumentation` and each route into separate chunks, and Turbopack emitted
+ * two copies of `data-core`'s runtime-config port — the composition root
+ * configured one while every route read the other, and production answered 500
+ * on every server route. Static checks and `tsx` tests cannot see it, because
+ * Node resolves one path to one instance.
+ *
+ * A `Symbol.for` key on the global object is the same value from whichever
+ * instance asks, which is what "configure once at startup" has to mean here.
+ */
+const PORT_KEY = Symbol.for('@asol/data-core/product-search-fields');
+
+interface PortCarrier {
+  [PORT_KEY]?: DataCoreProductSearchFieldsPort;
+}
+
+const portDefaults = (): DataCoreProductSearchFieldsPort => ({ ...DEFAULTS });
+
+function portState(): DataCoreProductSearchFieldsPort {
+  const carrier = globalThis as PortCarrier;
+  carrier[PORT_KEY] ??= portDefaults();
+  return carrier[PORT_KEY]!;
+}
+
+function setPortState(next: DataCoreProductSearchFieldsPort): void {
+  (globalThis as PortCarrier)[PORT_KEY] = next;
+}
 
 export function configureDataCoreProductSearchFields(
   next: Partial<DataCoreProductSearchFieldsPort>,
 ): void {
-  port = { ...port, ...next };
+  setPortState({ ...portState(), ...next });
 }
 
 export function resetDataCoreProductSearchFields(): void {
-  port = { ...DEFAULTS };
+  setPortState({ ...DEFAULTS });
 }
 
 export function getProductSearchFields(
   mainCategoryId: string,
   subcategoryId: string,
 ): readonly ProductSearchField[] {
-  return port.getProductSearchFields(mainCategoryId, subcategoryId);
+  return portState().getProductSearchFields(mainCategoryId, subcategoryId);
 }
 
 export function getProductSearchFieldByKey(key: string): ProductSearchField | null {
-  return port.getProductSearchFieldByKey(key);
+  return portState().getProductSearchFieldByKey(key);
 }
 
 export function getDefaultProductSearchFieldKeys(
   mainCategoryId: string,
   subcategoryId: string,
 ): readonly string[] {
-  return port.getDefaultProductSearchFieldKeys(mainCategoryId, subcategoryId);
+  return portState().getDefaultProductSearchFieldKeys(mainCategoryId, subcategoryId);
 }

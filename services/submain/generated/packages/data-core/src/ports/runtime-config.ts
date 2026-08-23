@@ -115,83 +115,113 @@ const DEFAULTS: DataCoreRuntimeConfigPort = {
   },
 };
 
-let port: DataCoreRuntimeConfigPort = { ...DEFAULTS };
+/**
+ * The registration lives on `globalThis`, not in this module's scope.
+ *
+ * A bundler is free to give the same source file more than one instance. Next
+ * builds `instrumentation` and each route into separate chunks, and Turbopack
+ * emitted two copies of this module: `src/instrumentation.ts` configured one
+ * while every route handler read the other, which still held the defaults.
+ * Production answered `getServerRuntimeContext is not configured` on every
+ * server route — profile, notifications, system logs — while `typecheck`,
+ * `architecture:check` and the full suite stayed green, because Node resolves
+ * one path to one instance and only a bundled build splits them.
+ *
+ * A symbol keyed on the global object is the same value from whichever instance
+ * asks. It is the one place per process, which is what "configure this once at
+ * startup" actually means.
+ */
+const PORT_KEY = Symbol.for('@asol/data-core/runtime-config');
+
+interface PortCarrier {
+  [PORT_KEY]?: DataCoreRuntimeConfigPort;
+}
+
+function portState(): DataCoreRuntimeConfigPort {
+  const carrier = globalThis as PortCarrier;
+  carrier[PORT_KEY] ??= { ...DEFAULTS };
+  return carrier[PORT_KEY];
+}
+
+function setPortState(next: DataCoreRuntimeConfigPort): void {
+  (globalThis as PortCarrier)[PORT_KEY] = next;
+}
 
 export function configureDataCoreRuntimeConfig(
   next: Partial<DataCoreRuntimeConfigPort>,
 ): void {
-  port = { ...port, ...next };
+  setPortState({ ...portState(), ...next });
 }
 
 export function resetDataCoreRuntimeConfig(): void {
-  port = { ...DEFAULTS };
+  setPortState({ ...DEFAULTS });
 }
 
 export function dataCoreRuntimeConfig(): DataCoreRuntimeConfigPort {
-  return port;
+  return portState();
 }
 
 /** Convenience accessors matching the former `@/core/config` imports. */
 export function isDevelopment(): boolean {
-  return port.isDevelopment;
+  return portState().isDevelopment;
 }
 
 export function isDevRuntime(): boolean {
-  return port.isDevRuntime();
+  return portState().isDevRuntime();
 }
 
 export function isProvisioningContext(): boolean {
-  return port.isProvisioningContext();
+  return portState().isProvisioningContext();
 }
 
 export function getServerRuntimeContext() {
-  return port.getServerRuntimeContext();
+  return portState().getServerRuntimeContext();
 }
 
 export function getTursoRuntimeCredentials() {
-  return port.getTursoRuntimeCredentials();
+  return portState().getTursoRuntimeCredentials();
 }
 
 export function getTursoProductRuntimeCredentials() {
-  return port.getTursoProductRuntimeCredentials();
+  return portState().getTursoProductRuntimeCredentials();
 }
 
 export function getTursoNotificationsRuntimeCredentials() {
-  return port.getTursoNotificationsRuntimeCredentials();
+  return portState().getTursoNotificationsRuntimeCredentials();
 }
 
 export function getTursoAdvertisementsRuntimeCredentials() {
-  return port.getTursoAdvertisementsRuntimeCredentials();
+  return portState().getTursoAdvertisementsRuntimeCredentials();
 }
 
 export function getTursoPlatformCredentials() {
-  return port.getTursoPlatformCredentials();
+  return portState().getTursoPlatformCredentials();
 }
 
 export function writeTursoRuntimeCredentials(url: string, authToken: string) {
-  return port.writeTursoRuntimeCredentials(url, authToken);
+  return portState().writeTursoRuntimeCredentials(url, authToken);
 }
 
 export function writeTursoProductRuntimeCredentials(url: string, authToken: string) {
-  return port.writeTursoProductRuntimeCredentials(url, authToken);
+  return portState().writeTursoProductRuntimeCredentials(url, authToken);
 }
 
 export function writeTursoAdvertisementsRuntimeCredentials(url: string, authToken: string) {
-  return port.writeTursoAdvertisementsRuntimeCredentials(url, authToken);
+  return portState().writeTursoAdvertisementsRuntimeCredentials(url, authToken);
 }
 
 export function readOptionalEnv(key: string) {
-  return port.readOptionalEnv(key);
+  return portState().readOptionalEnv(key);
 }
 
 export function listLibsqlDatabaseUrlKeys() {
-  return port.listLibsqlDatabaseUrlKeys();
+  return portState().listLibsqlDatabaseUrlKeys();
 }
 
 export function asolHttpFetch(input: RequestInfo | URL, init?: RequestInit) {
-  return port.asolHttpFetch(input, init);
+  return portState().asolHttpFetch(input, init);
 }
 
 export function categoryService(): DataCoreCategoryCatalog {
-  return port.categoryCatalog;
+  return portState().categoryCatalog;
 }
