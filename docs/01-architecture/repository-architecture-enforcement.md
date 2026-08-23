@@ -327,3 +327,46 @@ literal `native-core/package.json` — a guard holding the shape rather than the
 and so an obstacle to fixing it. Its stated intent ("the two lists cannot drift") now has
 three assertions that follow the architecture: the list arrives through the package door,
 the relative path must not return, and native-core derives it from its own dependencies.
+
+## A declared door can be the widest bypass in the repository
+
+Every hardening pass so far guarded a *route* into a package: deep imports, relative
+paths, dynamic imports, re-exports, unknown directories, vendor SDKs. All of them assume
+the front door is narrow.
+
+`@asol/data-core/core` exported the data-source registry — the object whose `get(name)`
+returns any shard — alongside all six raw sources. Nothing outside the package used the
+registry, and nothing used five of the sources. Two lines reached every database:
+
+```ts
+import { dataSources } from "@asol/data-core/core";
+dataSources.get("users").execute("DELETE FROM users", []);
+```
+
+No deep import, no relative path, no forbidden SDK. A declared door that every
+architecture check accepts, and the first thing a developer finds when they search the
+repository for a way to write a row.
+
+A public door is not measured by who calls it today. It is measured by what it permits.
+
+The door now exports the one shard an approved composition root wires:
+`src/core/config/system-logs.server.ts` connects `@asol/system-logs-core`'s
+`database: { execute }` port to the profiles source. Repositories reach the registry
+inside the package, where it belongs — thirty-nine imports moved to the internal path.
+
+The bypass is now rejected by the type system rather than by a later check:
+
+```
+Module '"@asol/data-core/core"' has no exported member 'dataSources'
+```
+
+`test:data-core` pins it: the door may not name the registry, and the set of shards it
+exports must stay exactly `['profilesDataSource']`. Adding a shard means naming it there,
+which is a decision rather than an accident.
+
+### Least authority applies to doors, not only to ports
+
+The consuming side was already correct — `system-logs-core` receives one `execute`
+method, not a database client. The authority leaked from the *supply* side: the door
+offered far more than the wiring asked for. Auditing ports without auditing doors leaves
+the larger hole open.

@@ -1,4 +1,4 @@
-import { profilesDataSource } from "../../../core";
+import { profilesDataSource } from "../../../core/data-source-registry";
 import "server-only";
 
 import { randomUUID } from "node:crypto";

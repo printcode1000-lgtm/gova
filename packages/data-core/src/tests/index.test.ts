@@ -85,6 +85,35 @@ for (const [door, entry] of Object.entries(manifest.exports) as [string, { types
   assert.ok(statSync(target).isFile(), `Door ${door} points at a missing file: ${entry.types}`);
 }
 
+/**
+ * The `./core` door must not hand out the registry, or a shard nobody wires.
+ *
+ * It exported `dataSources` — `get(name)` for any database — plus all six raw
+ * sources, and nothing outside the package used the registry or five of the
+ * sources. A public door is not measured by who calls it today: it is what a
+ * developer finds when they search for a way to write a row, and this one
+ * handed over every database in one import through a door every architecture
+ * check accepts.
+ *
+ * One composition root needs one shard: `system-logs.server.ts` wires
+ * `@asol/system-logs-core`'s `database: { execute }` port to the profiles
+ * source. Adding another means naming that shard here — never the registry.
+ */
+{
+  const coreDoor = readFileSync(path.join(SRC, 'core', 'index.ts'), 'utf8');
+  assert.doesNotMatch(
+    coreDoor,
+    /\bdataSources\b/,
+    'The ./core door must not export the data-source registry: it grants every database at once.',
+  );
+  const exportedSources = [...coreDoor.matchAll(/\b(\w+DataSource)\b/g)].map((m) => m[1]!);
+  assert.deepEqual(
+    [...new Set(exportedSources)].sort(),
+    ['profilesDataSource'],
+    'Only shards an approved composition root wires may leave this door.',
+  );
+}
+
 // ── One door per domain, and no barrel across domains ───────────────────────
 const domainDirs = readdirSync(path.join(SRC, 'domains'));
 for (const domain of domainDirs) {

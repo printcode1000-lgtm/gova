@@ -1,4 +1,4 @@
-import { advertisementsDataSource, productsDataSource, profilesDataSource, usersDataSource } from "../../../../core";
+import { advertisementsDataSource, productsDataSource, profilesDataSource, usersDataSource } from "../../../../core/data-source-registry";
 import "server-only";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";

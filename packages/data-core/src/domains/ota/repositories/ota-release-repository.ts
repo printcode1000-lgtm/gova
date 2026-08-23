@@ -1,4 +1,4 @@
-import { usersDataSource } from "../../../core";
+import { usersDataSource } from "../../../core/data-source-registry";
 import 'server-only';
 
 import { desc, eq } from 'drizzle-orm';

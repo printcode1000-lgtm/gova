@@ -1,4 +1,4 @@
-import { advertisementsDataSource, productsDataSource, usersDataSource } from "../../../core";
+import { advertisementsDataSource, productsDataSource, usersDataSource } from "../../../core/data-source-registry";
 import "server-only";
 
 import { createHash } from "node:crypto";
