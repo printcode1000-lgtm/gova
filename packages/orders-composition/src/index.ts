@@ -23,7 +23,9 @@ export interface OrdersRuntimeConfig {
  * It calls the application's single registrar rather than restating the port
  * here, so the six accounts and the main app cannot drift apart.
  */
-registerDataCoreRuntimeConfigPorts();
+// This deployment is Turso-only: it aliases better-sqlite3 to a stub that
+// throws, so it must not let the environment pick a local data source.
+registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
 
 /**
  * Order reads. This account holds the nine order shards and nothing else.

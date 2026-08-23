@@ -169,7 +169,17 @@ async function probeService(probe: ServiceProbe, port: number): Promise<string |
     const body = (await response.text()).slice(0, 200);
 
     if (!probe.accept.includes(response.status)) {
-      return `${probe.service} ${probe.method ?? "GET"} ${probe.path}\n    HTTP ${response.status} — expected one of ${probe.accept.join(", ")}\n    body: ${body}`;
+      // Print what the server said. A body of {"error":"internalServerError"}
+      // names no cause, and diagnosing it by rebuilding the account by hand is
+      // the slow path this gate exists to remove.
+      const serverSaid = log
+        .join("")
+        .split("\n")
+        .filter((line) => /error|Error|not configured|not available/.test(line))
+        .slice(-3)
+        .map((line) => `\n    server: ${line.trim().slice(0, 300)}`)
+        .join("");
+      return `${probe.service} ${probe.method ?? "GET"} ${probe.path}\n    HTTP ${response.status} — expected one of ${probe.accept.join(", ")}\n    body: ${body}${serverSaid}`;
     }
 
     // A route can answer while a port silently falls back to a default.
