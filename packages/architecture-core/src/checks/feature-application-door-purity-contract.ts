@@ -13,7 +13,7 @@
  * exact COMPOSITION_FEATURE_SEAMS path, but it must never reach `/ui`, a
  * `use client` module, or browser-only capability doors.
  */
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, statSync } from 'fs';
 import { dirname, join, relative, resolve } from 'path';
 
 import { CAPABILITY_PACKAGES } from '../registry/capability-registry';
@@ -33,9 +33,17 @@ interface ServiceFeatureEntry {
   targetFile: string;
 }
 
+function existingSourceFile(candidate: string): string | null {
+  if (!existsSync(candidate)) return null;
+  try {
+    return statSync(candidate).isFile() ? candidate : null;
+  } catch {
+    return null;
+  }
+}
+
 function resolveSourceModule(base: string): string | null {
   for (const candidate of [
-    base,
     `${base}.ts`,
     `${base}.tsx`,
     `${base}.js`,
@@ -44,8 +52,10 @@ function resolveSourceModule(base: string): string | null {
     join(base, 'index.ts'),
     join(base, 'index.tsx'),
     join(base, 'index.js'),
+    base,
   ]) {
-    if (existsSync(candidate)) return candidate;
+    const file = existingSourceFile(candidate);
+    if (file) return file;
   }
   return null;
 }
