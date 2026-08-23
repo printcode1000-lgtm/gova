@@ -2,8 +2,8 @@ import { ORDERS_DECLARATION } from '@asol/account-declarations/orders';
 import * as serverEnv from '@/core/config/server-env';
 import * as marketplaceOrders from '@asol/data-core/marketplace-orders';
 import { actorFromInput, configureOrdersCore } from '@asol/orders-core';
-import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
-import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
+import { isSuperAdminIdentity } from '@/features/auth';
+import { registerDataCoreRuntimeConfigPorts } from '@/features/data/server';
 
 export interface OrdersRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */
