@@ -5,10 +5,11 @@
 import { join } from 'path';
 
 import { diffArchitectureDocs } from '../docs/generate-architecture-docs';
+import { diffFeatureSeamsDoc } from '../docs/generate-feature-seams-doc';
 import { ROOT, addViolation } from './architecture-types';
 
 export function checkArchitectureDocsDriftContract(): void {
-  for (const diff of diffArchitectureDocs()) {
+  for (const diff of [...diffArchitectureDocs(), ...diffFeatureSeamsDoc()]) {
     addViolation(
       'Architecture Docs Drift',
       join(ROOT, diff.path),
