@@ -177,14 +177,60 @@ Health is deliberately not the probe. The fault both gates exist for —
 a composition root that never registers a port — leaves health green and
 everything else broken.
 
-Codes that mean the handler ran are accepted: 400, 401, 403, 404 and 405 are
-answers. A 500, a refused connection, or a server that never listens is not.
-The server's own output is scanned too, because a route can answer 200 while a
-port quietly falls back to a default — any `is not configured` line fails the
-check even when every status is green.
+Codes that mean the handler ran are accepted, and a 500, a refused connection,
+or a server that never listens is not. The server's own output is scanned too,
+because a route can answer 200 while a port quietly falls back to a default —
+any `is not configured` line fails the check even when every status is green.
 
 Both run inside preflight, so a bundling or wiring fault stops the release
 before the deployment commit exists.
+
+#### What each account is asked, and why
+
+`smoke:services` builds each service itself, probes it, and deletes the output
+before moving to the next. It does not reuse `services:build`'s output:
+that step deletes its own `.next` on purpose, because the CLI uploads the
+service folder and Vercel builds it remotely, so a build directory left inside
+would be uploaded with it. Keeping the same invariant costs a rebuild and buys
+a gate that leaves nothing behind and runs standalone.
+
+| Account | Probe | Accepts |
+| --- | --- | --- |
+| profiles | `GET /api/profile/store-details` | 200, 400, 404 |
+| products | `GET /api/products?limit=1` | 200, 400 |
+| orders | `GET /api/orders?…` | 200, 400, 401, 403, 404 |
+| notifications | `POST /api/notifications/send` with a probe grant | 200, 400 |
+| submain | `GET /api/search/products?…` | 200, 400 |
+| sub2main | `POST /api/profile/discounts/quote` with an empty cart | 200 |
+
+The last two were chosen after their first probes proved nothing:
+
+- **notifications** has no `/api/notifications/preferences` — it serves `/send`
+  and `/health` only — so probing it hit Next's own 404 and never reached the
+  account's code. `/send` was then required to answer 200, which failed:
+  `assertNotificationsEnv` rightly refuses to deliver without VAPID keys and a
+  grant secret, which no local environment has. A 400 is therefore accepted,
+  and what separates a missing credential from an unregistered port is the
+  reason — which the route now logs rather than swallowing.
+- **sub2main** serves writes only, so a GET answered 405: routing, not wiring.
+  Probing `POST /api/products` was worse — `productService.create` reads a
+  field before validating it, so a minimal payload crashed it with a 500 that
+  would have failed every release for a fault in the probe. The quote route
+  guards its input with `Array.isArray`, so an empty cart is a real read out of
+  the seller-discounts repository, with no write and no crash.
+
+A probe that accepts a rejection prints the reason the account gave, so a green
+run still says which refusal it accepted. `ASOL_SERVICE_SMOKE_ONLY=<accounts>`
+restricts a run to named accounts while debugging one.
+
+#### Never let a catch hide which failure happened
+
+`/api/notifications/send` wrapped a malformed body, missing credentials, and a
+port that was never registered in one `catch` and returned all three as the
+same silent 400, logging nothing. That is the shape that kept the outage
+invisible for hours. A catch spanning several distinct failures must say which
+one it caught, or a gate downstream cannot tell an uncomposed deployment from a
+badly addressed request.
 
 ### Escape hatches
 

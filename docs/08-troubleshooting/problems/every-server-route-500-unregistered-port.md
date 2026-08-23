@@ -88,6 +88,13 @@ Both scan the server's output as well as the status code, because a route can
 answer 200 while a port quietly falls back to a default — any `is not
 configured` line fails the check.
 
+That scan only works if the failure is visible. `/api/notifications/send`
+returned a silent 400 for a malformed body, a missing credential and an
+unregistered port alike, so the gate could not tell them apart; it now logs the
+reason before rejecting. See `16-deployment-targets.md` § "What each account is
+asked, and why" for what each probe asks and why the obvious probe was wrong for
+two of the six accounts.
+
 ## If you see this again
 
 1. Read the response body, not just the status: it names the missing port.

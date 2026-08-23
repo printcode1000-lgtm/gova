@@ -180,7 +180,21 @@ async function probeService(probe: ServiceProbe, port: number): Promise<string |
       return `${probe.service}: unconfigured port(s) while answering: ${[...new Set(unconfigured)].join(", ")}`;
     }
 
-    console.log(`[service-smoke] ${response.status} ${probe.service} ${probe.method ?? "GET"} ${probe.path}`);
+    // Accepting a rejection blind is how a probe stops proving anything. When
+    // the account answers with a 4xx, show the reason it gave, so a green run
+    // still says which refusal it accepted.
+    const reason =
+      response.status >= 400
+        ? log
+            .join("")
+            .split("\n")
+            .filter((line) => line.includes("rejected before delivery") || line.includes("error"))
+            .slice(-1)[0]
+        : undefined;
+    console.log(
+      `[service-smoke] ${response.status} ${probe.service} ${probe.method ?? "GET"} ${probe.path}` +
+        (reason ? `\n           reason: ${reason.trim().slice(0, 200)}` : ""),
+    );
     return null;
   } catch (error) {
     return `${probe.service}: ${error instanceof Error ? error.message : String(error)}`;
@@ -192,8 +206,10 @@ async function probeService(probe: ServiceProbe, port: number): Promise<string |
 }
 
 async function main(): Promise<void> {
+  const only = process.env.ASOL_SERVICE_SMOKE_ONLY?.split(",").map((v) => v.trim());
   const failures: string[] = [];
   for (const [index, probe] of PROBES.entries()) {
+    if (only && !only.includes(probe.service)) continue;
     const failure = await probeService(probe, BASE_PORT + index);
     if (failure) failures.push(failure);
   }
@@ -206,7 +222,8 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  console.log(`[service-smoke] All ${PROBES.length} services answered a route that reaches their own data.`);
+  const ran = only ? PROBES.filter((p) => only.includes(p.service)).length : PROBES.length;
+  console.log(`[service-smoke] All ${ran} service(s) answered a route that reaches their own data.`);
 }
 
 main().catch((error) => {
