@@ -24,6 +24,7 @@ import { checkPageSaveWriteGatewayContract } from './checks/page-save-write-gate
 import { checkRepositorySweepContract } from './checks/repository-sweep-contract';
 import { checkPackageAppImportContract } from './checks/package-app-import-contract';
 import { checkIsolatedDeploymentBackendContract } from './checks/isolated-deployment-backend-contract';
+import { checkRuntimeTargetContract } from './checks/runtime-target-contract';
 import { checkVendorOwnershipContract } from './checks/vendor-ownership-contract';
 import { checkPageSaveGatewayContract } from './checks/page-save-gateway-contract';
 import { printReport, reportNativeSurface } from './checks/file-analysis';
@@ -62,6 +63,7 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   checkPageSaveWriteGatewayContract();
   checkRepositorySweepContract();
   checkIsolatedDeploymentBackendContract();
+  checkRuntimeTargetContract();
 
   // Root files owned by a capability for vendor purposes (e.g. capacitor.config.ts).
   for (const rootFile of ROOT_VENDOR_OWNED_FILES) {
