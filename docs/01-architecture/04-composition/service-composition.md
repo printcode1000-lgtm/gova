@@ -73,7 +73,10 @@ because the failure it exists for leaves health at 200. It also scans the
 server's output: any `is not configured` line fails the run even when every
 status code is green.
 
-The main application has the equivalent gate in `npm run smoke:production`.
+The main application has the equivalent gate in `npm run smoke:production`, and
+`npm run release:check` closes the last gap after deployment: it compares the
+build production actually serves with the one this tree produced, because
+Vercel's READY describes the deployment, not the site.
 
 See [Deployment Targets](../../07-mobile-and-release/deployment-targets.md) for what each account is asked and why.
 

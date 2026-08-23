@@ -111,6 +111,7 @@
     "db:push:vercel-env": "npx tsx scripts/push-vercel-turso-env.ts",
     "vercel:accounts:check": "npx tsx scripts/check-vercel-accounts.ts",
     "smoke:services": "npx tsx scripts/check-service-smoke.ts",
+    "release:check": "npx tsx scripts/check-deployed-release.ts",
     "smoke:production": "npx tsx scripts/check-production-smoke.ts",
     "vercel:function-size:check": "npx tsx scripts/check-vercel-function-size.ts",
     "deploy:redeploy-main": "npx tsx scripts/redeploy-main-vercel.ts",

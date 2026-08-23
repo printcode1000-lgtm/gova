@@ -170,7 +170,15 @@ export const DEPLOY_ALL_RUNBOOK: readonly DeployAllRunbookPhase[] = [
       {
         id: "main-verification",
         label: "Vercel production readiness",
-        branches: [branch("main-ready", "match commit SHA and wait for READY", "vercel:wait-main-ready", "vercel")],
+        branches: [
+          branch("main-ready", "match commit SHA and wait for READY", "vercel:wait-main-ready", "vercel"),
+          // READY describes the deployment, not the site. This run once reported
+          // six accounts READY and a main TIMEOUT while production served a build
+          // from an hour earlier, answering 200 on every route — an older healthy
+          // build answers exactly like a current one. Only the build identity
+          // separates them.
+          branch("main-serving", "production is serving this build", "release:check", "npm"),
+        ],
       },
     ],
   },

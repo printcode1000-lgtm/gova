@@ -247,6 +247,34 @@ invisible for hours. A catch spanning several distinct failures must say which
 one it caught, or a gate downstream cannot tell an uncomposed deployment from a
 badly addressed request.
 
+### The gate that asks production what it serves
+
+`npm run release:check` (`scripts/check-deployed-release.ts`) runs as the
+`main-serving` branch of the `main` phase, right after `main-ready`.
+
+`main-ready` waits for Vercel to call the deployment READY. That is a statement
+about the deployment, not about the site: this pipeline once reported six
+accounts READY and a main `TIMEOUT` while production served a build from an hour
+earlier — and every route answered 200, because an older healthy build answers
+exactly like a current one. A status code proves the site is up; only the build
+identity proves it is running the change just deployed.
+
+So the gate compares the manifest production serves with the one this working
+tree produced:
+
+| | |
+| --- | --- |
+| Compares | `createdAt` in `public/asol-web-manifest.json` vs `<origin>/asol-web-manifest.json` |
+| Origin | `ASOL_PRODUCTION_ORIGIN`, else `API_BASE_URL` from `@asol/native-core` |
+| Retries | `ASOL_RELEASE_CHECK_ATTEMPTS` (default 20) every 15s — a deployment can still be propagating |
+| Fails with | both build ids, and the likeliest cause |
+
+Run it alone at any time to answer "is my change actually live?":
+
+```bash
+npm run release:check
+```
+
 ### Do not push to `main` while `deploy:all` is running
 
 The main app is connected to GitHub and redeploys on every push to `main`. The
