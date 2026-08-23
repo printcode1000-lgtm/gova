@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T22:44:31.605Z",
+  "generatedAt": "2026-08-23T07:57:13.591Z",
   "entryPoints": [
     "features/product/services/product-service.server.ts",
     "features/profile/services/profile-service.bootstrap.server.ts",
@@ -19,8 +19,12 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 371,
+  "fileCount": 380,
   "files": [
+    "packages/account-declarations/src/accounts/products.ts",
+    "packages/account-declarations/src/accounts/profiles.ts",
+    "packages/account-declarations/src/accounts/sub2main-runtime-env-keys.ts",
+    "packages/account-declarations/src/accounts/sub2main.ts",
     "packages/auth-core/src/domain/account-deletion-registry.ts",
     "packages/auth-core/src/domain/constants.ts",
     "packages/auth-core/src/domain/entities.ts",
@@ -45,6 +49,7 @@
     "packages/catalog-core/src/index.ts",
     "packages/catalog-core/src/validation/catalog-display.ts",
     "packages/catalog-core/src/validation/catalog-v3.contract.ts",
+    "packages/data-core/src/composition.ts",
     "packages/data-core/src/core/data-source-registry.ts",
     "packages/data-core/src/core/database-runtime-policy.ts",
     "packages/data-core/src/core/database/abstract-database-client.ts",
@@ -285,6 +290,7 @@
     "packages/storage-core/src/server/transport/r2-platform-api.ts",
     "packages/storage-core/src/server/transport/r2-presign.ts",
     "packages/storage-core/src/validation/schemas.ts",
+    "packages/sub2main-composition/src/index.ts",
     "packages/system-logs-core/src/domain/constants.ts",
     "packages/system-logs-core/src/domain/correlation.ts",
     "packages/system-logs-core/src/domain/entities.ts",
@@ -319,6 +325,7 @@
     "src/app/api/profile/store-images/route.ts",
     "src/app/api/storage/images/upload/route.ts",
     "src/core/api/api-response.ts",
+    "src/core/api/asol-http-transport.ts",
     "src/core/api/business-api-error-codes.ts",
     "src/core/api/expected-business-error-codes.ts",
     "src/core/api/traced-route.ts",
@@ -347,6 +354,8 @@
     "src/features/categories/infrastructure/catalog-data.loader.ts",
     "src/features/categories/services/category.service.ts",
     "src/features/categories/types/public-api.ts",
+    "src/features/data/data-core-runtime-config-ports.ts",
+    "src/features/data/data-core-specialty-catalog-port.ts",
     "src/features/notifications/domain/notification-error.ts",
     "src/features/notifications/domain/notification-grant-envelope.ts",
     "src/features/notifications/server.ts",

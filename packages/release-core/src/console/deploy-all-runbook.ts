@@ -91,6 +91,13 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
       branch("service-mirror-sync", "service mirror sync", "services:sync", "npm"),
       branch("service-mirror-verify", "service mirror edge verification", "services:verify", "npm"),
       branch("service-builds", "Vercel-shaped service builds", "services:build", "npm"),
+      // Health is not enough, and that is the whole lesson: none of the six
+      // composition roots registered data-core's runtime-config port, so every
+      // route that reached a repository answered 500 while /api/health stayed
+      // 200. All six deployed READY with the profiles account serving errors to
+      // the browser. Each service is now asked for a route that reaches its own
+      // data, before any account is published.
+      branch("service-smoke", "services answer their own data routes", "smoke:services", "npm"),
     ],
   },
 ] as const;

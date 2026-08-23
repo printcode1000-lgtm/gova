@@ -293,6 +293,30 @@ The runner walks `src`, `packages`, `scripts` and `services`. An adversarial pas
 in a new top-level directory drew no complaint at all. A boundary a developer escapes by
 choosing a different folder name is not a boundary — that is default-allow.
 
+### The `./composition` door
+
+`@asol/data-core` used to publish `./core`, which exported the data-source
+registry — the object whose `get(name)` returns any database — plus all six raw
+sources. Nothing outside the package used the registry, and nothing used five of
+the sources.
+
+A public door is not measured by who calls it today. It is the answer a
+developer finds when they search for a way to write a row, and this one handed
+over every database in one import, through a declared door that every
+architecture check accepts. Two lines, no deep import, no relative path, no
+forbidden SDK.
+
+`./composition` replaces it and exports one shard: the profiles source that
+`src/core/config/system-logs.server.ts` wires into `@asol/system-logs-core`'s
+`database: { execute }` port. `@asol/data-core`'s contract test rejects the
+registry and any shard no approved composition root wires.
+
+**Internal imports were deliberately left alone.** An earlier attempt narrowed
+the door by also rewriting thirty-nine repository imports from the barrel to the
+registry path, which changes which module instance a bundler returns — and this
+package's port state is per instance. Narrow the door; never move the internals
+to do it.
+
 `checkRepositorySweepContract` runs the two rules that must hold regardless of where code
 lives — which package may touch an infrastructure SDK, and that package internals are
 unreachable — over the whole tree, including files at the repository root.
@@ -370,3 +394,57 @@ server route until the change was reverted.
 The lesson is narrower than "be careful": **do not change how internal modules reach a
 module that holds singleton state.** Narrow a public door by adding a new narrow door and
 moving its one consumer, leaving internal import paths untouched.
+
+## A port is one value per process, not per module
+
+`data-core`'s runtime-config port kept its registration in module scope. A
+bundler is free to give one source file more than one instance, and Turbopack
+did: Next builds `instrumentation` and each route into separate chunks, so
+`src/instrumentation.ts` configured one copy while every route handler read
+another that still held the throwing defaults. Production answered
+`dataCoreRuntimeConfig: getServerRuntimeContext is not configured` on every
+server route.
+
+Every port now keys its registration on `globalThis` through `Symbol.for`, so it
+is the same value from whichever instance asks — which is what "configure once
+at startup" has to mean when the module itself may be duplicated. Eight modules
+carried the flaw: `data-core/{runtime-config,product-search-fields}`,
+`account-bridge/app-bridge`, `notifications-core/{server-config,token-store}`,
+`ota-core/ports`, `system-logs-core/ports`, `observability-core/ports`.
+
+**No static check can see this.** `typecheck`, `architecture:check`, the full
+suite and the import-without-composition contract were all green throughout,
+because Node resolves one path to one instance. The duplication exists only in a
+bundled build. That is why the smoke gates exist.
+
+## Every deployment is a composition root, including the isolated accounts
+
+The refactor introduced the runtime-config port and wired
+`src/instrumentation.ts`. An isolated account has no application
+instrumentation, so **none of the six registered it** — every route that reached
+a repository threw, while `/api/health` stayed 200 and `deploy:all` reported
+READY.
+
+Registration is split by what each account actually reads:
+
+| Registrar | Registered by |
+| --- | --- |
+| `registerDataCoreRuntimeConfigPorts` — env and Turso credentials | all six accounts and the main app |
+| `registerDataCoreSpecialtyCatalogPort` — the specialty-column catalog | the four accounts carrying profile repositories: profiles, products, submain, sub2main |
+| `configureDataCoreProductSearchFields` | the main app, where search runs |
+
+The split is not tidiness. Calling one shared registrar from all six dragged
+`@asol/catalog-core` and its schema validation into the notifications mirror,
+and `services:sync` refused it: that account declares no such dependency and
+never reads a profile row. The refusal was the isolation rule working, so the
+fix was to grant less rather than to declare more.
+
+### Where the registration runs
+
+`submain`'s route files import their composition package, so its module-scope
+registration runs on import. `sub2main`'s route files re-export handlers from the
+mirrored application and import no composition at all — its registration was
+dead code, and its write routes would have thrown at the first repository call.
+Both services now have `services/<account>/src/instrumentation.ts`, which is the
+purpose-built hook and does not depend on which route happens to be imported
+first.

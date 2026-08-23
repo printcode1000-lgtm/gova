@@ -158,6 +158,34 @@ It honours `.vercelignore`, because a file that is never uploaded cannot be insi
 function — without that it fails on the developer's machine over paths the deployment
 never sees, and a guard that cries wolf locally is one people learn to skip.
 
+### Smoke: the built server has to answer
+
+`READY` means a deployment exists, not that a request succeeds. The pipeline
+built, uploaded and polled until Vercel said READY for all seven targets while
+every server route answered 500 — and the profiles account served errors to the
+browser for hours with `/api/health` returning 200 the whole time, because
+health touches no shard.
+
+Two gates close that:
+
+| Script | Runs | Asks |
+| --- | --- | --- |
+| `smoke:production` | after `build`, before `build:static` | five routes on the main app, each crossing a different composition root |
+| `smoke:services` | after `services:build` | one route per isolated account that reaches **that account's own data** |
+
+Health is deliberately not the probe. The fault both gates exist for —
+a composition root that never registers a port — leaves health green and
+everything else broken.
+
+Codes that mean the handler ran are accepted: 400, 401, 403, 404 and 405 are
+answers. A 500, a refused connection, or a server that never listens is not.
+The server's own output is scanned too, because a route can answer 200 while a
+port quietly falls back to a default — any `is not configured` line fails the
+check even when every status is green.
+
+Both run inside preflight, so a bundling or wiring fault stops the release
+before the deployment commit exists.
+
 ### Escape hatches
 
 Each is opt-in, and none is the default:

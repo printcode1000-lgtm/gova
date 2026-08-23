@@ -36,7 +36,7 @@ const productionFiles = sourceFiles.filter((f) => !f.includes('/tests/') && !f.e
 const EXPECTED_DOORS = [
   '.',
   './telemetry',
-  './core',
+  './composition',
   './browser',
   './provisioning',
   './tooling',

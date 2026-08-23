@@ -1,0 +1,45 @@
+{
+  "name": "@asol/account-declarations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./gova": {
+      "types": "./src/accounts/gova.ts",
+      "default": "./src/accounts/gova.ts"
+    },
+    "./notifications": {
+      "types": "./src/accounts/notifications.ts",
+      "default": "./src/accounts/notifications.ts"
+    },
+    "./products": {
+      "types": "./src/accounts/products.ts",
+      "default": "./src/accounts/products.ts"
+    },
+    "./orders": {
+      "types": "./src/accounts/orders.ts",
+      "default": "./src/accounts/orders.ts"
+    },
+    "./profiles": {
+      "types": "./src/accounts/profiles.ts",
+      "default": "./src/accounts/profiles.ts"
+    },
+    "./submain": {
+      "types": "./src/accounts/submain.ts",
+      "default": "./src/accounts/submain.ts"
+    },
+    "./sub2main": {
+      "types": "./src/accounts/sub2main.ts",
+      "default": "./src/accounts/sub2main.ts"
+    }
+  },
+  "scripts": {
+    "test": "npx tsx src/tests/index.test.ts"
+  }
+}
