@@ -15,7 +15,7 @@
  * edges are in scope here. Door legality is enforced by `feature-door-contract`.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'fs';
-import { join } from 'path';
+import { dirname, join, relative, resolve } from 'path';
 
 import { APPLICATION_FEATURES } from '../registry/application-features-registry';
 import { ROOT, addViolation, extractImports, rel } from './architecture-types';
@@ -43,36 +43,39 @@ function featureSourceFiles(featureName: string): string[] {
   return found;
 }
 
-function targetFeatureOfSpecifier(specifier: string): string | null {
-  const alias = specifier.match(/^@\/features\/([^/]+)/);
+function featureOfRepoPath(repoPath: string): string | null {
+  const normalized = repoPath.replace(/\\/g, '/');
+  const match = normalized.match(/^src\/features\/([^/]+)(?:\/|$)/);
+  return match?.[1] ?? null;
+}
+
+function targetFeatureOfSpecifier(specifier: string, importerFile: string): string | null {
+  const alias = specifier.match(/^@\/features\/([^/]+)(?:\/|$)/);
   if (alias) return alias[1]!;
-  return null;
+
+  if (!specifier.startsWith('.')) return null;
+  const resolved = relative(ROOT, resolve(dirname(importerFile), specifier)).replace(/\\/g, '/');
+  return featureOfRepoPath(resolved);
 }
 
 /** importer feature → (target feature → example file) */
 function buildActualGraph(): Map<string, Map<string, string>> {
   const registered = new Set(APPLICATION_FEATURES.map((f) => f.name));
   const graph = new Map<string, Map<string, string>>();
+
   for (const feature of APPLICATION_FEATURES) {
     const edges = new Map<string, string>();
     for (const file of featureSourceFiles(feature.name)) {
       const content = readFileSync(file, 'utf8');
       for (const specifier of extractImports(content)) {
-        const aliasTarget = targetFeatureOfSpecifier(specifier);
-        if (aliasTarget && aliasTarget !== feature.name) {
-          if (!edges.has(aliasTarget)) edges.set(aliasTarget, rel(file));
-          continue;
-        }
-        if (!specifier.startsWith('.')) continue;
-        const match = specifier.match(/^\.\.\/([^./]+)/);
-        if (!match) continue;
-        const target = match[1]!;
-        if (!registered.has(target) || target === feature.name) continue;
+        const target = targetFeatureOfSpecifier(specifier, file);
+        if (!target || target === feature.name || !registered.has(target)) continue;
         if (!edges.has(target)) edges.set(target, rel(file));
       }
     }
     graph.set(feature.name, edges);
   }
+
   return graph;
 }
 
@@ -124,6 +127,15 @@ export function checkFeatureDependencyContract(): void {
           join(ROOT, feature.sourcePath),
           `Feature "${feature.name}" lists unknown deepImportSeam "${seam}".`,
           'Remove the stale seam or register the target feature.',
+        );
+        continue;
+      }
+      if (!edges.has(seam)) {
+        addViolation(
+          'Feature Dependencies',
+          join(ROOT, feature.sourcePath),
+          `Feature "${feature.name}" declares deepImportSeam target "${seam}" but no production import uses that feature edge.`,
+          'Remove the stale relationship; exact seam paths are governed separately by FEATURE_DEEP_IMPORT_SEAMS.',
         );
       }
     }
