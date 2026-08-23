@@ -45,6 +45,12 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     name: '@asol/architecture-core',
     owns: 'Repository architecture contracts and static enforcement',
     layer: 'enforcement',
+    /**
+     * No owned vendor. The compiler API this package parses with is toolchain,
+     * not infrastructure: importing it grants access to no capability, and the
+     * refactor codemods under `scripts/refactor/` use it too. Modelling it as
+     * owned would claim exclusivity over the language's own parser.
+     */
     vendorModules: [],
     mayImportApp: false,
   },

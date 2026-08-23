@@ -214,6 +214,7 @@ export function useDataHealthPage() {
     setPlanning(true);
     setError("");
     try {
+      // page-save-read: computes a cleanup plan for review, persists nothing
       const next = await asolApi.post<DataHealthCleanupPlan>(
         DATA_HEALTH_API.plan,
         { issueIds: selected.map((issue) => issue.id) },
@@ -278,6 +279,7 @@ export function useDataHealthPage() {
     setError("");
     setNotice("");
     try {
+      // page-save-read: computes an order purge plan for review, persists nothing
       const next = await asolApi.post<DataHealthOrderPurgePlan>(
         DATA_HEALTH_API.orderPurgePlan,
         {},
@@ -347,8 +349,24 @@ export function useDataHealthPage() {
     if (report) exportDataHealthReport(report, format);
   };
 
-  const releaseQuarantine = async (quarantineId: string) => {
-    if (!authHeaders) return;
+  /**
+   * Staged, not run on tap: releasing quarantine restores rows into live data.
+   * `@asol/page-save-core` owns every user-triggered write, so the row control
+   * queues the operation and the header save icon executes it.
+   */
+  const stageQuarantineRelease = async (quarantineId: string): Promise<void> => {
+    setError("");
+    operations.stage({
+      itemId: `data-health-quarantine-release:${quarantineId}`,
+      kind: "save",
+      label: `إخراج عنصر من الحجر: ${quarantineId}`,
+      description: "يعيد العنصر المحجوز إلى البيانات الحية.",
+      execute: () => releaseQuarantine(quarantineId),
+    });
+  };
+
+  const releaseQuarantine = async (quarantineId: string): Promise<boolean> => {
+    if (!authHeaders) return false;
     setError("");
     try {
       await asolApi.post(
@@ -358,12 +376,14 @@ export function useDataHealthPage() {
       );
       await loadHistory();
       setNotice("تم إخراج العنصر من الحجر.");
+      return true;
     } catch (releaseError) {
       setError(
         releaseError instanceof Error
           ? releaseError.message
           : "تعذر إخراج العنصر من الحجر",
       );
+      return false;
     }
   };
 
@@ -525,7 +545,7 @@ export function useDataHealthPage() {
     plan,
     planning,
     query,
-    releaseQuarantine,
+    releaseQuarantine: stageQuarantineRelease,
     report,
     scan,
     schemaLoading,

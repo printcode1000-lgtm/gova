@@ -191,6 +191,8 @@ Every user-triggered save surface must:
 | `custom-request` | `/custom-request` special order | Image upload + request submit |
 | `account-deletion` | `/delete-account` | Account deletion (phrase gate stays on the page) |
 | `super-admin-users` | `/super-admin/users` | Super-admin deletion of a user account, one staged item per row |
+| `data-health` | `/super-admin/data-health` | Quarantine release, quarantined image delete |
+| `dev-cloud-backup` | `/super-admin/dev-cloud-backup` | Backup create, saved-backup update, restore, delete |
 | `super-admin-hero-slider` | Home hero slider admin | — |
 | `super-admin-featured-marquee` | Featured products marquee admin | — |
 | `super-admin-trending-ribbon` | Trending ribbon admin | — |

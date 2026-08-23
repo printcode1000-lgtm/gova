@@ -106,7 +106,7 @@ export function useDevCloudBackupPage() {
     [],
   );
 
-  const createBackup = async () => {
+  const runCreateBackup = async () => {
     if (!authHeaders) return;
     setBusy("create");
     setError("");
@@ -150,7 +150,7 @@ export function useDevCloudBackupPage() {
     }
   };
 
-  const updateSavedBackup = async (fileName: string) => {
+  const runUpdateSavedBackup = async (fileName: string) => {
     if (!authHeaders) return;
     setBusy(`update-saved:${fileName}`);
     setError("");
@@ -197,6 +197,7 @@ export function useDevCloudBackupPage() {
       `جاري فحص ${fileName} وقراءة manifest ومحتويات zip...`,
     );
     try {
+      // page-save-read: returns an inspection report, persists nothing
       const result = await asolApi.post<DevCloudBackupInspectResponse>(
         DEV_CLOUD_BACKUP_API.inspectSaved,
         { fileName },
@@ -232,6 +233,7 @@ export function useDevCloudBackupPage() {
       `جاري مقارنة ${fileName} مع أحدث بيانات Turso وR2...`,
     );
     try {
+      // page-save-read: returns a diff report for review, persists nothing
       const result = await asolApi.post<DevCloudBackupDiffReport>(
         DEV_CLOUD_BACKUP_API.compareSaved,
         { fileName },
@@ -281,7 +283,7 @@ export function useDevCloudBackupPage() {
     });
   };
 
-  const restoreSavedBackup = async (
+  const runRestoreSavedBackup = async (
     fileName: string,
     mode: DevCloudBackupRestoreMode,
   ) => {
@@ -320,6 +322,63 @@ export function useDevCloudBackupPage() {
     } finally {
       setBusy("");
     }
+  };
+
+  /**
+   * Staged, not run on tap.
+   *
+   * Creating, overwriting and restoring a backup all change durable state, and
+   * `@asol/page-save-core` owns every user-triggered write. The controls queue
+   * the work; the header save icon executes it and reports the outcome. The
+   * inspect and compare calls stay immediate — they compute a report and
+   * persist nothing.
+   */
+  const createBackup = async (): Promise<void> => {
+    setError("");
+    operations.stage({
+      itemId: "dev-cloud-backup-create",
+      kind: "save",
+      label: "إنشاء نسخة احتياطية جديدة",
+      description: "ينشئ نسخة احتياطية سحابية ويحفظها محليًا.",
+      execute: async () => {
+        await runCreateBackup();
+        return true;
+      },
+    });
+  };
+
+  const updateSavedBackup = async (fileName: string): Promise<void> => {
+    setError("");
+    operations.stage({
+      itemId: `dev-cloud-backup-update:${fileName}`,
+      kind: "save",
+      label: `تحديث النسخة المحفوظة: ${fileName}`,
+      description: "يعيد كتابة الأرشيف المحفوظ بأحدث البيانات.",
+      execute: async () => {
+        await runUpdateSavedBackup(fileName);
+        return true;
+      },
+    });
+  };
+
+  const restoreSavedBackup = async (
+    fileName: string,
+    mode: DevCloudBackupRestoreMode,
+  ): Promise<void> => {
+    setError("");
+    operations.stage({
+      itemId: `dev-cloud-backup-restore:${fileName}:${mode}`,
+      kind: "save",
+      label: `استعادة النسخة: ${fileName}`,
+      description:
+        mode === "replace"
+          ? "استعادة بوضع المطابقة التامة — تستبدل البيانات الحية."
+          : "استعادة بوضع الدمج مع البيانات الحية.",
+      execute: async () => {
+        await runRestoreSavedBackup(fileName, mode);
+        return true;
+      },
+    });
   };
 
   return {

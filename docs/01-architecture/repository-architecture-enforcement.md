@@ -159,7 +159,55 @@ an unconfigured port. Three notification tests and the follow test now call
 `registerNotificationsCorePorts()` themselves, exactly as the follow test already did
 for the session signing secret.
 
-## Known gap: the page-save gateway is not yet mandatory
+## The page-save gateway is mandatory
+
+`checkPageSaveWriteGatewayContract` reads the syntax tree of every `.tsx` file and
+every `.ts` under `presentation/`, and follows calls *within the module*: a mutating
+`asolApi` call is legal only when every path that reaches it starts at a staged
+executor (`stage({ execute })`) or a registration's `save` handler.
+
+Following calls is the point. `CustomRequestPageContent` hands `submitRequest` to
+`save:` and the `asolApi.post` sits in another function — lexical nesting alone reports
+that as a violation. Text matching does worse: the previous write-surface test
+allowlisted *named service calls*, so a page calling `asolApi.post` directly was
+invisible to it, and a probe reproducing that bypass passed every gate.
+
+### The read marker
+
+A POST that computes and returns something, persisting nothing — a plan, a validation,
+an inspection, a diff — is not a write, and the HTTP verb cannot say so. The call site
+does, and states why:
+
+```ts
+// page-save-read: computes a cleanup plan for review, persists nothing
+const plan = await asolApi.post<Plan>(DATA_HEALTH_API.plan, body, { headers });
+```
+
+Per call, reason-bearing, rejected when the reason is missing. It cannot be applied to
+a file or a directory, and it sits at the exact line it excuses.
+
+### Capabilities that own their own writes
+
+`NON_PAGE_SAVE_CAPABILITIES` lists the few files whose writes belong to another
+capability — cart checkout, order lifecycle transitions, session impersonation — each
+with a stated reason. This mirrors the exclusions the policy already names; page-save
+does not take over another package's responsibility.
+
+### Three bugs this check had before it worked
+
+Worth recording, because each one made it silently permissive:
+
+1. Functions were keyed by name, so a module's several `execute:` arrows overwrote each
+   other and a staged write looked unreachable from any gateway.
+2. Scope was `presentation/` and `components/` by folder, so a component placed
+   anywhere else was never scanned — the probe written to reproduce the original bypass
+   sailed straight through the check meant to catch it.
+3. `typescript` was briefly declared an owned vendor of `architecture-core`, which
+   immediately failed the refactor codemods that use the same parser. A compiler is
+   toolchain, not infrastructure: it grants access to no capability, so it is allowed
+   by name in that package's own contract test and owned by nobody.
+
+## Superseded gap note: the page-save gateway is not yet mandatory
 
 `checkPageSaveGatewayContract` verifies the package exists, exposes a single door, keeps
 its two enforcement tests, and is not deep-imported. It does **not** verify that
