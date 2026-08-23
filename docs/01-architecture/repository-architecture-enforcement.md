@@ -327,3 +327,46 @@ literal `native-core/package.json` — a guard holding the shape rather than the
 and so an obstacle to fixing it. Its stated intent ("the two lists cannot drift") now has
 three assertions that follow the architecture: the list arrives through the package door,
 the relative path must not return, and native-core derives it from its own dependencies.
+
+## Import without composition
+
+`npm run test:import-without-composition` imports every declared door in a bare process
+where nothing has been configured, and requires that the import itself does not throw.
+
+Six of the eight breaks in the enforcement refactor were one shape: a dependency
+correctly inverted into a port, and a place that resolves it left unwired. Neither
+`typecheck` nor `architecture:check` sees that — both stayed green throughout — because
+the failure is a runtime throw, sometimes only on a build machine, after the deployment
+commit is already on GitHub.
+
+This turns the rule the docs state into a check: a port is only inverted if it is also
+resolved lazily. A door may still throw when a *function* is called without
+configuration; that is correct, and is why the child process only imports.
+
+Two classifications keep it honest rather than lenient:
+
+- A door whose entry is `server-only` is imported under `--conditions=react-server`, and
+  one that turns out to be server-only transitively is retried there when Node reports
+  exactly that mismatch. Both are real load modes for this repository.
+- A failure matching `Unknown file extension` is a missing Node loader, not an
+  architectural fault — `@asol/map-core` reaches a stylesheet through `maplibre-gl`.
+  Classified from the failure, because the import that cannot load is usually several
+  modules deep.
+
+Verified by reintroducing the original break: resolving the category-catalog port at
+module scope in `specialty-columns.server.ts` fails the check with the same message that
+took down `products-composition`.
+
+### What it does not cover
+
+Module-instance duplication. A narrowing of the `@asol/data-core/core` door moved
+thirty-nine internal imports from the barrel to a direct path; ports in that package are
+singletons per module instance, and under Next's bundler the two specifiers produced two
+instances, so `instrumentation.ts` configured one while repositories read the other.
+Every static check and the full suite stayed green — `tsx` resolves one path to one
+instance — and production returned `getServerRuntimeContext is not configured` on every
+server route until the change was reverted.
+
+The lesson is narrower than "be careful": **do not change how internal modules reach a
+module that holds singleton state.** Narrow a public door by adding a new narrow door and
+moving its one consumer, leaving internal import paths untouched.
