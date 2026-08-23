@@ -298,4 +298,4 @@ npx tsx --test src/theme/runtime/__tests__/theme-runtime.test.ts
 
 ## Related documentation
 
-- [i18n-system.md](./i18n-system.md) — locale, RTL, translation keys
+- [i18n-system.md](../05-platform-features/i18n-system.md) — locale, RTL, translation keys

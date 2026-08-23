@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Preserved operational and architectural detail from `docs/01-architecture-backup/`. Agents use this for implementation guidance.
+Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.
 
 ## Scope
 

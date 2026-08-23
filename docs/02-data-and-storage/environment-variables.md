@@ -1,4 +1,4 @@
-> **Note:** Operational detail moved from `docs/01-architecture-backup/` during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../README.md).
+> **Note:** Operational detail relocated here during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../01-architecture/README.md).
 
 # Environment Variables
 
@@ -106,7 +106,7 @@ ASOL_OTA_R2_PREFIX=app-updates
 These never fall back to `PRODUCT_R2_*`, `APPAREL_PETS_R2_*`, or `R2_*`. **A fallback across an account boundary is a silent redirect, not a default** — it writes somewhere else instead of failing. Every target requires its own values and throws without them.
 
 `R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, `APPAREL_PETS_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` are Cloudflare **account** credentials — they create buckets and manage CORS policy. Reading an image needs none of that, so read paths take the S3 pair and the public URL only.
-See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
+See [R2 Storage Accounts](../05-platform-features/r2-storage-accounts.md).
 
 Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS`:
 
@@ -142,7 +142,7 @@ FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64=
 Push fan-out runs on a separate Vercel account. The two backends never call each
 other: the main app signs a grant, the browser carries it, the service verifies
 and delivers. See
-[Notification Bridge Module](../../05-platform-features/notification-bridge-module.md).
+[Notification Bridge Module](../05-platform-features/notification-bridge-module.md).
 
 ```env
 # Client-safe. Where the browser bridge delivers signed grants. Baked into
@@ -202,7 +202,7 @@ session. Set `ASOL_SESSION_SIGNING_SECRET` explicitly instead.
 Product reads run on a separate Vercel account. The two backends never call each
 other: the browser bridge sends reads to the products service and everything
 else to the main app. See
-[Service Bridge Module](../../05-platform-features/service-bridge-module.md).
+[Service Bridge Module](../05-platform-features/service-bridge-module.md).
 
 ```env
 # Client-safe. Where the browser bridge sends product reads. Baked into static
@@ -282,7 +282,7 @@ pointed at un-sharded databases that no code read; both have been deleted.
 
 ## Vercel deploy
 
-Six Vercel accounts; see [26-cloud-accounts.md](./26-cloud-accounts.md). The two
+Six Vercel accounts; see [26-cloud-accounts.md](../06-super-admin-and-operations/cloud-accounts-architecture.md). The two
 full-application deployments share runtime env keys but use different deploy
 tokens and update paths.
 

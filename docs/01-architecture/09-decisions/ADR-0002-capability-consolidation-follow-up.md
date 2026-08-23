@@ -32,7 +32,6 @@ Application **wiring seams** remain in `src/modules/` (single module per join):
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/capability-consolidation-2026-08-follow-up.md`
 - Packages: `packages/data-health-core/`, `backup-core/`, extended `release-core/`
 
 ## Related Documents

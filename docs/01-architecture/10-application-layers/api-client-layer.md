@@ -32,7 +32,6 @@ Static/mobile bundle calls remote API — local DB unavailable. Runtime context 
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/data-layers/04-asol-api-client-layer.md`
 - Contract ban: `fetch()` allowed only in transport module
 
 ## Related Documents

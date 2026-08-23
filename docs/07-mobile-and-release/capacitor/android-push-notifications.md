@@ -285,7 +285,7 @@ sound from importance 3 upward, and a channel created *without* a sound still
 inherits the system sound — omitting the file is not enough on its own.
 
 Channel selection lives in
-[`src/features/notifications/domain/notification-sound.ts`](../../../src/features/notifications/domain/notification-sound.ts)
+[`src/features/notifications/domain/notification-sound.ts`](../../../src/features/notifications/tests/notification-sound-contract.test.ts)
 and is shared by the server FCM provider and the on-device local notification,
 so a notification sounds the same whichever displayed it. In order:
 

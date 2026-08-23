@@ -21,7 +21,7 @@ Decisions affecting sealed packages, enforcement, branching, and application str
 
 ## Historical source
 
-Full narrative backups: `docs/01-architecture-backup/` (preserved read-only, never modified).
+Full narrative backups: the pre-reconstruction architecture docs (see git history) (preserved read-only, never modified).
 
 ADRs here are agent-first summaries; backup retains migration detail.
 

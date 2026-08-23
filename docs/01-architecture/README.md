@@ -20,7 +20,7 @@ Covers the sealed `@asol/*` package model, application layering, composition wir
 | Application layer stack | [10-application-layers/README.md](./10-application-layers/README.md) |
 | Historical decisions | [09-decisions/README.md](./09-decisions/README.md) |
 
-Preserved historical source (read-only): `docs/01-architecture-backup/`.
+Preserved historical source (read-only): the pre-reconstruction architecture docs (see git history).
 
 ## Organization
 

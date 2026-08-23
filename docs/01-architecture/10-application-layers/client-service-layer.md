@@ -6,7 +6,13 @@ Client-side domain orchestration that prepares API calls and interprets response
 
 ## Scope
 
-`*-client-service.ts`, feature services consumed by hooks under `src/features/`.
+Files under a `services/` directory ending in `-api-service.ts`, or named
+`auth-service.ts` / `session-service.ts`; plus
+`src/modules/release-commands/services/*-api-service.ts`.
+
+No file in this repository is named `*-client-service.ts`; the classifier keys
+on the suffixes above. `classifyFile` in
+`packages/architecture-core/src/contracts/contract.ts` is the authority.
 
 ## Responsibilities
 
@@ -28,7 +34,6 @@ Client-side domain orchestration that prepares API calls and interprets response
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/data-layers/03-client-service-layer.md`
 - HTTP transport: application module referenced in contract (asol-http-transport)
 
 ## Related Documents

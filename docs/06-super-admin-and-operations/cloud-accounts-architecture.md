@@ -1,4 +1,4 @@
-> **Note:** Operational detail moved from `docs/01-architecture-backup/` during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../README.md).
+> **Note:** Operational detail relocated here during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../01-architecture/README.md).
 
 # Cloud Accounts
 
@@ -6,7 +6,7 @@ Every external account this project deploys to or stores data in, what it is
 for, and what is actually inside it.
 
 Verified live against each provider's API. No token, key, or secret appears
-here — see [14. Environment Variables](./14-environment-variables.md) for which
+here — see [14. Environment Variables](../02-data-and-storage/environment-variables.md) for which
 variable carries what.
 
 ## At a glance
@@ -133,9 +133,9 @@ The 7 Vercel account architecture is enforced and driven by sealed capability pa
 6. **`@asol/orders-composition`** (`packages/orders-composition/`): Composition layer re-exporting entry points for `asol-orders`.
 7. **`@asol/profiles-composition`** (`packages/profiles-composition/`): Composition layer re-exporting entry points for `asol-profiles`.
 
-See [16. Deployment Targets](./16-deployment-targets.md),
-[Service Bridge Module](../../05-platform-features/service-bridge-module.md),
-and [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md).
+See [16. Deployment Targets](../07-mobile-and-release/deployment-targets.md),
+[Service Bridge Module](../05-platform-features/service-bridge-module.md),
+and [Notification Bridge Module](../05-platform-features/notification-bridge-module.md).
 
 ---
 
@@ -250,7 +250,7 @@ The general and product buckets hold zero OTA objects; `images/` objects in both
 
 `R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, `APPAREL_PETS_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` create buckets and manage CORS policy. Turning a key into a URL is string work and an existence check needs only the S3 pair, so the read paths take the narrow accessors — and neither `asol-products` nor `asol-profiles` holds an API token. `asol-products` does receive `APPAREL_PETS_R2_*` public/S3 keys so apparel/pets image URLs resolve.
 
-See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
+See [R2 Storage Accounts](../05-platform-features/r2-storage-accounts.md).
 
 ---
 

@@ -6,7 +6,14 @@ The query and command layer executing single logical database operations through
 
 ## Scope
 
-`src/features/**/operations/`, query/command modules, `operations/instances.ts` wiring.
+`packages/data-core/src/domains/**/index.server.ts` and
+`packages/data-core/src/domains/**/commands/**`, plus any path containing
+`/operations/`.
+
+There is no `src/features/**/operations/` directory in this repository — the
+layer moved into `@asol/data-core`'s domains. `classifyFile` in
+`packages/architecture-core/src/contracts/contract.ts` is the authority for what
+counts as this layer, and it is what `npm run architecture:check` enforces.
 
 ## Responsibilities
 
@@ -32,7 +39,8 @@ Commands/queries created in `operations/instances.ts`. Server services receive r
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/data-layers/07-query-command-layer.md`
+- `packages/data-core/src/domains/**/index.server.ts`, `.../commands/**`
+- Classifier: `packages/architecture-core/src/contracts/contract.ts`
 
 ## Related Documents
 

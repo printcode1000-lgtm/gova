@@ -69,7 +69,6 @@ Commands/queries instantiated in `operations/instances.ts`. API routes import bo
 ## Source Map
 
 - Contract: `packages/architecture-core/src/contracts/contract.ts`
-- Backup layers: `docs/01-architecture-backup/data-layers/01-ui-layer.md` through `09-database-client-layer.md`
 
 ## Related Documents
 

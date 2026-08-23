@@ -119,7 +119,7 @@ Because preferences are loaded asynchronously from AsolDB, rendering the page im
 | `ThemeProvider` and `PreferencesProvider` set their respective hydration flags to `"true"` on `<html>` | `ThemeProvider.tsx` & `PreferencesProvider.tsx` |
 | CSS reveals `body` with a smooth 150ms transition once both flags are `"true"` | `globals.css` |
 
-See [`doc/problems/english-locale-hydration-flash.md`](../problems/english-locale-hydration-flash.md) for the full root-cause analysis.
+See [`doc/problems/english-locale-hydration-flash.md`](../08-troubleshooting/problems/english-locale-hydration-flash.md) for the full root-cause analysis.
 
 ---
 

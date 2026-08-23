@@ -29,7 +29,6 @@ Packages declare ports; app injects auth, storage, `AsolDB`, `buildId`.
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/ui-capability-core-packages-2026-08.md`
 - Registry: four entries in `capability-registry.ts`
 
 ## Related Documents

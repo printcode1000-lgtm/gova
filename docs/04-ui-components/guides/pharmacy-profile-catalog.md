@@ -178,7 +178,7 @@ The migration file is:
 
 Fixed and custom pharmacy products are projected into the current typed product model. They do not use `product.data.fields`.
 
-See also [Product Data Model](../system/product-data-model.md).
+See also [Product Data Model](../../02-data-and-storage/product-data-model.md).
 
 ## Future Work
 

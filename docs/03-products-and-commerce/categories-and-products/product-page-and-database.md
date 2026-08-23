@@ -18,7 +18,7 @@ The runtime product object is grouped by purpose:
 
 Images are the only product value stored as a variable list, currently through `images_json`.
 
-See [Product Data Model](../system/product-data-model.md) for the full data model and storage rules.
+See [Product Data Model](../../02-data-and-storage/product-data-model.md) for the full data model and storage rules.
 
 ## Category Columns
 

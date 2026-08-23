@@ -1,4 +1,4 @@
-> **Note:** Operational detail moved from `docs/01-architecture-backup/` during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../README.md).
+> **Note:** Operational detail relocated here during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../01-architecture/README.md).
 
 # Cache, Rules, and Data Flow
 
@@ -18,7 +18,7 @@
 
 **Rule:** IndexedDB is normally a local cache. Notification-center entries, notification analytics/badges, and notification-only conversation bodies are explicit local-only sources of truth and are never copied to SQLite/Turso.
 
-See [session-system.md](../session-system.md) for session details.
+See [session-system.md](../05-platform-features/session-system.md) for session details.
 
 ### TanStack Query
 
@@ -137,9 +137,9 @@ flowchart LR
 
 ## Validation placement
 
-- **Client:** Zod in hooks before API calls — see [12-input-validation.md](./12-input-validation.md)
+- **Client:** Zod in hooks before API calls — see [12-input-validation.md](../01-architecture/10-application-layers/input-validation.md)
 - **Server:** Server Service / Command — domain rules
 
 ## Enforcement
 
-`npm run architecture:check` — see [19-architecture-contract.md](./19-architecture-contract.md).
+`npm run architecture:check` — see [19-architecture-contract.md](../01-architecture/10-application-layers/layer-stack.md).

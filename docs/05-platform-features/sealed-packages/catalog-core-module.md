@@ -86,6 +86,6 @@ npm run catalog:validate
 
 ## Related
 
-- [catalog-v3-data-contract.md](../03-products-and-commerce/categories-and-products/catalog-v3-data-contract.md)
-- [catalog-studio.md](../06-super-admin-and-operations/catalog-studio.md)
-- [module-isolation-rules.md](./module-isolation-rules.md)
+- [catalog-v3-data-contract.md](../../03-products-and-commerce/categories-and-products/catalog-v3-data-contract.md)
+- [catalog-studio.md](../../06-super-admin-and-operations/catalog-studio.md)
+- [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md)

@@ -1,4 +1,4 @@
-> **Note:** Operational detail moved from `docs/01-architecture-backup/` during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../README.md).
+> **Note:** Operational detail relocated here during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../01-architecture/README.md).
 
 # Deployment Targets
 
@@ -35,7 +35,7 @@ only through their CLI deploy commands.
 | Serves | production primary | isolated full-app staging | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
 | Turso account | `hesham101` (+ all shards via env) | same runtime env as `gova` | same runtime env as `gova` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
 
-The connectors are driven by seven sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, and `@asol/profiles-composition`. See [26-cloud-accounts.md](./26-cloud-accounts.md), [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md), and [Service Bridge Module](../../05-platform-features/service-bridge-module.md).
+The connectors are driven by seven sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, and `@asol/profiles-composition`. See [26-cloud-accounts.md](../06-super-admin-and-operations/cloud-accounts-architecture.md), [Notification Bridge Module](../05-platform-features/notification-bridge-module.md), and [Service Bridge Module](../05-platform-features/service-bridge-module.md).
 
 Keep the main project's GitHub connection as it is. The deploy command runs the
 CLI with `services/notifications` as its working directory, so it writes that
@@ -145,7 +145,7 @@ diagnosing.
 those routes read build artifacts and Play assets off the local filesystem, so
 Next's tracer cannot bound what they touch and sweeps the repository into the
 function. See
-[vercel-function-size-release-console.md](../../08-troubleshooting/problems/vercel-function-size-release-console.md).
+[vercel-function-size-release-console.md](../08-troubleshooting/problems/vercel-function-size-release-console.md).
 
 Preflight measures this before anything is published. `vercel:function-size:check`
 runs between `build` and `build:static`, reads the route traces Next writes during
@@ -529,7 +529,7 @@ together after verifying the CLI.
 
 ## Capacitor
 
-See [capacitor.md](../capacitor.md) for live reload, `cap:build`, and platform defaults.
+See [capacitor.md](./capacitor/capacitor.md) for live reload, `cap:build`, and platform defaults.
 
 ## Build pipeline (hosted)
 
@@ -541,7 +541,7 @@ npm run db:schema:sync
 next build
 ```
 
-Schema sync requires Turso env vars on CI/Vercel — see [20-schema-provisioning.md](./20-schema-provisioning.md).
+Schema sync requires Turso env vars on CI/Vercel — see [20-schema-provisioning.md](../02-data-and-storage/schema-provisioning.md).
 
 The root `.vercelignore` trims repository-root Vercel uploads (`gova` via GitHub
 and `asol-submain` / `asol-sub2main` via CLI). It excludes native shells at the repository root only (`/android/`, `/ios/`,
@@ -572,4 +572,4 @@ vercel deploy --prod                                    # upload services/notifi
 No schema sync and no page prerendering, so this build touches no database at
 all — which is why the notifications account holds no users, product, or shard
 credentials. See
-[Notifications Service Module](../../05-platform-features/notifications-service-module.md).
+[Notifications Service Module](../05-platform-features/notifications-service-module.md).

@@ -2,7 +2,7 @@
 
 ASOL uses **Capacitor as a native runtime shell only** — Android and iOS load the same static web app produced by Next.js. Capacitor does **not** contain business logic, database drivers, ORM code, or SQLite/Turso clients.
 
-For the full data-flow architecture (AsolApiClient, Business APIs, Repository), see [data-layers/README.md](./data-layers/README.md).
+For the full data-flow architecture (AsolApiClient, Business APIs, Repository), see [data-layers/README.md](../../01-architecture/10-application-layers/README.md).
 
 ---
 
@@ -64,7 +64,7 @@ out/                             # Static assets (from build:static)
 | `@capacitor-mlkit/barcode-scanning`   | QR and barcode scanning                                                        |
 | `@capawesome/capacitor-file-picker`   | Document and file selection for the Native Platform Files module               |
 
-No database plugin is installed. `@capacitor/filesystem` is used by the OTA platform adapter to store verified file-level web releases in application-private storage and by the image source picker to read the selected native image into a browser `File`; it is not a data-layer database. `@capacitor/app` is used by the Android platform adapter for system Back events and the confirmed exit action. The camera plugin is isolated behind the image source picker adapter, and the speech-recognition plugin is isolated behind the platform speech adapter. See [ota-update-system.md](./ota-update-system.md), [mobile-back-button-system.md](../system/mobile-back-button-system.md), [storage-image-source-picker-system.md](../system/storage-image-source-picker-system.md), and [voice-input-system.md](../system/voice-input-system.md).
+No database plugin is installed. `@capacitor/filesystem` is used by the OTA platform adapter to store verified file-level web releases in application-private storage and by the image source picker to read the selected native image into a browser `File`; it is not a data-layer database. `@capacitor/app` is used by the Android platform adapter for system Back events and the confirmed exit action. The camera plugin is isolated behind the image source picker adapter, and the speech-recognition plugin is isolated behind the platform speech adapter. See [ota-update-system.md](./ota-update-system.md), [mobile-back-button-system.md](./mobile-back-button-system.md), [storage-image-source-picker-system.md](../../02-data-and-storage/storage-image-source-picker-system.md), and [voice-input-system.md](../../05-platform-features/voice-input-system.md).
 
 ---
 
@@ -345,6 +345,6 @@ Platform-specific settings live in:
 - [branding-ssot.md](./branding-ssot.md) - single-source application icon and native launch-screen policy
 - [static-export-policy.md](./static-export-policy.md) - complete static source-file and route allow/ignore policy
 
-- [data-layers/README.md](./data-layers/README.md) — AsolApiClient, layers, CORS, static export
-- [platform/README.md](../../platform/README.md) — short platform-layer summary
+- [data-layers/README.md](../../01-architecture/10-application-layers/README.md) — AsolApiClient, layers, CORS, static export
+- [platform/README.md](../../01-architecture/README.md) — short platform-layer summary
 - [Capacitor docs](https://capacitorjs.com/docs) — upstream framework reference

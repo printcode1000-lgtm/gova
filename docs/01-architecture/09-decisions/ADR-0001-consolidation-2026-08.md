@@ -33,7 +33,6 @@ Each package received: explicit `exports`, registry entry, `test:*-core` in buil
 
 ## Source Map
 
-- Backup narrative: `docs/01-architecture-backup/consolidation-2026-08.md`
 - Registry: all eight entries in `capability-registry.ts`
 
 ## Related Documents

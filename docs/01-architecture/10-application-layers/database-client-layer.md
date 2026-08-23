@@ -46,7 +46,7 @@ Inside `@asol/data-core` only (`packages/data-core/src/core/database/**`, provis
 
 Schema changes, Turso sync, migrations: [docs/02-data-and-storage/](../../02-data-and-storage/).
 
-Backup reference: `docs/01-architecture-backup/data-layers/09-database-client-layer.md`, `11-current-databases.md`.
+Backup reference: the pre-reconstruction architecture docs (see git history), `11-current-databases.md`.
 
 ## Source Map
 

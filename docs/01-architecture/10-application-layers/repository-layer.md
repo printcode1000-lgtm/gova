@@ -34,7 +34,6 @@ Operational detail: [docs/02-data-and-storage/](../../02-data-and-storage/).
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/data-layers/08-repository-layer.md`
 - Domains: `packages/data-core/src/domains/`
 
 ## Related Documents

@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Preserved operational and architectural detail from `docs/01-architecture-backup/`. Agents use this for implementation guidance.
+Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.
 
 ## Scope
 
-See sections below. Architectural relationships defer to [docs/01-architecture/README.md](../README.md) where applicable.
+See sections below. Architectural relationships defer to [docs/01-architecture/README.md](../01-architecture/README.md) where applicable.
 
 ---
 
@@ -29,7 +29,7 @@ General deployment/runtime detection remains in `src/core/config/runtime-context
 | Browser / shared | `@asol/dev-core` | Client bundles, shared constants | Relative path segments, SQLite filenames, `sqliteFileNameForShard`, development predicates, `buildLocalSyncFilePublicUrl` |
 | Server | `@asol/dev-core/server` | API routes, scripts, server modules | Absolute path resolvers (`resolveSqliteDirectory`, `resolvePrimarySqlitePath`, …), guard helpers, `readLocalDevelopmentRuntimeFromProcess` |
 
-**Do not** deep-import from `packages/dev-core/src/**`. Use only the two doors above, per [module-isolation-rules.md](./module-isolation-rules.md).
+**Do not** deep-import from `packages/dev-core/src/**`. Use only the two doors above, per [module-isolation-rules.md](../01-architecture/02-packages/module-isolation-rules.md).
 
 ---
 

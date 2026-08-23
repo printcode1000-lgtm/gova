@@ -34,7 +34,8 @@ Server services wire ports registered in `src/core/composition/server-ports.ts`.
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/data-layers/06-server-service-layer.md`
+- `src/features/**/services/*.server.ts` (53 files)
+- Classifier: `packages/architecture-core/src/contracts/contract.ts`
 
 ## Related Documents
 

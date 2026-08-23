@@ -1,4 +1,4 @@
-> **Note:** Operational detail moved from `docs/01-architecture-backup/` during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../README.md).
+> **Note:** Operational detail relocated here during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../01-architecture/README.md).
 
 # Central Data Access Module — `@asol/data-core`
 
@@ -12,7 +12,7 @@ database provisioning, and browser IndexedDB primitives.
 It is a **sealed package**, not a folder. Nothing outside it may import one of
 its files by path; every consumer goes through a declared door in the package's
 `exports` map. The full contract, the door list, and the reasoning behind the
-shape live in [data-core-module.md](../data-core-module.md).
+shape live in [data-core-module.md](../05-platform-features/sealed-packages/data-core-module.md).
 
 There is no compatibility layer at the previous `src/modules/data-access`,
 `src/core/database`, `src/lib/asol-db`, feature repository, or feature operation

@@ -1,4 +1,4 @@
-> **Note:** Operational detail moved from `docs/01-architecture-backup/` during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../README.md).
+> **Note:** Operational detail relocated here during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../01-architecture/README.md).
 
 # Current Databases
 
@@ -120,7 +120,7 @@ records, not profile data — so it stayed on `hesham101`.
 
 | Layer | Files |
 | --- | --- |
-| API (reads) | `/api/profile/contacts`, `/api/profile/store-details`, `/api/profile/specialties`, `/api/profile/fulfillment-settings`, `/api/profile/users-by-specialty` — served by the [profiles service](../../05-platform-features/profiles-service-module.md) |
+| API (reads) | `/api/profile/contacts`, `/api/profile/store-details`, `/api/profile/specialties`, `/api/profile/fulfillment-settings`, `/api/profile/users-by-specialty` — served by the [profiles service](../05-platform-features/profiles-service-module.md) |
 | API (everything else) | the same paths on the main app, plus `/api/profile/reviews`, `/api/profile/discounts`, `/api/profile/store-images`, `/api/profile/editor` |
 | Server service | Profile server services |
 | Repository | Profile repositories through `profilesDataSource` |
@@ -168,7 +168,7 @@ The only list-style product value currently stored as JSON is:
 
 - `images_json`
 
-See [Product Data Model](../product-data-model.md).
+See [Product Data Model](./product-data-model.md).
 
 ### Why it is separate
 
@@ -181,7 +181,7 @@ logins or orders.
 
 | Layer | Files |
 | --- | --- |
-| API (reads) | `/api/products`, `/api/products/reviews`, `/api/search/products`, `/api/search/fields`, `/api/pharmacy-profile-catalog` — served by the [products service](../../05-platform-features/products-service-module.md) |
+| API (reads) | `/api/products`, `/api/products/reviews`, `/api/search/products`, `/api/search/fields`, `/api/pharmacy-profile-catalog` — served by the [products service](../05-platform-features/products-service-module.md) |
 | API (writes) | the same paths on the main app |
 | Server service | Product and pharmacy catalog services |
 | Repository | Product repositories through `productsDataSource` |
@@ -252,7 +252,7 @@ can never consume the quota that serves logins, profiles, or the catalogue.
 
 | Layer | Files |
 | --- | --- |
-| API (list) | `GET /api/orders` — served by the [orders service](../../05-platform-features/orders-service-module.md) |
+| API (list) | `GET /api/orders` — served by the [orders service](../05-platform-features/orders-service-module.md) |
 | API (detail + writes) | `GET /api/orders/:id` and every `POST` — main app |
 | Module | `@asol/orders-core` (domain) · `@asol/data-core/marketplace-orders` (reads and writes) |
 | Database client | Marketplace orders DB client |
@@ -269,7 +269,7 @@ several that can fail half-done, leaving an order with no items.
 Both accounts hold the shard credentials: the service to read the list, the main
 app to write and to serve the detail view.
 
-See [Marketplace Order Management](../marketplace-order-management/README.md).
+See [Marketplace Order Management](../03-products-and-commerce/marketplace-order-management/01-architecture.md).
 
 ## 6. Notifications
 
@@ -353,4 +353,4 @@ The build runs schema sync before Next.js compilation.
 6. Keep access inside repositories and server services.
 7. Document the new database in this file.
 
-See [20 Schema Provisioning](./20-schema-provisioning.md).
+See [20 Schema Provisioning](./schema-provisioning.md).

@@ -1,4 +1,4 @@
-> **Note:** Operational detail moved from `docs/01-architecture-backup/` during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../README.md).
+> **Note:** Operational detail relocated here during the 2026-08 architecture reconstruction. Architectural relationships: [docs/01-architecture/](../01-architecture/README.md).
 
 # Scripts & Workflows
 
@@ -103,8 +103,8 @@ npm run android:r8:verify-release
 
 Normal native and OTA updates preserve AsolDB and the current user session.
 Clean-run commands are limited to test targets. See
-[capacitor.md](../../capacitor/capacitor.md) and
-[installation-state-and-clean-testing.md](../../capacitor/installation-state-and-clean-testing.md).
+[capacitor.md](./capacitor/capacitor.md) and
+[installation-state-and-clean-testing.md](./capacitor/installation-state-and-clean-testing.md).
 
 ## Typical: new Turso + Vercel
 

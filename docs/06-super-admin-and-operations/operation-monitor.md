@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Preserved operational and architectural detail from `docs/01-architecture-backup/`. Agents use this for implementation guidance.
+Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.
 
 ## Scope
 
-See sections below. Architectural relationships defer to [docs/01-architecture/README.md](../README.md) where applicable.
+See sections below. Architectural relationships defer to [docs/01-architecture/README.md](../01-architecture/README.md) where applicable.
 
 ---
 
@@ -102,4 +102,4 @@ Auth uses Drizzle directly; server SQL visibility comes from **`drizzle-dev-logg
 
 ## Schema sync panel
 
-Reads `public/sync_data/schema-sync-report.json` and profile report. If missing, run `npm run db:schema:sync` or deploy backend first. See [schema-provisioning.md](../../02-data-and-storage/schema-provisioning.md).
+Reads `public/sync_data/schema-sync-report.json` and profile report. If missing, run `npm run db:schema:sync` or deploy backend first. See [schema-provisioning.md](../02-data-and-storage/schema-provisioning.md).

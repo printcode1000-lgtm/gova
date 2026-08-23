@@ -28,7 +28,6 @@ Removed hooks that blocked push for dirty `public/sync_data` — rule moved to `
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/data-layers/22-scripts-and-workflows.md` § "main is the only branch"
 - Hook: `.githooks/pre-push.d/10-main-only`
 - Agent rules: `AGENTS.md` §1 rule 10, `CLAUDE.md` rule 10
 

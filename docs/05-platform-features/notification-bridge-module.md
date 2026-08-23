@@ -195,7 +195,7 @@ build and `auditStaticMobilePushSecurity()` on `out/` — the blob must be prese
 and the bundle must not contain a private key or the unlock key. The audit matches
 **plaintext** PEM bodies and env names, not PEM header strings used by `fcm-auth.ts`
 for parsing; see
-[static-mobile-push-pem-audit-false-positive.md](../../08-troubleshooting/problems/static-mobile-push-pem-audit-false-positive.md).
+[static-mobile-push-pem-audit-false-positive.md](../08-troubleshooting/problems/static-mobile-push-pem-audit-false-positive.md).
 
 ## Android channel compatibility
 

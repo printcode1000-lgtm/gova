@@ -5,7 +5,7 @@ sealed package at `packages/data-core/`. It is the largest package in the reposi
 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard
 router, the provisioning engine, the maintenance executables, and the browser IndexedDB layer.
 
-It is held to [the eight module isolation rules](./module-isolation-rules.md). Quote them by
+It is held to [the eight module isolation rules](../../01-architecture/02-packages/module-isolation-rules.md). Quote them by
 number when changing anything here.
 
 ## What moved, and what did not
@@ -177,7 +177,7 @@ directions.
 
 ## Changing this package
 
-1. Read this file and [25-central-data-access-module.md](./data-layers/25-central-data-access-module.md).
+1. Read this file and [25-central-data-access-module.md](../../02-data-and-storage/central-data-access.md).
 2. Adding a domain means adding a door — `exports`, `tsconfig.json` paths, and the pinned list
    in the contract test, deliberately and in the same change.
 3. Never add a `"./*"` door, and never add a `"@asol/data-core/*"` path wildcard.

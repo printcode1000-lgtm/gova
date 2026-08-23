@@ -69,7 +69,7 @@ npm run build                # succeeds
 - Static assets under `public/` → `asolApi.getPublicJson('/path/to/file.json')`
 - Business data → `asolApi.get/post/put` + `ASOL_API_ROUTES`
 
-See [data-layers/04-asol-api-client-layer.md](../system/data-layers/04-asol-api-client-layer.md) and [data-layers/19-architecture-contract.md](../system/data-layers/19-architecture-contract.md).
+See [data-layers/04-asol-api-client-layer.md](../../01-architecture/10-application-layers/api-client-layer.md) and [data-layers/19-architecture-contract.md](../../01-architecture/10-application-layers/layer-stack.md).
 
 ---
 

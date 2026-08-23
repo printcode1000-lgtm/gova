@@ -37,7 +37,8 @@ Business logic belonging to a sealed capability should live in the `@asol/*-core
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/data-layers/02-hooks-layer.md`
+- `src/features/**/hooks/`, `src/hooks/` (15 hook directories)
+- Classifier: `packages/architecture-core/src/contracts/contract.ts`
 
 ## Related Documents
 

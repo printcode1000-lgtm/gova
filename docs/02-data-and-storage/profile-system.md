@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Preserved operational and architectural detail from `docs/01-architecture-backup/`. Agents use this for implementation guidance.
+Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.
 
 ## Scope
 
-See sections below. Architectural relationships defer to [docs/01-architecture/README.md](../README.md) where applicable.
+See sections below. Architectural relationships defer to [docs/01-architecture/README.md](../01-architecture/README.md) where applicable.
 
 ---
 

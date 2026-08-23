@@ -53,7 +53,7 @@ npm run lint
 npm run build
 ```
 
-Backup reference: `docs/01-architecture-backup/data-layers/19-architecture-contract.md`.
+Backup reference: the pre-reconstruction architecture docs (see git history).
 
 ## Related Documents
 

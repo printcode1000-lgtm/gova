@@ -27,7 +27,8 @@ No export doors, route URLs, storage keys, or notification contracts changed.
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/srp-file-splits-2026-08.md`
+- Git history for the 2026-08 split commits
+- Rule: [single-responsibility.md](../01-principles/single-responsibility.md)
 
 ## Related Documents
 

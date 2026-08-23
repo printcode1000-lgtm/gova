@@ -147,7 +147,7 @@ Fixed products and custom pharmacy products expose:
 
 Seller-specific pharmacy edits are stored in override tables, then projected back into the same product object shape.
 
-See [Pharmacy Profile Catalog](../componant/pharmacy-profile-catalog.md).
+See [Pharmacy Profile Catalog](../04-ui-components/guides/pharmacy-profile-catalog.md).
 
 ## Image Storage
 

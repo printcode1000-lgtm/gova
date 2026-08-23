@@ -164,7 +164,7 @@ Native Android/iOS behavior is isolated behind:
 src/platform/media/capacitor-image-source-adapter.ts
 ```
 
-See [Storage Image Source Picker System](../system/storage-image-source-picker-system.md) for the platform details.
+See [Storage Image Source Picker System](../../02-data-and-storage/storage-image-source-picker-system.md) for the platform details.
 
 ## Persistence rule
 

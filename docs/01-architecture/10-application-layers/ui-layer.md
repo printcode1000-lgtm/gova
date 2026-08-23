@@ -43,7 +43,6 @@ React components stay in app (ADR-0004). Packages like `@asol/hero-slider-core` 
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/data-layers/01-ui-layer.md`
 - Page save: `@asol/page-save-core`, `src/features/page-save/`
 
 ## Related Documents

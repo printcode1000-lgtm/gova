@@ -5,7 +5,7 @@ derivation, minor-unit pricing, validators, permissions, the actor model, the fu
 rules, and the visibility filter. It is what the main app and the orders deployment both agree an
 order *means* — independent of where its rows live.
 
-Held to [the eight module isolation rules](./module-isolation-rules.md).
+Held to [the eight module isolation rules](../../01-architecture/02-packages/module-isolation-rules.md).
 
 ## One door, and zero of everything else
 

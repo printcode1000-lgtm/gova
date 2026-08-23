@@ -38,7 +38,8 @@ API routes SHOULD use `runTracedBusinessRoute()` or catch + `mapServiceError()` 
 
 ## Source Map
 
-- Backup: `docs/01-architecture-backup/data-layers/05-business-api-layer.md`
+- `src/app/api/**/route.ts` (119 routes)
+- Classifier: `packages/architecture-core/src/contracts/contract.ts`
 
 ## Related Documents
 

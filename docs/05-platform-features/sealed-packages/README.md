@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Per-package operational and boundary documentation migrated from `docs/01-architecture-backup/*-core-module.md`. Agents consult these for package-specific file maps, execution flows, and extension contracts.
+Per-package operational and boundary documentation, relocated here during the 2026-08 architecture reconstruction. Agents consult these for package-specific file maps, execution flows, and extension contracts.
 
 ## Scope
 
