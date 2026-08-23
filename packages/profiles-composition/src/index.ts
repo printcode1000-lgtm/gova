@@ -1,10 +1,8 @@
 import { PROFILES_DECLARATION } from '@asol/account-declarations/profiles';
 import * as serverEnv from '@/core/config/server-env';
-import { profileService } from '@/features/profile/server';
-import {
-  registerDataCoreRuntimeConfigPorts,
-  registerDataCoreSpecialtyCatalogPort,
-} from '@/features/data/server';
+import { profileService } from '@/features/profile/services/profile-service.bootstrap.server';
+import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
+import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/data-core-specialty-catalog-port';
 
 export interface ProfilesRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */
