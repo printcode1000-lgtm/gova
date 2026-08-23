@@ -158,6 +158,7 @@ export function checkFeatureDoorContract(): void {
   validateCompositionFeatureSeamRegistry();
 
   const scanned = [...walk(SRC), ...productionCompositionSources()];
+  const usedCompositionSeams = new Map<string, Set<string>>();
 
   for (const file of scanned) {
     const repoRel = rel(file);
@@ -180,18 +181,18 @@ export function checkFeatureDoorContract(): void {
         if (importerFeature === target) continue;
 
         if (compositionPackage && isCompositionFeatureSeam(compositionPackage, specifier)) {
+          const used = usedCompositionSeams.get(compositionPackage) ?? new Set<string>();
+          used.add(specifier);
+          usedCompositionSeams.set(compositionPackage, used);
           continue;
         }
-
-        const importer = importerFeature ? featureByName(importerFeature) : undefined;
-        if (importer?.deepImportSeams.includes(target)) continue;
 
         addViolation(
           'Feature Doors',
           file,
           `Deep cross-feature import "${specifier}" bypasses declared doors.`,
           compositionPackage
-            ? `Register this exact path in COMPOSITION_FEATURE_SEAMS only if the service mirror requires a narrower graph; otherwise use a declared feature door.`
+            ? 'Register this exact path in COMPOSITION_FEATURE_SEAMS only if the service mirror requires a narrower graph; otherwise use a declared feature door.'
             : `Import through @/features/${target}, @/features/${target}/ui, or @/features/${target}/server.`,
         );
         continue;
@@ -213,9 +214,6 @@ export function checkFeatureDoorContract(): void {
 
       if (!targetFeatureResolved || importerFeature === targetFeatureResolved) continue;
 
-      const importerEntry = importerFeature ? featureByName(importerFeature) : undefined;
-      if (importerEntry?.deepImportSeams.includes(targetFeatureResolved)) continue;
-
       if (
         !isDeclaredDoorPath(targetFeatureResolved, resolved) &&
         !isDeclaredDoorPath(targetFeatureResolved, `${resolved}.ts`) &&
@@ -233,6 +231,19 @@ export function checkFeatureDoorContract(): void {
       }
 
       validateDoorImport(repoRel, importerFeature, targetFeatureResolved, specifier);
+    }
+  }
+
+  for (const [packageFolder, seams] of Object.entries(COMPOSITION_FEATURE_SEAMS)) {
+    const used = usedCompositionSeams.get(packageFolder) ?? new Set<string>();
+    for (const specifier of seams) {
+      if (used.has(specifier)) continue;
+      addViolation(
+        'Feature Doors',
+        join(ROOT, 'packages', packageFolder),
+        `Composition feature seam "${specifier}" is registered but unused.`,
+        'Remove stale seam authority when the production import no longer exists.',
+      );
     }
   }
 }
