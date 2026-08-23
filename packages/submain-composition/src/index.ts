@@ -1,19 +1,23 @@
 import { SUBMAIN_DECLARATION } from '@asol/account-declarations/submain';
 import * as serverEnv from '@/core/config/server-env';
-import { resolveCartPrices } from '@/features/cart/services/cart-catalogue-pricing.server';
-import { productSearchService } from '@/features/product-search/services/product-search-service.server';
-import { getEnabledProductSearchFields } from '@/features/product-search/services/product-search-fields.server';
+import { resolveCartPrices } from '@/features/cart/server';
+import {
+  getEnabledProductSearchFields,
+  productSearchService,
+} from '@/features/product-search/server';
 import { categoryService } from '@/features/categories';
 import { configureOrdersCore } from '@asol/orders-core';
-import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
-import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
-import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/data-core-specialty-catalog-port';
+import { isSuperAdminIdentity } from '@/features/auth';
+import {
+  registerDataCoreRuntimeConfigPorts,
+  registerDataCoreSpecialtyCatalogPort,
+} from '@/features/data/server';
 
 export type {
   ProductSearchFilters,
   ProductSearchRequest,
   SellerSearchRequest,
-} from '@/features/product-search/domain/product-search.types';
+} from '@/features/product-search';
 
 export interface SubmainRuntimeConfig {
   env?: NodeJS.ProcessEnv;
