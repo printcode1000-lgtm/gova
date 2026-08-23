@@ -45,6 +45,7 @@ test_profile/
 !/docs/01-architecture/08-reference/package-catalog.md
 !/docs/01-architecture/08-reference/dependency-map.md
 !/docs/01-architecture/08-reference/application-feature-catalog.md
+!/docs/01-architecture/08-reference/feature-seams.md
 .github/
 .cursor/
 .ssh_local/
