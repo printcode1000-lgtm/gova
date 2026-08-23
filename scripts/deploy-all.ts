@@ -15,6 +15,8 @@ import {
 } from "@asol/release-core";
 import {
   assertPhasePrerequisites,
+  clearDeployInFlight,
+  markDeployInFlight,
   markPhaseComplete,
   readDeployAllState,
   writeDeployAllState,
@@ -747,6 +749,12 @@ async function main(): Promise<void> {
   let publishContext = resolvePublishContext(phase, readDeployAllState());
   const reports: VercelDeploymentReport[] = [];
 
+  // Announce the run to tooling outside this process. Preflight phases rewrite
+  // tracked files as they go, and a guard that answers a dirty tree by pushing
+  // would cancel this run's own main deployment — the main app redeploys on
+  // every push to `main`. Cleared in the finally below, whatever the outcome.
+  markDeployInFlight();
+  try {
   for (const phaseId of phasesToRun) {
     console.log(`\n[deploy:all] ── phase: ${phaseId} ──`);
     try {
@@ -846,6 +854,9 @@ async function main(): Promise<void> {
     );
   } else {
     console.log("[deploy:all] All phases completed for this run.");
+  }
+  } finally {
+    clearDeployInFlight();
   }
 }
 

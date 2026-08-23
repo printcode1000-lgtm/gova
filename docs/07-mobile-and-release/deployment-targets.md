@@ -275,6 +275,28 @@ Run it alone at any time to answer "is my change actually live?":
 npm run release:check
 ```
 
+### The in-flight lock, and why it never blocks a push
+
+`deploy:all` writes `.deploy-all/in-flight.lock` (pid + start time) when a run
+begins and removes it in a `finally`. It is gitignored, and it exists only to
+tell tooling outside the process that a release is mid-run.
+
+It exists because of the interaction below: a guard that answers a dirty tree by
+committing and pushing cancels the very deployment the run created. The lock
+buys that guard a pause — never an exemption. **Pushing to `main` remains the
+rule; nothing may leave work unpushed.** So the pause holds only while the
+deploy process is genuinely alive:
+
+| Situation | Guard |
+| --- | --- |
+| Run in progress, pid alive | paused |
+| Run finished or failed normally | active — the `finally` removed the lock |
+| Run killed outright | active on the next check — the recorded pid is gone |
+| Lock older than 2h (reused pid) | active — final backstop |
+
+Deliberately not `run-state.json`: that file outlives a run by design and says
+nothing about whether one is in progress.
+
 ### Do not push to `main` while `deploy:all` is running
 
 The main app is connected to GitHub and redeploys on every push to `main`. The

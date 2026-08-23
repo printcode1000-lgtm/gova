@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 const STATE_DIR = path.join(process.cwd(), ".deploy-all");
@@ -66,4 +66,44 @@ export function assertPhasePrerequisites(
     throw new Error(`Phase "${phaseId}" requires a saved deploy run in ${STATE_FILE}.`);
   }
   return state;
+}
+
+const IN_FLIGHT_FILE = path.join(STATE_DIR, "in-flight.lock");
+
+/**
+ * Marks a deploy run as in progress, for tooling outside this process.
+ *
+ * Several preflight phases rewrite tracked files as a side effect of running:
+ * every phase that boots a server re-runs schema sync and rewrites
+ * `public/sync_data/*.json`, and `build:static` rewrites
+ * `public/asol-web-manifest.json` with a new build id. A guard that reacts to a
+ * dirty tree by committing and pushing therefore fires mid-run — and because
+ * the main app redeploys on every push to `main`, each of those pushes cancels
+ * the deployment this very run created. One run ended with the main target
+ * TIMEOUT after 27 such pushes in three hours.
+ *
+ * `deploy:all` commits those files itself in its publish phase. This lock lets
+ * an external guard stay quiet until then, without being told to trust the
+ * agent's judgement.
+ *
+ * Deliberately not `run-state.json`: that file outlives a run by design, so it
+ * says nothing about whether one is in progress. This file exists only while
+ * the process does, and carries a timestamp so a crashed run cannot silence a
+ * guard forever.
+ */
+export function markDeployInFlight(): void {
+  mkdirSync(STATE_DIR, { recursive: true });
+  writeFileSync(
+    IN_FLIGHT_FILE,
+    `${JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString() }, null, 2)}\n`,
+    "utf8",
+  );
+}
+
+export function clearDeployInFlight(): void {
+  if (existsSync(IN_FLIGHT_FILE)) rmSync(IN_FLIGHT_FILE, { force: true });
+}
+
+export function deployInFlightPath(): string {
+  return IN_FLIGHT_FILE;
 }
