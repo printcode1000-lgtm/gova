@@ -34,6 +34,9 @@ interface ServiceProbe {
   readonly path: string;
   /** Codes meaning the handler ran. 400/401/403/404/405 are answers. */
   readonly accept: readonly number[];
+  /** Defaults to GET. Several accounts expose writes only. */
+  readonly method?: "GET" | "POST";
+  readonly body?: unknown;
 }
 
 const PROBES: readonly ServiceProbe[] = [
@@ -53,9 +56,16 @@ const PROBES: readonly ServiceProbe[] = [
     accept: [200, 400, 401, 403, 404],
   },
   {
+    // This account exposes /send only — there is no /preferences here, and
+    // probing it returned Next's own 404, which proved nothing about the
+    // account's ports. /send is also wrapped in a try/catch that answers 400,
+    // so a 400 would hide an unconfigured port too: only a 200 out of
+    // deliverGrants proves the token store and runtime config were wired.
     service: "notifications",
-    path: "/api/notifications/preferences?uid=asol_smoke_probe&phone=%2B200000000000",
-    accept: [200, 400, 403, 404],
+    path: "/api/notifications/send",
+    method: "POST",
+    body: { grant: "asol_smoke_probe" },
+    accept: [200],
   },
   {
     service: "submain",
@@ -63,11 +73,15 @@ const PROBES: readonly ServiceProbe[] = [
     accept: [200, 400],
   },
   {
-    // sub2main serves writes only; GET is a routing answer, not a failure. It
-    // still proves the process booted and its ports registered without throwing.
+    // sub2main serves writes only, so a GET answered 405 — routing, which says
+    // nothing about its ports. This POST reaches productService.create, and an
+    // unconfigured port throws there into errorResponse, so a rejection of the
+    // probe payload still proves the service was composed.
     service: "sub2main",
-    path: "/api/profile/store-details?uid=asol_smoke_probe",
-    accept: [200, 400, 404, 405],
+    path: "/api/products",
+    method: "POST",
+    body: { uid: "asol_smoke_probe" },
+    accept: [400, 401, 403, 409, 422],
   },
 ];
 
@@ -141,12 +155,15 @@ async function probeService(probe: ServiceProbe, port: number): Promise<string |
     await waitForListening(server, port, log);
 
     const response = await fetch(`http://127.0.0.1:${port}${probe.path}`, {
+      method: probe.method ?? "GET",
+      headers: probe.body === undefined ? undefined : { "Content-Type": "application/json" },
+      body: probe.body === undefined ? undefined : JSON.stringify(probe.body),
       signal: AbortSignal.timeout(30_000),
     });
     const body = (await response.text()).slice(0, 200);
 
     if (!probe.accept.includes(response.status)) {
-      return `${probe.service}${probe.path}\n    HTTP ${response.status} — expected one of ${probe.accept.join(", ")}\n    body: ${body}`;
+      return `${probe.service} ${probe.method ?? "GET"} ${probe.path}\n    HTTP ${response.status} — expected one of ${probe.accept.join(", ")}\n    body: ${body}`;
     }
 
     // A route can answer while a port silently falls back to a default.
@@ -157,7 +174,7 @@ async function probeService(probe: ServiceProbe, port: number): Promise<string |
       return `${probe.service}: unconfigured port(s) while answering: ${[...new Set(unconfigured)].join(", ")}`;
     }
 
-    console.log(`[service-smoke] ${response.status} ${probe.service}${probe.path}`);
+    console.log(`[service-smoke] ${response.status} ${probe.service} ${probe.method ?? "GET"} ${probe.path}`);
     return null;
   } catch (error) {
     return `${probe.service}: ${error instanceof Error ? error.message : String(error)}`;
