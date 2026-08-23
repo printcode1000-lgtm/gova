@@ -285,3 +285,45 @@ infrastructure leaking upward, but it creates no cycle — those packages do not
 back — and it is the repository's deliberate shape: repositories typed by the domain
 contracts whose rows they store. Inverting it would move types across thirteen packages
 and close no bypass.
+
+## Default-deny: enforcement covers the repository, not four folders
+
+The runner walks `src`, `packages`, `scripts` and `services`. An adversarial pass put
+`import Database from "better-sqlite3"` in four places: three were rejected, and the one
+in a new top-level directory drew no complaint at all. A boundary a developer escapes by
+choosing a different folder name is not a boundary — that is default-allow.
+
+`checkRepositorySweepContract` runs the two rules that must hold regardless of where code
+lives — which package may touch an infrastructure SDK, and that package internals are
+unreachable — over the whole tree, including files at the repository root.
+
+Layer contracts stay on their roots. They classify a file by its architectural position
+(UI, hook, service, repository), and a path outside the application has no such position.
+Infrastructure ownership is different: it is about what a file may *touch*, which is true
+everywhere.
+
+Exclusions are content that is not repository source — build output, the Capacitor store
+shells, docs, public assets, gitignored local state — each excluded for what it is rather
+than for being inconvenient.
+
+### What the sweep found immediately
+
+```
+capacitor.config.ts reaches into packages/native-core by relative path
+  "./packages/native-core/package.json"
+```
+
+The config derived Capacitor's `includePlugins` allowlist by reading the package's own
+manifest. The intent was right — one source of truth, so adding a plugin needs no second
+edit — but the route was a relative traversal the package seal forbids everywhere else,
+and it survived only because root files were never scanned.
+
+Fixed structurally, not by exception: `@asol/native-core` owns the derivation and exports
+`CAPACITOR_INCLUDE_PLUGINS`, because the knowledge of which plugins exist belongs to the
+package that declares them. `capacitor.config.ts` imports it through the door.
+
+`release-commands` had pinned the old mechanism by asserting the config contained the
+literal `native-core/package.json` — a guard holding the shape rather than the invariant,
+and so an obstacle to fixing it. Its stated intent ("the two lists cannot drift") now has
+three assertions that follow the architecture: the list arrives through the package door,
+the relative path must not return, and native-core derives it from its own dependencies.

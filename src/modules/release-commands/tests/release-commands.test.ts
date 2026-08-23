@@ -368,8 +368,23 @@ for (const setting of [
 const capacitorConfig = await readFile("capacitor.config.ts", "utf8");
 assert.match(capacitorConfig, /includePlugins/,
   "capacitor.config.ts must declare includePlugins: plugin discovery cannot see native-core");
-assert.match(capacitorConfig, /native-core\/package\.json/,
-  "includePlugins must be derived from native-core so the two lists cannot drift");
+// The derivation moved into the package that declares the plugins. The config
+// used to read `./packages/native-core/package.json` by relative path — a
+// traversal the package seal forbids everywhere else, which survived only
+// because repository-root files were never scanned. Same invariant, one source
+// of truth, now reached through the package door.
+assert.match(capacitorConfig, /CAPACITOR_INCLUDE_PLUGINS/,
+  "includePlugins must come from native-core so the two lists cannot drift");
+assert.match(capacitorConfig, /from ["']@asol\/native-core["']/,
+  "the plugin list must arrive through the package door, not a relative path");
+assert.doesNotMatch(capacitorConfig, /native-core\/package\.json/,
+  "capacitor.config.ts must not reach into the package by relative path");
+const pluginManifest = await readFile(
+  "packages/native-core/src/domain/capacitor-plugin-manifest.ts",
+  "utf8",
+);
+assert.match(pluginManifest, /nativeCorePackage\.dependencies/,
+  "native-core must derive the list from its own dependencies, not restate it");
 const nativeCoreDeps = Object.keys(
   (JSON.parse(await readFile("packages/native-core/package.json", "utf8")) as {
     dependencies: Record<string, string>;
