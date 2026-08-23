@@ -269,6 +269,17 @@ tree produced:
 | Retries | `ASOL_RELEASE_CHECK_ATTEMPTS` (default 20) every 15s — a deployment can still be propagating |
 | Fails with | both build ids, and the likeliest cause |
 
+It runs **after** `main-ready`, and it runs **whatever `main-ready` concluded**.
+That is deliberate: an inconclusive Vercel verdict is exactly when the question
+matters. The phase then resolves like this:
+
+| `main-ready` | `release:check` | Outcome |
+| --- | --- | --- |
+| READY | serving this build | phase passes |
+| READY | serving something else | **fails** — the deployment exists but is not production |
+| TIMEOUT / other | serving this build | passes, logged as `SERVING` — the deployment did land, Vercel's poll just did not see it |
+| TIMEOUT / other | not serving this build | fails, reporting both findings |
+
 Run it alone at any time to answer "is my change actually live?":
 
 ```bash

@@ -808,11 +808,44 @@ async function main(): Promise<void> {
           comment: publishContext.mainComment,
         });
         reports.unshift(mainReport);
-        if (mainReport.state !== "READY") {
+
+        // READY describes the deployment; it does not say what production
+        // serves. Ask production directly — and ask precisely when Vercel's
+        // verdict was inconclusive, because that is when the answer decides
+        // whether anything is actually wrong. A run once reported TIMEOUT here
+        // while production was serving an older build and answering 200 on
+        // every route: no status code could tell those apart, only the build id.
+        const servingBranch = selectedIncludes(phase, "main-serving");
+        let serving = false;
+        if (servingBranch) {
+          try {
+            await runDeploymentNpmScript("release:check", { logPrefix: "deploy:all" });
+            serving = true;
+          } catch (error) {
+            const detail = error instanceof Error ? error.message : String(error);
+            if (mainReport.state === "READY") {
+              throw new Error(
+                `Vercel reported READY, but production is not serving this build: ${detail}`,
+              );
+            }
+            throw new Error(
+              `${mainReport.message || `Main deployment is ${mainReport.state}.`} ` +
+                `Production is not serving this build either: ${detail}`,
+            );
+          }
+        }
+
+        if (mainReport.state !== "READY" && !serving) {
           throw new Error(mainReport.message || `Main deployment is ${mainReport.state}.`);
         }
+        if (mainReport.state !== "READY") {
+          console.log(
+            `[deploy:all] Vercel reported ${mainReport.state}, but production is serving this build — ` +
+              "treating the main target as deployed.",
+          );
+        }
         markPhaseComplete("main");
-        console.log(`[deploy:all] Phase "main" completed (${mainReport.state}).`);
+        console.log(`[deploy:all] Phase "main" completed (${serving ? "SERVING" : mainReport.state}).`);
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
