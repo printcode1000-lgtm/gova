@@ -28,7 +28,6 @@ import { checkRuntimeTargetContract } from './checks/runtime-target-contract';
 import { checkVendorOwnershipContract } from './checks/vendor-ownership-contract';
 import { checkPageSaveGatewayContract } from './checks/page-save-gateway-contract';
 import { checkApplicationFeatureRegistryContract } from './checks/application-features-contract';
-import { checkFeatureAnatomyContract } from './checks/feature-anatomy-contract';
 import { checkFeatureDoorContract } from './checks/feature-door-contract';
 import { checkFeatureDependencyContract } from './checks/feature-dependency-contract';
 import { checkFeatureApplicationDoorPurityContract } from './checks/feature-application-door-purity-contract';
@@ -65,7 +64,6 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
 
   checkCapabilityOwnershipContract();
   checkApplicationFeatureRegistryContract();
-  checkFeatureAnatomyContract();
   checkPackageCycleContract();
   checkPageSaveGatewayContract();
   checkPageSaveWriteGatewayContract();
