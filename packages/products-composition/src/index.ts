@@ -1,13 +1,16 @@
 import { PRODUCTS_DECLARATION } from '@asol/account-declarations/products';
 import * as serverEnv from '@/core/config/server-env';
-import { productService } from '@/features/product/services/product-service.server';
-import { productReviewService } from '@/features/product/services/product-review-service.server';
-import { searchProducts } from '@/features/product-search/services/product-search-products.server';
-import { getEnabledProductSearchFields } from '@/features/product-search/services/product-search-fields.server';
+import { productReviewService, productService } from '@/features/product/server';
+import {
+  getEnabledProductSearchFields,
+  searchProducts,
+} from '@/features/product-search/server';
 import { categoryService } from '@/features/categories';
-import { pharmacyProfileCatalogService } from '@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server';
-import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
-import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/data-core-specialty-catalog-port';
+import { pharmacyProfileCatalogService } from '@/features/pharmacy-profile-catalog/server';
+import {
+  registerDataCoreRuntimeConfigPorts,
+  registerDataCoreSpecialtyCatalogPort,
+} from '@/features/data/server';
 
 /**
  * Register `@asol/data-core`'s runtime-config port.
@@ -35,7 +38,7 @@ registerDataCoreSpecialtyCatalogPort();
 export type {
   ProductSearchFilters,
   ProductSearchRequest,
-} from '@/features/product-search/domain/product-search.types';
+} from '@/features/product-search';
 
 export interface ProductsRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */
