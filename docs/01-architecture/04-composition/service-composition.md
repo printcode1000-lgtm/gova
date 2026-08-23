@@ -59,10 +59,23 @@ Each composition:
 npm run services:sync
 npm run services:verify
 npm run services:build
+npm run smoke:services
 npm run test:compositions
 ```
 
 Included in `npm run build` and `deploy:all` preflight.
+
+`smoke:services` is the only gate that proves a composition root actually ran.
+The static gates verify declarations and imports; they cannot observe a port
+that was never registered. It builds each account, starts it, and asks a route
+that reaches **that account's own data** — health is deliberately not the probe,
+because the failure it exists for leaves health at 200. It also scans the
+server's output: any `is not configured` line fails the run even when every
+status code is green.
+
+The main application has the equivalent gate in `npm run smoke:production`.
+
+See [Deployment Targets](../../07-mobile-and-release/deployment-targets.md) for what each account is asked and why.
 
 ## Cloud accounts
 
@@ -90,3 +103,35 @@ New service account touches declarations, composition, service folder, sync grap
 1. Six composition packages match six service folders.
 2. Compositions use per-account declaration doors only.
 3. `test:compositions` gates the build.
+4. Every deployment is a composition root. An account service has no
+   `src/instrumentation.ts` from the application, so its own composition MUST
+   register every port its routes reach.
+5. An account composition root MUST pin a runtime choice its deployment cannot
+   serve both sides of.
+
+### Invariant 5 — a deployment pins what it cannot serve
+
+Rule:
+: Each account composition root MUST call
+  `registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true })`.
+
+Reason:
+: Every account aliases `better-sqlite3` to a stub that throws — it runs against
+  Turso only. The backend is otherwise resolved from the runtime context, where
+  a data source of `local` selects SQLite in any deployment that asks.
+
+Failure prevented:
+: The profiles account did exactly this during a real `deploy:all`: it loaded a
+  driver it does not ship and answered 500 on every route reaching data, while
+  `/api/health` stayed 200 and Vercel reported READY. One misconfigured
+  environment variable reproduces it in production.
+
+Current implementation:
+: `src/features/data/data-core-runtime-config-ports.ts` accepts the pin;
+  the six `packages/*-composition/src/index.ts` pass it.
+  `checkIsolatedDeploymentBackendContract` fails `npm run architecture:check`
+  if a composition registers the port without it.
+
+The main application is deliberately excluded: it ships the real driver and
+needs the local branch for development. Only a deployment that cannot serve both
+branches pins one.

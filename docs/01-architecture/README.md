@@ -55,7 +55,7 @@ docs/01-architecture/
 | If you are… | Read first |
 |---|---|
 | Changing an existing `@asol/*` package | [capability-map.md](./08-reference/capability-map.md) → [module-isolation-rules.md](./02-packages/module-isolation-rules.md) → package `test:*-core` |
-| Creating a new package | [package-creation-rules.md](./02-packages/package-creation-rules.md) → [capability-registry.ts](../packages/architecture-core/src/registry/capability-registry.ts) |
+| Creating a new package | [package-creation-rules.md](./02-packages/package-creation-rules.md) → [capability-registry.ts](../../packages/architecture-core/src/registry/capability-registry.ts) |
 | Adding infrastructure access (DB, R2, Capacitor, etc.) | [infrastructure-ownership.md](./05-capability-enforcement/infrastructure-ownership.md) → [default-deny-model.md](./05-capability-enforcement/default-deny-model.md) |
 | Changing composition / port wiring | [composition-roots.md](./04-composition/composition-roots.md) → [ports-and-contracts.md](./03-dependencies/ports-and-contracts.md) |
 | Adding a new service deployment | [service-composition.md](./04-composition/service-composition.md) → [service-boundaries.md](./06-runtime-boundaries/service-boundaries.md) |

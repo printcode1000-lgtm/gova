@@ -50,7 +50,7 @@ Define `exports` in `package.json`. Start minimal — usually `.` and optionally
 
 ### 4. Contract test
 
-`src/tests/index.test.ts` MUST:
+`packages/<name>/src/tests/index.test.ts` MUST:
 
 - Assert export surface matches `package.json`
 - Assert the package imports no forbidden paths

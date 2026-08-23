@@ -43,6 +43,13 @@ function runNormalizeTest() {
 function runIdsTest() {
   assert.equal(isSafeProductId("product-1"), true);
   assert.equal(isSafeProductId("../bad"), false);
+  // Reached from request bodies cast to their input type without validation, so
+  // these arrive at runtime despite the `string` parameter. Reading .length off
+  // undefined turned a malformed payload into a 500 instead of a 400.
+  assert.equal(isSafeProductId(undefined as unknown as string), false);
+  assert.equal(isSafeProductId(null as unknown as string), false);
+  assert.equal(isSafeProductId(42 as unknown as string), false);
+  assert.equal(isSafeProductId({} as unknown as string), false);
   assert.equal(normalizeProductStatus(undefined), "active");
   assert.equal(normalizeProductStatus("draft"), "draft");
   console.log("✅ product-core ids test passed");

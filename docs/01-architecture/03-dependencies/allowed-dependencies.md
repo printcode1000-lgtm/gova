@@ -60,7 +60,7 @@ Full list: `OWNED_VENDOR_MODULES` in `capability-registry.ts`.
 |---|---|
 | UI | Hooks, shared components, `@asol/*` browser-safe doors |
 | Hooks | Client services |
-| Client services | `@asol/asol-api-client` transport layer |
+| Client services | `asolApi` from `src/core/api/asol-api-client.ts` (application transport, not an `@asol/*` package) |
 | Business API bootstrap | Server service factories |
 | Server services | Query/command layer |
 | Query/command | Repository interfaces |

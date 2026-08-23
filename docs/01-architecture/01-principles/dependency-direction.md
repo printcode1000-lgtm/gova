@@ -13,11 +13,11 @@ Dependency direction rules. Specific allow/forbid lists are in [03-dependencies/
 ```text
 Application UI/Hooks
   → Client Services
-  → AsolApiClient
+  → asolApi (`src/core/api/asol-api-client.ts`)
   → Business API / Server Services
   → Query/Command (operations)
   → Repository (@asol/data-core domain doors)
-  → Database Client (@asol/data-core/server internals)
+  → Database Client (`packages/data-core/src/core/database/`, package-internal — no door exposes it)
   → FINAL_SIDE_EFFECT (Turso / SQLite)
 
 Capability packages

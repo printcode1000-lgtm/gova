@@ -69,7 +69,7 @@ Gateway capabilities with explicit scan and/or ESLint enforcement. Ownership det
 | Camera, GPS, push token native | `@asol/native-core` | `@capacitor/*` in app |
 | Save from page UI | `@asol/page-save-core` | Direct repository from component |
 | Send push | `@asol/notifications-core` | `web-push` in route |
-| Publish OTA bundle | `@asol/ota-core/publishing` | `scripts/ota-publish` imports |
+| Publish OTA bundle | `@asol/ota-core/publishing` | `packages/ota-core/scripts/ota-publish.ts` (`npm run ota:publish`) |
 
 ## Source Map
 

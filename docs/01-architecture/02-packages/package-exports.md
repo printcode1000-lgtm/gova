@@ -51,9 +51,9 @@ Operational database detail: [docs/02-data-and-storage/](../../02-data-and-stora
 
 Exactly one export key: `"."`. `checkPageSaveGatewayContract` fails the build if a second door appears. Page-authored persistence MUST go through this gateway.
 
-### `@asol/native-core` — three doors
+### `@asol/native-core` — four doors
 
-`.`, `./platform-globals`, `./scripts/validate-android-r8-policy`. ESLint explicitly allows these while banning `@asol/native-core/src/**`.
+`.`, `./platform-globals`, `./scripts/validate-android-r8-policy`, `./scripts/android-build-preflight`. ESLint explicitly allows these while banning `@asol/native-core/src/**`.
 
 ### `@asol/ota-core` — runtime vs publishing split
 

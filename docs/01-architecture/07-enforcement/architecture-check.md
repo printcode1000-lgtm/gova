@@ -27,7 +27,7 @@ Before scan, `scripts/architecture-check.ts` runs:
 | Preflight | Source |
 |---|---|
 | Storage profiles validation | `@asol/storage-core/server` `validateStorageProfilesAtStartup()` |
-| Category data validation | `src/features/categories/infrastructure/validation.engine` |
+| Category data validation | `src/features/categories/infrastructure/validation.engine.ts` |
 
 These stay in the CLI because `@asol/architecture-core` MUST NOT import application data (would violate the rules it enforces).
 
@@ -39,19 +39,21 @@ These stay in the CLI because `@asol/architecture-core` MUST NOT import applicat
 | 2 | `checkPackageCycleContract` | Circular `@asol/*` deps |
 | 3 | `checkPageSaveGatewayContract` | Single-door page-save |
 | 4 | `checkPageSaveWriteGatewayContract` | Write ownership |
-| 5 | `checkRepositorySweepContract` | Repository layer rules |
-| 6 | Root vendor files | `capacitor.config.ts` |
-| 7 | Walk `src/` | Seal, system logs, vendor ownership, native |
-| 8 | Walk `packages/` | Seal, app-import ban, vendor |
-| 9 | Walk `scripts/` | Data access, account bridge, seal |
-| 10 | Touch + MapLibre contracts | UI policy |
-| 11 | Generated data-access artifacts | |
-| 12 | System logs bootstrap | |
-| 13 | Walk `services/` | Seal, vendor, notification module |
-| 14 | Dead contract rules | |
-| 15 | `printReport` + native surface report | |
+| 5 | `checkRepositorySweepContract` | Default-deny sweep over the whole tree |
+| 6 | `checkIsolatedDeploymentBackendContract` | Every account composition root pins its backend; each `better-sqlite3` stub names its own service |
+| 7 | `checkVendorOwnershipContract` | Root vendor-owned files (`capacitor.config.ts`) |
+| 8 | Walk `src/` → `checkFile`, `checkPackageSealContract`, `checkSystemLogsContract`, `checkVendorOwnershipContract` | Application source |
+| 9 | Walk `packages/` → `checkPackageSealContract`, `checkPackageAppImportContract`, `checkVendorOwnershipContract` | Package source |
+| 10 | Walk `scripts/` → `checkExternalDataAccessOwnership`, `checkAccountBridgeContract`, `checkPackageSealContract`, `checkVendorOwnershipContract` | Tooling |
+| 11 | `checkTouchInteractionContract`, `checkMapLibreWorkerContract` | UI policy |
+| 12 | `checkGeneratedDataAccessArtifacts` | Generated data-access artifacts |
+| 13 | `checkSystemLogsBootstrapContract` | Logging bootstrap |
+| 14 | `checkDeadContractRules` | Rules whose subject no longer exists |
+| 15 | Walk `services/` → `checkAccountBridgeContract`, `checkPackageSealContract`, `checkVendorOwnershipContract`, `checkNotificationModuleContract` | Account services (skips `generated/`) |
+| 16 | `printReport`, then `reportNativeSurface` | Verdict, then store-release cost |
 
-Exit code: `0` pass, `1` violations printed.
+SOURCE_OF_TRUTH → `packages/architecture-core/src/runner.ts`. Every check above is
+named exactly as it is exported, so an agent can search for it directly.
 
 ## When check fails
 
