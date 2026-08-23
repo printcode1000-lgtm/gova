@@ -7,7 +7,7 @@
 
 ## Purpose
 
-Explicit dependency relationships between sealed packages, derived from production imports under `packages/*/src`.
+Explicit dependency relationships between sealed packages, derived from production imports under `packages/*/src` using the same import parser as architecture enforcement.
 
 ## Scope
 
