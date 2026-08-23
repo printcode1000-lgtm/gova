@@ -5,14 +5,15 @@
  * - Every registry entry must resolve on disk
  * - Forbidden application roots (`src/modules`, …) must not exist
  * - Only APPROVED_SRC_ROOTS may appear as top-level directories under `src/`
- * - Competing top-level feature folders (`entities`, `components`) are rejected
+ * - Feature top-level folders must use FEATURE_INTERNAL_VOCABULARY
  */
-import { existsSync, readdirSync, statSync } from 'fs';
+import { existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 
 import {
   APPLICATION_FEATURES,
   APPROVED_SRC_ROOTS,
+  FEATURE_INTERNAL_VOCABULARY,
   FORBIDDEN_APP_ROOTS,
   featureByName,
 } from '../registry/application-features-registry';
@@ -22,8 +23,9 @@ import { ROOT, addViolation } from './architecture-types';
 const APPROVED = new Set<string>(APPROVED_SRC_ROOTS);
 const FORBIDDEN = new Set<string>(FORBIDDEN_APP_ROOTS);
 const PACKAGE_NAMES = new Set(CAPABILITY_PACKAGES.map((p) => p.name));
+const FEATURE_FOLDERS = new Set<string>(FEATURE_INTERNAL_VOCABULARY);
 
-/** Competing layer names that must not appear as a direct child of a feature. */
+/** Legacy competing names are called out with a more specific remediation. */
 const FORBIDDEN_FEATURE_TOP_FOLDERS = new Set(['entities', 'components', 'modules']);
 
 export function checkApplicationFeatureRegistryContract(): void {
@@ -38,7 +40,6 @@ export function checkApplicationFeatureRegistryContract(): void {
     return;
   }
 
-  // Forbidden competing roots
   for (const name of FORBIDDEN) {
     const path = join(srcRoot, name);
     if (existsSync(path)) {
@@ -51,7 +52,6 @@ export function checkApplicationFeatureRegistryContract(): void {
     }
   }
 
-  // Approved top-level directories only
   for (const entry of readdirSync(srcRoot, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     if (!APPROVED.has(entry.name)) {
@@ -64,7 +64,6 @@ export function checkApplicationFeatureRegistryContract(): void {
     }
   }
 
-  // Duplicate registry names / source paths (featureByName alone would hide these).
   const seenNames = new Set<string>();
   const seenPaths = new Set<string>();
   for (const entry of APPLICATION_FEATURES) {
@@ -157,7 +156,6 @@ export function checkApplicationFeatureRegistryContract(): void {
       continue;
     }
 
-    // Competing vocabulary at feature top level
     const featurePath = join(featuresRoot, name);
     for (const child of readdirSync(featurePath, { withFileTypes: true })) {
       if (!child.isDirectory()) continue;
@@ -168,16 +166,23 @@ export function checkApplicationFeatureRegistryContract(): void {
           `Feature "${name}" uses forbidden top-level folder "${child.name}".`,
           'Use canonical vocabulary: domain (not entities), presentation (not components).',
         );
+        continue;
+      }
+      if (!FEATURE_FOLDERS.has(child.name)) {
+        addViolation(
+          'Application Features',
+          join(featurePath, child.name),
+          `Feature "${name}" uses unregistered top-level folder vocabulary "${child.name}".`,
+          `Use one of: ${[...FEATURE_FOLDERS].join(', ')}. If a new architectural layer is genuinely required, add it once to FEATURE_INTERNAL_VOCABULARY with documentation and enforcement.`,
+        );
       }
     }
 
-    // Declared doors must exist on disk
     const feature = featureByName(name)!;
     for (const door of feature.doors) {
-      const file =
-        door === '.'
-          ? join(featurePath, 'index.ts')
-          : join(featurePath, `${door.slice(2)}.ts`);
+      const file = door === '.'
+        ? join(featurePath, 'index.ts')
+        : join(featurePath, `${door.slice(2)}.ts`);
       const alt = file.replace(/\.ts$/, '.tsx');
       if (!existsSync(file) && !existsSync(alt)) {
         addViolation(
@@ -200,7 +205,4 @@ export function checkApplicationFeatureRegistryContract(): void {
       );
     }
   }
-
-  // Silence unused
-  void statSync;
 }
