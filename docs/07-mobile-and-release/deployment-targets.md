@@ -247,6 +247,20 @@ invisible for hours. A catch spanning several distinct failures must say which
 one it caught, or a gate downstream cannot tell an uncomposed deployment from a
 badly addressed request.
 
+### The console pages describe commands that exist
+
+`/dev/deploy-all` and `/dev/release-console` render entirely from
+`DEPLOY_ALL_RUNBOOK`, `DEPLOY_PUSH_RUNBOOK` and `BUILD_COMMAND_CATALOG`, so they
+follow the repository on their own — a branch added to the runbook appears with
+no edit to the page.
+
+Derivation cannot catch the other direction. Renaming an npm script leaves the
+catalogs pointing at a command that no longer exists, and the page keeps
+offering a button that fails only when someone presses it.
+`npm run test:console-command-parity` closes that: every npm command those pages
+can run must resolve to a real script in `package.json`. It runs inside
+`build:static`, so a rename cannot reach a release.
+
 ### The gate that asks production what it serves
 
 `npm run release:check` (`scripts/check-deployed-release.ts`) runs as the

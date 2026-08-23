@@ -1,6 +1,6 @@
 # Super Admin Notification Tests
 
-`/super-admin/notification-tests` is a diagnostic console for notification
+`/dev/notification-tests` is a diagnostic console for notification
 channels, custom sound, device registration, and end-to-end provider delivery.
 It is linked under **Super Admin → Notifications** beside the production
 broadcast page.

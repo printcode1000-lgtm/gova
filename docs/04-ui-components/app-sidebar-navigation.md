@@ -26,8 +26,8 @@ cards above it. Growth is absorbed by scrolling, not by shrinking siblings.
 - A destination that is the only entry of its topic is rendered as a direct link
   card instead of a collapsible group, styled with the same header class
   (`groupButtonClass`) so it sits flush with the collapsible cards around it.
-  `حسابات التخزين السحابي` is such an entry; it has no group toggle and no key in
-  `COLLAPSED_SUPER_ADMIN_GROUPS`.
+  No such entry exists today — `حسابات التخزين السحابي` was one until it moved
+  to `/dev/cloud-accounts`; the pattern stays documented for the next one.
 - Navigating to any `/super-admin/*` route expands the section itself and keeps
   all groups collapsed — the route no longer auto-expands a matching group.
 - The expanded panel stays in normal document flow: it grows inside the card and
@@ -44,13 +44,14 @@ after the role each destination performs.
 | واجهة المتجر والعروض | سلايدر الواجهة الرئيسية | `/super-admin/hero-slider` |
 | واجهة المتجر والعروض | شريط المنتجات المميزة | `/super-admin/featured-marquee` |
 | واجهة المتجر والعروض | الشريط الإخباري المتحرك | `/super-admin/trending-ribbon` |
-| — (direct entry, no group) | حسابات التخزين السحابي | `/super-admin/cloud-accounts` |
-
-See [super-admin-cloud-accounts.md](../06-super-admin-and-operations/super-admin-cloud-accounts.md).
-| الإشعارات والبث | اختبار إرسال الإشعارات | `/super-admin/notification-tests` |
 | الإشعارات والبث | بث إشعار لكل المستخدمين | `/super-admin/notifications-broadcast` |
 | النظام وحسابات المستخدمين | سجل أحداث النظام | `/super-admin/logs` |
 | النظام وحسابات المستخدمين | إدارة حسابات المستخدمين | `/super-admin/users` |
+
+Development-only surfaces are deliberately absent. `/dev/cloud-accounts` and
+`/dev/notification-tests` moved out of `/super-admin` so they stay out of the
+mobile bundle, `out/`, and production — see
+[super-admin-cloud-accounts.md](../06-super-admin-and-operations/super-admin-cloud-accounts.md).
 
 The section trigger itself is labeled `لوحة تحكم السوبر أدمن`. Its header button
 uses the same `sidebarControlClass` stack as the settings card (icon, label, and
@@ -67,7 +68,6 @@ depth comes from surface tint, not shadow.
 | Inner block | Background token |
 | --- | --- |
 | واجهة المتجر والعروض | `bg-surface-container-low` |
-| حسابات التخزين السحابي (direct link) | `bg-primary-container/15` |
 | الإشعارات والبث | `bg-secondary-container/20` |
 | النظام وحسابات المستخدمين | `bg-tertiary-container/15` |
 

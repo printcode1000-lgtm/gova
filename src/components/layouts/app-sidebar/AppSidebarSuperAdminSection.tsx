@@ -1,13 +1,11 @@
 import Link from "next/link";
 import {
   ChevronDown,
-  Cloud,
   Megaphone,
   ScrollText,
   ShieldCheck,
   Sliders,
   Sparkles,
-  TestTube2,
   TrendingUp,
   Users,
 } from "lucide-react";
@@ -127,15 +125,6 @@ export function AppSidebarSuperAdminSection({
             <SuperAdminLink href="/super-admin/trending-ribbon" icon={<TrendingUp className={sidebarSmallIconClass} />} label="الشريط الإخباري المتحرك" className={itemClass} onClose={onClose} />
           </SuperAdminGroup>
 
-          <div
-            className={cn(innerShellBase, superAdminInnerSurface("cloud"))}
-          >
-            <Link href="/super-admin/cloud-accounts" onClick={onClose} className={groupButtonClass}>
-              <Cloud className={sidebarSmallIconClass} />
-              حسابات التخزين السحابي
-            </Link>
-          </div>
-
           <SuperAdminGroup
             icon={<Megaphone className={sidebarSmallIconClass} />}
             label="الإشعارات والبث"
@@ -145,7 +134,6 @@ export function AppSidebarSuperAdminSection({
             shellClass={cn(innerShellBase, superAdminInnerSurface("notifications"))}
             onToggle={() => onGroupToggle("notifications")}
           >
-            <SuperAdminLink href="/super-admin/notification-tests" icon={<TestTube2 className={sidebarSmallIconClass} />} label="اختبار إرسال الإشعارات" className={itemClass} onClose={onClose} />
             <SuperAdminLink href="/super-admin/notifications-broadcast" icon={<Megaphone className={sidebarSmallIconClass} />} label="بث إشعار لكل المستخدمين" className={itemClass} onClose={onClose} />
           </SuperAdminGroup>
 

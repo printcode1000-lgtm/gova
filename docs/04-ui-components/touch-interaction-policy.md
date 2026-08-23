@@ -65,7 +65,7 @@ So a wide table must be wide *by design*, not by accident:
   24px per column, which on a five-column table is a fifth of a phone's width
   spent on gutters.
 
-`/super-admin/cloud-accounts` is the worked example. Its tables carried 30–50
+`/dev/cloud-accounts` is the worked example. Its tables carried 30–50
 character ids and `r2.dev` URLs with no `break-words`, so each one laid itself out
 around 2000px wide against a declared `min-w-[640px]`, and the horizontal drag was
 the only way to reach any column but the first.

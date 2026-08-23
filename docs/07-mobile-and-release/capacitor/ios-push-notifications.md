@@ -202,7 +202,7 @@ To verify compilation and delivery on a physical iOS device:
 1. **macOS Xcode Build**: Open `ios/App/App.xcworkspace` in Xcode on macOS, allow SPM to resolve `firebase-ios-sdk@12.17.0` (which generates `Package.resolved`), and build to a physical Apple device.
 2. **Token Inspection**: Trigger push registration on the device and verify that the registered token string is an FCM registration token (not 64 hex characters).
 3. **Database Verification**: Check the database row in `user_notification_tokens` for the target `uid`: confirm `platform = ios` and `provider = fcm`.
-4. **Real Push Test**: Navigate to `/super-admin/notification-tests` in the web application, select Real Push mode, and trigger a test notification to the test user.
+4. **Real Push Test**: Navigate to `/dev/notification-tests` in the web application, select Real Push mode, and trigger a test notification to the test user.
 5. **Application States**: Verify push delivery across all three application states:
    - **Foreground**: Banner, badge, and notification-center entry update while the app is active.
    - **Background**: Banner notification appears while the app is minimized.

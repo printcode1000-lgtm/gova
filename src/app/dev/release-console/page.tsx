@@ -4,10 +4,12 @@ import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
 import { ReleaseConsolePage } from "@/modules/google-play-console";
 
 /**
- * Deliberately not `force-dynamic`: the catalog and android runbooks are
- * compile-time constants from `@asol/release-core/console`, and this route is
- * part of `output: "export"`, which rejects a force-dynamic page.
+ * Always re-evaluate: catalog and android runbooks come from @asol/release-core.
+ *
+ * Safe because `app/dev` is excluded from the static export by
+ * `STATIC_ROUTE_IGNORELIST`.
  */
+export const dynamic = "force-dynamic";
 export default function ReleaseConsoleRoute() {
   if (!getServerRuntimeContext().isDevelopment) notFound();
   return <ReleaseConsolePage />;

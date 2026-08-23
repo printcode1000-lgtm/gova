@@ -82,7 +82,7 @@ See [Deployment Targets](../../07-mobile-and-release/deployment-targets.md) for 
 
 ## Cloud accounts
 
-Each Vercel/Turso/R2 account must appear on `/super-admin/cloud-accounts`. See [docs/06-super-admin-and-operations/super-admin-cloud-accounts.md](../../06-super-admin-and-operations/super-admin-cloud-accounts.md).
+Each Vercel/Turso/R2 account must appear on `/dev/cloud-accounts`. See [docs/06-super-admin-and-operations/super-admin-cloud-accounts.md](../../06-super-admin-and-operations/super-admin-cloud-accounts.md).
 
 ## Source Map
 

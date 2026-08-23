@@ -13,7 +13,7 @@ import {
 } from '../presentation/cloud-accounts-reference';
 
 /**
- * /super-admin/cloud-accounts must stay complete when an account is added anywhere.
+ * /dev/cloud-accounts must stay complete when an account is added anywhere.
  *
  * Vercel and R2 account rows are derived from sealed packages; Turso rows live in
  * `cloud-accounts-reference.ts` (there is no Turso registry object in the tree).

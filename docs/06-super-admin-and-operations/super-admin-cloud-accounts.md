@@ -2,7 +2,17 @@
 
 ## Purpose
 
-`/super-admin/cloud-accounts` is a read-only reference for super admins. It lists
+`/dev/cloud-accounts` is a read-only reference, development-only.
+
+It lives under `/dev`, not `/super-admin`, and is not in the sidebar. That scope
+is what keeps it out of every shipped surface: `app/dev` is excluded from the
+static export by `STATIC_ROUTE_IGNORELIST`, so it never reaches the mobile
+bundle or `out/`, and the route returns 404 outside development. Under
+`/super-admin` it was exported into the mobile bundle, where its `"use client"`
+tree pulled `@asol/account-declarations` — whose entries carry
+`requiredEnv`/`optionalEnv` — into a static chunk, and
+`auditStaticMobilePushSecurity` failed the release over an inventory of server
+secret names. It lists
 every external account this project deploys to or stores data in: seven Vercel
 accounts, five Turso accounts, and four Cloudflare R2 accounts (general,
 legacy products, apparel/pets products, OTA).
