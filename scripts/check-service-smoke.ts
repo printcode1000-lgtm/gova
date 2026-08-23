@@ -58,14 +58,17 @@ const PROBES: readonly ServiceProbe[] = [
   {
     // This account exposes /send only — there is no /preferences here, and
     // probing it returned Next's own 404, which proved nothing about the
-    // account's ports. /send is also wrapped in a try/catch that answers 400,
-    // so a 400 would hide an unconfigured port too: only a 200 out of
-    // deliverGrants proves the token store and runtime config were wired.
+    // account's ports.
+    //
+    // 400 is accepted because this environment has no VAPID keys or grant
+    // secret, and the route rightly refuses to deliver without them. What
+    // separates that from an unregistered port is the reason, which the route
+    // now logs instead of swallowing — the scan below reads it.
     service: "notifications",
     path: "/api/notifications/send",
     method: "POST",
     body: { grant: "asol_smoke_probe" },
-    accept: [200],
+    accept: [200, 400],
   },
   {
     service: "submain",
@@ -74,14 +77,17 @@ const PROBES: readonly ServiceProbe[] = [
   },
   {
     // sub2main serves writes only, so a GET answered 405 — routing, which says
-    // nothing about its ports. This POST reaches productService.create, and an
-    // unconfigured port throws there into errorResponse, so a rejection of the
-    // probe payload still proves the service was composed.
+    // nothing about its ports. Probing /api/products instead was worse: an
+    // incomplete payload crashed productService.create on a field it reads
+    // before validating, and that 500 would have failed every release for a
+    // fault in the probe. This route guards its input with Array.isArray, so
+    // an empty cart is a real quote out of the seller-discounts repository —
+    // no write, and an unconfigured port throws into mapServiceError as a 500.
     service: "sub2main",
-    path: "/api/products",
+    path: "/api/profile/discounts/quote",
     method: "POST",
-    body: { uid: "asol_smoke_probe" },
-    accept: [400, 401, 403, 409, 422],
+    body: { items: [] },
+    accept: [200],
   },
 ];
 
