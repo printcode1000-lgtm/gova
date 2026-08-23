@@ -86,9 +86,10 @@ The **publish** phase is also split into sections:
 
 The six isolated Vercel phases each contain one deploy branch:
 `notifications:deploy`, `products:deploy`, `orders:deploy`, `profiles:deploy`,
-`submain:deploy`, and `sub2main:deploy`. The final `main` phase contains one
-verification branch that matches the GitHub-linked deployment by commit SHA and
-waits until it is `READY`.
+`submain:deploy`, and `sub2main:deploy`. The final `main` phase contains three
+branches: `main-ready` (match commit SHA and wait for `READY`), `main-serving`
+(`release:check` — production serves this build), and `deployed-smoke`
+(`smoke:deployed` — the seven deployed origins answer their data routes).
 
    `services:build` was added after every other check in this list passed, the
    release commit was pushed, `main` went `READY`, and **the isolated service
@@ -168,24 +169,28 @@ every server route answered 500 — and the profiles account served errors to th
 browser for hours with `/api/health` returning 200 the whole time, because
 health touches no shard.
 
-Two gates close that:
+Three gates close that:
 
 | Script | Runs | Asks |
 | --- | --- | --- |
 | `smoke:production` | after `build`, before `build:static` | five routes on the main app, each crossing a different composition root |
-| `smoke:services` | after `services:build` | one route per isolated account that reaches **that account's own data** |
+| `smoke:services` | after `services:build` | one route per isolated account that reaches **that account's own data** — against a **locally built** copy |
+| `smoke:deployed` | `main` phase, after `main-serving` | the same data probes against the **seven deployed origins** baked into the static/mobile bundle as `NEXT_PUBLIC_ASOL_*_URL` |
 
-Health is deliberately not the probe. The fault both gates exist for —
+Health is deliberately not the probe. The fault these gates exist for —
 a composition root that never registers a port — leaves health green and
-everything else broken.
+everything else broken. `/api/health` is never used as an account probe.
 
 Codes that mean the handler ran are accepted, and a 500, a refused connection,
 or a server that never listens is not. The server's own output is scanned too,
 because a route can answer 200 while a port quietly falls back to a default —
 any `is not configured` line fails the check even when every status is green.
 
-Both run inside preflight, so a bundling or wiring fault stops the release
-before the deployment commit exists.
+`smoke:production` and `smoke:services` run inside preflight, so a bundling or
+wiring fault stops the release before the deployment commit exists.
+`smoke:deployed` runs after publish: only a request to the real origin proves
+the URL the mobile app will call is alive. A missing `NEXT_PUBLIC_ASOL_*` env
+var fails the gate by name — accounts are never skipped.
 
 #### What each account is asked, and why
 
@@ -261,6 +266,17 @@ offering a button that fails only when someone presses it.
 can run must resolve to a real script in `package.json`. It runs inside
 `build:static`, so a rename cannot reach a release.
 
+Derivation also cannot catch a branch that the page shows but the executor
+never runs. Preflight is driven by iterating `DEPLOY_ALL_PREFLIGHT_SECTIONS`;
+the six service phases are driven by `SERVICE_PHASE_IDS`. The `publish` and
+`main` phases are hand-coded, so a branch declared only in the runbook is inert
+unless `scripts/deploy-all.ts` also names it. That already happened once:
+`main-serving` was added to the runbook and never executed until it was wired
+by hand. `npm run test:deploy-runbook-execution` fails when a declared branch
+is neither loop-executed nor named in the executor, and states that the branch
+will appear on `/dev/deploy-all` and in the docs while never running. It runs
+inside `build:static`.
+
 ### The gate that asks production what it serves
 
 `npm run release:check` (`scripts/check-deployed-release.ts`) runs as the
@@ -298,6 +314,35 @@ Run it alone at any time to answer "is my change actually live?":
 
 ```bash
 npm run release:check
+```
+
+### The gate that asks the seven deployed origins
+
+`npm run smoke:deployed` (`scripts/check-deployed-origins.ts`) runs as the
+`deployed-smoke` branch of the `main` phase, right after `main-serving`.
+
+`smoke:services` proves a locally built service answers. It does not prove the
+origin the Capacitor bundle will call. Those origins are the seven
+`NEXT_PUBLIC_ASOL_*_URL` values the static build bakes in (same names
+`assertStatic*BaseUrl` in `@asol/ota-core/publishing` requires):
+
+| Env var | Account | Probe (same as `smoke:services`, plus main) |
+| --- | --- | --- |
+| `NEXT_PUBLIC_ASOL_API_BASE_URL` | main (`gova`) | `GET /api/products?limit=1` |
+| `NEXT_PUBLIC_ASOL_PROFILES_URL` | profiles | `GET /api/profile/store-details?uid=asol_smoke_probe` |
+| `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | products | `GET /api/products?limit=1` |
+| `NEXT_PUBLIC_ASOL_ORDERS_URL` | orders | `GET /api/orders?…` |
+| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | notifications | `POST /api/notifications/send` with probe grant |
+| `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | submain | `GET /api/search/products?…` |
+| `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | sub2main | `POST /api/profile/discounts/quote` with empty cart |
+
+Accepted status codes match `smoke:services` (and main reuses the products
+accept list). A 500 always fails. Response bodies are scanned for
+`is not configured`. Failures print the account, URL, status, and body. A
+missing env var fails naming the variable — no account is skipped.
+
+```bash
+npm run smoke:deployed
 ```
 
 ### The in-flight lock, and why it never blocks a push
@@ -386,7 +431,7 @@ stored in `.deploy-all/run-state.json` (gitignored).
 | `preflight` | Branch/credential guards + production/Vercel readiness + checks/tests + DB sync + server/static builds + service mirror verification/builds |
 | `publish` | `secrets:backup`, deployment commit, `git push origin main` |
 | `notifications` … `sub2main` | One CLI service deploy each (six accounts) |
-| `main` | Wait until the GitHub-linked `gova` production deployment is `READY` |
+| `main` | Wait until `gova` is `READY`, confirm production serves this build (`release:check`), then `smoke:deployed` against the seven origins |
 
 ```bash
 npm run deploy:all                      # all phases in order

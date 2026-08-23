@@ -178,6 +178,15 @@ export const DEPLOY_ALL_RUNBOOK: readonly DeployAllRunbookPhase[] = [
           // build answers exactly like a current one. Only the build identity
           // separates them.
           branch("main-serving", "production is serving this build", "release:check", "npm"),
+          // READY and a matching manifest do not prove a data route works.
+          // smoke:services tests locally built copies; the mobile app calls the
+          // seven deployed origins baked in as NEXT_PUBLIC_ASOL_*_URL. Ask them.
+          branch(
+            "deployed-smoke",
+            "deployed origins answer their data routes",
+            "smoke:deployed",
+            "npm",
+          ),
         ],
       },
     ],

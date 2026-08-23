@@ -844,6 +844,19 @@ async function main(): Promise<void> {
               "treating the main target as deployed.",
           );
         }
+
+        // Local smoke:services builds are not these URLs. The static/mobile
+        // bundle calls the deployed origins; ask them after the build identity
+        // check so a wrong or broken account stops the release here.
+        if (selectedIncludes(phase, "deployed-smoke")) {
+          announceBranch("[deploy:all]", {
+            id: "deployed-smoke",
+            command: "smoke:deployed",
+            label: "deployed origins answer their data routes",
+          });
+          await runDeploymentNpmScript("smoke:deployed", { logPrefix: "deploy:all" });
+        }
+
         markPhaseComplete("main");
         console.log(`[deploy:all] Phase "main" completed (${serving ? "SERVING" : mainReport.state}).`);
       }
