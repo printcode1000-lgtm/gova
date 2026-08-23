@@ -60,10 +60,18 @@ function testGate(folder: string, name: string): string {
 function walkTs(dir: string, out: string[] = []): string[] {
   if (!existsSync(dir)) return out;
   for (const e of readdirSync(dir, { withFileTypes: true })) {
-    if (e.name === 'node_modules' || e.name === 'tests' || e.name === '__tests__' || e.name === 'dist') continue;
+    if (
+      e.name === 'node_modules' ||
+      e.name === 'tests' ||
+      e.name === '__tests__' ||
+      e.name === 'dist'
+    ) continue;
     const full = join(dir, e.name);
     if (e.isDirectory()) walkTs(full, out);
-    else if (/\.(ts|tsx|js|mjs|cjs)$/.test(e.name) && !/\.(?:test|spec)\.[cm]?[jt]sx?$/.test(e.name)) out.push(full);
+    else if (
+      /\.(ts|tsx|js|mjs|cjs)$/.test(e.name) &&
+      !/\.(?:test|spec)\.[cm]?[jt]sx?$/.test(e.name)
+    ) out.push(full);
   }
   return out;
 }
@@ -252,22 +260,38 @@ export function renderDependencyMap(): string {
     'MAY_IMPORT → @/ (only layer with mayImportApp: true)',
     '',
     'all packages',
-    'MUST NOT_FORM → package dependency cycles',
+    'MUST NOT form → circular @asol/* dependency (including import type)',
     '```',
     '',
-    '---',
-    '',
-    '## Package Edges',
+    '## Package Import Graph (production source)',
     '',
   ];
 
-  for (const pkg of CAPABILITY_PACKAGES) {
+  for (const pkg of [...CAPABILITY_PACKAGES].sort((a, b) => a.name.localeCompare(b.name))) {
     const deps = [...(edges.get(pkg.name) ?? [])].sort();
-    lines.push(`### \`${pkg.name}\``);
+    lines.push(`### ${pkg.name}`);
     lines.push('');
-    lines.push(deps.length ? deps.map((d) => `- → \`${d}\``).join('\n') : '- _(no @asol package dependencies)_');
-    lines.push('');
+    if (deps.length === 0) {
+      lines.push(`\`${pkg.name}\` has no production \`@asol/*\` imports.`);
+      lines.push('');
+      continue;
+    }
+    for (const dep of deps) {
+      lines.push(`\`${pkg.name}\``);
+      lines.push(`ALLOWED_TO_IMPORT → \`${dep}\``);
+      lines.push('');
+    }
   }
+
+  let edgeCount = 0;
+  for (const set of edges.values()) edgeCount += set.size;
+  lines.push('## Counts');
+  lines.push('');
+  lines.push('| Metric | Value |');
+  lines.push('|---|---|');
+  lines.push(`| Packages | ${CAPABILITY_PACKAGES.length} |`);
+  lines.push(`| Import edges | ${edgeCount} |`);
+  lines.push('');
 
   return lines.join('\n');
 }
@@ -279,37 +303,76 @@ export function renderApplicationFeatureCatalog(): string {
     '',
     '## Purpose',
     '',
-    'Canonical application-layer feature inventory. Every direct child of `src/features/` must appear here exactly once.',
+    'Canonical inventory of every application feature under `src/features/`.',
+    '',
+    '## Scope',
+    '',
+    `All ${APPLICATION_FEATURES.length} registered features. Sealed packages are listed in [package-catalog.md](./package-catalog.md).`,
     '',
     '## Source of Truth',
     '',
     '**Canonical source:** `packages/architecture-core/src/registry/application-features-registry.ts` (`APPLICATION_FEATURES`).',
     'This Markdown file is **generated** and verified by `architecture:check`.',
     '',
-    `Registered features: **${APPLICATION_FEATURES.length}**.`,
+    '## Approved application roots',
     '',
-    '| Feature | Purpose | Doors | Runtime | Capability owners | Dependencies | Deep-import seam targets |',
-    '|---|---|---|---|---|---|---|',
+    '```text',
+    'src/',
+    '  app/        # Next.js routes (framework-required)',
+    '  core/       # API client, config, composition roots, providers',
+    '  features/   # Application features (registered, default-deny)',
+    '  shared/     # Cross-feature, domain-neutral application code only',
+    '```',
+    '',
+    '`src/modules/`, `src/components/`, `src/hooks/`, `src/lib/`, `src/theme/`, and `src/locales/` are forbidden competing roots.',
+    '',
+    '---',
+    '',
   ];
 
   for (const feature of APPLICATION_FEATURES) {
+    lines.push(`### ${feature.name}`);
+    lines.push('');
+    lines.push('| Field | Value |');
+    lines.push('|---|---|');
+    lines.push(`| **Feature** | \`${feature.name}\` |`);
+    lines.push(`| **Source** | \`${feature.sourcePath}/\` |`);
+    lines.push(`| **Owns** | ${feature.owns} |`);
     lines.push(
-      `| \`${feature.name}\` | ${feature.purpose.replace(/\|/g, '\\|')} | ${feature.doors.map((d) => `\`${d}\``).join(', ') || '—'} | ${feature.runtimeTargets.map((r) => `\`${r}\``).join(', ')} | ${feature.capabilityOwners.map((p) => `\`${p}\``).join(', ') || '—'} | ${feature.permittedDependencies.map((d) => `\`${d}\``).join(', ') || '—'} | ${feature.deepImportSeams.map((d) => `\`${d}\``).join(', ') || '—'} |`,
+      `| **Public Doors** | ${feature.doors.map((d) => (d === '.' ? `\`@/features/${feature.name}\`` : `\`@/features/${feature.name}/${d.slice(2)}\``)).join(' · ') || '_(none)_'} |`,
     );
+    lines.push(
+      `| **Runtime Targets** | ${feature.runtimeTargets.map((t) => `\`${t}\``).join(', ')} |`,
+    );
+    lines.push(
+      `| **Capability Owners** | ${feature.capabilityOwners.length ? feature.capabilityOwners.map((c) => `\`${c}\``).join(', ') : '_(none)_'} |`,
+    );
+    lines.push(
+      `| **Permitted Feature Dependencies** | ${feature.permittedDependencies.length ? feature.permittedDependencies.map((d) => `\`${d}\``).join(', ') : '_(none)_'} |`,
+    );
+    lines.push(
+      `| **Deep Import Seams** | ${feature.deepImportSeams.length ? feature.deepImportSeams.map((d) => `\`${d}\``).join(', ') : '_(none)_'} |`,
+    );
+    lines.push(
+      `| **Surfaces** | browser=${feature.hasBrowser} · server=${feature.hasServer} · ui=${feature.hasUi} |`,
+    );
+    lines.push('');
   }
 
+  lines.push('## Counts');
   lines.push('');
-  lines.push('## Structural Rules');
-  lines.push('');
-  lines.push('- `src/modules/` is forbidden and cannot be recreated.');
-  lines.push('- Approved directory roots under `src/`: `app/`, `core/`, `features/`, `shared/`.');
-  lines.push('- Cross-feature consumers use declared doors (`.`, `/ui`, `/server`).');
-  lines.push('- Feature-to-feature deep paths require both a declared seam target and an exact `FEATURE_DEEP_IMPORT_SEAMS` path; target names alone grant no authority.');
-  lines.push('- Isolated composition packages may use only exact `COMPOSITION_FEATURE_SEAMS` when a public barrel would widen their service mirror graph.');
-  lines.push('- Feature-internal directories use the canonical vocabulary from `FEATURE_INTERNAL_VOCABULARY`.');
-  lines.push('- `src/shared/` is only for genuinely cross-feature, domain-neutral code.');
-  lines.push('');
-  lines.push('See [feature-seams.md](./feature-seams.md) for the generated exact seam inventory.');
+  lines.push('| Metric | Value |');
+  lines.push('|---|---|');
+  lines.push(`| Application features | ${APPLICATION_FEATURES.length} |`);
+  lines.push(
+    `| Features with UI door | ${APPLICATION_FEATURES.filter((f) => f.doors.includes('./ui')).length} |`,
+  );
+  lines.push(
+    `| Features with server door | ${APPLICATION_FEATURES.filter((f) => f.doors.includes('./server')).length} |`,
+  );
+  lines.push(
+    `| Sealed capability packages | ${CAPABILITY_PACKAGES.length} |`,
+  );
   lines.push('');
 
   return lines.join('\n');
@@ -319,37 +382,45 @@ export type ArchitectureDocId = (typeof GENERATED_ARCHITECTURE_DOCS)[number];
 
 export function renderArchitectureDoc(id: ArchitectureDocId): string {
   switch (id) {
-    case GENERATED_ARCHITECTURE_DOCS[0]: return renderCapabilityMap();
-    case GENERATED_ARCHITECTURE_DOCS[1]: return renderPackageCatalog();
-    case GENERATED_ARCHITECTURE_DOCS[2]: return renderDependencyMap();
-    case GENERATED_ARCHITECTURE_DOCS[3]: return renderApplicationFeatureCatalog();
+    case 'docs/01-architecture/08-reference/capability-map.md':
+      return renderCapabilityMap();
+    case 'docs/01-architecture/08-reference/package-catalog.md':
+      return renderPackageCatalog();
+    case 'docs/01-architecture/08-reference/dependency-map.md':
+      return renderDependencyMap();
+    case 'docs/01-architecture/08-reference/application-feature-catalog.md':
+      return renderApplicationFeatureCatalog();
+    default: {
+      const _exhaustive: never = id;
+      return _exhaustive;
+    }
   }
 }
 
 export function writeArchitectureDocs(): void {
   for (const id of GENERATED_ARCHITECTURE_DOCS) {
-    const target = join(ROOT, id);
-    mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, renderArchitectureDoc(id), 'utf8');
+    const abs = join(ROOT, id);
+    mkdirSync(dirname(abs), { recursive: true });
+    writeFileSync(abs, renderArchitectureDoc(id), 'utf8');
   }
 }
 
-export interface ArchitectureDocDiff {
-  path: ArchitectureDocId;
-  reason: 'missing' | 'content differs from canonical model';
-}
-
-export function diffArchitectureDocs(): ArchitectureDocDiff[] {
-  const diffs: ArchitectureDocDiff[] = [];
+export function diffArchitectureDocs(): Array<{ path: string; reason: string }> {
+  const diffs: Array<{ path: string; reason: string }> = [];
   for (const id of GENERATED_ARCHITECTURE_DOCS) {
-    const target = join(ROOT, id);
-    if (!existsSync(target)) {
-      diffs.push({ path: id, reason: 'missing' });
+    const abs = join(ROOT, id);
+    const expected = renderArchitectureDoc(id);
+    if (!existsSync(abs)) {
+      diffs.push({ path: id, reason: 'missing generated documentation file' });
       continue;
     }
-    const actual = readFileSync(target, 'utf8');
-    const expected = renderArchitectureDoc(id);
-    if (actual !== expected) diffs.push({ path: id, reason: 'content differs from canonical model' });
+    const actual = readFileSync(abs, 'utf8');
+    if (actual !== expected) {
+      diffs.push({
+        path: id,
+        reason: 'content differs from canonical architecture model output',
+      });
+    }
   }
   return diffs;
 }
