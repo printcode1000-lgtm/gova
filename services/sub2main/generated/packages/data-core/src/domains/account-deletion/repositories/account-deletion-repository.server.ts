@@ -1,4 +1,4 @@
-import { notificationsDataSource, productsDataSource, profilesDataSource, usersDataSource } from "../../../core/data-source-registry";
+import { notificationsDataSource, productsDataSource, profilesDataSource, usersDataSource } from "../../../core";
 import "server-only";
 import { createHash } from "node:crypto";
 import { createMarketplaceOrdersDb } from "../../marketplace-orders/db/client";

@@ -1,4 +1,4 @@
-import { notificationsDataSource } from "../../../core/data-source-registry";
+import { notificationsDataSource } from "../../../core";
 import "server-only";
 
 import { and, eq, inArray, isNull } from "drizzle-orm";

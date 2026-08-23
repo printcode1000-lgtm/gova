@@ -1,4 +1,4 @@
-import { advertisementsDataSource, productsDataSource, profilesDataSource, usersDataSource } from "../../../../core/data-source-registry";
+import { advertisementsDataSource, productsDataSource, profilesDataSource, usersDataSource } from "../../../../core";
 import "server-only";
 import { randomUUID } from "node:crypto";
 import {

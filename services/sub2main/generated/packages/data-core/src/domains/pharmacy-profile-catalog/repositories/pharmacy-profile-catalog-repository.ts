@@ -1,4 +1,4 @@
-import { productsDataSource } from "../../../core/data-source-registry";
+import { productsDataSource } from "../../../core";
 import "server-only";
 
 import { randomUUID } from "node:crypto";

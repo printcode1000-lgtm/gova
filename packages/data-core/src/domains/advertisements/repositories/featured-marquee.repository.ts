@@ -1,4 +1,4 @@
-import { advertisementsDataSource } from "../../../core/data-source-registry";
+import { advertisementsDataSource } from "../../../core";
 import "server-only";
 
 import { eq } from "drizzle-orm";

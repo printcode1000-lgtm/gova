@@ -1,4 +1,4 @@
-import { productsDataSource, profilesDataSource } from "../../../core/data-source-registry";
+import { productsDataSource, profilesDataSource } from "../../../core";
 import "server-only";
 
 import {
