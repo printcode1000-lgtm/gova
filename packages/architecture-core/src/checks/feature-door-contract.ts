@@ -4,16 +4,17 @@
  * Outside a feature, only declared doors (`@/features/<name>`, `/ui`, `/server`)
  * may be imported. Deep paths and relative traversal into another feature fail.
  * Dependencies must be listed on the importer's `permittedDependencies`.
+ * Composition packages are allowed to import the application, but only through
+ * those same declared doors — `mayImportApp` is not a deep-import bypass.
  */
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { dirname, join, relative, resolve } from 'path';
 
 import {
-  APPLICATION_FEATURES,
   featureByName,
-  featureDoorSpecifiers,
   isFeatureDoorSpecifier,
 } from '../registry/application-features-registry';
+import { CAPABILITY_PACKAGES } from '../registry/capability-registry';
 import { ROOT, SRC, addViolation, extractImports, walk, rel } from './architecture-types';
 
 const FEATURE_PREFIX = 'src/features/';
@@ -42,8 +43,7 @@ function resolveSpecifier(specifier: string, importerAbs: string): string | null
   }
   if (specifier.startsWith('.')) {
     const abs = resolve(dirname(importerAbs), specifier);
-    const repoRel = relative(ROOT, abs).replace(/\\/g, '/');
-    return repoRel;
+    return relative(ROOT, abs).replace(/\\/g, '/');
   }
   return null;
 }
@@ -52,10 +52,9 @@ function isDeclaredDoorPath(feature: string, repoRel: string): boolean {
   const entry = featureByName(feature);
   if (!entry) return false;
   for (const door of entry.doors) {
-    const doorFile =
-      door === '.'
-        ? `${entry.sourcePath}/index`
-        : `${entry.sourcePath}/${door.slice(2)}`;
+    const doorFile = door === '.'
+      ? `${entry.sourcePath}/index`
+      : `${entry.sourcePath}/${door.slice(2)}`;
     if (
       repoRel === doorFile ||
       repoRel === `${doorFile}.ts` ||
@@ -67,48 +66,64 @@ function isDeclaredDoorPath(feature: string, repoRel: string): boolean {
   return false;
 }
 
+function productionCompositionSources(): string[] {
+  const files: string[] = [];
+  for (const pkg of CAPABILITY_PACKAGES) {
+    if (!pkg.mayImportApp) continue;
+    const src = join(ROOT, 'packages', pkg.folder, 'src');
+    if (!existsSync(src)) continue;
+    for (const file of walk(src)) {
+      const repoRel = rel(file);
+      if (
+        repoRel.includes('/tests/') ||
+        repoRel.includes('/__tests__/') ||
+        /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(repoRel)
+      ) {
+        continue;
+      }
+      files.push(file);
+    }
+  }
+  return files;
+}
+
 export function checkFeatureDoorContract(): void {
   const scanned = [
     ...walk(SRC),
-    ...walk(join(ROOT, 'scripts')),
+    ...productionCompositionSources(),
   ];
-
-  // Composition packages may import app doors
-  const packagesDir = join(ROOT, 'packages');
-  for (const entry of APPLICATION_FEATURES) {
-    void entry;
-  }
 
   for (const file of scanned) {
     const repoRel = rel(file);
     if (PATH_MENTION_EXEMPT.has(repoRel)) continue;
     if (repoRel.startsWith('packages/architecture-core/')) continue;
-    // Tooling scripts may reach feature internals for validation/preflight.
-    // Application code under src/ remains sealed.
-    if (repoRel.startsWith('scripts/')) continue;
 
     const importerFeature = featureOfPath(repoRel);
     const content = readFileSync(file, 'utf8');
     const imports = extractImports(content);
 
     for (const specifier of imports) {
-
       // Alias deep import: @/features/foo/bar/...
       const deepAlias = specifier.match(/^@\/features\/([^/]+)\/(.+)$/);
       if (deepAlias) {
         const target = deepAlias[1]!;
         const rest = deepAlias[2]!;
-        if (rest === 'ui' || rest === 'server' || rest === 'index') {
-          // Door — validate registration + dependency
+
+        if (rest === 'ui' || rest === 'server') {
           validateDoorImport(repoRel, importerFeature, target, specifier);
           continue;
         }
-        if (importerFeature === target) continue; // internal OK
-        // Justified deep-import seams (e.g. notifications → auth internals)
+
+        // A feature may use its own internals directly. Everyone else — including
+        // composition packages — must use a declared public door. In particular,
+        // `/index` is not a separate public alias for the `.` door.
+        if (importerFeature === target) continue;
+
+        // Justified deep-import seams are legacy feature-to-feature exceptions.
+        // They never grant composition packages unrestricted application access.
         const importer = importerFeature ? featureByName(importerFeature) : undefined;
-        if (importer?.deepImportSeams.includes(target)) {
-          continue;
-        }
+        if (importer?.deepImportSeams.includes(target)) continue;
+
         addViolation(
           'Feature Doors',
           file,
@@ -118,25 +133,18 @@ export function checkFeatureDoorContract(): void {
         continue;
       }
 
-      // Exact door alias
+      // Exact declared door alias.
       const doorHit = isFeatureDoorSpecifier(specifier);
       if (doorHit) {
         validateDoorImport(repoRel, importerFeature, doorHit.feature, specifier);
         continue;
       }
 
-      // Relative / @/ resolution into another feature
+      // Relative / @/ resolution into another feature.
       const resolved = resolveSpecifier(specifier, file);
       if (!resolved) continue;
-      const targetFeature = featureOfPath(
-        resolved.endsWith('.ts') || resolved.endsWith('.tsx')
-          ? resolved
-          : // may omit extension
-            resolved,
-      );
-      // Also try with common extensions for featureOfPath on extensionless
       const targetFeatureResolved =
-        targetFeature ??
+        featureOfPath(resolved) ??
         featureOfPath(`${resolved}.ts`) ??
         featureOfPath(`${resolved}.tsx`) ??
         featureOfPath(resolved.replace(/\/index$/, '') + '/index.ts');
@@ -144,15 +152,14 @@ export function checkFeatureDoorContract(): void {
       if (!targetFeatureResolved) continue;
       if (importerFeature === targetFeatureResolved) continue;
 
-      // Resolved into another feature — must land on a door file (unless seam)
       const importerEntry = importerFeature ? featureByName(importerFeature) : undefined;
-      if (importerEntry?.deepImportSeams.includes(targetFeatureResolved)) {
-        continue;
-      }
+      if (importerEntry?.deepImportSeams.includes(targetFeatureResolved)) continue;
 
-      if (!isDeclaredDoorPath(targetFeatureResolved, resolved) &&
-          !isDeclaredDoorPath(targetFeatureResolved, `${resolved}.ts`) &&
-          !isDeclaredDoorPath(targetFeatureResolved, `${resolved}.tsx`)) {
+      if (
+        !isDeclaredDoorPath(targetFeatureResolved, resolved) &&
+        !isDeclaredDoorPath(targetFeatureResolved, `${resolved}.ts`) &&
+        !isDeclaredDoorPath(targetFeatureResolved, `${resolved}.tsx`)
+      ) {
         addViolation(
           'Feature Doors',
           file,
@@ -184,17 +191,16 @@ function validateDoorImport(
     return;
   }
 
-  const doorHit = isFeatureDoorSpecifier(
-    specifier.startsWith('@/')
-      ? specifier
-      : // relative landing on door — synthesize
-        featureDoorSpecifiers(target).find((s) => s.endsWith(specifier.split('/').pop() ?? '')) ??
-        `@/features/${targetFeature}`,
-  );
-
   if (specifier.startsWith('@/features/')) {
     const doorMatch = specifier.match(/^@\/features\/([^/]+)(?:\/(ui|server))?$/);
-    if (doorMatch) {
+    if (!doorMatch) {
+      addViolation(
+        'Feature Doors',
+        join(ROOT, importerRel),
+        `Import "${specifier}" is not a declared feature-door specifier.`,
+        `Use one of the declared doors for @/features/${targetFeature}.`,
+      );
+    } else {
       const door: import('../registry/application-features-registry').FeatureDoor =
         doorMatch[2] === 'ui' ? './ui' : doorMatch[2] === 'server' ? './server' : '.';
       if (!target.doors.includes(door)) {
@@ -219,6 +225,4 @@ function validateDoorImport(
       );
     }
   }
-
-  void doorHit;
 }
