@@ -25,7 +25,7 @@ const scanRoots = ["src"];
  * - api: HTTP route handlers persist through domain/data owners, not page-save
  *
  * Frozen by `checkPageSaveGatewayContract` in `@asol/architecture-core`.
- * Do not expand without updating docs/01-architecture/repository-architecture-enforcement.md.
+ * Do not expand without updating docs/01-architecture/07-enforcement/architecture-check.md.
  */
 const skippedDirectories = new Set(["node_modules", "tests", "__tests__", "api"]);
 

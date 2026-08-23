@@ -73,7 +73,7 @@ export function checkPageSaveGatewayContract(): void {
 
   // Freeze the write-surface skip set. `api` is excluded because route handlers
   // persist through domain/data owners, not page-save; expanding this set is an
-  // architectural decision and must update docs/01-architecture/repository-architecture-enforcement.md.
+  // architectural decision and must update docs/01-architecture/07-enforcement/architecture-check.md.
   if (existsSync(writeSurfaceTest)) {
     const writeSurfaceSource = readFileSync(writeSurfaceTest, 'utf8');
     const skipMatch = writeSurfaceSource.match(

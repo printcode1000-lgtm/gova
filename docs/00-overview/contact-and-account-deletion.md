@@ -134,4 +134,4 @@ Successful deletion returns:
 
 ### Implementation Reference
 
-Auth and deletion orchestration live in `@asol/auth-core`. See [auth-core-module.md](../01-architecture/auth-core-module.md) for package boundaries, security model, and file map.
+Auth and deletion orchestration live in `@asol/auth-core`. See [auth-core-module.md](../05-platform-features/auth-core-module.md) for package boundaries, security model, and file map.

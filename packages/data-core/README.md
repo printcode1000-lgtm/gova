@@ -8,4 +8,4 @@ Feature and UI modules may consume typed data-access operations, but must not
 import database drivers, Drizzle, raw SQL, or IndexedDB directly.
 
 The complete architecture and extension contract is documented in
-`docs/01-architecture/data-layers/25-central-data-access-module.md`.
+`docs/02-data-and-storage/central-data-access.md`.

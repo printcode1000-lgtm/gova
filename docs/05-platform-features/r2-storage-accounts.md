@@ -134,4 +134,4 @@ npm run test:storage-core
 5. The three media accounts (`general`, `products`, `products-apparel-pets`) have non-overlapping account IDs, endpoints, bucket names, public URLs, and env prefixes.
 6. No reference to `ASOL_OTA_LEGACY_R2_` anywhere in `packages/ota-core/src`, `src`, or `scripts`.
 
-See [Environment Variables](../01-architecture/data-layers/14-environment-variables.md).
+See [Environment Variables](../02-data-and-storage/environment-variables.md).

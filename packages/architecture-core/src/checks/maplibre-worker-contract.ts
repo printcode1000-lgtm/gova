@@ -60,7 +60,7 @@ export function checkMapLibreWorkerContract(): void {
       'shared',
       'packages/map-core/src/AsolMap.tsx',
       'AsolMap must call setWorkerUrl("/maplibre-gl-worker.mjs"); the bundler-resolved default 404s and disables every GeoJSON layer.',
-      'See docs/01-architecture/map-core-module.md.',
+      'See docs/05-platform-features/map-core-module.md.',
     );
   }
 }

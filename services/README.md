@@ -88,4 +88,4 @@ holds the deployments that are genuinely separate from it.
 - [Orders Service Module](../docs/05-platform-features/orders-service-module.md)
 - [Profiles Service Module](../docs/05-platform-features/profiles-service-module.md)
 - [Service Bridge Module](../docs/05-platform-features/service-bridge-module.md)
-- [Deployment Targets](../docs/01-architecture/data-layers/16-deployment-targets.md)
+- [Deployment Targets](../docs/07-mobile-and-release/deployment-targets.md)

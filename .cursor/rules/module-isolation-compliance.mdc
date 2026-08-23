@@ -5,12 +5,12 @@ alwaysApply: true
 
 # Module Isolation Compliance (always binding)
 
-Every change must respect `docs/01-architecture/module-isolation-rules.md`.
+Every change must respect `docs/01-architecture/02-packages/module-isolation-rules.md`.
 Violations cause silent breaks, seal bypasses, and CI gaps.
 
 ## Before editing
 
-1. Read `docs/01-architecture/module-isolation-rules.md` (full contract).
+1. Read `docs/01-architecture/02-packages/module-isolation-rules.md` (full contract).
 2. If the change touches a sealed `@asol/*` package, read that package's section in the same doc.
 3. Identify which declared door(s) the call site may use — never reach internals.
 
@@ -64,4 +64,4 @@ Any change that breaks these gates is incomplete.
 ## Docs
 
 When a change affects package doors, boundaries, or enforcement, update
-`docs/01-architecture/module-isolation-rules.md` in the same change (English only).
+`docs/01-architecture/02-packages/module-isolation-rules.md` in the same change (English only).

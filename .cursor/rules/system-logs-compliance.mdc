@@ -11,7 +11,7 @@ No error, break, or gap may disappear without a registration path.
 ## Before editing any feature
 
 1. Read `docs/06-super-admin-and-operations/super-admin-live-logs.md`.
-2. Read `docs/01-architecture/module-isolation-rules.md` (`@asol/system-logs-core` section).
+2. Read `docs/01-architecture/02-packages/module-isolation-rules.md` (`@asol/system-logs-core` section).
 
 ## Mandatory capture rules
 

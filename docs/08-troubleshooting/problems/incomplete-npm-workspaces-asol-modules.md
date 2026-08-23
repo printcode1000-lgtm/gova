@@ -60,4 +60,4 @@ broken machine and understand npm workspaces.
 ## Related
 
 - Installation policy: `docs/00-overview/technologies.md`
-- Branding door that often surfaces first: `docs/01-architecture/branding-core-module.md`
+- Branding door that often surfaces first: `docs/07-mobile-and-release/capacitor/branding-core-module.md`

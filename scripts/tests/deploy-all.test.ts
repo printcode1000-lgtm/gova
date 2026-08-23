@@ -155,7 +155,7 @@ for (const entry of shouldBlock) {
 const shouldPass = [
   "src/features/notifications/index.ts",
   "packages/native-core/src/index.ts",
-  "docs/01-architecture/native-core-module.md",
+  "docs/07-mobile-and-release/capacitor/native-core-module.md",
   "scripts/deploy-all.ts",
 ];
 for (const entry of shouldPass) {

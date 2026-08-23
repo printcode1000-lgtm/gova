@@ -8,7 +8,7 @@ Storage topology consists of four isolated Cloudflare R2 accounts:
 
 ## Env vars
 
-See [environment variables](../../01-architecture/data-layers/14-environment-variables.md) and [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
+See [environment variables](../../02-data-and-storage/environment-variables.md) and [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
 Local secrets live in `.env.local` (gitignored). Template in `.env.example`.
 

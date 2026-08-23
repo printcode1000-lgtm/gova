@@ -72,7 +72,7 @@ function main() {
   // The test is deleted rather than kept and skipped. It was already guarded by an
   // existsSync check, so with the file gone it would have printed a green S5 line while
   // asserting nothing — the exact empty-guard pattern documented in
-  // docs/01-architecture/module-isolation-rules.md.
+  // docs/01-architecture/02-packages/module-isolation-rules.md.
   //
   // Rule 6's enforcement half is unaffected and still verified: branch protection is
   // applied and read back by "npm run github:protect".

@@ -85,7 +85,7 @@ for (const required of requiredPaths) {
 }
 
 const excludedPaths = [
-  "docs/01-architecture/module-isolation-rules.md",
+  "docs/01-architecture/02-packages/module-isolation-rules.md",
   "android/app/build.gradle",
   "ios/App/App/Info.plist",
   "fastlane/Fastfile",

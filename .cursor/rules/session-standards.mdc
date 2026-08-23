@@ -50,7 +50,7 @@ have **one responsibility only** — one clear job and one primary reason to cha
 - When a change adds a second responsibility, **split** into separate files.
 - Barrel/index files may re-export only; they must not hold implementation logic.
 
-See `AGENTS.md` §3a and `docs/01-architecture/module-isolation-rules.md` rule 8.
+See `AGENTS.md` §3a and `docs/01-architecture/02-packages/module-isolation-rules.md` rule 8.
 
 ## Quick checklist
 

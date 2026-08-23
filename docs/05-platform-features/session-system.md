@@ -10,7 +10,7 @@ The login response includes a 30-day HMAC-signed `sessionToken`. It is persisted
 
 Having no server session table means **no session can be revoked**. A token verifies until it expires, whatever happened to the account behind it — including deletion by a super admin, which never reaches the target's device. See [contact-and-account-deletion.md](../00-overview/contact-and-account-deletion.md) § "Sessions Outlive Deletion".
 
-See [data-layers/README.md](../01-architecture/data-layers/README.md) for full layer architecture.
+See [data-layers/README.md](../01-architecture/10-application-layers/README.md) for full layer architecture.
 
 ---
 
@@ -177,6 +177,6 @@ packages/data-core/src/browser/asol-db/index.ts
 
 ## Related
 
-- [auth-core-module.md](../01-architecture/auth-core-module.md)
-- [data-layers/README.md](../01-architecture/data-layers/README.md)
+- [auth-core-module.md](../05-platform-features/auth-core-module.md)
+- [data-layers/README.md](../01-architecture/10-application-layers/README.md)
 - [contact-and-account-deletion.md](../00-overview/contact-and-account-deletion.md)

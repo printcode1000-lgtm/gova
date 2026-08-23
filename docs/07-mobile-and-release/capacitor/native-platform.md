@@ -3,7 +3,7 @@
 `packages/native-core` (`@asol/native-core`) is the **only** bridge between ASOL application code and native device capabilities.
 
 See the complete architecture and maintenance guide:
-👉 [Native Core Module Architecture](../../01-architecture/native-core-module.md)
+👉 [Native Core Module Architecture](../../07-mobile-and-release/capacitor/native-core-module.md)
 
 ---
 

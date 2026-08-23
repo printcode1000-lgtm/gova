@@ -15,7 +15,7 @@ unhandled API route exceptions all have a registration path.
 ## Sealed package
 
 Core logic lives in `@asol/system-logs-core` (see
-[module-isolation-rules.md](../01-architecture/module-isolation-rules.md)).
+[module-isolation-rules.md](../01-architecture/02-packages/module-isolation-rules.md)).
 The application wires ports through:
 
 ```text

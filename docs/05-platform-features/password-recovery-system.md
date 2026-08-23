@@ -91,4 +91,4 @@ npm run architecture:check
 
 ## Related
 
-- [auth-core-module.md](../01-architecture/auth-core-module.md)
+- [auth-core-module.md](../05-platform-features/auth-core-module.md)

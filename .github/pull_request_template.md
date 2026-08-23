@@ -1,6 +1,6 @@
 ## Pull Request Checklist
 
-Twenty-one sealed packages are held to [the eight module isolation rules](../docs/01-architecture/module-isolation-rules.md).
+Twenty-one sealed packages are held to [the eight module isolation rules](../docs/01-architecture/02-packages/module-isolation-rules.md).
 Tick what applies; delete the sections a change does not touch.
 
 ### 1. Package seal (rules 2, 5, 7 — all packages)

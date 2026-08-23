@@ -419,7 +419,7 @@ quota that serves logins, products, or orders.
 The consequence to remember: `uid` links these tables to `users`, but the two
 databases are on different accounts and **cannot be joined**. Any query needing
 both resolves them separately and merges in memory. See
-[`../01-architecture/data-layers/11-current-databases.md`](../01-architecture/data-layers/11-current-databases.md).
+[current-databases.md](../02-data-and-storage/current-databases.md).
 
 Table:
 
@@ -1893,7 +1893,7 @@ have produced.
 
 There are **no GitHub Actions workflows in this repository**; `.github/workflows`
 is empty and
-[`16-deployment-targets.md`](../01-architecture/data-layers/16-deployment-targets.md)
+[`16-deployment-targets.md`](../07-mobile-and-release/deployment-targets.md)
 records that Actions is intentionally unused. Enforcement lives in the npm
 scripts, which is what Vercel runs on a push:
 

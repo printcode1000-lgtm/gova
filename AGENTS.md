@@ -40,7 +40,7 @@ The `# This is NOT the Next.js you know` block in `CLAUDE.md` is written by
 
 ## 3. Module isolation
 
-Binding contract: `docs/01-architecture/module-isolation-rules.md` (nine rules).
+Binding contract: `docs/01-architecture/02-packages/module-isolation-rules.md` (nine rules).
 
 The practical form:
 
@@ -70,7 +70,7 @@ each file must have **one responsibility only**: one clear job and one primary r
   expanding the existing one.
 - Barrel/index files that only re-export are fine; they must not accumulate implementation logic.
 
-Binding for sealed packages: `docs/01-architecture/module-isolation-rules.md` rule 8. Agents apply
+Binding for sealed packages: `docs/01-architecture/02-packages/module-isolation-rules.md` rule 8. Agents apply
 the same principle project-wide.
 
 ---

@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 
 /**
- * Configures branch protection on `main` — rule 6 of docs/01-architecture/module-isolation-rules.md.
+ * Configures branch protection on `main` — rule 6 of docs/01-architecture/02-packages/module-isolation-rules.md.
  *
  * Rule 6 was the one rule that could not be satisfied from the tree: the configuration
  * lives in GitHub's settings, so it needs a credential.

@@ -22,7 +22,7 @@ const liveReloadUrl = process.env.CAPACITOR_SERVER_URL?.replace(/\/$/, "");
  *
  * Capacitor discovers plugins by reading the **root** `package.json` dependencies. Every
  * Capacitor plugin here is declared by `@asol/native-core` instead — rule 9 of
- * `docs/01-architecture/module-isolation-rules.md`: upgrading Capacitor must touch one
+ * `docs/01-architecture/02-packages/module-isolation-rules.md`: upgrading Capacitor must touch one
  * module. So `npx cap sync` found zero plugins and regenerated
  * `android/capacitor.settings.gradle` with none of them, dropping 25 registrations and
  * failing the native compile with "package com.capacitorjs.plugins.pushnotifications does

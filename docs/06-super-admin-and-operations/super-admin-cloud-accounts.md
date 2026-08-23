@@ -50,9 +50,9 @@ npm run sub2main:recreate-vercel-project
 | Super Admin UI shell | `src/features/super-admin/presentation/SuperAdminCloudAccountsPage.tsx` |
 | Cloud accounts page layout | `src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx` |
 | Derived account tables | `src/features/super-admin/presentation/cloud-accounts-reference.ts` |
-| Architecture reference | [26-cloud-accounts.md](../01-architecture/data-layers/26-cloud-accounts.md) |
-| Deploy commands | [16-deployment-targets.md](../01-architecture/data-layers/16-deployment-targets.md), [22-scripts-and-workflows.md](../01-architecture/data-layers/22-scripts-and-workflows.md) |
-| Environment variables | [14-environment-variables.md](../01-architecture/data-layers/14-environment-variables.md) (`VERCEL_SUBMAIN_TOKEN`, `VERCEL_SUB2MAIN_TOKEN`) |
+| Architecture reference | [26-cloud-accounts.md](../06-super-admin-and-operations/cloud-accounts-architecture.md) |
+| Deploy commands | [16-deployment-targets.md](../07-mobile-and-release/deployment-targets.md), [22-scripts-and-workflows.md](../07-mobile-and-release/scripts-and-workflows.md) |
+| Environment variables | [14-environment-variables.md](../02-data-and-storage/environment-variables.md) (`VERCEL_SUBMAIN_TOKEN`, `VERCEL_SUB2MAIN_TOKEN`) |
 | Account declarations | `packages/account-declarations/src/accounts/*.ts` |
 
 When account layout, emails, or deploy flows change, update the sealed package
