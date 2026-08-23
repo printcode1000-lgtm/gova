@@ -97,9 +97,9 @@ function requireToken(): string {
   if (!token) {
     console.error(
       '\nGITHUB_ADMIN_TOKEN is missing from .env.local / .env.\n' +
-        'It needs a fine-grained token scoped to this repository with\n' +
-        '"Administration: Read and write" — the same token github:protect uses.\n' +
-        'Run with --dry-run to review the payload without a token.',
+      'It needs a fine-grained token scoped to this repository with\n' +
+      '"Administration: Read and write" — the same token github:protect uses.\n' +
+      'Run with --dry-run to review the payload without a token.',
     );
     process.exit(1);
   }

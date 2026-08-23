@@ -10,6 +10,20 @@ legacy products, apparel/pets products, OTA).
 The page shows account names, project names, login emails, and what each account
 holds. It never displays tokens, keys, or secret values.
 
+The route is `force-dynamic`. Account tables are **derived at runtime** from sealed
+packages so the page stays aligned with declarations rather than a second hardcoded
+copy:
+
+| Provider | Source of truth |
+|---|---|
+| Vercel | `@asol/account-declarations` via `listVercelCloudAccounts()` |
+| Cloudflare R2 | `@asol/storage-core` `getAllStorageAccounts()` plus explicit OTA column |
+| Turso | `TURSO_CLOUD_ACCOUNTS` in `cloud-accounts-reference.ts` (no Turso registry package) |
+
+Arabic display labels (`serves`, Vercel login nicknames) live beside those lists in
+`src/features/super-admin/presentation/cloud-accounts-reference.ts`. Adding a Vercel
+or R2 account in a package without updating that file fails `npm run test:cloud-accounts`.
+
 ## Workload accounts (`submain`, `sub2main`)
 
 | Account | Email | Project | Role | Deploy |
@@ -34,15 +48,17 @@ npm run sub2main:recreate-vercel-project
 | Layer | Location |
 |---|---|
 | Super Admin UI shell | `src/features/super-admin/presentation/SuperAdminCloudAccountsPage.tsx` |
-| Cloud accounts reference content | `src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx` |
+| Cloud accounts page layout | `src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx` |
+| Derived account tables | `src/features/super-admin/presentation/cloud-accounts-reference.ts` |
 | Architecture reference | [26-cloud-accounts.md](../01-architecture/data-layers/26-cloud-accounts.md) |
 | Deploy commands | [16-deployment-targets.md](../01-architecture/data-layers/16-deployment-targets.md), [22-scripts-and-workflows.md](../01-architecture/data-layers/22-scripts-and-workflows.md) |
 | Environment variables | [14-environment-variables.md](../01-architecture/data-layers/14-environment-variables.md) (`VERCEL_SUBMAIN_TOKEN`, `VERCEL_SUB2MAIN_TOKEN`) |
-| Account declarations | `packages/account-declarations/src/accounts/submain.ts`, `packages/account-declarations/src/accounts/sub2main.ts` |
+| Account declarations | `packages/account-declarations/src/accounts/*.ts` |
 
-When account layout, emails, or deploy flows change, update the content component
-and the matching `docs/` files in the same change. The page shell stays limited
-to session loading and super-admin access decisions.
+When account layout, emails, or deploy flows change, update the sealed package
+declaration (or Turso rows in `cloud-accounts-reference.ts`) and the matching
+`docs/` files in the same change. Do not hardcode a parallel Vercel/R2 table in
+the page component.
 
 ## Access
 

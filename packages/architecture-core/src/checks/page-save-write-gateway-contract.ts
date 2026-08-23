@@ -199,7 +199,9 @@ function analyse(filePath: string, content: string): void {
     }
   }
 
-  const lines = content.split('\n');
+  // CRLF sources leave `\r` on each line when split on `\n` alone; the read
+  // marker regex anchors at `$` and would miss valid `page-save-read` comments.
+  const lines = content.split(/\r?\n/);
   const candidates: number[] = [...topLevelWrites];
   for (const fn of functions) {
     if (fn.writes.length === 0 || reachable.has(fn)) continue;

@@ -1,3 +1,8 @@
+import {
+  DEPLOY_ALL_SCENARIO_VALUES,
+  DEPLOY_PUSH_TARGET_VALUES,
+} from "./deploy-scenario-values";
+
 export type BuildCommandCategory = "web-static" | "ota" | "native-android" | "verification" | "fastlane" | "deployment";
 export type BuildCommandDanger = "safe" | "destructive" | "publishes-live";
 export type BuildParameterName =
@@ -101,19 +106,7 @@ const deployAllScenario = {
   name: "deployAllScenario",
   type: "enum",
   flag: "--deploy-all-scenario",
-  values: [
-    "full",
-    "preflight",
-    "publish",
-    "services",
-    "main",
-    "from-notifications",
-    "from-products",
-    "from-orders",
-    "from-profiles",
-    "from-submain",
-    "from-sub2main",
-  ],
+  values: DEPLOY_ALL_SCENARIO_VALUES,
 } as const;
 const deployAllBranches = { name: "deployAllBranches", type: "string", flag: "--runbook-branches", maxLength: 2000 } as const;
 const deployAllContinueOnError = { name: "deployAllContinueOnError", type: "boolean", flag: "--continue-on-error" } as const;
@@ -125,7 +118,7 @@ const deployPushTarget = {
   name: "deployPushTarget",
   type: "enum",
   flag: "--vercel-target",
-  values: ["none", "main", "notifications", "products", "orders", "profiles", "submain", "sub2main", "all"],
+  values: DEPLOY_PUSH_TARGET_VALUES,
 } as const;
 const deployPushAllowEmpty = { name: "deployPushAllowEmpty", type: "boolean", flag: "--allow-empty" } as const;
 const deployPushAllowManifestDowngrade = { name: "deployPushAllowManifestDowngrade", type: "boolean", flag: "--allow-manifest-downgrade" } as const;

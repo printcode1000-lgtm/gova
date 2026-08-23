@@ -21,16 +21,30 @@ import {
   parseContentVersion,
   releaseContentVersion,
 } from "@asol/ota-core";
-import { BUILD_COMMAND_CATALOG, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "@asol/release-core/console";
 import {
+  BUILD_COMMAND_CATALOG,
+  materializeBuildCommandParameters,
+  type BuildCommandCatalogEntry,
   allAndroidReleaseBranchIds,
   ANDROID_RELEASE_RUNBOOKS,
   androidRunbookStatsByTab,
   findAndroidReleaseBranch,
+  assertBuildJobTransition,
+  nextBuildJobActivity,
+  nextBuildJobStage,
+  DEPLOY_ALL_SCENARIO_VALUES,
+  DEPLOY_PUSH_TARGET_VALUES,
+  deployAllBranchIds,
+  deployPushBranchIds,
 } from "@asol/release-core/console";
 import { ANDROID_RELEASE_BRANCH_HELP } from "../../google-play-console/presentation/android-release-runbook-copy";
-import { assertBuildJobTransition } from "@asol/release-core/console";
-import { nextBuildJobActivity, nextBuildJobStage } from "@asol/release-core/console";
+import { ANDROID_RELEASE_PATHS } from "../../google-play-console/presentation/components/android-release-paths-data";
+import {
+  ALL_BRANCH_HELP,
+  PUSH_BRANCH_HELP,
+  deployAllScenarios,
+  deployPushTargets,
+} from "../../google-play-console/presentation/deploy-runbook-copy";
 import {
   acquireBuildJobLock,
   assertBuildJobId,
@@ -116,15 +130,29 @@ for (const command of BUILD_COMMAND_CATALOG) {
     assert.ok(adminAr[key]?.trim(), `missing Arabic command documentation: ${key}`);
   }
 }
-const androidPathIds = [
-  "release-android",
-  "build-static",
-  "cap-prepare-android",
-  "android-build-debug",
-  "ota-publish",
-];
-assert.deepEqual(Object.keys(ANDROID_RELEASE_RUNBOOKS).sort(), androidPathIds.sort(),
+const androidPathIds = ANDROID_RELEASE_PATHS.map((path) => path.id);
+assert.deepEqual(Object.keys(ANDROID_RELEASE_RUNBOOKS), androidPathIds,
+  "AndroidReleasePaths UI cards must follow ANDROID_RELEASE_RUNBOOKS key order");
+assert.deepEqual([...androidPathIds].sort(), Object.keys(ANDROID_RELEASE_RUNBOOKS).sort(),
   "android release runbooks must cover every Build & Publish tab path");
+
+for (const branchId of deployAllBranchIds()) {
+  assert.ok(ALL_BRANCH_HELP[branchId]?.trim(), `missing Deploy All Arabic branch help: ${branchId}`);
+}
+for (const branchId of deployPushBranchIds()) {
+  assert.ok(PUSH_BRANCH_HELP[branchId]?.trim(), `missing Deploy Push Arabic branch help: ${branchId}`);
+}
+assert.deepEqual(
+  deployAllScenarios.map(([value]) => value),
+  [...DEPLOY_ALL_SCENARIO_VALUES],
+  "Deploy All UI scenarios must match release-core catalog enum values",
+);
+assert.deepEqual(
+  deployPushTargets.map(([value]) => value),
+  [...DEPLOY_PUSH_TARGET_VALUES],
+  "Deploy Push UI targets must match release-core catalog enum values",
+);
+
 const androidBranchIds = allAndroidReleaseBranchIds();
 assert.equal(new Set(androidBranchIds).size, androidBranchIds.length,
   "android release runbook branch ids must be unique");

@@ -144,13 +144,19 @@ silently remain on an older framework release.
 ## Installation and update policy
 
 1. Install Node 24 LTS, npm 11.19.0, and Git.
-2. Run `npm ci`; the approved install scripts are pinned in `allowScripts` for
+2. On Windows, install a real Python 3.12+ on `PATH` (not the Microsoft Store
+   stub) before the first `npm ci`. `better-sqlite3`'s approved install script
+   may fall back to `node-gyp`, which fails without Python. See
+   `docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md`.
+3. Run `npm ci`; the approved install scripts are pinned in `allowScripts` for
    `better-sqlite3`, `esbuild`, and `unrs-resolver` so a fresh machine builds
-   exactly the native/tool binaries the project requires.
-3. Run `npm run doctor:environment` and follow only the actions for the intended
+   exactly the native/tool binaries the project requires. After install,
+   `node_modules/@asol/*` must cover every `packages/*` workspace — see
+   `docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules.md`.
+4. Run `npm run doctor:environment` and follow only the actions for the intended
    scenario.
-4. Run `npm run verify:all` before deployment.
-5. `npm outdated` is advisory. Compatible range updates may be installed and
+5. Run `npm run verify:all` before deployment.
+6. `npm outdated` is advisory. Compatible range updates may be installed and
    verified together. Major lines require build, architecture, web, and relevant
    native tests. This is why TypeScript 7 is reported for review rather than
    installed automatically.

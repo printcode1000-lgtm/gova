@@ -15,3 +15,6 @@ A log of project problems and their solutions for recurrence and environment set
 | 10 | Android Gradle fails: invalid `JAVA_HOME` on Windows | [invalid-java-home-windows.md](./invalid-java-home-windows.md) |
 | 11 | Main app deploy fails: release-console function exceeds Vercel's 250MB limit | [vercel-function-size-release-console.md](./vercel-function-size-release-console.md) |
 | 12 | Every server route returns 500: a port registered in module scope, and services that never registered it | [every-server-route-500-unregistered-port.md](./every-server-route-500-unregistered-port.md) |
+| 13 | `architecture:check` false positive on Windows: valid `page-save-read` markers ignored (CRLF) | [page-save-read-marker-crlf-windows.md](./page-save-read-marker-crlf-windows.md) |
+| 14 | Incomplete npm workspaces: `Cannot find module '@asol/…'` | [incomplete-npm-workspaces-asol-modules.md](./incomplete-npm-workspaces-asol-modules.md) |
+| 15 | `npm ci` fails on Windows: `better-sqlite3` / `node-gyp` needs Python | [npm-ci-better-sqlite3-python-windows.md](./npm-ci-better-sqlite3-python-windows.md) |
