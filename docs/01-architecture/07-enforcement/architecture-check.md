@@ -41,16 +41,17 @@ These stay in the CLI because `@asol/architecture-core` MUST NOT import applicat
 | 4 | `checkPageSaveWriteGatewayContract` | Write ownership |
 | 5 | `checkRepositorySweepContract` | Default-deny sweep over the whole tree |
 | 6 | `checkIsolatedDeploymentBackendContract` | Every account composition root pins its backend; each `better-sqlite3` stub names its own service |
-| 7 | `checkVendorOwnershipContract` | Root vendor-owned files (`capacitor.config.ts`) |
-| 8 | Walk `src/` → `checkFile`, `checkPackageSealContract`, `checkSystemLogsContract`, `checkVendorOwnershipContract` | Application source |
-| 9 | Walk `packages/` → `checkPackageSealContract`, `checkPackageAppImportContract`, `checkVendorOwnershipContract` | Package source |
-| 10 | Walk `scripts/` → `checkExternalDataAccessOwnership`, `checkAccountBridgeContract`, `checkPackageSealContract`, `checkVendorOwnershipContract` | Tooling |
-| 11 | `checkTouchInteractionContract`, `checkMapLibreWorkerContract` | UI policy |
-| 12 | `checkGeneratedDataAccessArtifacts` | Generated data-access artifacts |
-| 13 | `checkSystemLogsBootstrapContract` | Logging bootstrap |
-| 14 | `checkDeadContractRules` | Rules whose subject no longer exists |
-| 15 | Walk `services/` → `checkAccountBridgeContract`, `checkPackageSealContract`, `checkVendorOwnershipContract`, `checkNotificationModuleContract` | Account services (skips `generated/`) |
-| 16 | `printReport`, then `reportNativeSurface` | Verdict, then store-release cost |
+| 7 | `checkRuntimeTargetContract` | No `force-dynamic` page inside the static export (see [runtime-targets.md](../06-runtime-boundaries/runtime-targets.md)) |
+| 8 | `checkVendorOwnershipContract` | Root vendor-owned files (`capacitor.config.ts`) |
+| 9 | Walk `src/` → `checkFile`, `checkPackageSealContract`, `checkSystemLogsContract`, `checkVendorOwnershipContract` | Application source |
+| 10 | Walk `packages/` → `checkPackageSealContract`, `checkPackageAppImportContract`, `checkVendorOwnershipContract` | Package source |
+| 11 | Walk `scripts/` → `checkExternalDataAccessOwnership`, `checkAccountBridgeContract`, `checkPackageSealContract`, `checkVendorOwnershipContract` | Tooling |
+| 12 | `checkTouchInteractionContract`, `checkMapLibreWorkerContract` | UI policy |
+| 13 | `checkGeneratedDataAccessArtifacts` | Generated data-access artifacts |
+| 14 | `checkSystemLogsBootstrapContract` | Logging bootstrap |
+| 15 | `checkDeadContractRules` | Rules whose subject no longer exists |
+| 16 | Walk `services/` → `checkAccountBridgeContract`, `checkPackageSealContract`, `checkVendorOwnershipContract`, `checkNotificationModuleContract` | Account services (skips `generated/`) |
+| 17 | `printReport`, then `reportNativeSurface` | Verdict, then store-release cost |
 
 SOURCE_OF_TRUTH → `packages/architecture-core/src/runner.ts`. Every check above is
 named exactly as it is exported, so an agent can search for it directly.

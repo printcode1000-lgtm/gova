@@ -81,6 +81,22 @@ Ask, in order:
    the `isDevelopment` guard? One without the other leaks it into the other
    target.
 
+## Enforcement
+
+`checkRuntimeTargetContract` (in `npm run architecture:check`) fails the build
+when a page declares `force-dynamic` while still inside the static export. It
+reads `STATIC_ROUTE_IGNORELIST` directly, so the check cannot drift from the
+list it enforces, and it names both ways out: drop the directive, or exclude the
+route.
+
+It exists because the alternative is finding out from `build:static`, minutes
+into a release, after every other gate has passed.
+
+Invariants 3 and 4 below are not mechanically enforced. Rule 3 in particular —
+a `"use client"` module reaching an environment-variable inventory — is caught
+only by `auditStaticMobilePushSecurity` during the static build, and only for
+the patterns it knows.
+
 ## Invariants
 
 1. A route reachable from the static export MUST be statically renderable.
