@@ -32,6 +32,11 @@ export {
   type FeatureRuntimeTarget,
 } from './registry/application-features-registry';
 export {
+  COMPOSITION_FEATURE_SEAMS,
+  isCompositionFeatureSeam,
+  type CompositionFeatureSeamOwner,
+} from './registry/composition-feature-seams-registry';
+export {
   GENERATED_ARCHITECTURE_DOCS,
   renderArchitectureDoc,
   writeArchitectureDocs,
