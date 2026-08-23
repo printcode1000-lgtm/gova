@@ -12,13 +12,33 @@ See sections below. Architectural relationships defer to [docs/01-architecture/R
 
 ```text
 src/
-|-- core/
+|-- app/                             # Next.js App Router (pages + API routes)
+|-- core/                            # composition roots, HTTP, config (not sealed packages)
 |   |-- api/                         # AsolApiClient and HTTP transport
-|   |-- architecture/                # enforced dependency contracts
+|   |-- composition/                 # browser/server port registration roots
 |   |-- config/                      # runtime and server configuration
-|   `-- provisioning/                # R2-only provisioning utilities
-|-- features/                        # UI, hooks, client/server feature services
-`-- app/api/                         # Business API routes
+|   `-- providers/                   # app-wide React providers
+|-- features/                        # registered application features (APPLICATION_FEATURES)
+|   `-- <feature>/
+|       |-- index.ts                 # public application door: @/features/<feature>
+|       |-- ui.ts                    # optional UI door: @/features/<feature>/ui
+|       |-- server.ts                # optional server door: @/features/<feature>/server
+|       |-- domain/                  # types and pure domain logic
+|       |-- application/             # hooks/services orchestration when needed
+|       |-- presentation/            # React surfaces
+|       |-- infrastructure/          # adapters when needed
+|       `-- tests/
+|-- shared/                          # cross-feature, domain-neutral application code only
+|   |-- i18n/ locales/ theme/ ui/ layouts/ preferences/ …
+|-- instrumentation.ts               # Next.js required root
+`-- proxy.ts                         # Next.js required root
+
+# Forbidden competing roots (architecture:check): modules, components, hooks, lib, theme, locales
+
+packages/architecture-core/          # registries + architecture:check (not under src/core)
+|-- src/registry/capability-registry.ts
+|-- src/registry/application-features-registry.ts
+`-- src/docs/generate-architecture-docs.ts
 
 packages/data-core/                  # @asol/data-core — every database, sealed
 |-- package.json                     # the 24 doors; nothing else is importable
@@ -67,7 +87,7 @@ services/
     |-- src/config/                  # storage-profiles.json, read via fs
     `-- generated/                   # mirrored from src/ and public/
 
-packages/                            # four layers - see ../02-packages/module-isolation-rules.md
+packages/                            # sealed layers — see ../02-packages/module-isolation-rules.md
 |-- account-declarations/            # layer 3: pure data, imports nothing.
 |                                    # doors: "." plus one per account
 |-- vercel-deploy-core/              # account registry, GitHub-free project creation, CLI runner
@@ -82,9 +102,8 @@ packages/                            # four layers - see ../02-packages/module-i
 |-- storage-core/                    # central binary & R2 image storage boundary
 `-- dev-core/                        # sealed local development path contract
 
-src/features/
-|-- notification-bridge/             # re-exports @asol/account-bridge/notifications
-`-- service-bridge/                  # re-exports @asol/account-bridge
+# Application feature inventory (generated): application-feature-catalog.md
+# Bridge wiring lives under src/features/account-bridge (not a separate modules root)
 ```
 
 `services/` sits outside `src/` on purpose: it is deployed on its own, and the

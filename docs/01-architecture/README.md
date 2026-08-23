@@ -36,7 +36,7 @@ docs/01-architecture/
 ├── 05-capability-enforcement/   ← gateways, closure, infrastructure ownership
 ├── 06-runtime-boundaries/       ← the five runtime targets; browser/server/native/service boundaries
 ├── 07-enforcement/              ← architecture:check, sealing, exceptions
-├── 08-reference/                ← capability map, package catalog, dependency map
+├── 08-reference/                ← capability map, package catalog, dependency map, application feature catalog, file map
 ├── 09-decisions/                ← ADRs (historical rationale)
 └── 10-application-layers/       ← UI → DB layer stack (enforced contract)
 ```
