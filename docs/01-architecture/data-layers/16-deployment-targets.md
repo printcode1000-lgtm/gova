@@ -245,6 +245,45 @@ invisible for hours. A catch spanning several distinct failures must say which
 one it caught, or a gate downstream cannot tell an uncomposed deployment from a
 badly addressed request.
 
+### Do not push to `main` while `deploy:all` is running
+
+The main app is connected to GitHub and redeploys on every push to `main`. The
+six isolated accounts are not — they update only when their deploy command runs.
+
+So a push during a `deploy:all` run supersedes the deployment that run just
+created: Vercel abandons the in-flight build for the newer commit, and the
+run's `main` phase reports `TIMEOUT` — "did not reach a terminal state before
+the verification deadline". Nothing is broken; the deployment was simply
+replaced. The six accounts are unaffected, which is why a report can show them
+all READY next to a timed-out main.
+
+This is easy to cause without noticing, because several preflight phases rewrite
+tracked files as a side effect of running:
+
+- every phase that boots a server re-runs schema sync and rewrites
+  `public/sync_data/*.json` (timestamps only);
+- `build:static` rewrites `public/asol-web-manifest.json` with a new build id.
+
+Committing each of those mid-run — to keep the tree clean — is what triggers the
+cancellation. Let the run's own publish phase commit them instead; that is what
+it is for.
+
+If it happens: don't re-run `--phase=main` against a stale `run-state.json`,
+which replays the cached result without deploying, and don't delete that file to
+force a retry — it holds the progress of *every* phase, so the next
+`--phase=main` refuses on unmet prerequisites. Either let the GitHub integration
+finish deploying the newest commit, or start a fresh `deploy:all --allow-empty`.
+
+To confirm what production is actually serving, compare the deployed manifest to
+the local one:
+
+```bash
+curl -s https://gova-swart.vercel.app/asol-web-manifest.json | grep createdAt
+grep createdAt public/asol-web-manifest.json
+```
+
+A 200 from a route proves the site is up, not that it is running your change.
+
 ### Escape hatches
 
 Each is opt-in, and none is the default:
