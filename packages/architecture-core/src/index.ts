@@ -41,8 +41,11 @@ export {
 export { violations } from './checks/architecture-types';
 export { checkApplicationFeatureRegistryContract } from './checks/application-features-contract';
 export { checkFeatureDoorContract } from './checks/feature-door-contract';
+export { checkFeatureDependencyContract } from './checks/feature-dependency-contract';
 export { checkFeatureApplicationDoorPurityContract } from './checks/feature-application-door-purity-contract';
 export { checkArchitectureDocsDriftContract } from './checks/architecture-docs-drift-contract';
 export { checkPackageSealContract } from './checks/package-seal-contract';
+export { checkCapabilityOwnershipContract } from './checks/capability-ownership-contract';
+export { checkRepositorySweepContract } from './checks/repository-sweep-contract';
 export type { ArchitectureCheckOptions } from './runner';
 export { runArchitectureCheck } from './runner';

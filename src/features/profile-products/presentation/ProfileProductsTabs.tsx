@@ -8,7 +8,7 @@ import type { ProductRecord } from "@/features/product";
 import {
   isPharmacyProfileBucket,
   PharmacyNestedTabs,
-} from "@/features/pharmacy-profile-catalog/presentation/PharmacyNestedTabs";
+} from "@/features/pharmacy-profile-catalog/ui";
 import type {
   ProfileProductsFilters,
   ProfileProductsMainTab,

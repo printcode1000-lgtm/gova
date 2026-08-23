@@ -10,6 +10,7 @@ export * from './hooks/use-profile-fulfillment-settings';
 export * from './hooks/use-profile-store-images';
 export * from './hooks/use-store-details';
 export * from './hooks/use-users-by-specialty';
+export * from './presentation/contact-visual-style';
 export * from './presentation/CustomRequestPageContent';
 export * from './presentation/ProfilePageContent';
 export * from './presentation/profile-save-controller';

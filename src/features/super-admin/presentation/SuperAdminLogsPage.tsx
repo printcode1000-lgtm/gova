@@ -32,7 +32,7 @@ import {
   subscribeToSystemLogs,
   type SystemLogEntry,
   type SystemLogLevel,
-} from "@/features/system-logs/system-log-store";
+} from "@/features/system-logs";
 import type { PersistentSystemLogEntry } from "@/features/system-logs";
 import { persistentSystemLogApiService } from "@/features/system-logs";
 import { redactSystemLogText } from "@asol/system-logs-core";

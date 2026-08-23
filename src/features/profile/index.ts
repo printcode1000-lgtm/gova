@@ -8,6 +8,7 @@ export * from './domain/profile-contacts.entity';
 export * from './domain/profile-editor.entity';
 export * from './domain/profile-fulfillment-settings.entity';
 export * from './domain/profile-query-requests';
+export * from './domain/profile-review.entity';
 export * from './domain/profile-specialties.entity';
 export * from './domain/store-details.entity';
 export * from './domain/store-images.entity';

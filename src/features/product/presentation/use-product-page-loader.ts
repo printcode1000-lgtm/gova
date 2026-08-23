@@ -14,7 +14,7 @@ import { productApiService } from "@/features/product/services/product-api-servi
 import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_SUBCATEGORY_ID,
-} from "@/features/pharmacy-profile-catalog/domain/pharmacy-profile-catalog.types";
+} from "@/features/pharmacy-profile-catalog";
 import { createPharmacyInitialDetails } from "@/features/pharmacy-profile-catalog";
 import type { ProductMode } from "./product-component.types";
 

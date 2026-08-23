@@ -7,11 +7,11 @@ import { CategoriesGrid } from "@/features/home/presentation/CategoriesGrid";
 import {
   TrendingRibbon,
   type TrendingRibbonConfig,
-} from "@/features/advertisements/presentation/TrendingRibbon";
+} from "@/features/advertisements/ui";
 import {
   FeaturedMarquee,
   type FeaturedMarqueeConfig,
-} from "@/features/advertisements/presentation/FeaturedMarquee";
+} from "@/features/advertisements/ui";
 import { HeroSlider, type HeroSliderConfig } from "@/features/advertisements/ui";
 import { useHomeHeroSlider } from "@/features/advertisements/ui";
 import { useHomeFeaturedMarquee } from "@/features/advertisements/ui";

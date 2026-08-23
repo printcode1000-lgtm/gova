@@ -167,8 +167,26 @@ const devHandler = readFileSync(
 
 assert.match(
   mainSendRoute,
+  /@\/features\/notifications\/server/,
+  "The main-app send route must import the development handlers through the notifications server door.",
+);
+assert.match(
+  mainSendRoute,
+  /handleDevNotificationSendPost/,
+  "The main-app send route must delegate to the development-only POST handler.",
+);
+assert.match(
+  mainSendRoute,
+  /handleDevNotificationSendOptions/,
+  "The main-app send route must delegate to the development-only OPTIONS handler.",
+);
+assert.match(
+  readFileSync(
+    path.join(root, "src/features/notifications/server.ts"),
+    "utf8",
+  ),
   /dev-notification-send-handler\.server/,
-  "The main-app send route must delegate to the development-only handler.",
+  "The notifications server door must re-export the development-only handler module.",
 );
 assert.match(
   devHandler,

@@ -3,7 +3,7 @@ import type {
   PersistentSystemLogLevel,
   PersistentSystemLogOrigin,
   PersistentSystemLogPlatform,
-} from "@/features/system-logs/domain/persistent-system-log.entity";
+} from "@/features/system-logs";
 import { persistentSystemLogService } from "@/features/system-logs/server";
 import { assertSuperAdminRequest } from "@/features/super-admin/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';

@@ -2,7 +2,7 @@ import { runTracedBusinessRoute } from "@/core/api/traced-route";
 import {
   handleDevNotificationSendOptions,
   handleDevNotificationSendPost,
-} from "@/features/notifications/server/dev-notification-send-handler.server";
+} from "@/features/notifications/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

@@ -17,7 +17,7 @@ import { shareLocationUrl } from "@/features/sharing/ui";
 import {
   googleMapsSearchUrl,
   openDeviceMaps,
-} from "@/features/location/location-links";
+} from "@/features/location";
 
 const DEFAULT_LOCATION = {
   latitude: 29.9668,

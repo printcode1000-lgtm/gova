@@ -28,7 +28,7 @@ import {
   subscribeToSystemLogs,
   type SystemLogEntry,
   type SystemLogLevel,
-} from "@/features/system-logs/system-log-store";
+} from "@/features/system-logs";
 import { cn } from "@/shared/utils";
 import { redactSystemLogText } from "@asol/system-logs-core";
 import type { PersistentSystemLogEntry } from "@/features/system-logs";

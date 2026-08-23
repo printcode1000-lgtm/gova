@@ -18,7 +18,7 @@ import { StorageProfiles, type StoredImage } from "@asol/storage-core";
 import {
   StorageImageManager,
   type StorageImageManagerHandle,
-} from "@/features/storage/presentation/StorageImageManager";
+} from "@/features/storage/ui";
 import type {
   HeroSliderConfig,
   HeroSliderSlide,

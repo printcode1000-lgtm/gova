@@ -8,7 +8,7 @@ import {
 
 import {
   getContactVisualIcon,
-} from "@/features/profile/presentation/contact-visual-style";
+} from "@/features/profile/ui";
 
 import type {
   ContactActionBarData,

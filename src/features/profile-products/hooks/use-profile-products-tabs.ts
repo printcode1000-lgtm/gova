@@ -8,7 +8,7 @@ import type { ProductRecord } from "@/features/product";
 import {
   EMPTY_PROFILE_SPECIALTIES,
   type ProfileSpecialtiesSelection,
-} from "@/features/profile/domain/profile-specialties.entity";
+} from "@/features/profile";
 import { profileService } from "@/features/profile/ui";
 import { useTranslation } from "@/shared/i18n";
 import type {

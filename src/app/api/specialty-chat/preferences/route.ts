@@ -2,7 +2,7 @@ import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import type {
   SpecialtyChatIdentity,
   SpecialtyChatPreferenceChanges,
-} from "@/features/specialty-chat/domain/types";
+} from "@/features/specialty-chat";
 import { specialtyChatService } from "@/features/specialty-chat/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 

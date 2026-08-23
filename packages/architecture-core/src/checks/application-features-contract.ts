@@ -16,10 +16,12 @@ import {
   FORBIDDEN_APP_ROOTS,
   featureByName,
 } from '../registry/application-features-registry';
+import { CAPABILITY_PACKAGES } from '../registry/capability-registry';
 import { ROOT, addViolation } from './architecture-types';
 
 const APPROVED = new Set<string>(APPROVED_SRC_ROOTS);
 const FORBIDDEN = new Set<string>(FORBIDDEN_APP_ROOTS);
+const PACKAGE_NAMES = new Set(CAPABILITY_PACKAGES.map((p) => p.name));
 
 /** Competing layer names that must not appear as a direct child of a feature. */
 const FORBIDDEN_FEATURE_TOP_FOLDERS = new Set(['entities', 'components', 'modules']);
@@ -59,6 +61,72 @@ export function checkApplicationFeatureRegistryContract(): void {
         `Unknown top-level application directory "src/${entry.name}".`,
         `Allowed roots: ${[...APPROVED].join(', ')}. Register shared code under src/shared/ or a feature under src/features/.`,
       );
+    }
+  }
+
+  // Duplicate registry names / source paths (featureByName alone would hide these).
+  const seenNames = new Set<string>();
+  const seenPaths = new Set<string>();
+  for (const entry of APPLICATION_FEATURES) {
+    if (seenNames.has(entry.name)) {
+      addViolation(
+        'Application Features',
+        join(ROOT, entry.sourcePath),
+        `Duplicate APPLICATION_FEATURES name "${entry.name}".`,
+        'Each feature name must appear exactly once in the registry.',
+      );
+    }
+    seenNames.add(entry.name);
+
+    if (seenPaths.has(entry.sourcePath)) {
+      addViolation(
+        'Application Features',
+        join(ROOT, entry.sourcePath),
+        `Duplicate APPLICATION_FEATURES sourcePath "${entry.sourcePath}".`,
+        'Each sourcePath must appear exactly once in the registry.',
+      );
+    }
+    seenPaths.add(entry.sourcePath);
+
+    const expectedPath = `src/features/${entry.name}`;
+    if (entry.sourcePath !== expectedPath) {
+      addViolation(
+        'Application Features',
+        join(ROOT, entry.sourcePath),
+        `Registry entry "${entry.name}" has sourcePath "${entry.sourcePath}" but must be "${expectedPath}".`,
+        'Keep sourcePath identical to src/features/<name>.',
+      );
+    }
+
+    if (!existsSync(join(ROOT, entry.sourcePath))) {
+      addViolation(
+        'Application Features',
+        join(ROOT, entry.sourcePath),
+        `Registry entry "${entry.name}" points at missing path ${entry.sourcePath}.`,
+        'Restore the feature folder or remove the registry entry.',
+      );
+    }
+
+    for (const owner of entry.capabilityOwners) {
+      if (!PACKAGE_NAMES.has(owner)) {
+        addViolation(
+          'Application Features',
+          join(ROOT, entry.sourcePath),
+          `Feature "${entry.name}" lists unknown capability owner "${owner}".`,
+          'Use a name from CAPABILITY_PACKAGES or clear the owner list.',
+        );
+      }
+    }
+
+    for (const dep of entry.permittedDependencies) {
+      if (dep === entry.name) {
+        addViolation(
+          'Application Features',
+          join(ROOT, entry.sourcePath),
+          `Feature "${entry.name}" lists itself in permittedDependencies.`,
+          'Remove the self-dependency.',
+        );
+      }
     }
   }
 

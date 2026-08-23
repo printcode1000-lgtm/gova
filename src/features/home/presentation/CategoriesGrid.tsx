@@ -9,7 +9,7 @@ import {
   categoryTileClassName,
   categoryTileImageClassName,
   categoryTileTitleClassName,
-} from "@/features/categories/presentation/category-grid-styles";
+} from "@/features/categories/ui";
 import { useTranslation } from "@/shared/i18n";
 import {
   CATEGORY_CONSTANTS,

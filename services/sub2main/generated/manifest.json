@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-23T20:16:53.821Z",
+  "generatedAt": "2026-08-23T20:54:44.629Z",
   "entryPoints": [
     "features/product/services/product-service.server.ts",
     "features/profile/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 407,
+  "fileCount": 408,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -365,6 +365,7 @@
     "src/features/notifications/domain/notification-grant-envelope.ts",
     "src/features/notifications/notifications-core-ports.ts",
     "src/features/notifications/server.ts",
+    "src/features/notifications/server/dev-notification-send-handler.server.ts",
     "src/features/notifications/services/mobile-push-crypto.server.ts",
     "src/features/notifications/services/mobile-push-unlock.service.server.ts",
     "src/features/notifications/services/notification-broadcast-service.server.ts",

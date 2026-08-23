@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-23T20:16:53.425Z",
+  "generatedAt": "2026-08-23T20:54:43.979Z",
   "entryPoints": [
     "features/product-search/services/product-search-service.server.ts",
     "features/product-search/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 399,
+  "fileCount": 400,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -355,6 +355,7 @@
     "src/features/notifications/domain/notification-grant-envelope.ts",
     "src/features/notifications/notifications-core-ports.ts",
     "src/features/notifications/server.ts",
+    "src/features/notifications/server/dev-notification-send-handler.server.ts",
     "src/features/notifications/services/mobile-push-crypto.server.ts",
     "src/features/notifications/services/mobile-push-unlock.service.server.ts",
     "src/features/notifications/services/notification-broadcast-service.server.ts",

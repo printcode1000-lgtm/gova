@@ -1,5 +1,6 @@
 export {
   getDefaultProductSearchFieldKeys,
+  getProductSearchFieldByKey,
   getProductSearchFields,
 } from "./config/product-search-fields";
 export { productSearchApiService } from "./services/product-search-api-service";

@@ -5,7 +5,7 @@ import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
   type ProfileFulfillmentSettings,
-} from "@/features/profile/domain/profile-fulfillment-settings.entity";
+} from "@/features/profile";
 import { profileService } from "@/features/profile/ui";
 
 export function useCartCheckoutSettings(sellerIds: string[]) {

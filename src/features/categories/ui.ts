@@ -4,6 +4,7 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
+export * from './presentation/category-grid-styles';
 export * from './presentation/CategorySubcategoriesPage';
 export * from './presentation/CollectionSubcategoriesPage';
 export * from './presentation/DoctorAppointmentSellersPageContent';

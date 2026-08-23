@@ -92,7 +92,9 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
     capabilityOwners: [
       '@asol/account-bridge'
     ],
-    permittedDependencies: [],
+    permittedDependencies: [
+      'notifications'
+    ],
     deepImportSeams: [],
     hasBrowser: false,
     hasServer: false,
@@ -287,7 +289,8 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
       '@asol/data-core'
     ],
     permittedDependencies: [
-      'categories'
+      'categories',
+      'product-search'
     ],
     deepImportSeams: [],
     hasBrowser: false,
@@ -366,6 +369,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
       '@asol/dev-core'
     ],
     permittedDependencies: [
+      'categories',
       'page-save',
       'pharmacy-profile-catalog',
       'product'
@@ -786,6 +790,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
       'cart',
       'categories',
       'favorites',
+      'location',
       'page-save',
       'pharmacy-profile-catalog',
       'product-card',
@@ -793,7 +798,8 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
       'sharing',
       'specialty-chat',
       'storage',
-      'system-logs'
+      'system-logs',
+      'vehicle-catalog'
     ],
     deepImportSeams: [],
     hasBrowser: true,
@@ -883,6 +889,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
       'seller-discounts',
       'sharing',
       'specialty-chat',
+      'storage',
       'system-logs'
     ],
     deepImportSeams: [],
@@ -907,6 +914,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
     permittedDependencies: [
       'categories',
       'page-snapshot',
+      'pharmacy-profile-catalog',
       'product',
       'product-card',
       'product-search',
@@ -1041,8 +1049,10 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
     ],
     capabilityOwners: [],
     permittedDependencies: [
+      'app-reset',
       'auth',
-      'notifications'
+      'notifications',
+      'specialty-chat'
     ],
     deepImportSeams: [],
     hasBrowser: true,
@@ -1055,7 +1065,8 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
     owns: 'Native/web sharing orchestration',
     doors: [
       '.',
-      './ui'
+      './ui',
+      './server'
     ],
     runtimeTargets: [
       'web',

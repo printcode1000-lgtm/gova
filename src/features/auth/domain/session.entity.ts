@@ -1,7 +1,7 @@
 import {
   EMPTY_PROFILE_SPECIALTIES,
   type ProfileSpecialtiesSelection,
-} from '@/features/profile/domain/profile-specialties.entity';
+} from '@/features/profile';
 
 /** Logged-in user session — persisted in AsolDB (auth store, key: current). */
 export interface UserSession {

@@ -14,7 +14,7 @@ import {
   StorageImageManager,
   parseStorageImageManagerConfig,
   type StorageImageManagerHandle,
-} from "@/features/storage/presentation/StorageImageManager";
+} from "@/features/storage/ui";
 import type {
   ProfileSectionStatus,
   StoreDetailsController,

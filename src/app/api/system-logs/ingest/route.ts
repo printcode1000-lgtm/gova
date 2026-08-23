@@ -8,7 +8,7 @@ import type {
   PersistentSystemLogInput,
   PersistentSystemLogLevel,
   PersistentSystemLogOrigin,
-} from "@/features/system-logs/domain/persistent-system-log.entity";
+} from "@/features/system-logs";
 import { persistentSystemLogService } from "@/features/system-logs/server";
 import {
   isIngestRateLimited,

@@ -21,13 +21,13 @@ import {
 import {
   FeaturedMarquee,
   type FeaturedMarqueeConfig,
-} from "@/features/advertisements/presentation/FeaturedMarquee";
+} from "@/features/advertisements/ui";
 import { FollowButton } from "@/features/follow/ui";
 import { HeroSlider, type HeroSliderConfig } from "@/features/advertisements/ui";
 import {
   TrendingRibbon,
   type TrendingRibbonConfig,
-} from "@/features/advertisements/presentation/TrendingRibbon";
+} from "@/features/advertisements/ui";
 import { WorkingHoursCard } from "@/features/profile-working-hours/ui";
 import { ProductReviews } from "@/features/product/ui";
 import { SellerDiscountsPreview } from "@/features/seller-discounts/ui";

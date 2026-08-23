@@ -29,6 +29,7 @@ import { checkVendorOwnershipContract } from './checks/vendor-ownership-contract
 import { checkPageSaveGatewayContract } from './checks/page-save-gateway-contract';
 import { checkApplicationFeatureRegistryContract } from './checks/application-features-contract';
 import { checkFeatureDoorContract } from './checks/feature-door-contract';
+import { checkFeatureDependencyContract } from './checks/feature-dependency-contract';
 import { checkFeatureApplicationDoorPurityContract } from './checks/feature-application-door-purity-contract';
 import { checkArchitectureDocsDriftContract } from './checks/architecture-docs-drift-contract';
 import { printReport, reportNativeSurface } from './checks/file-analysis';
@@ -70,6 +71,7 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   checkIsolatedDeploymentBackendContract();
   checkRuntimeTargetContract();
   checkFeatureDoorContract();
+  checkFeatureDependencyContract();
   checkFeatureApplicationDoorPurityContract();
   checkArchitectureDocsDriftContract();
 

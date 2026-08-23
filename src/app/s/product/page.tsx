@@ -5,7 +5,7 @@ import { ProductPageContent } from "@/features/product/ui";
 import {
   loadPublicProductShareRecord,
   productShareMetadata,
-} from "@/features/sharing/index.server";
+} from "@/features/sharing/server";
 
 interface ProductSharePageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

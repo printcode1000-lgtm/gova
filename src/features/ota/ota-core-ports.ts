@@ -7,7 +7,7 @@ import { persistentSystemLogApiService } from "@/features/system-logs";
 import {
   reportPreAuthFailure,
   type PreAuthFailureContext,
-} from "@/features/system-logs/pre-auth-failure-reporter";
+} from "@/features/system-logs";
 import type { PersistentSystemLogInput } from "@/features/system-logs";
 
 /**

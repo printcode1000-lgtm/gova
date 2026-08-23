@@ -2,7 +2,7 @@ import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import type {
   DiscountBuyerContext,
   DiscountCartItem,
-} from "@/features/seller-discounts/domain/seller-discount.entity";
+} from "@/features/seller-discounts";
 import { sellerDiscountService } from "@/features/seller-discounts/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 

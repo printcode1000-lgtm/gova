@@ -6,7 +6,7 @@ import {
   StorageImageManager,
   type StorageImageManagerConfig,
   type StorageImageManagerHandle,
-} from "@/features/storage/presentation/StorageImageManager";
+} from "@/features/storage/ui";
 import type { StoredImage } from "@asol/storage-core";
 import type * as React from "react";
 

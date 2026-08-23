@@ -5,6 +5,7 @@
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
 export * from './presentation/ProductComponentPrimitives';
+export * from './presentation/ProductComponentsRenderer';
 export * from './presentation/ProductPageContent';
 export * from './presentation/ProductReviews';
 export * from './presentation/product-component.types';

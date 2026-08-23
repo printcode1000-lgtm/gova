@@ -5,6 +5,7 @@
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
 export * from './presentation/PharmacyCatalogManagerPage';
+export * from './presentation/PharmacyNestedTabs';
 export * from './presentation/ProductPharmacySpecs';
 export * from './presentation/ProductPharmacySpecsStyleEditor';
 /* END GENERATED FEATURE DOOR EXPORTS */

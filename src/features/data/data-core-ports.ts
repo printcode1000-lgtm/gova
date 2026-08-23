@@ -3,7 +3,7 @@ import {
   getDefaultProductSearchFieldKeys,
   getProductSearchFieldByKey,
   getProductSearchFields,
-} from '@/features/product-search/config/product-search-fields';
+} from '@/features/product-search';
 import { registerDataCoreRuntimeConfigPorts } from './data-core-runtime-config-ports';
 import { registerDataCoreSpecialtyCatalogPort } from './data-core-specialty-catalog-port';
 

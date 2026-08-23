@@ -11,7 +11,7 @@ import { StorageProfiles, type StoredImage } from "@asol/storage-core";
 import {
   StorageImageManager,
   type StorageImageManagerHandle,
-} from "@/features/storage/presentation/StorageImageManager";
+} from "@/features/storage/ui";
 import { usePageSaveRegistration } from "@/features/page-save/ui";
 import { buildImageUploadPageSaveItem } from "@/features/page-save";
 import { buildPageSaveOperationDescription } from "@/features/page-save";

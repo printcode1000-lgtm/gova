@@ -7,7 +7,7 @@ import { usePageSaveRegistration } from "@/features/page-save/ui";
 import {
   usePageSaveOperations,
   type PageSaveOperations,
-} from "@/features/page-save/hooks/use-page-save-operations";
+} from "@/features/page-save/ui";
 import { buildImageUploadPageSaveItem } from "@/features/page-save";
 import {
   CATALOG_STUDIO_API,

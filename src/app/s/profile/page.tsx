@@ -5,7 +5,7 @@ import { ProfilePageContent } from "@/features/profile/ui";
 import {
   loadPublicProfileShareRecord,
   profileShareMetadata,
-} from "@/features/sharing/index.server";
+} from "@/features/sharing/server";
 
 interface ProfileSharePageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

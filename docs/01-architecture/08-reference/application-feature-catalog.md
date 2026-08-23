@@ -42,7 +42,7 @@ src/
 | **Public Doors** | `@/features/account-bridge` |
 | **Runtime Targets** | `web` |
 | **Capability Owners** | `@asol/account-bridge` |
-| **Permitted Feature Dependencies** | _(none)_ |
+| **Permitted Feature Dependencies** | `notifications` |
 | **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=false · ui=false |
 
@@ -154,7 +154,7 @@ src/
 | **Public Doors** | `@/features/data` · `@/features/data/server` |
 | **Runtime Targets** | `web` |
 | **Capability Owners** | `@asol/data-core` |
-| **Permitted Feature Dependencies** | `categories` |
+| **Permitted Feature Dependencies** | `categories`, `product-search` |
 | **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=false · ui=false |
 
@@ -196,7 +196,7 @@ src/
 | **Public Doors** | `@/features/dev-tools` · `@/features/dev-tools/ui` |
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | `@asol/dev-core` |
-| **Permitted Feature Dependencies** | `page-save`, `pharmacy-profile-catalog`, `product` |
+| **Permitted Feature Dependencies** | `categories`, `page-save`, `pharmacy-profile-catalog`, `product` |
 | **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
@@ -434,7 +434,7 @@ src/
 | **Public Doors** | `@/features/product` · `@/features/product/ui` · `@/features/product/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/product-core`, `@asol/product-style-core` |
-| **Permitted Feature Dependencies** | `auth`, `cart`, `categories`, `favorites`, `page-save`, `pharmacy-profile-catalog`, `product-card`, `profile`, `sharing`, `specialty-chat`, `storage`, `system-logs` |
+| **Permitted Feature Dependencies** | `auth`, `cart`, `categories`, `favorites`, `location`, `page-save`, `pharmacy-profile-catalog`, `product-card`, `profile`, `sharing`, `specialty-chat`, `storage`, `system-logs`, `vehicle-catalog` |
 | **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
@@ -476,7 +476,7 @@ src/
 | **Public Doors** | `@/features/profile` · `@/features/profile/ui` · `@/features/profile/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `advertisements`, `auth`, `categories`, `follow`, `location`, `page-save`, `page-snapshot`, `product`, `profile-products`, `profile-working-hours`, `seller-card`, `seller-discounts`, `sharing`, `specialty-chat`, `system-logs` |
+| **Permitted Feature Dependencies** | `advertisements`, `auth`, `categories`, `follow`, `location`, `page-save`, `page-snapshot`, `product`, `profile-products`, `profile-working-hours`, `seller-card`, `seller-discounts`, `sharing`, `specialty-chat`, `storage`, `system-logs` |
 | **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
@@ -490,7 +490,7 @@ src/
 | **Public Doors** | `@/features/profile-products` · `@/features/profile-products/ui` |
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `categories`, `page-snapshot`, `product`, `product-card`, `product-search`, `profile` |
+| **Permitted Feature Dependencies** | `categories`, `page-snapshot`, `pharmacy-profile-catalog`, `product`, `product-card`, `product-search`, `profile` |
 | **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
@@ -574,7 +574,7 @@ src/
 | **Public Doors** | `@/features/settings` · `@/features/settings/ui` |
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `auth`, `notifications` |
+| **Permitted Feature Dependencies** | `app-reset`, `auth`, `notifications`, `specialty-chat` |
 | **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
@@ -585,7 +585,7 @@ src/
 | **Feature** | `sharing` |
 | **Source** | `src/features/sharing/` |
 | **Owns** | Native/web sharing orchestration |
-| **Public Doors** | `@/features/sharing` · `@/features/sharing/ui` |
+| **Public Doors** | `@/features/sharing` · `@/features/sharing/ui` · `@/features/sharing/server` |
 | **Runtime Targets** | `web`, `server` |
 | **Capability Owners** | `@asol/native-core` |
 | **Permitted Feature Dependencies** | `product`, `profile`, `qr-code`, `system-logs` |
@@ -696,5 +696,5 @@ src/
 |---|---|
 | Application features | 47 |
 | Features with UI door | 32 |
-| Features with server door | 25 |
+| Features with server door | 26 |
 | Sealed capability packages | 41 |

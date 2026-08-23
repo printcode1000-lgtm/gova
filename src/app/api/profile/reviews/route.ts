@@ -3,7 +3,7 @@ import type { ReviewSort } from "@/features/product";
 import type {
   SaveProfileReviewInput,
   UpdateProfileReviewInput,
-} from "@/features/profile/domain/profile-review.entity";
+} from "@/features/profile";
 import { profileReviewService } from "@/features/profile/server";
 
 function failure(error: unknown) {

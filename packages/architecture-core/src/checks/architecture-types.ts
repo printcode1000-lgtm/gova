@@ -164,8 +164,13 @@ export function extractImports(content: string): string[] {
   // Statement-boundary aware: fixture strings that embed the word import and a
   // package specifier (for example a Capacitor app plugin id inside quotes) must
   // not count as real imports. Real imports begin a statement.
+  //
+  // Multi-line named imports MUST match — import { a, b } spanning lines then
+  // from a quoted specifier was previously invisible to every seal/door/
+  // dependency contract that shares this helper, which is how a deep
+  // cross-feature import could ship undetected.
   const importRegex =
-    /(?:^|[;{}\n])\s*import\s+(?:type\s+)?(?:[^'"\n]+from\s+)?['"]([^'"]+)['"]/gm;
+    /(?:^|[;{}\n])\s*import\s+(?:type\s+)?(?:[^'";]+?\sfrom\s+)?['"]([^'"]+)['"]/gm;
   // Bare require(...) — an identifier ending in "Require" (nodeRequire) does not match
   // \brequire\b, so it is handled explicitly below.
   const requireRegex = /(?:^|[^\w$.])require\(\s*['"]([^'"]+)['"]\s*\)/g;

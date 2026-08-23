@@ -14,7 +14,7 @@ import { ProductField } from "@/features/product/ui";
 import type {
   ProductComponentConfig,
   ProductMode,
-} from "@/features/product/presentation/product-component.types";
+} from "@/features/product/ui";
 import { PharmacySelect } from "./PharmacySelect";
 
 interface ProductPharmacySpecsProps {

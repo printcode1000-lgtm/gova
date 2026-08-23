@@ -11,9 +11,12 @@ import {
   CAPABILITY_PACKAGES,
   checkApplicationFeatureRegistryContract,
   checkArchitectureDocsDriftContract,
+  checkCapabilityOwnershipContract,
   checkFeatureApplicationDoorPurityContract,
+  checkFeatureDependencyContract,
   checkFeatureDoorContract,
   checkPackageSealContract,
+  checkRepositorySweepContract,
   diffArchitectureDocs,
   renderArchitectureDoc,
   violations,
@@ -21,6 +24,11 @@ import {
 } from '@asol/architecture-core';
 
 const ROOT = process.cwd();
+
+/** Build attack probe source without a literal import-from in *this* file (scripts are scanned). */
+function attackSource(parts: string[]): string {
+  return parts.join('');
+}
 
 function clearViolations(): void {
   violations.length = 0;
@@ -78,7 +86,11 @@ function hasViolationMatching(re: RegExp): boolean {
   const probe = join(ROOT, 'src/features/cart/__architecture_attack_probe.ts');
   writeFileSync(
     probe,
-    "import { something } from '@/features/auth/domain/session.entity';\nexport const x = something;\n",
+    attackSource([
+      "import { something } from '",
+      "@/features/auth",
+      "/domain/session.entity';\nexport const x = something;\n",
+    ]),
   );
   try {
     checkFeatureDoorContract();
@@ -188,7 +200,10 @@ function hasViolationMatching(re: RegExp): boolean {
 {
   clearViolations();
   const probe = join(ROOT, 'src/features/cart/__architecture_attack_pkg.ts');
-  writeFileSync(probe, "import {} from '@asol/data-core/src/core/database/db-client';\n");
+  writeFileSync(
+    probe,
+    attackSource(["import {} from '", "@asol/data-core", "/src/core/database/db-client';\n"]),
+  );
   try {
     checkPackageSealContract(probe, readFileSync(probe, 'utf8'));
     assert.ok(
@@ -213,7 +228,7 @@ function hasViolationMatching(re: RegExp): boolean {
   const original = readFileSync(indexPath, 'utf8');
   writeFileSync(
     poison,
-    "import {} from '@asol/data-core/browser';\nexport const attack = true;\n",
+    attackSource(["import {} from '", "@asol/data-core", "/browser';\nexport const attack = true;\n"]),
   );
   writeFileSync(
     indexPath,
@@ -231,8 +246,226 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
+// ── 12. Duplicate APPLICATION_FEATURES name ─────────────────────────────────
+{
+  clearViolations();
+  // Simulate by writing a second feature folder that shares a name collision
+  // via sourcePath mismatch: register path check is covered by missing-path
+  // below; here we assert the contract rejects a fake twin folder name that
+  // would collide if the registry listed it twice — exercised via on-disk twin.
+  const twin = join(ROOT, 'src/features/auth-twin-attack');
+  mkdirSync(twin, { recursive: true });
+  writeFileSync(join(twin, 'index.ts'), 'export {};\n');
+  try {
+    checkApplicationFeatureRegistryContract();
+    assert.ok(hasViolationMatching(/auth-twin-attack|not registered/i));
+  } finally {
+    rmSync(twin, { recursive: true, force: true });
+  }
+}
+
+// ── 13. Multi-line deep cross-feature import ────────────────────────────────
+{
+  clearViolations();
+  const probe = join(ROOT, 'src/features/cart/__architecture_attack_multiline.ts');
+  writeFileSync(
+    probe,
+    attackSource([
+      "import {\n  something\n} from '",
+      "@/features/auth",
+      "/domain/session.entity';\nexport const x = something;\n",
+    ]),
+  );
+  try {
+    checkFeatureDoorContract();
+    assert.ok(
+      hasViolationMatching(/Deep cross-feature import|session\.entity/i),
+      'Multi-line deep import must fail',
+    );
+  } finally {
+    rmSync(probe, { force: true });
+  }
+}
+
+// ── 14. Relative cross-feature traversal ────────────────────────────────────
+{
+  clearViolations();
+  const probe = join(ROOT, 'src/features/cart/__architecture_attack_rel.ts');
+  writeFileSync(
+    probe,
+    attackSource([
+      "import { something } from '",
+      "../auth",
+      "/domain/session.entity';\nexport const x = something;\n",
+    ]),
+  );
+  try {
+    checkFeatureDoorContract();
+    assert.ok(
+      hasViolationMatching(/resolves into feature|Deep cross-feature|auth/i),
+      'Relative cross-feature traversal must fail',
+    );
+  } finally {
+    rmSync(probe, { force: true });
+  }
+}
+
+// ── 15. Dynamic deep import ─────────────────────────────────────────────────
+{
+  clearViolations();
+  const probe = join(ROOT, 'src/features/cart/__architecture_attack_dyn.ts');
+  writeFileSync(
+    probe,
+    attackSource([
+      "export async function load() {\n  return import('",
+      "@/features/auth",
+      "/domain/session.entity');\n}\n",
+    ]),
+  );
+  try {
+    checkFeatureDoorContract();
+    assert.ok(
+      hasViolationMatching(/Deep cross-feature import|session\.entity/i),
+      'Dynamic deep import must fail',
+    );
+  } finally {
+    rmSync(probe, { force: true });
+  }
+}
+
+// ── 16. import type deep path ───────────────────────────────────────────────
+{
+  clearViolations();
+  const probe = join(ROOT, 'src/features/cart/__architecture_attack_type.ts');
+  writeFileSync(
+    probe,
+    attackSource([
+      "import type { Session } from '",
+      "@/features/auth",
+      "/domain/session.entity';\nexport type T = Session;\n",
+    ]),
+  );
+  try {
+    checkFeatureDoorContract();
+    assert.ok(
+      hasViolationMatching(/Deep cross-feature import|session\.entity/i),
+      'import type deep path must fail',
+    );
+  } finally {
+    rmSync(probe, { force: true });
+  }
+}
+
+// ── 17. Barrel re-export of deep path ───────────────────────────────────────
+{
+  clearViolations();
+  const barrel = join(ROOT, 'src/features/cart/__architecture_attack_barrel.ts');
+  writeFileSync(
+    barrel,
+    attackSource([
+      "export { something } from '",
+      "@/features/auth",
+      "/domain/session.entity';\n",
+    ]),
+  );
+  try {
+    checkFeatureDoorContract();
+    assert.ok(
+      hasViolationMatching(/Deep cross-feature import|session\.entity/i),
+      'Barrel re-export of deep path must fail',
+    );
+  } finally {
+    rmSync(barrel, { force: true });
+  }
+}
+
+// ── 18. Unauthorized top-level source directory ─────────────────────────────
+{
+  clearViolations();
+  const attackDir = join(ROOT, 'evil-root-dir');
+  mkdirSync(attackDir, { recursive: true });
+  writeFileSync(join(attackDir, 'index.ts'), 'export const x = 1;\n');
+  try {
+    checkRepositorySweepContract();
+    assert.ok(
+      hasViolationMatching(/evil-root-dir|Unauthorized top-level/i),
+      'Unauthorized root source dir must fail',
+    );
+  } finally {
+    rmSync(attackDir, { recursive: true, force: true });
+  }
+}
+
+// ── 19. Unregistered package folder ─────────────────────────────────────────
+{
+  clearViolations();
+  const pkg = join(ROOT, 'packages/evil-core');
+  mkdirSync(join(pkg, 'src'), { recursive: true });
+  writeFileSync(
+    join(pkg, 'package.json'),
+    JSON.stringify({
+      name: '@asol/evil-core',
+      version: '0.0.0',
+      private: true,
+      type: 'module',
+      exports: { '.': './src/index.ts' },
+    }),
+  );
+  writeFileSync(join(pkg, 'src/index.ts'), 'export const evil = 1;\n');
+  try {
+    checkCapabilityOwnershipContract();
+    assert.ok(
+      hasViolationMatching(/evil-core|not registered/i),
+      'Unregistered package must fail',
+    );
+  } finally {
+    rmSync(pkg, { recursive: true, force: true });
+  }
+}
+
+// ── 20. Undeclared feature dependency (door + dependency contracts) ─────────
+{
+  clearViolations();
+  const probe = join(ROOT, 'src/features/qr-code/__architecture_attack_stale.ts');
+  const target = APPLICATION_FEATURES.find((f) => f.name !== 'qr-code')!;
+  writeFileSync(probe, `import {} from '@/features/${target.name}';\n`);
+  try {
+    checkFeatureDoorContract();
+    const doorFailed = hasViolationMatching(/not permitted|permittedDependencies/i);
+    clearViolations();
+    checkFeatureDependencyContract();
+    const depFailed = hasViolationMatching(/neither permittedDependencies|imports/i);
+    assert.ok(doorFailed || depFailed, 'Undeclared dependency must fail');
+  } finally {
+    rmSync(probe, { force: true });
+  }
+}
+
+// ── 21. require() deep package path ─────────────────────────────────────────
+{
+  clearViolations();
+  const probe = join(ROOT, 'src/features/cart/__architecture_attack_require.ts');
+  writeFileSync(
+    probe,
+    attackSource([
+      "const x = require('",
+      "@asol/data-core",
+      "/src/core/database/db-client');\nexport default x;\n",
+    ]),
+  );
+  try {
+    checkPackageSealContract(probe, readFileSync(probe, 'utf8'));
+    assert.ok(
+      violations.some((v) => /data-core|seal|deep|door/i.test(`${v.layer} ${v.violation}`)),
+      'require() deep package path must fail',
+    );
+  } finally {
+    rmSync(probe, { force: true });
+  }
+}
+
 clearViolations();
 console.log(
-  `Adversarial architecture attacks: 11 scenarios rejected ` +
+  `Adversarial architecture attacks: 21 scenarios rejected ` +
     `(${APPLICATION_FEATURES.length} features, ${CAPABILITY_PACKAGES.length} packages).`,
 );

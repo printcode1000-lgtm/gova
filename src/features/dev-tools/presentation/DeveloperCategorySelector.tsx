@@ -17,7 +17,7 @@ import {
   PRODUCT_DEMO_DETAILS,
   PRODUCT_DEMO_IMAGES,
   ProductComponentsRenderer,
-} from "@/features/product/presentation/ProductComponentsRenderer";
+} from "@/features/product/ui";
 import type { ProductMode } from "@/features/product/ui";
 import {
   createEmptyProductDetails,

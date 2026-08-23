@@ -12,7 +12,7 @@ import { useTranslation } from "@/shared/i18n";
 import {
   CLEAR_STORAGE_WARNING,
   clearAllClientStorage,
-} from '@/features/app-reset/client-storage';
+} from '@/features/app-reset';
 import { useSession } from "@/features/auth/ui";
 import { isSuperAdmin } from "@/features/auth";
 import { useOtaUpdate } from "@asol/ota-core";

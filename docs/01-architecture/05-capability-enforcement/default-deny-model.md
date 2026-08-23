@@ -16,6 +16,10 @@ Default-deny applies to package registration, vendor SDK usage, application laye
 | Create `packages/new-thing/` | **Denied** at scan | Added to `CAPABILITY_PACKAGES` |
 | Create `src/features/new-thing/` | **Denied** at scan | Added to `APPLICATION_FEATURES` with doors |
 | Recreate `src/modules/` or other forbidden roots | **Denied** at scan | Never — use `src/features/` or `src/shared/` |
+| New top-level directory with `.ts`/`.js` source | **Denied** at scan | Never — code belongs under `src/`, `packages/`, `scripts/`, or `services/` |
+| Duplicate `APPLICATION_FEATURES` name/path | **Denied** at scan | Keep one registry row per feature |
+| Stale `permittedDependencies` entry | **Denied** at scan | Remove unused edges or add the real import |
+| Multi-line `import { … } from '…'` deep path | **Denied** at scan | Same as single-line — `extractImports` reads both |
 | Import `@capacitor/camera` from UI | **Denied** | Never — use `@asol/native-core` |
 | Add `exports` subpath without declaration | **Denied** at resolution | Key added to `package.json` + contract test |
 | Page component writes to DB | **Denied** | Routed through `@asol/page-save-core` |

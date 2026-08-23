@@ -249,3 +249,8 @@ export {
 } from "@asol/notifications-core";
 
 export { registerNotificationsCorePorts } from './notifications-core-ports';
+export {
+  handleDevNotificationSendOptions,
+  handleDevNotificationSendPost,
+  isDevNotificationSendEnabled,
+} from './server/dev-notification-send-handler.server';

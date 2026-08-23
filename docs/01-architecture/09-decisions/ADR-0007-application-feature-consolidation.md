@@ -48,3 +48,5 @@ New features have zero architectural authority until registered. Do not recreate
 2. Every `src/features/*` directory is in `APPLICATION_FEATURES`.
 3. Generated architecture reference docs match the registries.
 4. Existing package sealing, gateways, and capability ownership remain intact.
+5. Duplicate registry names/paths, stale `permittedDependencies`, and unauthorized top-level source directories fail `architecture:check`.
+6. Multi-line `import { … } from '…'` is visible to seal/door/dependency scans (same as single-line).
