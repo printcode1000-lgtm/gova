@@ -11,7 +11,7 @@
  */
 module.exports = function BetterSqlite3Unavailable() {
   throw new Error(
-    'better-sqlite3 is not available in the notifications service: this deployment is Turso-only.',
+    'better-sqlite3 is not available in the orders service: this deployment is Turso-only.',
   );
 };
 module.exports.default = module.exports;

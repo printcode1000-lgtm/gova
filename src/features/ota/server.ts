@@ -1,3 +1,6 @@
+import { asolApi, ASOL_API_ROUTES } from '@/core/api';
+import { publicEnv } from '@/core/config/public-env';
+import { categoryService } from '@/features/categories';
 import "server-only";
 
 import { configureOtaCore } from "@asol/ota-core";
@@ -32,5 +35,17 @@ export function registerOtaCoreServerPorts(): void {
       },
     },
     identity: { isSuperAdmin: isSuperAdminIdentity },
+    httpApi: asolApi,
+    apiRoutes: ASOL_API_ROUTES,
+    publicEnv: {
+      otaPublicKey: publicEnv.otaPublicKey,
+      otaManifestUrl: publicEnv.otaManifestUrl,
+      webBundleVersion: publicEnv.webBundleVersion,
+    },
+    categories: {
+      getMainCategories: () => categoryService.getMainCategories(),
+      getCollections: () => categoryService.getCollections(),
+      getCategoryTree: (categoryId) => categoryService.getCategoryTree(categoryId),
+    },
   });
 }

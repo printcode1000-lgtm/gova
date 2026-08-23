@@ -2,7 +2,7 @@ import { nodeRequire } from '../node-require';
 import "server-only";
 
 import { AbstractDatabaseClient } from "./abstract-database-client";
-import { getTursoProductRuntimeCredentials } from "@/core/config/server-env.values";
+import { getTursoProductRuntimeCredentials } from '../../ports/runtime-config';
 import { drizzle } from "./drizzle-libsql.server";
 
 let productTursoClient: any = null;

@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { categoryService } from "@/features/categories";
+import { otaCategories } from '../../ports';
 import { rootOutDir } from "./out-runtime-config";
 
 export function auditGeneratedStaticRoutes(): void {
@@ -11,10 +11,10 @@ export function auditGeneratedStaticRoutes(): void {
 
   // 1. Check Categories & Sellers
   const categoryIds = new Set<number>();
-  for (const category of categoryService.getMainCategories()) {
+  for (const category of otaCategories().getMainCategories()) {
     categoryIds.add(category.id);
   }
-  for (const collection of categoryService.getCollections()) {
+  for (const collection of otaCategories().getCollections()) {
     for (const item of collection.items) {
       categoryIds.add(item.id);
     }
@@ -32,7 +32,7 @@ export function auditGeneratedStaticRoutes(): void {
     }
 
     // Sellers pages for this category
-    const tree = categoryService.getCategoryTree(categoryId);
+    const tree = otaCategories().getCategoryTree(categoryId);
     if (tree) {
       for (const subcategory of tree.subcategories) {
         const sellerPath = path.join(
@@ -53,7 +53,7 @@ export function auditGeneratedStaticRoutes(): void {
   }
 
   // 2. Check Doctor Appointment Specialties (under Category 20)
-  const medicalCategory = categoryService.getCategoryTree(20);
+  const medicalCategory = otaCategories().getCategoryTree(20);
   if (medicalCategory && medicalCategory.doctorAppointmentItems) {
     for (const specialty of medicalCategory.doctorAppointmentItems) {
       const docPath = path.join(
@@ -73,7 +73,7 @@ export function auditGeneratedStaticRoutes(): void {
   }
 
   // 3. Check Collections
-  for (const collection of categoryService.getCollections()) {
+  for (const collection of otaCategories().getCollections()) {
     const collectionPath = path.join(
       rootOutDir,
       "collections",

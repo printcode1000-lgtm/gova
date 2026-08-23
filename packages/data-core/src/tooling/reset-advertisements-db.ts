@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { createClient } from "@libsql/client";
@@ -9,7 +9,15 @@ import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 import { ADVERTISEMENTS_SQLITE_DB_PATH } from "../core/database/environment";
 import { loadTursoAdvertisementsCredentialsFromEnv } from "../provisioning/core/turso-provisioner";
-import seed from "@/features/advertisements/config/home-hero-slider.seed.json";
+
+/** Seed lives in the app tree; tooling loads it by path (no `@/` import). */
+const seedPath = path.join(
+  process.cwd(),
+  "src/features/advertisements/config/home-hero-slider.seed.json",
+);
+const seed = JSON.parse(readFileSync(seedPath, "utf8")) as {
+  config: unknown;
+};
 
 process.env.ASOL_PROVISIONING = "true";
 if (existsSync(".env")) dotenv.config({ path: ".env" });

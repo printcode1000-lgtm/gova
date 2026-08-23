@@ -9,9 +9,7 @@ import type {
 import type { RegisteredNotificationToken } from "@asol/notifications-core";
 import { NotificationPlatforms } from "@asol/notifications-core";
 import { moneyVariablesByLocale } from "../shared/notification-money";
-import type { ListNotificationTokensQuery } from "@asol/data-core/notifications";
-import type { DeleteNotificationTokenCommand } from "@asol/data-core/notifications";
-import type { GetNotificationPushPreferenceQuery } from "@asol/data-core/notifications";
+import type { NotificationTokenStorePort } from "@asol/notifications-core/server";
 
 function token(
   id: string,
@@ -59,24 +57,22 @@ function buildService(
   deleted: string[],
   mutedUids: readonly string[] = [],
 ) {
-  const listTokens = {
-    byUids: async () => tokensByUid,
-  } as unknown as ListNotificationTokensQuery;
-  const deleteToken = {
-    execute: async (input: { tokenId: string }) => {
+  const muted = new Set(mutedUids);
+
+  // One port instead of three data-core doubles: delivery reads tokens through
+  // `NotificationTokenStorePort`, so a notifications-core test no longer has to
+  // impersonate the persistence package to exercise locale routing.
+  const tokens: NotificationTokenStorePort = {
+    tokensByUid: async () => tokensByUid,
+    pushEnabledUids: async (uids: string[]) => uids.filter((uid) => !muted.has(uid)),
+    deleteToken: async (input: { tokenId: string }) => {
       deleted.push(input.tokenId);
     },
-  } as unknown as DeleteNotificationTokenCommand;
-  const muted = new Set(mutedUids);
-  const pushPreference = {
-    pushEnabledUids: async (uids: string[]) => uids.filter((uid) => !muted.has(uid)),
-  } as unknown as GetNotificationPushPreferenceQuery;
+  };
   return new NotificationSendService(
-    listTokens,
     new NotificationProviderRegistry([provider]),
-    deleteToken,
     undefined,
-    pushPreference,
+    () => tokens,
   );
 }
 

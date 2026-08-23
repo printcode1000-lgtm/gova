@@ -15,7 +15,7 @@ import {
   envPrefixForShard,
   sqliteFileNameForShard,
 } from '../../core/database/database-shards';
-import { readOptionalEnv } from '@/core/config/server-env.values';
+import { readOptionalEnv } from '../../ports/runtime-config';
 import { readSqliteSchema } from './sqlite-schema-reader';
 import { readTursoSchema } from './turso-schema-reader';
 import { diffSchemas } from './schema-diff';

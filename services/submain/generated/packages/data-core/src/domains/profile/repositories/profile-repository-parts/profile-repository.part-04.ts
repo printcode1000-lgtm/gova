@@ -10,12 +10,12 @@ import type {
   ProfileTrendingItemRow,
   ProfileWorkingHourRow,
 } from "../../../../core/database/profile/profile.schema";
-import type { ProfileContactsData } from "@/features/profile/entities/profile-contacts.entity";
+import type { ProfileContactsData } from "../../entities";
 import {
   EMPTY_PROFILE_SHOWCASE,
   EMPTY_STORE_DETAILS,
   type StoreDetailsData,
-} from "@/features/profile/entities/store-details.entity";
+} from "../../entities";
 import type {
   ProfileImageKeys,
   IProfileRepository,
@@ -23,28 +23,24 @@ import type {
 import {
   EMPTY_PROFILE_SPECIALTIES,
   type ProfileSpecialtiesSelection,
-} from "@/features/profile/entities/profile-specialties.entity";
+} from "../../entities";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   type ProfileFulfillmentSettings,
-} from "@/features/profile/entities/profile-fulfillment-settings.entity";
+} from "../../entities";
 import {
   EMPTY_PROFILE_WORKING_HOURS,
   WORKING_DAY_LABELS,
   normalizeProfileWorkingHours,
   type WorkingDayId,
-} from "@/features/profile-working-hours";
+} from "../../entities";
 import {
-  SPECIALTY_COLUMN_NAMES,
+  specialtyColumnNames,
   selectedSpecialtyColumns,
-  columnBySelection,
-  columnByDoctorAppointment,
+  columnForDoctorAppointment,
+  deliveryServicesSpecialtyColumn,
 } from "../specialty-columns.server";
 import { ProfilePart3 } from "./profile-repository.part-03";
-const DELIVERY_SERVICES_SPECIALTY_COLUMN = columnBySelection.get("46:46");
-if (!DELIVERY_SERVICES_SPECIALTY_COLUMN) {
-  throw new Error("Delivery Services specialty column mapping is missing");
-}
 const DAY_TO_INDEX = new Map<WorkingDayId, number>(
   WORKING_DAY_LABELS.map((day, index) => [day.id, index]),
 );
@@ -161,7 +157,7 @@ export abstract class ProfilePart4 extends ProfilePart3 {
     if (uniqueUids.length === 0) return [];
     const placeholders = uniqueUids.map(() => "?").join(", ");
     const rows = (await this.database.execute(
-      `SELECT uid FROM user_specialties WHERE uid IN (${placeholders}) AND \`${DELIVERY_SERVICES_SPECIALTY_COLUMN}\` = 1`,
+      `SELECT uid FROM user_specialties WHERE uid IN (${placeholders}) AND \`${deliveryServicesSpecialtyColumn()}\` = 1`,
       uniqueUids,
     )) as Array<{ uid: string }>;
     return rows.map((row: { uid: string }) => row.uid);
@@ -201,14 +197,14 @@ export abstract class ProfilePart4 extends ProfilePart3 {
   ): Promise<void> {
     await this.ensureProfile(uid);
     const enabled = selectedSpecialtyColumns(selection);
-    const values = SPECIALTY_COLUMN_NAMES.map((column) =>
+    const values = specialtyColumnNames().map((column) =>
       enabled.has(column) ? 1 : 0,
     );
-    const quotedColumns = SPECIALTY_COLUMN_NAMES.map(
+    const quotedColumns = specialtyColumnNames().map(
       (column) => `\`${column}\``,
     ).join(", ");
-    const placeholders = SPECIALTY_COLUMN_NAMES.map(() => "?").join(", ");
-    const updates = SPECIALTY_COLUMN_NAMES.map(
+    const placeholders = specialtyColumnNames().map(() => "?").join(", ");
+    const updates = specialtyColumnNames().map(
       (column) => `\`${column}\` = excluded.\`${column}\``,
     ).join(", ");
     await this.database.execute(

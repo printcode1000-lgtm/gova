@@ -18,10 +18,17 @@ enforces rule 5 was the clearest example of what rule 5 forbids.
 
 ```text
 packages/architecture-core/src/
+  registry/     capability ownership inventory — one owner per package
   contracts/    the rules, as data      — layer classification, allowlists, forbidden patterns
   checks/       the scanners            — one file per contract it enforces
   runner.ts     the whole scan          — walks src/, packages/, scripts/, services/
 ```
+
+See also [repository-architecture-enforcement.md](./repository-architecture-enforcement.md).
+
+Vendor ownership is registry-driven: `OWNED_VENDOR_MODULES` is derived from each package's
+`vendorModules`, tests under non-owners are rejected, `nodeRequire` / `createRequire` are
+scanned, and `ROOT_VENDOR_OWNED_FILES` covers root shell configs such as `capacitor.config.ts`.
 
 `scripts/architecture-check.ts` is a CLI:
 

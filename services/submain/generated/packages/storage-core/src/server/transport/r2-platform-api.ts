@@ -1,4 +1,4 @@
-import { asolHttpFetch } from '@/core/api/asol-http-transport';
+import { asolHttpFetch } from '../../ports/http-fetch';
 import {
   getAccountCloudflareCredentials,
   getAccountS3Credentials,

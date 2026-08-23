@@ -1,4 +1,4 @@
-import { getNotificationGrantDeliveryIdentity } from '@/features/notifications/domain/notification-grant-delivery-context';
+import { getNotificationGrantDeliveryIdentity } from '../ports/app-bridge';
 import { isAndroid, NativeCore } from '@asol/native-core';
 import type { NotificationBridgeRecipientResult } from '../notifications';
 import { ensureMobilePushCredentials } from './enrollment';

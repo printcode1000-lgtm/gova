@@ -1,5 +1,5 @@
 import type { IProfileRepository } from '../../repositories/profile-repository.interface';
-import type { ProfileContactsData, SaveProfileContactsInput } from '@/features/profile/entities/profile-contacts.entity';
+import type { ProfileContactsData, SaveProfileContactsInput } from '../../entities';
 import { traceServerLayer } from '../../../../ports/telemetry';
 
 export class UpsertProfileContactsCommand {

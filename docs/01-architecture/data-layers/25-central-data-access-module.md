@@ -127,3 +127,12 @@ browser persistence artifacts.
 4. Register shard table mappings when the database is sharded.
 5. Add provisioning credentials and SQLite-to-Turso schema synchronization.
 6. Run `npm run typecheck`, `npm run architecture:check`, and the domain tests.
+
+## Domain entity ownership
+
+Row/entity contracts used by repositories (profile contacts, store details, specialties,
+fulfillment, reviews, auth user/profile, product reviews, follow, seller discounts, pharmacy
+catalog overrides, product-search request/result types, and profile working hours) are owned under
+each domain's browser-safe `./<domain>/entities` door. Application feature entity files re-export
+from those doors.
+

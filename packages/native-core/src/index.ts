@@ -8,6 +8,12 @@
  * - Zero raw adapter objects exposed in the public API.
  */
 
+// ── Capacitor plugin manifest ─────────────────────────────────────────────
+// The plugin allowlist `capacitor.config.ts` needs. Declared here because this
+// package declares the plugins; the config file used to derive it by reaching
+// into this package's package.json by relative path.
+export { CAPACITOR_INCLUDE_PLUGINS } from "./domain/capacitor-plugin-manifest";
+
 // ── Public Facade ─────────────────────────────────────────────────────────
 export { NativeCore } from "./api/native-core.api";
 

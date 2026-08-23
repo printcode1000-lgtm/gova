@@ -3,6 +3,10 @@ import {
   fcmSoundResource,
   resolveAndroidChannelId,
 } from '@asol/notifications-core';
+import {
+  BRANDING_ANDROID_NOTIFICATION_COLOR,
+  BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
+} from '@asol/branding-core';
 import type { MobileProviderPayload } from './provider-payload';
 import type { RecipientTokenRecord } from './types';
 
@@ -105,8 +109,8 @@ export function buildFcmHttpV1Message(
         collapse_key: payload.dedupeKey.slice(0, 64),
         notification: dataOnly || android ? undefined : {
           channel_id: channelId(payload),
-          icon: 'ic_stat_asol_notification',
-          color: '#006C4C',
+          icon: BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
+          color: BRANDING_ANDROID_NOTIFICATION_COLOR,
           ...(sound ? { sound } : {}),
           tag: payload.dedupeKey.slice(0, 64),
           visibility: 'PRIVATE',

@@ -1,5 +1,15 @@
+import {
+  configureNotificationsCoreServerConfig,
+  configureNotificationTokenStore,
+} from '@asol/notifications-core/server';
+import {
+  DeleteNotificationTokenCommand,
+  GetNotificationPushPreferenceQuery,
+  ListNotificationTokensQuery,
+} from '@asol/data-core/notifications';
 import { NOTIFICATIONS_DECLARATION } from '@asol/account-declarations/notifications';
 import * as serverEnv from '@/core/config/server-env';
+import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
 import {
   deliverNotificationGrants,
   readGrantsFromRequestBody,
@@ -75,6 +85,47 @@ export function assertNotificationsEnv(env: NodeJS.ProcessEnv = process.env): vo
 }
 
 /** Layer 2 for the notifications account — the connector between its tasks. */
+function wireNotificationsCoreServerConfig(): void {
+  // Composition root for the notifications deployment (no app instrumentation.ts).
+  configureNotificationsCoreServerConfig({
+    getWebPushServerConfig: serverEnv.getWebPushServerConfig,
+    getFirebaseAdminServiceAccount: serverEnv.getFirebaseAdminServiceAccount,
+    getApnsServerConfig: serverEnv.getApnsServerConfig,
+    getNotificationGrantSecret: serverEnv.getNotificationGrantSecret,
+  });
+
+  // The delivery path reads tokens through a port so the capability package
+  // does not import data-core. This deployment has no app instrumentation, so
+  // it wires the concrete queries here, exactly as the application does.
+  const listTokens = new ListNotificationTokensQuery();
+  const pushPreference = new GetNotificationPushPreferenceQuery();
+  const deleteToken = new DeleteNotificationTokenCommand();
+  configureNotificationTokenStore({
+    tokensByUid: (uids) => listTokens.byUids(uids),
+    pushEnabledUids: (uids) => pushPreference.pushEnabledUids(uids),
+    deleteToken: (input) => deleteToken.execute(input),
+  });
+}
+
+wireNotificationsCoreServerConfig();
+
+/**
+ * Register `@asol/data-core`'s runtime-config port.
+ *
+ * The main application does this from `src/instrumentation.ts`. An isolated
+ * deployment has no instrumentation, so nothing configured the port here and
+ * every route that reached a repository answered
+ * `dataCoreRuntimeConfig: getServerRuntimeContext is not configured` — a 500 on
+ * this account's real traffic while `/api/health` stayed 200, because health
+ * touches no shard. The service deployed READY and was broken.
+ *
+ * It calls the application's single registrar rather than restating the port
+ * here, so the six accounts and the main app cannot drift apart.
+ */
+// This deployment is Turso-only: it aliases better-sqlite3 to a stub that
+// throws, so it must not let the environment pick a local data source.
+registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
+
 export function createNotificationsRuntime(
   _config?: NotificationsRuntimeConfig,
 ): NotificationsRuntime {

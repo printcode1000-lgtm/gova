@@ -29,7 +29,7 @@ Vercel project — a different layer entirely, untouched by this migration.
 
 ## The doors
 
-Twenty-four, and the count is evidence of how many distinct load-time contracts this package
+The door count is evidence of how many distinct load-time contracts this package
 has rather than a lapse in rule 2. Every one is in the `exports` map that `architecture:check`
 reads; there is no `"./*"` wildcard, and no `"@asol/data-core/*"` path in `tsconfig.json` — that
 single wildcard silently defeated the `native-core` seal once and must never reappear.
@@ -94,21 +94,16 @@ returns its value, the drizzle logger is absent rather than a stub, and a failur
 propagates. A forgotten registration costs trace lines in `/dev/monitor` — never a query, never
 a write.
 
-**Budgeted — 25 edges that remain**, pinned in `packages/data-core/src/tests/index.test.ts` with
-the reason each one is layering rather than a violation. The count fell from 34 during the
-2026-08 consolidation: the two `auth/utils/*-normalization` shims became real functions in
-`@asol/auth-core/server`, and the storage profile file moved into the package that validates it.
-Package doors replaced them, which is the direction this list is meant to move:
+**Budgeted — remaining app edges**, pinned in `packages/data-core/src/tests/index.test.ts`.
+The budget is now **empty**: runtime config, HTTP, category specialty columns, and the
+product-search field catalog are registered through `src/ports/runtime-config.ts` and
+`src/ports/product-search-fields.ts`. The advertisements reset tool loads its seed JSON by
+filesystem path under `src/features/advertisements/config/` (no `@/` import). Database
+runtime policy uses a local `DatabaseRuntimeContext` shape instead of importing
+`AppRuntimeContext` from the app.
 
-| Group | Why it stays |
-| :-- | :-- |
-| `@/features/*` entity/search contracts (19) | Feature contracts the UI renders directly. Moving them here would give this package a second reason to change and break rule 8. |
-| `@/features/categories` (1) | Build-time catalog data. A port would default to an empty asset set — a silently wrong artifact. |
-| `@/core/config/*`, `@/core/api/asol-http-transport` (5) | Designated leaves: the config module and the single approved HTTP transport. |
-
-Driving the count to zero was never the goal; naming which edges are real is. **The list should
-only ever shrink**, and the test fails both when a new edge appears and when a budgeted one
-disappears without being deleted — a budget with unspent room silently allows the coupling back.
+Driving the count to zero was the direction of this list; **it should only ever stay empty
+or shrink**, and the test fails when a new `@/` edge appears.
 
 ## Package-to-package edges
 

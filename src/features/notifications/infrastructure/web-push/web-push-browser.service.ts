@@ -3,11 +3,16 @@
 import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@asol/data-core/browser";
 import { NotificationPlatforms } from "@asol/notifications-core";
 import { WEB_PUSH_VAPID_PUBLIC_KEY } from "@asol/notifications-core";
+import { withBasePath } from "@/core/config/public-env";
 import { notificationApiService } from "../../services/notification-api-service";
 import { readNotificationLocale } from "../../shared/read-notification-locale";
 import { nativePermissionService } from "../native/native-permission.service";
 
 const DEVICE_ID_KEY = "web-push-device-id";
+
+function serviceWorkerScope(): string {
+  return withBasePath("/");
+}
 
 function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -94,7 +99,9 @@ export class WebPushBrowserService {
    */
   async hasSubscription(): Promise<boolean> {
     if (!this.isSupported()) return false;
-    const registration = await navigator.serviceWorker.getRegistration("/");
+    const registration = await navigator.serviceWorker.getRegistration(
+      serviceWorkerScope(),
+    );
     return Boolean(await registration?.pushManager.getSubscription());
   }
 
@@ -107,8 +114,8 @@ export class WebPushBrowserService {
     if (!permission.granted) throw new Error("notificationPermissionDenied");
 
     const registration = await waitForActiveServiceWorker(
-      await navigator.serviceWorker.register("/asol-push-sw.js", {
-        scope: "/",
+      await navigator.serviceWorker.register(withBasePath("/asol-push-sw.js"), {
+        scope: serviceWorkerScope(),
       }),
     );
     const existing = await registration.pushManager.getSubscription();
@@ -141,7 +148,9 @@ export class WebPushBrowserService {
    */
   async refreshLocale(uid: string, phone: string): Promise<boolean> {
     if (!this.isSupported()) return false;
-    const registration = await navigator.serviceWorker.getRegistration("/");
+    const registration = await navigator.serviceWorker.getRegistration(
+      serviceWorkerScope(),
+    );
     const subscription = await registration?.pushManager.getSubscription();
     if (!subscription) return false;
     await notificationApiService.registerToken({
@@ -159,7 +168,9 @@ export class WebPushBrowserService {
 
   async unsubscribe(uid: string, phone: string) {
     if (!this.isSupported()) return false;
-    const registration = await navigator.serviceWorker.getRegistration("/");
+    const registration = await navigator.serviceWorker.getRegistration(
+      serviceWorkerScope(),
+    );
     const subscription = await registration?.pushManager.getSubscription();
     if (subscription) await subscription.unsubscribe();
     const deviceId = await getDeviceId();

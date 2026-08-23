@@ -128,13 +128,31 @@ npx tsx scripts/sync-notifications-service-sources.ts
 ## The `better-sqlite3` stub
 
 The shared data-access code keeps a local-SQLite branch for main-app
-development. This deployment always runs against Turso, so
-`getServerDatabaseBackend()` can never return `sqlite` here and the driver is
-unreachable. Bundling the real native module would force a native build for code
-that cannot run.
+development. This deployment always runs against Turso, so the driver is
+unreachable here, and bundling the real native module would force a native build
+for code that cannot run.
 
 The stub throws when constructed rather than returning a fake database, so a
 routing mistake surfaces immediately instead of silently reading an empty file.
+
+### The stub is not the guarantee — the composition root is
+
+This section used to claim `getServerDatabaseBackend()` could never return
+`sqlite` here. That was false, and the service smoke gate proved it: the backend
+is resolved from the runtime context, and a data source of `local` selects
+sqlite in any deployment that asks. During a real `deploy:all` the profiles
+account did exactly that, loaded a driver it does not ship, and answered 500 on
+every route reaching data — with a stub message naming a different account.
+
+An account that cannot run SQLite must not leave the choice to configuration.
+Every isolated composition root now pins it:
+
+```ts
+registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
+```
+
+The stub is the backstop that makes the mistake loud. The pin is what prevents
+it. See `docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md`.
 
 ## Deploying
 

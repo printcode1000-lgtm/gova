@@ -18,7 +18,15 @@ import {
   checkSystemLogsBootstrapContract,
   checkSystemLogsContract,
 } from './checks/system-logs-contract';
+import { checkCapabilityOwnershipContract } from './checks/capability-ownership-contract';
+import { checkPackageCycleContract } from './checks/package-cycle-contract';
+import { checkPageSaveWriteGatewayContract } from './checks/page-save-write-gateway-contract';
+import { checkRepositorySweepContract } from './checks/repository-sweep-contract';
+import { checkPackageAppImportContract } from './checks/package-app-import-contract';
+import { checkVendorOwnershipContract } from './checks/vendor-ownership-contract';
+import { checkPageSaveGatewayContract } from './checks/page-save-gateway-contract';
 import { printReport, reportNativeSurface } from './checks/file-analysis';
+import { ROOT_VENDOR_OWNED_FILES } from './registry/capability-registry';
 
 /**
  * The whole repository-wide architecture scan, as a function.
@@ -47,11 +55,26 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
     }
   }
 
+  checkCapabilityOwnershipContract();
+  checkPackageCycleContract();
+  checkPageSaveGatewayContract();
+  checkPageSaveWriteGatewayContract();
+  checkRepositorySweepContract();
+
+  // Root files owned by a capability for vendor purposes (e.g. capacitor.config.ts).
+  for (const rootFile of ROOT_VENDOR_OWNED_FILES) {
+    const absolute = join(ROOT, rootFile.relativePath);
+    if (!existsSync(absolute)) continue;
+    const content = readFileSync(absolute, 'utf8');
+    checkVendorOwnershipContract(absolute, content);
+  }
+
   for (const file of walk(SRC)) {
     const content = readFileSync(file, 'utf8');
     checkFile(file);
     checkPackageSealContract(file, content);
     checkSystemLogsContract(file, content);
+    checkVendorOwnershipContract(file, content);
   }
 
   // `packages/` was never walked by this check. Every sealed package's own source was
@@ -64,15 +87,21 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
       // This package holds the rules, so its own contract files quote every pattern the scan
       // looks for. Scanning them reports the rule text itself as a violation.
       if (normalizePath(file).includes('packages/architecture-core/src/contracts/')) continue;
-      checkPackageSealContract(file, readFileSync(file, 'utf8'));
+      if (normalizePath(file).includes('packages/architecture-core/src/registry/')) continue;
+      const content = readFileSync(file, 'utf8');
+      checkPackageSealContract(file, content);
+      checkPackageAppImportContract(file, content);
+      checkVendorOwnershipContract(file, content);
     }
   }
 
   for (const file of walk(SCRIPTS)) {
     if (rel(file) === 'scripts/architecture-check.ts') continue;
+    const content = readFileSync(file, 'utf8');
     checkExternalDataAccessOwnership(file);
-    checkAccountBridgeContract(file, readFileSync(file, 'utf8'));
-    checkPackageSealContract(file, readFileSync(file, 'utf8'));
+    checkAccountBridgeContract(file, content);
+    checkPackageSealContract(file, content);
+    checkVendorOwnershipContract(file, content);
   }
   checkTouchInteractionContract();
   checkMapLibreWorkerContract();
@@ -92,9 +121,11 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   if (existsSync(servicesDir)) {
     for (const file of walk(servicesDir)) {
       if (file.includes('node_modules')) continue;
+      if (file.includes('/generated/')) continue;
       const content = readFileSync(file, 'utf8');
       checkAccountBridgeContract(file, content);
       checkPackageSealContract(file, content);
+      checkVendorOwnershipContract(file, content);
       if (file.includes('services/notifications/src')) {
         checkNotificationModuleContract(file, content);
       }

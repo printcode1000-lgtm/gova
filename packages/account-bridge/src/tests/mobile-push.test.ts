@@ -55,7 +55,19 @@ async function testCredentialStoreCryptoRoundtrip(): Promise<void> {
 
 function testEmbeddedBlobModuleUsesPublicEnv(): void {
   const source = readFileSync(path.join(mobilePushDir, 'embedded-blob.ts'), 'utf8');
-  assert.match(source, /publicEnv\.mobilePushCredentialBlob/);
+
+  // The blob is read from the client-safe public env, never the server unlock
+  // key. Since the `@/` inversion the value arrives through the package's own
+  // port rather than a direct application import, so the assertion follows the
+  // port — it had been left pinned to the pre-inversion symbol, which turned
+  // `npm test` red while the module itself was correct.
+  assert.match(source, /accountBridgePublicEnv\(\)\.mobilePushCredentialBlob/);
+  assert.match(source, /from '\.\.\/ports\/app-bridge'/);
+  assert.doesNotMatch(
+    source,
+    /from ['"]@\//,
+    'the channel must reach the application through its port, never by importing @/',
+  );
   assert.doesNotMatch(source, /ASOL_MOBILE_PUSH_UNLOCK_KEY/);
 }
 

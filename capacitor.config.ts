@@ -1,6 +1,10 @@
 import type { CapacitorConfig } from "@capacitor/cli";
+import {
+  BRANDING_ANDROID_NOTIFICATION_COLOR,
+  BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
+} from "@asol/branding-core";
 
-import nativeCorePackage from "./packages/native-core/package.json";
+import { CAPACITOR_INCLUDE_PLUGINS } from "@asol/native-core";
 
 /**
  * Capacitor platform configuration — runtime shell only.
@@ -28,15 +32,7 @@ const liveReloadUrl = process.env.CAPACITOR_SERVER_URL?.replace(/\/$/, "");
  * discovery. Deriving it from native-core's dependencies keeps one source of truth, so
  * adding a plugin there is enough and this file needs no edit.
  */
-const nativeCoreDependencies = nativeCorePackage.dependencies;
-const includePlugins = Object.keys(nativeCoreDependencies).filter(
-  (name) =>
-    /^(@capacitor|@capacitor-mlkit|@capawesome|@capgo)\//.test(name) &&
-    // Platforms, the CLI and the runtime are not plugins.
-    !["@capacitor/android", "@capacitor/ios", "@capacitor/cli", "@capacitor/core"].includes(
-      name,
-    ),
-);
+const includePlugins = [...CAPACITOR_INCLUDE_PLUGINS];
 
 const config: CapacitorConfig = {
   appId: "hgh.asol.app",
@@ -59,6 +55,10 @@ const config: CapacitorConfig = {
     },
     PushNotifications: {
       presentationOptions: ["badge", "sound", "banner", "list"],
+    },
+    LocalNotifications: {
+      smallIcon: BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
+      iconColor: BRANDING_ANDROID_NOTIFICATION_COLOR,
     },
   },
   server: liveReloadUrl

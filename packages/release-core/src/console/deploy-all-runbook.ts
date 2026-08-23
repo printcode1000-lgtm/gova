@@ -63,6 +63,24 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
     label: "main app builds",
     branches: [
       branch("server-build", "server build", "build", "npm"),
+      // Reads the build's own route traces. Vercel rejects a function over
+      // 250MB at *upload*, after the deployment commit is pushed and the
+      // isolated services are live, and reports it as a build failure. Measuring
+      // here turns that into a preflight stop that names the route.
+      branch(
+        "function-size",
+        "Vercel function size budget",
+        "vercel:function-size:check",
+        "npm",
+      ),
+      // Starts the built server and asks it real questions. Nothing else in
+      // the pipeline does: `deploy:all` builds, uploads and waits for READY,
+      // and READY means the deployment exists, not that a request succeeds —
+      // it reported seven targets READY while every server route answered 500.
+      // That fault was a bundler giving a port module two instances, which no
+      // static check and no `tsx` test can see because Node resolves one path
+      // to one instance. Only a real server answering a real request can.
+      branch("smoke", "built server answers real requests", "smoke:production", "npm"),
       branch("static-build", "static release export", "build:static", "npm"),
     ],
   },
@@ -73,6 +91,13 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
       branch("service-mirror-sync", "service mirror sync", "services:sync", "npm"),
       branch("service-mirror-verify", "service mirror edge verification", "services:verify", "npm"),
       branch("service-builds", "Vercel-shaped service builds", "services:build", "npm"),
+      // Health is not enough, and that is the whole lesson: none of the six
+      // composition roots registered data-core's runtime-config port, so every
+      // route that reached a repository answered 500 while /api/health stayed
+      // 200. All six deployed READY with the profiles account serving errors to
+      // the browser. Each service is now asked for a route that reaches its own
+      // data, before any account is published.
+      branch("service-smoke", "services answer their own data routes", "smoke:services", "npm"),
     ],
   },
 ] as const;

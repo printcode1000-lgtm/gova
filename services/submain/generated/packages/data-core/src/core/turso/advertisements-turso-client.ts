@@ -1,8 +1,8 @@
 import { nodeRequire } from '../node-require';
 import 'server-only';
 
-import { isDevRuntime, isProvisioningContext } from '@/core/config/runtime-context.server';
-import { getTursoAdvertisementsRuntimeCredentials } from '@/core/config/server-env.values';
+import { isDevRuntime, isProvisioningContext } from '../../ports/runtime-config';
+import { getTursoAdvertisementsRuntimeCredentials } from '../../ports/runtime-config';
 
 let tursoAdvertisementsClientInstance: unknown | null = null;
 

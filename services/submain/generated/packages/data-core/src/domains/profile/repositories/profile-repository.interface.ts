@@ -1,7 +1,7 @@
-import type { ProfileContactsData } from "@/features/profile/entities/profile-contacts.entity";
-import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
-import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
-import type { ProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
+import type { ProfileContactsData } from "../entities";
+import type { StoreDetailsData } from "../entities";
+import type { ProfileSpecialtiesSelection } from "../entities";
+import type { ProfileFulfillmentSettings } from "../entities";
 import type { UserProfileRow } from "../../../core/database/profile/profile.schema";
 export type { UserProfileRow };
 

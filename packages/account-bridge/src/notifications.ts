@@ -13,8 +13,8 @@
  * Anything wider than this belongs behind an injected parameter, not an import: a channel
  * that transitively reaches the application is a channel whose seal is decoration.
  */
-import { readNotificationGrants } from '@/features/notifications/domain/notification-grant-envelope';
-import { getNotificationsPublicUrl } from '@/core/config/public-env';
+import { readNotificationGrants, getNotificationsPublicUrl } from './ports/app-bridge';
+
 import { isNativePlatform } from '@asol/native-core';
 import { deliverNotificationGrantsFromNative } from './mobile-push/deliver';
 
@@ -178,3 +178,5 @@ export function scheduleNotificationGrantDelivery(body: unknown): void {
     },
   );
 }
+
+export { configureAccountBridge, resetAccountBridgePorts } from './ports/app-bridge';

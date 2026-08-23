@@ -1,4 +1,4 @@
-import { asolApi, ASOL_API_ROUTES } from '@/core/api';
+import { otaHttpApi, otaApiRoutes } from '../ports';
 import { NativeCore, isNativePlatform } from '@asol/native-core';
 
 import type {
@@ -43,7 +43,7 @@ export class OtaApiService {
   }
 
   getLocalManifest(signal?: AbortSignal): Promise<OtaManifest> {
-    return asolApi.getPublicJson<OtaManifest>('/asol-web-manifest.json', {
+    return otaHttpApi().getPublicJson<OtaManifest>('/asol-web-manifest.json', {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,
@@ -65,7 +65,7 @@ export class OtaApiService {
       return res.value;
     }
 
-    return asolApi.getAbsoluteJson<T>(url, {
+    return otaHttpApi().getAbsoluteJson<T>(url, {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,
@@ -95,7 +95,7 @@ export class OtaApiService {
       return res.value;
     }
 
-    return asolApi.getAbsoluteBinary(url, {
+    return otaHttpApi().getAbsoluteBinary(url, {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,
@@ -103,7 +103,7 @@ export class OtaApiService {
   }
 
   getCurrentFile(path: string, signal?: AbortSignal): Promise<ArrayBuffer> {
-    return asolApi.getPublicBinary(`/${path}`, {
+    return otaHttpApi().getPublicBinary(`/${path}`, {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,
@@ -115,7 +115,7 @@ export class OtaApiService {
     version: string;
     identity?: OtaIdentity;
   }, signal?: AbortSignal): Promise<OtaReleaseAccess> {
-    return asolApi.post<OtaReleaseAccess>(ASOL_API_ROUTES.ota.access, {
+    return otaHttpApi().post<OtaReleaseAccess>(otaApiRoutes().ota.access, {
       ...input,
       installationId: await this.rolloutInstallationId(),
     }, {
@@ -127,7 +127,7 @@ export class OtaApiService {
 
   getAdminDashboard(identity: OtaIdentity): Promise<OtaAdminDashboard> {
     const query = new URLSearchParams({ uid: identity.uid, phone: identity.phone });
-    return asolApi.get<OtaAdminDashboard>(`${ASOL_API_ROUTES.ota.adminReleases}?${query}`, {
+    return otaHttpApi().get<OtaAdminDashboard>(`${otaApiRoutes().ota.adminReleases}?${query}`, {
       cache: 'no-store',
     });
   }
@@ -138,13 +138,13 @@ export class OtaApiService {
       phone: identity.phone,
       baseReleaseId,
     });
-    return asolApi.get<OtaReleaseDiff>(`${ASOL_API_ROUTES.ota.adminReleaseDiff}?${query}`, {
+    return otaHttpApi().get<OtaReleaseDiff>(`${otaApiRoutes().ota.adminReleaseDiff}?${query}`, {
       cache: 'no-store',
     });
   }
 
   setReleaseApproval(input: SetOtaReleaseApprovalInput): Promise<OtaAdminDashboard> {
-    return asolApi.put<OtaAdminDashboard>(ASOL_API_ROUTES.ota.adminReleases, input, {
+    return otaHttpApi().put<OtaAdminDashboard>(otaApiRoutes().ota.adminReleases, input, {
       cache: 'no-store',
     });
   }

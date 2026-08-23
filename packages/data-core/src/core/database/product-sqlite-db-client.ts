@@ -2,7 +2,7 @@ import { nodeRequire } from '../node-require';
 import { ensureProductDevMigrations } from './ensure-product-migrations';
 import "server-only";
 
-import { isDevelopment } from "@/core/config";
+import { dataCoreRuntimeConfig } from '../../ports/runtime-config';
 import { createDrizzleDevLogger } from '../../ports/telemetry';
 import { AbstractDatabaseClient } from "./abstract-database-client";
 import { PRODUCT_SQLITE_DB_PATH } from "./environment";
@@ -18,7 +18,7 @@ export class ProductSQLiteDatabaseClient extends AbstractDatabaseClient {
     sqlite.pragma("foreign_keys = ON");
     this._db = drizzle(
       sqlite,
-      isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
+      dataCoreRuntimeConfig().isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
     );
     ensureProductDevMigrations(this._db);
     return this._db;

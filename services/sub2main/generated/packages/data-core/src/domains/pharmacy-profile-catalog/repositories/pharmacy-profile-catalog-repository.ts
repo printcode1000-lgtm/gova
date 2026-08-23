@@ -8,7 +8,7 @@ import type {
   PharmacyProfileCategoryOverride,
   PharmacyProfileProductOverride,
   PharmacyProfileSubcategoryOverride,
-} from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
+} from "../entities";
 
 function isMissingPharmacyTable(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);

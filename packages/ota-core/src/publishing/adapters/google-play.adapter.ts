@@ -234,3 +234,27 @@ export async function requireGooglePlayProductionNativeVersion(): Promise<string
   const release = await readLiveTrackVersionCodesStrict("production");
   return androidVersionNameFromCode(release.highestVersionCode);
 }
+
+/**
+ * Authenticated Android Publisher client for callers that must not import
+ * `google-auth-library` themselves. Owns the vendor SDK behind `@asol/ota-core/publishing`.
+ */
+export async function createGooglePlayAuthClient(): Promise<{
+  client: Awaited<ReturnType<GoogleAuth["getClient"]>>;
+  packageName: string;
+}> {
+  const credentialResolution = await resolveGooglePlayCredentials();
+  if (!credentialResolution.credentials) {
+    throw new Error("googlePlayConsoleCredentialsMissing");
+  }
+  const auth = new GoogleAuth({
+    credentials: credentialResolution.credentials,
+    scopes: [ANDROID_PUBLISHER_SCOPE],
+  });
+  const client = await auth.getClient();
+  const config = resolveGooglePlayConsoleConfig();
+  return {
+    client,
+    packageName: encodeURIComponent(config.packageName),
+  };
+}

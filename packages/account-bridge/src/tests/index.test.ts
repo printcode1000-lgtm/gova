@@ -145,12 +145,7 @@ function runRule0Tests(): void {
   //
   // Every `@/` edge must be on this list, and every module on it must be a leaf or close
   // to one. Widening an edge means changing this list, deliberately.
-  const ALLOWED_APP_EDGES = new Set([
-    '@/core/config/public-env',
-    '@/core/config/runtime-context',
-    '@/features/notifications/domain/notification-grant-envelope',
-    '@/features/notifications/domain/notification-grant-delivery-context',
-  ]);
+  const ALLOWED_APP_EDGES = new Set<string>([]);
   for (const file of bridgeFiles) {
     const content = readFileSync(file, 'utf-8');
     for (const match of content.matchAll(/\bfrom\s+['"](@\/[^'"]+)['"]/g)) {

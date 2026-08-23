@@ -1,6 +1,6 @@
 import { createPublicKey, verify } from "node:crypto";
 
-import { asolApi } from "@/core/api";
+import { otaHttpApi } from '../ports';
 // Own it directly. This used to reach back into the app's `@/core/config/server-env.values`
 // for a function this package itself defines — a round trip through the application for
 // its own code, and the re-export that made it work is what leaked `@asol/ota-core/publishing`
@@ -26,7 +26,15 @@ import type {
   SetOtaReleaseApprovalInput,
 } from "../domain/release/manifest-types";
 
-function assertManifest(manifest: OtaManifest): void {
+/**
+ * Narrows a stored manifest blob.
+ *
+ * The repository returns `unknown`: it stores JSON and has no business knowing
+ * the manifest schema. Validation belongs here, where the schema is owned, so
+ * the assertion both checks and narrows instead of trusting a cast.
+ */
+function assertManifest(value: unknown): asserts value is OtaManifest {
+  const manifest = value as OtaManifest;
   if (manifest.schemaVersion !== 2 || manifest.delivery !== "files")
     throw new Error("otaManifestInvalid");
   if (!manifest.releaseId || !isOtaVersion(manifest.version)) {
@@ -88,7 +96,7 @@ function verifyManifestSignature(manifest: OtaManifest): boolean {
 }
 
 async function fetchCurrentManifest(): Promise<OtaManifest> {
-  const manifest = await asolApi.getAbsoluteJson<OtaManifest>(manifestUrl(), {
+  const manifest = await otaHttpApi().getAbsoluteJson<OtaManifest>(manifestUrl(), {
     cache: "no-store",
     suppressErrorLog: true,
   });

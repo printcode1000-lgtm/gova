@@ -1,4 +1,4 @@
-import { publicEnv } from '@/core/config/public-env';
+import { accountBridgePublicEnv } from '../ports/app-bridge';
 
 /**
  * AES-256-GCM ciphertext baked into native/static bundles.
@@ -6,6 +6,6 @@ import { publicEnv } from '@/core/config/public-env';
  * `POST /api/notifications/mobile-push/unlock`.
  */
 export function getEmbeddedMobilePushCredentialBlob(): string | null {
-  const blob = publicEnv.mobilePushCredentialBlob.trim();
+  const blob = accountBridgePublicEnv().mobilePushCredentialBlob.trim();
   return blob.length > 0 ? blob : null;
 }

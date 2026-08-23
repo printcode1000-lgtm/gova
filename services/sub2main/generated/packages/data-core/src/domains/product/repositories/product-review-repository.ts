@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import type {
   ProductReview,
   ReviewSort,
-} from "@/features/product/entities/product-review.entity";
+} from "../entities";
 
 type Row = Record<string, any>;
 function mapReview(row: Row): ProductReview {

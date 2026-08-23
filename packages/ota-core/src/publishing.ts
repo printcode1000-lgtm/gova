@@ -79,6 +79,7 @@ export {
 } from "./publishing/truth/live-play-release";
 export {
   resolveGooglePlayCredentials,
+  createGooglePlayAuthClient,
   readLiveTrackVersionCodes,
   readLiveTrackVersionCodesStrict,
   requireGooglePlayProductionNativeVersion,

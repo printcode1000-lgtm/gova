@@ -36,7 +36,7 @@ const productionFiles = sourceFiles.filter((f) => !f.includes('/tests/') && !f.e
 const EXPECTED_DOORS = [
   '.',
   './telemetry',
-  './core',
+  './composition',
   './browser',
   './provisioning',
   './tooling',
@@ -58,6 +58,15 @@ const EXPECTED_DOORS = [
   './seller-discounts',
   './super-admin',
   './system-logs',
+  './auth/entities',
+  './follow/entities',
+  './pharmacy-profile-catalog/entities',
+  './product/entities',
+  './product-search/entities',
+  './profile/entities',
+  './seller-discounts/entities',
+  './runtime-config',
+  './product-search-fields',
 ];
 
 assert.deepEqual(
@@ -202,34 +211,9 @@ await assert.rejects(
  * layering rather than a violation. Driving the count to zero was never the goal; naming which
  * edges are real is. **This list should only ever shrink.**
  */
-const ALLOWED_APP_EDGES = new Set([
-  // Feature contracts: row shapes the application owns and the UI renders directly. Moving them
-  // here would give this package a second reason to change (rule 8).
-  '@/features/profile/entities/profile-specialties.entity',
-  '@/features/profile/entities/store-details.entity',
-  '@/features/profile/entities/profile-fulfillment-settings.entity',
-  '@/features/profile/entities/profile-contacts.entity',
-  '@/features/profile/entities/profile-review.entity',
-  '@/features/profile-working-hours',
-  '@/features/auth/entities/user.entity',
-  '@/features/auth/entities/profile.entity',
-  '@/features/product/entities/product-review.entity',
-  '@/features/product-search/entities/product-search.types',
-  '@/features/product-search/config/product-search-fields',
-  '@/features/product-search/utils/arabic-search',
-  '@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types',
-  '@/features/follow/entities/follow.types',
-  '@/features/seller-discounts/entities/seller-discount.entity',
-  '@/features/advertisements/config/home-hero-slider.seed.json',
-  // Build-time catalog data. A port would need an empty asset set as its safe default, which is
-  // a silently wrong result — an import that fails loudly beats a default that fails quietly.
-  '@/features/categories',
-  // Designated leaves: the config module and the single approved HTTP transport.
-  '@/core/config',
-  '@/core/config/server-env.values',
-  '@/core/config/runtime-context',
-  '@/core/config/runtime-context.server',
-  '@/core/api/asol-http-transport',
+const ALLOWED_APP_EDGES = new Set<string>([
+  // Empty: capability production sources must not import `@/`. Remaining
+  // runtime/config/catalog needs are registered via ports under `src/ports/`.
 ]);
 
 /**

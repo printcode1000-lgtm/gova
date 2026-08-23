@@ -153,15 +153,52 @@ export function matchesAny(path: string, patterns: RegExp[]): boolean {
 }
 
 export function extractImports(content: string): string[] {
+  // Strip comments and template literals first so sample code inside tests
+  // (e.g. a string containing an application-alias import) is not treated as a real import.
+  const stripped = content
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|[^:])\/\/.*$/gm, '$1')
+    .replace(/`(?:\\.|[^`\\])*`/g, '``');
+
   const imports: string[] = [];
-  const importRegex = /import\s+(?:type\s+)?(?:[^'"]+\s+from\s+)?['"]([^'"]+)['"]/g;
-  const requireRegex = /require\(\s*['"]([^'"]+)['"]\s*\)/g;
-  const dynamicRegex = /import\(\s*['"]([^'"]+)['"]\s*\)/g;
+  // Statement-boundary aware: fixture strings that embed the word import and a
+  // package specifier (for example a Capacitor app plugin id inside quotes) must
+  // not count as real imports. Real imports begin a statement.
+  const importRegex =
+    /(?:^|[;{}\n])\s*import\s+(?:type\s+)?(?:[^'"\n]+from\s+)?['"]([^'"]+)['"]/gm;
+  // Bare require(...) — an identifier ending in "Require" (nodeRequire) does not match
+  // \brequire\b, so it is handled explicitly below.
+  const requireRegex = /(?:^|[^\w$.])require\(\s*['"]([^'"]+)['"]\s*\)/g;
+  const nodeRequireRegex = /\bnodeRequire\(\s*['"]([^'"]+)['"]\s*\)/g;
+  // createRequire(import.meta.url)("pkg") — data-core lazy driver loading.
+  const createRequireRegex =
+    /createRequire\s*\([^)]*\)\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
+  // Dynamic import() as an expression, not as text inside a quoted fixture string.
+  const dynamicRegex =
+    /(?:^|[;{}\n=(\s])import\(\s*['"]([^'"]+)['"]\s*\)/gm;
+  /**
+   * A re-export is an import that also republishes.
+   *
+   * (The syntax is not spelled out here: this file is scanned by the package's
+   * own contract test, which reads raw text and would take the example for a
+   * real dependency.)
+   *
+   * It was the one form nothing here read, and it is the most useful shape for
+   * hiding a forbidden dependency: a module re-exports a package's internals
+   * and everything downstream reaches them through a local path that looks
+   * legal. Every check built on this function shared the hole — vendor
+   * ownership, the package seal, cycles, the package/app boundary.
+   */
+  const exportFromRegex =
+    /(?:^|[;{}\n])\s*export\s+(?:type\s+)?(?:\*(?:\s+as\s+\w+)?|\{[^}]*\})\s*from\s+['"]([^'"]+)['"]/gm;
 
   let match: RegExpExecArray | null;
-  while ((match = importRegex.exec(content))) imports.push(match[1]);
-  while ((match = requireRegex.exec(content))) imports.push(match[1]);
-  while ((match = dynamicRegex.exec(content))) imports.push(match[1]);
+  while ((match = importRegex.exec(stripped))) imports.push(match[1]!);
+  while ((match = requireRegex.exec(stripped))) imports.push(match[1]!);
+  while ((match = nodeRequireRegex.exec(stripped))) imports.push(match[1]!);
+  while ((match = createRequireRegex.exec(stripped))) imports.push(match[1]!);
+  while ((match = dynamicRegex.exec(stripped))) imports.push(match[1]!);
+  while ((match = exportFromRegex.exec(stripped))) imports.push(match[1]!);
 
   return imports;
 }

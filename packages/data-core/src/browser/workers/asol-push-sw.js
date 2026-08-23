@@ -252,10 +252,18 @@ self.addEventListener('push', (event) => {
   }
 
   const title = payload.title || 'ASOL';
+  const notificationIcon = new URL(
+    'icons/asol-app-icon-192.png',
+    self.registration.scope,
+  ).toString();
+  const notificationBadge = new URL(
+    'icons/asol-notification-badge-96.png',
+    self.registration.scope,
+  ).toString();
   const options = {
     body: payload.body || '',
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-192.png',
+    icon: notificationIcon,
+    badge: notificationBadge,
     tag: payload.dedupeKey || payload.notificationId || 'asol-notification',
     // A browser cannot play the bundled ASOL sound — the Notification API has
     // no sound option — but it can be told to stay quiet, so a notification

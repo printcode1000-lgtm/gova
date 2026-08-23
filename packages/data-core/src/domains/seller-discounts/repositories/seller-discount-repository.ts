@@ -12,7 +12,7 @@ import type {
   SellerDiscountType,
   SellerDiscountUsageSummary,
   SellerDiscountValueType,
-} from "@/features/seller-discounts/entities/seller-discount.entity";
+} from "../entities";
 
 function nowIso() {
   return new Date().toISOString();

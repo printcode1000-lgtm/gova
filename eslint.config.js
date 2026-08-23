@@ -93,18 +93,20 @@ module.exports = [
     },
   },
   // ── @asol/native-core architecture sealing ────────────────────────────────
-  // All Capacitor imports are banned in app code. Only the adapters layer
-  // inside packages/native-core may import them directly.
+  // Capacitor imports are banned outside native-core (app, services, scripts, and
+  // every other package). Root capacitor.config.ts is owned via ROOT_VENDOR_OWNED_FILES.
   {
     files: [
       'src/**/*.{ts,tsx,js,jsx}',
       'services/**/*.{ts,tsx,js,jsx}',
       'scripts/**/*.ts',
+      'packages/**/*.{ts,tsx,js,jsx}',
     ],
     ignores: [
-      'packages/native-core/src/adapters/**',
-      'packages/native-core/scripts/**',
+      'packages/native-core/**',
+      'packages/architecture-core/**',
       'scripts/architecture-check.ts',
+      'capacitor.config.ts',
     ],
     rules: {
       'no-restricted-imports': [
@@ -114,7 +116,7 @@ module.exports = [
             {
               group: ['@capacitor/*', '@capawesome/*', '@capgo/*', '@capacitor-mlkit/*'],
               message:
-                'Direct Capacitor imports are forbidden in app code. Use @asol/native-core instead.',
+                'Direct Capacitor imports are forbidden outside @asol/native-core. Use @asol/native-core instead.',
             },
             {
               // The package has three declared doors — `.`, `./platform-globals`, and the R8
@@ -209,19 +211,21 @@ module.exports = [
     },
   },
   // ── @aws-sdk / google-auth-library adapter sealing ────────────────────────
-  // @aws-sdk/* and google-auth-library belong exclusively in adapter layers.
+  // Dual ownership is intentional: storage-core + ota-core for S3; notifications-core
+  // (FCM HTTP v1) + ota-core (Play) for google-auth-library. firebase-admin is not a
+  // production path and remains banned everywhere.
   {
     files: [
       'src/**/*.{ts,tsx}',
       'scripts/**/*.ts',
       'services/**/*.{ts,tsx}',
+      'packages/**/*.{ts,tsx}',
     ],
     ignores: [
-      'packages/storage-core/src/adapters/**',
-      'packages/ota-core/src/publishing/adapters/**',
-      'src/features/notifications/services/providers/fcm-http-v1.server.ts',
-      'src/modules/google-play-console/services/google-play-console-service.server.ts',
-      'src/modules/google-play-console/services/google-play-store-assets-service.server.ts',
+      'packages/storage-core/**',
+      'packages/ota-core/**',
+      'packages/notifications-core/**',
+      'packages/architecture-core/**',
       'services/*/generated/**',
     ],
     rules: {
@@ -231,13 +235,67 @@ module.exports = [
           patterns: [
             {
               group: ['@aws-sdk/*', '@aws-sdk'],
-              message: '@aws-sdk belongs exclusively to packages/storage-core/src/adapters and packages/ota-core/src/publishing/adapters.',
+              message:
+                '@aws-sdk belongs to @asol/storage-core and @asol/ota-core only. Import through those package doors.',
             },
             {
               group: ['google-auth-library'],
-              message: 'google-auth-library belongs to packages/ota-core/src/publishing/adapters. Use resolveGooglePlayCredentials from @asol/ota-core/publishing.',
+              message:
+                'google-auth-library belongs to @asol/notifications-core (FCM) and @asol/ota-core/publishing (Play). Do not import it elsewhere.',
             },
           ],
+        },
+      ],
+    },
+  },
+
+  // ── Repository-wide deep-import ban for every sealed @asol package ─────────
+  // Vendor ownership, mirroring packages/architecture-core/src/registry/
+  // capability-registry.ts. The registry is the authority; this rule is the
+  // editor-time echo of it, and the two must name the same owners — a rule that
+  // fires inside the package that owns the SDK is not enforcement, it is a
+  // broken build. `data-core` owns the database drivers and drizzle,
+  // `notifications-core` owns web-push and firebase-admin.
+  {
+    files: ['src/**/*.{ts,tsx}', 'scripts/**/*.ts', 'services/**/*.{ts,tsx}', 'packages/**/*.{ts,tsx}'],
+    ignores: [
+      'services/*/generated/**',
+      'scripts/architecture-check.ts',
+      'packages/data-core/**',
+      'packages/notifications-core/**',
+      'packages/architecture-core/**',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@asol/*/src', '@asol/*/src/**', '**/packages/*/src/**'],
+              message:
+                'Deep import into a sealed @asol package is forbidden. Use a declared package door only.',
+            },
+            {
+              // Sub-paths only. The bare names are matched as exact `paths`
+              // below: as a pattern, `web-push` also matched the relative
+              // import `../infrastructure/web-push/web-push-browser.service`,
+              // flagging a module for importing its own adapter.
+              group: ['drizzle-orm/*', '@libsql/*'],
+              message:
+                'This vendor SDK is owned by a sealed package. Import through that package public door.',
+            },
+          ],
+          paths: [
+            'web-push',
+            'firebase-admin',
+            'better-sqlite3',
+            '@libsql/client',
+            'drizzle-orm',
+          ].map((name) => ({
+            name,
+            message:
+              'This vendor SDK is owned by a sealed package. Import through that package public door.',
+          })),
         },
       ],
     },

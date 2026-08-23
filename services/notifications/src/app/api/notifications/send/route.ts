@@ -51,7 +51,16 @@ export async function POST(request: Request): Promise<Response> {
     const { crypto } = createNotificationsRuntime();
     assertNotificationsEnv();
     grants = crypto.readGrants(await request.json()).slice(0, crypto.maxGrantsPerRequest);
-  } catch {
+  } catch (error) {
+    // Say why. This catch spans three very different failures — a malformed
+    // body, missing account credentials, and a port that was never registered —
+    // and swallowing them all as one silent 400 is how an unconfigured
+    // deployment passes for a merely badly-addressed request. The outage that
+    // took every server route down was invisible for exactly this reason.
+    console.error(
+      '[notifications/send] rejected before delivery:',
+      error instanceof Error ? error.message : error,
+    );
     return Response.json({ error: 'invalidJsonBody' }, { status: 400, headers });
   }
 

@@ -1,4 +1,4 @@
-import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
+import type { ProfileSpecialtiesSelection } from "../../entities";
 import type { IProfileRepository } from "../../repositories/profile-repository.interface";
 
 export class UpsertProfileSpecialtiesCommand {

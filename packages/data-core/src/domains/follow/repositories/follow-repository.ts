@@ -7,7 +7,7 @@ import type {
   FollowMutationInput,
   FollowStatusInput,
   FollowTargetType,
-} from "@/features/follow/entities/follow.types";
+} from "../entities";
 
 function createFollowId(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 
 import {
   redactSystemLogText,
@@ -32,14 +32,26 @@ const workspaceRoot = path.resolve(
   '../../../..',
 );
 
+/**
+ * In-memory SQLite port for repository integration tests.
+ * Uses Node's built-in `node:sqlite` so this package never imports the
+ * `better-sqlite3` vendor owned by `@asol/data-core`.
+ */
 class MemoryDatabasePort {
-  readonly db = new Database(':memory:');
+  readonly db = new DatabaseSync(':memory:');
 
   async execute(sql: string, params: unknown[] = []) {
     const statement = this.db.prepare(sql);
-    if (statement.reader) return statement.all(...params);
-    const result = statement.run(...params);
-    return result;
+    const head = sql.trimStart().slice(0, 6).toLowerCase();
+    // node:sqlite does not always mark PRAGMA as a reader; treat read-shaped
+    // statements as queries so callers receive a row array (better-sqlite3 shape).
+    const isQuery =
+      statement.reader ||
+      head.startsWith('select') ||
+      head.startsWith('pragma') ||
+      head.startsWith('with');
+    if (isQuery) return statement.all(...(params as never[]));
+    return statement.run(...(params as never[]));
   }
 }
 

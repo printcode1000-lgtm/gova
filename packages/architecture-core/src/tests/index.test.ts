@@ -26,13 +26,29 @@ assert.deepEqual(Object.keys(manifest.exports), ['.'], 'One door: the contract a
 // asserts the split cannot come back by re-adding such an import.
 function sources(dir: string): string[] {
   const out: string[] = [];
-  for (const entry of readdirSync(path.join(ROOT, PACKAGE, 'src', dir), { withFileTypes: true })) {
-    if (entry.isFile() && entry.name.endsWith('.ts')) out.push(path.join(dir, entry.name));
+  const root = path.join(ROOT, PACKAGE, 'src', dir);
+  function walk(current: string, prefix: string): void {
+    for (const entry of readdirSync(current, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        walk(path.join(current, entry.name), path.join(prefix, entry.name));
+        continue;
+      }
+      if (entry.isFile() && entry.name.endsWith('.ts')) {
+        out.push(path.join(prefix, entry.name));
+      }
+    }
   }
+  walk(root, dir);
   return out;
 }
 
-const files = [...sources('contracts'), ...sources('checks'), 'runner.ts', 'index.ts'];
+const files = [
+  ...sources('contracts'),
+  ...sources('checks'),
+  ...sources('registry'),
+  'runner.ts',
+  'index.ts',
+];
 assert.ok(files.length > 12, `Expected the contracts and the checks, found ${files.length}`);
 
 /**
@@ -42,12 +58,30 @@ assert.ok(files.length > 12, `Expected the contracts and the checks, found ${fil
  */
 const DECLARED_PACKAGE_DOORS = new Set(['@asol/ota-core/publishing']);
 
+/**
+ * Toolchain, not infrastructure.
+ *
+ * The rule this file enforces is that the package judging the repository stays
+ * unentangled with it: no `@/`, no capability package internals, no SDK that
+ * reaches a database, a bucket, or a device. A parser is none of those — it
+ * grants access to nothing, and it is what lets a check follow a call through a
+ * function reference instead of matching text, which the page-save gateway
+ * needs because a page hands its writer to `save:` and the call sits elsewhere.
+ *
+ * Kept to an explicit set so a second entry is a decision, and deliberately not
+ * modelled as an owned vendor in the capability registry: the refactor codemods
+ * use the same parser, and claiming exclusivity over the language's own
+ * compiler would be a category error.
+ */
+const TOOLCHAIN_MODULES = new Set(['typescript']);
+
 for (const file of files) {
   const text = readFileSync(path.join(ROOT, PACKAGE, 'src', file), 'utf8');
   for (const match of text.matchAll(/from\s+['"]([^'"]+)['"]/g)) {
     const specifier = match[1]!;
     if (specifier.startsWith('node:') || specifier === 'fs' || specifier === 'path') continue;
     if (DECLARED_PACKAGE_DOORS.has(specifier)) continue;
+    if (TOOLCHAIN_MODULES.has(specifier)) continue;
     assert.ok(
       !specifier.startsWith('@/'),
       `${file} imports ${specifier}: this package must never reach the application it checks.`,

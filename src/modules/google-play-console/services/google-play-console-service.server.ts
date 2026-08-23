@@ -1,7 +1,5 @@
 import "server-only";
 
-import { GoogleAuth } from "google-auth-library";
-
 import {
   assertGooglePlayConsoleAllowed,
   googlePlayConsoleEnvironment,
@@ -12,11 +10,12 @@ import type {
   GooglePlayConsoleEndpointResult,
   GooglePlayConsoleSnapshot,
 } from "../domain/types";
-import { resolveGooglePlayCredentials } from "./google-play-credentials.server";
+import {
+  createGooglePlayAuthClient,
+  resolveGooglePlayCredentials,
+} from "./google-play-credentials.server";
 import { withGooglePlayEditLock } from "./google-play-edit-lock.server";
 
-const ANDROID_PUBLISHER_SCOPE =
-  "https://www.googleapis.com/auth/androidpublisher";
 const API_ROOT = "https://androidpublisher.googleapis.com/androidpublisher/v3";
 
 function toErrorMessage(error: unknown): string {
@@ -58,17 +57,7 @@ export class GooglePlayConsoleService {
     assertGooglePlayConsoleAllowed();
 
     const config = await this.readConfigStatus();
-    const credentialResolution = await resolveGooglePlayCredentials();
-    if (!credentialResolution.credentials) {
-      throw new Error("googlePlayConsoleCredentialsMissing");
-    }
-
-    const auth = new GoogleAuth({
-      credentials: credentialResolution.credentials,
-      scopes: [ANDROID_PUBLISHER_SCOPE],
-    });
-    const client = await auth.getClient();
-    const packageName = encodeURIComponent(config.packageName);
+    const { client, packageName } = await createGooglePlayAuthClient();
     const endpoints: GooglePlayConsoleEndpointResult[] = [];
     let editId: string | null = null;
 

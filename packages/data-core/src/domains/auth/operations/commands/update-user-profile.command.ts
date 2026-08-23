@@ -4,7 +4,7 @@ import { hashPassword, verifyPassword } from '@asol/auth-core/server';
 import { assertSessionMatchesUid } from '@asol/auth-core/server';
 import { normalizeAuthEmail, normalizeAuthPhone } from '@asol/auth-core/server';
 import type { IUserRepository } from '../../repositories/user-repository.interface';
-import type { UserProfile, UpdateProfileInput } from '@/features/auth/entities/profile.entity';
+import type { UserProfile, UpdateProfileInput } from '../../entities';
 import { traceServerLayer } from '../../../../ports/telemetry';
 
 /** @deprecated Profile updates are handled by `@asol/auth-core` via `authOperationsService`. */

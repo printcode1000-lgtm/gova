@@ -4,7 +4,7 @@ import 'server-only';
 import { eq, and, isNull, inArray } from 'drizzle-orm';
 import type { IDatabaseClient } from '../../../core/database/database-client.interface';
 import { users } from '../../../core/database/schema';
-import type { User } from '@/features/auth/entities/user.entity';
+import type { User } from '../entities';
 import type { IUserRepository } from './user-repository.interface';
 import { authPhoneCandidates, normalizeAuthPhone } from '@asol/auth-core/server';
 import { normalizeAuthEmail } from '@asol/auth-core/server';

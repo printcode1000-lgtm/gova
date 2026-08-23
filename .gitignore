@@ -145,3 +145,8 @@ tmp/
 # Runtime system-ops shard: generated locally by db:ensure and holds system logs /
 # data-health records. Schema sync uses Turso; do not commit this SQLite file.
 public/sync_data/sync_sqlite/system-ops.db
+
+# Scratch tree for the static export build (packages/ota-core, `tempBuildDir`).
+# It holds a rewritten copy of src/ and the Next `out/` while build:static runs,
+# and survives on disk whenever that build is interrupted. Never committed.
+.tmp-static-build/

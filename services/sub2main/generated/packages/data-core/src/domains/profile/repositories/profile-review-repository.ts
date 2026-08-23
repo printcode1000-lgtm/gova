@@ -2,8 +2,8 @@ import { profilesDataSource } from "../../../core";
 import "server-only";
 
 import { randomUUID } from "node:crypto";
-import type { ReviewSort } from "@/features/product/entities/product-review.entity";
-import type { ProfileReview } from "@/features/profile/entities/profile-review.entity";
+import type { ReviewSort } from "../../product/entities";
+import type { ProfileReview } from "../entities";
 
 type Row = Record<string, any>;
 

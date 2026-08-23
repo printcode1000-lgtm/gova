@@ -139,11 +139,150 @@ the build; the cause is the upload. Read `vercel inspect --logs` before
 diagnosing.
 
 `next.config.ts` keeps `outputFileTracingExcludes` for
-`/api/super-admin/build-jobs/**`: those routes read Android build artifacts off
-the local filesystem, so Next's tracer cannot bound what they touch and sweeps
-the repository into the function. They refuse to run outside local development
-anyway (`assertGooglePlayConsoleAllowed`). See
+`/api/super-admin/build-jobs/**` and `/api/super-admin/google-play-store-assets/**`:
+those routes read build artifacts and Play assets off the local filesystem, so
+Next's tracer cannot bound what they touch and sweeps the repository into the
+function. See
 [vercel-function-size-release-console.md](../../08-troubleshooting/problems/vercel-function-size-release-console.md).
+
+Preflight measures this before anything is published. `vercel:function-size:check`
+runs between `build` and `build:static`, reads the route traces Next writes during
+the build, and fails with the offending route and its largest contributors:
+
+```
+[vercel:function-size] api/super-admin/google-play-console is 260.5MB across 5791 files
+     237.2MB  test_profile/manageProfile
+```
+
+It honours `.vercelignore`, because a file that is never uploaded cannot be inside a
+function — without that it fails on the developer's machine over paths the deployment
+never sees, and a guard that cries wolf locally is one people learn to skip.
+
+### Smoke: the built server has to answer
+
+`READY` means a deployment exists, not that a request succeeds. The pipeline
+built, uploaded and polled until Vercel said READY for all seven targets while
+every server route answered 500 — and the profiles account served errors to the
+browser for hours with `/api/health` returning 200 the whole time, because
+health touches no shard.
+
+Two gates close that:
+
+| Script | Runs | Asks |
+| --- | --- | --- |
+| `smoke:production` | after `build`, before `build:static` | five routes on the main app, each crossing a different composition root |
+| `smoke:services` | after `services:build` | one route per isolated account that reaches **that account's own data** |
+
+Health is deliberately not the probe. The fault both gates exist for —
+a composition root that never registers a port — leaves health green and
+everything else broken.
+
+Codes that mean the handler ran are accepted, and a 500, a refused connection,
+or a server that never listens is not. The server's own output is scanned too,
+because a route can answer 200 while a port quietly falls back to a default —
+any `is not configured` line fails the check even when every status is green.
+
+Both run inside preflight, so a bundling or wiring fault stops the release
+before the deployment commit exists.
+
+#### What each account is asked, and why
+
+`smoke:services` builds each service itself, probes it, and deletes the output
+before moving to the next. It does not reuse `services:build`'s output:
+that step deletes its own `.next` on purpose, because the CLI uploads the
+service folder and Vercel builds it remotely, so a build directory left inside
+would be uploaded with it. Keeping the same invariant costs a rebuild and buys
+a gate that leaves nothing behind and runs standalone.
+
+| Account | Probe | Accepts |
+| --- | --- | --- |
+| profiles | `GET /api/profile/store-details` | 200, 400, 404 |
+| products | `GET /api/products?limit=1` | 200, 400 |
+| orders | `GET /api/orders?…` | 200, 400, 401, 403, 404 |
+| notifications | `POST /api/notifications/send` with a probe grant | 200, 400 |
+| submain | `GET /api/search/products?…` | 200, 400 |
+| sub2main | `POST /api/profile/discounts/quote` with an empty cart | 200 |
+
+The last two were chosen after their first probes proved nothing:
+
+- **notifications** has no `/api/notifications/preferences` — it serves `/send`
+  and `/health` only — so probing it hit Next's own 404 and never reached the
+  account's code. `/send` was then required to answer 200, which failed:
+  `assertNotificationsEnv` rightly refuses to deliver without VAPID keys and a
+  grant secret, which no local environment has. A 400 is therefore accepted,
+  and what separates a missing credential from an unregistered port is the
+  reason — which the route now logs rather than swallowing.
+- **sub2main** serves writes only, so a GET answered 405: routing, not wiring.
+  Probing `POST /api/products` was worse — `productService.create` reads a
+  field before validating it, so a minimal payload crashed it with a 500 that
+  would have failed every release for a fault in the probe. The quote route
+  guards its input with `Array.isArray`, so an empty cart is a real read out of
+  the seller-discounts repository, with no write and no crash.
+
+A probe that accepts a rejection prints the reason the account gave, so a green
+run still says which refusal it accepted. `ASOL_SERVICE_SMOKE_ONLY=<accounts>`
+restricts a run to named accounts while debugging one.
+
+#### A deployment pins what it cannot serve
+
+Every isolated account is Turso-only and aliases `better-sqlite3` to a stub
+that throws. Each therefore registers its runtime-config port with
+`forceRemoteDataSource: true`, rather than letting the environment choose a
+backend it cannot load. The gate found this the first time it ran inside a
+real deploy: the profiles account answered 500 on every data route because the
+environment said `local`.
+
+When a deployment physically cannot serve one branch of a runtime choice, pin
+it in code. Configuration can be set wrong; an invariant stated in the
+composition root cannot.
+
+#### Never let a catch hide which failure happened
+
+`/api/notifications/send` wrapped a malformed body, missing credentials, and a
+port that was never registered in one `catch` and returned all three as the
+same silent 400, logging nothing. That is the shape that kept the outage
+invisible for hours. A catch spanning several distinct failures must say which
+one it caught, or a gate downstream cannot tell an uncomposed deployment from a
+badly addressed request.
+
+### Do not push to `main` while `deploy:all` is running
+
+The main app is connected to GitHub and redeploys on every push to `main`. The
+six isolated accounts are not — they update only when their deploy command runs.
+
+So a push during a `deploy:all` run supersedes the deployment that run just
+created: Vercel abandons the in-flight build for the newer commit, and the
+run's `main` phase reports `TIMEOUT` — "did not reach a terminal state before
+the verification deadline". Nothing is broken; the deployment was simply
+replaced. The six accounts are unaffected, which is why a report can show them
+all READY next to a timed-out main.
+
+This is easy to cause without noticing, because several preflight phases rewrite
+tracked files as a side effect of running:
+
+- every phase that boots a server re-runs schema sync and rewrites
+  `public/sync_data/*.json` (timestamps only);
+- `build:static` rewrites `public/asol-web-manifest.json` with a new build id.
+
+Committing each of those mid-run — to keep the tree clean — is what triggers the
+cancellation. Let the run's own publish phase commit them instead; that is what
+it is for.
+
+If it happens: don't re-run `--phase=main` against a stale `run-state.json`,
+which replays the cached result without deploying, and don't delete that file to
+force a retry — it holds the progress of *every* phase, so the next
+`--phase=main` refuses on unmet prerequisites. Either let the GitHub integration
+finish deploying the newest commit, or start a fresh `deploy:all --allow-empty`.
+
+To confirm what production is actually serving, compare the deployed manifest to
+the local one:
+
+```bash
+curl -s https://gova-swart.vercel.app/asol-web-manifest.json | grep createdAt
+grep createdAt public/asol-web-manifest.json
+```
+
+A 200 from a route proves the site is up, not that it is running your change.
 
 ### Escape hatches
 

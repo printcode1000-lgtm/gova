@@ -4,7 +4,7 @@ import type {
   NotificationProviderSendResult,
 } from './notification-provider.interface';
 import webpush from 'web-push';
-import { getWebPushServerConfig } from '@/core/config/server-env/server-env.values.turso-env';
+import { getWebPushServerConfig } from '../../ports/server-config';
 import {
   WEB_PUSH_VAPID_PUBLIC_KEY,
   WEB_PUSH_VAPID_SUBJECT,

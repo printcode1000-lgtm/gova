@@ -28,6 +28,20 @@ android/app/google-services.json
 android/app/src/main/res/raw/custom_notification.mp3
 ```
 
+Notification icon identity is owned by `@asol/branding-core`:
+
+- `ic_stat_asol_notification` is generated as a transparent white ASOL-tree
+  silhouette for every Android density. Android status-bar icons cannot use the
+  full-colour launcher bitmap.
+- `asol_notification_large_icon` is generated in full colour and displayed by
+  `AsolPushMessagingService` in expanded notifications.
+- The application manifest's Firebase default, FCM payload builders, Capacitor
+  local notifications, and the application-owned receiver all use the same
+  resource contract.
+
+Run `npm run branding:generate` after changing the package SSOT. See
+[Branding SSOT](branding-ssot.md).
+
 `google-services.json` is no longer stored in the repository. Its complete lossless JSON is held in `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64` and is regenerated only inside `android/app` during a native build. The generated files are ignored by Git. `npm run cap:sync`, `npm run cap:copy`, `npm run cap:build`, and `npm run cap:build:local` validate the Firebase project identity and synchronize the generated config and sound automatically.
 
 The Firebase service-account JSON is server-only, ignored by Git, and must never enter Android, static output, R2, OTA, or client JavaScript.
