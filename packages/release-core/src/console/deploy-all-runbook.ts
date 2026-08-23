@@ -73,6 +73,14 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
         "vercel:function-size:check",
         "npm",
       ),
+      // Starts the built server and asks it real questions. Nothing else in
+      // the pipeline does: `deploy:all` builds, uploads and waits for READY,
+      // and READY means the deployment exists, not that a request succeeds —
+      // it reported seven targets READY while every server route answered 500.
+      // That fault was a bundler giving a port module two instances, which no
+      // static check and no `tsx` test can see because Node resolves one path
+      // to one instance. Only a real server answering a real request can.
+      branch("smoke", "built server answers real requests", "smoke:production", "npm"),
       branch("static-build", "static release export", "build:static", "npm"),
     ],
   },
