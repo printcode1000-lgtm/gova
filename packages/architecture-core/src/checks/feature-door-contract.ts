@@ -5,15 +5,20 @@
  * may be imported. Deep paths and relative traversal into another feature fail.
  * Dependencies must be listed on the importer's `permittedDependencies`.
  *
- * Composition packages are a deliberate special boundary: service mirrors are
- * built from their exact import graphs, so some deployment roots need a narrow
- * internal application module rather than a broad feature barrel. Those paths
- * are allowed only when listed exactly in COMPOSITION_FEATURE_SEAMS.
+ * Two exact, default-deny seam registries exist for the rare cases where a
+ * public barrel would widen an import graph or where an already-established
+ * cross-feature internal edge cannot safely be changed as part of an
+ * architecture-only refactor:
+ * - FEATURE_DEEP_IMPORT_SEAMS for feature-to-feature imports.
+ * - COMPOSITION_FEATURE_SEAMS for isolated composition/service-mirror roots.
+ *
+ * Target-feature declarations alone never grant deep-import authority.
  */
 import { existsSync, readFileSync } from 'fs';
 import { dirname, join, relative, resolve } from 'path';
 
 import {
+  APPLICATION_FEATURES,
   featureByName,
   isFeatureDoorSpecifier,
 } from '../registry/application-features-registry';
@@ -22,6 +27,10 @@ import {
   COMPOSITION_FEATURE_SEAMS,
   isCompositionFeatureSeam,
 } from '../registry/composition-feature-seams-registry';
+import {
+  FEATURE_DEEP_IMPORT_SEAMS,
+  isFeatureDeepImportSeam,
+} from '../registry/feature-deep-import-seams-registry';
 import { ROOT, SRC, addViolation, extractImports, walk, rel } from './architecture-types';
 
 const FEATURE_PREFIX = 'src/features/';
@@ -48,6 +57,10 @@ function resolveSpecifier(specifier: string, importerAbs: string): string | null
     return relative(ROOT, abs).replace(/\\/g, '/');
   }
   return null;
+}
+
+function normalizeModulePath(repoPath: string): string {
+  return repoPath.replace(/\.(?:ts|tsx)$/, '');
 }
 
 function sourcePathExists(repoPathWithoutExtension: string): boolean {
@@ -119,6 +132,80 @@ function validateCompositionFeatureSeamRegistry(): void {
   }
 }
 
+function validateFeatureDeepImportSeamRegistry(): void {
+  for (const [importerFeature, seams] of Object.entries(FEATURE_DEEP_IMPORT_SEAMS)) {
+    const importer = featureByName(importerFeature);
+    if (!importer) {
+      addViolation(
+        'Feature Doors',
+        join(ROOT, 'src/features', importerFeature),
+        `FEATURE_DEEP_IMPORT_SEAMS names unregistered importer feature "${importerFeature}".`,
+        'Register the feature first or remove the stale seam entry.',
+      );
+      continue;
+    }
+
+    const seen = new Set<string>();
+    for (const repoPath of seams) {
+      if (seen.has(repoPath)) {
+        addViolation(
+          'Feature Doors',
+          join(ROOT, importer.sourcePath),
+          `Duplicate feature deep-import seam "${repoPath}".`,
+          'Each exact seam must be registered once.',
+        );
+      }
+      seen.add(repoPath);
+
+      const targetFeature = featureOfPath(repoPath);
+      if (!targetFeature || targetFeature === importerFeature || !featureByName(targetFeature)) {
+        addViolation(
+          'Feature Doors',
+          join(ROOT, importer.sourcePath),
+          `Feature deep-import seam "${repoPath}" does not target another registered feature.`,
+          'Register only exact modules under another src/features/<feature> owner.',
+        );
+        continue;
+      }
+
+      if (!importer.deepImportSeams.includes(targetFeature)) {
+        addViolation(
+          'Feature Doors',
+          join(ROOT, importer.sourcePath),
+          `Exact seam "${repoPath}" targets "${targetFeature}", but that target is not declared in ${importerFeature}.deepImportSeams.`,
+          'Declare the target relationship in APPLICATION_FEATURES and the exact path here; neither declaration grants authority alone.',
+        );
+      }
+
+      if (!sourcePathExists(repoPath)) {
+        addViolation(
+          'Feature Doors',
+          join(ROOT, importer.sourcePath),
+          `Feature deep-import seam "${repoPath}" points at a missing source module.`,
+          'Remove the stale seam or restore the exact target module.',
+        );
+      }
+    }
+  }
+
+  for (const importer of APPLICATION_FEATURES) {
+    for (const targetFeature of importer.deepImportSeams) {
+      const exact = FEATURE_DEEP_IMPORT_SEAMS[
+        importer.name as keyof typeof FEATURE_DEEP_IMPORT_SEAMS
+      ] as readonly string[] | undefined;
+      const hasExactTarget = exact?.some((repoPath) => featureOfPath(repoPath) === targetFeature) ?? false;
+      if (!hasExactTarget) {
+        addViolation(
+          'Feature Doors',
+          join(ROOT, importer.sourcePath),
+          `Feature "${importer.name}" declares deepImportSeams target "${targetFeature}" without any exact registered path.`,
+          'Add only the required exact path to FEATURE_DEEP_IMPORT_SEAMS or remove the broad target declaration.',
+        );
+      }
+    }
+  }
+}
+
 function isDeclaredDoorPath(feature: string, repoRel: string): boolean {
   const entry = featureByName(feature);
   if (!entry) return false;
@@ -156,9 +243,11 @@ function productionCompositionSources(): string[] {
 
 export function checkFeatureDoorContract(): void {
   validateCompositionFeatureSeamRegistry();
+  validateFeatureDeepImportSeamRegistry();
 
   const scanned = [...walk(SRC), ...productionCompositionSources()];
   const usedCompositionSeams = new Map<string, Set<string>>();
+  const usedFeatureSeams = new Map<string, Set<string>>();
 
   for (const file of scanned) {
     const repoRel = rel(file);
@@ -187,13 +276,21 @@ export function checkFeatureDoorContract(): void {
           continue;
         }
 
+        const repoTarget = normalizeModulePath(`src/${specifier.slice(2)}`);
+        if (importerFeature && isFeatureDeepImportSeam(importerFeature, repoTarget)) {
+          const used = usedFeatureSeams.get(importerFeature) ?? new Set<string>();
+          used.add(repoTarget);
+          usedFeatureSeams.set(importerFeature, used);
+          continue;
+        }
+
         addViolation(
           'Feature Doors',
           file,
           `Deep cross-feature import "${specifier}" bypasses declared doors.`,
           compositionPackage
             ? 'Register this exact path in COMPOSITION_FEATURE_SEAMS only if the service mirror requires a narrower graph; otherwise use a declared feature door.'
-            : `Import through @/features/${target}, @/features/${target}/ui, or @/features/${target}/server.`,
+            : `Import through @/features/${target}, @/features/${target}/ui, or @/features/${target}/server. If a deep edge is genuinely unavoidable, register only its exact source module in FEATURE_DEEP_IMPORT_SEAMS.`,
         );
         continue;
       }
@@ -204,8 +301,9 @@ export function checkFeatureDoorContract(): void {
         continue;
       }
 
-      const resolved = resolveSpecifier(specifier, file);
-      if (!resolved) continue;
+      const resolvedRaw = resolveSpecifier(specifier, file);
+      if (!resolvedRaw) continue;
+      const resolved = normalizeModulePath(resolvedRaw);
       const targetFeatureResolved =
         featureOfPath(resolved) ??
         featureOfPath(`${resolved}.ts`) ??
@@ -213,6 +311,13 @@ export function checkFeatureDoorContract(): void {
         featureOfPath(resolved.replace(/\/index$/, '') + '/index.ts');
 
       if (!targetFeatureResolved || importerFeature === targetFeatureResolved) continue;
+
+      if (importerFeature && isFeatureDeepImportSeam(importerFeature, resolved)) {
+        const used = usedFeatureSeams.get(importerFeature) ?? new Set<string>();
+        used.add(resolved);
+        usedFeatureSeams.set(importerFeature, used);
+        continue;
+      }
 
       if (
         !isDeclaredDoorPath(targetFeatureResolved, resolved) &&
@@ -225,7 +330,7 @@ export function checkFeatureDoorContract(): void {
           `Import "${specifier}" resolves into feature "${targetFeatureResolved}" internals.`,
           compositionPackage
             ? 'Composition seams must use an exact registered @/features/... alias; relative deep traversal is never allowed.'
-            : `Use a declared door for @/features/${targetFeatureResolved}.`,
+            : `Use a declared door for @/features/${targetFeatureResolved}, or register only the exact unavoidable module in FEATURE_DEEP_IMPORT_SEAMS.`,
         );
         continue;
       }
@@ -243,6 +348,19 @@ export function checkFeatureDoorContract(): void {
         join(ROOT, 'packages', packageFolder),
         `Composition feature seam "${specifier}" is registered but unused.`,
         'Remove stale seam authority when the production import no longer exists.',
+      );
+    }
+  }
+
+  for (const [importerFeature, seams] of Object.entries(FEATURE_DEEP_IMPORT_SEAMS)) {
+    const used = usedFeatureSeams.get(importerFeature) ?? new Set<string>();
+    for (const repoPath of seams) {
+      if (used.has(normalizeModulePath(repoPath))) continue;
+      addViolation(
+        'Feature Doors',
+        join(ROOT, 'src/features', importerFeature),
+        `Feature deep-import seam "${repoPath}" is registered but unused.`,
+        'Remove stale seam authority when the production/test import no longer exists.',
       );
     }
   }
