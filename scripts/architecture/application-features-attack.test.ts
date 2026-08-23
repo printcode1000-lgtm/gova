@@ -1,9 +1,9 @@
 /**
- * Adversarial architecture attacks — prove the new model rejects bypasses.
+ * Adversarial architecture attacks — prove the architecture model rejects bypasses.
  * Uses only the public `@asol/architecture-core` door.
  */
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, cpSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import {
@@ -25,7 +25,7 @@ import {
 
 const ROOT = process.cwd();
 
-/** Build attack probe source without a literal import-from in *this* file (scripts are scanned). */
+/** Build attack source without putting the forbidden literal import in this scanned test file. */
 function attackSource(parts: string[]): string {
   return parts.join('');
 }
@@ -38,7 +38,7 @@ function hasViolationMatching(re: RegExp): boolean {
   return violations.some((v) => re.test(`${v.layer} ${v.violation} ${v.file}`));
 }
 
-// ── 1. Unregistered feature directory ───────────────────────────────────────
+// 1. Unregistered feature directory.
 {
   clearViolations();
   const fake = join(ROOT, 'src/features/fake-feature');
@@ -52,7 +52,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 2. Recreation of src/modules/ ───────────────────────────────────────────
+// 2. Recreation of src/modules/.
 {
   clearViolations();
   const modules = join(ROOT, 'src/modules');
@@ -66,7 +66,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 3. Unknown top-level application directory ──────────────────────────────
+// 3. Unknown top-level application directory.
 {
   clearViolations();
   const unknown = join(ROOT, 'src/legacy-bucket');
@@ -74,13 +74,13 @@ function hasViolationMatching(re: RegExp): boolean {
   writeFileSync(join(unknown, 'x.ts'), 'export {};\n');
   try {
     checkApplicationFeatureRegistryContract();
-    assert.ok(hasViolationMatching(/legacy-bucket/i), 'unknown root must fail');
+    assert.ok(hasViolationMatching(/legacy-bucket/i), 'Unknown source root must fail');
   } finally {
     rmSync(unknown, { recursive: true, force: true });
   }
 }
 
-// ── 4. Deep cross-feature import bypassing a door ───────────────────────────
+// 4. Deep cross-feature import bypassing a door.
 {
   clearViolations();
   const probe = join(ROOT, 'src/features/cart/__architecture_attack_probe.ts');
@@ -103,7 +103,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 5. Feature dependency not allowed by registry ───────────────────────────
+// 5. Feature dependency not allowed by registry.
 {
   clearViolations();
   const importer = APPLICATION_FEATURES.find(
@@ -127,7 +127,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 6. Registry entry pointing at a missing feature ─────────────────────────
+// 6. Registry entry pointing at a missing feature.
 {
   clearViolations();
   const sample = APPLICATION_FEATURES[0]!;
@@ -145,7 +145,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 7. Undeclared public feature door ───────────────────────────────────────
+// 7. Undeclared public feature door.
 {
   clearViolations();
   const feature = APPLICATION_FEATURES.find((f) => !f.doors.includes('./ui'));
@@ -168,7 +168,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 8. Manual modification of generated architecture documentation ──────────
+// 8. Manual modification of generated architecture documentation.
 {
   clearViolations();
   const docPath = join(ROOT, 'docs/01-architecture/08-reference/capability-map.md');
@@ -182,7 +182,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 9. Architecture model / documentation count drift ───────────────────────
+// 9. Architecture model / documentation count drift.
 {
   clearViolations();
   const rendered = renderArchitectureDoc(
@@ -196,7 +196,7 @@ function hasViolationMatching(re: RegExp): boolean {
   assert.equal(diffArchitectureDocs().length, 0);
 }
 
-// ── 10. Existing package deep-import attack ─────────────────────────────────
+// 10. Existing package deep-import attack.
 {
   clearViolations();
   const probe = join(ROOT, 'src/features/cart/__architecture_attack_pkg.ts');
@@ -215,44 +215,50 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 11. Application door re-exporting browser poison ────────────────────────
+// 11. Browser poison entering an actual composition/service-mirror feature graph.
 {
   clearViolations();
-  const feature = APPLICATION_FEATURES.find(
-    (f) => f.hasServer || f.doors.includes('./server') || f.runtimeTargets.includes('server'),
+  const composition = CAPABILITY_PACKAGES.find((p) => p.mayImportApp);
+  const feature = APPLICATION_FEATURES[0];
+  assert.ok(composition, 'Need a composition package');
+  assert.ok(feature, 'Need an application feature');
+
+  const poison = join(ROOT, feature!.sourcePath, '__attack_service_browser_poison.ts');
+  const compositionProbe = join(
+    ROOT,
+    'packages',
+    composition!.folder,
+    'src',
+    '__architecture_attack_service_browser.ts',
   );
-  assert.ok(feature, 'Need a server-capable feature');
-  const poison = join(ROOT, feature!.sourcePath, '__attack_browser_poison.ts');
-  const indexPath = join(ROOT, feature!.sourcePath, 'index.ts');
-  assert.ok(existsSync(indexPath));
-  const original = readFileSync(indexPath, 'utf8');
+
   writeFileSync(
     poison,
     attackSource(["import {} from '", "@asol/data-core", "/browser';\nexport const attack = true;\n"]),
   );
   writeFileSync(
-    indexPath,
-    `${original}\nexport * from './__attack_browser_poison';\n`,
+    compositionProbe,
+    attackSource([
+      "import { attack } from '",
+      `@/features/${feature!.name}`,
+      "/__attack_service_browser_poison';\nexport const serviceAttack = attack;\n",
+    ]),
   );
   try {
     checkFeatureApplicationDoorPurityContract();
     assert.ok(
-      hasViolationMatching(/browser poison|Feature Door Purity/i),
-      'Browser poison on application door must fail',
+      hasViolationMatching(/browser capability|Feature Door Purity|service-mirror/i),
+      'Browser poison reachable from a composition/service mirror must fail',
     );
   } finally {
-    writeFileSync(indexPath, original);
+    rmSync(compositionProbe, { force: true });
     rmSync(poison, { force: true });
   }
 }
 
-// ── 12. Duplicate APPLICATION_FEATURES name ─────────────────────────────────
+// 12. Unregistered twin feature folder.
 {
   clearViolations();
-  // Simulate by writing a second feature folder that shares a name collision
-  // via sourcePath mismatch: register path check is covered by missing-path
-  // below; here we assert the contract rejects a fake twin folder name that
-  // would collide if the registry listed it twice — exercised via on-disk twin.
   const twin = join(ROOT, 'src/features/auth-twin-attack');
   mkdirSync(twin, { recursive: true });
   writeFileSync(join(twin, 'index.ts'), 'export {};\n');
@@ -264,7 +270,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 13. Multi-line deep cross-feature import ────────────────────────────────
+// 13. Multi-line deep cross-feature import.
 {
   clearViolations();
   const probe = join(ROOT, 'src/features/cart/__architecture_attack_multiline.ts');
@@ -287,7 +293,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 14. Relative cross-feature traversal ────────────────────────────────────
+// 14. Relative cross-feature traversal.
 {
   clearViolations();
   const probe = join(ROOT, 'src/features/cart/__architecture_attack_rel.ts');
@@ -310,7 +316,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 15. Dynamic deep import ─────────────────────────────────────────────────
+// 15. Dynamic deep import.
 {
   clearViolations();
   const probe = join(ROOT, 'src/features/cart/__architecture_attack_dyn.ts');
@@ -333,7 +339,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 16. import type deep path ───────────────────────────────────────────────
+// 16. import type deep path.
 {
   clearViolations();
   const probe = join(ROOT, 'src/features/cart/__architecture_attack_type.ts');
@@ -356,7 +362,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 17. Barrel re-export of deep path ───────────────────────────────────────
+// 17. Barrel re-export of deep path.
 {
   clearViolations();
   const barrel = join(ROOT, 'src/features/cart/__architecture_attack_barrel.ts');
@@ -379,7 +385,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 18. Unauthorized top-level source directory ─────────────────────────────
+// 18. Unauthorized top-level source directory.
 {
   clearViolations();
   const attackDir = join(ROOT, 'evil-root-dir');
@@ -396,7 +402,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 19. Unregistered package folder ─────────────────────────────────────────
+// 19. Unregistered package folder.
 {
   clearViolations();
   const pkg = join(ROOT, 'packages/evil-core');
@@ -423,7 +429,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 20. Undeclared feature dependency (door + dependency contracts) ─────────
+// 20. Undeclared feature dependency (door + dependency contracts).
 {
   clearViolations();
   const probe = join(ROOT, 'src/features/qr-code/__architecture_attack_stale.ts');
@@ -441,7 +447,7 @@ function hasViolationMatching(re: RegExp): boolean {
   }
 }
 
-// ── 21. require() deep package path ─────────────────────────────────────────
+// 21. require() deep package path.
 {
   clearViolations();
   const probe = join(ROOT, 'src/features/cart/__architecture_attack_require.ts');
