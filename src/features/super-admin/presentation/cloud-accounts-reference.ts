@@ -224,3 +224,23 @@ export function cloudAccountsGlance() {
     r2Word: arabicAccountCountWord(r2),
   };
 }
+
+/**
+ * Database count for one Turso account, for section titles that state it.
+ *
+ * A title like "hesham105 — 7 شظايا بروفايل" repeats a number this file already
+ * holds. Two copies of one fact drift the moment a shard is added, and the page
+ * then states a count the repository contradicts — which is the failure
+ * `test:cloud-accounts` exists to prevent. The title asks for the number
+ * instead of restating it.
+ */
+export function tursoDatabaseCount(account: string): number {
+  const row = TURSO_CLOUD_ACCOUNTS.find((candidate) => candidate.account === account);
+  if (!row) {
+    throw new Error(
+      `[cloud-accounts] no Turso account named "${account}". ` +
+        `Known: ${TURSO_CLOUD_ACCOUNTS.map((r) => r.account).join(", ")}.`,
+    );
+  }
+  return row.databases;
+}

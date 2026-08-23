@@ -20,6 +20,14 @@ copy:
 | Cloudflare R2 | `@asol/storage-core` `getAllStorageAccounts()` plus explicit OTA column |
 | Turso | `TURSO_CLOUD_ACCOUNTS` in `cloud-accounts-reference.ts` (no Turso registry package) |
 
+Counts the page states about itself are asked for, never restated. The
+at-a-glance row uses `cloudAccountsGlance()`, and a section title naming a
+shard count uses `tursoDatabaseCount(account)` rather than a literal — three
+titles carried their own copy of a number this reference already held, which
+drifts the first time a shard is added. `tursoDatabaseCount` throws on an
+unknown account, so a renamed account fails loudly instead of rendering a
+silent zero.
+
 Arabic display labels (`serves`, Vercel login nicknames) live beside those lists in
 `src/features/super-admin/presentation/cloud-accounts-reference.ts`. Adding a Vercel
 or R2 account in a package without updating that file fails `npm run test:cloud-accounts`.

@@ -10,6 +10,7 @@ import { Cloud } from "lucide-react";
 
 import {
   cloudAccountsGlance,
+  tursoDatabaseCount,
   listR2CloudAccounts,
   listVercelCloudAccounts,
   TURSO_CLOUD_ACCOUNTS,
@@ -238,7 +239,7 @@ export function SuperAdminCloudAccountsContent() {
         نشرة للقراءة فقط تحمل <strong>فقط</strong> الشظايا التي تخدمها.
       </Note>
 
-      <SubTitle>hesham101 — 3 قواعد بيانات</SubTitle>
+      <SubTitle>hesham101 — {tursoDatabaseCount("hesham101")} قواعد بيانات</SubTitle>
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
@@ -295,7 +296,7 @@ export function SuperAdminCloudAccountsContent() {
         بروفايل الصيدليات.
       </Note>
 
-      <SubTitle>hesham104 — 9 شظايا طلبات</SubTitle>
+      <SubTitle>hesham104 — {tursoDatabaseCount("hesham104")} شظايا طلبات</SubTitle>
       <Note>
         <span dir="ltr">orders-core</span> ·{" "}
         <span dir="ltr">orders-items</span> ·{" "}
@@ -308,7 +309,7 @@ export function SuperAdminCloudAccountsContent() {
         <span dir="ltr">orders-disputes-audit</span>.
       </Note>
 
-      <SubTitle>hesham105 — 7 شظايا بروفايل</SubTitle>
+      <SubTitle>hesham105 — {tursoDatabaseCount("hesham105")} شظايا بروفايل</SubTitle>
       <Note>
         <span dir="ltr">profile-core</span> ·{" "}
         <span dir="ltr">profile-contact</span> ·{" "}
