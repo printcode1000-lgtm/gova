@@ -1,17 +1,19 @@
 import { SUB2MAIN_DECLARATION } from '@asol/account-declarations/sub2main';
 import * as serverEnv from '@/core/config/server-env';
 import { categoryService } from '@/features/categories';
-import { pharmacyProfileCatalogService } from '@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server';
-import { productService } from '@/features/product/services/product-service.server';
-import { profileService } from '@/features/profile/services/profile-service.bootstrap.server';
-import { imageStorageService } from '@/features/storage/services/image-storage-service.bootstrap.server';
-import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
-import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/data-core-specialty-catalog-port';
+import { pharmacyProfileCatalogService } from '@/features/pharmacy-profile-catalog/server';
+import { productService } from '@/features/product/server';
+import { profileService } from '@/features/profile/server';
+import { imageStorageService } from '@/features/storage/server';
+import {
+  registerDataCoreRuntimeConfigPorts,
+  registerDataCoreSpecialtyCatalogPort,
+} from '@/features/data/server';
 
 export type {
   CreateProductInput,
   UpdateProductInput,
-} from '@/features/product/domain/product.entity';
+} from '@/features/product';
 
 export interface Sub2mainRuntimeConfig {
   env?: NodeJS.ProcessEnv;
