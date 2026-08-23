@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T22:44:30.870Z",
+  "generatedAt": "2026-08-23T06:21:15.253Z",
   "entryPoints": [
     "features/product-search/services/product-search-service.server.ts",
     "features/product-search/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 370,
+  "fileCount": 373,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -312,6 +312,7 @@
     "src/app/api/orders/from-cart/route.ts",
     "src/app/api/orders/order-api-helpers.ts",
     "src/core/api/api-response.ts",
+    "src/core/api/asol-http-transport.ts",
     "src/core/api/business-api-error-codes.ts",
     "src/core/api/expected-business-error-codes.ts",
     "src/core/api/traced-route.ts",
@@ -342,6 +343,8 @@
     "src/features/categories/infrastructure/catalog-data.loader.ts",
     "src/features/categories/services/category.service.ts",
     "src/features/categories/types/public-api.ts",
+    "src/features/data/data-core-runtime-config-ports.ts",
+    "src/features/data/data-core-specialty-catalog-port.ts",
     "src/features/notifications/domain/notification-error.ts",
     "src/features/notifications/domain/notification-grant-envelope.ts",
     "src/features/notifications/server.ts",

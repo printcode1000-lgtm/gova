@@ -3,11 +3,27 @@ import * as serverEnv from '@/core/config/server-env';
 import * as marketplaceOrders from '@asol/data-core/marketplace-orders';
 import { actorFromInput, configureOrdersCore } from '@asol/orders-core';
 import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
+import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
 
 export interface OrdersRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */
   env?: NodeJS.ProcessEnv;
 }
+
+/**
+ * Register `@asol/data-core`'s runtime-config port.
+ *
+ * The main application does this from `src/instrumentation.ts`. An isolated
+ * deployment has no instrumentation, so nothing configured the port here and
+ * every route that reached a repository answered
+ * `dataCoreRuntimeConfig: getServerRuntimeContext is not configured` — a 500 on
+ * this account's real traffic while `/api/health` stayed 200, because health
+ * touches no shard. The service deployed READY and was broken.
+ *
+ * It calls the application's single registrar rather than restating the port
+ * here, so the six accounts and the main app cannot drift apart.
+ */
+registerDataCoreRuntimeConfigPorts();
 
 /**
  * Order reads. This account holds the nine order shards and nothing else.

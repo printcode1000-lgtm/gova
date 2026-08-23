@@ -9,6 +9,7 @@ import {
 } from '@asol/data-core/notifications';
 import { NOTIFICATIONS_DECLARATION } from '@asol/account-declarations/notifications';
 import * as serverEnv from '@/core/config/server-env';
+import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
 import {
   deliverNotificationGrants,
   readGrantsFromRequestBody,
@@ -107,6 +108,21 @@ function wireNotificationsCoreServerConfig(): void {
 }
 
 wireNotificationsCoreServerConfig();
+
+/**
+ * Register `@asol/data-core`'s runtime-config port.
+ *
+ * The main application does this from `src/instrumentation.ts`. An isolated
+ * deployment has no instrumentation, so nothing configured the port here and
+ * every route that reached a repository answered
+ * `dataCoreRuntimeConfig: getServerRuntimeContext is not configured` — a 500 on
+ * this account's real traffic while `/api/health` stayed 200, because health
+ * touches no shard. The service deployed READY and was broken.
+ *
+ * It calls the application's single registrar rather than restating the port
+ * here, so the six accounts and the main app cannot drift apart.
+ */
+registerDataCoreRuntimeConfigPorts();
 
 export function createNotificationsRuntime(
   _config?: NotificationsRuntimeConfig,

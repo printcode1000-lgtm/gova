@@ -1,60 +1,21 @@
-import { configureDataCoreRuntimeConfig } from '@asol/data-core/runtime-config';
 import { configureDataCoreProductSearchFields } from '@asol/data-core/product-search-fields';
-import { asolHttpFetch } from '@/core/api/asol-http-transport';
-import { isDevelopment } from '@/core/config';
-import {
-  getServerRuntimeContext,
-  isDevRuntime,
-  isProvisioningContext,
-} from '@/core/config/runtime-context.server';
-import {
-  getTursoAdvertisementsRuntimeCredentials,
-  getTursoNotificationsRuntimeCredentials,
-  getTursoPlatformCredentials,
-  getTursoProductRuntimeCredentials,
-  getTursoRuntimeCredentials,
-  listLibsqlDatabaseUrlKeys,
-  readOptionalEnv,
-  writeTursoAdvertisementsRuntimeCredentials,
-  writeTursoProductRuntimeCredentials,
-  writeTursoRuntimeCredentials,
-} from '@/core/config/server-env.values';
-import { categoryService } from '@/features/categories';
 import {
   getDefaultProductSearchFieldKeys,
   getProductSearchFieldByKey,
   getProductSearchFields,
 } from '@/features/product-search/config/product-search-fields';
-import type {
-  DoctorAppointmentItem,
-  SpecialtyColumnItem,
-} from '@asol/data-core/runtime-config';
+import { registerDataCoreRuntimeConfigPorts } from './data-core-runtime-config-ports';
+import { registerDataCoreSpecialtyCatalogPort } from './data-core-specialty-catalog-port';
 
-/** Registers runtime config into `@asol/data-core` (server). */
+/**
+ * Everything `@asol/data-core` needs in the main application.
+ *
+ * The runtime config is shared with the isolated accounts and lives in its own
+ * module; product-search field metadata is registered only where search runs.
+ */
 export function registerDataCorePorts(): void {
-  configureDataCoreRuntimeConfig({
-    isDevelopment,
-    isDevRuntime,
-    isProvisioningContext,
-    getServerRuntimeContext: () => getServerRuntimeContext(),
-    getTursoRuntimeCredentials,
-    getTursoProductRuntimeCredentials,
-    getTursoNotificationsRuntimeCredentials,
-    getTursoAdvertisementsRuntimeCredentials,
-    getTursoPlatformCredentials,
-    writeTursoRuntimeCredentials,
-    writeTursoProductRuntimeCredentials,
-    writeTursoAdvertisementsRuntimeCredentials,
-    readOptionalEnv,
-    listLibsqlDatabaseUrlKeys,
-    asolHttpFetch,
-    categoryCatalog: {
-      getSpecialtyColumnItems: () =>
-        categoryService.getSpecialtyColumnItems() as unknown as readonly SpecialtyColumnItem[],
-      getDoctorAppointmentItems: () =>
-        categoryService.getDoctorAppointmentItems() as unknown as readonly DoctorAppointmentItem[],
-    },
-  });
+  registerDataCoreRuntimeConfigPorts();
+  registerDataCoreSpecialtyCatalogPort();
   configureDataCoreProductSearchFields({
     getProductSearchFields,
     getProductSearchFieldByKey,
