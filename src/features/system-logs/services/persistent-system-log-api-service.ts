@@ -3,7 +3,7 @@ import type {
   PersistentSystemLogEntry,
   PersistentSystemLogInput,
   PersistentSystemLogListOptions,
-} from "../entities/persistent-system-log.entity";
+} from "../domain/persistent-system-log.entity";
 import type { SystemLogListPage, SystemLogSummary } from "@asol/system-logs-core";
 
 function notifySystemLogsChanged() {

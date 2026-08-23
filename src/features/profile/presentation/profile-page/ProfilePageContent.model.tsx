@@ -1,7 +1,7 @@
 "use client";
 
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import { usePageSnapshot } from "@/features/page-snapshot";
 import { useProfilePublicContacts } from "@/features/profile/hooks/use-profile-public-contacts";
 import { useProfilePublicFulfillmentSettings } from "@/features/profile/hooks/use-profile-public-fulfillment-settings";
@@ -9,9 +9,9 @@ import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-stor
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import {
 type SellerDiscountsController
-} from "@/features/seller-discounts";
+} from "@/features/seller-discounts/ui";
 import type { PublicProfileShareRecord } from "@/features/sharing";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 import {
 LogIn
 } from "lucide-react";
@@ -32,9 +32,9 @@ StoreDetailsController,
 } from "../profile-save-controller";
 import { useProfileNavigation } from "../use-profile-navigation";
 import { useProfileSave } from "../use-profile-save";
-import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
-import { usePageSaveOperations } from "@/features/page-save/hooks/use-page-save-operations";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
+import { usePageSaveRegistration } from "@/features/page-save/ui";
+import { usePageSaveOperations } from "@/features/page-save/ui";
+import { buildPageSaveOperationDescription } from "@/features/page-save";
 import { useProfileShowcaseModel } from "./ProfilePageContent.showcase-model";
 
 export function useProfilePageContentModel({

@@ -2,9 +2,9 @@
 
 import { LogOut } from 'lucide-react';
 
-import { BOTTOM_NAV_CLEARANCE } from '@/components/layouts/bottom-nav-layout';
+import { BOTTOM_NAV_CLEARANCE } from '@/shared/layouts/bottom-nav-layout';
 import { useMobileBackButton } from '@/features/navigation/hooks/use-mobile-back-button';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation } from '@/shared/i18n';
 
 export function MobileBackButtonController() {
   const { showExitHint } = useMobileBackButton();

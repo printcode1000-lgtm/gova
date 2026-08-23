@@ -23,7 +23,6 @@ import path from 'path';
 const APP_SRC = path.join(process.cwd(), 'src');
 const SEAM = '@/core/composition/browser-ports';
 const SEAM_CALL = /registerBrowserPorts\(\s*\)/;
-const OTA_SEAM = 'src/features/ota/ota-core-ports.ts';
 
 /** Runtime symbols whose behaviour depends on a registered port. */
 const RUNTIME_SYMBOLS = ['useOtaUpdate', 'otaUpdateService', 'otaRevocationService'];
@@ -86,7 +85,11 @@ export async function runPortRegistrationTests(): Promise<void> {
     path.join(process.cwd(), 'src/core/composition/browser-ports.ts'),
     'utf8',
   );
-  if (!/registerOtaCorePorts\(\s*\)/.test(rootSource) || !rootSource.includes(OTA_SEAM.replace('src/', '@/').replace('.ts', ''))) {
+  const importsOtaPorts =
+    rootSource.includes('@/features/ota/ota-core-ports') ||
+    /from\s+['"]@\/features\/ota['"]/.test(rootSource) ||
+    /from\s+['"]@\/features\/ota\/index['"]/.test(rootSource);
+  if (!/registerOtaCorePorts\(\s*\)/.test(rootSource) || !importsOtaPorts) {
     throw new Error(
       'ota-core port registration: the browser composition root no longer calls ' +
         'registerOtaCorePorts(). Every consumer would still pass this check while the ports ' +

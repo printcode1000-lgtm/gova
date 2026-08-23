@@ -2,13 +2,13 @@ import { asolApi, ASOL_API_ROUTES } from '@/core/api';
 import { publicEnv } from '@/core/config/public-env';
 import { categoryService } from '@/features/categories';
 import { configureOtaCore } from "@asol/ota-core";
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
-import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
+import { isSuperAdminIdentity } from "@/features/auth";
+import { persistentSystemLogApiService } from "@/features/system-logs";
 import {
   reportPreAuthFailure,
   type PreAuthFailureContext,
 } from "@/features/system-logs/pre-auth-failure-reporter";
-import type { PersistentSystemLogInput } from "@/features/system-logs/entities/persistent-system-log.entity";
+import type { PersistentSystemLogInput } from "@/features/system-logs";
 
 /**
  * Wires the application into `@asol/ota-core`'s ports.

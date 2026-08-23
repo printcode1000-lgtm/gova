@@ -10,7 +10,7 @@ import {
   categoryTileImageClassName,
   categoryTileTitleClassName,
 } from "@/features/categories/presentation/category-grid-styles";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 import {
   CATEGORY_CONSTANTS,
   type CategoryDisplay,

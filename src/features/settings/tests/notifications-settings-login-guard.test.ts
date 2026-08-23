@@ -9,7 +9,7 @@ function source(relativePath: string): string {
 const page = source(
   'src/features/settings/presentation/NotificationsSettingsPageContent.tsx',
 );
-const dialog = source('src/features/auth/components/LoginRequiredDialog.tsx');
+const dialog = source('src/features/auth/presentation/LoginRequiredDialog.tsx');
 
 assert.match(page, /LoginRequiredDialog/);
 assert.match(page, /!isLoggedIn/);

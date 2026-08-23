@@ -10,7 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -18,8 +18,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { useTranslation } from "@/lib/i18n";
+} from "@/shared/ui/dialog";
+import { useTranslation } from "@/shared/i18n";
 import type { NotificationPromptAction } from "../application/notification-permission-prompt-policy";
 
 interface NotificationPermissionPromptProps {

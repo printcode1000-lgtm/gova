@@ -14,19 +14,19 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FeaturedMarquee } from "@/components/ui/FeaturedMarquee";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FeaturedMarquee } from "@/features/advertisements/ui";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
 import {
   FEATURED_MARQUEE_CACHE_KEY,
   type FeaturedMarqueeRecord,
 } from "@asol/featured-marquee-core";
-import { featuredMarqueeApiService } from "@/features/advertisements/services/featured-marquee-api-service";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import type { ProductRecord } from "@/features/product/entities/product.entity";
-import { productApiService } from "@/features/product/services/product-api-service";
+import { featuredMarqueeApiService } from "@/features/advertisements";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
+import type { ProductRecord } from "@/features/product";
+import { productApiService } from "@/features/product/ui";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 

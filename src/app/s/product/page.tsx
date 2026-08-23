@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { ProductPageContent } from "@/features/product/presentation/ProductPageContent";
+import { ProductPageContent } from "@/features/product/ui";
 import {
   loadPublicProductShareRecord,
   productShareMetadata,

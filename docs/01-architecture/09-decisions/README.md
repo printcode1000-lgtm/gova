@@ -18,6 +18,7 @@ Decisions affecting sealed packages, enforcement, branching, and application str
 | [ADR-0004](./ADR-0004-ui-capability-packages-2026-08.md) | UI-adjacent capability packages | Accepted |
 | [ADR-0005](./ADR-0005-sealed-package-model.md) | Sealed package model and nine rules | Accepted |
 | [ADR-0006](./ADR-0006-main-only-branch.md) | main is the only branch | Accepted |
+| [ADR-0007](./ADR-0007-application-feature-consolidation.md) | Application feature consolidation under `src/features` | Accepted |
 
 ## Historical source
 

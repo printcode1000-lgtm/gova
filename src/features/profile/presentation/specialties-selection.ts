@@ -3,7 +3,7 @@ import {
   CATEGORY_CONSTANTS,
   type CategoryDisplay,
 } from "@/features/categories";
-import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
+import type { ProfileSpecialtiesSelection } from "@/features/profile/domain/profile-specialties.entity";
 
 export const MEDICAL_SERVICES_CATEGORY_ID =
   CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID;

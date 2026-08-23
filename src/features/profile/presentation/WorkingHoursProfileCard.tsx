@@ -2,11 +2,11 @@
 
 import * as React from "react";
 
-import { WorkingHoursCard } from "@/components/ui/working-hours";
+import { WorkingHoursCard } from "@/features/profile-working-hours/ui";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
-import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
+import type { StoreDetailsData } from "@/features/profile/domain/store-details.entity";
 import { normalizeProfileWorkingHours } from "@/features/profile-working-hours";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 import type {
   ProfileSectionStatus,
   StoreDetailsController,

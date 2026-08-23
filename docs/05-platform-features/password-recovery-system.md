@@ -75,7 +75,7 @@ npm run db:schema:sync
 - `src/features/password-recovery/services/password-recovery-service.server.ts`: Flow logic and security rules.
 - `src/features/password-recovery/services/password-recovery-email-service.server.ts`: Gmail dispatch service.
 - `packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts`: Challenge storage repository.
-- `src/features/password-recovery/components/PasswordRecoveryPageContent.tsx`: Multi-step UI component.
+- `src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx`: Multi-step UI component.
 - `src/app/api/auth/password-recovery/*`: API routes.
 - `packages/data-core/src/core/database/migrations/0004_breezy_cammi.sql`: Database migration file.
 

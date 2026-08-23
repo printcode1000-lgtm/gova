@@ -1,5 +1,5 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
-import { imageStorageService } from '@/features/storage/services/image-storage-service.bootstrap.server';
+import { imageStorageService } from '@/features/storage/server';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function DELETE(

@@ -13,14 +13,14 @@ import {
   Loader2,
   MessageCircle,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 import {
   NotificationCategories,
   NotificationPriorities,
 } from "@asol/notifications-core";
 import type { NotificationEntity } from "@asol/notifications-core";
 import { useNotifications } from "./hooks/use-notifications";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 import {
   buildActivityGroups,
   buildLocalChatConversations,

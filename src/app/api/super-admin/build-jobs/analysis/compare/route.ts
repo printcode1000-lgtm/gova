@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
-import { assertGooglePlayConsoleAllowed } from "@/modules/google-play-console/domain/development-guard.server";
+import { assertSuperAdminRequest } from "@/features/super-admin/server";
+import { assertGooglePlayConsoleAllowed } from "@/features/google-play-console/server";
 import { compareCachedBundleAnalyses } from "@asol/release-core/console-artifacts";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 

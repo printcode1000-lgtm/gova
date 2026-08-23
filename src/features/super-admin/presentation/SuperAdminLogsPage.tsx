@@ -19,10 +19,10 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { NativeCore } from "@asol/native-core";
-import { Button } from "@/components/ui/button";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
+import { Button } from "@/shared/ui/button";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
+import { usePageSaveOperationScope } from "@/features/page-save/ui";
 import {
   clearAllSystemLogs,
   clearSystemLogs,
@@ -33,10 +33,10 @@ import {
   type SystemLogEntry,
   type SystemLogLevel,
 } from "@/features/system-logs/system-log-store";
-import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
-import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
+import type { PersistentSystemLogEntry } from "@/features/system-logs";
+import { persistentSystemLogApiService } from "@/features/system-logs";
 import { redactSystemLogText } from "@asol/system-logs-core";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 
 import { sections, formatForCopy, formatEntryForCopy } from "./logs/SuperAdminLogsPage.log-formatters";
 import { CloudErrorsContainer } from "./logs/SuperAdminLogsPage.cloud-errors";

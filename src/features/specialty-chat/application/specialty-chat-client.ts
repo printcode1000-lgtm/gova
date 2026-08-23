@@ -1,8 +1,8 @@
 "use client";
 
 import { asolApi } from "@/core/api/asol-api-client";
-import type { UserSession } from "@/features/auth/entities/session.entity";
-import { sessionService } from "@/features/auth/services/session-service";
+import type { UserSession } from "@/features/auth";
+import { sessionService } from "@/features/auth/ui";
 import {
   notifications,
   NotificationCategories,

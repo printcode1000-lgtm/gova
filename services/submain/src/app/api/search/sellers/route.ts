@@ -1,5 +1,5 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
-import { parseSellerSearchRequest } from '@/features/product-search/entities/product-search.request';
+import { parseSellerSearchRequest } from '@/features/product-search/domain/product-search.request';
 
 import { corsHeaders, preflight, searchErrorResponse } from '../../../lib/http';
 

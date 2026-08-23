@@ -1,5 +1,5 @@
 import { CATEGORY_CONSTANTS } from "@/features/categories";
-import type { ProductSearchField } from "../entities/product-search.types";
+import type { ProductSearchField } from "../domain/product-search.types";
 
 const BASIC_FIELDS: ProductSearchField[] = [
   { key: "name", column: "main_name", labelAr: "اسم المنتج", labelEn: "Product name", group: "basic", componentKey: "mainData", optionKey: "name" },

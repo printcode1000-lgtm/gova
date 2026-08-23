@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { PharmacyCatalogManagerPage } from "@/features/pharmacy-profile-catalog/components/PharmacyCatalogManagerPage";
+import { PharmacyCatalogManagerPage } from "@/features/pharmacy-profile-catalog/ui";
 
 export default function ProfilePharmacyCatalogPage() {
   return (

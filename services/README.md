@@ -12,8 +12,8 @@ shared between deployments except source that is mirrored explicitly.
 | products account | `gnagnahesham@gmail.com` | `asol-products` | [`services/products/`](./products) | that folder alone | `npm run products:deploy` (no GitHub connection) |
 | orders account | `tenderx10@gmail.com` | `asol-orders` | [`services/orders/`](./orders) | that folder alone | `npm run orders:deploy` (no GitHub connection) |
 | profiles account | `hesham10125@gmail.com` | `asol-profiles` | [`services/profiles/`](./profiles) | that folder alone | `npm run profiles:deploy` (no GitHub connection) |
-| *(none — runs in the browser)* | — | `src/modules/notification-bridge/` | ships inside the main app's client bundle | with the main app |
-| *(none — runs in the browser)* | — | `src/modules/service-bridge/` | ships inside the main app's client bundle | with the main app |
+| *(none — runs in the browser)* | — | `src/features/notification-bridge/` | ships inside the main app's client bundle | with the main app |
+| *(none — runs in the browser)* | — | `src/features/service-bridge/` | ships inside the main app's client bundle | with the main app |
 
 Each deployed module also owns its own Turso account: users and system operations
 on `hesham101`, notifications on `hesham102`, products on `hesham103`, orders on

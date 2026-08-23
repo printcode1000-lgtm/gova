@@ -58,12 +58,12 @@ Favorites are deliberately separate from the Follow System. A seller favorite is
 
 ## Files
 
-- `src/features/favorites/entities/favorite.entity.ts`
+- `src/features/favorites/domain/favorite.entity.ts`
 - `src/features/favorites/services/favorite-collection.ts`
 - `src/features/favorites/services/favorite-storage.ts`
 - `src/features/favorites/services/favorite-card-adapter.ts`
 - `src/features/favorites/hooks/FavoritesProvider.tsx`
-- `src/features/favorites/components/FavoriteButton.tsx`
+- `src/features/favorites/presentation/FavoriteButton.tsx`
 - `src/features/favorites/tests/favorites.test.ts`
 - `src/features/favorites/tests/favorites-local-storage-contract.test.ts`
 - `src/app/favorites/page.tsx`

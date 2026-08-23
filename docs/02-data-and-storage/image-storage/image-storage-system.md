@@ -68,7 +68,7 @@ in-memory queue and clears every image draft on Web, Android, and iOS.
 | **Client service**  | `packages/storage-image-manager-core/src/services/image-storage-service.ts` |
 | Draft persistence   | `packages/storage-image-manager-core/src/services/image-upload-draft-service.ts` |
 | API adapter         | `src/features/storage/services/image-storage-api-service.ts`    |
-| App wiring          | `src/features/storage/components/StorageImageManager.tsx` and service shims |
+| App wiring          | `src/features/storage/presentation/StorageImageManager.tsx` and service shims |
 | Hook                | `packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts` |
 | UI                  | `packages/storage-image-manager-core/src/components/StorageImageManager.tsx` |
 

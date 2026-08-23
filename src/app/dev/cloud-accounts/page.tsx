@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
-import { SuperAdminCloudAccountsPage } from "@/features/super-admin/presentation/SuperAdminCloudAccountsPage";
+import { SuperAdminCloudAccountsPage } from "@/features/super-admin/ui";
 
 /**
  * Always re-evaluate: account tables are derived from sealed package

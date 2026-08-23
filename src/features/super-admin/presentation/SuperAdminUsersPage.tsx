@@ -13,21 +13,21 @@ import {
 } from "lucide-react";
 
 import { asolApi } from "@/core/api/asol-api-client";
-import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { markPendingAuthLoginCompleted } from "@/features/auth/application/auth-lifecycle-events";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { sessionService } from "@/features/auth/services/session-service";
-import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
+import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { useSession } from "@/features/auth/ui";
+import { markPendingAuthLoginCompleted } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
+import { sessionService } from "@/features/auth/ui";
+import { clearImageUploadClientState } from "@/features/storage";
 import { notifications } from "@/features/notifications";
-import type { UserSession } from "@/features/auth/entities/session.entity";
+import type { UserSession } from "@/features/auth";
 import {
   asolDbDeleteSuperAdminOriginalSession,
   asolDbSetSuperAdminOriginalSession,
 } from "@asol/data-core/browser";
-import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
+import { usePageSaveOperationScope } from "@/features/page-save/ui";
 
 interface AdminUserResult {
   uid: string;

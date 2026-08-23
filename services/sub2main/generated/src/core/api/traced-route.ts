@@ -6,7 +6,7 @@ import {
   isErrorAlreadyLogged,
   markErrorAsLogged,
 } from '@asol/system-logs-core/server';
-import { logServerSystemIssue } from '@/features/system-logs/services/persistent-system-log-service.server';
+import { logServerSystemIssue } from '@/features/system-logs/server';
 
 /**
  * Generic over the response type rather than fixed to `NextResponse`.

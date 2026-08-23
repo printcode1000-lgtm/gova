@@ -9,7 +9,7 @@ backing up and restoring the cloud development state:
   no scope option and no prefix filtering: a backup is always complete.
 
 The UI is available at `/super-admin/dev-cloud-backup`. It remains under
-`src/modules/dev-cloud-backup`; one server wiring file supplies the Turso adapter and strict local
+`src/features/dev-cloud-backup`; one server wiring file supplies the Turso adapter and strict local
 runtime guard to the package.
 The presentation layer is split by responsibility: `DevCloudBackupPage.tsx` composes the screen,
 `use-dev-cloud-backup-page.ts` owns client state and API operations, and the saved-list/result/status

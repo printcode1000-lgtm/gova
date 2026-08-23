@@ -1,8 +1,8 @@
 "use client";
 
 import { Loader2, Send } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/shared/ui/input";
+import { Textarea } from "@/shared/ui/textarea";
 import type { RunAction } from "./OrderDetailsPageContent.navigation-summary";
 
 export function UnifiedDeliveryQuoteForm({

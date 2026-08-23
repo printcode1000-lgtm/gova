@@ -3,12 +3,12 @@
 import { configureObservabilityCore } from '@asol/observability-core';
 
 import { isDevelopment } from '@/core/config';
-import { registerOtaCorePorts } from '@/features/ota/ota-core-ports';
-import { registerAccountBridgePorts } from '@/features/account-bridge/account-bridge-ports';
-import { registerDataCoreBrowserPorts } from '@/features/data/data-core-browser-ports';
-import { registerPageSaveCorePorts } from '@/features/page-save/page-save-core-bootstrap';
-import { registerPageSnapshotCorePorts } from '@/features/page-snapshot/services/page-snapshot-service';
-import { registerSystemLogsCoreBrowserPorts } from '@/features/system-logs/system-logs-core-bootstrap';
+import { registerOtaCorePorts } from '@/features/ota';
+import { registerAccountBridgePorts } from '@/features/account-bridge';
+import { registerDataCoreBrowserPorts } from '@/features/data';
+import { registerPageSaveCorePorts } from '@/features/page-save';
+import { registerPageSnapshotCorePorts } from '@/features/page-snapshot';
+import { registerSystemLogsCoreBrowserPorts } from '@/features/system-logs';
 
 /**
  * The composition root for every browser-side port a sealed package names.

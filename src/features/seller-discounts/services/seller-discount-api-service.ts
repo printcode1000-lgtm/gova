@@ -5,7 +5,7 @@ import type {
   SaveSellerDiscountInput,
   SellerDiscountCartQuote,
   SellerDiscountRule,
-} from "../entities/seller-discount.entity";
+} from "../domain/seller-discount.entity";
 
 export class SellerDiscountApiService {
   async listSellerDiscounts(sellerUid: string, includeInactive = true) {

@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import type { SaveSellerDiscountInput } from "@/features/seller-discounts/entities/seller-discount.entity";
-import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
+import type { SaveSellerDiscountInput } from "@/features/seller-discounts";
+import { sellerDiscountService } from "@/features/seller-discounts/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {

@@ -27,6 +27,10 @@ import { checkIsolatedDeploymentBackendContract } from './checks/isolated-deploy
 import { checkRuntimeTargetContract } from './checks/runtime-target-contract';
 import { checkVendorOwnershipContract } from './checks/vendor-ownership-contract';
 import { checkPageSaveGatewayContract } from './checks/page-save-gateway-contract';
+import { checkApplicationFeatureRegistryContract } from './checks/application-features-contract';
+import { checkFeatureDoorContract } from './checks/feature-door-contract';
+import { checkFeatureApplicationDoorPurityContract } from './checks/feature-application-door-purity-contract';
+import { checkArchitectureDocsDriftContract } from './checks/architecture-docs-drift-contract';
 import { printReport, reportNativeSurface } from './checks/file-analysis';
 import { ROOT_VENDOR_OWNED_FILES } from './registry/capability-registry';
 
@@ -58,12 +62,16 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   }
 
   checkCapabilityOwnershipContract();
+  checkApplicationFeatureRegistryContract();
   checkPackageCycleContract();
   checkPageSaveGatewayContract();
   checkPageSaveWriteGatewayContract();
   checkRepositorySweepContract();
   checkIsolatedDeploymentBackendContract();
   checkRuntimeTargetContract();
+  checkFeatureDoorContract();
+  checkFeatureApplicationDoorPurityContract();
+  checkArchitectureDocsDriftContract();
 
   // Root files owned by a capability for vendor purposes (e.g. capacitor.config.ts).
   for (const rootFile of ROOT_VENDOR_OWNED_FILES) {

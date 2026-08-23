@@ -3,26 +3,26 @@
 import * as React from "react";
 import { Share2, UserCircle } from "lucide-react";
 
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 import { ASOL_API_ROUTES, asolApi } from "@/core/api";
-import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { usePageSaveRegistration } from "@/features/page-save/ui";
 import {
   PRODUCT_DEMO_DETAILS,
   PRODUCT_DEMO_IMAGES,
   ProductComponentsRenderer,
 } from "@/features/product/presentation/ProductComponentsRenderer";
-import type { ProductMode } from "@/features/product/presentation/product-component.types";
+import type { ProductMode } from "@/features/product/ui";
 import {
   createEmptyProductDetails,
   type ProductDetails,
-} from "@/features/product/entities/product.entity";
+} from "@/features/product";
 import {
   CATEGORY_CONSTANTS,
   categoryService,
@@ -31,23 +31,23 @@ import {
   type MainCategoryOption,
   type SubcategoryOption,
 } from "@/features/categories";
-import { ProductImagesStyleEditor } from "@/components/ui/images/ProductImagesStyleEditor";
-import { ProductRatingStyleEditor } from "@/components/ui/rating/ProductRatingStyleEditor";
-import { ProductPriceStyleEditor } from "@/components/ui/price/ProductPriceStyleEditor";
-import { ProductOrderStyleEditor } from "@/components/ui/order/ProductOrderStyleEditor";
-import { ProductMainDataStyleEditor } from "@/components/ui/main-data/ProductMainDataStyleEditor";
-import { ProductSpecificationsStyleEditor } from "@/components/ui/specifications/ProductSpecificationsStyleEditor";
-import { ProductVehicleSpecsStyleEditor } from "@/components/ui/vehicle-specs/ProductVehicleSpecsStyleEditor";
-import { ProductPropertySpecsStyleEditor } from "@/components/ui/property-specs/ProductPropertySpecsStyleEditor";
-import { ProductSearchColumnsStyleEditor } from "@/components/ui/search-columns/ProductSearchColumnsStyleEditor";
-import { ProductPharmacySpecsStyleEditor } from "@/features/pharmacy-profile-catalog/components/ProductPharmacySpecsStyleEditor";
+import { ProductImagesStyleEditor } from "@/features/product/ui";
+import { ProductRatingStyleEditor } from "@/features/product/ui";
+import { ProductPriceStyleEditor } from "@/features/product/ui";
+import { ProductOrderStyleEditor } from "@/features/product/ui";
+import { ProductMainDataStyleEditor } from "@/features/product/ui";
+import { ProductSpecificationsStyleEditor } from "@/features/product/ui";
+import { ProductVehicleSpecsStyleEditor } from "@/features/product/ui";
+import { ProductPropertySpecsStyleEditor } from "@/features/product/ui";
+import { ProductSearchColumnsStyleEditor } from "@/features/product/ui";
+import { ProductPharmacySpecsStyleEditor } from "@/features/pharmacy-profile-catalog/ui";
 import {
   createDefaultProductStyleComponents,
   normalizeProductStyleComponents,
   toProductStyleComponents,
   type ProductStyleSettings,
   type ProductStyleSettingsComponents,
-} from "@/components/ui/product-style-settings";
+} from "@/shared/ui/product-style-settings";
 import {
   SelectedRecordDetails,
   type DetailRecord,

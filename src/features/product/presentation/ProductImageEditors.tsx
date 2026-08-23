@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   StorageImageManager,
   type StorageImageManagerHandle,
-} from "@/features/storage/components/StorageImageManager";
+} from "@/features/storage/presentation/StorageImageManager";
 import {
   resolveProductStorageProfileId,
   type StoredImage,

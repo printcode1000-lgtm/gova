@@ -1,5 +1,5 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { accountDeletionService } from "@/features/auth/server/auth-core-bootstrap.server";
+import { accountDeletionService } from "@/features/auth/server";
 import type { DeleteAccountInput } from "@asol/auth-core";
 import { extractSessionToken } from "@asol/auth-core/server";
 

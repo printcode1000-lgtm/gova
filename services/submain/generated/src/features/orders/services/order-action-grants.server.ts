@@ -4,7 +4,7 @@ import {
   moneyVariablesByLocale,
   type NotificationGrantIssuer,
 } from "@/features/notifications/server";
-import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
+import { logServerSystemIssue } from "@/features/system-logs/server";
 import type { ActorRole } from "@asol/orders-core";
 import { excludeActorFromPartyUids } from "./order-party-helpers.server";
 

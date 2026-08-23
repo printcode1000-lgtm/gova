@@ -23,4 +23,9 @@ export type {
   PageSnapshotIdentity,
   PageSnapshotOptions,
   PageSnapshotRecord,
-} from './entities/page-snapshot.types';
+} from './domain/page-snapshot.types';
+
+/* BEGIN GENERATED FEATURE DOOR EXPORTS */
+/** Auto-maintained sealed-door re-exports. Do not edit by hand. */
+export * from './services/page-snapshot-service';
+/* END GENERATED FEATURE DOOR EXPORTS */

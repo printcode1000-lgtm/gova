@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import type { CartItem } from "@/features/cart/cart-store";
+import type { CartItem } from "@/features/cart/ui";
 import { sellerDiscountApiService } from "../services/seller-discount-api-service";
 import type {
   DiscountBuyerContext,
   SellerDiscountCartQuote,
-} from "../entities/seller-discount.entity";
+} from "../domain/seller-discount.entity";
 
 export function useCartDiscountQuote(
   items: CartItem[],

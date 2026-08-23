@@ -19,12 +19,12 @@ import {
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { Textarea } from "@/shared/ui/textarea";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import {
   notifications,
   getNotificationTestScenario,

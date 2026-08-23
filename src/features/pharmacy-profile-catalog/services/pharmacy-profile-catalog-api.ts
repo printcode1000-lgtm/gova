@@ -4,7 +4,7 @@ import { asolApi } from "@/core/api";
 import type {
   PharmacyOverrideStatus,
   PharmacyProfileCatalogView,
-} from "../entities/pharmacy-profile-catalog.types";
+} from "../domain/pharmacy-profile-catalog.types";
 
 const ROUTE = "/api/pharmacy-profile-catalog";
 

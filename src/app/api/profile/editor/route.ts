@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
-import type { SaveProfileEditorInput } from '@/features/profile/entities/profile-editor.entity';
-import { profileService } from '@/features/profile/services/profile-service.bootstrap.server';
+import type { SaveProfileEditorInput } from '@/features/profile';
+import { profileService } from '@/features/profile/server';
 import { extractSessionToken } from '@asol/auth-core/server';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 

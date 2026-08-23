@@ -3,9 +3,9 @@ import type {
   PersistentSystemLogLevel,
   PersistentSystemLogOrigin,
   PersistentSystemLogPlatform,
-} from "@/features/system-logs/entities/persistent-system-log.entity";
-import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
-import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
+} from "@/features/system-logs/domain/persistent-system-log.entity";
+import { persistentSystemLogService } from "@/features/system-logs/server";
+import { assertSuperAdminRequest } from "@/features/super-admin/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 function assertSuperAdmin(request: Request) {

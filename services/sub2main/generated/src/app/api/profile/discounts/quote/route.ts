@@ -2,8 +2,8 @@ import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import type {
   DiscountBuyerContext,
   DiscountCartItem,
-} from "@/features/seller-discounts/entities/seller-discount.entity";
-import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
+} from "@/features/seller-discounts/domain/seller-discount.entity";
+import { sellerDiscountService } from "@/features/seller-discounts/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function POST(request: Request) {

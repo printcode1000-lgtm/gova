@@ -1,9 +1,9 @@
 import { getCartTotalMinor, type CartItem } from "@/features/cart/cart-store";
-import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
+import { calculateSellerShipping } from "@/features/cart";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   type ProfileFulfillmentSettings,
-} from "@/features/profile/entities/profile-fulfillment-settings.entity";
+} from "@/features/profile/domain/profile-fulfillment-settings.entity";
 
 export function sellerIdsFromCartItems(items: CartItem[]) {
   return Array.from(new Set(items.map((item) => item.sellerId))).filter(Boolean);

@@ -10,14 +10,14 @@ number when changing anything here.
 
 ## What moved, and what did not
 
-The whole of `src/modules/data-access/` moved, with its directory structure preserved:
+The whole of `src/features/data-access/` moved, with its directory structure preserved:
 
 ```text
-src/modules/data-access/core        -> packages/data-core/src/core
-src/modules/data-access/domains     -> packages/data-core/src/domains
-src/modules/data-access/browser     -> packages/data-core/src/browser
-src/modules/data-access/provisioning-> packages/data-core/src/provisioning
-src/modules/data-access/tooling     -> packages/data-core/src/tooling
+src/features/data-access/core        -> packages/data-core/src/core
+src/features/data-access/domains     -> packages/data-core/src/domains
+src/features/data-access/browser     -> packages/data-core/src/browser
+src/features/data-access/provisioning-> packages/data-core/src/provisioning
+src/features/data-access/tooling     -> packages/data-core/src/tooling
 ```
 
 **Turso accounts did not move, and nothing about them changed.** Shard resolution still yields

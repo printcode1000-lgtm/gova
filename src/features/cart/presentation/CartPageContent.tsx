@@ -22,10 +22,10 @@ import {
   updateCartItemQuantity,
 } from "@/features/cart/cart-store";
 import { useCart } from "@/features/cart/use-cart";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { useTranslation } from "@/lib/i18n";
+import { useSession } from "@/features/auth/ui";
+import { useTranslation } from "@/shared/i18n";
 import { notifications } from "@/features/notifications";
-import { useCartDiscountQuote } from "@/features/seller-discounts";
+import { useCartDiscountQuote } from "@/features/seller-discounts/ui";
 import { formatMoney, orderErrorMessage } from "./cart-page-format";
 import { cartPageCopy } from "./cart-page-copy";
 import { buildCartSellerGroups, sellerIdsFromCartItems } from "./cart-seller-groups";

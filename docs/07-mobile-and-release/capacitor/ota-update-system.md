@@ -57,7 +57,7 @@ version that dipped would answer an old shell with "you are up to date"
 instead of routing it to the native-version gate, and that shell would never
 be told to update again.
 
-`src/modules/release-commands/domain/content-version.ts` holds the rules;
+`src/features/release-commands/domain/content-version.ts` holds the rules;
 `assertContentVersionAdvances` refuses any version that fails to outrank the
 one it replaces, and names the way out: raise the Android version first. The
 rules live in the domain rather than in `scripts/` because the release console
@@ -1290,7 +1290,7 @@ change alter something compiled into the store binary?".
 | --------------------------------------------------------------------- | -------------- |
 | Any page, route, component, layout, or style                          | OTA            |
 | Business logic, hooks, client services, validation                    | OTA            |
-| `src/locales/*`, theme, RTL/LTR                                       | OTA            |
+| `src/shared/locales/*`, theme, RTL/LTR                                       | OTA            |
 | Notification content, category, routing, dedupe, persistence, badge   | OTA            |
 | Creating or updating Android notification channels at runtime         | OTA            |
 | Calling camera, location, speech, share, or barcode from a new screen | OTA            |

@@ -10,7 +10,7 @@ import {
 import { createAsolDbPersister } from '@asol/data-core/browser';
 import { attachQueryObserver, registerMonitorTelemetry } from '@asol/observability-core';
 import { publicEnv } from '@/core/config/public-env';
-import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { reportPreAuthFailure } from '@/features/system-logs';
 
 /** 24 hours in milliseconds */
 const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24;

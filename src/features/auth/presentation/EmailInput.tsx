@@ -3,8 +3,8 @@
 import { ChevronDown } from 'lucide-react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+import { useTranslation } from '@/shared/i18n';
+import { cn } from '@/shared/utils';
 import type { RegistrationFormData } from '@asol/auth-core';
 
 export function EmailInput() {

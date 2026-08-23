@@ -7,10 +7,10 @@ import { ProfileRegistrationInfoCard } from "@/features/profile/presentation/Pro
 import { SpecialtiesCard } from "@/features/profile/presentation/SpecialtiesCard";
 import { StoreIdentityCard } from "@/features/profile/presentation/StoreIdentityCard";
 import { WorkingHoursProfileCard } from "@/features/profile/presentation/WorkingHoursProfileCard";
-import { Card,CardContent } from "@/components/ui/card";
+import { Card,CardContent } from "@/shared/ui/card";
 import {
 SellerDiscountsManager
-} from "@/features/seller-discounts";
+} from "@/features/seller-discounts/ui";
 import {
 faBuilding,
 faClock,

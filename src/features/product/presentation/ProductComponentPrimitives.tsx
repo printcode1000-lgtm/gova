@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 import type { ProductMode } from "./product-component.types";
 import {
   Select,
@@ -9,7 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 
 export function ProductComponentFrame({
   title,

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Rules for presentation components and pages under `src/components/`, `src/app/`, and feature presentation folders.
+Rules for presentation components and pages under `src/shared/`, `src/app/`, and feature presentation folders.
 
 ## Scope
 

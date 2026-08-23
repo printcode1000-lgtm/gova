@@ -5,7 +5,7 @@ import type {
   ReviewSort,
   SaveReviewInput,
   UpdateReviewInput,
-} from "../entities/product-review.entity";
+} from "../domain/product-review.entity";
 
 export const productReviewApiService = {
   list(

@@ -1,8 +1,8 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
 import { isDevelopment } from "@/core/config";
-import type { CatalogStudioImageRoot } from "@/features/catalog-studio/domain/catalog-studio.types";
-import { catalogStudioService } from "@/features/catalog-studio/services/catalog-studio.service.server";
-import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
+import type { CatalogStudioImageRoot } from "@/features/catalog-studio";
+import { catalogStudioService } from "@/features/catalog-studio/server";
+import { assertSuperAdminRequest } from "@/features/super-admin/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

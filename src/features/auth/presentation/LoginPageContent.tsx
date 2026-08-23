@@ -17,9 +17,9 @@ import { Controller, FormProvider } from 'react-hook-form';
 
 import { AuthHero } from '@/features/auth/presentation/AuthHero';
 import { AuthMobileBrand } from '@/features/auth/presentation/AuthMobileBrand';
-import { useGuestSession } from '@/hooks/use-guest-session';
-import { useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
+import { useTranslation } from '@/shared/i18n';
+import { cn } from '@/shared/utils';
 
 import { useLogin } from '@/features/auth/hooks/use-login';
 

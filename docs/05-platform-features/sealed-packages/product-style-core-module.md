@@ -17,11 +17,11 @@ configuration (component visibility, order, and search columns) used by
 
 | Old location | Replacement |
 | :--- | :--- |
-| `src/components/ui/product-style-settings/*` | `@asol/product-style-core` |
+| `src/shared/ui/product-style-settings/*` | `@asol/product-style-core` |
 | Validation + filesystem logic in `api/dev/product-style/route.ts` | `@asol/product-style-core/server` |
 | Duplicate search-column defaults in `product-search-fields.server.ts` | `filterSearchFieldsByStyle` |
 
-`src/components/ui/product-style-settings.ts` remains a thin re-export shim.
+`src/shared/ui/product-style-settings.ts` remains a thin re-export shim.
 
 ## App integration
 

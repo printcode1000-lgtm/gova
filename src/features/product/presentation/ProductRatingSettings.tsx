@@ -1,6 +1,6 @@
 "use client";
 
-import type { ProductRatingData } from "@/features/product/entities/product.entity";
+import type { ProductRatingData } from "@/features/product";
 
 export function ProductRatingSettings({
   rating,

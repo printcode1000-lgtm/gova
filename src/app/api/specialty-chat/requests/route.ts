@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { specialtyChatService } from "@/features/specialty-chat/services/specialty-chat-service.server";
-import type { SendSpecialtyRequestInput } from "@/features/specialty-chat/domain/types";
+import { specialtyChatService } from "@/features/specialty-chat/server";
+import type { SendSpecialtyRequestInput } from "@/features/specialty-chat";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function POST(request: Request) {

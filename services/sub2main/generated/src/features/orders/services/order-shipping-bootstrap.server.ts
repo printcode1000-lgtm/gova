@@ -1,7 +1,7 @@
 import "server-only";
 
-import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { calculateSellerShipping } from "@/features/cart";
+import { profileService } from "@/features/profile/server";
 import type { MarketplaceOrderService } from "@asol/data-core/marketplace-orders";
 import type { Actor } from "@asol/orders-core";
 

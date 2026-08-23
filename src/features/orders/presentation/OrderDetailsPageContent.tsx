@@ -21,10 +21,10 @@ import {
 } from "lucide-react";
 import { asolApi } from "@/core/api/asol-api-client";
 import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { Input } from "@/shared/ui/input";
+import { Textarea } from "@/shared/ui/textarea";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import { OrderActionButton } from "./OrderActionButton";
 import { OrderAuditTrail } from "./OrderAuditTrail";
 import {
@@ -42,7 +42,7 @@ import {
 import type { DbRow, OrderDetails, OrderRole } from "./order-types";
 
 import { RunAction, text, BackToOrders, OrderSummary } from "./order-details/OrderDetailsPageContent.navigation-summary";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 import { UnifiedDeliveryPlanPanel } from "./order-details/OrderDetailsPageContent.delivery-plan";
 import { SellerOrderCard } from "./order-details/OrderDetailsPageContent.seller-orders";
 import { OrderLevelActions, ShipmentsPanel } from "./order-details/OrderDetailsPageContent.shipments";

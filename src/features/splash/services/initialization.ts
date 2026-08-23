@@ -1,4 +1,4 @@
-import { SplashData, InitializationProgress } from '@/features/splash/entities/splash.types';
+import { SplashData, InitializationProgress } from '@/features/splash/domain/splash.types';
 
 import { getRandomCategories, getRandomSubcategories } from './splash-selection';
 

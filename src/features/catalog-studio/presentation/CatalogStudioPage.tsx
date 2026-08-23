@@ -32,13 +32,13 @@ import {
   Upload,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import { Button } from "@/shared/ui/button";
+import { Switch } from "@/shared/ui/switch";
 import { asolApi } from "@/core/api";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import { isNativePlatform } from '@asol/native-core';
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 
 import {
   CATALOG_STUDIO_API,

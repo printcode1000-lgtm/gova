@@ -5,7 +5,7 @@ import type {
   ProductSearchResult,
   SellerSearchRequest,
   SellerSearchResult,
-} from "../entities/product-search.types";
+} from "../domain/product-search.types";
 
 function productQuery(input: ProductSearchRequest) {
   const q = new URLSearchParams({

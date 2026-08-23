@@ -18,10 +18,10 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import { NativeCore } from "@asol/native-core";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import {
   clearAllSystemLogs,
   clearSystemLogs,
@@ -32,8 +32,8 @@ import {
   type SystemLogEntry,
   type SystemLogLevel,
 } from "@/features/system-logs/system-log-store";
-import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
-import { cn } from "@/lib/utils";
+import type { PersistentSystemLogEntry } from "@/features/system-logs";
+import { cn } from "@/shared/utils";
 import { redactSystemLogText } from "@asol/system-logs-core";
 import { cloudSource, formatCloudEntryForCopy } from "./SuperAdminLogsPage.log-formatters";
 

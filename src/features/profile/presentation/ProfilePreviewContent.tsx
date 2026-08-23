@@ -11,38 +11,38 @@ import {
   faPaperPlane,
   faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
-import { ContactActionBar } from "@/components/ui/contact-action-bar";
+import { ContactActionBar } from "@/shared/ui/contact-action-bar";
 import {
   ACTION_TILE_CLASS,
   ACTION_TILE_LABEL_CLASS,
   ACTION_TILE_STYLE,
   Button,
-} from "@/components/ui/button";
+} from "@/shared/ui/button";
 import {
   FeaturedMarquee,
   type FeaturedMarqueeConfig,
-} from "@/components/ui/FeaturedMarquee";
-import { FollowButton } from "@/components/ui/follow";
-import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
+} from "@/features/advertisements/presentation/FeaturedMarquee";
+import { FollowButton } from "@/features/follow/ui";
+import { HeroSlider, type HeroSliderConfig } from "@/features/advertisements/ui";
 import {
   TrendingRibbon,
   type TrendingRibbonConfig,
-} from "@/components/ui/TrendingRibbon";
-import { WorkingHoursCard } from "@/components/ui/working-hours";
-import { ProductReviews } from "@/features/product/presentation/ProductReviews";
-import { SellerDiscountsPreview } from "@/features/seller-discounts";
-import type { UserSession } from "@/features/auth/entities/session.entity";
-import type { ProfileContactsData } from "@/features/profile/entities/profile-contacts.entity";
-import type { ProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
-import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
-import type { StoreImagesData } from "@/features/profile/entities/store-images.entity";
+} from "@/features/advertisements/presentation/TrendingRibbon";
+import { WorkingHoursCard } from "@/features/profile-working-hours/ui";
+import { ProductReviews } from "@/features/product/ui";
+import { SellerDiscountsPreview } from "@/features/seller-discounts/ui";
+import type { UserSession } from "@/features/auth";
+import type { ProfileContactsData } from "@/features/profile/domain/profile-contacts.entity";
+import type { ProfileFulfillmentSettings } from "@/features/profile/domain/profile-fulfillment-settings.entity";
+import type { StoreDetailsData } from "@/features/profile/domain/store-details.entity";
+import type { StoreImagesData } from "@/features/profile/domain/store-images.entity";
 import { usePageSnapshot, useSnapshotState } from "@/features/page-snapshot";
 import { specialtyChatClient } from "@/features/specialty-chat";
 import {
   buildProfileShareUrl,
   ShareMenu,
 } from "@/features/sharing";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 import { ProfileProductsPreview } from "./ProfileProductsPreview";
 import { ProfileFulfillmentPreviewCard } from "./ProfilePreviewInformation";
 import { ProfilePreviewSectionHeading } from "./ProfilePreviewSectionHeading";

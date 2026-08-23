@@ -1,6 +1,6 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
 import type { TrendingRibbonConfig } from "@asol/trending-ribbon-core";
-import { featuredTrendingRibbonService } from "@/features/advertisements/services/trending-ribbon-service.server";
+import { featuredTrendingRibbonService } from "@/features/advertisements/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {

@@ -49,9 +49,9 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/instrumentation.ts',
   // The release console resolves its own Play credentials; the other two developer modules read
   // nothing themselves any more — they ask `src/core/config/development-guard.server.ts`.
-  'src/modules/google-play-console/domain/development-guard.server.ts',
-  'src/modules/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
-  'src/modules/data-health/tests/development-guard.test.ts',
+  'src/features/google-play-console/domain/development-guard.server.ts',
+  'src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
+  'src/features/data-health/tests/development-guard.test.ts',
   'src/features/notifications/tests/mobile-push-crypto.test.ts',
   'src/features/notifications/tests/mobile-push-unlock.service.test.ts',
   // Spawns one child per case with `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` set or
@@ -68,7 +68,7 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
  *
  * The inter-account channel is the connector between deployments. It lives in
  * `@asol/account-bridge`, and the application imports that door directly — the re-export shims
- * that once stood in front of it under `src/modules/*-bridge/` are gone. Two names for one
+ * that once stood in front of it under `src/features/*-bridge/` are gone. Two names for one
  * connector make the seal harder to read and, when one of them was a real duplicate, they drifted.
  * Neither backend can reach the other, so the hop happens on the device: it
  * carries a signed grant, sends no credentials, and holds no business logic.
@@ -80,7 +80,7 @@ export const ALLOWED_FETCH_FILES = new Set([
 
 /**
  * Database code lives in one sealed package. These three lists used to point at
- * `src/modules/data-access/`, where a folder path was the only thing standing between an
+ * `src/features/data-access/`, where a folder path was the only thing standing between an
  * app file and `drizzle-orm`. They now point inside `@asol/data-core`, and the folder they
  * name — `src/core/` — has no entry in that package's `exports` map, so the seal, not a
  * regular expression, is what keeps the ORM out of the rest of the repository.
@@ -164,18 +164,18 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('packages/data-core/src/domains/') && p.endsWith('/index.server.ts')) return 'operations';
   if (p.startsWith('packages/data-core/src/domains/') && p.includes('/commands/')) return 'operations';
   if (p.startsWith('packages/data-core/src/domains/') && p.includes('/queries/')) return 'operations';
-  if (p === 'src/modules/data-health/domain/execution-context.server.ts') return 'configuration';
-  if (p === 'src/modules/data-health/domain/development-guard.server.ts') return 'configuration';
-  if (p === 'src/modules/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
-  if (p === 'src/modules/google-play-console/domain/development-guard.server.ts') return 'configuration';
-  if (p.startsWith('src/modules/release-commands/tests/')) return 'dev-tools';
-  if (p.startsWith('src/modules/release-commands/services/') && p.endsWith('-api-service.ts')) return 'client-services';
-  if (p.startsWith('src/modules/release-commands/services/')) return 'server-services';
-  if (p.startsWith('src/modules/data-health/services/')) return 'server-services';
-  if (p.startsWith('src/modules/dev-cloud-backup/services/')) return 'server-services';
-  if (p.startsWith('src/modules/google-play-console/services/')) return 'server-services';
-  if (p.startsWith('src/modules/data-health/tests/')) return 'dev-tools';
-  if (p.startsWith('src/modules/dev-cloud-backup/tests/')) return 'dev-tools';
+  if (p === 'src/features/data-health/domain/execution-context.server.ts') return 'configuration';
+  if (p === 'src/features/data-health/domain/development-guard.server.ts') return 'configuration';
+  if (p === 'src/features/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
+  if (p === 'src/features/google-play-console/domain/development-guard.server.ts') return 'configuration';
+  if (p.startsWith('src/features/release-commands/tests/')) return 'dev-tools';
+  if (p.startsWith('src/features/release-commands/services/') && p.endsWith('-api-service.ts')) return 'client-services';
+  if (p.startsWith('src/features/release-commands/services/')) return 'server-services';
+  if (p.startsWith('src/features/data-health/services/')) return 'server-services';
+  if (p.startsWith('src/features/dev-cloud-backup/services/')) return 'server-services';
+  if (p.startsWith('src/features/google-play-console/services/')) return 'server-services';
+  if (p.startsWith('src/features/data-health/tests/')) return 'dev-tools';
+  if (p.startsWith('src/features/dev-cloud-backup/tests/')) return 'dev-tools';
   if (p.startsWith('packages/orders-core/src/')) return 'shared';
   // A feature's application layer is orchestration that runs on the server: it composes services,
   // repositories and notifications for one use case. Named `*.server.ts` so the half that could
@@ -205,10 +205,11 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.includes('/hooks/')) return 'hooks';
   if (p.startsWith('src/app/api/')) return 'business-api';
   if (p.startsWith('src/app/dev/') || p.startsWith('src/features/dev-tools/')) return 'dev-tools';
-  // Presentation lives with the feature that owns it. `src/components/` still holds what belongs
-  // to no single feature — the design-system primitives, the shell, the brand mark.
-  if (p.startsWith('src/components/')) return 'ui';
-  if (/^src\/features\/[^/]+\/(presentation|components)\//.test(p)) return 'ui';
+  // Shared application UI (design-system primitives, shell, brand) lives under src/shared/.
+  if (p.startsWith('src/shared/layouts/') || p.startsWith('src/shared/brand/') || p.startsWith('src/shared/ui/')) {
+    return 'ui';
+  }
+  if (/^src\/features\/[^/]+\/presentation\//.test(p)) return 'ui';
   if (p.startsWith('src/app/') && !p.startsWith('src/app/api/')) return 'ui';
   if (p.startsWith('src/dev/')) return 'dev-tools';
 
@@ -252,7 +253,7 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
 
   // `@asol/data-core` is reached only through its declared doors, so the door name is the
   // layer. Without this the whole package would classify as `external` and every layer
-  // rule that used to guard `src/modules/data-access/` would stop applying the moment the
+  // rule that used to guard `src/features/data-access/` would stop applying the moment the
   // code moved into the package.
   if (importPath === '@asol/data-core' || importPath.startsWith('@asol/data-core/')) {
     const dataCoreDoor = importPath.slice('@asol/data-core'.length).replace(/^\//, '');
@@ -309,8 +310,14 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
   if (resolved.includes('/core/api/asol-api-client') || resolved === 'src/core/api') return 'asol-api-client';
   if (resolved.includes('/core/api/')) return 'api-shared';
   if (resolved.includes('/hooks/')) return 'hooks';
-  if (resolved.startsWith('src/components/')) return 'ui';
-  if (/^src\/features\/[^/]+\/(presentation|components)\//.test(resolved)) return 'ui';
+  if (
+    resolved.startsWith('src/shared/layouts/') ||
+    resolved.startsWith('src/shared/brand/') ||
+    resolved.startsWith('src/shared/ui/')
+  ) {
+    return 'ui';
+  }
+  if (/^src\/features\/[^/]+\/presentation\//.test(resolved)) return 'ui';
 
   return classifyLayer(resolved);
 }

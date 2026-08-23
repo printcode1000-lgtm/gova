@@ -1,6 +1,6 @@
 "use client";
 
-import { readAppPreferencesFromDb } from "@/lib/preferences/app-preferences-storage";
+import { readAppPreferencesFromDb } from "@/shared/preferences/app-preferences-storage";
 import type { NotificationLocale } from "@asol/notifications-core";
 
 /**

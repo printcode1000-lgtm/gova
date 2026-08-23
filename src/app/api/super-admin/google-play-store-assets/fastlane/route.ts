@@ -1,6 +1,6 @@
-import { runSuperAdminJsonRoute } from "@/features/super-admin/services/super-admin-route.server";
+import { runSuperAdminJsonRoute } from "@/features/super-admin/server";
 import type { GooglePlayFastlaneAction } from "@asol/google-play-store-assets-core";
-import { googlePlayStoreAssetsService } from "@/modules/google-play-console/services/google-play-store-assets-service.server";
+import { googlePlayStoreAssetsService } from "@/features/google-play-console/server";
 
 interface GooglePlayFastlaneBody {
   action?: GooglePlayFastlaneAction;

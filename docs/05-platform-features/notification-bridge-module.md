@@ -5,7 +5,7 @@ The connector between the two backend deployments. It is implemented in
 else.
 
 The one-line re-export the application used to import it through
-(`src/modules/notification-bridge/`) is gone, along with its sibling for the service bridge. Its
+(`src/features/notification-bridge/`) is gone, along with its sibling for the service bridge. Its
 test moved into the package it tests. Import `@asol/account-bridge/notifications` directly.
 
 ## Why it exists

@@ -1,7 +1,7 @@
 import {
   PHARMACY_FIXED_PRODUCT_PREFIX,
   type PharmacyFixedProductIdentity,
-} from "../entities/pharmacy-profile-catalog.types";
+} from "../domain/pharmacy-profile-catalog.types";
 
 export function encodePharmacyFixedProductId(
   uid: string,

@@ -2,8 +2,8 @@
 
 import * as React from "react";
 
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 
 import { SuperAdminCloudAccountsContent } from "./SuperAdminCloudAccountsContent";
 

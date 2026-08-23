@@ -4,7 +4,7 @@ import type {
   FavoriteItem,
   FavoriteItemInput,
   FavoriteTargetType,
-} from "../entities/favorite.entity";
+} from "../domain/favorite.entity";
 
 export interface FavoritesContextValue {
   items: FavoriteItem[];

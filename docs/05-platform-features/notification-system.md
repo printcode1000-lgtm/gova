@@ -804,7 +804,7 @@ same three rules rather than restating them:
 `LoginRequiredDialog` instead of the device toggles; closing the dialog navigates
 back or to `/home`. Implementation:
 `src/features/settings/presentation/NotificationsSettingsPageContent.tsx` +
-`src/features/auth/components/LoginRequiredDialog.tsx`.
+`src/features/auth/presentation/LoginRequiredDialog.tsx`.
 
 1. The **open app settings** button renders only where
    `permission.canOpenSettings` is true — read from the diagnostics snapshot,

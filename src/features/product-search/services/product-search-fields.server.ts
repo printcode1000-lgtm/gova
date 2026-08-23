@@ -8,7 +8,7 @@ import {
   getBaseProductSearchFields,
   getDefaultProductSearchFieldKeys,
 } from "../config/product-search-fields";
-import type { ProductSearchField } from "../entities/product-search.types";
+import type { ProductSearchField } from "../domain/product-search.types";
 
 export async function getEnabledProductSearchFields(
   mainCategoryId: string,

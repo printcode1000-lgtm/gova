@@ -1,6 +1,6 @@
 "use client";
 
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { ToggleSwitch } from "@/shared/ui/toggle-switch";
 
 interface SettingsToggleRowProps {
   title: string;

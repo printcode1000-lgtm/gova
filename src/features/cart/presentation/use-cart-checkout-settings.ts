@@ -5,8 +5,8 @@ import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
   type ProfileFulfillmentSettings,
-} from "@/features/profile/entities/profile-fulfillment-settings.entity";
-import { profileService } from "@/features/profile/services/profile-service";
+} from "@/features/profile/domain/profile-fulfillment-settings.entity";
+import { profileService } from "@/features/profile/ui";
 
 export function useCartCheckoutSettings(sellerIds: string[]) {
   const [sellerSettings, setSellerSettings] = React.useState<

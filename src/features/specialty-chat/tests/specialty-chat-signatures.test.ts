@@ -71,7 +71,7 @@ const notificationSchemaSource = readFileSync(
 // The card's own strings are i18n keys, not literal Arabic text; the Arabic
 // dictionary is the source of truth for what they say.
 const arabicDictionarySource = readFileSync(
-  path.join(process.cwd(), "src/locales/ar.json"),
+  path.join(process.cwd(), "src/shared/locales/ar.json"),
   "utf8",
 );
 const unifiedPreferenceRoute = path.join(

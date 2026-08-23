@@ -3,5 +3,5 @@ export type {
   VehicleCatalog,
   VehicleCatalogGroup,
   VehicleCatalogOption,
-} from "./entities/vehicle-catalog.types";
+} from './domain/vehicle-catalog.types';
 

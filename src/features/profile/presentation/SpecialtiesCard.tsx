@@ -3,20 +3,20 @@
 import * as React from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
-import { useTranslation } from "@/lib/i18n";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/shared/i18n";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { Label } from "@/shared/ui/label";
+import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
+import { Button } from "@/shared/ui/button";
 import { asolApi } from "@/core/api";
 import { profileService } from "@/features/profile/services/profile-service";
-import { productApiService } from "@/features/product/services/product-api-service";
+import { productApiService } from "@/features/product/ui";
 import {
   categoryService,
   type CategoryDisplay,
   type SubcategoryDisplay,
 } from "@/features/categories";
-import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
+import type { ProfileSpecialtiesSelection } from "@/features/profile/domain/profile-specialties.entity";
 import type {
   ProfileSectionStatus,
   ProfileSpecialtiesController,

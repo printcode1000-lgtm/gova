@@ -4,7 +4,7 @@ import type {
   PageSnapshotIdentity,
   PageSnapshotOptions,
   PageSnapshotRecord,
-} from '../entities/page-snapshot.types';
+} from '../domain/page-snapshot.types';
 
 export interface SnapshotRegistryEntry<T = unknown> {
   get: () => T;

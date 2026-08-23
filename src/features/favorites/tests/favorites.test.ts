@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import type { FavoriteItemInput } from "../entities/favorite.entity";
+import type { FavoriteItemInput } from "../domain/favorite.entity";
 import {
   EMPTY_FAVORITE_COLLECTION,
   addFavorite,

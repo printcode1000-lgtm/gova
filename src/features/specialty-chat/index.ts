@@ -5,3 +5,8 @@ export { SpecialtyRequestPageContent } from "./presentation/SpecialtyRequestPage
 export { specialtyChatClient } from "./application/specialty-chat-client";
 export { isSpecialtyChatSessionTokenFailure } from "./application/specialty-chat-client";
 export { SPECIALTY_CHAT_KINDS } from "./domain/types";
+
+/* BEGIN GENERATED FEATURE DOOR EXPORTS */
+/** Auto-maintained sealed-door re-exports. Do not edit by hand. */
+export * from './domain/types';
+/* END GENERATED FEATURE DOOR EXPORTS */

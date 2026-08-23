@@ -6,18 +6,18 @@ import { Eye, RefreshCw, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/shared/ui/button";
+import { HeroSlider, type HeroSliderConfig } from "@/features/advertisements/ui";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
 import type { HomeHeroRecord } from "@asol/hero-slider-core";
-import { homeHeroSliderApiService } from "@/features/advertisements/services/home-hero-slider-api-service";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { homeHeroSliderApiService } from "@/features/advertisements";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import { reportSystemIssue } from '@asol/system-logs-core';
-import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
+import type { StorageImageManagerHandle } from "@/features/storage/ui";
 import { useSuperAdminHeroSliderSave } from "./use-super-admin-hero-slider-save";
-import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { usePageSaveRegistration } from "@/features/page-save/ui";
 
 const quickIntervals = [5, 15, 30, 60];
 

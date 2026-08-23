@@ -16,7 +16,7 @@ assert.equal(
 );
 
 const hookSource = readFileSync(
-  path.join(process.cwd(), 'src/hooks/use-phone-verification.ts'),
+  path.join(process.cwd(), 'src/features/auth/application/hooks/use-phone-verification.ts'),
   'utf8',
 );
 const bypassBranch = hookSource.indexOf('if (bypassPhoneVerification)');

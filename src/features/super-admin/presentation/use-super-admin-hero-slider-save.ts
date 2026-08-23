@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 
-import type { HeroSliderConfig } from "@/components/ui/HeroSlider";
+import type { HeroSliderConfig } from "@/features/advertisements/ui";
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 import {
   HOME_HERO_CACHE_KEY,
@@ -10,9 +10,9 @@ import {
   type HomeHeroRecord,
   type SuperAdminIdentity,
 } from "@asol/hero-slider-core";
-import { homeHeroSliderApiService } from "@/features/advertisements/services/home-hero-slider-api-service";
-import { notifyHomeHeroSliderUpdated } from "@/features/advertisements/home-hero-slider-sync";
-import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
+import { homeHeroSliderApiService } from "@/features/advertisements";
+import { notifyHomeHeroSliderUpdated } from "@/features/advertisements";
+import type { StorageImageManagerHandle } from "@/features/storage/ui";
 import { reportSystemIssue } from "@asol/system-logs-core";
 import {
   heroSliderFingerprint,

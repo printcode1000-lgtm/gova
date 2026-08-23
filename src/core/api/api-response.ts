@@ -7,7 +7,7 @@ import {
   KNOWN_BUSINESS_API_ERROR_CODES,
   sanitizeApiErrorCodeForClient,
 } from '@/core/api/business-api-error-codes';
-import { logServerSystemIssue } from '@/features/system-logs/services/persistent-system-log-service.server';
+import { logServerSystemIssue } from '@/features/system-logs/server';
 import { isErrorAlreadyLogged } from '@asol/system-logs-core/server';
 
 function attachDevTraceHeaders(response: NextResponse): NextResponse {

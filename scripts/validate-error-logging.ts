@@ -7,20 +7,20 @@ const violations: string[] = [];
 const preAuthCriticalFiles = new Set([
   "src/features/auth/presentation/PhoneVerification.tsx",
   "src/features/auth/presentation/LoginPageContent.tsx",
-  "src/components/layouts/SafeAreaController.tsx",
+  "src/shared/layouts/SafeAreaController.tsx",
   "src/core/providers/query-provider.tsx",
-  "src/features/auth/components/SessionProvider.tsx",
+  "src/features/auth/presentation/SessionProvider.tsx",
   "src/features/auth/hooks/use-login.ts",
   "src/features/auth/hooks/use-profile-registration.ts",
   "src/features/auth/hooks/use-register.ts",
   "src/features/favorites/hooks/FavoritesProvider.tsx",
   "src/features/network/hooks/use-network-status.tsx",
   "src/features/system-logs/PreAuthFailureMonitor.tsx",
-  "src/hooks/use-guest-session.ts",
-  "src/hooks/use-phone-verification.ts",
-  "src/lib/installation/InstallationBootstrap.tsx",
-  "src/lib/preferences/PreferencesProvider.tsx",
-  "src/theme/runtime/ThemeProvider.tsx",
+  "src/features/auth/application/hooks/use-guest-session.ts",
+  "src/features/auth/application/hooks/use-phone-verification.ts",
+  "src/shared/installation/InstallationBootstrap.tsx",
+  "src/shared/preferences/PreferencesProvider.tsx",
+  "src/shared/theme/runtime/ThemeProvider.tsx",
 ]);
 
 function walk(dir: string): string[] {
@@ -44,8 +44,8 @@ for (const file of files) {
   const content = readFileSync(file, "utf8");
   const lines = content.split(/\r?\n/);
   const generatedInitScript =
-    relative === "src/lib/app-init/build-app-init-script.ts" ||
-    relative === "src/theme/runtime/build-theme-init-script.ts";
+    relative === "src/shared/app-init/build-app-init-script.ts" ||
+    relative === "src/shared/theme/runtime/build-theme-init-script.ts";
 
   if (!generatedInitScript && /catch\s*\{\s*\}/.test(content)) {
     violations.push(`${relative}: empty catch block loses error details`);

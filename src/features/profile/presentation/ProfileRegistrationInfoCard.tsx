@@ -3,17 +3,17 @@
 import { ChevronDown, Lock, Loader2, Mail } from "lucide-react";
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { useTranslation } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
-import { useProfileRegistration } from "@/features/auth/hooks/use-profile-registration";
+import { Button } from "@/shared/ui/button";
+import { Label } from "@/shared/ui/label";
+import { Input } from "@/shared/ui/input";
+import { useTranslation } from "@/shared/i18n";
+import { cn } from "@/shared/utils";
+import { useProfileRegistration } from "@/features/auth/ui";
 import type {
   ProfileRegistrationController,
   ProfileSectionStatus,
 } from "./profile-save-controller";
-import { PhoneVerification } from "@/features/auth/presentation/PhoneVerification";
+import { PhoneVerification } from "@/features/auth/ui";
 
 interface ProfileRegistrationInfoCardProps {
   onStatusChange?: (status: ProfileSectionStatus) => void;

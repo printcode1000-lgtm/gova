@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import type { HeroSliderConfig } from "@/components/ui/hero-slider.types";
+import type { HeroSliderConfig } from "@/features/advertisements/ui";
 import { isHomeHeroConfigReadyToPersist } from "@asol/hero-slider-core";
 import {
   heroSliderHasRemovedImages,

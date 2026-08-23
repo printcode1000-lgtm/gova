@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import type { TrendingRibbonConfig as UIRibbonConfig } from "@/components/ui/TrendingRibbon";
+import type { TrendingRibbonConfig as UIRibbonConfig } from "@/features/advertisements/presentation/TrendingRibbon";
 import {
   DEFAULT_TRENDING_RIBBON_PUBLISHED,
   TRENDING_RIBBON_CACHE_KEY,

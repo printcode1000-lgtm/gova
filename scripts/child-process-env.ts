@@ -4,7 +4,7 @@
  * `next build` inherits NODE_OPTIONS; when it carries `--inspect` (VS Code
  * auto-attach, or a terminal started under a debugger) the build worker crashes
  * while prerendering pages. Mirrors `withoutDebuggerEnvironment` in
- * `src/modules/google-play-console/domain/development-guard.server.ts`.
+ * `src/features/google-play-console/domain/development-guard.server.ts`.
  */
 const INSPECTOR_FLAG = /(^|\s)--inspect(-brk|-port|-publish-uid)?(=\S*)?(?=\s|$)/g;
 const INSPECTOR_BOOTLOADER = /(^|\s)--require\s+\S*js-debug\S*(?=\s|$)/g;

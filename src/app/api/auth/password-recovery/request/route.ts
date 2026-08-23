@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
-import { passwordRecoveryService } from '@/features/password-recovery/services/password-recovery-service.server';
-import type { RecoveryRequestInput } from '@/features/password-recovery/types';
+import { passwordRecoveryService } from '@/features/password-recovery/server';
+import type { RecoveryRequestInput } from '@/features/password-recovery';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function POST(request: Request) {

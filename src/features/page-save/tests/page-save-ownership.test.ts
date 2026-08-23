@@ -75,7 +75,7 @@ function testImageManagerHasNoOwnActionButtons() {
  */
 function testSuccessFlashOwnsItsTimer() {
   const header = read(
-    "src/features/page-save/components/PageSaveHeaderButton.tsx",
+    "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
   );
   assert.match(header, /acknowledgePageSaveResult\(\)/);
   assert.match(
@@ -111,10 +111,10 @@ function testPackageOwnsOperationQueue() {
 /** The shared dialog exposes one execute contract on every page-save surface. */
 function testDialogExecuteContract() {
   const dialog = read(
-    "src/features/page-save/components/PageSaveDialog.tsx",
+    "src/features/page-save/presentation/PageSaveDialog.tsx",
   );
-  const arabic = read("src/locales/ar.json");
-  const english = read("src/locales/en.json");
+  const arabic = read("src/shared/locales/ar.json");
+  const english = read("src/shared/locales/en.json");
 
   assert.match(
     dialog,
@@ -222,11 +222,11 @@ function testStagingSurfacesRegisterScopes() {
       /usePageSaveOperationScope\(/,
     ],
     [
-      "src/modules/data-health/presentation/use-data-health-page.ts",
+      "src/features/data-health/presentation/use-data-health-page.ts",
       /usePageSaveOperationScope\(/,
     ],
     [
-      "src/modules/dev-cloud-backup/presentation/use-dev-cloud-backup-page.ts",
+      "src/features/dev-cloud-backup/presentation/use-dev-cloud-backup-page.ts",
       /usePageSaveOperationScope\(/,
     ],
     [
@@ -242,11 +242,11 @@ function testStagingSurfacesRegisterScopes() {
       /usePageSaveOperationScope\(/,
     ],
     [
-      "src/modules/google-play-console/hooks/use-store-assets.ts",
+      "src/features/google-play-console/hooks/use-store-assets.ts",
       /usePageSaveOperationScope\(/,
     ],
     [
-      "src/features/pharmacy-profile-catalog/components/PharmacyCatalogManagerPage.tsx",
+      "src/features/pharmacy-profile-catalog/presentation/PharmacyCatalogManagerPage.tsx",
       /usePageSaveOperationScope\(/,
     ],
     [
@@ -254,7 +254,7 @@ function testStagingSurfacesRegisterScopes() {
       /usePageSaveRegistration\(/,
     ],
     [
-      "src/features/auth/components/AccountDeletionPageContent.tsx",
+      "src/features/auth/presentation/AccountDeletionPageContent.tsx",
       /usePageSaveRegistration\(/,
     ],
     [

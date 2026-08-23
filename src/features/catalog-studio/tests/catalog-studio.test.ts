@@ -92,7 +92,7 @@ const imageApiSource = fs.readFileSync(
   "utf8",
 );
 const sidebarSource = fs.readFileSync(
-  path.join(root, "src", "components", "layouts", "AppSidebar.tsx"),
+  path.join(root, "src", "shared", "layouts", "AppSidebar.tsx"),
   "utf8",
 );
 const staticBuilderSource = fs.readFileSync(path.join(root, "packages", "ota-core", "src", "publishing", "build", "build-out.ts"), "utf8");

@@ -90,9 +90,9 @@ attribute.
 
 ## Toggle switches
 
-Use `@/components/ui/switch` (`Switch`) for every on/off control. It is the single
+Use `@/shared/ui/switch` (`Switch`) for every on/off control. It is the single
 touch-sized pill (`h-8 w-14`) with RTL-aware thumb motion (`inset-inline-start`).
-`@/components/ui/toggle-switch` (`ToggleSwitch`) is a thin wrapper that adds a
+`@/shared/ui/toggle-switch` (`ToggleSwitch`) is a thin wrapper that adds a
 required `aria-label` when no visible label is wired with `htmlFor`. Do not
 reintroduce smaller Radix defaults or pointer-based `translate-x` thumb motion.
 

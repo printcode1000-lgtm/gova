@@ -1,7 +1,7 @@
 import type { ProductCardViewModel } from "@/features/product-card";
 import type { SellerCardViewModel } from "@/features/seller-card";
 
-import type { FavoriteItem, FavoriteItemInput } from "../entities/favorite.entity";
+import type { FavoriteItem, FavoriteItemInput } from "../domain/favorite.entity";
 
 export function favoriteFromProductCard(card: ProductCardViewModel): FavoriteItemInput {
   return {

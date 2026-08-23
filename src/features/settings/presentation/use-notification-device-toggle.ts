@@ -2,12 +2,12 @@
 
 import * as React from "react";
 
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 import {
   notifications,
   type NotificationPermissionStateName,
 } from "@/features/notifications";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 
 import {
   notificationPermissionLabel,

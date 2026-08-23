@@ -14,7 +14,7 @@
  */
 import { configureOrdersCore } from '@asol/orders-core';
 
-import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
+import { isSuperAdminIdentity } from '@/features/auth';
 
 export function registerOrdersCorePorts(): void {
   configureOrdersCore({

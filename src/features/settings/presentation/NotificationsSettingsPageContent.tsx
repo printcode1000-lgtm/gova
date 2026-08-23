@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
-import { LoginRequiredDialog } from "@/features/auth/components/LoginRequiredDialog";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { useTranslation } from "@/lib/i18n";
+import { LoginRequiredDialog } from "@/features/auth/ui";
+import { useSession } from "@/features/auth/ui";
+import { useTranslation } from "@/shared/i18n";
 
 import { NotificationDeviceSettingsCard } from "./NotificationDeviceSettingsCard";
 

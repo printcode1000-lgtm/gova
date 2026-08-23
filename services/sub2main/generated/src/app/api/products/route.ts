@@ -1,6 +1,6 @@
 import { apiError, apiSuccess } from '@/core/api/api-response';
-import type { CreateProductInput, UpdateProductInput } from '@/features/product/entities/product.entity';
-import { productService } from '@/features/product/services/product-service.server';
+import type { CreateProductInput, UpdateProductInput } from '@/features/product';
+import { productService } from '@/features/product/server';
 
 function errorResponse(error: unknown) {
   const message = error instanceof Error ? error.message : 'Internal Server Error';

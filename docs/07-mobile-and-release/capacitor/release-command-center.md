@@ -1,9 +1,9 @@
 # Release Command Center
 
-The release command center UI lives in `src/modules/google-play-console`. Its browser-safe command
+The release command center UI lives in `src/features/google-play-console`. Its browser-safe command
 policy is sealed behind `@asol/release-core/console`, process mechanics are behind
 `@asol/release-core/console-server`, and artifact analysis is isolated in
-`@asol/release-core/console-artifacts`. `src/modules/release-commands` now contains only the client
+`@asol/release-core/console-artifacts`. `src/features/release-commands` now contains only the client
 API/hook and the single server wiring seam.
 
 Google Play Store asset contracts and image validation are sealed separately in
@@ -424,4 +424,4 @@ Total: **23** phases, **68** sections, **356** selectable command branches acros
 Phase, section, and branch **labels** in the runbook source are Arabic; branch cards also
 read per-id help from `android-release-runbook-copy.ts` (generated Arabic text for every leaf,
 with high-signal overrides split under `presentation/runbook-copy/`). Shared UI labels
-remain in `src/locales/admin-ar.json` under `releaseConsole.androidPaths.*`.
+remain in `src/shared/locales/admin-ar.json` under `releaseConsole.androidPaths.*`.

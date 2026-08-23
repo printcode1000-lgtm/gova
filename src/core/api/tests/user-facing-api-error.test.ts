@@ -7,7 +7,7 @@ import {
   sanitizeApiErrorCodeForClient,
 } from "@/core/api/business-api-error-codes";
 import { formatUserFacingApiError } from "@/core/api/user-facing-api-error";
-import { translate } from "@/lib/i18n";
+import { translate } from "@/shared/i18n";
 
 const t = (key: string) => translate("ar", key);
 

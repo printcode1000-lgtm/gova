@@ -1,5 +1,5 @@
 import { apiSuccess, apiError } from '@/core/api/api-response';
-import { authService } from '@/features/auth/services/auth-service.bootstrap.server';
+import { authService } from '@/features/auth/server';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 /**

@@ -1,29 +1,29 @@
 import type { Metadata, Viewport } from "next";
 import { BRANDING_WEB_BROWSER_ICON_PATH } from "@asol/branding-core";
 import "./globals.css";
-import { AppInitScript } from "@/lib/app-init";
-import { THEME_COLOR_LIGHT } from "@/theme/runtime";
+import { AppInitScript } from "@/shared/app-init";
+import { THEME_COLOR_LIGHT } from "@/shared/theme/runtime";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
 config.autoAddCss = false;
 
-import { PreferencesProvider } from "@/lib/preferences";
-import { ShellLayout } from "@/components/layouts/ShellLayout";
-import { SafeAreaController } from "@/components/layouts/SafeAreaController";
+import { PreferencesProvider } from "@/shared/preferences";
+import { ShellLayout } from "@/shared/layouts/ShellLayout";
+import { SafeAreaController } from "@/shared/layouts/SafeAreaController";
 import { AppQueryProvider } from "@/core/providers/query-provider";
-import { SessionProvider } from "@/features/auth/components/SessionProvider";
-import { AuthLoginBootstrapController } from "@/features/auth/components/AuthLoginBootstrapController";
-import { LoginSuccessToast } from "@/features/auth/components/LoginSuccessToast";
-import { NetworkStatusProvider } from "@/features/network/hooks/use-network-status";
-import { NetworkStatusBanner } from "@/features/network/presentation/NetworkStatusBanner";
+import { SessionProvider } from "@/features/auth/ui";
+import { AuthLoginBootstrapController } from "@/features/auth/ui";
+import { LoginSuccessToast } from "@/features/auth/ui";
+import { NetworkStatusProvider } from "@/features/network/ui";
+import { NetworkStatusBanner } from "@/features/network/ui";
 import { OtaUpdateProvider } from "@asol/ota-core";
-import { MobileBackButtonController } from "@/features/navigation/presentation/MobileBackButtonController";
-import { VoiceInputController } from "@/features/voice-input/presentation/VoiceInputController";
-import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
-import { SystemLogErrorBoundary } from "@/features/system-logs/SystemLogErrorBoundary";
-import { SuperAdminErrorFloatingButton } from "@/features/system-logs/SuperAdminErrorFloatingButton";
-import { SuperAdminImpersonationBanner } from "@/features/super-admin/components/SuperAdminImpersonationBanner";
+import { MobileBackButtonController } from "@/features/navigation/ui";
+import { VoiceInputController } from "@/features/voice-input/ui";
+import { SystemLogCollector } from "@/features/system-logs/ui";
+import { SystemLogErrorBoundary } from "@/features/system-logs/ui";
+import { SuperAdminErrorFloatingButton } from "@/features/system-logs/ui";
+import { SuperAdminImpersonationBanner } from "@/features/super-admin/ui";
 import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
 import { FeatureFlagController } from "@/features/feature-flags";
@@ -33,14 +33,14 @@ import {
   WebPushController,
 } from "@/features/notifications/ui";
 import { SpecialtyChatNotificationsController } from "@/features/specialty-chat";
-import { OrderNotificationsController } from "@/features/orders/presentation/OrderNotificationsController";
+import { OrderNotificationsController } from "@/features/orders/ui";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
 import { isDevelopment } from "@/core/config";
 import { withBasePath } from "@/core/config/public-env";
-import { InstallationBootstrap } from "@/lib/installation";
-import { PreAuthFailureMonitor } from "@/features/system-logs/PreAuthFailureMonitor";
+import { InstallationBootstrap } from "@/shared/installation";
+import { PreAuthFailureMonitor } from "@/features/system-logs/ui";
 import {
   PUBLIC_SHARE_ORIGIN,
   ShareDeepLinkController,
@@ -48,7 +48,7 @@ import {
 
 const DeveloperBadge = isDevelopment
   ? dynamic(() =>
-      import("@/features/dev-tools/presentation/DeveloperBadge").then((m) => m.DeveloperBadge),
+      import("@/features/dev-tools/ui").then((m) => m.DeveloperBadge),
     )
   : () => null;
 

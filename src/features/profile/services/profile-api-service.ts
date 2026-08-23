@@ -1,36 +1,36 @@
 import { asolApi, ASOL_API_ROUTES } from "@/core/api";
-import type { ReviewSort } from "@/features/product/entities/product-review.entity";
+import type { ReviewSort } from "@/features/product";
 import type {
   ProfileReview,
   ProfileReviewsResult,
   SaveProfileReviewInput,
   UpdateProfileReviewInput,
-} from "../entities/profile-review.entity";
+} from "../domain/profile-review.entity";
 import type {
   ProfileContactsData,
   SaveProfileContactsInput,
-} from "../entities/profile-contacts.entity";
+} from "../domain/profile-contacts.entity";
 import type {
   SaveStoreImagesInput,
   StoreImagesData,
-} from "../entities/store-images.entity";
+} from "../domain/store-images.entity";
 import type {
   SaveStoreDetailsInput,
   StoreDetailsData,
-} from "../entities/store-details.entity";
+} from "../domain/store-details.entity";
 import type { IProfileService } from "./profile-service.interface";
 import type {
   SaveProfileEditorInput,
   SaveProfileEditorResult,
-} from "../entities/profile-editor.entity";
+} from "../domain/profile-editor.entity";
 import type {
   ProfileSpecialtiesSelection,
   SaveProfileSpecialtiesInput,
-} from "../entities/profile-specialties.entity";
+} from "../domain/profile-specialties.entity";
 import type {
   ProfileFulfillmentSettings,
   SaveProfileFulfillmentSettingsInput,
-} from "../entities/profile-fulfillment-settings.entity";
+} from "../domain/profile-fulfillment-settings.entity";
 import type { UserProfileRow } from "./profile-service.interface";
 
 export class ProfileApiService implements IProfileService {

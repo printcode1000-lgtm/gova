@@ -8,4 +8,4 @@ export type {
   ProfileProductsTabsMode,
   ProfileProductsTabsState,
   UseProfileProductsTabsInput,
-} from './entities/profile-products.types';
+} from './domain/profile-products.types';

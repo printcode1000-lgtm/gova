@@ -5,17 +5,17 @@ import { ApiError, asolApi } from "@/core/api";
 import type {
   ProductDetails,
   ProductRecord,
-} from "@/features/product/entities/product.entity";
+} from "@/features/product";
 import {
   createEmptyProductDetails,
   toProductDetails,
-} from "@/features/product/entities/product.entity";
+} from "@/features/product";
 import { productApiService } from "@/features/product/services/product-api-service";
 import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_SUBCATEGORY_ID,
-} from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
-import { createPharmacyInitialDetails } from "@/features/pharmacy-profile-catalog/utils/pharmacy-initial-fields";
+} from "@/features/pharmacy-profile-catalog/domain/pharmacy-profile-catalog.types";
+import { createPharmacyInitialDetails } from "@/features/pharmacy-profile-catalog";
 import type { ProductMode } from "./product-component.types";
 
 export interface ProductStyleFile {

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
+import type { StorageImageManagerHandle } from "@/features/storage/ui";
 
 type ImageUploadHandle = Pick<
   StorageImageManagerHandle,

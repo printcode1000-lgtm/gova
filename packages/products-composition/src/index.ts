@@ -35,7 +35,7 @@ registerDataCoreSpecialtyCatalogPort();
 export type {
   ProductSearchFilters,
   ProductSearchRequest,
-} from '@/features/product-search/entities/product-search.types';
+} from '@/features/product-search/domain/product-search.types';
 
 export interface ProductsRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */

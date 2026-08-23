@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 
-import { useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+import { useTranslation } from '@/shared/i18n';
+import { cn } from '@/shared/utils';
 
 interface OtpInputProps {
   value: string;

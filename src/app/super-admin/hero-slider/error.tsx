@@ -1,6 +1,6 @@
 "use client";
 
-import { RouteErrorFallback } from "@/features/system-logs/RouteErrorFallback";
+import { RouteErrorFallback } from "@/features/system-logs/ui";
 
 export default function HeroSliderAdminError(props: {
   error: Error & { digest?: string };

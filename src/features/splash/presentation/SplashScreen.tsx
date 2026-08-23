@@ -2,8 +2,8 @@
 
 import { Suspense } from 'react';
 
-import AppIcon from '@/components/brand/AppIcon';
-import { useTranslation } from '@/lib/i18n';
+import AppIcon from '@/shared/brand/AppIcon';
+import { useTranslation } from '@/shared/i18n';
 import type { CategoryDisplay } from '@/features/categories';
 
 import SplashInitializer from './SplashInitializer';

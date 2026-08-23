@@ -64,7 +64,7 @@ The static HTML contains Arabic text baked in at build time. React hydration rep
 
 Three coordinated changes:
 
-### 1. `src/components/layouts/AppSidebar.tsx`
+### 1. `src/shared/layouts/AppSidebar.tsx`
 
 Added `mounted` state. The component returns `null` on the first render, preventing the sidebar from appearing in the DOM before `PreferencesProvider` has applied the correct locale.
 
@@ -81,7 +81,7 @@ if (!mounted) return null;
 
 **Why this is safe:** the sidebar is never shown on first paint regardless; `isOpen` starts as `false`. The `null` return just avoids a DOM node whose direction is wrong.
 
-### 2. `src/lib/preferences/PreferencesProvider.tsx`
+### 2. `src/shared/preferences/PreferencesProvider.tsx`
 
 After reading and applying stored preferences, set `data-hydrated="true"` on `<html>`:
 
@@ -144,8 +144,8 @@ The user never sees Arabic text or a mis-directed sidebar.
 
 | File | Change |
 |------|--------|
-| `src/components/layouts/AppSidebar.tsx` | `mounted` guard — returns `null` before hydration |
-| `src/lib/preferences/PreferencesProvider.tsx` | Sets `data-hydrated="true"` after loading preferences |
+| `src/shared/layouts/AppSidebar.tsx` | `mounted` guard — returns `null` before hydration |
+| `src/shared/preferences/PreferencesProvider.tsx` | Sets `data-hydrated="true"` after loading preferences |
 | `src/app/layout.tsx` | Adds `data-hydrated="false"` to static `<html>` |
 | `src/app/globals.css` | Anti-flash CSS rule using `data-locale` + `data-hydrated` |
 

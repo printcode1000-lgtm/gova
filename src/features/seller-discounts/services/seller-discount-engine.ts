@@ -6,7 +6,7 @@ import type {
   SellerDiscountCartQuote,
   SellerDiscountRule,
   SellerDiscountUsageSummary,
-} from "../entities/seller-discount.entity";
+} from "../domain/seller-discount.entity";
 
 function isActiveNow(rule: SellerDiscountRule, now = new Date()): boolean {
   if (rule.status !== "active") return false;

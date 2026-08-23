@@ -5,10 +5,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { mergeLiveAndPersistentCounts } from "@asol/system-logs-core";
 
-import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
+import { usePageSaveOperationScope } from "@/features/page-save/ui";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
+import type { PersistentSystemLogEntry } from "@/features/system-logs/domain/persistent-system-log.entity";
 import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
 import {
   clearAllSystemLogs,

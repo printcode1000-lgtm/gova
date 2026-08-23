@@ -3,7 +3,7 @@ import type {
   SpecialtyChatIdentity,
   SpecialtyChatPreferenceChanges,
 } from "@/features/specialty-chat/domain/types";
-import { specialtyChatService } from "@/features/specialty-chat/services/specialty-chat-service.server";
+import { specialtyChatService } from "@/features/specialty-chat/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 function preferenceChanges(value: unknown): SpecialtyChatPreferenceChanges {

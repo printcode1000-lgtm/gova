@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
-import { superAdminUserService } from "@/features/super-admin/services/super-admin-user-service.server";
+import { assertSuperAdminRequest } from "@/features/super-admin/server";
+import { superAdminUserService } from "@/features/super-admin/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 interface ImpersonateBody {

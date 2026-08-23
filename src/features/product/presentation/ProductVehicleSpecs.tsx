@@ -6,7 +6,7 @@ import {
   type VehicleCatalog,
   type VehicleCatalogOption,
 } from "@/features/vehicle-catalog";
-import type { ProductVehicleSpecsData } from "@/features/product/entities/product.entity";
+import type { ProductVehicleSpecsData } from "@/features/product";
 import type {
   ProductMode,
   ProductComponentConfig,

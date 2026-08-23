@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
-import { ReleaseConsolePage } from "@/modules/google-play-console";
+import { ReleaseConsolePage } from "@/features/google-play-console";
 
 /**
  * Always re-evaluate: catalog and android runbooks come from @asol/release-core.

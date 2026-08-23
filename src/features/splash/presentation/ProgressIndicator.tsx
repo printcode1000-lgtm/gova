@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { useTranslation } from '@/lib/i18n';
-import type { TranslationKey } from '@/lib/i18n';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { useTranslation } from '@/shared/i18n';
+import type { TranslationKey } from '@/shared/i18n';
 
 interface ProgressIndicatorProps {
   progress: number;

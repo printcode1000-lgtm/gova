@@ -35,7 +35,7 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 | `src/features/auth/services/signed-session-token.server.ts` | `createSignedSessionToken` / `verifySignedSessionToken` |
 | `@asol/auth-core` (inline schemas) | Re-exports from `@asol/auth-core` |
 | `@asol/auth-core` (inline schemas) | Re-exports from `@asol/auth-core` |
-| `src/features/account-deletion/**` (entire feature folder) | `src/features/auth/components/AccountDeletionPageContent.tsx`, `account-deletion-api-service.ts`, bootstrap wiring |
+| `src/features/account-deletion/**` (entire feature folder) | `src/features/auth/presentation/AccountDeletionPageContent.tsx`, `account-deletion-api-service.ts`, bootstrap wiring |
 
 ### Still in the app (by design)
 

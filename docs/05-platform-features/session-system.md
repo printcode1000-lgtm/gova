@@ -107,7 +107,7 @@ On first load, `cleanLegacyStore()`:
 
 ## `useSession()`
 
-**File:** `src/features/auth/components/SessionProvider.tsx`
+**File:** `src/features/auth/presentation/SessionProvider.tsx`
 
 ```tsx
 const { session, isLoggedIn, isGuest, isLoading, setSession, refreshSession } = useSession();
@@ -158,7 +158,7 @@ src/features/auth/
     ├── use-logout.ts
     └── use-profile-registration.ts
 
-src/hooks/use-guest-session.ts
+src/features/auth/application/hooks/use-guest-session.ts
 packages/data-core/src/browser/asol-db/index.ts
 ```
 

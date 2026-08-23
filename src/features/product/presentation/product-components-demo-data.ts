@@ -3,7 +3,7 @@ import type { StoredImage } from "@asol/storage-core";
 import {
   createEmptyProductDetails,
   type ProductDetails,
-} from "@/features/product/entities/product.entity";
+} from "@/features/product";
 
 export const PRODUCT_DEMO_IMAGES: StoredImage[] = [
   {

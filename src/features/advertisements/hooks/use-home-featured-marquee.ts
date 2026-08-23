@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import type { FeaturedMarqueeConfig as MarqueeUIConfig } from "@/components/ui/FeaturedMarquee";
+import type { FeaturedMarqueeConfig as MarqueeUIConfig } from "@/features/advertisements/presentation/FeaturedMarquee";
 import {
   DEFAULT_FEATURED_MARQUEE_PUBLISHED,
   FEATURED_MARQUEE_CACHE_KEY,
@@ -11,7 +11,7 @@ import {
   type FeaturedMarqueePublished,
 } from "@asol/featured-marquee-core";
 import { featuredMarqueeApiService } from "@/features/advertisements/services/featured-marquee-api-service";
-import { productApiService } from "@/features/product/services/product-api-service";
+import { productApiService } from "@/features/product/ui";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import {
   ASOL_DB_STORES,

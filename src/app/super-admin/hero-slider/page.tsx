@@ -1,4 +1,4 @@
-import { SuperAdminHeroSliderPage } from "@/features/super-admin/presentation/SuperAdminHeroSliderPage";
+import { SuperAdminHeroSliderPage } from "@/features/super-admin/ui";
 
 export default function HeroSliderAdminPage() {
   return <SuperAdminHeroSliderPage />;

@@ -1,6 +1,6 @@
 "use client";
 
-import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
+import { BOTTOM_NAV_CLEARANCE } from "@/shared/layouts/bottom-nav-layout";
 
 export function SpecialtiesToast({ message }: { message: string | null }) {
   if (!message) return null;

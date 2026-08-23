@@ -6,8 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, MessageCircle, Send, Users } from "lucide-react";
 import { categoryService } from "@/features/categories";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { useTranslation } from "@/lib/i18n";
+import { useSession } from "@/features/auth/ui";
+import { useTranslation } from "@/shared/i18n";
 import { specialtyChatClient } from "../application/specialty-chat-client";
 import { getSpecialtyChatSubOptions } from "../domain/specialty-options";
 

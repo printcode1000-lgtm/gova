@@ -1,5 +1,5 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
-import { profileReviewService } from "@/features/profile/services/profile-review-service.server";
+import { profileReviewService } from "@/features/profile/server";
 
 export async function POST(request: Request) {
   try {

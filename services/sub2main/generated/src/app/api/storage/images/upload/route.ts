@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { getMimeTypeForOutputFormat } from "@asol/storage-core/server";
-import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
+import { imageStorageService } from "@/features/storage/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function POST(request: Request) {

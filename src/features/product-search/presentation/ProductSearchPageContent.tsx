@@ -3,8 +3,8 @@
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
-import { ProductSearchPanel } from "@/components/ui/product-search";
-import { useTranslation } from "@/lib/i18n";
+import { ProductSearchPanel } from "@/features/product-search/presentation/panel";
+import { useTranslation } from "@/shared/i18n";
 
 export function ProductSearchPageContent() {
   const { locale } = useTranslation();

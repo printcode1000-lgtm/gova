@@ -7,7 +7,7 @@ import {
   type AuthUserRecord,
   type AuthUserRepositoryPort,
 } from '@asol/auth-core/server';
-import { imageStorageService } from '@/features/storage/services/image-storage-service.bootstrap.server';
+import { imageStorageService } from '@/features/storage/server';
 import {
   createUserCommand,
   getUserByEmailQuery,

@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
-import { authService } from '@/features/auth/services/auth-service.bootstrap.server';
-import type { UpdateProfileInput } from '@/features/auth/entities/profile.entity';
+import { authService } from '@/features/auth/server';
+import type { UpdateProfileInput } from '@/features/auth';
 import { extractSessionToken } from '@asol/auth-core/server';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 

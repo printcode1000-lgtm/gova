@@ -5,7 +5,7 @@ import {
   type FavoriteItem,
   type FavoriteItemInput,
   type FavoriteTargetType,
-} from "../entities/favorite.entity";
+} from "../domain/favorite.entity";
 
 export const EMPTY_FAVORITE_COLLECTION: FavoriteCollection = {
   schemaVersion: 1,

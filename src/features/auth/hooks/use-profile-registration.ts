@@ -2,22 +2,22 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation } from '@/shared/i18n';
 import {
   createProfileSchema,
   isProfileFormDirty,
   toProfileFormData,
   type ProfileFormData,
 } from '@asol/auth-core';
-import { useSession } from '@/features/auth/components/SessionProvider';
+import { useSession } from '@/features/auth/presentation/SessionProvider';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
-import type { UserProfile } from '../entities/profile.entity';
-import type { ProfileRegistrationSnapshot } from '@/features/profile/entities/profile-editor.entity';
+import type { UserProfile } from '../domain/profile.entity';
+import type { ProfileRegistrationSnapshot } from '@/features/profile';
 import { isExpectedProfileSaveRejection } from '@/core/api/expected-business-error-codes';
 import { reportSystemIssue } from '@asol/system-logs-core';
-import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { reportPreAuthFailure } from '@/features/system-logs';
 
 export function useProfileRegistration() {
   const { t } = useTranslation();

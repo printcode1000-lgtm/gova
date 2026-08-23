@@ -82,7 +82,7 @@ packages/                            # four layers - see ../02-packages/module-i
 |-- storage-core/                    # central binary & R2 image storage boundary
 `-- dev-core/                        # sealed local development path contract
 
-src/modules/
+src/features/
 |-- notification-bridge/             # re-exports @asol/account-bridge/notifications
 `-- service-bridge/                  # re-exports @asol/account-bridge
 ```

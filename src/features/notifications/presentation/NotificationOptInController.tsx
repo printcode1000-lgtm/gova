@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useSession } from "@/features/auth/presentation/SessionProvider";
 import {
   AUTH_LOGIN_COMPLETED_EVENT,
   type AuthLoginCompletedDetail,

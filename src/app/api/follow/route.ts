@@ -1,5 +1,5 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { followService } from "@/features/follow/services/follow-service.bootstrap.server";
+import { followService } from "@/features/follow/server";
 import type { FollowMutationInput, FollowTargetType } from "@/features/follow";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 

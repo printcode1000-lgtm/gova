@@ -1,6 +1,6 @@
 import { apiError, apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
-import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
+import { persistentSystemLogService } from "@/features/system-logs/server";
+import { assertSuperAdminRequest } from "@/features/super-admin/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 function mapSystemLogAccessError(error: unknown) {

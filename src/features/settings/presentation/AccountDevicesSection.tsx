@@ -3,7 +3,7 @@
 import { formatDateTime } from "@asol/format-core";
 import { RefreshCw, Trash2 } from "lucide-react";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 import {
   accountDevicePlatformKey,

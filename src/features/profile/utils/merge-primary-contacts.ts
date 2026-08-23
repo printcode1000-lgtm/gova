@@ -1,4 +1,4 @@
-import type { ProfileContactsData } from '../entities/profile-contacts.entity';
+import type { ProfileContactsData } from '../domain/profile-contacts.entity';
 
 export function mergePrimaryContacts(
   primary: { phone: string; email?: string | null },

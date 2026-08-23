@@ -6,14 +6,14 @@ import {
   createOpenStreetMapProvider,
   markerAt,
 } from "@asol/map-core";
-import type { ProductPropertySpecsData } from "@/features/product/entities/product.entity";
+import type { ProductPropertySpecsData } from "@/features/product";
 import { ProductField } from "./ProductComponentPrimitives";
 import type {
   ProductComponentConfig,
   ProductMode,
 } from "./product-component.types";
 import { isCancelledError } from '@asol/native-core';
-import { shareLocationUrl } from "@/features/sharing/share-location-url";
+import { shareLocationUrl } from "@/features/sharing/ui";
 import {
   googleMapsSearchUrl,
   openDeviceMaps,

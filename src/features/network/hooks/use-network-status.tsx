@@ -12,7 +12,7 @@ import {
 } from 'react';
 
 import { networkApiService } from '../services/network-api-service';
-import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { reportPreAuthFailure } from '@/features/system-logs';
 
 export type NetworkStatus = 'checking' | 'online' | 'offline' | 'server-unreachable';
 

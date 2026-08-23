@@ -2,23 +2,23 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { ToggleSwitch } from "@/shared/ui/toggle-switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/shared/ui/select";
+import { Textarea } from "@/shared/ui/textarea";
 import { CATEGORY_CONSTANTS } from "@/features/categories";
-import { normalizeProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
+import { normalizeProfileFulfillmentSettings } from "@/features/profile/domain/profile-fulfillment-settings.entity";
 import { useProfileFulfillmentSettings } from "@/features/profile/hooks/use-profile-fulfillment-settings";
 import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
 import type { UserProfileRow } from "@/features/profile/services/profile-service.interface";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 import type {
   ProfileFulfillmentController,
   ProfileSectionStatus,

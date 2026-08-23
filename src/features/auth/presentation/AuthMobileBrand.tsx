@@ -1,7 +1,7 @@
 'use client';
 
-import AppIcon from '@/components/brand/AppIcon';
-import { useTranslation } from '@/lib/i18n';
+import AppIcon from '@/shared/brand/AppIcon';
+import { useTranslation } from '@/shared/i18n';
 
 export function AuthMobileBrand() {
   const { t } = useTranslation();

@@ -1,10 +1,10 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
-import type { ReviewSort } from "@/features/product/entities/product-review.entity";
+import type { ReviewSort } from "@/features/product";
 import type {
   SaveProfileReviewInput,
   UpdateProfileReviewInput,
-} from "@/features/profile/entities/profile-review.entity";
-import { profileReviewService } from "@/features/profile/services/profile-review-service.server";
+} from "@/features/profile/domain/profile-review.entity";
+import { profileReviewService } from "@/features/profile/server";
 
 function failure(error: unknown) {
   const message =

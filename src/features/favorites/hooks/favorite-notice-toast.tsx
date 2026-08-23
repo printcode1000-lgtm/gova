@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import type { FavoriteItem } from "../entities/favorite.entity";
+import type { FavoriteItem } from "../domain/favorite.entity";
 
 export interface FavoriteNotice {
   message: string;

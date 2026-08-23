@@ -8,7 +8,7 @@ export {
   isSearchCategorySelectionShaped,
   parseProductSearchRequest,
   parseSellerSearchRequest,
-} from "./entities/product-search.request";
+} from './domain/product-search.request';
 export type {
   ProductSearchField,
   ProductSearchFilters,
@@ -19,4 +19,9 @@ export type {
   SellerSearchRequest,
   SellerSearchResult,
   SellerSearchSort,
-} from "./entities/product-search.types";
+} from './domain/product-search.types';
+
+/* BEGIN GENERATED FEATURE DOOR EXPORTS */
+/** Auto-maintained sealed-door re-exports. Do not edit by hand. */
+export * from './domain/product-search.request';
+/* END GENERATED FEATURE DOOR EXPORTS */

@@ -1,12 +1,12 @@
 "use client";
 
 import { Image as ImageIcon, LayoutTemplate } from "lucide-react";
-import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
+import { HeroSlider, type HeroSliderConfig } from "@/features/advertisements/ui";
 import {
   StorageImageManager,
   type StorageImageManagerConfig,
   type StorageImageManagerHandle,
-} from "@/features/storage/components/StorageImageManager";
+} from "@/features/storage/presentation/StorageImageManager";
 import type { StoredImage } from "@asol/storage-core";
 import type * as React from "react";
 

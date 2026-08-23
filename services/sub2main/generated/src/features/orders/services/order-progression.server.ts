@@ -1,8 +1,8 @@
 import "server-only";
 
-import { authService } from "@/features/auth/services/auth-service.bootstrap.server";
+import { authService } from "@/features/auth/server";
 import { notificationsServer, type NotificationGrantIssuer } from "@/features/notifications/server";
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { profileService } from "@/features/profile/server";
 import type { MarketplaceOrderService } from "@asol/data-core/marketplace-orders";
 import {
   getMarketplaceOrderQueries,

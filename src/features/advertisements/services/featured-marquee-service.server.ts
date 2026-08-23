@@ -1,6 +1,6 @@
 import "server-only";
 
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
+import { isSuperAdminIdentity } from "@/features/auth";
 import { featuredMarqueeRepository } from "@asol/data-core/advertisements";
 import { createFeaturedMarqueeService } from "@asol/featured-marquee-core/server";
 

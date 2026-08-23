@@ -8,7 +8,7 @@ Client-side domain orchestration that prepares API calls and interprets response
 
 Files under a `services/` directory ending in `-api-service.ts`, or named
 `auth-service.ts` / `session-service.ts`; plus
-`src/modules/release-commands/services/*-api-service.ts`.
+`src/features/release-commands/services/*-api-service.ts`.
 
 No file in this repository is named `*-client-service.ts`; the classifier keys
 on the suffixes above. `classifyFile` in

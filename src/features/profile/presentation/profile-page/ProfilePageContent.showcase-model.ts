@@ -1,17 +1,17 @@
 "use client";
 
 import { formatPlainMoneyMajor } from "@asol/format-core";
-import type { FeaturedMarqueeConfig } from "@/components/ui/FeaturedMarquee";
-import type { HeroSliderConfig } from "@/components/ui/HeroSlider";
+import type { FeaturedMarqueeConfig } from "@/features/advertisements/ui";
+import type { HeroSliderConfig } from "@/features/advertisements/ui";
 import {
   DEFAULT_HOME_HERO_TRANSITION,
   DEFAULT_HOME_HERO_TRANSITION_DURATION,
 } from "@asol/hero-slider-core";
-import type { TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
-import type { ProductRecord } from "@/features/product/entities/product.entity";
-import { productApiService } from "@/features/product/services/product-api-service";
-import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
-import type { StoreImagesData } from "@/features/profile/entities/store-images.entity";
+import type { TrendingRibbonConfig } from "@/features/advertisements/ui";
+import type { ProductRecord } from "@/features/product";
+import { productApiService } from "@/features/product/ui";
+import type { StoreDetailsData } from "@/features/profile/domain/store-details.entity";
+import type { StoreImagesData } from "@/features/profile/domain/store-images.entity";
 import * as React from "react";
 import { useMemo } from "react";
 

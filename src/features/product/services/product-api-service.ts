@@ -3,7 +3,7 @@ import type {
   CreateProductInput,
   ProductRecord,
   UpdateProductInput,
-} from "../entities/product.entity";
+} from "../domain/product.entity";
 
 export const productApiService = {
   get(id: string, options: AsolApiRequestOptions = {}) {

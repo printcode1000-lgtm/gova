@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
-} from "../entities/profile-fulfillment-settings.entity";
+} from "../domain/profile-fulfillment-settings.entity";
 import { profileService } from "../services/profile-service";
 
 export const profileFulfillmentSettingsQueryKey = (uid: string) =>

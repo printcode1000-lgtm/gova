@@ -26,7 +26,7 @@ UI component
 Files:
 
 - `src/features/follow`
-- `src/components/ui/follow`
+- `src/features/follow/presentation`
 - `src/app/api/follow`
 - `packages/data-core/src/core/database/profile/profile.schema.ts`
 - `packages/data-core/src/core/database/profile/migrations/0009_follows.sql`

@@ -1,16 +1,22 @@
+<!-- GENERATED FILE. DO NOT EDIT BY HAND.
+     Source: packages/architecture-core registries (CAPABILITY_PACKAGES, APPLICATION_FEATURES).
+     Regenerate: npm run architecture:docs
+     Drift fails: npm run architecture:check -->
+
 # Package Catalog
 
 ## Purpose
 
-Canonical inventory of every sealed `@asol/*` package in `packages/`. Each record is verified against `packages/<folder>/package.json` `exports` and `packages/architecture-core/src/registry/capability-registry.ts`.
+Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 41 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors (those are deployment copies synced by `@asol/service-mirror-core`).
+Covers all 41 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
-This document is the canonical package inventory. Capability ownership statements defer to [capability-map.md](./capability-map.md).
+**Canonical source:** `packages/architecture-core/src/registry/capability-registry.ts` + each `packages/<folder>/package.json` `exports`.
+This Markdown file is **generated** and verified by `architecture:check`.
 
 ---
 
@@ -22,12 +28,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/architecture-core/` |
 | **Purpose** | Repository architecture contracts and static enforcement |
 | **Architectural Layer** | enforcement |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:architecture-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/account-declarations
 
@@ -37,12 +42,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/account-declarations/` |
 | **Purpose** | Deployment account declarations and routing metadata |
 | **Architectural Layer** | declarations |
-| **Runtime** | universal (single or multi-door) |
-| **Public Exports** | `.` · `./gova` · `./notifications` · `./products` · `./orders` · `./profiles` · `./submain` · `./sub2main` |
+| **Public Exports** | `.` · `./gova` · `./notifications` · `./orders` · `./products` · `./profiles` · `./sub2main` · `./submain` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:account-declarations` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/account-bridge
 
@@ -52,12 +56,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/account-bridge/` |
 | **Purpose** | Cross-account notification and identity bridging |
 | **Architectural Layer** | bridge |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` · `./notifications` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:account-bridge` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/auth-core
 
@@ -67,12 +70,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/auth-core/` |
 | **Purpose** | Authentication and session identity |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:auth-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/backup-core
 
@@ -82,12 +84,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/backup-core/` |
 | **Purpose** | Backup orchestration over storage ports |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:backup-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/branding-core
 
@@ -97,12 +98,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/branding-core/` |
 | **Purpose** | App icon identity and generated branding assets |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` · `./tooling` |
 | **Infrastructure Privileges** | `sharp` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:branding-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/catalog-core
 
@@ -112,12 +112,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/catalog-core/` |
 | **Purpose** | Category catalog domain |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:catalog-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/data-core
 
@@ -127,12 +126,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/data-core/` |
 | **Purpose** | Database access, sharding, and domain repositories |
 | **Architectural Layer** | capability |
-| **Runtime** | browser + server doors |
 | **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./data-health` · `./dev-cloud-backup` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` |
 | **Infrastructure Privileges** | `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `drizzle-orm/better-sqlite3`, `drizzle-orm/libsql` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:data-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/data-health-core
 
@@ -142,12 +140,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/data-health-core/` |
 | **Purpose** | Schema health and data integrity checks |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:data-health-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/dev-core
 
@@ -157,12 +154,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/dev-core/` |
 | **Purpose** | Developer-only tooling surfaces |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:dev-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/env-core
 
@@ -172,12 +168,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/env-core/` |
 | **Purpose** | Environment variable reading rules |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` · `./files` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:env-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/featured-marquee-core
 
@@ -187,12 +182,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/featured-marquee-core/` |
 | **Purpose** | Featured marquee UI capability |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:featured-marquee-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/format-core
 
@@ -202,12 +196,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/format-core/` |
 | **Purpose** | Formatting helpers with a single owner |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:format-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/google-play-store-assets-core
 
@@ -217,12 +210,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/google-play-store-assets-core/` |
 | **Purpose** | Google Play store listing image assets |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` · `./images` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:google-play-store-assets-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/hero-slider-core
 
@@ -232,12 +224,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/hero-slider-core/` |
 | **Purpose** | Hero slider UI capability |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:hero-slider-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/map-core
 
@@ -247,12 +238,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/map-core/` |
 | **Purpose** | MapLibre map capability |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | `maplibre-gl` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:map-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/native-core
 
@@ -262,12 +252,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/native-core/` |
 | **Purpose** | Capacitor / native device capabilities |
 | **Architectural Layer** | capability |
-| **Runtime** | native + browser shell |
-| **Public Exports** | `.` · `./platform-globals` · `./scripts/validate-android-r8-policy` · `./scripts/android-build-preflight` |
+| **Public Exports** | `.` · `./platform-globals` · `./scripts/android-build-preflight` · `./scripts/validate-android-r8-policy` |
 | **Infrastructure Privileges** | `@capacitor/cli`, `@capacitor/core`, `@capacitor/action-sheet`, `@capacitor/app`, `@capacitor/browser`, `@capacitor/camera`, `@capacitor/clipboard`, `@capacitor/device`, `@capacitor/dialog`, `@capacitor/filesystem`, `@capacitor/geolocation`, `@capacitor/haptics`, `@capacitor/keyboard`, `@capacitor/local-notifications`, `@capacitor/network`, `@capacitor/preferences`, `@capacitor/push-notifications`, `@capacitor/screen-orientation`, `@capacitor/share`, `@capacitor/splash-screen`, `@capacitor/status-bar`, `@capacitor/text-zoom`, `@capacitor/toast`, `@capacitor-mlkit/barcode-scanning`, `@capawesome/capacitor-file-picker`, `@capgo/capacitor-speech-recognition` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:native-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/notifications-core
 
@@ -277,12 +266,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/notifications-core/` |
 | **Purpose** | Push notification delivery (Web Push, FCM HTTP v1, APNs) |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
-| **Public Exports** | `.` · `./server` · `./builder` · `./providers` |
+| **Public Exports** | `.` · `./builder` · `./providers` · `./server` |
 | **Infrastructure Privileges** | `web-push`, `google-auth-library` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:notifications-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/notifications-composition
 
@@ -292,12 +280,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/notifications-composition/` |
 | **Purpose** | Composition root for the notifications account |
 | **Architectural Layer** | composition |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
-| **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Test Gate** | `npm run test:notifications-composition` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/observability-core
 
@@ -307,12 +294,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/observability-core/` |
 | **Purpose** | Observability and telemetry ports |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./dev-trace` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:observability-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/orders-core
 
@@ -322,12 +308,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/orders-core/` |
 | **Purpose** | Order domain meaning and policies |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:orders-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/orders-composition
 
@@ -337,12 +322,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/orders-composition/` |
 | **Purpose** | Composition root for the orders account |
 | **Architectural Layer** | composition |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
-| **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Test Gate** | `npm run test:orders-composition` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/ota-core
 
@@ -352,12 +336,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/ota-core/` |
 | **Purpose** | OTA publishing and update runtime |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./publishing` · `./server` |
 | **Infrastructure Privileges** | `@aws-sdk/client-s3`, `google-auth-library` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:ota-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/page-save-core
 
@@ -367,12 +350,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/page-save-core/` |
 | **Purpose** | Mandatory gateway for page-authored persistence |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:page-save-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/page-snapshot-core
 
@@ -382,12 +364,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/page-snapshot-core/` |
 | **Purpose** | Page snapshot capture and restore |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:page-snapshot-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/product-core
 
@@ -397,12 +378,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/product-core/` |
 | **Purpose** | Product domain logic |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:product-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/product-style-core
 
@@ -412,12 +392,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/product-style-core/` |
 | **Purpose** | Product presentation style rules |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:product-style-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/products-composition
 
@@ -427,12 +406,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/products-composition/` |
 | **Purpose** | Composition root for the products account |
 | **Architectural Layer** | composition |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
-| **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Test Gate** | `npm run test:products-composition` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/profiles-composition
 
@@ -442,12 +420,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/profiles-composition/` |
 | **Purpose** | Composition root for the profiles account |
 | **Architectural Layer** | composition |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
-| **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Test Gate** | `npm run test:profiles-composition` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/release-core
 
@@ -457,12 +434,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/release-core/` |
 | **Purpose** | Release console and runbooks |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
-| **Public Exports** | `.` · `./console` · `./console-server` · `./console-artifacts` · `./console/android-release-runbook` |
+| **Public Exports** | `.` · `./console` · `./console-artifacts` · `./console-server` · `./console/android-release-runbook` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:release-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/secrets-core
 
@@ -472,12 +448,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/secrets-core/` |
 | **Purpose** | Secrets archive backup and restore |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:secrets-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/service-mirror-core
 
@@ -487,12 +462,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/service-mirror-core/` |
 | **Purpose** | Service source mirroring into services/* |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:service-mirror-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/service-runtime-core
 
@@ -502,12 +476,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/service-runtime-core/` |
 | **Purpose** | Shared service runtime helpers |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:service-runtime-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/signed-token-core
 
@@ -517,12 +490,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/signed-token-core/` |
 | **Purpose** | Signed token create/verify |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:signed-token-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/storage-core
 
@@ -532,12 +504,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/storage-core/` |
 | **Purpose** | Object storage (R2/S3) access |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
-| **Public Exports** | `.` · `./server` · `./profiles-config` |
+| **Public Exports** | `.` · `./profiles-config` · `./server` |
 | **Infrastructure Privileges** | `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:storage-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/storage-image-manager-core
 
@@ -547,12 +518,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/storage-image-manager-core/` |
 | **Purpose** | Image manager UI and client lifecycle over storage ports |
 | **Architectural Layer** | capability |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` · `./client-lifecycle` · `./services` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:storage-image-manager-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/sub2main-composition
 
@@ -562,12 +532,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/sub2main-composition/` |
 | **Purpose** | Composition root for the sub2main account |
 | **Architectural Layer** | composition |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
-| **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Test Gate** | `npm run test:sub2main-composition` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/submain-composition
 
@@ -577,12 +546,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/submain-composition/` |
 | **Purpose** | Composition root for the submain account |
 | **Architectural Layer** | composition |
-| **Runtime** | universal (single or multi-door) |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | yes |
-| **Test Gate** | `npm run test:compositions` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Test Gate** | `npm run test:submain-composition` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/system-logs-core
 
@@ -592,12 +560,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/system-logs-core/` |
 | **Purpose** | System log capture and persistence contract |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:system-logs-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/trending-ribbon-core
 
@@ -607,12 +574,11 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/trending-ribbon-core/` |
 | **Purpose** | Trending ribbon UI capability |
 | **Architectural Layer** | capability |
-| **Runtime** | universal + ./server |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:trending-ribbon-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/vercel-deploy-core
 
@@ -622,20 +588,14 @@ This document is the canonical package inventory. Capability ownership statement
 | **Folder** | `packages/vercel-deploy-core/` |
 | **Purpose** | Vercel deployment orchestration |
 | **Architectural Layer** | capability |
-| **Runtime** | Node-only deploy engine |
 | **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:vercel-deploy-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../../01-architecture/02-packages/module-isolation-rules.md) |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
-## Related Documents
+## Counts
 
-- [Package Layers](../02-packages/package-layers.md)
-- [Package Exports](../02-packages/package-exports.md)
-- [Capability Map](./capability-map.md)
-- [Dependency Map](./dependency-map.md)
-
-## Change Impact
-
-Adding or removing a package requires updating: `capability-registry.ts`, this catalog, `capability-map.md`, `package.json` exports, root `tsconfig.json` paths, ESLint restrictions, and the matching `test:*-core` gate in root `package.json` build chain.
+| Metric | Value |
+|---|---|
+| Packages | 41 |

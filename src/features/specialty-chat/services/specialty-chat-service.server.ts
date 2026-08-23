@@ -1,7 +1,7 @@
 import "server-only";
 
 import { categoryService } from "@/features/categories";
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { profileService } from "@/features/profile/server";
 import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications";
 import { GetSpecialtyChatPreferencesQuery } from "@asol/data-core/notifications";
 import { SetSpecialtyChatPreferencesCommand } from "@asol/data-core/notifications";
@@ -15,7 +15,7 @@ import { createSpecialtyChatCapability, verifySpecialtyChatCapability } from "./
 import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialtyReceiptInput, type SendSpecialtyRequestInput, type SendSpecialtyRequestResult, type SpecialtyChatIdentity, type SpecialtyChatPreferenceChanges, type StartProductConversationInput, type StartProductConversationResult, type StartProfileConversationInput, type StartProfileConversationResult } from "../domain/types";
 import { getSpecialtyChatSubOptions } from "../domain/specialty-options";
 import { verifySignedSessionToken } from "@asol/auth-core/server";
-import { productService } from "@/features/product/services/product-service.server";
+import { productService } from "@/features/product/server";
 
 const MAX_MESSAGE_LENGTH = 800;
 const MAX_RECIPIENTS = 500;

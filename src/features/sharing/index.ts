@@ -23,3 +23,7 @@ export {
   internalRouteFromPublicShareUrl,
   PUBLIC_SHARE_ORIGIN,
 } from "./share-links";
+
+/* BEGIN GENERATED FEATURE DOOR EXPORTS */
+/** Auto-maintained sealed-door re-exports. Do not edit by hand. */
+/* END GENERATED FEATURE DOOR EXPORTS */

@@ -1,4 +1,4 @@
-import { SuperAdminNotificationBroadcastPage } from "@/features/super-admin/presentation/SuperAdminNotificationBroadcastPage";
+import { SuperAdminNotificationBroadcastPage } from "@/features/super-admin/ui";
 
 export default function NotificationsBroadcastPage() {
   return <SuperAdminNotificationBroadcastPage />;

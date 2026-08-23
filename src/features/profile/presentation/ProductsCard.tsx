@@ -2,24 +2,24 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/input';
-import { ProfileProductsTabs } from '@/components/ui/profile-products-tabs';
+import { Input } from '@/shared/ui/input';
+import { ProfileProductsTabs } from '@/features/profile-products/ui';
 import { useProfileProductsTabs } from '@/features/profile-products';
 import {
   EMPTY_PROFILE_SHOWCASE,
   type ProfileShowcaseSettings,
   type StoreDetailsData,
-} from '@/features/profile/entities/store-details.entity';
+} from '@/features/profile/domain/store-details.entity';
 import { useStoreDetails } from '@/features/profile/hooks/use-store-details';
-import type { ProductRecord } from '@/features/product/entities/product.entity';
-import { productApiService } from '@/features/product/services/product-api-service';
+import type { ProductRecord } from '@/features/product';
+import { productApiService } from '@/features/product/ui';
 import type {
   ProfileSectionStatus,
   ProfileSpecialtiesController,
 } from './profile-save-controller';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation } from '@/shared/i18n';
 import { cloneShowcase, isShowcaseDirty } from './products-card-model';
-import { usePageSaveOperations } from '@/features/page-save/hooks/use-page-save-operations';
+import { usePageSaveOperations } from '@/features/page-save/ui';
 
 interface ProductsCardProps {
   uid: string;

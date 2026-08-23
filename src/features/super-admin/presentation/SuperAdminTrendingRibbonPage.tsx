@@ -14,21 +14,21 @@ import {
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { TrendingRibbon } from "@/components/ui/TrendingRibbon";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { TrendingRibbon } from "@/features/advertisements/ui";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
 import {
   TRENDING_RIBBON_CACHE_KEY,
   TRENDING_RIBBON_FALLBACK_LABEL,
   type TrendingRibbonRecord,
 } from "@asol/trending-ribbon-core";
-import { trendingRibbonApiService } from "@/features/advertisements/services/trending-ribbon-api-service";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { trendingRibbonApiService } from "@/features/advertisements";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 import { reportSystemIssue } from '@asol/system-logs-core';
-import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { usePageSaveRegistration } from "@/features/page-save/ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

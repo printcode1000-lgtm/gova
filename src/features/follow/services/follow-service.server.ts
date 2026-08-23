@@ -1,6 +1,6 @@
 import "server-only";
 
-import { FOLLOW_TARGET_TYPES } from "../entities/follow.types";
+import { FOLLOW_TARGET_TYPES } from "../domain/follow.types";
 import type {
   FollowActionResult,
   FollowAudience,
@@ -8,12 +8,12 @@ import type {
   FollowStatus,
   FollowStatusInput,
   FollowTargetType,
-} from "../entities/follow.types";
+} from "../domain/follow.types";
 import { FollowRepository } from "@asol/data-core/follow";
 import { verifySignedSessionToken } from "@asol/auth-core/server";
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
+import { isSuperAdminIdentity } from "@/features/auth";
 import { notificationsServer } from "@/features/notifications/server";
-import type { SendFollowerNotificationInput, SendFollowerNotificationResult } from "../entities/follow.types";
+import type { SendFollowerNotificationInput, SendFollowerNotificationResult } from "../domain/follow.types";
 
 const MAX_NOTIFICATION_TITLE_LENGTH = 120;
 const MAX_NOTIFICATION_BODY_LENGTH = 1_000;

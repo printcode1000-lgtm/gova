@@ -7,15 +7,15 @@ import { CategoriesGrid } from "@/features/home/presentation/CategoriesGrid";
 import {
   TrendingRibbon,
   type TrendingRibbonConfig,
-} from "@/components/ui/TrendingRibbon";
+} from "@/features/advertisements/presentation/TrendingRibbon";
 import {
   FeaturedMarquee,
   type FeaturedMarqueeConfig,
-} from "@/components/ui/FeaturedMarquee";
-import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
-import { useHomeHeroSlider } from "@/features/advertisements/hooks/use-home-hero-slider";
-import { useHomeFeaturedMarquee } from "@/features/advertisements/hooks/use-home-featured-marquee";
-import { useHomeTrendingRibbon } from "@/features/advertisements/hooks/use-home-trending-ribbon";
+} from "@/features/advertisements/presentation/FeaturedMarquee";
+import { HeroSlider, type HeroSliderConfig } from "@/features/advertisements/ui";
+import { useHomeHeroSlider } from "@/features/advertisements/ui";
+import { useHomeFeaturedMarquee } from "@/features/advertisements/ui";
+import { useHomeTrendingRibbon } from "@/features/advertisements/ui";
 import type { CategoryDisplay } from "@/features/categories";
 
 interface HomeScreenProps {

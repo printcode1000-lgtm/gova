@@ -7,14 +7,14 @@
 | Responsibility                      | File                                                        |
 | ----------------------------------- | ----------------------------------------------------------- |
 | Runtime contract, schemas and save policy | `packages/hero-slider-core/src`                            |
-| Reusable component                  | `src/components/ui/HeroSlider.tsx`                          |
-| Reusable component public props/types | `src/components/ui/hero-slider.types.ts`                   |
-| Reusable component transition styling | `src/components/ui/hero-slider-styles.ts`                  |
-| View-mode off-screen image probes   | `src/components/ui/HeroSliderImageProbe.tsx`                |
-| Carousel slide filtering helpers    | `src/components/ui/hero-slider-model.ts`                    |
-| Carousel UI helper tests            | `src/components/ui/hero-slider.test.ts`                     |
-| Full administrative editor          | `src/components/ui/HeroSliderEditor.tsx`                    |
-| Image-only profile editor           | `src/components/ui/HeroSliderImagesEditor.tsx`              |
+| Reusable component                  | `src/shared/ui/HeroSlider.tsx`                          |
+| Reusable component public props/types | `src/shared/ui/hero-slider.types.ts`                   |
+| Reusable component transition styling | `src/shared/ui/hero-slider-styles.ts`                  |
+| View-mode off-screen image probes   | `src/shared/ui/HeroSliderImageProbe.tsx`                |
+| Carousel slide filtering helpers    | `src/shared/ui/hero-slider-model.ts`                    |
+| Carousel UI helper tests            | `src/shared/ui/hero-slider.test.ts`                     |
+| Full administrative editor          | `src/shared/ui/HeroSliderEditor.tsx`                    |
+| Image-only profile editor           | `src/shared/ui/HeroSliderImagesEditor.tsx`              |
 | Home integration                    | `src/features/home/presentation/HomeScreen.tsx`                        |
 | Home cache and synchronization      | `src/features/advertisements/hooks/use-home-hero-slider.ts` |
 | Home save broadcast                 | `src/features/advertisements/home-hero-slider-sync.ts`      |
@@ -22,7 +22,7 @@
 | Super-admin page                    | `src/features/super-admin/presentation/SuperAdminHeroSliderPage.tsx`   |
 | Profile preview integration         | `src/features/profile/presentation/ProfilePageContent.tsx`             |
 | Profile image-editing tabs          | `src/features/profile/presentation/StoreIdentityCard.tsx`              |
-| Image management UI                 | `@asol/storage-image-manager-core` via `src/features/storage/components/StorageImageManager.tsx` |
+| Image management UI                 | `@asol/storage-image-manager-core` via `src/features/storage/presentation/StorageImageManager.tsx` |
 
 ## Component modes
 

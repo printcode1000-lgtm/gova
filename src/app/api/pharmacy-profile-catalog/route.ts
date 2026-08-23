@@ -1,6 +1,6 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
-import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server";
-import type { PharmacyOverrideStatus } from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
+import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/server";
+import type { PharmacyOverrideStatus } from "@/features/pharmacy-profile-catalog";
 
 function cleanText(value: unknown) {
   return typeof value === "string" ? value.trim().slice(0, 200) : "";

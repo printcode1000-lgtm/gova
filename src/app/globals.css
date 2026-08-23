@@ -1,11 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "../theme/index.css";
+@import "../shared/theme/index.css";
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-@source "../components/**/*.{ts,tsx}";
-@source "../lib/**/*.{ts,tsx}";
+@source "../shared/**/*.{ts,tsx}";
+@source "../features/**/*.{ts,tsx}";
+@source "../core/**/*.{ts,tsx}";
+@source "../app/**/*.{ts,tsx}";
+
 
 /*
  * System-inset layer — the single source of truth for every edge the OS owns.

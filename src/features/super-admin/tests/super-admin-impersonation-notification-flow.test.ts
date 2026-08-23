@@ -7,8 +7,8 @@ function source(relativePath: string): string {
 }
 
 const usersPage = source('src/features/super-admin/presentation/SuperAdminUsersPage.tsx');
-const banner = source('src/features/super-admin/components/SuperAdminImpersonationBanner.tsx');
-const bootstrap = source('src/features/auth/components/AuthLoginBootstrapController.tsx');
+const banner = source('src/features/super-admin/presentation/SuperAdminImpersonationBanner.tsx');
+const bootstrap = source('src/features/auth/presentation/AuthLoginBootstrapController.tsx');
 const lifecycle = source('src/features/auth/application/auth-lifecycle-events.ts');
 const asolDb = source('packages/data-core/src/browser/asol-db/index.ts');
 const layout = source('src/app/layout.tsx');

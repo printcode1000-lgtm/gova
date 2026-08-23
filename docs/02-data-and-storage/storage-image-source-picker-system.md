@@ -17,7 +17,7 @@ The component still uploads only one image per slot. It does not support selecti
 
 ```text
 packages/storage-image-manager-core/src/components/StorageImageManager.tsx
-src/features/storage/components/StorageImageManager.tsx
+src/features/storage/presentation/StorageImageManager.tsx
 src/platform/media/capacitor-image-source-adapter.ts
 ios/App/App/Info.plist
 ```

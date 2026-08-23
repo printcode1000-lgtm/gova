@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
-import { artifactsForJob } from "@/modules/release-commands/services/build-job-runner.server";
+import { assertSuperAdminRequest } from "@/features/super-admin/server";
+import { artifactsForJob } from "@/features/release-commands/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(

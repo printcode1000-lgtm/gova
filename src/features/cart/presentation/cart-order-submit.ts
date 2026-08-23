@@ -1,6 +1,6 @@
 import { asolApi } from "@/core/api/asol-api-client";
 import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
-import type { UserSession } from "@/features/auth/entities/session.entity";
+import type { UserSession } from "@/features/auth";
 import type { CartItem } from "@/features/cart/cart-store";
 import { notifications } from "@/features/notifications";
 

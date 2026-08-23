@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 
-import { useTranslation } from '@/lib/i18n';
-import type { Locale } from '@/lib/i18n';
+import { useTranslation } from '@/shared/i18n';
+import type { Locale } from '@/shared/i18n';
 import type { CategoryDisplay } from '@/features/categories';
 
 import MarqueeCard from './MarqueeCard';

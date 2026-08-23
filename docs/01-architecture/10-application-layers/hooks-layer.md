@@ -6,7 +6,7 @@ Rules for React hooks that bridge UI and client services.
 
 ## Scope
 
-Hooks under `src/features/**/hooks/`, `src/hooks/`, and colocated `use*.ts` files.
+Hooks under `src/features/**/hooks/`, feature hooks, and colocated `use*.ts` files.
 
 ## Responsibilities
 
@@ -37,7 +37,7 @@ Business logic belonging to a sealed capability should live in the `@asol/*-core
 
 ## Source Map
 
-- `src/features/**/hooks/`, `src/hooks/` (15 hook directories)
+- `src/features/**/hooks/`, feature hooks (15 hook directories)
 - Classifier: `packages/architecture-core/src/contracts/contract.ts`
 
 ## Related Documents

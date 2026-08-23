@@ -2,7 +2,7 @@
 
 import { Bell } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 
 import { AccountDevicesSection } from "./AccountDevicesSection";
 import { ChatMessagePreferencesSection } from "./ChatMessagePreferencesSection";

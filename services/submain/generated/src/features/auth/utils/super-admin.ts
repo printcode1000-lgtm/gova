@@ -1,4 +1,4 @@
-import type { UserSession } from "@/features/auth/entities/session.entity";
+import type { UserSession } from "@/features/auth/domain/session.entity";
 
 export const SUPER_ADMIN_UID = "usr_1782522385927_pwpl7rr";
 export const SUPER_ADMIN_PHONE = "01026546550";

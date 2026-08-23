@@ -72,7 +72,7 @@ export function checkImageStorageContract(fileRel: string, content: string, file
   if (
     usesLegacyBlobUpload &&
     !IMAGE_STORAGE_LEGACY_BLOB_UPLOAD_FILES.has(fileRel) &&
-    fileRel !== 'src/components/onboarding/form-components.tsx'
+    fileRel !== 'src/features/onboarding/presentation/form-components.tsx'
   ) {
     addViolation(
       'Image Storage Contract',
@@ -85,21 +85,24 @@ export function checkImageStorageContract(fileRel: string, content: string, file
   if (fileRel === IMAGE_STORAGE_SERVER_UPLOAD_ROUTE) {
     if (
       !content.includes('imageUploadApplicationService') &&
-      !content.includes('image-storage-service.bootstrap.server')
+      !content.includes('image-storage-service.bootstrap.server') &&
+      !content.includes('@/features/storage/server')
     ) {
       addViolation(
         'Image Storage Contract',
         filePath,
         'Upload API must delegate to ImageUploadApplicationService.',
-        'Business API → Application Layer only.'
+        'Business API → Application Layer only (via @/features/storage/server).'
       );
     }
   }
 
   const isUiOrHook =
-    fileRel.startsWith('src/components/') ||
-    /^src\/features\/[^/]+\/(presentation|components)\//.test(fileRel) ||
-    fileRel.startsWith('src/app/') && !fileRel.startsWith('src/app/api/') ||
+    fileRel.startsWith('src/shared/layouts/') ||
+    fileRel.startsWith('src/shared/brand/') ||
+    fileRel.startsWith('src/shared/ui/') ||
+    /^src\/features\/[^/]+\/presentation\//.test(fileRel) ||
+    (fileRel.startsWith('src/app/') && !fileRel.startsWith('src/app/api/')) ||
     fileRel.includes('/hooks/');
 
   if (isUiOrHook && /\/api\/storage\/images\/upload/.test(content)) {

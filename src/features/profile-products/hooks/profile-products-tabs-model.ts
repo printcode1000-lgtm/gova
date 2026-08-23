@@ -1,11 +1,11 @@
 import { CATEGORY_CONSTANTS, categoryService } from "@/features/categories";
-import type { ProductRecord } from "@/features/product/entities/product.entity";
-import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
+import type { ProductRecord } from "@/features/product";
+import type { ProfileSpecialtiesSelection } from "@/features/profile";
 import type {
   ProfileProductsFilters,
   ProfileProductsMainTab,
   ProfileProductsSubTab,
-} from "../entities/profile-products.types";
+} from "../domain/profile-products.types";
 
 export const EMPTY_PROFILE_PRODUCTS_FILTERS: ProfileProductsFilters = {
   searchText: "",

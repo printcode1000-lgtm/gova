@@ -71,9 +71,9 @@ const CONTENT_WRITES = [
 
 /** Modules that legitimately perform a content write, and the scope that runs it. */
 const ALLOWED = new Map<string, string>([
-  ["src/features/auth/components/AccountDeletionPageContent.tsx", "account-deletion"],
+  ["src/features/auth/presentation/AccountDeletionPageContent.tsx", "account-deletion"],
   [
-    "src/features/pharmacy-profile-catalog/components/PharmacyCatalogManagerPage.tsx",
+    "src/features/pharmacy-profile-catalog/presentation/PharmacyCatalogManagerPage.tsx",
     "pharmacy-catalog-manager",
   ],
   ["src/features/product/presentation/ProductPageContent.tsx", "product-*"],
@@ -103,7 +103,7 @@ const ALLOWED = new Map<string, string>([
     "system-logs-floating",
   ],
   [
-    "src/modules/google-play-console/hooks/use-store-assets.ts",
+    "src/features/google-play-console/hooks/use-store-assets.ts",
     "release-console-store-*",
   ],
 ]);

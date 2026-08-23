@@ -17,8 +17,8 @@ import {
 } from "@asol/data-core/product";
 import { StorageProfiles } from "@asol/storage-core";
 import { categoryService } from "@/features/categories";
-import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
-import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server";
+import { imageStorageService } from "@/features/storage/server";
+import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/server";
 
 function resolveStoredProductImageProfileId(image: ProductImage): string {
   // Legacy rows omit storageProfileId and live on the original product bucket.

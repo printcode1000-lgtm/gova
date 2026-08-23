@@ -7,7 +7,7 @@ import {
   DEFAULT_RETENTION_DAYS,
 } from '@asol/system-logs-core/server';
 import { profilesDataSource } from '@asol/data-core/composition';
-import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
+import { isSuperAdminIdentity } from '@/features/auth';
 
 function retentionDays() {
   return Number(process.env.SYSTEM_LOGS_RETENTION_DAYS ?? DEFAULT_RETENTION_DAYS);

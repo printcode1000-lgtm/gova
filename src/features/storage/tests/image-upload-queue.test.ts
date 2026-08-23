@@ -171,7 +171,7 @@ async function main() {
     "utf8",
   );
   const appManagerSource = readFileSync(
-    path.join(root, "src/features/storage/components/StorageImageManager.tsx"),
+    path.join(root, "src/features/storage/presentation/StorageImageManager.tsx"),
     "utf8",
   );
   const productSource = readFileSync(
@@ -183,7 +183,7 @@ async function main() {
     "utf8",
   );
   const heroEditorsSource = readFileSync(
-    path.join(root, "src/components/ui/HeroSliderImagesEditor.tsx"),
+    path.join(root, "src/shared/ui/HeroSliderImagesEditor.tsx"),
     "utf8",
   );
   const profileSource = readFileSync(
@@ -285,7 +285,7 @@ async function main() {
   );
 
   const allowedCoreComponentWiring = new Set([
-    path.join(root, "src/features/storage/components/StorageImageManager.tsx"),
+    path.join(root, "src/features/storage/presentation/StorageImageManager.tsx"),
   ]);
   const allowedCoreHookWiring = new Set([
     path.join(root, "src/features/storage/hooks/use-storage-profile-upload.ts"),
@@ -315,7 +315,7 @@ async function main() {
       !allowedCoreHookWiring.has(filePath)
     ) {
       assert.fail(
-        `${path.relative(root, filePath)} must not import @asol/storage-image-manager-core directly; use @/features/storage/components/StorageImageManager`,
+        `${path.relative(root, filePath)} must not import @asol/storage-image-manager-core directly; use @/features/storage/presentation/StorageImageManager`,
       );
     }
 

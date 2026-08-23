@@ -13,8 +13,10 @@ All 41 packages in `CAPABILITY_PACKAGES`, all application layers under `src/`, s
 | Artifact | Path |
 |---|---|
 | Registry (41 packages) | `packages/architecture-core/src/registry/capability-registry.ts` |
+| Application features | `packages/architecture-core/src/registry/application-features-registry.ts` |
 | Scan runner | `packages/architecture-core/src/runner.ts` |
 | CLI | `scripts/architecture-check.ts` |
+| Docs generator | `npm run architecture:docs` → `packages/architecture-core/src/docs/generate-architecture-docs.ts` |
 | Layer contract | `packages/architecture-core/src/contracts/contract.ts` |
 | ESLint import bans | `eslint.config.js` |
 | Browser composition root | `src/core/composition/browser-ports.ts` |

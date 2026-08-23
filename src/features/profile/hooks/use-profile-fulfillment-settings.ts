@@ -2,12 +2,12 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
   type ProfileFulfillmentSettings,
-} from "../entities/profile-fulfillment-settings.entity";
+} from "../domain/profile-fulfillment-settings.entity";
 import { profileService } from "../services/profile-service";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { profileFulfillmentSettingsQueryKey } from "./use-profile-public-fulfillment-settings";

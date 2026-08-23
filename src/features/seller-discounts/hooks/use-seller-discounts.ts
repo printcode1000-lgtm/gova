@@ -5,9 +5,9 @@ import { sellerDiscountApiService } from "../services/seller-discount-api-servic
 import type {
   SaveSellerDiscountInput,
   SellerDiscountRule,
-} from "../entities/seller-discount.entity";
+} from "../domain/seller-discount.entity";
 
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 
 export function useSellerDiscounts(sellerUid: string, includeInactive = true) {
   const { formatApiError } = useTranslation();

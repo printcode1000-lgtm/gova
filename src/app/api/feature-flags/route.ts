@@ -1,5 +1,5 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
-import { featureFlagService } from "@/features/feature-flags/services/feature-flag-service.server";
+import { featureFlagService } from "@/features/feature-flags/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 /**

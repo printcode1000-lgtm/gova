@@ -1,5 +1,5 @@
 import { assertProfilesEnv, createProfilesRuntime } from '@asol/profiles-composition';
-import { parseUsersBySpecialtyQuery } from '@/features/profile/entities/profile-query-requests';
+import { parseUsersBySpecialtyQuery } from '@/features/profile/domain/profile-query-requests';
 import { corsHeaders, preflight, profileErrorResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';

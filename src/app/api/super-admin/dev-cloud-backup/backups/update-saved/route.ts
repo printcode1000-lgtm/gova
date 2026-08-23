@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
-import { devCloudBackupService } from "@/modules/dev-cloud-backup/services/dev-cloud-backup-service.server";
+import { assertSuperAdminRequest } from "@/features/super-admin/server";
+import { devCloudBackupService } from "@/features/dev-cloud-backup/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function POST(request: Request) {

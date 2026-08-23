@@ -13,7 +13,7 @@ export type {
   ProductSearchFilters,
   ProductSearchRequest,
   SellerSearchRequest,
-} from '@/features/product-search/entities/product-search.types';
+} from '@/features/product-search/domain/product-search.types';
 
 export interface SubmainRuntimeConfig {
   env?: NodeJS.ProcessEnv;

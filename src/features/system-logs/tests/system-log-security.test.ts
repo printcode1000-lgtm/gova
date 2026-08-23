@@ -6,7 +6,7 @@ import {
   redactSystemLogText,
   sanitizePersistentSystemLog,
 } from '@asol/system-logs-core';
-import type { PersistentSystemLogInput } from "../entities/persistent-system-log.entity";
+import type { PersistentSystemLogInput } from "../domain/persistent-system-log.entity";
 
 const base: PersistentSystemLogInput = {
   level: "error",

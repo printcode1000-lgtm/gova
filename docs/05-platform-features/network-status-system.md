@@ -230,8 +230,8 @@ The following keys exist in both locale dictionaries:
 Files:
 
 ```text
-src/locales/ar.json
-src/locales/en.json
+src/shared/locales/ar.json
+src/shared/locales/en.json
 ```
 
 Any new network message must be added to both dictionaries.

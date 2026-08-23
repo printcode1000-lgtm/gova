@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
-import { DeployRunbookPage } from "@/modules/google-play-console/presentation/DeployRunbookPage";
+import { DeployRunbookPage } from "@/features/google-play-console/ui";
 
 /**
  * Always re-evaluate: runbook/commands come from @asol/release-core.

@@ -37,7 +37,7 @@ const INVERTED_AWAY = [
   '@/core/config/public-env',
   '@/core/api',
   '@/features/auth/utils/super-admin',
-  '@/features/system-logs/entities/persistent-system-log.entity',
+  '@/features/system-logs/domain/persistent-system-log.entity',
   '@/features/system-logs/pre-auth-failure-reporter',
   '@/features/system-logs/services/persistent-system-log-api-service',
   '@/features/system-logs/services/persistent-system-log-service.server',

@@ -1,4 +1,4 @@
-import type { SaveSessionInput, UserSession } from '../entities/session.entity';
+import type { SaveSessionInput, UserSession } from '../domain/session.entity';
 
 export interface ISessionService {
   /** Remove legacy auth rows and normalize stored session shape. */

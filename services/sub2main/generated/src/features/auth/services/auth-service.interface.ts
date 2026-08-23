@@ -5,8 +5,8 @@ import type {
 import type {
   UpdateProfileInput,
   UserProfile,
-} from '../entities/profile.entity';
-import type { ProfileSpecialtiesSelection } from '@/features/profile/entities/profile-specialties.entity';
+} from '../domain/profile.entity';
+import type { ProfileSpecialtiesSelection } from '@/features/profile';
 
 export interface LoginResult {
   uid: string;

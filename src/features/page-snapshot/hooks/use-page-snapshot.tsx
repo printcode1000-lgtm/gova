@@ -20,7 +20,7 @@ import type {
   PageSnapshotIdentity,
   PageSnapshotOptions,
   PageSnapshotRecord,
-} from '../entities/page-snapshot.types';
+} from '../domain/page-snapshot.types';
 import {
   DEFAULT_DEBOUNCE_MS,
   DEFAULT_RESTORE_DELAY_MS,

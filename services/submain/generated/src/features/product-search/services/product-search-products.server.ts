@@ -4,11 +4,11 @@ import { categoryService } from "@/features/categories";
 import type {
   ProductSearchRequest,
   ProductSearchResult,
-} from "../entities/product-search.types";
+} from "../domain/product-search.types";
 import { productSearchRepository } from "@asol/data-core/product-search";
 import { StorageProfiles } from "@asol/storage-core";
 import { getEnabledProductSearchFieldKeys } from "./product-search-fields.server";
-import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
+import { imageStorageService } from "@/features/storage/server";
 
 /**
  * Product search, split out from the seller search that used to sit beside it.

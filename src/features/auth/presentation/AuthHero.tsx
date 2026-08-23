@@ -2,8 +2,8 @@
 
 import { Shield, Smartphone, Lock } from 'lucide-react';
 
-import AppIcon from '@/components/brand/AppIcon';
-import { useTranslation } from '@/lib/i18n';
+import AppIcon from '@/shared/brand/AppIcon';
+import { useTranslation } from '@/shared/i18n';
 
 interface AuthHeroProps {
   variant: 'login' | 'registration';

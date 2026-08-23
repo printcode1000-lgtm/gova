@@ -1,6 +1,6 @@
 "use client";
 
-import type { UserSession } from "@/features/auth/entities/session.entity";
+import type { UserSession } from "@/features/auth";
 import {
   notifications,
   type NotificationCenterExtension,

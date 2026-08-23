@@ -1,8 +1,8 @@
 # App Sidebar Navigation
 
-Source: `src/components/layouts/AppSidebar.tsx`
-Props contract: `src/components/layouts/app-sidebar/AppSidebar.sidebar-model.tsx`
-Super Admin section: `src/components/layouts/app-sidebar/AppSidebarSuperAdminSection.tsx`
+Source: `src/shared/layouts/AppSidebar.tsx`
+Props contract: `src/shared/layouts/app-sidebar/AppSidebar.sidebar-model.tsx`
+Super Admin section: `src/shared/layouts/app-sidebar/AppSidebarSuperAdminSection.tsx`
 
 ## Card surfaces
 
@@ -74,7 +74,7 @@ depth comes from surface tint, not shadow.
 `SuperAdminGroup` accepts a `shellClass` prop (base border/radius plus one of the
 tokens above). Interactive rows inside still use `sidebarPressSurface` on buttons
 and links so `:active` feedback remains visible on each tinted surface. Tokens
-resolve through the theme (`src/theme/tokens.css`) so light and dark schemes stay
+resolve through the theme (`src/shared/theme/tokens.css`) so light and dark schemes stay
 harmonious without per-scheme class branches in the component.
 
 ## Guardrails

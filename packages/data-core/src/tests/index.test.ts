@@ -218,7 +218,7 @@ const ALLOWED_APP_EDGES = new Set<string>([
 
 /**
  * Sealed packages this one may reach, and only through a declared door. The order vocabulary
- * used to be eight `@/modules/marketplace-orders/*` app edges; it is now one door on
+ * used to be eight `@/features/marketplace-orders/*` app edges; it is now one door on
  * `@asol/orders-core`, which is a layer-1 → layer-1 edge rather than knowledge of the app.
  */
 const DECLARED_PACKAGE_DOORS = new Set([

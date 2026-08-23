@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
-import { profileService } from '@/features/profile/services/profile-service.bootstrap.server';
-import type { SaveStoreImagesInput } from '@/features/profile/entities/store-images.entity';
+import { profileService } from '@/features/profile/server';
+import type { SaveStoreImagesInput } from '@/features/profile';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {

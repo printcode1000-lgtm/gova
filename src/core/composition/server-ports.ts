@@ -33,7 +33,7 @@ export async function registerAppServerPorts(): Promise<void> {
   // `@asol/orders-core` decides what an order means and never who is an administrator. Its
   // identity port fails closed, so this registration is what lets the real super admin act as
   // one — not what protects the routes from everyone else.
-  const { registerOrdersCorePorts } = await import('@/features/orders/orders-core-ports');
+  const { registerOrdersCorePorts } = await import('@/features/orders');
   registerOrdersCorePorts();
 
   const { registerSystemLogsCoreServerPorts } = await import('@/core/config/system-logs.server');
@@ -43,14 +43,14 @@ export async function registerAppServerPorts(): Promise<void> {
   registerOtaCoreServerPorts();
 
   const { registerNotificationsCorePorts } = await import(
-    '@/features/notifications/notifications-core-ports'
+    '@/features/notifications/server'
   );
   registerNotificationsCorePorts();
 
-  const { registerStorageCorePorts } = await import('@/features/storage/storage-core-ports');
+  const { registerStorageCorePorts } = await import('@/features/storage/server');
   registerStorageCorePorts();
 
-  const { registerDataCorePorts } = await import('@/features/data/data-core-ports');
+  const { registerDataCorePorts } = await import('@/features/data/server');
   registerDataCorePorts();
 }
 

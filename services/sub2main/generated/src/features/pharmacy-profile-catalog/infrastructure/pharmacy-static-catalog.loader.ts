@@ -17,7 +17,7 @@ import type {
   PharmacyCatalogForm,
   PharmacyCatalogStrength,
   PharmacyCatalogSubcategory,
-} from "../entities/pharmacy-static-catalog.types";
+} from "../domain/pharmacy-static-catalog.types";
 
 type VersionedItems<T> = { schemaVersion: 3; items: T[] };
 

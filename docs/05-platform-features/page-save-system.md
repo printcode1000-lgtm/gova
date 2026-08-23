@@ -115,7 +115,7 @@ Several scopes can be mounted at once (a product page shows both the editor and 
 
 ## Header indicator
 
-`PageSaveHeaderButton` in `src/features/page-save/components/PageSaveHeaderButton.tsx` is mounted in `AppHeader`. `PageSaveRuntimeInit` in `AppShell` registers storage ports and hydrates pending records on startup.
+`PageSaveHeaderButton` in `src/features/page-save/presentation/PageSaveHeaderButton.tsx` is mounted in `AppHeader`. `PageSaveRuntimeInit` in `AppShell` registers storage ports and hydrates pending records on startup.
 
 - Appears when the active scope has dirty items, is saving, or a persisted pending record exists
 - Shows wave animation while dirty (not saving)

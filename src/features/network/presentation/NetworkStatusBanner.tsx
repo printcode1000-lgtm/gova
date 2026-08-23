@@ -3,10 +3,10 @@
 import { RefreshCw, ServerOff, Wifi, WifiOff } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import { BOTTOM_NAV_CLEARANCE } from '@/components/layouts/bottom-nav-layout';
+import { BOTTOM_NAV_CLEARANCE } from '@/shared/layouts/bottom-nav-layout';
 import { useNetworkStatus, type NetworkStatus } from '@/features/network/hooks/use-network-status';
-import { useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+import { useTranslation } from '@/shared/i18n';
+import { cn } from '@/shared/utils';
 
 const DISCONNECTED_STATUSES: NetworkStatus[] = ['offline', 'server-unreachable'];
 

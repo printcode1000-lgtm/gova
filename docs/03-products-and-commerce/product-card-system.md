@@ -29,14 +29,14 @@ src/features/product-card
 ProductCardViewModel
         |
         v
-src/components/ui/product-card/ProductCard
+src/features/product-card/presentation/ProductCard
 ```
 
 The feature module prepares a display model. The UI component only renders the supplied model and actions.
 
 ## Files
 
-- `src/features/product-card/entities/product-card.types.ts`
+- `src/features/product-card/domain/product-card.types.ts`
   Defines card variants, actions, badges, and the `ProductCardViewModel`.
 
 - `src/features/product-card/services/product-card-presenter.ts`
@@ -45,10 +45,10 @@ The feature module prepares a display model. The UI component only renders the s
 - `src/features/product-card/index.ts`
   Public module exports.
 
-- `src/components/ui/product-card/ProductCard.tsx`
+- `src/features/product-card/presentation/ProductCard.tsx`
   The shared visual product card.
 
-- `src/components/ui/product-card/index.ts`
+- `src/features/product-card/presentation/index.ts`
   Public UI export.
 
 ## Data Flow

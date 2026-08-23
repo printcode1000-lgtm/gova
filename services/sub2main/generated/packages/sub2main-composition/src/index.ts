@@ -11,7 +11,7 @@ import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/data-core-
 export type {
   CreateProductInput,
   UpdateProductInput,
-} from '@/features/product/entities/product.entity';
+} from '@/features/product/domain/product.entity';
 
 export interface Sub2mainRuntimeConfig {
   env?: NodeJS.ProcessEnv;

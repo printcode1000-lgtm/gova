@@ -48,7 +48,7 @@ ProductRecord {
 The canonical TypeScript definition lives in:
 
 ```text
-src/features/product/entities/product.entity.ts (re-export shim for `@asol/product-core`)
+src/features/product/domain/product.entity.ts (re-export shim for `@asol/product-core`)
 ```
 
 ## Database Storage

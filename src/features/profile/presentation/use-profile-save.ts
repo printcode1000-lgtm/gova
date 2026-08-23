@@ -1,6 +1,6 @@
 import * as React from "react";
 import { profileService } from "@/features/profile/services/profile-service";
-import { sessionService } from "@/features/auth/services/session-service";
+import { sessionService } from "@/features/auth/ui";
 import { mergePrimaryContacts } from "@/features/profile/utils/merge-primary-contacts";
 import {
   getErrorMessage,
@@ -17,8 +17,8 @@ import type {
   ProfileDiscountsController,
   StoreDetailsController,
 } from "./profile-save-controller";
-import type { ProfileEditorSection } from "@/features/profile/entities/profile-editor.entity";
-import type { UserSession } from "@/features/auth/entities/session.entity";
+import type { ProfileEditorSection } from "@/features/profile/domain/profile-editor.entity";
+import type { UserSession } from "@/features/auth";
 import { useRouter } from "next/navigation";
 
 interface UseProfileSaveProps {

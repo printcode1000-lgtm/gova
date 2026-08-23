@@ -2,15 +2,15 @@
 
 import * as React from "react";
 import { ChevronLeft, MessageSquare } from "lucide-react";
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 import type {
   ProductReview,
   ProductReviewsResult,
   ReviewSort,
-} from "@/features/product/entities/product-review.entity";
+} from "@/features/product";
 import { productReviewApiService } from "@/features/product/services/product-review-api-service";
-import { profileApiService } from "@/features/profile/services/profile-api-service";
-import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
+import { profileApiService } from "@/features/profile/ui";
+import { usePageSaveOperationScope } from "@/features/page-save/ui";
 
 import { PAGE_SIZE, emptyReviewsResult, Stars, relativeDate } from "./product-reviews/ProductReviews.review-formatting";
 import {

@@ -8,7 +8,7 @@ export const APPAREL_PETS_MAIN_CATEGORY_IDS = ['1', '12'] as const;
 
 /**
  * Onboarding fashion category slug ids from
- * `src/lib/onboarding/schemas.ts` → `constants.fashionCategories`.
+ * `src/features/onboarding/domain/schemas.ts` → `constants.fashionCategories`.
  * These are not numeric catalog ids; treat all as apparel.
  */
 export const ONBOARDING_FASHION_CATEGORY_IDS = [

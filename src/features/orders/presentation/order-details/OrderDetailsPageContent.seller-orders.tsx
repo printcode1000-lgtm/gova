@@ -20,10 +20,10 @@ import {
 } from "lucide-react";
 import { asolApi } from "@/core/api/asol-api-client";
 import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { Input } from "@/shared/ui/input";
+import { Textarea } from "@/shared/ui/textarea";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import { OrderActionButton } from "../OrderActionButton";
 import { OrderAuditTrail } from "../OrderAuditTrail";
 import {

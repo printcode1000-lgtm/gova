@@ -3,8 +3,8 @@ import type {
   ReviewSort,
   SaveReviewInput,
   UpdateReviewInput,
-} from "@/features/product/entities/product-review.entity";
-import { productReviewService } from "@/features/product/services/product-review-service.server";
+} from "@/features/product";
+import { productReviewService } from "@/features/product/server";
 
 function failure(error: unknown) {
   const message =

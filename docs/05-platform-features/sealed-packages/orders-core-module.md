@@ -56,7 +56,7 @@ phone is not the super admin, and an actor with no uid is refused rather than de
 ## What this changed elsewhere
 
 - `@asol/data-core` dropped **8 budgeted application edges** — the order vocabulary it used to
-  reach through `@/modules/marketplace-orders/*`. Its budget went from 41 to 34, and
+  reach through `@/features/marketplace-orders/*`. Its budget went from 41 to 34, and
   `@asol/orders-core` is now pinned in its declared package-door list instead.
 - `@asol/orders-composition` imports the door and registers the identity port.
 - The orders account declaration no longer names an order file as a mirror entry point. Both

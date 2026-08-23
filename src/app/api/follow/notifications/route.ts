@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import type { SendFollowerNotificationInput } from "@/features/follow";
-import { followService } from "@/features/follow/services/follow-service.bootstrap.server";
+import { followService } from "@/features/follow/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export const runtime = "nodejs";

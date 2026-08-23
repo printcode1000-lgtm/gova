@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { parseUsersBySpecialtyQuery } from "@/features/profile/entities/profile-query-requests";
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { parseUsersBySpecialtyQuery } from "@/features/profile";
+import { profileService } from "@/features/profile/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {

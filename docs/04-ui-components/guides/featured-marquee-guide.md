@@ -6,7 +6,7 @@ The `FeaturedMarquee` is a reusable, self-scrolling product showcase component d
 
 ## Component Location
 * Runtime contract and validation: `packages/featured-marquee-core/src`
-* Component code: `src/components/ui/FeaturedMarquee.tsx`
+* Component code: `src/shared/ui/FeaturedMarquee.tsx`
 * Home cache and synchronization: `src/features/advertisements/hooks/use-home-featured-marquee.ts`
 * Server adapter: `src/features/advertisements/services/featured-marquee-service.server.ts`
 
@@ -82,7 +82,7 @@ Place a JSON file in the folder of your Screen component:
 'use client';
 
 import { useMemo } from 'react';
-import { FeaturedMarquee, type FeaturedMarqueeConfig } from '@/components/ui/FeaturedMarquee';
+import { FeaturedMarquee, type FeaturedMarqueeConfig } from '@/features/advertisements/presentation/FeaturedMarquee';
 import marqueeData from './my-featured-marquee.json';
 
 export default function MyScreen() {

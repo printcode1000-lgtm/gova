@@ -1,5 +1,5 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
-import { isSearchCategorySelectionShaped } from '@/features/product-search/entities/product-search.request';
+import { isSearchCategorySelectionShaped } from '@/features/product-search/domain/product-search.request';
 
 import { corsHeaders, preflight, searchErrorResponse } from '../../../lib/http';
 

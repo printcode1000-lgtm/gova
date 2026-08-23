@@ -4,8 +4,8 @@ import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-sav
 import { buildImageUploadPageSaveItem } from "@/features/page-save/utils/page-save-image-items";
 import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
 import { uploadPageSaveImageUploadHandles } from "@/features/page-save/runtime/page-save-image-upload-registry";
-import { useOnboardingStore } from "@/lib/onboarding";
-import { useTranslation } from "@/lib/i18n";
+import { useOnboardingStore } from "@/features/onboarding";
+import { useTranslation } from "@/shared/i18n";
 
 export const ONBOARDING_IMAGE_UPLOAD_HANDLES = [
   "onboarding-store-logo",

@@ -4,8 +4,8 @@ import { categoryService } from '@/features/categories';
 import "server-only";
 
 import { configureOtaCore } from "@asol/ota-core";
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
-import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
+import { isSuperAdminIdentity } from "@/features/auth";
+import { persistentSystemLogService } from "@/features/system-logs/server";
 
 /**
  * The server half of the `@asol/ota-core` port registration.

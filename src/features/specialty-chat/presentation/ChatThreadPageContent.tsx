@@ -11,15 +11,15 @@ import {
   MessageCircle,
   Send,
 } from "lucide-react";
-import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { BOTTOM_NAV_CLEARANCE } from "@/shared/layouts/bottom-nav-layout";
+import { useSession } from "@/features/auth/ui";
 import {
   conversationMessages,
   findLocalChatConversation,
   useNotifications,
 } from "@/features/notifications/ui";
-import { useTranslation } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { useTranslation } from "@/shared/i18n";
+import { cn } from "@/shared/utils";
 import { specialtyChatClient } from "../application/specialty-chat-client";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
 import {

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode, RefObject } from "react";
-import type { ProductDetails } from "@/features/product/entities/product.entity";
+import type { ProductDetails } from "@/features/product";
 import {
   ProductComponentFrame,
   ProductField,
@@ -9,7 +9,7 @@ import {
 import { ProductAddToCartButton } from "./ProductAddToCartButton";
 import { ProductImageEditors } from "./ProductImageEditors";
 import { ProductImageGallery } from "./ProductImageGallery";
-import { ProductPharmacySpecs } from "@/features/pharmacy-profile-catalog/components/ProductPharmacySpecs";
+import { ProductPharmacySpecs } from "@/features/pharmacy-profile-catalog/ui";
 import { ProductPropertySpecs } from "./ProductPropertySpecs";
 import { ProductRatingSettings } from "./ProductRatingSettings";
 import { ProductReviews } from "./ProductReviews";
@@ -18,7 +18,7 @@ import type {
   ProductStyleComponents,
 } from "./product-component.types";
 import { ProductVehicleSpecs } from "./ProductVehicleSpecs";
-import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
+import type { StorageImageManagerHandle } from "@/features/storage/ui";
 import {
   PRODUCT_COMPONENT_FIELDS,
   PRODUCT_COMPONENT_TITLES,

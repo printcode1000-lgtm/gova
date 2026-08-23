@@ -8,8 +8,8 @@ import type {
   PersistentSystemLogInput,
   PersistentSystemLogLevel,
   PersistentSystemLogOrigin,
-} from "@/features/system-logs/entities/persistent-system-log.entity";
-import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
+} from "@/features/system-logs/domain/persistent-system-log.entity";
+import { persistentSystemLogService } from "@/features/system-logs/server";
 import {
   isIngestRateLimited,
   readBoundedJsonBody,

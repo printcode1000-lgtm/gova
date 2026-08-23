@@ -5,19 +5,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ImagePlus, Loader2 } from "lucide-react";
 
 import { ASOL_API_ROUTES, asolApi } from "@/core/api";
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { StorageProfiles, type StoredImage } from "@asol/storage-core";
 import {
   StorageImageManager,
   type StorageImageManagerHandle,
-} from "@/features/storage/components/StorageImageManager";
-import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
-import { buildImageUploadPageSaveItem } from "@/features/page-save/utils/page-save-image-items";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useTranslation } from "@/lib/i18n";
+} from "@/features/storage/presentation/StorageImageManager";
+import { usePageSaveRegistration } from "@/features/page-save/ui";
+import { buildImageUploadPageSaveItem } from "@/features/page-save";
+import { buildPageSaveOperationDescription } from "@/features/page-save";
+import { Input } from "@/shared/ui/input";
+import { Textarea } from "@/shared/ui/textarea";
+import { useTranslation } from "@/shared/i18n";
 
 function normalizeCustomRequestImages(
   images: Array<StoredImage | null | undefined>,

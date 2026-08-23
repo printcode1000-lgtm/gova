@@ -1,6 +1,6 @@
 import 'server-only';
 
-import '@/features/auth/server/auth-core-ports.server';
+import '@/features/auth/server';
 import {
   extractSessionToken,
   isSuperAdminIdentity,

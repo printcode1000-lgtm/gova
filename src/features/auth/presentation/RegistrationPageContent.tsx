@@ -12,9 +12,9 @@ import { EmailInput } from '@/features/auth/presentation/EmailInput';
 import { PasswordInput } from '@/features/auth/presentation/PasswordInput';
 import { PasswordStrength } from '@/features/auth/presentation/PasswordStrength';
 import { PhoneVerification } from '@/features/auth/presentation/PhoneVerification';
-import { useGuestSession } from '@/hooks/use-guest-session';
-import { useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
+import { useTranslation } from '@/shared/i18n';
+import { cn } from '@/shared/utils';
 import { createRegistrationSchema, type RegistrationFormData } from '@asol/auth-core';
 
 import { useRegister } from '@/features/auth/hooks/use-register';

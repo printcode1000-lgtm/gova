@@ -1,5 +1,5 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
-import { productReviewService } from "@/features/product/services/product-review-service.server";
+import { productReviewService } from "@/features/product/server";
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as {

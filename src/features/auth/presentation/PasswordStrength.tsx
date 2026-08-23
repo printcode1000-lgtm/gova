@@ -2,9 +2,9 @@
 
 import { Check } from 'lucide-react';
 
-import { useTranslation } from '@/lib/i18n';
-import type { TranslationKey } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+import { useTranslation } from '@/shared/i18n';
+import type { TranslationKey } from '@/shared/i18n';
+import { cn } from '@/shared/utils';
 
 interface PasswordStrengthProps {
   password: string;

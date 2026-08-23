@@ -10,8 +10,8 @@ import {
   type RunAction,
   text,
 } from "./OrderDetailsPageContent.navigation-summary";
-import { useProfileFulfillmentSettings } from "@/features/profile/hooks/use-profile-fulfillment-settings";
-import { useProfileCarrierLabels } from "@/features/profile/hooks/use-profile-carrier-labels";
+import { useProfileFulfillmentSettings } from "@/features/profile/ui";
+import { useProfileCarrierLabels } from "@/features/profile/ui";
 
 export function SellerCarrierLinkPanel({
   orderId,

@@ -79,7 +79,7 @@ assert.match(selfTestButton, /notifications\.selfTest\.button/);
 assert.match(card, /<SelfTestNotificationButton state=\{state\} \/>/);
 
 // Every new string exists in both locales.
-const locales = ['src/locales/ar.json', 'src/locales/en.json'].map(
+const locales = ['src/shared/locales/ar.json', 'src/shared/locales/en.json'].map(
   (file) => JSON.parse(source(file)) as Record<string, string>,
 );
 for (const key of [

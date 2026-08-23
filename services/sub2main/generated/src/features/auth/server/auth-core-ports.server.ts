@@ -8,7 +8,7 @@ import { getAsolSessionSigningSecret } from '@/core/config/server-env';
 import {
   SUPER_ADMIN_PHONE,
   SUPER_ADMIN_UID,
-} from '@/features/auth/utils/super-admin';
+} from '@/features/auth';
 
 registerSessionSigningSecret(getAsolSessionSigningSecret);
 registerSuperAdminIdentity(() => ({

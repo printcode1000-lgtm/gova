@@ -28,14 +28,14 @@ src/features/seller-card
 SellerCardViewModel
       |
       v
-src/components/ui/seller-card/SellerCard
+src/features/seller-card/presentation/SellerCard
 ```
 
 The feature module converts profile rows into a display model. The UI component renders that model using a variant selected by the host page.
 
 ## Files
 
-- `src/features/seller-card/entities/seller-card.types.ts`
+- `src/features/seller-card/domain/seller-card.types.ts`
   Defines variants, badges, actions, and the `SellerCardViewModel`.
 
 - `src/features/seller-card/services/seller-card-presenter.ts`
@@ -44,10 +44,10 @@ The feature module converts profile rows into a display model. The UI component 
 - `src/features/seller-card/index.ts`
   Public feature exports.
 
-- `src/components/ui/seller-card/SellerCard.tsx`
+- `src/features/seller-card/presentation/SellerCard.tsx`
   Shared seller card UI component.
 
-- `src/components/ui/seller-card/index.ts`
+- `src/features/seller-card/presentation/index.ts`
   Public UI export.
 
 ## Variants

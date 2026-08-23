@@ -1,7 +1,7 @@
 import "server-only";
 
-import { runSuperAdminJsonRoute } from "@/features/super-admin/services/super-admin-route.server";
-import { superAdminUserService } from "@/features/super-admin/services/super-admin-user-service.server";
+import { runSuperAdminJsonRoute } from "@/features/super-admin/server";
+import { superAdminUserService } from "@/features/super-admin/server";
 
 interface DeleteUserBody {
   targetUid: string;

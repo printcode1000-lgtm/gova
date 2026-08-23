@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { useSession } from '@/features/auth/components/SessionProvider';
-import { isSuperAdmin } from '@/features/auth/utils/super-admin';
-import { useTranslation } from '@/lib/i18n';
+import { useSession } from '@/features/auth/ui';
+import { isSuperAdmin } from '@/features/auth';
+import { useTranslation } from '@/shared/i18n';
 import { asolDbGet, ASOL_DB_STORES } from '@asol/data-core/browser';
 import { runInitialization } from '@/features/splash/services/initialization';
 import { otaUpdateService } from '@asol/ota-core';

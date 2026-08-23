@@ -1,4 +1,4 @@
-import type { LocationEntry } from '@/features/profile/entities/profile-contacts.entity';
+import type { LocationEntry } from '@/features/profile/domain/profile-contacts.entity';
 
 import type {
   PhoneLink,

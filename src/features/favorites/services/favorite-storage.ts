@@ -5,7 +5,7 @@ import {
   asolDbSet,
 } from "@asol/data-core/browser";
 
-import type { FavoriteCollection } from "../entities/favorite.entity";
+import type { FavoriteCollection } from "../domain/favorite.entity";
 import {
   EMPTY_FAVORITE_COLLECTION,
   mergeFavoriteCollections,

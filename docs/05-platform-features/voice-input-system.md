@@ -52,7 +52,7 @@ RootLayout
 | `src/features/voice-input/voice-input-scanner.ts` | Scans fields, creates buttons, inserts transcripts, and performs cleanup |
 | `src/platform/speech/speech-recognition-adapter.ts` | Selects and isolates native or browser recognition |
 | `src/app/globals.css` | Microphone placement, active state, and reduced-motion behavior |
-| `src/locales/ar.json` and `src/locales/en.json` | Accessible button labels |
+| `src/shared/locales/ar.json` and `src/shared/locales/en.json` | Accessible button labels |
 
 ## Automatic scanning
 

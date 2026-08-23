@@ -2,8 +2,8 @@
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { setSystemLogCollectorAuthorized } from "@/features/system-logs/system-log-store";
 

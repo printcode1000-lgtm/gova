@@ -5,27 +5,27 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MessageCircle, Share2, UserCircle } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { useTranslation } from "@/lib/i18n";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { Button } from "@/shared/ui/button";
+import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
+import { useSession } from "@/features/auth/ui";
+import { useTranslation } from "@/shared/i18n";
+import { isSuperAdmin } from "@/features/auth";
 import { categoryService } from "@/features/categories";
 import type {
   ProductDetails,
   ProductRecord,
-} from "@/features/product/entities/product.entity";
+} from "@/features/product";
 import { productApiService } from "@/features/product/services/product-api-service";
 import { createProductCardViewModel } from "@/features/product-card";
 import { FavoriteButton, favoriteFromProductCard } from "@/features/favorites";
 import { specialtyChatClient } from "@/features/specialty-chat";
-import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
+import type { StorageImageManagerHandle } from "@/features/storage/ui";
 import { ProductComponentsRenderer } from "./ProductComponentsRenderer";
 import type { ProductStyleComponents } from "./product-component.types";
-import { createDefaultProductStyleComponents } from "@/components/ui/product-style-settings";
-import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
-import { buildImageUploadPageSaveItem } from "@/features/page-save/utils/page-save-image-items";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
+import { createDefaultProductStyleComponents } from "@/shared/ui/product-style-settings";
+import { usePageSaveRegistration } from "@/features/page-save/ui";
+import { buildImageUploadPageSaveItem } from "@/features/page-save";
+import { buildPageSaveOperationDescription } from "@/features/page-save";
 import {
   buildProductShareUrl,
   ShareMenu,

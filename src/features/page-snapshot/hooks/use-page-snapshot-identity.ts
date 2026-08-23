@@ -3,9 +3,9 @@
 import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-import { useSession } from '@/features/auth/components/SessionProvider';
+import { useSession } from '@/features/auth/ui';
 
-import type { PageSnapshotIdentity } from '../entities/page-snapshot.types';
+import type { PageSnapshotIdentity } from '../domain/page-snapshot.types';
 import {
   installNavigationEvents,
   searchParamsToRecord,

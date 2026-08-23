@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
-import { ARABIC_ONLY_SOURCE_ROOTS } from "../src/lib/i18n/arabic-only-routes";
+import { ARABIC_ONLY_SOURCE_ROOTS } from "../src/shared/i18n/arabic-only-routes";
 
 const root = process.cwd();
 const forbiddenImport = /from\s+["']@\/lib\/i18n["']/;
@@ -39,7 +39,7 @@ for (const relativeRoot of ARABIC_ONLY_SOURCE_ROOTS) {
   }
 }
 
-for (const localeFile of ["src/locales/ar.json", "src/locales/en.json"]) {
+for (const localeFile of ["src/shared/locales/ar.json", "src/shared/locales/en.json"]) {
   const locale = JSON.parse(readFileSync(path.join(root, localeFile), "utf8")) as Record<
     string,
     string
@@ -48,12 +48,12 @@ for (const localeFile of ["src/locales/ar.json", "src/locales/en.json"]) {
   assert.equal(
     leaked.length,
     0,
-    `${localeFile} must not contain releaseConsole.* keys (use src/locales/admin-ar.json)`,
+    `${localeFile} must not contain releaseConsole.* keys (use src/shared/locales/admin-ar.json)`,
   );
 }
 
 const adminAr = JSON.parse(
-  readFileSync(path.join(root, "src/locales/admin-ar.json"), "utf8"),
+  readFileSync(path.join(root, "src/shared/locales/admin-ar.json"), "utf8"),
 ) as Record<string, string>;
 assert.ok(
   Object.keys(adminAr).some((key) => key.startsWith("releaseConsole.")),
@@ -73,7 +73,7 @@ for (const [, label] of devNavSource.matchAll(/name:\s*['"]([^'"]+)['"]/g)) {
 }
 
 const sidebarSource = readFileSync(
-  path.join(root, "src/components/layouts/AppSidebar.tsx"),
+  path.join(root, "src/shared/layouts/AppSidebar.tsx"),
   "utf8",
 );
 for (const match of sidebarSource.matchAll(

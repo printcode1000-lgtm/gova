@@ -1,4 +1,4 @@
-import type { ProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
+import type { ProfileFulfillmentSettings } from "@/features/profile";
 
 type ShippingPricing = ProfileFulfillmentSettings["shippingPricing"];
 

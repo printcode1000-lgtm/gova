@@ -1,4 +1,4 @@
-import { SettingsPageContent } from '@/features/settings/presentation/SettingsPageContent';
+import { SettingsPageContent } from '@/features/settings/ui';
 
 export default function SettingsPage() {
   return <SettingsPageContent />;

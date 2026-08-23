@@ -247,3 +247,5 @@ export {
   type NotificationTestScenario,
   type NotificationTestScenarioId,
 } from "@asol/notifications-core";
+
+export { registerNotificationsCorePorts } from './notifications-core-ports';

@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
-import { dataHealthService } from "@/modules/data-health/services/data-health-service.server";
+import { assertSuperAdminRequest } from "@/features/super-admin/server";
+import { dataHealthService } from "@/features/data-health/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 interface CleanupBody {

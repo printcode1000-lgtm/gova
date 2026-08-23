@@ -1,4 +1,4 @@
-import type { ProfileShowcaseSettings } from '@/features/profile/entities/store-details.entity';
+import type { ProfileShowcaseSettings } from '@/features/profile/domain/store-details.entity';
 
 export function cloneShowcase(showcase: ProfileShowcaseSettings): ProfileShowcaseSettings {
   return {

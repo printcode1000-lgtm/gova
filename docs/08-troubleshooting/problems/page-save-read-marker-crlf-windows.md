@@ -6,7 +6,7 @@
 
 ```text
 Layer: Page Save Write Gateway
-File: src/modules/data-health/presentation/use-data-health-page.ts
+File: src/features/data-health/presentation/use-data-health-page.ts
 Violation: Rendering code writes outside the page-save gateway (lines 218, 283).
 ```
 

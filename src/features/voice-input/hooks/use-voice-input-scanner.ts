@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-import type { Locale } from '@/lib/i18n';
+import type { Locale } from '@/shared/i18n';
 
 import { VoiceInputScanner } from '../voice-input-scanner';
 

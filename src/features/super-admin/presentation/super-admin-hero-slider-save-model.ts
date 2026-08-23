@@ -1,4 +1,4 @@
-import type { HeroSliderConfig } from "@/components/ui/hero-slider.types";
+import type { HeroSliderConfig } from "@/features/advertisements/ui";
 import { homeHeroImageKeys, isHomeHeroConfigReadyToPersist } from "@asol/hero-slider-core";
 
 export function heroSliderFingerprint(

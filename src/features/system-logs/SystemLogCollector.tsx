@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import { publicEnv } from "@/core/config/public-env";
 import { installGlobalCapture } from "@asol/system-logs-core";
 import { registerSystemLogsCoreBrowserPorts } from "./system-logs-core-bootstrap";

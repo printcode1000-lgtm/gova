@@ -1,7 +1,7 @@
 import "server-only";
 
 import { apiError } from "@/core/api/api-response";
-import { registerOrdersCorePorts } from "@/features/orders/orders-core-ports";
+import { registerOrdersCorePorts } from "@/features/orders";
 
 /**
  * `actorFromInput` used to live here. It moved to

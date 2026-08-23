@@ -7,7 +7,7 @@ Asol implements a **Material Design 3–style theme** with CSS custom properties
 ## Architecture
 
 ```
-src/theme/
+src/shared/theme/
 ├── index.css              # Aggregates all theme CSS (imported from globals.css)
 ├── tokens.css             # Color tokens, surfaces, on-colors
 ├── tailwind-theme.css     # Tailwind @theme mapping
@@ -24,7 +24,7 @@ src/theme/
     └── ThemeInitScript.tsx     # Deprecated — use AppInitScript
 ```
 
-**Unified init:** `src/lib/app-init/` generates `public/asol-app-init.js`, which restores **both theme and locale** before paint.
+**Unified init:** `src/shared/app-init/` generates `public/asol-app-init.js`, which restores **both theme and locale** before paint.
 
 ---
 
@@ -35,8 +35,8 @@ src/theme/
 ```tsx
 'use client';
 
-import { useThemePreferences, useResolvedColorScheme } from '@/lib/preferences';
-// or: import { useThemePreferences } from '@/theme/runtime';
+import { useThemePreferences, useResolvedColorScheme } from '@/shared/preferences';
+// or: import { useThemePreferences } from '@/shared/theme/runtime';
 
 export function ThemeToggle() {
   const { preferences, resolvedScheme, toggleColorScheme, updatePreferences } =
@@ -151,8 +151,8 @@ Use `dark:` utilities — they follow `data-theme`, not `class="dark"`.
 
 ```tsx
 // src/app/layout.tsx
-import { AppInitScript } from '@/lib/app-init';
-import { PreferencesProvider } from '@/lib/preferences';
+import { AppInitScript } from '@/shared/app-init';
+import { PreferencesProvider } from '@/shared/preferences';
 
 <html lang="ar" dir="rtl" data-theme="light" suppressHydrationWarning>
   <head>
@@ -185,7 +185,7 @@ All in-app routes are rendered through `AppShell`, which reserves enough space f
 The shared expression is defined in:
 
 ```ts
-// src/components/layouts/bottom-nav-layout.ts
+// src/shared/layouts/bottom-nav-layout.ts
 export const BOTTOM_NAV_CLEARANCE =
   'calc(var(--asol-bottom-nav-space, calc(5rem + env(safe-area-inset-bottom, 0px))) + 1rem)';
 ```
@@ -195,7 +195,7 @@ export const BOTTOM_NAV_CLEARANCE =
 Normal page content is protected by `AppShell`. Viewport-positioned elements are outside document flow, so every page-level `fixed` or bottom-aligned `sticky` element must use the same clearance:
 
 ```tsx
-import { BOTTOM_NAV_CLEARANCE } from '@/components/layouts/bottom-nav-layout';
+import { BOTTOM_NAV_CLEARANCE } from '@/shared/layouts/bottom-nav-layout';
 
 <div
   className="fixed inset-x-4"
@@ -219,7 +219,7 @@ This rule applies to floating actions, save bars, toasts, network banners, and n
 
 ## Settings UI
 
-Theme mode (light / dark) is toggled from the collapsible "Settings" group in the sidebar (`src/components/layouts/AppSidebar.tsx`), next to the language toggle.
+Theme mode (light / dark) is toggled from the collapsible "Settings" group in the sidebar (`src/shared/layouts/AppSidebar.tsx`), next to the language toggle.
 
 Remaining theme options are in **Settings** (`src/features/settings/presentation/SettingsPageContent.tsx`):
 
@@ -238,7 +238,7 @@ Labels are translated via i18n keys: `theme.light`, `density.compact`, `motion.s
 npm run app:init
 ```
 
-Regenerates `public/asol-app-init.js` from `src/lib/app-init/build-app-init-script.ts`.
+Regenerates `public/asol-app-init.js` from `src/shared/app-init/build-app-init-script.ts`.
 Runs automatically before `dev` and `build`.
 
 **Keep in sync:** init script logic must mirror `apply-document-theme.ts` and `apply-locale.ts`.
@@ -249,13 +249,13 @@ Runs automatically before `dev` and `build`.
 
 ### New CSS token
 
-1. Add variable to `src/theme/tokens.css`
+1. Add variable to `src/shared/theme/tokens.css`
 2. Map in `tailwind-theme.css` if needed for Tailwind utilities
 3. Use via `var(--your-token)` or Tailwind class
 
 ### New preference field
 
-1. Add to `ThemePreferences` in `src/theme/runtime/types.ts`
+1. Add to `ThemePreferences` in `src/shared/theme/runtime/types.ts`
 2. Handle in `normalizeThemePreferences()` (`storage.ts`)
 3. Apply in `apply-document-theme.ts`
 4. Add CSS rules in `preferences.css` if needed
@@ -288,10 +288,10 @@ Both are restored by `asol-app-init.js` before paint.
 
 ## Testing
 
-Theme runtime tests: `src/theme/runtime/__tests__/theme-runtime.test.ts`
+Theme runtime tests: `src/shared/theme/runtime/__tests__/theme-runtime.test.ts`
 
 ```bash
-npx tsx --test src/theme/runtime/__tests__/theme-runtime.test.ts
+npx tsx --test src/shared/theme/runtime/__tests__/theme-runtime.test.ts
 ```
 
 ---

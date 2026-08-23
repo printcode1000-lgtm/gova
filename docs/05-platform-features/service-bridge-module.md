@@ -4,7 +4,7 @@ The connector between the main app and the read-only service deployments. It
 is implemented in `@asol/account-bridge` (door `.`), ships in the browser bundle, and runs nowhere
 else.
 
-The application used to import it through a one-line re-export at `src/modules/service-bridge/`.
+The application used to import it through a one-line re-export at `src/features/service-bridge/`.
 That shim is gone: a second name for a package door makes the seal harder to read and buys
 nothing. Import `@asol/account-bridge` directly.
 

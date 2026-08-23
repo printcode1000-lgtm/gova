@@ -11,7 +11,7 @@ packages/storage-image-manager-core/src/components/StorageImageManager.tsx
 ```
 
 The application keeps a compatibility wrapper at
-`src/features/storage/components/StorageImageManager.tsx`. That wrapper only
+`src/features/storage/presentation/StorageImageManager.tsx`. That wrapper only
 injects app-owned session and translation ports, then renders the package
 component. Queueing, draft persistence, image processing, upload orchestration,
 and the imperative `uploadPending()` handle live in
@@ -35,7 +35,7 @@ padding around `StorageImageManager`.
 | Empty state | shared UI constants | compact icon + label, wrapped text allowed, always clipped inside the frame |
 
 Import the component only through
-`@/features/storage/components/StorageImageManager`. That wrapper injects session
+`@/features/storage/presentation/StorageImageManager`. That wrapper injects session
 and translation ports, then renders the sealed core component unchanged.
 
 Structural tests in `packages/storage-image-manager-core/src/tests/index.test.ts`
@@ -91,7 +91,7 @@ Both `product-default` and `product-apparel-pets` use this strategy, so every pr
 import {
   StorageImageManager,
   parseStorageImageManagerConfig,
-} from "@/features/storage/components/StorageImageManager";
+} from "@/features/storage/presentation/StorageImageManager";
 import imageConfig from "./image-configs/store-logo.image.json";
 
 const config = parseStorageImageManagerConfig(imageConfig);

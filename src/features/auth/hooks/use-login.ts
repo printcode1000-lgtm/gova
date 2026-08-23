@@ -5,17 +5,17 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation } from '@/shared/i18n';
 import { createLoginSchema, type LoginFormData } from '@asol/auth-core';
-import { useGuestSession } from '@/hooks/use-guest-session';
-import { useSession } from '@/features/auth/components/SessionProvider';
+import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
+import { useSession } from '@/features/auth/presentation/SessionProvider';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@asol/observability-core';
 import { reportSystemIssue } from '@asol/system-logs-core';
-import { queueLoginSuccessToast } from '@/features/auth/components/LoginSuccessToast';
-import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { queueLoginSuccessToast } from '@/features/auth/presentation/LoginSuccessToast';
+import { reportPreAuthFailure } from '@/features/system-logs';
 import { announceAuthLoginCompleted } from '../application/auth-lifecycle-events';
 
 export function useLogin() {

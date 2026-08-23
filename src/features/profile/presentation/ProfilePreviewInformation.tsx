@@ -14,8 +14,8 @@ import {
   faStar,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
-import type { ProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
-import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
+import type { ProfileFulfillmentSettings } from "@/features/profile/domain/profile-fulfillment-settings.entity";
+import type { StoreDetailsData } from "@/features/profile/domain/store-details.entity";
 import { useProfileCarrierLabels } from "@/features/profile/hooks/use-profile-carrier-labels";
 
 interface ProfilePreviewInformationProps {

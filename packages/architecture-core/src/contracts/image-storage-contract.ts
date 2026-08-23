@@ -47,8 +47,8 @@ export const IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT = new Set([
 
 /** Legacy blob upload — must migrate to StorageImageManager. */
 export const IMAGE_STORAGE_LEGACY_BLOB_UPLOAD_FILES = new Set([
-  'src/components/onboarding/form-components.tsx',
-  'src/components/onboarding/sections/verification-section.tsx',
+  'src/features/onboarding/presentation/form-components.tsx',
+  'src/features/onboarding/presentation/sections/verification-section.tsx',
 ]);
 
 /** Forbidden direct API adapter imports outside client service + hook orchestration. */

@@ -10,17 +10,18 @@ Covers the sealed `@asol/*` package model, application layering, composition wir
 
 ## Canonical Sources of Truth
 
-| Subject | Canonical Document |
+| Subject | Canonical Source |
 |---|---|
-| Capability ownership | [08-reference/capability-map.md](./08-reference/capability-map.md) |
-| Package inventory | [08-reference/package-catalog.md](./08-reference/package-catalog.md) |
-| Inter-package dependencies | [08-reference/dependency-map.md](./08-reference/dependency-map.md) |
+| Capability ownership | `CAPABILITY_PACKAGES` in `packages/architecture-core/src/registry/capability-registry.ts` — generated: [08-reference/capability-map.md](./08-reference/capability-map.md) |
+| Package inventory | Same registry + each `package.json` `exports` — generated: [08-reference/package-catalog.md](./08-reference/package-catalog.md) |
+| Inter-package dependencies | Live production imports under `packages/*/src` — generated: [08-reference/dependency-map.md](./08-reference/dependency-map.md) |
+| Application features | `APPLICATION_FEATURES` in `packages/architecture-core/src/registry/application-features-registry.ts` — generated: [08-reference/application-feature-catalog.md](./08-reference/application-feature-catalog.md) |
 | Module isolation rules | [02-packages/module-isolation-rules.md](./02-packages/module-isolation-rules.md) |
 | Architecture enforcement | [07-enforcement/architecture-check.md](./07-enforcement/architecture-check.md) |
 | Application layer stack | [10-application-layers/README.md](./10-application-layers/README.md) |
 | Historical decisions | [09-decisions/README.md](./09-decisions/README.md) |
 
-Preserved historical source (read-only): the pre-reconstruction architecture docs (see git history).
+Generated reference docs are verified by `npm run architecture:check` (drift fails the build). Regenerate with `npm run architecture:docs`.
 
 ## Organization
 

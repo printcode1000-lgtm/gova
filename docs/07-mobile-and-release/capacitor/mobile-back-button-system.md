@@ -46,8 +46,8 @@ The responsibilities are separated as follows:
 | `src/features/navigation/presentation/MobileBackButtonController.tsx` | Displays the accessible, translated confirmation message |
 | `src/features/navigation/hooks/use-mobile-back-button.ts` | Implements history, home fallback, and double-press logic |
 | `src/platform/navigation/capacitor-back-button-adapter.ts` | Wraps `@capacitor/app` and restricts the feature to native Android |
-| `src/locales/ar.json` | Arabic exit-confirmation translation |
-| `src/locales/en.json` | English exit-confirmation translation |
+| `src/shared/locales/ar.json` | Arabic exit-confirmation translation |
+| `src/shared/locales/en.json` | English exit-confirmation translation |
 | `package.json` | Declares the `@capacitor/app` dependency |
 
 ## Platform detection

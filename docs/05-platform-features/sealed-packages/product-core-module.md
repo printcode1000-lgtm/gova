@@ -16,11 +16,11 @@ sections, normalization before persistence, and database row mapping.
 
 | Old location | Replacement |
 | :--- | :--- |
-| `src/features/product/entities/product.entity.ts` (logic) | `@asol/product-core` |
+| `src/features/product/domain/product.entity.ts` (logic) | `@asol/product-core` |
 | `normalizeDetails` in `product-service.server.ts` | `normalizeProductDetails` |
 | Row mapping in `product-repository.ts` | `@asol/product-core/server` |
 
-`src/features/product/entities/product.entity.ts` remains a thin re-export shim.
+`src/features/product/domain/product.entity.ts` remains a thin re-export shim.
 
 ## What stays in the app
 

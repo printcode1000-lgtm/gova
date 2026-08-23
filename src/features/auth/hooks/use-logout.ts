@@ -1,11 +1,11 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { useSession } from '@/features/auth/components/SessionProvider';
+import { useSession } from '@/features/auth/presentation/SessionProvider';
 import { authApiService } from '../services/auth-api-service';
 import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
-import { clearImageUploadClientState } from '@/features/storage/services/image-upload-client-lifecycle';
+import { clearImageUploadClientState } from '@/features/storage';
 import { notifications } from '@/features/notifications';
 
 /** Clears session in IndexedDB and updates in-memory session state. */

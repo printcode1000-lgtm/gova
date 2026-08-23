@@ -11,7 +11,7 @@ import type {
   PharmacyCatalogForm,
   PharmacyCatalogStrength,
   PharmacyCatalogSubcategory,
-} from "../entities/pharmacy-static-catalog.types";
+} from "../domain/pharmacy-static-catalog.types";
 import {
   isCatalogItemVisible,
   visibleCatalogItems,

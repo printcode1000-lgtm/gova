@@ -1,7 +1,7 @@
 "use client";
 
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { useTranslation } from "@/lib/i18n";
+import { useSession } from "@/features/auth/ui";
+import { useTranslation } from "@/shared/i18n";
 
 import { useAccountDevices } from "./use-account-devices";
 import { useChatMessagePreferences } from "./use-chat-message-preferences";

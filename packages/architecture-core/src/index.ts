@@ -19,5 +19,30 @@ export {
   type CapabilityPackage,
   type PackageLayer,
 } from './registry/capability-registry';
+export {
+  APPLICATION_FEATURES,
+  APPROVED_SRC_ROOTS,
+  FORBIDDEN_APP_ROOTS,
+  FEATURE_INTERNAL_VOCABULARY,
+  featureByName,
+  featureDoorSpecifiers,
+  isFeatureDoorSpecifier,
+  type ApplicationFeature,
+  type FeatureDoor,
+  type FeatureRuntimeTarget,
+} from './registry/application-features-registry';
+export {
+  GENERATED_ARCHITECTURE_DOCS,
+  renderArchitectureDoc,
+  writeArchitectureDocs,
+  diffArchitectureDocs,
+  type ArchitectureDocId,
+} from './docs/generate-architecture-docs';
+export { violations } from './checks/architecture-types';
+export { checkApplicationFeatureRegistryContract } from './checks/application-features-contract';
+export { checkFeatureDoorContract } from './checks/feature-door-contract';
+export { checkFeatureApplicationDoorPurityContract } from './checks/feature-application-door-purity-contract';
+export { checkArchitectureDocsDriftContract } from './checks/architecture-docs-drift-contract';
+export { checkPackageSealContract } from './checks/package-seal-contract';
 export type { ArchitectureCheckOptions } from './runner';
 export { runArchitectureCheck } from './runner';

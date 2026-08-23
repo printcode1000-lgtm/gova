@@ -1,5 +1,5 @@
-import { runSuperAdminJsonRoute } from "@/features/super-admin/services/super-admin-route.server";
-import { googlePlayStoreAssetsService } from "@/modules/google-play-console/services/google-play-store-assets-service.server";
+import { runSuperAdminJsonRoute } from "@/features/super-admin/server";
+import { googlePlayStoreAssetsService } from "@/features/google-play-console/server";
 
 interface DeleteGooglePlayListingBody {
   language?: string;

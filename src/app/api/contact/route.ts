@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { contactService } from "@/features/contact/services/contact-service.server";
-import type { ContactMessageInput } from "@/features/contact/types";
+import { contactService } from "@/features/contact/server";
+import type { ContactMessageInput } from "@/features/contact";
 
 export async function POST(request: Request) {
   try {

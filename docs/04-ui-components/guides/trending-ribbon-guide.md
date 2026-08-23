@@ -6,7 +6,7 @@ The `TrendingRibbon` is a reusable, self-scrolling text ticker component designe
 
 ## Component Location
 * Runtime contract and validation: `packages/trending-ribbon-core/src`
-* Component code: `src/components/ui/TrendingRibbon.tsx`
+* Component code: `src/shared/ui/TrendingRibbon.tsx`
 * Home cache and synchronization: `src/features/advertisements/hooks/use-home-trending-ribbon.ts`
 * Server adapter: `src/features/advertisements/services/trending-ribbon-service.server.ts`
 
@@ -69,7 +69,7 @@ Place a JSON file in the folder of your Screen component:
 'use client';
 
 import { useMemo } from 'react';
-import { TrendingRibbon, type TrendingRibbonConfig } from '@/components/ui/TrendingRibbon';
+import { TrendingRibbon, type TrendingRibbonConfig } from '@/features/advertisements/presentation/TrendingRibbon';
 import ribbonData from './my-trending-ribbon.json';
 
 export default function MyScreen() {

@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { type HeroSliderConfig } from "@/components/ui/HeroSlider";
-import { RatingSettingsEditor } from "@/components/ui/rating/RatingSettingsEditor";
-import { useTranslation } from "@/lib/i18n";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { Textarea } from "@/shared/ui/textarea";
+import { type HeroSliderConfig } from "@/features/advertisements/ui";
+import { RatingSettingsEditor } from "@/features/product/ui";
+import { useTranslation } from "@/shared/i18n";
 import type { StoredImage } from "@asol/storage-core";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
@@ -14,7 +14,7 @@ import {
   StorageImageManager,
   parseStorageImageManagerConfig,
   type StorageImageManagerHandle,
-} from "@/features/storage/components/StorageImageManager";
+} from "@/features/storage/presentation/StorageImageManager";
 import type {
   ProfileSectionStatus,
   StoreDetailsController,
@@ -22,8 +22,8 @@ import type {
 import storeLogoImageConfig from "./image-configs/store-logo.image.json";
 import { MAX_STOREFRONT_COVER_IMAGES } from "./image-configs/storefront-images.constants";
 import { StoreIdentityImagesEditor } from "./store-identity/StoreIdentityImagesEditor";
-import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
-import type { PageSaveOperation } from "@/features/page-save/utils/page-save-operation-description";
+import { buildPageSaveOperationDescription } from "@/features/page-save";
+import type { PageSaveOperation } from "@/features/page-save";
 
 const storeLogoConfig = parseStorageImageManagerConfig(storeLogoImageConfig);
 

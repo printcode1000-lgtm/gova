@@ -4,10 +4,10 @@ import * as React from "react";
 import Link from "next/link";
 import { Send, Users } from "lucide-react";
 
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { useResolvedColorScheme } from "@/lib/preferences";
-import { useTranslation } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { useSession } from "@/features/auth/ui";
+import { useResolvedColorScheme } from "@/shared/preferences";
+import { useTranslation } from "@/shared/i18n";
+import { cn } from "@/shared/utils";
 
 /** Header entry point. The request composer itself is a full page. */
 export function SpecialtyRequestComposer() {

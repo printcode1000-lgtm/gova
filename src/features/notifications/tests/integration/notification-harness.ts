@@ -560,7 +560,7 @@ function installFakes(): void {
     },
   });
 
-  inject("@/lib/preferences/app-preferences-storage", {
+  inject("@/shared/preferences/app-preferences-storage", {
     readAppPreferencesFromDb: async () => ({ locale: "ar" }),
   });
 

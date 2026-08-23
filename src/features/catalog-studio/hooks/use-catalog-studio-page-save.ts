@@ -3,12 +3,12 @@
 import * as React from "react";
 
 import { asolApi } from "@/core/api";
-import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { usePageSaveRegistration } from "@/features/page-save/ui";
 import {
   usePageSaveOperations,
   type PageSaveOperations,
 } from "@/features/page-save/hooks/use-page-save-operations";
-import { buildImageUploadPageSaveItem } from "@/features/page-save/utils/page-save-image-items";
+import { buildImageUploadPageSaveItem } from "@/features/page-save";
 import {
   CATALOG_STUDIO_API,
   CATALOG_STUDIO_IMAGES_API,

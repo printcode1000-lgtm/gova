@@ -1,4 +1,4 @@
-import HomeScreen from '@/features/home/presentation/HomeScreen';
+import HomeScreen from '@/features/home/ui';
 import { categoryService } from '@/features/categories';
 
 export default function HomePage() {

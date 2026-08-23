@@ -17,8 +17,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/dialog";
+import { cn } from "@/shared/utils";
 import { saveQrCodePng } from "@/features/qr-code";
 import type { ShareContent, ShareDestination } from "./share-content";
 import {

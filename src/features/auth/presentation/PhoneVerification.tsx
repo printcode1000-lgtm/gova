@@ -4,13 +4,13 @@ import { CheckCircle2, Pencil, Smartphone } from 'lucide-react';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
-import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { useTranslation } from '@/shared/i18n';
+import { cn } from '@/shared/utils';
+import { reportPreAuthFailure } from '@/features/system-logs';
 import type { RegistrationFormData } from '@asol/auth-core';
 
 import { OtpInput } from './OtpInput';
-import { usePhoneVerification } from '@/hooks/use-phone-verification';
+import { usePhoneVerification } from '@/features/auth/application/hooks/use-phone-verification';
 import { canSendPhoneOtp, formatPhoneDisplay } from './phone-verification-model';
 
 interface PhoneVerificationProps {

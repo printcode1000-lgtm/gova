@@ -1,1 +1,1 @@
-export { geoLocationUrl, googleMapsSearchUrl } from "@/features/location/location-links";
+export { geoLocationUrl, googleMapsSearchUrl } from "@/features/location";

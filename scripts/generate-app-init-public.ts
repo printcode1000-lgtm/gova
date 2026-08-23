@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { buildAppInitScript } from '../src/lib/app-init/build-app-init-script';
+import { buildAppInitScript } from '../src/shared/app-init/build-app-init-script';
 
 const ROOT = join(__dirname, '..');
 const SCRIPT = `${buildAppInitScript()}\n`;

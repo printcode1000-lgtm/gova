@@ -23,7 +23,7 @@ Only then does the UI show the columns that can be searched for that category pa
   - Server search service.
   - Product search repository.
 
-- `src/components/ui/product-search`
+- `src/features/product-search/presentation/panel`
   - Shared UI components for compact and full search experiences.
 
 - `src/app/api/search/products`
@@ -208,8 +208,8 @@ Variants:
 - `compact`: used inside profile product tabs.
 
 The shared `ProductSearchPanel` keeps UI orchestration. Its props contract is in
-`src/components/ui/product-search/product-search-panel.types.ts`, and default
-field selection lives in `src/components/ui/product-search/product-search-fields.ts`.
+`src/features/product-search/presentation/panel/product-search-panel.types.ts`, and default
+field selection lives in `src/features/product-search/presentation/panel/product-search-fields.ts`.
 
 Profile product tab selection uses
 `src/features/profile-products/hooks/profile-products-tabs-model.ts` for

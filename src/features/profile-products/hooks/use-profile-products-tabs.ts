@@ -3,20 +3,20 @@
 import * as React from "react";
 import { useSnapshotState } from "@/features/page-snapshot";
 import { categoryService } from "@/features/categories";
-import { productApiService } from "@/features/product/services/product-api-service";
-import type { ProductRecord } from "@/features/product/entities/product.entity";
+import { productApiService } from "@/features/product/ui";
+import type { ProductRecord } from "@/features/product";
 import {
   EMPTY_PROFILE_SPECIALTIES,
   type ProfileSpecialtiesSelection,
-} from "@/features/profile/entities/profile-specialties.entity";
-import { profileService } from "@/features/profile/services/profile-service";
-import { useTranslation } from "@/lib/i18n";
+} from "@/features/profile/domain/profile-specialties.entity";
+import { profileService } from "@/features/profile/ui";
+import { useTranslation } from "@/shared/i18n";
 import type {
   ProfileProductsFilters,
   ProfileProductsMainTab,
   ProfileProductsSubTab,
   UseProfileProductsTabsInput,
-} from "../entities/profile-products.types";
+} from "../domain/profile-products.types";
 import {
   EMPTY_PROFILE_PRODUCTS_FILTERS,
   buildProfileProductsTabs,

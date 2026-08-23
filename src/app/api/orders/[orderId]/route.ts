@@ -1,8 +1,8 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { getMarketplaceOrderQueries } from "@asol/data-core/marketplace-orders";
 import { filterOrderDetailsForActor } from "@asol/orders-core";
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
-import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
+import { profileService } from "@/features/profile/server";
+import { logServerSystemIssue } from "@/features/system-logs/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 import { actorFromInput } from "@asol/orders-core";
 import { mapOrderError } from "../order-api-helpers";

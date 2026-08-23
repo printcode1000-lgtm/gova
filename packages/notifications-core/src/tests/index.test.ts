@@ -45,7 +45,7 @@ const DECLARED_APP_EDGES = new Set<string>([
 
 /**
  * Sealed packages this one may reach, and the door it must use. The notification token reads
- * used to be three `@/modules/data-access/...` app edges; they now go through one declared door
+ * used to be three `@/features/data-access/...` app edges; they now go through one declared door
  * on `@asol/data-core`, which is a layer-1 → layer-1 edge rather than knowledge of the app.
  * A deep path here would resolve nothing — the seal has no wildcard — but pinning the door
  * keeps a second one from appearing unnoticed.

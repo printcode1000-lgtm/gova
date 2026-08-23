@@ -12,7 +12,7 @@
 ## Account Deletion Page
 
 - Public Route: `/delete-account`, accessible from the Contact Us page.
-- UI lives in `src/features/auth/components/AccountDeletionPageContent.tsx`.
+- UI lives in `src/features/auth/presentation/AccountDeletionPageContent.tsx`.
 - Core deletion logic lives in `@asol/auth-core/server` (`AccountDeletionService`).
 - Requires authentication, a signed `sessionToken` header, current password, exact confirmation text matching either `DELETE ASOL ACCOUNT` or `احذف حساب أصول نهائيا`, and approval of the final warning.
 - Super Admin account cannot be deleted from this page.

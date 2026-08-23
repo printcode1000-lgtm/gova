@@ -1,7 +1,7 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { runTracedBusinessRoute } from "@/core/api/traced-route";
-import type { ActionInput } from "@/features/orders/application/order-action-grants.server";
-import { executeOrderAction } from "@/features/orders/application/order-actions.server";
+import type { ActionInput } from "@/features/orders/server";
+import { executeOrderAction } from "@/features/orders/server";
 
 import { mapOrderError } from "../../order-api-helpers";
 

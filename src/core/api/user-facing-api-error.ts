@@ -7,7 +7,7 @@ import {
   NetworkOfflineError,
   NetworkUnavailableError,
 } from '@/core/api/api-error';
-import type { TranslationParams } from '@/lib/i18n';
+import type { TranslationParams } from '@/shared/i18n';
 
 type TranslateFn = (key: string, params?: TranslationParams) => string;
 

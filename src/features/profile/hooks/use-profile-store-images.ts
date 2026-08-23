@@ -2,11 +2,11 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 import type {
   SaveStoreImagesInput,
   StoreImagesData,
-} from "../entities/store-images.entity";
+} from "../domain/store-images.entity";
 import { profileService } from "../services/profile-service";
 import { reportSystemIssue } from '@asol/system-logs-core';
 

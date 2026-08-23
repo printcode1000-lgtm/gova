@@ -2,8 +2,8 @@
 
 import { Suspense } from 'react';
 
-import { RegistrationPageContent } from '@/features/auth/presentation/RegistrationPageContent';
-import { useTranslation } from '@/lib/i18n';
+import { RegistrationPageContent } from '@/features/auth/ui';
+import { useTranslation } from '@/shared/i18n';
 
 function RegistrationFallback() {
   const { t } = useTranslation();

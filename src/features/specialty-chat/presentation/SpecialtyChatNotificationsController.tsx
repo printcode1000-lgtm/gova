@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 import { notifications } from "@/features/notifications";
 import { createSpecialtyChatNotificationExtension } from "../application/specialty-chat-notification-extension";
 

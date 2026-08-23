@@ -13,7 +13,7 @@ registerSessionSigningSecret(() => "follow-session-test-secret-0123456789abcdef"
 // Without it every grant is dropped and the follow flow reports
 // `notificationGrantNotIssued` on a machine where the secret is present.
 const { registerNotificationsCorePorts } = await import(
-  "@/features/notifications/notifications-core-ports"
+  "@/features/notifications"
 );
 registerNotificationsCorePorts();
 

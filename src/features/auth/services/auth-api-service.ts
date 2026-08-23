@@ -1,6 +1,6 @@
 import { asolApi, ASOL_API_ROUTES } from '@/core/api';
 import type { RegistrationFormData, LoginFormData } from '@asol/auth-core';
-import type { UpdateProfileInput, UserProfile } from '../entities/profile.entity';
+import type { UpdateProfileInput, UserProfile } from '../domain/profile.entity';
 import type { IAuthService, LoginResult } from './auth-service.interface';
 
 function sessionHeaders(sessionToken: string): Record<string, string> {

@@ -1,8 +1,8 @@
 "use client";
 
 import { Search, Truck } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { SellerCard } from "@/components/ui/seller-card";
+import { Input } from "@/shared/ui/input";
+import { SellerCard } from "@/features/seller-card/ui";
 import type { UserProfileRow } from "@/features/profile/services/profile-service.interface";
 import {
   createSellerCardViewModel,

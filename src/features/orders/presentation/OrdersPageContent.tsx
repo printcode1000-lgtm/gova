@@ -6,9 +6,9 @@ import { ClipboardList, Loader2, ShieldCheck } from "lucide-react";
 
 import { asolApi } from "@/core/api/asol-api-client";
 import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { useTranslation } from "@/lib/i18n";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
+import { useTranslation } from "@/shared/i18n";
 import { useOrdersListAutoRefresh } from "./OrderNotificationsController";
 import {
   formatMoney,

@@ -8,7 +8,7 @@ import {
   parseStoredSession,
   type SaveSessionInput,
   type UserSession,
-} from '../entities/session.entity';
+} from '../domain/session.entity';
 import type { ISessionService } from './session-service.interface';
 
 function toStoredSession(input: SaveSessionInput): UserSession {

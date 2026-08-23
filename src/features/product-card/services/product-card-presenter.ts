@@ -1,9 +1,9 @@
-import type { ProductRecord } from "@/features/product/entities/product.entity";
+import type { ProductRecord } from "@/features/product";
 import type {
   FeaturedProductCardInput,
   ProductCardBadge,
   ProductCardViewModel,
-} from "../entities/product-card.types";
+} from "../domain/product-card.types";
 
 function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";

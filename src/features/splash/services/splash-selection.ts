@@ -1,4 +1,4 @@
-import type { CategoryItem, SubcategoryItem } from '@/features/splash/entities/splash.types';
+import type { CategoryItem, SubcategoryItem } from '@/features/splash/domain/splash.types';
 import { categoryService } from '@/features/categories';
 
 function fisherYatesShuffle<T>(array: T[]): T[] {

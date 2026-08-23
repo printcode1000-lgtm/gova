@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
-import { useProfileContacts } from "@/features/profile/hooks/use-profile-contacts";
+import { useProfileContacts } from "@/features/profile/ui";
 import { OrderActionButton } from "../OrderActionButton";
 import { hasOrderDeliveryAddress, profileAddress } from "../order-labels";
 import type { DbRow } from "../order-types";

@@ -11,7 +11,7 @@ import {
   categoryTileImageClassName,
   categoryTileTitleClassName,
 } from "@/features/categories/presentation/category-grid-styles";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 import type { CategoryTree } from "@/features/categories";
 
 interface CategorySubcategoriesPageProps {

@@ -1,7 +1,7 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+import { Skeleton } from "@/shared/ui/skeleton";
+import { cn } from "@/shared/utils";
 
 import { SettingsToggleRow } from "./SettingsToggleRow";
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";

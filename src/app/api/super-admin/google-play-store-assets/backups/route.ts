@@ -1,5 +1,5 @@
-import { runSuperAdminRoute } from "@/features/super-admin/services/super-admin-route.server";
-import { googlePlayStoreAssetsService } from "@/modules/google-play-console/services/google-play-store-assets-service.server";
+import { runSuperAdminRoute } from "@/features/super-admin/server";
+import { googlePlayStoreAssetsService } from "@/features/google-play-console/server";
 
 export async function GET(request: Request) {
   return runSuperAdminRoute(

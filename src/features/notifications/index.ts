@@ -119,3 +119,7 @@ export {
   setNotificationGrantDeliveryIdentity,
   type NotificationGrantDeliveryIdentity,
 } from "./domain/notification-grant-delivery-context";
+
+/* BEGIN GENERATED FEATURE DOOR EXPORTS */
+/** Auto-maintained sealed-door re-exports. Do not edit by hand. */
+/* END GENERATED FEATURE DOOR EXPORTS */

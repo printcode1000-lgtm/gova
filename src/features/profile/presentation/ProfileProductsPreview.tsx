@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { ProfileProductsTabs } from '@/components/ui/profile-products-tabs';
+import { ProfileProductsTabs } from '@/features/profile-products/ui';
 import { useProfileProductsTabs } from '@/features/profile-products';
-import type { ProductRecord } from '@/features/product/entities/product.entity';
-import { useTranslation } from '@/lib/i18n';
+import type { ProductRecord } from '@/features/product';
+import { useTranslation } from '@/shared/i18n';
 
 interface ProfileProductsPreviewProps {
   uid: string;

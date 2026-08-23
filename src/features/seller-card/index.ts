@@ -5,7 +5,7 @@ export type {
   SellerCardBadge,
   SellerCardVariant,
   SellerCardViewModel,
-} from "./entities/seller-card.types";
+} from './domain/seller-card.types';
 export {
   createSellerCardViewModel,
   sellerCardAvatar,

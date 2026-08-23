@@ -1,12 +1,12 @@
 import "server-only";
 
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { profileService } from "@/features/profile/server";
 import type {
   ProductSearchRequest,
   ProductSearchResult,
   SellerSearchRequest,
   SellerSearchResult,
-} from "../entities/product-search.types";
+} from "../domain/product-search.types";
 import {
   requireCategoryPair,
   searchProducts,

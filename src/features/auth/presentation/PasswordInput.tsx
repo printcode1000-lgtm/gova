@@ -4,8 +4,8 @@ import { Eye, EyeOff } from 'lucide-react';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+import { useTranslation } from '@/shared/i18n';
+import { cn } from '@/shared/utils';
 import type { RegistrationFormData } from '@asol/auth-core';
 
 interface PasswordInputProps {

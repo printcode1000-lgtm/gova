@@ -164,7 +164,7 @@ module.exports = [
                 'scripts/ota-publish/**',
                 'scripts/build-static',
                 'scripts/build-static/**',
-                '@/modules/release-commands/domain/content-version',
+                '@/features/release-commands/domain/content-version',
               ],
               message:
                 'OTA has been consolidated into @asol/ota-core. Import from @asol/ota-core or @asol/ota-core/publishing.',

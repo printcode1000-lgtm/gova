@@ -14,6 +14,8 @@ Default-deny applies to package registration, vendor SDK usage, application laye
 |---|---|---|
 | Import `drizzle-orm` from `src/` | **Denied** | Never — use `@asol/data-core` |
 | Create `packages/new-thing/` | **Denied** at scan | Added to `CAPABILITY_PACKAGES` |
+| Create `src/features/new-thing/` | **Denied** at scan | Added to `APPLICATION_FEATURES` with doors |
+| Recreate `src/modules/` or other forbidden roots | **Denied** at scan | Never — use `src/features/` or `src/shared/` |
 | Import `@capacitor/camera` from UI | **Denied** | Never — use `@asol/native-core` |
 | Add `exports` subpath without declaration | **Denied** at resolution | Key added to `package.json` + contract test |
 | Page component writes to DB | **Denied** | Routed through `@asol/page-save-core` |
@@ -54,7 +56,8 @@ Assume **denied** until all four are answered.
 ## Source Map
 
 - Ownership contract: `checks/capability-ownership-contract.ts`
-- Registry: `capability-registry.ts`
+- Application features: `checks/application-features-contract.ts`, `checks/feature-door-contract.ts`
+- Registries: `capability-registry.ts`, `application-features-registry.ts`
 
 ## Related Documents
 
@@ -69,5 +72,7 @@ Introducing allow-by-default patterns requires ADR and undermines four-layer enf
 ## Invariants
 
 1. Unregistered packages fail scan.
-2. Unowned vendor imports fail scan.
-3. Undeclared export paths fail resolution or seal check.
+2. Unregistered application features fail scan.
+3. Unowned vendor imports fail scan.
+4. Undeclared export paths / feature doors fail resolution or seal check.
+5. Generated architecture docs that drift from registries fail scan.

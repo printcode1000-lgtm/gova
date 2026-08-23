@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { notificationsServer } from "@/features/notifications/server";
-import { assertSignedInRequest } from "@/features/auth/server/session-request.server";
+import { assertSignedInRequest } from "@/features/auth/server";
 import { runTracedBusinessRoute } from "@/core/api/traced-route";
 
 export const runtime = "nodejs";

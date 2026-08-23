@@ -1,8 +1,8 @@
-import type { UserProfileRow } from "@/features/profile/services/profile-service.interface";
+import type { UserProfileRow } from "@/features/profile";
 import type {
   SellerCardBadge,
   SellerCardViewModel,
-} from "../entities/seller-card.types";
+} from "../domain/seller-card.types";
 
 interface StoreImagesLike {
   avatarUrl?: unknown;

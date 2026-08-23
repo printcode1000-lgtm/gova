@@ -14,7 +14,7 @@ its files by path; every consumer goes through a declared door in the package's
 `exports` map. The full contract, the door list, and the reasoning behind the
 shape live in [data-core-module.md](../05-platform-features/sealed-packages/data-core-module.md).
 
-There is no compatibility layer at the previous `src/modules/data-access`,
+There is no compatibility layer at the previous `src/features/data-access`,
 `src/core/database`, `src/lib/asol-db`, feature repository, or feature operation
 paths. Consumers must use the package doors directly.
 

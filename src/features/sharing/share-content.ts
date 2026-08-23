@@ -20,5 +20,5 @@ export interface PublicProfileShareRecord {
   storeDetails: StoreDetailsData;
   storeImages: StoreImagesData;
 }
-import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
-import type { StoreImagesData } from "@/features/profile/entities/store-images.entity";
+import type { StoreDetailsData } from "@/features/profile";
+import type { StoreImagesData } from "@/features/profile";

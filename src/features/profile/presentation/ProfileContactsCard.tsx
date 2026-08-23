@@ -1,7 +1,7 @@
 'use client';
 
 import { ContactInfoCard } from '@/features/profile/presentation/ContactInfoCard';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation } from '@/shared/i18n';
 import { useProfileContacts } from '@/features/profile/hooks/use-profile-contacts';
 import * as React from 'react';
 import type {

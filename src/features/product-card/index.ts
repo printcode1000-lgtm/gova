@@ -6,7 +6,7 @@ export type {
   ProductCardBadge,
   ProductCardVariant,
   ProductCardViewModel,
-} from "./entities/product-card.types";
+} from './domain/product-card.types';
 export {
   createFeaturedProductCardViewModel,
   createProductCardViewModel,

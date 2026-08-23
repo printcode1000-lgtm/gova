@@ -446,7 +446,7 @@ Offline download is deliberately not implemented. The provider boundary permits 
 
 Implementation: `packages/map-core/src/`. The single door is `@asol/map-core`.
 
-The component is no longer re-exported from `@/components/ui`: a barrel would give the package a
+The component is no longer re-exported from `@/shared/ui`: a barrel would give the package a
 second entry that the `exports` seal does not govern.
 
 ### Public surface

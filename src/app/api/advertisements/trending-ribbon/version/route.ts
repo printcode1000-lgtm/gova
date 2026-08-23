@@ -1,5 +1,5 @@
 import { apiSuccess } from "@/core/api/api-response";
-import { featuredTrendingRibbonService } from "@/features/advertisements/services/trending-ribbon-service.server";
+import { featuredTrendingRibbonService } from "@/features/advertisements/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET() {

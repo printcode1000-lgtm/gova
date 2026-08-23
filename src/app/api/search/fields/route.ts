@@ -1,7 +1,7 @@
 import { apiError, apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { categoryService } from "@/features/categories";
-import { isSearchCategorySelectionShaped } from "@/features/product-search/entities/product-search.request";
-import { getEnabledProductSearchFields } from "@/features/product-search/services/product-search-fields.server";
+import { isSearchCategorySelectionShaped } from "@/features/product-search";
+import { getEnabledProductSearchFields } from "@/features/product-search/server";
 
 export async function GET(request: Request) {
   try {

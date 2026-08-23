@@ -2,21 +2,21 @@
 
 import * as React from "react";
 
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 
 import {
   favoriteKey,
   type FavoriteCollection,
   type FavoriteItemInput,
   type FavoriteTargetType,
-} from "../entities/favorite.entity";
+} from "../domain/favorite.entity";
 import {
   addFavorite,
   removeFavorite,
   restoreFavorite,
 } from "../services/favorite-collection";
 import { favoriteStorage } from "../services/favorite-storage";
-import { reportPreAuthFailure } from "@/features/system-logs/pre-auth-failure-reporter";
+import { reportPreAuthFailure } from "@/features/system-logs";
 import { FavoritesContext, type FavoritesContextValue } from "./favorites-context";
 import { FavoriteNoticeToast, type FavoriteNotice } from "./favorite-notice-toast";
 

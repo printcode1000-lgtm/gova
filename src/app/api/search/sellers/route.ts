@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { parseSellerSearchRequest } from "@/features/product-search/entities/product-search.request";
-import { productSearchService } from "@/features/product-search/services/product-search-service.server";
+import { parseSellerSearchRequest } from "@/features/product-search";
+import { productSearchService } from "@/features/product-search/server";
 
 export async function GET(request: Request) {
   try {

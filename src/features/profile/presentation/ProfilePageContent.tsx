@@ -28,7 +28,7 @@ import {
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
+import { BOTTOM_NAV_CLEARANCE } from "@/shared/layouts/bottom-nav-layout";
 import { ProfileContactsCard } from "@/features/profile/presentation/ProfileContactsCard";
 import { ProfileRegistrationInfoCard } from "@/features/profile/presentation/ProfileRegistrationInfoCard";
 import { SpecialtiesCard } from "@/features/profile/presentation/SpecialtiesCard";
@@ -36,17 +36,17 @@ import { ProductsCard } from "@/features/profile/presentation/ProductsCard";
 import { StoreIdentityCard } from "@/features/profile/presentation/StoreIdentityCard";
 import { FulfillmentSettingsCard } from "@/features/profile/presentation/FulfillmentSettingsCard";
 import { WorkingHoursProfileCard } from "@/features/profile/presentation/WorkingHoursProfileCard";
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { useTranslation } from "@/lib/i18n";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import type { FeaturedMarqueeConfig } from "@/components/ui/FeaturedMarquee";
-import type { HeroSliderConfig } from "@/components/ui/HeroSlider";
-import type { TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
+import { useTranslation } from "@/shared/i18n";
+import { Card, CardContent } from "@/shared/ui/card";
+import { Button } from "@/shared/ui/button";
+import type { FeaturedMarqueeConfig } from "@/features/advertisements/ui";
+import type { HeroSliderConfig } from "@/features/advertisements/ui";
+import type { TrendingRibbonConfig } from "@/features/advertisements/ui";
 import { asolApi, ASOL_API_ROUTES } from "@/core/api";
-import type { ProductRecord } from "@/features/product/entities/product.entity";
-import { productApiService } from "@/features/product/services/product-api-service";
+import type { ProductRecord } from "@/features/product";
+import { productApiService } from "@/features/product/ui";
 import { usePageSnapshot } from "@/features/page-snapshot";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
@@ -55,7 +55,7 @@ import { useProfilePublicFulfillmentSettings } from "@/features/profile/hooks/us
 import {
   SellerDiscountsManager,
   type SellerDiscountsController,
-} from "@/features/seller-discounts";
+} from "@/features/seller-discounts/ui";
 import { ProfilePreviewContent } from "./ProfilePreviewContent";
 import type {
   ProfileContactsController,

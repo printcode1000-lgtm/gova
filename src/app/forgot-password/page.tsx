@@ -1,4 +1,4 @@
-import { PasswordRecoveryPageContent } from '@/features/password-recovery/components/PasswordRecoveryPageContent';
+import { PasswordRecoveryPageContent } from '@/features/password-recovery/ui';
 
 export default function ForgotPasswordPage() {
   return <PasswordRecoveryPageContent />;

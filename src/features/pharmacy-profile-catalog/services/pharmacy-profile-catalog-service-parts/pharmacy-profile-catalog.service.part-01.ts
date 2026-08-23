@@ -1,7 +1,7 @@
 import "server-only";
-import type { ProductRecord } from "@/features/product/entities/product.entity";
-import type { ProductDetails } from "@/features/product/entities/product.entity";
-import { createEmptyProductDetails } from "@/features/product/entities/product.entity";
+import type { ProductRecord } from "@/features/product";
+import type { ProductDetails } from "@/features/product";
+import { createEmptyProductDetails } from "@/features/product";
 import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_PRICE_LABEL,
@@ -13,7 +13,7 @@ import {
   type PharmacyProfileCatalogView,
   type PharmacyProfileProduct,
   type PharmacyProfileProductOverride,
-} from "../../entities/pharmacy-profile-catalog.types";
+} from "../../domain/pharmacy-profile-catalog.types";
 import { pharmacyStaticCatalogService } from "../pharmacy-static-catalog.service";
 import { pharmacyProfileCatalogRepository } from "@asol/data-core/pharmacy-profile-catalog";
 import {

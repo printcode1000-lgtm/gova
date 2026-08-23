@@ -5,17 +5,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, Package, Store } from "lucide-react";
 
-import { ProductCard } from "@/components/ui/product-card";
-import { SellerCard } from "@/components/ui/seller-card";
-import { LoadingSpinner } from "@/components/ui";
+import { ProductCard } from "@/features/product-card/ui";
+import { SellerCard } from "@/features/seller-card/ui";
+import { LoadingSpinner } from "@/shared/ui";
 import {
   productCardFromFavorite,
   sellerCardFromFavorite,
   useFavorites,
   type FavoriteTargetType,
 } from "@/features/favorites";
-import { useTranslation } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { useTranslation } from "@/shared/i18n";
+import { cn } from "@/shared/utils";
 
 export default function FavoritesPage() {
   const router = useRouter();

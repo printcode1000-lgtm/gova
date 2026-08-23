@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
-import { SuperAdminNotificationTestsPage } from "@/features/super-admin/presentation/SuperAdminNotificationTestsPage";
+import { SuperAdminNotificationTestsPage } from "@/features/super-admin/ui";
 
 /**
  * Development-only surface: it sends real notifications to real devices.

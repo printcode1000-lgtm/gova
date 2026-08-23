@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { cache } from "react";
 import { BRANDING_WEB_APP_ICON_PATH } from "@asol/branding-core";
 
-import { productService } from "@/features/product/services/product-service.server";
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
-import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
-import type { ProductRecord } from "@/features/product/entities/product.entity";
+import { productService } from "@/features/product/server";
+import { profileService } from "@/features/profile/server";
+import { logServerSystemIssue } from "@/features/system-logs/server";
+import type { ProductRecord } from "@/features/product";
 import {
   buildProductShareUrl,
   buildProfileShareUrl,

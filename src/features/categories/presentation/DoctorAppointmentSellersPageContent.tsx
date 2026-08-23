@@ -5,10 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
-import { SellerCard } from "@/components/ui/seller-card";
-import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
+import { SellerCard } from "@/features/seller-card/ui";
+import { useUsersBySpecialty } from "@/features/profile/ui";
 import { createSellerCardViewModel, sellerCardTitle } from "@/features/seller-card";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/shared/i18n";
 
 interface DoctorAppointmentSellersPageContentProps {
   categoryId: number;

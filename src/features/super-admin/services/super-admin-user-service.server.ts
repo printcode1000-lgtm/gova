@@ -1,9 +1,9 @@
 import 'server-only';
 
-import '@/features/auth/server/auth-core-ports.server';
+import '@/features/auth/server';
 import { createSignedSessionToken } from '@asol/auth-core/server';
-import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
-import { accountDeletionService } from "@/features/auth/server/auth-core-bootstrap.server";
+import { persistentSystemLogService } from "@/features/system-logs/server";
+import { accountDeletionService } from "@/features/auth/server";
 import {
   superAdminUserSearchRepository,
   type SuperAdminUserSearchFilters,

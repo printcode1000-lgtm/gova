@@ -6,15 +6,15 @@ import { RefreshCw, RotateCcw } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import * as React from "react";
-import { cn } from "@/lib/utils";
-import { useAppPreferences, useThemePreferences } from "@/lib/preferences";
-import { useTranslation } from "@/lib/i18n";
+import { cn } from "@/shared/utils";
+import { useAppPreferences, useThemePreferences } from "@/shared/preferences";
+import { useTranslation } from "@/shared/i18n";
 import {
   CLEAR_STORAGE_WARNING,
   clearAllClientStorage,
 } from '@/features/app-reset/client-storage';
-import { useSession } from "@/features/auth/components/SessionProvider";
-import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { useSession } from "@/features/auth/ui";
+import { isSuperAdmin } from "@/features/auth";
 import { useOtaUpdate } from "@asol/ota-core";
 import { registerBrowserPorts } from "@/core/composition/browser-ports";
 import { publicEnv } from "@/core/config/public-env";

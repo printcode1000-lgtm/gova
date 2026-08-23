@@ -2,12 +2,12 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useTranslation } from "@/lib/i18n";
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useTranslation } from "@/shared/i18n";
+import { useSession } from "@/features/auth/ui";
 import {
   EMPTY_STORE_DETAILS,
   type StoreDetailsData,
-} from "../entities/store-details.entity";
+} from "../domain/store-details.entity";
 import { profileService } from "../services/profile-service";
 import { reportSystemIssue } from '@asol/system-logs-core';
 

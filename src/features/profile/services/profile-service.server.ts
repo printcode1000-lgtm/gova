@@ -13,33 +13,33 @@ import type { GetProfileFulfillmentSettingsQuery } from "@asol/data-core/profile
 import type { UpsertProfileFulfillmentSettingsCommand } from "@asol/data-core/profile";
 import type { GetUserByUidQuery } from "@asol/data-core/auth";
 import { MAX_PROFILE_COVER_IMAGES } from "@asol/data-core/profile";
-import { authOperationsService } from "@/features/auth/server/auth-core-bootstrap.server";
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
+import { authOperationsService } from "@/features/auth/server";
+import { isSuperAdminIdentity } from "@/features/auth";
 import type {
   ProfileContactsData,
   SaveProfileContactsInput,
-} from "../entities/profile-contacts.entity";
+} from "../domain/profile-contacts.entity";
 import type {
   SaveStoreImagesInput,
   StoreImagesData,
-} from "../entities/store-images.entity";
+} from "../domain/store-images.entity";
 import type {
   SaveStoreDetailsInput,
   StoreDetailsData,
-} from "../entities/store-details.entity";
+} from "../domain/store-details.entity";
 import type { IProfileService } from "./profile-service.interface";
 import type {
   SaveProfileEditorInput,
   SaveProfileEditorResult,
-} from "../entities/profile-editor.entity";
+} from "../domain/profile-editor.entity";
 import type {
   ProfileSpecialtiesSelection,
   SaveProfileSpecialtiesInput,
-} from "../entities/profile-specialties.entity";
+} from "../domain/profile-specialties.entity";
 import type {
   ProfileFulfillmentSettings,
   SaveProfileFulfillmentSettingsInput,
-} from "../entities/profile-fulfillment-settings.entity";
+} from "../domain/profile-fulfillment-settings.entity";
 import { traceServerLayer } from '@asol/observability-core/server';
 import { StorageProfiles } from "@asol/storage-core";
 import { imageStorageOrchestrator } from "@asol/storage-core/server";

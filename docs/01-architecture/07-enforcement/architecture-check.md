@@ -35,23 +35,26 @@ These stay in the CLI because `@asol/architecture-core` MUST NOT import applicat
 
 | Order | Check | Scope |
 |---|---|---|
-| 1 | `checkCapabilityOwnershipContract` | Registry ↔ disk parity |
-| 2 | `checkPackageCycleContract` | Circular `@asol/*` deps |
-| 3 | `checkPageSaveGatewayContract` | Single-door page-save |
-| 4 | `checkPageSaveWriteGatewayContract` | Write ownership |
-| 5 | `checkRepositorySweepContract` | Default-deny sweep over the whole tree |
-| 6 | `checkIsolatedDeploymentBackendContract` | Every account composition root pins its backend; each `better-sqlite3` stub names its own service |
-| 7 | `checkRuntimeTargetContract` | No `force-dynamic` page inside the static export (see [runtime-targets.md](../06-runtime-boundaries/runtime-targets.md)) |
-| 8 | `checkVendorOwnershipContract` | Root vendor-owned files (`capacitor.config.ts`) |
-| 9 | Walk `src/` → `checkFile`, `checkPackageSealContract`, `checkSystemLogsContract`, `checkVendorOwnershipContract` | Application source |
-| 10 | Walk `packages/` → `checkPackageSealContract`, `checkPackageAppImportContract`, `checkVendorOwnershipContract` | Package source |
-| 11 | Walk `scripts/` → `checkExternalDataAccessOwnership`, `checkAccountBridgeContract`, `checkPackageSealContract`, `checkVendorOwnershipContract` | Tooling |
-| 12 | `checkTouchInteractionContract`, `checkMapLibreWorkerContract` | UI policy |
-| 13 | `checkGeneratedDataAccessArtifacts` | Generated data-access artifacts |
-| 14 | `checkSystemLogsBootstrapContract` | Logging bootstrap |
-| 15 | `checkDeadContractRules` | Rules whose subject no longer exists |
-| 16 | Walk `services/` → `checkAccountBridgeContract`, `checkPackageSealContract`, `checkVendorOwnershipContract`, `checkNotificationModuleContract` | Account services (skips `generated/`) |
-| 17 | `printReport`, then `reportNativeSurface` | Verdict, then store-release cost |
+| 1 | `checkCapabilityOwnershipContract` | Registry ↔ disk parity for `@asol/*` |
+| 2 | `checkApplicationFeatureRegistryContract` | `APPLICATION_FEATURES` ↔ `src/features/*`; forbidden roots (`src/modules`, …) |
+| 3 | `checkPackageCycleContract` | Circular `@asol/*` deps |
+| 4 | `checkPageSaveGatewayContract` | Single-door page-save |
+| 5 | `checkPageSaveWriteGatewayContract` | Write ownership |
+| 6 | `checkRepositorySweepContract` | Default-deny sweep over the whole tree |
+| 7 | `checkIsolatedDeploymentBackendContract` | Every account composition root pins its backend |
+| 8 | `checkRuntimeTargetContract` | No `force-dynamic` page inside the static export |
+| 9 | `checkFeatureDoorContract` | Cross-feature imports only through declared doors |
+| 10 | `checkArchitectureDocsDriftContract` | Generated reference docs match registries |
+| 11 | `checkVendorOwnershipContract` | Root vendor-owned files (`capacitor.config.ts`) |
+| 12 | Walk `src/` → `checkFile`, seal, system-logs, vendor | Application source |
+| 13 | Walk `packages/` → seal, app-import ban, vendor | Package source |
+| 14 | Walk `scripts/` → data-access ownership, account-bridge, seal, vendor | Tooling |
+| 15 | `checkTouchInteractionContract`, `checkMapLibreWorkerContract` | UI policy |
+| 16 | `checkGeneratedDataAccessArtifacts` | Generated data-access artifacts |
+| 17 | `checkSystemLogsBootstrapContract` | Logging bootstrap |
+| 18 | `checkDeadContractRules` | Rules whose subject no longer exists |
+| 19 | Walk `services/` → bridge, seal, vendor, notification contract | Account services (skips `generated/`) |
+| 20 | `printReport`, then `reportNativeSurface` | Verdict, then store-release cost |
 
 SOURCE_OF_TRUTH → `packages/architecture-core/src/runner.ts`. Every check above is
 named exactly as it is exported, so an agent can search for it directly.

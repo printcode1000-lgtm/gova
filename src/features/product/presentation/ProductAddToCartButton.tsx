@@ -3,8 +3,8 @@
 import * as React from "react";
 import { ShoppingCart } from "lucide-react";
 
-import { addCartItem } from "@/features/cart/cart-store";
-import type { ProductDetails } from "@/features/product/entities/product.entity";
+import { addCartItem } from "@/features/cart/ui";
+import type { ProductDetails } from "@/features/product";
 
 interface ProductAddToCartButtonProps {
   productId: string;

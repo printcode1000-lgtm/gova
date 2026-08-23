@@ -1,4 +1,4 @@
-import type { ProductReview } from "@/features/product/entities/product-review.entity";
+import type { ProductReview } from "@/features/product";
 
 /**
  * Composition surfaces only. Persisting a review or a seller reply is staged

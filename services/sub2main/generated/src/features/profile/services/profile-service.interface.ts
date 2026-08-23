@@ -1,28 +1,28 @@
 import type {
   ProfileContactsData,
   SaveProfileContactsInput,
-} from "../entities/profile-contacts.entity";
+} from "../domain/profile-contacts.entity";
 import type {
   SaveStoreImagesInput,
   StoreImagesData,
-} from "../entities/store-images.entity";
+} from "../domain/store-images.entity";
 import type {
   SaveStoreDetailsInput,
   StoreDetailsData,
-} from "../entities/store-details.entity";
+} from "../domain/store-details.entity";
 import type {
   SaveProfileEditorInput,
   SaveProfileEditorResult,
-} from "../entities/profile-editor.entity";
+} from "../domain/profile-editor.entity";
 import type {
   ProfileSpecialtiesSelection,
   SaveProfileSpecialtiesInput,
-} from "../entities/profile-specialties.entity";
+} from "../domain/profile-specialties.entity";
 import type {
   ProfileFulfillmentSettings,
   SaveProfileFulfillmentSettingsInput,
-} from "../entities/profile-fulfillment-settings.entity";
-import type { UserProfileRow } from "../entities/user-profile-row.entity";
+} from "../domain/profile-fulfillment-settings.entity";
+import type { UserProfileRow } from "../domain/user-profile-row.entity";
 export type { UserProfileRow };
 
 

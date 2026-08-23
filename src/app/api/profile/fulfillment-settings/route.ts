@@ -1,10 +1,10 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { notificationsServer } from "@/features/notifications/server";
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { profileService } from "@/features/profile/server";
 import { getMarketplaceOrderService } from "@asol/data-core/marketplace-orders";
-import type { SaveProfileFulfillmentSettingsInput } from "@/features/profile/entities/profile-fulfillment-settings.entity";
+import type { SaveProfileFulfillmentSettingsInput } from "@/features/profile";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
-import { syncSellerFulfillmentToOpenOrders } from "@/features/orders/services/order-progression.server";
+import { syncSellerFulfillmentToOpenOrders } from "@/features/orders/server";
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute(

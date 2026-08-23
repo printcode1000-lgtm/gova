@@ -1,14 +1,14 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { StorageProfiles } from "@asol/storage-core";
-import { authService } from "@/features/auth/services/auth-service.bootstrap.server";
+import { authService } from "@/features/auth/server";
 import { notificationsServer } from "@/features/notifications/server";
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { profileService } from "@/features/profile/server";
 import { getMarketplaceOrderService } from "@asol/data-core/marketplace-orders";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 import { actorFromInput } from "@asol/orders-core";
 import { mapOrderError } from "../order-api-helpers";
 import { fulfillmentSettingsToSnapshot } from "@asol/orders-core";
-import { grantBuyerOrderCreated, grantSellerOrderCreated } from "@/features/orders/application/order-action-grants.server";
+import { grantBuyerOrderCreated, grantSellerOrderCreated } from "@/features/orders/server";
 
 interface CustomRequestImageInput {
   imageKey: string;

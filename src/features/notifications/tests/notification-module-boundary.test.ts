@@ -16,7 +16,7 @@ import {
   type NotificationCommand,
 } from "../public/notification-commands";
 import type { NotificationsApi } from "../public/notifications";
-import type { NotificationEntity } from "@asol/notifications-core/builder";
+import type { NotificationEntity } from "@asol/notifications-core";
 import type {
   NotificationDiagnostics,
   NotificationReceiveOutcome,

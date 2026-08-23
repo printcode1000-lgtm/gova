@@ -4,7 +4,7 @@ import type {
   DiscountBuyerContext,
   DiscountCartItem,
   SaveSellerDiscountInput,
-} from "../entities/seller-discount.entity";
+} from "../domain/seller-discount.entity";
 import { calculateCartDiscounts } from "./seller-discount-engine";
 import { sellerDiscountRepository } from "@asol/data-core/seller-discounts";
 

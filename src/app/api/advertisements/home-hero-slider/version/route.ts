@@ -1,5 +1,5 @@
 import { apiSuccess } from "@/core/api/api-response";
-import { homeHeroSliderService } from "@/features/advertisements/services/home-hero-slider-service.server";
+import { homeHeroSliderService } from "@/features/advertisements/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET() {

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
-import { useSession } from "@/features/auth/components/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 import { notifications } from "@/features/notifications";
 import {
   notifyOrderDataRefreshFromNotification,

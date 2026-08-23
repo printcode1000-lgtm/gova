@@ -244,7 +244,7 @@ for (const [file, reason] of NATIVE_CONTRACT_FILES) {
 for (const file of [
   "src/features/profile/presentation/ProfilePreviewContent.tsx",
   "src/features/notifications/application/notification-sender.ts",
-  "src/locales/ar.json",
+  "src/shared/locales/ar.json",
   "docs/07-mobile-and-release/capacitor/native-platform.md",
   "package-lock.json",
   "src/app/profile/page.tsx",

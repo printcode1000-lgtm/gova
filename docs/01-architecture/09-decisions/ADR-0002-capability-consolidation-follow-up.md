@@ -16,7 +16,7 @@ Post ADR-0001 audit found remaining dispersion: data-health policy in applicatio
 | Backup manifest, archive, R2 traversal | `@asol/backup-core` | `.`, `./server` |
 | Release command catalog, job state, artifacts | `@asol/release-core` | `./console`, `./console-server`, `./console-artifacts` |
 
-Application **wiring seams** remain in `src/modules/` (single module per join):
+Application **wiring seams** live under `src/features/` (see ADR-0007; formerly `src/modules/`):
 
 - `data-health/.../execution-context.server.ts`
 - `dev-cloud-backup/.../dev-cloud-backup-service.server.ts`
@@ -41,7 +41,7 @@ Application **wiring seams** remain in `src/modules/` (single module per join):
 
 ## Change Impact
 
-New cross-cutting policy features should land in sealed owner, not new `src/modules/*` domain copies.
+New cross-cutting policy features should land in sealed owner, not new `src/features/*` domain copies.
 
 ## Invariants
 
