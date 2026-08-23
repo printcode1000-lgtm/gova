@@ -176,6 +176,21 @@ export function extractImports(content: string): string[] {
   // Dynamic import() as an expression, not as text inside a quoted fixture string.
   const dynamicRegex =
     /(?:^|[;{}\n=(\s])import\(\s*['"]([^'"]+)['"]\s*\)/gm;
+  /**
+   * A re-export is an import that also republishes.
+   *
+   * (The syntax is not spelled out here: this file is scanned by the package's
+   * own contract test, which reads raw text and would take the example for a
+   * real dependency.)
+   *
+   * It was the one form nothing here read, and it is the most useful shape for
+   * hiding a forbidden dependency: a module re-exports a package's internals
+   * and everything downstream reaches them through a local path that looks
+   * legal. Every check built on this function shared the hole — vendor
+   * ownership, the package seal, cycles, the package/app boundary.
+   */
+  const exportFromRegex =
+    /(?:^|[;{}\n])\s*export\s+(?:type\s+)?(?:\*(?:\s+as\s+\w+)?|\{[^}]*\})\s*from\s+['"]([^'"]+)['"]/gm;
 
   let match: RegExpExecArray | null;
   while ((match = importRegex.exec(stripped))) imports.push(match[1]!);
@@ -183,6 +198,7 @@ export function extractImports(content: string): string[] {
   while ((match = nodeRequireRegex.exec(stripped))) imports.push(match[1]!);
   while ((match = createRequireRegex.exec(stripped))) imports.push(match[1]!);
   while ((match = dynamicRegex.exec(stripped))) imports.push(match[1]!);
+  while ((match = exportFromRegex.exec(stripped))) imports.push(match[1]!);
 
   return imports;
 }

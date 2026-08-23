@@ -241,3 +241,47 @@ URL — and treats an empty literal as a failure only when nothing baked a real 
 
 When a refactor adds ports, re-read the guards that match on source text. They were
 written against a codebase that had no defaults to confuse them.
+
+## Independent verification pass
+
+A second, adversarial pass built ten bypasses and ran them against the repository
+rather than reading the rules. Nine were rejected: a direct database client, a storage
+SDK, a deep import of a repository, a native API, a relative path into `packages/`, an
+owned vendor, a dynamic `import()`, a `createRequire` load, and a type-only deep import.
+
+The tenth was not.
+
+```ts
+export * from "@asol/data-core/src/core/database/turso-db-client";
+```
+
+`extractImports` — the function every architecture check is built on: vendor ownership,
+the package seal, package cycles, the package/app boundary — read `import`, `require`,
+`nodeRequire`, `createRequire` and dynamic `import()`, and did not read re-exports. That
+is the most useful shape for hiding a forbidden dependency: one module republishes a
+package's internals, and everything downstream reaches them through a local path that
+looks legal. One fix closed it in every check at once.
+
+Two things this pass also confirmed, by measurement rather than by reading:
+
+- **Infrastructure ownership is genuinely narrow.** `better-sqlite3`, `@libsql/client`
+  and `drizzle-orm` have exactly one consuming package each (`data-core`);
+  `@aws-sdk/client-s3` has two; `web-push` has one. All declared in the registry.
+- **The graph is acyclic**, with one layer inversion — `architecture-core` reads
+  `@asol/ota-core/publishing` for the native-surface report, through a declared door,
+  named in that package's own contract test.
+
+### Scanning a file that contains the rule
+
+Twice now a guard has failed on its own text: the touch-policy test spelled `hover:` out
+in full, and the re-export doc comment above spelled the syntax it matches. A check whose
+source is inside its own scan has to describe its pattern without writing it.
+
+### Reported, not changed
+
+`data-core` has thirteen outgoing package edges (ninety-five references to `orders-core`
+alone). A persistence package depending on thirteen domain packages reads as
+infrastructure leaking upward, but it creates no cycle — those packages do not import it
+back — and it is the repository's deliberate shape: repositories typed by the domain
+contracts whose rows they store. Inverting it would move types across thirteen packages
+and close no bypass.
