@@ -1,5 +1,10 @@
 #!/usr/bin/env tsx
 import { loadReleaseEnvironment } from "./load-release-env";
+import {
+  bodyReportsUnconfiguredPort,
+  mainDeployedSmokeProbe,
+  SERVICE_SMOKE_PROBES,
+} from "./release-service-smoke-probes";
 
 loadReleaseEnvironment();
 
@@ -18,9 +23,9 @@ loadReleaseEnvironment();
  * probe: the outage these gates exist for left `/api/health` at 200 while
  * every data route answered 500.
  *
- * Probe definitions match `scripts/check-service-smoke.ts` (and the main app
- * reuses the products data route from that set). No side effects: every probe
- * is a read or a rejected write.
+ * Probe definitions come from `release-service-smoke-probes.ts` — the same
+ * source `smoke:services` uses — so the two cannot drift. No side effects:
+ * every probe is a read or a rejected write.
  */
 interface OriginProbe {
   readonly account: string;
@@ -31,55 +36,46 @@ interface OriginProbe {
   readonly body?: unknown;
 }
 
-const PROBES: readonly OriginProbe[] = [
-  {
-    // Main app serves the same products read the products account does.
-    account: "main",
-    envVar: "NEXT_PUBLIC_ASOL_API_BASE_URL",
-    path: "/api/products?limit=1",
-    accept: [200, 400],
-  },
-  {
-    account: "profiles",
-    envVar: "NEXT_PUBLIC_ASOL_PROFILES_URL",
-    path: "/api/profile/store-details?uid=asol_smoke_probe",
-    accept: [200, 400, 404],
-  },
-  {
-    account: "products",
-    envVar: "NEXT_PUBLIC_ASOL_PRODUCTS_URL",
-    path: "/api/products?limit=1",
-    accept: [200, 400],
-  },
-  {
-    account: "orders",
-    envVar: "NEXT_PUBLIC_ASOL_ORDERS_URL",
-    path: "/api/orders?uid=asol_smoke_probe&phone=%2B200000000000&limit=1&offset=0",
-    accept: [200, 400, 401, 403, 404],
-  },
-  {
-    account: "notifications",
-    envVar: "NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL",
-    path: "/api/notifications/send",
-    method: "POST",
-    body: { grant: "asol_smoke_probe" },
-    accept: [200, 400],
-  },
-  {
-    account: "submain",
-    envVar: "NEXT_PUBLIC_ASOL_SUBMAIN_URL",
-    path: "/api/search/products?q=probe&categoryId=1&limit=1",
-    accept: [200, 400],
-  },
-  {
-    account: "sub2main",
-    envVar: "NEXT_PUBLIC_ASOL_SUB2MAIN_URL",
-    path: "/api/profile/discounts/quote",
-    method: "POST",
-    body: { items: [] },
-    accept: [200],
-  },
-];
+const ACCOUNT_ENV: Record<string, string> = {
+  main: "NEXT_PUBLIC_ASOL_API_BASE_URL",
+  profiles: "NEXT_PUBLIC_ASOL_PROFILES_URL",
+  products: "NEXT_PUBLIC_ASOL_PRODUCTS_URL",
+  orders: "NEXT_PUBLIC_ASOL_ORDERS_URL",
+  notifications: "NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL",
+  submain: "NEXT_PUBLIC_ASOL_SUBMAIN_URL",
+  sub2main: "NEXT_PUBLIC_ASOL_SUB2MAIN_URL",
+};
+
+function buildProbes(): OriginProbe[] {
+  const main = mainDeployedSmokeProbe();
+  const serviceProbes = SERVICE_SMOKE_PROBES.map((probe) => {
+    const envVar = ACCOUNT_ENV[probe.service];
+    if (!envVar) {
+      throw new Error(`No NEXT_PUBLIC_ASOL_* env mapping for service "${probe.service}".`);
+    }
+    return {
+      account: probe.service,
+      envVar,
+      path: probe.path,
+      accept: probe.accept,
+      method: probe.method,
+      body: probe.body,
+    };
+  });
+  return [
+    {
+      account: main.service,
+      envVar: ACCOUNT_ENV.main,
+      path: main.path,
+      accept: main.accept,
+      method: main.method,
+      body: main.body,
+    },
+    ...serviceProbes,
+  ];
+}
+
+const PROBES = buildProbes();
 
 function requiredOrigin(envVar: string): string {
   const value = process.env[envVar]?.trim().replace(/\/$/, "");
@@ -113,19 +109,11 @@ async function probeOrigin(probe: OriginProbe): Promise<string | null> {
       );
     }
 
-    if (response.status === 500) {
-      return (
-        `${probe.account} ${probe.method ?? "GET"} ${url}\n` +
-        `    HTTP 500 is never acceptable\n` +
-        `    body: ${body}`
-      );
-    }
-
-    const unconfigured = [...body.matchAll(/[\w.]+ is not configured/g)].map((m) => m[0]);
+    const unconfigured = bodyReportsUnconfiguredPort(body);
     if (unconfigured.length > 0) {
       return (
         `${probe.account}: unconfigured port(s) while answering ${url}: ` +
-        `${[...new Set(unconfigured)].join(", ")}\n    body: ${body}`
+        `${unconfigured.join(", ")}\n    body: ${body}`
       );
     }
 

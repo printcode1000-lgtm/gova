@@ -273,7 +273,9 @@ the six service phases are driven by `SERVICE_PHASE_IDS`. The `publish` and
 unless `scripts/deploy-all.ts` also names it. That already happened once:
 `main-serving` was added to the runbook and never executed until it was wired
 by hand. `npm run test:deploy-runbook-execution` fails when a declared branch
-is neither loop-executed nor named in the executor, and states that the branch
+is neither loop-executed nor selected in the executor via a string-literal
+argument to `selectedIncludes` / `runSelectedPublishBranch` (a comment or dead
+string mentioning the id is not enough). The failure states that the branch
 will appear on `/dev/deploy-all` and in the docs while never running. It runs
 inside `build:static`.
 
@@ -324,7 +326,10 @@ npm run release:check
 `smoke:services` proves a locally built service answers. It does not prove the
 origin the Capacitor bundle will call. Those origins are the seven
 `NEXT_PUBLIC_ASOL_*_URL` values the static build bakes in (same names
-`assertStatic*BaseUrl` in `@asol/ota-core/publishing` requires):
+`assertStatic*BaseUrl` in `@asol/ota-core/publishing` requires). Both
+`smoke:services` and `smoke:deployed` read probe path/method/body/accept from
+`scripts/release-service-smoke-probes.ts` so the tables cannot drift; main
+reuses the products data read for `NEXT_PUBLIC_ASOL_API_BASE_URL`.
 
 | Env var | Account | Probe (same as `smoke:services`, plus main) |
 | --- | --- | --- |
