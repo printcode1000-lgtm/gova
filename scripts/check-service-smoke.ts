@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
-import { spawn, type ChildProcess } from "node:child_process";
-import { existsSync } from "node:fs";
+import { execFileSync, spawn, type ChildProcess } from "node:child_process";
+import { existsSync, rmSync } from "node:fs";
 import path from "node:path";
 
 /**
@@ -19,6 +19,14 @@ import path from "node:path";
  *
  * Runs after `services:build`, so a missing registration stops the release
  * before any account is published.
+ *
+ * Each service is built here rather than reused from `services:build`. That
+ * step deletes its own `.next` on purpose: the CLI uploads the service folder
+ * and Vercel builds it remotely, so a build directory left inside that folder
+ * would be uploaded with it. This gate keeps the same invariant — it builds one
+ * service, probes it, and deletes the output before moving to the next — which
+ * costs a rebuild and buys a gate that leaves nothing behind and runs on its
+ * own, without a preceding phase.
  */
 interface ServiceProbe {
   readonly service: string;
@@ -66,6 +74,26 @@ const PROBES: readonly ServiceProbe[] = [
 const BASE_PORT = Number(process.env.ASOL_SERVICE_SMOKE_PORT ?? 3310);
 const STARTUP_TIMEOUT_MS = 90_000;
 
+function buildService(service: string, serviceDir: string): void {
+  const run = (command: string, args: string[]): void => {
+    execFileSync(command, args, {
+      stdio: "inherit",
+      shell: process.platform === "win32",
+      cwd: serviceDir,
+    });
+  };
+
+  // Each service is its own project, not a workspace of the root, so a root
+  // install leaves it without dependencies. This mirrors what Vercel does.
+  if (!existsSync(path.join(serviceDir, "node_modules"))) {
+    console.log(`[service-smoke] ${service}: installing dependencies...`);
+    run("npm", ["ci", "--no-audit", "--no-fund"]);
+  }
+
+  console.log(`[service-smoke] ${service}: building...`);
+  run("npx", ["next", "build"]);
+}
+
 function startService(service: string, port: number): ChildProcess {
   const next = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");
   return spawn(process.execPath, [next, "start", "-p", String(port)], {
@@ -96,9 +124,15 @@ async function waitForListening(server: ChildProcess, port: number, log: string[
 }
 
 async function probeService(probe: ServiceProbe, port: number): Promise<string | null> {
-  const built = path.join(process.cwd(), "services", probe.service, ".next");
-  if (!existsSync(built)) {
-    return `${probe.service}: no build output at services/${probe.service}/.next — run services:build first.`;
+  const serviceDir = path.join(process.cwd(), "services", probe.service);
+  if (!existsSync(serviceDir)) {
+    return `${probe.service}: services/${probe.service} is missing`;
+  }
+
+  try {
+    buildService(probe.service, serviceDir);
+  } catch {
+    return `${probe.service}: next build failed — see the output above.`;
   }
 
   const log: string[] = [];
@@ -129,6 +163,8 @@ async function probeService(probe: ServiceProbe, port: number): Promise<string |
     return `${probe.service}: ${error instanceof Error ? error.message : String(error)}`;
   } finally {
     server.kill("SIGTERM");
+    // Never leave a build directory inside a folder the CLI uploads verbatim.
+    rmSync(path.join(serviceDir, ".next"), { recursive: true, force: true });
   }
 }
 
