@@ -5,8 +5,8 @@
  * declared doors, the absence of a door onto the drivers, the safety of every telemetry
  * default, and the budget of application modules the package is still allowed to reach.
  *
- * Run by `npm run test:data-core`, which is in the `build`, `build:static`, and `test` chains —
- * rule 3 was missed three times in this repository by writing a test that gated nothing.
+ * Run by `npm run test:data-core`. Release-gate coverage is owned centrally by the generated
+ * gate contract so this package test does not duplicate or contradict gate composition policy.
  */
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
@@ -337,15 +337,9 @@ for (const file of productionFiles) {
   );
 }
 
-// ── Rule 3: the gate is wired into the release chains ───────────────────────
-const rootManifest = JSON.parse(readFileSync(path.join(REPO_ROOT, 'package.json'), 'utf8'));
-for (const chain of ['build', 'build:static', 'test']) {
-  assert.ok(
-    rootManifest.scripts[chain].includes('test:data-core'),
-    `test:data-core is missing from the ${chain} chain. A test that does not gate the release ` +
-      'does not satisfy rule 3.',
-  );
-}
+// Rule 3 (release-gate coverage) is verified centrally by scripts/generated-gate-contract.ts.
+// It resolves the generated `build`, `build:static`, and `test` policies and fails if any
+// `test:*-core` script is absent from either build gate or any `test:*` script is absent from test.
 
 console.log(
   `@asol/data-core contract: ${Object.keys(manifest.exports).length} doors, ` +
