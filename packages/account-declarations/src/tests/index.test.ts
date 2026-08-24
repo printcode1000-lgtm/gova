@@ -16,6 +16,19 @@ function assert(condition: boolean, message: string): void {
 }
 
 const PACKAGE_ROOT = path.join(process.cwd(), 'packages/account-declarations/src');
+const APPLICATION_ROOT = path.join(process.cwd(), 'src');
+const CANONICAL_FEATURE_ROOT_CHILDREN = new Set([
+  'domain',
+  'application',
+  'infrastructure',
+  'presentation',
+  'ports',
+  'server',
+  'tests',
+  'index.ts',
+  'ui.ts',
+  'server.ts',
+]);
 
 function allSourceFiles(dir: string): string[] {
   const out: string[] = [];
@@ -77,6 +90,26 @@ function runTests(): void {
     assert(declaration.tokenEnvVar.startsWith('VERCEL_'), `${name}: token var is a Vercel token`);
   }
   console.log('  ✔ All seven declarations are well-formed.');
+
+  // ---------------------------------------------------------------- mirror entry points are real and canonical
+  for (const declaration of Object.values(ACCOUNT_DECLARATIONS)) {
+    for (const entryPoint of declaration.mirrorEntryPoints) {
+      const absolute = path.join(APPLICATION_ROOT, entryPoint);
+      assert(
+        existsSync(absolute),
+        `${declaration.name}: mirror entry point does not exist: src/${entryPoint}`,
+      );
+      const parts = entryPoint.split('/');
+      if (parts[0] === 'features') {
+        const rootChild = parts[2];
+        assert(
+          Boolean(rootChild && CANONICAL_FEATURE_ROOT_CHILDREN.has(rootChild)),
+          `${declaration.name}: mirror entry point bypasses canonical feature layers: src/${entryPoint}`,
+        );
+      }
+    }
+  }
+  console.log('  ✔ Every mirror entry point exists and uses canonical feature layers.');
 
   // ---------------------------------------------------------------- credential isolation
   for (const declaration of [
