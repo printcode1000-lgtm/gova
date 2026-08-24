@@ -1,3 +1,4 @@
 int color notification_accent 0x0
+int drawable asol_notification_large_icon 0x0
 int drawable ic_stat_asol_notification 0x0
 int raw custom_notification 0x0

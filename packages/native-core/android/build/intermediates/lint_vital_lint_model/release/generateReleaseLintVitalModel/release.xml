@@ -28,6 +28,6 @@
       applicationId="hgh.asol.app.nativecore"
       generatedSourceFolders="build\generated\ap_generated_sources\release\out"
       generatedResourceFolders="build\generated\res\resValues\release"
-      desugaredMethodsFiles="C:\Users\hesham\AppData\Local\Temp\cursor-sandbox-cache\b118aeb7b54f648868d50e5b598f949b\gradle\caches\9.4.1\transforms\99ce837f126c176a580e5c0fee278876\transformed\D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="C:\Users\hesham\.gradle\caches\9.4.1\transforms\99ce837f126c176a580e5c0fee278876\transformed\D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>
