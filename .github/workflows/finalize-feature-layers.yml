@@ -7,6 +7,7 @@ on:
     paths:
       - scripts/architecture/finalize-feature-layers.mjs
       - scripts/architecture/finalize-feature-contract.mjs
+      - scripts/architecture/fix-notification-layering.mjs
       - .github/workflows/finalize-feature-layers.yml
 
 permissions:
@@ -37,6 +38,9 @@ jobs:
 
       - name: Remove legacy classifier paths
         run: node scripts/architecture/finalize-feature-contract.mjs
+
+      - name: Canonicalize notification layering
+        run: node scripts/architecture/fix-notification-layering.mjs
 
       - name: Regenerate architecture reference docs
         run: npx tsx -e "import { writeArchitectureDocs } from '@asol/architecture-core'; writeArchitectureDocs();"
