@@ -2,8 +2,8 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { useSession } from '@/features/auth/presentation/SessionProvider';
-import { authApiService } from '../application/services/auth-api-service';
-import { sessionService } from '../application/services/session-service';
+import { authApiService } from '../../application/services/auth-api-service';
+import { sessionService } from '../../application/services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { clearImageUploadClientState } from '@/features/storage';
 import { notifications } from '@/features/notifications';

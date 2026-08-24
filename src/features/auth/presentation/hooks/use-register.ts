@@ -9,14 +9,14 @@ import { useTranslation } from '@/shared/i18n';
 import { createRegistrationSchema, type RegistrationFormData } from '@asol/auth-core';
 import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
 import { useSession } from '@/features/auth/presentation/SessionProvider';
-import { authService } from '../application/services/auth-service';
-import { sessionService } from '../application/services/session-service';
+import { authService } from '../../application/services/auth-service';
+import { sessionService } from '../../application/services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@asol/observability-core';
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { reportPreAuthFailure } from '@/features/system-logs';
 import { queueRegistrationSuccessToast } from '@/features/auth/presentation/LoginSuccessToast';
-import { announceAuthLoginCompleted } from '../application/auth-lifecycle-events';
+import { announceAuthLoginCompleted } from '../../application/auth-lifecycle-events';
 
 export function useRegister() {
   const { t, formatApiError } = useTranslation();
@@ -24,7 +24,6 @@ export function useRegister() {
   const { endGuestSession } = useGuestSession();
   const { setSession } = useSession();
   const registrationSchema = useMemo(() => createRegistrationSchema(t), [t]);
-
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
     defaultValues: { phone: '', password: '', confirmPassword: '', email: '', phoneVerified: false },
@@ -38,16 +37,8 @@ export function useRegister() {
       const { uid } = await authService.register(data);
       if (!uid?.trim()) throw new Error('invalidRegistrationResponse');
       const loginResult = await authService.login({ phone: data.phone, password: data.password });
-      if (!loginResult.uid?.trim() || !loginResult.phone?.trim() || !loginResult.sessionToken?.trim()) {
-        throw new Error('invalidPostRegistrationLoginResponse');
-      }
-      return sessionService.saveSession({
-        uid: loginResult.uid || uid,
-        phone: data.phone,
-        email: loginResult.email || undefined,
-        specialties: loginResult.specialties,
-        sessionToken: loginResult.sessionToken,
-      });
+      if (!loginResult.uid?.trim() || !loginResult.phone?.trim() || !loginResult.sessionToken?.trim()) throw new Error('invalidPostRegistrationLoginResponse');
+      return sessionService.saveSession({ uid: loginResult.uid || uid, phone: data.phone, email: loginResult.email || undefined, specialties: loginResult.specialties, sessionToken: loginResult.sessionToken });
     },
     meta: authMonitorMeta('useRegister', 'RegistrationPageContent', 'Register', 'INSERT'),
     onSuccess: (session) => {
@@ -57,9 +48,7 @@ export function useRegister() {
         announceAuthLoginCompleted({ uid: session.uid, phone: session.phone });
         queueRegistrationSuccessToast();
         router.replace('/home');
-      } catch (error) {
-        reportPreAuthFailure('complete-registration', error);
-      }
+      } catch (error) { reportPreAuthFailure('complete-registration', error); }
     },
     onError: (error) => {
       const expectedConflict = error instanceof Error && ['phoneAlreadyRegistered', 'emailAlreadyRegistered'].includes(error.message);
@@ -73,6 +62,5 @@ export function useRegister() {
     (data) => { startNewFlow(); mutation.mutate(data); },
     (fieldErrors) => reportPreAuthFailure('validate-registration-form', new Error('registrationFormInvalid'), { fields: Object.keys(fieldErrors).sort().join(',') }, 'warn'),
   );
-
   return { form, isSubmitting: mutation.isPending, error, password, phoneVerified, onSubmit };
 }

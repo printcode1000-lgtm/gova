@@ -9,14 +9,14 @@ import { useTranslation } from '@/shared/i18n';
 import { createLoginSchema, type LoginFormData } from '@asol/auth-core';
 import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
 import { useSession } from '@/features/auth/presentation/SessionProvider';
-import { authService } from '../application/services/auth-service';
-import { sessionService } from '../application/services/session-service';
+import { authService } from '../../application/services/auth-service';
+import { sessionService } from '../../application/services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@asol/observability-core';
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { queueLoginSuccessToast } from '@/features/auth/presentation/LoginSuccessToast';
 import { reportPreAuthFailure } from '@/features/system-logs';
-import { announceAuthLoginCompleted } from '../application/auth-lifecycle-events';
+import { announceAuthLoginCompleted } from '../../application/auth-lifecycle-events';
 
 export function useLogin() {
   const { t, formatApiError } = useTranslation();
@@ -24,29 +24,15 @@ export function useLogin() {
   const { endGuestSession } = useGuestSession();
   const { setSession } = useSession();
   const loginSchema = useMemo(() => createLoginSchema(t), [t]);
-
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { phone: '', password: '' },
-    mode: 'onChange',
-  });
+  const form = useForm<LoginFormData>({ resolver: zodResolver(loginSchema), defaultValues: { phone: '', password: '' }, mode: 'onChange' });
 
   const mutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
       const result = await authService.login(data);
-      if (!result.uid?.trim() || !result.phone?.trim() || !result.sessionToken?.trim()) {
-        throw new Error('invalidLoginResponse');
-      }
-      return sessionService.saveSession({
-        uid: result.uid,
-        phone: result.phone,
-        email: result.email || undefined,
-        specialties: result.specialties,
-        sessionToken: result.sessionToken,
-      });
+      if (!result.uid?.trim() || !result.phone?.trim() || !result.sessionToken?.trim()) throw new Error('invalidLoginResponse');
+      return sessionService.saveSession({ uid: result.uid, phone: result.phone, email: result.email || undefined, specialties: result.specialties, sessionToken: result.sessionToken });
     },
     meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),
-
     onSuccess: (session) => {
       try {
         endGuestSession();
@@ -54,9 +40,7 @@ export function useLogin() {
         announceAuthLoginCompleted({ uid: session.uid, phone: session.phone });
         queueLoginSuccessToast();
         router.replace('/home');
-      } catch (error) {
-        reportPreAuthFailure('complete-login', error);
-      }
+      } catch (error) { reportPreAuthFailure('complete-login', error); }
     },
     onError: (error) => {
       if (error instanceof Error && ['userNotFound', 'invalidPassword'].includes(error.message)) {
@@ -71,10 +55,7 @@ export function useLogin() {
   const error = useMemo(() => mutation.error ? formatApiError(mutation.error) : null, [mutation.error, formatApiError]);
   const onSubmit = form.handleSubmit(
     (data) => { startNewFlow(); mutation.mutate(data); },
-    (fieldErrors) => {
-      reportPreAuthFailure('validate-login-form', new Error('loginFormInvalid'), { fields: Object.keys(fieldErrors).sort().join(',') }, 'warn');
-    },
+    (fieldErrors) => reportPreAuthFailure('validate-login-form', new Error('loginFormInvalid'), { fields: Object.keys(fieldErrors).sort().join(',') }, 'warn'),
   );
-
   return { form, isSubmitting: mutation.isPending, error, onSubmit };
 }

@@ -10,10 +10,10 @@ import {
   type ProfileFormData,
 } from '@asol/auth-core';
 import { useSession } from '@/features/auth/presentation/SessionProvider';
-import { authService } from '../application/services/auth-service';
-import { sessionService } from '../application/services/session-service';
+import { authService } from '../../application/services/auth-service';
+import { sessionService } from '../../application/services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
-import type { UserProfile } from '../domain/profile.entity';
+import type { UserProfile } from '../../domain/profile.entity';
 import type { ProfileRegistrationSnapshot } from '@/features/profile';
 import { isExpectedProfileSaveRejection } from '@/core/api/expected-business-error-codes';
 import { reportSystemIssue } from '@asol/system-logs-core';
@@ -23,7 +23,11 @@ export function useProfileRegistration() {
   const { t } = useTranslation();
   const { session, setSession } = useSession();
   const uid = session?.uid ?? '';
-  const initialForm = useMemo(() => toProfileFormData({ phone: session?.phone, email: session?.email }), [session?.phone, session?.email]);
+  const initialForm = useMemo(
+    () => toProfileFormData({ phone: session?.phone, email: session?.email }),
+    [session?.phone, session?.email],
+  );
+
   const [form, setForm] = useState<ProfileFormData>(initialForm);
   const [baseline, setBaseline] = useState<ProfileFormData>(initialForm);
   const [phoneVerified, setPhoneVerified] = useState(true);
@@ -38,6 +42,7 @@ export function useProfileRegistration() {
 
   const isDirty = isProfileFormDirty(form, baseline);
   const schema = useMemo(() => createProfileSchema(t), [t]);
+
   const updateField = useCallback(<K extends keyof ProfileFormData>(key: K, value: ProfileFormData[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
     setFieldErrors((prev) => ({ ...prev, [key]: undefined }));
@@ -121,5 +126,19 @@ export function useProfileRegistration() {
     return true;
   };
 
-  return { form, updateField, fieldErrors, phoneVerified, setPhoneVerified, isDirty, isLoading: !session, isSaving: saveMutation.isPending, error, saveAsync, prepareSnapshot, applySaved, saved: saveMutation.isSuccess && !isDirty };
+  return {
+    form,
+    updateField,
+    fieldErrors,
+    phoneVerified,
+    setPhoneVerified,
+    isDirty,
+    isLoading: !session,
+    isSaving: saveMutation.isPending,
+    error,
+    saveAsync,
+    prepareSnapshot,
+    applySaved,
+    saved: saveMutation.isSuccess && !isDirty,
+  };
 }

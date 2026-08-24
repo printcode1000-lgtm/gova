@@ -5,8 +5,8 @@
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
 export * from './application/auth-lifecycle-events';
-export * from './hooks/use-logout';
-export * from './hooks/use-profile-registration';
+export * from './presentation/hooks/use-logout';
+export * from './presentation/hooks/use-profile-registration';
 export * from './presentation/AccountDeletionPageContent';
 export * from './presentation/AuthHero';
 export * from './presentation/AuthLoginBootstrapController';
