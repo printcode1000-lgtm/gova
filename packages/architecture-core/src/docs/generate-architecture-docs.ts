@@ -47,8 +47,8 @@ function testGate(folder: string, name: string): string {
     const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as {
       scripts?: Record<string, string>;
     };
-    for (const c of candidates) {
-      if (pkg.scripts?.[c]) return `\`npm run ${c}\``;
+    for (const candidate of candidates) {
+      if (pkg.scripts?.[candidate]) return `\`npm run ${candidate}\``;
     }
     if (folder.endsWith('-composition')) return '`npm run test:compositions`';
   } catch {
@@ -59,24 +59,23 @@ function testGate(folder: string, name: string): string {
 
 function walkTs(dir: string, out: string[] = []): string[] {
   if (!existsSync(dir)) return out;
-  for (const e of readdirSync(dir, { withFileTypes: true })) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
     if (
-      e.name === 'node_modules' ||
-      e.name === 'tests' ||
-      e.name === '__tests__' ||
-      e.name === 'dist'
+      entry.name === 'node_modules' ||
+      entry.name === 'tests' ||
+      entry.name === '__tests__' ||
+      entry.name === 'dist'
     ) continue;
-    const full = join(dir, e.name);
-    if (e.isDirectory()) walkTs(full, out);
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) walkTs(full, out);
     else if (
-      /\.(ts|tsx|js|mjs|cjs)$/.test(e.name) &&
-      !/\.(?:test|spec)\.[cm]?[jt]sx?$/.test(e.name)
+      /\.(ts|tsx|js|mjs|cjs)$/.test(entry.name) &&
+      !/\.(?:test|spec)\.[cm]?[jt]sx?$/.test(entry.name)
     ) out.push(full);
   }
   return out;
 }
 
-/** Production @asol/* import edges between packages, parsed by the same helper as enforcement. */
 function collectPackageEdges(): Map<string, Set<string>> {
   const edges = new Map<string, Set<string>>();
   for (const pkg of CAPABILITY_PACKAGES) {
@@ -84,12 +83,11 @@ function collectPackageEdges(): Map<string, Set<string>> {
     edges.set(pkg.name, owned);
     const src = join(ROOT, 'packages', pkg.folder, 'src');
     for (const file of walkTs(src)) {
-      const text = readFileSync(file, 'utf8');
-      for (const spec of extractImports(text)) {
-        if (!spec.startsWith('@asol/')) continue;
-        const base = spec.split('/').slice(0, 2).join('/');
+      for (const specifier of extractImports(readFileSync(file, 'utf8'))) {
+        if (!specifier.startsWith('@asol/')) continue;
+        const base = specifier.split('/').slice(0, 2).join('/');
         if (base === pkg.name) continue;
-        owned.add(spec);
+        owned.add(specifier);
       }
     }
   }
@@ -128,25 +126,19 @@ export function renderCapabilityMap(): string {
     lines.push(`| **Owner Package** | \`${pkg.name}\` |`);
     lines.push(`| **Architectural Layer** | ${pkg.layer} |`);
     lines.push(
-      `| **Public Gateway** | ${doors.map((d) => (d === '.' ? pkg.name : `${pkg.name}/${d.slice(2)}`)).map((s) => `\`${s}\``).join(' · ') || '_(none)_'} |`,
+      `| **Public Gateway** | ${doors.map((door) => (door === '.' ? pkg.name : `${pkg.name}/${door.slice(2)}`)).map((specifier) => `\`${specifier}\``).join(' · ') || '_(none)_'} |`,
     );
-    lines.push(
-      '| **Allowed Consumers** | Application via declared doors; composition packages wire ports |',
-    );
+    lines.push('| **Allowed Consumers** | Application via declared doors; composition packages wire ports |');
     lines.push(
       `| **Composition Root** | ${pkg.mayImportApp ? '`src/core/composition/` + feature ports' : '`N/A` (capability must not import `@/`)'} |`,
     );
     lines.push(
-      `| **Infrastructure Owner** | ${pkg.vendorModules.length ? pkg.vendorModules.map((v) => `\`${v}\``).join(', ') : 'none (pure logic or ports)'} |`,
+      `| **Infrastructure Owner** | ${pkg.vendorModules.length ? pkg.vendorModules.map((vendor) => `\`${vendor}\``).join(', ') : 'none (pure logic or ports)'} |`,
     );
     lines.push('| **Status** | CLOSED (sealed package with registry entry) |');
-    lines.push(
-      '| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |',
-    );
+    lines.push('| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |');
     lines.push('');
-    lines.push(
-      `**Source Map:** \`packages/${pkg.folder}/\` · registry: \`packages/architecture-core/src/registry/capability-registry.ts\``,
-    );
+    lines.push(`**Source Map:** \`packages/${pkg.folder}/\` · registry: \`packages/architecture-core/src/registry/capability-registry.ts\``);
     lines.push('');
     lines.push('---');
     lines.push('');
@@ -158,12 +150,11 @@ export function renderCapabilityMap(): string {
   lines.push('|---|---|');
   lines.push(`| Sealed packages | ${CAPABILITY_PACKAGES.length} |`);
   const byLayer = new Map<string, number>();
-  for (const p of CAPABILITY_PACKAGES) byLayer.set(p.layer, (byLayer.get(p.layer) ?? 0) + 1);
+  for (const pkg of CAPABILITY_PACKAGES) byLayer.set(pkg.layer, (byLayer.get(pkg.layer) ?? 0) + 1);
   for (const [layer, count] of [...byLayer.entries()].sort()) {
     lines.push(`| Layer \`${layer}\` | ${count} |`);
   }
   lines.push('');
-
   return lines.join('\n');
 }
 
@@ -199,17 +190,11 @@ export function renderPackageCatalog(): string {
     lines.push(`| **Folder** | \`packages/${pkg.folder}/\` |`);
     lines.push(`| **Purpose** | ${pkg.owns} |`);
     lines.push(`| **Architectural Layer** | ${pkg.layer} |`);
-    lines.push(
-      `| **Public Exports** | ${doors.map((d) => `\`${d}\``).join(' · ') || '_(none)_'} |`,
-    );
-    lines.push(
-      `| **Infrastructure Privileges** | ${pkg.vendorModules.length ? pkg.vendorModules.map((v) => `\`${v}\``).join(', ') : 'none'} |`,
-    );
+    lines.push(`| **Public Exports** | ${doors.map((door) => `\`${door}\``).join(' · ') || '_(none)_'} |`);
+    lines.push(`| **Infrastructure Privileges** | ${pkg.vendorModules.length ? pkg.vendorModules.map((vendor) => `\`${vendor}\``).join(', ') : 'none'} |`);
     lines.push(`| **May Import App (\`@/\`)** | ${pkg.mayImportApp ? 'yes' : 'no'} |`);
     lines.push(`| **Test Gate** | ${testGate(pkg.folder, pkg.name)} |`);
-    lines.push(
-      '| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |',
-    );
+    lines.push('| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |');
     lines.push('');
   }
 
@@ -219,7 +204,6 @@ export function renderPackageCatalog(): string {
   lines.push('|---|---|');
   lines.push(`| Packages | ${CAPABILITY_PACKAGES.length} |`);
   lines.push('');
-
   return lines.join('\n');
 }
 
@@ -268,23 +252,23 @@ export function renderDependencyMap(): string {
   ];
 
   for (const pkg of [...CAPABILITY_PACKAGES].sort((a, b) => a.name.localeCompare(b.name))) {
-    const deps = [...(edges.get(pkg.name) ?? [])].sort();
+    const dependencies = [...(edges.get(pkg.name) ?? [])].sort();
     lines.push(`### ${pkg.name}`);
     lines.push('');
-    if (deps.length === 0) {
+    if (dependencies.length === 0) {
       lines.push(`\`${pkg.name}\` has no production \`@asol/*\` imports.`);
       lines.push('');
       continue;
     }
-    for (const dep of deps) {
+    for (const dependency of dependencies) {
       lines.push(`\`${pkg.name}\``);
-      lines.push(`ALLOWED_TO_IMPORT → \`${dep}\``);
+      lines.push(`ALLOWED_TO_IMPORT → \`${dependency}\``);
       lines.push('');
     }
   }
 
   let edgeCount = 0;
-  for (const set of edges.values()) edgeCount += set.size;
+  for (const dependencies of edges.values()) edgeCount += dependencies.size;
   lines.push('## Counts');
   lines.push('');
   lines.push('| Metric | Value |');
@@ -292,7 +276,6 @@ export function renderDependencyMap(): string {
   lines.push(`| Packages | ${CAPABILITY_PACKAGES.length} |`);
   lines.push(`| Import edges | ${edgeCount} |`);
   lines.push('');
-
   return lines.join('\n');
 }
 
@@ -338,24 +321,11 @@ export function renderApplicationFeatureCatalog(): string {
     lines.push(`| **Feature** | \`${feature.name}\` |`);
     lines.push(`| **Source** | \`${feature.sourcePath}/\` |`);
     lines.push(`| **Owns** | ${feature.owns} |`);
-    lines.push(
-      `| **Public Doors** | ${feature.doors.map((d) => (d === '.' ? `\`@/features/${feature.name}\`` : `\`@/features/${feature.name}/${d.slice(2)}\``)).join(' · ') || '_(none)_'} |`,
-    );
-    lines.push(
-      `| **Runtime Targets** | ${feature.runtimeTargets.map((t) => `\`${t}\``).join(', ')} |`,
-    );
-    lines.push(
-      `| **Capability Owners** | ${feature.capabilityOwners.length ? feature.capabilityOwners.map((c) => `\`${c}\``).join(', ') : '_(none)_'} |`,
-    );
-    lines.push(
-      `| **Permitted Feature Dependencies** | ${feature.permittedDependencies.length ? feature.permittedDependencies.map((d) => `\`${d}\``).join(', ') : '_(none)_'} |`,
-    );
-    lines.push(
-      `| **Deep Import Seams** | ${feature.deepImportSeams.length ? feature.deepImportSeams.map((d) => `\`${d}\``).join(', ') : '_(none)_'} |`,
-    );
-    lines.push(
-      `| **Surfaces** | browser=${feature.hasBrowser} · server=${feature.hasServer} · ui=${feature.hasUi} |`,
-    );
+    lines.push(`| **Public Doors** | ${feature.doors.map((door) => (door === '.' ? `\`@/features/${feature.name}\`` : `\`@/features/${feature.name}/${door.slice(2)}\``)).join(' · ') || '_(none)_'} |`);
+    lines.push(`| **Runtime Targets** | ${feature.runtimeTargets.map((target) => `\`${target}\``).join(', ')} |`);
+    lines.push(`| **Capability Owners** | ${feature.capabilityOwners.length ? feature.capabilityOwners.map((owner) => `\`${owner}\``).join(', ') : '_(none)_'} |`);
+    lines.push(`| **Permitted Feature Dependencies** | ${feature.permittedDependencies.length ? feature.permittedDependencies.map((dependency) => `\`${dependency}\``).join(', ') : '_(none)_'} |`);
+    lines.push(`| **Surfaces** | browser=${feature.hasBrowser} · server=${feature.hasServer} · ui=${feature.hasUi} |`);
     lines.push('');
   }
 
@@ -364,17 +334,10 @@ export function renderApplicationFeatureCatalog(): string {
   lines.push('| Metric | Value |');
   lines.push('|---|---|');
   lines.push(`| Application features | ${APPLICATION_FEATURES.length} |`);
-  lines.push(
-    `| Features with UI door | ${APPLICATION_FEATURES.filter((f) => f.doors.includes('./ui')).length} |`,
-  );
-  lines.push(
-    `| Features with server door | ${APPLICATION_FEATURES.filter((f) => f.doors.includes('./server')).length} |`,
-  );
-  lines.push(
-    `| Sealed capability packages | ${CAPABILITY_PACKAGES.length} |`,
-  );
+  lines.push(`| Features with UI door | ${APPLICATION_FEATURES.filter((feature) => feature.doors.includes('./ui')).length} |`);
+  lines.push(`| Features with server door | ${APPLICATION_FEATURES.filter((feature) => feature.doors.includes('./server')).length} |`);
+  lines.push(`| Sealed capability packages | ${CAPABILITY_PACKAGES.length} |`);
   lines.push('');
-
   return lines.join('\n');
 }
 
@@ -391,35 +354,32 @@ export function renderArchitectureDoc(id: ArchitectureDocId): string {
     case 'docs/01-architecture/08-reference/application-feature-catalog.md':
       return renderApplicationFeatureCatalog();
     default: {
-      const _exhaustive: never = id;
-      return _exhaustive;
+      const exhaustive: never = id;
+      return exhaustive;
     }
   }
 }
 
 export function writeArchitectureDocs(): void {
   for (const id of GENERATED_ARCHITECTURE_DOCS) {
-    const abs = join(ROOT, id);
-    mkdirSync(dirname(abs), { recursive: true });
-    writeFileSync(abs, renderArchitectureDoc(id), 'utf8');
+    const absolute = join(ROOT, id);
+    mkdirSync(dirname(absolute), { recursive: true });
+    writeFileSync(absolute, renderArchitectureDoc(id), 'utf8');
   }
 }
 
 export function diffArchitectureDocs(): Array<{ path: string; reason: string }> {
   const diffs: Array<{ path: string; reason: string }> = [];
   for (const id of GENERATED_ARCHITECTURE_DOCS) {
-    const abs = join(ROOT, id);
+    const absolute = join(ROOT, id);
     const expected = renderArchitectureDoc(id);
-    if (!existsSync(abs)) {
+    if (!existsSync(absolute)) {
       diffs.push({ path: id, reason: 'missing generated documentation file' });
       continue;
     }
-    const actual = readFileSync(abs, 'utf8');
+    const actual = readFileSync(absolute, 'utf8');
     if (actual !== expected) {
-      diffs.push({
-        path: id,
-        reason: 'content differs from canonical architecture model output',
-      });
+      diffs.push({ path: id, reason: 'content differs from canonical architecture model output' });
     }
   }
   return diffs;
