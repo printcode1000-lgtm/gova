@@ -21,11 +21,24 @@ for (const { file, source } of sources) {
   assert.doesNotMatch(source, /\blocalStorage\b|\bsessionStorage\b/, `${file} bypasses the private AsolDB store.`);
 }
 
-const storage = readFileSync(
-  path.join(favoritesRoot, "services/favorite-storage.ts"),
-  "utf8",
+const storageSources = sources.filter(({ file }) => path.basename(file) === "favorite-storage.ts");
+assert.equal(
+  storageSources.length,
+  1,
+  `Favorites must have exactly one favorite-storage.ts implementation; found ${storageSources.length}.`,
 );
+const storage = storageSources[0]!.source;
 assert.match(storage, /ASOL_DB_STORES\.FAVORITES/);
 assert.match(storage, /favorites:\$\{scope\}/);
+
+const provider = sources.find(
+  ({ file }) => path.basename(file) === "FavoritesProvider.tsx",
+);
+assert.ok(provider, "FavoritesProvider.tsx must exist.");
+assert.match(
+  provider.source,
+  /from\s+["'][^"']*favorite-storage["']/,
+  "FavoritesProvider must use the feature's favorite-storage implementation.",
+);
 
 console.log("Favorites device-local storage contract passed.");
