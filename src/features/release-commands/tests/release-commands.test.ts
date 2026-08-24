@@ -8,6 +8,14 @@ import path from "node:path";
 
 import { zipSync } from "fflate";
 
+import {
+  ALL_BRANCH_HELP,
+  ANDROID_RELEASE_BRANCH_HELP,
+  ANDROID_RELEASE_PATHS,
+  PUSH_BRANCH_HELP,
+  deployAllScenarios,
+  deployPushTargets,
+} from "@/features/google-play-console";
 import { detectImageContentType, readImageDimensions, validateGooglePlayImage } from "@asol/google-play-store-assets-core/images";
 import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "@asol/ota-core/publishing";
 import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "@asol/native-core/scripts/validate-android-r8-policy";
@@ -37,14 +45,6 @@ import {
   deployAllBranchIds,
   deployPushBranchIds,
 } from "@asol/release-core/console";
-import { ANDROID_RELEASE_BRANCH_HELP } from "../../google-play-console/presentation/android-release-runbook-copy";
-import { ANDROID_RELEASE_PATHS } from "../../google-play-console/presentation/components/android-release-paths-data";
-import {
-  ALL_BRANCH_HELP,
-  PUSH_BRANCH_HELP,
-  deployAllScenarios,
-  deployPushTargets,
-} from "../../google-play-console/presentation/deploy-runbook-copy";
 import {
   acquireBuildJobLock,
   assertBuildJobId,
@@ -269,9 +269,6 @@ assert.match(
   /runAndroidBuildPreflight/,
   "android:device:tests must run Android preflight before connected Gradle tests",
 );
-// One merged full-release path. It publishes nothing, so it needs no OTA
-// credentials and no confirmation phrase: the shell it builds carries its own
-// complete bundle, and OTA publication is `ota-publish` on its own button.
 assert.equal(
   BUILD_COMMAND_CATALOG.filter((item) => item.script.startsWith("release:android")).length,
   1,
@@ -321,18 +318,12 @@ assert.match(
 const fullReleaseOrchestrator = await readFile("scripts/release-android.ts", "utf8");
 assert.match(fullReleaseOrchestrator, /capBuildPath, "--no-ota", \.\.\.forwarded/,
   "the release orchestrator must build without OTA and pass the resolved choices to cap-build");
-
-// The version action is resolved before cap-build runs, so `cap-build`'s `auto` fallback is
-// unreachable from this path. The console's dialog never offers `auto`, and a full release
-// picking its own version number silently is the mistake this path exists to prevent.
 assert.match(fullReleaseOrchestrator, /resolveNativeVersionAction\(releaseArguments\)/,
   "the release orchestrator must resolve the Android version action before building");
 assert.match(fullReleaseOrchestrator, /\$\{NATIVE_VERSION_FLAG\}\$\{nativeVersionAction\}/,
   "the resolved action must be forwarded to cap-build as --native-version=");
 
 const versionChoice = await readFile("scripts/release-android-version-choice.ts", "utf8");
-// The two answers must be exactly the two the dialog offers, mapped to the two values
-// `cap-build` accepts. A third value here would be a behaviour the console cannot produce.
 for (const value of ["current", "next-patch"]) {
   assert.match(versionChoice, new RegExp(`value: "${value}"`),
     `the terminal prompt must offer the ${value} action, matching the console dialog`);
@@ -342,28 +333,15 @@ assert.doesNotMatch(versionChoice, /"auto"/,
 assert.match(versionChoice, /process\.stdin\.isTTY/,
   "the prompt must detect a terminal: the console spawns this script with piped stdio and " +
   "would hang forever on a question nobody can answer");
-// English only. A mixed-script prompt reorders around option numbers and flag values in
-// most shells, which misleads about which key selects what.
 assert.doesNotMatch(versionChoice, /[؀-ۿ]/,
   "terminal output must be English only");
 assert.ok(fullReleaseOrchestrator.indexOf("capBuildPath")
   < fullReleaseOrchestrator.lastIndexOf("signedBuildPath"),
 "signed Android artifacts must be built only after web/native preparation");
-// Checked against `forwarded` rather than the raw argv: the orchestrator now resolves the
-// version action first and rebuilds the argument list, and `return` replaces `process.exit`
-// so the async entry point can reject through its own catch instead of exiting mid-promise.
 assert.match(fullReleaseOrchestrator, /forwarded\.includes\("--dry-run"\)\)\s*return/,
   "a full-release dry run must stop before signing");
 assert.match(fullReleaseOrchestrator, /ASOL_WEB_BUNDLE_READY:\s*"1"/,
   "the signed build must receive proof that cap-build prepared the web bundle");
-
-// Every artifact from this command is signed and R8-processed.
-//
-// Signing was already enforced by build-android-signed, which refuses when a keystore
-// variable is missing. R8 was not: cap-build permits --no-r8 alongside --no-ota, and
-// --no-ota is exactly what this path passes — so `release:android --no-r8` would have
-// assembled releaseNoR8 artifacts with minifyEnabled false and then signed a separate
-// release build on top, leaving two different outputs from one release run.
 assert.match(fullReleaseOrchestrator, /includes\("--no-r8"\)/,
   "release:android must refuse --no-r8: every package it produces is R8-processed");
 const signedBuild = await readFile("scripts/build-android-signed.ts", "utf8");
@@ -385,22 +363,9 @@ for (const setting of [
     `the release build type must keep "${setting}": it is what makes the shipped shell minified and signed`);
 }
 
-// Capacitor plugin registration must survive `cap sync`.
-//
-// Capacitor discovers plugins from the **root** package.json, and every plugin here is
-// declared by @asol/native-core instead (rule 9). So `npx cap sync` found none and
-// regenerated android/capacitor.settings.gradle with 1 entry instead of 25 — the native
-// compile then failed with "package com.capacitorjs.plugins.pushnotifications does not
-// exist". `includePlugins` overrides discovery, and deriving it from native-core keeps one
-// source of truth.
 const capacitorConfig = await readFile("capacitor.config.ts", "utf8");
 assert.match(capacitorConfig, /includePlugins/,
   "capacitor.config.ts must declare includePlugins: plugin discovery cannot see native-core");
-// The derivation moved into the package that declares the plugins. The config
-// used to read `./packages/native-core/package.json` by relative path — a
-// traversal the package seal forbids everywhere else, which survived only
-// because repository-root files were never scanned. Same invariant, one source
-// of truth, now reached through the package door.
 assert.match(capacitorConfig, /CAPACITOR_INCLUDE_PLUGINS/,
   "includePlugins must come from native-core so the two lists cannot drift");
 assert.match(capacitorConfig, /from ["']@asol\/native-core["']/,
@@ -422,43 +387,25 @@ const nativeCoreDeps = Object.keys(
   !["@capacitor/android", "@capacitor/ios", "@capacitor/cli", "@capacitor/core"].includes(name));
 const settingsGradle = await readFile("android/capacitor.settings.gradle", "utf8");
 for (const plugin of nativeCoreDeps) {
-  // The generated file points at the package's own android/ folder under node_modules,
-  // so the scoped name appears verbatim.
   assert.ok(settingsGradle.includes(`node_modules/${plugin}/android`),
     `android/capacitor.settings.gradle must register ${plugin}; run npm run cap:sync`);
 }
 
-// The `:native-core` Gradle library module must stay compilable.
-//
-// It was added on 2026-08-15, after the last successful Android build, so nothing had
-// opened it and it failed `:native-core:compileReleaseJavaWithJavac` three times over. All
-// three defects are mechanically detectable, which is what these assertions are for. A Java
-// compile cannot run here, so each one pins the specific mistake rather than the outcome.
 const nativeCoreGradle = await readFile("packages/native-core/android/build.gradle", "utf8");
 const nativeCoreJavaDir = "packages/native-core/android/src/main/java/hgh/asol/app";
 const nativeCoreJavaNames = (await readdir(nativeCoreJavaDir)).filter((name) => name.endsWith(".java"));
 assert.ok(nativeCoreJavaNames.length > 0, `${nativeCoreJavaDir} must contain the module's Java sources`);
-
-// The module's namespace differs from its Java package, so an unqualified `R` resolves to a
-// nonexistent hgh.asol.app.R. Any file using R must import the module's own R explicitly.
 const nativeCoreNamespace = /namespace\s+["']([^"']+)["']/.exec(nativeCoreGradle)?.[1];
 assert.equal(nativeCoreNamespace, "hgh.asol.app.nativecore",
   "packages/native-core/android/build.gradle must declare its own namespace");
 for (const name of nativeCoreJavaNames) {
   const source = await readFile(`${nativeCoreJavaDir}/${name}`, "utf8");
-
   if (/\bR\.(drawable|color|raw|string|layout)\./.test(source)) {
     assert.match(source, new RegExp(`import ${nativeCoreNamespace.replace(/\./g, "\\.")}\\.R;`),
       `${name} uses R but does not import ${nativeCoreNamespace}.R; unqualified R resolves to hgh.asol.app.R, which does not exist`);
   }
-
-  // MainActivity lives in the application module. A library cannot depend on the app that
-  // consumes it, so naming that class here does not compile — the launcher intent must be
-  // resolved through the package manager instead.
   assert.doesNotMatch(source, /\bMainActivity\b/,
     `${name} must not reference MainActivity: :native-core is a library module and cannot see the app's classes. Resolve the intent with getLaunchIntentForPackage`);
-
-  // Extending a plugin's class requires that plugin project on the compile classpath.
   const extendedPlugin = /class\s+\w+\s+extends\s+(\w*Plugin\w*)/.exec(source)?.[1];
   if (extendedPlugin === "PushNotificationsPlugin" || /PushNotificationsPlugin\./.test(source)) {
     assert.match(nativeCoreGradle, /project\(':capacitor-push-notifications'\)/,
@@ -466,9 +413,6 @@ for (const name of nativeCoreJavaNames) {
   }
 }
 
-// The iOS push-policy validator reads notification sources by path, and extracting
-// @asol/notifications-core moved every one of them. It was wired into no gate, so nothing
-// reported it: the paths it names must exist, and the gates must run it.
 const iosPushValidator = await readFile("packages/native-core/scripts/validate-ios-push-policy.ts", "utf8");
 for (const [, quoted] of iosPushValidator.matchAll(/["'`](packages\/[^"'`]+\.tsx?)["'`]/g)) {
   assert.ok(existsSync(quoted),
@@ -550,9 +494,6 @@ try {
   await writeFile(diagnosticManifest, JSON.stringify({ diagnostic: false }));
   assert.doesNotThrow(() => assertReleaseStaticBundle(diagnosticManifest));
 
-  // A store release opens its own content line; every OTA afterwards advances
-  // the counter alone, and the next shell restarts it without ever ranking
-  // below what devices already carry.
   assert.equal(releaseContentVersion("0.2.3"), "0.2.3.0");
   assert.throws(() => releaseContentVersion("0.2.3.0"), /Invalid native shell version/);
   assert.deepEqual(parseContentVersion("0.2.3.7"), { nativeVersion: "0.2.3", counter: 7 });
@@ -568,25 +509,9 @@ try {
     "a restarted counter must still outrank the whole previous line");
   assert.equal(compareOtaVersions("0.2.3", "0.2.3.0"), 0,
     "a legacy three-part version and its .0 form must compare equal");
-  // The one ordering an installed bundle cannot recover from: a published
-  // version that does not advance reads as "no update" forever.
   assert.throws(() => nextContentVersion("0.3.0.2", "0.2.3"), /does not outrank/);
   assert.throws(() => assertContentVersionAdvances("0.2.3.0", "0.2.3.0"), /does not outrank/);
   assert.doesNotThrow(() => assertContentVersionAdvances("0.2.3.0", null));
-
-  // The store-release rule compares content **lines**, not counters.
-  //
-  // The shell always stamps `<native>.0`, which is structurally the lowest value on its
-  // line: every OTA published onto that shell is `.1` and upward. So the normal state of a
-  // store rebuild looks like a regression to a counter comparison —
-  //
-  //   Google Play published   0.2.3
-  //   OTA on R2               0.2.3.1
-  //   local package rebuilt   0.2.3.0   ← newest out/ bundle, same line, not a regression
-  //
-  // and that is exactly the case the "keep the current version" choice exists to serve:
-  // fresh packages carrying every latest change, at the published version numbers, with
-  // nothing written to R2. The higher OTA version comes later, deliberately, as 0.2.3.2.
   assert.doesNotThrow(() => assertContentLineDoesNotRegress("0.2.3.0", "0.2.3.1"),
     "a store rebuild must be allowed while a higher OTA exists on the same line");
   assert.doesNotThrow(() => assertContentLineDoesNotRegress("0.2.4.0", "0.2.4.0"),
@@ -595,16 +520,11 @@ try {
     "advancing the line must remain allowed regardless of the old counter");
   assert.doesNotThrow(() => assertContentLineDoesNotRegress("0.2.4.0", null),
     "a first local build has nothing to compare against");
-  // Moving the line backwards is still refused: older native content shipped as current.
   assert.throws(() => assertContentLineDoesNotRegress("0.2.4.0", "0.2.5.1"), /is older than/,
     "a store release must never move the content line backwards");
-
-  // The publish rule keeps its strictness, where it belongs.
   assert.throws(() => assertContentVersionAdvances("0.2.3.0", "0.2.3.1"), /does not outrank/,
     "publishing must still refuse a version that does not advance");
 
-  // And the store-release path must use the line rule, not the publish one — otherwise the
-  // keep-current button regresses to always failing.
   const capBuild = await readFile("scripts/cap-build.ts", "utf8");
   assert.match(capBuild, /regressionBaselineFromLocalManifest/,
     "the store-release path must allow rebuilding on the same content line");
@@ -613,14 +533,6 @@ try {
   assert.doesNotMatch(capBuild, /assertContentVersionAdvances/,
     "the publish-only ordering rule must not be applied to a build that publishes nothing");
 
-  // Keeping the version is refused outright when the build carries compiled native
-  // changes. A native change makes a different shell, and reusing its versionName and
-  // versionCode gives two different binaries one identity: Play rejects the duplicate
-  // versionCode, and no device can tell them apart.
-  //
-  // The guard used to be conditional on the target not outranking the baseline, so a shell
-  // already ahead of the last store tag — the normal state between releases — kept its
-  // version while carrying new native code.
   const platformTruth = await readFile(
     "packages/ota-core/src/domain/versioning/platform-version-truth.ts",
     "utf8",
@@ -632,8 +544,6 @@ try {
   assert.match(capBuild, /requireGooglePlayProductionNativeVersion/,
     "cap-build must read Google Play Production before planning Android versions");
 
-  // Stages announced by a script are authoritative: the real order differs per
-  // path, so ranking them against one fixed sequence hid steps that ran.
   assert.equal(nextBuildJobStage("starting", "[stage] building-web"), "building-web");
   assert.equal(nextBuildJobStage("verifying", "[stage] syncing-native"), "syncing-native",
     "publishing verifies R2 before syncing Capacitor");
@@ -644,8 +554,6 @@ try {
     "output without announcements still falls back to the heuristics");
   assert.equal(nextBuildJobStage("building-android", "Signing the AAB"), "signing");
 
-  // The step names the individual check inside a stage. Thirty checks under one
-  // "testing" stage are indistinguishable from a hang without it.
   assert.equal(nextBuildJobActivity(undefined, "[step] 3/31 test:notifications"), "3/31 test:notifications");
   assert.equal(nextBuildJobActivity("old", "nothing announced here"), "old",
     "a chunk without a step keeps the one already showing");
@@ -654,12 +562,10 @@ try {
   assert.equal(nextBuildJobActivity(undefined, `[step] ${"x".repeat(200)}`)!.length, 80,
     "a step is capped so it cannot overflow the button it renders in");
 
-  // The device path: one card builds and installs, a separate button tests.
   const deviceTests = BUILD_COMMAND_CATALOG.find((item) => item.id === "run-device-tests")!;
   const hostTests = BUILD_COMMAND_CATALOG.find((item) => item.id === "run-test-suite")!;
   assert.equal(deviceTests.script, "android:device:tests");
   assert.equal(hostTests.script, "verify:all", "the host suite keeps its own button and script");
-  // Verification category on both: neither may wait behind the release lock.
   assert.equal(deviceTests.exclusive, false);
   assert.equal(hostTests.exclusive, false);
   assert.deepEqual(deviceTests.parameters.map((parameter) => parameter.name), ["device"]);
@@ -677,12 +583,9 @@ try {
   const debugBuilderSource = await readFile("scripts/build-android-debug.ts", "utf8");
   assert.match(debugBuilderSource, /assembleDebugR8/,
     "the testing build must assemble the R8 variant, not plain debug");
-  // Building must never touch a connected device.
   assert.doesNotMatch(debugBuilderSource, /wipeProjectPackages|installApk/,
     "the build step must not touch a connected device");
 
-  // A failed job used to show a red chip carrying a job id and nothing else,
-  // stamped with the one stage that had nothing to do with the failure.
   assert.equal(
     lastMeaningfulLine([
       "[stage] detecting-device",
@@ -842,14 +745,6 @@ async function verifyCancellationPaths() {
   await rm(path.join(jobDir, `${logId}.log`), { force: true });
 }
 
-/**
- * Collecting a job's artifacts must stay proportional to what a build produces.
- *
- * A full web export drops thousands of `.json` and `.txt` files into `out/`.
- * Treating each one as an artifact — hashing it, and rewriting the whole
- * descriptor cache around it — left finished builds sitting in
- * `finalizing-results` with the APK already on disk.
- */
 async function verifyArtifactCollection() {
   const scanned = Object.keys(await snapshotBuildOutputs());
   const fromExport = scanned.filter((file) => file.startsWith("out/"));
@@ -858,8 +753,6 @@ async function verifyArtifactCollection() {
     `only the web manifest is an artifact under out/, found: ${fromExport.slice(0, 5).join(", ")}`,
   );
 
-  // A file that appears is reported once, and hashing it writes the cache a
-  // single time rather than once per file.
   const probeDirectory = path.resolve("android", "app", "build", "outputs", "apk");
   await mkdir(probeDirectory, { recursive: true });
   const probe = path.join(probeDirectory, "asol-artifact-collection-probe.json");
@@ -871,7 +764,6 @@ async function verifyArtifactCollection() {
     assert.ok(descriptor, "a new build output must be reported as a changed artifact");
     assert.match(descriptor.sha256, /^[a-f0-9]{64}$/);
 
-    // Cached on the second pass: the same file is not hashed again.
     const again = await changedBuildArtifacts(before);
     assert.deepEqual(
       again.find((artifact) => artifact.path === descriptor.path),
@@ -881,9 +773,6 @@ async function verifyArtifactCollection() {
     await rm(probe, { force: true });
   }
 
-  // The build writes and deletes as it runs, so a path can disappear between
-  // being listed and being measured. That must not throw: the throw escaped
-  // `finalize`, where nothing catches it, and froze the record on `running`.
   const vanished = await changedBuildArtifacts({
     ...before,
     "android/app/build/outputs/apk/asol-never-existed.json": { size: 1, mtimeMs: 1 },
