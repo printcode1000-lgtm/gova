@@ -26,6 +26,16 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Announce deploy run
+        id: status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          url=$(gh issue create --title "deploy:all running ${GITHUB_SHA::12}" --body "Full deploy:all started from ${GITHUB_SHA}. This issue is updated automatically and closed on success.")
+          echo "issue=${url##*/}" >> "$GITHUB_OUTPUT"
+
       - name: Pin checkout to main branch
         run: |
           git fetch origin main
@@ -92,10 +102,12 @@ jobs:
           set -o pipefail
           npm run deploy:all -- --allow-empty 2>&1 | tee /tmp/deploy-all.log
 
-      - name: Report deploy failure
-        if: failure() && steps.deploy_all.outcome == 'failure'
+      - name: Record failure status
+        if: failure() && steps.status.outputs.issue != ''
         env:
           GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ steps.status.outputs.issue }}
+          DEPLOY_OUTCOME: ${{ steps.deploy_all.outcome }}
         shell: bash
         run: |
           set -euo pipefail
@@ -103,18 +115,29 @@ jobs:
             echo '# deploy:all automated run failed'
             echo
             echo "Trigger commit: ${GITHUB_SHA}"
-            echo
-            echo '```text'
-            grep -E '^\[deploy:all\]|FAILED|failed at branch|missing from environment|Missing required|Required Vercel runtime|Vercel token|ERROR|Error:' /tmp/deploy-all.log | tail -n 180 | sed -E 's/vcp_[A-Za-z0-9_-]+/[REDACTED_VERCEL_TOKEN]/g' || true
-            echo '```'
-          } > /tmp/deploy-failure.md
-          gh issue create --title "deploy:all failed ${GITHUB_SHA::12}" --body-file /tmp/deploy-failure.md
+            echo "deploy_all step: ${DEPLOY_OUTCOME:-not-reached}"
+            if [ -f /tmp/deploy-all.log ]; then
+              echo
+              echo '```text'
+              grep -E '^\[deploy:all\]|FAILED|failed at branch|missing from environment|Missing required|Required Vercel runtime|Vercel token|ERROR|Error:|npm error|ERR!' /tmp/deploy-all.log | tail -n 220 | sed -E 's/vcp_[A-Za-z0-9_-]+/[REDACTED_VERCEL_TOKEN]/g' || true
+              echo '```'
+            else
+              echo
+              echo 'The run failed before deploy:all started. Inspect the Actions job setup step.'
+            fi
+          } > /tmp/deploy-status.md
+          gh issue edit "$ISSUE" --title "deploy:all failed ${GITHUB_SHA::12}" --body-file /tmp/deploy-status.md
 
-      - name: Remove one-shot deploy runner after success
+      - name: Close status and remove one-shot runner after success
         if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ steps.status.outputs.issue }}
         shell: bash
         run: |
           set -euo pipefail
+          gh issue comment "$ISSUE" --body 'deploy:all completed successfully: all seven production targets were verified READY.'
+          gh issue close "$ISSUE" --reason completed
           git fetch origin main
           git checkout main
           git pull --ff-only origin main
