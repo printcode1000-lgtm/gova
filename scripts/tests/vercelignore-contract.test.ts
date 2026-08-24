@@ -37,7 +37,9 @@ function patternMatches(normalized: string, rawPattern: string): boolean {
     const regexSource = `^${rootAnchored ? "" : "(?:.*/)?"}${effective
       .replace(/\./g, "\\.")
       .replace(/\*\*/g, ".*")
-      .replace(/\*/g, "[^/]*")}${isDirPattern ? "(?:/.*)?" : ""}$`;
+      .replace(/\*/g, "[^/]*")}(?:/.*)?$`;
+    // A wildcard pattern may match a directory even without a trailing slash.
+    // Once that directory is ignored, its descendants are ignored too.
     return new RegExp(regexSource).test(normalized);
   }
   if (rootAnchored) {
