@@ -4,8 +4,14 @@
 
 ```env
 # ── ASOL API (client-safe) ──
-NEXT_PUBLIC_ASOL_API_BASE_URL=     # Remote backend (static/Capacitor). Empty = same origin.
+NEXT_PUBLIC_ASOL_API_BASE_URL=     # Remote backend (static/Capacitor). Empty = same origin locally; production smoke needs the live origin (e.g. https://gova-swart.vercel.app).
 NEXT_PUBLIC_ASOL_BASE_PATH=        # Asset base path (GitHub Pages sub-path)
+NEXT_PUBLIC_ASOL_PROFILES_URL=     # asol-profiles production origin — required by smoke:deployed
+NEXT_PUBLIC_ASOL_PRODUCTS_URL=     # asol-products production origin
+NEXT_PUBLIC_ASOL_ORDERS_URL=       # asol-orders production origin
+NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL=
+NEXT_PUBLIC_ASOL_SUBMAIN_URL=      # asol-submain production origin — required by smoke:deployed
+NEXT_PUBLIC_ASOL_SUB2MAIN_URL=     # asol-sub2main production origin — required by smoke:deployed
 
 # ── Turso runtime (server-only) ──
 TURSO_DATABASE_URL=                # users DB (allusers.db)
