@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useSession } from "@/features/auth/presentation/SessionProvider";
 import {
   AUTH_LOGIN_COMPLETED_EVENT,
   type AuthLoginCompletedDetail,
-} from "@/features/auth/application/auth-lifecycle-events";
+  useSession,
+} from "@/features/auth/ui";
 import { notificationDeviceTokenService } from "../application/device-token-service";
 import { notificationPermissionService } from "../application/permission-service";
 import {
