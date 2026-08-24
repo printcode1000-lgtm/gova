@@ -166,6 +166,9 @@ compatibility gate executes.
 All tracked `docs/` and `.cursor/rules/` sources also remain remote-build inputs:
 the agent-knowledge portion of `architecture:check` validates the complete
 documentation graph during every production build.
+The bare package-door import contract also imposes a 15-second limit per child
+process. A door that retains a timer, socket, watcher, or other live resource at
+module scope fails with its exact specifier instead of hanging a remote build.
 
 ## Service deployment checks
 

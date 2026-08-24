@@ -28,6 +28,7 @@ import path from "node:path";
  */
 const ROOT = process.cwd();
 const PACKAGES = path.join(ROOT, "packages");
+const IMPORT_TIMEOUT_MS = 15_000;
 
 interface Door {
   specifier: string;
@@ -89,14 +90,23 @@ function runImport(specifier: string, reactServer: boolean): { ok: boolean; outp
     {
       cwd: ROOT,
       encoding: "utf8",
+      timeout: IMPORT_TIMEOUT_MS,
       env: reactServer
         ? { ...process.env, NODE_OPTIONS: "--conditions=react-server" }
         : process.env,
     },
   );
+  const timedOut =
+    result.error !== undefined &&
+    "code" in result.error &&
+    result.error.code === "ETIMEDOUT";
   return {
     ok: result.status === 0,
-    output: `${result.stdout ?? ""}${result.stderr ?? ""}`.trim(),
+    output: `${result.stdout ?? ""}${result.stderr ?? ""}${
+      timedOut
+        ? `Import process did not exit within ${IMPORT_TIMEOUT_MS}ms; module scope retained a live resource.`
+        : result.error?.message ?? ""
+    }`.trim(),
   };
 }
 
