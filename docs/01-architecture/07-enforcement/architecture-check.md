@@ -61,6 +61,10 @@ These stay in the CLI because `@asol/architecture-core` MUST NOT import applicat
 SOURCE_OF_TRUTH → `packages/architecture-core/src/runner.ts`. Every check above is
 named exactly as it is exported, so an agent can search for it directly.
 
+Generated-document drift is semantic and cross-platform: the checker normalizes `LF` and `CRLF`
+before deciding whether generated reference content differs. A Windows checkout therefore cannot
+fail only because Git converted line endings, while any real content difference still fails.
+
 ## When check fails
 
 1. Read violation output — lists rule name, file, message
