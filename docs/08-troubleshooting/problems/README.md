@@ -21,3 +21,4 @@ A log of project problems and their solutions for recurrence and environment set
 | 16 | `architecture:check` false positive on Windows: generated architecture docs differ only by CRLF | [architecture-docs-drift-crlf-windows.md](./architecture-docs-drift-crlf-windows.md) |
 | 17 | Generated build/test gate fails on Windows with `spawnSync npm.cmd EINVAL` | [generated-gate-npm-cmd-einval-windows.md](./generated-gate-npm-cmd-einval-windows.md) |
 | 18 | `.vercelignore` contract falsely treats wildcarded directory descendants as included | [vercelignore-contract-wildcard-directory-descendants.md](./vercelignore-contract-wildcard-directory-descendants.md) |
+| 19 | Favorites local-storage contract reads a stale pre-refactor file path | [favorites-storage-contract-stale-path.md](./favorites-storage-contract-stale-path.md) |
