@@ -1,4 +1,8 @@
-export { ReleaseConsolePage } from "./presentation/ReleaseConsolePage";
+/**
+ * Public application door for `@/features/google-play-console`.
+ * Browser-safe data and Arabic runbook copy only — no Next.js client pages.
+ * Import `ReleaseConsolePage` from `@/features/google-play-console/ui`.
+ */
 export {
   GOOGLE_PLAY_CONSOLE_API,
   GOOGLE_PLAY_STORE_ASSETS_API,

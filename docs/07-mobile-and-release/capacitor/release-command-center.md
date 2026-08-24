@@ -6,6 +6,18 @@ policy is sealed behind `@asol/release-core/console`, process mechanics are behi
 `@asol/release-core/console-artifacts`. `src/features/release-commands` now contains only the client
 API/hook and the single server wiring seam.
 
+Public doors:
+
+| Door | Import | Contents |
+| --- | --- | --- |
+| `.` | `@/features/google-play-console` | Arabic runbook copy, route/config constants, shared types (safe under `react-server`) |
+| `./ui` | `@/features/google-play-console/ui` | `ReleaseConsolePage`, deploy-runbook page surfaces |
+| `./server` | `@/features/google-play-console/server` | Google Play console/store-assets server services |
+
+`test:release-commands` imports the `.` door under `NODE_OPTIONS=--conditions=react-server`
+so it can load `server-only` build-job wiring without pulling Next.js client navigation
+through `ReleaseConsolePage`.
+
 Google Play Store asset contracts and image validation are sealed separately in
 `@asol/google-play-store-assets-core`, so release-command tests exercise the same PNG/JPEG validation
 rules used by the Store Assets tab without importing the app module.
