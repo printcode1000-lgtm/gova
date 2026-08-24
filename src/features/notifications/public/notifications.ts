@@ -12,7 +12,7 @@ import { notificationsFacade, type NotificationsFacade } from "./notification-fa
 import {
   registerNotificationStoredExtension,
   type NotificationStoredExtension,
-} from "./notification-stored-extension";
+} from "../application/notification-stored-extension";
 
 /**
  * The notification module's public API.
@@ -50,10 +50,8 @@ const handlers: NotificationCommandHandlers = {
   unregisterDevice: (command) => notificationsFacade.unregisterDevice(command.payload),
   refreshDeviceLocale: (command) => notificationsFacade.refreshDeviceLocale(command.payload),
   listDevices: (command) => notificationsFacade.listDevices(command.payload),
-  listAccountDevices: (command) =>
-    notificationsFacade.listAccountDevices(command.payload),
-  revokeAccountDevice: (command) =>
-    notificationsFacade.revokeAccountDevice(command.payload),
+  listAccountDevices: (command) => notificationsFacade.listAccountDevices(command.payload),
+  revokeAccountDevice: (command) => notificationsFacade.revokeAccountDevice(command.payload),
   sendSelfTest: (command) => notificationsFacade.sendSelfTest(command.payload),
   requestPermission: (command) => notificationsFacade.requestPermission(command.payload ?? {}),
   getPermissionState: () => notificationsFacade.getPermissionState(),
@@ -70,8 +68,7 @@ const handlers: NotificationCommandHandlers = {
   importDelivered: (command) => notificationsFacade.importDelivered(command.payload ?? {}),
   createChannels: () => notificationsFacade.createChannels(),
   clearLocalInbox: () => notificationsFacade.clearLocalInbox(),
-  synchronizeNotificationCenter: (command) =>
-    notificationsFacade.synchronizeNotificationCenter(command.payload),
+  synchronizeNotificationCenter: (command) => notificationsFacade.synchronizeNotificationCenter(command.payload),
   list: (command) => notificationsFacade.list(command.payload),
   getUnreadCount: (command) => notificationsFacade.getUnreadCount(command.payload),
   markRead: (command) => notificationsFacade.markRead(command.payload),
@@ -81,8 +78,7 @@ const handlers: NotificationCommandHandlers = {
   openNotification: (command) => notificationsFacade.openNotification(command.payload),
   patchMetadata: (command) => notificationsFacade.patchMetadata(command.payload),
   enqueueRetry: (command) => notificationsFacade.enqueueRetry(command.payload),
-  registerCenterExtension: async (command) =>
-    notificationsFacade.registerCenterExtension(command.payload),
+  registerCenterExtension: async (command) => notificationsFacade.registerCenterExtension(command.payload),
   executeTestScenario: (command) => notificationsFacade.executeTestScenario(command.payload),
   getDiagnostics: (command) => notificationsFacade.getDiagnostics(command.payload ?? {}),
 };
