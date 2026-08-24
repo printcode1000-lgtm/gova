@@ -4,6 +4,7 @@ import { validateStorageProfilesAtStartup } from '@asol/storage-core/server';
 import { validationEngine as categoryValidationEngine } from '../src/features/categories/infrastructure/validation.engine';
 import { validateAgentKnowledge } from './docs/check';
 import { verifyGeneratedGateContract } from './generated-gate-contract';
+import { validateRuntimeCompatibilityReference } from './runtime-compatibility-reference';
 
 /**
  * The CLI around `@asol/architecture-core`.
@@ -14,6 +15,10 @@ import { verifyGeneratedGateContract } from './generated-gate-contract';
 process.exit(
   runArchitectureCheck({
     preflight: [
+      {
+        label: 'runtime compatibility reference failed',
+        run: () => validateRuntimeCompatibilityReference(),
+      },
       {
         label: 'generated Build/Test gate contract failed',
         run: () => verifyGeneratedGateContract(),

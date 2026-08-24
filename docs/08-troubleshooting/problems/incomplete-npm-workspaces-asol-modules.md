@@ -35,17 +35,16 @@ The two counts must match. If they do not, the tree is incomplete.
 
 ## Fix
 
-1. Ensure a real Python 3.x is on `PATH` (not the Microsoft Store stub). On
-   Windows, `better-sqlite3`'s install script may fall back to `node-gyp` and
-   fail without Python — see
-   [npm-ci-better-sqlite3-python-windows.md](./npm-ci-better-sqlite3-python-windows.md).
-2. Reinstall from the lockfile:
+1. Reinstall from the lockfile with the project-owned compatibility wrapper:
 
 ```bash
-npm ci
+npm run dependencies:install
 ```
 
-3. Confirm every workspace is linked, then re-run the build:
+   On Windows this avoids npm's erroneous `better-sqlite3@13` rebuild while
+   still executing and validating the bundled binary. See
+   [npm-ci-better-sqlite3-python-windows.md](./npm-ci-better-sqlite3-python-windows.md).
+2. Confirm every workspace is linked, then re-run the build:
 
 ```powershell
 (Get-ChildItem node_modules\@asol).Count   # must equal packages/* count
@@ -53,9 +52,9 @@ node -e "require('better-sqlite3'); console.log('sqlite ok')"
 npm run build
 ```
 
-If `npm ci` still leaves a gap after a successful exit, delete `node_modules`
-and run `npm ci` again. Do not hand-edit junctions unless you are recovering a
-broken machine and understand npm workspaces.
+If the wrapper still leaves a gap after a successful exit, remove only the
+known incomplete `node_modules` tree and run it again. Do not hand-edit
+junctions unless recovering a broken machine and you understand npm workspaces.
 
 ## Related
 

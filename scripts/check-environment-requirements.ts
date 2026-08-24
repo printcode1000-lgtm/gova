@@ -1,10 +1,11 @@
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { homedir, platform, release } from "node:os";
 import path from "node:path";
 import dotenv from "dotenv";
 import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 import { isValidJavaHome, resolveJavaHome } from "./android/java-home";
+import { validateRuntimeCompatibilityReference } from "./runtime-compatibility-reference";
 
 dotenv.config({ path: ".env.local", quiet: true });
 dotenv.config({ path: ".env", quiet: true });
@@ -23,7 +24,7 @@ interface CheckResult {
 
 const ROOT = process.cwd();
 const requested = (process.argv.find((arg) => arg.startsWith("--scenario="))?.split("=")[1] ?? "all") as Scenario;
-const skipOutdated = process.argv.includes("--skip-outdated");
+const checkOutdated = process.argv.includes("--check-outdated") && !process.argv.includes("--skip-outdated");
 const VALID_SCENARIOS = new Set<Scenario>(["all", "development", "web", "production", "android", "ios"]);
 if (!VALID_SCENARIOS.has(requested)) {
   throw new Error(`Unknown scenario "${requested}". Use all, development, web, production, android, or ios.`);
@@ -93,6 +94,49 @@ function checkCommon(): void {
     installed: nodeVersion,
     required: packageJson.engines?.node ?? ">=22 <25",
     action: nodeOk ? "No action." : "Install the current Node.js 24 LTS line used by this project.",
+  });
+
+  const referenceErrors = validateRuntimeCompatibilityReference(ROOT);
+  add({
+    scenario: "common",
+    item: "Immutable compatibility reference",
+    level: referenceErrors.length ? "CONFIGURE" : "OK",
+    installed: referenceErrors.length ? `${referenceErrors.length} drift item(s)` : "reviewed baseline matches",
+    required: "config/runtime-compatibility-reference.json",
+    action: referenceErrors.length ? referenceErrors.slice(0, 5).join(" ") : "No action.",
+  });
+
+  const npmExecutable = process.env.npm_execpath
+    ? process.execPath
+    : process.platform === "win32"
+      ? "npm.cmd"
+      : "npm";
+  const npmArguments = process.env.npm_execpath
+    ? [process.env.npm_execpath, "ls", "--all", "--json"]
+    : ["ls", "--all", "--json"];
+  const graphResult = spawnSync(npmExecutable, npmArguments, {
+    cwd: ROOT,
+    encoding: "utf8",
+    windowsHide: true,
+    shell: false,
+  });
+  let graphProblems: string[] = [];
+  try {
+    const graph = JSON.parse(graphResult.stdout || "{}") as { problems?: string[]; error?: { summary?: string } };
+    graphProblems = graph.problems ?? (graph.error?.summary ? [graph.error.summary] : []);
+  } catch {
+    graphProblems = ["npm ls --all returned unreadable dependency graph output"];
+  }
+  if (graphResult.status !== 0 && graphProblems.length === 0) {
+    graphProblems.push((graphResult.stderr || "npm ls --all failed").trim());
+  }
+  add({
+    scenario: "common",
+    item: "npm peer and transitive graph",
+    level: graphProblems.length ? "UPDATE" : "OK",
+    installed: graphProblems.length ? `${graphProblems.length} problem(s)` : "npm ls --all is valid",
+    required: "No invalid, missing, extraneous, or peer-incompatible package anywhere in the installed tree",
+    action: graphProblems.length ? graphProblems.slice(0, 5).join("; ") : "No action.",
   });
 
   const npmVersion = commandVersion("npm", ["--version"]);
@@ -195,10 +239,10 @@ function checkOutdatedPackages(): void {
   add({
     scenario: "common",
     item: "Compatible package updates",
-    level: compatible.length ? "UPDATE" : "OK",
+    level: compatible.length ? "INFO" : "OK",
     installed: `${compatible.length} package(s)`,
-    required: "Latest version allowed by the tested dependency ranges",
-    action: compatible.length ? `Run npm update, then verify all checks. ${compatible.slice(0, 10).map(([name, value]) => `${name} ${value.current} -> ${value.wanted}`).join(", ")}` : "No action.",
+    required: "Advisory only; the reviewed lockfile remains authoritative",
+    action: compatible.length ? `Review separately; do not change the compatibility reference without full validation. ${compatible.slice(0, 10).map(([name, value]) => `${name} ${value.current} -> ${value.wanted}`).join(", ")}` : "No action.",
   });
   add({
     scenario: "common",
@@ -221,7 +265,10 @@ function checkWeb(): void {
     "react-dom": lock.packages?.["node_modules/react-dom"]?.version,
     typescript: lock.packages?.["node_modules/typescript"]?.version,
   };
-  const serviceNames = ["notifications", "products", "orders", "profiles"];
+  const serviceNames = readdirSync(path.join(ROOT, "services"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
   const drift: string[] = [];
   for (const serviceName of serviceNames) {
     const serviceLockPath = path.join(ROOT, "services", serviceName, "package-lock.json");
@@ -243,8 +290,8 @@ function checkWeb(): void {
     scenario: "web",
     item: "Isolated service runtimes",
     level: drift.length ? "UPDATE" : "OK",
-    installed: drift.length ? `${drift.length} mismatch(es)` : `4/4 services match Next ${expected.next}, React ${expected.react}, TypeScript ${expected.typescript}`,
-    required: "The four Vercel services must use the same tested Next/React/TypeScript runtime as the main application",
+    installed: drift.length ? `${drift.length} mismatch(es)` : `${serviceNames.length}/${serviceNames.length} services match Next ${expected.next}, React ${expected.react}, TypeScript ${expected.typescript}`,
+    required: "Every discovered Vercel service must use the same tested Next/React/TypeScript runtime as the main application",
     action: drift.length ? `Update each service package and lockfile: ${drift.slice(0, 8).join(", ")}.` : "No action.",
   });
 }
@@ -306,7 +353,7 @@ function checkAndroid(): void {
   add({
     scenario: "android",
     item: "JDK",
-    level: javaOk && javaHomeOk ? (javaHomeMismatch ? "CONFIGURE" : "OK") : java ? "UPDATE" : "INSTALL",
+    level: javaOk && javaHomeOk ? "OK" : java ? "UPDATE" : "INSTALL",
     installed: [
       java ?? "java not found",
       configuredJavaHome ? `JAVA_HOME=${configuredJavaHome}` : "JAVA_HOME unset",
@@ -316,7 +363,7 @@ function checkAndroid(): void {
     action: !javaOk
       ? "Install JDK 21 and point JAVA_HOME at its root directory."
       : javaHomeMismatch
-        ? `JAVA_HOME points to a missing directory. Set JAVA_HOME=${resolvedJavaHome} or ASOL_ANDROID_JAVA_HOME in your user environment.`
+        ? `The configured JAVA_HOME is stale; release tooling safely resolves ${resolvedJavaHome}. Update JAVA_HOME when convenient.`
         : javaHomeOk
           ? "No action."
           : "Install JDK 21 and set JAVA_HOME or ASOL_ANDROID_JAVA_HOME.",
@@ -365,5 +412,5 @@ if (scenarios.has("web") || scenarios.has("development")) checkWeb();
 if (scenarios.has("production")) checkProduction();
 if (scenarios.has("android")) checkAndroid();
 if (scenarios.has("ios")) checkIos();
-if (!skipOutdated) checkOutdatedPackages();
+if (checkOutdated) checkOutdatedPackages();
 printReport();

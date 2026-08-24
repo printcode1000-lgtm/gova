@@ -135,8 +135,14 @@ from the **Environment Doctor** entry in `.vscode/launch.json`. It covers all
 scenarios or accepts `--scenario=development|web|production|android|ios` when
 running the TypeScript script directly. It reports:
 
-- Node/npm/Git versions and lockfile-to-`node_modules` consistency;
-- compatible npm updates separately from major-version review items;
+- Node/npm/Git versions, the complete peer/transitive `npm ls --all` graph,
+  and lockfile-to-`node_modules` consistency;
+- the immutable `config/runtime-compatibility-reference.json` result across
+  root, all auto-discovered packages and services, Ruby, Android, and deployment
+  tools;
+- registry updates only when explicitly requested with
+  `npm run dependencies:outdated`; they are advisory and never rewrite the
+  reference;
 - the one GitHub-linked Vercel project, seven account tokens (including
   `VERCEL_SUBMAIN_TOKEN` for `groupstenderximages@gmail.com`), and the ephemeral
   Vercel CLI policy;
@@ -144,8 +150,10 @@ running the TypeScript script directly. It reports:
 - Xcode requirements on macOS and an explicit not-applicable result elsewhere.
 
 The doctor does not install packages, rewrite configuration, or print secret
-values. A missing/update/configure result produces a non-zero exit code, making
-it suitable for onboarding and CI diagnostics.
+values. `npm run dependencies:install` is the separate reproducible installer;
+it executes the bundled native/tool binaries and validates the complete npm
+graph. A missing or incompatible result produces a non-zero exit code, making
+the doctor suitable for onboarding and CI diagnostics.
 
 ## Service deployment checks
 

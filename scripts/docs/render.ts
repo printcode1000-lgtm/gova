@@ -70,7 +70,8 @@ export function renderRouteCatalog(graph: KnowledgeGraph): string {
     const owners = graph.edges
       .filter((edge) => edge.from === route.id && (edge.kind === 'belongs-to' || edge.kind === 'related-to'))
       .map((edge) => map.get(edge.to))
-      .filter((node): node is KnowledgeNode => Boolean(node) && ['package', 'feature', 'service'].includes(node.kind));
+      .filter((node): node is KnowledgeNode => node !== undefined)
+      .filter((node) => ['package', 'feature', 'service'].includes(node.kind));
     const runtimes = graph.edges
       .filter((edge) => edge.from === route.id && edge.kind === 'affects-runtime')
       .map((edge) => map.get(edge.to)?.name)

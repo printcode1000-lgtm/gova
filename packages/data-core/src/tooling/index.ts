@@ -3,3 +3,4 @@
  * filesystem and spawn processes, so they must never be reachable from the app bundle.
  */
 export { provisionDatabaseShards } from "./provision-database-shards";
+export { verifySqliteRuntime } from './verify-sqlite-runtime';

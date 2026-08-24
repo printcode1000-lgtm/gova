@@ -28,7 +28,7 @@
     {
       "id": "ui-components",
       "docsPrefix": "docs/04-ui-components/",
-      "sourcePrefixes": ["src/app/", "src/components/", "src/features/", "packages/page-snapshot-core/", "packages/product-style-core/"],
+      "sourcePrefixes": ["src/app/", "src/features/", "packages/page-snapshot-core/", "packages/product-style-core/"],
       "readFirst": ["docs/04-ui-components/README.md", "docs/04-ui-components/touch-interaction-policy.md", "docs/04-ui-components/page-snapshot-system.md", "docs/09-agent-knowledge/runtime-contract.md"]
     },
     {

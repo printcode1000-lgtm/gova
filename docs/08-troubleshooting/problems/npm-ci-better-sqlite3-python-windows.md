@@ -1,4 +1,4 @@
-# `npm ci` fails on Windows: `better-sqlite3` / `node-gyp` needs Python
+# `npm ci` wrongly rebuilds `better-sqlite3@13` on Windows
 
 ## Symptom
 
@@ -25,60 +25,30 @@ Python was not found; run without arguments to install from the Microsoft Store
 
 ## Root cause
 
-`better-sqlite3` is an approved native install script (`allowScripts` in root
-`package.json`). When a matching prebuild is unavailable or the install path
-rebuilds, `node-gyp` requires a real Python 3.6+ interpreter. Store aliases and
-empty `PYTHON` leave the rebuild with nothing to use.
-
-Node 24 (ABI / `modules` 137) is in the project's engine range; rebuilds are
-more likely when prebuilds for that ABI are missing or when cleanup after a
-failed install removes the package.
+`better-sqlite3@13.0.3` contains the required Windows x64 prebuilt binary, but
+the current npm install path can still infer an implicit `node-gyp rebuild`
+from package metadata. That unnecessary rebuild then requires Python and the
+Visual C++ toolset. Installing Python alone therefore does not make the install
+reproducible.
 
 ## Fix
 
-1. Install a real Python 3.12+ (example via winget):
-
-```powershell
-winget install Python.Python.3.12 --accept-package-agreements --accept-source-agreements
-```
-
-2. Open a **new** terminal so `PATH` picks up
-   `%LOCALAPPDATA%\Programs\Python\Python312\`. Confirm:
-
-```powershell
-python --version
-# expect: Python 3.12.x  (not the Store message)
-```
-
-Optional for the current session only:
-
-```powershell
-$env:PYTHON = "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe"
-$env:Path = "$(Split-Path $env:PYTHON);$(Split-Path $env:PYTHON)\Scripts;$env:Path"
-```
-
-3. Restore the native module (full tree preferred):
+Use the repository installer:
 
 ```bash
-npm ci
+npm run dependencies:install
 ```
 
-If only `better-sqlite3` is missing and workspaces are already linked:
-
-```bash
-npm install better-sqlite3@13.0.3 --no-save
-node -e "require('better-sqlite3'); console.log('load OK')"
-```
-
-Prefer `npm ci` when the lockfile and `node_modules` may be inconsistent.
-
-4. Re-run `npm run build`.
+On Windows it performs a lockfile-clean install without lifecycle scripts, then
+executes a real in-memory SQLite query through `@asol/data-core/tooling`, loads
+the `esbuild` and `unrs-resolver` binaries, and requires `npm ls --all` to pass. On
+other operating systems it keeps the ordinary `npm ci` path.
 
 ## Notes
 
-- Visual C++ Build Tools are also required if `node-gyp` compiles from source
-  and no Windows prebuild is used. A successful `require('better-sqlite3')`
-  after install is the practical gate.
+- Python and Visual C++ Build Tools remain necessary only when intentionally
+  compiling a native module from source; that is not this project's verified
+  Windows install path.
 - Do not commit installer logs (`python-install.log`, `better-sqlite3-install.log`,
   `npm-ci-output.log`).
 

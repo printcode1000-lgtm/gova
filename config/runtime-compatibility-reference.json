@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 1,
+  "policy": "review-required",
+  "rootManifest": {
+    "packageManager": "npm@11.19.0",
+    "engines": {
+      "node": ">=22 <25",
+      "npm": ">=11 <12"
+    },
+    "workspaces": [
+      "packages/*"
+    ],
+    "declaredDependencies": {
+      "@aws-sdk/client-s3": "^3.1075.0",
+      "@aws-sdk/s3-request-presigner": "^3.1075.0",
+      "@fortawesome/fontawesome-svg-core": "^7.3.0",
+      "@fortawesome/free-brands-svg-icons": "^7.3.0",
+      "@fortawesome/free-solid-svg-icons": "^7.3.0",
+      "@fortawesome/react-fontawesome": "^3.3.1",
+      "@hookform/resolvers": "^5.4.0",
+      "@libsql/client": "^0.17.4",
+      "@radix-ui/react-checkbox": "^1.3.5",
+      "@radix-ui/react-dialog": "^1.1.18",
+      "@radix-ui/react-dropdown-menu": "^2.1.18",
+      "@radix-ui/react-label": "^2.1.10",
+      "@radix-ui/react-progress": "^1.1.10",
+      "@radix-ui/react-radio-group": "^1.4.1",
+      "@radix-ui/react-select": "^2.3.1",
+      "@radix-ui/react-slot": "^1.3.0",
+      "@radix-ui/react-switch": "^1.3.1",
+      "@radix-ui/react-tabs": "^1.1.15",
+      "@tanstack/react-query": "^5.101.1",
+      "@tanstack/react-query-persist-client": "^5.101.1",
+      "@types/web-push": "^3.6.4",
+      "better-sqlite3": "^13.0.3",
+      "class-variance-authority": "^0.7.1",
+      "clsx": "^2.1.1",
+      "dotenv": "^17.4.2",
+      "drizzle-orm": "^0.45.2",
+      "drizzle-zod": "^0.8.3",
+      "fflate": "^0.8.3",
+      "focus-trap-react": "^12.0.3",
+      "google-auth-library": "11.0.2",
+      "heic-to": "^1.5.2",
+      "lucide-react": "^1.21.0",
+      "maplibre-gl": "6.6.0",
+      "next": "16.3.2",
+      "nodemailer": "^9.0.3",
+      "qrcode": "^1.5.4",
+      "react": "19.2.8",
+      "react-dom": "19.2.8",
+      "react-hook-form": "^7.79.0",
+      "server-only": "^0.0.1",
+      "supercluster": "9.0.0",
+      "tailwind-merge": "^3.6.0",
+      "tw-animate-css": "^1.4.0",
+      "web-push": "^3.6.7",
+      "zod": "^4.4.3",
+      "zustand": "^5.0.14"
+    },
+    "declaredDevDependencies": {
+      "@tailwindcss/postcss": "^4.3.1",
+      "@types/better-sqlite3": "9.6.0",
+      "@types/geojson": "^7946.0.16",
+      "@types/node": "24.13.3",
+      "@types/nodemailer": "^8.0.1",
+      "@types/qrcode": "^1.5.6",
+      "@types/react": "19.2.18",
+      "@types/react-dom": "19.2.5",
+      "@types/supercluster": "^7.1.3",
+      "cross-env": "10.1.0",
+      "eslint": "9.39.5",
+      "eslint-config-next": "16.3.2",
+      "prettier": "^3.8.4",
+      "prettier-plugin-tailwindcss": "^0.8.0",
+      "tailwindcss": "^4.3.1",
+      "tsx": "^4.22.4",
+      "typescript": "5.x"
+    },
+    "overrides": {
+      "postcss": "8.5.25",
+      "uuid": "11.1.1"
+    },
+    "allowScripts": {
+      "better-sqlite3@13.0.3": true,
+      "esbuild@0.28.2": true,
+      "unrs-resolver@1.12.2": true
+    }
+  },
+  "resolvedDirectDependencies": {
+    "@aws-sdk/client-s3": "3.1117.0",
+    "@aws-sdk/s3-request-presigner": "3.1117.0",
+    "@fortawesome/fontawesome-svg-core": "7.3.1",
+    "@fortawesome/free-brands-svg-icons": "7.3.1",
+    "@fortawesome/free-solid-svg-icons": "7.3.1",
+    "@fortawesome/react-fontawesome": "3.5.0",
+    "@hookform/resolvers": "5.9.1",
+    "@libsql/client": "0.17.4",
+    "@radix-ui/react-checkbox": "1.3.11",
+    "@radix-ui/react-dialog": "1.1.23",
+    "@radix-ui/react-dropdown-menu": "2.1.24",
+    "@radix-ui/react-label": "2.1.15",
+    "@radix-ui/react-progress": "1.1.16",
+    "@radix-ui/react-radio-group": "1.4.7",
+    "@radix-ui/react-select": "2.3.7",
+    "@radix-ui/react-slot": "1.3.3",
+    "@radix-ui/react-switch": "1.3.7",
+    "@radix-ui/react-tabs": "1.1.21",
+    "@tanstack/react-query": "5.102.3",
+    "@tanstack/react-query-persist-client": "5.102.3",
+    "@types/web-push": "3.6.4",
+    "better-sqlite3": "13.0.3",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "dotenv": "17.4.2",
+    "drizzle-orm": "0.45.2",
+    "drizzle-zod": "0.8.3",
+    "fflate": "0.8.3",
+    "focus-trap-react": "12.0.3",
+    "google-auth-library": "11.0.2",
+    "heic-to": "1.5.2",
+    "lucide-react": "1.34.0",
+    "maplibre-gl": "6.6.0",
+    "next": "16.3.2",
+    "nodemailer": "9.0.5",
+    "qrcode": "1.5.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hook-form": "7.86.0",
+    "server-only": "0.0.1",
+    "supercluster": "9.0.0",
+    "tailwind-merge": "3.6.0",
+    "tw-animate-css": "1.4.0",
+    "web-push": "3.6.7",
+    "zod": "4.4.3",
+    "zustand": "5.0.15"
+  },
+  "resolvedDirectDevDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/better-sqlite3": "9.6.0",
+    "@types/geojson": "7946.0.16",
+    "@types/node": "24.13.3",
+    "@types/nodemailer": "8.0.1",
+    "@types/qrcode": "1.5.6",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "@types/supercluster": "7.1.3",
+    "cross-env": "10.1.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.2",
+    "prettier": "3.9.6",
+    "prettier-plugin-tailwindcss": "0.8.1",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.23.12",
+    "typescript": "5.9.3"
+  },
+  "packageLockDigest": "7f5be484fc05d2d701459f9ddc66e9164d98479102eee4d9451eadd70d453312",
+  "workspacePackages": {
+    "account-bridge": "@asol/account-bridge@0.1.0",
+    "account-declarations": "@asol/account-declarations@0.1.0",
+    "architecture-core": "@asol/architecture-core@0.1.0",
+    "auth-core": "@asol/auth-core@0.1.0",
+    "backup-core": "@asol/backup-core@0.1.0",
+    "branding-core": "@asol/branding-core@0.1.0",
+    "catalog-core": "@asol/catalog-core@0.1.0",
+    "data-core": "@asol/data-core@0.1.0",
+    "data-health-core": "@asol/data-health-core@0.1.0",
+    "dev-core": "@asol/dev-core@0.1.0",
+    "env-core": "@asol/env-core@0.1.0",
+    "featured-marquee-core": "@asol/featured-marquee-core@0.1.0",
+    "format-core": "@asol/format-core@0.1.0",
+    "google-play-store-assets-core": "@asol/google-play-store-assets-core@0.1.0",
+    "hero-slider-core": "@asol/hero-slider-core@0.1.0",
+    "map-core": "@asol/map-core@0.1.0",
+    "native-core": "@asol/native-core@0.1.0",
+    "notifications-composition": "@asol/notifications-composition@0.1.0",
+    "notifications-core": "@asol/notifications-core@0.1.0",
+    "observability-core": "@asol/observability-core@0.1.0",
+    "orders-composition": "@asol/orders-composition@0.1.0",
+    "orders-core": "@asol/orders-core@0.1.0",
+    "ota-core": "@asol/ota-core@0.1.0",
+    "page-save-core": "@asol/page-save-core@0.1.0",
+    "page-snapshot-core": "@asol/page-snapshot-core@0.1.0",
+    "product-core": "@asol/product-core@0.1.0",
+    "product-style-core": "@asol/product-style-core@0.1.0",
+    "products-composition": "@asol/products-composition@0.1.0",
+    "profiles-composition": "@asol/profiles-composition@0.1.0",
+    "release-core": "@asol/release-core@0.1.0",
+    "secrets-core": "@asol/secrets-core@0.1.0",
+    "service-mirror-core": "@asol/service-mirror-core@0.1.0",
+    "service-runtime-core": "@asol/service-runtime-core@0.1.0",
+    "signed-token-core": "@asol/signed-token-core@0.1.0",
+    "storage-core": "@asol/storage-core@0.1.0",
+    "storage-image-manager-core": "@asol/storage-image-manager-core@0.1.0",
+    "sub2main-composition": "@asol/sub2main-composition@0.1.0",
+    "submain-composition": "@asol/submain-composition@0.1.0",
+    "system-logs-core": "@asol/system-logs-core@0.1.0",
+    "trending-ribbon-core": "@asol/trending-ribbon-core@0.1.0",
+    "vercel-deploy-core": "@asol/vercel-deploy-core@0.1.0"
+  },
+  "services": {
+    "notifications": {
+      "packageManager": "npm@11.19.0",
+      "engines": {
+        "node": ">=22 <25",
+        "npm": ">=11 <12"
+      },
+      "dependencies": {
+        "@libsql/client": "0.17.4",
+        "drizzle-orm": "0.45.2",
+        "google-auth-library": "11.0.2",
+        "next": "16.3.2",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "server-only": "^0.0.1",
+        "web-push": "3.6.7",
+        "zustand": "5.0.15"
+      },
+      "devDependencies": {
+        "@types/better-sqlite3": "9.6.0",
+        "@types/node": "24.13.3",
+        "@types/react": "19.2.18",
+        "@types/react-dom": "19.2.5",
+        "@types/web-push": "3.6.4",
+        "typescript": "5.9.3"
+      },
+      "lockDigest": "e3c0526a2f4b5b5b1cbdee0dccb3e2d0deb72cd9429a306dadf6baa5e6574013"
+    },
+    "orders": {
+      "packageManager": "npm@11.19.0",
+      "engines": {
+        "node": ">=22 <25",
+        "npm": ">=11 <12"
+      },
+      "dependencies": {
+        "@libsql/client": "0.17.4",
+        "drizzle-orm": "0.45.2",
+        "next": "16.3.2",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "server-only": "^0.0.1",
+        "zustand": "5.0.15"
+      },
+      "devDependencies": {
+        "@types/better-sqlite3": "9.6.0",
+        "@types/node": "24.13.3",
+        "@types/react": "19.2.18",
+        "@types/react-dom": "19.2.5",
+        "typescript": "5.9.3"
+      },
+      "lockDigest": "4d580ff6b13744fe40511f323a74ed28044537dd7cdab81813f4b759920e6b6c"
+    },
+    "products": {
+      "packageManager": "npm@11.19.0",
+      "engines": {
+        "node": ">=22 <25",
+        "npm": ">=11 <12"
+      },
+      "dependencies": {
+        "@aws-sdk/client-s3": "3.1117.0",
+        "@aws-sdk/s3-request-presigner": "3.1117.0",
+        "@libsql/client": "0.17.4",
+        "drizzle-orm": "0.45.2",
+        "next": "16.3.2",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "server-only": "^0.0.1",
+        "zod": "4.4.3",
+        "zustand": "5.0.15"
+      },
+      "devDependencies": {
+        "@types/better-sqlite3": "9.6.0",
+        "@types/node": "24.13.3",
+        "@types/react": "19.2.18",
+        "@types/react-dom": "19.2.5",
+        "typescript": "5.9.3"
+      },
+      "lockDigest": "2e70e688930392276eeef20fc7a5250229b02015a12bf81ee16730670879f331"
+    },
+    "profiles": {
+      "packageManager": "npm@11.19.0",
+      "engines": {
+        "node": ">=22 <25",
+        "npm": ">=11 <12"
+      },
+      "dependencies": {
+        "@aws-sdk/client-s3": "3.1117.0",
+        "@aws-sdk/s3-request-presigner": "3.1117.0",
+        "@libsql/client": "0.17.4",
+        "drizzle-orm": "0.45.2",
+        "next": "16.3.2",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "server-only": "^0.0.1",
+        "zod": "4.4.3",
+        "zustand": "5.0.15"
+      },
+      "devDependencies": {
+        "@types/better-sqlite3": "9.6.0",
+        "@types/node": "24.13.3",
+        "@types/react": "19.2.18",
+        "@types/react-dom": "19.2.5",
+        "typescript": "5.9.3"
+      },
+      "lockDigest": "684cc644bcfa15117b8d41b6374ad05a3ac492b10b4368e7626b713672c7bb57"
+    },
+    "sub2main": {
+      "packageManager": "npm@11.19.0",
+      "engines": {
+        "node": ">=22 <25",
+        "npm": ">=11 <12"
+      },
+      "dependencies": {
+        "@aws-sdk/client-s3": "3.1117.0",
+        "@aws-sdk/s3-request-presigner": "3.1117.0",
+        "@libsql/client": "0.17.4",
+        "drizzle-orm": "0.45.2",
+        "google-auth-library": "11.0.2",
+        "next": "16.3.2",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "server-only": "^0.0.1",
+        "web-push": "3.6.7",
+        "zod": "4.4.3",
+        "zustand": "5.0.15"
+      },
+      "devDependencies": {
+        "@types/better-sqlite3": "9.6.0",
+        "@types/node": "24.13.3",
+        "@types/react": "19.2.18",
+        "@types/react-dom": "19.2.5",
+        "@types/web-push": "3.6.4",
+        "typescript": "5.9.3"
+      },
+      "lockDigest": "f89ffbfb7e791e97c08ab4c8796f6b634a44a59caff56bb4e2ab9b567adc846f"
+    },
+    "submain": {
+      "packageManager": "npm@11.19.0",
+      "engines": {
+        "node": ">=22 <25",
+        "npm": ">=11 <12"
+      },
+      "dependencies": {
+        "@aws-sdk/client-s3": "3.1117.0",
+        "@aws-sdk/s3-request-presigner": "3.1117.0",
+        "@libsql/client": "0.17.4",
+        "drizzle-orm": "0.45.2",
+        "google-auth-library": "11.0.2",
+        "next": "16.3.2",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "server-only": "^0.0.1",
+        "web-push": "3.6.7",
+        "zod": "4.4.3",
+        "zustand": "5.0.15"
+      },
+      "devDependencies": {
+        "@types/better-sqlite3": "9.6.0",
+        "@types/node": "24.13.3",
+        "@types/react": "19.2.18",
+        "@types/react-dom": "19.2.5",
+        "@types/web-push": "3.6.4",
+        "typescript": "5.9.3"
+      },
+      "lockDigest": "a16ec95de3605bafd025aee66cf20edbb8518b92d39cfd12bf27702438b6bd98"
+    }
+  },
+  "tools": {
+    "jdkMajor": 21,
+    "gradleWrapper": "9.4.1",
+    "androidGradlePlugin": "9.2.1",
+    "googleServicesGradlePlugin": "4.4.4",
+    "androidMinSdk": 24,
+    "androidCompileSdk": 36,
+    "androidTargetSdk": 36,
+    "firebaseMessaging": "25.0.1",
+    "vercelCli": "59.0.0",
+    "drizzleKit": "0.31.10",
+    "fastlane": "2.237.0",
+    "gemLockDigest": "5b11710a52f36e429b5a214e143bdc13edf96d31f067f45799acaf6fe61efa7c"
+  }
+}

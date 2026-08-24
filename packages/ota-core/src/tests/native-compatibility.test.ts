@@ -320,7 +320,11 @@ assert.equal(
   assert.equal(Array.isArray(report.changedNativeDependencies), true);
   if (baselineReadable) {
     assert.equal(report.baselineMissing, false);
-    assert.deepEqual(report.changedNativeDependencies, []);
+    assert.equal(
+      report.requiresStoreRelease,
+      report.changedPaths.length > 0 || report.changedNativeDependencies.length > 0,
+      "A dirty native working tree must be reported as requiring a store release; the test must not assume HEAD equality",
+    );
   } else {
     assert.equal(
       report.baselineMissing,
