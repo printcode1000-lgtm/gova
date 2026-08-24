@@ -27,9 +27,8 @@ export interface ApplicationFeature {
 export const APPROVED_SRC_ROOTS = ['app', 'core', 'features', 'shared'] as const;
 
 /**
- * Transitional vocabulary of currently recognized feature folders. Phase 4 of
- * the consolidation narrows this list after all feature internals are moved to
- * the canonical architectural layers. Unknown names are already default-deny.
+ * Canonical feature-internal top-level vocabulary. No compatibility or legacy
+ * buckets are recognized: new roots fail closed in architecture:check.
  */
 export const FEATURE_INTERNAL_VOCABULARY = [
   'domain',
@@ -39,17 +38,6 @@ export const FEATURE_INTERNAL_VOCABULARY = [
   'ports',
   'server',
   'tests',
-  'hooks',
-  'services',
-  'utils',
-  'config',
-  'public',
-  'shared',
-  'runtime',
-  'context',
-  'processing',
-  'validation',
-  'types',
 ] as const;
 
 export const FORBIDDEN_APP_ROOTS = ['modules', 'components', 'hooks', 'lib', 'theme', 'locales'] as const;
