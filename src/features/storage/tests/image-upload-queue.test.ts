@@ -183,7 +183,10 @@ async function main() {
     "utf8",
   );
   const heroEditorsSource = readFileSync(
-    path.join(root, "src/shared/ui/HeroSliderImagesEditor.tsx"),
+    path.join(
+      root,
+      "src/features/advertisements/presentation/HeroSliderImagesEditor.tsx",
+    ),
     "utf8",
   );
   const profileSource = readFileSync(
