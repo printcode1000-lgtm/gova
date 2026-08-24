@@ -27,7 +27,7 @@ export type {
   NotificationCenterExtension,
   NotificationCenterExtensionContext,
 } from "./public/notification-center-extension";
-export type { NotificationStoredExtension } from "./public/notification-stored-extension";
+export type { NotificationStoredExtension } from "./application/notification-stored-extension";
 export type {
   NotificationCenterSnapshot,
   NotificationDiagnostics,
