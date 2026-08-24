@@ -11,11 +11,11 @@ import {
   NotificationSyncStates,
   NotificationTargets,
 } from "@asol/notifications-core";
-import { notifyOrderDataRefreshFromNotification } from "@/features/orders";
 import { assertNotificationEntity } from "../domain/notification-validation";
 import { notificationLog } from "../domain/notification-redaction";
 import { nativeLocalNotificationService } from "../infrastructure/native/native-local-notification.service";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
+import { runNotificationStoredExtensions } from "../public/notification-stored-extension";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 import { notificationRouter } from "./notification-router";
@@ -29,13 +29,6 @@ function emitChanged(uid: string, notificationId?: string): void {
   );
 }
 
-/**
- * Creates a notification on this device.
- *
- * The input is a caller in this codebase, so it is asserted rather than
- * sanitized: a malformed local notification is a bug to fix, not a payload to
- * salvage.
- */
 export class NotificationSender {
   async send(notification: unknown): Promise<NotificationEntity> {
     const validated = assertNotificationEntity(notification);
@@ -51,8 +44,6 @@ export class NotificationSender {
     };
 
     const outcome = await asolNotificationRepository.save(routed);
-    // A duplicate is not an error and not a second notification: the caller gets
-    // the row that already exists, and nothing is presented again.
     if (!outcome.stored) return outcome.notification;
 
     const saved = outcome.notification;
@@ -67,7 +58,7 @@ export class NotificationSender {
       event: NotificationLifecycleEvents.Displayed,
     });
     await notificationBadgeService.refresh(saved.uid);
-    notifyOrderDataRefreshFromNotification(saved);
+    await runNotificationStoredExtensions(saved);
 
     if (saved.targets.includes(NotificationTargets.Popup)) {
       if (typeof window !== "undefined") {
@@ -76,8 +67,6 @@ export class NotificationSender {
       try {
         await nativeLocalNotificationService.display(saved);
       } catch (error) {
-        // A missing banner must never lose the stored notification, which is
-        // already committed at this point.
         notificationLog.warn("Local presentation failed.", error);
       }
     }
