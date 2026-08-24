@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   SUPER_ADMIN_PHONE,
   SUPER_ADMIN_UID,
-} from "@/features/auth/utils/super-admin";
+} from "@/features/auth";
 import { NotificationBroadcastService } from "../services/notification-broadcast-service.server";
 import { verifyNotificationGrant } from "@asol/notifications-core/server";
 import { registerNotificationsCorePorts } from "../notifications-core-ports";
