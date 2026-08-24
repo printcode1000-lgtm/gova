@@ -322,10 +322,11 @@ async function main() {
       );
     }
 
+    const rendersStorageImageManager = /<StorageImageManager(?:\s|\/|>)/.test(source);
     if (
       /from ["']@\/features\/storage\/components\/StorageImageManager["']/.test(source) ||
       /from ["']@asol\/storage-image-manager-core["']/.test(source) ||
-      !source.includes("<StorageImageManager")
+      !rendersStorageImageManager
     ) {
       continue;
     }
