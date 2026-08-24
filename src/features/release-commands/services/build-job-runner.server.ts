@@ -7,7 +7,7 @@ import {
   googlePlayFastlaneEnvironment,
   releaseRequirementSatisfied,
   resolveNpmCliPath,
-} from "@/features/google-play-console/domain/development-guard.server";
+} from "@/features/google-play-console/server";
 import {
   configureReleaseConsolePorts,
 } from "@asol/release-core/console-server";
