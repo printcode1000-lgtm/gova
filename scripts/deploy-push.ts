@@ -19,6 +19,7 @@ import {
   waitForVercelProductionDeployment,
 } from "@asol/vercel-deploy-core";
 import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
+import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
 import { loadReleaseEnvironment } from "./load-release-env";
 
 loadReleaseEnvironment();
@@ -278,6 +279,7 @@ async function assertFastPublishReadiness(
   flags: DeployPushFlags,
 ): Promise<void> {
   assertMainBranch();
+  await ensureReleaseSecretsRestored("deploy:push");
   assertMainDeploymentCredentials();
   await assertVercelAccountsForTargets(targets);
   assertNoScratchFiles(flags);

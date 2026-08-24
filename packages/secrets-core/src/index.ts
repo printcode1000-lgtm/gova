@@ -13,3 +13,4 @@
  */
 export * from './archive/archive-workspace';
 export * from './archive/archive-crypto';
+export * from './archive/archive-password';

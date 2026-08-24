@@ -42,6 +42,7 @@ import {
   inspectNativeCompatibility,
   resolveNativeBaseline,
 } from "@asol/ota-core/publishing";
+import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
 import { loadReleaseEnvironment } from "./load-release-env";
 
 loadReleaseEnvironment();
@@ -392,7 +393,9 @@ function assertDeploymentCredentials(): void {
     .filter((key) => !process.env[key]?.trim());
   if (missingTokens.length > 0) {
     throw new Error(
-      `Vercel token(s) required before running deploy:all: ${missingTokens.join(", ")}.`,
+      `Vercel token(s) required before running deploy:all: ${missingTokens.join(", ")}.\n` +
+        "On a clean Cloud Agent VM: add ASOL_SECRET_ARCHIVE_PASSWORD to Cloud Agents → Secrets, " +
+        "then re-run (deploy:all auto-restores) or run `npm run secrets:restore` first.",
     );
   }
   const missingRuntime = Object.values(ACCOUNT_DECLARATIONS).flatMap((declaration) =>
@@ -755,6 +758,7 @@ async function main(): Promise<void> {
   // every push to `main`. Cleared in the finally below, whatever the outcome.
   markDeployInFlight();
   try {
+  await ensureReleaseSecretsRestored("deploy:all");
   for (const phaseId of phasesToRun) {
     console.log(`\n[deploy:all] ── phase: ${phaseId} ──`);
     try {

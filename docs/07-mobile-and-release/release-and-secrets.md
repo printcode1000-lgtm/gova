@@ -93,7 +93,9 @@ decides *how*, and the test fails if a CLI starts doing its own cryptography.
 `.private-key.pem`). **Both are tracked, and both must stay tracked.**
 
 The requirement they serve is exact: download this repository as a ZIP onto a clean machine, run
-`npm run secrets:restore`, type the passphrase, and every secret returns to its place. Nothing else
+`npm run secrets:restore`, type the passphrase, and every secret returns to its place. On a
+non-interactive Cloud Agent VM, set `ASOL_SECRET_ARCHIVE_PASSWORD` instead of typing — the restore
+CLI and `deploy:all` read that env var when stdin is not a TTY. Nothing else
 is carried to that machine. Each piece of the chain has to already be in the ZIP:
 
 - `resolveRestoreArchivePath()` looks only at `config/secret-archive-latest.zip.enc`.
