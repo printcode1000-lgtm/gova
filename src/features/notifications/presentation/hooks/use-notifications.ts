@@ -1,26 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { useSession } from "@/features/auth/ui";
 import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
 import type { NotificationEntity } from "@asol/notifications-core";
 import { notificationsFacade } from "../../public/notification-facade";
+import { useNotificationRuntime } from "../NotificationRuntimeProvider";
 
-/**
- * The notification centre, as React state.
- *
- * Its one job is keeping a rendered list in step with stored notifications: it
- * loads, it listens for change and for the network coming back, and it exposes
- * the read/dismiss operations a list needs.
- *
- * It knows nothing about what any notification is *for*. Behaviour that belongs
- * to another feature — turning a chat receipt into a delivery mark, replaying a
- * receipt the device could not send — arrives through
- * `notifications.registerCenterExtension`, so the hook never imports a consumer
- * and the two features do not import each other.
- */
 export function useNotifications() {
-  const { session, isLoading } = useSession();
+  const { identity: session, isLoading } = useNotificationRuntime();
   const uid = session?.uid ?? "";
   const [notifications, setNotifications] = React.useState<NotificationEntity[]>([]);
   const [unreadCount, setUnreadCount] = React.useState(0);
@@ -50,8 +37,6 @@ export function useNotifications() {
       const detail = (event as CustomEvent<{ uid: string }>).detail;
       if (!detail?.uid || detail.uid === uid) void refresh();
     };
-    // Coming back online is the moment the retry queue can drain, which
-    // `refresh` does on its way to reloading the list.
     window.addEventListener(NOTIFICATION_CHANGED_EVENT, handleChanged);
     window.addEventListener("online", handleChanged);
     return () => {
