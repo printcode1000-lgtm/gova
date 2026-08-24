@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import { createMultiSellerDeliveryDraft } from "../multi-seller-delivery-planner";
+import { createMultiSellerDeliveryDraft } from "../application/multi-seller-delivery-planner";
 
 const draft = createMultiSellerDeliveryDraft(
   [

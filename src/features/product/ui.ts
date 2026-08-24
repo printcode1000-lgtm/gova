@@ -20,6 +20,6 @@ export * from './presentation/style-editors/search-columns/ProductSearchColumnsS
 export * from './presentation/style-editors/specifications/ProductSpecificationsStyleEditor';
 export * from './presentation/style-editors/vehicle-specs/ProductVehicleSpecsStyleEditor';
 /** Browser client API — never on the application door (service mirrors walk export *). */
-export * from './services/product-api-service';
-export * from './services/product-review-api-service';
+export * from './application/services/product-api-service';
+export * from './application/services/product-review-api-service';
 /* END GENERATED FEATURE DOOR EXPORTS */

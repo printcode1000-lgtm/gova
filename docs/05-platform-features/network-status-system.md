@@ -283,7 +283,7 @@ When a component needs to change its presentation while offline:
 ```tsx
 'use client';
 
-import { useNetworkStatus } from '@/features/network/hooks/use-network-status';
+import { useNetworkStatus } from '@/features/network/presentation/hooks/use-network-status';
 
 export function SyncButton() {
   const { isOnline, isChecking, checkConnection } = useNetworkStatus();

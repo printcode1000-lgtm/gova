@@ -5,10 +5,10 @@ import { Plus, ListPlus } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
-import { useStoreAssets } from "../../hooks/use-store-assets";
+import { useStoreAssets } from "../hooks/use-store-assets";
 import type { GooglePlayStoreListing } from "../../domain/store-assets-types";
 import { Field } from "../components/Field";
-import { useStoreTextPageSave } from "../../hooks/use-store-text-page-save";
+import { useStoreTextPageSave } from "../hooks/use-store-text-page-save";
 
 export function StoreTextTab() {
   const { t } = useAdminArabic();

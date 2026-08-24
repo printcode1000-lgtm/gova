@@ -5,11 +5,11 @@
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
 export * from './domain/persistent-system-log.entity';
-export * from './pre-auth-failure-reporter';
+export * from './application/pre-auth-failure-reporter';
 export {
   PersistentSystemLogApiService,
   persistentSystemLogApiService,
-} from './services/persistent-system-log-api-service';
-export * from './system-log-store';
-export * from './system-logs-core-bootstrap';
+} from './application/services/persistent-system-log-api-service';
+export * from './application/system-log-store';
+export * from './application/system-logs-core-bootstrap';
 /* END GENERATED FEATURE DOOR EXPORTS */

@@ -130,7 +130,7 @@ Failure prevented:
   environment variable reproduces it in production.
 
 Current implementation:
-: `src/features/data/data-core-runtime-config-ports.ts` accepts the pin;
+: `src/features/data/ports/data-core-runtime-config-ports.ts` accepts the pin;
   the six `packages/*-composition/src/index.ts` pass it.
   `checkIsolatedDeploymentBackendContract` fails `npm run architecture:check`
   if a composition registers the port without it.

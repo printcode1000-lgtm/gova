@@ -3,7 +3,7 @@ import {
   createNotificationGrant,
   verifyNotificationGrant,
 } from "@asol/notifications-core/server";
-import { registerNotificationsCorePorts } from "../notifications-core-ports";
+import { registerNotificationsCorePorts } from "../ports/notifications-core-ports";
 
 // The signing secret is supplied by the npm script, not set here: touching the
 // environment outside the Configuration layer is an architecture violation, and

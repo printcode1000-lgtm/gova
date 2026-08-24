@@ -8,8 +8,8 @@ import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import type { GooglePlayTrackName } from "../../domain/store-assets-types";
-import { usePlayTracks } from "../../hooks/use-play-tracks";
-import { usePlayTracksPageSave } from "../../hooks/use-play-tracks-page-save";
+import { usePlayTracks } from "../hooks/use-play-tracks";
+import { usePlayTracksPageSave } from "../hooks/use-play-tracks-page-save";
 
 const TRACKS: GooglePlayTrackName[] = ["internal", "alpha", "beta", "production"];
 

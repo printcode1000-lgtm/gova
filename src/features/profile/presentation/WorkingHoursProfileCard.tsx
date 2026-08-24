@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { WorkingHoursCard } from "@/features/profile-working-hours/ui";
-import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
+import { useStoreDetails } from "@/features/profile/presentation/hooks/use-store-details";
 import type { StoreDetailsData } from "@/features/profile/domain/store-details.entity";
 import { normalizeProfileWorkingHours } from "@/features/profile-working-hours";
 import { useTranslation } from "@/shared/i18n";

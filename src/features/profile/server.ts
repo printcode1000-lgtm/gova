@@ -4,6 +4,6 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './services/profile-review-service.server';
-export * from './services/profile-service.bootstrap.server';
+export * from './server/services/profile-review-service.server';
+export * from './server/services/profile-service.bootstrap.server';
 /* END GENERATED FEATURE DOOR EXPORTS */

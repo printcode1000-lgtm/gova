@@ -86,7 +86,7 @@ export async function runPortRegistrationTests(): Promise<void> {
     'utf8',
   );
   const importsOtaPorts =
-    rootSource.includes('@/features/ota/ota-core-ports') ||
+    rootSource.includes('@/features/ota/ports/ota-core-ports') ||
     /from\s+['"]@\/features\/ota['"]/.test(rootSource) ||
     /from\s+['"]@\/features\/ota\/index['"]/.test(rootSource);
   if (!/registerOtaCorePorts\(\s*\)/.test(rootSource) || !importsOtaPorts) {

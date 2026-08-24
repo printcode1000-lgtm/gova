@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createCipheriv, randomBytes } from "node:crypto";
-import { MobilePushUnlockService } from "../services/mobile-push-unlock.service.server";
+import { MobilePushUnlockService } from "../server/services/mobile-push-unlock.service.server";
 
 function encryptBundle(
   bundle: { projectId: string; clientEmail: string; privateKey: string },

@@ -1,4 +1,4 @@
-import { getCartTotalMinor, type CartItem } from "@/features/cart/cart-store";
+import { getCartTotalMinor, type CartItem } from "@/features/cart/application/cart-store";
 import { calculateSellerShipping } from "@/features/cart";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,

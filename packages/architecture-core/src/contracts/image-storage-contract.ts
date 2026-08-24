@@ -3,7 +3,7 @@
  */
 
 /** Only authorized client upload entry point module. */
-export const IMAGE_STORAGE_CLIENT_ENTRY = 'src/features/storage/services/image-storage-service.ts';
+export const IMAGE_STORAGE_CLIENT_ENTRY = 'src/features/storage/application/services/image-storage-service.ts';
 
 /** Only authorized server upload API route. */
 export const IMAGE_STORAGE_SERVER_UPLOAD_ROUTE = 'src/app/api/storage/images/upload/route.ts';
@@ -27,8 +27,8 @@ export const R2_S3_CLIENT_MODULE = 'packages/storage-core/src/adapters/s3-client
 
 /** Only module allowed to import image-storage-api-service. */
 export const IMAGE_STORAGE_API_ADAPTER_ALLOWED_IMPORTERS = new Set([
-  'src/features/storage/services/image-storage-service.ts',
-  'src/features/storage/services/image-storage-api-service.ts',
+  'src/features/storage/application/services/image-storage-service.ts',
+  'src/features/storage/application/services/image-storage-api-service.ts',
 ]);
 
 /** Files exempt from forbidden-pattern scan (definitions / providers). */

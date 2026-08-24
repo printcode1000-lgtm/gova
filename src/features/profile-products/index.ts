@@ -1,6 +1,6 @@
 'use client';
 
-export { useProfileProductsTabs } from './hooks/use-profile-products-tabs';
+export { useProfileProductsTabs } from './presentation/hooks/use-profile-products-tabs';
 export type {
   ProfileProductsFilters,
   ProfileProductsMainTab,

@@ -7,7 +7,7 @@ import { useSession } from '@/features/auth/ui';
 import { isSuperAdmin } from '@/features/auth';
 import { useTranslation } from '@/shared/i18n';
 import { asolDbGet, ASOL_DB_STORES } from '@asol/data-core/browser';
-import { runInitialization } from '@/features/splash/services/initialization';
+import { runInitialization } from '@/features/splash/application/services/initialization';
 import { otaUpdateService } from '@asol/ota-core';
 
 import ProgressIndicator from './ProgressIndicator';

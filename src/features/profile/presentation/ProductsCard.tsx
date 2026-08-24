@@ -10,7 +10,7 @@ import {
   type ProfileShowcaseSettings,
   type StoreDetailsData,
 } from '@/features/profile/domain/store-details.entity';
-import { useStoreDetails } from '@/features/profile/hooks/use-store-details';
+import { useStoreDetails } from '@/features/profile/presentation/hooks/use-store-details';
 import type { ProductRecord } from '@/features/product';
 import { productApiService } from '@/features/product/ui';
 import type {

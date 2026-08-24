@@ -38,7 +38,7 @@ The feature module converts profile rows into a display model. The UI component 
 - `src/features/seller-card/domain/seller-card.types.ts`
   Defines variants, badges, actions, and the `SellerCardViewModel`.
 
-- `src/features/seller-card/services/seller-card-presenter.ts`
+- `src/features/seller-card/application/services/seller-card-presenter.ts`
   Converts `UserProfileRow` into a safe card view model.
 
 - `src/features/seller-card/index.ts`

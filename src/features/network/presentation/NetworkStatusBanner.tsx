@@ -4,7 +4,7 @@ import { RefreshCw, ServerOff, Wifi, WifiOff } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { BOTTOM_NAV_CLEARANCE } from '@/shared/layouts/bottom-nav-layout';
-import { useNetworkStatus, type NetworkStatus } from '@/features/network/hooks/use-network-status';
+import { useNetworkStatus, type NetworkStatus } from '@/features/network/presentation/hooks/use-network-status';
 import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
 

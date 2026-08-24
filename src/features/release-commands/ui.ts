@@ -4,5 +4,5 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './hooks/use-build-jobs';
+export * from './presentation/hooks/use-build-jobs';
 /* END GENERATED FEATURE DOOR EXPORTS */

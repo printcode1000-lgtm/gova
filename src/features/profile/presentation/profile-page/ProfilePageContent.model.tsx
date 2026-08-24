@@ -3,10 +3,10 @@
 import { useSession } from "@/features/auth/ui";
 import { isSuperAdmin } from "@/features/auth";
 import { usePageSnapshot } from "@/features/page-snapshot";
-import { useProfilePublicContacts } from "@/features/profile/hooks/use-profile-public-contacts";
-import { useProfilePublicFulfillmentSettings } from "@/features/profile/hooks/use-profile-public-fulfillment-settings";
-import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
-import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
+import { useProfilePublicContacts } from "@/features/profile/presentation/hooks/use-profile-public-contacts";
+import { useProfilePublicFulfillmentSettings } from "@/features/profile/presentation/hooks/use-profile-public-fulfillment-settings";
+import { useProfileStoreImages } from "@/features/profile/presentation/hooks/use-profile-store-images";
+import { useStoreDetails } from "@/features/profile/presentation/hooks/use-store-details";
 import {
 type SellerDiscountsController
 } from "@/features/seller-discounts/ui";

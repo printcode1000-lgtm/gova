@@ -10,7 +10,7 @@ import {
 } from "@asol/storage-image-manager-core";
 import { useSession } from "@/features/auth/ui";
 import { useTranslation } from "@/shared/i18n";
-import "@/features/storage/services/image-storage-service";
+import "@/features/storage/application/services/image-storage-service";
 
 export { parseStorageImageManagerConfig };
 export type { StorageImageManagerConfig, StorageImageManagerHandle };

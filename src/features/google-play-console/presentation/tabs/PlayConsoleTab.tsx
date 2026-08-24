@@ -4,7 +4,7 @@ import { RefreshCw } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
-import { usePlayConsoleSnapshot } from "../../hooks/use-play-console-snapshot";
+import { usePlayConsoleSnapshot } from "../hooks/use-play-console-snapshot";
 import { EndpointCard } from "../components/EndpointCard";
 import { InfoRow } from "../components/InfoRow";
 import { Metric } from "../components/Metric";

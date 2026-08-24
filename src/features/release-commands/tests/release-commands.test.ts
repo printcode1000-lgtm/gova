@@ -58,7 +58,7 @@ import {
   releaseBuildJobLock,
   startBuildJob,
   trackBuildJobProcess,
-} from "../services/build-job-runner.server";
+} from "../server/services/build-job-runner.server";
 import {
   analyzeBundleArtifact,
   changedBuildArtifacts,

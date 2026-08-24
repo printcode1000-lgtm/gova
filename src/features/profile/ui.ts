@@ -4,18 +4,18 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './hooks/use-profile-carrier-labels';
-export * from './hooks/use-profile-contacts';
-export * from './hooks/use-profile-fulfillment-settings';
-export * from './hooks/use-profile-store-images';
-export * from './hooks/use-store-details';
-export * from './hooks/use-users-by-specialty';
+export * from './presentation/hooks/use-profile-carrier-labels';
+export * from './presentation/hooks/use-profile-contacts';
+export * from './presentation/hooks/use-profile-fulfillment-settings';
+export * from './presentation/hooks/use-profile-store-images';
+export * from './presentation/hooks/use-store-details';
+export * from './presentation/hooks/use-users-by-specialty';
 export * from './presentation/contact-visual-style';
 export * from './presentation/CustomRequestPageContent';
 export * from './presentation/ProfilePageContent';
 export * from './presentation/profile-save-controller';
 export * from './presentation/storefront-image-config';
 /** Browser client API — never on the application door (service mirrors walk export *). */
-export * from './services/profile-api-service';
-export * from './services/profile-service';
+export * from './application/services/profile-api-service';
+export * from './application/services/profile-service';
 /* END GENERATED FEATURE DOOR EXPORTS */

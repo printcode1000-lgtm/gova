@@ -44,7 +44,7 @@ import {
   CATALOG_STUDIO_API,
   CATALOG_STUDIO_IMAGES_API,
   CATALOG_STUDIO_MIN_WIDTH,
-} from "../config";
+} from "../application/config/config";
 import type {
   CatalogStudioDraftFile,
   CatalogStudioFile,
@@ -79,7 +79,7 @@ import {
 } from "./catalog-studio-drafts";
 import { SectionButton } from "./SectionButton";
 import { StatusBox } from "./StatusBox";
-import { useCatalogStudioPageSave } from "../hooks/use-catalog-studio-page-save";
+import { useCatalogStudioPageSave } from "./hooks/use-catalog-studio-page-save";
 
 export function CatalogStudioPage() {
   const { session, isLoading: sessionLoading } = useSession();

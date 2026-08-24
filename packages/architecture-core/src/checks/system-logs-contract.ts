@@ -10,8 +10,8 @@ const REQUIRED_LAYOUT_MARKERS = [
 
 const REQUIRED_CAPTURE_FILES = [
   'src/app/global-error.tsx',
-  'src/features/system-logs/SystemLogCollector.tsx',
-  'src/features/system-logs/system-logs-core-bootstrap.ts',
+  'src/features/system-logs/application/SystemLogCollector.tsx',
+  'src/features/system-logs/application/system-logs-core-bootstrap.ts',
   // The server half is `src/core/config/system-logs.server.ts` itself. The feature folder used to
   // carry a one-line re-export of it; a second name for one surface is not a second surface.
   'src/core/config/system-logs.server.ts',

@@ -3,7 +3,7 @@
 import { Activity, LockKeyhole, Package, Radio, ShieldCheck } from "lucide-react";
 
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
-import { useReleaseOverview } from "../../hooks/use-release-overview";
+import { useReleaseOverview } from "../hooks/use-release-overview";
 import { Metric } from "../components/Metric";
 
 export function OverviewTab() {

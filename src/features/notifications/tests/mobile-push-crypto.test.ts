@@ -2,7 +2,7 @@ import { createCipheriv, randomBytes } from "node:crypto";
 import {
   decryptMobilePushCredentialBlob,
   type MobilePushCredentialBundle,
-} from "../services/mobile-push-crypto.server";
+} from "../server/services/mobile-push-crypto.server";
 
 function encrypt(bundle: MobilePushCredentialBundle, key: Buffer): string {
   const iv = randomBytes(12);

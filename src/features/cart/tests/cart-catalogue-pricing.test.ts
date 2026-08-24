@@ -58,7 +58,7 @@ assert.ok(
 
 const resolver = stripComments(
   readFileSync(
-    path.join(root, "src/features/cart/services/cart-catalogue-pricing.server.ts"),
+    path.join(root, "src/features/cart/server/services/cart-catalogue-pricing.server.ts"),
     "utf8",
   ),
 );

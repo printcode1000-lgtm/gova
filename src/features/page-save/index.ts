@@ -4,8 +4,8 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './page-save-core-bootstrap';
-export * from './runtime/page-save-image-upload-registry';
-export * from './utils/page-save-image-items';
-export * from './utils/page-save-operation-description';
+export * from './application/page-save-core-bootstrap';
+export * from './infrastructure/runtime/page-save-image-upload-registry';
+export * from './application/utils/page-save-image-items';
+export * from './application/utils/page-save-operation-description';
 /* END GENERATED FEATURE DOOR EXPORTS */

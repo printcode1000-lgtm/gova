@@ -6,7 +6,7 @@ import { ArrowLeft, ImagePlus, Loader2 } from "lucide-react";
 
 import { ASOL_API_ROUTES, asolApi } from "@/core/api";
 import { useSession } from "@/features/auth/ui";
-import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
+import { useStoreDetails } from "@/features/profile/presentation/hooks/use-store-details";
 import { StorageProfiles, type StoredImage } from "@asol/storage-core";
 import {
   StorageImageManager,

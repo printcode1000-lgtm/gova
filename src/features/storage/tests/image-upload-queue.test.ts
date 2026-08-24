@@ -288,7 +288,7 @@ async function main() {
     path.join(root, "src/features/storage/presentation/StorageImageManager.tsx"),
   ]);
   const allowedCoreHookWiring = new Set([
-    path.join(root, "src/features/storage/hooks/use-storage-profile-upload.ts"),
+    path.join(root, "src/features/storage/presentation/hooks/use-storage-profile-upload.ts"),
   ]);
 
   function walkSourceFiles(dir: string, files: string[] = []): string[] {

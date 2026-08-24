@@ -550,7 +550,7 @@ all — fan-out lives on the
 [notifications service](notifications-service-module.md) — so
 the public API deliberately exposes no server-side send.
 `src/app/api/orders/**` and
-`src/features/specialty-chat/services/specialty-chat-service.server.ts` issue
+`src/features/specialty-chat/server/services/specialty-chat-service.server.ts` issue
 signed grants through `NotificationGrantCollector` and return them in the
 response body; the [browser bridge](notification-bridge-module.md) delivers them.
 

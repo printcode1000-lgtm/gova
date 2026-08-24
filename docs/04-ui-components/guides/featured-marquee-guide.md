@@ -7,8 +7,8 @@ The `FeaturedMarquee` is a reusable, self-scrolling product showcase component d
 ## Component Location
 * Runtime contract and validation: `packages/featured-marquee-core/src`
 * Component code: `src/shared/ui/FeaturedMarquee.tsx`
-* Home cache and synchronization: `src/features/advertisements/hooks/use-home-featured-marquee.ts`
-* Server adapter: `src/features/advertisements/services/featured-marquee-service.server.ts`
+* Home cache and synchronization: `src/features/advertisements/presentation/hooks/use-home-featured-marquee.ts`
+* Server adapter: `src/features/advertisements/server/services/featured-marquee-service.server.ts`
 
 ---
 

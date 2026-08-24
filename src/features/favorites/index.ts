@@ -6,10 +6,10 @@ export type {
 } from './domain/favorite.entity';
 export { favoriteKey } from './domain/favorite.entity';
 export { FavoriteButton } from './presentation/FavoriteButton';
-export { FavoritesProvider, useFavorites } from "./hooks/FavoritesProvider";
+export { FavoritesProvider, useFavorites } from "./presentation/hooks/FavoritesProvider";
 export {
   favoriteFromProductCard,
   favoriteFromSellerCard,
   productCardFromFavorite,
   sellerCardFromFavorite,
-} from "./services/favorite-card-adapter";
+} from "./application/services/favorite-card-adapter";

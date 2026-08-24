@@ -3,7 +3,7 @@
  *
  * The channel needs public-env leaves and notification-grant helpers that live in
  * the application. This package names the surface; the app registers implementations
- * through `src/features/account-bridge/account-bridge-portsState().ts`.
+ * through `src/features/account-bridge/ports/account-bridge-portsState().ts`.
  */
 
 export type AppPlatform = "web" | "android" | "ios";

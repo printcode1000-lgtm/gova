@@ -3,7 +3,7 @@ export {
   GOOGLE_PLAY_CONSOLE_API,
   GOOGLE_PLAY_STORE_ASSETS_API,
   RELEASE_CONSOLE_ROUTE,
-} from "./config";
+} from "./application/config/config";
 export {
   ALL_BRANCH_HELP,
   PUSH_BRANCH_HELP,

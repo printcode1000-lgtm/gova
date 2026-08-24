@@ -1,7 +1,7 @@
 import * as React from "react";
-import { profileService } from "@/features/profile/services/profile-service";
+import { profileService } from "@/features/profile/application/services/profile-service";
 import { sessionService } from "@/features/auth/ui";
-import { mergePrimaryContacts } from "@/features/profile/utils/merge-primary-contacts";
+import { mergePrimaryContacts } from "@/features/profile/application/utils/merge-primary-contacts";
 import {
   getErrorMessage,
   isExpectedProfileSaveRejection,

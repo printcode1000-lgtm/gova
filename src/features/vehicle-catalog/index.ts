@@ -1,4 +1,4 @@
-export { vehicleCatalogService } from "./services/vehicle-catalog.service";
+export { vehicleCatalogService } from "./application/services/vehicle-catalog.service";
 export type {
   VehicleCatalog,
   VehicleCatalogGroup,

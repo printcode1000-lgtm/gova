@@ -29,7 +29,7 @@ import {
 import { reportSystemIssue } from "@asol/system-logs-core";
 import { useTranslation } from "@/shared/i18n";
 
-import { describePageSaveItem } from "../utils/page-save-operation-description";
+import { describePageSaveItem } from "../application/utils/page-save-operation-description";
 
 export function PageSaveDialog() {
   const { t } = useTranslation();

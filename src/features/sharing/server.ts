@@ -7,4 +7,4 @@ export {
   loadPublicProfileShareRecord,
   productShareMetadata,
   profileShareMetadata,
-} from './share-metadata.server';
+} from './server/share-metadata.server';

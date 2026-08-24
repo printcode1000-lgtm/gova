@@ -9,9 +9,9 @@ const workspaceRoot = path.resolve(
 );
 
 const requiredCaptureSurfaces = [
-  'src/features/system-logs/SystemLogCollector.tsx',
-  'src/features/system-logs/SystemLogErrorBoundary.tsx',
-  'src/features/system-logs/RouteErrorFallback.tsx',
+  'src/features/system-logs/application/SystemLogCollector.tsx',
+  'src/features/system-logs/application/SystemLogErrorBoundary.tsx',
+  'src/features/system-logs/application/RouteErrorFallback.tsx',
   // `reportSystemIssue` is imported straight from this package now — the application's one-line
   // re-export of it was a second name for one surface, not a second surface.
   'src/app/global-error.tsx',
@@ -32,7 +32,7 @@ export function runScenarioCoverageTest() {
   }
 
   const collector = readFileSync(
-    path.join(workspaceRoot, 'src/features/system-logs/SystemLogCollector.tsx'),
+    path.join(workspaceRoot, 'src/features/system-logs/application/SystemLogCollector.tsx'),
     'utf8',
   );
   assert.ok(collector.includes('installGlobalCapture'));
@@ -61,7 +61,7 @@ export function runScenarioCoverageTest() {
   );
 
   const preAuthReporter = readFileSync(
-    path.join(workspaceRoot, 'src/features/system-logs/pre-auth-failure-reporter.ts'),
+    path.join(workspaceRoot, 'src/features/system-logs/application/pre-auth-failure-reporter.ts'),
     'utf8',
   );
   assert.ok(

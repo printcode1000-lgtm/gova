@@ -10,7 +10,7 @@ import {
   createEmptyProductDetails,
   toProductDetails,
 } from "@/features/product";
-import { productApiService } from "@/features/product/services/product-api-service";
+import { productApiService } from "@/features/product/application/services/product-api-service";
 import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_SUBCATEGORY_ID,

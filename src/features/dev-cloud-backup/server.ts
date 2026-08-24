@@ -4,5 +4,5 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './services/dev-cloud-backup-service.server';
+export * from './server/services/dev-cloud-backup-service.server';
 /* END GENERATED FEATURE DOOR EXPORTS */

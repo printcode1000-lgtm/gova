@@ -8,8 +8,8 @@ import { type HeroSliderConfig } from "@/features/advertisements/ui";
 import { RatingSettingsEditor } from "@/features/product/ui";
 import { useTranslation } from "@/shared/i18n";
 import type { StoredImage } from "@asol/storage-core";
-import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
-import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
+import { useProfileStoreImages } from "@/features/profile/presentation/hooks/use-profile-store-images";
+import { useStoreDetails } from "@/features/profile/presentation/hooks/use-store-details";
 import {
   StorageImageManager,
   parseStorageImageManagerConfig,

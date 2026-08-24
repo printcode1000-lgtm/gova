@@ -18,7 +18,7 @@ function testUnlockUsesClientBlob(): void {
   const source = readFileSync(
     path.join(
       repoRoot,
-      "src/features/notifications/services/mobile-push-unlock.service.server.ts",
+      "src/features/notifications/server/services/mobile-push-unlock.service.server.ts",
     ),
     "utf8",
   );

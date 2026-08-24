@@ -1,16 +1,16 @@
 export {
   OpenInAsolHeaderPrompt,
   useOpenInAsolHeaderPrompt,
-} from "./OpenInAsolHeaderPrompt";
-export type { AsolInstallPrompt } from "./OpenInAsolHeaderPrompt";
-export { ShareDeepLinkController } from "./ShareDeepLinkController";
-export { ShareMenu } from "./ShareMenu";
+} from "./application/OpenInAsolHeaderPrompt";
+export type { AsolInstallPrompt } from "./application/OpenInAsolHeaderPrompt";
+export { ShareDeepLinkController } from "./application/ShareDeepLinkController";
+export { ShareMenu } from "./application/ShareMenu";
 export type {
   ShareContent,
   ShareDestination,
   ShareResourceKind,
   PublicProfileShareRecord,
-} from "./share-content";
+} from "./application/share-content";
 export {
   APPLE_APP_STORE_INSTALL_URL,
   ASOL_ANDROID_PACKAGE,
@@ -22,7 +22,7 @@ export {
   GOOGLE_PLAY_INSTALL_URL,
   internalRouteFromPublicShareUrl,
   PUBLIC_SHARE_ORIGIN,
-} from "./share-links";
+} from "./application/share-links";
 
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */

@@ -15,9 +15,9 @@ import {
 import { Textarea } from "@/shared/ui/textarea";
 import { CATEGORY_CONSTANTS } from "@/features/categories";
 import { normalizeProfileFulfillmentSettings } from "@/features/profile/domain/profile-fulfillment-settings.entity";
-import { useProfileFulfillmentSettings } from "@/features/profile/hooks/use-profile-fulfillment-settings";
-import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
-import type { UserProfileRow } from "@/features/profile/services/profile-service.interface";
+import { useProfileFulfillmentSettings } from "@/features/profile/presentation/hooks/use-profile-fulfillment-settings";
+import { useUsersBySpecialty } from "@/features/profile/presentation/hooks/use-users-by-specialty";
+import type { UserProfileRow } from "@/features/profile/application/services/profile-service.interface";
 import { useTranslation } from "@/shared/i18n";
 import type {
   ProfileFulfillmentController,

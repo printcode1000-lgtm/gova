@@ -13,33 +13,33 @@ Current inventory: **28** exact composition seam path(s).
 
 | Composition package | Exact application module |
 | --- | --- |
-| `notifications-composition` | `@/features/data/data-core-runtime-config-ports` |
+| `notifications-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
 | `orders-composition` | `@/features/auth/domain/super-admin` |
-| `orders-composition` | `@/features/data/data-core-runtime-config-ports` |
-| `products-composition` | `@/features/product/services/product-service.server` |
-| `products-composition` | `@/features/product/services/product-review-service.server` |
-| `products-composition` | `@/features/product-search/services/product-search-products.server` |
-| `products-composition` | `@/features/product-search/services/product-search-fields.server` |
-| `products-composition` | `@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server` |
-| `products-composition` | `@/features/data/data-core-runtime-config-ports` |
-| `products-composition` | `@/features/data/data-core-specialty-catalog-port` |
+| `orders-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
+| `products-composition` | `@/features/product/server/services/product-service.server` |
+| `products-composition` | `@/features/product/server/services/product-review-service.server` |
+| `products-composition` | `@/features/product-search/server/services/product-search-products.server` |
+| `products-composition` | `@/features/product-search/server/services/product-search-fields.server` |
+| `products-composition` | `@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server` |
+| `products-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
+| `products-composition` | `@/features/data/ports/data-core-specialty-catalog-port` |
 | `products-composition` | `@/features/product-search/domain/product-search.types` |
-| `profiles-composition` | `@/features/profile/services/profile-service.bootstrap.server` |
-| `profiles-composition` | `@/features/data/data-core-runtime-config-ports` |
-| `profiles-composition` | `@/features/data/data-core-specialty-catalog-port` |
-| `submain-composition` | `@/features/cart/services/cart-catalogue-pricing.server` |
-| `submain-composition` | `@/features/product-search/services/product-search-service.server` |
-| `submain-composition` | `@/features/product-search/services/product-search-fields.server` |
+| `profiles-composition` | `@/features/profile/server/services/profile-service.bootstrap.server` |
+| `profiles-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
+| `profiles-composition` | `@/features/data/ports/data-core-specialty-catalog-port` |
+| `submain-composition` | `@/features/cart/server/services/cart-catalogue-pricing.server` |
+| `submain-composition` | `@/features/product-search/server/services/product-search-service.server` |
+| `submain-composition` | `@/features/product-search/server/services/product-search-fields.server` |
 | `submain-composition` | `@/features/auth/domain/super-admin` |
-| `submain-composition` | `@/features/data/data-core-runtime-config-ports` |
-| `submain-composition` | `@/features/data/data-core-specialty-catalog-port` |
+| `submain-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
+| `submain-composition` | `@/features/data/ports/data-core-specialty-catalog-port` |
 | `submain-composition` | `@/features/product-search/domain/product-search.types` |
-| `sub2main-composition` | `@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server` |
-| `sub2main-composition` | `@/features/product/services/product-service.server` |
-| `sub2main-composition` | `@/features/profile/services/profile-service.bootstrap.server` |
-| `sub2main-composition` | `@/features/storage/services/image-storage-service.bootstrap.server` |
-| `sub2main-composition` | `@/features/data/data-core-runtime-config-ports` |
-| `sub2main-composition` | `@/features/data/data-core-specialty-catalog-port` |
+| `sub2main-composition` | `@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server` |
+| `sub2main-composition` | `@/features/product/server/services/product-service.server` |
+| `sub2main-composition` | `@/features/profile/server/services/profile-service.bootstrap.server` |
+| `sub2main-composition` | `@/features/storage/server/services/image-storage-service.bootstrap.server` |
+| `sub2main-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
+| `sub2main-composition` | `@/features/data/ports/data-core-specialty-catalog-port` |
 | `sub2main-composition` | `@/features/product/domain/product.entity` |
 
 ## Enforcement

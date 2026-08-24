@@ -24,8 +24,8 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "@/shared/i18n";
-import { contactApiService } from "../services/contact-api-service";
-import type { ContactMessageInput } from "../types";
+import { contactApiService } from "../application/services/contact-api-service";
+import type { ContactMessageInput } from "../application/types";
 
 const SOCIALS = [
   { href: "https://www.facebook.com/share/1DfPfyv1mg/", label: "Facebook", icon: faFacebook },

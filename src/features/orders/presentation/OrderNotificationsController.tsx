@@ -7,7 +7,7 @@ import { notifications } from "@/features/notifications";
 import {
   notifyOrderDataRefreshFromNotification,
   ORDER_DATA_REFRESH_EVENT,
-} from '@/features/orders/order-data-refresh';
+} from '@/features/orders/application/order-data-refresh';
 
 /**
  * Turns order-related notifications into live order reload signals for open pages.

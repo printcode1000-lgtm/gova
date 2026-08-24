@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import { createQrCodePng } from "../qr-code-service.client";
+import { createQrCodePng } from "../application/qr-code-service.client";
 
 async function main() {
   const artifact = await createQrCodePng({

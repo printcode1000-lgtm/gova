@@ -8,8 +8,8 @@ button, but it is not coupled to sharing or profile UI.
 
 ## Files
 
-- `src/features/qr-code/types.ts` — public input and artifact contracts.
-- `src/features/qr-code/qr-code-service.client.ts` — validates input, generates
+- `src/features/qr-code/application/types.ts` — public input and artifact contracts.
+- `src/features/qr-code/application/qr-code-service.client.ts` — validates input, generates
   PNG bytes with `qrcode`, and delegates user-facing saving to Native Platform.
 - `src/features/qr-code/index.ts` — public module surface.
 - `src/features/qr-code/tests/qr-code-module.test.ts` — real PNG signature and

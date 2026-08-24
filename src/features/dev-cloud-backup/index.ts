@@ -1,5 +1,5 @@
 export { DevCloudBackupPage } from "./presentation/DevCloudBackupPage";
-export { DEV_CLOUD_BACKUP_API, DEV_CLOUD_BACKUP_ROUTE } from "./config";
+export { DEV_CLOUD_BACKUP_API, DEV_CLOUD_BACKUP_ROUTE } from "./application/config/config";
 export {
   DEV_CLOUD_BACKUP_RESTORE_MODES,
   devCloudBackupRestoreConfirmation,

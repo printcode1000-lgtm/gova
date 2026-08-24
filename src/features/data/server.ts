@@ -5,6 +5,6 @@
 export {
   registerDataCoreRuntimeConfigPorts,
   type DataCoreRuntimeConfigPortOptions,
-} from './data-core-runtime-config-ports';
-export { registerDataCoreSpecialtyCatalogPort } from './data-core-specialty-catalog-port';
-export { registerDataCorePorts } from './data-core-ports';
+} from './ports/data-core-runtime-config-ports';
+export { registerDataCoreSpecialtyCatalogPort } from './ports/data-core-specialty-catalog-port';
+export { registerDataCorePorts } from './ports/data-core-ports';

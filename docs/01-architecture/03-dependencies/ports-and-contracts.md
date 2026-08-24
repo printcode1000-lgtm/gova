@@ -36,15 +36,15 @@ Exactly **one wiring module per port family** under `src/features/**/`:
 
 | Package | Wiring module |
 |---|---|
-| `@asol/data-core` | `src/features/data/data-core-ports.ts`, `data-core-browser-ports.ts` |
-| `@asol/storage-core` | `src/features/storage/storage-core-ports.ts` |
-| `@asol/orders-core` | `src/features/orders/orders-core-ports.ts` |
-| `@asol/notifications-core` | `src/features/notifications/notifications-core-ports.ts` |
-| `@asol/ota-core` | `src/features/ota/ota-core-ports.ts`, `src/features/ota/server.ts` |
-| `@asol/page-save-core` | `src/features/page-save/page-save-core-bootstrap.ts` |
-| `@asol/page-snapshot-core` | `src/features/page-snapshot/services/page-snapshot-service.ts` |
-| `@asol/system-logs-core` | `src/features/system-logs/system-logs-core-bootstrap*.ts` |
-| `@asol/account-bridge` | `src/features/account-bridge/account-bridge-ports.ts` |
+| `@asol/data-core` | `src/features/data/ports/data-core-ports.ts`, `data-core-browser-ports.ts` |
+| `@asol/storage-core` | `src/features/storage/ports/storage-core-ports.ts` |
+| `@asol/orders-core` | `src/features/orders/ports/orders-core-ports.ts` |
+| `@asol/notifications-core` | `src/features/notifications/ports/notifications-core-ports.ts` |
+| `@asol/ota-core` | `src/features/ota/ports/ota-core-ports.ts`, `src/features/ota/server.ts` |
+| `@asol/page-save-core` | `src/features/page-save/application/page-save-core-bootstrap.ts` |
+| `@asol/page-snapshot-core` | `src/features/page-snapshot/application/services/page-snapshot-service.ts` |
+| `@asol/system-logs-core` | `src/features/system-logs/application/system-logs-core-bootstrap*.ts` |
+| `@asol/account-bridge` | `src/features/account-bridge/ports/account-bridge-ports.ts` |
 
 Wiring modules are the **only** files allowed to know both package port types and application implementations. Cast at the boundary with a comment explaining why.
 

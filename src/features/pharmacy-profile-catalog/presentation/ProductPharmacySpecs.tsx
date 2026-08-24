@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { ProductDetails } from "@/features/product";
-import { pharmacyStaticCatalogService } from "../services/pharmacy-static-catalog.service";
-import { pharmacyProfileCatalogApi } from "../services/pharmacy-profile-catalog-api";
+import { pharmacyStaticCatalogService } from "../application/services/pharmacy-static-catalog.service";
+import { pharmacyProfileCatalogApi } from "../application/services/pharmacy-profile-catalog-api";
 import type {
   PharmacyProfileCatalogCategoryView,
   PharmacyProfileCatalogSubcategoryView,

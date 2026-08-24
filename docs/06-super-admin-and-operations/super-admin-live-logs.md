@@ -19,8 +19,8 @@ Core logic lives in `@asol/system-logs-core` (see
 The application wires ports through:
 
 ```text
-src/features/system-logs/system-logs-core-bootstrap.ts        (browser)
-src/features/system-logs/system-logs-core-bootstrap.server.ts (server)
+src/features/system-logs/application/system-logs-core-bootstrap.ts        (browser)
+src/features/system-logs/application/system-logs-core-bootstrap.server.ts (server)
 ```
 
 Doors:

@@ -8,7 +8,7 @@ import {
   normalizeFavoriteCollection,
   removeFavorite,
   restoreFavorite,
-} from "../services/favorite-collection";
+} from "../application/services/favorite-collection";
 
 const product: FavoriteItemInput = {
   type: "product",

@@ -10,7 +10,7 @@ import {
   deployAllBranchIds,
   deployPushBranchIds,
 } from "@asol/release-core/console";
-import { useAuthHeaders } from "../hooks/use-auth-headers";
+import { useAuthHeaders } from "./hooks/use-auth-headers";
 import { RunbookPanel } from "./DeployRunbookControls";
 import { DeployRunbookCollapsible } from "./DeployRunbookCollapsible";
 import { DeployRunbookMainGrid } from "./DeployRunbookMainGrid";

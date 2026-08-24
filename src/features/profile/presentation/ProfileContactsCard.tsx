@@ -2,7 +2,7 @@
 
 import { ContactInfoCard } from '@/features/profile/presentation/ContactInfoCard';
 import { useTranslation } from '@/shared/i18n';
-import { useProfileContacts } from '@/features/profile/hooks/use-profile-contacts';
+import { useProfileContacts } from '@/features/profile/presentation/hooks/use-profile-contacts';
 import * as React from 'react';
 import type {
   ProfileContactsController,

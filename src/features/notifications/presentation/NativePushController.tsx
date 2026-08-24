@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { NativeCore } from "@asol/native-core";
-import { notificationsFacade } from "../public/notification-facade";
+import { notificationsFacade } from "../application/public/notification-facade";
 import { notificationLog } from "../domain/notification-redaction";
 import { useNotificationRuntime } from "./NotificationRuntimeProvider";
 

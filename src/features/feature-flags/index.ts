@@ -1,18 +1,18 @@
 /** Single responsibility: expose capability-aware remote feature flags. */
-export { featureFlags } from "./feature-flag-service";
-export { FeatureFlagController } from "./FeatureFlagController";
+export { featureFlags } from "./application/feature-flag-service";
+export { FeatureFlagController } from "./application/FeatureFlagController";
 export {
   FEATURE_FLAGS,
   FEATURE_FLAG_KEYS,
   featureFlag,
   type FeatureFlagCatalogEntry,
-} from "./definitions";
+} from "./application/definitions";
 export {
   featureFlagApiService,
   type FeatureFlagAdminEntry,
-} from "./services/feature-flag-api-service";
+} from "./application/services/feature-flag-api-service";
 export type {
   FeatureFlagDefinition,
   RemoteFeatureFlagProvider,
   RemoteFeatureFlagValues,
-} from "./types";
+} from "./application/types";

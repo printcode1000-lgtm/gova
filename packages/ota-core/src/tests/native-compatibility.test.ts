@@ -211,7 +211,7 @@ for (const file of [
   "packages/native-core/src/adapters/ota.adapter.ts",
   "packages/native-core/src/adapters/back-button.adapter.ts",
   "packages/ota-core/src/runtime/api-service.ts",
-  "src/features/page-snapshot/hooks/use-page-snapshot.tsx",
+  "src/features/page-snapshot/presentation/hooks/use-page-snapshot.tsx",
 ]) {
   assert.equal(
     classify(file, NATIVE_IMPORTING_FILE),

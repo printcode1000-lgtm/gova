@@ -8,7 +8,7 @@ import type {
   ProductReviewsResult,
   ReviewSort,
 } from "@/features/product";
-import { productReviewApiService } from "@/features/product/services/product-review-api-service";
+import { productReviewApiService } from "@/features/product/application/services/product-review-api-service";
 import { profileApiService } from "@/features/profile/ui";
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
 

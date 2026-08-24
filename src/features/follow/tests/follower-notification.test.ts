@@ -17,7 +17,7 @@ const { registerNotificationsCorePorts } = await import(
 );
 registerNotificationsCorePorts();
 
-const { FollowService } = await import("../services/follow-service.server");
+const { FollowService } = await import("../server/services/follow-service.server");
 
 const repository = {
   async listFollowerUids() {

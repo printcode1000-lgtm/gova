@@ -61,7 +61,7 @@ for (const file of productionFiles) {
     assert.ok(
       !specifier.startsWith('@/'),
       `${file} imports ${specifier}. This package has no application edges and must keep none — ` +
-        'declare a port in src/ports and register it from src/features/orders/orders-core-ports.ts.',
+        'declare a port in src/ports and register it from src/features/orders/ports/orders-core-ports.ts.',
     );
     assert.ok(
       !specifier.startsWith('@asol/'),
@@ -154,7 +154,7 @@ orders.resetOrdersCorePorts();
 // port fails closed — so it is asserted here rather than discovered by an admin who cannot see
 // their own orders.
 const seam = readFileSync(
-  path.join(REPO_ROOT, 'src/features/orders/orders-core-ports.ts'),
+  path.join(REPO_ROOT, 'src/features/orders/ports/orders-core-ports.ts'),
   'utf8',
 );
 assert.ok(

@@ -38,9 +38,9 @@ const INVERTED_AWAY = [
   '@/core/api',
   '@/features/auth/utils/super-admin',
   '@/features/system-logs/domain/persistent-system-log.entity',
-  '@/features/system-logs/pre-auth-failure-reporter',
-  '@/features/system-logs/services/persistent-system-log-api-service',
-  '@/features/system-logs/services/persistent-system-log-service.server',
+  '@/features/system-logs/application/pre-auth-failure-reporter',
+  '@/features/system-logs/application/services/persistent-system-log-api-service',
+  '@/features/system-logs/server/services/persistent-system-log-service.server',
 ];
 
 function sourceFiles(dir: string): string[] {
@@ -71,7 +71,7 @@ export async function runAppEdgeTests(): Promise<void> {
           `ota-core app-edge contract: ${path.relative(process.cwd(), file)} imports ` +
             `"${reverted}", which was deliberately inverted into a port.\n` +
             `Use the port in packages/ota-core/src/ports and register the implementation ` +
-            `in src/features/ota/ota-core-ports.ts instead of importing the feature.`,
+            `in src/features/ota/ports/ota-core-ports.ts instead of importing the feature.`,
         );
       }
 

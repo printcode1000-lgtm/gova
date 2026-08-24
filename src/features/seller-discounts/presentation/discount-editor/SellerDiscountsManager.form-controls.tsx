@@ -23,7 +23,7 @@ import {
   type SellerDiscountType,
   type SellerDiscountValueType,
 } from "../../domain/seller-discount.entity";
-import { useSellerDiscounts } from "../../hooks/use-seller-discounts";
+import { useSellerDiscounts } from "../hooks/use-seller-discounts";
 
 import {
   MinorCurrencyInput,

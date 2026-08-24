@@ -9,7 +9,7 @@ import {
 } from '@asol/data-core/notifications';
 import { NOTIFICATIONS_DECLARATION } from '@asol/account-declarations/notifications';
 import * as serverEnv from '@/core/config/server-env';
-import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
+import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-core-runtime-config-ports';
 import {
   deliverNotificationGrants,
   readGrantsFromRequestBody,

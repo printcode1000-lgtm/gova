@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
-import { catalogStudioService } from "../services/catalog-studio.service.server";
+import { catalogStudioService } from "../server/services/catalog-studio.service.server";
 
 async function main() {
 const root = process.cwd();

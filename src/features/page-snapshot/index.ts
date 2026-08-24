@@ -4,7 +4,7 @@ export {
   SnapshotProvider,
   usePageSnapshot,
   useSnapshotState,
-} from './hooks/use-page-snapshot';
+} from './presentation/hooks/use-page-snapshot';
 export {
   applySnapshotToDom,
   captureSnapshot,
@@ -18,7 +18,7 @@ export {
   restoreSnapshot,
   resumeSnapshot,
   saveSnapshot,
-} from './services/page-snapshot-service';
+} from './application/services/page-snapshot-service';
 export type {
   PageSnapshotIdentity,
   PageSnapshotOptions,
@@ -27,5 +27,5 @@ export type {
 
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './services/page-snapshot-service';
+export * from './application/services/page-snapshot-service';
 /* END GENERATED FEATURE DOOR EXPORTS */

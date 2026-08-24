@@ -238,11 +238,11 @@ function testStagingSurfacesRegisterScopes() {
       /usePageSaveOperationScope\(\{\s*id:\s*"super-admin-users"/,
     ],
     [
-      "src/features/system-logs/SuperAdminErrorFloatingButton.tsx",
+      "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
       /usePageSaveOperationScope\(/,
     ],
     [
-      "src/features/google-play-console/hooks/use-store-assets.ts",
+      "src/features/google-play-console/presentation/hooks/use-store-assets.ts",
       /usePageSaveOperationScope\(/,
     ],
     [

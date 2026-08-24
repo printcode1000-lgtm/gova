@@ -23,16 +23,16 @@ function source(relativePath: string): string {
 const devicesRoute = source("src/app/api/notifications/devices/route.ts");
 const selfTestRoute = source("src/app/api/notifications/test/self/route.ts");
 const tokenService = source(
-  "src/features/notifications/services/notification-token-service.server.ts",
+  "src/features/notifications/server/services/notification-token-service.server.ts",
 );
 const selfTestService = source(
-  "src/features/notifications/services/notification-self-test.service.server.ts",
+  "src/features/notifications/server/services/notification-self-test.service.server.ts",
 );
 const apiService = source(
-  "src/features/notifications/services/notification-api-service.ts",
+  "src/features/notifications/application/services/notification-api-service.ts",
 );
 const commands = source(
-  "src/features/notifications/public/notification-commands.ts",
+  "src/features/notifications/application/public/notification-commands.ts",
 );
 
 // The identity is the verified session on both routes, never the payload.

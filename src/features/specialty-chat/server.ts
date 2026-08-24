@@ -4,5 +4,5 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './services/specialty-chat-service.server';
+export * from './server/services/specialty-chat-service.server';
 /* END GENERATED FEATURE DOOR EXPORTS */

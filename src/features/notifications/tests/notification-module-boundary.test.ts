@@ -14,14 +14,14 @@ import {
 import {
   NOTIFICATION_COMMAND_TYPES,
   type NotificationCommand,
-} from "../public/notification-commands";
-import type { NotificationsApi } from "../public/notifications";
+} from "../application/public/notification-commands";
+import type { NotificationsApi } from "../application/public/notifications";
 import type { NotificationEntity } from "@asol/notifications-core";
 import type {
   NotificationDiagnostics,
   NotificationReceiveOutcome,
   OpenNotificationResult,
-} from "../public/notification-public-types";
+} from "../application/public/notification-public-types";
 
 /**
  * The notification module's boundary and its public contract.

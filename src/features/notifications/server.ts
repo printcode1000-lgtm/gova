@@ -16,14 +16,14 @@ import type {
   SendNotificationToUsersInput,
 } from "@asol/notifications-core";
 import { withNotificationGrants } from "./domain/notification-grant-envelope";
-import { NotificationGrantCollector } from "./services/notification-grant-collector.server";
+import { NotificationGrantCollector } from "./server/services/notification-grant-collector.server";
 import {
   notificationBroadcastService,
   notificationSelfTestService,
   notificationTokenService,
-} from "./services/notification-service.bootstrap.server";
-import { notificationRecipientTokensService } from "./services/notification-recipient-tokens.service.server";
-import { mobilePushUnlockService } from "./services/mobile-push-unlock.service.server";
+} from "./server/services/notification-service.bootstrap.server";
+import { notificationRecipientTokensService } from "./server/services/notification-recipient-tokens.service.server";
+import { mobilePushUnlockService } from "./server/services/mobile-push-unlock.service.server";
 
 export interface NotificationGrantIssuer {
   issue(send: SendNotificationToUsersInput): boolean;
@@ -157,7 +157,7 @@ export const notificationsServer = {
   },
 } as const;
 
-export { moneyVariablesByLocale } from "./shared/notification-money";
+export { moneyVariablesByLocale } from "./application/shared/notification-money";
 export {
   readNotificationGrants,
   NOTIFICATION_GRANTS_KEY,
@@ -178,7 +178,7 @@ export {
   type NotificationTestScenarioId,
 } from "@asol/notifications-core";
 
-export { registerNotificationsCorePorts } from './notifications-core-ports';
+export { registerNotificationsCorePorts } from './ports/notifications-core-ports';
 export {
   configureNotificationAdminAuthorization,
   type NotificationAdminIdentity,

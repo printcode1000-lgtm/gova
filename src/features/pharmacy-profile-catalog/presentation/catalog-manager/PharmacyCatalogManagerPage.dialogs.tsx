@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
 import { useSession } from "@/features/auth/ui";
 import { isSuperAdmin } from "@/features/auth";
-import { pharmacyProfileCatalogApi } from "../../services/pharmacy-profile-catalog-api";
+import { pharmacyProfileCatalogApi } from "../../application/services/pharmacy-profile-catalog-api";
 import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_SUBCATEGORY_ID,

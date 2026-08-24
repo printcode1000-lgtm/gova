@@ -5,9 +5,9 @@
 export {
   getEnabledProductSearchFields,
   getEnabledProductSearchFieldKeys,
-} from './services/product-search-fields.server';
-export { searchProducts, requireCategoryPair } from './services/product-search-products.server';
+} from './server/services/product-search-fields.server';
+export { searchProducts, requireCategoryPair } from './server/services/product-search-products.server';
 export {
   ProductSearchService,
   productSearchService,
-} from './services/product-search-service.server';
+} from './server/services/product-search-service.server';

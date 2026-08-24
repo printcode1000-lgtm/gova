@@ -8,7 +8,7 @@ import type {
 } from "@asol/notifications-core/server";
 import type { RegisteredNotificationToken } from "@asol/notifications-core";
 import { NotificationPlatforms } from "@asol/notifications-core";
-import { moneyVariablesByLocale } from "../shared/notification-money";
+import { moneyVariablesByLocale } from "../application/shared/notification-money";
 import type { NotificationTokenStorePort } from "@asol/notifications-core/server";
 
 function token(

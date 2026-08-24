@@ -175,7 +175,7 @@ in both directions. It under-matched: the four sanctioned Capacitor-import
 exceptions (`packages/ota-core/src/adapters/ota.adapter.ts`,
 `packages/ota-core/src/adapters/back-button.adapter.ts`,
 `packages/ota-core/src/runtime/api-service.ts`,
-`src/features/page-snapshot/hooks/use-page-snapshot.tsx`) sit outside that
+`src/features/page-snapshot/presentation/hooks/use-page-snapshot.tsx`) sit outside that
 prefix and passed the gate untouched. It also over-matched: facades, web
 adapters, `share-validator.ts`, and `duplicate-filter.ts` are pure TypeScript
 that ships inside the web bundle, and blocking them pushed publishers toward

@@ -22,7 +22,7 @@ import {
   type SellerDiscountType,
   type SellerDiscountValueType,
 } from "../domain/seller-discount.entity";
-import { useSellerDiscounts } from "../hooks/use-seller-discounts";
+import { useSellerDiscounts } from "./hooks/use-seller-discounts";
 
 import { SellerDiscountsController, TYPE_LABELS_AR, TYPE_LABELS_EN, DISCOUNT_TYPES, isDirty, normalizeForSave } from "./discount-editor/SellerDiscountsManager.discount-form";
 import { DiscountEditor } from "./discount-editor/SellerDiscountsManager.form-controls";

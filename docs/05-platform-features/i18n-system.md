@@ -180,7 +180,7 @@ const schema = useMemo(() => createRegistrationSchema(t), [t]);
 
 ## Splash initialization
 
-`src/features/splash/services/initialization.ts` emits `statusKey` values (e.g. `init.starting`). `SplashInitializer` translates them with `t(statusKey)`.
+`src/features/splash/application/services/initialization.ts` emits `statusKey` values (e.g. `init.starting`). `SplashInitializer` translates them with `t(statusKey)`.
 
 ---
 

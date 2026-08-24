@@ -3,7 +3,7 @@ import {
   maskRecoveryEmail,
   normalizeRecoveryPhone,
   PASSWORD_RECOVERY_POLICY,
-} from '../password-recovery-policy';
+} from '../application/password-recovery-policy';
 
 assert.equal(normalizeRecoveryPhone('010 1234 5678'), '01012345678');
 assert.throws(() => normalizeRecoveryPhone('123'), /passwordRecoveryInvalidPhone/);

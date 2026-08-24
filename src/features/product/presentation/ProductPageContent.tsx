@@ -15,7 +15,7 @@ import type {
   ProductDetails,
   ProductRecord,
 } from "@/features/product";
-import { productApiService } from "@/features/product/services/product-api-service";
+import { productApiService } from "@/features/product/application/services/product-api-service";
 import { createProductCardViewModel } from "@/features/product-card";
 import { FavoriteButton, favoriteFromProductCard } from "@/features/favorites";
 import { specialtyChatClient } from "@/features/specialty-chat";

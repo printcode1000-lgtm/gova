@@ -6,7 +6,7 @@ import { Heart, Loader2 } from "lucide-react";
 import { cn } from "@/shared/utils";
 
 import type { FavoriteItemInput } from "../domain/favorite.entity";
-import { useFavorites } from "../hooks/FavoritesProvider";
+import { useFavorites } from "./hooks/FavoritesProvider";
 
 interface FavoriteButtonProps {
   item: FavoriteItemInput;

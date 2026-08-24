@@ -78,13 +78,13 @@ const ALLOWED = new Map<string, string>([
   ],
   ["src/features/product/presentation/ProductPageContent.tsx", "product-*"],
   ["src/features/product/presentation/ProductReviews.tsx", "product-reviews:*"],
-  ["src/features/profile/hooks/use-profile-contacts.ts", "profile-edit"],
-  ["src/features/profile/hooks/use-profile-fulfillment-settings.ts", "profile-edit"],
-  ["src/features/profile/hooks/use-profile-store-images.ts", "profile-edit"],
-  ["src/features/profile/hooks/use-store-details.ts", "profile-edit"],
+  ["src/features/profile/presentation/hooks/use-profile-contacts.ts", "profile-edit"],
+  ["src/features/profile/presentation/hooks/use-profile-fulfillment-settings.ts", "profile-edit"],
+  ["src/features/profile/presentation/hooks/use-profile-store-images.ts", "profile-edit"],
+  ["src/features/profile/presentation/hooks/use-store-details.ts", "profile-edit"],
   ["src/features/profile/presentation/ProductsCard.tsx", "profile-edit"],
   ["src/features/profile/presentation/use-profile-save.ts", "profile-edit"],
-  ["src/features/seller-discounts/hooks/use-seller-discounts.ts", "profile-edit"],
+  ["src/features/seller-discounts/presentation/hooks/use-seller-discounts.ts", "profile-edit"],
   [
     "src/features/super-admin/presentation/SuperAdminFeaturedMarqueePage.tsx",
     "super-admin-featured-marquee",
@@ -99,11 +99,11 @@ const ALLOWED = new Map<string, string>([
     "super-admin-hero-slider",
   ],
   [
-    "src/features/system-logs/SuperAdminErrorFloatingButton.tsx",
+    "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
     "system-logs-floating",
   ],
   [
-    "src/features/google-play-console/hooks/use-store-assets.ts",
+    "src/features/google-play-console/presentation/hooks/use-store-assets.ts",
     "release-console-store-*",
   ],
 ]);
@@ -162,12 +162,12 @@ function testEveryWriterIsDrivenByTheRegistry() {
   const drivenIndirectly = new Set([
     // Section mutations invoked through the profile controllers, which the
     // `profile-edit` registration owns.
-    "src/features/profile/hooks/use-profile-contacts.ts",
-    "src/features/profile/hooks/use-profile-fulfillment-settings.ts",
-    "src/features/profile/hooks/use-profile-store-images.ts",
-    "src/features/profile/hooks/use-store-details.ts",
+    "src/features/profile/presentation/hooks/use-profile-contacts.ts",
+    "src/features/profile/presentation/hooks/use-profile-fulfillment-settings.ts",
+    "src/features/profile/presentation/hooks/use-profile-store-images.ts",
+    "src/features/profile/presentation/hooks/use-store-details.ts",
     "src/features/profile/presentation/use-profile-save.ts",
-    "src/features/seller-discounts/hooks/use-seller-discounts.ts",
+    "src/features/seller-discounts/presentation/hooks/use-seller-discounts.ts",
     // The hero slider save model is called from the page's registration.
     "src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts",
   ]);

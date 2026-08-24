@@ -74,7 +74,7 @@ The user selects a main category and subcategory before selecting fields or runn
 
 Searchable field definitions are configured in:
 
-`src/features/product-search/config/product-search-fields.ts`
+`src/features/product-search/application/config/product-search-fields.ts`
 
 Field availability per category is controlled by product style settings saved from
 `/dev/category-selector`. Runtime resolution of enabled columns uses
@@ -212,7 +212,7 @@ The shared `ProductSearchPanel` keeps UI orchestration. Its props contract is in
 field selection lives in `src/features/product-search/presentation/panel/product-search-fields.ts`.
 
 Profile product tab selection uses
-`src/features/profile-products/hooks/profile-products-tabs-model.ts` for
+`src/features/profile-products/presentation/hooks/profile-products-tabs-model.ts` for
 non-React normalization, bucket keys, filtering, and product sorting; the hook
 keeps React state and loading.
 - `full`: used in `/search`.

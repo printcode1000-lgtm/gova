@@ -18,12 +18,12 @@ Registers:
 | Registration | Source module |
 |---|---|
 | `configureObservabilityCore` | `@/core/config` (isDevelopment) |
-| `registerOtaCorePorts` | `@/features/ota/ota-core-ports` |
-| `registerAccountBridgePorts` | `@/features/account-bridge/account-bridge-ports` |
-| `registerDataCoreBrowserPorts` | `@/features/data/data-core-browser-ports` |
-| `registerPageSaveCorePorts` | `@/features/page-save/page-save-core-bootstrap` |
-| `registerPageSnapshotCorePorts` | `@/features/page-snapshot/services/page-snapshot-service` |
-| `registerSystemLogsCoreBrowserPorts` | `@/features/system-logs/system-logs-core-bootstrap` |
+| `registerOtaCorePorts` | `@/features/ota/ports/ota-core-ports` |
+| `registerAccountBridgePorts` | `@/features/account-bridge/ports/account-bridge-ports` |
+| `registerDataCoreBrowserPorts` | `@/features/data/ports/data-core-browser-ports` |
+| `registerPageSaveCorePorts` | `@/features/page-save/application/page-save-core-bootstrap` |
+| `registerPageSnapshotCorePorts` | `@/features/page-snapshot/application/services/page-snapshot-service` |
+| `registerSystemLogsCoreBrowserPorts` | `@/features/system-logs/application/system-logs-core-bootstrap` |
 
 **Why one entry point:** Scattered registration caused OTA ports to stay at defaults until a late-mounted component ran — safe defaults hid the bug. Central registration makes "which seams exist" a single fact.
 

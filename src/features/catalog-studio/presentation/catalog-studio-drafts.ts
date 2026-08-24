@@ -1,4 +1,4 @@
-import { CATALOG_STUDIO_DRAFT_KEY } from "../config";
+import { CATALOG_STUDIO_DRAFT_KEY } from "../application/config/config";
 
 export interface StoredCatalogStudioDraft {
   revision: string;

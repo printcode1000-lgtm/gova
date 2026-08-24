@@ -8,7 +8,7 @@ import {
   buildWhatsAppShareUrl,
   internalRouteFromPublicShareUrl,
   PUBLIC_SHARE_ORIGIN,
-} from "../share-links";
+} from "../application/share-links";
 
 const productUrl = buildProductShareUrl("product-123");
 const parsedProduct = new URL(productUrl);

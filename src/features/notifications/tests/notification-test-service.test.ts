@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 
-import { NotificationBroadcastService } from "../services/notification-broadcast-service.server";
+import { NotificationBroadcastService } from "../server/services/notification-broadcast-service.server";
 import { configureNotificationAdminAuthorization } from "../server/notification-admin-authorization";
 import { verifyNotificationGrant } from "@asol/notifications-core/server";
-import { registerNotificationsCorePorts } from "../notifications-core-ports";
+import { registerNotificationsCorePorts } from "../ports/notifications-core-ports";
 
 registerNotificationsCorePorts();
 

@@ -51,6 +51,6 @@ catalogue numbers rather than on whatever arrived in the request.
 | Price text blank or malformed | Treated as price-on-request, never as zero |
 | Product archived or missing | Order fails with `productUnavailable` |
 
-Resolver: `src/features/cart/services/cart-catalogue-pricing.server.ts`.
+Resolver: `src/features/cart/server/services/cart-catalogue-pricing.server.ts`.
 Enforced by `src/features/cart/tests/cart-catalogue-pricing.test.ts`, which
 fails if the route stops overwriting the client's values.

@@ -10,7 +10,7 @@ import { useSession } from "@/features/auth/ui";
 import { isSuperAdmin } from "@/features/auth";
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
 import { useTranslation } from "@/shared/i18n";
-import { pharmacyProfileCatalogApi } from "../services/pharmacy-profile-catalog-api";
+import { pharmacyProfileCatalogApi } from "../application/services/pharmacy-profile-catalog-api";
 import {
   type PharmacyProfileCatalogCategoryView,
   type PharmacyProfileCatalogProductView,

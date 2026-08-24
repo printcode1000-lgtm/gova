@@ -9,7 +9,7 @@ import { useSession } from "@/features/auth/ui";
 import { isSuperAdmin } from "@/features/auth";
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
 
-import { DATA_HEALTH_API } from "../config";
+import { DATA_HEALTH_API } from "../application/config/config";
 import { exportDataHealthReport } from "./data-health-export";
 import { PAGE_SIZE, type HistoryResponse } from "./data-health-page-types";
 import type {

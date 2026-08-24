@@ -4,7 +4,7 @@ import {
   collectOrderPartyUids,
   excludeActorFromPartyUids,
   resolveOrderUpdateRecipients,
-} from "../services/order-party-helpers";
+} from "../application/services/order-party-helpers";
 
 const snapshot = {
   buyerId: "buyer_1",

@@ -13,7 +13,7 @@ import {
   Truck,
   Users,
 } from "lucide-react";
-import { useSellerDiscounts } from "../hooks/use-seller-discounts";
+import { useSellerDiscounts } from "./hooks/use-seller-discounts";
 import {
   formatMinorCurrency,
   type SellerDiscountRule,

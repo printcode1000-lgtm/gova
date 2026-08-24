@@ -16,8 +16,8 @@
 | Full administrative editor          | `src/shared/ui/HeroSliderEditor.tsx`                    |
 | Image-only profile editor           | `src/shared/ui/HeroSliderImagesEditor.tsx`              |
 | Home integration                    | `src/features/home/presentation/HomeScreen.tsx`                        |
-| Home cache and synchronization      | `src/features/advertisements/hooks/use-home-hero-slider.ts` |
-| Home save broadcast                 | `src/features/advertisements/home-hero-slider-sync.ts`      |
+| Home cache and synchronization      | `src/features/advertisements/presentation/hooks/use-home-hero-slider.ts` |
+| Home save broadcast                 | `src/features/advertisements/application/home-hero-slider-sync.ts`      |
 | Super-admin save (explicit publish) | `src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts` |
 | Super-admin page                    | `src/features/super-admin/presentation/SuperAdminHeroSliderPage.tsx`   |
 | Profile preview integration         | `src/features/profile/presentation/ProfilePageContent.tsx`             |
@@ -217,7 +217,7 @@ There are no draft, publication, history, normalized-slide, or cleanup tables. T
 The initial record is validated and seeded from:
 
 ```text
-src/features/advertisements/config/home-hero-slider.seed.json
+src/features/advertisements/application/config/home-hero-slider.seed.json
 ```
 
 The seed document contains `schemaVersion` and `config`. Zod validates it before insertion. The obsolete `src/features/home/presentation/home-hero-slider.json` file has been removed; there is now one seed source and one runtime database source.
@@ -239,7 +239,7 @@ Relevant files:
 
 - `src/app/api/advertisements/home-hero-slider/route.ts`
 - `src/app/api/advertisements/home-hero-slider/version/route.ts`
-- `src/features/advertisements/services/home-hero-slider-service.server.ts`
+- `src/features/advertisements/server/services/home-hero-slider-service.server.ts`
 - `packages/hero-slider-core/src/server/home-hero-slider-service.ts`
 - `packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts`
 - `packages/data-core/src/core/database/advertisements-db-client.ts`

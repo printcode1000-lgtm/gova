@@ -11,7 +11,7 @@ import {
   vehicleGroupCatalogFileSchema,
   vehicleOptionCatalogFileSchema,
 } from '@asol/catalog-core';
-import { pharmacyStaticCatalogService } from "../src/features/pharmacy-profile-catalog/services/pharmacy-static-catalog.service";
+import { pharmacyStaticCatalogService } from "../src/features/pharmacy-profile-catalog/application/services/pharmacy-static-catalog.service";
 
 type OrderedItem = { display: { order: number; hidden: boolean } };
 

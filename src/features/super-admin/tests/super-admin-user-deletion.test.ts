@@ -13,7 +13,7 @@ function source(relativePath: string): string {
 // 1. Static contract and UI compliance tests
 const usersPage = source("src/features/super-admin/presentation/SuperAdminUsersPage.tsx");
 const deleteRoute = source("src/app/api/super-admin/users/delete/route.ts");
-const userService = source("src/features/super-admin/services/super-admin-user-service.server.ts");
+const userService = source("src/features/super-admin/server/services/super-admin-user-service.server.ts");
 
 // Verify route wiring
 assert.match(usersPage, /\/api\/super-admin\/users\/delete/);

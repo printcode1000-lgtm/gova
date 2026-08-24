@@ -7,8 +7,8 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import { GOOGLE_PLAY_IMAGE_TYPES, type GooglePlayImageType } from "../../domain/store-assets-types";
-import { useStoreAssets } from "../../hooks/use-store-assets";
-import { useStoreImagesPageSave } from "../../hooks/use-store-images-page-save";
+import { useStoreAssets } from "../hooks/use-store-assets";
+import { useStoreImagesPageSave } from "../hooks/use-store-images-page-save";
 
 export function StoreImagesTab() {
   const { t } = useAdminArabic();

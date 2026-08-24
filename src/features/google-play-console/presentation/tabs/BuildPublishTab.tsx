@@ -4,7 +4,7 @@ import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import { AndroidReleasePaths } from "../components/AndroidReleasePaths";
 import { ReleaseCommandConfirmDialog } from "../components/ReleaseCommandConfirmDialog";
 import { ReleaseJobStopDialog } from "../components/ReleaseJobStopDialog";
-import { useReleaseJobs } from "../../hooks/use-release-jobs";
+import { useReleaseJobs } from "../hooks/use-release-jobs";
 
 export function BuildPublishTab() {
   const { t } = useAdminArabic();

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import { calculateSellerShipping } from "../shipping-pricing";
+import { calculateSellerShipping } from "../application/shipping-pricing";
 
 const common = {
   flatRate: 30,

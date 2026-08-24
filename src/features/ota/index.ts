@@ -4,5 +4,5 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './ota-core-ports';
+export * from './ports/ota-core-ports';
 /* END GENERATED FEATURE DOOR EXPORTS */

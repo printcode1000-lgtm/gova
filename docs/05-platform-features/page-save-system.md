@@ -10,9 +10,9 @@ No page, dialog, card, or list row anywhere in `src/` or `packages/` may carry i
 | ---- | ---- |
 | Browser/runtime | `@asol/page-save-core` → `packages/page-save-core/src/index.ts` |
 
-The registry stores registrations keyed by scope id. Each editable surface registers through `usePageSaveRegistration` in `src/features/page-save/hooks/use-page-save-registration.ts`.
+The registry stores registrations keyed by scope id. Each editable surface registers through `usePageSaveRegistration` in `src/features/page-save/presentation/hooks/use-page-save-registration.ts`.
 
-IndexedDB belongs to `@asol/data-core`. The package names a `PageSaveStoragePort`; `src/features/page-save/page-save-core-bootstrap.ts` binds it to `ASOL_DB_STORES.PAGE_SAVE_PENDING` and `ASOL_DB_STORES.PAGE_SAVE_JOURNAL` (DB version 11), and `src/core/composition/browser-ports.ts` registers it. No IndexedDB code lives inside `@asol/page-save-core`.
+IndexedDB belongs to `@asol/data-core`. The package names a `PageSaveStoragePort`; `src/features/page-save/application/page-save-core-bootstrap.ts` binds it to `ASOL_DB_STORES.PAGE_SAVE_PENDING` and `ASOL_DB_STORES.PAGE_SAVE_JOURNAL` (DB version 11), and `src/core/composition/browser-ports.ts` registers it. No IndexedDB code lives inside `@asol/page-save-core`.
 
 The generated push service worker mirrors the same database name, version, and store list; edit `packages/data-core/src/browser/workers/asol-push-sw.js` and run `npm run data-access:sync-public`.
 
@@ -103,9 +103,9 @@ The dialog derives the per-item wording from `operation` (`pageSave.operation.*`
 
 | Hook | File | Use |
 | ---- | ---- | --- |
-| `usePageSaveRegistration` | `src/features/page-save/hooks/use-page-save-registration.ts` | Register a scope whose dirtiness comes from form state |
-| `usePageSaveOperations` | `src/features/page-save/hooks/use-page-save-operations.ts` | Stage operations for a scope that also has form items; merge `items` into the registration and call `run()` from `save` |
-| `usePageSaveOperationScope` | `src/features/page-save/hooks/use-page-save-operation-scope.ts` | Register a scope whose only work is staged operations |
+| `usePageSaveRegistration` | `src/features/page-save/presentation/hooks/use-page-save-registration.ts` | Register a scope whose dirtiness comes from form state |
+| `usePageSaveOperations` | `src/features/page-save/presentation/hooks/use-page-save-operations.ts` | Stage operations for a scope that also has form items; merge `items` into the registration and call `run()` from `save` |
+| `usePageSaveOperationScope` | `src/features/page-save/presentation/hooks/use-page-save-operation-scope.ts` | Register a scope whose only work is staged operations |
 
 On unmount both operation hooks call `dropPageSaveItems()` with the ids they cleared. Only those items are forgotten; other dirty items in the same scope keep their persisted pending record.
 
@@ -154,7 +154,7 @@ When the user confirms save while the target page is not mounted, the registry n
 2. Implement `prepareForSave(selectedItemIds)` to call `uploadPending()` for selected image items
 3. Never render a per-slot upload button
 
-Onboarding image handles can register through `registerPageSaveImageUploadHandle()` in `src/features/page-save/runtime/page-save-image-upload-registry.ts`.
+Onboarding image handles can register through `registerPageSaveImageUploadHandle()` in `src/features/page-save/infrastructure/runtime/page-save-image-upload-registry.ts`.
 
 ## Persistence
 

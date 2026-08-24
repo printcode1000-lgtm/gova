@@ -3,7 +3,7 @@
 import { LogOut } from 'lucide-react';
 
 import { BOTTOM_NAV_CLEARANCE } from '@/shared/layouts/bottom-nav-layout';
-import { useMobileBackButton } from '@/features/navigation/hooks/use-mobile-back-button';
+import { useMobileBackButton } from '@/features/navigation/presentation/hooks/use-mobile-back-button';
 import { useTranslation } from '@/shared/i18n';
 
 export function MobileBackButtonController() {

@@ -4,5 +4,5 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './types';
+export * from './application/types';
 /* END GENERATED FEATURE DOOR EXPORTS */

@@ -4,5 +4,5 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './services/password-recovery-service.server';
+export * from './server/services/password-recovery-service.server';
 /* END GENERATED FEATURE DOOR EXPORTS */

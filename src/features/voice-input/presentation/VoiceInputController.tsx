@@ -1,6 +1,6 @@
 'use client';
 
-import { useVoiceInputScanner } from '@/features/voice-input/hooks/use-voice-input-scanner';
+import { useVoiceInputScanner } from '@/features/voice-input/presentation/hooks/use-voice-input-scanner';
 import { useTranslation } from '@/shared/i18n';
 
 export function VoiceInputController() {

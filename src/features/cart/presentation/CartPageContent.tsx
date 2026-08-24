@@ -20,8 +20,8 @@ import {
   getCartTotalMinor,
   removeCartItem,
   updateCartItemQuantity,
-} from "@/features/cart/cart-store";
-import { useCart } from "@/features/cart/use-cart";
+} from "@/features/cart/application/cart-store";
+import { useCart } from "@/features/cart/presentation/hooks/use-cart";
 import { useSession } from "@/features/auth/ui";
 import { useTranslation } from "@/shared/i18n";
 import { notifications } from "@/features/notifications";

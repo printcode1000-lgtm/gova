@@ -4,7 +4,7 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './cart-store';
+export * from './application/cart-store';
 export * from './presentation/CartPageContent';
-export * from './use-cart';
+export * from './presentation/hooks/use-cart';
 /* END GENERATED FEATURE DOOR EXPORTS */

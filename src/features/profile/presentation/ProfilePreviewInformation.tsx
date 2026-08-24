@@ -16,7 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import type { ProfileFulfillmentSettings } from "@/features/profile/domain/profile-fulfillment-settings.entity";
 import type { StoreDetailsData } from "@/features/profile/domain/store-details.entity";
-import { useProfileCarrierLabels } from "@/features/profile/hooks/use-profile-carrier-labels";
+import { useProfileCarrierLabels } from "@/features/profile/presentation/hooks/use-profile-carrier-labels";
 
 interface ProfilePreviewInformationProps {
   locale: "ar" | "en";

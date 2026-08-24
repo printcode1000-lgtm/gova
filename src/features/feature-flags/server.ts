@@ -4,5 +4,5 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './services/feature-flag-service.server';
+export * from './server/services/feature-flag-service.server';
 /* END GENERATED FEATURE DOOR EXPORTS */

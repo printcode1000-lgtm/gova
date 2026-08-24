@@ -13,7 +13,7 @@ import { loadTursoAdvertisementsCredentialsFromEnv } from "../provisioning/core/
 /** Seed lives in the app tree; tooling loads it by path (no `@/` import). */
 const seedPath = path.join(
   process.cwd(),
-  "src/features/advertisements/config/home-hero-slider.seed.json",
+  "src/features/advertisements/application/config/home-hero-slider.seed.json",
 );
 const seed = JSON.parse(readFileSync(seedPath, "utf8")) as {
   config: unknown;

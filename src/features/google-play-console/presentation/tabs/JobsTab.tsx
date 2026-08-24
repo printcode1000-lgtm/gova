@@ -4,7 +4,7 @@ import { Download, Square } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
-import { useReleaseJobs } from "../../hooks/use-release-jobs";
+import { useReleaseJobs } from "../hooks/use-release-jobs";
 import { LogViewer } from "../components/LogViewer";
 import { ReleaseJobStopDialog } from "../components/ReleaseJobStopDialog";
 

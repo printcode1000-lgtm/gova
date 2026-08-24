@@ -5,8 +5,8 @@ import { Ban, CheckCircle2, ClipboardCopy, CloudDownload, RefreshCw } from "luci
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
-import { useOtaAdmin } from "../../hooks/use-ota-admin";
-import { useOtaRolloutPageSave } from "../../hooks/use-ota-rollout-page-save";
+import { useOtaAdmin } from "../hooks/use-ota-admin";
+import { useOtaRolloutPageSave } from "../hooks/use-ota-rollout-page-save";
 import { Metric } from "../components/Metric";
 import { OtaReleaseChanges } from "../components/OtaReleaseChanges";
 

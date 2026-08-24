@@ -4,7 +4,7 @@ import type { NotificationOfflineOperation } from "@asol/notifications-core";
 import { notificationLog } from "../domain/notification-redaction";
 import { assertRetryKind, assertString, assertUid } from "../domain/notification-validation";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
-import { SingleFlight } from "../shared/keyed-mutex";
+import { SingleFlight } from "./shared/keyed-mutex";
 
 /** Operations are dropped after this many failed replays. */
 const MAX_ATTEMPTS = 5;

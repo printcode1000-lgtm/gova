@@ -10,4 +10,4 @@ export {
   createSellerCardViewModel,
   sellerCardAvatar,
   sellerCardTitle,
-} from "./services/seller-card-presenter";
+} from "./application/services/seller-card-presenter";

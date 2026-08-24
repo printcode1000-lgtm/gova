@@ -3,7 +3,7 @@
 import * as React from "react";
 import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
 import type { NotificationEntity } from "@asol/notifications-core";
-import { notificationsFacade } from "../../public/notification-facade";
+import { notificationsFacade } from "../../application/public/notification-facade";
 import { useNotificationRuntime } from "../NotificationRuntimeProvider";
 
 export function useNotifications() {

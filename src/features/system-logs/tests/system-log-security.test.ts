@@ -50,10 +50,10 @@ const read = (file: string) => readFileSync(path.join(root, file), "utf8");
 const listRoute = read("src/app/api/system-logs/route.ts");
 const ingestRoute = read("src/app/api/system-logs/ingest/route.ts");
 const apiService = read(
-  "src/features/system-logs/services/persistent-system-log-api-service.ts",
+  "src/features/system-logs/application/services/persistent-system-log-api-service.ts",
 );
 const globalError = read("src/app/global-error.tsx");
-const collector = read("src/features/system-logs/SystemLogCollector.tsx");
+const collector = read("src/features/system-logs/application/SystemLogCollector.tsx");
 
 assert.equal(listRoute.includes("assertSuperAdminRequest(request)"), true);
 assert.equal(listRoute.includes('searchParams.get("uid")'), false);

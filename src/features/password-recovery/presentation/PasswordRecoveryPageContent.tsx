@@ -6,7 +6,7 @@ import { FormEvent, useState } from 'react';
 import { AuthHero } from '@/features/auth/ui';
 import { AuthMobileBrand } from '@/features/auth/ui';
 import { useTranslation } from '@/shared/i18n';
-import { usePasswordRecovery } from '../hooks/use-password-recovery';
+import { usePasswordRecovery } from './hooks/use-password-recovery';
 
 const ERROR_KEYS: Record<string, string> = {
   passwordRecoveryInvalidPhone: 'auth.passwordRecovery.errors.invalidPhone',

@@ -4,5 +4,5 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './client-storage';
+export * from './application/client-storage';
 /* END GENERATED FEATURE DOOR EXPORTS */

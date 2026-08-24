@@ -81,7 +81,7 @@ their owning JSON identities and cannot be removed.
   keeps screen orchestration, while formatting helpers, section metadata, and
   small shared presentation controls live in separate files beside it. Local
   draft session persistence is isolated in `catalog-studio-drafts.ts`.
-- `src/features/catalog-studio/services/catalog-studio.service.server.ts` owns filesystem access,
+- `src/features/catalog-studio/server/services/catalog-studio.service.server.ts` owns filesystem access,
   validation, transactions, recovery, images and audit.
 - `src/app/api/dev/catalog-studio` contains thin authenticated development-only adapters.
 - `src/app/super-admin/catalog/page.tsx` is only the route guard and feature entry point.

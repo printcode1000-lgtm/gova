@@ -6,15 +6,15 @@
  * registrations at composition boundaries.
  */
 
-export { notifications, type NotificationsApi } from "./public/notifications";
+export { notifications, type NotificationsApi } from "./application/public/notifications";
 
-export { NOTIFICATION_COMMAND_TYPES } from "./public/notification-commands";
+export { NOTIFICATION_COMMAND_TYPES } from "./application/public/notification-commands";
 export type {
   NotificationCommand,
   NotificationCommandResult,
   NotificationCommandResults,
   NotificationCommandType,
-} from "./public/notification-commands";
+} from "./application/public/notification-commands";
 
 export {
   NotificationError,
@@ -26,7 +26,7 @@ export {
 export type {
   NotificationCenterExtension,
   NotificationCenterExtensionContext,
-} from "./public/notification-center-extension";
+} from "./application/public/notification-center-extension";
 export type { NotificationStoredExtension } from "./application/notification-stored-extension";
 export type {
   NotificationCenterSnapshot,
@@ -36,7 +36,7 @@ export type {
   NotificationReceiveOutcome,
   OpenNotificationResult,
   ReceiveHandlers,
-} from "./public/notification-public-types";
+} from "./application/public/notification-public-types";
 
 export * from "@asol/notifications-core";
 export type { RetryOperationKind } from "./domain/notification-validation";

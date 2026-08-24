@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
-import { useBundleAnalysis } from "../../hooks/use-bundle-analysis";
+import { useBundleAnalysis } from "../hooks/use-bundle-analysis";
 import { CategoryTree } from "../components/CategoryTree";
 import { DeltaTable } from "../components/DeltaTable";
 import { Metric } from "../components/Metric";

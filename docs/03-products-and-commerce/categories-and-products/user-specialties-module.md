@@ -69,17 +69,17 @@ The module follows the project's standard layered architecture:
 - **Description**: Query operation that wraps the repository method. Imports `UserProfileRow` type from the repository interface (not from the database-client layer directly).
 
 ### Service Layer
-- **Location**: `src/features/profile/services/profile-service.server.ts`
+- **Location**: `src/features/profile/server/services/profile-service.server.ts`
 - **Method**: `getUsersBySpecialty(categoryId, subcategoryId, offset, limit)`
 - **Description**: Business logic layer that delegates to `GetUsersBySpecialtyQuery`
 
 ### Client Service
-- **Location**: `src/features/profile/services/profile-api-service.ts`
+- **Location**: `src/features/profile/application/services/profile-api-service.ts`
 - **Method**: `getUsersBySpecialty(categoryId, subcategoryId, offset, limit)`
 - **Description**: Client-side service that calls the API endpoint via `AsolApiClient`
 
 ### React Hook
-- **Location**: `src/features/profile/hooks/use-users-by-specialty.ts`
+- **Location**: `src/features/profile/presentation/hooks/use-users-by-specialty.ts`
 - **Hook**: `useUsersBySpecialty(categoryId, subcategoryId, offset?, limit?)`
 - **Description**: Client-side React hook for querying users by specialty
 - **Features**:
@@ -139,7 +139,7 @@ The module follows the project's standard layered architecture:
 ### Using the React Hook
 
 ```typescript
-import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
+import { useUsersBySpecialty } from "@/features/profile/presentation/hooks/use-users-by-specialty";
 
 function SellersPageContent({ categoryId, subcategoryId }: { categoryId: number; subcategoryId: number }) {
   const { data: users, isLoading, error } = useUsersBySpecialty(
@@ -163,7 +163,7 @@ function SellersPageContent({ categoryId, subcategoryId }: { categoryId: number;
 ### Using the Service Layer (Server-Side)
 
 ```typescript
-import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { profileService } from "@/features/profile/server/services/profile-service.bootstrap.server";
 
 async function getSellers() {
   const users = await profileService.getUsersBySpecialty(

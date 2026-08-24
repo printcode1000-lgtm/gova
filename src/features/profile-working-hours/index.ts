@@ -13,4 +13,4 @@ export {
   getWorkingHoursDayLabel,
   hasWorkingHours,
   normalizeProfileWorkingHours,
-} from "./services/profile-working-hours";
+} from "./application/services/profile-working-hours";

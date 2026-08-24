@@ -9,7 +9,7 @@ import { Label } from "@/shared/ui/label";
 import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
 import { Button } from "@/shared/ui/button";
 import { asolApi } from "@/core/api";
-import { profileService } from "@/features/profile/services/profile-service";
+import { profileService } from "@/features/profile/application/services/profile-service";
 import { productApiService } from "@/features/product/ui";
 import {
   categoryService,

@@ -14,4 +14,4 @@ export {
   productCardImage,
   productCardPrice,
   productCardTitle,
-} from "./services/product-card-presenter";
+} from "./application/services/product-card-presenter";

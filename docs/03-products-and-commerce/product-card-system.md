@@ -39,7 +39,7 @@ The feature module prepares a display model. The UI component only renders the s
 - `src/features/product-card/domain/product-card.types.ts`
   Defines card variants, actions, badges, and the `ProductCardViewModel`.
 
-- `src/features/product-card/services/product-card-presenter.ts`
+- `src/features/product-card/application/services/product-card-presenter.ts`
   Converts product data into a card view model.
 
 - `src/features/product-card/index.ts`

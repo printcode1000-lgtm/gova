@@ -9,7 +9,7 @@ import {
 import {
   createSpecialtyChatCapability,
   verifySpecialtyChatCapability,
-} from "../services/specialty-chat-capability.server";
+} from "../server/services/specialty-chat-capability.server";
 
 registerSessionSigningSecret(() => "audit-only-secret-0123456789abcdef");
 
@@ -36,7 +36,7 @@ const expired = createSpecialtyChatCapability({
 assert.throws(() => verifySpecialtyChatCapability(expired), /specialtyChatCapabilityExpired/);
 
 const serviceSource = readFileSync(
-  path.join(process.cwd(), "src/features/specialty-chat/services/specialty-chat-service.server.ts"),
+  path.join(process.cwd(), "src/features/specialty-chat/server/services/specialty-chat-service.server.ts"),
   "utf8",
 );
 const clientSource = readFileSync(

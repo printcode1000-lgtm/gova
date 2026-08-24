@@ -4,5 +4,5 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './account-bridge-ports';
+export * from './ports/account-bridge-ports';
 /* END GENERATED FEATURE DOOR EXPORTS */

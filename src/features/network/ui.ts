@@ -4,6 +4,6 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './hooks/use-network-status';
+export * from './presentation/hooks/use-network-status';
 export * from './presentation/NetworkStatusBanner';
 /* END GENERATED FEATURE DOOR EXPORTS */

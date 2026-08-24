@@ -6,7 +6,7 @@ import { registerBrowserPorts } from "@/core/composition/browser-ports";
 import {
   hydratePageSavePendingFromStorage,
   hydratePageSaveRecoveryFromStorage,
-} from "@/features/page-save/page-save-core-bootstrap";
+} from "@/features/page-save/application/page-save-core-bootstrap";
 
 /**
  * Ports are registered by the browser composition root; this only restores what

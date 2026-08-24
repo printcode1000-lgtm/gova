@@ -8,7 +8,7 @@ import { isSuperAdmin } from "@/features/auth";
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 
-import { DEV_CLOUD_BACKUP_API } from "../config";
+import { DEV_CLOUD_BACKUP_API } from "../application/config/config";
 import type {
   BackupOperationKind,
   BackupOperationStatus,

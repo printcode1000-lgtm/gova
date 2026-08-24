@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Settings2 } from "lucide-react";
 
-import { pharmacyProfileCatalogApi } from "../services/pharmacy-profile-catalog-api";
+import { pharmacyProfileCatalogApi } from "../application/services/pharmacy-profile-catalog-api";
 import type {
   PharmacyProfileCatalogView,
   PharmacyProfileCatalogCategoryView,
