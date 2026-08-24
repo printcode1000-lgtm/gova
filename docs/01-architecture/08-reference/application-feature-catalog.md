@@ -43,7 +43,6 @@ src/
 | **Runtime Targets** | `web` |
 | **Capability Owners** | `@asol/account-bridge` |
 | **Permitted Feature Dependencies** | `notifications` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=false · ui=false |
 
 ### advertisements
@@ -57,7 +56,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/hero-slider-core`, `@asol/featured-marquee-core`, `@asol/trending-ribbon-core` |
 | **Permitted Feature Dependencies** | `auth`, `product`, `product-card`, `profile`, `storage` |
-| **Deep Import Seams** | `profile` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### app-reset
@@ -71,7 +69,6 @@ src/
 | **Runtime Targets** | `web` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `notifications` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=false · ui=false |
 
 ### auth
@@ -85,7 +82,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/auth-core` |
 | **Permitted Feature Dependencies** | `app-reset`, `notifications`, `page-save`, `profile`, `storage`, `system-logs` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### cart
@@ -99,7 +95,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `auth`, `notifications`, `profile`, `seller-discounts` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### catalog-studio
@@ -113,7 +108,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/catalog-core` |
 | **Permitted Feature Dependencies** | `auth`, `page-save` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### categories
@@ -127,7 +121,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/catalog-core` |
 | **Permitted Feature Dependencies** | `profile`, `seller-card` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### contact
@@ -141,7 +134,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | _(none)_ |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### data
@@ -155,7 +147,6 @@ src/
 | **Runtime Targets** | `web` |
 | **Capability Owners** | `@asol/data-core` |
 | **Permitted Feature Dependencies** | `categories`, `product-search` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=false · ui=false |
 
 ### data-health
@@ -169,7 +160,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/data-health-core`, `@asol/data-core` |
 | **Permitted Feature Dependencies** | `auth`, `page-save`, `system-logs` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### dev-cloud-backup
@@ -183,7 +173,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/backup-core`, `@asol/data-core` |
 | **Permitted Feature Dependencies** | `auth`, `page-save` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### dev-tools
@@ -197,7 +186,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | `@asol/dev-core` |
 | **Permitted Feature Dependencies** | `categories`, `page-save`, `pharmacy-profile-catalog`, `product` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### favorites
@@ -211,7 +199,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `auth`, `product-card`, `seller-card`, `system-logs` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### feature-flags
@@ -225,7 +212,6 @@ src/
 | **Runtime Targets** | `web`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `auth` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=true · ui=false |
 
 ### follow
@@ -239,7 +225,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `auth`, `notifications` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### google-play-console
@@ -253,7 +238,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/google-play-store-assets-core`, `@asol/release-core`, `@asol/ota-core` |
 | **Permitted Feature Dependencies** | `auth`, `page-save`, `release-commands` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### home
@@ -267,7 +251,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `advertisements`, `categories` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### location
@@ -281,7 +264,6 @@ src/
 | **Runtime Targets** | `web` |
 | **Capability Owners** | `@asol/map-core` |
 | **Permitted Feature Dependencies** | _(none)_ |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=false · ui=false |
 
 ### navigation
@@ -295,7 +277,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | _(none)_ |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### network
@@ -309,7 +290,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `system-logs` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### notifications
@@ -322,8 +302,7 @@ src/
 | **Public Doors** | `@/features/notifications` · `@/features/notifications/ui` · `@/features/notifications/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/notifications-core` |
-| **Permitted Feature Dependencies** | `auth`, `orders`, `specialty-chat` |
-| **Deep Import Seams** | `auth`, `orders`, `specialty-chat` |
+| **Permitted Feature Dependencies** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### onboarding
@@ -337,7 +316,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `page-save`, `storage` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### orders
@@ -351,7 +329,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/orders-core` |
 | **Permitted Feature Dependencies** | `auth`, `cart`, `notifications`, `profile`, `system-logs` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### ota
@@ -365,7 +342,6 @@ src/
 | **Runtime Targets** | `web`, `server` |
 | **Capability Owners** | `@asol/ota-core` |
 | **Permitted Feature Dependencies** | `auth`, `categories`, `system-logs` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=true · ui=false |
 
 ### page-save
@@ -379,7 +355,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | `@asol/page-save-core` |
 | **Permitted Feature Dependencies** | `onboarding`, `storage` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### page-snapshot
@@ -393,7 +368,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | `@asol/page-snapshot-core` |
 | **Permitted Feature Dependencies** | `auth` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### password-recovery
@@ -407,7 +381,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `auth` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### pharmacy-profile-catalog
@@ -421,7 +394,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `auth`, `page-save`, `product` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### product
@@ -435,7 +407,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/product-core`, `@asol/product-style-core` |
 | **Permitted Feature Dependencies** | `auth`, `cart`, `categories`, `favorites`, `location`, `page-save`, `pharmacy-profile-catalog`, `product-card`, `profile`, `sharing`, `specialty-chat`, `storage`, `system-logs`, `vehicle-catalog` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### product-card
@@ -449,7 +420,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `favorites`, `product` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### product-search
@@ -463,7 +433,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `categories`, `product`, `product-card`, `profile`, `seller-card`, `storage` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### profile
@@ -477,7 +446,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `advertisements`, `auth`, `categories`, `follow`, `location`, `page-save`, `page-snapshot`, `product`, `profile-products`, `profile-working-hours`, `seller-card`, `seller-discounts`, `sharing`, `specialty-chat`, `storage`, `system-logs` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### profile-products
@@ -491,7 +459,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `categories`, `page-snapshot`, `pharmacy-profile-catalog`, `product`, `product-card`, `product-search`, `profile` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### profile-working-hours
@@ -505,7 +472,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | _(none)_ |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### qr-code
@@ -519,7 +485,6 @@ src/
 | **Runtime Targets** | `web` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | _(none)_ |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=false · ui=false |
 
 ### release-commands
@@ -533,7 +498,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/release-core` |
 | **Permitted Feature Dependencies** | `google-play-console` |
-| **Deep Import Seams** | `google-play-console` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### seller-card
@@ -547,7 +511,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `favorites`, `profile` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### seller-discounts
@@ -561,7 +524,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `cart`, `profile` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### settings
@@ -575,7 +537,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `app-reset`, `auth`, `notifications`, `specialty-chat` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### sharing
@@ -589,7 +550,6 @@ src/
 | **Runtime Targets** | `web`, `server` |
 | **Capability Owners** | `@asol/native-core` |
 | **Permitted Feature Dependencies** | `product`, `profile`, `qr-code`, `system-logs` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=true · ui=true |
 
 ### specialty-chat
@@ -603,7 +563,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `auth`, `categories`, `notifications`, `product`, `profile` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### splash
@@ -617,7 +576,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `auth`, `categories` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### storage
@@ -631,7 +589,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/storage-core`, `@asol/storage-image-manager-core` |
 | **Permitted Feature Dependencies** | `auth` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### super-admin
@@ -645,7 +602,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | `advertisements`, `auth`, `notifications`, `page-save`, `product`, `storage`, `system-logs` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### system-logs
@@ -659,7 +615,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/system-logs-core` |
 | **Permitted Feature Dependencies** | `auth`, `page-save` |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### vehicle-catalog
@@ -673,7 +628,6 @@ src/
 | **Runtime Targets** | `web` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | _(none)_ |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=false · server=false · ui=false |
 
 ### voice-input
@@ -687,7 +641,6 @@ src/
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
 | **Permitted Feature Dependencies** | _(none)_ |
-| **Deep Import Seams** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ## Counts
