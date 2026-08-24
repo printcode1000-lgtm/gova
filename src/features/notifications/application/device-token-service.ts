@@ -9,9 +9,9 @@ import {
 } from "../infrastructure/native/native-push.service";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { webPushBrowserService } from "../infrastructure/web-push/web-push-browser.service";
-import { notificationApiService } from "./services/notification-api-service";
+import { notificationApiService } from "../infrastructure/http/notification-api-service";
 import { ensureMobilePushCredentials } from '@asol/account-bridge/notifications';
-import { SingleFlight } from "./shared/keyed-mutex";
+import { SingleFlight } from "../infrastructure/concurrency/keyed-mutex";
 
 /**
  * This device's push registration.

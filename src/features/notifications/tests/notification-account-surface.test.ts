@@ -29,7 +29,7 @@ const selfTestService = source(
   "src/features/notifications/server/services/notification-self-test.service.server.ts",
 );
 const apiService = source(
-  "src/features/notifications/application/services/notification-api-service.ts",
+  "src/features/notifications/infrastructure/http/notification-api-service.ts",
 );
 const commands = source(
   "src/features/notifications/application/public/notification-commands.ts",

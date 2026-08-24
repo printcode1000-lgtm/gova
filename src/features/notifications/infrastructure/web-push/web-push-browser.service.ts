@@ -4,8 +4,8 @@ import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@asol/data-core/browser";
 import { NotificationPlatforms } from "@asol/notifications-core";
 import { WEB_PUSH_VAPID_PUBLIC_KEY } from "@asol/notifications-core";
 import { withBasePath } from "@/core/config/public-env";
-import { notificationApiService } from "../../application/services/notification-api-service";
-import { readNotificationLocale } from "../../application/shared/read-notification-locale";
+import { notificationApiService } from "../http/notification-api-service";
+import { readNotificationLocale } from "../preferences/read-notification-locale";
 import { nativePermissionService } from "../native/native-permission.service";
 
 const DEVICE_ID_KEY = "web-push-device-id";

@@ -40,8 +40,8 @@ import { notificationReceiver } from "../notification-receiver";
 import { notificationSender } from "../notification-sender";
 import { notificationSyncService } from "../notification-sync-service";
 import { asolNotificationRepository } from "../../infrastructure/asol-notification-repository";
-import { notificationApiService } from "../services/notification-api-service";
-import { SingleFlight } from "../shared/keyed-mutex";
+import { notificationApiService } from "../../infrastructure/http/notification-api-service";
+import { SingleFlight } from "../../infrastructure/concurrency/keyed-mutex";
 import {
   registerNotificationCenterExtension,
   replayQueuedOperationWithExtensions,

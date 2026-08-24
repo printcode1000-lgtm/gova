@@ -7,7 +7,7 @@ import {
   type MappedInboxRecord,
 } from "../infrastructure/native/native-inbox.service";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
-import { SingleFlight } from "./shared/keyed-mutex";
+import { SingleFlight } from "../infrastructure/concurrency/keyed-mutex";
 import { notificationLifecycleService } from "./notification-lifecycle-service";
 import { notificationReceiver } from "./notification-receiver";
 

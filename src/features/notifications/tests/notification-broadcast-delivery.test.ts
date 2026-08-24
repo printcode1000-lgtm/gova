@@ -4,7 +4,7 @@ import {
   mergeBroadcastDeliveryResult,
   mergeNotificationTestDeliveryResult,
   prepareNotificationTestRequest,
-} from "../application/services/notification-api-service";
+} from "../infrastructure/http/notification-api-service";
 
 const granted = {
   requested: 3,

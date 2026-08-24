@@ -18,7 +18,7 @@ import {
   sanitizeNotificationEntity,
   sanitizeRetryOperation,
 } from "../domain/notification-validation";
-import { KeyedMutex } from "../application/shared/keyed-mutex";
+import { KeyedMutex } from "./concurrency/keyed-mutex";
 
 /**
  * The notification centre's storage.
