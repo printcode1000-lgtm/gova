@@ -44,7 +44,10 @@ runtime, so:
   includes constants pulled in transitively:
   `@asol/account-declarations` carries `requiredEnv`/`optionalEnv`, so importing
   it from a client component put the names of every server secret into a static
-  chunk, and `auditStaticMobilePushSecurity` failed the release over it.
+  chunk, and `auditStaticMobilePushSecurity` failed the release over it. The
+  same leak returns if a development-only page that imports declarations shares
+  a feature `./ui` barrel with a module the root layout imports — keep
+  declaration-backed pages on the `.` door instead.
 
 ## How a route is excluded
 

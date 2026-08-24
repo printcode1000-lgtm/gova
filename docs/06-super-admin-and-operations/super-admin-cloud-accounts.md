@@ -17,6 +17,11 @@ every external account this project deploys to or stores data in: seven Vercel
 accounts, five Turso accounts, and four Cloudflare R2 accounts (general,
 legacy products, apparel/pets products, OTA).
 
+The page is exported from `@/features/super-admin` (the `.` door), not
+`@/features/super-admin/ui`. The UI door is imported by the root layout for the
+impersonation banner; keeping cloud-accounts off that barrel prevents the env
+inventory from shipping in every static chunk after a barrel re-export.
+
 The page shows account names, project names, login emails, and what each account
 holds. It never displays tokens, keys, or secret values.
 

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
-import { SuperAdminCloudAccountsPage } from "@/features/super-admin/ui";
+import { SuperAdminCloudAccountsPage } from "@/features/super-admin";
 
 /**
  * Always re-evaluate: account tables are derived from sealed package
@@ -18,6 +18,11 @@ import { SuperAdminCloudAccountsPage } from "@/features/super-admin/ui";
  * `auditStaticMobilePushSecurity` failed the release over an inventory of
  * server secret names. `output: "export"` also rejects a force-dynamic page
  * outright, so the route could not be both exported and current.
+ *
+ * Import from `@/features/super-admin` (the `.` door), not `./ui`. The UI door
+ * is also imported by the root layout for `SuperAdminImpersonationBanner`;
+ * sharing that barrel with cloud-accounts re-pulled the env inventory into
+ * every static chunk even after this route moved under `/dev`.
  */
 export const dynamic = "force-dynamic";
 
