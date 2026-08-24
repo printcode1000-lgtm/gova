@@ -1,0 +1,291 @@
+name: migrate-build-test-gates
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/migrate-build-test-gates.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: architecture-finalization
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Wait for feature finalization
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 120); do
+            git fetch origin main
+            if ! git cat-file -e origin/main:.github/workflows/finalize-feature-layers.yml 2>/dev/null; then
+              git reset --hard origin/main
+              exit 0
+            fi
+            echo "Feature finalization still running (attempt ${attempt}/120)."
+            sleep 15
+          done
+          echo "Feature finalization did not complete before the gate-migration deadline." >&2
+          exit 1
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Migrate build and test gates to registry
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p config
+          cat > /tmp/migrate-gates.mjs <<'NODE'
+          import fs from 'node:fs';
+
+          const packagePath = 'package.json';
+          const pkg = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+          const gateIds = ['build', 'build:static', 'test'];
+          const compact = {
+            build: 'npx tsx scripts/run-generated-gate.ts build',
+            'build:static': 'npx tsx scripts/run-generated-gate.ts build:static',
+            test: 'npx tsx scripts/run-generated-gate.ts test',
+          };
+
+          function splitChain(value, id) {
+            if (typeof value !== 'string' || !value.trim()) {
+              throw new Error(`Missing ${id} script while generating gates.`);
+            }
+            if (value === compact[id]) {
+              throw new Error(`${id} is already compact; refusing to regenerate from the runner itself.`);
+            }
+            return value.split(/\s+&&\s+/).map((part) => part.trim()).filter(Boolean);
+          }
+
+          const gates = Object.fromEntries(gateIds.map((id) => [id, splitChain(pkg.scripts[id], id)]));
+          for (const id of gateIds) {
+            if (!gates[id].includes('npm run gates:verify')) gates[id].unshift('npm run gates:verify');
+          }
+
+          const registry = {
+            schemaVersion: 1,
+            purpose: 'Canonical ordered Build/Test gates. package.json contains only compact runner entry points.',
+            gates,
+          };
+          fs.writeFileSync('config/build-test-gates.registry.json', `${JSON.stringify(registry, null, 2)}\n`);
+
+          pkg.scripts.build = compact.build;
+          pkg.scripts['build:static'] = compact['build:static'];
+          pkg.scripts.test = compact.test;
+          pkg.scripts['gates:verify'] = 'npx tsx scripts/generated-gate-contract.ts';
+          fs.writeFileSync(packagePath, `${JSON.stringify(pkg, null, 2)}\n`);
+          NODE
+          node /tmp/migrate-gates.mjs
+
+      - name: Write permanent gate runner and contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > scripts/generated-gate-contract.ts <<'TS'
+          import { readFileSync } from 'node:fs';
+          import path from 'node:path';
+
+          export type GeneratedGateId = 'build' | 'build:static' | 'test';
+
+          interface GateRegistry {
+            schemaVersion: number;
+            purpose: string;
+            gates: Record<GeneratedGateId, string[]>;
+          }
+
+          const ROOT = process.cwd();
+          const REGISTRY_PATH = path.join(ROOT, 'config', 'build-test-gates.registry.json');
+          const PACKAGE_PATH = path.join(ROOT, 'package.json');
+
+          export const GATE_ENTRYPOINTS: Readonly<Record<GeneratedGateId, string>> = {
+            build: 'npx tsx scripts/run-generated-gate.ts build',
+            'build:static': 'npx tsx scripts/run-generated-gate.ts build:static',
+            test: 'npx tsx scripts/run-generated-gate.ts test',
+          };
+
+          export function readGeneratedGateRegistry(): GateRegistry {
+            return JSON.parse(readFileSync(REGISTRY_PATH, 'utf8')) as GateRegistry;
+          }
+
+          export function verifyGeneratedGateContract(): string[] {
+            const errors: string[] = [];
+            const registry = readGeneratedGateRegistry();
+            const pkg = JSON.parse(readFileSync(PACKAGE_PATH, 'utf8')) as { scripts?: Record<string, string> };
+
+            if (registry.schemaVersion !== 1) errors.push(`Unsupported gate registry schemaVersion: ${registry.schemaVersion}.`);
+            for (const gateId of Object.keys(GATE_ENTRYPOINTS) as GeneratedGateId[]) {
+              const commands = registry.gates?.[gateId];
+              if (!Array.isArray(commands) || commands.length === 0) {
+                errors.push(`Gate ${gateId} has no commands.`);
+                continue;
+              }
+              if (pkg.scripts?.[gateId] !== GATE_ENTRYPOINTS[gateId]) {
+                errors.push(`package.json script ${gateId} must be exactly: ${GATE_ENTRYPOINTS[gateId]}`);
+              }
+              if (commands[0] !== 'npm run gates:verify') {
+                errors.push(`Gate ${gateId} must start with npm run gates:verify.`);
+              }
+              const recursive = commands.filter((command) =>
+                command === `npm run ${gateId}` ||
+                (gateId === 'test' && /^npm\s+(?:run\s+)?test(?:\s|$)/.test(command)),
+              );
+              if (recursive.length > 0) errors.push(`Gate ${gateId} recursively invokes itself: ${recursive.join(', ')}`);
+            }
+            if (pkg.scripts?.['gates:verify'] !== 'npx tsx scripts/generated-gate-contract.ts') {
+              errors.push('package.json script gates:verify must point at scripts/generated-gate-contract.ts.');
+            }
+            return errors;
+          }
+
+          if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}`) {
+            const errors = verifyGeneratedGateContract();
+            if (errors.length > 0) {
+              console.error('Generated Build/Test gate contract failed:');
+              for (const error of errors) console.error(`- ${error}`);
+              process.exitCode = 1;
+            } else {
+              const registry = readGeneratedGateRegistry();
+              console.log(
+                `Generated Build/Test gate contract passed (${Object.values(registry.gates).reduce((sum, commands) => sum + commands.length, 0)} ordered gate steps).`,
+              );
+            }
+          }
+          TS
+
+          cat > scripts/run-generated-gate.ts <<'TS'
+          import { spawnSync } from 'node:child_process';
+          import {
+            type GeneratedGateId,
+            readGeneratedGateRegistry,
+            verifyGeneratedGateContract,
+          } from './generated-gate-contract';
+
+          const gateId = process.argv[2] as GeneratedGateId | undefined;
+          if (!gateId || !['build', 'build:static', 'test'].includes(gateId)) {
+            console.error('Usage: npx tsx scripts/run-generated-gate.ts <build|build:static|test>');
+            process.exit(2);
+          }
+
+          const contractErrors = verifyGeneratedGateContract();
+          if (contractErrors.length > 0) {
+            for (const error of contractErrors) console.error(`[gate:${gateId}] ${error}`);
+            process.exit(1);
+          }
+
+          const commands = readGeneratedGateRegistry().gates[gateId];
+          console.log(`[gate:${gateId}] ${commands.length} generated step(s).`);
+          for (let index = 0; index < commands.length; index += 1) {
+            const command = commands[index]!;
+            console.log(`\n[gate:${gateId}] ${index + 1}/${commands.length}: ${command}`);
+            const result = spawnSync(command, {
+              cwd: process.cwd(),
+              env: process.env,
+              shell: true,
+              stdio: 'inherit',
+            });
+            if (result.error) throw result.error;
+            if (result.status !== 0) process.exit(result.status ?? 1);
+          }
+          TS
+
+      - name: Add gate contract to architecture preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'scripts/architecture-check.ts';
+          let source = fs.readFileSync(path, 'utf8');
+          const importLine = "import { verifyGeneratedGateContract } from './generated-gate-contract';\n";
+          if (!source.includes(importLine.trim())) {
+            const marker = "import { validateStorageProfilesAtStartup } from '@asol/storage-core/server';\n";
+            source = source.replace(marker, `${marker}${importLine}`);
+          }
+          const preflightMarker = '    preflight: [\n';
+          const gateBlock = `      {\n        label: 'generated Build/Test gate contract failed',\n        run: () => verifyGeneratedGateContract(),\n      },\n`;
+          if (!source.includes("generated Build/Test gate contract failed")) {
+            source = source.replace(preflightMarker, `${preflightMarker}${gateBlock}`);
+          }
+          fs.writeFileSync(path, source);
+          NODE
+
+      - name: Document generated gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p docs/01-architecture/07-enforcement
+          cat > docs/01-architecture/07-enforcement/build-test-gates.md <<'DOC'
+          # Generated Build/Test Gates
+
+          `package.json` is not the owner of the Build/Test pipeline. It exposes only three compact doors:
+
+          - `npm run build`
+          - `npm run build:static`
+          - `npm test`
+
+          Their ordered steps live in `config/build-test-gates.registry.json` and are executed by `scripts/run-generated-gate.ts`.
+
+          The registry is fail-closed. Every gate starts with `npm run gates:verify`, and `architecture:check` also runs the same contract before scanning the application. The contract rejects missing/empty gates, recursive gates, or any attempt to replace the compact `package.json` doors with hand-written command chains.
+
+          This removes the former giant Build/Test command strings from `package.json` without compatibility wrappers: the registry and runner are the only Build/Test orchestration mechanism.
+          DOC
+
+      - name: Remove feature-migration residue and this one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f scripts/architecture/finalize-feature-layers.mjs
+          rm -f scripts/architecture/finalize-feature-contract.mjs
+          rm -f scripts/architecture/fix-notification-layering.mjs
+          rm -f .architecture-feature-verification-status
+          rm -f .architecture-notification-reference-map
+          rm -f .architecture-feature-*.log
+          rm -f .architecture-feature-canonicalization-verified
+          rm -f .github/workflows/finalize-feature-layers.yml
+          rm -f .github/workflows/migrate-build-test-gates.yml
+
+      - name: Verify generated gate contract
+        run: npm run gates:verify
+
+      - name: Synchronize service mirrors
+        run: npm run services:sync
+
+      - name: Architecture invariants
+        run: npm run architecture:check
+
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: Full repository test gate
+        run: npm test
+
+      - name: Commit verified gate architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && { echo "Expected gate migration changes are missing."; exit 1; }
+          git commit -m "refactor(architecture): generate build and test gates from registry"
+          git push origin HEAD:main
