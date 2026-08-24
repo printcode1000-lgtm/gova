@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { LOCALE_CHANGED_EVENT } from "@/shared/i18n";
-import { useSession } from "@/features/auth/presentation/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
 import { notificationDeviceTokenService } from "../application/device-token-service";
 import { notificationLog } from "../domain/notification-redaction";
