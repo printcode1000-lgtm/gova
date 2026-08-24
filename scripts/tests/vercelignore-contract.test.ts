@@ -1,5 +1,5 @@
 /**
- * Guards the root `.vercelignore` contract for gova and asol-submain uploads.
+ * Guards the root Vercel input and deterministic-install contract.
  */
 
 import assert from "node:assert/strict";
@@ -9,6 +9,9 @@ import path from "node:path";
 const ROOT = process.cwd();
 const IGNORE_PATH = path.join(ROOT, ".vercelignore");
 const ignore = readFileSync(IGNORE_PATH, "utf8");
+const vercelConfig = JSON.parse(readFileSync(path.join(ROOT, "vercel.json"), "utf8")) as {
+  installCommand?: string;
+};
 const ignoreLines = ignore
   .split(/\r?\n/)
   .map((line) => line.trim())
@@ -65,6 +68,7 @@ const requiredPaths = [
   "next.config.ts",
   "tsconfig.json",
   "capacitor.config.ts",
+  "vercel.json",
   ".env.example",
   "src/app/layout.tsx",
   "public/logo.png",
@@ -76,6 +80,9 @@ const requiredPaths = [
   "scripts/architecture-check.ts",
   "scripts/sync-all-service-sources.ts",
   "assets/google-play/custom_notification.mp3",
+  "android/build.gradle",
+  "android/variables.gradle",
+  "android/gradle/wrapper/gradle-wrapper.properties",
 ];
 
 for (const required of requiredPaths) {
@@ -119,8 +126,13 @@ for (const required of mustStayPaths) {
   );
 }
 
-assert.match(ignore, /^\/android\/\s*$/m, ".vercelignore must exclude only the root Capacitor android shell.");
+assert.match(ignore, /^\/android\/\*\*\s*$/m, ".vercelignore must exclude the root Capacitor android shell by default.");
 assert.match(ignore, /^\/ios\/\s*$/m, ".vercelignore must exclude only the root Capacitor ios shell.");
 assert.match(ignore, /public\/sync_data\//, ".vercelignore must exclude local SQLite mirrors.");
+assert.equal(
+  vercelConfig.installCommand,
+  "npm ci",
+  "Vercel must install the reviewed lockfile without rewriting it.",
+);
 
-console.log("vercelignore contract tests passed.");
+console.log("Vercel input and deterministic-install contract tests passed.");

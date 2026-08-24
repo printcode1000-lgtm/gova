@@ -160,6 +160,9 @@ files read by the compatibility gate (`build.gradle`, `variables.gradle`, and
 `gradle-wrapper.properties`) while excluding the rest of the native shell. This
 lets the same default-deny reference run in Vercel without uploading generated
 Android artifacts or weakening the production build check.
+The root `vercel.json` pins the remote install command to `npm ci`; Vercel must
+consume the reviewed lockfile byte-for-byte instead of rewriting it before the
+compatibility gate executes.
 
 ## Service deployment checks
 
