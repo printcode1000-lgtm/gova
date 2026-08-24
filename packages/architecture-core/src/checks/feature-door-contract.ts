@@ -252,7 +252,7 @@ function validateDoorImport(
       addViolation(
         'Feature Doors',
         join(ROOT, importerRel),
-        `Feature "${importerFeature}" imports "${targetFeature}" but that dependency is not declared.`,
+        `Feature "${importerFeature}" imports "${targetFeature}" but that dependency is not permitted by permittedDependencies.`,
         `Add "${targetFeature}" to permittedDependencies only if the edge is architecturally justified.`,
       );
     }
