@@ -199,7 +199,8 @@ starts the platform flow:
   refusal into an application error.
 - A device already enabled with granted permission is not prompted again.
 
-The prompt listens to the explicit login-completed event, not merely to
+The prompt is driven by the explicit login-completed event (bridged through
+`NotificationsFeatureBridge` into `loginCompleted`), not merely by
 `SessionProvider` hydration. It is delayed until the login-success toast has
 finished so the two accessible surfaces never overlap.
 

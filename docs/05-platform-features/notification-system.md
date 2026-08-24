@@ -712,8 +712,8 @@ in AsolDB/IndexedDB.
 
 Nothing is registered until the user agrees. `NotificationOptInController` owns
 that moment and runs on **every platform** — Android, iOS, and the browser. It
-is the only one of the three notification controllers in `src/app/layout.tsx`
-that renders UI; the other two render `null`.
+is the only one of the three notification controllers under
+`NotificationsFeatureBridge` that renders UI; the other two render `null`.
 
 | Controller | Platforms | Renders |
 |------------|-----------|---------|
@@ -723,7 +723,10 @@ that renders UI; the other two render `null`.
 
 ### When it appears
 
-It listens for `AUTH_LOGIN_COMPLETED_EVENT`, dispatched by `useLogin` after a
+`NotificationsFeatureBridge` (`src/core/composition/NotificationsFeatureBridge.tsx`)
+listens for `AUTH_LOGIN_COMPLETED_EVENT` — notifications must not import auth —
+and passes `loginCompleted` into `NotificationRuntimeProvider`. The opt-in
+controller reacts to that value. The event is dispatched by `useLogin` after a
 fresh interactive login and replayed by `AuthLoginBootstrapController` after
 super-admin impersonation start/stop (both use hard navigation). Session
 hydration does not dispatch it, so a returning user is never interrupted on an
@@ -822,11 +825,13 @@ back or to `/home`. Implementation:
 ### Files
 
 ```text
-presentation/NotificationOptInController.tsx      the dialog's states and effects
-presentation/NotificationPermissionPrompt.tsx     the dialog itself
-application/notification-permission-prompt-policy.ts   the pure decision
-public/notification-facade.ts                     the use cases behind it
-tests/notification-permission-prompt-policy.test.ts    its contract
+src/core/composition/NotificationsFeatureBridge.tsx   auth→notifications loginCompleted bridge
+presentation/NotificationOptInController.tsx          the dialog's states and effects
+presentation/NotificationRuntimeProvider.tsx          identity + loginCompleted runtime
+presentation/NotificationPermissionPrompt.tsx         the dialog itself
+application/notification-permission-prompt-policy.ts  the pure decision
+public/notification-facade.ts                         the use cases behind it
+tests/notification-permission-prompt-policy.test.ts   its contract
 ```
 
 ### The push switch is per device, not per account

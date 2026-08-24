@@ -11,7 +11,10 @@ const loginPage = source('src/features/auth/presentation/LoginPageContent.tsx');
 const registration = source('src/features/auth/presentation/hooks/use-register.ts');
 const registrationPage = source('src/features/auth/presentation/RegistrationPageContent.tsx');
 const toast = source('src/features/auth/presentation/LoginSuccessToast.tsx');
-const notificationOptIn = source('src/features/notifications/presentation/NotificationOptInController.tsx');
+const notificationBridge = source('src/core/composition/NotificationsFeatureBridge.tsx');
+const notificationOptIn = source(
+  'src/features/notifications/presentation/NotificationOptInController.tsx',
+);
 
 for (const hook of [login, registration]) {
   assert.match(hook, /announceAuthLoginCompleted\(\{ uid: session\.uid, phone: session\.phone \}\)/);
@@ -28,7 +31,16 @@ assert.doesNotMatch(registrationPage, /continueToApp/);
 assert.doesNotMatch(registrationPage, /handleContinue/);
 assert.match(toast, /kind === "registration"/);
 assert.match(toast, /t\("auth\.registration\.successMessage"\)/);
-assert.match(notificationOptIn, /AUTH_LOGIN_COMPLETED_EVENT/);
+// Notifications must not import auth: the composition bridge listens for the
+// login-completed event and passes loginCompleted through NotificationRuntimeProvider.
+assert.match(notificationBridge, /AUTH_LOGIN_COMPLETED_EVENT/);
+assert.match(notificationBridge, /setLoginCompleted/);
+assert.match(notificationOptIn, /loginCompleted/);
 assert.match(notificationOptIn, /POST_LOGIN_PROMPT_DELAY_MS = 4_200/);
+assert.doesNotMatch(
+  notificationOptIn,
+  /AUTH_LOGIN_COMPLETED_EVENT/,
+  'NotificationOptInController must receive loginCompleted via the composition bridge, not listen to auth events directly',
+);
 
 console.log('Registration success flow tests passed.');
