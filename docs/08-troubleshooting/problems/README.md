@@ -19,3 +19,4 @@ A log of project problems and their solutions for recurrence and environment set
 | 14 | Incomplete npm workspaces: `Cannot find module '@asol/…'` | [incomplete-npm-workspaces-asol-modules.md](./incomplete-npm-workspaces-asol-modules.md) |
 | 15 | `npm ci` fails on Windows: `better-sqlite3` / `node-gyp` needs Python | [npm-ci-better-sqlite3-python-windows.md](./npm-ci-better-sqlite3-python-windows.md) |
 | 16 | `architecture:check` false positive on Windows: generated architecture docs differ only by CRLF | [architecture-docs-drift-crlf-windows.md](./architecture-docs-drift-crlf-windows.md) |
+| 17 | Generated build/test gate fails on Windows with `spawnSync npm.cmd EINVAL` | [generated-gate-npm-cmd-einval-windows.md](./generated-gate-npm-cmd-einval-windows.md) |
