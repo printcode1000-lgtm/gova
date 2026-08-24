@@ -1,114 +1,68 @@
 /**
  * CI gate coverage.
  *
- * `scripts/tests/pipeline-coverage.test.ts` already asserts that every `test:*-core` script is
- * in the `build`, `build:static`, and `test` chains — rule 3. That guards the *local* release
- * path. It says nothing about CI, and CI is what branch protection actually requires: the
- * `verify` job is the reviewer on a single-developer repository.
- *
- * The workflow's gate list is a hand-maintained copy of package.json, so it drifts. It had:
- * seven sealed packages — auth, catalog, product, product-style, dev, system-logs, map — were
- * never run there, and a broken one would have merged green. This closes that by making the copy
- * checked rather than trusted.
- *
- * It also pins the two names that must not change silently: the job id `verify`, which is the
- * required status check, and the steps that keep a clean checkout honest.
+ * CI no longer owns a handwritten copy of every package test. The required `verify` job runs the
+ * generated `test` gate, and this contract proves that the generated gate contains every sealed
+ * package test plus the clean-checkout prerequisites that CI needs.
  */
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { readPackageScripts, resolveGeneratedGate } from './generated-gates';
+
 const ROOT = process.cwd();
 const WORKFLOW = path.join(ROOT, '.github/workflows/native-core.yml');
-
 const workflow = readFileSync(WORKFLOW, 'utf8');
-const manifest = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8')) as {
-  scripts: Record<string, string>;
-};
+const scripts = readPackageScripts();
 
-// ── The required status check's name ────────────────────────────────────────
-//
-// GitHub reports the check run under the job's name, falling back to the job id. Branch
-// protection in scripts/protect-main-branch.ts requires `verify`. A rename here would leave a
-// required check that never reports, which blocks every merge permanently — a worse failure than
-// no protection at all.
+// The job id `verify` is the required status check named by branch protection.
 assert.match(
   workflow,
   /^ {2}verify:$/m,
-  'The job id `verify` is the required status check named in scripts/protect-main-branch.ts. ' +
-    'Renaming it blocks every merge permanently. Rename the file or the workflow instead.',
+  'The job id `verify` is the required branch-protection status check.',
 );
 assert.ok(
   !/^ {4}name:/m.test(workflow.slice(workflow.indexOf('  verify:'))),
-  'The `verify` job must not declare its own `name:` — that becomes the check-run name and would ' +
-    'no longer match the required status check.',
+  'The `verify` job must not declare its own name; the check-run name must remain `verify`.',
 );
-
 const protection = readFileSync(path.join(ROOT, 'scripts/protect-main-branch.ts'), 'utf8');
-assert.ok(
-  protection.includes("'verify'"),
-  'Branch protection no longer requires the `verify` check, so nothing gates a merge.',
+assert.ok(protection.includes("'verify'"), 'Branch protection no longer requires the `verify` check.');
+
+const generatedTest = resolveGeneratedGate('test', scripts);
+const testScripts = new Set(
+  generatedTest.filter((step) => step.kind === 'npm-script').map((step) => step.value),
 );
-
-// ── Every package gate runs in CI ───────────────────────────────────────────
-const packageGates = Object.keys(manifest.scripts).filter((name) => /^test:.*-core$/.test(name));
-assert.ok(packageGates.length >= 15, `Expected the full set of package gates, found ${packageGates.length}`);
-
-const missing = packageGates.filter((gate) => !workflow.includes(`npm run ${gate}`));
+const packageGates = Object.keys(scripts).filter((name) => /^test:.*-core$/.test(name));
+assert.ok(packageGates.length >= 15, `Expected the full package gate set, found ${packageGates.length}.`);
 assert.deepEqual(
-  missing,
+  packageGates.filter((gate) => !testScripts.has(gate)),
   [],
-  `These package gates never run in CI: ${missing.join(', ')}. A sealed package whose contract ` +
-    'test does not run on the required check is guarded by nothing on the path that actually ' +
-    'gates a merge.',
+  'Every test:*-core script must be generated into the required CI test gate.',
 );
 
-// ── The steps a clean checkout depends on ───────────────────────────────────
-//
-// Each of these exists because something passed locally and failed on CI. Losing one restores a
-// failure this repository has already paid for.
-const REQUIRED_STEPS: ReadonlyArray<{ script: string; because: string }> = [
-  {
-    script: 'services:sync',
-    because:
-      'services/*/generated is git-ignored, so a clean checkout has no mirrors and the contract ' +
-      'tests that assert a non-empty mirror fail on every push',
-  },
-  {
-    script: 'services:verify',
-    because:
-      'a specifier the mirror walker cannot see is never copied, and the remote build still ' +
-      'succeeds — the failure lands on the first request instead',
-  },
-  {
-    script: 'services:build',
-    because:
-      'each service is uploaded alone and installed against its own package.json; nothing else ' +
-      'builds one the way Vercel does',
-  },
-  { script: 'architecture:check', because: 'it is what enforces rules 2, 5 and 7 mechanically' },
-  { script: 'test:compositions', because: 'the per-account capability closure is asserted there' },
-];
-
-for (const step of REQUIRED_STEPS) {
-  assert.ok(
-    workflow.includes(`npm run ${step.script}`),
-    `CI no longer runs "${step.script}": ${step.because}.`,
-  );
+for (const required of ['services:sync', 'test:compositions']) {
+  assert.ok(testScripts.has(required), `Generated test gate must contain ${required}.`);
 }
 
-// ── Order matters for exactly one pair ──────────────────────────────────────
+// The workflow consumes the generated gate rather than enumerating package tests itself.
+assert.ok(workflow.includes('npm test'), 'CI must execute the generated test gate with npm test.');
 assert.ok(
-  workflow.indexOf('npm run services:sync') < workflow.indexOf('npm run services:verify'),
-  'services:verify reads the mirror, so it must run after services:sync writes it.',
+  workflow.includes('npm run architecture:check'),
+  'CI must enforce architecture before accepting the generated test gate.',
+);
+for (const script of ['services:verify', 'services:build']) {
+  assert.ok(workflow.includes(`npm run ${script}`), `CI must run ${script} on clean service mirrors.`);
+}
+assert.ok(
+  workflow.indexOf('npm test') < workflow.indexOf('npm run services:verify'),
+  'The generated test gate writes service mirrors before services:verify reads them.',
 );
 assert.ok(
   workflow.indexOf('npm run services:verify') < workflow.indexOf('npm run services:build'),
-  'Verifying the upload before building it reports a missing module as a missing module, rather ' +
-    'than as whatever the bundler says about it.',
+  'Service mirrors must be verified before Vercel-shaped service builds run.',
 );
 
 console.log(
-  `[ci:coverage] verify job intact, ${packageGates.length} package gates run in CI, ` +
-    `${REQUIRED_STEPS.length} clean-checkout steps present.`,
+  `[ci:coverage] verify job consumes the generated test gate; ${packageGates.length} package gates are auto-covered.`,
 );
