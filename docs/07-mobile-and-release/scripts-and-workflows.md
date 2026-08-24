@@ -155,6 +155,12 @@ it executes the bundled native/tool binaries and validates the complete npm
 graph. A missing or incompatible result produces a non-zero exit code, making
 the doctor suitable for onboarding and CI diagnostics.
 
+The repository-root `.vercelignore` keeps the three Android Gradle declaration
+files read by the compatibility gate (`build.gradle`, `variables.gradle`, and
+`gradle-wrapper.properties`) while excluding the rest of the native shell. This
+lets the same default-deny reference run in Vercel without uploading generated
+Android artifacts or weakening the production build check.
+
 ## Service deployment checks
 
 `npm run deploy:all` is organized as a runbook:
@@ -179,7 +185,7 @@ The publish phase has separate guard, secrets, and Git sections; every service
 phase has exactly one deploy branch; the final main phase has one Vercel
 readiness verification branch.
 
-`npm run services:build` (`scripts/build-all-services.ts`) refreshes the four
+`npm run services:build` (`scripts/build-all-services.ts`) refreshes the six
 mirrors and then runs `next build` inside every `services/<name>/` folder,
 installing that folder's dependencies first when they are missing.
 

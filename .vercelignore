@@ -20,7 +20,14 @@ coverage/
 # ── Capacitor native shells (web build uses packages/native-core only) ─────
 # Root android/ and ios/ are store shells. packages/native-core/{android,ios}/
 # stay available for architecture and native-core contract tests during build.
-/android/
+# Keep only the Android toolchain declarations consumed by the immutable
+# runtime-compatibility gate that runs inside the production web build.
+/android/**
+!/android/build.gradle
+!/android/variables.gradle
+!/android/gradle/
+!/android/gradle/wrapper/
+!/android/gradle/wrapper/gradle-wrapper.properties
 /ios/
 /fastlane/
 
