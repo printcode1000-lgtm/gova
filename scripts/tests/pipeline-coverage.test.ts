@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
+import { resolveGeneratedGate } from '../generated-gates';
+
 function getAllFiles(dir: string, exts: string[]): string[] {
   if (!existsSync(dir)) return [];
   const entries = readdirSync(dir, { withFileTypes: true });
@@ -25,20 +27,46 @@ function main() {
   const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
   const scripts = pkg.scripts || {};
 
-  // ── S4: Chain wiring for test:*-core & test:compositions ─────────────────
+  // ── S4: Generated gate wiring for test:*-core & test:compositions ─────────
   const testCoreScripts = Object.keys(scripts).filter((key) => /^test:.*-core$/.test(key));
   assert.ok(testCoreScripts.length >= 3, `Expected at least 3 test:*-core scripts, found ${testCoreScripts.length}`);
 
-  const buildScript = scripts.build || '';
-  const buildStaticScript = scripts['build:static'] || '';
-  const testScript = scripts.test || '';
+  const testGate = new Set(
+    resolveGeneratedGate('test', scripts)
+      .filter((step) => step.kind === 'npm-script')
+      .map((step) => step.value),
+  );
+  const buildGate = new Set(
+    resolveGeneratedGate('build', scripts)
+      .filter((step) => step.kind === 'npm-script')
+      .map((step) => step.value),
+  );
+  const buildStaticGate = new Set(
+    resolveGeneratedGate('build:static', scripts)
+      .filter((step) => step.kind === 'npm-script')
+      .map((step) => step.value),
+  );
 
-  for (const scriptName of [...testCoreScripts, 'test:compositions']) {
-    assert.ok(testScript.includes(scriptName), `Script ${scriptName} must be included in package.json "test" chain`);
-    assert.ok(buildScript.includes(scriptName), `Script ${scriptName} must be included in package.json "build" chain`);
-    assert.ok(buildStaticScript.includes(scriptName), `Script ${scriptName} must be included in package.json "build:static" chain`);
+  for (const scriptName of testCoreScripts) {
+    assert.ok(testGate.has(scriptName), `Script ${scriptName} must be included in the generated test gate`);
+    assert.ok(buildGate.has(scriptName), `Script ${scriptName} must be included in the generated build gate`);
+    assert.ok(buildStaticGate.has(scriptName), `Script ${scriptName} must be included in the generated build:static gate`);
   }
-  console.log('  ✔ S4: All test:*-core & test:compositions scripts properly chained in test, build, and build:static.');
+  for (const gate of [testGate, buildGate, buildStaticGate]) {
+    assert.ok(gate.has('test:compositions'), 'test:compositions must be included in every generated release gate');
+  }
+  console.log('  ✔ S4: All test:*-core & test:compositions scripts are covered by the generated gates.');
+
+  // The generated runner must not directly spawn npm.cmd. Modern Node rejects direct .cmd/.bat
+  // execution on Windows; npm_execpath lets Node execute npm-cli.js without a shell.
+  const generatedGateRunner = readFileSync(path.join(root, 'scripts/run-generated-gate.ts'), 'utf8');
+  assert.match(generatedGateRunner, /npm_execpath/, 'Generated gate runner must prefer npm_execpath.');
+  assert.match(generatedGateRunner, /process\.execPath/, 'Generated gate runner must execute npm-cli.js with Node.');
+  assert.doesNotMatch(
+    generatedGateRunner,
+    /const\s+npmBin\s*=.*npm\.cmd/s,
+    'Generated gate runner must not restore direct spawnSync(npm.cmd, ...).',
+  );
 
   // ── S1: No "./*" wildcard exports in any package.json ────────────────────
   const packagesDir = path.join(root, 'packages');
