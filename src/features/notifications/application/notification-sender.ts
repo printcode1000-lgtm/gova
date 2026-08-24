@@ -11,6 +11,7 @@ import {
   NotificationSyncStates,
   NotificationTargets,
 } from "@asol/notifications-core";
+import { notifyOrderDataRefreshFromNotification } from "@/features/orders";
 import { assertNotificationEntity } from "../domain/notification-validation";
 import { notificationLog } from "../domain/notification-redaction";
 import { nativeLocalNotificationService } from "../infrastructure/native/native-local-notification.service";
@@ -18,7 +19,6 @@ import { asolNotificationRepository } from "../infrastructure/asol-notification-
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 import { notificationRouter } from "./notification-router";
-import { notifyOrderDataRefreshFromNotification } from '@/features/orders/order-data-refresh';
 
 function emitChanged(uid: string, notificationId?: string): void {
   if (typeof window === "undefined") return;
