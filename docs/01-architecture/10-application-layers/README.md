@@ -17,6 +17,23 @@ UI → Hooks → Client Services → AsolApiClient → Business API
 
 No shortcut paths. Architecture scan and ESLint enforce the matrix in `packages/architecture-core/src/contracts/contract.ts`.
 
+## Canonical feature shape
+
+A feature may expose only these top-level implementation directories:
+
+```text
+src/features/<feature>/
+  domain/
+  application/
+  infrastructure/
+  presentation/
+  ports/
+  server/
+  tests/
+```
+
+`index.ts`, `ui.ts`, and `server.ts` are Public API doors, not implementation buckets. `hooks`, client services, server services, configuration adapters, utilities, runtime helpers, validation, shared helpers, and types MUST live under the canonical owner layer instead of creating competing feature roots. `FEATURE_INTERNAL_VOCABULARY` is default-deny and contains only the seven directories above.
+
 ## Layer documents
 
 | Layer | Document |
@@ -70,3 +87,4 @@ Layer violations fail build. New features need layer placement decided before im
 1. UI never imports repository or database layers.
 2. Client code never imports `server-only` modules.
 3. All layers participate in architecture scan.
+4. No feature may recreate a top-level compatibility bucket outside the seven canonical directories.
