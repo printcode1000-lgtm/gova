@@ -11,6 +11,7 @@ const keys = [
   "ASOL_DATA_SOURCE",
   "ASOL_PROVISIONING",
   "TURSO_DATABASE_URL",
+  "GITHUB_ACTIONS",
 ] as const;
 const original = Object.fromEntries(
   keys.map((key) => [key, process.env[key]]),
