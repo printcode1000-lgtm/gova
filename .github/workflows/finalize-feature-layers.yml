@@ -57,15 +57,18 @@ jobs:
         run: |
           set +e
           : > .architecture-feature-verification-status
+          rm -f .architecture-feature-*.log
           overall=0
           check() {
             name="$1"
             shift
+            log=".architecture-feature-${name}.log"
             echo "== $name =="
-            "$@"
+            "$@" > >(tee "$log") 2>&1
             code=$?
             if [ "$code" -eq 0 ]; then
               echo "$name=pass" >> .architecture-feature-verification-status
+              rm -f "$log"
             else
               echo "$name=fail:$code" >> .architecture-feature-verification-status
               overall=1
@@ -87,7 +90,7 @@ jobs:
             printf '%s\n' "setup=fail" "overall=fail" > .architecture-feature-verification-status
           fi
           printf '%s\n' "verified_commit=$(git rev-parse HEAD)" >> .architecture-feature-verification-status
-          git add .architecture-feature-verification-status
+          git add -A .architecture-feature-verification-status .architecture-feature-*.log 2>/dev/null || git add .architecture-feature-verification-status
           if ! git diff --cached --quiet; then
             git commit -m "test(architecture): record canonical verification matrix"
             git push origin HEAD:main
