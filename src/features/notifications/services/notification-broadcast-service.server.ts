@@ -1,7 +1,6 @@
 import 'server-only';
 
 import { createHash, randomUUID } from 'node:crypto';
-import { isSuperAdminIdentity } from '@/features/auth';
 import type {
   BroadcastNotificationInput,
   BroadcastNotificationResult,
@@ -11,6 +10,7 @@ import type {
 } from '@asol/notifications-core';
 import { getNotificationTestScenario } from '@asol/notifications-core';
 import { ListBroadcastRecipientsQuery } from '@asol/data-core/notifications';
+import { assertNotificationAdmin } from '../server/notification-admin-authorization';
 import { NotificationGrantCollector } from './notification-grant-collector.server';
 
 export class NotificationBroadcastService {
@@ -19,7 +19,7 @@ export class NotificationBroadcastService {
   ) {}
 
   async listRecipients(identity: { uid: string; phone: string }): Promise<BroadcastRecipientsResult> {
-    this.assertAdmin(identity);
+    assertNotificationAdmin(identity);
     const recipients = await this.listRecipientsQuery.execute();
     const providerCounts: Record<string, number> = {};
     const platformCounts: Record<string, number> = {};
@@ -41,7 +41,7 @@ export class NotificationBroadcastService {
   }
 
   async send(input: BroadcastNotificationInput): Promise<BroadcastNotificationResult> {
-    this.assertAdmin(input.identity);
+    assertNotificationAdmin(input.identity);
     const title = input.title.trim();
     const body = input.body.trim();
     if (!title || !body) throw new Error('notificationContentRequired');
@@ -57,9 +57,6 @@ export class NotificationBroadcastService {
       .update(JSON.stringify({ title, body, audienceKey }))
       .digest('hex')
       .slice(0, 24);
-    // The main app authorises the broadcast; it does not deliver it. The admin's
-    // browser carries the grant to the notifications service, so the reported
-    // result is what was granted, not what a provider accepted.
     const grants = new NotificationGrantCollector(input.identity.uid);
     const issued = grants.issue({
       actorUid: input.identity.uid,
@@ -83,16 +80,14 @@ export class NotificationBroadcastService {
   }
 
   async sendTest(input: NotificationTestInput): Promise<NotificationTestResult> {
-    this.assertAdmin(input.identity);
+    assertNotificationAdmin(input.identity);
     const scenario = getNotificationTestScenario(input.scenarioId);
     if (!scenario) throw new Error('notificationTestScenarioInvalid');
 
     const title = input.title.trim();
     const body = input.body.trim();
     if (!title || !body) throw new Error('notificationContentRequired');
-    if (title.length > 120 || body.length > 1_000) {
-      throw new Error('notificationContentTooLong');
-    }
+    if (title.length > 120 || body.length > 1_000) throw new Error('notificationContentTooLong');
 
     const routeHref = input.routeHref?.trim() || '/notifications';
     if (!routeHref.startsWith('/') || routeHref.startsWith('//') || routeHref.length > 500) {
@@ -123,17 +118,11 @@ export class NotificationBroadcastService {
 
     return {
       requested: 1,
-      results: [
-        { uid: input.identity.uid, tokenCount: 0, status: 'granted' as const },
-      ],
+      results: [{ uid: input.identity.uid, tokenCount: 0, status: 'granted' as const }],
       notificationGrants: grants.toArray(),
       scenarioId: scenario.id,
       channelId: scenario.channelId,
       dedupeKey,
     };
-  }
-
-  private assertAdmin(identity: { uid: string; phone: string }) {
-    if (!isSuperAdminIdentity(identity.uid, identity.phone)) throw new Error('forbidden');
   }
 }
