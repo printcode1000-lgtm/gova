@@ -9,58 +9,13 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Normalize and persist generated architecture
-        id: normalize
-        if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
-        env:
-          ALL_SECRETS_JSON: ${{ toJSON(secrets) }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          node <<'NODE'
-          const fs = require('node:fs');
-          const file = 'package.json';
-          const pkg = JSON.parse(fs.readFileSync(file, 'utf8'));
-          pkg.scripts.build = 'npx tsx scripts/run-generated-gate.ts build';
-          pkg.scripts['build:static'] = 'npx tsx scripts/run-generated-gate.ts build:static';
-          pkg.scripts.test = 'npx tsx scripts/run-generated-gate.ts test';
-          pkg.scripts['gates:verify'] = 'npx tsx scripts/generated-gate-contract.ts';
-          delete pkg.scripts.pretest;
-          fs.writeFileSync(file, `${JSON.stringify(pkg, null, 2)}\n`);
-          const names = Object.keys(JSON.parse(process.env.ALL_SECRETS_JSON || '{}')).sort();
-          fs.writeFileSync('.deploy-secret-names.json', `${JSON.stringify({ names }, null, 2)}\n`);
-          NODE
-          rm -f .github/workflows/finalize-feature-layers.yml
-          rm -f .github/workflows/migrate-build-test-gates.yml
-          rm -f .github/workflows/check-deploy-secret-names.yml
-          rm -f scripts/architecture/finalize-feature-layers.mjs
-          rm -f scripts/architecture/finalize-feature-contract.mjs
-          rm -f scripts/architecture/fix-notification-layering.mjs
-          rm -f .architecture-feature-verification-status
-          rm -f .architecture-notification-reference-map
-          rm -f .architecture-feature-*.log
-          rm -f .architecture-feature-canonicalization-verified
-          rm -f .architecture-finalization-status.md
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          if ! git diff --cached --quiet; then
-            git commit -m 'refactor(architecture): finalize generated gates and clean architecture'
-            git push origin HEAD:main
-          fi
 
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
@@ -74,79 +29,31 @@ jobs:
         run: npm ci
 
       - name: Generated gate contract
-        id: gates
         run: npm run gates:verify
 
       - name: Synchronize service mirrors
-        id: sync
         run: npm run services:sync
 
       - name: Lint
-        id: lint
         run: npm run lint
 
       - name: TypeScript
-        id: typecheck
         run: npm run typecheck
 
       - name: Architecture invariants
-        id: architecture
         run: npm run architecture:check
 
       - name: CI coverage contract
-        id: coverage
         run: npm run ci:coverage
 
       - name: Generated full test gate
-        id: tests
         run: npm test
 
       - name: Version contract
-        id: versions
         run: npm run version:validate
 
       - name: Verify service mirrors
-        id: service_verify
         run: npm run services:verify
 
       - name: Build Vercel-shaped services
-        id: service_build
         run: npm run services:build
-
-      - name: Record failed verification step
-        if: failure() && github.event_name == 'push' && github.actor != 'github-actions[bot]'
-        env:
-          NORMALIZE: ${{ steps.normalize.outcome }}
-          GATES: ${{ steps.gates.outcome }}
-          SYNC: ${{ steps.sync.outcome }}
-          LINT: ${{ steps.lint.outcome }}
-          TYPECHECK: ${{ steps.typecheck.outcome }}
-          ARCHITECTURE: ${{ steps.architecture.outcome }}
-          COVERAGE: ${{ steps.coverage.outcome }}
-          TESTS: ${{ steps.tests.outcome }}
-          VERSIONS: ${{ steps.versions.outcome }}
-          SERVICE_VERIFY: ${{ steps.service_verify.outcome }}
-          SERVICE_BUILD: ${{ steps.service_build.outcome }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > .architecture-finalization-status.md <<EOF
-          # Architecture finalization status
-
-          - normalize: ${NORMALIZE}
-          - gates: ${GATES}
-          - services-sync: ${SYNC}
-          - lint: ${LINT}
-          - typecheck: ${TYPECHECK}
-          - architecture: ${ARCHITECTURE}
-          - ci-coverage: ${COVERAGE}
-          - tests: ${TESTS}
-          - versions: ${VERSIONS}
-          - services-verify: ${SERVICE_VERIFY}
-          - services-build: ${SERVICE_BUILD}
-          EOF
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .architecture-finalization-status.md
-          git commit -m 'test(architecture): record final CI failure' || true
-          git push origin HEAD:main || true
