@@ -1,32 +1,19 @@
 import assert from "node:assert/strict";
 
-import {
-  SUPER_ADMIN_PHONE,
-  SUPER_ADMIN_UID,
-} from "@/features/auth";
 import { NotificationBroadcastService } from "../services/notification-broadcast-service.server";
+import { configureNotificationAdminAuthorization } from "../server/notification-admin-authorization";
 import { verifyNotificationGrant } from "@asol/notifications-core/server";
 import { registerNotificationsCorePorts } from "../notifications-core-ports";
 
-/**
- * Compose the way the application composes.
- *
- * Since the grant secret moved behind `@asol/notifications-core`'s server-config
- * port, reading it requires a registration that `registerAppServerPorts()`
- * performs from `src/instrumentation.ts` at server startup. This test imports
- * the service directly, so nothing had run instrumentation and every grant came
- * back unissued — `notificationGrantNotIssued`, with the collector swallowing
- * the underlying "port is not configured" throw.
- *
- * The running application was never affected. A test that exercises a composed
- * service has to compose it.
- */
 registerNotificationsCorePorts();
 
 const identity = {
-  uid: SUPER_ADMIN_UID,
-  phone: SUPER_ADMIN_PHONE,
+  uid: "super-admin-test",
+  phone: "+201000000000",
 };
+configureNotificationAdminAuthorization(
+  (candidate) => candidate.uid === identity.uid && candidate.phone === identity.phone,
+);
 
 const service = new NotificationBroadcastService({
   execute: async () => [
