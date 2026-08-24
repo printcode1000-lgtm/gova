@@ -1,0 +1,147 @@
+name: Complete Feature Public API Stage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/public-api-stage.yml
+
+permissions:
+  contents: write
+
+jobs:
+  complete:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Remove feature deep-import compatibility and finish public APIs
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          def read(path): return Path(path).read_text(encoding='utf-8')
+          def write(path, text): Path(path).write_text(text, encoding='utf-8')
+          def replace_once(text, old, new, label):
+              if old not in text:
+                  raise SystemExit(f'missing expected fragment: {label}')
+              return text.replace(old, new, 1)
+
+          # release-commands tests must consume google-play-console only through its public door.
+          p = 'src/features/release-commands/tests/release-commands.test.ts'
+          s = read(p)
+          old = '''import { ANDROID_RELEASE_BRANCH_HELP } from "../../google-play-console/presentation/android-release-runbook-copy";\nimport { ANDROID_RELEASE_PATHS } from "../../google-play-console/presentation/components/android-release-paths-data";\nimport {\n  ALL_BRANCH_HELP,\n  PUSH_BRANCH_HELP,\n  deployAllScenarios,\n  deployPushTargets,\n} from "../../google-play-console/presentation/deploy-runbook-copy";'''
+          new = '''import {\n  ALL_BRANCH_HELP,\n  ANDROID_RELEASE_BRANCH_HELP,\n  ANDROID_RELEASE_PATHS,\n  PUSH_BRANCH_HELP,\n  deployAllScenarios,\n  deployPushTargets,\n} from "@/features/google-play-console";'''
+          s = replace_once(s, old, new, 'release-commands public imports')
+          write(p, s)
+
+          # Remove feature-to-feature seam authority from the canonical feature model entirely.
+          p = 'packages/architecture-core/src/registry/application-features-registry.ts'
+          s = read(p)
+          seam_doc = '''  /**\n   * Justified deep-import seams into other features (rare). Used when a\n   * feature must not import another feature's public door to avoid cycles\n   * (e.g. notifications → auth internals). Empty for almost every feature.\n   */\n  deepImportSeams: readonly string[];\n'''
+          s = replace_once(s, seam_doc, '', 'ApplicationFeature.deepImportSeams field')
+          s, count = re.subn(r'^\s*deepImportSeams:\s*.*\n', '', s, flags=re.MULTILINE)
+          if count < 1:
+              raise SystemExit('no deepImportSeams registry entries removed')
+          write(p, s)
+
+          # Feature doors now have one rule: cross-feature access is public-door-only.
+          p = 'packages/architecture-core/src/checks/feature-door-contract.ts'
+          s = read(p)
+          s = s.replace(''' * Two exact, default-deny seam registries exist for the rare cases where a\n * public barrel would widen an import graph or where an already-established\n * cross-feature internal edge cannot safely be changed as part of an\n * architecture-only refactor:\n * - FEATURE_DEEP_IMPORT_SEAMS for feature-to-feature imports.\n * - COMPOSITION_FEATURE_SEAMS for isolated composition/service-mirror roots.\n *\n * Target-feature declarations alone never grant deep-import authority.\n''', ''' * Cross-feature feature imports have no exceptions: they must use a declared\n * public door. COMPOSITION_FEATURE_SEAMS remains a separate exact-path mechanism\n * only for isolated composition/service-mirror roots whose graph must stay narrow.\n''')
+          s = replace_once(s, '''import {\n  FEATURE_DEEP_IMPORT_SEAMS,\n  isFeatureDeepImportSeam,\n} from '../registry/feature-deep-import-seams-registry';\n''', '', 'feature seam import')
+          start = s.find('function validateFeatureDeepImportSeamRegistry(): void {')
+          end = s.find('function isDeclaredDoorPath', start)
+          if start < 0 or end < 0:
+              raise SystemExit('feature seam validator range not found')
+          s = s[:start] + s[end:]
+          s = s.replace('  validateFeatureDeepImportSeamRegistry();\n', '')
+          s = s.replace('  const usedFeatureSeams = new Map<string, Set<string>>();\n', '')
+
+          block = '''        const repoTarget = normalizeModulePath(`src/${specifier.slice(2)}`);\n        if (importerFeature && isFeatureDeepImportSeam(importerFeature, repoTarget)) {\n          const used = usedFeatureSeams.get(importerFeature) ?? new Set<string>();\n          used.add(repoTarget);\n          usedFeatureSeams.set(importerFeature, used);\n          continue;\n        }\n\n'''
+          s = replace_once(s, block, '', 'alias feature seam bypass')
+          block = '''      if (importerFeature && isFeatureDeepImportSeam(importerFeature, resolved)) {\n        const used = usedFeatureSeams.get(importerFeature) ?? new Set<string>();\n        used.add(resolved);\n        usedFeatureSeams.set(importerFeature, used);\n        continue;\n      }\n\n'''
+          s = replace_once(s, block, '', 'relative feature seam bypass')
+          loop_start = s.find('  for (const [importerFeature, seams] of Object.entries(FEATURE_DEEP_IMPORT_SEAMS)) {')
+          loop_end = s.find('\n}\n\nfunction validateDoorImport', loop_start)
+          if loop_start < 0 or loop_end < 0:
+              raise SystemExit('feature seam stale-authority loop not found')
+          s = s[:loop_start] + s[loop_end:]
+          s = s.replace(' If a deep edge is genuinely unavoidable, register only its exact source module in FEATURE_DEEP_IMPORT_SEAMS.', '')
+          s = s.replace(', or register only the exact unavoidable module in FEATURE_DEEP_IMPORT_SEAMS.', '.')
+          write(p, s)
+
+          # Remove exports and generated reference dedicated to the deleted compatibility mechanism.
+          p = 'packages/architecture-core/src/index.ts'
+          s = read(p)
+          s = replace_once(s, '''export {\n  FEATURE_DEEP_IMPORT_SEAMS,\n  isFeatureDeepImportSeam,\n  type FeatureDeepImportSeamOwner,\n} from './registry/feature-deep-import-seams-registry';\n''', '', 'architecture-core seam export')
+          s = replace_once(s, '''export {\n  GENERATED_FEATURE_SEAMS_DOC,\n  renderFeatureSeamsDoc,\n  writeFeatureSeamsDoc,\n  diffFeatureSeamsDoc,\n} from './docs/generate-feature-seams-doc';\n''', '', 'feature seams doc export')
+          write(p, s)
+
+          p = 'packages/architecture-core/src/checks/architecture-docs-drift-contract.ts'
+          s = read(p)
+          s = s.replace("import { diffFeatureSeamsDoc } from '../docs/generate-feature-seams-doc';\n", '')
+          s = s.replace('for (const diff of [...diffArchitectureDocs(), ...diffFeatureSeamsDoc()]) {', 'for (const diff of diffArchitectureDocs()) {')
+          write(p, s)
+
+          p = 'scripts/architecture/generate-architecture-docs.ts'
+          s = read(p)
+          s = s.replace('''  writeFeatureSeamsDoc,\n  GENERATED_FEATURE_SEAMS_DOC,\n''', '')
+          s = s.replace('writeFeatureSeamsDoc();\n', '')
+          s = s.replace('`Regenerated ${GENERATED_ARCHITECTURE_DOCS.length + 1} architecture reference docs.`', '`Regenerated ${GENERATED_ARCHITECTURE_DOCS.length} architecture reference docs.`')
+          s = s.replace('console.log(`  ${GENERATED_FEATURE_SEAMS_DOC}`);\n', '')
+          write(p, s)
+
+          for doomed in [
+              'packages/architecture-core/src/registry/feature-deep-import-seams-registry.ts',
+              'packages/architecture-core/src/docs/generate-feature-seams-doc.ts',
+              'docs/01-architecture/08-reference/feature-seams.md',
+          ]:
+              Path(doomed).unlink(missing_ok=True)
+
+          p = '.vercelignore'
+          s = read(p)
+          s = '\n'.join(line for line in s.splitlines() if 'feature-seams.md' not in line) + '\n'
+          write(p, s)
+
+          # No executable architecture source may retain the deleted mechanism.
+          forbidden = ('FEATURE_DEEP_IMPORT_SEAMS', 'deepImportSeams', 'feature-deep-import-seams-registry', 'generate-feature-seams-doc')
+          roots = [Path('packages/architecture-core/src'), Path('scripts/architecture')]
+          leftovers = []
+          for root in roots:
+              for f in root.rglob('*'):
+                  if not f.is_file() or f.suffix not in {'.ts', '.tsx'}: continue
+                  text = f.read_text(encoding='utf-8')
+                  for token in forbidden:
+                      if token in text: leftovers.append(f'{f}: {token}')
+          if leftovers:
+              raise SystemExit('deleted feature-seam mechanism still referenced:\n' + '\n'.join(leftovers))
+          PY
+      - name: Regenerate architecture references
+        run: npx tsx scripts/architecture/generate-architecture-docs.ts
+      - name: Verify Public API stage
+        run: |
+          npm run architecture:check
+          npm run test:architecture-core
+          npm run test:notifications
+          npm run test:release-commands
+          npm run test:compositions
+          npm run typecheck
+      - name: Commit verified stage and remove executor
+        shell: bash
+        run: |
+          git config user.name "printcode1000-lgtm"
+          git config user.email "print.code.1000@gmail.com"
+          git rm .github/workflows/public-api-stage.yml
+          git add -A
+          git commit -m "refactor(architecture): enforce feature public APIs without seams"
+          git push origin main
