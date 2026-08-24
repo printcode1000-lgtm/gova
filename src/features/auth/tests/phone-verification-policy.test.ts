@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { shouldBypassPhoneVerification } from '@/features/auth/utils/phone-verification-policy';
+import { shouldBypassPhoneVerification } from '@/features/auth/domain/phone-verification-policy';
 
 assert.equal(
   shouldBypassPhoneVerification({ developmentBuild: true }),
