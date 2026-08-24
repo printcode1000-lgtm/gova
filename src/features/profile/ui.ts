@@ -14,6 +14,7 @@ export * from './presentation/contact-visual-style';
 export * from './presentation/CustomRequestPageContent';
 export * from './presentation/ProfilePageContent';
 export * from './presentation/profile-save-controller';
+export * from './presentation/storefront-image-config';
 /** Browser client API — never on the application door (service mirrors walk export *). */
 export * from './services/profile-api-service';
 export * from './services/profile-service';
