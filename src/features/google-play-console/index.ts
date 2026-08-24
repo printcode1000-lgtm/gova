@@ -4,6 +4,14 @@ export {
   GOOGLE_PLAY_STORE_ASSETS_API,
   RELEASE_CONSOLE_ROUTE,
 } from "./config";
+export {
+  ALL_BRANCH_HELP,
+  PUSH_BRANCH_HELP,
+  deployAllScenarios,
+  deployPushTargets,
+} from "./presentation/deploy-runbook-copy";
+export { ANDROID_RELEASE_BRANCH_HELP } from "./presentation/android-release-runbook-copy";
+export { ANDROID_RELEASE_PATHS } from "./presentation/components/android-release-paths-data";
 export type {
   GooglePlayConsoleConfigStatus,
   GooglePlayConsoleEndpointResult,
