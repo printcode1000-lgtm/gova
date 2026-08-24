@@ -33,13 +33,13 @@ with declared doors before it has architectural authority. Run
 
 8. **Routes** — add to `ASOL_API_ROUTES`
 9. **API Service** — `product-api-service.ts` using `asolApi`
-10. **Client export** — `product-service.ts` re-exports adapter
-11. **Query keys** — stable constants in hooks
-12. **Hooks** — `useQuery` / `useMutation` + invalidation under feature hooks
-13. **UI** — consume hooks only; export presentation from `ui.ts`
+10. **Client export** — expose the supported client contract through the feature Public API
+11. **Query keys** — stable constants colocated with the feature presentation/application logic
+12. **Hooks** — `useQuery` / `useMutation` + invalidation inside the feature's canonical presentation layer
+13. **UI** — consume feature-local presentation/application APIs only; export supported presentation from `ui.ts`
 14. **Application door** — `index.ts` for non-UI/non-server consumers
 
-Cross-feature imports MUST use declared doors (`@/features/product`, `/ui`, `/server`), except documented `deepImportSeams` (e.g. notifications → auth). Composition packages (`mayImportApp: true`) may deep-import feature internals to wire ports.
+Cross-feature imports MUST use declared Public API doors only (`@/features/product`, `/ui`, `/server`). Feature-to-feature deep imports and relative traversal have no escape hatch. Isolated composition packages may use a deep application path only when that exact specifier is registered in `COMPOSITION_FEATURE_SEAMS`; target-wide and prefix-wide authority are forbidden.
 
 ## New database?
 
