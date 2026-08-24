@@ -20,6 +20,30 @@ Node/npm must match `package.json` `engines` (`node` `>=22 <25`, `npm` `>=11 <12
 
 Add credentials in the [Cloud Agents dashboard Secrets](https://cursor.com/dashboard/cloud-agents) so the VM can talk to Turso, R2, session signing, notification grants, and other runtime services. Do not commit `.env.local`.
 
+### Preferred: restore the portable archive
+
+The repository already commits `config/secret-archive-latest.zip.enc` and its sidecar
+recovery key. On a clean Cloud Agent VM the shortest path is one dashboard secret:
+
+| Secret | Purpose |
+| --- | --- |
+| `ASOL_SECRET_ARCHIVE_PASSWORD` | PKCS#8 passphrase that unwraps the recovery key |
+
+Then either:
+
+```bash
+npm run secrets:restore   # writes .env.local, .vercel/project.json, and other ignored secrets
+npm run deploy:all
+```
+
+or run `npm run deploy:all` alone — preflight calls `ensureReleaseSecretsRestored`, which runs
+`secrets:restore` when release tokens are missing and `ASOL_SECRET_ARCHIVE_PASSWORD` is set.
+
+Without that passphrase (and without a full set of Vercel/Turso/R2 env vars), `deploy:all` stops
+at credential checks: the archive cannot be opened and no `.env.local` exists.
+
+### Minimal secrets for local Web Push only
+
 For Web Push on `http://localhost:3001`, the dashboard (or `.env.local`) needs at least:
 
 - `ASOL_SESSION_SIGNING_SECRET` or `ASOL_NOTIFICATION_GRANT_SECRET` — signs notification grants on the main app

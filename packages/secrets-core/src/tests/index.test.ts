@@ -84,6 +84,20 @@ assert.ok(PORTABLE_ARCHIVE_PATH.endsWith('.zip.enc'));
 assert.equal(PORTABLE_RECOVERY_KEY_PATH, `${PORTABLE_ARCHIVE_PATH}.private-key.pem`);
 assert.equal(typeof isGitIgnored, 'function');
 
+// ── Non-interactive restore password ───────────────────────────────────────
+const passwordSource = readFileSync(
+  path.join(ROOT, 'packages/secrets-core/src/archive/archive-password.ts'),
+  'utf8',
+);
+assert.ok(
+  passwordSource.includes('ASOL_SECRET_ARCHIVE_PASSWORD'),
+  'Cloud Agents restore through ASOL_SECRET_ARCHIVE_PASSWORD.',
+);
+assert.ok(
+  /SECRET_ARCHIVE_PASSWORD_ENV_VAR/.test(passwordSource),
+  'The env var name is exported as a constant.',
+);
+
 // ── The CLIs stay CLIs ──────────────────────────────────────────────────────
 for (const cli of [
   'scripts/backup-project-secrets.ts',
@@ -95,6 +109,12 @@ for (const cli of [
     text.includes('@asol/secrets-core'),
     `${cli} must use the package rather than a second copy of the archive rules.`,
   );
+  if (cli.endsWith('restore-project-secrets.ts')) {
+    assert.ok(
+      text.includes('resolveArchivePassword'),
+      `${cli} must resolve the password through the package (env or TTY), not promptHidden alone.`,
+    );
+  }
   assert.ok(
     !/createCipheriv|createDecipheriv|publicEncrypt/.test(text),
     `${cli} performs its own cryptography. The envelope is held once, in the package.`,

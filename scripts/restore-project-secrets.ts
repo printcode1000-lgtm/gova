@@ -13,7 +13,7 @@ import {
 } from "@asol/secrets-core";
 import {
   decryptArchiveToZip,
-  promptHidden,
+  resolveArchivePassword,
 } from "@asol/secrets-core";
 
 async function extractZipSafely(zipPath: string, destinationRoot: string): Promise<void> {
@@ -53,7 +53,7 @@ async function main(): Promise<void> {
 
   try {
     console.log(`Restoring from: ${archivePath}`);
-    const password = await promptHidden("Private-key password: ");
+    const password = await resolveArchivePassword("Private-key password: ");
     await decryptArchiveToZip(archivePath, decryptedZipPath, password);
     await extractZipSafely(decryptedZipPath, restoreDirectory);
     const manifestPath = path.join(restoreDirectory, MANIFEST_FILE_NAME);
