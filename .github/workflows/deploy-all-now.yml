@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - '.deploy-all-trigger'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.deploy-all-trigger'
 
 permissions:
   contents: write
@@ -20,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
-      - name: Checkout main
+      - name: Checkout event source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
