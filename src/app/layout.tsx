@@ -12,6 +12,7 @@ import { PreferencesProvider } from "@/shared/preferences";
 import { ShellLayout } from "@/shared/layouts/ShellLayout";
 import { SafeAreaController } from "@/shared/layouts/SafeAreaController";
 import { AppQueryProvider } from "@/core/providers/query-provider";
+import { NotificationsFeatureBridge } from "@/core/composition/NotificationsFeatureBridge";
 import { SessionProvider } from "@/features/auth/ui";
 import { AuthLoginBootstrapController } from "@/features/auth/ui";
 import { LoginSuccessToast } from "@/features/auth/ui";
@@ -27,11 +28,6 @@ import { SuperAdminImpersonationBanner } from "@/features/super-admin/ui";
 import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
 import { FeatureFlagController } from "@/features/feature-flags";
-import {
-  NativePushController,
-  NotificationOptInController,
-  WebPushController,
-} from "@/features/notifications/ui";
 import { SpecialtyChatNotificationsController } from "@/features/specialty-chat";
 import { OrderNotificationsController } from "@/features/orders/ui";
 import dynamic from "next/dynamic";
@@ -91,41 +87,39 @@ export default function RootLayout({
         <InstallationBootstrap>
           <AppQueryProvider>
             <SessionProvider>
-              <AuthLoginBootstrapController />
-              <FavoritesProvider>
-                <PreferencesProvider>
-                  <SystemLogCollector />
-                  <FeatureFlagController />
-                  <NativePushController />
-                  <WebPushController />
-                  <NotificationOptInController />
-                  <SpecialtyChatNotificationsController />
-                  <OrderNotificationsController />
-                  <SystemLogErrorBoundary>
-                    <NetworkStatusProvider>
-                      <OtaUpdateProvider>
-                        {/* Owns the system insets for every route, shell or not. */}
-                        <SafeAreaController />
-                        <Suspense
-                          fallback={<ShellLayout>{children}</ShellLayout>}
-                        >
-                          <SnapshotProvider>
-                            <ShellLayout>{children}</ShellLayout>
-                          </SnapshotProvider>
-                        </Suspense>
-                        <NetworkStatusBanner />
-                        <LoginSuccessToast />
-                        <MobileBackButtonController />
-                        <ShareDeepLinkController />
-                        <VoiceInputController />
-                        <SuperAdminImpersonationBanner />
-                        <SuperAdminErrorFloatingButton />
-                        <DeveloperBadge />
-                      </OtaUpdateProvider>
-                    </NetworkStatusProvider>
-                  </SystemLogErrorBoundary>
-                </PreferencesProvider>
-              </FavoritesProvider>
+              <NotificationsFeatureBridge>
+                <AuthLoginBootstrapController />
+                <FavoritesProvider>
+                  <PreferencesProvider>
+                    <SystemLogCollector />
+                    <FeatureFlagController />
+                    <SpecialtyChatNotificationsController />
+                    <OrderNotificationsController />
+                    <SystemLogErrorBoundary>
+                      <NetworkStatusProvider>
+                        <OtaUpdateProvider>
+                          <SafeAreaController />
+                          <Suspense
+                            fallback={<ShellLayout>{children}</ShellLayout>}
+                          >
+                            <SnapshotProvider>
+                              <ShellLayout>{children}</ShellLayout>
+                            </SnapshotProvider>
+                          </Suspense>
+                          <NetworkStatusBanner />
+                          <LoginSuccessToast />
+                          <MobileBackButtonController />
+                          <ShareDeepLinkController />
+                          <VoiceInputController />
+                          <SuperAdminImpersonationBanner />
+                          <SuperAdminErrorFloatingButton />
+                          <DeveloperBadge />
+                        </OtaUpdateProvider>
+                      </NetworkStatusProvider>
+                    </SystemLogErrorBoundary>
+                  </PreferencesProvider>
+                </FavoritesProvider>
+              </NotificationsFeatureBridge>
             </SessionProvider>
           </AppQueryProvider>
         </InstallationBootstrap>
