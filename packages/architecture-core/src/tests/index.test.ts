@@ -5,6 +5,7 @@ import path from 'node:path';
 import {
   ALLOWED_PROCESS_ENV_FILES,
   LAYER_LABELS,
+  checkApplicationFeatureRegistryContract,
   checkFeatureDoorContract,
   classifyLayer,
   normalizePath,
@@ -138,6 +139,24 @@ assert.ok(
     assert.ok(
       messages.some((message) => /auth\/index|Deep cross-feature import/i.test(message)),
       'Undeclared /index feature alias must fail.',
+    );
+  } finally {
+    rmSync(probe, { force: true });
+    violations.length = 0;
+  }
+}
+
+// ── Feature roots contain only public doors + canonical layer directories ──
+{
+  const probe = path.join(ROOT, 'src/features/qr-code/__architecture_root_file_attack.ts');
+  writeFileSync(probe, 'export const bypass = true;\n');
+  try {
+    violations.length = 0;
+    checkApplicationFeatureRegistryContract();
+    const messages = violations.map((v) => `${v.layer} ${v.violation} ${v.file}`);
+    assert.ok(
+      messages.some((message) => /qr-code.*implementation file|root_file_attack/i.test(message)),
+      'A feature-root implementation file outside index/ui/server doors must fail.',
     );
   } finally {
     rmSync(probe, { force: true });
