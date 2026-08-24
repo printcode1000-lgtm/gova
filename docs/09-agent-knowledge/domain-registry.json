@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "domains": [
+    {
+      "id": "overview",
+      "docsPrefix": "docs/00-overview/",
+      "sourcePrefixes": ["package.json", ".env.example", "next.config.ts", "capacitor.config.ts"],
+      "readFirst": ["docs/00-overview/README.md", "docs/00-overview/technologies.md"]
+    },
+    {
+      "id": "architecture",
+      "docsPrefix": "docs/01-architecture/",
+      "sourcePrefixes": ["packages/architecture-core/", "packages/", "src/core/composition/"],
+      "readFirst": ["docs/01-architecture/README.md", "docs/01-architecture/02-packages/module-isolation-rules.md"]
+    },
+    {
+      "id": "data-and-storage",
+      "docsPrefix": "docs/02-data-and-storage/",
+      "sourcePrefixes": ["packages/data-core/", "packages/storage-core/", "src/features/data/", "src/features/storage/"],
+      "readFirst": ["docs/02-data-and-storage/README.md", "docs/02-data-and-storage/central-data-access.md"]
+    },
+    {
+      "id": "products-and-commerce",
+      "docsPrefix": "docs/03-products-and-commerce/",
+      "sourcePrefixes": ["packages/product-core/", "packages/catalog-core/", "src/features/product/", "src/features/product-card/", "src/features/product-search/", "src/features/cart/", "src/features/categories/", "src/features/seller-card/", "src/features/seller-discounts/", "src/features/orders/"],
+      "readFirst": ["docs/03-products-and-commerce/README.md"]
+    },
+    {
+      "id": "ui-components",
+      "docsPrefix": "docs/04-ui-components/",
+      "sourcePrefixes": ["src/app/", "src/components/", "src/features/", "packages/page-snapshot-core/", "packages/product-style-core/"],
+      "readFirst": ["docs/04-ui-components/README.md", "docs/04-ui-components/touch-interaction-policy.md", "docs/04-ui-components/page-snapshot-system.md"]
+    },
+    {
+      "id": "platform-features",
+      "docsPrefix": "docs/05-platform-features/",
+      "sourcePrefixes": ["src/features/", "packages/auth-core/", "packages/notifications-core/", "packages/map-core/", "packages/page-save-core/", "packages/native-core/"],
+      "readFirst": ["docs/05-platform-features/README.md"]
+    },
+    {
+      "id": "super-admin-and-operations",
+      "docsPrefix": "docs/06-super-admin-and-operations/",
+      "sourcePrefixes": ["src/features/super-admin/", "src/features/system-logs/", "src/features/data-health/", "packages/system-logs-core/", "packages/observability-core/"],
+      "readFirst": ["docs/06-super-admin-and-operations/README.md"]
+    },
+    {
+      "id": "mobile-and-release",
+      "docsPrefix": "docs/07-mobile-and-release/",
+      "sourcePrefixes": ["android/", "ios/", "fastlane/", "scripts/", "services/", "packages/ota-core/", "packages/native-core/", "packages/vercel-deploy-core/", "capacitor.config.ts"],
+      "readFirst": ["docs/07-mobile-and-release/README.md", "docs/07-mobile-and-release/deployment-targets.md", "docs/07-mobile-and-release/release-and-secrets.md"]
+    },
+    {
+      "id": "troubleshooting",
+      "docsPrefix": "docs/08-troubleshooting/",
+      "sourcePrefixes": [],
+      "readFirst": ["docs/08-troubleshooting/README.md"]
+    },
+    {
+      "id": "agent-knowledge",
+      "docsPrefix": "docs/09-agent-knowledge/",
+      "sourcePrefixes": ["scripts/docs/", "scripts/architecture/generate-architecture-docs.ts", "scripts/architecture-check.ts"],
+      "readFirst": ["docs/09-agent-knowledge/README.md", "docs/09-agent-knowledge/agent-protocol.md"]
+    }
+  ]
+}

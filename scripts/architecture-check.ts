@@ -2,6 +2,7 @@ import { runArchitectureCheck } from '@asol/architecture-core';
 import { validateStorageProfilesAtStartup } from '@asol/storage-core/server';
 
 import { validationEngine as categoryValidationEngine } from '../src/features/categories/infrastructure/validation.engine';
+import { validateAgentKnowledge } from './docs/check';
 import { verifyGeneratedGateContract } from './generated-gate-contract';
 
 /**
@@ -16,6 +17,10 @@ process.exit(
       {
         label: 'generated Build/Test gate contract failed',
         run: () => verifyGeneratedGateContract(),
+      },
+      {
+        label: 'agent knowledge documentation contract failed',
+        run: () => validateAgentKnowledge(),
       },
       {
         label: 'storage-profiles.json validation failed',
