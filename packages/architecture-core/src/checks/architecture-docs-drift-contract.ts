@@ -11,18 +11,45 @@ import {
   renderArchitectureDoc,
   type ArchitectureDocId,
 } from '../docs/generate-architecture-docs';
-import { diffFeatureSeamsDoc } from '../docs/generate-feature-seams-doc';
+import {
+  GENERATED_FEATURE_SEAMS_DOC,
+  diffFeatureSeamsDoc,
+  renderFeatureSeamsDoc,
+} from '../docs/generate-feature-seams-doc';
 import { ROOT, addViolation } from './architecture-types';
 
 const ARCHITECTURE_DOC_IDS = new Set<string>(GENERATED_ARCHITECTURE_DOCS);
 
-function firstMismatchDetail(path: string): string | null {
-  if (!ARCHITECTURE_DOC_IDS.has(path)) return null;
-  const absolute = join(ROOT, path);
-  if (!existsSync(absolute)) return null;
+function normalizeLineEndings(content: string): string {
+  return content.replace(/\r\n?/g, '\n');
+}
 
-  const expected = renderArchitectureDoc(path as ArchitectureDocId).split('\n');
-  const actual = readFileSync(absolute, 'utf8').split('\n');
+function expectedGeneratedDoc(path: string): string | null {
+  if (ARCHITECTURE_DOC_IDS.has(path)) {
+    return renderArchitectureDoc(path as ArchitectureDocId);
+  }
+  if (path === GENERATED_FEATURE_SEAMS_DOC) {
+    return renderFeatureSeamsDoc();
+  }
+  return null;
+}
+
+function differsOnlyByLineEndings(path: string): boolean {
+  const expected = expectedGeneratedDoc(path);
+  const absolute = join(ROOT, path);
+  if (expected === null || !existsSync(absolute)) return false;
+
+  const actual = readFileSync(absolute, 'utf8');
+  return actual !== expected && normalizeLineEndings(actual) === normalizeLineEndings(expected);
+}
+
+function firstMismatchDetail(path: string): string | null {
+  const expectedContent = expectedGeneratedDoc(path);
+  const absolute = join(ROOT, path);
+  if (expectedContent === null || !existsSync(absolute)) return null;
+
+  const expected = normalizeLineEndings(expectedContent).split('\n');
+  const actual = normalizeLineEndings(readFileSync(absolute, 'utf8')).split('\n');
   const max = Math.max(expected.length, actual.length);
   for (let index = 0; index < max; index += 1) {
     if (expected[index] === actual[index]) continue;
@@ -35,6 +62,8 @@ function firstMismatchDetail(path: string): string | null {
 
 export function checkArchitectureDocsDriftContract(): void {
   for (const diff of [...diffArchitectureDocs(), ...diffFeatureSeamsDoc()]) {
+    if (differsOnlyByLineEndings(diff.path)) continue;
+
     const detail = firstMismatchDetail(diff.path);
     addViolation(
       'Architecture Docs Drift',
