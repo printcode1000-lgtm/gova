@@ -20,12 +20,12 @@ import {
 import {
   applyBuyerDeliveryToOrder,
   applyCarrierToOrder,
-} from "../services/order-progression.server";
+} from "../server/services/order-progression.server";
 import {
   finalizeOrderActionResponse,
   type OrderActionNotificationContext,
-} from "../services/order-action-notifications.server";
-import { resolveOrderUpdateRecipients } from "../services/order-party-helpers.server";
+} from "../server/services/order-action-notifications.server";
+import { resolveOrderUpdateRecipients } from "../server/services/order-party-helpers.server";
 
 /**
  * Everything one order action does, in one place.

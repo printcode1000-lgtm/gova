@@ -25,10 +25,10 @@ export const SUB2MAIN_DECLARATION = {
   // with `@asol/storage-core`, which imports it.
   runtimeAssets: [],
   mirrorEntryPoints: [
-    'features/product/services/product-service.server.ts',
-    'features/profile/services/profile-service.bootstrap.server.ts',
-    'features/storage/services/image-storage-service.bootstrap.server.ts',
-    'features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server.ts',
+    'features/product/server/services/product-service.server.ts',
+    'features/profile/server/services/profile-service.bootstrap.server.ts',
+    'features/storage/server/services/image-storage-service.bootstrap.server.ts',
+    'features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server.ts',
     'app/api/products/route.ts',
     'app/api/profile/editor/route.ts',
     'app/api/profile/contacts/route.ts',

@@ -6,5 +6,5 @@
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
 export * from './application/order-action-grants.server';
 export * from './application/order-actions.server';
-export * from './services/order-progression.server';
+export * from './server/services/order-progression.server';
 /* END GENERATED FEATURE DOOR EXPORTS */

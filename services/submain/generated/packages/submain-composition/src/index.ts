@@ -1,13 +1,13 @@
 import { SUBMAIN_DECLARATION } from '@asol/account-declarations/submain';
 import * as serverEnv from '@/core/config/server-env';
-import { resolveCartPrices } from '@/features/cart/services/cart-catalogue-pricing.server';
-import { productSearchService } from '@/features/product-search/services/product-search-service.server';
-import { getEnabledProductSearchFields } from '@/features/product-search/services/product-search-fields.server';
+import { resolveCartPrices } from '@/features/cart/server/services/cart-catalogue-pricing.server';
+import { productSearchService } from '@/features/product-search/server/services/product-search-service.server';
+import { getEnabledProductSearchFields } from '@/features/product-search/server/services/product-search-fields.server';
 import { categoryService } from '@/features/categories';
 import { configureOrdersCore } from '@asol/orders-core';
-import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
-import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
-import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/data-core-specialty-catalog-port';
+import { isSuperAdminIdentity } from '@/features/auth/domain/super-admin';
+import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-core-runtime-config-ports';
+import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/ports/data-core-specialty-catalog-port';
 
 export type {
   ProductSearchFilters,

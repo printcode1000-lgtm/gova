@@ -29,8 +29,8 @@ export const PRODUCTS_DECLARATION = {
   // with `@asol/storage-core`, which imports it.
   runtimeAssets: [],
   mirrorEntryPoints: [
-    'features/product/services/product-service.server.ts',
-    'features/product/services/product-review-service.server.ts',
+    'features/product/server/services/product-service.server.ts',
+    'features/product/server/services/product-review-service.server.ts',
     'features/categories/index.ts',
     'core/config/server-env.ts',
   ],

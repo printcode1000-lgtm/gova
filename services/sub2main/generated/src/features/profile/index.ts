@@ -12,5 +12,5 @@ export * from './domain/profile-review.entity';
 export * from './domain/profile-specialties.entity';
 export * from './domain/store-details.entity';
 export * from './domain/store-images.entity';
-export * from './services/profile-service.interface';
+export * from './application/services/profile-service.interface';
 /* END GENERATED FEATURE DOOR EXPORTS */

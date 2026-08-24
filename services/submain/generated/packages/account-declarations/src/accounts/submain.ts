@@ -25,10 +25,10 @@ export const SUBMAIN_DECLARATION = {
   // with `@asol/storage-core`, which imports it.
   runtimeAssets: [],
   mirrorEntryPoints: [
-    'features/product-search/services/product-search-service.server.ts',
-    'features/product-search/services/product-search-products.server.ts',
-    'features/product-search/services/product-search-fields.server.ts',
-    'features/cart/services/cart-catalogue-pricing.server.ts',
+    'features/product-search/server/services/product-search-service.server.ts',
+    'features/product-search/server/services/product-search-products.server.ts',
+    'features/product-search/server/services/product-search-fields.server.ts',
+    'features/cart/server/services/cart-catalogue-pricing.server.ts',
     'app/api/orders/from-cart/route.ts',
     'app/api/orders/custom-request-from-profile/route.ts',
     'core/config/server-env.ts',

@@ -4,7 +4,7 @@
  * Push providers and the grant protocol need a handful of secrets that live in the
  * application env layer. This package must not import `@/core/config/*`, so it names the
  * getters it needs and the application registers them through
- * `src/features/notifications/notifications-core-ports.ts`.
+ * `src/features/notifications/ports/notifications-core-ports.ts`.
  *
  * Defaults fail closed: missing Web Push / APNs config returns null (providers already
  * treat that as "not configured"), while the grant secret and Firebase account throw —

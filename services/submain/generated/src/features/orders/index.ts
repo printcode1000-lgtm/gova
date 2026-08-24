@@ -4,6 +4,6 @@
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './order-data-refresh';
-export * from './orders-core-ports';
+export * from './application/order-data-refresh';
+export * from './ports/orders-core-ports';
 /* END GENERATED FEATURE DOOR EXPORTS */

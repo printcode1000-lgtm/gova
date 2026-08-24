@@ -58,7 +58,7 @@ export const PROFILES_DECLARATION = {
   // with `@asol/storage-core`, which imports it.
   runtimeAssets: [],
   mirrorEntryPoints: [
-    'features/profile/services/profile-service.bootstrap.server.ts',
+    'features/profile/server/services/profile-service.bootstrap.server.ts',
     'core/config/server-env.ts',
   ],
 } as const;

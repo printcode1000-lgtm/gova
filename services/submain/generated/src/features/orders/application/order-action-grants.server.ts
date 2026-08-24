@@ -1,1 +1,1 @@
-export * from "@/features/orders/services/order-action-grants.server";
+export * from "@/features/orders/server/services/order-action-grants.server";
