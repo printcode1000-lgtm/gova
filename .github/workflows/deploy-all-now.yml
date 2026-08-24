@@ -1,0 +1,120 @@
+name: deploy-all-now
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.deploy-all-trigger'
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: deploy-all-now
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Pin checkout to main branch
+        run: |
+          git fetch origin main
+          git checkout -B main origin/main
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies and 7-Zip
+        run: |
+          npm ci
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq p7zip-full
+
+      - name: Restore complete project secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '::add-mask::hgh101hgh101'
+          mkdir -p .secret-archive
+          cp config/secret-archive-latest.zip.enc.private-key.pem .secret-archive/private-key.pem
+          chmod 600 .secret-archive/private-key.pem
+          printf '%s\n' 'hgh101hgh101' | script -qefc 'npm run secrets:restore' /dev/null
+          test -f .env.local
+
+      - name: Link the GitHub main Vercel project
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .vercel
+          cat > .vercel/project.json <<'JSON'
+          {"orgId":"team_uksNmhOonimlPfmx4VNhsrqi","projectId":"prj_O5bt4dz6rKMXMhlWdHNCTOEhm8Li","projectName":"gova"}
+          JSON
+
+      - name: Mask restored secret values
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const dotenv = require('dotenv');
+          const env = dotenv.parse(fs.readFileSync('.env.local', 'utf8'));
+          for (const [key, value] of Object.entries(env)) {
+            if (!value) continue;
+            if (/(TOKEN|SECRET|PASSWORD|PRIVATE|AUTH|ACCESS_KEY|CREDENTIAL)/i.test(key)) {
+              process.stdout.write(`::add-mask::${String(value).replace(/\r?\n/g, '')}\n`);
+            }
+          }
+          NODE
+
+      - name: Full deploy all
+        id: deploy_all
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run deploy:all -- --allow-empty 2>&1 | tee /tmp/deploy-all.log
+
+      - name: Report deploy failure
+        if: failure() && steps.deploy_all.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo '# deploy:all automated run failed'
+            echo
+            echo "Trigger commit: ${GITHUB_SHA}"
+            echo
+            echo '```text'
+            grep -E '^\[deploy:all\]|FAILED|failed at branch|missing from environment|Missing required|Required Vercel runtime|Vercel token|ERROR|Error:' /tmp/deploy-all.log | tail -n 180 | sed -E 's/vcp_[A-Za-z0-9_-]+/[REDACTED_VERCEL_TOKEN]/g' || true
+            echo '```'
+          } > /tmp/deploy-failure.md
+          gh issue create --title "deploy:all failed ${GITHUB_SHA::12}" --body-file /tmp/deploy-failure.md
+
+      - name: Remove one-shot deploy runner after success
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+          git rm -f .github/workflows/deploy-all-now.yml .deploy-all-trigger
+          git commit -m 'chore(deploy): remove one-shot deploy runner'
+          git push origin main
