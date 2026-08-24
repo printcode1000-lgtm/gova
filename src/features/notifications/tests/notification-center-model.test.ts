@@ -11,7 +11,7 @@ import {
   NotificationTargets,
   NotificationTypes,
 } from "@asol/notifications-core";
-import { SPECIALTY_CHAT_KINDS } from "@/features/specialty-chat/domain/types";
+import { SPECIALTY_CHAT_KINDS } from "@/features/specialty-chat";
 import {
   buildActivityGroups,
   buildLocalChatConversations,
