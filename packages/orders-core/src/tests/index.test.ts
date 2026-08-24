@@ -1,9 +1,9 @@
 /**
  * `@asol/orders-core` contract test.
  *
- * Run by `npm run test:orders-core`, which is in the `build`, `build:static`, and `test` chains.
- * The test asserts that wiring itself: rule 3 has been missed three times in this repository by
- * writing a test that passed while gating nothing.
+ * Run by `npm run test:orders-core`. Release-chain coverage is owned centrally by the generated
+ * gate contract: core tests are selected into build/build:static and all test:* scripts into test.
+ * This test pins that central mechanism instead of duplicating the generated command strings.
  */
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
@@ -191,15 +191,39 @@ assert.ok(
     'never recognise the super admin.',
 );
 
-// ── Rule 3: the gate is wired into the release chains ───────────────────────
+// ── Rule 3: generated gates own release-chain coverage ──────────────────────
 const rootManifest = JSON.parse(readFileSync(path.join(REPO_ROOT, 'package.json'), 'utf8'));
-for (const chain of ['build', 'build:static', 'test']) {
-  assert.ok(
-    rootManifest.scripts[chain].includes('test:orders-core'),
-    `test:orders-core is missing from the ${chain} chain. A test that does not gate the release ` +
-      'does not satisfy rule 3.',
+assert.ok(rootManifest.scripts['test:orders-core'], 'The named orders-core test script must exist.');
+assert.equal(
+  rootManifest.scripts['gates:verify'],
+  'npx tsx scripts/generated-gate-contract.ts',
+  'Generated gate coverage must remain centrally verified.',
+);
+for (const [gate, entrypoint] of Object.entries({
+  build: 'npx tsx scripts/run-generated-gate.ts build',
+  'build:static': 'npx tsx scripts/run-generated-gate.ts build:static',
+  test: 'npx tsx scripts/run-generated-gate.ts test',
+})) {
+  assert.equal(
+    rootManifest.scripts[gate],
+    entrypoint,
+    `${gate} must stay behind the generated gate runner; coverage is verified by gates:verify.`,
   );
 }
+const generatedGateContract = readFileSync(
+  path.join(REPO_ROOT, 'scripts/generated-gate-contract.ts'),
+  'utf8',
+);
+assert.match(
+  generatedGateContract,
+  /const coreScripts = Object\.keys\(scripts\)\.filter\(\(name\) => \/\^test:\.\*-core\$\//,
+  'The central gate contract must continue discovering every test:*-core script.',
+);
+assert.match(
+  generatedGateContract,
+  /Generated \$\{gateId\} gate does not cover core test \$\{coreScript\}/,
+  'The central contract must fail when build/build:static omit a core test.',
+);
 
 console.log(
   `@asol/orders-core contract: 1 door, ${productionFiles.length} production files, ` +
