@@ -3,8 +3,15 @@ import { spawn, type ChildProcess } from "node:child_process";
 import type { VercelDeploymentReport } from "@asol/vercel-deploy-core";
 
 const REPORT_MARKER = "[ASOL_DEPLOY_REPORT] ";
+const DEPLOY_ONLY_NPM_CONFIG_KEYS = new Set([
+  "npm_config_phase",
+  "npm_config_from_phase",
+  "npm_config_revision",
+  "npm_config_runbook_branches",
+  "npm_config_list_phases",
+]);
 
-/** Strip debugger hooks so nested npm/tsx children do not lose piped stdout. */
+/** Strip debugger and deploy-CLI hooks so nested npm/tsx children receive only runtime config. */
 export function childProcessEnvForDeployment(
   overlay: Record<string, string> = {},
 ): NodeJS.ProcessEnv {
@@ -12,6 +19,9 @@ export function childProcessEnvForDeployment(
   delete env.NODE_OPTIONS;
   delete env.VSCODE_INSPECTOR_OPTIONS;
   delete env.VSCODE_NODE_CWD;
+  for (const key of Object.keys(env)) {
+    if (DEPLOY_ONLY_NPM_CONFIG_KEYS.has(key.toLowerCase())) delete env[key];
+  }
   return env;
 }
 
