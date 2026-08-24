@@ -15,7 +15,7 @@ import { assertNotificationEntity } from "../domain/notification-validation";
 import { notificationLog } from "../domain/notification-redaction";
 import { nativeLocalNotificationService } from "../infrastructure/native/native-local-notification.service";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
-import { runNotificationStoredExtensions } from "../public/notification-stored-extension";
+import { runNotificationStoredExtensions } from "./notification-stored-extension";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 import { notificationRouter } from "./notification-router";
