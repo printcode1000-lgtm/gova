@@ -11,12 +11,16 @@ import {
   NotificationTargets,
   NotificationTypes,
 } from "@asol/notifications-core";
-import { SPECIALTY_CHAT_KINDS } from "@/features/specialty-chat";
 import {
   buildActivityGroups,
   buildLocalChatConversations,
   conversationMessages,
 } from "../presentation/notification-center-model";
+
+const TEST_CHAT_KINDS = {
+  Request: "specialty_request",
+  Message: "specialty_message",
+} as const;
 
 function notification(
   id: string,
@@ -52,7 +56,7 @@ const request = notification(
   NotificationCategories.Chat,
   "2026-08-11T10:00:00.000Z",
   {
-    specialtyChatKind: SPECIALTY_CHAT_KINDS.Request,
+    specialtyChatKind: TEST_CHAT_KINDS.Request,
     requestId: "req_12345678",
     outgoing: true,
     subcategoryName: "ملابس نسائية",
@@ -64,7 +68,7 @@ const providerOneReply = notification(
   NotificationCategories.Chat,
   "2026-08-11T10:02:00.000Z",
   {
-    specialtyChatKind: SPECIALTY_CHAT_KINDS.Message,
+    specialtyChatKind: TEST_CHAT_KINDS.Message,
     requestId: "req_12345678",
     messageId: "msg_provider_one",
     peerUid: "provider-1",
@@ -78,7 +82,7 @@ const buyerReply = notification(
   NotificationCategories.Chat,
   "2026-08-11T10:03:00.000Z",
   {
-    specialtyChatKind: SPECIALTY_CHAT_KINDS.Message,
+    specialtyChatKind: TEST_CHAT_KINDS.Message,
     requestId: "req_12345678",
     messageId: "msg_buyer_reply",
     peerUid: "provider-1",
@@ -92,7 +96,7 @@ const providerTwoReply = notification(
   NotificationCategories.Chat,
   "2026-08-11T10:04:00.000Z",
   {
-    specialtyChatKind: SPECIALTY_CHAT_KINDS.Message,
+    specialtyChatKind: TEST_CHAT_KINDS.Message,
     requestId: "req_12345678",
     messageId: "msg_provider_two",
     peerUid: "provider-2",
