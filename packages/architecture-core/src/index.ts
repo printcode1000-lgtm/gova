@@ -37,11 +37,6 @@ export {
   type CompositionFeatureSeamOwner,
 } from './registry/composition-feature-seams-registry';
 export {
-  FEATURE_DEEP_IMPORT_SEAMS,
-  isFeatureDeepImportSeam,
-  type FeatureDeepImportSeamOwner,
-} from './registry/feature-deep-import-seams-registry';
-export {
   GENERATED_ARCHITECTURE_DOCS,
   renderArchitectureDoc,
   writeArchitectureDocs,
