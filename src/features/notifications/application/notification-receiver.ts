@@ -3,12 +3,12 @@
 import type { NotificationEntity } from "@asol/notifications-core";
 import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
 import { NotificationLifecycleEvents } from "@asol/notifications-core";
+import { notifyOrderDataRefreshFromNotification } from "@/features/orders";
 import { sanitizeNotificationEntity } from "../domain/notification-validation";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 import { notificationRouter } from "./notification-router";
-import { notifyOrderDataRefreshFromNotification } from '@/features/orders/order-data-refresh';
 
 /**
  * What happened to an inbound notification.
