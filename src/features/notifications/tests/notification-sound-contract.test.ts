@@ -20,7 +20,6 @@ if (!hasRootAndroidShell || !hasRootIosShell) {
 import { DEFAULT_CHANNELS, DEFAULT_CHANNEL_ID, DEFAULT_CHANNEL_SOUND } from '@asol/native-core';
 import {
   ANDROID_SOUND_FILE,
-  APPLE_SOUND_FILE,
   FCM_SOUND_RESOURCE,
   NotificationChannelIds,
   appleSoundFile,
