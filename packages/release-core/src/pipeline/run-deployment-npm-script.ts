@@ -60,13 +60,26 @@ export async function runDeploymentNpmScript(
     captureReport?: boolean;
   },
 ): Promise<VercelDeploymentReport | undefined> {
-  const npmCli = process.env.npm_execpath;
-  const command = npmCli
-    ? process.execPath
-    : process.platform === "win32"
-      ? "npm.cmd"
-      : "npm";
-  const args = npmCli ? [npmCli, "run", script] : ["run", script];
+  const npmCli = process.env.npm_execpath?.trim();
+  let command: string;
+  let args: string[];
+
+  if (npmCli) {
+    command = process.execPath;
+    args = [npmCli, "run", script];
+  } else if (process.platform === "win32") {
+    if (!/^[A-Za-z0-9:_-]+$/.test(script)) {
+      throw new DeploymentNpmScriptError(
+        `Unsafe npm script name for Windows command execution: ${script}.`,
+      );
+    }
+    command = process.env.ComSpec?.trim() || "cmd.exe";
+    args = ["/d", "/s", "/c", `npm.cmd run ${script}`];
+  } else {
+    command = "npm";
+    args = ["run", script];
+  }
+
   const capture = options.captureReport === true;
   const logPrefix = options.logPrefix;
 
