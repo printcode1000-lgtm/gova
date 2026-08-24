@@ -2,34 +2,18 @@
 
 import { useEffect } from "react";
 import { LOCALE_CHANGED_EVENT } from "@/shared/i18n";
-import { useSession } from "@/features/auth/ui";
 import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
 import { notificationDeviceTokenService } from "../application/device-token-service";
 import { notificationLog } from "../domain/notification-redaction";
+import { useNotificationRuntime } from "./NotificationRuntimeProvider";
 
-/**
- * Browser-side notification wiring.
- *
- * Forwards service-worker messages into window events, and re-registers the
- * device token when the UI language changes. The language part runs on every
- * platform and listens for the document-locale event rather than reading the
- * preferences context, so it stays independent of where it is mounted.
- *
- * This controller never prompts. The post-login opt-in dialog is shared by
- * every platform and lives in `NotificationOptInController`; `/settings` keeps
- * its manual toggle for turning the browser subscription on and off later.
- */
 export function WebPushController() {
-  const { session } = useSession();
+  const { identity: session } = useNotificationRuntime();
   const uid = session?.uid ?? "";
   const phone = session?.phone ?? "";
 
   useEffect(() => {
     if (!uid || typeof window === "undefined") return;
-    // A browser subscription survives sessions. Re-attach it whenever an
-    // authenticated user arrives so the server atomically replaces this
-    // user's Web row (and releases the token from any previous account)
-    // without showing another permission prompt.
     void notificationDeviceTokenService
       .refreshLocale(uid, phone)
       .catch((error) => {
@@ -43,8 +27,6 @@ export function WebPushController() {
       void notificationDeviceTokenService
         .refreshLocale(uid, phone)
         .catch((error) => {
-          // Not fatal: push keeps working, the text just stays in the previous
-          // language until the next registration.
           notificationLog.warn(
             "Failed to update the device language.",
             error,
