@@ -22,7 +22,7 @@
 | Super-admin page                    | `src/features/super-admin/presentation/SuperAdminHeroSliderPage.tsx`   |
 | Profile preview integration         | `src/features/profile/presentation/ProfilePageContent.tsx`             |
 | Profile image-editing tabs          | `src/features/profile/presentation/StoreIdentityCard.tsx`              |
-| Image management UI                 | `@asol/storage-image-manager-core` via `src/features/storage/presentation/StorageImageManager.tsx` |
+| Image management UI                 | `@asol/storage-image-manager-core` via `@/features/storage/ui` |
 
 ## Component modes
 

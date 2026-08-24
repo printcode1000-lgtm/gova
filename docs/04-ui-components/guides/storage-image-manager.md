@@ -34,9 +34,11 @@ padding around `StorageImageManager`.
 | Upload surface | `StorageImageSlot` | dashed inner border, `h-full w-full`, clipped previews |
 | Empty state | shared UI constants | compact icon + label, wrapped text allowed, always clipped inside the frame |
 
-Import the component only through
-`@/features/storage/presentation/StorageImageManager`. That wrapper injects session
+Import the component only through the storage feature UI door
+`@/features/storage/ui` (ADR-0007 sealed Feature Public API). That door re-exports
+`src/features/storage/presentation/StorageImageManager.tsx`, which injects session
 and translation ports, then renders the sealed core component unchanged.
+Do not import `@asol/storage-image-manager-core` from other features.
 
 Structural tests in `packages/storage-image-manager-core/src/tests/index.test.ts`
 and `src/features/storage/tests/image-upload-queue.test.ts` guard this contract.
@@ -91,7 +93,7 @@ Both `product-default` and `product-apparel-pets` use this strategy, so every pr
 import {
   StorageImageManager,
   parseStorageImageManagerConfig,
-} from "@/features/storage/presentation/StorageImageManager";
+} from "@/features/storage/ui";
 import imageConfig from "./image-configs/store-logo.image.json";
 
 const config = parseStorageImageManagerConfig(imageConfig);

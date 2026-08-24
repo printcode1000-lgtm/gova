@@ -318,22 +318,30 @@ async function main() {
       !allowedCoreHookWiring.has(filePath)
     ) {
       assert.fail(
-        `${path.relative(root, filePath)} must not import @asol/storage-image-manager-core directly; use @/features/storage/presentation/StorageImageManager`,
+        `${path.relative(root, filePath)} must not import @asol/storage-image-manager-core directly; use @/features/storage/ui`,
       );
     }
 
     const rendersStorageImageManager = /<StorageImageManager(?:\s|\/|>)/.test(source);
+    if (!rendersStorageImageManager) continue;
+
     if (
-      /from ["']@\/features\/storage\/components\/StorageImageManager["']/.test(source) ||
-      /from ["']@asol\/storage-image-manager-core["']/.test(source) ||
-      !rendersStorageImageManager
+      /from ["']@\/features\/storage\/components\/StorageImageManager["']/.test(source)
     ) {
-      continue;
+      assert.fail(
+        `${path.relative(root, filePath)} uses removed @/features/storage/components/StorageImageManager; import from @/features/storage/ui`,
+      );
     }
 
-    assert.fail(
-      `${path.relative(root, filePath)} renders StorageImageManager without importing the app wrapper door`,
-    );
+    const importsAppWrapperDoor =
+      /from ["']@\/features\/storage\/ui["']/.test(source) ||
+      /from ["']@\/features\/storage\/presentation\/StorageImageManager["']/.test(source);
+
+    if (!importsAppWrapperDoor) {
+      assert.fail(
+        `${path.relative(root, filePath)} renders StorageImageManager without importing the app wrapper door (@/features/storage/ui)`,
+      );
+    }
   }
 
   assert.doesNotMatch(
