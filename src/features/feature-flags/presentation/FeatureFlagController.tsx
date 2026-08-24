@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { NativeCore } from "@asol/native-core";
-import { featureFlags } from "./feature-flag-service";
-import { featureFlagApiService } from "./services/feature-flag-api-service";
+import { featureFlags } from "../application/feature-flag-service";
+import { featureFlagApiService } from "../application/services/feature-flag-api-service";
 
 /** How long a fetched flag set is trusted before the next refresh. */
 const REFRESH_INTERVAL_MS = 15 * 60 * 1000;

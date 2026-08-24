@@ -1,6 +1,6 @@
 /** Single responsibility: expose capability-aware remote feature flags. */
 export { featureFlags } from "./application/feature-flag-service";
-export { FeatureFlagController } from "./application/FeatureFlagController";
+export { FeatureFlagController } from "./presentation/FeatureFlagController";
 export {
   FEATURE_FLAGS,
   FEATURE_FLAG_KEYS,
