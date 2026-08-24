@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import * as React from "react";
 import {
   vehicleCatalogService,
@@ -80,10 +81,12 @@ export function ProductVehicleSpecs({
             className="flex items-center gap-3 rounded-xl border bg-muted/20 p-3"
           >
             {group.supportsImage ? (
-              <img
+              <Image
                 src={option && catalog ? optionImage(option, catalog.imageRoot) : FALLBACK_IMAGE}
                 alt=""
-                loading="lazy"
+                width={64}
+                height={64}
+                unoptimized
                 className="h-16 w-16 shrink-0 rounded-lg object-contain bg-background"
               />
             ) : null}
@@ -145,10 +148,12 @@ export function ProductVehicleSpecs({
                     }`}
                   >
                     {group.supportsImage ? (
-                      <img
+                      <Image
                         src={catalog ? optionImage(option, catalog.imageRoot) : FALLBACK_IMAGE}
                         alt=""
-                        loading="lazy"
+                        width={160}
+                        height={64}
+                        unoptimized
                         className="mx-auto h-16 w-full rounded-lg object-contain"
                       />
                     ) : null}
