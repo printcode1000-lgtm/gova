@@ -12,6 +12,10 @@ const IGNORED_DIRECTORIES = new Set([
   'build',
   'coverage',
   '.turbo',
+  '.gradle',
+  'DerivedData',
+  'Pods',
+  'xcuserdata',
 ]);
 
 export function normalizePath(value: string): string {

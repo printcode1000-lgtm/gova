@@ -1,22 +1,36 @@
 export type KnowledgeNodeKind =
   | 'document'
+  | 'domain'
   | 'package'
+  | 'external-dependency'
   | 'feature'
   | 'route'
   | 'service'
   | 'script'
   | 'test'
   | 'config'
-  | 'source';
+  | 'source'
+  | 'runtime'
+  | 'artifact'
+  | 'command'
+  | 'environment-key';
 
 export type KnowledgeEdgeKind =
   | 'contains'
   | 'imports'
+  | 'declares-dependency'
   | 'belongs-to'
   | 'references'
   | 'documents'
   | 'tests'
-  | 'related-to';
+  | 'related-to'
+  | 'affects-runtime'
+  | 'targets-runtime'
+  | 'produces'
+  | 'consumes'
+  | 'invokes'
+  | 'configured-by'
+  | 'uses-environment';
 
 export interface KnowledgeNode {
   id: string;
@@ -35,7 +49,7 @@ export interface KnowledgeEdge {
 }
 
 export interface KnowledgeGraph {
-  version: 1;
+  version: 2;
   nodes: KnowledgeNode[];
   edges: KnowledgeEdge[];
 }

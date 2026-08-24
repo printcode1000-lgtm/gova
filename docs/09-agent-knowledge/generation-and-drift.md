@@ -4,48 +4,79 @@
 
 ### Generated truth
 
-Facts that repository tooling can derive belong in generated output: package inventories and exports, source relationships, routes, services, tests, document inventory, operational command names, environment key names, and change-impact relationships.
+Facts tooling can derive belong in the live Knowledge Graph and optional generated views: packages/ownership, source and owner dependencies, external dependencies, routes, services, native source presence, tests, commands, command invocation, environment key names/consumers, runtime mappings, build artifacts, document inventory, and change-impact relationships.
 
 ### Intentional truth
 
-Reasons, policies, invariants, supported flows, failure semantics, operational choices, and historical decisions remain hand-written. A generator cannot infer why an invariant is required.
+Reasons, policies, invariants, supported flows, failure semantics, operational choices, runtime compatibility requirements, and historical decisions remain hand-written. A generator can discover that Android consumes `out/`; [Project Runtime Contract](./runtime-contract.md) explains why every agent must care.
 
-Do not maintain the same factual inventory manually and automatically. Link to the generated source instead.
+Do not maintain the same factual inventory manually and automatically. Hand-written docs link to generated/live facts instead.
 
-## Generation
+## Live Graph Is Binding
 
-The existing architecture generation entry point is extended repository-wide:
+`scripts/docs/repository-knowledge.ts` builds Knowledge Graph v2 from the **current checkout**. `scripts/docs/context.ts` uses that live graph, so read-before-edit context does not depend on a previously generated file existing.
+
+`scripts/docs/check.ts` validates the live graph on every `npm run architecture:check`, including:
+
+- mandatory node and edge classes;
+- all five application runtime nodes;
+- `.next` / `out/` producer-consumer topology;
+- Android/iOS source runtime mappings;
+- server route-handler exclusion from static/native runtime surfaces;
+- owner-level dependency edges;
+- owner-to-external dependency edges;
+- documentation-domain membership;
+- supported agent instruction parity;
+- Context Pack five-runtime visibility;
+- environment-assignment redaction.
+
+These checks are binding even in a checkout with no generated snapshots.
+
+## Snapshot Generation
+
+The existing architecture generation entry point is repository-wide:
 
 ```bash
 npm run architecture:docs
 ```
 
-It regenerates architecture reference documents first, then `docs/09-agent-knowledge/generated/` from the current checkout.
+It regenerates architecture references, then the optional cached views under `docs/09-agent-knowledge/generated/`.
 
-Generated outputs are deterministic: paths use `/`, collections are sorted, duplicates are removed, timestamps are omitted, and runtime environment values are never emitted.
+Generated output is deterministic: normalized `/` paths, stable sorting, de-duplication, no timestamps, and no environment values.
 
-## Validation
+## Generated Views
 
-`npm run architecture:check` includes the agent-knowledge documentation contract. The contract validates required entry points, domain-registry references, graph viability, and generated drift when generated snapshots are present.
-
-This gives two safety layers: live structural validation prevents a broken knowledge system, while snapshot comparison prevents committed generated references from silently lagging the repository.
-
-## Generated Directory
-
-`generated/` is overwrite-only. The generator produces:
+The generator can emit:
 
 - `repository-catalog.md`
 - `document-catalog.md`
 - `route-catalog.md`
 - `change-impact-index.md`
+- `runtime-catalog.md`
+- `command-catalog.md`
+- `environment-catalog.md`
+- `graph-health.md`
 - `operational-catalog.md`
 - `knowledge-graph.json`
 - `search-index.json`
 
-A human or agent must never repair one of these files directly. Change the repository source or the generator.
+When one of these files is committed, byte-for-byte drift becomes binding and `architecture:check` instructs the agent to regenerate it. A fresh checkout does not need a snapshot to obtain correct task context because the live graph is rebuilt from repository truth.
+
+## Secret-Safety Invariant
+
+Environment knowledge contains **names only**. `process.env.KEY`, `.env.example` key names, and root-command assignment names may become graph nodes. Values must not.
+
+The operational renderer replaces command assignments such as `KEY=value` with `KEY=<redacted>`, including values embedded in test commands. The contract has a redaction probe so this behavior cannot silently regress.
 
 ## Change Rules
 
-When changing a generator, update its contract/documented semantics, regenerate with `npm run architecture:docs`, run `npm run architecture:check`, and inspect meaningful generated diffs rather than accepting them blindly.
+When graph semantics change:
 
-When changing hand-written docs, ensure the document still points at live source-of-truth paths and does not introduce a second manual inventory for generated facts.
+1. update `knowledge-schema.md` and `coverage-contract.md` as applicable;
+2. update `runtime-contract.md` if runtime meaning/topology changes;
+3. update the scanner/model/renderer in one coherent change;
+4. run `npm run architecture:docs` when generated views are maintained in the checkout;
+5. run `npm run architecture:check` and inspect graph/catalog diffs;
+6. run relevant targeted tests/type/lint/build gates.
+
+When hand-written docs change, ensure links and source-of-truth paths still exist and avoid introducing parallel manual inventories.

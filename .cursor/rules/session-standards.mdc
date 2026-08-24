@@ -1,5 +1,5 @@
 ---
-description: Core session rules — no browser, Arabic replies, English docs only in docs/
+description: Core session rules — no browser, Arabic replies, English docs only in docs/, five-runtime context
 alwaysApply: true
 ---
 
@@ -25,29 +25,39 @@ These rules apply to **every session and every task** in this project. Do not sk
 
 - **All** project documentation lives **only** under `docs/`.
 - Documentation in `docs/` must be written in **English**.
-- Do **not** add or update documentation in other locations (README fragments, inline doc files outside `docs/`, Arabic docs in the repo) unless the user explicitly asks.
+- Do **not** add or update documentation in other locations unless the user explicitly asks.
 
-### Docs-first workflow (mandatory)
+### Docs/context-first workflow (mandatory)
 
 Before changing **any** part of the project:
 
-1. **Search `docs/`** for files relevant to that area (feature, package, API, module).
-2. **Read and understand** them — current behavior, constraints, architecture, and contracts.
-3. Only then start editing code.
+1. Run `npx tsx scripts/docs/context.ts <target-path-or-capability>` with the narrowest useful target.
+2. Read the returned Project Runtime Contract, target/runtime footprint, owners, Read First docs, impact, dependencies/consumers, tests, and guardrails.
+3. If the command cannot run, read `docs/README.md`, `docs/09-agent-knowledge/runtime-contract.md`, and the matching domain `README.md`.
+4. Only then start editing code.
 
-When making **any** modification to an area:
+When making any behavioral/API/data/architecture/configuration/runtime/operational change, update the matching `docs/` files in the same change. Pure typo/comment-only changes are exempt.
 
-- **Update the matching `docs/` files in the same change** whenever the edit affects behavior, APIs, data contracts, architecture, configuration, or operational steps for that area.
-- A pure typo or comment-only fix with zero behavioral impact does not require a doc update.
-- If no doc exists yet for that area and the change is non-trivial, add or extend the appropriate file under `docs/`.
+## 3. Five application runtimes — always evaluate all
 
-## 3. Single responsibility per file
+Gova must always be reasoned about across **Development, Web, Static `out/`, Android, and iOS**.
 
-On **every** create or edit (`src/`, `packages/`, `scripts/`, `services/`, etc.), each file must
-have **one responsibility only** — one clear job and one primary reason to change.
+- Web server builds use `.next`.
+- `npm run build:static` produces `out/`.
+- Production Android and iOS consume `out/` through Capacitor and add platform-native behavior.
+- App Router API handlers are not bundled into `out/`; static/native clients require a valid remote API boundary.
+- A target-specific graph footprint that omits one surface is an evidence gap, not permission to ignore it.
 
-- Do not combine unrelated concerns in one file (UI + API + domain logic + misc helpers).
-- When a change adds a second responsibility, **split** into separate files.
+Binding contract: `docs/09-agent-knowledge/runtime-contract.md`.
+
+Do not run `npm run build:static` merely as a generic verification step because it overwrites the release `out/` bundle.
+
+## 4. Single responsibility per file
+
+On every create or edit (`src/`, `packages/`, `scripts/`, `services/`, native source, etc.), each file must have **one responsibility only** — one clear job and one primary reason to change.
+
+- Do not combine unrelated concerns in one file.
+- When a change adds a second responsibility, split it.
 - Barrel/index files may re-export only; they must not hold implementation logic.
 
 See `AGENTS.md` §3a and `docs/01-architecture/02-packages/module-isolation-rules.md` rule 8.
@@ -57,8 +67,9 @@ See `AGENTS.md` §3a and `docs/01-architecture/02-packages/module-isolation-rule
 | Do | Don't |
 |---|---|
 | Reply in Arabic | Use browser/preview for verification |
-| Keep replies very brief and on-topic only | Pad answers with filler or unrelated context |
-| Read `docs/` for the area **before** editing | Start coding without reading relevant docs |
-| Update matching `docs/` in the same change | Leave docs stale after a behavior change |
-| Write docs in `docs/` in English | Put project docs outside `docs/` or write Arabic in `docs/` |
-| One responsibility per file; split when needed | Mix unrelated logic in one file |
+| Run the Context Pack before editing | Start coding from filenames/assumptions |
+| Evaluate Development/Web/out/Android/iOS | Treat shared code as web-only |
+| Update matching docs in the same change | Leave docs/runtime knowledge stale |
+| Write docs in `docs/` in English | Put project docs elsewhere |
+| Keep environment values out of docs/graph output | Paste secret/test assignment values into generated catalogs |
+| One responsibility per file | Mix unrelated logic in one file |

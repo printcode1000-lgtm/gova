@@ -15,6 +15,13 @@ export interface OperationalFacts {
   packageManager?: string;
 }
 
+export function redactEnvironmentAssignments(command: string): string {
+  return command.replace(
+    /(^|\s)([A-Z][A-Z0-9_]*)=(?:"[^"]*"|'[^']*'|[^\s]+)/g,
+    (_match, prefix: string, key: string) => `${prefix}${key}=<redacted>`,
+  );
+}
+
 export function collectOperationalFacts(): OperationalFacts {
   const manifest = readRepoJson<RootManifest>('package.json');
   const environmentKeys = new Set<string>();
@@ -27,7 +34,7 @@ export function collectOperationalFacts(): OperationalFacts {
 
   return {
     scripts: Object.entries(manifest.scripts || {})
-      .map(([name, command]) => ({ name, command }))
+      .map(([name, command]) => ({ name, command: redactEnvironmentAssignments(command) }))
       .sort((a, b) => a.name.localeCompare(b.name)),
     environmentKeys: [...environmentKeys].sort(),
     workspaces: [...(manifest.workspaces || [])].sort(),
@@ -52,7 +59,7 @@ export function renderOperationalCatalog(): string {
     '',
     '# Operational Catalog',
     '',
-    'This catalog exposes command and environment **names only**. Runtime environment values are never emitted.',
+    'This catalog exposes command and environment **names only**. Environment assignment values embedded in npm scripts are replaced with `<redacted>` and runtime environment values are never emitted.',
     '',
     '## Runtime',
     '',
