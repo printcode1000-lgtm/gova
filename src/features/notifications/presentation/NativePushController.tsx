@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "@/features/auth/presentation/SessionProvider";
+import { useSession } from "@/features/auth/ui";
 import { NativeCore } from "@asol/native-core";
 import { notificationsFacade } from "../public/notification-facade";
 import { notificationLog } from "../domain/notification-redaction";
