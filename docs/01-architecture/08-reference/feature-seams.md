@@ -1,35 +1,15 @@
 <!-- GENERATED FILE — DO NOT EDIT. Run `npm run architecture:docs`. -->
 
-# Exact Feature Seams
+# Composition Feature Seams
 
-This reference is generated from the machine-readable seam registries owned by `@asol/architecture-core`.
-Public feature doors remain the default boundary. A deep path has no authority unless it is registered exactly and remains in active use; stale entries fail `architecture:check`.
+Feature-to-feature dependencies have no deep-import exceptions: they must use declared Public API doors.
+The only exact application paths listed here belong to composition/service-mirror packages whose isolated import graphs must remain narrower than a broad feature barrel.
 
-Canonical sources:
-- `packages/architecture-core/src/registry/application-features-registry.ts` — declares allowed target-feature relationships, but grants no deep-path authority by itself.
-- `packages/architecture-core/src/registry/feature-deep-import-seams-registry.ts` — exact feature-to-feature source modules.
-- `packages/architecture-core/src/registry/composition-feature-seams-registry.ts` — exact composition/service-mirror source modules.
+## Source of Truth
 
-Current inventory: **10** exact feature-to-feature seam path(s) and **28** exact composition seam path(s).
+- `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`
 
-## Feature-to-feature exact seams
-
-| Importer feature | Exact target module |
-| --- | --- |
-| `advertisements` | `src/features/profile/presentation/image-configs/storefront-images.image.json` |
-| `notifications` | `src/features/orders/order-data-refresh` |
-| `notifications` | `src/features/auth/presentation/SessionProvider` |
-| `notifications` | `src/features/auth/application/auth-lifecycle-events` |
-| `notifications` | `src/features/specialty-chat/domain/types` |
-| `notifications` | `src/features/auth/utils/super-admin` |
-| `release-commands` | `src/features/google-play-console/domain/development-guard.server` |
-| `release-commands` | `src/features/google-play-console/presentation/android-release-runbook-copy` |
-| `release-commands` | `src/features/google-play-console/presentation/components/android-release-paths-data` |
-| `release-commands` | `src/features/google-play-console/presentation/deploy-runbook-copy` |
-
-## Composition/service-mirror exact seams
-
-These exceptions exist because isolated service mirrors follow the real import graph. Importing a broad application barrel can pull capabilities or npm dependencies into an account that must not own them.
+Current inventory: **28** exact composition seam path(s).
 
 | Composition package | Exact application module |
 | --- | --- |
@@ -64,9 +44,7 @@ These exceptions exist because isolated service mirrors follow the real import g
 
 ## Enforcement
 
-- Unknown deep imports fail.
-- Relative traversal cannot bypass composition seams.
-- A feature target declaration without an exact path fails.
-- An exact feature seam whose target relationship is not declared fails.
-- Missing, duplicate, or unused seam entries fail.
-- Declared public doors (`.`, `/ui`, `/server`) do not belong in these exception registries.
+- Feature-to-feature deep imports always fail.
+- Relative traversal cannot bypass feature Public API doors or composition seams.
+- Composition seams must be exact, existing, registered, and actively used.
+- Stale, duplicate, missing, or broad composition seam authority fails `architecture:check`.
