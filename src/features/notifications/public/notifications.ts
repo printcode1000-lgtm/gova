@@ -9,6 +9,10 @@ import {
   type NotificationCommandType,
 } from "./notification-commands";
 import { notificationsFacade, type NotificationsFacade } from "./notification-facade";
+import {
+  registerNotificationStoredExtension,
+  type NotificationStoredExtension,
+} from "./notification-stored-extension";
 
 /**
  * The notification module's public API.
@@ -29,16 +33,10 @@ export interface NotificationsApi extends NotificationsFacade {
   execute<TCommand extends NotificationCommand>(
     command: TCommand,
   ): Promise<NotificationCommandResult<TCommand>>;
+  /** Register behaviour owned by another feature without importing that feature here. */
+  registerStoredExtension(extension: NotificationStoredExtension): () => void;
 }
 
-/**
- * One handler per command, each checked against the result map.
- *
- * This shape is the point: the mapped type ties every handler's argument and
- * return type to its command, so a handler that returns the wrong thing — or a
- * command with no handler — is a compile error rather than a runtime surprise.
- * There is no `as` anywhere in the dispatch path.
- */
 type NotificationCommandHandlers = {
   [K in NotificationCommandType]: (
     command: Extract<NotificationCommand, { type: K }>,
@@ -91,13 +89,6 @@ const handlers: NotificationCommandHandlers = {
 
 const KNOWN_COMMAND_TYPES: ReadonlySet<string> = new Set(NOTIFICATION_COMMAND_TYPES);
 
-/**
- * Fail closed.
- *
- * A command is data, and data can arrive from anywhere a caller chooses to send
- * it from. An unrecognised `type` is rejected rather than ignored, so a typo or
- * a forged command cannot silently do nothing and be read as success.
- */
 function assertKnownCommand(command: unknown): asserts command is NotificationCommand {
   if (!command || typeof command !== "object" || Array.isArray(command)) {
     throw new NotificationError(
@@ -126,15 +117,10 @@ async function execute<TCommand extends NotificationCommand>(
   command: TCommand,
 ): Promise<NotificationCommandResult<TCommand>> {
   assertKnownCommand(command);
-  // `NotificationCommandHandlers` is what the compiler checks, and it is what
-  // makes this sound: every handler's argument and return type is tied to its
-  // own command by the mapped type, so a handler returning the wrong shape — or
-  // a command with no handler — fails to compile above. TypeScript cannot carry
-  // that correlation through a generic call site (TypeScript#30581), so the one
-  // narrowing in the module lives here, over a value the map already proved.
   return dispatch(command) as Promise<NotificationCommandResult<TCommand>>;
 }
 
 export const notifications: NotificationsApi = Object.assign(notificationsFacade, {
   execute,
+  registerStoredExtension: registerNotificationStoredExtension,
 });
