@@ -5,7 +5,7 @@ import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
 import { NotificationLifecycleEvents } from "@asol/notifications-core";
 import { sanitizeNotificationEntity } from "../domain/notification-validation";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
-import { runNotificationStoredExtensions } from "../public/notification-stored-extension";
+import { runNotificationStoredExtensions } from "./notification-stored-extension";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 
