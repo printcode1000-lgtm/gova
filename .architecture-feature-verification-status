@@ -1,6 +1,6 @@
-architecture=fail:1
+architecture=pass
 typecheck=pass
 architecture-core=pass
 compositions=pass
-overall=fail
-verified_commit=5ed288ec21a371868a1df9cd09a038dba1b16a3e
+overall=pass
+verified_commit=2952630120448e14f09422f762a3742760a2994b
