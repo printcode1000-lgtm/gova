@@ -72,7 +72,9 @@ for (const file of clientNotificationFiles) {
   assert.doesNotMatch(source, /\blocalStorage\b|\bsessionStorage\b/, `${file} bypasses AsolDB.`);
 }
 
-const serverChatFiles = filesBelow(path.join(root, "src/features/specialty-chat/services"));
+const serverChatFiles = filesBelow(
+  path.join(root, "src/features/specialty-chat/server/services"),
+);
 for (const file of serverChatFiles) {
   const source = readFileSync(file, "utf8");
   assert.doesNotMatch(
