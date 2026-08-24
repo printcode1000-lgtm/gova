@@ -418,13 +418,23 @@ for (const [, quoted] of iosPushValidator.matchAll(/["'`](packages\/[^"'`]+\.tsx
   assert.ok(existsSync(quoted),
     `validate-ios-push-policy.ts reads ${quoted}, which does not exist`);
 }
-const rootPackageScripts = (JSON.parse(await readFile("package.json", "utf8")) as {
-  scripts: Record<string, string>;
-}).scripts;
-for (const gate of ["test", "build", "build:static"]) {
-  assert.match(rootPackageScripts[gate] ?? "", /ios:push:validate/,
-    `the ${gate} script must run ios:push:validate; a validator no gate runs reports nothing`);
-}
+const generatedGatesSource = await readFile("scripts/generated-gates.ts", "utf8");
+assert.match(
+  generatedGatesSource,
+  /const commonBuildChecks:[\s\S]*?name: 'ios:push:validate'/,
+  "build and build:static must include ios:push:validate through the shared generated gate policy",
+);
+assert.match(
+  generatedGatesSource,
+  /test:\s*\[[\s\S]*?name: 'ios:push:validate'/,
+  "the generated test gate must include ios:push:validate",
+);
+const generatedGateContractSource = await readFile("scripts/generated-gate-contract.ts", "utf8");
+assert.match(
+  generatedGateContractSource,
+  /package\.json script \$\{gateId\} must be exactly/,
+  "generated gate entrypoints must remain contract-verified instead of hand-expanded in package.json",
+);
 
 const capBuildSource = await readFile("scripts/cap-build.ts", "utf8");
 assert.match(capBuildSource, /if \(noOta\) \{\s*await buildStoreRelease/,
