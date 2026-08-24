@@ -1,10 +1,10 @@
 import 'server-only';
 
 import type { RegistrationFormData, LoginFormData } from '@asol/auth-core';
-import type { UpdateProfileInput, UserProfile } from '../domain/profile.entity';
-import type { IAuthService, LoginResult } from './auth-service.interface';
+import type { UpdateProfileInput, UserProfile } from '../../domain/profile.entity';
+import type { IAuthService, LoginResult } from '../../services/auth-service.interface';
 import { traceServerLayer } from '@asol/observability-core/server';
-import { authOperationsService } from '../server/auth-core-bootstrap.server';
+import { authOperationsService } from '../auth-core-bootstrap.server';
 
 export class AuthService implements IAuthService {
   async register(formData: RegistrationFormData): Promise<{ uid: string }> {
