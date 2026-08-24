@@ -5,16 +5,13 @@ on:
     branches:
       - main
     paths:
-      - scripts/architecture/finalize-feature-layers.mjs
-      - scripts/architecture/finalize-feature-contract.mjs
-      - scripts/architecture/fix-notification-layering.mjs
       - .github/workflows/finalize-feature-layers.yml
 
 permissions:
   contents: write
 
 jobs:
-  canonicalize:
+  finalize:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,77 +30,34 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Canonicalize all 47 features
-        run: node scripts/architecture/finalize-feature-layers.mjs
-
-      - name: Remove legacy classifier paths
-        run: node scripts/architecture/finalize-feature-contract.mjs
-
-      - name: Canonicalize notification layering
-        run: node scripts/architecture/fix-notification-layering.mjs
-
-      - name: Regenerate architecture reference docs
-        run: npx tsx -e "import { writeArchitectureDocs } from '@asol/architecture-core'; writeArchitectureDocs();"
-
-      - name: Capture notification layering references
+      - name: Remove one-shot migration artifacts
         run: |
-          grep -RInE 'keyed-mutex|read-notification-locale|notification-api-service' src/features/notifications > .architecture-notification-reference-map || true
+          rm -f scripts/architecture/finalize-feature-layers.mjs
+          rm -f scripts/architecture/finalize-feature-contract.mjs
+          rm -f scripts/architecture/fix-notification-layering.mjs
+          rm -f .architecture-feature-verification-status
+          rm -f .architecture-notification-reference-map
+          rm -f .architecture-feature-*.log
+          rm -f .architecture-feature-canonicalization-verified
+          rm -f .github/workflows/finalize-feature-layers.yml
 
-      - name: Commit canonicalized tree
+      - name: Synchronize isolated service mirrors
+        run: npm run services:sync
+
+      - name: Architecture invariants
+        run: npm run architecture:check
+
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: Full repository test suite
+        run: npm test
+
+      - name: Commit verified clean tree
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          if ! git diff --cached --quiet; then
-            git commit -m "refactor(features): finalize canonical layer contracts"
-            git push origin HEAD:main
-          fi
-
-      - name: Verification matrix
-        id: matrix
-        continue-on-error: true
-        run: |
-          set +e
-          : > .architecture-feature-verification-status
-          rm -f .architecture-feature-*.log
-          overall=0
-          check() {
-            name="$1"
-            shift
-            log=".architecture-feature-${name}.log"
-            echo "== $name =="
-            "$@" > >(tee "$log") 2>&1
-            code=$?
-            if [ "$code" -eq 0 ]; then
-              echo "$name=pass" >> .architecture-feature-verification-status
-              rm -f "$log"
-            else
-              echo "$name=fail:$code" >> .architecture-feature-verification-status
-              overall=1
-            fi
-          }
-          check architecture npm run architecture:check
-          check typecheck npm run typecheck
-          check architecture-core npm run test:architecture-core
-          check compositions npm run test:compositions
-          echo "overall=$([ "$overall" -eq 0 ] && echo pass || echo fail)" >> .architecture-feature-verification-status
-          exit "$overall"
-
-      - name: Publish verification matrix
-        if: always()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ ! -f .architecture-feature-verification-status ]; then
-            printf '%s\n' "setup=fail" "overall=fail" > .architecture-feature-verification-status
-          fi
-          printf '%s\n' "verified_commit=$(git rev-parse HEAD)" >> .architecture-feature-verification-status
-          git add -A .architecture-feature-verification-status .architecture-feature-*.log .architecture-notification-reference-map 2>/dev/null || git add .architecture-feature-verification-status
-          if ! git diff --cached --quiet; then
-            git commit -m "test(architecture): record canonical verification matrix"
-            git push origin HEAD:main
-          fi
-
-      - name: Fail when verification failed
-        if: steps.matrix.outcome == 'failure'
-        run: exit 1
+          git diff --cached --quiet && { echo "Expected cleanup changes are missing."; exit 1; }
+          git commit -m "refactor(features): finalize verified canonical architecture"
+          git push origin HEAD:main
