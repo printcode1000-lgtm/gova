@@ -14,7 +14,7 @@ Current inventory: **28** exact composition seam path(s).
 | Composition package | Exact application module |
 | --- | --- |
 | `notifications-composition` | `@/features/data/data-core-runtime-config-ports` |
-| `orders-composition` | `@/features/auth/utils/super-admin` |
+| `orders-composition` | `@/features/auth/domain/super-admin` |
 | `orders-composition` | `@/features/data/data-core-runtime-config-ports` |
 | `products-composition` | `@/features/product/services/product-service.server` |
 | `products-composition` | `@/features/product/services/product-review-service.server` |
@@ -30,7 +30,7 @@ Current inventory: **28** exact composition seam path(s).
 | `submain-composition` | `@/features/cart/services/cart-catalogue-pricing.server` |
 | `submain-composition` | `@/features/product-search/services/product-search-service.server` |
 | `submain-composition` | `@/features/product-search/services/product-search-fields.server` |
-| `submain-composition` | `@/features/auth/utils/super-admin` |
+| `submain-composition` | `@/features/auth/domain/super-admin` |
 | `submain-composition` | `@/features/data/data-core-runtime-config-ports` |
 | `submain-composition` | `@/features/data/data-core-specialty-catalog-port` |
 | `submain-composition` | `@/features/product-search/domain/product-search.types` |

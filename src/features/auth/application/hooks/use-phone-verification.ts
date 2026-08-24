@@ -5,7 +5,7 @@ import { useTranslation } from '@/shared/i18n';
 import { publicEnv } from '@/core/config/public-env';
 import { asolApi, ASOL_API_ROUTES } from '@/core/api';
 import { reportPreAuthFailure } from '@/features/system-logs';
-import { shouldBypassPhoneVerification } from '@/features/auth/utils/phone-verification-policy';
+import { shouldBypassPhoneVerification } from '@/features/auth/domain/phone-verification-policy';
 
 const RESEND_COUNTDOWN = 60;
 const bypassPhoneVerification = shouldBypassPhoneVerification(publicEnv);

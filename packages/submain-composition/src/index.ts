@@ -5,7 +5,7 @@ import { productSearchService } from '@/features/product-search/services/product
 import { getEnabledProductSearchFields } from '@/features/product-search/services/product-search-fields.server';
 import { categoryService } from '@/features/categories';
 import { configureOrdersCore } from '@asol/orders-core';
-import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
+import { isSuperAdminIdentity } from '@/features/auth/domain/super-admin';
 import { registerDataCoreRuntimeConfigPorts } from '@/features/data/data-core-runtime-config-ports';
 import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/data-core-specialty-catalog-port';
 

@@ -6,5 +6,5 @@
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
 export * from './domain/profile.entity';
 export * from './domain/session.entity';
-export * from './utils/super-admin';
+export * from './domain/super-admin';
 /* END GENERATED FEATURE DOOR EXPORTS */

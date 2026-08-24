@@ -14,7 +14,7 @@ export const COMPOSITION_FEATURE_SEAMS = {
     '@/features/data/data-core-runtime-config-ports',
   ],
   'orders-composition': [
-    '@/features/auth/utils/super-admin',
+    '@/features/auth/domain/super-admin',
     '@/features/data/data-core-runtime-config-ports',
   ],
   'products-composition': [
@@ -36,7 +36,7 @@ export const COMPOSITION_FEATURE_SEAMS = {
     '@/features/cart/services/cart-catalogue-pricing.server',
     '@/features/product-search/services/product-search-service.server',
     '@/features/product-search/services/product-search-fields.server',
-    '@/features/auth/utils/super-admin',
+    '@/features/auth/domain/super-admin',
     '@/features/data/data-core-runtime-config-ports',
     '@/features/data/data-core-specialty-catalog-port',
     '@/features/product-search/domain/product-search.types',
