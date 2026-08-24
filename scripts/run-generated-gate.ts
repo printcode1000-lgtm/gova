@@ -19,8 +19,36 @@ if (contractErrors.length > 0) {
   process.exit(1);
 }
 
+function runNpmScript(script: string) {
+  const npmCli = process.env.npm_execpath?.trim();
+  if (npmCli) {
+    return spawnSync(process.execPath, [npmCli, 'run', script], {
+      cwd: process.cwd(),
+      env: process.env,
+      stdio: 'inherit',
+    });
+  }
+
+  if (process.platform === 'win32') {
+    if (!/^[A-Za-z0-9:_-]+$/.test(script)) {
+      throw new Error(`Unsafe npm script name for Windows command execution: ${script}`);
+    }
+    return spawnSync(process.env.ComSpec?.trim() || 'cmd.exe', ['/d', '/s', '/c', `npm.cmd run ${script}`], {
+      cwd: process.cwd(),
+      env: process.env,
+      stdio: 'inherit',
+      windowsHide: true,
+    });
+  }
+
+  return spawnSync('npm', ['run', script], {
+    cwd: process.cwd(),
+    env: process.env,
+    stdio: 'inherit',
+  });
+}
+
 const steps = resolveGeneratedGate(gateId);
-const npmBin = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 console.log(`[gate:${gateId}] ${steps.length} generated step(s).`);
 
 for (let index = 0; index < steps.length; index += 1) {
@@ -28,11 +56,7 @@ for (let index = 0; index < steps.length; index += 1) {
   const label = step.kind === 'npm-script' ? `npm run ${step.value}` : step.value;
   console.log(`\n[gate:${gateId}] ${index + 1}/${steps.length}: ${label}`);
   const result = step.kind === 'npm-script'
-    ? spawnSync(npmBin, ['run', step.value], {
-        cwd: process.cwd(),
-        env: process.env,
-        stdio: 'inherit',
-      })
+    ? runNpmScript(step.value)
     : spawnSync(step.value, {
         cwd: process.cwd(),
         env: process.env,
