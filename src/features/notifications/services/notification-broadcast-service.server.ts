@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { createHash, randomUUID } from 'node:crypto';
-import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
+import { isSuperAdminIdentity } from '@/features/auth';
 import type {
   BroadcastNotificationInput,
   BroadcastNotificationResult,
