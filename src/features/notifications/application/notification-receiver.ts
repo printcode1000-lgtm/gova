@@ -3,27 +3,15 @@
 import type { NotificationEntity } from "@asol/notifications-core";
 import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
 import { NotificationLifecycleEvents } from "@asol/notifications-core";
-import { notifyOrderDataRefreshFromNotification } from "@/features/orders";
 import { sanitizeNotificationEntity } from "../domain/notification-validation";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
+import { runNotificationStoredExtensions } from "../public/notification-stored-extension";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
-import { notificationRouter } from "./notification-router";
 
-/**
- * What happened to an inbound notification.
- *
- * `stored` is the acknowledgement signal. A caller that must tell a source the
- * notification was handled — the Android native inbox deleting a handoff
- * record, an extension acknowledging a receipt — may only do so when persistence
- * actually succeeded, so a crash between the two leaves the item to be
- * re-imported rather than silently lost.
- */
 export interface NotificationReceiveResult {
   notification: NotificationEntity;
-  /** True only when this call added a new row. */
   stored: boolean;
-  /** Present when it did not: why. */
   reason?: "duplicate" | "dismissed" | "placeholder" | "invalid";
 }
 
@@ -37,14 +25,6 @@ function emitChanged(uid: string, notificationId?: string): void {
 }
 
 export class NotificationReceiver {
-  /**
-   * Take one inbound notification into the centre.
-   *
-   * Analytics and the change event fire only for a notification that was
-   * actually stored: a duplicate delivery of the same push is not a second
-   * "received" event, and firing the change event for it would make the centre
-   * reload on every redelivery.
-   */
   async receiveForeground(notification: unknown): Promise<NotificationReceiveResult> {
     const sanitized = sanitizeNotificationEntity(notification);
     if (!sanitized) {
@@ -71,16 +51,11 @@ export class NotificationReceiver {
       event: NotificationLifecycleEvents.Displayed,
     });
     await notificationBadgeService.refresh(outcome.notification.uid);
-    notifyOrderDataRefreshFromNotification(outcome.notification);
+    await runNotificationStoredExtensions(outcome.notification);
     emitChanged(outcome.notification.uid, outcome.notification.id);
     return { notification: outcome.notification, stored: true };
   }
 
-  /**
-   * Take a batch — a native-inbox or legacy-tray import — under one storage lock.
-   *
-   * Returns only what was newly stored, which is what the importer acknowledges.
-   */
   async receiveBatch(
     uid: string,
     notifications: readonly unknown[],
@@ -103,12 +78,10 @@ export class NotificationReceiver {
         notificationId: notification.id,
         event: NotificationLifecycleEvents.Displayed,
       });
+      await runNotificationStoredExtensions(notification);
     }
     if (stored.length > 0) {
       await notificationBadgeService.refresh(uid);
-      for (const notification of stored) {
-        notifyOrderDataRefreshFromNotification(notification);
-      }
       emitChanged(uid);
     }
     const storedIds = new Set(stored.map((item) => item.id));
