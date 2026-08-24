@@ -47,21 +47,48 @@ jobs:
             git push origin HEAD:main
           fi
 
-      - name: Architecture invariants
-        run: npm run architecture:check
-
-      - name: TypeScript
-        run: npm run typecheck
-
-      - name: Architecture attacks
-        run: npm run test:architecture-core
-
-      - name: Composition boundaries
-        run: npm run test:compositions
-
-      - name: Attest verification
+      - name: Verification matrix
+        id: matrix
+        continue-on-error: true
         run: |
-          printf '%s\n' "verified $(git rev-parse HEAD)" > .architecture-feature-canonicalization-verified
-          git add .architecture-feature-canonicalization-verified
-          git commit -m "test(architecture): attest canonical feature verification"
-          git push origin HEAD:main
+          set +e
+          : > .architecture-feature-verification-status
+          overall=0
+          check() {
+            name="$1"
+            shift
+            echo "== $name =="
+            "$@"
+            code=$?
+            if [ "$code" -eq 0 ]; then
+              echo "$name=pass" >> .architecture-feature-verification-status
+            else
+              echo "$name=fail:$code" >> .architecture-feature-verification-status
+              overall=1
+            fi
+          }
+          check architecture npm run architecture:check
+          check typecheck npm run typecheck
+          check architecture-core npm run test:architecture-core
+          check compositions npm run test:compositions
+          echo "overall=$([ "$overall" -eq 0 ] && echo pass || echo fail)" >> .architecture-feature-verification-status
+          exit "$overall"
+
+      - name: Publish verification matrix
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ ! -f .architecture-feature-verification-status ]; then
+            printf '%s\n' "setup=fail" "overall=fail" > .architecture-feature-verification-status
+          fi
+          printf '%s\n' "verified_commit=$(git rev-parse HEAD)" >> .architecture-feature-verification-status
+          git add .architecture-feature-verification-status
+          if ! git diff --cached --quiet; then
+            git commit -m "test(architecture): record canonical verification matrix"
+            git push origin HEAD:main
+          fi
+
+      - name: Fail when verification failed
+        if: steps.matrix.outcome == 'failure'
+        run: exit 1
