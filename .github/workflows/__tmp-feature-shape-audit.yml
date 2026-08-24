@@ -1,0 +1,36 @@
+name: Temporary Feature Shape Audit
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    if: github.event.head_commit.message == 'chore: audit feature canonical shape'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit feature top-level shape
+        shell: python
+        run: |
+          from pathlib import Path
+          canonical_dirs = {'domain','application','infrastructure','presentation','ports','server','tests'}
+          door_files = {'index.ts','ui.ts','server.ts'}
+          root = Path('src/features')
+          print('FEATURE_SHAPE_AUDIT_BEGIN')
+          feature_count = 0
+          violation_count = 0
+          for feature in sorted(p for p in root.iterdir() if p.is_dir()):
+              feature_count += 1
+              dirs = sorted(p.name for p in feature.iterdir() if p.is_dir())
+              files = sorted(p.name for p in feature.iterdir() if p.is_file())
+              legacy_dirs = [d for d in dirs if d not in canonical_dirs]
+              extra_files = [f for f in files if f not in door_files]
+              if legacy_dirs or extra_files:
+                  violation_count += len(legacy_dirs) + len(extra_files)
+                  print(f'{feature.name}: legacy_dirs={legacy_dirs}; root_files={extra_files}')
+          print(f'FEATURES={feature_count}; VIOLATIONS={violation_count}')
+          print('FEATURE_SHAPE_AUDIT_END')
