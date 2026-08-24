@@ -2,7 +2,7 @@ import 'server-only';
 
 import type { RegistrationFormData, LoginFormData } from '@asol/auth-core';
 import type { UpdateProfileInput, UserProfile } from '../../domain/profile.entity';
-import type { IAuthService, LoginResult } from '../../services/auth-service.interface';
+import type { IAuthService, LoginResult } from '../../ports/auth-service.interface';
 import { traceServerLayer } from '@asol/observability-core/server';
 import { authOperationsService } from '../auth-core-bootstrap.server';
 

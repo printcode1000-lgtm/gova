@@ -6,14 +6,11 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from '@/shared/i18n';
-import {
-  createRegistrationSchema,
-  type RegistrationFormData,
-} from '@asol/auth-core';
+import { createRegistrationSchema, type RegistrationFormData } from '@asol/auth-core';
 import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
 import { useSession } from '@/features/auth/presentation/SessionProvider';
-import { authService } from '../services/auth-service';
-import { sessionService } from '../services/session-service';
+import { authService } from '../application/services/auth-service';
+import { sessionService } from '../application/services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@asol/observability-core';
 import { reportSystemIssue } from '@asol/system-logs-core';
@@ -26,38 +23,22 @@ export function useRegister() {
   const router = useRouter();
   const { endGuestSession } = useGuestSession();
   const { setSession } = useSession();
-
   const registrationSchema = useMemo(() => createRegistrationSchema(t), [t]);
 
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
-    defaultValues: {
-      phone: '',
-      password: '',
-      confirmPassword: '',
-      email: '',
-      phoneVerified: false,
-    },
+    defaultValues: { phone: '', password: '', confirmPassword: '', email: '', phoneVerified: false },
     mode: 'onChange',
   });
-
   const password = useWatch({ control: form.control, name: 'password' }) ?? '';
-  const phoneVerified =
-    useWatch({ control: form.control, name: 'phoneVerified' }) ?? false;
+  const phoneVerified = useWatch({ control: form.control, name: 'phoneVerified' }) ?? false;
 
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
       const { uid } = await authService.register(data);
       if (!uid?.trim()) throw new Error('invalidRegistrationResponse');
-      const loginResult = await authService.login({
-        phone: data.phone,
-        password: data.password,
-      });
-      if (
-        !loginResult.uid?.trim() ||
-        !loginResult.phone?.trim() ||
-        !loginResult.sessionToken?.trim()
-      ) {
+      const loginResult = await authService.login({ phone: data.phone, password: data.password });
+      if (!loginResult.uid?.trim() || !loginResult.phone?.trim() || !loginResult.sessionToken?.trim()) {
         throw new Error('invalidPostRegistrationLoginResponse');
       }
       return sessionService.saveSession({
@@ -68,13 +49,7 @@ export function useRegister() {
         sessionToken: loginResult.sessionToken,
       });
     },
-    meta: authMonitorMeta(
-      'useRegister',
-      'RegistrationPageContent',
-      'Register',
-      'INSERT',
-    ),
-
+    meta: authMonitorMeta('useRegister', 'RegistrationPageContent', 'Register', 'INSERT'),
     onSuccess: (session) => {
       try {
         endGuestSession();
@@ -87,51 +62,17 @@ export function useRegister() {
       }
     },
     onError: (error) => {
-      const expectedConflict =
-        error instanceof Error &&
-        ['phoneAlreadyRegistered', 'emailAlreadyRegistered'].includes(error.message);
-      reportPreAuthFailure(
-        expectedConflict ? 'registration-identity-rejected' : 'register-and-create-session',
-        error,
-        {},
-        expectedConflict ? 'warn' : 'error',
-      );
-      reportSystemIssue({
-        level: expectedConflict ? 'warning' : 'error',
-        feature: 'Authentication',
-        operation: 'register-and-create-session',
-        error,
-        page: '/registration',
-      });
+      const expectedConflict = error instanceof Error && ['phoneAlreadyRegistered', 'emailAlreadyRegistered'].includes(error.message);
+      reportPreAuthFailure(expectedConflict ? 'registration-identity-rejected' : 'register-and-create-session', error, {}, expectedConflict ? 'warn' : 'error');
+      reportSystemIssue({ level: expectedConflict ? 'warning' : 'error', feature: 'Authentication', operation: 'register-and-create-session', error, page: '/registration' });
     },
   });
 
-  const error = useMemo(() => {
-    if (!mutation.error) return null;
-    return formatApiError(mutation.error);
-  }, [mutation.error, formatApiError]);
-
+  const error = useMemo(() => mutation.error ? formatApiError(mutation.error) : null, [mutation.error, formatApiError]);
   const onSubmit = form.handleSubmit(
-    (data) => {
-      startNewFlow();
-      mutation.mutate(data);
-    },
-    (fieldErrors) => {
-      reportPreAuthFailure(
-        'validate-registration-form',
-        new Error('registrationFormInvalid'),
-        { fields: Object.keys(fieldErrors).sort().join(',') },
-        'warn',
-      );
-    },
+    (data) => { startNewFlow(); mutation.mutate(data); },
+    (fieldErrors) => reportPreAuthFailure('validate-registration-form', new Error('registrationFormInvalid'), { fields: Object.keys(fieldErrors).sort().join(',') }, 'warn'),
   );
 
-  return {
-    form,
-    isSubmitting: mutation.isPending,
-    error,
-    password,
-    phoneVerified,
-    onSubmit,
-  };
+  return { form, isSubmitting: mutation.isPending, error, password, phoneVerified, onSubmit };
 }

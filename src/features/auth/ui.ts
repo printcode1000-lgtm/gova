@@ -18,5 +18,5 @@ export * from './presentation/PhoneVerification';
 export * from './presentation/RegistrationPageContent';
 export * from './presentation/SessionProvider';
 /** Browser session / auth lifecycle — never on the application door (mirror walk). */
-export * from './services/session-service';
+export * from './application/services/session-service';
 /* END GENERATED FEATURE DOOR EXPORTS */

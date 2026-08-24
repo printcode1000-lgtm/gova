@@ -20,7 +20,7 @@ import { usePageSaveRegistration } from "@/features/page-save/ui";
 import { isSuperAdmin } from "@/features/auth";
 import { clearAllClientStorage } from '@/features/app-reset';
 import { useTranslation } from "@/shared/i18n";
-import { accountDeletionApiService } from "@/features/auth/services/account-deletion-api-service";
+import { accountDeletionApiService } from "../application/services/account-deletion-api-service";
 import { notifications } from "@/features/notifications";
 
 const COPY = {

@@ -9,8 +9,8 @@ import { useTranslation } from '@/shared/i18n';
 import { createLoginSchema, type LoginFormData } from '@asol/auth-core';
 import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
 import { useSession } from '@/features/auth/presentation/SessionProvider';
-import { authService } from '../services/auth-service';
-import { sessionService } from '../services/session-service';
+import { authService } from '../application/services/auth-service';
+import { sessionService } from '../application/services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@asol/observability-core';
 import { reportSystemIssue } from '@asol/system-logs-core';
@@ -59,50 +59,22 @@ export function useLogin() {
       }
     },
     onError: (error) => {
-      if (
-        error instanceof Error &&
-        ['userNotFound', 'invalidPassword'].includes(error.message)
-      ) {
+      if (error instanceof Error && ['userNotFound', 'invalidPassword'].includes(error.message)) {
         reportPreAuthFailure('login-credentials-rejected', error, {}, 'warn');
         return;
       }
-
       reportPreAuthFailure('login', error);
-
-      reportSystemIssue({
-        level: 'error',
-        feature: 'Authentication',
-        operation: 'login',
-        error,
-        page: '/login',
-      });
+      reportSystemIssue({ level: 'error', feature: 'Authentication', operation: 'login', error, page: '/login' });
     },
   });
 
-  const error = useMemo(() => {
-    if (!mutation.error) return null;
-    return formatApiError(mutation.error);
-  }, [mutation.error, formatApiError]);
-
+  const error = useMemo(() => mutation.error ? formatApiError(mutation.error) : null, [mutation.error, formatApiError]);
   const onSubmit = form.handleSubmit(
-    (data) => {
-      startNewFlow();
-      mutation.mutate(data);
-    },
+    (data) => { startNewFlow(); mutation.mutate(data); },
     (fieldErrors) => {
-      reportPreAuthFailure(
-        'validate-login-form',
-        new Error('loginFormInvalid'),
-        { fields: Object.keys(fieldErrors).sort().join(',') },
-        'warn',
-      );
+      reportPreAuthFailure('validate-login-form', new Error('loginFormInvalid'), { fields: Object.keys(fieldErrors).sort().join(',') }, 'warn');
     },
   );
 
-  return {
-    form,
-    isSubmitting: mutation.isPending,
-    error,
-    onSubmit,
-  };
+  return { form, isSubmitting: mutation.isPending, error, onSubmit };
 }

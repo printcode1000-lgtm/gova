@@ -8,8 +8,8 @@ import {
   parseStoredSession,
   type SaveSessionInput,
   type UserSession,
-} from '../domain/session.entity';
-import type { ISessionService } from './session-service.interface';
+} from '../../domain/session.entity';
+import type { ISessionService } from '../../ports/session-service.interface';
 
 function toStoredSession(input: SaveSessionInput): UserSession {
   const email = input.email?.trim();

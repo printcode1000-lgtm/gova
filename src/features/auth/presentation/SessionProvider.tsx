@@ -11,7 +11,7 @@ import {
 } from 'react';
 
 import { isLoggedIn, type UserSession } from '../domain/session.entity';
-import { sessionService } from '../services/session-service';
+import { sessionService } from '../application/services/session-service';
 import { clearImageUploadClientState } from '@/features/storage';
 import { reportPreAuthFailure } from '@/features/system-logs';
 import { setNotificationGrantDeliveryIdentity } from '@/features/notifications';
@@ -48,9 +48,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         if (active) setIsLoading(false);
       }
     })();
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, [refreshSession]);
 
   useEffect(() => {
@@ -60,8 +58,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       });
       setSessionState(null);
     };
-    window.addEventListener("asol-session-invalid", clearInvalidSession);
-    return () => window.removeEventListener("asol-session-invalid", clearInvalidSession);
+    window.addEventListener('asol-session-invalid', clearInvalidSession);
+    return () => window.removeEventListener('asol-session-invalid', clearInvalidSession);
   }, []);
 
   const setSession = useCallback((next: UserSession | null) => {
@@ -70,24 +68,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (session !== null && isLoggedIn(session)) {
-      setNotificationGrantDeliveryIdentity({
-        uid: session.uid,
-        phone: session.phone,
-      });
+      setNotificationGrantDeliveryIdentity({ uid: session.uid, phone: session.phone });
       return;
     }
     setNotificationGrantDeliveryIdentity(null);
   }, [session]);
 
   const value = useMemo(
-    () => ({
-      session,
-      isLoggedIn: isLoggedIn(session),
-      isGuest: !isLoggedIn(session),
-      isLoading,
-      refreshSession,
-      setSession,
-    }),
+    () => ({ session, isLoggedIn: isLoggedIn(session), isGuest: !isLoggedIn(session), isLoading, refreshSession, setSession }),
     [session, isLoading, refreshSession, setSession],
   );
 
@@ -96,8 +84,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
 export function useSession(): SessionContextValue {
   const ctx = useContext(SessionContext);
-  if (!ctx) {
-    throw new Error('useSession must be used within SessionProvider');
-  }
+  if (!ctx) throw new Error('useSession must be used within SessionProvider');
   return ctx;
 }
