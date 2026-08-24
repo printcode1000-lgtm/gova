@@ -6,6 +6,7 @@
  * - Forbidden application roots (`src/modules`, …) must not exist
  * - Only APPROVED_SRC_ROOTS may appear as top-level directories under `src/`
  * - Feature top-level folders must use FEATURE_INTERNAL_VOCABULARY
+ * - Feature-root files are limited to the declared public doors (`index`, `ui`, `server`)
  */
 import { existsSync, readdirSync } from 'fs';
 import { join } from 'path';
@@ -24,6 +25,7 @@ const APPROVED = new Set<string>(APPROVED_SRC_ROOTS);
 const FORBIDDEN = new Set<string>(FORBIDDEN_APP_ROOTS);
 const PACKAGE_NAMES = new Set(CAPABILITY_PACKAGES.map((p) => p.name));
 const FEATURE_FOLDERS = new Set<string>(FEATURE_INTERNAL_VOCABULARY);
+const FEATURE_ROOT_FILES = new Set(['index.ts', 'index.tsx', 'ui.ts', 'ui.tsx', 'server.ts', 'server.tsx']);
 
 /** Legacy competing names are called out with a more specific remediation. */
 const FORBIDDEN_FEATURE_TOP_FOLDERS = new Set(['entities', 'components', 'modules']);
@@ -158,6 +160,17 @@ export function checkApplicationFeatureRegistryContract(): void {
 
     const featurePath = join(featuresRoot, name);
     for (const child of readdirSync(featurePath, { withFileTypes: true })) {
+      if (child.isFile()) {
+        if (!FEATURE_ROOT_FILES.has(child.name)) {
+          addViolation(
+            'Application Features',
+            join(featurePath, child.name),
+            `Feature "${name}" places implementation file "${child.name}" directly at its root.`,
+            `Move it under one of: ${[...FEATURE_FOLDERS].join(', ')}. Only index.ts(x), ui.ts(x), and server.ts(x) may live directly at a feature root.`,
+          );
+        }
+        continue;
+      }
       if (!child.isDirectory()) continue;
       if (FORBIDDEN_FEATURE_TOP_FOLDERS.has(child.name)) {
         addViolation(
