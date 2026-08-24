@@ -3,7 +3,6 @@ import {
   NotificationCategories,
   type NotificationCategory,
 } from "@asol/notifications-core";
-import { SPECIALTY_CHAT_KINDS } from "@/features/specialty-chat";
 
 export interface NotificationActivityGroup {
   key: string;
@@ -22,10 +21,7 @@ export interface LocalChatConversation extends NotificationActivityGroup {
   contextItem?: NotificationEntity;
 }
 
-function metadataText(
-  notification: NotificationEntity,
-  ...keys: string[]
-): string {
+function metadataText(notification: NotificationEntity, ...keys: string[]): string {
   for (const key of keys) {
     const value = notification.metadata?.[key];
     if (typeof value === "string" && value.trim()) return value.trim();
@@ -39,33 +35,21 @@ function timeValue(notification: NotificationEntity): number {
   return Number.isFinite(value) ? value : 0;
 }
 
-export function sortNewestFirst(
-  items: readonly NotificationEntity[],
-): NotificationEntity[] {
+export function sortNewestFirst(items: readonly NotificationEntity[]): NotificationEntity[] {
   return [...items].sort((left, right) => timeValue(right) - timeValue(left));
 }
 
-export function sortOldestFirst(
-  items: readonly NotificationEntity[],
-): NotificationEntity[] {
+export function sortOldestFirst(items: readonly NotificationEntity[]): NotificationEntity[] {
   return [...items].sort((left, right) => timeValue(left) - timeValue(right));
 }
 
 function explicitBusinessKey(notification: NotificationEntity): string {
   if (notification.groupKey?.trim()) return notification.groupKey.trim();
-
   if (notification.category === NotificationCategories.Orders) {
     return metadataText(notification, "orderId", "shipmentId", "returnRequestId");
   }
   if (notification.category === NotificationCategories.Offers) {
-    return metadataText(
-      notification,
-      "offerId",
-      "quoteId",
-      "deliveryPlanId",
-      "orderId",
-      "requestId",
-    );
+    return metadataText(notification, "offerId", "quoteId", "deliveryPlanId", "orderId", "requestId");
   }
   if (notification.category === NotificationCategories.Payment) {
     return metadataText(notification, "paymentId", "transactionId", "orderId");
@@ -77,19 +61,14 @@ function explicitBusinessKey(notification: NotificationEntity): string {
 }
 
 function activityKey(notification: NotificationEntity): string {
-  if (notification.category === NotificationCategories.Chat) {
-    return chatKey(notification);
-  }
+  if (notification.category === NotificationCategories.Chat) return chatKey(notification);
   const businessKey = explicitBusinessKey(notification);
   return businessKey
     ? `${notification.category}:${businessKey}`
     : `${notification.category}:notification:${notification.id}`;
 }
 
-function toActivityGroup(
-  key: string,
-  items: NotificationEntity[],
-): NotificationActivityGroup {
+function toActivityGroup(key: string, items: NotificationEntity[]): NotificationActivityGroup {
   const sorted = sortNewestFirst(items);
   return {
     key,
@@ -100,10 +79,6 @@ function toActivityGroup(
   };
 }
 
-/**
- * Groups only when an explicit business identity is available. Every source
- * notification remains present in exactly one group.
- */
 export function buildActivityGroups(
   notifications: readonly NotificationEntity[],
 ): NotificationActivityGroup[] {
@@ -122,17 +97,11 @@ function chatIdentity(notification: NotificationEntity): {
   requestId: string;
   peerUid: string;
 } | null {
-  const specialtyKind = metadataText(notification, "specialtyChatKind");
   const requestId = metadataText(notification, "requestId");
   const peerUid = metadataText(notification, "peerUid", "senderUid");
   const outgoing = notification.metadata?.outgoing === true;
 
-  if (
-    specialtyKind === SPECIALTY_CHAT_KINDS.Request &&
-    outgoing &&
-    requestId &&
-    !peerUid
-  ) {
+  if (outgoing && requestId && !peerUid) {
     return { kind: "broadcast", requestId, peerUid: "" };
   }
   if (requestId && peerUid) {
@@ -152,23 +121,19 @@ export function buildLocalChatConversations(
   notifications: readonly NotificationEntity[],
 ): LocalChatConversation[] {
   const chatItems = notifications.filter(
-    (item) =>
-      item.category === NotificationCategories.Chat && chatIdentity(item) !== null,
+    (item) => item.category === NotificationCategories.Chat && chatIdentity(item) !== null,
   );
   const outgoingRequests = new Map<string, NotificationEntity>();
   for (const item of chatItems) {
     const identity = chatIdentity(item);
-    if (!identity) continue;
-    if (identity.kind === "broadcast") outgoingRequests.set(identity.requestId, item);
+    if (identity?.kind === "broadcast") outgoingRequests.set(identity.requestId, item);
   }
 
   return buildActivityGroups(chatItems).map((group) => {
     const identity = chatIdentity(group.latest);
-    if (!identity) throw new Error("invalidSpecialtyChatNotification");
+    if (!identity) throw new Error("invalidChatNotification");
     const contextItem =
-      identity.kind === "conversation"
-        ? outgoingRequests.get(identity.requestId)
-        : undefined;
+      identity.kind === "conversation" ? outgoingRequests.get(identity.requestId) : undefined;
     return {
       ...group,
       kind: identity.kind,
@@ -181,15 +146,11 @@ export function buildLocalChatConversations(
   });
 }
 
-export function conversationMessages(
-  conversation: LocalChatConversation,
-): NotificationEntity[] {
+export function conversationMessages(conversation: LocalChatConversation): NotificationEntity[] {
   const source = conversation.contextItem
     ? [conversation.contextItem, ...conversation.items]
     : conversation.items;
-  return sortOldestFirst(
-    [...new Map(source.map((item) => [item.id, item])).values()],
-  );
+  return sortOldestFirst([...new Map(source.map((item) => [item.id, item])).values()]);
 }
 
 export function findLocalChatConversation(
