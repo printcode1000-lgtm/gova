@@ -169,11 +169,6 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p === 'src/features/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
   if (p === 'src/features/google-play-console/domain/development-guard.server.ts') return 'configuration';
   if (p.startsWith('src/features/release-commands/tests/')) return 'dev-tools';
-  if (p.startsWith('src/features/release-commands/services/') && p.endsWith('-api-service.ts')) return 'client-services';
-  if (p.startsWith('src/features/release-commands/services/')) return 'server-services';
-  if (p.startsWith('src/features/data-health/services/')) return 'server-services';
-  if (p.startsWith('src/features/dev-cloud-backup/services/')) return 'server-services';
-  if (p.startsWith('src/features/google-play-console/services/')) return 'server-services';
   if (p.startsWith('src/features/data-health/tests/')) return 'dev-tools';
   if (p.startsWith('src/features/dev-cloud-backup/tests/')) return 'dev-tools';
   if (p.startsWith('packages/orders-core/src/')) return 'shared';
@@ -183,7 +178,6 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.includes('/application/') && /^src\/features\//.test(p) && p.endsWith('.server.ts')) {
     return 'server-services';
   }
-  if (p.includes('/application/') && p.includes('/features/storage/')) return 'server-services';
   // A feature's server entry point — `src/features/<name>/server.ts` — is the
   // server half of that module's public API, not a shared utility. Without this
   // it falls through to `shared`, where importing `server-only` is forbidden.
