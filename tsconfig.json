@@ -359,6 +359,7 @@
   "exclude": [
     "node_modules",
     "out",
+    ".next/types/validator.ts",
     ".next/dev/types/**/*.ts",
     "packages/native-core/scripts",
     "**/__tests__/*",
