@@ -12,32 +12,17 @@ permissions:
 
 concurrency:
   group: architecture-finalization
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   migrate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout latest main
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Wait for feature finalization
-        shell: bash
-        run: |
-          set -euo pipefail
-          for attempt in $(seq 1 120); do
-            git fetch origin main
-            if ! git cat-file -e origin/main:.github/workflows/finalize-feature-layers.yml 2>/dev/null; then
-              git reset --hard origin/main
-              exit 0
-            fi
-            echo "Feature finalization still running (attempt ${attempt}/120)."
-            sleep 15
-          done
-          echo "Feature finalization did not complete before the gate-migration deadline." >&2
-          exit 1
+          ref: main
 
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
@@ -250,7 +235,7 @@ jobs:
           This removes the former giant Build/Test command strings from `package.json` without compatibility wrappers: the registry and runner are the only Build/Test orchestration mechanism.
           DOC
 
-      - name: Remove feature-migration residue and this one-shot workflow
+      - name: Remove migration residue
         shell: bash
         run: |
           set -euo pipefail
@@ -262,7 +247,6 @@ jobs:
           rm -f .architecture-feature-*.log
           rm -f .architecture-feature-canonicalization-verified
           rm -f .github/workflows/finalize-feature-layers.yml
-          rm -f .github/workflows/migrate-build-test-gates.yml
 
       - name: Verify generated gate contract
         run: npm run gates:verify
@@ -278,6 +262,9 @@ jobs:
 
       - name: Full repository test gate
         run: npm test
+
+      - name: Remove this one-shot workflow
+        run: rm -f .github/workflows/migrate-build-test-gates.yml
 
       - name: Commit verified gate architecture
         shell: bash
