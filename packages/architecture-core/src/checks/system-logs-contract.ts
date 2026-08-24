@@ -73,25 +73,8 @@ export function checkSystemLogsBootstrapContract(): void {
     );
   }
 
-  const packageJson = JSON.parse(
-    readFileSync(join(ROOT, 'package.json'), 'utf8'),
-  ) as { scripts?: Record<string, string> };
-  const scripts = packageJson.scripts ?? {};
-  for (const chain of ['build', 'build:static', 'test'] as const) {
-    const value = scripts[chain] ?? '';
-    if (!value.includes('test:system-logs-core')) {
-      addViolation(
-        'configuration',
-        'package.json',
-        `${chain} script must run test:system-logs-core`,
-      );
-    }
-    if (chain === 'test' && !value.includes('validate:error-logging')) {
-      addViolation(
-        'configuration',
-        'package.json',
-        'test script must run validate:error-logging',
-      );
-    }
-  }
+  // Build/test composition is generated centrally by scripts/generated-gates.ts and is verified
+  // before the repository-wide architecture scan by scripts/generated-gate-contract.ts. Requiring
+  // literal test names inside package.json here would contradict those generated entrypoints and
+  // duplicate ownership of the gate policy.
 }
