@@ -2,8 +2,9 @@
 # `asol-submain` and `asol-sub2main` via CLI). Service-only folders use their own `.vercelignore`.
 #
 # Goal: ship only what `npm run build` needs for the hosted Next.js app. Native
-# shells, most prose docs, local databases, and CI-only trees are rebuilt or
-# generated on the build machine — they must not inflate CLI uploads (~70MB+).
+# shells, local databases, and CI-only trees are rebuilt or generated on the
+# build machine — they must not inflate CLI uploads (~70MB+). Documentation and
+# agent-rule sources stay because architecture:check validates them during build.
 
 # ── Build output and dependencies (installed remotely) ─────────────────────
 .git/
@@ -39,22 +40,10 @@ coverage/
 # is ever committed again, it still must not reach a build machine.
 test_profile/
 
-# ── Documentation, CI, editor, and local tooling ───────────────────────────
-# Keep only generated architecture references required by architecture:check.
-# IMPORTANT: anchor this at repository root. An unanchored `docs/` also matches
-# packages/architecture-core/src/docs/ and removes the docs generator itself.
-/docs/*
-!/docs/01-architecture/
-/docs/01-architecture/*
-!/docs/01-architecture/08-reference/
-/docs/01-architecture/08-reference/*
-!/docs/01-architecture/08-reference/capability-map.md
-!/docs/01-architecture/08-reference/package-catalog.md
-!/docs/01-architecture/08-reference/dependency-map.md
-!/docs/01-architecture/08-reference/application-feature-catalog.md
-!/docs/01-architecture/08-reference/feature-seams.md
+# ── CI and local tooling ──────────────────────────────────────────────────
+# docs/ and .cursor/rules/ are deliberate production-build inputs for the
+# agent-knowledge contract, even though they are not runtime payload.
 .github/
-.cursor/
 .ssh_local/
 .ssh_config
 scripts/tests/

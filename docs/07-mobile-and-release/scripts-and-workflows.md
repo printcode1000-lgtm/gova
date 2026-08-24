@@ -163,6 +163,9 @@ Android artifacts or weakening the production build check.
 The root `vercel.json` pins the remote install command to `npm ci`; Vercel must
 consume the reviewed lockfile byte-for-byte instead of rewriting it before the
 compatibility gate executes.
+All tracked `docs/` and `.cursor/rules/` sources also remain remote-build inputs:
+the agent-knowledge portion of `architecture:check` validates the complete
+documentation graph during every production build.
 
 ## Service deployment checks
 

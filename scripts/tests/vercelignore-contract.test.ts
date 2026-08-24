@@ -70,6 +70,11 @@ const requiredPaths = [
   "capacitor.config.ts",
   "vercel.json",
   ".env.example",
+  ".cursor/rules/session-standards.mdc",
+  "docs/README.md",
+  "docs/00-overview/README.md",
+  "docs/09-agent-knowledge/domain-registry.json",
+  "docs/09-agent-knowledge/runtime-contract.md",
   "src/app/layout.tsx",
   "public/logo.png",
   "public/catagory",
@@ -94,7 +99,6 @@ for (const required of requiredPaths) {
 }
 
 const excludedPaths = [
-  "docs/01-architecture/02-packages/module-isolation-rules.md",
   "android/app/build.gradle",
   "ios/App/App/Info.plist",
   "fastlane/Fastfile",
