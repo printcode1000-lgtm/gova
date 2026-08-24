@@ -9,14 +9,14 @@ import {
   StorageImageManager,
   type StorageImageManagerHandle,
 } from "@/features/storage/ui";
-import storefrontImagesConfig from "@/features/profile/presentation/image-configs/storefront-images.image.json";
+import { STOREFRONT_IMAGES_CONFIG } from "@/features/profile/ui";
 import type { HeroSliderConfig, HeroSliderSlide } from "./HeroSlider";
 import {
   DEFAULT_HOME_HERO_TRANSITION,
   DEFAULT_HOME_HERO_TRANSITION_DURATION,
 } from "@asol/hero-slider-core";
 
-const storefrontSlots = storefrontImagesConfig.slots.map(
+const storefrontSlots = STOREFRONT_IMAGES_CONFIG.slots.map(
   parseStorageImageManagerConfig,
 );
 const MAX_PROFILE_SLIDES = storefrontSlots.length;
