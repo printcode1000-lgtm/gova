@@ -1,4 +1,4 @@
-import type { KnowledgeGraph, KnowledgeNode } from './model';
+import type { KnowledgeNode } from './model';
 import { CORE_RUNTIME_IDS, RUNTIME_DEFINITIONS } from './runtime-knowledge';
 
 export interface RuntimeTestPlan {
@@ -19,6 +19,7 @@ function isDevOnlyTarget(seeds: KnowledgeNode[]): boolean {
       path.startsWith('src/app/dev/') ||
       path.includes('/dev/') ||
       path.startsWith('src/features/dev-') ||
+      path.startsWith('packages/dev-core/') ||
       name.includes('dev-only') ||
       path.includes('dev-tools') ||
       path.includes('dev-cloud')
@@ -44,7 +45,7 @@ export function buildRuntimeTestPlan(input: {
     requiredChecks.push('Development suitability for the changed dev-only surface');
     requiredChecks.push('Confirm the change does not leak into Web/Static out/Android/iOS release behavior');
     commands.push('npm run runtime:check:dev');
-    warnings.push('Target appears dev-only: do not treat Development success as release proof.');
+    warnings.push('Target appears dev-only: Development is the only execution surface to test; review release surfaces only for non-leakage.');
   } else {
     requiredChecks.push('Evaluate all five runtimes: Development, Web, Static out, Android, iOS');
     commands.push('npm run runtime:check');
@@ -91,19 +92,33 @@ export function buildRuntimeTestPlan(input: {
 
 export function renderRuntimeTestPlanSection(plan: RuntimeTestPlan): string[] {
   const core = RUNTIME_DEFINITIONS.filter((runtime) => CORE_RUNTIME_IDS.includes(runtime.id as (typeof CORE_RUNTIME_IDS)[number]));
+  const mandatorySurfaces = plan.isDevOnly
+    ? core.filter((runtime) => runtime.id === 'development')
+    : core;
+  const nonLeakageSurfaces = plan.isDevOnly
+    ? core.filter((runtime) => runtime.id !== 'development')
+    : [];
   return [
     '## Required Runtime-Compatibility Test Plan',
     '',
     `**Scope class:** ${plan.isDevOnly ? 'dev-only' : 'release-relevant shared/runtime code'}`,
     '',
     plan.isDevOnly
-      ? 'Verify Development suitability and non-leakage into Web/Static out/Android/iOS release behavior.'
+      ? 'Verify Development suitability. Web, Static out, Android, and iOS are non-leakage review targets, not required execution surfaces for dev-only code.'
       : 'Verify safe compatibility across Development, Web, Static out, Android, and iOS using non-publishing checks.',
     '',
-    'Mandatory surfaces:',
+    plan.isDevOnly ? 'Mandatory execution surface:' : 'Mandatory surfaces:',
     '',
-    ...core.map((runtime) => `- **${runtime.name}**`),
+    ...mandatorySurfaces.map((runtime) => `- **${runtime.name}**`),
     '',
+    ...(nonLeakageSurfaces.length
+      ? [
+          'Release non-leakage review:',
+          '',
+          ...nonLeakageSurfaces.map((runtime) => `- **${runtime.name}** — confirm the dev-only change is not shipped or required here`),
+          '',
+        ]
+      : []),
     'Required checks:',
     '',
     ...plan.requiredChecks.map((item) => `- ${item}`),

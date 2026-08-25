@@ -1,5 +1,5 @@
 import { collectDeadDocsFindings, deadDocsValidationErrors } from './dead-docs';
-import { diffGeneratedKnowledge, writeGeneratedKnowledge } from './generate';
+import { diffGeneratedKnowledge } from './generate';
 import { listChangedPathsAgainst, loadDocumentMutabilityRegistry, classifyDocumentationPath } from './document-mutability';
 import { runMutabilityCheck } from './mutability-check';
 import { validateAgentKnowledge } from './check';
@@ -85,7 +85,7 @@ function requireAgentMarkers(): string[] {
   return errors;
 }
 
-export function runDocsCi(options?: { mode?: DocsCiMode; baseRef?: string; regenerate?: boolean }): string[] {
+export function runDocsCi(options?: { mode?: DocsCiMode; baseRef?: string }): string[] {
   const changed = listChangedPathsAgainst(options?.baseRef);
   const mode = options?.mode && options.mode !== 'auto' ? options.mode : detectMode(changed);
   const errors: string[] = [];
@@ -97,21 +97,21 @@ export function runDocsCi(options?: { mode?: DocsCiMode; baseRef?: string; regen
     const graph = buildRepositoryKnowledgeGraph();
     errors.push(...deadDocsValidationErrors(collectDeadDocsFindings(graph)));
     errors.push(...envSafetyValidationErrors(graph));
+    // Editable docs are part of the graph/search index too. Never let the light
+    // path hide stale committed snapshots.
+    errors.push(...diffGeneratedKnowledge());
     return [...new Set(errors)].sort();
   }
 
-  if (options?.regenerate !== false) {
-    writeGeneratedKnowledge();
-  }
+  // Validation is intentionally non-mutating. Generation is a separate command
+  // (`npm run docs:generate`); CI compares its working-tree result against HEAD.
   errors.push(...validateAgentKnowledge());
-  errors.push(...diffGeneratedKnowledge());
 
   const graph = buildRepositoryKnowledgeGraph();
   errors.push(...deadDocsValidationErrors(collectDeadDocsFindings(graph)));
   errors.push(...envSafetyValidationErrors(graph));
   errors.push(...checkAllRuntimeCompatibility());
 
-  // Task template presence
   for (const template of [
     'docs/09-agent-knowledge/templates/ui-task.md',
     'docs/09-agent-knowledge/templates/api-task.md',

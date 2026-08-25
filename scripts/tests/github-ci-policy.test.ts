@@ -19,6 +19,25 @@ const docsSource = readFileSync(path.join(process.cwd(), ".github", "workflows",
 assert.equal(docsWorkflowViolations(docsSource).length, 0, docsWorkflowViolations(docsSource).join("\n"));
 
 assert.ok(
+  docsWorkflowViolations(docsSource.replace("fetch-depth: 0", "fetch-depth: 1")).some((error) =>
+    error.includes("fetch-depth: 0"),
+  ),
+);
+assert.ok(
+  docsWorkflowViolations(
+    docsSource.replace(
+      "DOCS_CI_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}",
+      "DOCS_CI_BASE_REF: HEAD~1",
+    ),
+  ).some((error) => error.includes("DOCS_CI_BASE_REF")),
+);
+assert.ok(
+  docsWorkflowViolations(docsSource.replace("npm run docs:diff -- --against-head", "npm run docs:check")).some(
+    (error) => error.includes("docs:diff -- --against-head"),
+  ),
+);
+
+assert.ok(
   docsWorkflowViolations(`
 name: native-core
 on:

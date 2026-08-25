@@ -48,9 +48,13 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      DOCS_CI_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
@@ -63,8 +67,14 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
+      - name: Regenerate documentation knowledge
+        run: npm run docs:generate
+
       - name: Documentation CI
         run: npm run docs:ci
+
+      - name: Generated documentation must match HEAD
+        run: npm run docs:diff -- --against-head
 
       - name: Runtime compatibility contracts
         run: npm run runtime:check

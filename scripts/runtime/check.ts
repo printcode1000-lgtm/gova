@@ -5,6 +5,16 @@ import {
 } from './compatibility-checks';
 import { listChangedPathsAgainst } from '../docs/document-mutability';
 
+function isDevOnlyPath(path: string): boolean {
+  return (
+    path.startsWith('src/app/dev/') ||
+    path.startsWith('src/features/dev-') ||
+    path.startsWith('src/features/dev-tools/') ||
+    path.startsWith('src/features/dev-cloud-backup/') ||
+    path.startsWith('packages/dev-core/')
+  );
+}
+
 function run(surface?: RuntimeSurface | 'all' | 'changed'): string[] {
   if (!surface || surface === 'all') return checkAllRuntimeCompatibility();
   if (surface === 'changed') {
@@ -12,15 +22,26 @@ function run(surface?: RuntimeSurface | 'all' | 'changed'): string[] {
     const surfaces = new Set<RuntimeSurface>();
     if (!changed.length) return checkAllRuntimeCompatibility();
     for (const path of changed) {
-      if (path.startsWith('android/') || path.includes('capacitor')) surfaces.add('android');
-      if (path.startsWith('ios/') || path.includes('capacitor')) surfaces.add('ios');
+      // Dev-only application/package surfaces are verified only for Development
+      // execution plus non-leakage; do not misclassify them as release code.
+      if (isDevOnlyPath(path)) {
+        surfaces.add('dev');
+        continue;
+      }
+      if (path.startsWith('android/')) surfaces.add('android');
+      if (path.startsWith('ios/')) surfaces.add('ios');
+      if (path.includes('capacitor')) {
+        surfaces.add('static');
+        surfaces.add('dev');
+        surfaces.add('android');
+        surfaces.add('ios');
+      }
       if (path.startsWith('src/app/api/') || path.includes('/route.')) surfaces.add('web');
       if (path.startsWith('src/') || path.startsWith('packages/')) {
         surfaces.add('static');
         surfaces.add('dev');
         surfaces.add('web');
       }
-      if (path.startsWith('src/app/dev/') || path.includes('/dev-')) surfaces.add('dev');
     }
     if (!surfaces.size) return checkAllRuntimeCompatibility();
     return [...surfaces].flatMap((item) => checkRuntimeSurface(item));
