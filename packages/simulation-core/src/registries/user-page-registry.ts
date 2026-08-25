@@ -175,15 +175,39 @@ export const USER_PAGE_REGISTRY: readonly UserPageDefinition[] = [
     },
   ]),
   page("cart", "/cart", "/cart", "السلة", "عناصر السلة والكميات وإنشاء الطلب.", [
-    click("cart-increase", "زيادة الكمية", "زيادة كمية أول عنصر فعلي.", "buyer"),
-    click("cart-decrease", "خفض الكمية", "خفض كمية أول عنصر فعلي.", "buyer"),
-    click("cart-remove", "إزالة عنصر", "إزالة أول عنصر عبر مخزن السلة الحقيقي.", "buyer"),
+    {
+      id: "cart-increase",
+      label: "زيادة الكمية",
+      description: "زيادة كمية أول عنصر فعلي.",
+      actor: "buyer",
+      actions: [{ type: "click", selector: "button[aria-label=\"زيادة الكمية\"]", accessibleLabel: "زيادة الكمية" }],
+    },
+    {
+      id: "cart-decrease",
+      label: "خفض الكمية",
+      description: "خفض كمية أول عنصر فعلي.",
+      actor: "buyer",
+      actions: [{ type: "click", selector: "button[aria-label=\"تقليل الكمية\"]", accessibleLabel: "خفض الكمية" }],
+    },
+    {
+      id: "cart-remove",
+      label: "إزالة عنصر",
+      description: "إزالة أول عنصر عبر مخزن السلة الحقيقي.",
+      actor: "buyer",
+      actions: [{ type: "click", selector: "button[aria-label=\"إزالة من السلة\"]", accessibleLabel: "إزالة عنصر" }],
+    },
     click("cart-checkout", "تنفيذ الطلب", "إرسال محتوى السلة إلى مسار إنشاء الطلب.", "buyer"),
   ]),
   page("favorites", "/favorites", "/favorites", "المفضلة", "المنتجات والبائعون المحفوظون على الجهاز.", [
     click("favorites-products", "عرض المنتجات", "اختيار تبويب المنتجات."),
     click("favorites-sellers", "عرض البائعين", "اختيار تبويب البائعين."),
-    click("favorites-open", "فتح عنصر محفوظ", "فتح أول عنصر محفوظ فعليًا."),
+    {
+      id: "favorites-open",
+      label: "فتح عنصر محفوظ",
+      description: "فتح أول عنصر محفوظ فعليًا.",
+      actor: "any",
+      actions: [{ type: "click", selector: "main article > button[type=button]", accessibleLabel: "فتح عنصر محفوظ" }],
+    },
   ]),
   page("product", "/product", "/product", "المنتج", "تفاصيل المنتج وإجراءات الشراء والحفظ والمشاركة.", [
     click("product-add-cart", "إضافة إلى السلة", "إضافة المنتج الحالي عبر خدمة السلة.", "buyer"),
