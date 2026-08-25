@@ -6,12 +6,6 @@ import { CheckCircle2, Loader2, RefreshCw, XCircle } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { useSimulationUsersBootstrap } from "./use-simulation-users-bootstrap";
 
-function simulationUserSetupLabel(role: (typeof SIMULATION_USERS)[number]["role"]): string | null {
-  if (role === "seller") return "الإعداد: تصنيف رئيسي صالح + تصنيف فرعي صالح";
-  if (role === "delivery") return "الإعداد: تصنيف خدمات التوصيل";
-  return null;
-}
-
 export function SimulationUsersStatus() {
   const state = useSimulationUsersBootstrap();
   if (!state.allowed) return null;
@@ -35,7 +29,7 @@ export function SimulationUsersStatus() {
         {SIMULATION_USERS.map((user) => {
           const result = state.users.find((candidate) => candidate.id === user.id);
           const failed = result?.status === "failed";
-          const setupLabel = simulationUserSetupLabel(user.role);
+          const specialty = result?.specialtySelection;
           return (
             <div key={user.id} className="flex items-center gap-2 rounded-xl bg-surface-container-low p-3 text-sm">
               {failed ? (
@@ -48,7 +42,18 @@ export function SimulationUsersStatus() {
               <div className="min-w-0">
                 <div className="font-semibold text-on-surface">{user.storeName}</div>
                 <div className="text-xs text-on-surface-variant" dir="ltr">{user.phone}</div>
-                {setupLabel ? <div className="mt-1 text-xs text-on-surface-variant">{setupLabel}</div> : null}
+                {specialty ? (
+                  <div className="mt-1 space-y-0.5 text-xs text-on-surface-variant">
+                    <div>
+                      التصنيف الرئيسي: <span className="font-semibold text-on-surface">{specialty.main.nameAr}</span>
+                    </div>
+                    {specialty.sub ? (
+                      <div>
+                        التصنيف الفرعي: <span className="font-semibold text-on-surface">{specialty.sub.nameAr}</span>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
                 {failed ? <div className="break-words text-xs text-error">{result.error}</div> : null}
               </div>
             </div>
