@@ -64,12 +64,13 @@ export function SuperAdminSimulationPage() {
     interaction: PageInteraction,
     onProgress: (next: readonly SimulationProgressStep[]) => void,
   ): Promise<SimulationRunResult> => {
+    let latestSteps: readonly SimulationProgressStep[] = [];
     let runResult: SimulationRunResult = {
       succeeded: false,
       runtime,
       pageId: page.id,
       interactionId: interaction.id,
-      steps: [],
+      steps: latestSteps,
       error: "simulationExecutionDidNotStart",
     };
     let restoreSession: (() => Promise<void>) | undefined;
@@ -88,7 +89,10 @@ export function SuperAdminSimulationPage() {
         user,
         internalCatalogImages: internalCatalogImagePool(),
         port: new IframeSimulationExecutionPort(),
-        onProgress,
+        onProgress: (nextSteps) => {
+          latestSteps = nextSteps;
+          onProgress(nextSteps);
+        },
       });
     } catch (error) {
       runResult = {
@@ -96,7 +100,7 @@ export function SuperAdminSimulationPage() {
         runtime,
         pageId: page.id,
         interactionId: interaction.id,
-        steps: [],
+        steps: latestSteps,
         error: error instanceof Error ? error.message : String(error),
       };
     }
@@ -162,14 +166,16 @@ export function SuperAdminSimulationPage() {
           setSelectedInteractionId(interaction.id);
           setBatchRuns((current) =>
             current.map((run) =>
-              run.id === runId ? { ...run, status: "running", steps: [], error: undefined } : run,
+              run.id === runId
+                ? { ...run, status: "running" as const, steps: [], error: undefined }
+                : run,
             ),
           );
 
           const next = await executeInteraction(page, interaction, (nextSteps) => {
             setBatchRuns((current) =>
               current.map((run) =>
-                run.id === runId ? { ...run, status: "running", steps: nextSteps } : run,
+                run.id === runId ? { ...run, status: "running" as const, steps: nextSteps } : run,
               ),
             );
           });
@@ -179,7 +185,7 @@ export function SuperAdminSimulationPage() {
               run.id === runId
                 ? {
                     ...run,
-                    status: next.succeeded ? "passed" : "failed",
+                    status: next.succeeded ? ("passed" as const) : ("failed" as const),
                     steps: next.steps,
                     error: next.error,
                   }
