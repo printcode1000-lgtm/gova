@@ -30,21 +30,41 @@ function linked(
   return [...ids].map((item) => map.get(item)).filter((node): node is KnowledgeNode => Boolean(node));
 }
 
+function linkedFromScope(
+  graph: KnowledgeGraph,
+  ids: Set<string>,
+  kinds: string[],
+  targetKind: KnowledgeNode['kind'],
+): KnowledgeNode[] {
+  const map = new Map(graph.nodes.map((node) => [node.id, node]));
+  const result = new Map<string, KnowledgeNode>();
+  for (const edge of graph.edges) {
+    if (!kinds.includes(edge.kind) || !ids.has(edge.from)) continue;
+    const target = map.get(edge.to);
+    if (target?.kind === targetKind) result.set(target.id, target);
+  }
+  return [...result.values()];
+}
+
 export function buildDocCoverageScore(graph: KnowledgeGraph): CoverageScoreRow[] {
   const owners = graph.nodes.filter((node) => ['package', 'feature', 'service'].includes(node.kind));
   const rows: CoverageScoreRow[] = [];
 
   for (const owner of owners) {
+    const ownedNodes = linked(graph, owner.id, ['belongs-to'], 'to').filter((node) =>
+      ['source', 'script', 'test'].includes(node.kind),
+    );
+    const scopeIds = new Set([owner.id, ...ownedNodes.map((node) => node.id)]);
     const docs = linked(graph, owner.id, ['documents', 'references', 'related-to', 'belongs-to']).filter(
       (node) => node.kind === 'document',
     );
     const tests = linked(graph, owner.id, ['tests', 'belongs-to']).filter((node) => node.kind === 'test');
-    const runtimes = linked(graph, owner.id, ['affects-runtime', 'targets-runtime']).filter((node) => node.kind === 'runtime');
+    const runtimes = linkedFromScope(graph, scopeIds, ['affects-runtime', 'targets-runtime'], 'runtime');
     const dependencies = linked(graph, owner.id, ['imports'], 'from');
     const consumers = linked(graph, owner.id, ['imports'], 'to');
     const commands = linked(graph, owner.id, ['invokes', 'related-to']).filter((node) => node.kind === 'command');
     const configs = linked(graph, owner.id, ['configured-by', 'related-to']).filter((node) => node.kind === 'config');
-    const envs = linked(graph, owner.id, ['uses-environment']).filter((node) => node.kind === 'environment-key');
+    const envs = linkedFromScope(graph, scopeIds, ['uses-environment'], 'environment-key');
 
     const flags = {
       hasOwner: true,
@@ -54,7 +74,10 @@ export function buildDocCoverageScore(graph: KnowledgeGraph): CoverageScoreRow[]
       hasConsumers: consumers.length > 0,
       hasDependencies: dependencies.length > 0,
       hasCommandsOrConfigOrEnv: commands.length + configs.length + envs.length > 0,
-      hasRuntimeCompatibilityGuidance: runtimes.length > 0 || Boolean(owner.path?.startsWith('src/features/dev-')),
+      hasRuntimeCompatibilityGuidance:
+        runtimes.length > 0 ||
+        Boolean(owner.path?.startsWith('src/features/dev-')) ||
+        Boolean(owner.path?.startsWith('packages/dev-core/')),
     };
     const values = Object.values(flags);
     const scorePercent = Math.round((values.filter(Boolean).length / values.length) * 100);
@@ -81,6 +104,8 @@ export function renderDocCoverageScore(graph: KnowledgeGraph): string {
   const lines = [
     banner,
     '# Doc Coverage Score',
+    '',
+    'Runtime coverage is inherited from each owner\'s owned source/test/script nodes, not only direct owner edges.',
     '',
     `Owners scored: **${rows.length}**`,
     `Average coverage: **${average}%**`,
