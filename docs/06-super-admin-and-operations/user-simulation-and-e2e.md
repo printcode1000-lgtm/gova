@@ -7,6 +7,22 @@ runtime classification, fixed simulation identities, random internal-image
 selection, execution progress, and discovery guard. The Super Admin surface is
 available at `/super-admin/simulation`.
 
+## Super Admin execution surface
+
+`/super-admin/simulation` is the single primary control surface for page-level
+simulation. It keeps page selection, interaction selection, execution, and E2E
+progress on the same screen:
+
+- The page selector lists every entry in `USER_PAGE_REGISTRY`.
+- The interaction selector lists the real user interactions declared for the
+  currently selected page.
+- `SimulationProgressPanel` is one shared execution monitor. It is not a
+  selector and shows the current or most recent E2E execution progress.
+- The Run button executes the selected interaction in place without navigating
+  to a page-specific simulation screen.
+- Page and interaction selection are locked while an execution is active so
+  the shared progress monitor always describes one stable run.
+
 ## Boundaries
 
 - Discovery, execution, and presentation are separate modules.
