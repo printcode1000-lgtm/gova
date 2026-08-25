@@ -2,6 +2,8 @@ import type { SimulationExecutionPort } from "@asol/simulation-core";
 import { asolApi } from "@/core/api/asol-api-client";
 
 const LOAD_TIMEOUT_MS = 20_000;
+const TARGET_TIMEOUT_MS = 5_000;
+const TARGET_POLL_MS = 50;
 
 function editableValue(element: Element, value: string): void {
   const view = element.ownerDocument.defaultView;
@@ -58,6 +60,20 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
     editableValue(this.target(selector), value);
   }
 
+  async selectFirstOption(selector: string): Promise<void> {
+    const target = this.target(selector);
+    const view = target.ownerDocument.defaultView;
+    if (!view || !(target instanceof view.HTMLSelectElement)) {
+      throw new Error(`simulationTargetIsNotSelect:${selector}`);
+    }
+    const option = Array.from(target.options).find((candidate) => !candidate.disabled && candidate.value !== "");
+    if (!option) throw new Error(`simulationSelectOptionMissing:${selector}`);
+    target.value = option.value;
+    target.dispatchEvent(new view.Event("input", { bubbles: true }));
+    target.dispatchEvent(new view.Event("change", { bubbles: true }));
+    await this.wait(250);
+  }
+
   async click(selector: string, _accessibleLabel?: string): Promise<void> {
     const target = this.target(selector);
     const view = target.ownerDocument.defaultView;
@@ -103,6 +119,15 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
       throw new Error(`simulationTargetNotSubmittable:${selector}`);
     }
     await this.wait(250);
+  }
+
+  async waitForTarget(selector: string, timeoutMs = TARGET_TIMEOUT_MS): Promise<void> {
+    const startedAt = Date.now();
+    while (Date.now() - startedAt <= timeoutMs) {
+      if (this.documentNode().querySelector(selector)) return;
+      await this.wait(TARGET_POLL_MS);
+    }
+    throw new Error(`simulationInteractionTargetTimeout:${selector}`);
   }
 
   wait(milliseconds: number): Promise<void> {
