@@ -1,18 +1,99 @@
 "use client";
 
-import { SIMULATION_SCENARIOS, USER_PAGE_REGISTRY, resolveSimulationRuntime } from "@asol/simulation-core";
-import { FlaskConical, Layers3, MonitorSmartphone } from "lucide-react";
-import Link from "next/link";
+import {
+  SIMULATION_SCENARIOS,
+  USER_PAGE_REGISTRY,
+  resolveSimulationRuntime,
+  runPageInteraction,
+  simulationUserByRole,
+  type SimulationProgressStep,
+  type SimulationRunResult,
+} from "@asol/simulation-core";
+import { FlaskConical, Layers3, MonitorSmartphone, Play } from "lucide-react";
+import * as React from "react";
 
 import { getClientRuntimeContext } from "@/core/config/runtime-context.client";
 import { isSuperAdmin } from "@/features/auth";
 import { useSession } from "@/features/auth/ui";
+import { Button } from "@/shared/ui/button";
+import { beginSimulationActorSession } from "../application/services/simulation-actor-session";
+import { IframeSimulationExecutionPort } from "../infrastructure/iframe-simulation-execution.port";
+import { internalCatalogImagePool } from "../infrastructure/internal-catalog-image-pool";
+import { SimulationProgressPanel } from "./SimulationProgressPanel";
 import { SimulationUsersStatus } from "./SimulationUsersStatus";
 import { simulationRuntimeLabel } from "./simulation-runtime-label";
+
+const initialPage = USER_PAGE_REGISTRY[0];
 
 export function SuperAdminSimulationPage() {
   const { session, isLoading } = useSession();
   const runtime = resolveSimulationRuntime(getClientRuntimeContext());
+  const [selectedPageId, setSelectedPageId] = React.useState(initialPage?.id ?? "");
+  const [selectedInteractionId, setSelectedInteractionId] = React.useState(
+    initialPage?.interactions[0]?.id ?? "",
+  );
+  const [steps, setSteps] = React.useState<readonly SimulationProgressStep[]>([]);
+  const [result, setResult] = React.useState<SimulationRunResult | null>(null);
+  const [runningId, setRunningId] = React.useState("");
+
+  const selectedPage = React.useMemo(
+    () => USER_PAGE_REGISTRY.find((page) => page.id === selectedPageId) ?? initialPage,
+    [selectedPageId],
+  );
+  const selectedInteraction = React.useMemo(
+    () => selectedPage?.interactions.find((interaction) => interaction.id === selectedInteractionId),
+    [selectedInteractionId, selectedPage],
+  );
+
+  const selectPage = (pageId: string) => {
+    const page = USER_PAGE_REGISTRY.find((candidate) => candidate.id === pageId);
+    setSelectedPageId(pageId);
+    setSelectedInteractionId(page?.interactions[0]?.id ?? "");
+  };
+
+  const runSelectedInteraction = async () => {
+    if (!selectedPage || !selectedInteraction) return;
+
+    setRunningId(selectedInteraction.id);
+    setResult(null);
+    setSteps([]);
+
+    const user =
+      selectedInteraction.actor === "buyer" ||
+      selectedInteraction.actor === "seller" ||
+      selectedInteraction.actor === "delivery"
+        ? simulationUserByRole(selectedInteraction.actor)
+        : undefined;
+    let restoreSession: (() => Promise<void>) | undefined;
+
+    try {
+      const actor = user ?? (selectedInteraction.actor === "guest" ? "guest" : "any");
+      restoreSession = await beginSimulationActorSession(actor);
+      const next = await runPageInteraction({
+        runtime,
+        page: selectedPage,
+        interaction: selectedInteraction,
+        user,
+        internalCatalogImages: internalCatalogImagePool(),
+        port: new IframeSimulationExecutionPort(),
+        onProgress: setSteps,
+      });
+      setResult(next);
+      setSteps(next.steps);
+    } catch (error) {
+      setResult({
+        succeeded: false,
+        runtime,
+        pageId: selectedPage.id,
+        interactionId: selectedInteraction.id,
+        steps: [],
+        error: error instanceof Error ? error.message : String(error),
+      });
+    } finally {
+      await restoreSession?.();
+      setRunningId("");
+    }
+  };
 
   if (isLoading) return <div className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
   if (!isSuperAdmin(session)) {
@@ -28,7 +109,7 @@ export function SuperAdminSimulationPage() {
             محاكاة المستخدم وE2E
           </h1>
           <p className="mt-1 text-sm text-on-surface-variant">
-            تشغيل تفاعلات الصفحات الحقيقية ومشاهدة مراحل التنفيذ والنتائج.
+            اختر الصفحة والحدث وشغّل التفاعل الحقيقي مع متابعة التنفيذ من نفس الشاشة.
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-xl bg-primary-container px-3 py-2 text-sm text-on-primary-container">
@@ -39,23 +120,70 @@ export function SuperAdminSimulationPage() {
 
       <SimulationUsersStatus />
 
-      <section className="space-y-3 rounded-2xl border border-outline-variant bg-surface p-4">
-        <div>
-          <h2 className="font-bold text-on-surface">حاوية الصفحات</h2>
-          <p className="text-xs text-on-surface-variant">{USER_PAGE_REGISTRY.length} صفحة مستخدم مغطاة.</p>
+      <section className="rounded-2xl border border-outline-variant bg-surface p-4">
+        <div className="mb-4">
+          <h2 className="font-bold text-on-surface">تشغيل محاكاة الصفحة</h2>
+          <p className="text-xs text-on-surface-variant">
+            {USER_PAGE_REGISTRY.length} صفحة مستخدم مغطاة. اختر الصفحة ثم حدث المستخدم الحقيقي المطلوب.
+          </p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {USER_PAGE_REGISTRY.map((page) => (
-            <Link
-              key={page.id}
-              href={`/super-admin/simulation/${page.id}`}
-              className="rounded-xl border border-outline-variant bg-surface-container-low p-4 no-underline transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)_minmax(320px,1.2fr)_auto] xl:items-start">
+          <label className="space-y-2">
+            <span className="block text-sm font-semibold text-on-surface">الصفحة</span>
+            <select
+              value={selectedPage?.id ?? ""}
+              onChange={(event) => selectPage(event.target.value)}
+              disabled={Boolean(runningId)}
+              className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <div className="font-semibold text-on-surface">{page.label}</div>
-              <div className="mt-1 text-xs text-primary" dir="ltr">{page.route}</div>
-              <div className="mt-2 text-xs text-on-surface-variant">{page.interactions.length} تفاعل</div>
-            </Link>
-          ))}
+              {USER_PAGE_REGISTRY.map((page) => (
+                <option key={page.id} value={page.id}>
+                  {page.label} — {page.route}
+                </option>
+              ))}
+            </select>
+            {selectedPage ? (
+              <span className="block text-xs text-on-surface-variant">{selectedPage.description}</span>
+            ) : null}
+          </label>
+
+          <label className="space-y-2">
+            <span className="block text-sm font-semibold text-on-surface">أحداث المستخدم الحقيقية</span>
+            <select
+              value={selectedInteraction?.id ?? ""}
+              onChange={(event) => setSelectedInteractionId(event.target.value)}
+              disabled={Boolean(runningId) || !selectedPage}
+              className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {selectedPage?.interactions.map((interaction) => (
+                <option key={interaction.id} value={interaction.id}>
+                  {interaction.label}
+                </option>
+              ))}
+            </select>
+            {selectedInteraction ? (
+              <span className="block text-xs text-on-surface-variant">{selectedInteraction.description}</span>
+            ) : null}
+          </label>
+
+          <SimulationProgressPanel steps={steps} error={result?.error} />
+
+          <Button
+            type="button"
+            onClick={() => void runSelectedInteraction()}
+            disabled={Boolean(runningId) || !selectedPage || !selectedInteraction}
+            className="w-full xl:mt-7 xl:w-auto"
+          >
+            {runningId ? (
+              <span className="animate-pulse">جارٍ التنفيذ</span>
+            ) : (
+              <>
+                <Play className="h-4 w-4" />
+                تشغيل
+              </>
+            )}
+          </Button>
         </div>
       </section>
 
