@@ -1,21 +1,46 @@
-# Generated Agent Knowledge
+# Generated Agent Knowledge Outputs
 
-Files in this directory are deterministic **cached views** generated from the current repository by `scripts/docs/`. They are overwrite-only and never more authoritative than the live graph built from the current checkout.
+These files are **overwrite-only**. Never hand-edit them.
 
-Regenerate with:
+Regenerate:
 
 ```bash
+npm run docs:generate
+# or
 npm run architecture:docs
 ```
 
-Validate the live graph and any committed snapshot drift with:
+Validate:
 
 ```bash
-npm run architecture:check
+npm run docs:ci
+npm run docs:diff
 ```
 
-Generated views can cover repository/domain/package/feature/service inventory, external dependency visibility, routes, owner-level dependencies, Development/Web/Static `out`/Android/iOS runtime relationships, build artifacts, command invocation, configuration, environment key **names and consumers**, tests, documentation relationships, graph health, the relational `knowledge-graph.json`, and a search index.
+## Layout
 
-Environment values are never valid generated knowledge. Command environment assignments are rendered as `<redacted>`.
+```text
+catalogs/
+  repository-catalog.md
+  document-catalog.md
+  route-catalog.md
+  api-contract-catalog.md
+  command-catalog.md
+  environment-catalog.md
+  native-capability-map.md
+  runtime-catalog.md
+  operational-catalog.md
+graphs/
+  knowledge-graph.json
+  search-index.json
+reports/
+  change-impact-index.md
+  doc-coverage-score.md
+  write-surface-map.md
+  env-safety-matrix.md
+  dead-docs-report.md
+  runtime-compatibility-matrix.md
+  graph-health.md
+```
 
-Do not edit generated facts manually; change their source, runtime/domain registry, or generator and regenerate.
+Legacy flat paths directly under `generated/` are no longer valid and fail docs CI until removed after regeneration.

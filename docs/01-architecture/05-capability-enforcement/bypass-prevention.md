@@ -64,7 +64,7 @@ Static and test-based bypass prevention. Runtime security (auth, CSRF) is separa
 
 ## No GitHub Actions escape hatch
 
-General GitHub CI is forbidden. The only workflow is `.github/workflows/docs.yml`, path-filtered to `docs/**`. Code pushes to `main` run no GitHub jobs. Correctness remains local npm scripts and `deploy:all` preflight. Local `npm run github:ci-policy` rejects a general workflow before it is reintroduced; that guard is not itself a GitHub `push` job. See [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
+General GitHub CI is forbidden. The only workflow is `.github/workflows/docs.yml`, path-filtered to documentation, agent instruction surfaces, and docs/knowledge/runtime tooling. Ordinary code-only pushes to `main` run no GitHub jobs. Correctness remains local npm scripts and `deploy:all` preflight. Local `npm run github:ci-policy` rejects a general workflow before it is reintroduced; that guard is not itself a GitHub general `push` job. See [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 ## Source Map
 

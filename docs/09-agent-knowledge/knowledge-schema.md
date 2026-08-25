@@ -50,7 +50,7 @@ Every edge is directional and typed:
 | `references` | A document links or mentions another known repository object |
 | `documents` | A documentation domain/document intentionally covers a repository object/runtime/artifact |
 | `tests` | A test verifies its owner or an imported target |
-| `related-to` | Intentional weaker relationship, including route-to-owner dependency projection |
+| `related-to` | Intentional weaker relationship, including route-to-owner dependency projection and route-to-write-gateway projection (`detail: route write gateway`) |
 | `affects-runtime` | Source/route/config has direct evidence of impact on a runtime surface |
 | `targets-runtime` | Command operates on/builds/runs a runtime |
 | `produces` | Command creates a build/release artifact |
@@ -86,6 +86,7 @@ The graph contract requires `artifact:static-out` to be produced by `npm run bui
 - External dependency nodes use the npm package name and never represent internal `@asol/*` packages.
 - Routes derive from App Router page/route files; route groups `(group)` and parallel slots `@slot` are removed from URL identity.
 - Server route handlers must not receive Static/Android/iOS runtime edges because they are absent from `out/`.
+- Route nodes also project transitive import neighborhoods toward `@asol/page-save-core`, `@asol/data-core`, and `@asol/storage-core` when detectable, using `related-to` with detail `route write gateway`.
 - Environment-key nodes store names only and validate against `^[A-Z][A-Z0-9_]*$`.
 - Root command nodes store command identity; generated operational text redacts environment assignment values.
 

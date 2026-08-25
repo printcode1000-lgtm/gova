@@ -1,6 +1,7 @@
 import type { DomainRegistry, KnowledgeGraph, KnowledgeNode } from './model';
 import { pathExists, readRepoJson, readRepoText } from './fs-scan';
 import { diffGeneratedKnowledge } from './generate';
+import { validateDocumentMutabilityRegistry } from './document-mutability';
 import { redactEnvironmentAssignments } from './operational-facts';
 import { buildRepositoryKnowledgeGraph } from './repository-knowledge';
 import { CORE_RUNTIME_IDS } from './runtime-knowledge';
@@ -25,7 +26,13 @@ const REQUIRED_ENTRY_POINTS = [
   'docs/09-agent-knowledge/context-packs.md',
   'docs/09-agent-knowledge/generation-and-drift.md',
   'docs/09-agent-knowledge/authoring-standard.md',
+  'docs/09-agent-knowledge/document-mutability.md',
+  'docs/09-agent-knowledge/document-mutability.json',
   'docs/09-agent-knowledge/domain-registry.json',
+  'docs/09-agent-knowledge/contracts/docs-ci.md',
+  'docs/09-agent-knowledge/contracts/runtime-compatibility.md',
+  'docs/09-agent-knowledge/contracts/documentation-update-policy.md',
+  'docs/09-agent-knowledge/contracts/protected-docs.md',
   'docs/09-agent-knowledge/generated/README.md',
 ] as const;
 
@@ -40,6 +47,9 @@ const AGENT_ENTRY_SURFACES = [
 const REQUIRED_AGENT_MARKERS = [
   'scripts/docs/context.ts',
   'docs/09-agent-knowledge/runtime-contract.md',
+  'document-mutability',
+  'runtime:check',
+  'docs:ci',
 ] as const;
 
 function nodeMap(graph: KnowledgeGraph): Map<string, KnowledgeNode> {
@@ -163,6 +173,12 @@ function validateGraphContract(graph: KnowledgeGraph): string[] {
   if (!sampleContext.includes('every change must consider Development, Web, Static `out/`, Android, and iOS')) {
     errors.push('context pack is missing the binding five-runtime rule');
   }
+  if (!sampleContext.includes('## Risk Classification')) {
+    errors.push('context pack is missing risk classification');
+  }
+  if (!sampleContext.includes('## Required Runtime-Compatibility Test Plan')) {
+    errors.push('context pack is missing runtime-compatibility test plan');
+  }
 
   return errors;
 }
@@ -214,6 +230,7 @@ export function validateAgentKnowledge(): string[] {
     errors.push('operational command redaction leaks environment assignment values');
   }
 
+  errors.push(...validateDocumentMutabilityRegistry());
   errors.push(...diffGeneratedKnowledge());
   return [...new Set(errors)].sort();
 }
@@ -222,7 +239,7 @@ if (process.argv[1]?.replace(/\\/g, '/').endsWith('/scripts/docs/check.ts')) {
   const errors = validateAgentKnowledge();
   if (errors.length) {
     for (const error of errors) console.error(`- ${error}`);
-    process.exitCode = 1;
+    process.exit(1);
   } else {
     console.log('Agent knowledge documentation contract passed.');
   }

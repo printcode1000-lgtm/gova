@@ -1,6 +1,11 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 
+import { renderApiContractCatalog, renderWriteSurfaceMap } from './api-and-write-catalogs';
+import { renderDocCoverageScore } from './coverage-score';
+import { collectDeadDocsFindings, renderDeadDocsReport } from './dead-docs';
+import { renderEnvSafetyMatrix } from './env-safety-matrix';
+import { renderNativeCapabilityMap } from './native-capability-map';
 import { buildRepositoryKnowledgeGraph } from './repository-knowledge';
 import { renderOperationalCatalog } from './operational-facts';
 import {
@@ -15,10 +20,35 @@ import {
   renderRuntimeCatalog,
   renderSearchIndexJson,
 } from './render';
+import { renderRuntimeCompatibilityMatrix } from '../runtime/compatibility-checks';
 
 const ROOT = process.cwd();
 
 export const GENERATED_KNOWLEDGE_FILES = [
+  'docs/09-agent-knowledge/generated/catalogs/repository-catalog.md',
+  'docs/09-agent-knowledge/generated/catalogs/document-catalog.md',
+  'docs/09-agent-knowledge/generated/catalogs/route-catalog.md',
+  'docs/09-agent-knowledge/generated/catalogs/api-contract-catalog.md',
+  'docs/09-agent-knowledge/generated/catalogs/command-catalog.md',
+  'docs/09-agent-knowledge/generated/catalogs/environment-catalog.md',
+  'docs/09-agent-knowledge/generated/catalogs/native-capability-map.md',
+  'docs/09-agent-knowledge/generated/catalogs/runtime-catalog.md',
+  'docs/09-agent-knowledge/generated/catalogs/operational-catalog.md',
+  'docs/09-agent-knowledge/generated/reports/change-impact-index.md',
+  'docs/09-agent-knowledge/generated/reports/doc-coverage-score.md',
+  'docs/09-agent-knowledge/generated/reports/write-surface-map.md',
+  'docs/09-agent-knowledge/generated/reports/env-safety-matrix.md',
+  'docs/09-agent-knowledge/generated/reports/dead-docs-report.md',
+  'docs/09-agent-knowledge/generated/reports/runtime-compatibility-matrix.md',
+  'docs/09-agent-knowledge/generated/reports/graph-health.md',
+  'docs/09-agent-knowledge/generated/graphs/knowledge-graph.json',
+  'docs/09-agent-knowledge/generated/graphs/search-index.json',
+] as const;
+
+export type GeneratedKnowledgeFile = (typeof GENERATED_KNOWLEDGE_FILES)[number];
+
+/** Legacy flat paths kept only so migration messaging stays actionable. */
+export const LEGACY_GENERATED_KNOWLEDGE_FILES = [
   'docs/09-agent-knowledge/generated/repository-catalog.md',
   'docs/09-agent-knowledge/generated/document-catalog.md',
   'docs/09-agent-knowledge/generated/route-catalog.md',
@@ -32,22 +62,28 @@ export const GENERATED_KNOWLEDGE_FILES = [
   'docs/09-agent-knowledge/generated/search-index.json',
 ] as const;
 
-export type GeneratedKnowledgeFile = (typeof GENERATED_KNOWLEDGE_FILES)[number];
-
 export function renderGeneratedKnowledgeFiles(): Map<GeneratedKnowledgeFile, string> {
   const graph = buildRepositoryKnowledgeGraph();
+  const deadFindings = collectDeadDocsFindings(graph);
   return new Map<GeneratedKnowledgeFile, string>([
     [GENERATED_KNOWLEDGE_FILES[0], renderRepositoryCatalog(graph)],
     [GENERATED_KNOWLEDGE_FILES[1], renderDocumentCatalog(graph)],
     [GENERATED_KNOWLEDGE_FILES[2], renderRouteCatalog(graph)],
-    [GENERATED_KNOWLEDGE_FILES[3], renderChangeImpactIndex(graph)],
-    [GENERATED_KNOWLEDGE_FILES[4], renderRuntimeCatalog(graph)],
-    [GENERATED_KNOWLEDGE_FILES[5], renderCommandCatalog(graph)],
-    [GENERATED_KNOWLEDGE_FILES[6], renderEnvironmentCatalog(graph)],
-    [GENERATED_KNOWLEDGE_FILES[7], renderGraphHealth(graph)],
+    [GENERATED_KNOWLEDGE_FILES[3], renderApiContractCatalog(graph)],
+    [GENERATED_KNOWLEDGE_FILES[4], renderCommandCatalog(graph)],
+    [GENERATED_KNOWLEDGE_FILES[5], renderEnvironmentCatalog(graph)],
+    [GENERATED_KNOWLEDGE_FILES[6], renderNativeCapabilityMap(graph)],
+    [GENERATED_KNOWLEDGE_FILES[7], renderRuntimeCatalog(graph)],
     [GENERATED_KNOWLEDGE_FILES[8], renderOperationalCatalog()],
-    [GENERATED_KNOWLEDGE_FILES[9], renderKnowledgeGraphJson(graph)],
-    [GENERATED_KNOWLEDGE_FILES[10], renderSearchIndexJson(graph)],
+    [GENERATED_KNOWLEDGE_FILES[9], renderChangeImpactIndex(graph)],
+    [GENERATED_KNOWLEDGE_FILES[10], renderDocCoverageScore(graph)],
+    [GENERATED_KNOWLEDGE_FILES[11], renderWriteSurfaceMap(graph)],
+    [GENERATED_KNOWLEDGE_FILES[12], renderEnvSafetyMatrix(graph)],
+    [GENERATED_KNOWLEDGE_FILES[13], renderDeadDocsReport(deadFindings)],
+    [GENERATED_KNOWLEDGE_FILES[14], renderRuntimeCompatibilityMatrix(graph)],
+    [GENERATED_KNOWLEDGE_FILES[15], renderGraphHealth(graph)],
+    [GENERATED_KNOWLEDGE_FILES[16], renderKnowledgeGraphJson(graph)],
+    [GENERATED_KNOWLEDGE_FILES[17], renderSearchIndexJson(graph)],
   ]);
 }
 
@@ -63,11 +99,19 @@ export function diffGeneratedKnowledge(): string[] {
   const errors: string[] = [];
   for (const [path, expected] of renderGeneratedKnowledgeFiles()) {
     const absolute = join(ROOT, path);
-    // Live graph validation is binding even in a checkout without committed snapshots.
-    // When a snapshot is committed, byte-for-byte drift is also binding.
-    if (!existsSync(absolute)) continue;
+    if (!existsSync(absolute)) {
+      errors.push(`${path} is missing; run npm run docs:generate`);
+      continue;
+    }
     const actual = readFileSync(absolute, 'utf8');
-    if (actual !== expected) errors.push(`${path} is stale; run npm run architecture:docs`);
+    if (actual !== expected) errors.push(`${path} is stale; run npm run docs:generate`);
+  }
+  for (const legacy of LEGACY_GENERATED_KNOWLEDGE_FILES) {
+    if (existsSync(join(ROOT, legacy))) {
+      errors.push(
+        `${legacy} is a legacy generated path; remove it and use the catalogs/graphs/reports layout via npm run docs:generate`,
+      );
+    }
   }
   return errors;
 }

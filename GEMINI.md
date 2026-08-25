@@ -38,6 +38,14 @@ Binding contract: `docs/09-agent-knowledge/runtime-contract.md`.
 
 Do not run `npm run build:static` merely as a generic verification command because it overwrites the release `out/` bundle.
 
+## Documentation Mutability and Docs CI
+
+- Protected docs (architecture/runtime/agent/docs-CI contracts, including `document-mutability`) are not normal editable docs. Require `[docs-contract-change]` or `DOCS_CONTRACT_CHANGE=1`.
+- Generated docs under `docs/09-agent-knowledge/generated/` are never hand-edited; regenerate with `npm run docs:generate`.
+- Normal feature work updates editable docs only.
+- Docs CI protects these rules: `npm run docs:ci`.
+- After code changes run `npm run runtime:check` (and `runtime:check:*`). Shared/release-relevant code must cover Static out, Development, Web, Android, and iOS. Dev-only code is checked for Development suitability and non-leakage into release behavior.
+
 ## Planning
 
 For complex or multi-file tasks, create a concise implementation plan before editing.
@@ -261,10 +269,12 @@ Before declaring the task complete:
 5. verify types
 6. run relevant tests
 7. run `npm run architecture:check`
-8. run the server/web build when appropriate
-9. explicitly evaluate Development, Web, Static `out/`, Android, and iOS
-10. ensure documentation/Knowledge Graph semantics remain accurate
-11. on a cloud server, push to `main`
+8. run `npm run runtime:check`
+9. run `npm run docs:ci` when docs/knowledge/runtime tooling or documentation changed
+10. run the server/web build when appropriate
+11. explicitly evaluate Development, Web, Static `out/`, Android, and iOS
+12. ensure documentation/Knowledge Graph semantics remain accurate (editable docs updated; protected only when authorized; generated never hand-edited)
+13. on a cloud server, push to `main`
 
 Report:
 

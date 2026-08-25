@@ -1,7 +1,7 @@
 <!-- GENERATED FILE. DO NOT EDIT BY HAND.
      Source: live repository graph built by scripts/docs/.
-     Regenerate: npm run architecture:docs
-     Validate: npm run architecture:check -->
+     Regenerate: npm run docs:generate
+     Validate: npm run docs:ci -->
 
 # Repository Catalog
 
@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 231 |
+| command | 245 |
 | config | 13 |
-| document | 226 |
+| document | 245 |
 | domain | 10 |
-| environment-key | 225 |
-| external-dependency | 106 |
+| environment-key | 226 |
+| external-dependency | 104 |
 | feature | 47 |
 | package | 41 |
 | route | 173 |
 | runtime | 7 |
-| script | 111 |
+| script | 127 |
 | service | 6 |
-| source | 2210 |
-| test | 209 |
+| source | 2006 |
+| test | 210 |
 
 ## Domains
 

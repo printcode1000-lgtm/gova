@@ -69,7 +69,7 @@ Only declared doors are importable. Enforced by four independent layers (see [En
 
 ### Rule 6 — Branch and release gates
 
-`main` is the only branch. Release quality is gated by local npm scripts in the build chain, not by GitHub Actions. The only GitHub workflow is docs-only and path-filtered to `docs/**`; see [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
+`main` is the only branch. Release quality is gated by local npm scripts in the build chain, not by GitHub Actions. The only GitHub workflow is docs-focused and path-filtered to documentation/agent/docs tooling surfaces; see [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 **Agent action:** Commit and push to `main`. Run `npm run build` or at minimum `npm run architecture:check` before claiming done. See ADR-0006.
 

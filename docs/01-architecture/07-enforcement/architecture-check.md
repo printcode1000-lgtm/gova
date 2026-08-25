@@ -18,7 +18,7 @@ npm run architecture:check
 
 Included in: `npm run build`, `npm run build:static`, `verify:*` scripts.
 
-GitHub Actions does not run this check. The only remote workflow is docs-only (`docs/**`). See [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
+GitHub Actions does not run this check as general app CI. The only remote workflow is docs-focused and path-filtered to documentation/agent/docs tooling surfaces. See [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 ## CLI preflight (application-specific)
 

@@ -1,28 +1,46 @@
 # GitHub CI Policy
 
-GitHub Actions is not a project correctness gate. Direct pushes to `main` must
-not wait on checks, reviews, pull requests, branch protection, or required
+GitHub Actions is not a general application correctness gate. Direct pushes to
+`main` must not wait on reviews, pull requests, branch protection, or required
 status checks.
 
 ## What runs remotely
 
 | Change in the commit | GitHub Actions |
 |---|---|
-| Code, packages, scripts, configuration, or native trees only | **Nothing.** `git push origin main` completes with no CI. |
-| Any path under `docs/**` (alone or mixed with other files) | **Docs workflow only** (`.github/workflows/docs.yml`) |
+| Ordinary application/native code only (outside the docs-aware path filter) | **Nothing.** `git push origin main` completes with no CI. |
+| Documentation, agent instruction surfaces, docs/knowledge/runtime tooling, or related package manifests listed below | **Docs workflow** (`.github/workflows/docs.yml`) |
 
-The docs workflow is path-filtered to `docs/**`. GitHub skips it when that
-glob does not match. It installs the lockfile with lifecycle scripts disabled,
-runs `npm run docs:check`, and must not run lint, typecheck, tests,
-`architecture:check`, or any application build.
+The docs workflow triggers on `push` and `pull_request` to `main` with an
+explicit positive path filter covering:
+
+- `docs/**`
+- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`
+- `.agents/**`, `.cursor/rules/**`
+- `scripts/docs/**`, `scripts/architecture/**`, `scripts/architecture-check.ts`
+- `scripts/runtime/**`, `scripts/github-ci-policy.ts`
+- `package.json`, `package-lock.json`
+- `.github/workflows/docs.yml`
+
+It installs the lockfile with lifecycle scripts disabled, runs
+`npm run docs:ci` and `npm run runtime:check`, and must not run lint,
+typecheck, full application tests, `architecture:check`, deploy, OTA publish,
+destructive database commands, or any application build.
+
+`docs:ci` is smart/scoped: editable-doc-only changes can take a lighter path;
+protected/generated/tooling/runtime-contract changes run the full documentation
+and knowledge validation suite.
 
 ## What must not exist
 
 - Any other file under `.github/workflows/`
-- `pull_request` / `pull_request_target` / `workflow_dispatch` / `schedule` triggers
+- `pull_request_target` / `workflow_dispatch` / `schedule` triggers
 - Pull-request templates or required PR merge
 - Branch protection or any active rule that can reject or delay an update to `main`
-- A required status check named `verify` or any other job
+- A required status check named `verify` or any other job that blocks `main`
+
+`pull_request` is allowed only as a docs-aware informational workflow for the
+same path filter. It must not become a required status check.
 
 `main` remains the only branch. The `main-only` ruleset (if applied) may block
 *creation* of other branches; it must exclude `refs/heads/main` so it cannot
@@ -37,12 +55,14 @@ local guard below.
 ## Local guards (not GitHub CI)
 
 These run on a developer machine as npm scripts. They must never be added as a
-`push` workflow that runs for the whole tree:
+general `push` workflow that runs for the whole application tree:
 
 ```bash
 npm run github:ci-policy
 npx tsx scripts/tests/github-ci-policy.test.ts
-npm run architecture:check   # includes the same policy as a preflight
+npm run docs:ci
+npm run runtime:check
+npm run architecture:check   # includes the GitHub CI policy as a preflight
 ```
 
 Correctness stays local: `npm run lint`, `npm run typecheck`,
@@ -69,3 +89,5 @@ Credential: `GITHUB_ADMIN_TOKEN` in `.env.local`. Never print the token.
 - Protection script: `scripts/protect-main-branch.ts`
 - Branch creation ruleset: `scripts/block-branch-creation.ts`
 - Hook: `.githooks/pre-push.d/10-main-only`
+- Docs CI: `scripts/docs/docs-ci.ts` via `npm run docs:ci`
+- Runtime checks: `scripts/runtime/check.ts` via `npm run runtime:check`

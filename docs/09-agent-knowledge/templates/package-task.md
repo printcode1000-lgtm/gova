@@ -12,7 +12,7 @@ npx tsx scripts/docs/context.ts @asol/<package> OR packages/<package>
 - `docs/09-agent-knowledge/document-mutability.md`
 - `docs/09-agent-knowledge/contracts/documentation-update-policy.md`
 - `docs/09-agent-knowledge/contracts/runtime-compatibility.md`
-- - `docs/01-architecture/02-packages/module-isolation-rules.md` (protected)
+- `docs/01-architecture/02-packages/module-isolation-rules.md` (protected)
 - capability docs under architecture/reference after regenerate
 
 ## Protected docs may be touched?

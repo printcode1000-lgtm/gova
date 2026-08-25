@@ -12,7 +12,7 @@ npx tsx scripts/docs/context.ts android/ OR ios/ OR packages/native-core
 - `docs/09-agent-knowledge/document-mutability.md`
 - `docs/09-agent-knowledge/contracts/documentation-update-policy.md`
 - `docs/09-agent-knowledge/contracts/runtime-compatibility.md`
-- - `docs/07-mobile-and-release/`
+- `docs/07-mobile-and-release/`
 - `docs/09-agent-knowledge/contracts/native-capabilities.md`
 
 ## Protected docs may be touched?

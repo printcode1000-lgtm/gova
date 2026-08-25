@@ -27,8 +27,13 @@ This file defines the documentation/knowledge goals that must remain true for ev
 | No silent uncertainty | Missing resolution or ambiguous scope must be surfaced instead of invented. | Context Pack failure behavior and explicit runtime evidence-gap wording. |
 | Drift detection | The live graph contract is validated on every architecture check; committed generated snapshots, when present, must match regeneration. | `scripts/docs/check.ts`, `diffGeneratedKnowledge()`, `npm run architecture:check`. |
 | Repository-wide search surface | External tools/agents can consume deterministic JSON/search/catalog output. | generated `knowledge-graph.json`, `search-index.json`, catalogs. |
-| Documentation stays with change | Behavior/API/data/config/runtime/operations changes update intentional docs in the same change. | Agent rules + authoring standard. |
+| Documentation stays with change | Behavior/API/data/config/runtime/operations changes update intentional **editable** docs in the same change. Protected docs require authorization. Generated docs are regenerated, never hand-edited. | Agent rules + `document-mutability.md` + `docs:mutability:check` / `docs:ci`. |
 | No duplicate factual inventories | Hand-written docs link to generated facts rather than maintaining parallel package/route/import/test lists. | `authoring-standard.md`; generated catalogs. |
+| Document mutability | Every docs/agent-instruction path is classified protected/editable/generated; unauthorized protected edits and hand-edited generated outputs fail loudly. | `document-mutability.json` + `scripts/docs/document-mutability.ts` + `npm run docs:mutability:check` / `docs:ci`. |
+| Dead docs detection | Broken internal links, missing required contracts/templates, and editable-doc attempts to redefine protected contracts fail validation. | `scripts/docs/dead-docs.ts` + generated dead-docs report. |
+| Risk classification | Context Packs expose low/medium/high/release-critical risk with reasons. | `scripts/docs/risk-classifier.ts`. |
+| Runtime-compatibility plan | Context Packs expose required runtime checks; `npm run runtime:check*` enforces safe non-publishing surface checks. | `scripts/docs/runtime-test-plan.ts` + `scripts/runtime/*` + `contracts/runtime-compatibility.md`. |
+| Docs CI | Documentation-aware CI entry point validates mutability, generation drift, dead docs, env safety, templates, and agent markers. | `npm run docs:ci` + `.github/workflows/docs.yml`. |
 
 ## Knowledge Graph v2 Coverage
 
@@ -68,21 +73,13 @@ The runtime contract is intentionally different from ordinary context retrieval.
 
 ## Generated Views
 
-`npm run architecture:docs` can materialize the live model as:
+`npm run docs:generate` (also via `npm run architecture:docs`) materializes the live model under `docs/09-agent-knowledge/generated/`:
 
-- repository catalog;
-- document catalog;
-- route/runtime catalog;
-- owner-level change-impact index;
-- runtime/artifact catalog;
-- command relationship catalog;
-- environment-usage catalog;
-- graph-health report;
-- redacted operational catalog;
-- full `knowledge-graph.json`;
-- `search-index.json`.
+- `catalogs/` — repository, document, route, API contract, command, environment, native capability, runtime, operational
+- `reports/` — change-impact, doc-coverage-score, write-surface-map, env-safety-matrix, dead-docs, runtime-compatibility-matrix, graph-health
+- `graphs/` — `knowledge-graph.json`, `search-index.json`
 
-These files are outputs. The live graph and contract are built from the current checkout, so an agent can obtain correct context while a change is still in progress.
+These files are overwrite-only outputs. The live graph and contract are built from the current checkout, so an agent can obtain correct context while a change is still in progress.
 
 ## Acceptance Rule
 
@@ -95,3 +92,5 @@ A documentation/knowledge change is incomplete if it improves prose but leaves a
 5. What does this mean for Development, Web, Static `out/`, Android, and iOS?
 6. Which boundary/gateway/invariant must not be bypassed?
 7. How is the change verified without exposing secrets or relying on stale generated facts?
+8. Is the documentation path protected, editable, or generated — and is the edit authorized?
+9. Which runtime-compatibility checks are required for this target?

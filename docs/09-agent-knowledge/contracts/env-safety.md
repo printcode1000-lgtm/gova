@@ -1,55 +1,46 @@
-# Env Safety Matrix
+# Env Safety
 
 ## Purpose
 
-Defines the Env Safety Matrix: a catalog of every environment variable **name** the repository reads or assigns, who consumes it, and which runtime it affects — with a single, absolute rule that values never enter documentation or generated knowledge.
+Defines the safety classification every environment variable **name** receives in the Knowledge Graph, what the generated Env Safety Matrix verifies, and why a server-only secret must never reach a static/native bundle. See [Generation and Drift](../generation-and-drift.md) § "Secret-Safety Invariant" for the no-values rule this contract extends into a per-key risk classification.
 
-## What It Covers
+## Scope
 
-Every environment key discovered from `.env.example`, `process.env.KEY` reads in source, and root-command assignments (`KEY=value node script.js`-style invocations in `package.json` scripts). This is the documentation-facing view of the `environment-key` nodes and `uses-environment` edges already defined in [Knowledge Schema](../knowledge-schema.md).
+Applies to every `environment-key` node discovered from `.env.example`, `process.env.KEY` code references, and redacted command assignments. Values are never in scope for this document or its generated evidence — only names, consumers, and classification.
 
-## Fields — Key Names Only
+## Generated Evidence
 
-| Field | Meaning |
-|---|---|
-| Key name | The exact `^[A-Z][A-Z0-9_]*$` identifier — never a value, never an example value, never a partially-redacted value. |
-| Consumers | Source files/commands/packages that read or assign the key. |
-| Runtime(s) affected | Which of Development/Web/Static `out/`/Android/iOS/services/tooling the key is relevant to. A `NEXT_PUBLIC_*` key is almost always bundled into the static/native client payload; a server-only key must never leak into a `NEXT_PUBLIC_*` name. |
-| Provisioning surface | Where the value is supplied in practice (`.env.local`, Vercel project environment, cloud-agent secret store, Fastlane/CI secret) — described as a procedure, never as the value itself. |
-| Required/optional | Whether the runtime fails without it. |
+`docs/09-agent-knowledge/generated/reports/env-safety-matrix.md` (source: `scripts/docs/env-safety-matrix.ts`) lists, per key: visibility (`client-visible` for `NEXT_PUBLIC_*`, else `server-only`), static/native classification (`allowed` / `dangerous` / `unknown`), sample consumers, relevance tags (`vercel/database`, `object-storage`, `native/fastlane`, `cloud-agent`, `ota/release`), overall classification, and required runtime checks. Regenerate with `npm run docs:generate`; never hand-edit.
 
-## Redaction Is Absolute
+## Classification Rules
 
-- Documentation and generated knowledge store **names only**. No default value, no "example" value that happens to be a real secret shape, no partially masked value.
-- Root-command text that embeds an assignment (`SECRET_KEY=... node script.js`) is rendered with the assignment replaced by `<redacted>` wherever it appears in generated operational output — this is a probed invariant (`npm run architecture:check` includes a redaction probe that fails if a known-sensitive or known-visible value ever leaks through).
-- If a key's very name is sensitive enough to imply structure worth hiding, that is still fine to document as a name; the rule is about the **value**, never the identifier.
+- `client-visible`: `NEXT_PUBLIC_*` keys. Safe by convention for static/native bundles because Next.js inlines them at build time.
+- `server-only` with a name matching `SECRET|TOKEN|PASSWORD|PRIVATE|KEY$`: classified `dangerous-for-static-native-if-leaked`. Must never reach a static/native bundle or a client-readable code path.
+- `server-only` consumed from a non-server `src/` path outside `/api/`: also classified `dangerous-for-static-native-if-leaked` — a signal the consumer may be reachable from client code.
+- No discovered consumers: classified `missing/unknown consumers` — an evidence gap, not proof of safety.
 
-## Why Names Only, Never Values
+## Required Runtime Checks Per Classification
 
-An agent (or a generated catalog committed to the repository) that includes a real secret value creates a permanent, hard-to-purge leak in Git history, independent of whether the file is later corrected. Treating environment knowledge as name-and-relationship-only means the catalog is exactly as safe to publish, share, and feed into external tooling as the rest of the (non-secret) Knowledge Graph.
+- `dangerous-for-static-native-if-leaked`: `npm run runtime:check:static`, `npm run runtime:check:web`, `npm run docs:ci`.
+- Everything else: `npm run runtime:check:changed` is the minimum.
 
-## Regeneration
+## Common Risks
 
-The matrix is `generated` truth, derived from `.env.example`, source `process.env` reads, and command-assignment scanning — not hand-maintained. Regenerate with:
-
-```bash
-npm run docs:generate
-# or
-npm run architecture:docs
-```
-
-Never hand-edit the generated matrix. If a key is missing or misattributed, fix `.env.example`/the source read/the command definition, then regenerate.
+- Introducing a new server-only secret key that is imported from shared `src/` code without a server boundary.
+- Renaming a key without updating `.env.example` and every consumer that references it.
+- Pasting an assignment value (`KEY=value`) into documentation, a generated catalog, or a command example instead of the key name.
 
 ## Verification
 
 ```bash
+npm run docs:generate
+npm run runtime:check:static
+npm run runtime:check:web
 npm run docs:ci
-npm run architecture:check   # includes the environment-assignment redaction probe
 ```
 
 ## Related Documents
 
-- [API Contract Catalog](./api-contracts.md)
-- [Generation and Drift](../generation-and-drift.md) — "Secret-Safety Invariant" section
-- [Knowledge Schema](../knowledge-schema.md)
-- [Data Task Template](../templates/data-task.md)
+- [Generation and Drift](../generation-and-drift.md)
+- [API Contracts](./api-contracts.md)
+- [Runtime Compatibility Contract](./runtime-compatibility.md)

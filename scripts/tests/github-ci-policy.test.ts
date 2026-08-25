@@ -6,6 +6,7 @@ import path from "node:path";
 import {
   collectGithubCiPolicyErrors,
   docsWorkflowViolations,
+  DOCS_WORKFLOW_PATH_FILTERS,
   FORBIDDEN_CI_PATHS,
   verifyGithubCiPolicy,
 } from "../github-ci-policy";
@@ -15,7 +16,7 @@ const live = verifyGithubCiPolicy();
 assert.deepEqual(live, [], live.join("\n"));
 
 const docsSource = readFileSync(path.join(process.cwd(), ".github", "workflows", "docs.yml"), "utf8");
-assert.equal(docsWorkflowViolations(docsSource).length, 0);
+assert.equal(docsWorkflowViolations(docsSource).length, 0, docsWorkflowViolations(docsSource).join("\n"));
 
 assert.ok(
   docsWorkflowViolations(`
@@ -29,27 +30,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: npm test
-`).includes("Docs workflow trigger must be exactly push.branches=[main] and push.paths=[docs/**]."),
+`).some((error) => error.includes("push to main") || error.includes("pull_request")),
 );
 
-const pullRequest = docsWorkflowViolations(`
+const missingPr = docsWorkflowViolations(`
 name: docs
 on:
   push:
     branches:
       - main
     paths:
-      - "docs/**"
-  pull_request:
-    branches:
-      - main
+${DOCS_WORKFLOW_PATH_FILTERS.map((item) => `      - "${item}"`).join("\n")}
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - run: npm run docs:check
+      - run: npm run docs:ci
 `);
-assert.ok(pullRequest.some((error) => error.includes("pull_request")));
+assert.ok(missingPr.some((error) => error.includes("pull_request")));
 
 const codeCi = docsWorkflowViolations(`
 name: docs
@@ -58,13 +56,18 @@ on:
     branches:
       - main
     paths:
-      - "docs/**"
+${DOCS_WORKFLOW_PATH_FILTERS.map((item) => `      - "${item}"`).join("\n")}
+  pull_request:
+    branches:
+      - main
+    paths:
+${DOCS_WORKFLOW_PATH_FILTERS.map((item) => `      - "${item}"`).join("\n")}
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
       - run: npm run lint
-      - run: npm run docs:check
+      - run: npm run docs:ci
 `);
 assert.ok(codeCi.some((error) => error.includes("npm run lint")));
 
@@ -77,16 +80,6 @@ const alternateAction = docsWorkflowViolations(
 );
 assert.ok(alternateAction.some((error) => error.includes("action is not allowed")));
 
-const extraEvent = docsWorkflowViolations(
-  docsSource.replace(/  push:\r?\n/, "  push:\n  issues:\n"),
-);
-assert.ok(extraEvent.some((error) => error.includes("trigger must be exactly")));
-
-const extraPath = docsWorkflowViolations(
-  docsSource.replace('      - "docs/**"', '      - "docs/**"\n      - "src/**"'),
-);
-assert.ok(extraPath.some((error) => error.includes("trigger must be exactly")));
-
 const dispatch = docsWorkflowViolations(`
 name: docs
 on:
@@ -95,12 +88,17 @@ on:
     branches:
       - main
     paths:
-      - "docs/**"
+${DOCS_WORKFLOW_PATH_FILTERS.map((item) => `      - "${item}"`).join("\n")}
+  pull_request:
+    branches:
+      - main
+    paths:
+${DOCS_WORKFLOW_PATH_FILTERS.map((item) => `      - "${item}"`).join("\n")}
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - run: npm run docs:check
+      - run: npm run docs:ci
 `);
 assert.ok(dispatch.some((error) => error.includes("workflow_dispatch")));
 
@@ -111,14 +109,19 @@ on:
     branches:
       - main
     paths:
-      - "docs/**"
+${DOCS_WORKFLOW_PATH_FILTERS.map((item) => `      - "${item}"`).join("\n")}
     paths-ignore:
       - "src/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+${DOCS_WORKFLOW_PATH_FILTERS.map((item) => `      - "${item}"`).join("\n")}
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - run: npm run docs:check
+      - run: npm run docs:ci
 `);
 assert.ok(pathsIgnore.some((error) => error.includes("paths-ignore")));
 

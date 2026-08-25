@@ -430,21 +430,40 @@ export function buildRepositoryKnowledgeGraph(): KnowledgeGraph {
     }
   }
 
+  const writeGatewayNames = new Set(['@asol/page-save-core', '@asol/data-core', '@asol/storage-core']);
   for (const [path, routeNode] of routeNodeByPath) {
     const source = sourceNodeByPath.get(path);
     if (!source) continue;
     const importedOwnerIds = new Set<string>();
-    for (const edge of edges.values()) {
-      if (edge.from !== source.id || edge.kind !== 'imports') continue;
-      const direct = nodes.get(edge.to);
-      if (!direct) continue;
-      if (['package', 'feature', 'service'].includes(direct.kind)) importedOwnerIds.add(direct.id);
-      if (direct.path) {
-        const owner = ownerBySourcePath.get(direct.path);
-        if (owner) importedOwnerIds.add(owner.id);
+    const writeGatewayIds = new Set<string>();
+    const frontier = [source.id];
+    const visited = new Set<string>(frontier);
+    for (let depth = 0; depth < 4 && frontier.length; depth += 1) {
+      const current = frontier.splice(0, frontier.length);
+      for (const fromId of current) {
+        for (const edge of edges.values()) {
+          if (edge.from !== fromId || edge.kind !== 'imports') continue;
+          const direct = nodes.get(edge.to);
+          if (!direct) continue;
+          if (['package', 'feature', 'service'].includes(direct.kind)) importedOwnerIds.add(direct.id);
+          if (direct.path) {
+            const owner = ownerBySourcePath.get(direct.path);
+            if (owner) importedOwnerIds.add(owner.id);
+          }
+          if (writeGatewayNames.has(direct.name) || [...writeGatewayNames].some((name) => edge.detail?.startsWith(name))) {
+            writeGatewayIds.add(direct.id);
+          }
+          if (!visited.has(direct.id) && depth < 3) {
+            visited.add(direct.id);
+            frontier.push(direct.id);
+          }
+        }
       }
     }
     for (const ownerId of importedOwnerIds) addEdge({ from: routeNode.id, to: ownerId, kind: 'related-to', detail: 'route source dependency' });
+    for (const gatewayId of writeGatewayIds) {
+      addEdge({ from: routeNode.id, to: gatewayId, kind: 'related-to', detail: 'route write gateway' });
+    }
   }
 
   const configNodeByPath = new Map<string, KnowledgeNode>();

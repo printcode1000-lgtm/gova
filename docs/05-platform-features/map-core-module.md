@@ -6,7 +6,7 @@
 It uses MapLibre GL JS, GeoJSON, OpenStreetMap-compatible tiles, and Supercluster. It has no
 Mapbox, Google Maps, paid SDK, or map-engine API-key requirement.
 
-It is held to [The Eight Module Isolation Rules](module-isolation-rules.md).
+It is held to [The Eight Module Isolation Rules](../01-architecture/02-packages/module-isolation-rules.md).
 
 ## Isolation contract
 

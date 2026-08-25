@@ -16,10 +16,11 @@ Read [Project Runtime Contract](./runtime-contract.md). An agent must consider a
 2. Read the **Project Runtime Contract** section in the returned pack. It is always present.
 3. Confirm the owner. For `@asol/*` work, the owning package and its declared exports are binding.
 4. Read every item under **Read First**. These are intentionally ranked, not a generic documentation dump.
-5. Inspect **Dependencies**, **Consumers**, **Routes**, **Services**, **Commands**, **Artifacts**, **Configuration**, **Environment Key Names**, **Tests**, and **Change Impact** as applicable.
+5. Inspect **Dependencies**, **Consumers**, **Routes**, **Services**, **Commands**, **Artifacts**, **Configuration**, **Environment Key Names**, **Tests**, **Risk Classification**, **Required Runtime-Compatibility Test Plan**, and **Change Impact** as applicable.
 6. Inspect **Target Runtime Footprint**, then explicitly evaluate compatibility with all five application surfaces. Missing direct runtime evidence is an evidence gap, not proof of non-impact.
 7. Identify mandatory gateways: database, object storage, native APIs, page-authored writes, notifications, OTA, deployment, and other architecture-owned infrastructure.
-8. Identify focused verification before writing code.
+8. Confirm documentation mutability: update editable docs with behavior changes; never hand-edit generated docs; touch protected docs only with `[docs-contract-change]` or `DOCS_CONTRACT_CHANGE=1`.
+9. Identify focused verification before writing code, including `npm run runtime:check` / `runtime:check:*` and `npm run docs:ci` when documentation/knowledge tooling is involved.
 
 ## Runtime Questions Required for Every Change
 
@@ -49,6 +50,8 @@ Run the cheapest relevant checks first and fix failures before moving on:
 npm run typecheck
 npm run lint
 npm run architecture:check
+npm run runtime:check
+npm run docs:ci
 ```
 
 Run the tests listed by the Context Pack plus tests introduced by the change. Use `npm run build` for the complete web/server release gate when appropriate.
@@ -58,10 +61,12 @@ Do not use `npm run build:static` as a generic check because it overwrites the r
 Regenerate generated knowledge when graph facts change:
 
 ```bash
+npm run docs:generate
+# or
 npm run architecture:docs
 ```
 
-Then ensure `npm run architecture:check` remains green.
+Then ensure `npm run architecture:check` and `npm run docs:ci` remain green.
 
 ## Escalation Rules
 

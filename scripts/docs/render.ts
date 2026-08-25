@@ -1,6 +1,6 @@
 import type { KnowledgeEdge, KnowledgeGraph, KnowledgeNode } from './model';
 
-const GENERATED_BANNER = `<!-- GENERATED FILE. DO NOT EDIT BY HAND.\n     Source: live repository graph built by scripts/docs/.\n     Regenerate: npm run architecture:docs\n     Validate: npm run architecture:check -->\n`;
+const GENERATED_BANNER = `<!-- GENERATED FILE. DO NOT EDIT BY HAND.\n     Source: live repository graph built by scripts/docs/.\n     Regenerate: npm run docs:generate\n     Validate: npm run docs:ci -->\n`;
 
 function cell(value: string | undefined): string {
   return (value || '').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');

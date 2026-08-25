@@ -9,11 +9,14 @@
    - Module isolation: Respect sealed packages under `packages/*`. Never use deep imports.
    - Single responsibility per file: Every file has one clear job and one reason to change.
    - English documentation exclusively under `docs/`.
-   - Generated knowledge under `docs/09-agent-knowledge/generated/` is overwrite-only. Change source code, registries, manifests, or intentional docs, then regenerate with `npm run architecture:docs`.
+   - Generated knowledge under `docs/09-agent-knowledge/generated/` is overwrite-only (`generated`). Change source code, registries, manifests, or editable intentional docs, then regenerate with `npm run docs:generate` (or `npm run architecture:docs`). Never hand-edit generated catalogs/graphs/reports.
+   - Documentation mutability: protected docs (contracts/agent rules/architecture/runtime policies) require explicit authorization via `[docs-contract-change]` in the commit message or `DOCS_CONTRACT_CHANGE=1`. Normal feature work updates editable docs only. See `docs/09-agent-knowledge/document-mutability.md`.
+   - After code changes, run runtime-compatibility checks with `npm run runtime:check` (and surface-specific `runtime:check:*`). Shared/release-relevant code must be evaluated for Static out, Development, Web, Android, and iOS. Dev-only surfaces are checked for Development suitability and non-leakage into release behavior.
+   - Documentation CI entry point: `npm run docs:ci`. Violations must stop the developer with loud actionable errors.
    - Never store environment values in generated/documentation knowledge; key names only. Generated command rendering must redact assignments.
 
 2. **Verification Gate**:
    - Run targeted tests first.
-   - `npm run typecheck && npm run lint && npm run architecture:check`
+   - `npm run typecheck && npm run lint && npm run architecture:check && npm run runtime:check && npm run docs:ci`
    - `npm run build` when the full server/web release gate is required.
    - Do not run `npm run build:static` merely as a generic check because it overwrites the release `out/` bundle.

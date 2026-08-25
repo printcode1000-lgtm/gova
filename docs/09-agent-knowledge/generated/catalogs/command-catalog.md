@@ -1,7 +1,7 @@
 <!-- GENERATED FILE. DO NOT EDIT BY HAND.
      Source: live repository graph built by scripts/docs/.
-     Regenerate: npm run architecture:docs
-     Validate: npm run architecture:check -->
+     Regenerate: npm run docs:generate
+     Validate: npm run docs:ci -->
 
 # Command Relationship Catalog
 
@@ -79,6 +79,13 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run dev` | `Development`, `Tooling` | 0 |  | 0 |
 | `npm run dev:checked` | `Development`, `Tooling` | 4 |  | 0 |
 | `npm run docs:check` | `Tooling` | 1 |  | 0 |
+| `npm run docs:ci` | `Tooling` | 1 |  | 0 |
+| `npm run docs:coverage` | `Tooling` | 1 |  | 0 |
+| `npm run docs:dead-links` | `Tooling` | 1 |  | 0 |
+| `npm run docs:diff` | `Tooling` | 1 |  | 0 |
+| `npm run docs:generate` | `Tooling` | 1 |  | 0 |
+| `npm run docs:mutability:check` | `Tooling` | 1 |  | 0 |
+| `npm run docs:runtime-coverage` | `Tooling` | 1 |  | 0 |
 | `npm run doctor:environment` | `Tooling` | 1 |  | 0 |
 | `npm run doctor:environment:production` | `Tooling` | 1 |  | 0 |
 | `npm run fastlane` | `Tooling` | 1 |  | 0 |
@@ -126,6 +133,13 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run r2:sync:cors` | `Tooling` | 1 |  | 0 |
 | `npm run release:android` | `Android`, `Tooling` | 1 | `Android release package (APK/AAB)` | 0 |
 | `npm run release:check` | `Tooling` | 1 |  | 0 |
+| `npm run runtime:check` | `Tooling` | 1 |  | 0 |
+| `npm run runtime:check:android` | `Android`, `Tooling` | 1 |  | 0 |
+| `npm run runtime:check:changed` | `Tooling` | 1 |  | 0 |
+| `npm run runtime:check:dev` | `Tooling` | 1 |  | 0 |
+| `npm run runtime:check:ios` | `iOS`, `Tooling` | 1 |  | 0 |
+| `npm run runtime:check:static` | `Static out`, `Tooling` | 1 |  | 0 |
+| `npm run runtime:check:web` | `Tooling` | 1 |  | 0 |
 | `npm run runtime:compatibility:check` | `Tooling` | 1 |  | 0 |
 | `npm run secrets:backup` | `Tooling` | 1 |  | 0 |
 | `npm run secrets:key:init` | `Tooling` | 1 |  | 0 |

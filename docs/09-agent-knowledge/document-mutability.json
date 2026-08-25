@@ -1,0 +1,236 @@
+{
+  "version": 1,
+  "authorization": {
+    "commitMessageMarker": "[docs-contract-change]",
+    "environmentVariable": "DOCS_CONTRACT_CHANGE",
+    "default": "deny",
+    "description": "Protected documentation may change only when the commit message contains [docs-contract-change] or DOCS_CONTRACT_CHANGE=1 is set for local/CI tooling. Generated documentation must never be hand-edited."
+  },
+  "classes": {
+    "protected": {
+      "description": "Binding project rules, architecture/runtime contracts, agent workflow, documentation CI, mutability, and runtime-compatibility verification rules. Not editable during normal feature work.",
+      "authorizationRequired": true
+    },
+    "editable": {
+      "description": "Operational and application documentation that must stay current with behavior changes without redefining protected contracts.",
+      "authorizationRequired": false
+    },
+    "generated": {
+      "description": "Overwrite-only outputs produced by generators. Never hand-edit.",
+      "authorizationRequired": false,
+      "handEditForbidden": true
+    }
+  },
+  "entries": [
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/runtime-contract.md",
+      "reason": "Binding five-surface runtime contract"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/coverage-contract.md",
+      "reason": "Binding knowledge coverage contract"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/knowledge-schema.md",
+      "reason": "Binding Knowledge Graph schema"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/context-packs.md",
+      "reason": "Binding Context Pack contract"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/generation-and-drift.md",
+      "reason": "Binding generation and drift policy"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/authoring-standard.md",
+      "reason": "Binding documentation authoring standard"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/document-mutability.md",
+      "reason": "Binding documentation mutability model"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/document-mutability.json",
+      "reason": "Machine-readable mutability registry"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/agent-protocol.md",
+      "reason": "Binding agent workflow protocol"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/domain-registry.json",
+      "reason": "Intentional domain-to-source registry"
+    },
+    {
+      "class": "protected",
+      "path": "docs/09-agent-knowledge/contracts/",
+      "reason": "Protected agent-knowledge contracts hub"
+    },
+    {
+      "class": "protected",
+      "path": "docs/01-architecture/",
+      "reason": "Architecture contracts and enforcement docs"
+    },
+    {
+      "class": "protected",
+      "path": "docs/07-mobile-and-release/release-and-secrets.md",
+      "reason": "Release and secrets safety contract"
+    },
+    {
+      "class": "protected",
+      "path": "docs/07-mobile-and-release/deployment-targets.md",
+      "reason": "Deployment target contract"
+    },
+    {
+      "class": "protected",
+      "path": "docs/07-mobile-and-release/scripts-and-workflows.md",
+      "reason": "Scripts and workflow contract including main-only"
+    },
+    {
+      "class": "protected",
+      "path": "docs/07-mobile-and-release/github-ci-policy.md",
+      "reason": "Documentation/GitHub CI policy contract"
+    },
+    {
+      "class": "protected",
+      "path": "docs/04-ui-components/touch-interaction-policy.md",
+      "reason": "Touch-only UI policy"
+    },
+    {
+      "class": "protected",
+      "path": "docs/04-ui-components/page-snapshot-system.md",
+      "reason": "Page snapshot system contract"
+    },
+    {
+      "class": "protected",
+      "path": "AGENTS.md",
+      "reason": "Primary agent instruction surface"
+    },
+    {
+      "class": "protected",
+      "path": "CLAUDE.md",
+      "reason": "Claude agent instruction surface"
+    },
+    {
+      "class": "protected",
+      "path": "GEMINI.md",
+      "reason": "Gemini agent instruction surface"
+    },
+    {
+      "class": "protected",
+      "path": ".agents/rules/agent-instructions.md",
+      "reason": "Agents rules instruction surface"
+    },
+    {
+      "class": "protected",
+      "path": ".cursor/rules/session-standards.mdc",
+      "reason": "Cursor always-on session standards"
+    },
+    {
+      "class": "editable",
+      "path": "docs/00-overview/",
+      "reason": "Product and overview documentation"
+    },
+    {
+      "class": "editable",
+      "path": "docs/02-data-and-storage/",
+      "reason": "Data and storage operational docs"
+    },
+    {
+      "class": "editable",
+      "path": "docs/03-products-and-commerce/",
+      "reason": "Products and commerce docs"
+    },
+    {
+      "class": "editable",
+      "path": "docs/04-ui-components/",
+      "reason": "UI docs except protected policy files listed above",
+      "except": [
+        "docs/04-ui-components/touch-interaction-policy.md",
+        "docs/04-ui-components/page-snapshot-system.md"
+      ]
+    },
+    {
+      "class": "editable",
+      "path": "docs/05-platform-features/",
+      "reason": "Platform feature docs"
+    },
+    {
+      "class": "editable",
+      "path": "docs/06-super-admin-and-operations/",
+      "reason": "Operations and super-admin docs"
+    },
+    {
+      "class": "editable",
+      "path": "docs/07-mobile-and-release/",
+      "reason": "Mobile/release operational docs except protected contracts listed above",
+      "except": [
+        "docs/07-mobile-and-release/release-and-secrets.md",
+        "docs/07-mobile-and-release/deployment-targets.md",
+        "docs/07-mobile-and-release/scripts-and-workflows.md",
+        "docs/07-mobile-and-release/github-ci-policy.md"
+      ]
+    },
+    {
+      "class": "editable",
+      "path": "docs/08-troubleshooting/",
+      "reason": "Troubleshooting docs"
+    },
+    {
+      "class": "editable",
+      "path": "docs/09-agent-knowledge/README.md",
+      "reason": "Hub overview may be clarified during knowledge work when not changing protected contracts"
+    },
+    {
+      "class": "editable",
+      "path": "docs/09-agent-knowledge/templates/",
+      "reason": "Task templates for agents; content must not redefine protected contracts"
+    },
+    {
+      "class": "editable",
+      "path": "docs/README.md",
+      "reason": "Docs index"
+    },
+    {
+      "class": "generated",
+      "path": "docs/09-agent-knowledge/generated/",
+      "reason": "Generated knowledge catalogs, graphs, and reports"
+    },
+    {
+      "class": "generated",
+      "path": "docs/01-architecture/08-reference/capability-map.md",
+      "reason": "Generated architecture capability map"
+    },
+    {
+      "class": "generated",
+      "path": "docs/01-architecture/08-reference/package-catalog.md",
+      "reason": "Generated architecture package catalog"
+    },
+    {
+      "class": "generated",
+      "path": "docs/01-architecture/08-reference/dependency-map.md",
+      "reason": "Generated architecture dependency map"
+    },
+    {
+      "class": "generated",
+      "path": "docs/01-architecture/08-reference/application-feature-catalog.md",
+      "reason": "Generated application feature catalog"
+    },
+    {
+      "class": "generated",
+      "path": "docs/01-architecture/08-reference/feature-seams.md",
+      "reason": "Generated feature seams reference"
+    }
+  ]
+}

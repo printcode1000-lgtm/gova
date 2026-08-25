@@ -1,7 +1,7 @@
 <!-- GENERATED FILE. DO NOT EDIT BY HAND.
      Source: live repository graph built by scripts/docs/.
-     Regenerate: npm run architecture:docs
-     Validate: npm run architecture:check -->
+     Regenerate: npm run docs:generate
+     Validate: npm run docs:ci -->
 
 # Environment Usage Catalog
 
@@ -79,6 +79,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_WEB_BUNDLE_READY` | server/tooling | 1 | `scripts/build-android-signed.ts` |
 | `CAPACITOR_SERVER_URL` | server/tooling | 0 |  |
 | `CI` | server/tooling | 1 | `scripts/schema-sync.ts` |
+| `DOCS_CI_BASE_REF` | server/tooling | 3 | `scripts/docs/docs-ci.ts`, `scripts/docs/mutability-check.ts`, `scripts/runtime/check.ts` |
 | `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD` | server/tooling | 0 |  |
 | `FASTLANE_SKIP_UPDATE_CHECK` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `FASTLANE_USER` | server/tooling | 0 |  |

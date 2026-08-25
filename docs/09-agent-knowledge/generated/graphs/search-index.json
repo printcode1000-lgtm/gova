@@ -1135,6 +1135,105 @@
       ]
     },
     {
+      "id": "command:docs:ci",
+      "kind": "command",
+      "name": "npm run docs:ci",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "ci",
+        "docs",
+        "docs:ci",
+        "npm",
+        "npm run docs:ci",
+        "run"
+      ]
+    },
+    {
+      "id": "command:docs:coverage",
+      "kind": "command",
+      "name": "npm run docs:coverage",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "coverage",
+        "docs",
+        "docs:coverage",
+        "npm",
+        "npm run docs:coverage",
+        "run"
+      ]
+    },
+    {
+      "id": "command:docs:dead-links",
+      "kind": "command",
+      "name": "npm run docs:dead-links",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "dead-links",
+        "docs",
+        "docs:dead-links",
+        "npm",
+        "npm run docs:dead-links",
+        "run"
+      ]
+    },
+    {
+      "id": "command:docs:diff",
+      "kind": "command",
+      "name": "npm run docs:diff",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "diff",
+        "docs",
+        "docs:diff",
+        "npm",
+        "npm run docs:diff",
+        "run"
+      ]
+    },
+    {
+      "id": "command:docs:generate",
+      "kind": "command",
+      "name": "npm run docs:generate",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "docs",
+        "docs:generate",
+        "generate",
+        "npm",
+        "npm run docs:generate",
+        "run"
+      ]
+    },
+    {
+      "id": "command:docs:mutability:check",
+      "kind": "command",
+      "name": "npm run docs:mutability:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "docs",
+        "docs:mutability:check",
+        "mutability",
+        "npm",
+        "npm run docs:mutability:check",
+        "run"
+      ]
+    },
+    {
+      "id": "command:docs:runtime-coverage",
+      "kind": "command",
+      "name": "npm run docs:runtime-coverage",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "docs",
+        "docs:runtime-coverage",
+        "npm",
+        "npm run docs:runtime-coverage",
+        "run",
+        "runtime-coverage"
+      ]
+    },
+    {
       "id": "command:doctor:environment",
       "kind": "command",
       "name": "npm run doctor:environment",
@@ -1820,6 +1919,110 @@
         "release",
         "release:check",
         "run"
+      ]
+    },
+    {
+      "id": "command:runtime:check",
+      "kind": "command",
+      "name": "npm run runtime:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "npm",
+        "npm run runtime:check",
+        "run",
+        "runtime",
+        "runtime:check"
+      ]
+    },
+    {
+      "id": "command:runtime:check:android",
+      "kind": "command",
+      "name": "npm run runtime:check:android",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "android",
+        "check",
+        "npm",
+        "npm run runtime:check:android",
+        "run",
+        "runtime",
+        "runtime:check:android"
+      ]
+    },
+    {
+      "id": "command:runtime:check:changed",
+      "kind": "command",
+      "name": "npm run runtime:check:changed",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "changed",
+        "check",
+        "npm",
+        "npm run runtime:check:changed",
+        "run",
+        "runtime",
+        "runtime:check:changed"
+      ]
+    },
+    {
+      "id": "command:runtime:check:dev",
+      "kind": "command",
+      "name": "npm run runtime:check:dev",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "dev",
+        "npm",
+        "npm run runtime:check:dev",
+        "run",
+        "runtime",
+        "runtime:check:dev"
+      ]
+    },
+    {
+      "id": "command:runtime:check:ios",
+      "kind": "command",
+      "name": "npm run runtime:check:ios",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "ios",
+        "npm",
+        "npm run runtime:check:ios",
+        "run",
+        "runtime",
+        "runtime:check:ios"
+      ]
+    },
+    {
+      "id": "command:runtime:check:static",
+      "kind": "command",
+      "name": "npm run runtime:check:static",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "npm",
+        "npm run runtime:check:static",
+        "run",
+        "runtime",
+        "runtime:check:static",
+        "static"
+      ]
+    },
+    {
+      "id": "command:runtime:check:web",
+      "kind": "command",
+      "name": "npm run runtime:check:web",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "npm",
+        "npm run runtime:check:web",
+        "run",
+        "runtime",
+        "runtime:check:web",
+        "web"
       ]
     },
     {
@@ -12480,9 +12683,10 @@
       "kind": "document",
       "name": "GitHub CI Policy",
       "path": "docs/07-mobile-and-release/github-ci-policy.md",
-      "summary": "GitHub Actions is not a project correctness gate. Direct pushes to `main` must not wait on checks, reviews, pull requests, branch protection, or required status checks.",
+      "summary": "GitHub Actions is not a general application correctness gate. Direct pushes to `main` must not wait on reviews, pull requests, branch protection, or required status checks.",
       "tags": [
         "actions",
+        "application",
         "branch",
         "checks",
         "ci",
@@ -12491,8 +12695,9 @@
         "docs/07-mobile-and-release/github-ci-policy",
         "docs/07-mobile-and-release/github-ci-policy.md",
         "gate",
+        "general",
         "github",
-        "github actions is not a project correctness gate. direct pushes to `main` must not wait on checks, reviews, pull requests, branch protection, or required status checks.",
+        "github actions is not a general application correctness gate. direct pushes to `main` must not wait on reviews, pull requests, branch protection, or required status checks.",
         "github ci policy",
         "is",
         "main",
@@ -12502,19 +12707,24 @@
         "on",
         "or",
         "policy",
-        "project",
         "protection",
         "pull",
         "pushes",
         "requests",
         "required",
         "reviews",
+        "scripts/architecture-check",
+        "scripts/architecture-check.ts",
         "scripts/block-branch-creation",
         "scripts/block-branch-creation.ts",
+        "scripts/docs/docs-ci",
+        "scripts/docs/docs-ci.ts",
         "scripts/github-ci-policy",
         "scripts/github-ci-policy.ts",
         "scripts/protect-main-branch",
         "scripts/protect-main-branch.ts",
+        "scripts/runtime/check",
+        "scripts/runtime/check.ts",
         "scripts/tests/github-ci-policy",
         "scripts/tests/github-ci-policy.test.ts",
         "status",
@@ -13587,6 +13797,468 @@
       ]
     },
     {
+      "id": "document:docs/09-agent-knowledge/contracts/api-contracts.md",
+      "kind": "document",
+      "name": "API Contracts",
+      "path": "docs/09-agent-knowledge/contracts/api-contracts.md",
+      "summary": "Defines what makes an App Router request handler (`src/app/api/**`, `src/app/**/route.*`) a safe, discoverable API contract, and what the generated API Contract Catalog verifies about it. Read [Project Runtime Contract](../runtime-contract.md) first — handlers are a Web/Developme",
+      "tags": [
+        "/route",
+        "/runtime-contract",
+        "@asol/data-core",
+        "@asol/page-save-core",
+        "@asol/storage-core",
+        "about",
+        "an",
+        "and",
+        "api",
+        "api contracts",
+        "app",
+        "are",
+        "catalog",
+        "contract",
+        "contracts",
+        "defines",
+        "defines what makes an app router request handler (`src/app/api/**`, `src/app/**/route.*`) a safe, discoverable api contract, and what the generated api contract catalog verifies about it. read [project runtime contract](../runtime-contract.md) first — handlers are a web/developme",
+        "discoverable",
+        "docs/03-products-and-commerce/",
+        "docs/05-platform-features/",
+        "docs/09-agent-knowledge/contracts/api-contracts",
+        "docs/09-agent-knowledge/contracts/api-contracts.md",
+        "docs/09-agent-knowledge/generated/catalogs/api-contract-catalog",
+        "docs/09-agent-knowledge/generated/catalogs/api-contract-catalog.md",
+        "first",
+        "generated",
+        "handler",
+        "handlers",
+        "it",
+        "makes",
+        "md",
+        "project",
+        "read",
+        "request",
+        "router",
+        "runtime",
+        "safe",
+        "scripts/docs/api-and-write-catalogs",
+        "scripts/docs/api-and-write-catalogs.ts",
+        "src/app/",
+        "src/app/api/",
+        "the",
+        "ts",
+        "verifies",
+        "web/developme",
+        "what"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/contracts/docs-ci.md",
+      "kind": "document",
+      "name": "Docs CI Contract",
+      "path": "docs/09-agent-knowledge/contracts/docs-ci.md",
+      "summary": "Defines what `npm run docs:ci` guarantees, when it runs in GitHub Actions, why its scope is deliberately narrow, and what it must never do. Read [GitHub CI Policy](../../07-mobile-and-release/github-ci-policy.md) first — that document is the binding, protected policy for what Git",
+      "tags": [
+        "/07-mobile-and-release/github-ci-policy",
+        "@asol/ota-core",
+        "actions",
+        "and",
+        "binding",
+        "ci",
+        "contract",
+        "defines",
+        "defines what `npm run docs:ci` guarantees, when it runs in github actions, why its scope is deliberately narrow, and what it must never do. read [github ci policy](../../07-mobile-and-release/github-ci-policy.md) first — that document is the binding, protected policy for what git",
+        "deliberately",
+        "do",
+        "docs",
+        "docs ci contract",
+        "docs/09-agent-knowledge/contracts/docs-ci",
+        "docs/09-agent-knowledge/contracts/docs-ci.md",
+        "document",
+        "first",
+        "for",
+        "git",
+        "github",
+        "guarantees",
+        "in",
+        "is",
+        "it",
+        "its",
+        "md",
+        "must",
+        "narrow",
+        "never",
+        "npm",
+        "policy",
+        "protected",
+        "read",
+        "run",
+        "runs",
+        "scope",
+        "that",
+        "the",
+        "what",
+        "when",
+        "why"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+      "kind": "document",
+      "name": "Documentation Update Policy",
+      "path": "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+      "summary": "States exactly when a change must update documentation, which class of document to touch, and the two hard boundaries: never hand-edit generated docs, never touch a protected doc without authorization. This is the operational decision rule that [Document Mutability](../document-m",
+      "tags": [
+        "/document-m",
+        "and",
+        "authorization",
+        "boundaries",
+        "change",
+        "class",
+        "decision",
+        "doc",
+        "docs",
+        "docs/00-overview/",
+        "docs/01-architecture/",
+        "docs/01-architecture/08-reference/",
+        "docs/02-data-and-storage/",
+        "docs/03-products-and-commerce/",
+        "docs/04-ui-components/",
+        "docs/05-platform-features/",
+        "docs/06-super-admin-and-operations/",
+        "docs/07-mobile-and-release/",
+        "docs/08-troubleshooting/",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+        "docs/09-agent-knowledge/domain-registry",
+        "docs/09-agent-knowledge/domain-registry.json",
+        "docs/09-agent-knowledge/generated/",
+        "docs/09-agent-knowledge/readme",
+        "docs/09-agent-knowledge/readme.md",
+        "docs/09-agent-knowledge/templates/",
+        "document",
+        "documentation",
+        "documentation update policy",
+        "exactly",
+        "generated",
+        "hand-edit",
+        "hard",
+        "is",
+        "json",
+        "md",
+        "must",
+        "mutability",
+        "never",
+        "of",
+        "operational",
+        "policy",
+        "protected",
+        "rule",
+        "states",
+        "states exactly when a change must update documentation, which class of document to touch, and the two hard boundaries: never hand-edit generated docs, never touch a protected doc without authorization. this is the operational decision rule that [document mutability](../document-m",
+        "that",
+        "the",
+        "this",
+        "to",
+        "touch",
+        "two",
+        "update",
+        "when",
+        "which",
+        "without"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/contracts/env-safety.md",
+      "kind": "document",
+      "name": "Env Safety",
+      "path": "docs/09-agent-knowledge/contracts/env-safety.md",
+      "summary": "Defines the safety classification every environment variable **name** receives in the Knowledge Graph, what the generated Env Safety Matrix verifies, and why a server-only secret must never reach a static/native bundle. See [Generation and Drift](../generation-and-drift.md) § \"Se",
+      "tags": [
+        "/generation-and-drift",
+        "and",
+        "bundle",
+        "classification",
+        "defines",
+        "defines the safety classification every environment variable **name** receives in the knowledge graph, what the generated env safety matrix verifies, and why a server-only secret must never reach a static/native bundle. see [generation and drift](../generation-and-drift.md) § \"se",
+        "docs/09-agent-knowledge/contracts/env-safety",
+        "docs/09-agent-knowledge/contracts/env-safety.md",
+        "docs/09-agent-knowledge/generated/reports/env-safety-matrix",
+        "docs/09-agent-knowledge/generated/reports/env-safety-matrix.md",
+        "drift",
+        "env",
+        "env safety",
+        "environment",
+        "every",
+        "generated",
+        "generation",
+        "graph",
+        "in",
+        "knowledge",
+        "matrix",
+        "md",
+        "must",
+        "name",
+        "never",
+        "reach",
+        "receives",
+        "safety",
+        "scripts/docs/env-safety-matrix",
+        "scripts/docs/env-safety-matrix.ts",
+        "se",
+        "secret",
+        "see",
+        "server-only",
+        "static/native",
+        "the",
+        "ts",
+        "variable",
+        "verifies",
+        "what",
+        "why"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/contracts/native-capabilities.md",
+      "kind": "document",
+      "name": "Native Capabilities",
+      "path": "docs/09-agent-knowledge/contracts/native-capabilities.md",
+      "summary": "Defines what the generated Native Capability Map covers, and the required discipline for a change touching Android permissions/manifest entries, iOS entitlements/Info.plist capability keys, or Capacitor plugin wiring. Read [Project Runtime Contract](../runtime-contract.md) first ",
+      "tags": [
+        "/runtime-contract",
+        "and",
+        "android",
+        "capabilities",
+        "capability",
+        "capacitor",
+        "change",
+        "contract",
+        "covers",
+        "defines",
+        "defines what the generated native capability map covers, and the required discipline for a change touching android permissions/manifest entries, ios entitlements/info.plist capability keys, or capacitor plugin wiring. read [project runtime contract](../runtime-contract.md) first ",
+        "discipline",
+        "docs/07-mobile-and-release/",
+        "docs/07-mobile-and-release/readme",
+        "docs/07-mobile-and-release/readme.md",
+        "docs/09-agent-knowledge/contracts/native-capabilities",
+        "docs/09-agent-knowledge/contracts/native-capabilities.md",
+        "docs/09-agent-knowledge/generated/catalogs/native-capability-map",
+        "docs/09-agent-knowledge/generated/catalogs/native-capability-map.md",
+        "entitlements/info",
+        "entries",
+        "first",
+        "for",
+        "generated",
+        "ios",
+        "keys",
+        "map",
+        "md",
+        "native",
+        "native capabilities",
+        "or",
+        "permissions/manifest",
+        "plist",
+        "plugin",
+        "project",
+        "read",
+        "required",
+        "runtime",
+        "scripts/docs/native-capability-map",
+        "scripts/docs/native-capability-map.ts",
+        "the",
+        "touching",
+        "ts",
+        "what",
+        "wiring"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/contracts/protected-docs.md",
+      "kind": "document",
+      "name": "Protected Docs",
+      "path": "docs/09-agent-knowledge/contracts/protected-docs.md",
+      "summary": "Defines the `protected` mutability class in depth: which files it covers, why each is protected, and the exact authorization an agent must supply before touching one. Read [Document Mutability](../document-mutability.md) first for the class model and enforcement chain; this docum",
+      "tags": [
+        "/document-mutability",
+        "agent",
+        "an",
+        "and",
+        "authorization",
+        "before",
+        "chain",
+        "class",
+        "covers",
+        "defines",
+        "defines the `protected` mutability class in depth: which files it covers, why each is protected, and the exact authorization an agent must supply before touching one. read [document mutability](../document-mutability.md) first for the class model and enforcement chain; this docum",
+        "depth",
+        "docs",
+        "docs/01-architecture/",
+        "docs/04-ui-components/page-snapshot-system",
+        "docs/04-ui-components/page-snapshot-system.md",
+        "docs/04-ui-components/touch-interaction-policy",
+        "docs/04-ui-components/touch-interaction-policy.md",
+        "docs/07-mobile-and-release/deployment-targets",
+        "docs/07-mobile-and-release/deployment-targets.md",
+        "docs/07-mobile-and-release/github-ci-policy",
+        "docs/07-mobile-and-release/github-ci-policy.md",
+        "docs/07-mobile-and-release/release-and-secrets",
+        "docs/07-mobile-and-release/release-and-secrets.md",
+        "docs/07-mobile-and-release/scripts-and-workflows",
+        "docs/07-mobile-and-release/scripts-and-workflows.md",
+        "docs/08-troubleshooting/problems/",
+        "docs/09-agent-knowledge/",
+        "docs/09-agent-knowledge/agent-protocol",
+        "docs/09-agent-knowledge/agent-protocol.md",
+        "docs/09-agent-knowledge/authoring-standard",
+        "docs/09-agent-knowledge/authoring-standard.md",
+        "docs/09-agent-knowledge/context-packs",
+        "docs/09-agent-knowledge/context-packs.md",
+        "docs/09-agent-knowledge/contracts/",
+        "docs/09-agent-knowledge/contracts/protected-docs",
+        "docs/09-agent-knowledge/contracts/protected-docs.md",
+        "docs/09-agent-knowledge/coverage-contract",
+        "docs/09-agent-knowledge/coverage-contract.md",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.json",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/domain-registry",
+        "docs/09-agent-knowledge/domain-registry.json",
+        "docs/09-agent-knowledge/generation-and-drift",
+        "docs/09-agent-knowledge/generation-and-drift.md",
+        "docs/09-agent-knowledge/knowledge-schema",
+        "docs/09-agent-knowledge/knowledge-schema.md",
+        "docs/09-agent-knowledge/runtime-contract",
+        "docs/09-agent-knowledge/runtime-contract.md",
+        "docs/09-agent-knowledge/templates/",
+        "docum",
+        "document",
+        "each",
+        "enforcement",
+        "exact",
+        "files",
+        "first",
+        "for",
+        "in",
+        "is",
+        "it",
+        "json",
+        "md",
+        "model",
+        "must",
+        "mutability",
+        "one",
+        "protected",
+        "protected docs",
+        "read",
+        "supply",
+        "the",
+        "this",
+        "touching",
+        "which",
+        "why"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+      "kind": "document",
+      "name": "Runtime Compatibility Contract",
+      "path": "docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+      "summary": "Defines the safe, non-publishing checks an agent runs to verify cross-runtime compatibility before completing a change, and the exact reason `npm run build:static` is excluded from that set. Read [Project Runtime Contract](../runtime-contract.md) first — it is the binding, protec",
+      "tags": [
+        "/runtime-contract",
+        "agent",
+        "an",
+        "and",
+        "before",
+        "binding",
+        "build",
+        "change",
+        "checks",
+        "compatibility",
+        "completing",
+        "contract",
+        "cross-runtime",
+        "defines",
+        "defines the safe, non-publishing checks an agent runs to verify cross-runtime compatibility before completing a change, and the exact reason `npm run build:static` is excluded from that set. read [project runtime contract](../runtime-contract.md) first — it is the binding, protec",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+        "exact",
+        "excluded",
+        "first",
+        "from",
+        "is",
+        "it",
+        "md",
+        "non-publishing",
+        "npm",
+        "project",
+        "protec",
+        "read",
+        "reason",
+        "run",
+        "runs",
+        "runtime",
+        "runtime compatibility contract",
+        "safe",
+        "set",
+        "static",
+        "that",
+        "the",
+        "to",
+        "verify"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/contracts/write-surfaces.md",
+      "kind": "document",
+      "name": "Write Surfaces",
+      "path": "docs/09-agent-knowledge/contracts/write-surfaces.md",
+      "summary": "Defines the write-gateway invariant every persistence-affecting code path must satisfy, and what the generated Write Surface Map verifies. A \"write surface\" is any source file whose code performs a create/update/delete/upload/save/insert/patch/mutate/publish operation.",
+      "tags": [
+        "@asol/data-core",
+        "@asol/page-save-core",
+        "@asol/storage-core",
+        "and",
+        "any",
+        "code",
+        "create/update/delete/upload/save/insert/patch/mutate/publish",
+        "defines",
+        "defines the write-gateway invariant every persistence-affecting code path must satisfy, and what the generated write surface map verifies. a \"write surface\" is any source file whose code performs a create/update/delete/upload/save/insert/patch/mutate/publish operation.",
+        "docs/01-architecture/",
+        "docs/01-architecture/02-packages/module-isolation-rules",
+        "docs/01-architecture/02-packages/module-isolation-rules.md",
+        "docs/09-agent-knowledge/contracts/write-surfaces",
+        "docs/09-agent-knowledge/contracts/write-surfaces.md",
+        "docs/09-agent-knowledge/generated/reports/write-surface-map",
+        "docs/09-agent-knowledge/generated/reports/write-surface-map.md",
+        "every",
+        "file",
+        "generated",
+        "invariant",
+        "is",
+        "map",
+        "md",
+        "must",
+        "operation",
+        "path",
+        "performs",
+        "persistence-affecting",
+        "satisfy",
+        "scripts/docs/api-and-write-catalogs",
+        "scripts/docs/api-and-write-catalogs.ts",
+        "source",
+        "surface",
+        "surfaces",
+        "the",
+        "ts",
+        "verifies",
+        "what",
+        "whose",
+        "write",
+        "write surfaces",
+        "write-gateway"
+      ]
+    },
+    {
       "id": "document:docs/09-agent-knowledge/coverage-contract.md",
       "kind": "document",
       "name": "Agent Knowledge Coverage Contract",
@@ -13604,6 +14276,7 @@
         "defines",
         "docs/09-agent-knowledge/coverage-contract",
         "docs/09-agent-knowledge/coverage-contract.md",
+        "docs/09-agent-knowledge/generated/",
         "docs/readme",
         "docs/readme.md",
         "documentation/knowledge",
@@ -13633,8 +14306,16 @@
         "scripts/docs/check.ts",
         "scripts/docs/context",
         "scripts/docs/context.ts",
+        "scripts/docs/dead-docs",
+        "scripts/docs/dead-docs.ts",
+        "scripts/docs/document-mutability",
+        "scripts/docs/document-mutability.ts",
         "scripts/docs/model",
         "scripts/docs/model.ts",
+        "scripts/docs/risk-classifier",
+        "scripts/docs/risk-classifier.ts",
+        "scripts/docs/runtime-test-plan",
+        "scripts/docs/runtime-test-plan.ts",
         "that",
         "the",
         "these",
@@ -13644,6 +14325,64 @@
         "ts",
         "under",
         "working"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/document-mutability.md",
+      "kind": "document",
+      "name": "Document Mutability",
+      "path": "docs/09-agent-knowledge/document-mutability.md",
+      "summary": "Not every file under `docs/` (plus the small set of root agent-instruction surfaces) may change for the same reason. This contract defines the three mutability classes every documentation change belongs to, the default-deny authorization rule that gates the most sensitive class, ",
+      "tags": [
+        "agent-instruction",
+        "authorization",
+        "belongs",
+        "change",
+        "class",
+        "classes",
+        "contract",
+        "default-deny",
+        "defines",
+        "docs/",
+        "docs/01-architecture/",
+        "docs/09-agent-knowledge/contracts/",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.json",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/generated/",
+        "document",
+        "document mutability",
+        "documentation",
+        "every",
+        "file",
+        "for",
+        "gates",
+        "json",
+        "may",
+        "md",
+        "most",
+        "mutability",
+        "not",
+        "not every file under `docs/` (plus the small set of root agent-instruction surfaces) may change for the same reason. this contract defines the three mutability classes every documentation change belongs to, the default-deny authorization rule that gates the most sensitive class, ",
+        "of",
+        "plus",
+        "reason",
+        "root",
+        "rule",
+        "same",
+        "scripts/docs/document-mutability",
+        "scripts/docs/document-mutability.ts",
+        "sensitive",
+        "set",
+        "small",
+        "surfaces",
+        "that",
+        "the",
+        "this",
+        "three",
+        "to",
+        "ts",
+        "under"
       ]
     },
     {
@@ -13708,6 +14447,9 @@
       "path": "docs/09-agent-knowledge/knowledge-schema.md",
       "summary": "Knowledge Graph v2 provides stable vocabulary for relationships an agent needs during change-impact analysis. It is deterministic, serializable as JSON, safe to build from a fresh checkout, and explicitly models runtime/build topology rather than treating the repository as a flat",
       "tags": [
+        "@asol/data-core",
+        "@asol/page-save-core",
+        "@asol/storage-core",
         "agent",
         "an",
         "analysis",
@@ -13776,7 +14518,6 @@
         "and",
         "before",
         "coordination",
-        "docs/01-architecture/",
         "docs/09-agent-knowledge/readme",
         "docs/09-agent-knowledge/readme.md",
         "documentation",
@@ -13842,6 +14583,418 @@
         "through",
         "together",
         "ts"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/api-task.md",
+      "kind": "document",
+      "name": "API Task Template",
+      "path": "docs/09-agent-knowledge/templates/api-task.md",
+      "summary": "**No** for normal API work.",
+      "tags": [
+        "**no** for normal api work.",
+        "api",
+        "api task template",
+        "docs/09-agent-knowledge/contracts/api-contracts",
+        "docs/09-agent-knowledge/contracts/api-contracts.md",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+        "docs/09-agent-knowledge/contracts/write-surfaces",
+        "docs/09-agent-knowledge/contracts/write-surfaces.md",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/runtime-contract",
+        "docs/09-agent-knowledge/runtime-contract.md",
+        "docs/09-agent-knowledge/templates/api-task",
+        "docs/09-agent-knowledge/templates/api-task.md",
+        "for",
+        "md",
+        "no",
+        "normal",
+        "task",
+        "template",
+        "work"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/data-task.md",
+      "kind": "document",
+      "name": "Data/Schema Task Template",
+      "path": "docs/09-agent-knowledge/templates/data-task.md",
+      "summary": "**No**, unless changing architecture data-layer contracts under `docs/01-architecture/`.",
+      "tags": [
+        "**no**, unless changing architecture data-layer contracts under `docs/01-architecture/`.",
+        "architecture",
+        "changing",
+        "contracts",
+        "data-layer",
+        "data/schema",
+        "data/schema task template",
+        "docs/01-architecture/",
+        "docs/02-data-and-storage/",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+        "docs/09-agent-knowledge/contracts/write-surfaces",
+        "docs/09-agent-knowledge/contracts/write-surfaces.md",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/runtime-contract",
+        "docs/09-agent-knowledge/runtime-contract.md",
+        "docs/09-agent-knowledge/templates/data-task",
+        "docs/09-agent-knowledge/templates/data-task.md",
+        "md",
+        "no",
+        "task",
+        "template",
+        "under",
+        "unless"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/deploy-task.md",
+      "kind": "document",
+      "name": "Deploy/OTA/Release Task Template",
+      "path": "docs/09-agent-knowledge/templates/deploy-task.md",
+      "summary": "**Only if** the task explicitly authorizes protected release/deploy contract changes (`[docs-contract-change]` / `DOCS_CONTRACT_CHANGE=1`).",
+      "tags": [
+        "**only if** the task explicitly authorizes protected release/deploy contract changes (`[docs-contract-change]` / `docs_contract_change=1`).",
+        "authorizes",
+        "changes",
+        "contract",
+        "deploy/ota/release",
+        "deploy/ota/release task template",
+        "docs-contract-change",
+        "docs/07-mobile-and-release/deployment-targets",
+        "docs/07-mobile-and-release/deployment-targets.md",
+        "docs/07-mobile-and-release/release-and-secrets",
+        "docs/07-mobile-and-release/release-and-secrets.md",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/runtime-contract",
+        "docs/09-agent-knowledge/runtime-contract.md",
+        "docs/09-agent-knowledge/templates/deploy-task",
+        "docs/09-agent-knowledge/templates/deploy-task.md",
+        "docs_contract_change",
+        "explicitly",
+        "if",
+        "md",
+        "only",
+        "protected",
+        "release/deploy",
+        "task",
+        "template",
+        "the"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/docs-ci-task.md",
+      "kind": "document",
+      "name": "Docs CI Task",
+      "path": "docs/09-agent-knowledge/templates/docs-ci-task.md",
+      "summary": "Use when changing `scripts/docs/**`, `.github/workflows/docs.yml`, `scripts/github-ci-policy.ts`, or the document-mutability/dead-docs/coverage tooling itself. Read [Docs CI Contract](../contracts/docs-ci.md) first.",
+      "tags": [
+        "/contracts/docs-ci",
+        "changing",
+        "ci",
+        "contract",
+        "docs",
+        "docs ci task",
+        "docs/07-mobile-and-release/github-ci-policy",
+        "docs/07-mobile-and-release/github-ci-policy.md",
+        "docs/09-agent-knowledge/contracts/docs-ci",
+        "docs/09-agent-knowledge/contracts/docs-ci.md",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/templates/docs-ci-task",
+        "docs/09-agent-knowledge/templates/docs-ci-task.md",
+        "document-mutability/dead-docs/coverage",
+        "first",
+        "github/workflows/docs",
+        "itself",
+        "md",
+        "or",
+        "read",
+        "scripts/docs/",
+        "scripts/github-ci-policy",
+        "scripts/github-ci-policy.ts",
+        "scripts/tests/github-ci-policy",
+        "scripts/tests/github-ci-policy.test.ts",
+        "task",
+        "test",
+        "the",
+        "tooling",
+        "ts",
+        "use",
+        "use when changing `scripts/docs/**`, `.github/workflows/docs.yml`, `scripts/github-ci-policy.ts`, or the document-mutability/dead-docs/coverage tooling itself. read [docs ci contract](../contracts/docs-ci.md) first.",
+        "when",
+        "yml"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/editable-doc-change-task.md",
+      "kind": "document",
+      "name": "Editable Doc Change Task",
+      "path": "docs/09-agent-knowledge/templates/editable-doc-change-task.md",
+      "summary": "Use for the normal case: a change to behavior, an API/data contract, configuration, runtime compatibility, or an operational step that must update the matching editable document in the same change. See [Documentation Update Policy](../contracts/documentation-update-policy.md).",
+      "tags": [
+        "/contracts/documentation-update-policy",
+        "an",
+        "api/data",
+        "behavior",
+        "case",
+        "change",
+        "compatibility",
+        "configuration",
+        "contract",
+        "doc",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+        "docs/09-agent-knowledge/domain-registry",
+        "docs/09-agent-knowledge/domain-registry.json",
+        "docs/09-agent-knowledge/generated/",
+        "docs/09-agent-knowledge/templates/editable-doc-change-task",
+        "docs/09-agent-knowledge/templates/editable-doc-change-task.md",
+        "document",
+        "documentation",
+        "editable",
+        "editable doc change task",
+        "for",
+        "in",
+        "json",
+        "matching",
+        "md",
+        "must",
+        "normal",
+        "operational",
+        "or",
+        "policy",
+        "runtime",
+        "same",
+        "see",
+        "step",
+        "task",
+        "that",
+        "the",
+        "to",
+        "update",
+        "use",
+        "use for the normal case: a change to behavior, an api/data contract, configuration, runtime compatibility, or an operational step that must update the matching editable document in the same change. see [documentation update policy](../contracts/documentation-update-policy.md)."
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/native-task.md",
+      "kind": "document",
+      "name": "Android/iOS/Native Task Template",
+      "path": "docs/09-agent-knowledge/templates/native-task.md",
+      "summary": "**No** for normal native work. Protected release/secrets/scripts docs need authorization.",
+      "tags": [
+        "**no** for normal native work. protected release/secrets/scripts docs need authorization.",
+        "android/ios/native",
+        "android/ios/native task template",
+        "authorization",
+        "docs",
+        "docs/07-mobile-and-release/",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+        "docs/09-agent-knowledge/contracts/native-capabilities",
+        "docs/09-agent-knowledge/contracts/native-capabilities.md",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/runtime-contract",
+        "docs/09-agent-knowledge/runtime-contract.md",
+        "docs/09-agent-knowledge/templates/native-task",
+        "docs/09-agent-knowledge/templates/native-task.md",
+        "for",
+        "md",
+        "native",
+        "need",
+        "no",
+        "normal",
+        "protected",
+        "release/secrets/scripts",
+        "task",
+        "template",
+        "work"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/package-task.md",
+      "kind": "document",
+      "name": "Package/Capability Task Template",
+      "path": "docs/09-agent-knowledge/templates/package-task.md",
+      "summary": "**Only if** changing package isolation/architecture contracts. Normal package behavior updates use editable docs.",
+      "tags": [
+        "**only if** changing package isolation/architecture contracts. normal package behavior updates use editable docs.",
+        "behavior",
+        "changing",
+        "contracts",
+        "docs",
+        "docs/01-architecture/02-packages/module-isolation-rules",
+        "docs/01-architecture/02-packages/module-isolation-rules.md",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/runtime-contract",
+        "docs/09-agent-knowledge/runtime-contract.md",
+        "docs/09-agent-knowledge/templates/package-task",
+        "docs/09-agent-knowledge/templates/package-task.md",
+        "editable",
+        "if",
+        "isolation/architecture",
+        "md",
+        "normal",
+        "only",
+        "package",
+        "package/capability",
+        "package/capability task template",
+        "task",
+        "template",
+        "updates",
+        "use"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/protected-doc-change-task.md",
+      "kind": "document",
+      "name": "Protected Doc Change Task",
+      "path": "docs/09-agent-knowledge/templates/protected-doc-change-task.md",
+      "summary": "Use only when a task genuinely requires altering a binding rule, a runtime/knowledge contract, an architecture contract, a release/CI/touch-UI/page-snapshot policy, or an agent instruction surface. Read [Document Mutability](../document-mutability.md) and [Protected Docs](../cont",
+      "tags": [
+        "/cont",
+        "/document-mutability",
+        "agent",
+        "altering",
+        "an",
+        "and",
+        "architecture",
+        "binding",
+        "change",
+        "contract",
+        "doc",
+        "docs",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+        "docs/09-agent-knowledge/contracts/protected-docs",
+        "docs/09-agent-knowledge/contracts/protected-docs.md",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/templates/protected-doc-change-task",
+        "docs/09-agent-knowledge/templates/protected-doc-change-task.md",
+        "document",
+        "genuinely",
+        "instruction",
+        "md",
+        "mutability",
+        "only",
+        "or",
+        "policy",
+        "protected",
+        "protected doc change task",
+        "read",
+        "release/ci/touch-ui/page-snapshot",
+        "requires",
+        "rule",
+        "runtime/knowledge",
+        "surface",
+        "task",
+        "use",
+        "use only when a task genuinely requires altering a binding rule, a runtime/knowledge contract, an architecture contract, a release/ci/touch-ui/page-snapshot policy, or an agent instruction surface. read [document mutability](../document-mutability.md) and [protected docs](../cont",
+        "when"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/runtime-compatibility-task.md",
+      "kind": "document",
+      "name": "Runtime Compatibility Task",
+      "path": "docs/09-agent-knowledge/templates/runtime-compatibility-task.md",
+      "summary": "Use whenever a change is release-relevant across the five application surfaces, or whenever `runtime:check*` output needs to be interpreted or extended. Read [Runtime Compatibility Contract](../contracts/runtime-compatibility.md) first.",
+      "tags": [
+        "/contracts/runtime-compatibility",
+        "across",
+        "application",
+        "be",
+        "change",
+        "check",
+        "compatibility",
+        "contract",
+        "docs/07-mobile-and-release/deployment-targets",
+        "docs/07-mobile-and-release/deployment-targets.md",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+        "docs/09-agent-knowledge/runtime-contract",
+        "docs/09-agent-knowledge/runtime-contract.md",
+        "docs/09-agent-knowledge/templates/runtime-compatibility-task",
+        "docs/09-agent-knowledge/templates/runtime-compatibility-task.md",
+        "extended",
+        "first",
+        "five",
+        "interpreted",
+        "is",
+        "md",
+        "needs",
+        "or",
+        "output",
+        "read",
+        "release-relevant",
+        "runtime",
+        "runtime compatibility task",
+        "surfaces",
+        "task",
+        "the",
+        "to",
+        "use",
+        "use whenever a change is release-relevant across the five application surfaces, or whenever `runtime:check*` output needs to be interpreted or extended. read [runtime compatibility contract](../contracts/runtime-compatibility.md) first.",
+        "whenever"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/templates/ui-task.md",
+      "kind": "document",
+      "name": "UI Task Template",
+      "path": "docs/09-agent-knowledge/templates/ui-task.md",
+      "summary": "**No**, unless the task explicitly changes touch/page-snapshot policy contracts.",
+      "tags": [
+        "**no**, unless the task explicitly changes touch/page-snapshot policy contracts.",
+        "changes",
+        "contracts",
+        "docs/04-ui-components/",
+        "docs/04-ui-components/touch-interaction-policy",
+        "docs/04-ui-components/touch-interaction-policy.md",
+        "docs/05-platform-features/",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy",
+        "docs/09-agent-knowledge/contracts/documentation-update-policy.md",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility",
+        "docs/09-agent-knowledge/contracts/runtime-compatibility.md",
+        "docs/09-agent-knowledge/document-mutability",
+        "docs/09-agent-knowledge/document-mutability.md",
+        "docs/09-agent-knowledge/runtime-contract",
+        "docs/09-agent-knowledge/runtime-contract.md",
+        "docs/09-agent-knowledge/templates/ui-task",
+        "docs/09-agent-knowledge/templates/ui-task.md",
+        "explicitly",
+        "md",
+        "no",
+        "policy",
+        "task",
+        "template",
+        "the",
+        "touch/page-snapshot",
+        "ui",
+        "ui task template",
+        "unless"
       ]
     },
     {
@@ -14984,6 +16137,19 @@
       "summary": "Server/tooling environment key name",
       "tags": [
         "ci",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:DOCS_CI_BASE_REF",
+      "kind": "environment-key",
+      "name": "DOCS_CI_BASE_REF",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "docs_ci_base_ref",
         "environment",
         "server",
         "server tooling environment",
@@ -17006,12 +18172,12 @@
       ]
     },
     {
-      "id": "external-dependency:)\r\n      ? line.slice(",
+      "id": "external-dependency:)\n      ? line.slice(",
       "kind": "external-dependency",
-      "name": ")\r\n      ? line.slice(",
+      "name": ")\n      ? line.slice(",
       "summary": "External package imported by repository source",
       "tags": [
-        ")\r\n      ? line.slice(",
+        ")\n      ? line.slice(",
         "dependency",
         "external",
         "external dependency npm package",
@@ -17569,20 +18735,6 @@
       ]
     },
     {
-      "id": "external-dependency:@maplibre/maplibre-gl-style-spec",
-      "kind": "external-dependency",
-      "name": "@maplibre/maplibre-gl-style-spec",
-      "summary": "External package imported by repository source",
-      "tags": [
-        "@maplibre/maplibre-gl-style-spec",
-        "dependency",
-        "external",
-        "external dependency npm package",
-        "npm",
-        "package"
-      ]
-    },
-    {
       "id": "external-dependency:@next/eslint-plugin-next",
       "kind": "external-dependency",
       "name": "@next/eslint-plugin-next",
@@ -17940,7 +19092,7 @@
       ]
     },
     {
-      "id": "external-dependency:/././",
+      "id": "external-dependency:\\.\\.\\",
       "kind": "external-dependency",
       "name": "\\.\\.\\",
       "summary": "External package imported by repository source",
@@ -18269,20 +19421,6 @@
         "nodemailer",
         "npm",
         "package"
-      ]
-    },
-    {
-      "id": "external-dependency:pbf",
-      "kind": "external-dependency",
-      "name": "pbf",
-      "summary": "External package imported by repository source",
-      "tags": [
-        "dependency",
-        "external",
-        "external dependency npm package",
-        "npm",
-        "package",
-        "pbf"
       ]
     },
     {
@@ -23315,6 +24453,17 @@
       ]
     },
     {
+      "id": "script:scripts/docs/api-and-write-catalogs.ts",
+      "kind": "script",
+      "name": "api-and-write-catalogs.ts",
+      "path": "scripts/docs/api-and-write-catalogs.ts",
+      "tags": [
+        "scripts/docs/api-and-write-catalogs",
+        "scripts/docs/api-and-write-catalogs.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/docs/check.ts",
       "kind": "script",
       "name": "check.ts",
@@ -23333,6 +24482,94 @@
       "tags": [
         "scripts/docs/context",
         "scripts/docs/context.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/coverage-cli.ts",
+      "kind": "script",
+      "name": "coverage-cli.ts",
+      "path": "scripts/docs/coverage-cli.ts",
+      "tags": [
+        "scripts/docs/coverage-cli",
+        "scripts/docs/coverage-cli.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/coverage-score.ts",
+      "kind": "script",
+      "name": "coverage-score.ts",
+      "path": "scripts/docs/coverage-score.ts",
+      "tags": [
+        "scripts/docs/coverage-score",
+        "scripts/docs/coverage-score.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/dead-docs-cli.ts",
+      "kind": "script",
+      "name": "dead-docs-cli.ts",
+      "path": "scripts/docs/dead-docs-cli.ts",
+      "tags": [
+        "scripts/docs/dead-docs-cli",
+        "scripts/docs/dead-docs-cli.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/dead-docs.ts",
+      "kind": "script",
+      "name": "dead-docs.ts",
+      "path": "scripts/docs/dead-docs.ts",
+      "tags": [
+        "scripts/docs/dead-docs",
+        "scripts/docs/dead-docs.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/docs-ci.ts",
+      "kind": "script",
+      "name": "docs-ci.ts",
+      "path": "scripts/docs/docs-ci.ts",
+      "tags": [
+        "scripts/docs/docs-ci",
+        "scripts/docs/docs-ci.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/docs-diff.ts",
+      "kind": "script",
+      "name": "docs-diff.ts",
+      "path": "scripts/docs/docs-diff.ts",
+      "tags": [
+        "scripts/docs/docs-diff",
+        "scripts/docs/docs-diff.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/document-mutability.ts",
+      "kind": "script",
+      "name": "document-mutability.ts",
+      "path": "scripts/docs/document-mutability.ts",
+      "tags": [
+        "scripts/docs/document-mutability",
+        "scripts/docs/document-mutability.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/env-safety-matrix.ts",
+      "kind": "script",
+      "name": "env-safety-matrix.ts",
+      "path": "scripts/docs/env-safety-matrix.ts",
+      "tags": [
+        "scripts/docs/env-safety-matrix",
+        "scripts/docs/env-safety-matrix.ts",
         "ts"
       ]
     },
@@ -23381,6 +24618,28 @@
       ]
     },
     {
+      "id": "script:scripts/docs/mutability-check.ts",
+      "kind": "script",
+      "name": "mutability-check.ts",
+      "path": "scripts/docs/mutability-check.ts",
+      "tags": [
+        "scripts/docs/mutability-check",
+        "scripts/docs/mutability-check.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/native-capability-map.ts",
+      "kind": "script",
+      "name": "native-capability-map.ts",
+      "path": "scripts/docs/native-capability-map.ts",
+      "tags": [
+        "scripts/docs/native-capability-map",
+        "scripts/docs/native-capability-map.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/docs/operational-facts.ts",
       "kind": "script",
       "name": "operational-facts.ts",
@@ -23414,6 +24673,28 @@
       ]
     },
     {
+      "id": "script:scripts/docs/risk-classifier.ts",
+      "kind": "script",
+      "name": "risk-classifier.ts",
+      "path": "scripts/docs/risk-classifier.ts",
+      "tags": [
+        "scripts/docs/risk-classifier",
+        "scripts/docs/risk-classifier.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/runtime-coverage-cli.ts",
+      "kind": "script",
+      "name": "runtime-coverage-cli.ts",
+      "path": "scripts/docs/runtime-coverage-cli.ts",
+      "tags": [
+        "scripts/docs/runtime-coverage-cli",
+        "scripts/docs/runtime-coverage-cli.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/docs/runtime-knowledge.ts",
       "kind": "script",
       "name": "runtime-knowledge.ts",
@@ -23421,6 +24702,17 @@
       "tags": [
         "scripts/docs/runtime-knowledge",
         "scripts/docs/runtime-knowledge.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/docs/runtime-test-plan.ts",
+      "kind": "script",
+      "name": "runtime-test-plan.ts",
+      "path": "scripts/docs/runtime-test-plan.ts",
+      "tags": [
+        "scripts/docs/runtime-test-plan",
+        "scripts/docs/runtime-test-plan.ts",
         "ts"
       ]
     },
@@ -23854,6 +25146,28 @@
       ]
     },
     {
+      "id": "script:scripts/runtime/check.ts",
+      "kind": "script",
+      "name": "check.ts",
+      "path": "scripts/runtime/check.ts",
+      "tags": [
+        "scripts/runtime/check",
+        "scripts/runtime/check.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/runtime/compatibility-checks.ts",
+      "kind": "script",
+      "name": "compatibility-checks.ts",
+      "path": "scripts/runtime/compatibility-checks.ts",
+      "tags": [
+        "scripts/runtime/compatibility-checks",
+        "scripts/runtime/compatibility-checks.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/schema-sync.ts",
       "kind": "script",
       "name": "schema-sync.ts",
@@ -24222,174 +25536,6 @@
       ]
     },
     {
-      "id": "source:android/.idea/AndroidProjectSystem.xml",
-      "kind": "source",
-      "name": "AndroidProjectSystem.xml",
-      "path": "android/.idea/AndroidProjectSystem.xml",
-      "tags": [
-        "android/",
-        "android/.idea/androidprojectsystem.xml",
-        "idea/androidprojectsystem",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/caches/deviceStreaming.xml",
-      "kind": "source",
-      "name": "deviceStreaming.xml",
-      "path": "android/.idea/caches/deviceStreaming.xml",
-      "tags": [
-        "android/",
-        "android/.idea/caches/devicestreaming.xml",
-        "idea/caches/devicestreaming",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/compiler.xml",
-      "kind": "source",
-      "name": "compiler.xml",
-      "path": "android/.idea/compiler.xml",
-      "tags": [
-        "android/",
-        "android/.idea/compiler.xml",
-        "idea/compiler",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/deploymentTargetSelector.xml",
-      "kind": "source",
-      "name": "deploymentTargetSelector.xml",
-      "path": "android/.idea/deploymentTargetSelector.xml",
-      "tags": [
-        "android/",
-        "android/.idea/deploymenttargetselector.xml",
-        "idea/deploymenttargetselector",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/deviceManager.xml",
-      "kind": "source",
-      "name": "deviceManager.xml",
-      "path": "android/.idea/deviceManager.xml",
-      "tags": [
-        "android/",
-        "android/.idea/devicemanager.xml",
-        "idea/devicemanager",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/gradle.xml",
-      "kind": "source",
-      "name": "gradle.xml",
-      "path": "android/.idea/gradle.xml",
-      "tags": [
-        "android/",
-        "android/.idea/gradle.xml",
-        "idea/gradle",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/markdown.xml",
-      "kind": "source",
-      "name": "markdown.xml",
-      "path": "android/.idea/markdown.xml",
-      "tags": [
-        "android/",
-        "android/.idea/markdown.xml",
-        "idea/markdown",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/migrations.xml",
-      "kind": "source",
-      "name": "migrations.xml",
-      "path": "android/.idea/migrations.xml",
-      "tags": [
-        "android/",
-        "android/.idea/migrations.xml",
-        "idea/migrations",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/misc.xml",
-      "kind": "source",
-      "name": "misc.xml",
-      "path": "android/.idea/misc.xml",
-      "tags": [
-        "android/",
-        "android/.idea/misc.xml",
-        "idea/misc",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/planningMode.xml",
-      "kind": "source",
-      "name": "planningMode.xml",
-      "path": "android/.idea/planningMode.xml",
-      "tags": [
-        "android/",
-        "android/.idea/planningmode.xml",
-        "idea/planningmode",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/runConfigurations.xml",
-      "kind": "source",
-      "name": "runConfigurations.xml",
-      "path": "android/.idea/runConfigurations.xml",
-      "tags": [
-        "android/",
-        "android/.idea/runconfigurations.xml",
-        "idea/runconfigurations",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/studiobot.xml",
-      "kind": "source",
-      "name": "studiobot.xml",
-      "path": "android/.idea/studiobot.xml",
-      "tags": [
-        "android/",
-        "android/.idea/studiobot.xml",
-        "idea/studiobot",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/vcs.xml",
-      "kind": "source",
-      "name": "vcs.xml",
-      "path": "android/.idea/vcs.xml",
-      "tags": [
-        "android/",
-        "android/.idea/vcs.xml",
-        "idea/vcs",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:android/.idea/workspace.xml",
-      "kind": "source",
-      "name": "workspace.xml",
-      "path": "android/.idea/workspace.xml",
-      "tags": [
-        "android/",
-        "android/.idea/workspace.xml",
-        "idea/workspace",
-        "xml"
-      ]
-    },
-    {
       "id": "source:android/app/build.gradle",
       "kind": "source",
       "name": "build.gradle",
@@ -24443,1013 +25589,6 @@
         "android/app/src/main/androidmanifest",
         "android/app/src/main/androidmanifest.xml",
         "xml"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/cGpyIpsDek2BGQBE0J95N/_buildManifest.js",
-      "kind": "source",
-      "name": "_buildManifest.js",
-      "path": "android/app/src/main/assets/public/_next/static/cGpyIpsDek2BGQBE0J95N/_buildManifest.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/cgpyipsdek2bgqbe0j95n/_buildmanifest",
-        "android/app/src/main/assets/public/_next/static/cgpyipsdek2bgqbe0j95n/_buildmanifest.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/cGpyIpsDek2BGQBE0J95N/_clientMiddlewareManifest.js",
-      "kind": "source",
-      "name": "_clientMiddlewareManifest.js",
-      "path": "android/app/src/main/assets/public/_next/static/cGpyIpsDek2BGQBE0J95N/_clientMiddlewareManifest.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/cgpyipsdek2bgqbe0j95n/_clientmiddlewaremanifest",
-        "android/app/src/main/assets/public/_next/static/cgpyipsdek2bgqbe0j95n/_clientmiddlewaremanifest.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/cGpyIpsDek2BGQBE0J95N/_ssgManifest.js",
-      "kind": "source",
-      "name": "_ssgManifest.js",
-      "path": "android/app/src/main/assets/public/_next/static/cGpyIpsDek2BGQBE0J95N/_ssgManifest.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/cgpyipsdek2bgqbe0j95n/_ssgmanifest",
-        "android/app/src/main/assets/public/_next/static/cgpyipsdek2bgqbe0j95n/_ssgmanifest.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0-4srap-ffvu1.js",
-      "kind": "source",
-      "name": "0-4srap-ffvu1.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0-4srap-ffvu1.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0-4srap-ffvu1",
-        "android/app/src/main/assets/public/_next/static/chunks/0-4srap-ffvu1.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0-nmzxg_koauq.js",
-      "kind": "source",
-      "name": "0-nmzxg_koauq.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0-nmzxg_koauq.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0-nmzxg_koauq",
-        "android/app/src/main/assets/public/_next/static/chunks/0-nmzxg_koauq.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0-p_efaqaui-o.js",
-      "kind": "source",
-      "name": "0-p_efaqaui-o.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0-p_efaqaui-o.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0-p_efaqaui-o",
-        "android/app/src/main/assets/public/_next/static/chunks/0-p_efaqaui-o.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/00g_69f6kltnm.js",
-      "kind": "source",
-      "name": "00g_69f6kltnm.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/00g_69f6kltnm.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/00g_69f6kltnm",
-        "android/app/src/main/assets/public/_next/static/chunks/00g_69f6kltnm.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/01m7x36n127__.js",
-      "kind": "source",
-      "name": "01m7x36n127__.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/01m7x36n127__.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/01m7x36n127__",
-        "android/app/src/main/assets/public/_next/static/chunks/01m7x36n127__.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/04kfujq2xiv8i.js",
-      "kind": "source",
-      "name": "04kfujq2xiv8i.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/04kfujq2xiv8i.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/04kfujq2xiv8i",
-        "android/app/src/main/assets/public/_next/static/chunks/04kfujq2xiv8i.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/05_sc975jeqpz.js",
-      "kind": "source",
-      "name": "05_sc975jeqpz.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/05_sc975jeqpz.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/05_sc975jeqpz",
-        "android/app/src/main/assets/public/_next/static/chunks/05_sc975jeqpz.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/05v6dxvpyx5d2.js",
-      "kind": "source",
-      "name": "05v6dxvpyx5d2.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/05v6dxvpyx5d2.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/05v6dxvpyx5d2",
-        "android/app/src/main/assets/public/_next/static/chunks/05v6dxvpyx5d2.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/06gjbjcpkgd13.js",
-      "kind": "source",
-      "name": "06gjbjcpkgd13.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/06gjbjcpkgd13.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/06gjbjcpkgd13",
-        "android/app/src/main/assets/public/_next/static/chunks/06gjbjcpkgd13.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/07afazkbg7jdv.js",
-      "kind": "source",
-      "name": "07afazkbg7jdv.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/07afazkbg7jdv.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/07afazkbg7jdv",
-        "android/app/src/main/assets/public/_next/static/chunks/07afazkbg7jdv.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/08jdyfhf5x0fy.js",
-      "kind": "source",
-      "name": "08jdyfhf5x0fy.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/08jdyfhf5x0fy.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/08jdyfhf5x0fy",
-        "android/app/src/main/assets/public/_next/static/chunks/08jdyfhf5x0fy.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/08lbpvth0tgn7.js",
-      "kind": "source",
-      "name": "08lbpvth0tgn7.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/08lbpvth0tgn7.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/08lbpvth0tgn7",
-        "android/app/src/main/assets/public/_next/static/chunks/08lbpvth0tgn7.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0cz1d0mv5g_q7.js",
-      "kind": "source",
-      "name": "0cz1d0mv5g_q7.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0cz1d0mv5g_q7.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0cz1d0mv5g_q7",
-        "android/app/src/main/assets/public/_next/static/chunks/0cz1d0mv5g_q7.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0dh9i9tzkfp1j.js",
-      "kind": "source",
-      "name": "0dh9i9tzkfp1j.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0dh9i9tzkfp1j.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0dh9i9tzkfp1j",
-        "android/app/src/main/assets/public/_next/static/chunks/0dh9i9tzkfp1j.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0dt6itranqncl.js",
-      "kind": "source",
-      "name": "0dt6itranqncl.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0dt6itranqncl.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0dt6itranqncl",
-        "android/app/src/main/assets/public/_next/static/chunks/0dt6itranqncl.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0gkapo3vyd-s7.js",
-      "kind": "source",
-      "name": "0gkapo3vyd-s7.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0gkapo3vyd-s7.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0gkapo3vyd-s7",
-        "android/app/src/main/assets/public/_next/static/chunks/0gkapo3vyd-s7.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0le-teresgyx5.js",
-      "kind": "source",
-      "name": "0le-teresgyx5.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0le-teresgyx5.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0le-teresgyx5",
-        "android/app/src/main/assets/public/_next/static/chunks/0le-teresgyx5.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0lgzmndtne3qa.js",
-      "kind": "source",
-      "name": "0lgzmndtne3qa.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0lgzmndtne3qa.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0lgzmndtne3qa",
-        "android/app/src/main/assets/public/_next/static/chunks/0lgzmndtne3qa.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0llmy4amk9zx-.js",
-      "kind": "source",
-      "name": "0llmy4amk9zx-.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0llmy4amk9zx-.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0llmy4amk9zx-",
-        "android/app/src/main/assets/public/_next/static/chunks/0llmy4amk9zx-.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0miaexpcqx95n.js",
-      "kind": "source",
-      "name": "0miaexpcqx95n.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0miaexpcqx95n.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0miaexpcqx95n",
-        "android/app/src/main/assets/public/_next/static/chunks/0miaexpcqx95n.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0pr0vzvn-wvwj.js",
-      "kind": "source",
-      "name": "0pr0vzvn-wvwj.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0pr0vzvn-wvwj.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0pr0vzvn-wvwj",
-        "android/app/src/main/assets/public/_next/static/chunks/0pr0vzvn-wvwj.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0qc12oz8sp33l.js",
-      "kind": "source",
-      "name": "0qc12oz8sp33l.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0qc12oz8sp33l.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0qc12oz8sp33l",
-        "android/app/src/main/assets/public/_next/static/chunks/0qc12oz8sp33l.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0vj2608sljm2p.js",
-      "kind": "source",
-      "name": "0vj2608sljm2p.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0vj2608sljm2p.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0vj2608sljm2p",
-        "android/app/src/main/assets/public/_next/static/chunks/0vj2608sljm2p.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0xfdjrxjfbjxo.js",
-      "kind": "source",
-      "name": "0xfdjrxjfbjxo.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0xfdjrxjfbjxo.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0xfdjrxjfbjxo",
-        "android/app/src/main/assets/public/_next/static/chunks/0xfdjrxjfbjxo.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/0zfb9y8nflbzi.js",
-      "kind": "source",
-      "name": "0zfb9y8nflbzi.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/0zfb9y8nflbzi.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/0zfb9y8nflbzi",
-        "android/app/src/main/assets/public/_next/static/chunks/0zfb9y8nflbzi.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1_8cqtfqg4m4-.js",
-      "kind": "source",
-      "name": "1_8cqtfqg4m4-.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1_8cqtfqg4m4-.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1_8cqtfqg4m4-",
-        "android/app/src/main/assets/public/_next/static/chunks/1_8cqtfqg4m4-.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1_ff_kq5z1x4r.js",
-      "kind": "source",
-      "name": "1_ff_kq5z1x4r.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1_ff_kq5z1x4r.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1_ff_kq5z1x4r",
-        "android/app/src/main/assets/public/_next/static/chunks/1_ff_kq5z1x4r.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/11vtfbcd87rud.js",
-      "kind": "source",
-      "name": "11vtfbcd87rud.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/11vtfbcd87rud.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/11vtfbcd87rud",
-        "android/app/src/main/assets/public/_next/static/chunks/11vtfbcd87rud.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/11wcxpb5osrba.js",
-      "kind": "source",
-      "name": "11wcxpb5osrba.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/11wcxpb5osrba.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/11wcxpb5osrba",
-        "android/app/src/main/assets/public/_next/static/chunks/11wcxpb5osrba.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/139cc2yx97wpe.js",
-      "kind": "source",
-      "name": "139cc2yx97wpe.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/139cc2yx97wpe.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/139cc2yx97wpe",
-        "android/app/src/main/assets/public/_next/static/chunks/139cc2yx97wpe.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/152yg2vs8vi_e.js",
-      "kind": "source",
-      "name": "152yg2vs8vi_e.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/152yg2vs8vi_e.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/152yg2vs8vi_e",
-        "android/app/src/main/assets/public/_next/static/chunks/152yg2vs8vi_e.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/17efmec2h8r5a.js",
-      "kind": "source",
-      "name": "17efmec2h8r5a.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/17efmec2h8r5a.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/17efmec2h8r5a",
-        "android/app/src/main/assets/public/_next/static/chunks/17efmec2h8r5a.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/18enq984epkga.js",
-      "kind": "source",
-      "name": "18enq984epkga.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/18enq984epkga.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/18enq984epkga",
-        "android/app/src/main/assets/public/_next/static/chunks/18enq984epkga.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/18yfiq8apm2ip.js",
-      "kind": "source",
-      "name": "18yfiq8apm2ip.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/18yfiq8apm2ip.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/18yfiq8apm2ip",
-        "android/app/src/main/assets/public/_next/static/chunks/18yfiq8apm2ip.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/19zh4ghg32ra5.js",
-      "kind": "source",
-      "name": "19zh4ghg32ra5.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/19zh4ghg32ra5.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/19zh4ghg32ra5",
-        "android/app/src/main/assets/public/_next/static/chunks/19zh4ghg32ra5.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1d3wpoc586w90.js",
-      "kind": "source",
-      "name": "1d3wpoc586w90.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1d3wpoc586w90.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1d3wpoc586w90",
-        "android/app/src/main/assets/public/_next/static/chunks/1d3wpoc586w90.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1h79cx1k6t-wj.js",
-      "kind": "source",
-      "name": "1h79cx1k6t-wj.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1h79cx1k6t-wj.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1h79cx1k6t-wj",
-        "android/app/src/main/assets/public/_next/static/chunks/1h79cx1k6t-wj.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1hm018of-j740.js",
-      "kind": "source",
-      "name": "1hm018of-j740.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1hm018of-j740.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1hm018of-j740",
-        "android/app/src/main/assets/public/_next/static/chunks/1hm018of-j740.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1j8od2hf9e5aa.js",
-      "kind": "source",
-      "name": "1j8od2hf9e5aa.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1j8od2hf9e5aa.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1j8od2hf9e5aa",
-        "android/app/src/main/assets/public/_next/static/chunks/1j8od2hf9e5aa.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1nmka6c5220ch.js",
-      "kind": "source",
-      "name": "1nmka6c5220ch.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1nmka6c5220ch.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1nmka6c5220ch",
-        "android/app/src/main/assets/public/_next/static/chunks/1nmka6c5220ch.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1ty_curyxdkz-.js",
-      "kind": "source",
-      "name": "1ty_curyxdkz-.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1ty_curyxdkz-.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1ty_curyxdkz-",
-        "android/app/src/main/assets/public/_next/static/chunks/1ty_curyxdkz-.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1vq-7g8i6qwr0.js",
-      "kind": "source",
-      "name": "1vq-7g8i6qwr0.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1vq-7g8i6qwr0.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1vq-7g8i6qwr0",
-        "android/app/src/main/assets/public/_next/static/chunks/1vq-7g8i6qwr0.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/1x5g4t9iajz7f.js",
-      "kind": "source",
-      "name": "1x5g4t9iajz7f.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/1x5g4t9iajz7f.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/1x5g4t9iajz7f",
-        "android/app/src/main/assets/public/_next/static/chunks/1x5g4t9iajz7f.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/20x95zoynuixl.js",
-      "kind": "source",
-      "name": "20x95zoynuixl.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/20x95zoynuixl.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/20x95zoynuixl",
-        "android/app/src/main/assets/public/_next/static/chunks/20x95zoynuixl.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/214agjvjovfb_.js",
-      "kind": "source",
-      "name": "214agjvjovfb_.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/214agjvjovfb_.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/214agjvjovfb_",
-        "android/app/src/main/assets/public/_next/static/chunks/214agjvjovfb_.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/22b71qlk35t1d.js",
-      "kind": "source",
-      "name": "22b71qlk35t1d.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/22b71qlk35t1d.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/22b71qlk35t1d",
-        "android/app/src/main/assets/public/_next/static/chunks/22b71qlk35t1d.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/23wtiv7idp6_-.js",
-      "kind": "source",
-      "name": "23wtiv7idp6_-.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/23wtiv7idp6_-.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/23wtiv7idp6_-",
-        "android/app/src/main/assets/public/_next/static/chunks/23wtiv7idp6_-.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/24w3tl_ucbgr6.js",
-      "kind": "source",
-      "name": "24w3tl_ucbgr6.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/24w3tl_ucbgr6.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/24w3tl_ucbgr6",
-        "android/app/src/main/assets/public/_next/static/chunks/24w3tl_ucbgr6.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/2e3i4f4ikr399.js",
-      "kind": "source",
-      "name": "2e3i4f4ikr399.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/2e3i4f4ikr399.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/2e3i4f4ikr399",
-        "android/app/src/main/assets/public/_next/static/chunks/2e3i4f4ikr399.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/2if6lay7o_hxm.js",
-      "kind": "source",
-      "name": "2if6lay7o_hxm.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/2if6lay7o_hxm.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/2if6lay7o_hxm",
-        "android/app/src/main/assets/public/_next/static/chunks/2if6lay7o_hxm.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/2iieg5cttwv_j.js",
-      "kind": "source",
-      "name": "2iieg5cttwv_j.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/2iieg5cttwv_j.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/2iieg5cttwv_j",
-        "android/app/src/main/assets/public/_next/static/chunks/2iieg5cttwv_j.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/2rz7_ab8nm5n1.js",
-      "kind": "source",
-      "name": "2rz7_ab8nm5n1.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/2rz7_ab8nm5n1.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/2rz7_ab8nm5n1",
-        "android/app/src/main/assets/public/_next/static/chunks/2rz7_ab8nm5n1.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/2uo69c2pd4euf.js",
-      "kind": "source",
-      "name": "2uo69c2pd4euf.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/2uo69c2pd4euf.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/2uo69c2pd4euf",
-        "android/app/src/main/assets/public/_next/static/chunks/2uo69c2pd4euf.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/2v1boob84t3ke.js",
-      "kind": "source",
-      "name": "2v1boob84t3ke.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/2v1boob84t3ke.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/2v1boob84t3ke",
-        "android/app/src/main/assets/public/_next/static/chunks/2v1boob84t3ke.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3_cbo43788bk0.js",
-      "kind": "source",
-      "name": "3_cbo43788bk0.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3_cbo43788bk0.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3_cbo43788bk0",
-        "android/app/src/main/assets/public/_next/static/chunks/3_cbo43788bk0.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3_j6e99q5zq9i.js",
-      "kind": "source",
-      "name": "3_j6e99q5zq9i.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3_j6e99q5zq9i.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3_j6e99q5zq9i",
-        "android/app/src/main/assets/public/_next/static/chunks/3_j6e99q5zq9i.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/38kv68cikm92d.js",
-      "kind": "source",
-      "name": "38kv68cikm92d.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/38kv68cikm92d.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/38kv68cikm92d",
-        "android/app/src/main/assets/public/_next/static/chunks/38kv68cikm92d.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/392vxd3ydvqsx.js",
-      "kind": "source",
-      "name": "392vxd3ydvqsx.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/392vxd3ydvqsx.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/392vxd3ydvqsx",
-        "android/app/src/main/assets/public/_next/static/chunks/392vxd3ydvqsx.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3ahiqtq77q3_z.js",
-      "kind": "source",
-      "name": "3ahiqtq77q3_z.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3ahiqtq77q3_z.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3ahiqtq77q3_z",
-        "android/app/src/main/assets/public/_next/static/chunks/3ahiqtq77q3_z.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3aqpx94flp384.js",
-      "kind": "source",
-      "name": "3aqpx94flp384.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3aqpx94flp384.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3aqpx94flp384",
-        "android/app/src/main/assets/public/_next/static/chunks/3aqpx94flp384.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3arwh1zs19zrw.js",
-      "kind": "source",
-      "name": "3arwh1zs19zrw.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3arwh1zs19zrw.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3arwh1zs19zrw",
-        "android/app/src/main/assets/public/_next/static/chunks/3arwh1zs19zrw.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3byplbu2bd8no.js",
-      "kind": "source",
-      "name": "3byplbu2bd8no.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3byplbu2bd8no.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3byplbu2bd8no",
-        "android/app/src/main/assets/public/_next/static/chunks/3byplbu2bd8no.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3d2a2njnstt-k.js",
-      "kind": "source",
-      "name": "3d2a2njnstt-k.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3d2a2njnstt-k.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3d2a2njnstt-k",
-        "android/app/src/main/assets/public/_next/static/chunks/3d2a2njnstt-k.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3emz_qguffe81.js",
-      "kind": "source",
-      "name": "3emz_qguffe81.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3emz_qguffe81.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3emz_qguffe81",
-        "android/app/src/main/assets/public/_next/static/chunks/3emz_qguffe81.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3iws5lbheo0da.js",
-      "kind": "source",
-      "name": "3iws5lbheo0da.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3iws5lbheo0da.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3iws5lbheo0da",
-        "android/app/src/main/assets/public/_next/static/chunks/3iws5lbheo0da.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3mvltxi0uozex.js",
-      "kind": "source",
-      "name": "3mvltxi0uozex.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3mvltxi0uozex.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3mvltxi0uozex",
-        "android/app/src/main/assets/public/_next/static/chunks/3mvltxi0uozex.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3ogh0n7_bl0vz.js",
-      "kind": "source",
-      "name": "3ogh0n7_bl0vz.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3ogh0n7_bl0vz.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3ogh0n7_bl0vz",
-        "android/app/src/main/assets/public/_next/static/chunks/3ogh0n7_bl0vz.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3svh1x_0hgcjd.js",
-      "kind": "source",
-      "name": "3svh1x_0hgcjd.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3svh1x_0hgcjd.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3svh1x_0hgcjd",
-        "android/app/src/main/assets/public/_next/static/chunks/3svh1x_0hgcjd.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3tszzavck1q54.js",
-      "kind": "source",
-      "name": "3tszzavck1q54.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3tszzavck1q54.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3tszzavck1q54",
-        "android/app/src/main/assets/public/_next/static/chunks/3tszzavck1q54.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3upy991swwhwc.js",
-      "kind": "source",
-      "name": "3upy991swwhwc.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3upy991swwhwc.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3upy991swwhwc",
-        "android/app/src/main/assets/public/_next/static/chunks/3upy991swwhwc.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3z-12xscv3ct9.js",
-      "kind": "source",
-      "name": "3z-12xscv3ct9.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3z-12xscv3ct9.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3z-12xscv3ct9",
-        "android/app/src/main/assets/public/_next/static/chunks/3z-12xscv3ct9.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3za1wzcr3k3i2.js",
-      "kind": "source",
-      "name": "3za1wzcr3k3i2.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3za1wzcr3k3i2.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3za1wzcr3k3i2",
-        "android/app/src/main/assets/public/_next/static/chunks/3za1wzcr3k3i2.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3zaovahi0d9hy.js",
-      "kind": "source",
-      "name": "3zaovahi0d9hy.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3zaovahi0d9hy.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3zaovahi0d9hy",
-        "android/app/src/main/assets/public/_next/static/chunks/3zaovahi0d9hy.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/3zff5c9trzrs7.js",
-      "kind": "source",
-      "name": "3zff5c9trzrs7.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/3zff5c9trzrs7.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/3zff5c9trzrs7",
-        "android/app/src/main/assets/public/_next/static/chunks/3zff5c9trzrs7.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/chunks/turbopack-1dps_bt5ky9ek.js",
-      "kind": "source",
-      "name": "turbopack-1dps_bt5ky9ek.js",
-      "path": "android/app/src/main/assets/public/_next/static/chunks/turbopack-1dps_bt5ky9ek.js",
-      "tags": [
-        "android/app/src/main/assets/public/_next/static/chunks/turbopack-1dps_bt5ky9ek",
-        "android/app/src/main/assets/public/_next/static/chunks/turbopack-1dps_bt5ky9ek.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/media/maplibre-gl-dev.20x3-5awu0rtw.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-dev.20x3-5awu0rtw.mjs",
-      "path": "android/app/src/main/assets/public/_next/static/media/maplibre-gl-dev.20x3-5awu0rtw.mjs",
-      "tags": [
-        "20x3-5awu0rtw",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-dev",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-dev.20x3-5awu0rtw.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/media/maplibre-gl-shared-dev.3cujs3u1p0bt2.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-shared-dev.3cujs3u1p0bt2.mjs",
-      "path": "android/app/src/main/assets/public/_next/static/media/maplibre-gl-shared-dev.3cujs3u1p0bt2.mjs",
-      "tags": [
-        "3cujs3u1p0bt2",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-shared-dev",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-shared-dev.3cujs3u1p0bt2.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/media/maplibre-gl-shared.3n592vt0na6rz.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-shared.3n592vt0na6rz.mjs",
-      "path": "android/app/src/main/assets/public/_next/static/media/maplibre-gl-shared.3n592vt0na6rz.mjs",
-      "tags": [
-        "3n592vt0na6rz",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-shared",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-shared.3n592vt0na6rz.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/media/maplibre-gl-worker-dev.1dyjzeito63ts.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-worker-dev.1dyjzeito63ts.mjs",
-      "path": "android/app/src/main/assets/public/_next/static/media/maplibre-gl-worker-dev.1dyjzeito63ts.mjs",
-      "tags": [
-        "1dyjzeito63ts",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-worker-dev",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-worker-dev.1dyjzeito63ts.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/media/maplibre-gl-worker.1hfb6nl_qj5oz.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-worker.1hfb6nl_qj5oz.mjs",
-      "path": "android/app/src/main/assets/public/_next/static/media/maplibre-gl-worker.1hfb6nl_qj5oz.mjs",
-      "tags": [
-        "1hfb6nl_qj5oz",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-worker",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl-worker.1hfb6nl_qj5oz.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/_next/static/media/maplibre-gl.3vqtpaudl-dky.mjs",
-      "kind": "source",
-      "name": "maplibre-gl.3vqtpaudl-dky.mjs",
-      "path": "android/app/src/main/assets/public/_next/static/media/maplibre-gl.3vqtpaudl-dky.mjs",
-      "tags": [
-        "3vqtpaudl-dky",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl",
-        "android/app/src/main/assets/public/_next/static/media/maplibre-gl.3vqtpaudl-dky.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/asol-app-init.js",
-      "kind": "source",
-      "name": "asol-app-init.js",
-      "path": "android/app/src/main/assets/public/asol-app-init.js",
-      "tags": [
-        "android/app/src/main/assets/public/asol-app-init",
-        "android/app/src/main/assets/public/asol-app-init.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/asol-push-sw.js",
-      "kind": "source",
-      "name": "asol-push-sw.js",
-      "path": "android/app/src/main/assets/public/asol-push-sw.js",
-      "tags": [
-        "android/app/src/main/assets/public/asol-push-sw",
-        "android/app/src/main/assets/public/asol-push-sw.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/asol-theme-init.js",
-      "kind": "source",
-      "name": "asol-theme-init.js",
-      "path": "android/app/src/main/assets/public/asol-theme-init.js",
-      "tags": [
-        "android/app/src/main/assets/public/asol-theme-init",
-        "android/app/src/main/assets/public/asol-theme-init.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/cordova_plugins.js",
-      "kind": "source",
-      "name": "cordova_plugins.js",
-      "path": "android/app/src/main/assets/public/cordova_plugins.js",
-      "tags": [
-        "android/app/src/main/assets/public/cordova_plugins",
-        "android/app/src/main/assets/public/cordova_plugins.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/cordova.js",
-      "kind": "source",
-      "name": "cordova.js",
-      "path": "android/app/src/main/assets/public/cordova.js",
-      "tags": [
-        "android/app/src/main/assets/public/cordova",
-        "android/app/src/main/assets/public/cordova.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/maplibre-gl-shared.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-shared.mjs",
-      "path": "android/app/src/main/assets/public/maplibre-gl-shared.mjs",
-      "tags": [
-        "android/app/src/main/assets/public/maplibre-gl-shared",
-        "android/app/src/main/assets/public/maplibre-gl-shared.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:android/app/src/main/assets/public/maplibre-gl-worker.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-worker.mjs",
-      "path": "android/app/src/main/assets/public/maplibre-gl-worker.mjs",
-      "tags": [
-        "android/app/src/main/assets/public/maplibre-gl-worker",
-        "android/app/src/main/assets/public/maplibre-gl-worker.mjs",
-        "mjs"
       ]
     },
     {
@@ -25574,17 +25713,6 @@
       ]
     },
     {
-      "id": "source:android/app/src/main/res/xml/config.xml",
-      "kind": "source",
-      "name": "config.xml",
-      "path": "android/app/src/main/res/xml/config.xml",
-      "tags": [
-        "android/app/src/main/res/xml/config",
-        "android/app/src/main/res/xml/config.xml",
-        "xml"
-      ]
-    },
-    {
       "id": "source:android/app/src/main/res/xml/data_extraction_rules.xml",
       "kind": "source",
       "name": "data_extraction_rules.xml",
@@ -25615,40 +25743,6 @@
         "android/build",
         "android/build.gradle",
         "gradle"
-      ]
-    },
-    {
-      "id": "source:android/capacitor-cordova-android-plugins/build.gradle",
-      "kind": "source",
-      "name": "build.gradle",
-      "path": "android/capacitor-cordova-android-plugins/build.gradle",
-      "tags": [
-        "android/capacitor-cordova-android-plugins/build",
-        "android/capacitor-cordova-android-plugins/build.gradle",
-        "gradle"
-      ]
-    },
-    {
-      "id": "source:android/capacitor-cordova-android-plugins/cordova.variables.gradle",
-      "kind": "source",
-      "name": "cordova.variables.gradle",
-      "path": "android/capacitor-cordova-android-plugins/cordova.variables.gradle",
-      "tags": [
-        "android/capacitor-cordova-android-plugins/cordova",
-        "android/capacitor-cordova-android-plugins/cordova.variables.gradle",
-        "gradle",
-        "variables"
-      ]
-    },
-    {
-      "id": "source:android/capacitor-cordova-android-plugins/src/main/AndroidManifest.xml",
-      "kind": "source",
-      "name": "AndroidManifest.xml",
-      "path": "android/capacitor-cordova-android-plugins/src/main/AndroidManifest.xml",
-      "tags": [
-        "android/capacitor-cordova-android-plugins/src/main/androidmanifest",
-        "android/capacitor-cordova-android-plugins/src/main/androidmanifest.xml",
-        "xml"
       ]
     },
     {
@@ -25697,17 +25791,6 @@
       ]
     },
     {
-      "id": "source:android/local.properties",
-      "kind": "source",
-      "name": "local.properties",
-      "path": "android/local.properties",
-      "tags": [
-        "android/local",
-        "android/local.properties",
-        "properties"
-      ]
-    },
-    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",
@@ -25727,17 +25810,6 @@
         "android/variables",
         "android/variables.gradle",
         "gradle"
-      ]
-    },
-    {
-      "id": "source:fastlane/report.xml",
-      "kind": "source",
-      "name": "report.xml",
-      "path": "fastlane/report.xml",
-      "tags": [
-        "fastlane/report",
-        "fastlane/report.xml",
-        "xml"
       ]
     },
     {
@@ -25788,28 +25860,6 @@
       ]
     },
     {
-      "id": "source:ios/App/App/config.xml",
-      "kind": "source",
-      "name": "config.xml",
-      "path": "ios/App/App/config.xml",
-      "tags": [
-        "ios/app/app/config",
-        "ios/app/app/config.xml",
-        "xml"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "source",
-      "name": "GoogleService-Info.plist",
-      "path": "ios/App/App/GoogleService-Info.plist",
-      "tags": [
-        "ios/app/app/googleservice-info",
-        "ios/app/app/googleservice-info.plist",
-        "plist"
-      ]
-    },
-    {
       "id": "source:ios/App/App/Info.plist",
       "kind": "source",
       "name": "Info.plist",
@@ -25818,1013 +25868,6 @@
         "ios/app/app/info",
         "ios/app/app/info.plist",
         "plist"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/cGpyIpsDek2BGQBE0J95N/_buildManifest.js",
-      "kind": "source",
-      "name": "_buildManifest.js",
-      "path": "ios/App/App/public/_next/static/cGpyIpsDek2BGQBE0J95N/_buildManifest.js",
-      "tags": [
-        "ios/app/app/public/_next/static/cgpyipsdek2bgqbe0j95n/_buildmanifest",
-        "ios/app/app/public/_next/static/cgpyipsdek2bgqbe0j95n/_buildmanifest.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/cGpyIpsDek2BGQBE0J95N/_clientMiddlewareManifest.js",
-      "kind": "source",
-      "name": "_clientMiddlewareManifest.js",
-      "path": "ios/App/App/public/_next/static/cGpyIpsDek2BGQBE0J95N/_clientMiddlewareManifest.js",
-      "tags": [
-        "ios/app/app/public/_next/static/cgpyipsdek2bgqbe0j95n/_clientmiddlewaremanifest",
-        "ios/app/app/public/_next/static/cgpyipsdek2bgqbe0j95n/_clientmiddlewaremanifest.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/cGpyIpsDek2BGQBE0J95N/_ssgManifest.js",
-      "kind": "source",
-      "name": "_ssgManifest.js",
-      "path": "ios/App/App/public/_next/static/cGpyIpsDek2BGQBE0J95N/_ssgManifest.js",
-      "tags": [
-        "ios/app/app/public/_next/static/cgpyipsdek2bgqbe0j95n/_ssgmanifest",
-        "ios/app/app/public/_next/static/cgpyipsdek2bgqbe0j95n/_ssgmanifest.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0-4srap-ffvu1.js",
-      "kind": "source",
-      "name": "0-4srap-ffvu1.js",
-      "path": "ios/App/App/public/_next/static/chunks/0-4srap-ffvu1.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0-4srap-ffvu1",
-        "ios/app/app/public/_next/static/chunks/0-4srap-ffvu1.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0-nmzxg_koauq.js",
-      "kind": "source",
-      "name": "0-nmzxg_koauq.js",
-      "path": "ios/App/App/public/_next/static/chunks/0-nmzxg_koauq.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0-nmzxg_koauq",
-        "ios/app/app/public/_next/static/chunks/0-nmzxg_koauq.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0-p_efaqaui-o.js",
-      "kind": "source",
-      "name": "0-p_efaqaui-o.js",
-      "path": "ios/App/App/public/_next/static/chunks/0-p_efaqaui-o.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0-p_efaqaui-o",
-        "ios/app/app/public/_next/static/chunks/0-p_efaqaui-o.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/00g_69f6kltnm.js",
-      "kind": "source",
-      "name": "00g_69f6kltnm.js",
-      "path": "ios/App/App/public/_next/static/chunks/00g_69f6kltnm.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/00g_69f6kltnm",
-        "ios/app/app/public/_next/static/chunks/00g_69f6kltnm.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/01m7x36n127__.js",
-      "kind": "source",
-      "name": "01m7x36n127__.js",
-      "path": "ios/App/App/public/_next/static/chunks/01m7x36n127__.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/01m7x36n127__",
-        "ios/app/app/public/_next/static/chunks/01m7x36n127__.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/04kfujq2xiv8i.js",
-      "kind": "source",
-      "name": "04kfujq2xiv8i.js",
-      "path": "ios/App/App/public/_next/static/chunks/04kfujq2xiv8i.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/04kfujq2xiv8i",
-        "ios/app/app/public/_next/static/chunks/04kfujq2xiv8i.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/05_sc975jeqpz.js",
-      "kind": "source",
-      "name": "05_sc975jeqpz.js",
-      "path": "ios/App/App/public/_next/static/chunks/05_sc975jeqpz.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/05_sc975jeqpz",
-        "ios/app/app/public/_next/static/chunks/05_sc975jeqpz.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/05v6dxvpyx5d2.js",
-      "kind": "source",
-      "name": "05v6dxvpyx5d2.js",
-      "path": "ios/App/App/public/_next/static/chunks/05v6dxvpyx5d2.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/05v6dxvpyx5d2",
-        "ios/app/app/public/_next/static/chunks/05v6dxvpyx5d2.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/06gjbjcpkgd13.js",
-      "kind": "source",
-      "name": "06gjbjcpkgd13.js",
-      "path": "ios/App/App/public/_next/static/chunks/06gjbjcpkgd13.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/06gjbjcpkgd13",
-        "ios/app/app/public/_next/static/chunks/06gjbjcpkgd13.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/07afazkbg7jdv.js",
-      "kind": "source",
-      "name": "07afazkbg7jdv.js",
-      "path": "ios/App/App/public/_next/static/chunks/07afazkbg7jdv.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/07afazkbg7jdv",
-        "ios/app/app/public/_next/static/chunks/07afazkbg7jdv.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/08jdyfhf5x0fy.js",
-      "kind": "source",
-      "name": "08jdyfhf5x0fy.js",
-      "path": "ios/App/App/public/_next/static/chunks/08jdyfhf5x0fy.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/08jdyfhf5x0fy",
-        "ios/app/app/public/_next/static/chunks/08jdyfhf5x0fy.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/08lbpvth0tgn7.js",
-      "kind": "source",
-      "name": "08lbpvth0tgn7.js",
-      "path": "ios/App/App/public/_next/static/chunks/08lbpvth0tgn7.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/08lbpvth0tgn7",
-        "ios/app/app/public/_next/static/chunks/08lbpvth0tgn7.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0cz1d0mv5g_q7.js",
-      "kind": "source",
-      "name": "0cz1d0mv5g_q7.js",
-      "path": "ios/App/App/public/_next/static/chunks/0cz1d0mv5g_q7.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0cz1d0mv5g_q7",
-        "ios/app/app/public/_next/static/chunks/0cz1d0mv5g_q7.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0dh9i9tzkfp1j.js",
-      "kind": "source",
-      "name": "0dh9i9tzkfp1j.js",
-      "path": "ios/App/App/public/_next/static/chunks/0dh9i9tzkfp1j.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0dh9i9tzkfp1j",
-        "ios/app/app/public/_next/static/chunks/0dh9i9tzkfp1j.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0dt6itranqncl.js",
-      "kind": "source",
-      "name": "0dt6itranqncl.js",
-      "path": "ios/App/App/public/_next/static/chunks/0dt6itranqncl.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0dt6itranqncl",
-        "ios/app/app/public/_next/static/chunks/0dt6itranqncl.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0gkapo3vyd-s7.js",
-      "kind": "source",
-      "name": "0gkapo3vyd-s7.js",
-      "path": "ios/App/App/public/_next/static/chunks/0gkapo3vyd-s7.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0gkapo3vyd-s7",
-        "ios/app/app/public/_next/static/chunks/0gkapo3vyd-s7.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0le-teresgyx5.js",
-      "kind": "source",
-      "name": "0le-teresgyx5.js",
-      "path": "ios/App/App/public/_next/static/chunks/0le-teresgyx5.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0le-teresgyx5",
-        "ios/app/app/public/_next/static/chunks/0le-teresgyx5.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0lgzmndtne3qa.js",
-      "kind": "source",
-      "name": "0lgzmndtne3qa.js",
-      "path": "ios/App/App/public/_next/static/chunks/0lgzmndtne3qa.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0lgzmndtne3qa",
-        "ios/app/app/public/_next/static/chunks/0lgzmndtne3qa.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0llmy4amk9zx-.js",
-      "kind": "source",
-      "name": "0llmy4amk9zx-.js",
-      "path": "ios/App/App/public/_next/static/chunks/0llmy4amk9zx-.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0llmy4amk9zx-",
-        "ios/app/app/public/_next/static/chunks/0llmy4amk9zx-.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0miaexpcqx95n.js",
-      "kind": "source",
-      "name": "0miaexpcqx95n.js",
-      "path": "ios/App/App/public/_next/static/chunks/0miaexpcqx95n.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0miaexpcqx95n",
-        "ios/app/app/public/_next/static/chunks/0miaexpcqx95n.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0pr0vzvn-wvwj.js",
-      "kind": "source",
-      "name": "0pr0vzvn-wvwj.js",
-      "path": "ios/App/App/public/_next/static/chunks/0pr0vzvn-wvwj.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0pr0vzvn-wvwj",
-        "ios/app/app/public/_next/static/chunks/0pr0vzvn-wvwj.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0qc12oz8sp33l.js",
-      "kind": "source",
-      "name": "0qc12oz8sp33l.js",
-      "path": "ios/App/App/public/_next/static/chunks/0qc12oz8sp33l.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0qc12oz8sp33l",
-        "ios/app/app/public/_next/static/chunks/0qc12oz8sp33l.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0vj2608sljm2p.js",
-      "kind": "source",
-      "name": "0vj2608sljm2p.js",
-      "path": "ios/App/App/public/_next/static/chunks/0vj2608sljm2p.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0vj2608sljm2p",
-        "ios/app/app/public/_next/static/chunks/0vj2608sljm2p.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0xfdjrxjfbjxo.js",
-      "kind": "source",
-      "name": "0xfdjrxjfbjxo.js",
-      "path": "ios/App/App/public/_next/static/chunks/0xfdjrxjfbjxo.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0xfdjrxjfbjxo",
-        "ios/app/app/public/_next/static/chunks/0xfdjrxjfbjxo.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/0zfb9y8nflbzi.js",
-      "kind": "source",
-      "name": "0zfb9y8nflbzi.js",
-      "path": "ios/App/App/public/_next/static/chunks/0zfb9y8nflbzi.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/0zfb9y8nflbzi",
-        "ios/app/app/public/_next/static/chunks/0zfb9y8nflbzi.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1_8cqtfqg4m4-.js",
-      "kind": "source",
-      "name": "1_8cqtfqg4m4-.js",
-      "path": "ios/App/App/public/_next/static/chunks/1_8cqtfqg4m4-.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1_8cqtfqg4m4-",
-        "ios/app/app/public/_next/static/chunks/1_8cqtfqg4m4-.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1_ff_kq5z1x4r.js",
-      "kind": "source",
-      "name": "1_ff_kq5z1x4r.js",
-      "path": "ios/App/App/public/_next/static/chunks/1_ff_kq5z1x4r.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1_ff_kq5z1x4r",
-        "ios/app/app/public/_next/static/chunks/1_ff_kq5z1x4r.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/11vtfbcd87rud.js",
-      "kind": "source",
-      "name": "11vtfbcd87rud.js",
-      "path": "ios/App/App/public/_next/static/chunks/11vtfbcd87rud.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/11vtfbcd87rud",
-        "ios/app/app/public/_next/static/chunks/11vtfbcd87rud.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/11wcxpb5osrba.js",
-      "kind": "source",
-      "name": "11wcxpb5osrba.js",
-      "path": "ios/App/App/public/_next/static/chunks/11wcxpb5osrba.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/11wcxpb5osrba",
-        "ios/app/app/public/_next/static/chunks/11wcxpb5osrba.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/139cc2yx97wpe.js",
-      "kind": "source",
-      "name": "139cc2yx97wpe.js",
-      "path": "ios/App/App/public/_next/static/chunks/139cc2yx97wpe.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/139cc2yx97wpe",
-        "ios/app/app/public/_next/static/chunks/139cc2yx97wpe.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/152yg2vs8vi_e.js",
-      "kind": "source",
-      "name": "152yg2vs8vi_e.js",
-      "path": "ios/App/App/public/_next/static/chunks/152yg2vs8vi_e.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/152yg2vs8vi_e",
-        "ios/app/app/public/_next/static/chunks/152yg2vs8vi_e.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/17efmec2h8r5a.js",
-      "kind": "source",
-      "name": "17efmec2h8r5a.js",
-      "path": "ios/App/App/public/_next/static/chunks/17efmec2h8r5a.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/17efmec2h8r5a",
-        "ios/app/app/public/_next/static/chunks/17efmec2h8r5a.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/18enq984epkga.js",
-      "kind": "source",
-      "name": "18enq984epkga.js",
-      "path": "ios/App/App/public/_next/static/chunks/18enq984epkga.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/18enq984epkga",
-        "ios/app/app/public/_next/static/chunks/18enq984epkga.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/18yfiq8apm2ip.js",
-      "kind": "source",
-      "name": "18yfiq8apm2ip.js",
-      "path": "ios/App/App/public/_next/static/chunks/18yfiq8apm2ip.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/18yfiq8apm2ip",
-        "ios/app/app/public/_next/static/chunks/18yfiq8apm2ip.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/19zh4ghg32ra5.js",
-      "kind": "source",
-      "name": "19zh4ghg32ra5.js",
-      "path": "ios/App/App/public/_next/static/chunks/19zh4ghg32ra5.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/19zh4ghg32ra5",
-        "ios/app/app/public/_next/static/chunks/19zh4ghg32ra5.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1d3wpoc586w90.js",
-      "kind": "source",
-      "name": "1d3wpoc586w90.js",
-      "path": "ios/App/App/public/_next/static/chunks/1d3wpoc586w90.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1d3wpoc586w90",
-        "ios/app/app/public/_next/static/chunks/1d3wpoc586w90.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1h79cx1k6t-wj.js",
-      "kind": "source",
-      "name": "1h79cx1k6t-wj.js",
-      "path": "ios/App/App/public/_next/static/chunks/1h79cx1k6t-wj.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1h79cx1k6t-wj",
-        "ios/app/app/public/_next/static/chunks/1h79cx1k6t-wj.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1hm018of-j740.js",
-      "kind": "source",
-      "name": "1hm018of-j740.js",
-      "path": "ios/App/App/public/_next/static/chunks/1hm018of-j740.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1hm018of-j740",
-        "ios/app/app/public/_next/static/chunks/1hm018of-j740.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1j8od2hf9e5aa.js",
-      "kind": "source",
-      "name": "1j8od2hf9e5aa.js",
-      "path": "ios/App/App/public/_next/static/chunks/1j8od2hf9e5aa.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1j8od2hf9e5aa",
-        "ios/app/app/public/_next/static/chunks/1j8od2hf9e5aa.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1nmka6c5220ch.js",
-      "kind": "source",
-      "name": "1nmka6c5220ch.js",
-      "path": "ios/App/App/public/_next/static/chunks/1nmka6c5220ch.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1nmka6c5220ch",
-        "ios/app/app/public/_next/static/chunks/1nmka6c5220ch.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1ty_curyxdkz-.js",
-      "kind": "source",
-      "name": "1ty_curyxdkz-.js",
-      "path": "ios/App/App/public/_next/static/chunks/1ty_curyxdkz-.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1ty_curyxdkz-",
-        "ios/app/app/public/_next/static/chunks/1ty_curyxdkz-.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1vq-7g8i6qwr0.js",
-      "kind": "source",
-      "name": "1vq-7g8i6qwr0.js",
-      "path": "ios/App/App/public/_next/static/chunks/1vq-7g8i6qwr0.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1vq-7g8i6qwr0",
-        "ios/app/app/public/_next/static/chunks/1vq-7g8i6qwr0.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/1x5g4t9iajz7f.js",
-      "kind": "source",
-      "name": "1x5g4t9iajz7f.js",
-      "path": "ios/App/App/public/_next/static/chunks/1x5g4t9iajz7f.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/1x5g4t9iajz7f",
-        "ios/app/app/public/_next/static/chunks/1x5g4t9iajz7f.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/20x95zoynuixl.js",
-      "kind": "source",
-      "name": "20x95zoynuixl.js",
-      "path": "ios/App/App/public/_next/static/chunks/20x95zoynuixl.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/20x95zoynuixl",
-        "ios/app/app/public/_next/static/chunks/20x95zoynuixl.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/214agjvjovfb_.js",
-      "kind": "source",
-      "name": "214agjvjovfb_.js",
-      "path": "ios/App/App/public/_next/static/chunks/214agjvjovfb_.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/214agjvjovfb_",
-        "ios/app/app/public/_next/static/chunks/214agjvjovfb_.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/22b71qlk35t1d.js",
-      "kind": "source",
-      "name": "22b71qlk35t1d.js",
-      "path": "ios/App/App/public/_next/static/chunks/22b71qlk35t1d.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/22b71qlk35t1d",
-        "ios/app/app/public/_next/static/chunks/22b71qlk35t1d.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/23wtiv7idp6_-.js",
-      "kind": "source",
-      "name": "23wtiv7idp6_-.js",
-      "path": "ios/App/App/public/_next/static/chunks/23wtiv7idp6_-.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/23wtiv7idp6_-",
-        "ios/app/app/public/_next/static/chunks/23wtiv7idp6_-.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/24w3tl_ucbgr6.js",
-      "kind": "source",
-      "name": "24w3tl_ucbgr6.js",
-      "path": "ios/App/App/public/_next/static/chunks/24w3tl_ucbgr6.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/24w3tl_ucbgr6",
-        "ios/app/app/public/_next/static/chunks/24w3tl_ucbgr6.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/2e3i4f4ikr399.js",
-      "kind": "source",
-      "name": "2e3i4f4ikr399.js",
-      "path": "ios/App/App/public/_next/static/chunks/2e3i4f4ikr399.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/2e3i4f4ikr399",
-        "ios/app/app/public/_next/static/chunks/2e3i4f4ikr399.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/2if6lay7o_hxm.js",
-      "kind": "source",
-      "name": "2if6lay7o_hxm.js",
-      "path": "ios/App/App/public/_next/static/chunks/2if6lay7o_hxm.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/2if6lay7o_hxm",
-        "ios/app/app/public/_next/static/chunks/2if6lay7o_hxm.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/2iieg5cttwv_j.js",
-      "kind": "source",
-      "name": "2iieg5cttwv_j.js",
-      "path": "ios/App/App/public/_next/static/chunks/2iieg5cttwv_j.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/2iieg5cttwv_j",
-        "ios/app/app/public/_next/static/chunks/2iieg5cttwv_j.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/2rz7_ab8nm5n1.js",
-      "kind": "source",
-      "name": "2rz7_ab8nm5n1.js",
-      "path": "ios/App/App/public/_next/static/chunks/2rz7_ab8nm5n1.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/2rz7_ab8nm5n1",
-        "ios/app/app/public/_next/static/chunks/2rz7_ab8nm5n1.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/2uo69c2pd4euf.js",
-      "kind": "source",
-      "name": "2uo69c2pd4euf.js",
-      "path": "ios/App/App/public/_next/static/chunks/2uo69c2pd4euf.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/2uo69c2pd4euf",
-        "ios/app/app/public/_next/static/chunks/2uo69c2pd4euf.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/2v1boob84t3ke.js",
-      "kind": "source",
-      "name": "2v1boob84t3ke.js",
-      "path": "ios/App/App/public/_next/static/chunks/2v1boob84t3ke.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/2v1boob84t3ke",
-        "ios/app/app/public/_next/static/chunks/2v1boob84t3ke.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3_cbo43788bk0.js",
-      "kind": "source",
-      "name": "3_cbo43788bk0.js",
-      "path": "ios/App/App/public/_next/static/chunks/3_cbo43788bk0.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3_cbo43788bk0",
-        "ios/app/app/public/_next/static/chunks/3_cbo43788bk0.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3_j6e99q5zq9i.js",
-      "kind": "source",
-      "name": "3_j6e99q5zq9i.js",
-      "path": "ios/App/App/public/_next/static/chunks/3_j6e99q5zq9i.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3_j6e99q5zq9i",
-        "ios/app/app/public/_next/static/chunks/3_j6e99q5zq9i.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/38kv68cikm92d.js",
-      "kind": "source",
-      "name": "38kv68cikm92d.js",
-      "path": "ios/App/App/public/_next/static/chunks/38kv68cikm92d.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/38kv68cikm92d",
-        "ios/app/app/public/_next/static/chunks/38kv68cikm92d.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/392vxd3ydvqsx.js",
-      "kind": "source",
-      "name": "392vxd3ydvqsx.js",
-      "path": "ios/App/App/public/_next/static/chunks/392vxd3ydvqsx.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/392vxd3ydvqsx",
-        "ios/app/app/public/_next/static/chunks/392vxd3ydvqsx.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3ahiqtq77q3_z.js",
-      "kind": "source",
-      "name": "3ahiqtq77q3_z.js",
-      "path": "ios/App/App/public/_next/static/chunks/3ahiqtq77q3_z.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3ahiqtq77q3_z",
-        "ios/app/app/public/_next/static/chunks/3ahiqtq77q3_z.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3aqpx94flp384.js",
-      "kind": "source",
-      "name": "3aqpx94flp384.js",
-      "path": "ios/App/App/public/_next/static/chunks/3aqpx94flp384.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3aqpx94flp384",
-        "ios/app/app/public/_next/static/chunks/3aqpx94flp384.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3arwh1zs19zrw.js",
-      "kind": "source",
-      "name": "3arwh1zs19zrw.js",
-      "path": "ios/App/App/public/_next/static/chunks/3arwh1zs19zrw.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3arwh1zs19zrw",
-        "ios/app/app/public/_next/static/chunks/3arwh1zs19zrw.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3byplbu2bd8no.js",
-      "kind": "source",
-      "name": "3byplbu2bd8no.js",
-      "path": "ios/App/App/public/_next/static/chunks/3byplbu2bd8no.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3byplbu2bd8no",
-        "ios/app/app/public/_next/static/chunks/3byplbu2bd8no.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3d2a2njnstt-k.js",
-      "kind": "source",
-      "name": "3d2a2njnstt-k.js",
-      "path": "ios/App/App/public/_next/static/chunks/3d2a2njnstt-k.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3d2a2njnstt-k",
-        "ios/app/app/public/_next/static/chunks/3d2a2njnstt-k.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3emz_qguffe81.js",
-      "kind": "source",
-      "name": "3emz_qguffe81.js",
-      "path": "ios/App/App/public/_next/static/chunks/3emz_qguffe81.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3emz_qguffe81",
-        "ios/app/app/public/_next/static/chunks/3emz_qguffe81.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3iws5lbheo0da.js",
-      "kind": "source",
-      "name": "3iws5lbheo0da.js",
-      "path": "ios/App/App/public/_next/static/chunks/3iws5lbheo0da.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3iws5lbheo0da",
-        "ios/app/app/public/_next/static/chunks/3iws5lbheo0da.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3mvltxi0uozex.js",
-      "kind": "source",
-      "name": "3mvltxi0uozex.js",
-      "path": "ios/App/App/public/_next/static/chunks/3mvltxi0uozex.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3mvltxi0uozex",
-        "ios/app/app/public/_next/static/chunks/3mvltxi0uozex.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3ogh0n7_bl0vz.js",
-      "kind": "source",
-      "name": "3ogh0n7_bl0vz.js",
-      "path": "ios/App/App/public/_next/static/chunks/3ogh0n7_bl0vz.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3ogh0n7_bl0vz",
-        "ios/app/app/public/_next/static/chunks/3ogh0n7_bl0vz.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3svh1x_0hgcjd.js",
-      "kind": "source",
-      "name": "3svh1x_0hgcjd.js",
-      "path": "ios/App/App/public/_next/static/chunks/3svh1x_0hgcjd.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3svh1x_0hgcjd",
-        "ios/app/app/public/_next/static/chunks/3svh1x_0hgcjd.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3tszzavck1q54.js",
-      "kind": "source",
-      "name": "3tszzavck1q54.js",
-      "path": "ios/App/App/public/_next/static/chunks/3tszzavck1q54.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3tszzavck1q54",
-        "ios/app/app/public/_next/static/chunks/3tszzavck1q54.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3upy991swwhwc.js",
-      "kind": "source",
-      "name": "3upy991swwhwc.js",
-      "path": "ios/App/App/public/_next/static/chunks/3upy991swwhwc.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3upy991swwhwc",
-        "ios/app/app/public/_next/static/chunks/3upy991swwhwc.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3z-12xscv3ct9.js",
-      "kind": "source",
-      "name": "3z-12xscv3ct9.js",
-      "path": "ios/App/App/public/_next/static/chunks/3z-12xscv3ct9.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3z-12xscv3ct9",
-        "ios/app/app/public/_next/static/chunks/3z-12xscv3ct9.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3za1wzcr3k3i2.js",
-      "kind": "source",
-      "name": "3za1wzcr3k3i2.js",
-      "path": "ios/App/App/public/_next/static/chunks/3za1wzcr3k3i2.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3za1wzcr3k3i2",
-        "ios/app/app/public/_next/static/chunks/3za1wzcr3k3i2.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3zaovahi0d9hy.js",
-      "kind": "source",
-      "name": "3zaovahi0d9hy.js",
-      "path": "ios/App/App/public/_next/static/chunks/3zaovahi0d9hy.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3zaovahi0d9hy",
-        "ios/app/app/public/_next/static/chunks/3zaovahi0d9hy.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/3zff5c9trzrs7.js",
-      "kind": "source",
-      "name": "3zff5c9trzrs7.js",
-      "path": "ios/App/App/public/_next/static/chunks/3zff5c9trzrs7.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/3zff5c9trzrs7",
-        "ios/app/app/public/_next/static/chunks/3zff5c9trzrs7.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/chunks/turbopack-1dps_bt5ky9ek.js",
-      "kind": "source",
-      "name": "turbopack-1dps_bt5ky9ek.js",
-      "path": "ios/App/App/public/_next/static/chunks/turbopack-1dps_bt5ky9ek.js",
-      "tags": [
-        "ios/app/app/public/_next/static/chunks/turbopack-1dps_bt5ky9ek",
-        "ios/app/app/public/_next/static/chunks/turbopack-1dps_bt5ky9ek.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/media/maplibre-gl-dev.20x3-5awu0rtw.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-dev.20x3-5awu0rtw.mjs",
-      "path": "ios/App/App/public/_next/static/media/maplibre-gl-dev.20x3-5awu0rtw.mjs",
-      "tags": [
-        "20x3-5awu0rtw",
-        "ios/app/app/public/_next/static/media/maplibre-gl-dev",
-        "ios/app/app/public/_next/static/media/maplibre-gl-dev.20x3-5awu0rtw.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/media/maplibre-gl-shared-dev.3cujs3u1p0bt2.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-shared-dev.3cujs3u1p0bt2.mjs",
-      "path": "ios/App/App/public/_next/static/media/maplibre-gl-shared-dev.3cujs3u1p0bt2.mjs",
-      "tags": [
-        "3cujs3u1p0bt2",
-        "ios/app/app/public/_next/static/media/maplibre-gl-shared-dev",
-        "ios/app/app/public/_next/static/media/maplibre-gl-shared-dev.3cujs3u1p0bt2.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/media/maplibre-gl-shared.3n592vt0na6rz.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-shared.3n592vt0na6rz.mjs",
-      "path": "ios/App/App/public/_next/static/media/maplibre-gl-shared.3n592vt0na6rz.mjs",
-      "tags": [
-        "3n592vt0na6rz",
-        "ios/app/app/public/_next/static/media/maplibre-gl-shared",
-        "ios/app/app/public/_next/static/media/maplibre-gl-shared.3n592vt0na6rz.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/media/maplibre-gl-worker-dev.1dyjzeito63ts.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-worker-dev.1dyjzeito63ts.mjs",
-      "path": "ios/App/App/public/_next/static/media/maplibre-gl-worker-dev.1dyjzeito63ts.mjs",
-      "tags": [
-        "1dyjzeito63ts",
-        "ios/app/app/public/_next/static/media/maplibre-gl-worker-dev",
-        "ios/app/app/public/_next/static/media/maplibre-gl-worker-dev.1dyjzeito63ts.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/media/maplibre-gl-worker.1hfb6nl_qj5oz.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-worker.1hfb6nl_qj5oz.mjs",
-      "path": "ios/App/App/public/_next/static/media/maplibre-gl-worker.1hfb6nl_qj5oz.mjs",
-      "tags": [
-        "1hfb6nl_qj5oz",
-        "ios/app/app/public/_next/static/media/maplibre-gl-worker",
-        "ios/app/app/public/_next/static/media/maplibre-gl-worker.1hfb6nl_qj5oz.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/_next/static/media/maplibre-gl.3vqtpaudl-dky.mjs",
-      "kind": "source",
-      "name": "maplibre-gl.3vqtpaudl-dky.mjs",
-      "path": "ios/App/App/public/_next/static/media/maplibre-gl.3vqtpaudl-dky.mjs",
-      "tags": [
-        "3vqtpaudl-dky",
-        "ios/app/app/public/_next/static/media/maplibre-gl",
-        "ios/app/app/public/_next/static/media/maplibre-gl.3vqtpaudl-dky.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/asol-app-init.js",
-      "kind": "source",
-      "name": "asol-app-init.js",
-      "path": "ios/App/App/public/asol-app-init.js",
-      "tags": [
-        "ios/app/app/public/asol-app-init",
-        "ios/app/app/public/asol-app-init.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/asol-push-sw.js",
-      "kind": "source",
-      "name": "asol-push-sw.js",
-      "path": "ios/App/App/public/asol-push-sw.js",
-      "tags": [
-        "ios/app/app/public/asol-push-sw",
-        "ios/app/app/public/asol-push-sw.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/asol-theme-init.js",
-      "kind": "source",
-      "name": "asol-theme-init.js",
-      "path": "ios/App/App/public/asol-theme-init.js",
-      "tags": [
-        "ios/app/app/public/asol-theme-init",
-        "ios/app/app/public/asol-theme-init.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/cordova_plugins.js",
-      "kind": "source",
-      "name": "cordova_plugins.js",
-      "path": "ios/App/App/public/cordova_plugins.js",
-      "tags": [
-        "ios/app/app/public/cordova_plugins",
-        "ios/app/app/public/cordova_plugins.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/cordova.js",
-      "kind": "source",
-      "name": "cordova.js",
-      "path": "ios/App/App/public/cordova.js",
-      "tags": [
-        "ios/app/app/public/cordova",
-        "ios/app/app/public/cordova.js",
-        "js"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/maplibre-gl-shared.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-shared.mjs",
-      "path": "ios/App/App/public/maplibre-gl-shared.mjs",
-      "tags": [
-        "ios/app/app/public/maplibre-gl-shared",
-        "ios/app/app/public/maplibre-gl-shared.mjs",
-        "mjs"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/public/maplibre-gl-worker.mjs",
-      "kind": "source",
-      "name": "maplibre-gl-worker.mjs",
-      "path": "ios/App/App/public/maplibre-gl-worker.mjs",
-      "tags": [
-        "ios/app/app/public/maplibre-gl-worker",
-        "ios/app/app/public/maplibre-gl-worker.mjs",
-        "mjs"
       ]
     },
     {
@@ -50648,6 +49691,18 @@
       "tags": [
         "scripts/tests/deploy-push",
         "scripts/tests/deploy-push.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/docs/document-mutability.test.ts",
+      "kind": "test",
+      "name": "document-mutability.test.ts",
+      "path": "scripts/tests/docs/document-mutability.test.ts",
+      "tags": [
+        "scripts/tests/docs/document-mutability",
+        "scripts/tests/docs/document-mutability.test.ts",
         "test",
         "ts"
       ]

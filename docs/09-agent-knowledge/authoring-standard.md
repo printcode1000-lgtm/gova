@@ -4,6 +4,12 @@
 
 Keep hand-written documentation useful to humans and agents without duplicating facts tooling can derive, and ensure system documents explain runtime compatibility rather than describing only the web path.
 
+Before editing any document, classify it with [Document Mutability](./document-mutability.md) and follow [Documentation Update Policy](./contracts/documentation-update-policy.md):
+
+- **editable** — update with behavior changes;
+- **protected** — require `[docs-contract-change]` or `DOCS_CONTRACT_CHANGE=1`;
+- **generated** — never hand-edit; regenerate with `npm run docs:generate`.
+
 ## Required Shape for New System Documents
 
 Use the sections that apply; omit empty sections instead of adding filler.

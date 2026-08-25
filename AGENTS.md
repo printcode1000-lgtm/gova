@@ -246,6 +246,10 @@ See `docs/07-mobile-and-release/cursor-cloud-agents.md`.
 | Troubleshooting log | `docs/08-troubleshooting/problems/` |
 | Agent Knowledge Graph / Context Packs / Runtime Contract | `docs/09-agent-knowledge/` |
 
-The live Knowledge Graph is built from the current checkout. Generated views are cached outputs only. Environment knowledge stores key names, never values; generated command rendering redacts assignments.
+The live Knowledge Graph is built from the current checkout. Generated views under `docs/09-agent-knowledge/generated/` are overwrite-only (`generated` class) and must never be hand-edited; regenerate with `npm run docs:generate`. Environment knowledge stores key names, never values; generated command rendering redacts assignments.
+
+Documentation mutability (`docs/09-agent-knowledge/document-mutability.md`): protected docs require `[docs-contract-change]` or `DOCS_CONTRACT_CHANGE=1`; editable docs are updated with normal behavior changes; generated docs are generator-only. Docs CI entry point: `npm run docs:ci`.
+
+Runtime-compatibility entry point: `npm run runtime:check` (plus `runtime:check:static|dev|web|android|ios|changed`). Shared/release-relevant code must be checked against Static out, Development, Web, Android, and iOS. Dev-only surfaces are checked for Development suitability and non-leakage into release behavior.
 
 When you solve a recurring problem, add it under `docs/08-troubleshooting/problems/` and register it in that folder's index.

@@ -12,7 +12,7 @@ npx tsx scripts/docs/context.ts packages/data-core
 - `docs/09-agent-knowledge/document-mutability.md`
 - `docs/09-agent-knowledge/contracts/documentation-update-policy.md`
 - `docs/09-agent-knowledge/contracts/runtime-compatibility.md`
-- - `docs/02-data-and-storage/`
+- `docs/02-data-and-storage/`
 - `docs/09-agent-knowledge/contracts/write-surfaces.md`
 
 ## Protected docs may be touched?

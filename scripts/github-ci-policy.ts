@@ -4,11 +4,12 @@ import path from "node:path";
 /**
  * Local GitHub CI policy.
  *
- * GitHub Actions must not run for ordinary project changes. The only allowed
- * workflow is docs-only, and it must be path-filtered to `docs/**`.
+ * GitHub Actions is documentation-focused. Ordinary code-only pushes should not
+ * run full application CI. The docs workflow is path-filtered to documentation,
+ * agent instruction surfaces, and docs/knowledge/runtime tooling.
  *
  * This module is invoked by local npm scripts and `architecture:check`. It is
- * not a GitHub job and must never be wired to `push` for the whole tree.
+ * not a general application CI job.
  */
 
 const ROOT = process.cwd();
@@ -17,7 +18,6 @@ const DOCS_WORKFLOW = "docs.yml";
 export const ALLOWED_WORKFLOW_FILES = [DOCS_WORKFLOW] as const;
 
 const FORBIDDEN_EVENTS = [
-  "pull_request",
   "pull_request_target",
   "workflow_dispatch",
   "schedule",
@@ -38,18 +38,39 @@ const FORBIDDEN_COMMANDS = [
   "npm run services:build",
   "npm run services:sync",
   "npm run test:",
+  "npm run deploy",
+  "npm run ota",
 ] as const;
 
 const ALLOWED_DOCS_RUN_COMMANDS = new Set([
   "npm install -g npm@11",
   "npm ci --ignore-scripts",
+  "npm run docs:ci",
   "npm run docs:check",
+  "npm run runtime:check",
 ]);
 
 const ALLOWED_DOCS_ACTIONS = new Set([
   "actions/checkout@v4",
   "actions/setup-node@v4",
 ]);
+
+export const DOCS_WORKFLOW_PATH_FILTERS = [
+  "docs/**",
+  "AGENTS.md",
+  "CLAUDE.md",
+  "GEMINI.md",
+  ".agents/**",
+  ".cursor/rules/**",
+  "scripts/docs/**",
+  "scripts/architecture/**",
+  "scripts/architecture-check.ts",
+  "scripts/runtime/**",
+  "scripts/github-ci-policy.ts",
+  "package.json",
+  "package-lock.json",
+  ".github/workflows/docs.yml",
+] as const;
 
 /** Extra CI configs that must not reappear. Checked locally only — never as a GitHub job. */
 export const FORBIDDEN_CI_PATHS = [
@@ -104,24 +125,51 @@ function docsWorkflowJobIds(body: string): string[] {
   return ids;
 }
 
-function hasExactDocsPushTrigger(body: string): boolean {
+function extractPathFilters(body: string, eventKey: "push" | "pull_request"): string[] {
   const lines = body.split(/\r?\n/);
   const onLine = lines.findIndex((line) => /^on:\s*$/.test(line));
-  if (onLine < 0) return false;
-  const block: string[] = [];
-  for (const line of lines.slice(onLine)) {
-    if (block.length > 0 && /^\S/.test(line)) break;
-    if (line.trim()) block.push(line.trimEnd());
+  if (onLine < 0) return [];
+  const eventLine = lines.findIndex(
+    (line, index) => index > onLine && new RegExp(`^ {2}${eventKey}:\\s*$`).test(line),
+  );
+  if (eventLine < 0) return [];
+  const pathsLine = lines.findIndex(
+    (line, index) => index > eventLine && /^ {4}paths:\s*$/.test(line),
+  );
+  if (pathsLine < 0) return [];
+  const paths: string[] = [];
+  for (const line of lines.slice(pathsLine + 1)) {
+    if (!/^\s/.test(line) || /^ {2}\S/.test(line) || /^ {4}\S/.test(line)) break;
+    const match = /^ {6}- ["'](.+)["']\s*$/.exec(line);
+    if (match) paths.push(match[1]!);
   }
-  const expected = [
-    /^on:$/,
-    /^ {2}push:$/,
-    /^ {4}branches:$/,
-    /^ {6}- main$/,
-    /^ {4}paths:$/,
-    /^ {6}- ["']docs\/\*\*["']$/,
-  ];
-  return block.length === expected.length && block.every((line, index) => expected[index]!.test(line));
+  return paths;
+}
+
+function hasDocsAwareTriggers(body: string): string[] {
+  const errors: string[] = [];
+  if (!/^ {2}push:\s*$/m.test(body) || !/^ {4}branches:\s*$/m.test(body) || !body.includes("- main")) {
+    errors.push("Docs workflow must trigger on push to main.");
+  }
+  if (!/^ {2}pull_request:\s*$/m.test(body)) {
+    errors.push("Docs workflow must also trigger on pull_request (docs-aware path filter).");
+  }
+  const pushPaths = extractPathFilters(body, "push");
+  const prPaths = extractPathFilters(body, "pull_request");
+  for (const required of DOCS_WORKFLOW_PATH_FILTERS) {
+    if (!pushPaths.includes(required)) {
+      errors.push(`Docs workflow push.paths missing required filter: ${required}`);
+    }
+    if (!prPaths.includes(required)) {
+      errors.push(`Docs workflow pull_request.paths missing required filter: ${required}`);
+    }
+  }
+  for (const unexpected of pushPaths) {
+    if (!(DOCS_WORKFLOW_PATH_FILTERS as readonly string[]).includes(unexpected)) {
+      errors.push(`Docs workflow push.paths contains unexpected filter: ${unexpected}`);
+    }
+  }
+  return errors;
 }
 
 export function docsWorkflowViolations(source: string): string[] {
@@ -130,13 +178,9 @@ export function docsWorkflowViolations(source: string): string[] {
   if (!/^name:\s*docs\s*$/m.test(body)) {
     errors.push("Docs workflow name must be exactly `docs`.");
   }
-  if (!hasExactDocsPushTrigger(body)) {
-    errors.push(
-      "Docs workflow trigger must be exactly push.branches=[main] and push.paths=[docs/**].",
-    );
-  }
+  errors.push(...hasDocsAwareTriggers(body));
   if (/\bpaths-ignore\s*:/.test(body)) {
-    errors.push("Docs workflow must not use paths-ignore; only a positive docs/** path filter is allowed.");
+    errors.push("Docs workflow must not use paths-ignore; use an explicit positive path filter.");
   }
   if (!/^ {2}docs:\s*$/m.test(body)) {
     errors.push("Docs workflow job id must be `docs`.");
@@ -145,14 +189,14 @@ export function docsWorkflowViolations(source: string): string[] {
   if (jobIds.length !== 1 || jobIds[0] !== "docs") {
     errors.push(`Docs workflow must contain exactly one job named docs. Found: ${jobIds.join(", ") || "(none)"}.`);
   }
-  if (!body.includes("npm run docs:check")) {
-    errors.push("Docs workflow must run `npm run docs:check`.");
+  if (!body.includes("npm run docs:ci")) {
+    errors.push("Docs workflow must run `npm run docs:ci`.");
   }
   for (const event of FORBIDDEN_EVENTS) {
     const asKey = new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m");
     const asOnList = new RegExp(`\\bon:\\s*\\[?[^\\n]*\\b${event}\\b`);
     if (asKey.test(body) || asOnList.test(body)) {
-      errors.push(`GitHub event ${event} is forbidden; only path-filtered push to main is allowed.`);
+      errors.push(`GitHub event ${event} is forbidden for the docs workflow.`);
     }
   }
   for (const command of FORBIDDEN_COMMANDS) {
@@ -188,7 +232,7 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
     }
   }
   if (!existsSync(workflowsDir)) {
-    errors.push("Missing .github/workflows/docs.yml — docs-only CI is the single allowed workflow.");
+    errors.push("Missing .github/workflows/docs.yml — docs-focused CI is the single allowed workflow.");
     return errors;
   }
   const files = listWorkflowYamlFiles(workflowsDir);
@@ -229,6 +273,6 @@ if (executedDirectly) {
     for (const error of errors) console.error(`- ${error}`);
     process.exitCode = 1;
   } else {
-    console.log("GitHub CI policy passed: docs-only path-filtered workflow; no general CI.");
+    console.log("GitHub CI policy passed: docs-focused path-filtered workflow; no general app CI.");
   }
 }

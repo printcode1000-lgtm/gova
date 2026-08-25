@@ -54,8 +54,8 @@ export function renderOperationalCatalog(): string {
   const lines = [
     '<!-- GENERATED FILE. DO NOT EDIT BY HAND.',
     '     Source: package.json + .env.example key names.',
-    '     Regenerate: npm run architecture:docs',
-    '     Validate: npm run architecture:check -->',
+    '     Regenerate: npm run docs:generate',
+    '     Validate: npm run docs:ci -->',
     '',
     '# Operational Catalog',
     '',

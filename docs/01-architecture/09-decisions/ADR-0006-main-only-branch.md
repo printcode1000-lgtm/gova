@@ -15,7 +15,7 @@ Ephemeral agent branches (`claude/*`, `cursor/*`) accumulated with no unique wor
 3. Server-side: GitHub `main-only` ruleset may block branch *creation* and must exclude `refs/heads/main`
 4. Agents commit and push directly to `main` — no feature branches and no required pull requests
 5. Vercel `gova` production linked to `main` — renaming the branch would break the deploy link
-6. GitHub Actions is docs-only (`paths: docs/**`). Code pushes run no GitHub CI. See [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
+6. GitHub Actions is docs-focused (path-filtered to documentation/agent/docs tooling). Ordinary code-only pushes run no GitHub CI. See [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 Push **to** `main` is unrestricted (no branch protection, no required checks).
 

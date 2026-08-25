@@ -1,9 +1,9 @@
-# Docs-only GitHub Actions workflow.
+# Docs-focused GitHub Actions workflow.
 #
-# This is the only allowed workflow. It must never run for a push that does not
-# touch `docs/**`. Code, packages, scripts, and configuration push to `main`
-# with no GitHub CI. Local `npm run github:ci-policy` enforces this contract;
-# that guard is not itself a GitHub job.
+# This is the only allowed workflow. It is path-filtered to documentation,
+# agent instruction surfaces, and docs/knowledge/runtime tooling. Ordinary
+# code-only pushes do not run this job. Local `npm run github:ci-policy`
+# enforces the contract; that guard is not itself a general GitHub app CI job.
 name: docs
 
 on:
@@ -12,6 +12,37 @@ on:
       - main
     paths:
       - "docs/**"
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - "GEMINI.md"
+      - ".agents/**"
+      - ".cursor/rules/**"
+      - "scripts/docs/**"
+      - "scripts/architecture/**"
+      - "scripts/architecture-check.ts"
+      - "scripts/runtime/**"
+      - "scripts/github-ci-policy.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - "GEMINI.md"
+      - ".agents/**"
+      - ".cursor/rules/**"
+      - "scripts/docs/**"
+      - "scripts/architecture/**"
+      - "scripts/architecture-check.ts"
+      - "scripts/runtime/**"
+      - "scripts/github-ci-policy.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/docs.yml"
 
 jobs:
   docs:
@@ -32,5 +63,8 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
-      - name: Documentation contract
-        run: npm run docs:check
+      - name: Documentation CI
+        run: npm run docs:ci
+
+      - name: Runtime compatibility contracts
+        run: npm run runtime:check

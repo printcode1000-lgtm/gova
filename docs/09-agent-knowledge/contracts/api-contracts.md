@@ -1,63 +1,49 @@
-# API Contract Catalog
+# API Contracts
 
 ## Purpose
 
-Defines what the API Contract Catalog is for, the fields it carries per route, and why static/native impact is a first-class field rather than an afterthought. The catalog turns `src/app/**/route.*` handlers from an implicit list of files into an explicit, queryable contract surface.
+Defines what makes an App Router request handler (`src/app/api/**`, `src/app/**/route.*`) a safe, discoverable API contract, and what the generated API Contract Catalog verifies about it. Read [Project Runtime Contract](../runtime-contract.md) first — handlers are a Web/Development surface, never bundled into `out/`.
 
-## What It Covers
+## Scope
 
-Every App Router request handler under `src/app/api/**` (and any other `route.*` file), one entry per route. This is a superset view over the `route` nodes already in the Knowledge Graph (see [Knowledge Schema](../knowledge-schema.md)), focused specifically on the request/response contract and cross-runtime consequence instead of general graph relationships.
+Applies to every App Router route handler. Does not cover independent `services/*` HTTP surfaces beyond their own documentation domain, and does not replace feature-specific API documentation under `docs/03-products-and-commerce/`, `docs/05-platform-features/`, or similar.
 
-## Fields
+## Generated Evidence
 
-| Field | Meaning |
-|---|---|
-| Route path | The App Router path, with route groups `(group)` and parallel slots `@slot` normalized out of URL identity, matching graph route-identity rules. |
-| HTTP method(s) | Verbs the handler implements. |
-| Owner | Package/feature/service that owns the handler, per the same ownership resolution used elsewhere in the graph. |
-| Request contract | Expected input shape (body/query/params) as declared/validated in the handler. |
-| Response contract | Success and error response shapes the handler returns. |
-| Auth requirement | Whether the route requires authentication/authorization, and which gateway enforces it. |
-| Environment keys used | Names only — see [Env Safety Matrix](./env-safety.md); never values. |
-| Write surface | Whether the handler writes through a declared gateway (`@asol/data-core`, `@asol/storage-core`, `@asol/page-save-core`) — see [Write Surface Map](./write-surfaces.md). |
-| Static/native impact | See below. |
-| Related tests | Tests that exercise this route, from the graph's `tests` edges. |
+`docs/09-agent-knowledge/generated/catalogs/api-contract-catalog.md` (source: `scripts/docs/api-and-write-catalogs.ts`) lists, per handler: route, source file, detected HTTP methods, inferred auth requirement, owning package/feature/service, write-gateway evidence, runtime surfaces, static/native impact note, related environment key names, related tests, required runtime checks, and risk notes. Regenerate with `npm run docs:generate`; never hand-edit.
 
-## Static/Native Impact Is Mandatory
+## Required Properties Of A Safe Handler
 
-Every entry must state one of:
+- Declares its HTTP methods as named exports (`GET`, `POST`, ...) so method detection is unambiguous.
+- States or enforces its auth requirement explicitly rather than leaving it undetectable.
+- Any create/update/delete/upload/save/insert/patch/mutate/publish/remove/upsert operation reaches its target through a declared write gateway (`@asol/page-save-core`, `@asol/data-core`, `@asol/storage-core`) — see [Write Surfaces](./write-surfaces.md).
+- Environment keys it reads or assigns are discoverable as **names only** — see [Env Safety](./env-safety.md).
+- Is treated as Web/Development-only: static/native clients calling it must use the configured remote API base, because handlers are excluded from `out/`.
 
-- **Web/Development only** — the route is a server handler with no static/native equivalent. It is intentionally absent from `out/` per the [Runtime Contract](../runtime-contract.md)'s classification rule that server route handlers are never bundled into static/native runtime surfaces.
-- **Backs a static/native client** — a Static `out/`/Android/iOS client calls this route through the configured remote API base (never same-origin, since `out/` ships no local handler). Name the calling client surface.
-- **No known static/native caller** — direct evidence is absent; flag this as an evidence gap rather than assuming safety, per the [Agent Protocol](../agent-protocol.md) escalation rule for "a static/native client depends on a server route without a valid remote API path".
+## Runtime Surfaces
 
-This field exists because the single most common cross-runtime regression is a feature that works in Development/Web (same-origin API available) and silently breaks in Static `out/`/Android/iOS (no local handler, and no remote API base configured for the new route). See the [Runtime Compatibility Contract](./runtime-compatibility.md)'s static/native API invariant.
+- **Development / Web:** the handler executes here.
+- **Static `out/` / Android / iOS:** never bundled; a static/native caller must hit the configured remote origin, not a same-origin fallback that only works during browser development.
 
-## Regeneration
+## Common Risks
 
-The catalog is `generated` truth once materialized: it is derived from the same route/owner/test/environment graph data the Knowledge Graph already builds, not hand-maintained prose. Regenerate with:
-
-```bash
-npm run docs:generate
-# or, for the architecture-reference subset:
-npm run architecture:docs
-```
-
-Never hand-edit the generated catalog file. If an entry is wrong or missing, the underlying route/ownership/contract evidence in source is what needs fixing — then regenerate. See [Generation and Drift](../generation-and-drift.md) and [Documentation Update Policy](./documentation-update-policy.md).
+- HTTP methods or auth requirement the catalog cannot detect (rendered as `unknown`) — a signal to fix, not to ignore.
+- A write-like handler with no proven gateway import (`riskNotes: write-like route without proven gateway import`).
+- A static/native feature quietly depending on this handler being same-origin.
 
 ## Verification
 
 ```bash
+npm run docs:generate            # regenerate the API Contract Catalog
+npm run runtime:check:web
+npm run runtime:check:static
+npm run runtime:check:dev
 npm run docs:ci
-npm run architecture:check
 ```
-
-`architecture:check` enforces the underlying route/runtime graph invariants this catalog depends on (every route has a runtime mapping; server handlers never receive static/android/ios `affects-runtime` edges).
 
 ## Related Documents
 
-- [Env Safety Matrix](./env-safety.md)
-- [Write Surface Map](./write-surfaces.md)
+- [Write Surfaces](./write-surfaces.md)
+- [Env Safety](./env-safety.md)
 - [Runtime Compatibility Contract](./runtime-compatibility.md)
-- [Knowledge Schema](../knowledge-schema.md)
 - [API Task Template](../templates/api-task.md)

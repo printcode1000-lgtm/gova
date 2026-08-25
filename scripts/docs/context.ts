@@ -2,6 +2,8 @@ import type { DomainRegistry, KnowledgeEdge, KnowledgeGraph, KnowledgeNode } fro
 import { normalizePath, pathExists, readRepoJson } from './fs-scan';
 import { buildRepositoryKnowledgeGraph } from './repository-knowledge';
 import { CORE_RUNTIME_IDS, RUNTIME_DEFINITIONS } from './runtime-knowledge';
+import { classifyContextRisk, renderRiskSection } from './risk-classifier';
+import { buildRuntimeTestPlan, renderRuntimeTestPlanSection } from './runtime-test-plan';
 
 function scoreNode(node: KnowledgeNode, target: string): number {
   const needle = target.toLowerCase();
@@ -275,6 +277,44 @@ export function renderContextPack(targetInput: string): string {
 
   lines.push('## Target', '', ...markdownList(seeds), '');
   if (owners.length) lines.push('## Owners / Scope', '', ...markdownList(owners), '');
+
+  const hasApiHandlers = routes.some((route) => route.summary === 'App Router request handler');
+  const hasNativePaths = [...seeds, ...owners].some(
+    (node) => node.path?.startsWith('android/') || node.path?.startsWith('ios/') || /capacitor|fastlane|native/i.test(node.name),
+  );
+  const hasStaticImpact = coreDirectRuntimes.some((node) => node.id === 'runtime:static-out') || !seeds.every((node) => (node.path || '').includes('/dev'));
+  const runtimePlan = buildRuntimeTestPlan({
+    seeds,
+    coreDirectRuntimes,
+    routes,
+    hasApiHandlers,
+    hasNativePaths,
+    hasStaticImpact,
+  });
+  const documentationCoverageWeak =
+    relatedDocs.length === 0 ||
+    !graph.edges.some(
+      (edge) =>
+        (expandedIds.has(edge.from) || expandedIds.has(edge.to)) &&
+        (edge.kind === 'documents' || edge.kind === 'references'),
+    );
+  const risk = classifyContextRisk({
+    graph,
+    seeds,
+    expandedIds,
+    routes,
+    environmentKeys,
+    commands: relatedCommands,
+    tests,
+    owners,
+    coreDirectRuntimes,
+    isDevOnly: runtimePlan.isDevOnly,
+    documentationCoverageWeak,
+    runtimeTestGuidanceMissing: runtimePlan.warnings.some((item) => /incomplete|missing/i.test(item)),
+  });
+  lines.push(...renderRiskSection(risk));
+  lines.push(...renderRuntimeTestPlanSection(runtimePlan));
+
   lines.push(
     '## Target Runtime Footprint',
     '',
@@ -306,9 +346,11 @@ export function renderContextPack(targetInput: string): string {
     'npm run typecheck',
     'npm run lint',
     'npm run architecture:check',
+    'npm run runtime:check',
+    'npm run docs:ci',
     '```',
     '',
-    'Use `npm run build` when the task requires the complete server/web release gate. Do **not** run `npm run build:static` merely as a generic check because it overwrites the release `out/` bundle; use the static/native release verification flow only when the task actually affects or authorizes that output. Regenerate knowledge with `npm run architecture:docs` when graph facts changed.',
+    'Use `npm run build` when the task requires the complete server/web release gate. Do **not** run `npm run build:static` merely as a generic check because it overwrites the release `out/` bundle; use the static/native release verification flow only when the task actually affects or authorizes that output. Regenerate knowledge with `npm run docs:generate` (or `npm run architecture:docs`) when graph facts changed.',
     '',
     '## Guardrails',
     '',
@@ -319,8 +361,9 @@ export function renderContextPack(targetInput: string): string {
     '- Static `out/` contains no App Router API handlers; native shells must reach the configured remote API.',
     '- Android and iOS production shells consume the static `out/` payload and add platform-specific native behavior.',
     '- Keep one responsibility per file.',
-    '- Update intentional docs when behavior, contracts, architecture, configuration, runtime compatibility, or operations change.',
-    '- Never hand-edit generated knowledge snapshots and never put environment values in documentation.',
+    '- Update editable intentional docs when behavior, contracts, architecture, configuration, runtime compatibility, or operations change.',
+    '- Protected docs require explicit authorization (`[docs-contract-change]` or `DOCS_CONTRACT_CHANGE=1`); generated docs are overwrite-only and never hand-edited.',
+    '- Never put environment values in documentation or generated catalogs.',
     '',
   );
   return lines.join('\n');

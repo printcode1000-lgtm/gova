@@ -1,7 +1,7 @@
 <!-- GENERATED FILE. DO NOT EDIT BY HAND.
      Source: package.json + .env.example key names.
-     Regenerate: npm run architecture:docs
-     Validate: npm run architecture:check -->
+     Regenerate: npm run docs:generate
+     Validate: npm run docs:ci -->
 
 # Operational Catalog
 
@@ -93,6 +93,13 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run dev` | `next dev --turbo --port 3001` |
 | `npm run dev:checked` | `npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --turbo --port 3001` |
 | `npm run docs:check` | `npx tsx scripts/docs/check.ts` |
+| `npm run docs:ci` | `npx tsx scripts/docs/docs-ci.ts` |
+| `npm run docs:coverage` | `npx tsx scripts/docs/coverage-cli.ts` |
+| `npm run docs:dead-links` | `npx tsx scripts/docs/dead-docs-cli.ts` |
+| `npm run docs:diff` | `npx tsx scripts/docs/docs-diff.ts` |
+| `npm run docs:generate` | `npx tsx scripts/docs/generate.ts` |
+| `npm run docs:mutability:check` | `npx tsx scripts/docs/mutability-check.ts` |
+| `npm run docs:runtime-coverage` | `npx tsx scripts/docs/runtime-coverage-cli.ts` |
 | `npm run doctor:environment` | `npx tsx scripts/check-environment-requirements.ts --scenario=all` |
 | `npm run doctor:environment:production` | `npx tsx scripts/check-environment-requirements.ts --scenario=production --skip-outdated` |
 | `npm run fastlane` | `npx tsx scripts/fastlane-runner.ts` |
@@ -140,6 +147,13 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run r2:sync:cors` | `npx tsx packages/storage-core/scripts/sync-cors.ts` |
 | `npm run release:android` | `npx tsx scripts/release-android.ts` |
 | `npm run release:check` | `npx tsx scripts/check-deployed-release.ts` |
+| `npm run runtime:check` | `npx tsx scripts/runtime/check.ts` |
+| `npm run runtime:check:android` | `npx tsx scripts/runtime/check.ts android` |
+| `npm run runtime:check:changed` | `npx tsx scripts/runtime/check.ts changed` |
+| `npm run runtime:check:dev` | `npx tsx scripts/runtime/check.ts dev` |
+| `npm run runtime:check:ios` | `npx tsx scripts/runtime/check.ts ios` |
+| `npm run runtime:check:static` | `npx tsx scripts/runtime/check.ts static` |
+| `npm run runtime:check:web` | `npx tsx scripts/runtime/check.ts web` |
 | `npm run runtime:compatibility:check` | `npx tsx scripts/runtime-compatibility-reference.ts` |
 | `npm run secrets:backup` | `npx tsx scripts/backup-project-secrets.ts` |
 | `npm run secrets:key:init` | `npx tsx scripts/initialize-secret-archive-key.ts` |

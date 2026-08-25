@@ -1,6 +1,6 @@
-# Protected Doc Change Task Checklist
+# Protected Doc Change Task
 
-Use **only** when the task explicitly requires changing a binding contract: a runtime/knowledge contract, an architecture rule, a release/CI/touch-UI/page-snapshot policy, this mutability system itself, or an agent instruction surface. If the task is ordinary feature work, stop and use [Editable Doc Change Task](./editable-doc-change-task.md) instead — see [Protected Docs](../contracts/protected-docs.md) "What To Do Instead".
+Use only when a task genuinely requires altering a binding rule, a runtime/knowledge contract, an architecture contract, a release/CI/touch-UI/page-snapshot policy, or an agent instruction surface. Read [Document Mutability](../document-mutability.md) and [Protected Docs](../contracts/protected-docs.md) first — this is the rare path, not the default for feature work.
 
 ## Context Pack Target Example
 
@@ -8,48 +8,38 @@ Use **only** when the task explicitly requires changing a binding contract: a ru
 npx tsx scripts/docs/context.ts docs/09-agent-knowledge/runtime-contract.md
 ```
 
-## Docs To Read First
+## Docs To Read
 
 - `docs/09-agent-knowledge/document-mutability.md`
 - `docs/09-agent-knowledge/contracts/protected-docs.md`
-- `docs/09-agent-knowledge/document-mutability.json` (the registry itself)
-- The specific protected document being changed, in full
+- `docs/09-agent-knowledge/contracts/documentation-update-policy.md`
+- The protected document itself, plus every document that links to it.
 
-## Protected Docs: May They Be Touched?
+## Protected Docs May Be Touched?
 
-**Yes — this is the one template where the answer is yes**, and only for the specific protected path(s) the explicit request names. Authorization is still mandatory:
-
-- include `[docs-contract-change]` in the commit message, **or**
-- set `DOCS_CONTRACT_CHANGE=1`/`true` for the tooling run.
-
-Update `docs/09-agent-knowledge/document-mutability.json` in the same change if the set of protected/editable/generated paths itself changed (new protected file, path moved, class reclassified).
+**Yes — but only with explicit authorization.** Include `[docs-contract-change]` in the commit message, or set `DOCS_CONTRACT_CHANGE=1`/`true` for the tooling run. Without one of these the default is deny; re-scope into an editable document instead (see [Editable Doc Change Task](./editable-doc-change-task.md)).
 
 ## Runtime Surfaces To Evaluate
 
-Protected contracts are frequently runtime-topology-defining. Re-evaluate all five explicitly whenever the change touches `runtime-contract.md`, `coverage-contract.md`, or `knowledge-schema.md`: Development, Web, Static `out/`, Android, iOS.
+All five, when the protected document is a runtime/knowledge/architecture contract: a rule change can silently redefine what "safe" means for every other change across Development, Web, Static `out/`, Android, and iOS.
 
 ## Required Runtime-Compatibility Checks
 
 ```bash
-npm run docs:mutability:check
+npm run runtime:check
 npm run docs:ci
-npm run architecture:check
 ```
-
-If the change affects runtime-topology claims, also re-run the standard non-publishing checks per [Runtime Compatibility Contract](../contracts/runtime-compatibility.md).
 
 ## Common Risks
 
-- Forgetting the authorization marker/environment variable — the change fails `docs:mutability:check`/`docs:ci` even if the content is correct.
-- Editing a protected contract without updating the other protected surfaces that must stay in parity (for example, updating `runtime-contract.md` without confirming `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and `.cursor/rules/session-standards.mdc` still agree).
-- Introducing a new protected concept without adding it to `document-mutability.json`.
-- Silently loosening a binding rule ("agents may skip Context Packs", "protected docs are freely editable") — these patterns are explicitly checked for and rejected.
-- Using this template for a change that is actually ordinary feature work in disguise.
+- Editing without authorization — a hard `docs:mutability:check`/`docs:ci` failure.
+- Adding a new protected document without registering it in `document-mutability.json` in the same change.
+- Silently narrowing/widening a binding rule without stating explicitly in the change description that a protected contract changed and why.
+- Using one authorization marker to bulk-unlock unrelated protected edits — authorization is repository-wide for the commit, so scope the change to the genuine contract update only.
 
 ## Relevant Tests/Checks
 
 ```bash
-npm run docs:check
 npm run docs:mutability:check
 npm run docs:ci
 npm run architecture:check
@@ -57,12 +47,10 @@ npm run architecture:check
 
 ## Documentation To Update
 
-- The protected document(s) named by the explicit request.
-- `document-mutability.json` if the protected/editable/generated path set changed.
-- Every agent instruction surface that must stay in parity, if the change affects agent workflow (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agents/rules/agent-instructions.md`, `.cursor/rules/session-standards.mdc`).
+The protected document itself, `document-mutability.json` if the protected/editable/generated path set changed, and every document that references the changed rule (update cross-links; do not duplicate the rule text elsewhere).
 
 ## Forbidden Unless Explicitly Requested
 
-- Committing without the `[docs-contract-change]` marker or `DOCS_CONTRACT_CHANGE` variable.
-- Bundling an unrelated protected edit into the same authorized change "while you're in there".
-- Skipping the update to `document-mutability.json` when the path set changed.
+- Editing a protected document without `[docs-contract-change]` or `DOCS_CONTRACT_CHANGE=1`.
+- Using this template for ordinary feature work — that is [Editable Doc Change Task](./editable-doc-change-task.md).
+- Browser/preview/computer-use verification.

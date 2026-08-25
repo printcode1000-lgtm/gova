@@ -82,6 +82,8 @@ A pack contains these sections when relevant:
 - **Project Runtime Contract — Always Evaluate All Five** — permanent five-surface knowledge.
 - **Target** — resolved seeds and paths.
 - **Owners / Scope** — package, feature, service, or documentation domain owners.
+- **Risk Classification** — `low` / `medium` / `high` / `release-critical` with reasons (writes, APIs, auth, env, native, static, release scripts, protected/generated docs, missing coverage).
+- **Required Runtime-Compatibility Test Plan** — whether the target is dev-only or release-relevant, required checks, warnings, and `npm run runtime:check*` commands.
 - **Target Runtime Footprint** — direct graph evidence plus explicit evidence-gap semantics.
 - **Read First** — ranked intentional and architectural documents; the runtime contract is always included.
 - **Change Impact** — structurally connected source/owner surfaces.
@@ -92,8 +94,8 @@ A pack contains these sections when relevant:
 - **Configuration** — relevant known configuration nodes.
 - **Environment Key Names** — names only; never values.
 - **Tests** — ownership/import-related tests.
-- **Verification** — repository gates and safe build guidance.
-- **Guardrails** — architecture, runtime, static/native, documentation, and secret-safety invariants.
+- **Verification** — repository gates including `runtime:check` and `docs:ci`, plus safe build guidance.
+- **Guardrails** — architecture, runtime, static/native, documentation mutability, and secret-safety invariants.
 
 ## Live Truth vs Generated Snapshots
 

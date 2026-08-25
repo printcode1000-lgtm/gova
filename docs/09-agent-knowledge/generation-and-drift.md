@@ -34,33 +34,37 @@ These checks are binding even in a checkout with no generated snapshots.
 
 ## Snapshot Generation
 
-The existing architecture generation entry point is repository-wide:
+Primary docs/knowledge generation:
+
+```bash
+npm run docs:generate
+```
+
+The broader architecture generation entry point also regenerates knowledge snapshots:
 
 ```bash
 npm run architecture:docs
 ```
 
-It regenerates architecture references, then the optional cached views under `docs/09-agent-knowledge/generated/`.
+Generated output lives under `docs/09-agent-knowledge/generated/` in this layout:
 
-Generated output is deterministic: normalized `/` paths, stable sorting, de-duplication, no timestamps, and no environment values.
+```text
+catalogs/
+graphs/
+reports/
+```
+
+Legacy flat paths directly under `generated/` are rejected by drift checks. Generated output is deterministic: normalized `/` paths, stable sorting, de-duplication, no timestamps, and no environment values.
 
 ## Generated Views
 
-The generator can emit:
+The generator emits:
 
-- `repository-catalog.md`
-- `document-catalog.md`
-- `route-catalog.md`
-- `change-impact-index.md`
-- `runtime-catalog.md`
-- `command-catalog.md`
-- `environment-catalog.md`
-- `graph-health.md`
-- `operational-catalog.md`
-- `knowledge-graph.json`
-- `search-index.json`
+- catalogs: repository, document, route, API contract, command, environment, native capability, runtime, operational
+- reports: change-impact, doc-coverage-score, write-surface-map, env-safety-matrix, dead-docs, runtime-compatibility-matrix, graph-health
+- graphs: `knowledge-graph.json`, `search-index.json`
 
-When one of these files is committed, byte-for-byte drift becomes binding and `architecture:check` instructs the agent to regenerate it. A fresh checkout does not need a snapshot to obtain correct task context because the live graph is rebuilt from repository truth.
+When these files are committed, byte-for-byte drift becomes binding and `docs:ci` / `architecture:check` instruct the agent to regenerate. A fresh checkout does not need a snapshot to obtain correct task context because the live graph is rebuilt from repository truth.
 
 ## Secret-Safety Invariant
 
@@ -75,8 +79,9 @@ When graph semantics change:
 1. update `knowledge-schema.md` and `coverage-contract.md` as applicable;
 2. update `runtime-contract.md` if runtime meaning/topology changes;
 3. update the scanner/model/renderer in one coherent change;
-4. run `npm run architecture:docs` when generated views are maintained in the checkout;
-5. run `npm run architecture:check` and inspect graph/catalog diffs;
-6. run relevant targeted tests/type/lint/build gates.
+4. authorize protected-doc edits with `[docs-contract-change]` or `DOCS_CONTRACT_CHANGE=1` when required;
+5. run `npm run docs:generate` when generated views are maintained in the checkout;
+6. run `npm run docs:ci` and `npm run architecture:check` and inspect graph/catalog diffs;
+7. run relevant targeted tests/type/lint/runtime gates.
 
-When hand-written docs change, ensure links and source-of-truth paths still exist and avoid introducing parallel manual inventories.
+When hand-written docs change, ensure links and source-of-truth paths still exist, respect document mutability classes, and avoid introducing parallel manual inventories.

@@ -1,67 +1,55 @@
-# Editable Doc Change Task Checklist
+# Editable Doc Change Task
 
-Use for the default case: documenting a behavior/API/data/config/runtime/operational change made during ordinary feature work. This is the checklist almost every documentation update should follow.
+Use for the normal case: a change to behavior, an API/data contract, configuration, runtime compatibility, or an operational step that must update the matching editable document in the same change. See [Documentation Update Policy](../contracts/documentation-update-policy.md).
 
 ## Context Pack Target Example
 
 ```bash
-npx tsx scripts/docs/context.ts docs/05-platform-features/README.md
+npx tsx scripts/docs/context.ts src/features/<feature>
 ```
 
-## Docs To Read First
+## Docs To Read
 
 - `docs/09-agent-knowledge/contracts/documentation-update-policy.md`
-- `docs/09-agent-knowledge/authoring-standard.md`
-- The owning domain's `README.md` (use `docs/09-agent-knowledge/domain-registry.json` to find it)
-- The specific editable document being updated, in full
+- `docs/09-agent-knowledge/domain-registry.json` (find the owning editable domain)
+- The existing editable document that already owns the topic, if any.
 
-## Protected Docs: May They Be Touched?
+## Protected Docs May Be Touched?
 
-**No.** If following this checklist leads to "the only place to say this is a protected file," stop — that is a signal to either link to the protected contract instead of restating it, or to re-scope as a [Protected Doc Change Task](./protected-doc-change-task.md) with explicit authorization.
+**No.** Editable feature work never needs a protected-path edit. If it feels like it does, re-scope per [Protected Docs](../contracts/protected-docs.md) § "What To Do Instead", or use [Protected Doc Change Task](./protected-doc-change-task.md) only when the task explicitly calls for a contract change.
 
 ## Runtime Surfaces To Evaluate
 
-Whatever surfaces the underlying code change actually affects — state them explicitly in the doc using the compact form from [Authoring Standard](../authoring-standard.md#runtime-writing-rule):
-
-```text
-Runtime Surfaces
-- Development: ...
-- Web: ...
-- Static out / Android / iOS: ...
-```
-
-Do not copy the full five-surface matrix into the document; link to [Project Runtime Contract](../runtime-contract.md) instead.
+Whatever the underlying code change affects — state it explicitly per [Authoring Standard](../authoring-standard.md) § "Runtime Writing Rule" rather than describing only "the website".
 
 ## Required Runtime-Compatibility Checks
-
-Documentation itself has no runtime to check, but verify the *content* is still accurate against:
 
 ```bash
 npm run runtime:check:changed
 ```
 
+Add the specific per-surface command(s) the Context Pack's runtime test plan requires for the target.
+
 ## Common Risks
 
-- Duplicating a generated inventory (file list, route list, import list, test list, command list, environment consumer list) instead of linking to the live/generated catalog.
-- Restating a protected rule instead of linking to it, causing future drift between the two copies.
-- Adding YAML front matter or a "last updated" date — machine discovery derives metadata from structure and Git history instead.
-- Describing a path, package, command, environment key, runtime, or artifact that does not actually exist in the repository.
-- Skipping the update entirely because the code change "seemed too small," when it changed behavior, an API, data, config, architecture, or an operational step.
+- Creating a new document when an existing editable document already owns the topic (duplicate/parallel inventory).
+- Copying a generated fact list by hand instead of linking to the live/generated catalog.
+- Describing only the web path for shared client code that also reaches Static `out/`/Android/iOS.
 
 ## Relevant Tests/Checks
 
 ```bash
 npm run docs:check
-npm run architecture:check
+npm run docs:mutability:check
+npm run docs:ci
 ```
 
 ## Documentation To Update
 
-- The one editable document that owns this topic (do not create a second document for the same topic).
-- Cross-links from/to related documents if the change affects how they should be discovered.
+The editable document under the domain that owns the change (see `domain-registry.json`). This is the only class this template authorizes — do not touch protected or generated paths.
 
 ## Forbidden Unless Explicitly Requested
 
-- Creating documentation outside `docs/`.
-- Writing documentation in a language other than English.
-- Editing a protected or generated file to make this update "complete."
+- Editing any protected document.
+- Hand-editing anything under `docs/09-agent-knowledge/generated/`.
+- Browser/preview/computer-use verification.

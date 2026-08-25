@@ -52,7 +52,15 @@ Binding contract: `docs/09-agent-knowledge/runtime-contract.md`.
 
 Do not run `npm run build:static` merely as a generic verification step because it overwrites the release `out/` bundle.
 
-## 4. Single responsibility per file
+## 5. Documentation mutability and CI (mandatory)
+
+- Protected docs (architecture/runtime/agent/docs-CI contracts, including `document-mutability`) are not normal editable docs. They require `[docs-contract-change]` or `DOCS_CONTRACT_CHANGE=1`.
+- Generated docs under `docs/09-agent-knowledge/generated/` are never hand-edited; regenerate with `npm run docs:generate`.
+- Normal feature work updates editable docs only.
+- Docs CI protects these rules: `npm run docs:ci`.
+- Code changes require runtime-compatibility evaluation via `npm run runtime:check` (and `runtime:check:*`). Shared/release-relevant code must cover Static out, Development, Web, Android, and iOS. Dev-only code is checked for Development suitability and non-leakage into release behavior.
+
+## 6. Single responsibility per file
 
 On every create or edit (`src/`, `packages/`, `scripts/`, `services/`, native source, etc.), each file must have **one responsibility only** — one clear job and one primary reason to change.
 
@@ -69,7 +77,8 @@ See `AGENTS.md` §3a and `docs/01-architecture/02-packages/module-isolation-rule
 | Reply in Arabic | Use browser/preview for verification |
 | Run the Context Pack before editing | Start coding from filenames/assumptions |
 | Evaluate Development/Web/out/Android/iOS | Treat shared code as web-only |
-| Update matching docs in the same change | Leave docs/runtime knowledge stale |
+| Update editable docs with behavior changes | Hand-edit generated docs or casually edit protected docs |
+| Run `npm run runtime:check` and `npm run docs:ci` when relevant | Skip mutability/runtime documentation gates |
 | Write docs in `docs/` in English | Put project docs elsewhere |
 | Keep environment values out of docs/graph output | Paste secret/test assignment values into generated catalogs |
 | One responsibility per file | Mix unrelated logic in one file |
