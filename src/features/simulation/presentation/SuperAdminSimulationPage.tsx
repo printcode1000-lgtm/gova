@@ -40,14 +40,14 @@ export function SuperAdminSimulationPage() {
     () => USER_PAGE_REGISTRY.find((page) => page.id === selectedPageId) ?? initialPage,
     [selectedPageId],
   );
-  const selectedInteraction = React.useMemo(
-    () => selectedPage?.interactions.find((interaction) => interaction.id === selectedInteractionId),
-    [selectedInteractionId, selectedPage],
-  );
+  const selectedInteractions = selectedPage?.interactions ?? [];
+  const selectedInteraction =
+    selectedInteractions.find((interaction) => interaction.id === selectedInteractionId) ??
+    selectedInteractions[0];
 
   const selectPage = (pageId: string) => {
     const page = USER_PAGE_REGISTRY.find((candidate) => candidate.id === pageId);
-    setSelectedPageId(pageId);
+    setSelectedPageId(page?.id ?? "");
     setSelectedInteractionId(page?.interactions[0]?.id ?? "");
   };
 
@@ -153,12 +153,13 @@ export function SuperAdminSimulationPage() {
               <label className="block space-y-2">
                 <span className="block text-sm font-semibold text-on-surface">أحداث المستخدم الحقيقية</span>
                 <select
+                  key={selectedPage?.id ?? "no-page"}
                   value={selectedInteraction?.id ?? ""}
                   onChange={(event) => setSelectedInteractionId(event.target.value)}
                   disabled={Boolean(runningId) || !selectedPage}
                   className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {selectedPage?.interactions.map((interaction) => (
+                  {selectedInteractions.map((interaction) => (
                     <option key={interaction.id} value={interaction.id}>
                       {interaction.label}
                     </option>
