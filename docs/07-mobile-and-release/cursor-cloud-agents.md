@@ -68,5 +68,5 @@ Verify the whole chain with `npm run notifications:check:local`; see [the bridge
 
 ## Related
 
-- Project agent rules: `AGENTS.md` (§ Cursor Cloud specific instructions)
+- Project-wide agent rules: `AGENTS.md`
 - Cursor docs: [Cloud Agents](https://cursor.com/docs/cloud-agent.md), [Setup](https://cursor.com/docs/cloud-agent/setup.md)

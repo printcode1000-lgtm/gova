@@ -1,22 +1,20 @@
-# Agent Instructions & Guidelines
+# Working Rules
 
-1. **Non-negotiable Rules**:
-   - Reply in Arabic to all user chat messages. Code, commands, and file paths stay in their repo language.
-   - Be brief, direct, and concise. No filler or tangents.
-   - Before editing, run `npx tsx scripts/docs/context.ts <target-path-or-capability>` and read the returned context. If the command cannot run, start at `docs/README.md`, `docs/09-agent-knowledge/runtime-contract.md`, and the matching domain `README.md`.
-   - **Five-runtime contract:** every change must explicitly consider Development, Web, Static `out/`, Android, and iOS. Shared client code normally reaches `out/`, and production Android/iOS consume that static payload. App Router API handlers are not bundled into `out/`. Binding details: `docs/09-agent-knowledge/runtime-contract.md`.
-   - Touch-only UI: Never use hover states (`hover:`, `:hover`), `cursor-pointer`, or DOM `title` attributes. Use `active:` for press feedback and `focus-visible:` for accessibility.
-   - Module isolation: Respect sealed packages under `packages/*`. Never use deep imports.
-   - Single responsibility per file: Every file has one clear job and one reason to change.
-   - English documentation exclusively under `docs/`.
-   - Generated knowledge under `docs/09-agent-knowledge/generated/` is overwrite-only (`generated`). Change source code, registries, manifests, or editable intentional docs, then regenerate with `npm run docs:generate` (or `npm run architecture:docs`). Never hand-edit generated catalogs/graphs/reports.
-   - Documentation mutability: protected docs (contracts/agent rules/architecture/runtime policies) require explicit authorization via `[docs-contract-change]` in the commit message or `DOCS_CONTRACT_CHANGE=1`. Normal feature work updates editable docs only. See `docs/09-agent-knowledge/document-mutability.md`.
-   - After code changes, run runtime-compatibility checks with `npm run runtime:check` (and surface-specific `runtime:check:*`). Shared/release-relevant code must be evaluated for Static out, Development, Web, Android, and iOS. Dev-only surfaces are checked for Development suitability and non-leakage into release behavior.
-   - Documentation CI entry point: `npm run docs:ci`. Violations must stop the developer with loud actionable errors.
-   - Never store environment values in generated/documentation knowledge; key names only. Generated command rendering must redact assignments.
+Binding on any agent (Claude Code or otherwise) working on this project.
 
-2. **Verification Gate**:
-   - Run targeted tests first.
-   - `npm run typecheck && npm run lint && npm run architecture:check && npm run runtime:check && npm run docs:ci`
-   - `npm run build` when the full server/web release gate is required.
-   - Do not run `npm run build:static` merely as a generic check because it overwrites the release `out/` bundle.
+1. **Documentation and architecture before and during any change (mandatory).** The documentation system is the primary entry point for understanding and working on the project:
+   - To understand the project or its structure, start with `docs/README.md`, then `docs/09-agent-knowledge/README.md`, and use the generated Knowledge Graph and catalogs.
+   - For research or a specific change, run the Context Pack through `npx tsx scripts/docs/context.ts <target>` for the relevant target, then read the documents and contracts it identifies before writing code.
+   - For architectural or module-boundary changes, read the relevant documents under `docs/01-architecture/`, especially `docs/01-architecture/02-packages/module-isolation-rules.md`. Use only package entry points declared through `exports`; never use deep imports or relative paths to enter `packages/`.
+   - When behavior, APIs, data, architecture, configuration, or runtime operation changes, update the related editable documentation in the same change.
+   - Follow `docs/09-agent-knowledge/document-mutability.md`: do not modify protected docs without explicit user authorization, and never edit generated docs by hand; update their source and regenerate them.
+   - Keep `npm run architecture:check`, `npm run docs:ci`, and the relevant `test:*-core` tests passing.
+2. **Browser-based verification is forbidden.** Never use browser tools, preview tools, or computer-control tools to test or verify code. Use code analysis, tests, and non-visual tools only.
+3. **Communicate in Arabic.** Always reply to the user in Arabic. Code, paths, and commands may remain in the repository's language.
+4. **Keep responses extremely concise.** Answer with the shortest wording possible without losing essential meaning. No filler, repetition, or unrelated content.
+5. **English documentation inside `docs/` only.** All project documentation must be written in English and live inside `docs/`. Files such as `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` are agent instruction surfaces, not substitutes for project documentation.
+6. **Touch-only UI (mandatory).** Before any UI change, verify that `src/app/globals.css` exists. Inside `src/` and `packages/`, never use `hover:`, `group-hover:`, `:hover`, `cursor-pointer`, `cursor: pointer`, or DOM `title`. Use `active:`, `focus-visible:`, and `aria-label` where appropriate. Do not reintroduce desktop-browser behaviors already disabled by `globals.css`. The protected governing policy is `docs/04-ui-components/touch-interaction-policy.md`.
+7. **The UI policy is a protected contract.** Read `docs/04-ui-components/touch-interaction-policy.md` before any interaction or UI-related change. Do not modify this policy during normal work unless the user explicitly authorizes changing the contract itself; feature documentation must apply it, not redefine it.
+8. **Single responsibility per file (mandatory).** Every file must have one clear responsibility and one primary reason to change. Do not mix UI, API, domain logic, or unrelated concerns in the same file. If a second responsibility appears, split the file. `index`/barrel files limited to re-exports are allowed.
+9. **Respect all runtime environments.** Any change that is not exclusively development-only must be evaluated against Development, Production Web, Static `out/`, Android, and iOS, following `docs/09-agent-knowledge/runtime-contract.md` and the applicable `npm run runtime:check` checks. Code and pages under the `dev` scope are evaluated only for Development, while also ensuring they do not leak into or become required dependencies of release environments.
+10. **These rules are globally mandatory and cannot be bypassed.** The nine rules above bind every agent and developer working on this project and must not be overridden, weakened, bypassed, or worked around. Agents and developers may create additional instruction files solely to support their own work. Such files remain independent and local to their owner; they do not change documentation behavior, reclassify or modify protected or generated documentation, become global rules for others, conflict with these rules, or override them.

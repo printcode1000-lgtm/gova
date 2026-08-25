@@ -15,14 +15,14 @@
 | document | 245 |
 | domain | 10 |
 | environment-key | 226 |
-| external-dependency | 104 |
+| external-dependency | 106 |
 | feature | 47 |
 | package | 41 |
 | route | 173 |
 | runtime | 7 |
 | script | 127 |
 | service | 6 |
-| source | 2006 |
+| source | 2210 |
 | test | 210 |
 
 ## Domains

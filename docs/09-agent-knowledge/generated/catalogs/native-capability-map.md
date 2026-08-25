@@ -5,7 +5,7 @@
 
 # Native Capability Map
 
-Entries: **28**
+Entries: **29**
 
 | Platform | Capability | Source | Features | Packages | Notes |
 |---|---|---|---|---|---|
@@ -21,6 +21,7 @@ Entries: **28**
 | android | `android.permission.RECEIVE_BOOT_COMPLETED` | `android/app/src/main/AndroidManifest.xml` | unknown | unknown | AndroidManifest permission/component |
 | android | `android.permission.RECORD_AUDIO` | `android/app/src/main/AndroidManifest.xml` | unknown | unknown | AndroidManifest permission/component |
 | android | `android.permission.WRITE_EXTERNAL_STORAGE` | `android/app/src/main/AndroidManifest.xml` | `src/features/storage` | `@asol/backup-core`, `@asol/storage-core`, `@asol/storage-image-manager-core` | AndroidManifest permission/component |
+| android | `capacitor-plugin-wiring` | `android/.idea/gradle.xml` | unknown | `@asol/native-core` | Capacitor plugin/native wiring evidence |
 | android | `capacitor-plugin-wiring` | `android/capacitor.settings.gradle` | unknown | `@asol/native-core` | Capacitor plugin/native wiring evidence |
 | android | `capacitor-plugin-wiring` | `android/variables.gradle` | unknown | `@asol/native-core` | Capacitor plugin/native wiring evidence |
 | android | `notification-channel` | `android/app/src/main/AndroidManifest.xml` | `src/features/notifications` | `@asol/account-bridge`, `@asol/account-declarations`, `@asol/data-core`, `@asol/notifications-composition`, `@asol/notifications-core` | notification channel configuration evidence |
