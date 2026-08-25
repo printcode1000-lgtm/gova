@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
 import path from "node:path";
+import { loadOtaEnvironment } from "../config/ota-config";
 import { ok, err, type Result } from "../../errors/result";
 import { OtaCoreError } from "../../errors/ota-core-error";
 import {
@@ -147,6 +148,7 @@ export async function buildStaticOut(
 ): Promise<Result<BuildStaticOutResult, OtaCoreError>> {
   const root = options.root ?? rootDir;
   try {
+    loadOtaEnvironment();
     const childEnv = {
       ...withoutVsCodeDebuggerEnv(process.env),
       ...(options.env ?? {}),

@@ -306,15 +306,19 @@ earlier — and every route answered 200, because an older healthy build answers
 exactly like a current one. A status code proves the site is up; only the build
 identity proves it is running the change just deployed.
 
-So the gate compares the manifest production serves with the one this working
-tree produced:
+So the gate compares the manifest production serves with the marker committed
+in the **target git revision**, not a later local rewrite of
+`public/asol-web-manifest.json`. `build:static` and Android/iOS `cap sync` both
+regenerate that working-tree file. Retrying only the `main` phase after such a
+local rebuild must still expect the deployed commit's identity.
 
 | | |
 | --- | --- |
-| Compares | `createdAt` in `public/asol-web-manifest.json` vs `<origin>/asol-web-manifest.json` |
+| Compares | `createdAt` from `git show <revision>:public/asol-web-manifest.json` vs `<origin>/asol-web-manifest.json` |
+| Revision | `ASOL_RELEASE_REVISION` when set (deploy:all passes the publish SHA), else `.deploy-all/run-state.json` `revision`, else `HEAD` |
 | Origin | `ASOL_PRODUCTION_ORIGIN`, else `API_BASE_URL` from `@asol/native-core` |
 | Retries | `ASOL_RELEASE_CHECK_ATTEMPTS` (default 20) every 15s — a deployment can still be propagating |
-| Fails with | both build ids, and the likeliest cause |
+| Fails with | both build ids, the git revision, and the likeliest cause |
 
 It runs **after** `main-ready`, and it runs **whatever `main-ready` concluded**.
 That is deliberate: an inconclusive Vercel verdict is exactly when the question

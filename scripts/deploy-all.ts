@@ -823,7 +823,10 @@ async function main(): Promise<void> {
         let serving = false;
         if (servingBranch) {
           try {
-            await runDeploymentNpmScript("release:check", { logPrefix: "deploy:all" });
+            await runDeploymentNpmScript("release:check", {
+              logPrefix: "deploy:all",
+              env: { ASOL_RELEASE_REVISION: publishContext.revision },
+            });
             serving = true;
           } catch (error) {
             const detail = error instanceof Error ? error.message : String(error);

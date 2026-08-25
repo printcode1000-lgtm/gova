@@ -85,6 +85,11 @@ for (const route of [
 }
 assert.match(staticBuilderSource, /auditCatalogStudioExcluded\(\)/,
   "static output must audit that development-only release routes are absent");
+assert.match(staticBuilderSource, /loadOtaEnvironment\(\)/,
+  "static out must load the unified release-tool environment before baking credentials");
+const staticCliSource = await readFile("scripts/build-static.ts", "utf8");
+assert.match(staticCliSource, /loadReleaseEnvironment\(\)/,
+  "build:static must load the same release-tool env as ota:check and release:android");
 const releasePageSource = await readFile(
   "src/app/super-admin/google-play-store-assets/page.tsx",
   "utf8",

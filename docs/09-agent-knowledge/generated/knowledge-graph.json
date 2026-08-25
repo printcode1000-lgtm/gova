@@ -5287,6 +5287,7 @@
         "packages/architecture-core/src/runner.ts",
         "scripts/architecture-check",
         "scripts/architecture-check.ts",
+        "src/core/composition/",
         "src/features/page-save/tests/page-save-write-surface",
         "src/features/page-save/tests/page-save-write-surface.test.ts",
         "test",
@@ -9816,6 +9817,7 @@
         "performs",
         "place",
         "save",
+        "src/core/composition/",
         "src/core/composition/browser-ports",
         "src/core/composition/browser-ports.ts",
         "src/features/page-save/application/page-save-core-bootstrap",
@@ -10291,6 +10293,19 @@
         "not",
         "ones",
         "read",
+        "scripts/build-static",
+        "scripts/build-static.ts",
+        "scripts/cap-build",
+        "scripts/cap-build.ts",
+        "scripts/deploy-all",
+        "scripts/deploy-all.ts",
+        "scripts/deploy-push",
+        "scripts/deploy-push.ts",
+        "scripts/load-release-env",
+        "scripts/load-release-env.ts",
+        "scripts/release-android",
+        "scripts/release-android.ts",
+        "ts",
         "variable",
         "which"
       ]
@@ -12079,6 +12094,9 @@
         "download",
         "during",
         "each",
+        "env",
+        "fastlane/",
+        "fastlane/.env",
         "fastlane/fastfile",
         "file",
         "forward-only",
@@ -23414,6 +23432,17 @@
       "tags": [
         "scripts/ensure-release-secrets-restored",
         "scripts/ensure-release-secrets-restored.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/expected-deployed-release-marker.ts",
+      "kind": "script",
+      "name": "expected-deployed-release-marker.ts",
+      "path": "scripts/expected-deployed-release-marker.ts",
+      "tags": [
+        "scripts/expected-deployed-release-marker",
+        "scripts/expected-deployed-release-marker.ts",
         "ts"
       ]
     },
@@ -50388,6 +50417,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/expected-deployed-release-marker.test.ts",
+      "kind": "test",
+      "name": "expected-deployed-release-marker.test.ts",
+      "path": "scripts/tests/expected-deployed-release-marker.test.ts",
+      "tags": [
+        "scripts/tests/expected-deployed-release-marker",
+        "scripts/tests/expected-deployed-release-marker.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/github-ci-policy.test.ts",
       "kind": "test",
       "name": "github-ci-policy.test.ts",
@@ -53625,6 +53666,11 @@
     {
       "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/deploy-push.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/expected-deployed-release-marker.test.ts",
       "kind": "invokes"
     },
     {
@@ -58698,6 +58744,12 @@
       "to": "source:packages/architecture-core/src/runner.ts",
       "kind": "references",
       "detail": "packages/architecture-core/src/runner.ts"
+    },
+    {
+      "from": "document:docs/01-architecture/07-enforcement/enforcement-exceptions.md",
+      "to": "source:src/core/composition/server-ports.ts",
+      "kind": "references",
+      "detail": "src/core/composition/"
     },
     {
       "from": "document:docs/01-architecture/07-enforcement/enforcement-exceptions.md",
@@ -65017,6 +65069,12 @@
     },
     {
       "from": "document:docs/05-platform-features/page-save-system.md",
+      "to": "source:src/core/composition/server-ports.ts",
+      "kind": "references",
+      "detail": "src/core/composition/"
+    },
+    {
+      "from": "document:docs/05-platform-features/page-save-system.md",
       "to": "source:src/features/page-save/application/page-save-core-bootstrap.ts",
       "kind": "references",
       "detail": "src/features/page-save/application/page-save-core-bootstrap.ts"
@@ -65563,6 +65621,42 @@
       "to": "package:@asol/env-core",
       "kind": "references",
       "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/env-core-module.md",
+      "to": "script:scripts/build-static.ts",
+      "kind": "references",
+      "detail": "scripts/build-static.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/env-core-module.md",
+      "to": "script:scripts/cap-build.ts",
+      "kind": "references",
+      "detail": "scripts/cap-build.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/env-core-module.md",
+      "to": "script:scripts/deploy-all.ts",
+      "kind": "references",
+      "detail": "scripts/deploy-all.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/env-core-module.md",
+      "to": "script:scripts/deploy-push.ts",
+      "kind": "references",
+      "detail": "scripts/deploy-push.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/env-core-module.md",
+      "to": "script:scripts/load-release-env.ts",
+      "kind": "references",
+      "detail": "scripts/load-release-env.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/env-core-module.md",
+      "to": "script:scripts/release-android.ts",
+      "kind": "references",
+      "detail": "scripts/release-android.ts"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/format-core-module.md",
@@ -68213,6 +68307,12 @@
       "to": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "kind": "references",
       "detail": "./github-ci-policy.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "to": "domain:architecture",
+      "kind": "references",
+      "detail": "docs/01-architecture/"
     },
     {
       "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
@@ -77727,6 +77827,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/expected-deployed-release-marker.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/fastlane-runner.js",
       "kind": "documents",
       "detail": "scripts/"
@@ -81484,6 +81590,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/deploy-push.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/expected-deployed-release-marker.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -106426,6 +106538,12 @@
     },
     {
       "from": "script:scripts/build-static.ts",
+      "to": "script:scripts/load-release-env.ts",
+      "kind": "imports",
+      "detail": "./load-release-env"
+    },
+    {
+      "from": "script:scripts/build-static.ts",
       "to": "source:src/features/categories/index.ts",
       "kind": "imports",
       "detail": "@/features/categories"
@@ -106560,6 +106678,12 @@
       "to": "package:@asol/native-core",
       "kind": "imports",
       "detail": "@asol/native-core"
+    },
+    {
+      "from": "script:scripts/check-deployed-release.ts",
+      "to": "script:scripts/expected-deployed-release-marker.ts",
+      "kind": "imports",
+      "detail": "./expected-deployed-release-marker"
     },
     {
       "from": "script:scripts/check-deployed-release.ts",
@@ -107149,6 +107273,11 @@
       "from": "script:scripts/ensure-release-secrets-restored.ts",
       "to": "environment-key:ASOL_ANDROID_KEYSTORE_FILE",
       "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/expected-deployed-release-marker.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "script:scripts/fastlane-runner.js",
@@ -193831,12 +193960,6 @@
     },
     {
       "from": "source:src/features/specialty-chat/application/specialty-chat-client.ts",
-      "to": "source:src/features/auth/index.ts",
-      "kind": "imports",
-      "detail": "@/features/auth"
-    },
-    {
-      "from": "source:src/features/specialty-chat/application/specialty-chat-client.ts",
       "to": "source:src/features/auth/ui.ts",
       "kind": "imports",
       "detail": "@/features/auth/ui"
@@ -208448,6 +208571,22 @@
     {
       "from": "test:scripts/tests/deploy-push.test.ts",
       "to": "script:scripts/deploy-push.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/expected-deployed-release-marker.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/expected-deployed-release-marker.test.ts",
+      "to": "script:scripts/expected-deployed-release-marker.ts",
+      "kind": "imports",
+      "detail": "../expected-deployed-release-marker"
+    },
+    {
+      "from": "test:scripts/tests/expected-deployed-release-marker.test.ts",
+      "to": "script:scripts/expected-deployed-release-marker.ts",
       "kind": "tests"
     },
     {

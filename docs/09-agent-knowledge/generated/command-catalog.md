@@ -168,7 +168,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:data-health-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-runbook-execution` | `Tooling` | 1 |  | 0 |
-| `npm run test:deployment-tools` | `Tooling` | 10 |  | 0 |
+| `npm run test:deployment-tools` | `Tooling` | 11 |  | 0 |
 | `npm run test:dev-cloud-backup` | `Tooling` | 1 |  | 1 |
 | `npm run test:dev-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:env-core` | `Tooling` | 1 |  | 0 |

@@ -33,7 +33,7 @@ These are **registered** dual owners, not bypasses:
 
 ## Page-save write-surface skip set
 
-`page-save-write-surface.test.ts` excludes `api` routes because handlers persist through domain owners, not page-save. Expanding skipped directories requires architectural review and doc update (see comment in `page-save-gateway-contract.ts`).
+`page-save-write-surface.test.ts` excludes `api` routes because handlers persist through domain owners, not page-save. It also skips `src/core/composition/` because those files wire ports (they bind `profileApiService.createReview` and similar methods into product/profile slots) and do not execute page-authored writes. Expanding either skip set requires architectural review and a matching freeze in `page-save-gateway-contract.ts`.
 
 ## What is NOT excepted
 

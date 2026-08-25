@@ -1,8 +1,7 @@
 #!/usr/bin/env tsx
-import { readFileSync } from "node:fs";
-import path from "node:path";
-
 import { API_BASE_URL } from "@asol/native-core";
+
+import { expectedDeployedReleaseMarker } from "./expected-deployed-release-marker";
 
 /**
  * Ask production what it is actually serving.
@@ -15,7 +14,8 @@ import { API_BASE_URL } from "@asol/native-core";
  *
  * A status code proves the site is up. It cannot prove the site is running the
  * change that was just deployed. Only the build identity can, so this compares
- * the manifest production serves with the one this working tree produced.
+ * the manifest production serves with the marker committed in the target
+ * revision — not a later local Static/Android rewrite of the working-tree file.
  *
  * Run after the deployment reaches a terminal state. A mismatch is not
  * necessarily a failure — a deployment can still be propagating — so this
@@ -31,11 +31,6 @@ interface WebManifest {
   readonly releaseId?: string;
 }
 
-function localManifest(): WebManifest {
-  const file = path.join(process.cwd(), "public", MANIFEST);
-  return JSON.parse(readFileSync(file, "utf8")) as WebManifest;
-}
-
 async function deployedManifest(): Promise<WebManifest> {
   const response = await fetch(`${ORIGIN}/${MANIFEST}`, {
     cache: "no-store",
@@ -46,15 +41,17 @@ async function deployedManifest(): Promise<WebManifest> {
 }
 
 async function main(): Promise<void> {
-  const local = localManifest();
-  console.log(`[release-check] expecting ${local.createdAt} at ${ORIGIN}`);
+  const expected = expectedDeployedReleaseMarker();
+  console.log(
+    `[release-check] expecting ${expected.createdAt} from git ${expected.revision} at ${ORIGIN}`,
+  );
 
   let seen = "";
   for (let attempt = 1; attempt <= ATTEMPTS; attempt += 1) {
     try {
       const deployed = await deployedManifest();
       seen = deployed.createdAt;
-      if (deployed.createdAt === local.createdAt) {
+      if (deployed.createdAt === expected.createdAt) {
         console.log(`[release-check] production is serving this build (${seen}).`);
         return;
       }
@@ -71,7 +68,7 @@ async function main(): Promise<void> {
 
   console.error(
     `\n[release-check] production never served this build.\n` +
-      `  expected: ${local.createdAt}\n` +
+      `  expected: ${expected.createdAt} (git ${expected.revision})\n` +
       `  serving:  ${seen || "(unreadable)"}\n\n` +
       `The deployment did not become production. The usual cause is a newer push:\n` +
       `the main app redeploys on every push to main, so a commit made during the\n` +

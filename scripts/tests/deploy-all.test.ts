@@ -10,6 +10,7 @@
  */
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { __testables } from "../deploy-all";
 
 const {
@@ -208,5 +209,12 @@ assert.deepEqual(
 // ── 11. Phase flags reject unknown ids and conflicting selectors ───────────
 assert.throws(() => parseArgv(["--phase=unknown"]), /Unknown phase/);
 assert.throws(() => parseArgv(["--phase=preflight", "--from-phase=publish"]), /not both/);
+
+const deployAllSource = readFileSync(new URL("../deploy-all.ts", import.meta.url), "utf8");
+assert.match(
+  deployAllSource,
+  /ASOL_RELEASE_REVISION:\s*publishContext\.revision/,
+  "main-serving must pin release:check to the publish SHA, not a later local static rebuild.",
+);
 
 console.log("deploy:all guard tests passed.");

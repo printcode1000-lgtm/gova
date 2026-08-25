@@ -25,9 +25,13 @@ const scanRoots = ["src"];
  * - api: HTTP route handlers persist through domain/data owners, not page-save
  *
  * Frozen by `checkPageSaveGatewayContract` in `@asol/architecture-core`.
- * Do not expand without updating docs/01-architecture/07-enforcement/architecture-check.md.
+ * Do not expand without updating docs/01-architecture/07-enforcement/architecture-check.md
+ * and docs/01-architecture/07-enforcement/enforcement-exceptions.md.
  */
 const skippedDirectories = new Set(["node_modules", "tests", "__tests__", "api"]);
+
+/** Composition roots wire ports; they do not execute page-authored writes. */
+const SKIPPED_PATH_PREFIXES = ["src/core/composition/"] as const;
 
 const CONTENT_WRITES = [
   "productApiService.create",
@@ -137,6 +141,7 @@ function testWriteSurfaceIsFrozen() {
     for (const filePath of collect(path.join(root, scanRoot))) {
       const relativePath = path.relative(root, filePath).replace(/\\/g, "/");
       if (isServiceDefinition(relativePath)) continue;
+      if (SKIPPED_PATH_PREFIXES.some((prefix) => relativePath.startsWith(prefix))) continue;
       const source = readFileSync(filePath, "utf8");
       if (CONTENT_WRITES.some((call) => source.includes(call))) {
         found.add(relativePath);

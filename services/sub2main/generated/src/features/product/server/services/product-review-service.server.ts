@@ -1,7 +1,7 @@
 import "server-only";
 
 import { getUserByUidQuery } from "@asol/data-core/auth";
-import { profileService } from "@/features/profile/server";
+import { getReviewerAvatarPort } from "../../ports/reviewer-avatar.port";
 import { logServerSystemIssue } from "@/features/system-logs/server";
 import { productRepository } from "@asol/data-core/product";
 import { productReviewRepository } from "@asol/data-core/product";
@@ -89,15 +89,14 @@ export class ProductReviewService {
     const user = await getUserByUidQuery.execute(input.uid);
     if (!user) throw new Error("userNotFound");
     const name = user.email?.trim() || user.phone || user.uid;
-    const avatarUrl = await profileService
-      .getStoreImages(input.uid)
-      .then((images) => images.avatarUrl)
+    const avatarUrl = await getReviewerAvatarPort()
+      .getAvatarUrl(input.uid)
       .catch((error) => {
         void logServerSystemIssue({
           error,
           feature: "ProductReviews",
           operation: "load-reviewer-avatar",
-        }).catch(() => undefined);
+        });
         return null;
       });
     return productReviewRepository.create(

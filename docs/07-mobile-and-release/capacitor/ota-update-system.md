@@ -646,6 +646,12 @@ out/asol-web-manifest.json
 public/asol-web-manifest.json
 ```
 
+The CLI loads the unified release-tool environment first (`loadReleaseEnvironment`,
+same precedence as `ota:check`) so baked keys such as
+`ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` resolve from `.env.local` / `.env` /
+`fastlane/.env` without manual injection. `buildStaticOut` also calls
+`loadOtaEnvironment()` so package-level callers get the same contract.
+
 The local manifest contains the bundled version and the complete file inventory. `asol-web-manifest.json` itself is excluded from the file inventory and is not stored under `app-updates/files`.
 
 Hidden control files whose path contains a segment beginning with `.`, such as `.gitkeep` and `.DS_Store`, are excluded because Capacitor's local WebView does not reliably serve them.

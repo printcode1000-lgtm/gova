@@ -22,6 +22,10 @@ orchestration while `storage-image-manager.types.ts` owns the React-facing
 contracts and `storage-image-manager-ui.tsx` owns the shared dialog/button/spinner
 presentation primitives.
 
+Slot previews render with a native `<img>` element. The package cannot import
+`next/image` (sealed, no Next.js dependency), and the preview source is a
+`blob:` URL or stored object URL that the Next optimizer cannot process.
+
 ## Global card chrome
 
 Every rendered slot is wrapped by `StorageImageSlotFrame` inside the core

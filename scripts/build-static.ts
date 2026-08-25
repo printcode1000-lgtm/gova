@@ -6,6 +6,8 @@ import {
   buildStaticOut,
 } from '@asol/ota-core/publishing';
 
+import { loadReleaseEnvironment } from './load-release-env';
+
 /**
  * Composition root for the static release build.
  *
@@ -19,7 +21,14 @@ import {
  * its own bootstrap; the static build had no equivalent. This is it. The audit
  * stays in ota-core and the category logic stays in the feature that owns it —
  * neither is reimplemented here, only wired.
+ *
+ * Release-tool env is loaded first so a missing process value is filled from
+ * `.env.local` → `.env` → `fastlane/.env` — the same contract as `ota:check`
+ * and `release:android`. Static/native bundles bake
+ * `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` from that resolved environment.
  */
+loadReleaseEnvironment();
+
 configureOtaCore({
   categories: {
     getMainCategories: () => categoryService.getMainCategories(),

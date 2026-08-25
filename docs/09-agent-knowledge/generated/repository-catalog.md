@@ -20,10 +20,10 @@
 | package | 41 |
 | route | 173 |
 | runtime | 7 |
-| script | 105 |
+| script | 106 |
 | service | 6 |
 | source | 2194 |
-| test | 206 |
+| test | 207 |
 
 ## Domains
 

@@ -54,20 +54,30 @@ PY
   10.5 MB  out/_next
 ```
 
-`test_profile/` was the dominant cause: a committed local Chrome profile for
-three personal Google accounts — browser cache, Safe Browsing databases, and
-on-device ML models (a single `model.tflite` is 35MB). It is not project source.
-It had been untracked once before (`8c8da78`) and re-added afterwards.
+`test_profile/manageProfile` was the dominant cause: a local Chrome profile
+directory (browser cache, Safe Browsing databases, and on-device ML models; a
+single `model.tflite` is 35MB). It is not project source.
+
+Tracked vs untracked policy:
+
+- **Tracked:** launcher scripts and shortcuts under `test_profile/` (`run.ps1`,
+  `open-all.cmd`, and the per-account `.cmd` / `.lnk` files). These are
+  developer helpers, not application runtime.
+- **Gitignored:** `test_profile/manageProfile/` and Chrome cache trees
+  (`**/Cache/`, `**/Code Cache/`, `**/GPUCache/`). Those must never be committed.
+- **Never uploaded:** `.vercelignore` lists `test_profile/` so even the tracked
+  launchers stay off Vercel build machines.
 
 ## Fix
 
 Three independent layers, because any one of them can be undone by a later
 commit:
 
-1. **`.gitignore`** — `test_profile/` is untracked and stays on the developer's
-   disk. It never reaches GitHub.
-2. **`.vercelignore`** — listed there too, so that even if it is committed again
-   it is not uploaded to a build machine.
+1. **`.gitignore`** — ignores `test_profile/manageProfile/` and Chrome caches.
+   Launcher scripts remain tracked. The heavy profile data stays on the
+   developer's disk and never reaches GitHub.
+2. **`.vercelignore`** — ignores the whole `test_profile/` tree so a future
+   accidental commit still cannot inflate a hosted function.
 3. **`next.config.ts` → `outputFileTracingExcludes`** — the `build-jobs` routes
    no longer trace `test_profile/`, `out/`, `ios/`, `android/`, or `public/`.
 

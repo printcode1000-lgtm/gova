@@ -1,7 +1,10 @@
 import type { UserProfile } from "@/features/auth";
+import type { ProfileRegistrationSnapshot } from "@asol/data-core/profile/entities";
 import type { ProfileContactsData } from "./profile-contacts.entity";
 import type { StoreDetailsData } from "./store-details.entity";
 import type { ProfileSpecialtiesSelection } from "./profile-specialties.entity";
+
+export type { ProfileRegistrationSnapshot };
 
 export type ProfileEditorSection =
   | "registration"
@@ -9,15 +12,6 @@ export type ProfileEditorSection =
   | "products"
   | "contact"
   | "store";
-
-export interface ProfileRegistrationSnapshot {
-  phone: string;
-  email: string;
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-  phoneVerified: boolean;
-}
 
 export interface SaveProfileEditorInput {
   uid: string;

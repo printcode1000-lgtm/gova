@@ -13,6 +13,10 @@
     "./files": {
       "types": "./src/domain/env-files.ts",
       "default": "./src/domain/env-files.ts"
+    },
+    "./process": {
+      "types": "./src/domain/load-release-environment.ts",
+      "default": "./src/domain/load-release-environment.ts"
     }
   },
   "scripts": {

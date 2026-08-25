@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-24T10:45:11.733Z",
+  "generatedAt": "2026-08-25T00:26:24.233Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 409,
+  "fileCount": 413,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -29,6 +29,7 @@
     "packages/auth-core/src/domain/constants.ts",
     "packages/auth-core/src/domain/entities.ts",
     "packages/auth-core/src/domain/password-input.ts",
+    "packages/auth-core/src/domain/super-admin.ts",
     "packages/auth-core/src/index.ts",
     "packages/auth-core/src/ports/account-deletion.port.ts",
     "packages/auth-core/src/ports/auth-repository.port.ts",
@@ -145,6 +146,7 @@
     "packages/data-core/src/domains/profile/entities/index.ts",
     "packages/data-core/src/domains/profile/entities/profile-contacts.entity.ts",
     "packages/data-core/src/domains/profile/entities/profile-fulfillment-settings.entity.ts",
+    "packages/data-core/src/domains/profile/entities/profile-registration.entity.ts",
     "packages/data-core/src/domains/profile/entities/profile-review.entity.ts",
     "packages/data-core/src/domains/profile/entities/profile-specialties.entity.ts",
     "packages/data-core/src/domains/profile/entities/profile-working-hours.ts",
@@ -400,6 +402,8 @@
     "src/features/product/domain/product-review.entity.ts",
     "src/features/product/domain/product.entity.ts",
     "src/features/product/index.ts",
+    "src/features/product/ports/pharmacy-product-lookup.port.ts",
+    "src/features/product/ports/reviewer-avatar.port.ts",
     "src/features/product/server.ts",
     "src/features/product/server/services/product-review-service.server.ts",
     "src/features/product/server/services/product-service.server.ts",

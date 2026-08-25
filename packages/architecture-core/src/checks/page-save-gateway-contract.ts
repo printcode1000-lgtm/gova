@@ -72,8 +72,9 @@ export function checkPageSaveGatewayContract(): void {
   }
 
   // Freeze the write-surface skip set. `api` is excluded because route handlers
-  // persist through domain/data owners, not page-save; expanding this set is an
-  // architectural decision and must update docs/01-architecture/07-enforcement/architecture-check.md.
+  // persist through domain/data owners, not page-save. `src/core/composition/`
+  // is a path-prefix skip because those files wire ports and do not execute
+  // page-authored writes. Expanding either skip is an architectural decision.
   if (existsSync(writeSurfaceTest)) {
     const writeSurfaceSource = readFileSync(writeSurfaceTest, 'utf8');
     const skipMatch = writeSurfaceSource.match(
@@ -91,7 +92,17 @@ export function checkPageSaveGatewayContract(): void {
         'Page Save Gateway',
         writeSurfaceTest,
         `page-save write-surface skippedDirectories is [${actualSkip || '(missing)'}].`,
-        `Keep exactly [${approvedSkip}]. Document any change in repository-architecture-enforcement.md.`,
+        `Keep exactly [${approvedSkip}]. Document any change in architecture-check.md.`,
+      );
+    }
+
+    const approvedPrefixes = 'src/core/composition/';
+    if (!writeSurfaceSource.includes(`SKIPPED_PATH_PREFIXES = ["${approvedPrefixes}"]`)) {
+      addViolation(
+        'Page Save Gateway',
+        writeSurfaceTest,
+        'page-save write-surface SKIPPED_PATH_PREFIXES drifted.',
+        `Keep exactly ["${approvedPrefixes}"]. Composition roots wire ports; they are not page writers. Document changes in enforcement-exceptions.md.`,
       );
     }
   }

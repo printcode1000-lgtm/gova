@@ -889,6 +889,9 @@ const StorageImageSlot = React.forwardRef<
     >
       {previewUrl ? (
         <>
+          {/* Slot preview is a blob: or stored object URL. This sealed package
+              cannot import next/image, and the optimizer cannot process blob URLs. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             ref={imageRef}
             src={previewUrl}

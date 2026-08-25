@@ -27,6 +27,12 @@ and **never logs values**:
 
 Empty declarations are unconfigured and do not mask a later non-empty value.
 
+Callers: `ota:*` commands via `loadOtaEnvironment()`, `scripts/build-static.ts`,
+`scripts/release-android.ts`, `scripts/cap-build.ts`, `scripts/deploy-all.ts`,
+`scripts/deploy-push.ts`, and other release-tool CLIs through
+`scripts/load-release-env.ts`. Direct `npm run build:static` must not require
+manual env injection.
+
 ## The rule
 
 **Blank is absent.** A key set to `""` or `"   "` is unconfigured, not configured-to-empty — which

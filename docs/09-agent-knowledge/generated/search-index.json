@@ -5287,6 +5287,7 @@
         "packages/architecture-core/src/runner.ts",
         "scripts/architecture-check",
         "scripts/architecture-check.ts",
+        "src/core/composition/",
         "src/features/page-save/tests/page-save-write-surface",
         "src/features/page-save/tests/page-save-write-surface.test.ts",
         "test",
@@ -9816,6 +9817,7 @@
         "performs",
         "place",
         "save",
+        "src/core/composition/",
         "src/core/composition/browser-ports",
         "src/core/composition/browser-ports.ts",
         "src/features/page-save/application/page-save-core-bootstrap",
@@ -10291,6 +10293,19 @@
         "not",
         "ones",
         "read",
+        "scripts/build-static",
+        "scripts/build-static.ts",
+        "scripts/cap-build",
+        "scripts/cap-build.ts",
+        "scripts/deploy-all",
+        "scripts/deploy-all.ts",
+        "scripts/deploy-push",
+        "scripts/deploy-push.ts",
+        "scripts/load-release-env",
+        "scripts/load-release-env.ts",
+        "scripts/release-android",
+        "scripts/release-android.ts",
+        "ts",
         "variable",
         "which"
       ]
@@ -12079,6 +12094,9 @@
         "download",
         "during",
         "each",
+        "env",
+        "fastlane/",
+        "fastlane/.env",
         "fastlane/fastfile",
         "file",
         "forward-only",
@@ -23414,6 +23432,17 @@
       "tags": [
         "scripts/ensure-release-secrets-restored",
         "scripts/ensure-release-secrets-restored.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/expected-deployed-release-marker.ts",
+      "kind": "script",
+      "name": "expected-deployed-release-marker.ts",
+      "path": "scripts/expected-deployed-release-marker.ts",
+      "tags": [
+        "scripts/expected-deployed-release-marker",
+        "scripts/expected-deployed-release-marker.ts",
         "ts"
       ]
     },
@@ -50383,6 +50412,18 @@
       "tags": [
         "scripts/tests/deploy-push",
         "scripts/tests/deploy-push.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/expected-deployed-release-marker.test.ts",
+      "kind": "test",
+      "name": "expected-deployed-release-marker.test.ts",
+      "path": "scripts/tests/expected-deployed-release-marker.test.ts",
+      "tags": [
+        "scripts/tests/expected-deployed-release-marker",
+        "scripts/tests/expected-deployed-release-marker.test.ts",
         "test",
         "ts"
       ]

@@ -233,7 +233,8 @@ Pulling those into the registry would move another package's responsibility into
 this one and would replace immediate interactions with a deferred confirmation.
 `src/features/page-save/tests/page-save-write-surface.test.ts` freezes the exact
 set of client modules allowed to perform a content write, so a new bypass fails a
-gate instead of shipping.
+gate instead of shipping. Composition roots under `src/core/composition/` are
+skipped: they wire those methods into ports and do not run the write.
 
 ## Forbidden patterns
 

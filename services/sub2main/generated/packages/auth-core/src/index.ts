@@ -57,3 +57,9 @@ export {
   type ProfileFormData,
   type ProfileTranslateFn,
 } from './validation/profile-schema';
+
+export {
+  registerSuperAdminIdentity,
+  isSuperAdminIdentity,
+  isSuperAdminSession,
+} from './domain/super-admin';

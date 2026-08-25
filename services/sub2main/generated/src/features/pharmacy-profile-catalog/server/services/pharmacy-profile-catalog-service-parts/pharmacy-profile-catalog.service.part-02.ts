@@ -1,7 +1,7 @@
 import "server-only";
-import type { ProductRecord } from "@/features/product";
-import type { ProductDetails } from "@/features/product";
-import { createEmptyProductDetails } from "@/features/product";
+import type { ProductRecord } from "@asol/product-core";
+import type { ProductDetails } from "@asol/product-core";
+import { createEmptyProductDetails } from "@asol/product-core";
 import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_PRICE_LABEL,

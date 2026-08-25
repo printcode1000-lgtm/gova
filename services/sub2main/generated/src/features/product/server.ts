@@ -7,3 +7,7 @@
 export * from './server/services/product-review-service.server';
 export * from './server/services/product-service.server';
 /* END GENERATED FEATURE DOOR EXPORTS */
+export {
+  registerPharmacyProductLookupPort,
+} from './ports/pharmacy-product-lookup.port';
+export { registerReviewerAvatarPort } from './ports/reviewer-avatar.port';

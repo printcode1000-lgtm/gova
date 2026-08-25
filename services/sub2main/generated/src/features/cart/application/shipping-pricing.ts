@@ -1,4 +1,4 @@
-import type { ProfileFulfillmentSettings } from "@/features/profile";
+import type { ProfileFulfillmentSettings } from "@asol/data-core/profile/entities";
 
 type ShippingPricing = ProfileFulfillmentSettings["shippingPricing"];
 

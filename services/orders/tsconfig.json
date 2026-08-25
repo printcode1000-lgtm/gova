@@ -161,6 +161,9 @@
       "@asol/env-core/files": [
         "./generated/packages/env-core/src/domain/env-files.ts"
       ],
+      "@asol/env-core/process": [
+        "./generated/packages/env-core/src/domain/load-release-environment.ts"
+      ],
       "@asol/orders-composition": [
         "./generated/packages/orders-composition/src/index.ts"
       ],

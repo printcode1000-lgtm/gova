@@ -1,7 +1,7 @@
 import {
   createEmptyProductDetails,
   type ProductDetails,
-} from "@/features/product";
+} from "@asol/product-core";
 import { pharmacyStaticCatalogService } from "../services/pharmacy-static-catalog.service";
 
 export function createPharmacyInitialDetails(

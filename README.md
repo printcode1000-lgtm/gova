@@ -1,29 +1,32 @@
 # asol
 
-تطبيق Next.js مع نظام ثيم ودعم عربي/إنجليزي (I18n).
+Next.js application with a shared theme system and Arabic/English i18n.
 
-## البدء السريع
+## Quick start
 
 ```bash
 npm install
 npm run dev
 ```
 
-التطبيق يعمل على: http://localhost:3001
+The development server listens on http://localhost:3001
 
-## أوامر مهمة
+## Commands
 
-| الأمر | الوصف |
+| Command | Description |
 |--------|--------|
-| `npm run dev` | تشغيل التطبيق |
-| `npm run build` | بناء إنتاج |
-| `npm run build:static` | تصدير ثابت (`out/`) |
-| `npm run typecheck` | فحص الأنواع |
-| `npm run server:stop` | إيقاف السيرفر على المنفذ 3001 |
+| `npm run dev` | Development server |
+| `npm run build` | Web correctness gate + `.next` |
+| `npm run build:static` | Static export (`out/`) for Capacitor/OTA |
+| `npm run typecheck` | Type check |
+| `npm run server:stop` | Stop the process on port 3001 |
 
-## التوثيق
+Canonical command list: [docs/07-mobile-and-release/scripts-and-workflows.md](./docs/07-mobile-and-release/scripts-and-workflows.md)
 
-- [note/i18n-system.md](./note/i18n-system.md) — نظام الترجمة (English)
-- [note/theme-system.md](./note/theme-system.md) — نظام الثيم (English)
-- [doc/COMMANDS.md](./doc/COMMANDS.md) — أوامر التشغيل والبناء
-- [doc/GITHUB_SETUP.md](./doc/GITHUB_SETUP.md) — رفع المشروع إلى GitHub
+## Documentation
+
+Project documentation lives under [`docs/`](./docs/README.md) and is English-only.
+
+- [i18n](./docs/05-platform-features/i18n-system.md)
+- [Theme](./docs/04-ui-components/theme-system.md)
+- [GitHub CI policy](./docs/07-mobile-and-release/github-ci-policy.md)

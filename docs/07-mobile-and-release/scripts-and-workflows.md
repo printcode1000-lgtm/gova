@@ -335,3 +335,16 @@ being the only branch this repository allows.
 
 Nothing in `deploy:all` or `deploy:push` creates a branch, so no release path
 is affected either way.
+
+## Retained local notes (not project documentation)
+
+These paths were re-evaluated and **kept**. They are not unused source, and they
+are not project documentation (`docs/` remains the only English project docs
+tree):
+
+| Path | Evidence | Policy |
+| --- | --- | --- |
+| `note/k1.md` | Operator reconstruction brief for `docs/01-architecture/`. No imports, scripts, or CI entry points. | Retained as a local brief. Do not treat as a runtime or docs source. |
+| `note/note1.md` | Operator PowerShell/IDE scratch notes. No imports or tooling entry points. | Retained as local scratch. |
+| `test_profile/*.cmd`, `*.ps1`, `*.lnk`, `*.bat` | Tracked developer launchers. `git ls-files test_profile` lists them. | Keep tracked. |
+| `test_profile/manageProfile/` | Local Chrome profile caches. Gitignored. | Must stay untracked. `.vercelignore` excludes the whole `test_profile/` tree. |
