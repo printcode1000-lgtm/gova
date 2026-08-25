@@ -8,6 +8,7 @@ interface SettingsToggleRowProps {
   checked: boolean;
   disabled?: boolean;
   emphasised?: boolean;
+  simulationTargetId?: string;
   onChange: (next: boolean) => void;
 }
 
@@ -18,6 +19,7 @@ export function SettingsToggleRow({
   checked,
   disabled = false,
   emphasised = false,
+  simulationTargetId,
   onChange,
 }: SettingsToggleRowProps) {
   return (
@@ -35,6 +37,7 @@ export function SettingsToggleRow({
         </p>
       </div>
       <ToggleSwitch
+        data-simulation-target={simulationTargetId}
         checked={checked}
         onChange={onChange}
         label={title}

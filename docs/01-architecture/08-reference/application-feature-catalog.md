@@ -493,11 +493,11 @@ src/
 |---|---|
 | **Feature** | `release-commands` |
 | **Source** | `src/features/release-commands/` |
-| **Owns** | Release build-job client and server wiring |
+| **Owns** | Release build-job and production deploy orchestration |
 | **Public Doors** | `@/features/release-commands` · `@/features/release-commands/ui` · `@/features/release-commands/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | `@asol/release-core` |
-| **Permitted Feature Dependencies** | `google-play-console` |
+| **Capability Owners** | `@asol/notifications-core`, `@asol/release-core`, `@asol/vercel-deploy-core` |
+| **Permitted Feature Dependencies** | `auth`, `google-play-console`, `notifications` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### seller-card

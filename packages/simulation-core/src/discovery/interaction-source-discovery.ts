@@ -9,6 +9,12 @@ import type {
 
 const IMPORT_PATTERN = /(?:import|export)\s+(?:type\s+)?(?:[\s\S]*?\s+from\s+)?["']([^"']+)["']/g;
 const INTERACTION_PATTERN = /\b(onClick|onSubmit|onChange|onPointerDown|onKeyDown|href|type\s*=\s*["']submit["'])\b/;
+/**
+ * Simulation instrumentation is invisible to interaction discovery: markers are
+ * addressing metadata, never a behavioural change of the page itself.
+ */
+const SIMULATION_INSTRUMENTATION_PATTERN =
+  /\s(?:data-simulation-(?:target|field|list-item|file)|simulation(?:TargetId|ListItemId|FileId|Index))=(?:"[^"]*"|'[^']*'|\{(?:[^{}]|\{[^{}]*\})*\})/g;
 
 function resolveSourceFile(root: string, importer: string, specifier: string): string | null {
   let candidate: string;
@@ -50,7 +56,7 @@ export function discoverPageInteractionSources(
     const lines = readFileSync(absolute, "utf8").split(/\r?\n/);
     for (let index = 0; index < lines.length; index += 1) {
       const line = lines[index]!
-        .replace(/\sdata-simulation-event=(?:"[^"]*"|'[^']*')/g, "")
+        .replace(SIMULATION_INSTRUMENTATION_PATTERN, "")
         .trim()
         .replace(/\s+/g, " ");
       if (INTERACTION_PATTERN.test(line)) signatures.push(`${relative}:${line}`);

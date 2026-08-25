@@ -33,7 +33,7 @@ export function RegistrationPageContent() {
             <div className="space-y-2 text-center lg:text-start"><h1 className="text-3xl font-bold text-on-surface">{t('auth.registration.title')}</h1></div>
             {error && <div className="p-3 text-sm rounded bg-error/15 text-error text-center font-medium animate-in fade-in duration-200">{error}</div>}
             <FormProvider {...form}>
-              <form data-simulation-event="registration-submit" onSubmit={onSubmit} className="space-y-6" noValidate>
+              <form data-simulation-target="registration-submit" onSubmit={onSubmit} className="space-y-6" noValidate>
                 <PhoneVerification useForm={true} />
                 <div className="space-y-4">
                   <PasswordInput name="password" />
@@ -49,7 +49,7 @@ export function RegistrationPageContent() {
                 </div>
               </form>
             </FormProvider>
-            <p className="text-center text-sm text-on-surface-variant">{t('auth.registration.hasAccount')}{''}<Link data-simulation-event="registration-login" href="/login" className="font-medium text-primary">{t('auth.registration.loginLink')}</Link></p>
+            <p className="text-center text-sm text-on-surface-variant">{t('auth.registration.hasAccount')}{''}<Link data-simulation-target="registration-login" href="/login" className="font-medium text-primary">{t('auth.registration.loginLink')}</Link></p>
           </div>
         </div>
       </div>

@@ -78,7 +78,7 @@ export function AppHeader({
             <Link
               href="/search"
               id="header-search-button"
-              data-simulation-event={pathname === '/home' ? 'home-search' : undefined}
+              data-simulation-target={pathname === '/home' ? 'home-search' : undefined}
               className={cn(
                 "asol-control-icon flex items-center justify-center rounded-full transition-all duration-200",
                 isSearchActive

@@ -302,6 +302,7 @@ export function PharmacyCatalogManagerPage() {
                   } ${category.status === "hidden" ? "opacity-55" : ""}`}
                 >
                   <button
+                    data-simulation-list-item="pharmacy-category"
                     type="button"
                     onClick={() => setActiveCategoryId(category.id)}
                     className="flex min-w-0 flex-1 items-center gap-2 text-start"
@@ -379,6 +380,7 @@ export function PharmacyCatalogManagerPage() {
                       product={product}
                       disabled={busy}
                       onToggle={() => toggleProduct(product)}
+                      simulationToggleListItemId="pharmacy-toggle"
                     />
                   ))}
                 </div>

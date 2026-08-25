@@ -173,6 +173,7 @@ export function NotificationsPageContent() {
             return (
               <button
                 key={item.id}
+                data-simulation-list-item="notification-filter"
                 type="button"
                 onClick={() => selectFilter(item.id)}
                 aria-pressed={active}
@@ -385,19 +386,34 @@ function NotificationGroupCard({
             </p>
             <div className="flex flex-wrap gap-2">
               {group.unreadCount > 0 ? (
-                <button type="button" onClick={onRead} className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold">
+                <button
+                  data-simulation-list-item="notification-read"
+                  type="button"
+                  onClick={onRead}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold"
+                >
                   <CheckCheck className="h-4 w-4" />
                   {locale === "ar" ? "تمت القراءة" : "Mark read"}
                 </button>
               ) : null}
               {(group.latest.route?.href || group.category === NotificationCategories.Chat) ? (
-                <button type="button" onClick={onOpen} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-on-primary">
+                <button
+                  data-simulation-list-item="notification-open"
+                  type="button"
+                  onClick={onOpen}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-on-primary"
+                >
                   <ExternalLink className="h-4 w-4" />
                   {group.latest.route?.label ?? (locale === "ar" ? "فتح التفاصيل" : "Open details")}
                 </button>
               ) : null}
               {canArchive ? (
-                <button type="button" onClick={onDismiss} className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-on-surface-variant">
+                <button
+                  data-simulation-list-item="notification-dismiss"
+                  type="button"
+                  onClick={onDismiss}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-on-surface-variant"
+                >
                   <Archive className="h-4 w-4" />
                   {locale === "ar" ? "أرشفة" : "Archive"}
                 </button>

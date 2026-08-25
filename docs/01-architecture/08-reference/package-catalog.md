@@ -602,8 +602,8 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/vercel-deploy-core/` |
 | **Purpose** | Vercel deployment orchestration |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` |
-| **Infrastructure Privileges** | none |
+| **Public Exports** | `.` · `./remote-deploy-contracts` · `./remote-deploy-sandbox` |
+| **Infrastructure Privileges** | `@vercel/sandbox` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:vercel-deploy-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |

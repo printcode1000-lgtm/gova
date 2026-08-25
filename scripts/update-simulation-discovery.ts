@@ -8,6 +8,14 @@ import {
   INTERACTION_BASELINE,
 } from "@asol/simulation-core/discovery";
 
+/**
+ * Instrumentation-only migrations change interaction source text (markers and
+ * the JSX reflow around them) without adding or removing a real interaction.
+ * Pass `--accept-source-drift` to record the new digests for those routes; the
+ * runtime guard in `assertSimulationCoverage` stays strict either way.
+ */
+const acceptSourceDrift = process.argv.includes("--accept-source-drift");
+const acceptedRoutes: string[] = [];
 const root = process.cwd();
 const entries = discoverUserPages(root).map((page) => {
   const discovery = discoverPageInteractionSources(page, root);
@@ -20,10 +28,14 @@ const entries = discoverUserPages(root).map((page) => {
     previous.sourceDigest !== discovery.sourceDigest &&
     previous.eventIds.join("|") === eventIds.join("|")
   ) {
-    throw new Error(
-      `Interactions changed for ${page.route} but its event registry did not. ` +
-        "Add, remove, or rename the matching simulation event before updating the baseline.",
-    );
+    if (!acceptSourceDrift) {
+      throw new Error(
+        `Interactions changed for ${page.route} but its event registry did not. ` +
+          "Add, remove, or rename the matching simulation event before updating the baseline, " +
+          "or re-run with --accept-source-drift for an instrumentation-only change.",
+      );
+    }
+    acceptedRoutes.push(page.route);
   }
   return [page.route, {
     sourceDigest: discovery.sourceDigest,
@@ -47,3 +59,8 @@ writeFileSync(
   output,
 );
 console.log(`Updated simulation interaction baseline for ${entries.length} user pages.`);
+if (acceptedRoutes.length > 0) {
+  console.log(
+    `Accepted instrumentation-only source drift for ${acceptedRoutes.length} routes: ${acceptedRoutes.join(", ")}.`,
+  );
+}

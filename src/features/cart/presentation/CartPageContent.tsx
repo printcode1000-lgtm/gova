@@ -290,6 +290,7 @@ export function CartPageContent() {
                               ) : null}
                             </div>
                             <button
+                              data-simulation-list-item="cart-remove"
                               type="button"
                               onClick={() => void removeCartItem(item.id)}
                               className="rounded-full p-2 text-muted-foreground transition"
@@ -302,6 +303,7 @@ export function CartPageContent() {
                           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                             <div className="inline-flex items-center overflow-hidden rounded-lg border border-outline-variant">
                               <button
+                                data-simulation-list-item="cart-decrease"
                                 type="button"
                                 onClick={() =>
                                   void updateCartItemQuantity(
@@ -318,6 +320,7 @@ export function CartPageContent() {
                                 {item.quantity}
                               </span>
                               <button
+                                data-simulation-list-item="cart-increase"
                                 type="button"
                                 onClick={() =>
                                   void updateCartItemQuantity(
@@ -486,7 +489,7 @@ export function CartPageContent() {
             ) : null}
             <button
               type="button"
-              data-simulation-event="cart-checkout"
+              data-simulation-target="cart-checkout"
               disabled={isSubmitting || isSessionLoading}
               onClick={submitOrder}
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-on-primary transition disabled:cursor-not-allowed disabled:opacity-60"

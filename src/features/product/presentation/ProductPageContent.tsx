@@ -138,7 +138,7 @@ export function ProductPageContent({
           imageUrl: details.images.find((image) => image.url)?.url,
         }}
         trigger={
-          <Button type="button" variant="outline" className="gap-2">
+          <Button data-simulation-target="product-share" type="button" variant="outline" className="gap-2">
             <Share2 className="h-4 w-4" />
             {locale === "ar" ? "مشاركة المنتج" : "Share product"}
           </Button>
@@ -149,6 +149,7 @@ export function ProductPageContent({
     mode === "view" && product?.uid ? (
       <Button asChild variant="outline" className="gap-2">
         <Link
+          data-simulation-target="product-owner-profile"
           href={`/profile?mode=preview&uid=${encodeURIComponent(product.uid)}`}
         >
           <UserCircle className="h-4 w-4" />
@@ -162,6 +163,7 @@ export function ProductPageContent({
         item={favoriteFromProductCard(createProductCardViewModel(product))}
         label={locale === "ar" ? "المفضلة" : "Favorite"}
         className="h-10 w-auto gap-2 rounded-xl px-4"
+        simulationTargetId="product-favorite"
       />
     ) : null;
 
@@ -217,6 +219,7 @@ export function ProductPageContent({
   };
   const contactAction = mode === "view" && product?.uid ? (
     <Button
+      data-simulation-target="product-contact"
       type="button"
       variant="outline"
       className="gap-2"

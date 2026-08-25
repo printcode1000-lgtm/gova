@@ -127,6 +127,7 @@ export function OrdersPageContent() {
               return (
                 <Link
                   key={id}
+                  data-simulation-list-item="orders-open"
                   href={`/orders/details?orderId=${encodeURIComponent(id)}&role=${detailRole}`}
                   className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm transition"
                 >
@@ -191,6 +192,7 @@ export function OrdersPageContent() {
           {hasMore ? (
             <div className="mt-6 flex justify-center">
               <button
+                data-simulation-target="orders-load-more"
                 type="button"
                 onClick={() => void loadOrders()}
                 disabled={loadingMore}

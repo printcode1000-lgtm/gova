@@ -23,6 +23,7 @@ export function SelfTestNotificationButton({
         </p>
       </div>
       <button
+        data-simulation-target="notifications-test"
         type="button"
         disabled={state.selfTestBusy}
         onClick={() => void state.sendSelfTest()}

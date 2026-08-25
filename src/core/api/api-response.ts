@@ -92,7 +92,17 @@ export function mapServiceError(error: unknown): NextResponse {
     error instanceof Error ? error.message : 'Internal Server Error';
   const knownCodes = KNOWN_BUSINESS_API_ERROR_CODES.filter(
     (code) =>
-      !['forbidden', 'invalidJsonBody', 'internalServerError', 'unexpectedError', 'requestFailed', 'invalidLoginResponse'].includes(code),
+      ![
+        'forbidden',
+        'invalidJsonBody',
+        'internalServerError',
+        'unexpectedError',
+        'requestFailed',
+        'invalidLoginResponse',
+        'productionDeployAlreadyRunning',
+        'productionDeployNotConfigured',
+        'productionDeployCallbackRejected',
+      ].includes(code),
   );
   if (knownCodes.includes(message as (typeof knownCodes)[number])) {
     if (!isQuietMappedServiceError(message)) {
@@ -122,6 +132,21 @@ export function mapServiceError(error: unknown): NextResponse {
   if (message === 'accountDeletionSuperAdminForbidden') {
     void logMappedServiceError(error, message, 403);
     return apiError(message, 403);
+  }
+
+  // A release is one process at a time, and the console must be able to tell
+  // "someone else is deploying" from "the deploy failed".
+  if (message === 'productionDeployAlreadyRunning') {
+    void logMappedServiceError(error, message, 409);
+    return apiError(message, 409, { skipPersistence: true });
+  }
+  if (message === 'productionDeployCallbackRejected') {
+    void logMappedServiceError(error, message, 403);
+    return apiError(message, 403);
+  }
+  if (message === 'productionDeployNotConfigured') {
+    void logMappedServiceError(error, message, 503);
+    return apiError(message, 503, { skipPersistence: true });
   }
 
   if (message === 'passwordRecoveryNotConfigured') {

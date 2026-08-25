@@ -40,7 +40,7 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
             <Link
               key={cat.id}
               href={getCategoryHref(cat)}
-              data-simulation-event={index === 0 ? "home-category" : undefined}
+              data-simulation-list-item="home-category"
               className={categoryTileClassName}
               aria-label={name}
             >

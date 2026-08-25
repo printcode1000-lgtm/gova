@@ -9,9 +9,20 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./remote-deploy-contracts": {
+      "types": "./src/remote-deploy-contracts.ts",
+      "default": "./src/remote-deploy-contracts.ts"
+    },
+    "./remote-deploy-sandbox": {
+      "types": "./src/remote-deploy-sandbox.ts",
+      "default": "./src/remote-deploy-sandbox.ts"
     }
   },
   "scripts": {
     "test": "npx tsx src/tests/index.test.ts"
+  },
+  "dependencies": {
+    "@vercel/sandbox": "^3.1.0"
   }
 }

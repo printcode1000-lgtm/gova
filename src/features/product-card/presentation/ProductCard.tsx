@@ -26,6 +26,7 @@ interface ProductCardProps {
   actions?: ProductCardAction[];
   className?: string;
   favoriteEnabled?: boolean;
+  simulationListItemId?: string;
   onOpen?: (
     event: React.MouseEvent<HTMLButtonElement>,
     card: ProductCardViewModel,
@@ -86,6 +87,7 @@ export function ProductCard({
   actions = [],
   className = "",
   favoriteEnabled,
+  simulationListItemId,
   onOpen,
 }: ProductCardProps) {
   const isFeatured = variant === "featured-marquee";
@@ -105,6 +107,7 @@ export function ProductCard({
         />
       ) : null}
       <button
+        data-simulation-list-item={simulationListItemId}
         type="button"
         onClick={(event) => onOpen?.(event, card)}
         className="block w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"

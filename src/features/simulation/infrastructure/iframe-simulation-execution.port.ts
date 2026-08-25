@@ -1,4 +1,4 @@
-import type { SimulationExecutionPort } from "@asol/simulation-core";
+import type { SimulationExecutionPort, SimulationTarget } from "@asol/simulation-core";
 import { asolApi } from "@/core/api/asol-api-client";
 
 const LOAD_TIMEOUT_MS = 20_000;
@@ -17,6 +17,25 @@ function editableValue(element: Element, value: string): void {
   setter?.call(element, value);
   element.dispatchEvent(new view.Event("input", { bubbles: true }));
   element.dispatchEvent(new view.Event("change", { bubbles: true }));
+}
+
+function targetAttribute(target: SimulationTarget): string {
+  if (target.kind === "event") return "data-simulation-target";
+  if (target.kind === "field") return "data-simulation-field";
+  if (target.kind === "list-item") return "data-simulation-list-item";
+  return "data-simulation-file";
+}
+
+function escapeAttributeValue(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
+function targetSelector(target: SimulationTarget): string {
+  return `[${targetAttribute(target)}="${escapeAttributeValue(target.id)}"]`;
+}
+
+function targetLabel(target: SimulationTarget): string {
+  return `${target.kind}:${target.id}`;
 }
 
 export class IframeSimulationExecutionPort implements SimulationExecutionPort {
@@ -50,56 +69,60 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
     return documentNode;
   }
 
-  private target(selector: string): Element {
-    const target = this.documentNode().querySelector(selector);
-    if (!target) throw new Error(`simulationInteractionTargetMissing:${selector}`);
-    return target;
-  }
-
-  async setValue(selector: string, value: string): Promise<void> {
-    editableValue(this.target(selector), value);
-  }
-
-  async selectFirstOption(selector: string): Promise<void> {
-    const target = this.target(selector);
-    const view = target.ownerDocument.defaultView;
-    if (!view || !(target instanceof view.HTMLSelectElement)) {
-      throw new Error(`simulationTargetIsNotSelect:${selector}`);
+  private target(target: SimulationTarget): Element {
+    const selector = targetSelector(target);
+    const matches = this.documentNode().querySelectorAll(selector);
+    if (matches.length === 0) throw new Error(`simulationInteractionTargetMissing:${targetLabel(target)}`);
+    if (matches.length > 1 && target.kind !== "list-item") {
+      throw new Error(`simulationInteractionTargetAmbiguous:${targetLabel(target)}`);
     }
-    const option = Array.from(target.options).find((candidate) => !candidate.disabled && candidate.value !== "");
-    if (!option) throw new Error(`simulationSelectOptionMissing:${selector}`);
-    target.value = option.value;
-    target.dispatchEvent(new view.Event("input", { bubbles: true }));
-    target.dispatchEvent(new view.Event("change", { bubbles: true }));
+    return matches[0]!;
+  }
+
+  async setValue(target: SimulationTarget, value: string): Promise<void> {
+    editableValue(this.target(target), value);
+  }
+
+  async selectFirstOption(target: SimulationTarget): Promise<void> {
+    const element = this.target(target);
+    const view = element.ownerDocument.defaultView;
+    if (!view || !(element instanceof view.HTMLSelectElement)) {
+      throw new Error(`simulationTargetIsNotSelect:${targetLabel(target)}`);
+    }
+    const option = Array.from(element.options).find((candidate) => !candidate.disabled && candidate.value !== "");
+    if (!option) throw new Error(`simulationSelectOptionMissing:${targetLabel(target)}`);
+    element.value = option.value;
+    element.dispatchEvent(new view.Event("input", { bubbles: true }));
+    element.dispatchEvent(new view.Event("change", { bubbles: true }));
     await this.wait(250);
   }
 
-  async pressKey(selector: string, key: string): Promise<void> {
-    const target = this.target(selector);
-    const view = target.ownerDocument.defaultView;
-    if (!view || !(target instanceof view.HTMLElement)) {
-      throw new Error(`simulationInteractionTargetNotKeyboardAccessible:${selector}`);
+  async pressKey(target: SimulationTarget, key: string): Promise<void> {
+    const element = this.target(target);
+    const view = element.ownerDocument.defaultView;
+    if (!view || !(element instanceof view.HTMLElement)) {
+      throw new Error(`simulationInteractionTargetNotKeyboardAccessible:${targetLabel(target)}`);
     }
-    target.focus();
-    target.dispatchEvent(new view.KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
-    target.dispatchEvent(new view.KeyboardEvent("keyup", { key, bubbles: true, cancelable: true }));
+    element.focus();
+    element.dispatchEvent(new view.KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
+    element.dispatchEvent(new view.KeyboardEvent("keyup", { key, bubbles: true, cancelable: true }));
     await this.wait(250);
   }
 
-  async click(selector: string, _accessibleLabel?: string): Promise<void> {
-    const target = this.target(selector);
-    const view = target.ownerDocument.defaultView;
-    if (!view || !(target instanceof view.HTMLElement)) {
-      throw new Error(`simulationInteractionTargetNotClickable:${selector}`);
+  async click(target: SimulationTarget, _accessibleLabel?: string): Promise<void> {
+    const element = this.target(target);
+    const view = element.ownerDocument.defaultView;
+    if (!view || !(element instanceof view.HTMLElement)) {
+      throw new Error(`simulationInteractionTargetNotClickable:${targetLabel(target)}`);
     }
-    target.click();
+    element.click();
     await this.wait(250);
   }
 
-  async setInternalImage(selector: string, sourcePath: string): Promise<void> {
-    const target = this.target(selector);
-    const view = target.ownerDocument.defaultView;
-    if (!view || !(target instanceof view.HTMLInputElement) || target.type !== "file") {
+  async setInternalImage(target: SimulationTarget, sourcePath: string): Promise<void> {
+    const element = this.target(target);
+    const view = element.ownerDocument.defaultView;
+    if (!view || !(element instanceof view.HTMLInputElement) || element.type !== "file") {
       throw new Error("simulationTargetIsNotFileInput");
     }
     const bytes = await asolApi.getPublicBinary(sourcePath);
@@ -108,38 +131,39 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
     const file = new view.File([bytes], `simulation-${Date.now()}.${extension}`, { type: mime });
     const transfer = new view.DataTransfer();
     transfer.items.add(file);
-    target.files = transfer.files;
-    target.dispatchEvent(new view.Event("change", { bubbles: true }));
+    element.files = transfer.files;
+    element.dispatchEvent(new view.Event("change", { bubbles: true }));
     await this.wait(250);
   }
 
-  async submit(selector: string): Promise<void> {
-    const target = this.target(selector);
-    const view = target.ownerDocument.defaultView;
+  async submit(target: SimulationTarget): Promise<void> {
+    const element = this.target(target);
+    const view = element.ownerDocument.defaultView;
     if (!view) throw new Error("simulationPageDocumentUnavailable");
 
-    if (target instanceof view.HTMLFormElement) {
-      target.requestSubmit();
-    } else if (target instanceof view.HTMLButtonElement && target.type === "submit") {
-      target.click();
+    if (element instanceof view.HTMLFormElement) {
+      element.requestSubmit();
+    } else if (element instanceof view.HTMLButtonElement && element.type === "submit") {
+      element.click();
     } else if (
-      target instanceof view.HTMLInputElement &&
-      (target.type === "submit" || target.type === "image")
+      element instanceof view.HTMLInputElement &&
+      (element.type === "submit" || element.type === "image")
     ) {
-      target.click();
+      element.click();
     } else {
-      throw new Error(`simulationTargetNotSubmittable:${selector}`);
+      throw new Error(`simulationTargetNotSubmittable:${targetLabel(target)}`);
     }
     await this.wait(250);
   }
 
-  async waitForTarget(selector: string, timeoutMs = TARGET_TIMEOUT_MS): Promise<void> {
+  async waitForTarget(target: SimulationTarget, timeoutMs = TARGET_TIMEOUT_MS): Promise<void> {
     const startedAt = Date.now();
+    const selector = targetSelector(target);
     while (Date.now() - startedAt <= timeoutMs) {
       if (this.documentNode().querySelector(selector)) return;
       await this.wait(TARGET_POLL_MS);
     }
-    throw new Error(`simulationInteractionTargetTimeout:${selector}`);
+    throw new Error(`simulationInteractionTargetTimeout:${targetLabel(target)}`);
   }
 
   wait(milliseconds: number): Promise<void> {

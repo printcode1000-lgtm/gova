@@ -86,6 +86,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run deploy:all:preflight` | `npx tsx scripts/deploy-all.ts --phase=preflight` |
 | `npm run deploy:all:publish` | `npx tsx scripts/deploy-all.ts --phase=publish` |
 | `npm run deploy:all:services` | `npx tsx scripts/deploy-all.ts --phase=services` |
+| `npm run deploy:env:push` | `npx tsx scripts/push-production-deploy-env.ts` |
 | `npm run deploy:push` | `npx tsx scripts/deploy-push.ts` |
 | `npm run deploy:push:all` | `npx tsx scripts/deploy-push.ts --vercel-target=all` |
 | `npm run deploy:push:main` | `npx tsx scripts/deploy-push.ts --vercel-target=none` |

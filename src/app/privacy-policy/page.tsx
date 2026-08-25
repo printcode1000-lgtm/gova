@@ -100,7 +100,7 @@ export default function PrivacyPolicyPage() {
             </h2>
             <p className="text-on-surface-variant">
               لأي استفسار أو ملاحظات، يمكنكم التواصل عبر البريد الإلكتروني:{''}
-              <a data-simulation-event="privacy-email" href="mailto:suezbazaar@gmail.com" className="text-primary">
+              <a data-simulation-target="privacy-email" href="mailto:suezbazaar@gmail.com" className="text-primary">
                 suezbazaar@gmail.com
               </a>
             </p>

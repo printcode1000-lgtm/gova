@@ -12,6 +12,11 @@ import {
   runVercel,
   deployAccountService,
 } from '../index';
+import {
+  REMOTE_DEPLOY_ALL_STAGES,
+  idleRemoteDeployAllSnapshot,
+  isRemoteDeployAllTerminal,
+} from '../remote-deploy-contracts';
 
 function assert(condition: boolean, message: string): void {
   if (!condition) {
@@ -84,6 +89,19 @@ async function runTests(): Promise<void> {
   }
   // Note: deployAccountService calls process.exit(1) or throws when env missing
   console.log('  ✔ Missing required key check verified (D5).');
+
+  // Remote deploy contracts: the console and the sandbox runner agree on them,
+  // so a stage dropped here silently breaks the production deploy timeline.
+  const stages: readonly string[] = REMOTE_DEPLOY_ALL_STAGES;
+  for (const phase of ['preflight', 'publish', 'notifications', 'products', 'orders', 'profiles', 'submain', 'sub2main', 'main']) {
+    assert(stages.includes(phase), `Remote deploy stages must cover deploy:all phase "${phase}"`);
+  }
+  assert(stages.indexOf('preflight') < stages.indexOf('main'), 'Remote deploy stages keep pipeline order');
+  assert(isRemoteDeployAllTerminal('succeeded') && isRemoteDeployAllTerminal('failed'), 'Terminal statuses');
+  assert(!isRemoteDeployAllTerminal('running') && !isRemoteDeployAllTerminal('preparing'), 'Active statuses are not terminal');
+  const idle = idleRemoteDeployAllSnapshot('probe');
+  assert(idle.requestId === null && idle.status === 'idle', 'Idle snapshot carries no run');
+  console.log('  ✔ Remote deploy contracts cover every deploy:all phase.');
 
   console.log('\n✅ All @asol/vercel-deploy-core tests passed successfully!');
 }

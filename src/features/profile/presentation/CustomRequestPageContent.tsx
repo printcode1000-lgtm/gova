@@ -295,6 +295,8 @@ export function CustomRequestPageContent() {
                   }}
                   config={{
                     id: `custom-request-image-${index + 1}`,
+                    simulationFileId:
+                      index === 0 ? "custom-request-image" : undefined,
                     storageProfileId: StorageProfiles.SpicialOrder,
                     storageScope: "custom-request",
                     maxItems: 1,

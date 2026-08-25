@@ -12,6 +12,7 @@ interface ProductAddToCartButtonProps {
   sellerId: string;
   product: ProductDetails;
   mainCategoryId: string;
+  simulationTargetId?: string;
 }
 
 function numberValue(value: string) {
@@ -24,6 +25,7 @@ export function ProductAddToCartButton({
   sellerId,
   product,
   mainCategoryId,
+  simulationTargetId,
 }: ProductAddToCartButtonProps) {
   const [added, setAdded] = React.useState(false);
   const [isAdding, setIsAdding] = React.useState(false);
@@ -60,6 +62,7 @@ export function ProductAddToCartButton({
 
   return (
     <button
+      data-simulation-target={simulationTargetId}
       type="button"
       aria-label="إضافة إلى السلة"
       onClick={() => void handleAdd()}

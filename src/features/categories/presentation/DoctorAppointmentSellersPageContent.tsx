@@ -119,6 +119,7 @@ export function DoctorAppointmentSellersPageContent({
                 key={user.uid}
                 card={card}
                 variant="doctor-sellers"
+                simulationListItemId="doctor-open"
                 onOpen={() => router.push(card.href)}
               />
             );
@@ -129,6 +130,7 @@ export function DoctorAppointmentSellersPageContent({
       {users && users.length === limit ? (
         <div className="mt-6 text-center">
           <button
+            data-simulation-target="doctor-load-more"
             type="button"
             onClick={loadMore}
             disabled={isLoading}

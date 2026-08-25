@@ -4,6 +4,8 @@ import type { SimulationProgressStep } from "@asol/simulation-core";
 import { Check, CheckCircle2, Circle, Copy, Loader2, XCircle } from "lucide-react";
 import * as React from "react";
 
+import { simulationProgressClipboard } from "./simulation-progress-clipboard";
+
 export type SimulationProgressRunStatus = "pending" | "running" | "passed" | "failed";
 
 export type SimulationProgressRun = {
@@ -115,23 +117,6 @@ function buildErrorsOnlyText(
   return "";
 }
 
-async function copyText(text: string) {
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text);
-    return;
-  }
-
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.setAttribute("readonly", "");
-  textarea.style.position = "absolute";
-  textarea.style.left = "-9999px";
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  textarea.remove();
-}
-
 function StepList({ steps }: { steps: readonly SimulationProgressStep[] }) {
   return (
     <ol className="min-w-0 space-y-2">
@@ -185,7 +170,7 @@ export function SimulationProgressPanel({
   const handleCopy = async () => {
     if (!hasContent) return;
     try {
-      await copyText(buildCopyText(steps, error, succeeded, running, runs));
+      await simulationProgressClipboard.write(buildCopyText(steps, error, succeeded, running, runs));
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -196,7 +181,7 @@ export function SimulationProgressPanel({
   const handleCopyErrors = async () => {
     if (!hasErrors) return;
     try {
-      await copyText(errorsOnlyText);
+      await simulationProgressClipboard.write(errorsOnlyText);
       setErrorsCopied(true);
       window.setTimeout(() => setErrorsCopied(false), 1500);
     } catch {

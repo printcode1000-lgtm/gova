@@ -43,6 +43,9 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_CATALOG_ROOT` | server/tooling | 1 | `packages/catalog-core/src/server/validate-catalog-v3.ts` |
 | `ASOL_CORS_ORIGINS` | server/tooling | 2 | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts` |
 | `ASOL_DATA_SOURCE` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
+| `ASOL_DEPLOY_CALLBACK_SECRET` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
+| `ASOL_DEPLOY_CALLBACK_URL` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
+| `ASOL_DEPLOY_REPOSITORY_URL` | server/tooling | 1 | `scripts/push-production-deploy-env.ts` |
 | `ASOL_IOS_BUNDLE_ID` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_IOS_EXPORT_METHOD` | server/tooling | 0 |  |
 | `ASOL_IOS_TEAM_ID` | server/tooling | 1 | `src/core/config/server-env/server-env.values.turso-env.ts` |
@@ -69,6 +72,8 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_PRODUCTION_ORIGIN` | server/tooling | 1 | `scripts/check-deployed-release.ts` |
 | `ASOL_PROVISIONING` | server/tooling | 13 | `npm run db:provision:turso`, `npm run db:schema:sync:release`, `npm run db:schema:sync`, `scripts/provision-turso.ts`, `scripts/schema-sync.ts`, `scripts/setup-turso-db.ts` |
 | `ASOL_RELEASE_CHECK_ATTEMPTS` | server/tooling | 1 | `scripts/check-deployed-release.ts` |
+| `ASOL_REMOTE_DEPLOY_REQUEST_ID` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
+| `ASOL_REMOTE_DEPLOY_SANDBOX_NAME` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_SCHEMA_SYNC_EXACT` | server/tooling | 1 | `scripts/schema-sync.ts` |
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server/tooling | 2 | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` |
 | `ASOL_SERVICE_SMOKE_ONLY` | server/tooling | 1 | `scripts/check-service-smoke.ts` |
@@ -219,19 +224,19 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `TURSO_PROFILES_API_TOKEN` | server/tooling | 0 |  |
 | `TURSO_PROFILES_ORGANIZATION` | server/tooling | 0 |  |
 | `VERCEL` | server/tooling | 6 | `scripts/schema-sync.ts`, `scripts/test-data-health-environment.ts`, `packages/native-core/scripts/validate-ios-push-policy.ts`, `src/core/config/runtime-context.server.ts`, `src/features/data-health/tests/development-guard.test.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
-| `VERCEL_ACCESS_TOKEN` | server/tooling | 2 | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
+| `VERCEL_ACCESS_TOKEN` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
 | `VERCEL_ENV` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
 | `VERCEL_NOTIFICATIONS_TOKEN` | server/tooling | 0 |  |
 | `VERCEL_ORDERS_TOKEN` | server/tooling | 0 |  |
-| `VERCEL_ORG_ID` | server/tooling | 2 | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
+| `VERCEL_ORG_ID` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
 | `VERCEL_PRODUCTS_TOKEN` | server/tooling | 0 |  |
 | `VERCEL_PROFILES_TOKEN` | server/tooling | 0 |  |
 | `VERCEL_PROJECT_ID` | server/tooling | 2 | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
-| `VERCEL_PROJECT_NAME` | server/tooling | 2 | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
+| `VERCEL_PROJECT_NAME` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
 | `VERCEL_SUB2MAIN_ORG_ID` | server/tooling | 0 |  |
 | `VERCEL_SUB2MAIN_TOKEN` | server/tooling | 1 | `scripts/recreate-sub2main-vercel-project.ts` |
 | `VERCEL_SUBMAIN_ORG_ID` | server/tooling | 0 |  |
 | `VERCEL_SUBMAIN_TOKEN` | server/tooling | 1 | `scripts/recreate-submain-vercel-project.ts` |
-| `VERCEL_TEAM_ID` | server/tooling | 2 | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
-| `VERCEL_TOKEN` | server/tooling | 4 | `scripts/deploy-all.ts`, `scripts/deploy-push.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
+| `VERCEL_TEAM_ID` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
+| `VERCEL_TOKEN` | server/tooling | 5 | `scripts/deploy-all.ts`, `scripts/deploy-push.ts`, `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
 | `WEB_PUSH_VAPID_PRIVATE_KEY` | server/tooling | 2 | `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |

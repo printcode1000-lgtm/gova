@@ -48,13 +48,41 @@ progress on the same screen:
 - The execution driver may type into real editable fields, select the first real enabled option from an exact `<select>` target, dispatch real keyboard events, and wait for an exact asynchronously rendered target. These operations prepare real UI prerequisites; they are not fallback selector resolution.
 - The existing application handlers, hooks, services, APIs, repositories,
   database backend, validation/normalization functions, and storage configuration remain authoritative.
-- Simulation selectors are exact instrumentation. Missing declared targets fail explicitly; the execution port does not search for semantic or generic fallback targets.
+- Interaction definitions carry typed simulation targets, never CSS selectors. The execution port is the only module that knows how a target maps to a DOM attribute, and missing declared targets fail explicitly; it does not search for semantic or generic fallback targets.
 - Static Out, Android, and iOS use the configured remote Business API. They do
   not assume that App Router handlers exist in the static bundle.
 - Scenarios are intentionally empty in version one. A page interaction remains
   a single page-bound event; a future scenario may coordinate multiple users,
   pages, and roles.
 - A state that requires an external secret or out-of-band challenge must not be pretended into existence by page simulation. Password recovery therefore covers requesting the real recovery code at page-interaction level; code verification and password reset belong to a future scenario only when the real delivered code can be obtained through its real channel.
+
+## Interaction Targets
+
+An interaction action addresses a `SimulationTarget` — a `{ kind, id }` pair
+declared in `USER_PAGE_REGISTRY`. Registry definitions never contain a CSS
+selector, an `aria-label`, a field name, or a positional expression. The
+execution port is the only module that maps a target to the DOM:
+
+| Kind | DOM attribute | Resolution |
+|---|---|---|
+| `event` | `data-simulation-target` | Exactly one element; missing or duplicated is an explicit failure. |
+| `field` | `data-simulation-field` | Exactly one editable input, textarea, or select. |
+| `list-item` | `data-simulation-list-item` | A repeated row of a real list; resolves to the first marked element in document order. |
+| `file` | `data-simulation-file` | Exactly one real `<input type="file">`. |
+
+Because `list-item` is the declared contract for repeated rows, a list marks
+**every** row with the same id rather than threading an index through the
+component tree. `event`, `field`, and `file` stay strictly unique, so a marker
+accidentally rendered twice fails loudly instead of silently picking one.
+
+Instrumentation is addressing metadata only. It never changes rendering, never
+adds a behavior the real user does not have, and never authorizes a second
+implementation of an action. When the real interaction runs through a shared
+gateway — Page Save, for example — the target belongs on that gateway's real
+control, not on a simulation-only button.
+
+Interaction discovery strips these markers before fingerprinting a page, so
+adding or moving instrumentation is not by itself an interaction change.
 
 ## Simulation Users
 
@@ -90,3 +118,11 @@ The guard runs as its own `deploy:all` preflight branch. It does not execute all
 operational E2E interactions during deployment. When an intentional interaction
 changes, update the corresponding event registry first, then run
 `npm run simulation:discovery:update` to refresh the baseline.
+
+`simulation:discovery:update` refuses to record a route whose interaction
+sources changed while its event registry did not, because that normally means a
+real interaction was added or removed without a matching simulation event. An
+instrumentation-only migration — adding markers and the JSX reflow around them —
+legitimately changes source text on routes whose events are unchanged; record it
+with `npm run simulation:discovery:update -- --accept-source-drift`. The runtime
+guard stays strict either way.

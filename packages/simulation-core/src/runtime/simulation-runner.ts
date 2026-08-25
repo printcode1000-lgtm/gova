@@ -62,22 +62,22 @@ export async function runPageInteraction(
     begin("interaction", input.interaction.label);
     for (const action of input.interaction.actions) {
       if (action.type === "set-value") {
-        await input.port.setValue(action.selector, interpolate(action.value, input.user));
+        await input.port.setValue(action.target, interpolate(action.value, input.user));
       } else if (action.type === "select-first-option") {
-        await input.port.selectFirstOption(action.selector);
+        await input.port.selectFirstOption(action.target);
       } else if (action.type === "press-key") {
-        await input.port.pressKey(action.selector, action.key);
+        await input.port.pressKey(action.target, action.key);
       } else if (action.type === "click") {
-        await input.port.click(action.selector, action.accessibleLabel);
+        await input.port.click(action.target, action.accessibleLabel);
       } else if (action.type === "set-internal-image") {
         await input.port.setInternalImage(
-          action.selector,
+          action.target,
           pickRandomSimulationImage(input.internalCatalogImages ?? []),
         );
       } else if (action.type === "submit") {
-        await input.port.submit(action.selector);
+        await input.port.submit(action.target);
       } else if (action.type === "wait-for-target") {
-        await input.port.waitForTarget(action.selector, action.timeoutMs);
+        await input.port.waitForTarget(action.target, action.timeoutMs);
       } else {
         await input.port.wait(action.milliseconds);
       }

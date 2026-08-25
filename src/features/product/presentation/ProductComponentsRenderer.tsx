@@ -164,6 +164,7 @@ export function ProductComponentsRenderer({
                     sellerId={ownerUid}
                     product={product}
                     mainCategoryId={mainCategoryId}
+                    simulationTargetId="product-add-cart"
                   />
                 ) : null}
                 {config.favorite ? (

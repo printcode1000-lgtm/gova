@@ -28,6 +28,7 @@ export function ProductReviewsSummary({
       </button>
       {canRate ? (
         <button
+          data-simulation-target="product-review"
           type="button"
           aria-label="إرسال تقييم"
           onClick={onRate}

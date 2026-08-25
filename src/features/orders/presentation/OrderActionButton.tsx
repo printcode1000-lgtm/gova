@@ -26,6 +26,7 @@ export function OrderActionButton({
   const isDisabled = Boolean(busyAction) || disabled;
   return (
     <button
+      data-simulation-list-item="order-action"
       type="button"
       disabled={isDisabled}
       onClick={onClick}

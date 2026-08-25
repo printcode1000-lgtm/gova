@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 247 |
+| command | 248 |
 | config | 12 |
-| document | 244 |
+| document | 248 |
 | domain | 10 |
-| environment-key | 226 |
-| external-dependency | 106 |
+| environment-key | 231 |
+| external-dependency | 107 |
 | feature | 48 |
 | package | 42 |
-| route | 176 |
+| route | 179 |
 | runtime | 7 |
-| script | 129 |
+| script | 131 |
 | service | 6 |
-| source | 2242 |
-| test | 211 |
+| source | 2256 |
+| test | 213 |
 
 ## Domains
 
@@ -85,7 +85,7 @@
 | @asol/submain-composition | `packages/submain-composition` | Composition root for the submain account; Layer: composition; Public exports: . |
 | @asol/system-logs-core | `packages/system-logs-core` | System log capture and persistence contract; Layer: capability; Public exports: ., ./server |
 | @asol/trending-ribbon-core | `packages/trending-ribbon-core` | Trending ribbon UI capability; Layer: capability; Public exports: ., ./server |
-| @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel deployment orchestration; Layer: capability; Public exports: . |
+| @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel deployment orchestration; Layer: capability; Public exports: ., ./remote-deploy-contracts, ./remote-deploy-sandbox |
 
 ## Features
 

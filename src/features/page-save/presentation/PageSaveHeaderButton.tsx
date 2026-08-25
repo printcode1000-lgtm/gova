@@ -17,6 +17,13 @@ import { PageSaveDialog } from "./PageSaveDialog";
 
 const SUCCESS_FLASH_MS = 1800;
 
+function simulationTargetForPageSave(registrationId: string | null): string | undefined {
+  if (registrationId === "profile-edit") return "profile-save";
+  if (registrationId === "pharmacy-catalog-manager") return "pharmacy-save";
+  if (registrationId === "custom-request") return "custom-request-submit";
+  return undefined;
+}
+
 export function PageSaveHeaderButton() {
   const { t } = useTranslation();
   const snapshot = useSyncExternalStore(
@@ -89,6 +96,7 @@ export function PageSaveHeaderButton() {
   return (
     <>
       <button
+        data-simulation-target={simulationTargetForPageSave(snapshot.registrationId)}
         type="button"
         id="header-page-save-button"
         onClick={handleOpen}

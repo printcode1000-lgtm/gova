@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **226**
+Keys: **231**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -45,6 +45,9 @@ Keys: **226**
 | `ASOL_CATALOG_ROOT` | server-only | unknown | `packages/catalog-core/src/server/validate-catalog-v3.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_CORS_ORIGINS` | server-only | unknown | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DATA_SOURCE` | server-only | unknown | `src/core/config/runtime-context.server.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_DEPLOY_CALLBACK_SECRET` | server-only | dangerous | `scripts/run-remote-deploy-all.mjs` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_DEPLOY_CALLBACK_URL` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_DEPLOY_REPOSITORY_URL` | server-only | unknown | `scripts/push-production-deploy-env.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_IOS_BUNDLE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `ASOL_IOS_EXPORT_METHOD` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_IOS_TEAM_ID` | server-only | unknown | `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
@@ -71,6 +74,8 @@ Keys: **226**
 | `ASOL_PRODUCTION_ORIGIN` | server-only | unknown | `scripts/check-deployed-release.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_PROVISIONING` | server-only | unknown | `npm run db:provision:turso`, `npm run db:schema:sync`, `npm run db:schema:sync:release`, `packages/data-core/src/tooling/drop-factory-reset-tables.ts`, `packages/data-core/src/tooling/reset-advertisements-db.ts`, `packages/data-core/src/tooling/sync-users-sqlite-to-turso.ts`, `packages/storage-core/src/server/providers/provider-resolver.ts`, `packages/storage-core/src/tests/integration/parameterized-store.test.ts`, `scripts/provision-turso.ts`, `scripts/schema-sync.ts`, `scripts/setup-turso-db.ts`, `scripts/test-data-health-environment.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_RELEASE_CHECK_ATTEMPTS` | server-only | unknown | `scripts/check-deployed-release.ts` | ota/release | server-only | npm run runtime:check:changed |
+| `ASOL_REMOTE_DEPLOY_REQUEST_ID` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_REMOTE_DEPLOY_SANDBOX_NAME` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SCHEMA_SYNC_EXACT` | server-only | unknown | `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server-only | unknown | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SERVICE_SMOKE_ONLY` | server-only | unknown | `scripts/check-service-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
@@ -221,19 +226,19 @@ Keys: **226**
 | `TURSO_PROFILES_API_TOKEN` | server-only | dangerous | none | vercel/database | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `TURSO_PROFILES_ORGANIZATION` | server-only | unknown | none | vercel/database | missing/unknown consumers | npm run runtime:check:changed |
 | `VERCEL` | server-only | dangerous | `packages/native-core/scripts/validate-ios-push-policy.ts`, `scripts/schema-sync.ts`, `scripts/test-data-health-environment.ts`, `src/core/config/runtime-context.server.ts`, `src/features/data-health/tests/development-guard.test.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
-| `VERCEL_ACCESS_TOKEN` | server-only | dangerous | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `VERCEL_ACCESS_TOKEN` | server-only | dangerous | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `VERCEL_ENV` | server-only | unknown | `src/core/config/runtime-context.server.ts` | vercel/database | server-only | npm run runtime:check:changed |
 | `VERCEL_NOTIFICATIONS_TOKEN` | server-only | dangerous | none | vercel/database | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `VERCEL_ORDERS_TOKEN` | server-only | dangerous | none | vercel/database | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
-| `VERCEL_ORG_ID` | server-only | unknown | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | server-only | npm run runtime:check:changed |
+| `VERCEL_ORG_ID` | server-only | unknown | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | server-only | npm run runtime:check:changed |
 | `VERCEL_PRODUCTS_TOKEN` | server-only | dangerous | none | vercel/database | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `VERCEL_PROFILES_TOKEN` | server-only | dangerous | none | vercel/database | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `VERCEL_PROJECT_ID` | server-only | unknown | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | server-only | npm run runtime:check:changed |
-| `VERCEL_PROJECT_NAME` | server-only | unknown | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | server-only | npm run runtime:check:changed |
+| `VERCEL_PROJECT_NAME` | server-only | unknown | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | server-only | npm run runtime:check:changed |
 | `VERCEL_SUB2MAIN_ORG_ID` | server-only | unknown | none | vercel/database | missing/unknown consumers | npm run runtime:check:changed |
 | `VERCEL_SUB2MAIN_TOKEN` | server-only | dangerous | `scripts/recreate-sub2main-vercel-project.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `VERCEL_SUBMAIN_ORG_ID` | server-only | unknown | none | vercel/database | missing/unknown consumers | npm run runtime:check:changed |
 | `VERCEL_SUBMAIN_TOKEN` | server-only | dangerous | `scripts/recreate-submain-vercel-project.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
-| `VERCEL_TEAM_ID` | server-only | unknown | `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | server-only | npm run runtime:check:changed |
-| `VERCEL_TOKEN` | server-only | dangerous | `scripts/deploy-all.ts`, `scripts/deploy-push.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `VERCEL_TEAM_ID` | server-only | unknown | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | server-only | npm run runtime:check:changed |
+| `VERCEL_TOKEN` | server-only | dangerous | `scripts/deploy-all.ts`, `scripts/deploy-push.ts`, `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `WEB_PUSH_VAPID_PRIVATE_KEY` | server-only | dangerous | `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |

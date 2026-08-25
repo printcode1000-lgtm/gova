@@ -7,6 +7,7 @@ interface ToggleSwitchProps {
   onChange: (next: boolean) => void;
   label: string;
   disabled?: boolean;
+  "data-simulation-target"?: string;
 }
 
 export function ToggleSwitch({
@@ -14,9 +15,11 @@ export function ToggleSwitch({
   onChange,
   label,
   disabled = false,
+  "data-simulation-target": simulationTarget,
 }: ToggleSwitchProps) {
   return (
     <Switch
+      data-simulation-target={simulationTarget}
       checked={checked}
       onCheckedChange={onChange}
       disabled={disabled}

@@ -31,6 +31,7 @@ export function ProductSearchResults({
               key={product.id}
               card={card}
               variant="search"
+              simulationListItemId="search-result"
               onOpen={() => onOpen(card.href)}
             />
           );
@@ -48,6 +49,7 @@ export function ProductSearchResults({
             key={seller.uid}
             card={card}
             variant="search"
+            simulationListItemId="search-result"
             onOpen={() => onOpen(card.href)}
           />
         );

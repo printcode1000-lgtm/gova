@@ -59,12 +59,12 @@ export function PasswordRecoveryPageContent() {
             {errorMessage && <div className="p-3 rounded bg-error/15 text-error text-sm text-center">{errorMessage}</div>}
 
             {recovery.step === 'phone' && (
-              <form data-simulation-event="password-request" onSubmit={submitPhone} className="auth-card space-y-5">
+              <form data-simulation-target="password-request" onSubmit={submitPhone} className="auth-card space-y-5">
                 <label className="space-y-2 block">
                   <span className="text-sm font-semibold flex items-center gap-2"><Smartphone className="h-4 w-4 text-primary" />{t('auth.passwordRecovery.phone')}</span>
                   <div className="relative">
                     <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">+20</span>
-                    <input className="auth-input ps-12 w-full" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 11))} inputMode="tel" autoComplete="tel" placeholder="01x xxxx xxxx" />
+                    <input data-simulation-field="password-request-phone" className="auth-input ps-12 w-full" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 11))} inputMode="tel" autoComplete="tel" placeholder="01x xxxx xxxx" />
                   </div>
                 </label>
                 <SubmitButton loading={recovery.isLoading} label={t('auth.passwordRecovery.sendCode')} />
@@ -73,7 +73,7 @@ export function PasswordRecoveryPageContent() {
             )}
 
             {recovery.step === 'code' && (
-              <form data-simulation-event="password-verify" onSubmit={submitCode} className="auth-card space-y-5">
+              <form data-simulation-target="password-verify" onSubmit={submitCode} className="auth-card space-y-5">
                 <div className="rounded bg-primary/10 p-3 text-sm text-on-surface-variant flex gap-2"><Mail className="h-5 w-5 text-primary shrink-0" /><span>{recovery.maskedEmail ? t('auth.passwordRecovery.sentTo', { email: recovery.maskedEmail }) : t('auth.passwordRecovery.genericSent')}</span></div>
                 <label className="space-y-2 block">
                   <span className="text-sm font-semibold">{t('auth.passwordRecovery.code')}</span>
@@ -85,7 +85,7 @@ export function PasswordRecoveryPageContent() {
             )}
 
             {recovery.step === 'password' && (
-              <form data-simulation-event="password-reset" onSubmit={submitPassword} className="auth-card space-y-5">
+              <form data-simulation-target="password-reset" onSubmit={submitPassword} className="auth-card space-y-5">
                 <PasswordField label={t('auth.passwordRecovery.newPassword')} value={password} onChange={setPassword} visible={showPassword} toggle={() => setShowPassword((value) => !value)} />
                 <PasswordField label={t('auth.passwordRecovery.confirmPassword')} value={confirmPassword} onChange={setConfirmPassword} visible={showPassword} />
                 <SubmitButton loading={recovery.isLoading} label={t('auth.passwordRecovery.savePassword')} />

@@ -174,6 +174,7 @@ export function ProductSearchPanel({
     fixedMainCategoryId && fixedSubcategoryId ? null : (
       <div className="grid gap-2 sm:grid-cols-2">
         <select
+          data-simulation-field="search-main-category"
           value={mainCategoryId}
           onChange={(event) => {
             setMainCategoryId(event.target.value);
@@ -192,6 +193,7 @@ export function ProductSearchPanel({
           ))}
         </select>
         <select
+          data-simulation-field="search-subcategory"
           value={subcategoryId}
           disabled={!mainCategory}
           onChange={(event) => {
@@ -218,6 +220,7 @@ export function ProductSearchPanel({
         <div className="flex gap-2">
           {(["products", "sellers"] as ProductSearchMode[]).map((item) => (
             <button
+              data-simulation-target={item === "sellers" ? "search-sellers-mode" : undefined}
               key={item}
               type="button"
               onClick={() => setActiveMode(item)}
@@ -245,6 +248,7 @@ export function ProductSearchPanel({
         <div className="relative">
           <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
           <Input
+            data-simulation-field="search-query"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={(event) => {

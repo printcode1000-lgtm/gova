@@ -184,6 +184,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                 {previewUid ? (
                   <div className="flex flex-wrap items-center gap-2">
                     <FollowButton
+                      simulationTargetId="profile-follow"
                       targetType="store"
                       targetId={previewUid}
                       targetOwnerUid={previewUid}
@@ -210,6 +211,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       }}
                       trigger={
                         <Button
+                          data-simulation-target="profile-share"
                           type="button"
                           variant="outline"
                           className={`${ACTION_TILE_CLASS} border-input  `}
@@ -228,6 +230,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                     />
                     {!props.isOwner ? (
                       <Button
+                        data-simulation-target="profile-contact"
                         type="button"
                         variant="outline"
                         className={`${ACTION_TILE_CLASS} border-input  `}

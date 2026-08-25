@@ -122,6 +122,7 @@ export function SellersPageContent({
                 key={user.uid}
                 card={card}
                 variant="category-sellers"
+                simulationListItemId="seller-open"
                 onOpen={() => router.push(card.href)}
               />
             );
@@ -132,6 +133,7 @@ export function SellersPageContent({
       {users && users.length === limit ? (
         <div className="mt-6 text-center">
           <button
+            data-simulation-target="sellers-load-more"
             type="button"
             onClick={loadMore}
             disabled={isLoading}

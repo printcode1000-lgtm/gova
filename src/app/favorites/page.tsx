@@ -65,7 +65,7 @@ export default function FavoritesPage() {
 
       <div className="mb-5 grid grid-cols-2 rounded-xl bg-surface-container p-1">
         <button
-          data-simulation-event="favorites-products"
+          data-simulation-target="favorites-products"
           type="button"
           onClick={() => setActiveTab("product")}
           className={cn(
@@ -82,7 +82,7 @@ export default function FavoritesPage() {
           </span>
         </button>
         <button
-          data-simulation-event="favorites-sellers"
+          data-simulation-target="favorites-sellers"
           type="button"
           onClick={() => setActiveTab("seller")}
           className={cn(
@@ -130,6 +130,7 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
+                simulationListItemId="favorites-open"
                 onOpen={() => router.push(card.href || "/search")}
               />
             );
@@ -144,6 +145,7 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
+                simulationListItemId="favorites-open"
                 onOpen={() => router.push(card.href || "/search")}
               />
             );

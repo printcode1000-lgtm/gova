@@ -91,6 +91,7 @@ export function CollectionSubcategoriesPage({
             return (
               <Link
                 key={item.id}
+                data-simulation-list-item="collection-item"
                 href={`/categories/${item.id}`}
                 className={categoryTileClassName}
                 aria-label={altText}

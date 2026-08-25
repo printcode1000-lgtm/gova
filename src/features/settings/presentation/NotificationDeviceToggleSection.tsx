@@ -38,6 +38,7 @@ export function NotificationDeviceToggleSection({
             )}
           >
             <button
+              data-simulation-target="notifications-permission"
               type="button"
               disabled={state.deviceBusy}
               onClick={() => void state.recheckPermission()}
@@ -62,6 +63,7 @@ export function NotificationDeviceToggleSection({
         </div>
       ) : (
         <SettingsToggleRow
+          simulationTargetId="notifications-permission"
           emphasised
           title={state.t("notifications.deviceCard.toggleTitle")}
           description={state.t("notifications.deviceCard.toggleDescription")}

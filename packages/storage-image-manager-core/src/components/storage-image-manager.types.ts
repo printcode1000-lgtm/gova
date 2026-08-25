@@ -16,6 +16,8 @@ export interface StorageImageManagerConfig {
   allowReplace: boolean;
   deleteFromStorageOnRemove?: boolean;
   storageScope?: string;
+  /** Stable `data-simulation-file` marker for the first slot's device picker. */
+  simulationFileId?: string;
 }
 
 export type StorageImageManagerTranslate = (

@@ -125,6 +125,7 @@
     "db:drizzle": "npx tsx scripts/run-drizzle-kit.ts",
     "db:provision:turso": "cross-env ASOL_PROVISIONING=true npx tsx scripts/provision-turso.ts",
     "db:push:vercel-env": "npx tsx scripts/push-vercel-turso-env.ts",
+    "deploy:env:push": "npx tsx scripts/push-production-deploy-env.ts",
     "vercel:accounts:check": "npx tsx scripts/check-vercel-accounts.ts",
     "smoke:services": "npx tsx scripts/check-service-smoke.ts",
     "release:check": "npx tsx scripts/check-deployed-release.ts",

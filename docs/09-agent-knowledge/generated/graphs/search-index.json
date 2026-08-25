@@ -1037,6 +1037,21 @@
       ]
     },
     {
+      "id": "command:deploy:env:push",
+      "kind": "command",
+      "name": "npm run deploy:env:push",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "deploy",
+        "deploy:env:push",
+        "env",
+        "npm",
+        "npm run deploy:env:push",
+        "push",
+        "run"
+      ]
+    },
+    {
       "id": "command:deploy:push",
       "kind": "command",
       "name": "npm run deploy:push",
@@ -5633,6 +5648,7 @@
         "@asol/storage-image-manager-core",
         "@asol/system-logs-core",
         "@asol/trending-ribbon-core",
+        "@asol/vercel-deploy-core",
         "application",
         "application feature catalog",
         "application_features",
@@ -5877,6 +5893,8 @@
         "@asol/trending-ribbon-core",
         "@asol/trending-ribbon-core/server",
         "@asol/vercel-deploy-core",
+        "@asol/vercel-deploy-core/remote-deploy-contracts",
+        "@asol/vercel-deploy-core/remote-deploy-sandbox",
         "application_features",
         "architecture",
         "by",
@@ -9463,6 +9481,8 @@
         "packages/auth-core/src/...",
         "packages/auth-core/src/domain/account-deletion-registry",
         "packages/auth-core/src/domain/account-deletion-registry.ts",
+        "packages/auth-core/src/domain/phone",
+        "packages/auth-core/src/domain/phone.ts",
         "packages/data-core/src/domains/account-deletion/",
         "packages/data-core/src/domains/account-deletion/repositories/account-deletion-repository",
         "packages/data-core/src/domains/account-deletion/repositories/account-deletion-repository.server.ts",
@@ -10093,6 +10113,7 @@
       "summary": "The `src/features/password-recovery` module provides an independent password recovery flow via email. The user begins with their registered phone number, receives a 6-digit verification code, and sets a new password upon code verification.",
       "tags": [
         "6-digit",
+        "@asol/auth-core",
         "@asol/auth-core/server",
         "an",
         "and",
@@ -10107,6 +10128,8 @@
         "module",
         "new",
         "number",
+        "packages/auth-core/src/domain/phone",
+        "packages/auth-core/src/domain/phone.ts",
         "packages/data-core/src/core/database/migrations/0004_breezy_cammi",
         "packages/data-core/src/core/database/migrations/0004_breezy_cammi.sql",
         "packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository",
@@ -11575,6 +11598,67 @@
       ]
     },
     {
+      "id": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
+      "kind": "document",
+      "name": "Super Admin Production Deploy",
+      "path": "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
+      "summary": "`/super-admin/production-deploy` lets the super admin run the full release — the same `npm run deploy:all` pipeline — from the production web application, follow it stage by stage, and receive the outcome by in-app notification and by email.",
+      "tags": [
+        "/super-admin/production-deploy",
+        "`/super-admin/production-deploy` lets the super admin run the full release — the same `npm run deploy:all` pipeline — from the production web application, follow it stage by stage, and receive the outcome by in-app notification and by email.",
+        "admin",
+        "all",
+        "and",
+        "application",
+        "by",
+        "deploy",
+        "docs/06-super-admin-and-operations/super-admin-production-deploy",
+        "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
+        "email",
+        "follow",
+        "from",
+        "full",
+        "in-app",
+        "it",
+        "lets",
+        "md",
+        "mjs",
+        "notification",
+        "npm",
+        "outcome",
+        "packages/vercel-deploy-core/src/remote-deploy-contracts",
+        "packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
+        "packages/vercel-deploy-core/src/remote-deploy-sandbox",
+        "packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
+        "pipeline",
+        "production",
+        "receive",
+        "release",
+        "run",
+        "same",
+        "scripts/push-production-deploy-env",
+        "scripts/push-production-deploy-env.ts",
+        "scripts/run-remote-deploy-all",
+        "scripts/run-remote-deploy-all.mjs",
+        "server",
+        "src/features/release-commands/domain/production-deploy-report",
+        "src/features/release-commands/domain/production-deploy-report.ts",
+        "src/features/release-commands/presentation/productiondeploypage",
+        "src/features/release-commands/presentation/productiondeploypage.tsx",
+        "src/features/release-commands/server/services/production-deploy-email",
+        "src/features/release-commands/server/services/production-deploy-email.server.ts",
+        "src/features/release-commands/server/services/production-deploy-service",
+        "src/features/release-commands/server/services/production-deploy-service.server.ts",
+        "stage",
+        "super",
+        "super admin production deploy",
+        "the",
+        "ts",
+        "tsx",
+        "web"
+      ]
+    },
+    {
       "id": "document:docs/06-super-admin-and-operations/super-admin-user-impersonation.md",
       "kind": "document",
       "name": "Super Admin User Impersonation",
@@ -11624,6 +11708,7 @@
       "summary": "`@asol/simulation-core` owns the user-page registry, interaction contracts, runtime classification, fixed simulation identities, random internal-image selection, execution progress, and discovery guard. The Super Admin surface is available at `/super-admin/simulation`.",
       "tags": [
         "/super-admin/simulation",
+        "@asol/auth-core",
         "@asol/simulation-core",
         "`@asol/simulation-core` owns the user-page registry, interaction contracts, runtime classification, fixed simulation identities, random internal-image selection, execution progress, and discovery guard. the super admin surface is available at `/super-admin/simulation`.",
         "admin",
@@ -13290,6 +13375,61 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/notification-preference-incomplete-identity.md",
+      "kind": "document",
+      "name": "Notification Preference Forbidden from Incomplete Identity",
+      "path": "docs/08-troubleshooting/problems/notification-preference-incomplete-identity.md",
+      "summary": "`GET /api/notifications/preferences` can report `forbidden` when the client has a persisted session with a `uid` but no usable phone number, or when the same Egyptian phone is represented with different display formatting such as `010...` versus `+20 10...`.",
+      "tags": [
+        "/api/notifications/preferences",
+        "010",
+        "10",
+        "20",
+        "`get /api/notifications/preferences` can report `forbidden` when the client has a persisted session with a `uid` but no usable phone number, or when the same egyptian phone is represented with different display formatting such as `010...` versus `+20 10...`.",
+        "as",
+        "but",
+        "can",
+        "client",
+        "different",
+        "display",
+        "docs/08-troubleshooting/problems/notification-preference-incomplete-identity",
+        "docs/08-troubleshooting/problems/notification-preference-incomplete-identity.md",
+        "egyptian",
+        "forbidden",
+        "formatting",
+        "from",
+        "get",
+        "has",
+        "identity",
+        "incomplete",
+        "is",
+        "md",
+        "no",
+        "notification",
+        "notification preference forbidden from incomplete identity",
+        "number",
+        "or",
+        "persisted",
+        "phone",
+        "preference",
+        "report",
+        "represented",
+        "same",
+        "session",
+        "src/features/notifications/tests/notification-account-surface",
+        "src/features/notifications/tests/notification-account-surface.test.ts",
+        "such",
+        "test",
+        "the",
+        "ts",
+        "uid",
+        "usable",
+        "versus",
+        "when",
+        "with"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
       "kind": "document",
       "name": "`npm ci` wrongly rebuilds `better-sqlite3@13` on Windows",
@@ -13415,6 +13555,33 @@
         "windows",
         "with",
         "write"
+      ]
+    },
+    {
+      "id": "document:docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
+      "kind": "document",
+      "name": "PharmacyProductLookupPort Is Not Registered",
+      "path": "docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
+      "summary": "Local development can intermittently throw:",
+      "tags": [
+        "can",
+        "development",
+        "docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered",
+        "docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
+        "intermittently",
+        "is",
+        "local",
+        "local development can intermittently throw:",
+        "md",
+        "not",
+        "pharmacyproductlookupport",
+        "pharmacyproductlookupport is not registered",
+        "registered",
+        "src/features/product/tests/pharmacy-product-lookup-port-registry",
+        "src/features/product/tests/pharmacy-product-lookup-port-registry.test.ts",
+        "test",
+        "throw",
+        "ts"
       ]
     },
     {
@@ -14213,6 +14380,50 @@
         "the",
         "to",
         "verify"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/contracts/simulation-source-of-truth.md",
+      "kind": "document",
+      "name": "Simulation Source-of-Truth Contract",
+      "path": "docs/09-agent-knowledge/contracts/simulation-source-of-truth.md",
+      "summary": "This is a binding project contract for every user simulation and E2E path. Simulation exists to exercise the application exactly as a real user does; it must never become a parallel implementation of application behavior.",
+      "tags": [
+        "and",
+        "application",
+        "as",
+        "become",
+        "behavior",
+        "binding",
+        "contract",
+        "docs/09-agent-knowledge/contracts/simulation-source-of-truth",
+        "docs/09-agent-knowledge/contracts/simulation-source-of-truth.md",
+        "does",
+        "e2e",
+        "every",
+        "exactly",
+        "exercise",
+        "exists",
+        "for",
+        "implementation",
+        "is",
+        "it",
+        "md",
+        "must",
+        "never",
+        "of",
+        "parallel",
+        "path",
+        "project",
+        "real",
+        "simulation",
+        "simulation source-of-truth contract",
+        "source-of-truth",
+        "the",
+        "this",
+        "this is a binding project contract for every user simulation and e2e path. simulation exists to exercise the application exactly as a real user does; it must never become a parallel implementation of application behavior.",
+        "to",
+        "user"
       ]
     },
     {
@@ -15684,6 +15895,45 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_DEPLOY_CALLBACK_SECRET",
+      "kind": "environment-key",
+      "name": "ASOL_DEPLOY_CALLBACK_SECRET",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_deploy_callback_secret",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_DEPLOY_CALLBACK_URL",
+      "kind": "environment-key",
+      "name": "ASOL_DEPLOY_CALLBACK_URL",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_deploy_callback_url",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_DEPLOY_REPOSITORY_URL",
+      "kind": "environment-key",
+      "name": "ASOL_DEPLOY_REPOSITORY_URL",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_deploy_repository_url",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_IOS_BUNDLE_ID",
       "kind": "environment-key",
       "name": "ASOL_IOS_BUNDLE_ID",
@@ -16015,6 +16265,32 @@
       "summary": "Server/tooling environment key name",
       "tags": [
         "asol_release_check_attempts",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_REMOTE_DEPLOY_REQUEST_ID",
+      "kind": "environment-key",
+      "name": "ASOL_REMOTE_DEPLOY_REQUEST_ID",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_remote_deploy_request_id",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_REMOTE_DEPLOY_SANDBOX_NAME",
+      "kind": "environment-key",
+      "name": "ASOL_REMOTE_DEPLOY_SANDBOX_NAME",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_remote_deploy_sandbox_name",
         "environment",
         "server",
         "server tooling environment",
@@ -19114,6 +19390,21 @@
       ]
     },
     {
+      "id": "external-dependency:@vercel/sandbox",
+      "kind": "external-dependency",
+      "name": "@vercel/sandbox",
+      "summary": "Declared dependency range observed: ^3.1.0",
+      "tags": [
+        "@vercel/sandbox",
+        "^3.1.0",
+        "dependency",
+        "external",
+        "external dependency npm package",
+        "npm",
+        "package"
+      ]
+    },
+    {
       "id": "external-dependency:/././",
       "kind": "external-dependency",
       "name": "\\.\\.\\",
@@ -21177,10 +21468,15 @@
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
       "path": "packages/vercel-deploy-core",
-      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: .",
+      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./remote-deploy-contracts, ./remote-deploy-sandbox",
       "tags": [
         ".",
+        "./remote-deploy-contracts",
+        "./remote-deploy-sandbox",
+        "/remote-deploy-contracts",
+        "/remote-deploy-sandbox",
         "@asol/vercel-deploy-core",
+        "@vercel/sandbox",
         "capability",
         "deployment",
         "orchestration",
@@ -23085,6 +23381,38 @@
       ]
     },
     {
+      "id": "route:/api/super-admin/production-deploy:handler",
+      "kind": "route",
+      "name": "/api/super-admin/production-deploy",
+      "path": "src/app/api/super-admin/production-deploy/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/super-admin/production-deploy",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/super-admin/production-deploy/route",
+        "src/app/api/super-admin/production-deploy/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/super-admin/production-deploy/callback:handler",
+      "kind": "route",
+      "name": "/api/super-admin/production-deploy/callback",
+      "path": "src/app/api/super-admin/production-deploy/callback/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/super-admin/production-deploy/callback",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/super-admin/production-deploy/callback/route",
+        "src/app/api/super-admin/production-deploy/callback/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "route:/api/super-admin/simulation/users:handler",
       "kind": "route",
       "name": "/api/super-admin/simulation/users",
@@ -23898,6 +24226,20 @@
         "page",
         "src/app/super-admin/ota-releases/page",
         "src/app/super-admin/ota-releases/page.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "route:/super-admin/production-deploy:page",
+      "kind": "route",
+      "name": "/super-admin/production-deploy",
+      "path": "src/app/super-admin/production-deploy/page.tsx",
+      "summary": "App Router page",
+      "tags": [
+        "/super-admin/production-deploy",
+        "page",
+        "src/app/super-admin/production-deploy/page",
+        "src/app/super-admin/production-deploy/page.tsx",
         "tsx"
       ]
     },
@@ -25064,6 +25406,17 @@
       ]
     },
     {
+      "id": "script:scripts/push-production-deploy-env.ts",
+      "kind": "script",
+      "name": "push-production-deploy-env.ts",
+      "path": "scripts/push-production-deploy-env.ts",
+      "tags": [
+        "scripts/push-production-deploy-env",
+        "scripts/push-production-deploy-env.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/push-vercel-turso-env.ts",
       "kind": "script",
       "name": "push-vercel-turso-env.ts",
@@ -25248,6 +25601,17 @@
         "scripts/run-ota-self-test",
         "scripts/run-ota-self-test.ts",
         "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/run-remote-deploy-all.mjs",
+      "kind": "script",
+      "name": "run-remote-deploy-all.mjs",
+      "path": "scripts/run-remote-deploy-all.mjs",
+      "tags": [
+        "mjs",
+        "scripts/run-remote-deploy-all",
+        "scripts/run-remote-deploy-all.mjs"
       ]
     },
     {
@@ -29046,6 +29410,17 @@
       "tags": [
         "packages/auth-core/src/domain/password-input",
         "packages/auth-core/src/domain/password-input.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/auth-core/src/domain/phone.ts",
+      "kind": "source",
+      "name": "phone.ts",
+      "path": "packages/auth-core/src/domain/phone.ts",
+      "tags": [
+        "packages/auth-core/src/domain/phone",
+        "packages/auth-core/src/domain/phone.ts",
         "ts"
       ]
     },
@@ -37619,6 +37994,28 @@
       ]
     },
     {
+      "id": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
+      "kind": "source",
+      "name": "remote-deploy-contracts.ts",
+      "path": "packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/remote-deploy-contracts",
+        "packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
+      "kind": "source",
+      "name": "remote-deploy-sandbox.ts",
+      "path": "packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/remote-deploy-sandbox",
+        "packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/vercel-deploy-core/src/vercel-deployment-monitor.ts",
       "kind": "source",
       "name": "vercel-deployment-monitor.ts",
@@ -39608,6 +40005,28 @@
       ]
     },
     {
+      "id": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/super-admin/production-deploy/callback/route.ts",
+      "tags": [
+        "src/app/api/super-admin/production-deploy/callback/route",
+        "src/app/api/super-admin/production-deploy/callback/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/super-admin/production-deploy/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/super-admin/production-deploy/route.ts",
+      "tags": [
+        "src/app/api/super-admin/production-deploy/route",
+        "src/app/api/super-admin/production-deploy/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/app/api/super-admin/simulation/users/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -40370,6 +40789,17 @@
       ]
     },
     {
+      "id": "source:src/app/super-admin/production-deploy/page.tsx",
+      "kind": "source",
+      "name": "page.tsx",
+      "path": "src/app/super-admin/production-deploy/page.tsx",
+      "tags": [
+        "src/app/super-admin/production-deploy/page",
+        "src/app/super-admin/production-deploy/page.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/app/super-admin/simulation/[pageId]/page.tsx",
       "kind": "source",
       "name": "page.tsx",
@@ -40715,6 +41145,19 @@
         "auth-notifications",
         "src/core/config/server-env/server-env",
         "src/core/config/server-env/server-env.values.auth-notifications.ts",
+        "ts",
+        "values"
+      ]
+    },
+    {
+      "id": "source:src/core/config/server-env/server-env.values.production-deploy.ts",
+      "kind": "source",
+      "name": "server-env.values.production-deploy.ts",
+      "path": "src/core/config/server-env/server-env.values.production-deploy.ts",
+      "tags": [
+        "production-deploy",
+        "src/core/config/server-env/server-env",
+        "src/core/config/server-env/server-env.values.production-deploy.ts",
         "ts",
         "values"
       ]
@@ -48277,6 +48720,28 @@
       ]
     },
     {
+      "id": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
+      "kind": "source",
+      "name": "production-deploy-api-service.ts",
+      "path": "src/features/release-commands/application/services/production-deploy-api-service.ts",
+      "tags": [
+        "src/features/release-commands/application/services/production-deploy-api-service",
+        "src/features/release-commands/application/services/production-deploy-api-service.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/release-commands/domain/production-deploy-report.ts",
+      "kind": "source",
+      "name": "production-deploy-report.ts",
+      "path": "src/features/release-commands/domain/production-deploy-report.ts",
+      "tags": [
+        "src/features/release-commands/domain/production-deploy-report",
+        "src/features/release-commands/domain/production-deploy-report.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/release-commands/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -48295,6 +48760,28 @@
       "tags": [
         "src/features/release-commands/presentation/hooks/use-build-jobs",
         "src/features/release-commands/presentation/hooks/use-build-jobs.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
+      "kind": "source",
+      "name": "use-production-deploy.tsx",
+      "path": "src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
+      "tags": [
+        "src/features/release-commands/presentation/hooks/use-production-deploy",
+        "src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
+      "kind": "source",
+      "name": "ProductionDeployPage.tsx",
+      "path": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
+      "tags": [
+        "src/features/release-commands/presentation/productiondeploypage",
+        "src/features/release-commands/presentation/productiondeploypage.tsx",
         "tsx"
       ]
     },
@@ -48318,6 +48805,30 @@
         "server",
         "src/features/release-commands/server/services/build-job-runner",
         "src/features/release-commands/server/services/build-job-runner.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
+      "kind": "source",
+      "name": "production-deploy-email.server.ts",
+      "path": "src/features/release-commands/server/services/production-deploy-email.server.ts",
+      "tags": [
+        "server",
+        "src/features/release-commands/server/services/production-deploy-email",
+        "src/features/release-commands/server/services/production-deploy-email.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
+      "kind": "source",
+      "name": "production-deploy-service.server.ts",
+      "path": "src/features/release-commands/server/services/production-deploy-service.server.ts",
+      "tags": [
+        "server",
+        "src/features/release-commands/server/services/production-deploy-service",
+        "src/features/release-commands/server/services/production-deploy-service.server.ts",
         "ts"
       ]
     },
@@ -48989,6 +49500,17 @@
       "tags": [
         "src/features/simulation/infrastructure/internal-catalog-image-pool",
         "src/features/simulation/infrastructure/internal-catalog-image-pool.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/simulation/presentation/simulation-progress-clipboard.ts",
+      "kind": "source",
+      "name": "simulation-progress-clipboard.ts",
+      "path": "src/features/simulation/presentation/simulation-progress-clipboard.ts",
+      "tags": [
+        "src/features/simulation/presentation/simulation-progress-clipboard",
+        "src/features/simulation/presentation/simulation-progress-clipboard.ts",
         "ts"
       ]
     },
@@ -52727,6 +53249,18 @@
       ]
     },
     {
+      "id": "test:src/features/cart/tests/cart-checkout-simulation-target.test.ts",
+      "kind": "test",
+      "name": "cart-checkout-simulation-target.test.ts",
+      "path": "src/features/cart/tests/cart-checkout-simulation-target.test.ts",
+      "tags": [
+        "src/features/cart/tests/cart-checkout-simulation-target",
+        "src/features/cart/tests/cart-checkout-simulation-target.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/cart/tests/multi-seller-delivery-planner.test.ts",
       "kind": "test",
       "name": "multi-seller-delivery-planner.test.ts",
@@ -53190,6 +53724,18 @@
       "tags": [
         "src/features/password-recovery/tests/password-recovery-policy",
         "src/features/password-recovery/tests/password-recovery-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/product/tests/pharmacy-product-lookup-port-registry.test.ts",
+      "kind": "test",
+      "name": "pharmacy-product-lookup-port-registry.test.ts",
+      "path": "src/features/product/tests/pharmacy-product-lookup-port-registry.test.ts",
+      "tags": [
+        "src/features/product/tests/pharmacy-product-lookup-port-registry",
+        "src/features/product/tests/pharmacy-product-lookup-port-registry.test.ts",
         "test",
         "ts"
       ]

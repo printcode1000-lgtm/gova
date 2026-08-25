@@ -214,6 +214,13 @@ export function parseStorageImageManagerConfig(
   ) {
     throw new Error(`Invalid storageScope for ${config.id}`);
   }
+  if (
+    config.simulationFileId !== undefined &&
+    (typeof config.simulationFileId !== "string" ||
+      !/^[a-z0-9-]+$/.test(config.simulationFileId))
+  ) {
+    throw new Error(`Invalid simulationFileId for ${config.id}`);
+  }
 
   return {
     id: config.id,
@@ -224,6 +231,10 @@ export function parseStorageImageManagerConfig(
     deleteFromStorageOnRemove: config.deleteFromStorageOnRemove !== false,
     storageScope:
       typeof config.storageScope === "string" ? config.storageScope : undefined,
+    simulationFileId:
+      typeof config.simulationFileId === "string"
+        ? config.simulationFileId
+        : undefined,
   };
 }
 
@@ -995,6 +1006,7 @@ const StorageImageSlot = React.forwardRef<
 
       <input
         ref={inputRef}
+        data-simulation-file={index === 0 ? config.simulationFileId : undefined}
         type="file"
         accept="image/*"
         className="hidden"

@@ -16,6 +16,11 @@ import {
   deployAllScenarios,
   deployPushTargets,
 } from "@/features/google-play-console";
+import {
+  productionDeployEmail,
+  productionDeployNotification,
+  productionDeployStageLabel,
+} from "@/features/release-commands/domain/production-deploy-report";
 import { detectImageContentType, readImageDimensions, validateGooglePlayImage } from "@asol/google-play-store-assets-core/images";
 import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "@asol/ota-core/publishing";
 import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "@asol/native-core/scripts/validate-android-r8-policy";
@@ -677,6 +682,7 @@ await verifyPresentationStructure([adminAr]);
 await verifyRealRunnerSmokeTest();
 await verifyCancellationPaths();
 await verifyArtifactCollection();
+await verifyProductionDeployConsole();
 
 const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0, 0x49, 0x48, 0x44, 0x52, 0, 0, 2, 0, 0, 0, 2, 0]);
 const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xff, 0xc0, 0x00, 0x11, 0x08, 0x02, 0xd0, 0x05, 0x00, 0x03, 1, 0x11, 0, 2, 0x11, 0, 3, 0x11, 0, 0xff, 0xd9]);
@@ -833,6 +839,79 @@ async function verifyArtifactCollection() {
     changedBody.match(/writeCache\(/g)?.length,
     1,
     "changedBuildArtifacts must write the descriptor cache exactly once",
+  );
+
+}
+
+async function verifyProductionDeployConsole() {
+  const failedSnapshot = {
+    version: 1 as const,
+    requestId: "run-1",
+    status: "failed" as const,
+    stage: "submain" as const,
+    sandboxName: "asol-gova-deploy-all",
+    updatedAt: "2026-08-26T00:00:00.000Z",
+    error: "submain:deploy exited with 1",
+  };
+  const okSnapshot = { ...failedSnapshot, status: "succeeded" as const, stage: "complete" as const, error: undefined };
+
+  const failureNotification = productionDeployNotification({ snapshot: failedSnapshot, uids: ["admin-1"] });
+  const successNotification = productionDeployNotification({ snapshot: okSnapshot, uids: ["admin-1"] });
+  assert.notEqual(failureNotification.title, successNotification.title);
+  assert.notEqual(failureNotification.dedupeKey, successNotification.dedupeKey);
+  assert.match(failureNotification.dedupeKey, /run-1/);
+  assert.equal(failureNotification.route?.href, "/super-admin/production-deploy");
+  assert.ok(
+    failureNotification.body?.includes(productionDeployStageLabel("submain")),
+    "a failed deploy must name the stage it stopped at",
+  );
+
+  const failureEmail = productionDeployEmail({ snapshot: failedSnapshot, logTail: "tail-line" });
+  assert.notEqual(failureEmail.subject, productionDeployEmail({ snapshot: okSnapshot, logTail: "" }).subject);
+  assert.ok(failureEmail.text.includes("submain:deploy exited with 1"));
+  assert.ok(failureEmail.text.includes("tail-line"), "the email carries the end of the log");
+  assert.ok(
+    !failureEmail.html.includes("<script"),
+    "log output reaches the email escaped",
+  );
+
+  // The runner reads the pipeline's own phase banner; the two must not drift.
+  const remoteRunner = await readFile("scripts/run-remote-deploy-all.mjs", "utf8");
+  const deployAllSource = await readFile("scripts/deploy-all.ts", "utf8");
+  assert.ok(
+    deployAllSource.includes("[deploy:all] ── phase: ${phaseId} ──"),
+    "deploy:all must keep printing the phase banner the remote runner parses",
+  );
+  assert.ok(
+    remoteRunner.includes("── phase: "),
+    "the remote runner must parse the deploy:all phase banner",
+  );
+  assert.ok(
+    remoteRunner.includes("npm") && remoteRunner.includes("deploy:all"),
+    "the remote runner must run deploy:all itself rather than reimplement it",
+  );
+
+  // No deployment secret may leave the server: the archive password is only
+  // ever handed to the sandbox command.
+  const sandboxSource = await readFile("packages/vercel-deploy-core/src/remote-deploy-sandbox.ts", "utf8");
+  const contractsSource = await readFile("packages/vercel-deploy-core/src/remote-deploy-contracts.ts", "utf8");
+  assert.ok(
+    !/archivePassword|ASOL_SECRET_ARCHIVE_PASSWORD/.test(contractsSource),
+    "the snapshot contract must never carry a secret",
+  );
+  assert.equal(
+    sandboxSource.match(/config\.archivePassword/g)?.length,
+    1,
+    "the archive password is passed to the sandbox command and nowhere else",
+  );
+
+  const callbackService = await readFile(
+    "src/features/release-commands/server/services/production-deploy-service.server.ts",
+    "utf8",
+  );
+  assert.ok(
+    callbackService.includes("timingSafeEqual"),
+    "the deploy callback secret must be compared in constant time",
   );
 }
 

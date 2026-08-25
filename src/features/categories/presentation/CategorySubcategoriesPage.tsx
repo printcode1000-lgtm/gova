@@ -139,6 +139,7 @@ export function CategorySubcategoriesPage({
               return (
                 <button
                   key={item.id}
+                  data-simulation-list-item="category-item"
                   type="button"
                   className={categoryTileClassName}
                   onClick={() => {

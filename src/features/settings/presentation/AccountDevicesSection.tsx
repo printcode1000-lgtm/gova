@@ -91,6 +91,7 @@ export function AccountDevicesSection({
                   </p>
                 </div>
                 <button
+                  data-simulation-list-item="notifications-revoke-device"
                   type="button"
                   disabled={state.revokingDeviceId === device.deviceId}
                   onClick={() => void state.revokeAccountDevice(device.deviceId)}

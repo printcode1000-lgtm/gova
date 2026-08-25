@@ -16,7 +16,7 @@ Compatibility layers, fallback behavior, permissive substitutes, and simulation-
 
 - copy a regular expression, validator, normalizer, policy, permission rule, calculation, mapping, or business condition from production code;
 - create a simulation-specific equivalent of a real service, hook, API operation, repository, or domain function;
-- fall back to a different DOM element, generic form, semantic-label search, alternate selector, mock handler, fake response, or substitute data path when the declared real target is missing;
+- fall back to a different DOM element, generic form, semantic-label search, CSS selector, positional expression, mock handler, fake response, or substitute data path when the declared real target is missing;
 - silently coerce invalid simulation data into a shape that the real application would accept;
 - bypass validation, authentication, authorization, Page Save, storage, API, database, or other mandatory gateways used by real users.
 
@@ -26,7 +26,22 @@ If the real target or real code path cannot be executed, the simulation must fai
 
 Simulation may contain orchestration and transport adapters whose only responsibility is to invoke the real application surface, for example loading the real page in a same-origin iframe and dispatching the native event on the exact declared element. Such infrastructure must not contain application/business decisions or alternate behavior.
 
-`data-simulation-event` attributes are instrumentation only. They identify the exact real interactive element or form; they do not authorize a second implementation of the action.
+## Typed Targets, Never Selectors
+
+An interaction action declares a typed `SimulationTarget` — a `{ kind, id }` pair — and nothing else. Interaction definitions must never carry a CSS selector, an `aria-label`, a field name, a text match, or a positional expression. Only the execution port knows how a target reaches the DOM, through exactly one instrumentation attribute per kind:
+
+| Kind | DOM attribute | Resolution |
+|---|---|---|
+| `event` | `data-simulation-target` | Exactly one element. |
+| `field` | `data-simulation-field` | Exactly one real editable input, textarea, or select. |
+| `file` | `data-simulation-file` | Exactly one real `<input type="file">`. |
+| `list-item` | `data-simulation-list-item` | A repeated row of a real list; resolves to the first marked element in document order. |
+
+For `event`, `field`, and `file`, a missing marker and a duplicated marker are both explicit failures. `list-item` is the one kind whose id is deliberately shared by every row of one real list, so first-in-document-order is the declared contract rather than a fallback search; a list marks every row instead of threading a positional index through the component tree.
+
+These attributes are instrumentation only. They identify the exact real interactive element, field, list, or form; they never change rendering, never add behavior a real user does not have, and never authorize a second implementation of the action. When the real interaction runs through a shared gateway such as Page Save, the target belongs on that gateway's real control, never on a simulation-only button.
+
+Instrumentation coverage is bounded by the registry: every declared target must have a real marker in application source, but an unregistered interactive element is not required to carry one. Adding coverage means registering the real interaction first, then marking its real element.
 
 ## Test Data and Guards
 

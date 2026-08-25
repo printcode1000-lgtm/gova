@@ -188,10 +188,12 @@ export function ProductManagerCard({
   product,
   disabled,
   onToggle,
+  simulationToggleListItemId,
 }: {
   product: PharmacyProfileCatalogProductView;
   disabled?: boolean;
   onToggle: () => void;
+  simulationToggleListItemId?: string;
 }) {
   return (
     <article className={`rounded-lg border border-outline-variant bg-surface-container-low p-2 ${product.status === "hidden" ? "opacity-55" : ""}`}>
@@ -206,7 +208,12 @@ export function ProductManagerCard({
           <p className="mt-1 truncate text-[10px] text-on-surface-variant">{product.nameEn}</p>
           <div className="mt-2 flex items-center justify-between gap-2">
             <StatusBadge hidden={product.status === "hidden"} />
-            <VisibilityButton hidden={product.status === "hidden"} disabled={disabled} onClick={onToggle} />
+            <VisibilityButton
+              hidden={product.status === "hidden"}
+              disabled={disabled}
+              onClick={onToggle}
+              simulationListItemId={simulationToggleListItemId}
+            />
           </div>
         </div>
       </div>
@@ -226,13 +233,16 @@ export function VisibilityButton({
   hidden,
   disabled,
   onClick,
+  simulationListItemId,
 }: {
   hidden: boolean;
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
+  simulationListItemId?: string;
 }) {
   return (
     <button
+      data-simulation-list-item={simulationListItemId}
       type="button"
       disabled={disabled}
       onClick={onClick}

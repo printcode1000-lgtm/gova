@@ -241,6 +241,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
                 className="max-h-28 min-h-11 min-w-0 flex-1 resize-none rounded-xl border border-outline-variant bg-surface-container px-3 py-2.5 text-sm outline-none focus:border-primary"
               />
               <button
+                data-simulation-target="chat-reply"
                 type="button"
                 disabled={replying || !reply.trim()}
                 onClick={() => void sendReply()}

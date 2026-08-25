@@ -1,5 +1,20 @@
 import { addViolation, extractImports, rel } from './architecture-types';
 
+/**
+ * The two doors `@asol/vercel-deploy-core` publishes besides its root.
+ *
+ * Rule 5 forbids reaching *into* a sealed package, not importing a declared
+ * door — the same exception `@asol/account-bridge/notifications` already has.
+ * These exist because the package root pulls in the Vercel CLI, `child_process`
+ * and the Sandbox SDK: the production deploy console needs the run contracts in
+ * the browser, and only the server may hold the sandbox driver. Anything not
+ * listed here is still a deep import.
+ */
+const VERCEL_DEPLOY_CORE_DOORS = new Set([
+  '@asol/vercel-deploy-core/remote-deploy-contracts',
+  '@asol/vercel-deploy-core/remote-deploy-sandbox',
+]);
+
 export function checkAccountBridgeContract(filePath: string, content: string): void {
   const fileRel = rel(filePath);
 
@@ -35,7 +50,8 @@ export function checkAccountBridgeContract(filePath: string, content: string): v
     }
 
     if (
-      imp.startsWith('@asol/vercel-deploy-core/') ||
+      (imp.startsWith('@asol/vercel-deploy-core/') &&
+        !VERCEL_DEPLOY_CORE_DOORS.has(imp)) ||
       imp.startsWith('@asol/service-mirror-core/') ||
       (imp.startsWith('@asol/account-bridge/') && imp !== '@asol/account-bridge/notifications') ||
       imp.startsWith('@asol/notifications-composition/') ||

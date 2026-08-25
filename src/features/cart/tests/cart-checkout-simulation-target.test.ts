@@ -11,12 +11,12 @@ const cartPage = readFileSync(
 );
 
 const checkoutButton = cartPage.match(
-  /<button[\s\S]*?data-simulation-event="cart-checkout"[\s\S]*?onClick=\{submitOrder\}[\s\S]*?<\/button>/,
+  /<button[\s\S]*?data-simulation-target="cart-checkout"[\s\S]*?onClick=\{submitOrder\}[\s\S]*?<\/button>/,
 );
 
 assert.ok(
   checkoutButton,
-  'The real cart submit button must expose data-simulation-event="cart-checkout" so the registered simulation action can reach it.',
+  'The real cart submit button must expose data-simulation-target="cart-checkout" so the registered simulation action can reach it.',
 );
 
 console.log("Cart checkout simulation target test passed.");

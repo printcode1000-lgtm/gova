@@ -33,6 +33,7 @@ interface FollowButtonProps {
   isSuperAdmin?: boolean;
   targetLabel?: string;
   className?: string;
+  simulationTargetId?: string;
 }
 
 export function FollowButton({
@@ -44,6 +45,7 @@ export function FollowButton({
   isSuperAdmin = false,
   targetLabel,
   className,
+  simulationTargetId,
 }: FollowButtonProps) {
   const { t, locale } = useTranslation();
   const { session } = useSession();
@@ -181,6 +183,7 @@ export function FollowButton({
   return (
     <>
       <Button
+        data-simulation-target={simulationTargetId}
         type="button"
         variant={active && !canManage ? "secondary" : "outline"}
         onClick={openPrimaryDialog}

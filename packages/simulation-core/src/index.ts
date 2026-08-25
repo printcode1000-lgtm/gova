@@ -7,6 +7,8 @@ export type {
   SimulationRunResult,
   SimulationRuntime,
   SimulationRuntimeInput,
+  SimulationTarget,
+  SimulationTargetKind,
   SimulationUser,
   SimulationUserRole,
   UserPageDefinition,

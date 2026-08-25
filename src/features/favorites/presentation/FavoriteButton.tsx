@@ -12,9 +12,10 @@ interface FavoriteButtonProps {
   item: FavoriteItemInput;
   className?: string;
   label?: React.ReactNode;
+  simulationTargetId?: string;
 }
 
-export function FavoriteButton({ item, className, label }: FavoriteButtonProps) {
+export function FavoriteButton({ item, className, label, simulationTargetId }: FavoriteButtonProps) {
   const { isFavorite, isLoading, toggleFavorite } = useFavorites();
   const [isMutating, setIsMutating] = React.useState(false);
   const active = isFavorite(item.type, item.targetId);
@@ -33,6 +34,7 @@ export function FavoriteButton({ item, className, label }: FavoriteButtonProps) 
 
   return (
     <button
+      data-simulation-target={simulationTargetId}
       type="button"
       aria-label={active ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
       onClick={(event) => void handleClick(event)}

@@ -1,6 +1,7 @@
 "use client";
 
 import { formatDateTime } from "@asol/format-core";
+import Link from "next/link";
 
 import { RefreshCw, RotateCcw } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -158,6 +159,7 @@ export function SettingsPageContent() {
             </button>
           ) : null}
           <button
+            data-simulation-target="settings-check-update"
             type="button"
             onClick={() => void ota.checkNow()}
             disabled={ota.busy}
@@ -180,10 +182,19 @@ export function SettingsPageContent() {
         </div>
       </section>
 
+      <Link
+        data-simulation-target="settings-notifications"
+        href="/settings/notifications"
+        className="asol-control flex w-full items-center justify-center rounded-xl border border-outline-variant px-6 py-3 font-semibold text-on-surface"
+      >
+        {t("settings.notifications.title")}
+      </Link>
+
       {/* Footer actions — restore/clear is a destructive dev-facing reset, visible to super admins only */}
       {isSuperAdmin(session) ? (
         <footer className="flex flex-col items-center justify-center gap-4 pt-12 md:flex-row-reverse">
           <button
+            data-simulation-target="settings-clear-data"
             type="button"
             disabled={clearing}
             className="asol-control flex w-full items-center justify-center gap-2 rounded-xl border-2 border-error/30 bg-gradient-to-r from-error/10 to-error/5 px-6 py-3 font-semibold text-error shadow-lg shadow-error/10 transition-all md:w-auto disabled:opacity-60"

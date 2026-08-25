@@ -121,14 +121,14 @@ export function SpecialtyRequestPageContent() {
         <div><h1 className="text-2xl font-bold">{copy.title}</h1><p className="mt-1 max-w-2xl text-sm leading-6 text-on-surface-variant">{copy.subtitle}</p></div>
       </div>
 
-      <form onSubmit={submit} className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
+      <form data-simulation-target="specialty-submit" onSubmit={submit} className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
         <fieldset disabled={busy || result?.kind === "success"} className="min-w-0 space-y-6 disabled:opacity-70">
           <div className="min-w-0">
             <p className="mb-3 font-bold">{copy.main}</p>
             <div className="flex w-full max-w-full gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {mains.map((item) => {
                 const selected = mainId === String(item.id);
-                return <button key={item.id} type="button" aria-pressed={selected} onClick={() => { setMainId(String(item.id)); setSubId(""); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-primary bg-primary text-on-primary shadow-md" : "border-outline-variant bg-surface-container text-on-surface"}`}>
+                return <button key={item.id} data-simulation-list-item="specialty-main" type="button" aria-pressed={selected} onClick={() => { setMainId(String(item.id)); setSubId(""); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-primary bg-primary text-on-primary shadow-md" : "border-outline-variant bg-surface-container text-on-surface"}`}>
                   {item.imageUrl ? <Image src={item.imageUrl} alt="" width={56} height={56} className="h-12 w-12 rounded-xl object-cover sm:h-14 sm:w-14" /> : <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-current/10 sm:h-14 sm:w-14"><Users className="h-5 w-5" /></span>}
                   {locale === "ar" ? item.nameAr : item.nameEn}
                 </button>;
@@ -141,7 +141,7 @@ export function SpecialtyRequestPageContent() {
             <div className="flex w-full max-w-full gap-3 overflow-x-auto rounded-2xl bg-surface-container-low p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {subs.map((item) => {
                 const value = String(item.originalId); const selected = subId === value;
-                return <button key={value} type="button" aria-pressed={selected} onClick={() => { setSubId(value); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-secondary bg-secondary text-secondary-foreground shadow-md" : "border-outline-variant bg-surface text-on-surface"}`}>
+                return <button key={value} data-simulation-list-item="specialty-sub" type="button" aria-pressed={selected} onClick={() => { setSubId(value); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-secondary bg-secondary text-secondary-foreground shadow-md" : "border-outline-variant bg-surface text-on-surface"}`}>
                   {item.imageUrl ? <Image src={item.imageUrl} alt="" width={48} height={48} className="h-11 w-11 rounded-xl object-cover sm:h-12 sm:w-12" /> : <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-current/10 sm:h-12 sm:w-12"><Users className="h-5 w-5" /></span>}
                   {locale === "ar" ? item.nameAr : item.nameEn}
                 </button>;
@@ -150,7 +150,7 @@ export function SpecialtyRequestPageContent() {
           </div> : null}
 
           <label className="grid gap-2 font-bold">{copy.message}
-            <textarea value={message} onChange={(event) => { setMessage(event.target.value.slice(0, 800)); setResult(null); }} maxLength={800} rows={6} className="min-h-40 w-full min-w-0 max-w-full resize-y rounded-2xl border border-outline-variant bg-surface px-4 py-3 font-normal" placeholder={copy.placeholder} required />
+            <textarea data-simulation-field="specialty-message" value={message} onChange={(event) => { setMessage(event.target.value.slice(0, 800)); setResult(null); }} maxLength={800} rows={6} className="min-h-40 w-full min-w-0 max-w-full resize-y rounded-2xl border border-outline-variant bg-surface px-4 py-3 font-normal" placeholder={copy.placeholder} required />
             <span className="text-end text-xs font-normal text-on-surface-variant">{message.length}/800</span>
           </label>
         </fieldset>

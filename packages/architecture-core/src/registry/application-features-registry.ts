@@ -110,7 +110,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
   feature('profile-products', 'Profile products tabs presentation', ['.', './ui'], WEB_MOBILE, ['@asol/product-core', '@asol/data-core'], ['categories', 'page-snapshot', 'pharmacy-profile-catalog', 'product', 'product-card', 'product-search'], CLIENT_UI),
   feature('profile-working-hours', 'Working hours card presentation', ['.', './ui'], WEB_MOBILE, [], [], CLIENT_UI),
   feature('qr-code', 'QR code generation helpers', ['.'], WEB),
-  feature('release-commands', 'Release build-job client and server wiring', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/release-core'], ['google-play-console'], FULL),
+  feature('release-commands', 'Release build-job and production deploy orchestration', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/notifications-core', '@asol/release-core', '@asol/vercel-deploy-core'], ['auth', 'google-play-console', 'notifications'], FULL),
   feature('seller-card', 'Seller card view-model and presentation', ['.', './ui'], WEB_MOBILE, [], ['favorites', 'profile'], CLIENT_UI),
   feature('seller-discounts', 'Seller discount rules UI and services', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], ['cart', 'profile'], FULL),
   feature('settings', 'Settings screens', ['.', './ui'], WEB_MOBILE, [], ['app-reset', 'auth', 'notifications', 'specialty-chat'], CLIENT_UI),

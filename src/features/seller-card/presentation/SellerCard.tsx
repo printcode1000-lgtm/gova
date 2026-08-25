@@ -18,6 +18,7 @@ interface SellerCardProps {
   actions?: SellerCardAction[];
   className?: string;
   favoriteEnabled?: boolean;
+  simulationListItemId?: string;
   onOpen?: (
     event: React.MouseEvent<HTMLButtonElement>,
     card: SellerCardViewModel,
@@ -77,6 +78,7 @@ export function SellerCard({
   actions = [],
   className = "",
   favoriteEnabled,
+  simulationListItemId,
   onOpen,
 }: SellerCardProps) {
   const horizontal = variant === "linked-provider" || variant === "compact";
@@ -96,6 +98,7 @@ export function SellerCard({
         />
       ) : null}
       <button
+        data-simulation-list-item={simulationListItemId}
         type="button"
         onClick={(event) => onOpen?.(event, card)}
         className={`w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
