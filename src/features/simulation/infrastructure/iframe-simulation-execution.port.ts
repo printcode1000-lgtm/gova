@@ -13,8 +13,8 @@ function editableValue(element: Element, value: string): void {
     : view.HTMLTextAreaElement.prototype;
   const setter = Object.getOwnPropertyDescriptor(prototype, "value")?.set;
   setter?.call(element, value);
-  element.dispatchEvent(new Event("input", { bubbles: true }));
-  element.dispatchEvent(new Event("change", { bubbles: true }));
+  element.dispatchEvent(new view.Event("input", { bubbles: true }));
+  element.dispatchEvent(new view.Event("change", { bubbles: true }));
 }
 
 export class IframeSimulationExecutionPort implements SimulationExecutionPort {
@@ -58,21 +58,11 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
     editableValue(this.target(selector), value);
   }
 
-  async click(selector: string, accessibleLabel?: string): Promise<void> {
-    const documentNode = this.documentNode();
-    const normalizedLabel = accessibleLabel?.replace(/\s+/g, " ").trim();
-    const semanticTarget = normalizedLabel
-      ? [...documentNode.querySelectorAll("button, a, [role=button], [role=tab]")].find((candidate) => {
-          const text = `${candidate.textContent ?? ""} ${candidate.getAttribute("aria-label") ?? ""}`
-            .replace(/\s+/g, " ")
-            .trim();
-          return text === normalizedLabel || text.includes(normalizedLabel);
-        })
-      : undefined;
-    const target = documentNode.querySelector(selector) ?? semanticTarget;
-    const view = target?.ownerDocument.defaultView;
-    if (!target || !view || !(target instanceof view.HTMLElement)) {
-      throw new Error(`simulationInteractionTargetMissing:${selector}`);
+  async click(selector: string, _accessibleLabel?: string): Promise<void> {
+    const target = this.target(selector);
+    const view = target.ownerDocument.defaultView;
+    if (!view || !(target instanceof view.HTMLElement)) {
+      throw new Error(`simulationInteractionTargetNotClickable:${selector}`);
     }
     target.click();
     await this.wait(250);
@@ -96,11 +86,22 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
   }
 
   async submit(selector: string): Promise<void> {
-    const documentNode = this.documentNode();
-    const target = documentNode.querySelector(selector) ?? documentNode.querySelector("form");
-    const view = target?.ownerDocument.defaultView;
-    if (!target || !view || !(target instanceof view.HTMLFormElement)) throw new Error("simulationTargetNotForm");
-    target.requestSubmit();
+    const target = this.target(selector);
+    const view = target.ownerDocument.defaultView;
+    if (!view) throw new Error("simulationPageDocumentUnavailable");
+
+    if (target instanceof view.HTMLFormElement) {
+      target.requestSubmit();
+    } else if (target instanceof view.HTMLButtonElement && target.type === "submit") {
+      target.click();
+    } else if (
+      target instanceof view.HTMLInputElement &&
+      (target.type === "submit" || target.type === "image")
+    ) {
+      target.click();
+    } else {
+      throw new Error(`simulationTargetNotSubmittable:${selector}`);
+    }
     await this.wait(250);
   }
 

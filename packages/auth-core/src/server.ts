@@ -6,6 +6,13 @@ export {
   isAccountDeletionPhraseValid,
 } from './domain/constants';
 
+export {
+  egyptianMobilePhoneValidationIssue,
+  normalizeEgyptianMobilePhone,
+  isEgyptianMobilePhone,
+  type EgyptianMobilePhoneValidationIssue,
+} from './domain/phone';
+
 export type {
   UserProfile,
   UpdateProfileInput,

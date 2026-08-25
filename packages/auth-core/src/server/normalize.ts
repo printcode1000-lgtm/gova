@@ -1,9 +1,7 @@
+import { normalizeEgyptianMobilePhone } from '../domain/phone';
+
 export function normalizeAuthPhone(phone: string): string {
-  const digits = phone.replace(/\D/g, '');
-  if (digits.startsWith('20') && digits.length === 12) {
-    return `0${digits.slice(2)}`;
-  }
-  return digits;
+  return normalizeEgyptianMobilePhone(phone);
 }
 
 export function normalizeAuthEmail(email: string | undefined | null): string | null {
@@ -14,12 +12,13 @@ export function normalizeAuthEmail(email: string | undefined | null): string | n
 /**
  * Every spelling of a phone number a stored row may legitimately hold.
  *
- * Lookups match on any of them because rows written before normalization existed keep the raw
- * value the user typed. Deduplicated and empty-free, so a caller can build an `IN (...)` from it
- * without re-checking either.
+ * Lookups match on the raw spelling and the canonical Egyptian mobile spelling because rows
+ * written before normalization existed may keep the raw value the user typed. Invalid phone
+ * numbers are rejected by the same canonical rule used by browser validation and auth writes.
  */
 export function authPhoneCandidates(phone: unknown): string[] {
   const raw = typeof phone === 'string' ? phone.trim() : '';
-  const normalized = normalizeAuthPhone(raw);
-  return [...new Set([raw, normalized].filter(Boolean))];
+  if (!raw) return [];
+  const normalized = normalizeEgyptianMobilePhone(raw);
+  return [...new Set([raw, normalized])];
 }

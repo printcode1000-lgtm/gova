@@ -7,6 +7,13 @@ export {
 } from './domain/constants';
 
 export {
+  egyptianMobilePhoneValidationIssue,
+  normalizeEgyptianMobilePhone,
+  isEgyptianMobilePhone,
+  type EgyptianMobilePhoneValidationIssue,
+} from './domain/phone';
+
+export {
   readPasswordInput,
   assertPasswordMeetsMinimum,
 } from './domain/password-input';

@@ -1,18 +1,22 @@
 import { z } from 'zod';
 import { MIN_PASSWORD_LENGTH } from '../domain/constants';
+import { egyptianMobilePhoneValidationIssue } from '../domain/phone';
 import type { AuthTranslateFn } from './auth-schemas';
 
 export type ProfileTranslateFn = AuthTranslateFn;
 
 function createPhoneField(t: ProfileTranslateFn) {
-  return z
-    .string()
-    .min(1, t('auth.validation.phoneRequired'))
-    .refine((val) => val.replace(/\D/g, '').length === 11, t('auth.validation.phoneLength'))
-    .refine((val) => {
-      const prefix = val.replace(/\D/g, '').slice(0, 3);
-      return ['010', '011', '012', '015'].includes(prefix);
-    }, t('auth.validation.phonePrefix'));
+  return z.string().superRefine((value, ctx) => {
+    const issue = egyptianMobilePhoneValidationIssue(value);
+    if (!issue) return;
+    const key =
+      issue === 'required'
+        ? 'auth.validation.phoneRequired'
+        : issue === 'length'
+          ? 'auth.validation.phoneLength'
+          : 'auth.validation.phonePrefix';
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: t(key) });
+  });
 }
 
 export function createProfileSchema(t: ProfileTranslateFn) {
