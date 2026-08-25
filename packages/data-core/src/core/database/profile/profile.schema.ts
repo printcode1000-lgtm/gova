@@ -394,6 +394,14 @@ export const systemLogs = sqliteTable(
     appVersion: text("app_version").notNull().default(""),
     nativeVersion: text("native_version").notNull().default(""),
     uid: text("uid").notNull().default(""),
+    origin: text("origin").notNull().default("client"),
+    trustLevel: text("trust_level").notNull().default("legacy"),
+    messageTruncated: integer("message_truncated").notNull().default(0),
+    stackTruncated: integer("stack_truncated").notNull().default(0),
+    correlationId: text("correlation_id").notNull().default(""),
+    requestFlowId: text("request_flow_id").notNull().default(""),
+    sessionId: text("session_id").notNull().default(""),
+    monitorTraceId: text("monitor_trace_id").notNull().default(""),
     occurrences: integer("occurrences").notNull().default(1),
     firstOccurredAt: text("first_occurred_at").notNull(),
     lastOccurredAt: text("last_occurred_at").notNull(),
@@ -402,6 +410,8 @@ export const systemLogs = sqliteTable(
     index("system_logs_level_time_idx").on(table.level, table.lastOccurredAt),
     index("system_logs_platform_time_idx").on(table.platform, table.lastOccurredAt),
     index("system_logs_feature_idx").on(table.feature, table.operation),
+    index("system_logs_origin_time_idx").on(table.origin, table.lastOccurredAt),
+    index("system_logs_correlation_idx").on(table.correlationId),
   ],
 );
 

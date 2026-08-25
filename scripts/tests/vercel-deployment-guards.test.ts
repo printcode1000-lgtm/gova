@@ -1,8 +1,17 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 import {
+  ALLOWED_VERCEL_NPM_SCRIPTS,
   FORBIDDEN_VERCEL_PROOF_COMMANDS,
   HOSTED_RUNTIME_ENV_KEYS,
   VERCEL_BUILD_COMMAND,
@@ -12,7 +21,9 @@ import {
   assertVercelRuntimeEnvironment,
   missingHostedRuntimeEnvKeys,
   vercelBuildSourceMentionsForbiddenProof,
+  vercelBuildNpmScriptViolations,
 } from "../vercel-deployment-guards";
+import { assertVercelBuildArtifact } from "../vercel-build-artifact-guard";
 
 const ROOT = process.cwd();
 
@@ -63,9 +74,17 @@ for (const command of FORBIDDEN_VERCEL_PROOF_COMMANDS) {
 }
 assert.match(buildSource, /nextBin\(\),\s*"build"/);
 assert.match(buildSource, /vercel:function-size:check/);
+assert.deepEqual(vercelBuildNpmScriptViolations(buildSource), []);
+assert.deepEqual(ALLOWED_VERCEL_NPM_SCRIPTS, ["vercel:function-size:check"]);
+assert.deepEqual(
+  vercelBuildNpmScriptViolations('runNpmScript("verify:all")'),
+  ["verify:all"],
+  "a correctness suite hidden behind an npm alias must be rejected",
+);
 assert.doesNotMatch(buildSource, /shell:\s*true/);
 
 assert.ok(HOSTED_RUNTIME_ENV_KEYS.includes("TURSO_DATABASE_URL"));
+assert.ok(HOSTED_RUNTIME_ENV_KEYS.includes("SYSTEM_OPS_DATABASE_URL"));
 assert.ok(HOSTED_RUNTIME_ENV_KEYS.includes("ASOL_SESSION_SIGNING_SECRET"));
 assert.equal(
   HOSTED_RUNTIME_ENV_KEYS.some((key) => key.startsWith("VERCEL_") && key.endsWith("_TOKEN")),
@@ -96,6 +115,24 @@ try {
 assert.equal(assertVercelHostEnvironment("v22.18.0").nodeCompatible, true);
 assert.equal(assertVercelHostEnvironment("v24.18.0").nodeCompatible, true);
 assert.throws(() => assertVercelHostEnvironment("v20.19.0"), /outside the project engines range/);
+
+const artifactRoot = mkdtempSync(path.join(os.tmpdir(), "vercel-artifact-guard-"));
+try {
+  const nextRoot = path.join(artifactRoot, ".next");
+  mkdirSync(path.join(nextRoot, "server", "app"), { recursive: true });
+  writeFileSync(path.join(nextRoot, "BUILD_ID"), "reviewed-build\n");
+  writeFileSync(path.join(nextRoot, "routes-manifest.json"), "{}");
+  writeFileSync(path.join(nextRoot, "required-server-files.json"), "{}");
+  writeFileSync(path.join(nextRoot, "server", "app", "page.js.nft.json"), "{}");
+  assert.doesNotThrow(() => assertVercelBuildArtifact(artifactRoot));
+  writeFileSync(path.join(nextRoot, "required-server-files.json"), "");
+  assert.throws(
+    () => assertVercelBuildArtifact(artifactRoot),
+    /required-server-files\.json/,
+  );
+} finally {
+  rmSync(artifactRoot, { recursive: true, force: true });
+}
 
 const services = readdirSync(path.join(ROOT, "services"), { withFileTypes: true })
   .filter((entry) => entry.isDirectory())

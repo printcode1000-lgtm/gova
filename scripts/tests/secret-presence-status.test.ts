@@ -29,6 +29,7 @@ writeFileSync(path.join(fixture, ".env"), "VERCEL_TOKEN=super-secret-token-value
 const env: NodeJS.ProcessEnv = {
   VERCEL_TOKEN: "super-secret-token-value",
   ASOL_OTA_R2_BUCKET_NAME: "",
+  GOOGLE_PLAY_JSON_KEY_FILE: "private/play-key-location.json",
 };
 const rows = buildSecretPresenceReport({ cwd: fixture, env });
 const byEnv = Object.fromEntries(
@@ -47,6 +48,12 @@ assert.equal(
   files.some((row) => row.path === "fastlane/play-store-key.json" && row.status === "file-missing"),
   true,
 );
+assert.equal(
+  files.some((row) => row.path === "env:GOOGLE_PLAY_JSON_KEY_FILE" && row.status === "file-missing"),
+  true,
+  "A configured secret path is checked through its key label without printing its value.",
+);
+assert.equal(JSON.stringify(rows).includes("private/play-key-location.json"), false);
 assert.equal(
   JSON.stringify(rows).includes("super-secret-token-value"),
   false,

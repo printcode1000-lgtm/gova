@@ -78,6 +78,7 @@ export interface ReleaseVersionSnapshot {
   iosTruthError?: string;
   androidReady?: boolean;
   iosReady?: boolean;
+  iosStoreDistribution?: boolean;
 }
 
 export interface PaginatedBuildJobs {

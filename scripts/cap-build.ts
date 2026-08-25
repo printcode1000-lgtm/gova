@@ -30,6 +30,7 @@ import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { loadReleaseEnvironment } from "./load-release-env";
 import { reportStage } from "./release-stage";
 import { runGradle } from "./android/gradle";
+import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
 
 const LOCAL_MANIFEST_PATH = path.resolve("out", "asol-web-manifest.json");
 const ANDROID_BUILD_GRADLE = path.resolve("android", "app", "build.gradle");
@@ -244,6 +245,14 @@ async function main(): Promise<void> {
   if ((resumePublishedRelease || skipOta || noOta) && (otaNotesArguments.length > 0 || mandatoryOta)) {
     throw new Error("OTA notes and mandatory mode can only be set while publishing a new OTA.");
   }
+  await ensureReleaseSecretsRestored(
+    "cap:build",
+    noOta || dryRun
+      ? ["google-play"]
+      : skipOta || resumePublishedRelease
+        ? ["google-play", "ota-storage"]
+        : ["google-play", "ota"],
+  );
   const apiBaseUrl = (
     process.env.ASOL_API_BASE_URL ?? API_BASE_URL
   ).replace(/\/$/, "");

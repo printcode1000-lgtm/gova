@@ -2,14 +2,13 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
-import dotenv from "dotenv";
-
 import { gradleWrapperPath } from "./android/gradle";
 import { runAndroidBuildPreflight } from "@asol/native-core/scripts/android-build-preflight";
+import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
+import { loadReleaseEnvironment } from "./load-release-env";
 import { reportStage } from "./release-stage";
 
-if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
+loadReleaseEnvironment();
 
 const root = path.resolve(".");
 const androidDirectory = path.join(root, "android");
@@ -80,7 +79,10 @@ function assertArtifact(file: string): void {
   }
 }
 
-function main(): void {
+async function main(): Promise<void> {
+  await ensureReleaseSecretsRestored("android:build:signed", [
+    "android-signing",
+  ]);
   requireSigningEnvironment();
   requireSyncedWebBundle();
   const { javaHome, env } = runAndroidBuildPreflight({ env: process.env });
@@ -116,9 +118,7 @@ function main(): void {
   console.log(`Signed APK ready: ${apk} (${statSync(apk).size} bytes)`);
 }
 
-try {
-  main();
-} catch (error) {
+main().catch((error) => {
   console.error(`Signed Android build failed: ${error instanceof Error ? error.message : error}`);
   process.exitCode = 1;
-}
+});

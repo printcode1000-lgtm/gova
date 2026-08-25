@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 
 import { extractImports } from '../checks/architecture-types';
 import {
-  APPLICATION_CYCLE_SUBGRAPH,
+  KNOWN_APPLICATION_CYCLE_BASELINE,
+  applicationCycleBaselineViolations,
+  cyclicApplicationEdgeSignatures,
   findApplicationClusterCycles,
 } from '../checks/application-cycle-contract';
 
@@ -54,7 +56,6 @@ function graphOf(edges: Record<string, readonly string[]>): Map<string, Map<stri
 }
 
 {
-  assert.ok(!APPLICATION_CYCLE_SUBGRAPH.has('shared:session-runtime'));
   const cycles = findApplicationClusterCycles(
     graphOf({
       'feature:auth': ['shared:session-runtime'],
@@ -62,10 +63,38 @@ function graphOf(edges: Record<string, readonly string[]>): Map<string, Map<stri
       'feature:profile': ['shared:session-runtime'],
     }),
   );
+  assert.equal(cycles.length, 1, 'all discovered shared/core/feature clusters must close cycles');
+  assert.deepEqual(cycles[0], ['feature:auth', 'shared:session-runtime']);
+  assert.equal(
+    applicationCycleBaselineViolations(
+      graphOf({
+        'feature:auth': ['shared:session-runtime'],
+        'shared:session-runtime': ['feature:auth'],
+      }),
+    ).unexpected.length,
+    1,
+    'a new cycle outside the historical hand-picked scope must be rejected',
+  );
+}
+
+{
+  const original = graphOf({
+    'feature:a': ['feature:b'],
+    'feature:b': ['feature:a', 'feature:c'],
+    'feature:c': ['feature:b'],
+  });
+  const expanded = graphOf({
+    'feature:a': ['feature:b', 'feature:c'],
+    'feature:b': ['feature:a', 'feature:c'],
+    'feature:c': ['feature:b'],
+  });
+  assert.deepEqual(findApplicationClusterCycles(original), findApplicationClusterCycles(expanded));
   assert.deepEqual(
-    cycles,
-    [],
-    'edges through clusters outside APPLICATION_CYCLE_SUBGRAPH must not close a cycle',
+    cyclicApplicationEdgeSignatures(expanded).filter(
+      (edge) => !cyclicApplicationEdgeSignatures(original).includes(edge),
+    ),
+    ['feature:a -> feature:c'],
+    'adding a cyclic edge inside an existing SCC must appear as an exact new edge',
   );
 }
 
@@ -73,9 +102,17 @@ function graphOf(edges: Record<string, readonly string[]>): Map<string, Map<stri
   const live = findApplicationClusterCycles();
   assert.deepEqual(
     live,
-    [],
-    `live application subgraph must have zero cycles, found ${JSON.stringify(live)}`,
+    KNOWN_APPLICATION_CYCLE_BASELINE.map((component) => [...component]).sort((left, right) =>
+      left.join('|').localeCompare(right.join('|')),
+    ),
+    `live application cycles must match the audited baseline, found ${JSON.stringify(live)}`,
   );
+  assert.deepEqual(applicationCycleBaselineViolations(), {
+    unexpected: [],
+    stale: [],
+    unexpectedCyclicEdges: [],
+    staleCyclicEdges: [],
+  });
 }
 
-console.log('  ✔ application cycle contract: static/dynamic/re-export detection; live graph empty.');
+console.log('  ✔ application cycle contract: repository-wide discovery and audited baseline enforced.');

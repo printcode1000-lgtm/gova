@@ -46,13 +46,17 @@ folder's `.vercel`, never the repository root's link.
 The GitHub-linked main Vercel project does **not** run the local correctness
 gate. `vercel.json` `buildCommand` is `npm run build:vercel`
 (`scripts/vercel-deployment-build.ts`): Deployment/Smoke Guards only — hosted
-Node engines, required runtime **key names**, `next build`, and
+Node engines, the authoritative database/runtime and baked remote-origin **key
+names**, `next build`, required Next server manifests/root route trace, and
 `vercel:function-size:check`. It does not run `architecture:check`, lint,
 typecheck, generated test gates, or database ensure/schema sync.
 
 Local `npm run build` remains the correctness gate (`scripts/run-generated-gate.ts build`).
 Do not point Vercel at `npm run build`. Isolated `services/*` projects keep
-`next build` only.
+`next build` only. The hosted guard never invents missing URLs or credentials.
+Separately, `smoke:deployed` requires explicit origins for all seven deployment
+targets; a missing origin is an environment-evidence gap rather than a reason
+to omit that target or make it a requirement of the main hosted build.
 
 ## One-command production deployment
 

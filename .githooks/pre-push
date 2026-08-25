@@ -12,8 +12,6 @@
 #
 # Every check runs even after one fails — a push held back for two reasons should say so
 # once rather than over two attempts.
-#
-# Emergency override for all of them: `git push --no-verify`.
 
 hook_dir=$(dirname "$0")/pre-push.d
 refs=$(cat)

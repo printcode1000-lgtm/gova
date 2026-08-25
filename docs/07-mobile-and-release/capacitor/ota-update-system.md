@@ -390,6 +390,9 @@ Android `storeDistribution` is `true` (Google Play production is live truth).
 iOS `storeDistribution` is `false` and must keep `notLiveReason`. OTA must not
 treat missing App Store Connect credentials as “iOS is disabled.” See
 [ota-core-module.md](../../05-platform-features/sealed-packages/ota-core-module.md) §5.
+The development release console reads the same declaration: it labels iOS store
+distribution as not live and does not query App Store Connect. Missing-credential
+errors are shown only after iOS store distribution is deliberately enabled.
 
 ## Dedicated OTA Storage & Architecture
 

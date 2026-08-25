@@ -40,6 +40,17 @@ const FORBIDDEN_COMMANDS = [
   "npm run test:",
 ] as const;
 
+const ALLOWED_DOCS_RUN_COMMANDS = new Set([
+  "npm install -g npm@11",
+  "npm ci --ignore-scripts",
+  "npm run docs:check",
+]);
+
+const ALLOWED_DOCS_ACTIONS = new Set([
+  "actions/checkout@v4",
+  "actions/setup-node@v4",
+]);
+
 /** Extra CI configs that must not reappear. Checked locally only — never as a GitHub job. */
 export const FORBIDDEN_CI_PATHS = [
   ".travis.yml",
@@ -49,7 +60,14 @@ export const FORBIDDEN_CI_PATHS = [
   "appveyor.yml",
   ".mergify.yml",
   "bitbucket-pipelines.yml",
+  ".drone.yml",
+  "bitrise.yml",
+  "buildkite.yml",
+  "werf.yaml",
+  "werf.yml",
   path.join(".circleci", "config.yml"),
+  ".buildkite",
+  ".woodpecker",
   path.join(".github", "dependabot.yml"),
   path.join("scripts", "verify-ci-coverage.ts"),
 ] as const;
@@ -73,26 +91,59 @@ function stripYamlComments(source: string): string {
   return source.replace(/(^|[^:])#.*$/gm, "$1");
 }
 
+function docsWorkflowJobIds(body: string): string[] {
+  const lines = body.split(/\r?\n/);
+  const jobsLine = lines.findIndex((line) => /^jobs:\s*$/.test(line));
+  if (jobsLine < 0) return [];
+  const ids: string[] = [];
+  for (const line of lines.slice(jobsLine + 1)) {
+    if (/^\S/.test(line)) break;
+    const match = /^ {2}([A-Za-z0-9_-]+):\s*$/.exec(line);
+    if (match) ids.push(match[1]!);
+  }
+  return ids;
+}
+
+function hasExactDocsPushTrigger(body: string): boolean {
+  const lines = body.split(/\r?\n/);
+  const onLine = lines.findIndex((line) => /^on:\s*$/.test(line));
+  if (onLine < 0) return false;
+  const block: string[] = [];
+  for (const line of lines.slice(onLine)) {
+    if (block.length > 0 && /^\S/.test(line)) break;
+    if (line.trim()) block.push(line.trimEnd());
+  }
+  const expected = [
+    /^on:$/,
+    /^ {2}push:$/,
+    /^ {4}branches:$/,
+    /^ {6}- main$/,
+    /^ {4}paths:$/,
+    /^ {6}- ["']docs\/\*\*["']$/,
+  ];
+  return block.length === expected.length && block.every((line, index) => expected[index]!.test(line));
+}
+
 export function docsWorkflowViolations(source: string): string[] {
   const errors: string[] = [];
   const body = stripYamlComments(source);
   if (!/^name:\s*docs\s*$/m.test(body)) {
     errors.push("Docs workflow name must be exactly `docs`.");
   }
-  if (!/^on:\s*$/m.test(body) || !/^\s{2}push:\s*$/m.test(body)) {
-    errors.push("Docs workflow must trigger only on push.");
-  }
-  if (!/^\s{4}branches:\s*$/m.test(body) || !/^\s{6}-\s*main\s*$/m.test(body)) {
-    errors.push("Docs workflow must be limited to the main branch.");
-  }
-  if (!/^\s{4}paths:\s*$/m.test(body) || !/^\s{6}-\s*["']docs\/\*\*["']\s*$/m.test(body)) {
-    errors.push("Docs workflow must declare paths: docs/** so it never runs for non-docs changes.");
+  if (!hasExactDocsPushTrigger(body)) {
+    errors.push(
+      "Docs workflow trigger must be exactly push.branches=[main] and push.paths=[docs/**].",
+    );
   }
   if (/\bpaths-ignore\s*:/.test(body)) {
     errors.push("Docs workflow must not use paths-ignore; only a positive docs/** path filter is allowed.");
   }
   if (!/^ {2}docs:\s*$/m.test(body)) {
     errors.push("Docs workflow job id must be `docs`.");
+  }
+  const jobIds = docsWorkflowJobIds(body);
+  if (jobIds.length !== 1 || jobIds[0] !== "docs") {
+    errors.push(`Docs workflow must contain exactly one job named docs. Found: ${jobIds.join(", ") || "(none)"}.`);
   }
   if (!body.includes("npm run docs:check")) {
     errors.push("Docs workflow must run `npm run docs:check`.");
@@ -107,6 +158,18 @@ export function docsWorkflowViolations(source: string): string[] {
   for (const command of FORBIDDEN_COMMANDS) {
     if (body.includes(command)) {
       errors.push(`Docs workflow must not run code CI command: ${command}`);
+    }
+  }
+  for (const match of body.matchAll(/^\s*(?:-\s*)?run:\s*(.+?)\s*$/gm)) {
+    const command = match[1]!.replace(/^['"]|['"]$/g, "");
+    if (!ALLOWED_DOCS_RUN_COMMANDS.has(command)) {
+      errors.push(`Docs workflow run command is not allowed: ${command}`);
+    }
+  }
+  for (const match of body.matchAll(/^\s*(?:-\s*)?uses:\s*(\S+)\s*$/gm)) {
+    const action = match[1]!.replace(/^['"]|['"]$/g, "");
+    if (!ALLOWED_DOCS_ACTIONS.has(action)) {
+      errors.push(`Docs workflow action is not allowed: ${action}`);
     }
   }
   return errors;
@@ -146,6 +209,9 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
     }
     if (/REQUIRED_STATUS_CHECKS\s*=\s*\[[^\]]*'verify'/.test(protect)) {
       errors.push("protect-main-branch.ts must not require a GitHub status check.");
+    }
+    if (!protect.includes("/rules/branches/main") || !protect.includes("blockingMainRules")) {
+      errors.push("protect-main-branch.ts must inspect all active rules that apply to main, not classic protection alone.");
     }
   }
   return errors;

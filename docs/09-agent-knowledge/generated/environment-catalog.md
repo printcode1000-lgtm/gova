@@ -80,7 +80,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `CAPACITOR_SERVER_URL` | server/tooling | 0 |  |
 | `CI` | server/tooling | 1 | `scripts/schema-sync.ts` |
 | `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD` | server/tooling | 0 |  |
-| `FASTLANE_SKIP_UPDATE_CHECK` | server/tooling | 1 | `scripts/fastlane-runner.js` |
+| `FASTLANE_SKIP_UPDATE_CHECK` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `FASTLANE_USER` | server/tooling | 0 |  |
 | `FIREBASE_ADMIN_CLIENT_EMAIL` | server/tooling | 0 |  |
 | `FIREBASE_ADMIN_CLIENT_ID` | server/tooling | 0 |  |
@@ -126,8 +126,8 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `HOME` | server/tooling | 1 | `packages/native-core/scripts/android-build-preflight.ts` |
 | `HOST` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
 | `JAVA_HOME` | server/tooling | 2 | `scripts/check-environment-requirements.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
-| `LANG` | server/tooling | 1 | `scripts/fastlane-runner.js` |
-| `LC_ALL` | server/tooling | 1 | `scripts/fastlane-runner.js` |
+| `LANG` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
+| `LC_ALL` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `LEGACY_PRODUCT_DATABASE_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-product-database.ts` |
 | `LOCALAPPDATA` | server/tooling | 2 | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` |
 | `NEXT_PHASE` | server/tooling | 1 | `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
@@ -161,7 +161,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `PASSWORD_RECOVERY_GMAIL_APP_PASSWORD` | server/tooling | 2 | `scripts/send-coordinator-completion-email.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `PASSWORD_RECOVERY_GMAIL_USER` | server/tooling | 2 | `scripts/send-coordinator-completion-email.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `PASSWORD_RECOVERY_SIGNING_SECRET` | server/tooling | 1 | `src/core/config/server-env/server-env.values.turso-env.ts` |
-| `PATH` | server/tooling | 1 | `scripts/fastlane-runner.js` |
+| `PATH` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `PORT` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
 | `PRODUCT_R2_ACCESS_KEY_ID` | server/tooling | 2 | `packages/storage-core/src/tests/integration/credential-isolation.test.ts`, `packages/storage-core/src/tests/unit/account-credentials.test.ts` |
 | `PRODUCT_R2_ACCOUNT_ID` | server/tooling | 1 | `packages/storage-core/src/tests/unit/account-credentials.test.ts` |
@@ -189,7 +189,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `R2_PUBLIC_URL` | server/tooling | 3 | `packages/data-core/src/tooling/migrate-r2-cloud-folders.ts`, `packages/data-core/src/tooling/migrate-r2-image-public-url.ts`, `packages/storage-core/src/tests/unit/account-credentials.test.ts` |
 | `R2_SECRET_ACCESS_KEY` | server/tooling | 2 | `packages/storage-core/src/tests/integration/credential-isolation.test.ts`, `packages/storage-core/src/tests/unit/account-credentials.test.ts` |
 | `R2_WAREHOUSE_NAME` | server/tooling | 0 |  |
-| `RUBY_BIN` | server/tooling | 1 | `scripts/fastlane-runner.js` |
+| `RUBY_BIN` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `SYNTHETIC_ANALYTICS_R2_ACCESS_KEY_ID` | server/tooling | 1 | `packages/storage-core/src/tests/integration/add-account.test.ts` |
 | `SYNTHETIC_ANALYTICS_R2_BUCKET_NAME` | server/tooling | 1 | `packages/storage-core/src/tests/integration/add-account.test.ts` |
 | `SYNTHETIC_ANALYTICS_R2_ENDPOINT` | server/tooling | 1 | `packages/storage-core/src/tests/integration/add-account.test.ts` |

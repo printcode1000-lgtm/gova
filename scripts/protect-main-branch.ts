@@ -2,6 +2,12 @@ import { execFileSync } from "child_process";
 import { existsSync } from "fs";
 import dotenv from "dotenv";
 
+import {
+  blockingMainRules,
+  describeMainRules,
+  type GitHubBranchRule,
+} from "./github-main-policy";
+
 /**
  * Branch protection on `main` is forbidden.
  *
@@ -58,6 +64,54 @@ async function readProtection(repository: string, token: string): Promise<number
   return verify.status;
 }
 
+async function readActiveMainRules(
+  repository: string,
+  token: string,
+): Promise<GitHubBranchRule[]> {
+  const rules: GitHubBranchRule[] = [];
+  for (let page = 1; ; page += 1) {
+    const response = await fetch(
+      `https://api.github.com/repos/${repository}/rules/branches/main?per_page=100&page=${page}`,
+      { headers: apiHeaders(token) },
+    );
+    if (!response.ok) {
+      throw new Error(
+        `GitHub refused the active-main-rules check: ${response.status} ${await response.text()}`,
+      );
+    }
+    const payload = (await response.json()) as unknown;
+    if (!Array.isArray(payload)) {
+      throw new Error("GitHub returned an invalid active-main-rules response.");
+    }
+    rules.push(...(payload as GitHubBranchRule[]));
+    if (payload.length < 100) return rules;
+  }
+}
+
+async function assertMainPushUnrestricted(
+  repository: string,
+  token: string,
+): Promise<void> {
+  const [protectionStatus, activeRules] = await Promise.all([
+    readProtection(repository, token),
+    readActiveMainRules(repository, token),
+  ]);
+  const blockingRules = blockingMainRules(activeRules);
+  if (protectionStatus === 404 && blockingRules.length === 0) {
+    console.log("No classic protection or blocking active rule applies to main. Direct push is unrestricted.");
+    return;
+  }
+  const findings = [
+    protectionStatus === 404 ? null : `classic branch protection HTTP ${protectionStatus}`,
+    blockingRules.length === 0
+      ? null
+      : `active branch rules: ${describeMainRules(blockingRules)}`,
+  ].filter(Boolean);
+  throw new Error(
+    `Direct push to main is restricted by ${findings.join("; ")}. Remove the rule in GitHub administration.`,
+  );
+}
+
 async function removeProtection(repository: string, token: string): Promise<void> {
   const response = await fetch(`https://api.github.com/repos/${repository}/branches/main/protection`, {
     method: "DELETE",
@@ -66,12 +120,7 @@ async function removeProtection(repository: string, token: string): Promise<void
   if (!response.ok && response.status !== 404) {
     throw new Error(`GitHub refused the delete: ${response.status} ${await response.text()}`);
   }
-  const status = await readProtection(repository, token);
-  console.log(
-    status === 404
-      ? "Branch protection removed. Nothing restricts a push to main."
-      : `WARNING: protection still reported (${status}). Check it on GitHub.`,
-  );
+  await assertMainPushUnrestricted(repository, token);
 }
 
 async function main(): Promise<void> {
@@ -89,21 +138,19 @@ async function main(): Promise<void> {
 
   if (STATUS) {
     if (DRY_RUN) {
-      console.log("\n--dry-run: would GET /branches/main/protection. Nothing sent.");
+      console.log(
+        "\n--dry-run: would GET classic branch protection and /rules/branches/main. Nothing sent.",
+      );
       return;
     }
-    const status = await readProtection(repository, requireToken());
-    console.log(
-      status === 404
-        ? "No branch protection on main (404). Direct push is unrestricted."
-        : `WARNING: branch protection is present (${status}). Run npm run github:protect -- --remove.`,
-    );
-    if (status !== 404) process.exit(1);
+    await assertMainPushUnrestricted(repository, requireToken());
     return;
   }
 
   if (DRY_RUN) {
-    console.log("\n--dry-run: would delete branch protection on main. Nothing sent.");
+    console.log(
+      "\n--dry-run: would delete classic branch protection, then read all active main rules. Nothing sent.",
+    );
     return;
   }
   await removeProtection(repository, requireToken());

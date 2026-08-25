@@ -1,7 +1,10 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
+import {
+  ACCOUNT_DECLARATIONS,
+  GOVA_RUNTIME_REQUIRED_ENV_KEYS,
+} from "@asol/account-declarations";
 
 /**
  * Vercel Deployment/Smoke Guards.
@@ -14,6 +17,7 @@ import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 export const VERCEL_BUILD_SCRIPT = "build:vercel";
 export const VERCEL_BUILD_COMMAND = `npm run ${VERCEL_BUILD_SCRIPT}`;
 export const VERCEL_INSTALL_COMMAND = "npm ci";
+export const ALLOWED_VERCEL_NPM_SCRIPTS = ["vercel:function-size:check"] as const;
 
 export const FORBIDDEN_VERCEL_PROOF_COMMANDS = [
   "architecture:check",
@@ -28,21 +32,6 @@ export const FORBIDDEN_VERCEL_PROOF_COMMANDS = [
   "test:compositions",
 ] as const;
 
-const DATABASE_RUNTIME_KEYS = [
-  "TURSO_DATABASE_URL",
-  "TURSO_AUTH_TOKEN",
-  "TURSO_PRODUCT_DATABASE_URL",
-  "TURSO_PRODUCT_AUTH_TOKEN",
-  "TURSO_NOTIFICATIONS_DATABASE_URL",
-  "TURSO_NOTIFICATIONS_AUTH_TOKEN",
-  "TURSO_ADVERTISEMENTS_DATABASE_URL",
-  "TURSO_ADVERTISEMENTS_AUTH_TOKEN",
-  "ORDERS_CORE_DATABASE_URL",
-  "ORDERS_CORE_DATABASE_AUTH_TOKEN",
-  "PROFILE_CORE_DATABASE_URL",
-  "PROFILE_CORE_DATABASE_AUTH_TOKEN",
-] as const;
-
 const APP_RUNTIME_KEYS = [
   "ASOL_SESSION_SIGNING_SECRET",
   "ASOL_NOTIFICATION_GRANT_SECRET",
@@ -55,7 +44,7 @@ const APP_RUNTIME_KEYS = [
 
 export const HOSTED_RUNTIME_ENV_KEYS: readonly string[] = [
   ...new Set([
-    ...DATABASE_RUNTIME_KEYS,
+    ...GOVA_RUNTIME_REQUIRED_ENV_KEYS,
     ...APP_RUNTIME_KEYS,
     ...Object.values(ACCOUNT_DECLARATIONS).flatMap((declaration) => [...declaration.requiredEnv]),
   ]),
@@ -120,4 +109,11 @@ export function assertVercelRuntimeEnvironment(
 
 export function vercelBuildSourceMentionsForbiddenProof(source: string): string[] {
   return FORBIDDEN_VERCEL_PROOF_COMMANDS.filter((command) => source.includes(command));
+}
+
+export function vercelBuildNpmScriptViolations(source: string): string[] {
+  const allowed = new Set<string>(ALLOWED_VERCEL_NPM_SCRIPTS);
+  return [...source.matchAll(/runNpmScript\(\s*["']([^"']+)["']\s*\)/g)]
+    .map((match) => match[1]!)
+    .filter((script) => !allowed.has(script));
 }

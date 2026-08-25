@@ -1,11 +1,7 @@
-import { existsSync } from 'fs';
-import dotenv from 'dotenv';
+import { loadReleaseToolEnvironment } from '@asol/env-core/process';
 import { getOtaR2CloudflareCredentials, getOtaR2S3Credentials } from '../src/publishing/config/ota-r2-target';
 
-if (existsSync('.env.local')) {
-  dotenv.config({ path: '.env.local' });
-}
-dotenv.config({ path: '.env' });
+loadReleaseToolEnvironment();
 
 const CF_API_BASE = 'https://api.cloudflare.com/client/v4';
 

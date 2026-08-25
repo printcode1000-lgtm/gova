@@ -79,6 +79,24 @@ def check_android_signing!
   UI.success("Android signing environment is present")
 end
 
+def configured_app_store_connect_api_key
+  key_id = ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"].to_s.strip
+  issuer_id = ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"].to_s.strip
+  key_filepath = ensure_file!(
+    "App Store Connect API key",
+    ENV["APP_STORE_CONNECT_API_KEY_KEY_FILEPATH"]
+  )
+  UI.user_error!("App Store Connect API key ID is missing") if key_id.empty?
+  UI.user_error!("App Store Connect API issuer ID is missing") if issuer_id.empty?
+  app_store_connect_api_key(
+    key_id: key_id,
+    issuer_id: issuer_id,
+    key_filepath: key_filepath,
+    duration: 1200,
+    in_house: false
+  )
+end
+
 def run_command(command)
   UI.command(command)
   # fastlane runs sh from the fastlane/ directory. npm resolves its own package
@@ -291,7 +309,7 @@ end
 platform :ios do
   desc "Validate iOS publishing prerequisites"
   lane :doctor do
-    missing = %w[ASOL_IOS_TEAM_ID FASTLANE_USER].select { |key| ENV[key].to_s.strip.empty? }
+    missing = %w[ASOL_IOS_TEAM_ID].select { |key| ENV[key].to_s.strip.empty? }
     UI.user_error!("iOS publishing is missing: #{missing.join(", ")}") unless missing.empty?
     UI.success("iOS publishing environment is present")
   end
@@ -313,6 +331,7 @@ platform :ios do
   lane :beta do
     build
     upload_to_testflight(
+      api_key: configured_app_store_connect_api_key,
       ipa: "ios/build/fastlane/ASOL.ipa",
       skip_waiting_for_build_processing: true
     )

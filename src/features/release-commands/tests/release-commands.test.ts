@@ -249,15 +249,29 @@ assert.match(
   /runAndroidBuildPreflight/,
   "release:android must run Android preflight before cap-build and signing",
 );
+const developmentGuardSource = await readFile(
+  "src/features/google-play-console/domain/development-guard.server.ts",
+  "utf8",
+);
+assert.match(
+  developmentGuardSource,
+  /releaseArchiveCanRestore/,
+  "dynamic release pages must treat an authenticated portable restore as runnable",
+);
 assert.ok(
   packageJson.scripts["android:preflight"],
   "android:preflight npm script must exist for standalone toolchain checks",
 );
-const fastlaneRunnerSource = await readFile("scripts/fastlane-runner.js", "utf8");
+const fastlaneRunnerSource = await readFile("scripts/fastlane-runner.ts", "utf8");
 assert.match(
   fastlaneRunnerSource,
   /android-build-preflight\.ts/,
   "fastlane-runner must run Android preflight before non-doctor android lanes",
+);
+assert.match(
+  fastlaneRunnerSource,
+  /ensureReleaseSecretsRestored/,
+  "fastlane-runner must apply scoped secret auto-restore before Ruby starts",
 );
 const capRunCleanSource = await readFile("scripts/cap-run-clean.ts", "utf8");
 assert.match(
@@ -625,6 +639,12 @@ try {
   );
   assert.match(runnerSource, /const stageAtExit = current\.stage/,
     "a failed job must keep the stage it actually stopped at");
+  const versionSummarySource = await readFile(
+    "src/features/google-play-console/presentation/components/ReleaseVersionSummary.tsx",
+    "utf8",
+  );
+  assert.match(versionSummarySource, /iosStoreDistribution === false/,
+    "the dynamic release page must distinguish not-live iOS distribution from missing credentials");
 
   const archivePath = path.join(temp, "app-debug.apk");
   const fixtureEntries: Record<string, Uint8Array> = {

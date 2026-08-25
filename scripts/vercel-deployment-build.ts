@@ -7,6 +7,7 @@ import {
   assertVercelHostEnvironment,
   assertVercelRuntimeEnvironment,
 } from "./vercel-deployment-guards";
+import { assertVercelBuildArtifact } from "./vercel-build-artifact-guard";
 
 /**
  * Hosted Vercel build: environment health + a runnable Next.js artifact.
@@ -53,10 +54,8 @@ function main(): void {
   console.log("[vercel-build] next build");
   run(process.execPath, [nextBin(), "build"]);
 
-  const nextOutput = path.join(ROOT, ".next", "server", "app");
-  if (!existsSync(nextOutput)) {
-    throw new Error("next build finished without .next/server/app; the hosted artifact is not runnable.");
-  }
+  assertVercelBuildArtifact(ROOT);
+  console.log("[vercel-build] required Next.js server manifests and root route trace are present.");
 
   console.log("[vercel-build] vercel:function-size:check");
   runNpmScript("vercel:function-size:check");

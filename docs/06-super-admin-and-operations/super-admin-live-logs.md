@@ -120,7 +120,11 @@ surface file exists (collector, boundary, global-error, traced-route, etc.).
 
 Persistent logs are stored in the profile database table `system_logs`. The
 package repository creates or migrates the schema on first use, including
-correlation columns:
+origin/trust, truncation, and correlation columns. The Drizzle schema and
+`0013_system_logs.sql` mirror those columns. `db:ensure` idempotently adds them
+to an existing profile SQLite source before shard splitting; the offline
+schema-parity test prevents the runtime repository, migration, and upgrader
+from silently diverging. Correlation columns are:
 
 - `correlation_id`
 - `request_flow_id`

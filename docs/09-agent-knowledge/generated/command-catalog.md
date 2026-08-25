@@ -108,13 +108,14 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run notifications:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
 | `npm run notifications:tokens:dedupe` | `Tooling` | 1 |  | 0 |
 | `npm run orders:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
-| `npm run ota:check` | `Static out`, `Tooling` | 1 |  | 0 |
+| `npm run ota:check` | `Static out`, `Tooling` | 2 |  | 0 |
 | `npm run ota:keygen` | `Static out`, `Tooling` | 1 |  | 0 |
-| `npm run ota:publish` | `Static out`, `Tooling` | 1 |  | 0 |
-| `npm run ota:revoke` | `Static out`, `Tooling` | 1 |  | 0 |
+| `npm run ota:publish` | `Static out`, `Tooling` | 2 |  | 0 |
+| `npm run ota:revoke` | `Static out`, `Tooling` | 2 |  | 0 |
 | `npm run ota:self-test` | `Static out`, `Tooling` | 1 |  | 0 |
-| `npm run ota:status` | `Static out`, `Tooling` | 1 |  | 0 |
-| `npm run ota:sync:cors` | `Static out`, `Tooling` | 1 |  | 0 |
+| `npm run ota:self-test:local` | `Static out`, `Tooling` | 1 |  | 0 |
+| `npm run ota:status` | `Static out`, `Tooling` | 2 |  | 0 |
+| `npm run ota:sync:cors` | `Static out`, `Tooling` | 2 |  | 0 |
 | `npm run prepare` | `Tooling` | 0 |  | 0 |
 | `npm run preview:static` | `Static out`, `Tooling` | 1 |  | 0 |
 | `npm run products:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
@@ -168,7 +169,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:data-health-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-runbook-execution` | `Tooling` | 1 |  | 0 |
-| `npm run test:deployment-tools` | `Tooling` | 11 |  | 0 |
+| `npm run test:deployment-tools` | `Tooling` | 13 |  | 0 |
 | `npm run test:dev-cloud-backup` | `Tooling` | 1 |  | 1 |
 | `npm run test:dev-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:env-core` | `Tooling` | 1 |  | 0 |

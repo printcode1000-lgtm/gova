@@ -163,20 +163,17 @@ it executes the bundled native/tool binaries and validates the complete npm
 graph. A missing or incompatible result produces a non-zero exit code, making
 the doctor suitable for onboarding and CI diagnostics.
 
-The repository-root `.vercelignore` keeps the three Android Gradle declaration
-files read by the compatibility gate (`build.gradle`, `variables.gradle`, and
-`gradle-wrapper.properties`) while excluding the rest of the native shell. This
-lets the same default-deny reference run in Vercel without uploading generated
-Android artifacts or weakening the production build check.
+The repository-root `.vercelignore` excludes native build trees and generated
+artifacts from the hosted source upload. Runtime compatibility and project
+correctness remain local preflight responsibilities; the hosted Vercel command
+does not repeat those gates.
 The root `vercel.json` pins the remote install command to `npm ci`; Vercel must
 consume the reviewed lockfile byte-for-byte instead of rewriting it before the
 compatibility gate executes.
-All tracked `docs/` and `.cursor/rules/` sources also remain remote-build inputs:
-the agent-knowledge portion of `architecture:check` validates the complete
-documentation graph during every production build.
-The bare package-door import contract also imposes a 15-second limit per child
-process. A door that retains a timer, socket, watcher, or other live resource at
-module scope fails with its exact specifier instead of hanging a remote build.
+Vercel runs only the deployment/smoke build contract: environment key presence,
+`next build`, required server artifact manifests, and function upload-size
+limits. Documentation drift, package-door import checks, tests, lint, and
+typechecking remain in local `npm run build` / `deploy:all` preflight.
 
 ## Service deployment checks
 

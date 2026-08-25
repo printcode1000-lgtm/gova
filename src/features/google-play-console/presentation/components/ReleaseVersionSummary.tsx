@@ -56,10 +56,14 @@ export function ReleaseCurrentVersions({ versions, t }: {
     {versions.androidTruthError ? (
       <p className="text-sm text-destructive">{versions.androidTruthError}</p>
     ) : null}
-    {versions.iosTruthError ? (
+    {versions.iosStoreDistribution === false ? (
+      <p className="text-sm text-on-surface-variant">
+        {t("releaseConsole.confirmRun.appStoreDistributionNotLive")}
+      </p>
+    ) : versions.iosTruthError ? (
       <p className="text-sm text-destructive">{versions.iosTruthError}</p>
     ) : null}
-    {versions.iosReady === false ? (
+    {versions.iosStoreDistribution !== false && versions.iosReady === false ? (
       <p className="text-sm text-destructive">{t("releaseConsole.confirmRun.appStoreCredentialsMissing")}</p>
     ) : null}
   </section>;

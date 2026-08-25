@@ -17,7 +17,11 @@ export type ReleaseSecretScope =
   | "vercel"
   | "google-play"
   | "ota"
+  | "ota-storage"
+  | "ota-cloudflare"
+  | "ota-signing"
   | "android-signing"
+  | "ios-signing"
   | "app-store";
 
 const ROOT_VERCEL_LINK = path.join(process.cwd(), ".vercel", "project.json");
@@ -52,16 +56,22 @@ export function missingReleaseCredentialKeys(
     missing.push("GOOGLE_PLAY_CREDENTIALS");
   }
 
-  if (wanted.has("ota")) {
+  if (
+    wanted.has("ota") ||
+    wanted.has("ota-storage") ||
+    wanted.has("ota-cloudflare")
+  ) {
     for (const key of [
       "ASOL_OTA_R2_BUCKET_NAME",
-      "ASOL_OTA_R2_PUBLIC_URL",
-      "ASOL_OTA_R2_ACCOUNT_ID",
+      "ASOL_OTA_R2_ENDPOINT",
       "ASOL_OTA_R2_ACCESS_KEY_ID",
       "ASOL_OTA_R2_SECRET_ACCESS_KEY",
     ]) {
       if (!envPresent(key)) missing.push(key);
     }
+  }
+
+  if (wanted.has("ota") || wanted.has("ota-signing")) {
     if (
       !envPresent("ASOL_OTA_SIGNING_PRIVATE_KEY") &&
       !filePresent(path.join(".ota", "private-key.pem"))
@@ -80,6 +90,20 @@ export function missingReleaseCredentialKeys(
     }
     const keystore = process.env.ASOL_ANDROID_KEYSTORE_FILE?.trim();
     if (!filePresent(keystore)) missing.push("ASOL_ANDROID_KEYSTORE_FILE");
+  }
+
+  if (wanted.has("ios-signing") && !envPresent("ASOL_IOS_TEAM_ID")) {
+    missing.push("ASOL_IOS_TEAM_ID");
+  }
+
+  if (wanted.has("ota-cloudflare")) {
+    for (const key of ["ASOL_OTA_R2_ACCOUNT_ID", "ASOL_OTA_R2_API_TOKEN"]) {
+      if (!envPresent(key)) missing.push(key);
+    }
+  }
+
+  if (wanted.has("ota") && !envPresent("ASOL_OTA_R2_PUBLIC_URL")) {
+    missing.push("ASOL_OTA_R2_PUBLIC_URL");
   }
 
   if (wanted.has("app-store") && !appStoreConnectCredentialsAreReady()) {

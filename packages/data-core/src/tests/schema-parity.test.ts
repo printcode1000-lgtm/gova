@@ -29,6 +29,10 @@ import {
   PROFILE_SHARDS,
   envPrefixForShard,
 } from '../core/database/database-shards.ts';
+import {
+  SYSTEM_LOG_COMPATIBILITY_COLUMNS,
+  missingSystemLogColumnStatements,
+} from '../tooling/ensure-system-logs-schema.ts';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.resolve(HERE, '..');
@@ -80,6 +84,54 @@ function createdTables(ddl: string): Set<string> {
   }
   return tables;
 }
+
+// The system-logs repository reads and writes these security/correlation
+// columns. Keep both the Drizzle source and new-database migration aligned so
+// live Turso columns cannot remain invisible to the local schema reference.
+const systemLogColumns = [
+  'origin',
+  'trust_level',
+  'message_truncated',
+  'stack_truncated',
+  'correlation_id',
+  'request_flow_id',
+  'session_id',
+  'monitor_trace_id',
+] as const;
+const systemLogMigration = readFileSync(
+  path.join(SRC, 'core/database/profile/migrations/0013_system_logs.sql'),
+  'utf8',
+);
+const profileSchema = readFileSync(
+  path.join(SRC, 'core/database/profile/profile.schema.ts'),
+  'utf8',
+);
+for (const column of systemLogColumns) {
+  assert.match(
+    systemLogMigration,
+    new RegExp(`\\b${column}\\b`),
+    `system_logs migration is missing repository-owned column ${column}.`,
+  );
+  assert.ok(
+    profileSchema.includes(`("${column}")`),
+    `Drizzle system_logs schema is missing repository-owned column ${column}.`,
+  );
+}
+assert.deepEqual(
+  SYSTEM_LOG_COMPATIBILITY_COLUMNS.map(([name]) => name),
+  systemLogColumns,
+  'The existing-database upgrader and declared system-log schema columns must stay aligned.',
+);
+assert.equal(
+  missingSystemLogColumnStatements(new Set(systemLogColumns)).length,
+  0,
+  'The system-log upgrader must be idempotent when all compatibility columns exist.',
+);
+assert.match(
+  missingSystemLogColumnStatements(new Set(systemLogColumns.slice(1)))[0] ?? '',
+  /^ALTER TABLE system_logs ADD COLUMN origin /,
+  'The system-log upgrader must add a missing column with explicit DDL.',
+);
 
 // ── Every declared table is created by a migration ──────────────────────────
 for (const source of MIGRATION_SOURCES) {

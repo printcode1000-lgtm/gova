@@ -95,21 +95,21 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run docs:check` | `npx tsx scripts/docs/check.ts` |
 | `npm run doctor:environment` | `npx tsx scripts/check-environment-requirements.ts --scenario=all` |
 | `npm run doctor:environment:production` | `npx tsx scripts/check-environment-requirements.ts --scenario=production --skip-outdated` |
-| `npm run fastlane` | `node scripts/fastlane-runner.js` |
-| `npm run fastlane:android:aab:signed` | `node scripts/fastlane-runner.js android aab_signed` |
-| `npm run fastlane:android:aab:signed:no-r8` | `node scripts/fastlane-runner.js android aab_signed_no_r8` |
-| `npm run fastlane:android:aab:unsigned` | `node scripts/fastlane-runner.js android aab_unsigned` |
-| `npm run fastlane:android:aab:unsigned:no-r8` | `node scripts/fastlane-runner.js android aab_unsigned_no_r8` |
-| `npm run fastlane:android:apk:signed` | `node scripts/fastlane-runner.js android apk_signed` |
-| `npm run fastlane:android:apk:signed:no-r8` | `node scripts/fastlane-runner.js android apk_signed_no_r8` |
-| `npm run fastlane:android:apk:unsigned` | `node scripts/fastlane-runner.js android apk_unsigned` |
-| `npm run fastlane:android:apk:unsigned:no-r8` | `node scripts/fastlane-runner.js android apk_unsigned_no_r8` |
-| `npm run fastlane:android:build` | `node scripts/fastlane-runner.js android build` |
-| `npm run fastlane:android:doctor` | `node scripts/fastlane-runner.js android doctor` |
-| `npm run fastlane:android:internal` | `node scripts/fastlane-runner.js android internal` |
-| `npm run fastlane:android:production` | `node scripts/fastlane-runner.js android production` |
-| `npm run fastlane:ios:build` | `node scripts/fastlane-runner.js ios build` |
-| `npm run fastlane:ios:testflight` | `node scripts/fastlane-runner.js ios beta` |
+| `npm run fastlane` | `npx tsx scripts/fastlane-runner.ts` |
+| `npm run fastlane:android:aab:signed` | `npx tsx scripts/fastlane-runner.ts android aab_signed` |
+| `npm run fastlane:android:aab:signed:no-r8` | `npx tsx scripts/fastlane-runner.ts android aab_signed_no_r8` |
+| `npm run fastlane:android:aab:unsigned` | `npx tsx scripts/fastlane-runner.ts android aab_unsigned` |
+| `npm run fastlane:android:aab:unsigned:no-r8` | `npx tsx scripts/fastlane-runner.ts android aab_unsigned_no_r8` |
+| `npm run fastlane:android:apk:signed` | `npx tsx scripts/fastlane-runner.ts android apk_signed` |
+| `npm run fastlane:android:apk:signed:no-r8` | `npx tsx scripts/fastlane-runner.ts android apk_signed_no_r8` |
+| `npm run fastlane:android:apk:unsigned` | `npx tsx scripts/fastlane-runner.ts android apk_unsigned` |
+| `npm run fastlane:android:apk:unsigned:no-r8` | `npx tsx scripts/fastlane-runner.ts android apk_unsigned_no_r8` |
+| `npm run fastlane:android:build` | `npx tsx scripts/fastlane-runner.ts android build` |
+| `npm run fastlane:android:doctor` | `npx tsx scripts/fastlane-runner.ts android doctor` |
+| `npm run fastlane:android:internal` | `npx tsx scripts/fastlane-runner.ts android internal` |
+| `npm run fastlane:android:production` | `npx tsx scripts/fastlane-runner.ts android production` |
+| `npm run fastlane:ios:build` | `npx tsx scripts/fastlane-runner.ts ios build` |
+| `npm run fastlane:ios:testflight` | `npx tsx scripts/fastlane-runner.ts ios beta` |
 | `npm run gates:verify` | `npx tsx scripts/generated-gate-contract.ts` |
 | `npm run github:block-branches` | `npx tsx scripts/block-branch-creation.ts` |
 | `npm run github:ci-policy` | `npx tsx scripts/github-ci-policy.ts` |
@@ -122,13 +122,14 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run notifications:deploy` | `npx tsx scripts/deploy-notifications-service.ts` |
 | `npm run notifications:tokens:dedupe` | `npx tsx packages/data-core/src/tooling/enforce-notification-token-cardinality.ts` |
 | `npm run orders:deploy` | `npx tsx scripts/deploy-orders-service.ts` |
-| `npm run ota:check` | `npx tsx packages/ota-core/scripts/ota-publish.ts --dry-run` |
+| `npm run ota:check` | `npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts --dry-run` |
 | `npm run ota:keygen` | `npx tsx packages/ota-core/scripts/ota-keygen.ts` |
-| `npm run ota:publish` | `npx tsx packages/ota-core/scripts/ota-publish.ts` |
-| `npm run ota:revoke` | `npx tsx packages/ota-core/scripts/ota-revoke.ts` |
-| `npm run ota:self-test` | `npx tsx packages/ota-core/scripts/ota-self-test.ts` |
-| `npm run ota:status` | `npx tsx packages/ota-core/scripts/ota-status.ts` |
-| `npm run ota:sync:cors` | `npx tsx packages/ota-core/scripts/sync-cors.ts` |
+| `npm run ota:publish` | `npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts` |
+| `npm run ota:revoke` | `npx tsx scripts/ensure-release-command-secrets.ts ota-storage ota-signing && npx tsx packages/ota-core/scripts/ota-revoke.ts` |
+| `npm run ota:self-test` | `npx tsx scripts/run-ota-self-test.ts --r2` |
+| `npm run ota:self-test:local` | `npx tsx scripts/run-ota-self-test.ts` |
+| `npm run ota:status` | `npx tsx scripts/ensure-release-command-secrets.ts ota-storage && npx tsx packages/ota-core/scripts/ota-status.ts` |
+| `npm run ota:sync:cors` | `npx tsx scripts/ensure-release-command-secrets.ts ota-cloudflare && npx tsx packages/ota-core/scripts/sync-cors.ts` |
 | `npm run prepare` | `git config core.hooksPath .githooks \|\| exit 0` |
 | `npm run preview:static` | `npx tsx packages/ota-core/scripts/serve-static.ts` |
 | `npm run products:deploy` | `npx tsx scripts/deploy-products-service.ts` |
@@ -182,7 +183,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:data-health-core` | `npx tsx packages/data-health-core/src/tests/index.test.ts` |
 | `npm run test:delivery-planner` | `npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts` |
 | `npm run test:deploy-runbook-execution` | `npx tsx scripts/architecture/deploy-runbook-execution.test.ts` |
-| `npm run test:deployment-tools` | `npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy` |
+| `npm run test:deployment-tools` | `npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/release-secret-wiring.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy` |
 | `npm run test:dev-cloud-backup` | `cross-env NODE_OPTIONS=<redacted> npx tsx src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `npm run test:dev-core` | `npx tsx packages/dev-core/src/tests/index.test.ts` |
 | `npm run test:env-core` | `npx tsx packages/env-core/src/tests/index.test.ts` |

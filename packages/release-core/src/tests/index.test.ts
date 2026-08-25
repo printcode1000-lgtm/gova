@@ -63,6 +63,15 @@ assert.match(
   /releaseConsolePortsNotConfigured/,
   'The release runner must fail closed before the application seam is registered.',
 );
+const buildJobRunnerSource = readFileSync(
+  path.join(ROOT, 'packages/release-core/src/console-server/build-job-runner.ts'),
+  'utf8',
+);
+assert.match(
+  buildJobRunnerSource,
+  /if \(shippingPlatforms\.ios\.storeDistribution\)/,
+  'The dev release page must not query App Store Connect when iOS store distribution is explicitly not live.',
+);
 
 const runbookStats = androidRunbookStatsByTab();
 for (const pathId of Object.keys(ANDROID_RELEASE_RUNBOOKS)) {

@@ -35,7 +35,7 @@ package, service, lock graph, or tool version cannot pass without that review.
 | Next.js | `16.3.2` | Hosted application and static export |
 | React / React DOM | `19.2.8` | UI runtime |
 | TypeScript | `5.9.3` | Checked compiler line; TypeScript 7 is intentionally not adopted until the complete toolchain is verified against it |
-| Vercel CLI | `59.0.0`, ephemeral | Service deployment only; invoked through pinned `npx`, never installed in the application dependency tree |
+| Vercel CLI | `59.0.0`, exact direct dependency | Service deployment only; scripts resolve the reviewed local binary from `node_modules` rather than a mutable global/latest CLI |
 | Drizzle Kit | `0.31.10`, ephemeral | Schema tooling through `npm run db:drizzle` |
 | Java | JDK `21 LTS` | Android Gradle toolchain |
 

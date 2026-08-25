@@ -1,32 +1,54 @@
 /**
- * Application import-cycle contract for the five known cycle families.
+ * Repository-wide application import-cycle contract.
  *
- * Static imports, dynamic imports, and re-exports all count. There is no
- * allowlist for new cycles inside this subgraph: invert an edge, move a type,
- * or stop a barrel re-export.
+ * Static imports, dynamic imports, and re-exports all count. Every discovered
+ * feature/shared/core cluster participates. The baseline records pre-existing
+ * strongly connected components found by the audit; any new or changed cyclic
+ * component is rejected instead of being hidden by a hand-picked scan scope.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'fs';
 import { dirname, join, relative, resolve } from 'path';
 
 import { ROOT, addViolation, extractImports, rel } from './architecture-types';
+import { KNOWN_APPLICATION_CYCLIC_EDGE_BASELINE } from './application-cycle-edge-baseline';
 
 const SRC = join(ROOT, 'src');
 
-export const APPLICATION_CYCLE_SUBGRAPH = new Set([
-  'feature:advertisements',
-  'feature:product',
-  'feature:cart',
-  'feature:profile',
-  'feature:auth',
-  'feature:page-save',
-  'feature:page-snapshot',
-  'feature:profile-products',
-  'feature:pharmacy-profile-catalog',
-  'shared:i18n',
-  'shared:preferences',
-  'shared:ui',
-  'core:composition',
-]);
+export const KNOWN_APPLICATION_CYCLE_BASELINE = [
+  [
+    'core:api',
+    'core:config',
+    'feature:app-reset',
+    'feature:auth',
+    'feature:notifications',
+    'feature:onboarding',
+    'feature:page-save',
+    'feature:storage',
+    'feature:system-logs',
+    'shared:brand',
+    'shared:i18n',
+    'shared:preferences',
+    'shared:theme',
+  ],
+  [
+    'feature:advertisements',
+    'feature:cart',
+    'feature:categories',
+    'feature:favorites',
+    'feature:pharmacy-profile-catalog',
+    'feature:product',
+    'feature:product-card',
+    'feature:product-search',
+    'feature:profile',
+    'feature:profile-products',
+    'feature:seller-card',
+    'feature:seller-discounts',
+    'feature:sharing',
+    'feature:specialty-chat',
+    'shared:layouts',
+  ],
+  ['feature:google-play-console', 'feature:release-commands'],
+] as const;
 
 function walkSource(directory: string, found: string[] = []): string[] {
   if (!existsSync(directory)) return found;
@@ -86,47 +108,138 @@ export function buildApplicationClusterGraph(): Map<string, Map<string, string>>
 export function findApplicationClusterCycles(
   graph = buildApplicationClusterGraph(),
 ): string[][] {
-  const cycles: string[][] = [];
-  const reported = new Set<string>();
-  const state = new Map<string, 'visiting' | 'done'>();
+  let nextIndex = 0;
+  const indexes = new Map<string, number>();
+  const lowLinks = new Map<string, number>();
+  const stack: string[] = [];
+  const onStack = new Set<string>();
+  const components: string[][] = [];
 
-  const walk = (name: string, stack: string[]): void => {
-    state.set(name, 'visiting');
+  const visit = (name: string): void => {
+    indexes.set(name, nextIndex);
+    lowLinks.set(name, nextIndex);
+    nextIndex += 1;
     stack.push(name);
+    onStack.add(name);
+
     for (const target of graph.get(name)?.keys() ?? []) {
-      if (!APPLICATION_CYCLE_SUBGRAPH.has(target)) continue;
-      if (state.get(target) === 'visiting') {
-        const cycle = [...stack.slice(stack.indexOf(target)), target];
-        const signature = cycle.slice(0, -1).sort().join('|');
-        if (!reported.has(signature)) {
-          reported.add(signature);
-          cycles.push(cycle);
-        }
-        continue;
+      if (!graph.has(target)) continue;
+      if (!indexes.has(target)) {
+        visit(target);
+        lowLinks.set(name, Math.min(lowLinks.get(name)!, lowLinks.get(target)!));
+      } else if (onStack.has(target)) {
+        lowLinks.set(name, Math.min(lowLinks.get(name)!, indexes.get(target)!));
       }
-      if (state.get(target) !== 'done' && graph.has(target)) walk(target, stack);
     }
-    stack.pop();
-    state.set(name, 'done');
+
+    if (lowLinks.get(name) !== indexes.get(name)) return;
+    const component: string[] = [];
+    let member: string;
+    do {
+      member = stack.pop()!;
+      onStack.delete(member);
+      component.push(member);
+    } while (member !== name);
+
+    const selfCycle = component.length === 1 && graph.get(name)?.has(name);
+    if (component.length > 1 || selfCycle) components.push(component.sort());
   };
 
   for (const name of [...graph.keys()].sort()) {
-    if (!APPLICATION_CYCLE_SUBGRAPH.has(name)) continue;
-    if (!state.has(name)) walk(name, []);
+    if (!indexes.has(name)) visit(name);
   }
-  return cycles.sort((left, right) => left.join('>').localeCompare(right.join('>')));
+  return components.sort((left, right) => left.join('|').localeCompare(right.join('|')));
+}
+
+function componentSignature(component: readonly string[]): string {
+  return [...component].sort().join('|');
+}
+
+export function cyclicApplicationEdgeSignatures(
+  graph = buildApplicationClusterGraph(),
+): string[] {
+  const edges: string[] = [];
+  for (const component of findApplicationClusterCycles(graph)) {
+    const members = new Set(component);
+    for (const from of component) {
+      for (const target of graph.get(from)?.keys() ?? []) {
+        if (members.has(target)) edges.push(`${from} -> ${target}`);
+      }
+    }
+  }
+  return edges.sort();
+}
+
+export function applicationCycleBaselineViolations(
+  graph = buildApplicationClusterGraph(),
+): {
+  unexpected: string[][];
+  stale: readonly (readonly string[])[];
+  unexpectedCyclicEdges: string[];
+  staleCyclicEdges: readonly string[];
+} {
+  const actual = findApplicationClusterCycles(graph);
+  const actualSignatures = new Set(actual.map(componentSignature));
+  const baselineSignatures = new Set(KNOWN_APPLICATION_CYCLE_BASELINE.map(componentSignature));
+  const actualEdges = cyclicApplicationEdgeSignatures(graph);
+  const actualEdgeSet = new Set(actualEdges);
+  const baselineEdgeSet = new Set<string>(KNOWN_APPLICATION_CYCLIC_EDGE_BASELINE);
+  return {
+    unexpected: actual.filter((component) => !baselineSignatures.has(componentSignature(component))),
+    stale: KNOWN_APPLICATION_CYCLE_BASELINE.filter(
+      (component) => !actualSignatures.has(componentSignature(component)),
+    ),
+    unexpectedCyclicEdges: actualEdges.filter((edge) => !baselineEdgeSet.has(edge)),
+    staleCyclicEdges: KNOWN_APPLICATION_CYCLIC_EDGE_BASELINE.filter(
+      (edge) => !actualEdgeSet.has(edge),
+    ),
+  };
+}
+
+function exampleFileForComponent(
+  component: readonly string[],
+  graph: Map<string, Map<string, string>>,
+): string {
+  const members = new Set(component);
+  for (const from of component) {
+    for (const [target, file] of graph.get(from) ?? []) {
+      if (members.has(target)) return file;
+    }
+  }
+  return 'src';
 }
 
 export function checkApplicationCycleContract(): void {
   const graph = buildApplicationClusterGraph();
-  for (const cycle of findApplicationClusterCycles(graph)) {
-    const start = cycle[0]!;
-    const exampleFile = graph.get(start)?.get(cycle[1]!) ?? 'src';
+  const { unexpected, stale, unexpectedCyclicEdges, staleCyclicEdges } =
+    applicationCycleBaselineViolations(graph);
+  for (const component of unexpected) {
+    const exampleFile = exampleFileForComponent(component, graph);
     addViolation(
       'Application Cycles',
       join(ROOT, exampleFile),
-      `Circular application dependency: ${cycle.join(' -> ')}.`,
-      'Invert one edge: move a type to the owning package, stop a barrel re-export, or register a port. Do not add an allowlist.',
+      `New or changed circular application component: ${component.join(' <-> ')}.`,
+      'Invert an edge, move a type to the owner, stop a barrel re-export, or register a port. Do not expand the audited baseline.',
+    );
+  }
+  for (const component of stale) {
+    addViolation(
+      'Application Cycles',
+      SRC,
+      `The audited cycle baseline is stale because this component no longer exists: ${component.join(' <-> ')}.`,
+      'Remove the resolved component from KNOWN_APPLICATION_CYCLE_BASELINE after verifying the dependency graph.',
+    );
+  }
+  if (
+    unexpected.length === 0 &&
+    stale.length === 0 &&
+    (unexpectedCyclicEdges.length > 0 || staleCyclicEdges.length > 0)
+  ) {
+    addViolation(
+      'Application Cycles',
+      SRC,
+      `The application edges participating in known cycles changed. Added: ${unexpectedCyclicEdges.join(', ') || 'none'}. Removed: ${staleCyclicEdges.join(', ') || 'none'}.`,
+      'Remove the new cyclic edge, or remove the resolved edge and update the audited component and edge baselines after graph review.',
     );
   }
 }

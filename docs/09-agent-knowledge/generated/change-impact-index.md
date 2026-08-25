@@ -24,7 +24,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `favorites` | feature | 2 | 2 | 1 | 0 | 3 | 7 |
 | `feature-flags` | feature | 1 | 1 | 1 | 0 | 0 | 5 |
 | `follow` | feature | 2 | 1 | 3 | 0 | 1 | 9 |
-| `google-play-console` | feature | 2 | 1 | 17 | 0 | 1 | 12 |
+| `google-play-console` | feature | 2 | 1 | 17 | 0 | 1 | 13 |
 | `home` | feature | 2 | 0 | 1 | 0 | 0 | 4 |
 | `location` | feature | 1 | 0 | 0 | 0 | 2 | 0 |
 | `navigation` | feature | 1 | 0 | 0 | 0 | 0 | 4 |
@@ -66,7 +66,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/data-core` | package | 52 | 23 | 5 | 0 | 159 | 20 |
 | `@asol/data-health-core` | package | 7 | 2 | 0 | 0 | 45 | 0 |
 | `@asol/dev-core` | package | 8 | 1 | 0 | 0 | 10 | 0 |
-| `@asol/env-core` | package | 6 | 1 | 0 | 0 | 12 | 1 |
+| `@asol/env-core` | package | 6 | 1 | 0 | 0 | 14 | 1 |
 | `@asol/featured-marquee-core` | package | 6 | 1 | 1 | 0 | 12 | 1 |
 | `@asol/format-core` | package | 7 | 2 | 1 | 0 | 37 | 0 |
 | `@asol/google-play-store-assets-core` | package | 7 | 2 | 6 | 0 | 16 | 0 |
@@ -78,7 +78,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/observability-core` | package | 8 | 1 | 1 | 0 | 21 | 5 |
 | `@asol/orders-composition` | package | 12 | 1 | 0 | 0 | 2 | 5 |
 | `@asol/orders-core` | package | 17 | 6 | 4 | 0 | 41 | 1 |
-| `@asol/ota-core` | package | 34 | 25 | 3 | 0 | 37 | 14 |
+| `@asol/ota-core` | package | 34 | 26 | 3 | 0 | 40 | 13 |
 | `@asol/page-save-core` | package | 26 | 3 | 0 | 0 | 8 | 0 |
 | `@asol/page-snapshot-core` | package | 8 | 1 | 0 | 0 | 3 | 0 |
 | `@asol/product-core` | package | 9 | 1 | 0 | 0 | 26 | 0 |
@@ -86,7 +86,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/products-composition` | package | 8 | 1 | 0 | 0 | 4 | 6 |
 | `@asol/profiles-composition` | package | 8 | 1 | 0 | 0 | 6 | 3 |
 | `@asol/release-core` | package | 8 | 5 | 4 | 0 | 45 | 4 |
-| `@asol/secrets-core` | package | 5 | 1 | 0 | 0 | 6 | 0 |
+| `@asol/secrets-core` | package | 5 | 1 | 0 | 0 | 8 | 0 |
 | `@asol/service-mirror-core` | package | 10 | 1 | 0 | 0 | 7 | 1 |
 | `@asol/service-runtime-core` | package | 7 | 1 | 0 | 0 | 17 | 0 |
 | `@asol/signed-token-core` | package | 7 | 1 | 0 | 0 | 8 | 0 |

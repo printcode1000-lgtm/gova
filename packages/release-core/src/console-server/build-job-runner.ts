@@ -7,6 +7,7 @@ import path from "node:path";
 import {
   appStoreConnectCredentialsAreReady,
   googlePlayCredentialsAreReady,
+  readShippingPlatformsDeclaration,
   requireGooglePlayProductionNativeVersion,
   requireIosProductionNativeVersion,
 } from "@asol/ota-core/publishing";
@@ -328,10 +329,14 @@ async function writtenRecently(jobId: string): Promise<boolean> {
 
 async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
   loadReleaseToolEnvironment();
+  const shippingPlatforms = readShippingPlatformsDeclaration();
   const snapshot: ReleaseVersionSnapshot = {
     contentCurrent: releaseConsolePorts.currentWebContentVersion,
     androidReady: googlePlayCredentialsAreReady(),
-    iosReady: appStoreConnectCredentialsAreReady(),
+    iosStoreDistribution: shippingPlatforms.ios.storeDistribution,
+    iosReady: shippingPlatforms.ios.storeDistribution
+      ? appStoreConnectCredentialsAreReady()
+      : undefined,
   };
   try {
     const gradle = await fs.readFile(
@@ -346,10 +351,12 @@ async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
   } catch (error) {
     snapshot.androidTruthError = error instanceof Error ? error.message : String(error);
   }
-  try {
-    snapshot.iosProduction = await requireIosProductionNativeVersion();
-  } catch (error) {
-    snapshot.iosTruthError = error instanceof Error ? error.message : String(error);
+  if (shippingPlatforms.ios.storeDistribution) {
+    try {
+      snapshot.iosProduction = await requireIosProductionNativeVersion();
+    } catch (error) {
+      snapshot.iosTruthError = error instanceof Error ? error.message : String(error);
+    }
   }
 
   const manifestUrl = getOtaApprovalServerConfig().manifestUrl;

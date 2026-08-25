@@ -20,7 +20,7 @@ Dependencies between `@asol/*` packages, application layers, and vendor SDKs. Ex
 
 5. **Declarations import nothing** — `@asol/account-declarations` is pure data; any import fails its contract test.
 
-6. **No cycles** — `checkPackageCycleContract` rejects circular `@asol/*` dependencies. `checkApplicationCycleContract` rejects circular clusters inside `APPLICATION_CYCLE_SUBGRAPH` (`src/features/*`, listed `src/shared/*`, `src/core/composition`). Edges to `@asol/*` or to shared modules outside that set (for example `src/shared/session-runtime/`) do not close a cycle. There is no application-cycle allowlist.
+6. **No new cycles** — `checkPackageCycleContract` rejects circular `@asol/*` dependencies. `checkApplicationCycleContract` automatically discovers every cluster under `src/features/*`, `src/shared/*`, and `src/core/*`, including static imports, dynamic imports, and re-exports. Three pre-existing strongly connected components are frozen in `KNOWN_APPLICATION_CYCLE_BASELINE`, together with the exact audited list of every edge participating inside them; a new component, an internal cyclic edge, a component that gains members, or a stale baseline entry fails `architecture:check`. The baseline is recorded audit debt, not permission to add edges.
 
 7. **Pinned application edges** — `@asol/data-core` has a budget of application import sites (designated wiring modules). New edges require explicit approval and contract updates.
 

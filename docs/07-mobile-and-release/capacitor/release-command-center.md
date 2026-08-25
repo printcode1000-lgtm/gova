@@ -283,7 +283,7 @@ Hook points:
 - `scripts/build-android-debug.ts` → before `cap:prepare:android`
 - `scripts/build-android-signed.ts` → before signed release Gradle tasks
 - `scripts/release-android.ts` → before `cap-build`
-- `scripts/fastlane-runner.js` → before every Fastlane Android lane except `doctor`
+- `scripts/fastlane-runner.ts` → scoped secret readiness before every platform lane, plus Android preflight before every Android lane except `doctor`
 
 Direct `android\gradlew.bat` calls and Android Studio still rely on a correct user
 `JAVA_HOME`.

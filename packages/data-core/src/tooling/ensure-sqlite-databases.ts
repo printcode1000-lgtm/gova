@@ -16,6 +16,7 @@ import {
   SQLITE_DIRECTORY,
 } from "../core/database/environment";
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../domains/data-health/db/metadata-schema";
+import { ensureSystemLogsSchema } from "./ensure-system-logs-schema";
 
 function ensureDatabase(dbPath: string, createScript: string): void {
   if (existsSync(dbPath)) {
@@ -75,6 +76,7 @@ try {
   ]) {
     profileDatabase.exec(readFileSync(path.join(process.cwd(), migration), "utf8"));
   }
+  ensureSystemLogsSchema(profileDatabase);
   profileDatabase.exec(DATA_HEALTH_METADATA_STATEMENTS.join(";\n"));
   console.log("Profile source schema ready for shard split");
 } finally {

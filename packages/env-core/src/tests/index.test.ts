@@ -192,4 +192,3 @@ assert.equal(
 );
 
 console.log('@asol/env-core contract: 3 doors, blank-is-absent pinned, release-tool precedence pinned.');
-

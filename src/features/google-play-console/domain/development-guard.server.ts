@@ -11,6 +11,11 @@ import {
   appStoreConnectCredentialsAreReady,
   googlePlayCredentialsAreReady,
 } from "@asol/ota-core/publishing";
+import {
+  PORTABLE_ARCHIVE_PATH,
+  PORTABLE_RECOVERY_KEY_PATH,
+  SECRET_ARCHIVE_PASSWORD_ENV_VAR,
+} from "@asol/secrets-core";
 
 import type {
   GooglePlayConsoleConfigStatus,
@@ -157,16 +162,24 @@ const FILE_PATH_REQUIREMENTS = new Set([
   "APP_STORE_CONNECT_API_KEY_KEY_FILEPATH",
 ]);
 
+function releaseArchiveCanRestore(): boolean {
+  return Boolean(
+    process.env[SECRET_ARCHIVE_PASSWORD_ENV_VAR]?.trim() &&
+      existsSync(PORTABLE_ARCHIVE_PATH) &&
+      existsSync(PORTABLE_RECOVERY_KEY_PATH),
+  );
+}
+
 /** A requirement may list interchangeable variables separated by a pipe. */
 export function releaseRequirementSatisfied(requirement: string): boolean {
   if (
     requirement === "GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64" ||
     requirement === "GOOGLE_PLAY_CREDENTIALS"
   ) {
-    return googlePlayCredentialsAreReady();
+    return googlePlayCredentialsAreReady() || releaseArchiveCanRestore();
   }
   if (requirement === "APP_STORE_CONNECT_CREDENTIALS") {
-    return appStoreConnectCredentialsAreReady();
+    return appStoreConnectCredentialsAreReady() || releaseArchiveCanRestore();
   }
   const names = requirement.split("|");
   if (names.some((name) => process.env[name]?.trim())) {
@@ -178,11 +191,12 @@ export function releaseRequirementSatisfied(requirement: string): boolean {
       return existsSync(path.resolve(process.cwd(), value));
     });
   }
-  return names.some((name) => {
+  const fileFallbackSatisfied = names.some((name) => {
     const fallback = REQUIREMENT_FILE_FALLBACKS[name];
     return (
       Boolean(fallback) &&
       existsSync(/* turbopackIgnore: true */ path.resolve(/* turbopackIgnore: true */ fallback))
     );
   });
+  return fileFallbackSatisfied || releaseArchiveCanRestore();
 }

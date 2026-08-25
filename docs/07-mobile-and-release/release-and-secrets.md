@@ -99,8 +99,10 @@ decides *how*, and the test fails if a CLI starts doing its own cryptography.
 | `file-present` | The named path exists on disk |
 | `file-missing` | The named path is absent |
 
-It never prints secret values. Use it to see what restore still owes a machine
-without dumping `.env` into a log.
+It never prints secret values. Environment-configured secret files are reported
+as labels such as `env:GOOGLE_PLAY_JSON_KEY_FILE`; the configured path is used
+only for the existence check and is never printed. Use the command to see what
+restore still owes a machine without dumping `.env` into a log.
 
 ### Auto-restore for release commands
 
@@ -114,6 +116,29 @@ Agent worktrees (including nested `.claude/worktrees/**` clones) are excluded
 from archive discovery. App Store Connect `.p8` keys are covered by the
 `config/secret-backup-paths.json` `.p8` extension and `AuthKey_*.p8` name
 pattern; never commit a plaintext key.
+
+The scope guard is wired into the direct OTA commands, `cap:build`,
+`release:android`, `android:build:signed`, and the Fastlane runner. Google Play
+accepts either `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64` or an existing file at
+`GOOGLE_PLAY_JSON_KEY_FILE`; a blank earlier environment declaration never
+masks a usable value in a later release env file. OTA storage and OTA signing
+are independent scopes so read-only status/CORS commands do not demand a
+private signing key; the Cloudflare account/API-token scope is separate from
+ordinary S3-compatible R2 access. Fastlane unsigned Android lanes do not demand the Android
+keystore, while signed/upload lanes do. TestFlight is refused while
+`config/shipping-platforms.json` explicitly declares iOS store distribution
+disabled; when enabled, its three declared App Store Connect API-key fields are
+passed to `upload_to_testflight` instead of falling back to an interactive login.
+
+`ota:self-test` is the live R2 write/delete probe and therefore asks for S3 and
+signing credentials. `ota:self-test:local` performs only the local cryptographic
+and checksum proof and asks for the signing key alone.
+
+The dynamic development release pages use the same alternative-credential and
+file-fallback rules. When the portable archive, its recovery key, and
+`ASOL_SECRET_ARCHIVE_PASSWORD` are all available, a command is considered
+runnable so its scoped guard can restore before the provider tool starts. The
+command still fails closed if the restored archive does not contain its scope.
 
 ### What is committed, and why both files are
 

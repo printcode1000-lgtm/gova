@@ -37,6 +37,8 @@ const RELEASE_ENV_KEYS = [
   "ASOL_OTA_R2_BUCKET_NAME",
   "ASOL_OTA_R2_PUBLIC_URL",
   "ASOL_OTA_R2_ACCOUNT_ID",
+  "ASOL_OTA_R2_API_TOKEN",
+  "ASOL_OTA_R2_ENDPOINT",
   "ASOL_OTA_R2_ACCESS_KEY_ID",
   "ASOL_OTA_R2_SECRET_ACCESS_KEY",
   "ASOL_OTA_SIGNING_PRIVATE_KEY",
@@ -44,6 +46,7 @@ const RELEASE_ENV_KEYS = [
   "ASOL_ANDROID_KEYSTORE_PASSWORD",
   "ASOL_ANDROID_KEY_ALIAS",
   "ASOL_ANDROID_KEY_PASSWORD",
+  "ASOL_IOS_TEAM_ID",
   "APP_STORE_CONNECT_API_KEY_KEY_ID",
   "APP_STORE_CONNECT_API_KEY_ISSUER_ID",
   "APP_STORE_CONNECT_API_KEY_KEY_FILEPATH",
@@ -70,10 +73,6 @@ export function classifyFileExists(exists: boolean): FilePresence {
   return exists ? "file-present" : "file-missing";
 }
 
-function toPosix(relativePath: string): string {
-  return relativePath.replace(/\\/g, "/");
-}
-
 function resolveWorkspaceFile(relativeOrAbsolute: string, cwd: string): string {
   return path.isAbsolute(relativeOrAbsolute)
     ? relativeOrAbsolute
@@ -87,18 +86,29 @@ function backupExactPaths(cwd: string): string[] {
   return [...(parsed.exactPaths ?? [])];
 }
 
-function configuredFilePaths(env: NodeJS.ProcessEnv, cwd: string): string[] {
-  const paths = new Set<string>([
-    ...STATIC_SECRET_FILES,
-    ...backupExactPaths(cwd),
-  ]);
-  const keystore = env.ASOL_ANDROID_KEYSTORE_FILE?.trim();
-  if (keystore) paths.add(toPosix(keystore));
-  const appStoreKey = env.APP_STORE_CONNECT_API_KEY_KEY_FILEPATH?.trim();
-  if (appStoreKey) paths.add(toPosix(appStoreKey));
-  const playJson = env.GOOGLE_PLAY_JSON_KEY_FILE?.trim();
-  if (playJson) paths.add(toPosix(playJson));
-  return [...paths].sort((left, right) => left.localeCompare(right));
+interface ConfiguredFileCheck {
+  label: string;
+  resolvedPath: string;
+}
+
+function configuredFileChecks(env: NodeJS.ProcessEnv, cwd: string): ConfiguredFileCheck[] {
+  const checks = new Map<string, string>();
+  for (const relativePath of [...STATIC_SECRET_FILES, ...backupExactPaths(cwd)]) {
+    checks.set(relativePath, resolveWorkspaceFile(relativePath, cwd));
+  }
+  for (const key of [
+    "ASOL_ANDROID_KEYSTORE_FILE",
+    "APP_STORE_CONNECT_API_KEY_KEY_FILEPATH",
+    "GOOGLE_PLAY_JSON_KEY_FILE",
+  ] as const) {
+    const configuredPath = env[key]?.trim();
+    if (configuredPath) {
+      checks.set(`env:${key}`, resolveWorkspaceFile(configuredPath, cwd));
+    }
+  }
+  return [...checks]
+    .map(([label, resolvedPath]) => ({ label, resolvedPath }))
+    .sort((left, right) => left.label.localeCompare(right.label));
 }
 
 /**
@@ -121,11 +131,11 @@ export function buildSecretPresenceReport(options: {
       status: classifyEnvValue(env[name]),
     });
   }
-  for (const relativePath of configuredFilePaths(env, cwd)) {
+  for (const file of configuredFileChecks(env, cwd)) {
     rows.push({
       kind: "file",
-      path: relativePath,
-      status: classifyFileExists(existsSync(resolveWorkspaceFile(relativePath, cwd))),
+      path: file.label,
+      status: classifyFileExists(existsSync(file.resolvedPath)),
     });
   }
   return rows;
@@ -136,7 +146,8 @@ export function assertReportContainsNoValues(
   env: NodeJS.ProcessEnv,
 ): void {
   const serialized = JSON.stringify(rows);
-  for (const [key, value] of Object.entries(env)) {
+  for (const key of RELEASE_ENV_KEYS) {
+    const value = env[key];
     if (!value?.trim() || value.trim().length < 4) continue;
     if (serialized.includes(value)) {
       throw new Error(`Secret presence report leaked a value for ${key}.`);

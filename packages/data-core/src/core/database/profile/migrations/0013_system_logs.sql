@@ -21,6 +21,14 @@ CREATE TABLE IF NOT EXISTS system_logs (
   app_version text NOT NULL DEFAULT '',
   native_version text NOT NULL DEFAULT '',
   uid text NOT NULL DEFAULT '',
+  origin text NOT NULL DEFAULT 'client',
+  trust_level text NOT NULL DEFAULT 'legacy',
+  message_truncated integer NOT NULL DEFAULT 0,
+  stack_truncated integer NOT NULL DEFAULT 0,
+  correlation_id text NOT NULL DEFAULT '',
+  request_flow_id text NOT NULL DEFAULT '',
+  session_id text NOT NULL DEFAULT '',
+  monitor_trace_id text NOT NULL DEFAULT '',
   occurrences integer NOT NULL DEFAULT 1,
   first_occurred_at text NOT NULL,
   last_occurred_at text NOT NULL
@@ -34,3 +42,9 @@ CREATE INDEX IF NOT EXISTS system_logs_platform_time_idx
 
 CREATE INDEX IF NOT EXISTS system_logs_feature_idx
   ON system_logs(feature, operation);
+
+CREATE INDEX IF NOT EXISTS system_logs_origin_time_idx
+  ON system_logs(origin, last_occurred_at);
+
+CREATE INDEX IF NOT EXISTS system_logs_correlation_idx
+  ON system_logs(correlation_id);

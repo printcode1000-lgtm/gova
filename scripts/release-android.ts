@@ -9,6 +9,7 @@ import {
   NATIVE_VERSION_FLAG,
   resolveNativeVersionAction,
 } from "./release-android-version-choice";
+import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
 
 const tsxCliPath = path.resolve("node_modules", "tsx", "dist", "cli.mjs");
 const capBuildPath = path.resolve("scripts", "cap-build.ts");
@@ -51,6 +52,13 @@ async function main(): Promise<void> {
       ].join("\n"),
     );
   }
+
+  await ensureReleaseSecretsRestored(
+    "release:android",
+    releaseArguments.includes("--dry-run")
+      ? ["google-play"]
+      : ["google-play", "android-signing"],
+  );
 
   const nativeVersionAction = await resolveNativeVersionAction(releaseArguments);
 

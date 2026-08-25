@@ -353,6 +353,7 @@
   "releaseConsole.confirmRun.currentIosProductionVersion": "إصدار iOS المنشور",
   "releaseConsole.confirmRun.currentAppVersion": "إصدار التطبيق الحالي",
   "releaseConsole.confirmRun.appStoreCredentialsMissing": "بيانات App Store Connect غير مكتملة. لا تُخفى نتيجة Google Play الناجحة.",
+  "releaseConsole.confirmRun.appStoreDistributionNotLive": "توزيع iOS عبر App Store غير مُفعّل حالياً وفق مرجع منصات الإصدار، لذلك لم يُطلب اتصال App Store.",
   "releaseConsole.confirmRun.currentContentVersion": "إصدار المحتوى الحالي",
   "releaseConsole.confirmRun.currentOtaVersion": "إصدار OTA الفعّال حالياً",
   "releaseConsole.confirmRun.danger": "أمر غير آمن: يعدّل ملفات المشروع أو ينشر إصداراً.",

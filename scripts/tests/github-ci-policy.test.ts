@@ -9,6 +9,7 @@ import {
   FORBIDDEN_CI_PATHS,
   verifyGithubCiPolicy,
 } from "../github-ci-policy";
+import { blockingMainRules } from "../github-main-policy";
 
 const live = verifyGithubCiPolicy();
 assert.deepEqual(live, [], live.join("\n"));
@@ -28,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: npm test
-`).includes("Docs workflow must declare paths: docs/** so it never runs for non-docs changes."),
+`).includes("Docs workflow trigger must be exactly push.branches=[main] and push.paths=[docs/**]."),
 );
 
 const pullRequest = docsWorkflowViolations(`
@@ -66,6 +67,25 @@ jobs:
       - run: npm run docs:check
 `);
 assert.ok(codeCi.some((error) => error.includes("npm run lint")));
+
+const extraJob = docsWorkflowViolations(`${docsSource}\n  code:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo hidden-code-ci\n`);
+assert.ok(extraJob.some((error) => error.includes("exactly one job")));
+assert.ok(extraJob.some((error) => error.includes("not allowed")));
+
+const alternateAction = docsWorkflowViolations(
+  docsSource.replace("actions/checkout@v4", "example/code-check@v1"),
+);
+assert.ok(alternateAction.some((error) => error.includes("action is not allowed")));
+
+const extraEvent = docsWorkflowViolations(
+  docsSource.replace(/  push:\r?\n/, "  push:\n  issues:\n"),
+);
+assert.ok(extraEvent.some((error) => error.includes("trigger must be exactly")));
+
+const extraPath = docsWorkflowViolations(
+  docsSource.replace('      - "docs/**"', '      - "docs/**"\n      - "src/**"'),
+);
+assert.ok(extraPath.some((error) => error.includes("trigger must be exactly")));
 
 const dispatch = docsWorkflowViolations(`
 name: docs
@@ -105,6 +125,18 @@ assert.ok(pathsIgnore.some((error) => error.includes("paths-ignore")));
 for (const relative of FORBIDDEN_CI_PATHS) {
   assert.equal(existsSync(path.join(process.cwd(), relative)), false, relative);
 }
+
+assert.deepEqual(
+  blockingMainRules([
+    { type: "creation" },
+    { type: "deletion" },
+    { type: "required_status_checks" },
+    { type: "pull_request" },
+    {},
+  ]),
+  [{ type: "required_status_checks" }, { type: "pull_request" }, {}],
+  "unknown and update-constraining active rules must block direct-main policy",
+);
 
 const fixtureRoot = mkdtempSync(path.join(os.tmpdir(), "github-ci-policy-"));
 try {

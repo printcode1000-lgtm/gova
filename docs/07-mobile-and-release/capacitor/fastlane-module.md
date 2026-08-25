@@ -2,7 +2,7 @@
 
 The local full-release shortcuts create their signed AAB and APK through `scripts/build-android-signed.ts`. This keeps local artifact creation available when Ruby/Fastlane is not installed, validates the signing environment, and verifies both produced signatures. Fastlane remains required for Google Play uploads; its Windows runner reports a missing Bundler installation explicitly.
 
-Fastlane runs through `scripts/fastlane-runner.js` so that Ruby/Bundler runs consistently on Windows.
+Fastlane runs through `scripts/fastlane-runner.ts` so that Ruby/Bundler runs consistently on Windows and every lane receives the authoritative release environment plus scoped secret auto-restore before Ruby starts.
 
 ## Android Lanes
 
@@ -30,9 +30,15 @@ The release dashboard can read and update tracks: `internal`, `alpha`, `beta`, a
 
 ## iOS Lanes (Requires macOS)
 
-- `doctor`: Validate iOS publishing prerequisites (`ASOL_IOS_TEAM_ID`, `FASTLANE_USER`).
+- `doctor`: Validate the iOS signing-team prerequisite (`ASOL_IOS_TEAM_ID`).
 - `build`: Build and export signed iOS application archive (`ASOL.ipa`).
 - `beta`: Build and upload application archive directly to TestFlight.
+
+The `beta` lane fails closed while `config/shipping-platforms.json` declares
+`ios.storeDistribution=false`. Enabling the command requires an explicit
+shipping declaration and App Store Connect credentials; missing credentials do
+not implicitly enable or disable the platform. The API key is passed explicitly
+to `upload_to_testflight`, so the enabled release path remains non-interactive.
 
 For complete Mac/iOS setup and automated agent instructions, see [ios-mac-execution-agent-prompt.md](./ios-mac-execution-agent-prompt.md).
 

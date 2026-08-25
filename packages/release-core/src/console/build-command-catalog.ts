@@ -61,13 +61,25 @@ export interface BuildCommandCatalogEntry {
 }
 
 const signingEnv = ["ASOL_ANDROID_KEYSTORE_FILE", "ASOL_ANDROID_KEYSTORE_PASSWORD", "ASOL_ANDROID_KEY_ALIAS", "ASOL_ANDROID_KEY_PASSWORD"];
-const playEnv = ["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64"];
-// Each entry lists interchangeable sources; the runner accepts any of them,
-// matching how packages/ota-core/src/publishing/config/ota-config.ts actually resolves its configuration.
-// No alternatives. The publisher reads ASOL_OTA_R2_* alone, so accepting a
-// product or general bucket here would report the command ready and then fail
-// inside it — and, before that, would have published to the wrong account.
-const otaEnv = ["ASOL_OTA_R2_BUCKET_NAME", "ASOL_OTA_SIGNING_PRIVATE_KEY"];
+const playEnv = ["GOOGLE_PLAY_CREDENTIALS"];
+const otaStorageEnv = [
+  "ASOL_OTA_R2_ENDPOINT",
+  "ASOL_OTA_R2_BUCKET_NAME",
+  "ASOL_OTA_R2_ACCESS_KEY_ID",
+  "ASOL_OTA_R2_SECRET_ACCESS_KEY",
+];
+const otaSigningEnv = ["ASOL_OTA_SIGNING_PRIVATE_KEY"];
+const otaPublishEnv = [
+  ...playEnv,
+  ...otaStorageEnv,
+  "ASOL_OTA_R2_PUBLIC_URL",
+  ...otaSigningEnv,
+];
+const otaCloudflareEnv = [
+  ...otaStorageEnv,
+  "ASOL_OTA_R2_ACCOUNT_ID",
+  "ASOL_OTA_R2_API_TOKEN",
+];
 const notes = { name: "notes", type: "string", flag: "--notes", maxLength: 4000 } as const;
 const mandatory = { name: "mandatory", type: "boolean", flag: "--mandatory" } as const;
 const diagnostic = { name: "diagnostic", type: "boolean", flag: "--diagnostic" } as const;
@@ -156,11 +168,11 @@ function artifactMeaningKey(artifact: string): string {
 
 export const BUILD_COMMAND_CATALOG = [
   entry("build-static", "build:static", "web-static", "safe", [], ["out/asol-web-manifest.json"], "8-15 min", undefined, [diagnostic]),
-  entry("ota-check", "ota:check", "ota", "safe", otaEnv, [], "1-3 min"),
-  entry("ota-sync-cors", "ota:sync:cors", "ota", "safe", otaEnv, [], "1-2 min"),
-  entry("ota-publish", "ota:publish", "ota", "publishes-live", otaEnv, ["out/asol-web-manifest.json"], "10-20 min", "PUBLISH_OTA", [notes, mandatory, minimumNativeVersion]),
-  entry("ota-status", "ota:status", "ota", "safe", otaEnv, [], "30 sec"),
-  entry("ota-self-test", "ota:self-test", "verification", "safe", otaEnv, [], "1-3 min"),
+  entry("ota-check", "ota:check", "ota", "safe", otaPublishEnv, [], "1-3 min"),
+  entry("ota-sync-cors", "ota:sync:cors", "ota", "safe", otaCloudflareEnv, [], "1-2 min"),
+  entry("ota-publish", "ota:publish", "ota", "publishes-live", otaPublishEnv, ["out/asol-web-manifest.json"], "10-20 min", "PUBLISH_OTA", [notes, mandatory, minimumNativeVersion]),
+  entry("ota-status", "ota:status", "ota", "safe", otaStorageEnv, [], "30 sec"),
+  entry("ota-self-test", "ota:self-test", "verification", "safe", [...otaStorageEnv, ...otaSigningEnv], [], "1-3 min"),
   entry("cap-build", "cap:build", "native-android", "destructive", [], ["android/app/src/main/assets/public", "android/app/build/outputs"], "20-45 min", undefined, [otaSource, dryRun, optimization]),
   // The single full-release path. It publishes nothing: the shell it builds
   // carries its own complete, current bundle, so it needs neither OTA

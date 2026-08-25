@@ -12,15 +12,16 @@ status checks.
 | Any path under `docs/**` (alone or mixed with other files) | **Docs workflow only** (`.github/workflows/docs.yml`) |
 
 The docs workflow is path-filtered to `docs/**`. GitHub skips it when that
-glob does not match. It runs `npm run docs:check` and must not run lint,
-typecheck, tests, `architecture:check`, or any application build.
+glob does not match. It installs the lockfile with lifecycle scripts disabled,
+runs `npm run docs:check`, and must not run lint, typecheck, tests,
+`architecture:check`, or any application build.
 
 ## What must not exist
 
 - Any other file under `.github/workflows/`
 - `pull_request` / `pull_request_target` / `workflow_dispatch` / `schedule` triggers
 - Pull-request templates or required PR merge
-- Branch protection or a ruleset that requires status checks before updating `main`
+- Branch protection or any active rule that can reject or delay an update to `main`
 - A required status check named `verify` or any other job
 
 `main` remains the only branch. The `main-only` ruleset (if applied) may block
@@ -53,8 +54,8 @@ reviewed tree can compile on Vercel; they are not GitHub CI.
 
 | Command | Allowed action |
 |---|---|
-| `npm run github:protect -- --status` | Confirm `main` has no protection (404) |
-| `npm run github:protect -- --remove` | Delete leftover protection |
+| `npm run github:protect -- --status` | Confirm classic protection is absent and the GitHub branch-rules endpoint reports no active rule that can constrain `main` |
+| `npm run github:protect -- --remove` | Delete leftover classic protection, then fail if an active repository/organization/enterprise rule still constrains `main` |
 | `npm run github:protect` | **Forbidden** — applying protection is an error |
 | `npm run github:block-branches` | Apply the `main-only` creation ruleset (does not constrain `main`) |
 

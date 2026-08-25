@@ -42,7 +42,7 @@ These stay in the CLI because `@asol/architecture-core` MUST NOT import applicat
 | 1 | `checkCapabilityOwnershipContract` | Registry ↔ disk parity for `@asol/*` |
 | 2 | `checkApplicationFeatureRegistryContract` | `APPLICATION_FEATURES` ↔ `src/features/*`; forbidden roots (`src/modules`, …) |
 | 3 | `checkPackageCycleContract` | Circular `@asol/*` deps |
-| 4 | `checkApplicationCycleContract` | Circular clusters in `APPLICATION_CYCLE_SUBGRAPH` (no allowlist) |
+| 4 | `checkApplicationCycleContract` | Every discovered `features/shared/core` cluster; rejects new/changed cyclic components and reports exact added/removed cyclic edges inside the audited pre-existing baseline |
 | 5 | `checkPageSaveGatewayContract` | Single-door page-save |
 | 6 | `checkPageSaveWriteGatewayContract` | Write ownership |
 | 7 | `checkRepositorySweepContract` | Default-deny sweep over the whole tree |

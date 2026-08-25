@@ -142,13 +142,13 @@ Manual verification checklist on the booted simulator / device:
 
 ### Phase 8: Production Build & TestFlight Distribution (Fastlane)
 ```bash
-# 1. Check Fastlane iOS publishing prerequisites (Supports App Store Connect API Key or FASTLANE_USER)
+# 1. Check the iOS signing-team prerequisite
 npm run fastlane -- ios doctor
 
 # 2. Build Release Archive / IPA
 npm run fastlane -- ios build
 
-# 3. Upload to TestFlight (Requires App Store Connect API Key / Auth)
+# 3. Upload to TestFlight (requires ios.storeDistribution=true and the three declared App Store Connect API-key fields)
 npm run fastlane -- ios beta
 ```
 
@@ -158,14 +158,16 @@ To ensure you NEVER need a local Mac again:
 # Stage and commit all generated project files, SPM packages, and target configurations
 git add ios/ Gemfile.lock package-lock.json
 git commit -m "feat(ios): complete native xcode configuration, spm dependencies, and capabilities"
-git push
+git push -u origin HEAD:main
 ```
 
 ---
 
-## 3. How Zero-Mac Ongoing Development Works
+## 3. How Remote Mac Execution Works
 
-Once this setup is completed and committed to Git, you **do not need a Mac computer anymore**:
+Once this setup is committed, ordinary web/OTA work can continue on Windows or
+Linux. Native iOS compilation, signing, and store evidence still require a
+macOS/Xcode environment.
 
 1. **Daily Updates & Features (OTA Updates via Windows/Linux):**
    - For all UI changes, React components, bug fixes, styles, new features, and backend integrations, run on Windows:
@@ -174,10 +176,11 @@ Once this setup is completed and committed to Git, you **do not need a Mac compu
      ```
    - This command compiles the web bundle, increments the OTA version, uploads verified signed full/delta bundles to Cloudflare R2, and all active iOS devices receive the update silently in the background via `BackgroundDownloadPlugin.swift`.
    
-2. **Native iOS Binary Updates (Cloud CI via GitHub Actions):**
-   - When native code or Capacitor core changes in the future, trigger the cloud macOS runner:
-     - Fastlane is configured to run headless in CI/CD using `APP_STORE_CONNECT_API_KEY` or standard secrets.
-     - Cloud Mac machines (such as GitHub Actions macOS runners) automatically build the `.ipa` and publish to TestFlight without needing a local Mac.
+2. **Native iOS Binary Updates (manual macOS cloud agent):**
+   - Use an explicitly started macOS/Xcode workspace or agent when native code or Capacitor core changes.
+   - Do not add a GitHub Actions code workflow: project policy permits only the path-filtered documentation workflow.
+   - Fastlane passes the configured App Store Connect API key directly to TestFlight upload and remains gated by `config/shipping-platforms.json`.
+   - The macOS result must stay compatible with the canonical five-runtime contract, and any platform-only evidence gap must be reported explicitly.
 
 ---
 
