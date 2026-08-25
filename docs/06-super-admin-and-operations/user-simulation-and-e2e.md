@@ -15,7 +15,8 @@ The binding rule for all simulation implementation is [Simulation Source-of-Trut
 simulation. It keeps page selection, interaction selection, execution, and E2E
 progress on the same screen:
 
-- The page selector lists every entry in `USER_PAGE_REGISTRY`.
+- The page selector lists every entry in `USER_PAGE_REGISTRY`; each visible page title is paired with its short application route (for example, `البحث /search`) so the target is unambiguous.
+- The control surface, page-specific simulation view, user-status cards, action rows, and progress monitor must remain responsive on narrow, medium, and wide screens without forcing two-column controls on phone-sized viewports or allowing long routes/errors to overflow their containers.
 - The interaction selector lists the real user interactions declared for the
   currently selected page and is rebuilt when the selected page changes.
 - `SimulationProgressPanel` is one shared execution monitor. It is not a
