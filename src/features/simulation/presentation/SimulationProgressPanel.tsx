@@ -10,6 +10,7 @@ export type SimulationProgressRun = {
   id: string;
   pageId: string;
   pageLabel: string;
+  pageRoute?: string;
   interactionId: string;
   interactionLabel: string;
   status: SimulationProgressRunStatus;
@@ -24,6 +25,7 @@ type SimulationProgressPanelProps = {
   running?: boolean;
   runs?: readonly SimulationProgressRun[];
   pageLabel?: string;
+  pageRoute?: string;
   interactionLabel?: string;
 };
 
@@ -35,10 +37,10 @@ function statusLabel(status: SimulationProgressRunStatus) {
 }
 
 function statusIcon(status: SimulationProgressRunStatus) {
-  if (status === "passed") return <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden />;
-  if (status === "failed") return <XCircle className="h-4 w-4 text-error" aria-hidden />;
-  if (status === "running") return <Loader2 className="h-4 w-4 animate-spin text-secondary" aria-hidden />;
-  return <Circle className="h-4 w-4 text-on-surface-variant" aria-hidden />;
+  if (status === "passed") return <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden />;
+  if (status === "failed") return <XCircle className="h-4 w-4 shrink-0 text-error" aria-hidden />;
+  if (status === "running") return <Loader2 className="h-4 w-4 shrink-0 animate-spin text-secondary" aria-hidden />;
+  return <Circle className="h-4 w-4 shrink-0 text-on-surface-variant" aria-hidden />;
 }
 
 function singleStatusLabel(succeeded: boolean | undefined, running: boolean) {
@@ -46,6 +48,10 @@ function singleStatusLabel(succeeded: boolean | undefined, running: boolean) {
   if (succeeded === true) return "نجح";
   if (succeeded === false) return "فشل";
   return "لم يبدأ";
+}
+
+function pageText(label: string, route?: string) {
+  return route ? `${label} ${route}` : label;
 }
 
 function buildCopyText(
@@ -62,7 +68,7 @@ function buildCopyText(
     for (const run of runs) {
       if (run.pageId !== activePageId) {
         activePageId = run.pageId;
-        lines.push("", `الصفحة: ${run.pageLabel}`);
+        lines.push("", `الصفحة: ${pageText(run.pageLabel, run.pageRoute)}`);
       }
       lines.push(`  الحدث: ${run.interactionLabel}`);
       lines.push(`  الحالة: ${statusLabel(run.status)}`);
@@ -86,6 +92,7 @@ function buildErrorsOnlyText(
   error: string | undefined,
   runs: readonly SimulationProgressRun[],
   pageLabel: string | undefined,
+  pageRoute: string | undefined,
   interactionLabel: string | undefined,
 ) {
   const failedRuns = runs.filter((run) => Boolean(run.error));
@@ -94,7 +101,7 @@ function buildErrorsOnlyText(
   if (failedRuns.length > 0) {
     for (const run of failedRuns) {
       if (lines.length > 0) lines.push("");
-      lines.push(`الصفحة: ${run.pageLabel}`);
+      lines.push(`الصفحة: ${pageText(run.pageLabel, run.pageRoute)}`);
       lines.push(`الإجراء: ${run.interactionLabel}`);
       lines.push(`الخطأ: ${run.error}`);
     }
@@ -102,7 +109,7 @@ function buildErrorsOnlyText(
   }
 
   if (error && pageLabel && interactionLabel) {
-    return [`الصفحة: ${pageLabel}`, `الإجراء: ${interactionLabel}`, `الخطأ: ${error}`].join("\n");
+    return [`الصفحة: ${pageText(pageLabel, pageRoute)}`, `الإجراء: ${interactionLabel}`, `الخطأ: ${error}`].join("\n");
   }
 
   return "";
@@ -127,14 +134,14 @@ async function copyText(text: string) {
 
 function StepList({ steps }: { steps: readonly SimulationProgressStep[] }) {
   return (
-    <ol className="space-y-2">
+    <ol className="min-w-0 space-y-2">
       {steps.map((step) => (
-        <li key={step.id} className="flex items-start gap-3 rounded-xl bg-surface-container-low p-3">
-          {step.status === "passed" ? <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" /> :
-            step.status === "failed" ? <XCircle className="mt-0.5 h-4 w-4 text-error" /> :
-              step.status === "running" ? <Loader2 className="mt-0.5 h-4 w-4 animate-spin text-secondary" /> :
-                <Circle className="mt-0.5 h-4 w-4 text-on-surface-variant" />}
-          <div className="min-w-0">
+        <li key={step.id} className="flex min-w-0 items-start gap-3 rounded-xl bg-surface-container-low p-3">
+          {step.status === "passed" ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> :
+            step.status === "failed" ? <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-error" /> :
+              step.status === "running" ? <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-secondary" /> :
+                <Circle className="mt-0.5 h-4 w-4 shrink-0 text-on-surface-variant" />}
+          <div className="min-w-0 flex-1 break-words">
             <div className="text-sm font-semibold text-on-surface">{step.label}</div>
             {step.detail ? <div className="asol-selectable break-words text-xs text-on-surface-variant">{step.detail}</div> : null}
           </div>
@@ -151,22 +158,23 @@ export function SimulationProgressPanel({
   running = false,
   runs = [],
   pageLabel,
+  pageRoute,
   interactionLabel,
 }: SimulationProgressPanelProps) {
   const [copied, setCopied] = React.useState(false);
   const [errorsCopied, setErrorsCopied] = React.useState(false);
   const hasContent = runs.length > 0 || steps.length > 0 || Boolean(error) || succeeded !== undefined || running;
   const errorsOnlyText = React.useMemo(
-    () => buildErrorsOnlyText(error, runs, pageLabel, interactionLabel),
-    [error, runs, pageLabel, interactionLabel],
+    () => buildErrorsOnlyText(error, runs, pageLabel, pageRoute, interactionLabel),
+    [error, runs, pageLabel, pageRoute, interactionLabel],
   );
   const hasErrors = errorsOnlyText.length > 0;
   const pageGroups = React.useMemo(() => {
-    const groups: Array<{ pageId: string; pageLabel: string; runs: SimulationProgressRun[] }> = [];
+    const groups: Array<{ pageId: string; pageLabel: string; pageRoute?: string; runs: SimulationProgressRun[] }> = [];
     for (const run of runs) {
       const current = groups.at(-1);
       if (!current || current.pageId !== run.pageId) {
-        groups.push({ pageId: run.pageId, pageLabel: run.pageLabel, runs: [run] });
+        groups.push({ pageId: run.pageId, pageLabel: run.pageLabel, pageRoute: run.pageRoute, runs: [run] });
       } else {
         current.runs.push(run);
       }
@@ -197,15 +205,15 @@ export function SimulationProgressPanel({
   };
 
   return (
-    <section className="space-y-3 rounded-2xl border border-outline-variant bg-surface p-4" aria-live="polite">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <section className="min-w-0 space-y-3 overflow-hidden rounded-2xl border border-outline-variant bg-surface p-3 sm:p-4" aria-live="polite">
+      <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="font-bold text-on-surface">متابعة تنفيذ E2E</h2>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center">
           <button
             type="button"
             onClick={() => void handleCopyErrors()}
             disabled={!hasErrors}
-            className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex min-h-9 w-full items-center justify-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
           >
             {errorsCopied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
             {errorsCopied ? "تم نسخ الأخطاء" : "نسخ الأخطاء فقط"}
@@ -214,7 +222,7 @@ export function SimulationProgressPanel({
             type="button"
             onClick={() => void handleCopy()}
             disabled={!hasContent}
-            className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex min-h-9 w-full items-center justify-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
           >
             {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
             {copied ? "تم النسخ" : "نسخ"}
@@ -223,16 +231,23 @@ export function SimulationProgressPanel({
       </div>
 
       {runs.length > 0 ? (
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
           {pageGroups.map((group) => (
-            <section key={group.pageId} className="space-y-2 rounded-xl border border-outline-variant p-3">
-              <h3 className="font-bold text-on-surface">الصفحة: {group.pageLabel}</h3>
-              <div className="space-y-3">
+            <section key={group.pageId} className="min-w-0 space-y-2 overflow-hidden rounded-xl border border-outline-variant p-3">
+              <h3 className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-bold text-on-surface">
+                <span className="break-words">الصفحة: {group.pageLabel}</span>
+                {group.pageRoute ? (
+                  <code className="max-w-full break-all rounded-md bg-surface-container-low px-2 py-1 text-[11px] font-semibold text-primary" dir="ltr">
+                    {group.pageRoute}
+                  </code>
+                ) : null}
+              </h3>
+              <div className="min-w-0 space-y-3">
                 {group.runs.map((run) => (
-                  <article key={run.id} className="space-y-2 rounded-xl bg-surface-container-low p-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="text-sm font-semibold text-on-surface">{run.interactionLabel}</div>
-                      <div className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant">
+                  <article key={run.id} className="min-w-0 space-y-2 overflow-hidden rounded-xl bg-surface-container-low p-3">
+                    <div className="flex min-w-0 flex-col gap-2 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
+                      <div className="min-w-0 break-words text-sm font-semibold text-on-surface">{run.interactionLabel}</div>
+                      <div className="flex shrink-0 items-center gap-2 text-xs font-semibold text-on-surface-variant">
                         {statusIcon(run.status)}
                         <span>{statusLabel(run.status)}</span>
                       </div>
@@ -252,7 +267,13 @@ export function SimulationProgressPanel({
       ) : steps.length === 0 && !error && succeeded === undefined && !running ? (
         <p className="text-sm text-on-surface-variant">اختر حدثًا لبدء التنفيذ.</p>
       ) : (
-        <div className="space-y-3">
+        <div className="min-w-0 space-y-3">
+          {pageLabel ? (
+            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold text-on-surface">
+              <span className="break-words">الصفحة: {pageLabel}</span>
+              {pageRoute ? <code className="max-w-full break-all text-xs text-primary" dir="ltr">{pageRoute}</code> : null}
+            </div>
+          ) : null}
           <div className="text-sm font-semibold text-on-surface">
             الحالة: {singleStatusLabel(succeeded, running)}
           </div>

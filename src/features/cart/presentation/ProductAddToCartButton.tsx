@@ -61,6 +61,7 @@ export function ProductAddToCartButton({
   return (
     <button
       type="button"
+      aria-label="إضافة إلى السلة"
       onClick={() => void handleAdd()}
       disabled={!canAdd || isAdding}
       className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 font-semibold text-on-primary transition disabled:opacity-60"

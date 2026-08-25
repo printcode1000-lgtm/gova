@@ -15,7 +15,8 @@ The binding rule for all simulation implementation is [Simulation Source-of-Trut
 simulation. It keeps page selection, interaction selection, execution, and E2E
 progress on the same screen:
 
-- The page selector lists every entry in `USER_PAGE_REGISTRY`.
+- The page selector lists every entry in `USER_PAGE_REGISTRY`; each visible page title is paired with its short application route (for example, `البحث /search`) so the target is unambiguous.
+- The control surface, page-specific simulation view, user-status cards, action rows, and progress monitor must remain responsive on narrow, medium, and wide screens without forcing two-column controls on phone-sized viewports or allowing long routes/errors to overflow their containers.
 - The interaction selector lists the real user interactions declared for the
   currently selected page and is rebuilt when the selected page changes.
 - `SimulationProgressPanel` is one shared execution monitor. It is not a
@@ -44,6 +45,7 @@ progress on the same screen:
 - The page simulator loads the real application page in a non-visible,
   same-origin frame and dispatches the declared user action there. It does not
   render a copy of the original page UI.
+- The execution driver may type into real editable fields, select the first real enabled option from an exact `<select>` target, dispatch real keyboard events, and wait for an exact asynchronously rendered target. These operations prepare real UI prerequisites; they are not fallback selector resolution.
 - The existing application handlers, hooks, services, APIs, repositories,
   database backend, validation/normalization functions, and storage configuration remain authoritative.
 - Simulation selectors are exact instrumentation. Missing declared targets fail explicitly; the execution port does not search for semantic or generic fallback targets.
@@ -52,6 +54,7 @@ progress on the same screen:
 - Scenarios are intentionally empty in version one. A page interaction remains
   a single page-bound event; a future scenario may coordinate multiple users,
   pages, and roles.
+- A state that requires an external secret or out-of-band challenge must not be pretended into existence by page simulation. Password recovery therefore covers requesting the real recovery code at page-interaction level; code verification and password reset belong to a future scenario only when the real delivered code can be obtained through its real channel.
 
 ## Simulation Users
 

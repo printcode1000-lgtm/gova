@@ -87,12 +87,26 @@ function page(
   };
 }
 
+const SEARCH_MAIN_SELECTOR = "main section select:nth-of-type(1)";
+const SEARCH_SUB_SELECTOR = "main section select:nth-of-type(2)";
+const SEARCH_INPUT_SELECTOR = "main section input.asol-input-decorated-start";
+const SEARCH_RESULT_SELECTOR = "main section article > button[type=button]";
+
+function searchPreparationActions() {
+  return [
+    { type: "select-first-option" as const, selector: SEARCH_MAIN_SELECTOR },
+    { type: "select-first-option" as const, selector: SEARCH_SUB_SELECTOR },
+    { type: "set-value" as const, selector: SEARCH_INPUT_SELECTOR, value: "" },
+    { type: "press-key" as const, selector: SEARCH_INPUT_SELECTOR, key: "Enter" },
+  ];
+}
+
 export const USER_PAGE_REGISTRY: readonly UserPageDefinition[] = [
   page("splash", "/", "/", "البداية", "شاشة بدء تجربة المستخدم والانتقال التلقائي بعد التهيئة."),
   page("home", "/home", "/home", "الرئيسية", "الكتالوج والعروض ونقاط الدخول الأساسية.", [
     click("home-search", "فتح البحث", "الانتقال من الرئيسية إلى البحث."),
     click("home-category", "اختيار كتالوج", "فتح أول كتالوج متاح للمستخدم."),
-    click("home-promotion", "فتح عرض", "تشغيل إجراء أول عرض فعلي ظاهر."),
+    click("home-promotion", "فتح عرض", "تشغيل إجراء العرض النشط الفعلي."),
   ]),
   page("login", "/login", "/login", "تسجيل الدخول", "الدخول بحساب حقيقي أو كضيف.", [
     submit("login-submit", "تسجيل الدخول", "إرسال الهاتف وكلمة المرور عبر نموذج الدخول الحقيقي.", "buyer", [
@@ -107,12 +121,10 @@ export const USER_PAGE_REGISTRY: readonly UserPageDefinition[] = [
     submit("registration-submit", "إرسال التسجيل", "تشغيل نموذج التسجيل الحقيقي بعد التحقق من الهاتف.", "guest"),
     click("registration-login", "العودة لتسجيل الدخول", "فتح صفحة الدخول من التسجيل.", "guest"),
   ]),
-  page("forgot-password", "/forgot-password", "/forgot-password", "استعادة كلمة المرور", "طلب الرمز والتحقق وإعادة التعيين.", [
+  page("forgot-password", "/forgot-password", "/forgot-password", "استعادة كلمة المرور", "طلب رمز الاستعادة عبر المسار الحقيقي.", [
     submit("password-request", "طلب رمز الاستعادة", "إرسال الهاتف إلى خدمة الاستعادة الحقيقية.", "buyer", [
       { selector: "input[inputmode=tel]", value: "{{phone}}" },
     ]),
-    submit("password-verify", "التحقق من الرمز", "إرسال رمز التحقق الحقيقي.", "buyer"),
-    submit("password-reset", "تعيين كلمة مرور", "إرسال كلمة المرور الجديدة للمسار الحقيقي.", "buyer"),
   ]),
   page("contact", "/contact-us", "/contact-us", "تواصل معنا", "بيانات التواصل ونموذج الرسالة.", [
     submit("contact-submit", "إرسال رسالة", "إرسال نموذج التواصل إلى الخدمة الحقيقية.", "any"),
@@ -122,25 +134,80 @@ export const USER_PAGE_REGISTRY: readonly UserPageDefinition[] = [
     click("privacy-email", "مراسلة الدعم", "فتح البريد المعلن في سياسة الخصوصية."),
   ]),
   page("delete-account", "/delete-account", "/delete-account", "حذف الحساب", "تجهيز حذف الحساب عبر بوابة حفظ الصفحة.", [
-    click("account-delete-stage", "تجهيز حذف الحساب", "تجهيز العملية في Page Save دون تجاوز التأكيد.", "buyer"),
+    {
+      id: "account-delete-stage",
+      label: "تجهيز حذف الحساب",
+      description: "تفعيل إقرار الحذف الحقيقي لتجهيز حالة الصفحة دون تنفيذ الحذف النهائي.",
+      actor: "buyer",
+      actions: [{ type: "click", selector: "main input[type=checkbox]", accessibleLabel: "تجهيز حذف الحساب" }],
+    },
   ]),
   page("search", "/search", "/search", "البحث", "البحث الحقيقي عن المنتجات والبائعين.", [
-    submit("search-submit", "تنفيذ البحث", "إرسال عبارة البحث عبر واجهة البحث الحقيقية.", "any", [
-      { selector: "input[type=search]", value: "دواء" },
-    ]),
-    click("search-product", "فتح منتج", "فتح أول منتج من النتائج."),
-    click("search-seller", "فتح بائع", "فتح أول بائع من النتائج."),
+    {
+      id: "search-submit",
+      label: "تنفيذ البحث",
+      description: "اختيار أول فئة رئيسية وفرعية متاحتين ثم تنفيذ البحث من حقل البحث الحقيقي.",
+      actor: "any",
+      actions: searchPreparationActions(),
+    },
+    {
+      id: "search-product",
+      label: "فتح منتج",
+      description: "تنفيذ بحث فعلي ثم فتح أول منتج ظاهر من النتائج.",
+      actor: "any",
+      actions: [
+        ...searchPreparationActions(),
+        { type: "wait-for-target", selector: SEARCH_RESULT_SELECTOR, timeoutMs: 8_000 },
+        { type: "click", selector: SEARCH_RESULT_SELECTOR, accessibleLabel: "فتح منتج" },
+      ],
+    },
+    {
+      id: "search-seller",
+      label: "فتح بائع",
+      description: "الانتقال إلى بحث البائعين وتنفيذ بحث فعلي ثم فتح أول بائع ظاهر.",
+      actor: "any",
+      actions: [
+        { type: "click", selector: "main section > div:first-child > button:nth-child(2)", accessibleLabel: "البائعون" },
+        ...searchPreparationActions(),
+        { type: "wait-for-target", selector: SEARCH_RESULT_SELECTOR, timeoutMs: 8_000 },
+        { type: "click", selector: SEARCH_RESULT_SELECTOR, accessibleLabel: "فتح بائع" },
+      ],
+    },
   ]),
   page("cart", "/cart", "/cart", "السلة", "عناصر السلة والكميات وإنشاء الطلب.", [
-    click("cart-increase", "زيادة الكمية", "زيادة كمية أول عنصر فعلي.", "buyer"),
-    click("cart-decrease", "خفض الكمية", "خفض كمية أول عنصر فعلي.", "buyer"),
-    click("cart-remove", "إزالة عنصر", "إزالة أول عنصر عبر مخزن السلة الحقيقي.", "buyer"),
+    {
+      id: "cart-increase",
+      label: "زيادة الكمية",
+      description: "زيادة كمية أول عنصر فعلي.",
+      actor: "buyer",
+      actions: [{ type: "click", selector: "button[aria-label=\"زيادة الكمية\"]", accessibleLabel: "زيادة الكمية" }],
+    },
+    {
+      id: "cart-decrease",
+      label: "خفض الكمية",
+      description: "خفض كمية أول عنصر فعلي.",
+      actor: "buyer",
+      actions: [{ type: "click", selector: "button[aria-label=\"تقليل الكمية\"]", accessibleLabel: "خفض الكمية" }],
+    },
+    {
+      id: "cart-remove",
+      label: "إزالة عنصر",
+      description: "إزالة أول عنصر عبر مخزن السلة الحقيقي.",
+      actor: "buyer",
+      actions: [{ type: "click", selector: "button[aria-label=\"إزالة من السلة\"]", accessibleLabel: "إزالة عنصر" }],
+    },
     click("cart-checkout", "تنفيذ الطلب", "إرسال محتوى السلة إلى مسار إنشاء الطلب.", "buyer"),
   ]),
   page("favorites", "/favorites", "/favorites", "المفضلة", "المنتجات والبائعون المحفوظون على الجهاز.", [
     click("favorites-products", "عرض المنتجات", "اختيار تبويب المنتجات."),
     click("favorites-sellers", "عرض البائعين", "اختيار تبويب البائعين."),
-    click("favorites-open", "فتح عنصر محفوظ", "فتح أول عنصر محفوظ فعليًا."),
+    {
+      id: "favorites-open",
+      label: "فتح عنصر محفوظ",
+      description: "فتح أول عنصر محفوظ فعليًا.",
+      actor: "any",
+      actions: [{ type: "click", selector: "main article > button[type=button]", accessibleLabel: "فتح عنصر محفوظ" }],
+    },
   ]),
   page("product", "/product", "/product", "المنتج", "تفاصيل المنتج وإجراءات الشراء والحفظ والمشاركة.", [
     click("product-add-cart", "إضافة إلى السلة", "إضافة المنتج الحالي عبر خدمة السلة.", "buyer"),
