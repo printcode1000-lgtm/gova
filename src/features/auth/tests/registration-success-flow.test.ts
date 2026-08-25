@@ -11,6 +11,7 @@ const loginPage = source('src/features/auth/presentation/LoginPageContent.tsx');
 const registration = source('src/features/auth/presentation/hooks/use-register.ts');
 const registrationPage = source('src/features/auth/presentation/RegistrationPageContent.tsx');
 const toast = source('src/features/auth/presentation/LoginSuccessToast.tsx');
+const rootLayout = source('src/app/layout.tsx');
 const notificationBridge = source('src/core/composition/NotificationsFeatureBridge.tsx');
 const notificationOptIn = source(
   'src/features/notifications/presentation/NotificationOptInController.tsx',
@@ -35,6 +36,17 @@ assert.match(toast, /t\("auth\.registration\.successMessage"\)/);
 // login-completed event and passes loginCompleted through NotificationRuntimeProvider.
 assert.match(notificationBridge, /AUTH_LOGIN_COMPLETED_EVENT/);
 assert.match(notificationBridge, /setLoginCompleted/);
+const preferencesProviderStart = rootLayout.indexOf('<PreferencesProvider>');
+const notificationBridgeStart = rootLayout.indexOf('<NotificationsFeatureBridge>');
+const notificationBridgeEnd = rootLayout.indexOf('</NotificationsFeatureBridge>');
+const preferencesProviderEnd = rootLayout.indexOf('</PreferencesProvider>');
+assert.ok(preferencesProviderStart >= 0, 'Root layout must mount PreferencesProvider');
+assert.ok(notificationBridgeStart >= 0, 'Root layout must mount NotificationsFeatureBridge');
+assert.ok(
+  preferencesProviderStart < notificationBridgeStart &&
+    notificationBridgeEnd < preferencesProviderEnd,
+  'PreferencesProvider must wrap NotificationsFeatureBridge because notification prompts use the locale runtime',
+);
 assert.match(notificationOptIn, /loginCompleted/);
 assert.match(notificationOptIn, /POST_LOGIN_PROMPT_DELAY_MS = 4_200/);
 assert.doesNotMatch(

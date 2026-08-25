@@ -532,20 +532,10 @@ textarea,
 }
 
 /*
- * Anti-flash: Hide the page body while React hasn't yet loaded preferences from AsolDB (IndexedDB).
- * Once both ThemeProvider and PreferencesProvider mount and set data-theme-hydrated="true"
- * and data-app-hydrated="true", the body fades in smoothly.
+ * Keep the server-rendered app visible while preferences hydrate. The blocking
+ * app-init script applies safe theme and locale defaults before first paint;
+ * visibility must never depend on client JavaScript completing successfully.
  */
-body {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-}
-
-html[data-theme-hydrated="true"][data-app-hydrated="true"] body {
-  opacity: 1;
-  pointer-events: auto;
-}
 
 /* The release console mixes Arabic prose with command names, versions, and
  * paths. Plaintext bidi isolates each text run without changing explicit LTR

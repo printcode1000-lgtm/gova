@@ -107,17 +107,16 @@ t('onboarding.progress.sectionsCompleted', { completed: 3, total: 12 })
 
 Use `isRTL` from `useTranslation()` for component-level layout (icons, chevrons, etc.).
 
-### Anti-flash mechanism (AsolDB async hydration)
+### Flash-safe hydration (AsolDB async hydration)
 
-Because preferences are loaded asynchronously from AsolDB, rendering the page immediately would cause text/theme flashes. The following mechanism prevents this:
+Preferences are loaded asynchronously from AsolDB. The blocking app-init script applies safe locale and theme defaults before first paint, while the server-rendered body remains visible as a failure-safe:
 
 | Mechanism | Location |
 |-----------|----------|
 | `mounted` guard in `AppSidebar` — returns `null` on first render | `AppSidebar.tsx` |
 | `data-theme-hydrated="false"` and `data-app-hydrated="false"` on `<html>` | `layout.tsx` |
-| CSS hides `body` (`opacity: 0`) by default | `globals.css` |
 | `ThemeProvider` and `PreferencesProvider` set their respective hydration flags to `"true"` on `<html>` | `ThemeProvider.tsx` & `PreferencesProvider.tsx` |
-| CSS reveals `body` with a smooth 150ms transition once both flags are `"true"` | `globals.css` |
+| `body` remains visible regardless of hydration flags | `globals.css` |
 
 See [`doc/problems/english-locale-hydration-flash.md`](../08-troubleshooting/problems/english-locale-hydration-flash.md) for the full root-cause analysis.
 

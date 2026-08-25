@@ -14,11 +14,17 @@ const globalCapacitorPlugins = globalThis as typeof globalThis & {
   __asolWebViewPlugin?: CapacitorWebViewPlugin;
 };
 
+const capacitorPlugins = Capacitor as typeof Capacitor & {
+  Plugins?: Partial<Record<"WebView", CapacitorWebViewPlugin>>;
+};
+
 function webViewPlugin(): CapacitorWebViewPlugin {
   const existing = globalCapacitorPlugins.__asolWebViewPlugin;
   if (existing) return existing;
 
-  const plugin = registerPlugin<CapacitorWebViewPlugin>("WebView");
+  const plugin =
+    capacitorPlugins.Plugins?.WebView ??
+    registerPlugin<CapacitorWebViewPlugin>("WebView");
   globalCapacitorPlugins.__asolWebViewPlugin = plugin;
   return plugin;
 }

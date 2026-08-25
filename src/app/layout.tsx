@@ -87,10 +87,10 @@ export default function RootLayout({
         <InstallationBootstrap>
           <AppQueryProvider>
             <SessionProvider>
-              <NotificationsFeatureBridge>
-                <AuthLoginBootstrapController />
-                <FavoritesProvider>
-                  <PreferencesProvider>
+              <PreferencesProvider>
+                <NotificationsFeatureBridge>
+                  <AuthLoginBootstrapController />
+                  <FavoritesProvider>
                     <SystemLogCollector />
                     <FeatureFlagController />
                     <SpecialtyChatNotificationsController />
@@ -117,9 +117,9 @@ export default function RootLayout({
                         </OtaUpdateProvider>
                       </NetworkStatusProvider>
                     </SystemLogErrorBoundary>
-                  </PreferencesProvider>
-                </FavoritesProvider>
-              </NotificationsFeatureBridge>
+                  </FavoritesProvider>
+                </NotificationsFeatureBridge>
+              </PreferencesProvider>
             </SessionProvider>
           </AppQueryProvider>
         </InstallationBootstrap>

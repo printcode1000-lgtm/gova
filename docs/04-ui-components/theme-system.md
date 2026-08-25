@@ -131,7 +131,7 @@ Stored in AsolDB (`IndexedDB`) under the `appSettings` store with the key `theme
 
 1. **Before paint:** `asol-theme-init.js` initializes default attributes on `<html>` (such as light theme, comfortable density, 16px font-size) synchronously.
 2. **After hydration:** `ThemeProvider` loads preferences asynchronously from AsolDB (`IndexedDB`), updates document attributes, and sets `data-theme-hydrated="true"` on `<html>`.
-3. **CSS:** `preferences.css` reacts to `html[data-*]` attributes. The app body fades in smoothly (150ms transition) once both theme and app preferences have completed their async hydration.
+3. **CSS:** `preferences.css` reacts to `html[data-*]` attributes. The server-rendered body remains visible during async hydration so a client initialization failure cannot produce a permanent blank screen.
 
 ---
 

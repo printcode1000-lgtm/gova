@@ -12905,6 +12905,58 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration.md",
+      "kind": "document",
+      "name": "Capacitor WebView Duplicate Registration Blank Screen",
+      "path": "docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration.md",
+      "summary": "Opening `/` in the local development server or the deployed web app returns HTML with status `200`, but the UI stays blank after client JavaScript starts.",
+      "tags": [
+        "200",
+        "@asol/native-core",
+        "adapter",
+        "after",
+        "app",
+        "blank",
+        "but",
+        "capacitor",
+        "capacitor webview duplicate registration blank screen",
+        "client",
+        "deployed",
+        "development",
+        "docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration",
+        "docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration.md",
+        "duplicate",
+        "html",
+        "in",
+        "javascript",
+        "local",
+        "md",
+        "opening",
+        "opening `/` in the local development server or the deployed web app returns html with status `200`, but the ui stays blank after client javascript starts.",
+        "or",
+        "packages/native-core/src/adapters/ota",
+        "packages/native-core/src/adapters/ota.adapter.ts",
+        "packages/ota-core/src/runtime/use-ota-update",
+        "packages/ota-core/src/runtime/use-ota-update.tsx",
+        "registration",
+        "returns",
+        "screen",
+        "server",
+        "src/features/splash/presentation/splashinitializer",
+        "src/features/splash/presentation/splashinitializer.tsx",
+        "starts",
+        "status",
+        "stays",
+        "the",
+        "ts",
+        "tsx",
+        "ui",
+        "web",
+        "webview",
+        "with"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/english-locale-hydration-flash.md",
       "kind": "document",
       "name": "English Locale: Arabic Text Flash + Sidebar Direction Glitch",
@@ -70709,6 +70761,35 @@
       "detail": "src/features/splash/presentation/TopMarquee.tsx"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration.md",
+      "to": "package:@asol/native-core",
+      "kind": "references",
+      "detail": "@asol/native-core"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration.md",
+      "to": "source:packages/native-core/src/adapters/ota.adapter.ts",
+      "kind": "references",
+      "detail": "packages/native-core/src/adapters/ota.adapter.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration.md",
+      "to": "source:packages/ota-core/src/runtime/use-ota-update.tsx",
+      "kind": "references",
+      "detail": "packages/ota-core/src/runtime/use-ota-update.tsx"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration.md",
+      "to": "source:src/features/splash/presentation/SplashInitializer.tsx",
+      "kind": "references",
+      "detail": "src/features/splash/presentation/SplashInitializer.tsx"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/english-locale-hydration-flash.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -70981,6 +71062,12 @@
       "to": "document:docs/08-troubleshooting/problems/build-fetch-violation-categories-grid.md",
       "kind": "references",
       "detail": "./build-fetch-violation-categories-grid.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/README.md",
+      "to": "document:docs/08-troubleshooting/problems/capacitor-webview-duplicate-registration.md",
+      "kind": "references",
+      "detail": "./capacitor-webview-duplicate-registration.md"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/README.md",

@@ -107,16 +107,10 @@ export async function asolDbClearAll(): Promise<void>;
 ## Hydration Flow
 
 Because IndexedDB queries are asynchronous, Asol coordinates hydration states on mount:
-1. `body` visibility defaults to `opacity: 0` in CSS.
-2. `ThemeProvider` reads `theme-preferences` asynchronously and applies visual variables, then sets `data-theme-hydrated="true"` on `<html>`.
-3. `PreferencesProvider` reads `app-preferences` asynchronously and applies language/direction, then sets `data-app-hydrated="true"` on `<html>`.
-4. CSS reveals the app body via a transition when both attributes are `"true"`:
-   ```css
-   html[data-theme-hydrated="true"][data-app-hydrated="true"] body {
-     opacity: 1;
-     pointer-events: auto;
-   }
-   ```
+1. The blocking app-init script applies safe theme and locale defaults before first paint.
+2. The server-rendered `body` remains visible while client hydration runs, so IndexedDB or React initialization failures cannot leave a blank screen.
+3. `ThemeProvider` reads `theme-preferences` asynchronously and applies visual variables, then sets `data-theme-hydrated="true"` on `<html>`.
+4. `PreferencesProvider` reads `app-preferences` asynchronously and applies language/direction, then sets `data-app-hydrated="true"` on `<html>`.
 
 ---
 

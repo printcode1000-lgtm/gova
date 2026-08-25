@@ -2197,6 +2197,10 @@ that opted in from the dialog and one that used the toggle are indistinguishable
 afterwards. See
 [Post-Login Opt-In Dialog](#post-login-opt-in-dialog).
 
+In the root layout, `PreferencesProvider` wraps `NotificationsFeatureBridge`.
+Notification prompts use `useTranslation()`, so the locale runtime must exist
+before notification controllers render.
+
 Reading the key from the bundle rather than an endpoint is also what lets a
 static export and the native shell subscribe: neither has a server to ask
 before the user is signed in.

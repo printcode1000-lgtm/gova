@@ -23,3 +23,4 @@ A log of project problems and their solutions for recurrence and environment set
 | 18 | `.vercelignore` contract falsely treats wildcarded directory descendants as included | [vercelignore-contract-wildcard-directory-descendants.md](./vercelignore-contract-wildcard-directory-descendants.md) |
 | 19 | Favorites local-storage contract reads a stale pre-refactor file path | [favorites-storage-contract-stale-path.md](./favorites-storage-contract-stale-path.md) |
 | 20 | Follow notification test imports server composition from the public notifications door | [follow-notification-test-wrong-notifications-door.md](./follow-notification-test-wrong-notifications-door.md) |
+| 21 | Blank splash screen: Capacitor `WebView` duplicate registration | [capacitor-webview-duplicate-registration.md](./capacitor-webview-duplicate-registration.md) |
