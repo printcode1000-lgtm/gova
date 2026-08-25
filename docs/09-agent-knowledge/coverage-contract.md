@@ -17,6 +17,7 @@ This file defines the documentation/knowledge goals that must remain true for ev
 | Owner-level dependencies | A capability/feature/service can discover upstream/downstream owners without reading every file manually. | Aggregate owner `imports` edges derived from production imports. |
 | External dependency visibility | npm dependencies are explicit nodes and declaration/import relationships, not invisible package-manager text. | `external-dependency` nodes + `declares-dependency` and `imports` edges. |
 | Routes and API boundaries | App Router pages/handlers are discoverable with runtime implications. | Route nodes from `src/app/**`; route/runtime graph checks; static-handler exclusion invariant. |
+| Simulation scope | Simulation coverage is limited to routes and flows intended for ordinary end users. `super-admin`, `dev`, developer-only, operational, diagnostic, maintenance, and other internal-only pages are excluded even when technically routable. | Binding simulation coverage invariant in this contract. |
 | Native visibility | Android/iOS source/config is represented, not hidden behind the web TypeScript tree. | Text source scan of `android/`, `ios/`, `fastlane/`; native runtime edges. |
 | Build artifact topology | Agents know `.next` and `out/` are different artifacts and that Android/iOS consume `out/`. | Artifact nodes, `produces`/`consumes` edges, `runtime-contract.md`, contract checks. |
 | Commands as knowledge | Root npm scripts can be discovered and related to source, other commands, runtimes and artifacts. | Command nodes + `invokes`, `targets-runtime`, `produces` edges. |
@@ -34,6 +35,18 @@ This file defines the documentation/knowledge goals that must remain true for ev
 | Risk classification | Context Packs expose low/medium/high/release-critical risk with reasons. | `scripts/docs/risk-classifier.ts`. |
 | Runtime-compatibility plan | Context Packs expose required runtime checks; `npm run runtime:check*` enforces safe non-publishing surface checks. | `scripts/docs/runtime-test-plan.ts` + `scripts/runtime/*` + `contracts/runtime-compatibility.md`. |
 | Docs CI | Documentation-aware CI entry point validates mutability, generation drift, dead docs, env safety, templates, and agent markers. | `npm run docs:ci` + `.github/workflows/docs.yml`. |
+
+## Simulation Coverage Scope
+
+Simulation coverage **MUST** target only routes and flows intended for ordinary end users.
+
+The following are permanently excluded from simulation coverage:
+
+- `super-admin` routes and flows;
+- `dev` routes and developer-only tooling;
+- operational, diagnostic, maintenance, and other internal-only pages, even when technically routable.
+
+Excluded routes **MUST NOT** be counted as missing simulation coverage, required simulation targets, or gaps in user-flow completeness.
 
 ## Knowledge Graph v2 Coverage
 
