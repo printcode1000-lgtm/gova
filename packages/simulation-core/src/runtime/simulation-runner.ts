@@ -63,6 +63,8 @@ export async function runPageInteraction(
     for (const action of input.interaction.actions) {
       if (action.type === "set-value") {
         await input.port.setValue(action.selector, interpolate(action.value, input.user));
+      } else if (action.type === "select-first-option") {
+        await input.port.selectFirstOption(action.selector);
       } else if (action.type === "click") {
         await input.port.click(action.selector, action.accessibleLabel);
       } else if (action.type === "set-internal-image") {
@@ -72,6 +74,8 @@ export async function runPageInteraction(
         );
       } else if (action.type === "submit") {
         await input.port.submit(action.selector);
+      } else if (action.type === "wait-for-target") {
+        await input.port.waitForTarget(action.selector, action.timeoutMs);
       } else {
         await input.port.wait(action.milliseconds);
       }
