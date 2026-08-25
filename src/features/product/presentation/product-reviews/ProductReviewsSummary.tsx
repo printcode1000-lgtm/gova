@@ -29,6 +29,7 @@ export function ProductReviewsSummary({
       {canRate ? (
         <button
           type="button"
+          aria-label="إرسال تقييم"
           onClick={onRate}
           className="rounded-xl bg-primary px-4 py-2 font-semibold text-on-primary"
         >
