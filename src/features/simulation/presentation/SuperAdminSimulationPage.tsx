@@ -128,62 +128,66 @@ export function SuperAdminSimulationPage() {
           </p>
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)_minmax(320px,1.2fr)_auto] xl:items-start">
-          <label className="space-y-2">
-            <span className="block text-sm font-semibold text-on-surface">الصفحة</span>
-            <select
-              value={selectedPage?.id ?? ""}
-              onChange={(event) => selectPage(event.target.value)}
-              disabled={Boolean(runningId)}
-              className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {USER_PAGE_REGISTRY.map((page) => (
-                <option key={page.id} value={page.id}>
-                  {page.label} — {page.route}
-                </option>
-              ))}
-            </select>
-            {selectedPage ? (
-              <span className="block text-xs text-on-surface-variant">{selectedPage.description}</span>
-            ) : null}
-          </label>
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(320px,1fr)] xl:items-start">
+          <div className="grid grid-cols-2 items-start gap-4">
+            <label className="min-w-0 space-y-2">
+              <span className="block text-sm font-semibold text-on-surface">الصفحة</span>
+              <select
+                value={selectedPage?.id ?? ""}
+                onChange={(event) => selectPage(event.target.value)}
+                disabled={Boolean(runningId)}
+                className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {USER_PAGE_REGISTRY.map((page) => (
+                  <option key={page.id} value={page.id}>
+                    {page.label} — {page.route}
+                  </option>
+                ))}
+              </select>
+              {selectedPage ? (
+                <span className="block text-xs text-on-surface-variant">{selectedPage.description}</span>
+              ) : null}
+            </label>
 
-          <label className="space-y-2">
-            <span className="block text-sm font-semibold text-on-surface">أحداث المستخدم الحقيقية</span>
-            <select
-              value={selectedInteraction?.id ?? ""}
-              onChange={(event) => setSelectedInteractionId(event.target.value)}
-              disabled={Boolean(runningId) || !selectedPage}
-              className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {selectedPage?.interactions.map((interaction) => (
-                <option key={interaction.id} value={interaction.id}>
-                  {interaction.label}
-                </option>
-              ))}
-            </select>
-            {selectedInteraction ? (
-              <span className="block text-xs text-on-surface-variant">{selectedInteraction.description}</span>
-            ) : null}
-          </label>
+            <div className="min-w-0 space-y-3">
+              <label className="block space-y-2">
+                <span className="block text-sm font-semibold text-on-surface">أحداث المستخدم الحقيقية</span>
+                <select
+                  value={selectedInteraction?.id ?? ""}
+                  onChange={(event) => setSelectedInteractionId(event.target.value)}
+                  disabled={Boolean(runningId) || !selectedPage}
+                  className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {selectedPage?.interactions.map((interaction) => (
+                    <option key={interaction.id} value={interaction.id}>
+                      {interaction.label}
+                    </option>
+                  ))}
+                </select>
+                {selectedInteraction ? (
+                  <span className="block text-xs text-on-surface-variant">{selectedInteraction.description}</span>
+                ) : null}
+              </label>
+
+              <Button
+                type="button"
+                onClick={() => void runSelectedInteraction()}
+                disabled={Boolean(runningId) || !selectedPage || !selectedInteraction}
+                className="w-full"
+              >
+                {runningId ? (
+                  <span className="animate-pulse">جارٍ التنفيذ</span>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4" />
+                    تشغيل
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
 
           <SimulationProgressPanel steps={steps} error={result?.error} />
-
-          <Button
-            type="button"
-            onClick={() => void runSelectedInteraction()}
-            disabled={Boolean(runningId) || !selectedPage || !selectedInteraction}
-            className="w-full xl:mt-7 xl:w-auto"
-          >
-            {runningId ? (
-              <span className="animate-pulse">جارٍ التنفيذ</span>
-            ) : (
-              <>
-                <Play className="h-4 w-4" />
-                تشغيل
-              </>
-            )}
-          </Button>
         </div>
       </section>
 
