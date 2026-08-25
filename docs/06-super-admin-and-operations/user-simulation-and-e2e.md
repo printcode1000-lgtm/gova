@@ -45,6 +45,7 @@ progress on the same screen:
 - The page simulator loads the real application page in a non-visible,
   same-origin frame and dispatches the declared user action there. It does not
   render a copy of the original page UI.
+- The execution driver may type into real editable fields, select the first real enabled option from an exact `<select>` target, dispatch real keyboard events, and wait for an exact asynchronously rendered target. These operations prepare real UI prerequisites; they are not fallback selector resolution.
 - The existing application handlers, hooks, services, APIs, repositories,
   database backend, validation/normalization functions, and storage configuration remain authoritative.
 - Simulation selectors are exact instrumentation. Missing declared targets fail explicitly; the execution port does not search for semantic or generic fallback targets.
@@ -53,6 +54,7 @@ progress on the same screen:
 - Scenarios are intentionally empty in version one. A page interaction remains
   a single page-bound event; a future scenario may coordinate multiple users,
   pages, and roles.
+- A state that requires an external secret or out-of-band challenge must not be pretended into existence by page simulation. Password recovery therefore covers requesting the real recovery code at page-interaction level; code verification and password reset belong to a future scenario only when the real delivered code can be obtained through its real channel.
 
 ## Simulation Users
 
