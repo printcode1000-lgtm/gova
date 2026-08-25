@@ -15,7 +15,7 @@ import { cn } from "@/shared/utils";
 import {
   getContactVisualColor,
   getContactVisualIcon,
-} from "@/features/profile/ui";
+} from "@/shared/ui/contact-visual-style";
 import {
   buildContactGroups,
   isDirectGroup,

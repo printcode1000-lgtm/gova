@@ -8,7 +8,7 @@
  * which is the strongest possible argument for it being a sealed package with a contract test
  * rather than a script beside the deploy helpers.
  *
- * The CLIs stay in `scripts/`: `secrets:backup`, `secrets:restore`, `secrets:key:init`. They
+ * The CLIs stay in `scripts/`: `secrets:backup`, `secrets:restore`, `secrets:verify`, `secrets:key:init`. They
  * decide *when*; this decides *how*.
  */
 export * from './archive/archive-workspace';

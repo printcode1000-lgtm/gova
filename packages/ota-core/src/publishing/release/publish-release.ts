@@ -13,6 +13,7 @@ import {
   evaluateReleaseGate,
   type GateDecision,
 } from "../gate/native-gate";
+import { resolveOtaNativeCompatibilityLine } from "../truth/store-production-truth";
 import { requireGooglePlayProductionNativeVersion } from "../adapters/google-play.adapter";
 import {
   getOtaManifestUrl,
@@ -176,7 +177,7 @@ export async function publishOtaRelease(
 
     const nativeLine = options.minimumNativeVersion?.trim()
       ? options.minimumNativeVersion.trim()
-      : await requireGooglePlayProductionNativeVersion();
+      : (await resolveOtaNativeCompatibilityLine()).minimumNativeVersion;
 
     if (!options.skipGate) {
       const gateRes = await evaluateReleaseGate(nativeLine);
@@ -457,14 +458,11 @@ export async function cutNativeRelease(
 ): Promise<Result<CutNativeReleaseResult, OtaCoreError>> {
   try {
     const productionVersion = await requireGooglePlayProductionNativeVersion();
-
-    let targetVersion = options.nativeVersion;
-    if (!targetVersion) {
-      targetVersion =
-        options.action === "patch"
-          ? nextNativePatchVersion(productionVersion)
-          : productionVersion;
-    }
+    const targetVersion =
+      options.nativeVersion ??
+      (options.action === "patch"
+        ? nextNativePatchVersion(productionVersion)
+        : productionVersion);
 
     const writeRes = writeTreeVersions({
       nativeVersion: targetVersion,

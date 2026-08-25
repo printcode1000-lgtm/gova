@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import type { ProductDetails } from "@/features/product";
+import type { ProductDetails } from "@asol/product-core";
 import { pharmacyStaticCatalogService } from "../application/services/pharmacy-static-catalog.service";
 import { pharmacyProfileCatalogApi } from "../application/services/pharmacy-profile-catalog-api";
 import type {

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { isSuperAdminIdentity } from "@/features/auth";
+import { isSuperAdminIdentity } from "@asol/auth-core/server";
 import { trendingRibbonRepository } from "@asol/data-core/advertisements";
 import { createTrendingRibbonService } from "@asol/trending-ribbon-core/server";
 

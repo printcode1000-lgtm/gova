@@ -14,8 +14,8 @@ import { productApiService } from "@/features/product/application/services/produ
 import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_SUBCATEGORY_ID,
-} from "@/features/pharmacy-profile-catalog";
-import { createPharmacyInitialDetails } from "@/features/pharmacy-profile-catalog";
+} from "../domain/pharmacy-category.ids";
+import { getPharmacyInitialDetailsPort } from "../ports/pharmacy-initial-details.port";
 import type { ProductMode } from "./product-component.types";
 
 export interface ProductStyleFile {
@@ -88,7 +88,7 @@ export function useProductPageLoader({
             setDetails(
               initialMain === PHARMACY_MAIN_CATEGORY_ID &&
                 initialSub === PHARMACY_SUBCATEGORY_ID
-                ? createPharmacyInitialDetails(
+                ? getPharmacyInitialDetailsPort().createInitialDetails(
                     initialPharmacyCategory,
                     initialPharmacySubcategory,
                   )

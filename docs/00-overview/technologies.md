@@ -52,6 +52,20 @@ bundled JBR. The Android preflight resolves either source before Gradle runs;
 direct Gradle and Android Studio usage still require a valid configured Java
 path. See [invalid-java-home-windows.md](../08-troubleshooting/problems/invalid-java-home-windows.md).
 
+`npm run doctor:environment` classifies the machine with
+`scripts/runtime-compatibility-policy.ts`:
+
+| Host class | Meaning |
+|---|---|
+| `canonical-baseline-host` | Node is in `>=22 <25` and `config/runtime-compatibility-reference.json` matches |
+| `compatible-host` | Node is in range; the host may differ from the reviewed baseline. Do not rewrite lockfiles or the reference to accommodate it |
+| `unsupported-host` | Node is outside `>=22 <25` |
+
+Platform-specific checks that cannot run are **evidence gaps**, not passes. On
+non-macOS the doctor prints `ios-compile-sign` (Xcode compile/archive/sign) and
+must not mark that row `OK`. Do not rewrite
+`config/runtime-compatibility-reference.json` for a different host.
+
 The six isolated Vercel services under `services/*` each carry their own
 `package.json` and `package-lock.json`. They pin Node `>=22 <25`, npm `11.19.0`,
 Next.js `16.3.2`, React/React DOM `19.2.8`,
@@ -117,7 +131,6 @@ silently remain on an older framework release.
 | `clsx` | `2.1.1` |
 | `dotenv` | `17.4.2` |
 | `drizzle-orm` | `0.45.2` |
-| `drizzle-zod` | `0.8.3` |
 | `fflate` | `0.8.3` |
 | `focus-trap-react` | `12.0.3` |
 | `google-auth-library` | `11.0.2` |

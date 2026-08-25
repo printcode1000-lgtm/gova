@@ -39,8 +39,10 @@ async function runTests(): Promise<void> {
 
   // Test 3: Single pin for vercel CLI (D3)
   const indexSource = readFileSync(path.join(process.cwd(), 'packages', 'vercel-deploy-core', 'src', 'index.ts'), 'utf-8');
-  const cliPinMatches = indexSource.match(/--package=vercel@59\.0\.0/g);
-  assert(cliPinMatches !== null && cliPinMatches.length === 2, 'D3: vercel@59.0.0 CLI pin present in runVercel');
+  assert(indexSource.includes("const PINNED_VERCEL_CLI = '59.0.0'"), 'D3: pinned Vercel CLI version is 59.0.0');
+  assert(indexSource.includes("path.join(process.cwd(), 'node_modules', 'vercel', 'package.json')"), 'D3: CLI binary is resolved from the project-pinned node_modules install');
+  assert(!indexSource.includes('npx'), 'D3: runVercel must not invoke npx and therefore cannot drift from the pin');
+  assert(indexSource.includes('manifest.version !== PINNED_VERCEL_CLI'), 'D3: mismatched installed CLI version is rejected');
   console.log('  ✔ CLI pin @59.0.0 verified.');
 
   // Test 3b: CLI uploads carry no Git commit metadata (D1)

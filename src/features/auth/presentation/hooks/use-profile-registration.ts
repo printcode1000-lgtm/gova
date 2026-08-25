@@ -14,7 +14,7 @@ import { authService } from '../../application/services/auth-service';
 import { sessionService } from '../../application/services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import type { UserProfile } from '../../domain/profile.entity';
-import type { ProfileRegistrationSnapshot } from '@/features/profile';
+import type { ProfileRegistrationSnapshot } from '../../domain/profile-registration.entity';
 import { isExpectedProfileSaveRejection } from '@/core/api/expected-business-error-codes';
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { reportPreAuthFailure } from '@/features/system-logs';

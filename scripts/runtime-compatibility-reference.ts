@@ -218,7 +218,7 @@ export function collectRuntimeCompatibilityReference(
       androidCompileSdk: requireNumber(androidVariables, /compileSdkVersion\s*=\s*(\d+)/, "Android compile SDK"),
       androidTargetSdk: requireNumber(androidVariables, /targetSdkVersion\s*=\s*(\d+)/, "Android target SDK"),
       firebaseMessaging: requireMatch(androidVariables, /firebaseMessagingVersion\s*=\s*'([\d.]+)'/, "Firebase Messaging"),
-      vercelCli: uniqueVersion(vercelSource, /--package=vercel@([\d.]+)/g, "Vercel CLI"),
+      vercelCli: uniqueVersion(vercelSource, /PINNED_VERCEL_CLI = '([\d.]+)'/g, "Vercel CLI"),
       drizzleKit: uniqueVersion(drizzleSource, /drizzle-kit@([\d.]+)/g, "Drizzle Kit"),
       fastlane: requireMatch(gemLock, /^\s{4}fastlane \(([^)]+)\)$/m, "Fastlane"),
       gemLockDigest: digestText(gemLock),

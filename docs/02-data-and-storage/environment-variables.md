@@ -357,15 +357,10 @@ Server-only, and `.env.local` only — never `.env.example`, which is committed.
 `GITHUB_REPOSITORY` is optional; the script reads the `origin` remote when it is
 unset.
 
-Used by `npm run github:protect` (`scripts/protect-main-branch.ts`) to configure
-branch protection on `main`, by `--remove` to take it off — the state the
-repository currently runs in, see
-[22. Scripts & Workflows](./22-scripts-and-workflows.md#branch-protection) — and by
-`npm run github:block-branches` to apply the `main-only` ruleset that makes `main`
-the only branch that can exist. This is rule 6 of
-[the module isolation rules](../01-architecture/02-packages/module-isolation-rules.md) — the one
-rule that cannot be satisfied from the repository tree, because the enforcement
-lives in GitHub's settings rather than in a file.
+Used by `npm run github:protect -- --status` and `--remove` to confirm or delete
+branch protection on `main`. Applying protection is forbidden. Used by
+`npm run github:block-branches` to apply the `main-only` creation ruleset that
+excludes `main`. See [github-ci-policy.md](../07-mobile-and-release/github-ci-policy.md).
 
 ### What the current token can do
 
@@ -376,8 +371,8 @@ workflows, deployments, secrets and variables, security features, webhooks,
 releases, and related administrative operations.
 
 Read that as written: **it can change anything in this repository**, including
-the branch protection it is used to apply, the Actions workflows that gate
-merges, and the repository's own secrets. It is scoped to `printcode1000-lgtm/gova`
+Actions workflows and repository secrets. It must not be used to put branch
+protection or required checks on `main`. It is scoped to `printcode1000-lgtm/gova`
 alone and carries no user permissions, so its blast radius stops at this
 repository — but inside this repository there is nothing it cannot do.
 

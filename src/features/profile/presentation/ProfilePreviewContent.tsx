@@ -31,7 +31,7 @@ import {
 import { WorkingHoursCard } from "@/features/profile-working-hours/ui";
 import { ProductReviews } from "@/features/product/ui";
 import { SellerDiscountsPreview } from "@/features/seller-discounts/ui";
-import type { UserSession } from "@/features/auth";
+import type { SessionRuntimeUser } from "@/shared/session-runtime";
 import type { ProfileContactsData } from "@/features/profile/domain/profile-contacts.entity";
 import type { ProfileFulfillmentSettings } from "@/features/profile/domain/profile-fulfillment-settings.entity";
 import type { StoreDetailsData } from "@/features/profile/domain/store-details.entity";
@@ -51,7 +51,7 @@ import { ProfileStorySection } from "./ProfileStorySection";
 interface ProfilePreviewContentProps {
   locale: "ar" | "en";
   previewUid: string;
-  session: UserSession | null;
+  session: SessionRuntimeUser | null;
   isOwner: boolean;
   isSuperAdmin: boolean;
   storeImages: StoreImagesData;

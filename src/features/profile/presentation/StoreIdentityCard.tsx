@@ -4,7 +4,7 @@ import * as React from "react";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { Textarea } from "@/shared/ui/textarea";
-import { type HeroSliderConfig } from "@/features/advertisements/ui";
+import type { HomeHeroConfig as HeroSliderConfig } from "@asol/hero-slider-core";
 import { RatingSettingsEditor } from "@/features/product/ui";
 import { useTranslation } from "@/shared/i18n";
 import type { StoredImage } from "@asol/storage-core";

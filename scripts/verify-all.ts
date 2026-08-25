@@ -33,11 +33,7 @@ const STEPS: readonly Step[] = [
   { script: "validate-storage-profiles" },
   { script: "validate:error-logging" },
   { script: "version:validate" },
-  // The gate list in `.github/workflows/native-core.yml` is a hand-maintained copy of the
-  // package gates in package.json, and it had already drifted by seven packages. This asserts
-  // the copy rather than trusting it, and pins the `verify` job id that branch protection
-  // requires — renaming that job leaves a required check that never reports.
-  { script: "ci:coverage" },
+  { script: "github:ci-policy" },
 
   // Native container policy. These read committed project files only.
   { script: "android:backup:validate" },

@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 
+import { SessionRuntimeProvider, type SessionRuntimeUser } from '@/shared/session-runtime';
 import { isLoggedIn, type UserSession } from '../domain/session.entity';
 import { sessionService } from '../application/services/session-service';
 import { clearImageUploadClientState } from '@/features/storage';
@@ -79,7 +80,25 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     [session, isLoading, refreshSession, setSession],
   );
 
-  return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
+  const runtimeValue = useMemo(
+    () => ({
+      session,
+      isLoggedIn: isLoggedIn(session),
+      isGuest: !isLoggedIn(session),
+      isLoading,
+      refreshSession,
+      setSession: (next: SessionRuntimeUser | null) => {
+        setSessionState(next as UserSession | null);
+      },
+    }),
+    [session, isLoading, refreshSession],
+  );
+
+  return (
+    <SessionContext.Provider value={value}>
+      <SessionRuntimeProvider value={runtimeValue}>{children}</SessionRuntimeProvider>
+    </SessionContext.Provider>
+  );
 }
 
 export function useSession(): SessionContextValue {

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "android": {
+    "storeDistribution": true,
+    "productionTruth": "google-play"
+  },
+  "ios": {
+    "storeDistribution": false,
+    "productionTruth": "app-store-connect",
+    "notLiveReason": "The iOS Capacitor shell is a required application runtime. App Store store-distribution is not an enabled live target yet. Flip storeDistribution to true only after App Store Connect credentials and a production listing are intentionally enabled. Never infer disabled from missing credentials."
+  }
+}

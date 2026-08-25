@@ -43,7 +43,31 @@ const EXCLUDED_DIRECTORY_NAMES = new Set([
   "node_modules",
   "out",
   "coverage",
+  "worktrees",
 ]);
+
+const EXCLUDED_RELATIVE_DIRECTORY_PREFIXES = [
+  ".claude/worktrees/",
+  ".cursor/worktrees/",
+];
+
+export function shouldSkipSecretDiscoveryDirectory(
+  name: string,
+  relativeDirectory: string,
+  nestedGitPresent: boolean,
+): boolean {
+  if (EXCLUDED_DIRECTORY_NAMES.has(name)) return true;
+  const normalized = relativeDirectory.replace(/\\/g, "/").replace(/^\.\//, "");
+  if (
+    EXCLUDED_RELATIVE_DIRECTORY_PREFIXES.some(
+      (prefix) => normalized === prefix.slice(0, -1) || normalized.startsWith(prefix),
+    )
+  ) {
+    return true;
+  }
+  if (nestedGitPresent && normalized !== "") return true;
+  return false;
+}
 
 interface SecretPathConfig {
   exactPaths: string[];
@@ -127,7 +151,11 @@ async function walk(directory: string, files: string[]): Promise<void> {
     if (entry.isSymbolicLink()) continue;
     const absolutePath = path.join(directory, entry.name);
     if (entry.isDirectory()) {
-      if (EXCLUDED_DIRECTORY_NAMES.has(entry.name)) continue;
+      const relativeDirectory = toPosix(path.relative(WORKSPACE_ROOT, absolutePath));
+      const nestedGitPresent = existsSync(path.join(absolutePath, ".git"));
+      if (shouldSkipSecretDiscoveryDirectory(entry.name, relativeDirectory, nestedGitPresent)) {
+        continue;
+      }
       await walk(absolutePath, files);
       continue;
     }

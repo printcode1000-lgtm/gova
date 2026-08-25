@@ -1,7 +1,6 @@
 "use client";
 
 import { asolApi } from "@/core/api/asol-api-client";
-import type { UserSession } from "@/features/auth";
 import { sessionService } from "@/features/auth/ui";
 import {
   notifications,
@@ -20,7 +19,7 @@ import type { SendSpecialtyMessageInput, SendSpecialtyRequestInput, SendSpecialt
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
 import { deliverNotificationGrants } from '@asol/account-bridge/notifications';
 
-function identity(session: UserSession) {
+function identity(session: { uid: string; phone: string; sessionToken?: string }) {
   if (!session.sessionToken) throw new Error("specialtyChatLoginRefreshRequired");
   return { uid: session.uid, phone: session.phone, sessionToken: session.sessionToken };
 }
@@ -73,7 +72,7 @@ async function saveOutgoing(input: {
 
 export const specialtyChatClient = {
   async startProfileConversation(
-    session: UserSession,
+    session: { uid: string; phone: string; sessionToken?: string },
     input: Omit<StartProfileConversationInput, "identity">,
   ): Promise<{ conversationKey: string }> {
     const result = await asolApi.post<StartProfileConversationResult>(
@@ -106,7 +105,7 @@ export const specialtyChatClient = {
   },
 
   async startProductConversation(
-    session: UserSession,
+    session: { uid: string; phone: string; sessionToken?: string },
     input: Omit<StartProductConversationInput, "identity">,
   ): Promise<{ conversationKey: string }> {
     const result = await asolApi.post<StartProductConversationResult>(
@@ -139,7 +138,7 @@ export const specialtyChatClient = {
   },
 
   async sendRequest(
-    session: UserSession,
+    session: { uid: string; phone: string; sessionToken?: string },
     input: Omit<SendSpecialtyRequestInput, "identity">,
   ): Promise<SendSpecialtyRequestResult> {
     const result = await asolApi.post<SendSpecialtyRequestResult>(
@@ -174,7 +173,7 @@ export const specialtyChatClient = {
   },
 
   async sendMessage(
-    session: UserSession,
+    session: { uid: string; phone: string; sessionToken?: string },
     input: Omit<SendSpecialtyMessageInput, "identity"> & { requestId: string; peerUid: string },
   ) {
     const result = await asolApi.post<{
@@ -213,7 +212,7 @@ export const specialtyChatClient = {
   },
 
   async preferences(
-    session: UserSession,
+    session: { uid: string; phone: string; sessionToken?: string },
     changes?: SpecialtyChatPreferenceChanges,
   ) {
     try {
@@ -232,7 +231,7 @@ export const specialtyChatClient = {
   },
 
   async receipt(
-    session: UserSession,
+    session: { uid: string; phone: string; sessionToken?: string },
     input: { capability: string; targetMessageId: string; status: "received" | "read" },
   ) {
     const result = await asolApi.post<{

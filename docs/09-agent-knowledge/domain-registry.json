@@ -47,7 +47,7 @@
       "id": "mobile-and-release",
       "docsPrefix": "docs/07-mobile-and-release/",
       "sourcePrefixes": ["android/", "ios/", "fastlane/", "scripts/", "services/", "packages/ota-core/", "packages/native-core/", "packages/vercel-deploy-core/", "capacitor.config.ts", "next.config.ts"],
-      "readFirst": ["docs/07-mobile-and-release/README.md", "docs/09-agent-knowledge/runtime-contract.md", "docs/07-mobile-and-release/deployment-targets.md", "docs/07-mobile-and-release/release-and-secrets.md"]
+      "readFirst": ["docs/07-mobile-and-release/README.md", "docs/09-agent-knowledge/runtime-contract.md", "docs/07-mobile-and-release/deployment-targets.md", "docs/07-mobile-and-release/release-and-secrets.md", "docs/07-mobile-and-release/github-ci-policy.md"]
     },
     {
       "id": "troubleshooting",

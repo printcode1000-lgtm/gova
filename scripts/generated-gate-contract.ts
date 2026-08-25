@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import {
   COMPOSITION_LEAF_TESTS,
   generatedGateIds,
@@ -5,6 +8,7 @@ import {
   resolveGeneratedGate,
   type GeneratedGateId,
 } from './generated-gates';
+import { VERCEL_BUILD_COMMAND, VERCEL_INSTALL_COMMAND } from './vercel-deployment-guards';
 
 export const GATE_ENTRYPOINTS: Readonly<Record<GeneratedGateId, string>> = {
   build: 'npx tsx scripts/run-generated-gate.ts build',
@@ -30,6 +34,24 @@ export function verifyGeneratedGateContract(): string[] {
   }
   if (scripts.pretest) {
     errors.push('package.json pretest is forbidden: test setup belongs to the generated test gate.');
+  }
+  if (scripts.build === scripts['build:vercel']) {
+    errors.push('Vercel build:vercel must not be the local correctness gate `build`.');
+  }
+  try {
+    const vercel = JSON.parse(
+      readFileSync(path.join(process.cwd(), 'vercel.json'), 'utf8'),
+    ) as { installCommand?: string; buildCommand?: string };
+    if (vercel.installCommand !== VERCEL_INSTALL_COMMAND) {
+      errors.push(`vercel.json installCommand must be exactly: ${VERCEL_INSTALL_COMMAND}`);
+    }
+    if (vercel.buildCommand !== VERCEL_BUILD_COMMAND) {
+      errors.push(`vercel.json buildCommand must be exactly: ${VERCEL_BUILD_COMMAND}`);
+    }
+  } catch (error) {
+    errors.push(
+      `vercel.json Deployment/Smoke Guards contract could not be read: ${error instanceof Error ? error.message : error}`,
+    );
   }
 
   const resolved = new Map<GeneratedGateId, ReturnType<typeof resolveGeneratedGate>>();

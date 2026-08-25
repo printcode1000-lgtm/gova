@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSession } from "@/features/auth/ui";
+import { useSessionRuntime } from "@/shared/session-runtime";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
@@ -20,7 +20,7 @@ function isDirty(
 }
 
 export function useProfileFulfillmentSettings() {
-  const { session } = useSession();
+  const { session } = useSessionRuntime();
   const uid = session?.uid ?? "";
   const queryClient = useQueryClient();
 

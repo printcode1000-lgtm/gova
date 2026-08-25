@@ -1,4 +1,5 @@
 import { execFileSync } from 'child_process';
+import { readFileSync } from 'node:fs';
 import path from 'path';
 import type { AccountDeclaration } from '@asol/account-declarations';
 import {
@@ -347,14 +348,30 @@ export interface RunVercelOptions {
   teamId?: string;
 }
 
+const PINNED_VERCEL_CLI = '59.0.0';
+
+function resolvePinnedVercelCli(): string {
+  const packageJsonPath = path.join(process.cwd(), 'node_modules', 'vercel', 'package.json');
+  const manifest = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as {
+    version?: string;
+    bin?: string | Record<string, string>;
+  };
+  if (manifest.version !== PINNED_VERCEL_CLI) {
+    throw new Error(
+      `Vercel CLI must be the project-pinned ${PINNED_VERCEL_CLI}; found ${manifest.version ?? 'unknown'}.`,
+    );
+  }
+  const bin =
+    typeof manifest.bin === 'string'
+      ? manifest.bin
+      : manifest.bin?.vercel ?? manifest.bin?.vc;
+  if (!bin) throw new Error('Pinned Vercel CLI is missing a bin entry.');
+  return path.join(path.dirname(packageJsonPath), bin);
+}
+
 export function runVercel(options: RunVercelOptions): void {
-  const npxCli = process.env.npm_execpath
-    ? path.join(path.dirname(process.env.npm_execpath), 'npx-cli.js')
-    : null;
-  const command = npxCli ? process.execPath : 'npx';
-  const commandArgs = npxCli
-    ? [npxCli, '--yes', '--package=vercel@59.0.0', 'vercel', ...options.args]
-    : ['--yes', '--package=vercel@59.0.0', 'vercel', ...options.args];
+  const command = process.execPath;
+  const commandArgs = [resolvePinnedVercelCli(), ...options.args];
 
   const childEnv: NodeJS.ProcessEnv = {
     ...process.env,

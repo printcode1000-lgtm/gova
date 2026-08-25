@@ -20,3 +20,4 @@ export * from './presentation/SessionProvider';
 /** Browser session / auth lifecycle — never on the application door (mirror walk). */
 export * from './application/services/session-service';
 /* END GENERATED FEATURE DOOR EXPORTS */
+export { registerAuthCoreBrowserPorts } from './ports/auth-core-browser-ports';

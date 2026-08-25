@@ -1,12 +1,13 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { FolderOpen, Plus, X, Package } from 'lucide-react';
+import { shouldUseUnoptimizedImage, StorageProfiles, type StoredImage } from '@asol/storage-core';
 import { useOnboardingStore } from '@/features/onboarding/domain';
 import { useTranslation } from '@/shared/i18n';
 import { FormField, FormInput, FormTextarea } from '../form-components';
 import { StorageImageManager } from '@/features/storage/ui';
-import { StorageProfiles, type StoredImage } from '@asol/storage-core';
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
@@ -175,14 +176,17 @@ export function CollectionsSection() {
                 {data.collections.collections.map((collection) => (
                   <div
                     key={collection.id}
-                    className="group relative overflow-hidden rounded-lg border"
+                    className="relative overflow-hidden rounded-lg border"
                   >
                     {collection.coverImage ? (
                       <div className="aspect-video relative">
-                        <img
+                        <Image
                           src={collection.coverImage.url}
                           alt={collection.name}
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="(max-width: 640px) 100vw, 50vw"
+                          className="object-cover"
+                          unoptimized={shouldUseUnoptimizedImage(collection.coverImage.url)}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -201,7 +205,7 @@ export function CollectionsSection() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2 opacity-0 transition-opacity"
+                      className="absolute top-2 right-2"
                       onClick={() => removeCollection(collection.id)}
                     >
                       <X className="h-4 w-4" />

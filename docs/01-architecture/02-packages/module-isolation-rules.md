@@ -69,7 +69,7 @@ Only declared doors are importable. Enforced by four independent layers (see [En
 
 ### Rule 6 — Branch and release gates
 
-`main` is the only branch. Release quality is gated by npm scripts in the build chain, not GitHub Actions (no workflows in this repository).
+`main` is the only branch. Release quality is gated by local npm scripts in the build chain, not by GitHub Actions. The only GitHub workflow is docs-only and path-filtered to `docs/**`; see [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 **Agent action:** Commit and push to `main`. Run `npm run build` or at minimum `npm run architecture:check` before claiming done. See ADR-0006.
 
@@ -166,8 +166,8 @@ Capability packages declare **ports** (interfaces). Exactly one application modu
 
 | Root | File | Registers |
 |---|---|---|
-| Browser | `src/core/composition/browser-ports.ts` | OTA, account-bridge, data-core browser, page-save, page-snapshot, system-logs, observability |
-| Server | `src/core/composition/server-ports.ts` | storage, data-core, orders, OTA server, notifications, system-logs, observability |
+| Browser | `src/core/composition/browser-ports.ts` | OTA, account-bridge, data-core browser, page-save, page-snapshot, system-logs, observability, application cycle-breaking ports |
+| Server | `src/core/composition/server-ports.ts` | storage, data-core, orders, OTA server, notifications, system-logs, observability, application cycle-breaking ports |
 
 `src/core/composition/tests/ports-registry.test.ts` asserts every seam is listed — adding a port without registration fails CI.
 
@@ -197,9 +197,9 @@ Rules 2, 5, and 7 are enforced by **four independent layers** — any one alone 
 - `scripts/` — data access ownership, account bridge, seal
 - `services/` — seal, vendor ownership, notification module contract
 
-Preflight (in CLI only): storage profile validation, category data validation.
+Preflight (in CLI only): storage profile validation, category data validation, GitHub CI policy.
 
-No GitHub Actions — gates run via npm scripts in `build`, `build:static`, `verify:*`. See [architecture-check.md](../07-enforcement/architecture-check.md).
+Gates run via npm scripts in `build`, `build:static`, `verify:*`. GitHub Actions is docs-only. See [architecture-check.md](../07-enforcement/architecture-check.md) and [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 ---
 

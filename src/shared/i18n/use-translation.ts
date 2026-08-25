@@ -3,31 +3,23 @@
 import { usePathname } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 
-import { useAppPreferences } from '@/shared/preferences';
-
 import { isArabicOnlyRoute } from './arabic-only-routes';
 import { isRtlLocale } from './constants';
 import type { TranslationKey } from './dictionaries';
 import { formatUserFacingApiError } from '@/core/api/user-facing-api-error';
+import { useLocaleRuntime } from './locale-runtime';
 import { translate } from './translate';
 import type { Locale, TranslationParams } from './types';
 
 export function useTranslation() {
   const pathname = usePathname();
-  const { preferences, updatePreferences } = useAppPreferences();
-  const locale: Locale = isArabicOnlyRoute(pathname) ? 'ar' : preferences.locale;
+  const { locale: preferenceLocale, changeLanguage } = useLocaleRuntime();
+  const locale: Locale = isArabicOnlyRoute(pathname) ? 'ar' : preferenceLocale;
 
   const t = useCallback(
     (key: TranslationKey | string, params?: TranslationParams) =>
       translate(locale, key, params),
     [locale],
-  );
-
-  const changeLanguage = useCallback(
-    (lang: Locale) => {
-      updatePreferences({ locale: lang });
-    },
-    [updatePreferences],
   );
 
   const formatApiError = useCallback(

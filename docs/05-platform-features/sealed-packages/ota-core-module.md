@@ -114,6 +114,14 @@ platform store (Android/iOS) or on R2 (OTA). Local `build.gradle`, git tags, and
 repeated builds must never advance targets. When local numbers drift, release
 planning corrects them from live truth and fails closed if truth cannot be read.
 
+`config/shipping-platforms.json` is the explicit store-distribution declaration
+OTA reads. Android `storeDistribution` is `true` (Google Play production truth).
+iOS `storeDistribution` is `false` and must keep an explicit `notLiveReason`.
+OTA must **not** infer that a platform is disabled because credentials are
+missing: missing App Store Connect keys are a configuration error on a live
+target, not a silent skip. Flip iOS `storeDistribution` to `true` only after
+App Store Connect credentials and a production listing are intentionally enabled.
+
 `versionCode = major * 10000 + minor * 100 + patch` is the only Android mapping.
 `androidVersionNameFromCode()` inverts it when reading Google Play production.
 

@@ -64,6 +64,11 @@ function main() {
   assert.match(generatedGateRunner, /process\.execPath/, 'Generated gate runner must execute npm-cli.js with Node.');
   assert.doesNotMatch(
     generatedGateRunner,
+    /shell:\s*true/,
+    'Generated gate runner must not combine spawn with shell:true (DEP0190).',
+  );
+  assert.doesNotMatch(
+    generatedGateRunner,
     /const\s+npmBin\s*=.*npm\.cmd/s,
     'Generated gate runner must not restore direct spawnSync(npm.cmd, ...).',
   );
@@ -102,8 +107,9 @@ function main() {
   // asserting nothing — the exact empty-guard pattern documented in
   // docs/01-architecture/02-packages/module-isolation-rules.md.
   //
-  // Rule 6's enforcement half is unaffected and still verified: branch protection is
-  // applied and read back by "npm run github:protect".
+  // Rule 6's enforcement half is the `main-only` creation ruleset and unrestricted
+  // pushes to `main`. Branch protection must not be reapplied; `npm run github:protect`
+  // only reports status or deletes leftover rules. See docs/07-mobile-and-release/github-ci-policy.md.
 
   // ── C3: runVercel child env overrides VERCEL_TOKEN ─────────────────────────
   const vercelDeployCoreIndex = readFileSync(path.join(packagesDir, 'vercel-deploy-core/src/index.ts'), 'utf8');

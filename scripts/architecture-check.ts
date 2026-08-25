@@ -4,6 +4,7 @@ import { validateStorageProfilesAtStartup } from '@asol/storage-core/server';
 import { validationEngine as categoryValidationEngine } from '../src/features/categories/infrastructure/validation.engine';
 import { validateAgentKnowledge } from './docs/check';
 import { verifyGeneratedGateContract } from './generated-gate-contract';
+import { verifyGithubCiPolicy } from './github-ci-policy';
 import { validateRuntimeCompatibilityReference } from './runtime-compatibility-reference';
 
 /**
@@ -22,6 +23,10 @@ process.exit(
       {
         label: 'generated Build/Test gate contract failed',
         run: () => verifyGeneratedGateContract(),
+      },
+      {
+        label: 'GitHub CI policy failed',
+        run: () => verifyGithubCiPolicy(),
       },
       {
         label: 'agent knowledge documentation contract failed',

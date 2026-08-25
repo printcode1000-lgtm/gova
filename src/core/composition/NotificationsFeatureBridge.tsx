@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { registerBrowserPorts } from "@/core/composition/browser-ports";
 import {
   AUTH_LOGIN_COMPLETED_EVENT,
   useSession,
@@ -16,6 +17,8 @@ import {
   type NotificationLoginCompleted,
 } from "@/features/notifications/ui";
 import { notifyOrderDataRefreshFromNotification } from "@/features/orders";
+
+registerBrowserPorts();
 
 /**
  * Browser composition boundary for notifications.

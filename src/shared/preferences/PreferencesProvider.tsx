@@ -3,6 +3,7 @@
 import { ThemeProvider } from '@/shared/theme/runtime';
 import * as React from 'react';
 import { applyDocumentLocale } from '@/shared/i18n/apply-locale';
+import { LocaleRuntimeProvider } from '@/shared/i18n/locale-runtime';
 
 import {
   DEFAULT_APP_PREFERENCES,
@@ -70,7 +71,14 @@ function AppPreferencesScope({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <AppPreferencesContext.Provider value={value}>{children}</AppPreferencesContext.Provider>
+    <AppPreferencesContext.Provider value={value}>
+      <LocaleRuntimeProvider
+        locale={preferences.locale}
+        changeLanguage={(locale) => updatePreferences({ locale })}
+      >
+        {children}
+      </LocaleRuntimeProvider>
+    </AppPreferencesContext.Provider>
   );
 }
 

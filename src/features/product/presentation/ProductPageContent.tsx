@@ -7,9 +7,9 @@ import { MessageCircle, Share2, UserCircle } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
-import { useSession } from "@/features/auth/ui";
+import { useSessionRuntime } from "@/shared/session-runtime";
 import { useTranslation } from "@/shared/i18n";
-import { isSuperAdmin } from "@/features/auth";
+import { isSuperAdminSession } from "@asol/auth-core";
 import { categoryService } from "@/features/categories";
 import type {
   ProductDetails,
@@ -60,7 +60,7 @@ export function ProductPageContent({
     returnUrl,
   } = productPageRouteModel(searchParams);
   const { locale, formatApiError, t } = useTranslation();
-  const { session, isLoggedIn, isLoading: sessionLoading } = useSession();
+  const { session, isLoggedIn, isLoading: sessionLoading } = useSessionRuntime();
   const [saving, setSaving] = React.useState(false);
   const [openingConversation, setOpeningConversation] = React.useState(false);
   const imageUploadRef = React.useRef<StorageImageManagerHandle | null>(null);
@@ -473,7 +473,7 @@ export function ProductPageContent({
           {error}
         </p>
       ) : null}
-      {mode === "view" && isSuperAdmin(session) ? (
+      {mode === "view" && isSuperAdminSession(session) ? (
         <div className="rounded-2xl border border-warning/30 bg-warning/5 p-4 sm:p-5">
           <h3 className="text-sm font-semibold text-warning">
             {locale === "ar" ? "لوحة الإدارة الخارقة" : "Super Admin Panel"}

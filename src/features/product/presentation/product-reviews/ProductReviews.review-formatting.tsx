@@ -1,15 +1,8 @@
 "use client";
 
-import * as React from "react";
-import { ChevronLeft, MessageSquare } from "lucide-react";
-import { useSession } from "@/features/auth/ui";
 import type {
-  ProductReview,
   ProductReviewsResult,
-  ReviewSort,
 } from "@/features/product";
-import { productReviewApiService } from "@/features/product/application/services/product-review-api-service";
-import { profileApiService } from "@/features/profile/ui";
 
 export const PAGE_SIZE = 3;
 

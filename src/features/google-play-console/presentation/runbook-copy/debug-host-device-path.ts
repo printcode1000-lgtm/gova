@@ -45,7 +45,7 @@ export const DEBUG_HOST_DEVICE_PATH_HELP: Record<string, string> = {
   "host-verify-architecture":
     "مرجع: npm run architecture:check داخل verify:all.",
   "host-verify-ci-coverage":
-    "مرجع: npm run ci:coverage — parity مع native-core.yml.",
+    "مرجع: npm run github:ci-policy — لا CI عام على GitHub.",
   "host-verify-release-commands":
     "مرجع: test:release-commands — عقود كتالوج أوامر الإصدار والشجرة.",
   "host-verify-release-core":

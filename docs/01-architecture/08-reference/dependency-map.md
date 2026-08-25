@@ -229,6 +229,9 @@ ALLOWED_TO_IMPORT → `@asol/data-core/browser`
 ALLOWED_TO_IMPORT → `@asol/data-core/ota`
 
 `@asol/ota-core`
+ALLOWED_TO_IMPORT → `@asol/env-core/process`
+
+`@asol/ota-core`
 ALLOWED_TO_IMPORT → `@asol/native-core`
 
 ### @asol/page-save-core
@@ -258,6 +261,9 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations/products`
 ALLOWED_TO_IMPORT → `@asol/account-declarations/profiles`
 
 ### @asol/release-core
+
+`@asol/release-core`
+ALLOWED_TO_IMPORT → `@asol/env-core/process`
 
 `@asol/release-core`
 ALLOWED_TO_IMPORT → `@asol/ota-core/publishing`
@@ -331,4 +337,4 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 | Metric | Value |
 |---|---|
 | Packages | 41 |
-| Import edges | 53 |
+| Import edges | 55 |

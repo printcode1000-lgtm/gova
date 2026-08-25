@@ -12,6 +12,7 @@ import {
   runArchitectureCheck,
   violations,
 } from '../index';
+import './application-cycle-contract.test';
 
 const ROOT = process.cwd();
 const PACKAGE = 'packages/architecture-core';
@@ -82,7 +83,7 @@ for (const file of files) {
   const text = readFileSync(path.join(ROOT, PACKAGE, 'src', file), 'utf8');
   for (const match of text.matchAll(/from\s+['"]([^'"]+)['"]/g)) {
     const specifier = match[1]!;
-    if (specifier.startsWith('node:') || specifier === 'fs' || specifier === 'path') continue;
+    if (specifier.startsWith('node:') || specifier === 'fs' || specifier === 'path' || specifier === 'child_process') continue;
     if (DECLARED_PACKAGE_DOORS.has(specifier)) continue;
     if (TOOLCHAIN_MODULES.has(specifier)) continue;
     assert.ok(

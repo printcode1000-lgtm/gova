@@ -36,8 +36,6 @@ import { ProductsCard } from "@/features/profile/presentation/ProductsCard";
 import { StoreIdentityCard } from "@/features/profile/presentation/StoreIdentityCard";
 import { FulfillmentSettingsCard } from "@/features/profile/presentation/FulfillmentSettingsCard";
 import { WorkingHoursProfileCard } from "@/features/profile/presentation/WorkingHoursProfileCard";
-import { useSession } from "@/features/auth/ui";
-import { isSuperAdmin } from "@/features/auth";
 import { useTranslation } from "@/shared/i18n";
 import { Card, CardContent } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";

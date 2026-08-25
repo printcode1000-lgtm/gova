@@ -14,7 +14,7 @@ import type { UpsertProfileFulfillmentSettingsCommand } from "@asol/data-core/pr
 import type { GetUserByUidQuery } from "@asol/data-core/auth";
 import { MAX_PROFILE_COVER_IMAGES } from "@asol/data-core/profile";
 import { authOperationsService } from "@/features/auth/server";
-import { isSuperAdminIdentity } from "@/features/auth";
+import { isSuperAdminIdentity } from "@asol/auth-core/server";
 import type {
   ProfileContactsData,
   SaveProfileContactsInput,

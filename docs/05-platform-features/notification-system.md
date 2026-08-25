@@ -1896,11 +1896,10 @@ have produced.
 
 ## Build And CI Enforcement
 
-There are **no GitHub Actions workflows in this repository**; `.github/workflows`
-is empty and
-[`16-deployment-targets.md`](../07-mobile-and-release/deployment-targets.md)
-records that Actions is intentionally unused. Enforcement lives in the npm
-scripts, which is what Vercel runs on a push:
+GitHub Actions is not a notification correctness gate. Code pushes to `main`
+run no GitHub jobs. The only workflow is docs-only and path-filtered to
+`docs/**`; see [github-ci-policy.md](../07-mobile-and-release/github-ci-policy.md).
+Enforcement lives in local npm scripts and `deploy:all` preflight:
 
 | Gate | Command | Notification checks |
 |------|---------|---------------------|

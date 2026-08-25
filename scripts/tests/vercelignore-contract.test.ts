@@ -70,11 +70,6 @@ const requiredPaths = [
   "capacitor.config.ts",
   "vercel.json",
   ".env.example",
-  ".cursor/rules/session-standards.mdc",
-  "docs/README.md",
-  "docs/00-overview/README.md",
-  "docs/09-agent-knowledge/domain-registry.json",
-  "docs/09-agent-knowledge/runtime-contract.md",
   "src/app/layout.tsx",
   "public/logo.png",
   "public/catagory",
@@ -82,12 +77,7 @@ const requiredPaths = [
   "packages/native-core/ios/Sources",
   "services/notifications/package.json",
   "services/notifications/src",
-  "scripts/architecture-check.ts",
-  "scripts/sync-all-service-sources.ts",
   "assets/google-play/custom_notification.mp3",
-  "android/build.gradle",
-  "android/variables.gradle",
-  "android/gradle/wrapper/gradle-wrapper.properties",
 ];
 
 for (const required of requiredPaths) {
@@ -104,7 +94,8 @@ const excludedPaths = [
   "fastlane/Fastfile",
   "public/sync_data/allusers.db",
   "scripts/tests/deploy-push.test.ts",
-  ".github/workflows/native-core.yml",
+  ".github/workflows/docs.yml",
+  "docs/README.md",
   "services/notifications/generated/mirror.ts",
   "assets/google-play/k.jks",
 ];
@@ -130,7 +121,7 @@ for (const required of mustStayPaths) {
   );
 }
 
-assert.match(ignore, /^\/android\/\*\*\s*$/m, ".vercelignore must exclude the root Capacitor android shell by default.");
+assert.match(ignore, /^\/android\/\s*$/m, ".vercelignore must exclude the root Capacitor android shell.");
 assert.match(ignore, /^\/ios\/\s*$/m, ".vercelignore must exclude only the root Capacitor ios shell.");
 assert.match(ignore, /public\/sync_data\//, ".vercelignore must exclude local SQLite mirrors.");
 assert.equal(

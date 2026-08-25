@@ -18,11 +18,11 @@ import type {
   StoreDetailsController,
 } from "./profile-save-controller";
 import type { ProfileEditorSection } from "@/features/profile/domain/profile-editor.entity";
-import type { UserSession } from "@/features/auth";
+import type { SessionRuntimeUser } from "@/shared/session-runtime";
 import { useRouter } from "next/navigation";
 
 interface UseProfileSaveProps {
-  session: Pick<UserSession, "uid" | "sessionToken"> | null;
+  session: Pick<SessionRuntimeUser, "uid" | "sessionToken"> | null;
   locale: string;
   t: (key: string) => string;
   setActiveTab: (tab: ProfileEditTab) => void;

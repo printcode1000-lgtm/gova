@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-import { useSession } from '@/features/auth/ui';
+import { useSessionRuntime } from '@/shared/session-runtime';
 
 import type { PageSnapshotIdentity } from '../../domain/page-snapshot.types';
 import {
@@ -14,7 +14,7 @@ import {
 export function usePageSnapshotIdentity(namespace?: string): PageSnapshotIdentity {
   const pathname = usePathname() || '/';
   const searchParams = useSearchParams();
-  const { session } = useSession();
+  const { session } = useSessionRuntime();
   const querySignature = searchParams.toString();
   const query = React.useMemo(
     () => searchParamsToRecord(new URLSearchParams(querySignature)),

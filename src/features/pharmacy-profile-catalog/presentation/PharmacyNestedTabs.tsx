@@ -10,7 +10,7 @@ import type {
   PharmacyProfileCatalogCategoryView,
   PharmacyProfileCatalogSubcategoryView,
 } from "../domain/pharmacy-profile-catalog.types";
-import type { ProductRecord } from "@/features/product";
+import type { ProductRecord } from "@asol/product-core";
 import { PharmacyCategoryIcon } from "./PharmacyCategoryIcon";
 
 const text = {

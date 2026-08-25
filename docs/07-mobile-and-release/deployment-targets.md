@@ -5,7 +5,7 @@
 | Target | Command | API | Database |
 |--------|---------|-----|----------|
 | Local development | `npm run dev` | Same origin `/api/*` | SQLite |
-| Hosted backend | `npm run build` + deploy | Same origin or remote | Turso |
+| Hosted backend | Local `npm run build` (correctness) then deploy. Vercel GitHub builds use `npm run build:vercel` | Same origin or remote | Turso |
 | Static export (GitHub Pages) | `npm run build:static` | Remote via `ASOL_API_BASE_URL` | None (SPA only) |
 | Capacitor (Android / iOS) | `npm run cap:build` | Baked API URL | None (shell over `out/`) |
 | Notifications service | `npm run notifications:deploy` | Own origin, `/api/notifications/send` | Notifications Turso only |
@@ -41,10 +41,25 @@ Keep the main project's GitHub connection as it is. The deploy command runs the
 CLI with `services/notifications` as its working directory, so it writes that
 folder's `.vercel`, never the repository root's link.
 
+## Vercel hosted builds vs local correctness
+
+The GitHub-linked main Vercel project does **not** run the local correctness
+gate. `vercel.json` `buildCommand` is `npm run build:vercel`
+(`scripts/vercel-deployment-build.ts`): Deployment/Smoke Guards only — hosted
+Node engines, required runtime **key names**, `next build`, and
+`vercel:function-size:check`. It does not run `architecture:check`, lint,
+typecheck, generated test gates, or database ensure/schema sync.
+
+Local `npm run build` remains the correctness gate (`scripts/run-generated-gate.ts build`).
+Do not point Vercel at `npm run build`. Isolated `services/*` projects keep
+`next build` only.
+
 ## One-command production deployment
 
-GitHub Actions is intentionally unused. Two commands push `main` to production
-from a local `main` working tree:
+GitHub Actions is not a release gate. Direct `git push origin main` has **no
+GitHub CI** unless the commit also touches `docs/**`, in which case only the
+docs workflow runs. See [github-ci-policy.md](./github-ci-policy.md).
+Two commands still push `main` to production from a local `main` working tree:
 
 ```bash
 npm run deploy:all    # full preflight, then publish

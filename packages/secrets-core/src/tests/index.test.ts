@@ -10,6 +10,7 @@ import {
   isGitIgnored,
   manifestsContainSameFiles,
   resolveInsideWorkspace,
+  shouldSkipSecretDiscoveryDirectory,
 } from '../index';
 
 const ROOT = process.cwd();
@@ -102,6 +103,7 @@ assert.ok(
 for (const cli of [
   'scripts/backup-project-secrets.ts',
   'scripts/restore-project-secrets.ts',
+  'scripts/verify-project-secrets.ts',
   'scripts/initialize-secret-archive-key.ts',
 ]) {
   const text = readFileSync(path.join(ROOT, cli), 'utf8');
@@ -120,5 +122,94 @@ for (const cli of [
     `${cli} performs its own cryptography. The envelope is held once, in the package.`,
   );
 }
+
+assert.equal(
+  shouldSkipSecretDiscoveryDirectory('worktrees', '.claude/worktrees', false),
+  true,
+  'Agent worktrees are never archived.',
+);
+assert.equal(
+  shouldSkipSecretDiscoveryDirectory('nested-clone', '.claude/worktrees/nested-clone', true),
+  true,
+  'A nested repository clone under an agent worktree is never archived.',
+);
+assert.equal(
+  shouldSkipSecretDiscoveryDirectory(
+    '.secret-archive',
+    '.claude/worktrees/nested-clone/.secret-archive',
+    false,
+  ),
+  true,
+  'Adversarial nested .claude/worktrees paths stay excluded even without a nested .git.',
+);
+assert.equal(
+  shouldSkipSecretDiscoveryDirectory(
+    'AuthKey_dir',
+    '.claude/worktrees/nested-clone/fastlane',
+    false,
+  ),
+  true,
+  'App Store material under an agent worktree is never archived from that clone.',
+);
+assert.equal(
+  shouldSkipSecretDiscoveryDirectory('gova-copy', 'tmp/gova-copy', true),
+  true,
+  'A duplicated repository clone with its own .git is never archived.',
+);
+assert.equal(
+  shouldSkipSecretDiscoveryDirectory('fastlane', 'fastlane', false),
+  false,
+  'The real Fastlane directory remains eligible.',
+);
+assert.equal(
+  shouldSkipSecretDiscoveryDirectory('android', 'android', false),
+  false,
+  'The real Android tree remains eligible for signing material.',
+);
+
+const packageScripts = (
+  JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8')) as {
+    scripts?: Record<string, string>;
+  }
+).scripts ?? {};
+assert.equal(
+  packageScripts['secrets:verify'],
+  'npx tsx scripts/verify-project-secrets.ts',
+  'secrets:verify is the read-only presence reporter.',
+);
+
+const backupPaths = JSON.parse(
+  readFileSync(path.join(ROOT, 'config/secret-backup-paths.json'), 'utf8'),
+) as { extensions?: string[]; namePatterns?: string[] };
+assert.equal(backupPaths.extensions?.includes('.p8'), true, 'App Store .p8 files are backup-eligible.');
+assert.equal(
+  backupPaths.namePatterns?.includes('^AuthKey_.*\\.p8$'),
+  true,
+  'AuthKey_*.p8 App Store filenames are backup-eligible without committing a key.',
+);
+
+const verifyCli = readFileSync(path.join(ROOT, 'scripts/verify-project-secrets.ts'), 'utf8');
+assert.doesNotMatch(
+  verifyCli,
+  /console\.(log|error)\([^)]*process\.env/,
+  'secrets:verify must never print environment values.',
+);
+const presenceSource = readFileSync(
+  path.join(ROOT, 'scripts/secret-presence-status.ts'),
+  'utf8',
+);
+assert.match(presenceSource, /"present"/);
+assert.match(presenceSource, /"empty"/);
+assert.match(presenceSource, /"missing"/);
+assert.match(presenceSource, /"file-present"/);
+assert.match(presenceSource, /"file-missing"/);
+
+const ensureRestore = readFileSync(
+  path.join(ROOT, 'scripts/ensure-release-secrets-restored.ts'),
+  'utf8',
+);
+assert.match(ensureRestore, /SECRET_ARCHIVE_PASSWORD_ENV_VAR/);
+assert.match(ensureRestore, /PORTABLE_ARCHIVE_PATH/);
+assert.doesNotMatch(ensureRestore, /promptHidden|readline|isTTY/);
 
 console.log('@asol/secrets-core contract: 1 door, workspace containment and archive exclusions pinned.');

@@ -5,25 +5,17 @@ import dotenv from 'dotenv';
 /**
  * Blocks branch creation on GitHub for every ref except `main`.
  *
- * NOT CURRENTLY APPLIED. It was applied once, verified, and removed on purpose — running
- * this script turns the block back on, so read the trade-off before you do.
+ * NOT a required-status-check ruleset. Pushes to `main` stay unrestricted.
  *
- * A ruleset with no bypass actors refuses the owner's own branch pushes as well as an
- * agent's, and there is no useful middle setting: the automation that created the ten
- * branches this repository once carried pushes with an owner-scoped token, so any bypass
- * actor broad enough to keep the owner unblocked also unblocks the automation. Between a
- * block that stops the developer and no server-side block at all, this repository takes
- * the second. `.githooks/pre-push` and rule 10 of `CLAUDE.md` carry the rule instead, and
- * their limit is real: neither runs in a cloud session or the GitHub web UI.
+ * A ruleset with no bypass actors refuses the owner's own *other-branch* pushes as well as an
+ * agent's. `refs/heads/main` is excluded so this ruleset cannot delay or reject a push to main.
  *
- * The script stays because that decision may not be permanent, and because rebuilding a
- * verified ruleset from memory later is worse than keeping the one that was checked
- * against a live repository.
+ * `.githooks/pre-push` and rule 10 of `CLAUDE.md` also carry the rule. The hook only runs when
+ * `core.hooksPath` points at `.githooks`.
  *
- * This is a repository *ruleset*, not branch protection. The two are separate systems:
- * `scripts/protect-main-branch.ts` governs how `main` may move, and this governs whether
- * any other branch may come into existence. Neither replaces the other, and a ruleset is
- * the only one of the two that can express "creation" as a rule.
+ * This is a repository *ruleset*, not branch protection. `scripts/protect-main-branch.ts`
+ * must not apply protection on `main`. This script only governs whether any other branch
+ * may come into existence.
  *
  * The credential is `GITHUB_ADMIN_TOKEN` from git-ignored `.env.local`, the same
  * fine-grained token `github:protect` uses (`Administration: Read and write`, this
@@ -78,7 +70,7 @@ function buildPayload(): RulesetPayload {
       },
     },
     // Creation only. Not `deletion` and not `update`: deleting a stray branch must stay
-    // possible, and main's movement is governed by branch protection, not here.
+    // possible, and pushes to `main` stay unrestricted.
     rules: [{ type: 'creation' }],
   };
 }

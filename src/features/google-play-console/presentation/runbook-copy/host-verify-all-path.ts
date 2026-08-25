@@ -13,7 +13,7 @@ export const HOST_VERIFY_ALL_PATH_HELP: Record<string, string> = {
   "host-verify-all-version-validate":
     "مرجع: version:validate داخل verify:all.",
   "host-verify-all-ci-coverage":
-    "مرجع: npm run ci:coverage — parity مع native-core.yml داخل verify:all.",
+    "مرجع: npm run github:ci-policy — لا CI عام على GitHub؛ وثائق docs/** فقط.",
   "host-verify-all-android-backup":
     "android:backup:validate — خطوة verify:all (قابل للتشغيل منفصلاً).",
   "host-verify-all-android-r8":

@@ -168,7 +168,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/env-core/` |
 | **Purpose** | Environment variable reading rules |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./files` |
+| **Public Exports** | `.` · `./files` · `./process` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:env-core` |

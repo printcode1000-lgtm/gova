@@ -7,6 +7,10 @@ import {
   assertDevelopmentToolingAllowed,
   developmentToolingEnvironment,
 } from "@/core/config/development-guard.server";
+import {
+  appStoreConnectCredentialsAreReady,
+  googlePlayCredentialsAreReady,
+} from "@asol/ota-core/publishing";
 
 import type {
   GooglePlayConsoleConfigStatus,
@@ -147,10 +151,33 @@ const REQUIREMENT_FILE_FALLBACKS: Record<string, string> = {
   ASOL_OTA_SIGNING_PRIVATE_KEY: path.join(".ota", "private-key.pem"),
 };
 
+const FILE_PATH_REQUIREMENTS = new Set([
+  "ASOL_ANDROID_KEYSTORE_FILE",
+  "GOOGLE_PLAY_JSON_KEY_FILE",
+  "APP_STORE_CONNECT_API_KEY_KEY_FILEPATH",
+]);
+
 /** A requirement may list interchangeable variables separated by a pipe. */
 export function releaseRequirementSatisfied(requirement: string): boolean {
+  if (
+    requirement === "GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64" ||
+    requirement === "GOOGLE_PLAY_CREDENTIALS"
+  ) {
+    return googlePlayCredentialsAreReady();
+  }
+  if (requirement === "APP_STORE_CONNECT_CREDENTIALS") {
+    return appStoreConnectCredentialsAreReady();
+  }
   const names = requirement.split("|");
-  if (names.some((name) => process.env[name]?.trim())) return true;
+  if (names.some((name) => process.env[name]?.trim())) {
+    const fileNames = names.filter((name) => FILE_PATH_REQUIREMENTS.has(name));
+    if (fileNames.length === 0) return true;
+    return fileNames.some((name) => {
+      const value = process.env[name]?.trim();
+      if (!value) return false;
+      return existsSync(path.resolve(process.cwd(), value));
+    });
+  }
   return names.some((name) => {
     const fallback = REQUIREMENT_FILE_FALLBACKS[name];
     return (

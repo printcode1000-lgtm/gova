@@ -1,15 +1,17 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { ChevronLeft, MessageSquare } from "lucide-react";
-import { useSession } from "@/features/auth/ui";
+import { shouldUseUnoptimizedImage } from "@asol/storage-core";
+import { useSessionRuntime } from "@/shared/session-runtime";
 import type {
   ProductReview,
   ProductReviewsResult,
   ReviewSort,
 } from "@/features/product";
 import { productReviewApiService } from "@/features/product/application/services/product-review-api-service";
-import { profileApiService } from "@/features/profile/ui";
+import { getProfileReviewsPort } from "../ports/profile-reviews.port";
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
 
 import { PAGE_SIZE, emptyReviewsResult, Stars, relativeDate } from "./product-reviews/ProductReviews.review-formatting";
@@ -38,7 +40,7 @@ export function ProductReviews({
   commentsEnabled: boolean;
   type?: "product" | "profile";
 }) {
-  const { session, isLoggedIn } = useSession();
+  const { session, isLoggedIn } = useSessionRuntime();
   const [result, setResult] = React.useState<ProductReviewsResult | null>(null);
   const [sort, setSort] = React.useState<ReviewSort>("newest");
   const [loading, setLoading] = React.useState(true);
@@ -76,13 +78,13 @@ export function ProductReviews({
                 PAGE_SIZE,
                 session?.uid ?? "",
               )
-            : ((await profileApiService.listReviews(
+            : await getProfileReviewsPort().list(
                 targetId,
                 sort,
                 offset,
                 PAGE_SIZE,
                 session?.uid ?? "",
-              )) as any);
+              );
         setResult((current) =>
           append && current
             ? { ...next, reviews: [...current.reviews, ...next.reviews] }
@@ -148,14 +150,14 @@ export function ProductReviews({
               styleMode: commentsEnabled ? "stars-comments" : "stars",
             });
         } else if (editedId)
-          await profileApiService.updateReview({
+          await getProfileReviewsPort().update({
             reviewId: editedId,
             uid: session.uid,
             rating: nextRating,
             comment: nextComment,
           });
         else
-          await profileApiService.createReview({
+          await getProfileReviewsPort().create({
             targetUid: targetUid!,
             uid: session.uid,
             rating: nextRating,
@@ -186,7 +188,7 @@ export function ProductReviews({
       execute: async () => {
         if (type === "product")
           await productReviewApiService.delete(reviewId, session.uid);
-        else await profileApiService.deleteReview(reviewId, session.uid);
+        else await getProfileReviewsPort().delete(reviewId, session.uid);
         await refresh();
       },
     });
@@ -207,7 +209,7 @@ export function ProductReviews({
         if (type === "product")
           await productReviewApiService.reply(reviewId, session.uid, nextText);
         else
-          await profileApiService.replyReview(reviewId, session.uid, nextText);
+          await getProfileReviewsPort().reply(reviewId, session.uid, nextText);
         setReplyReview(null);
         setReplyText("");
         await refresh();
@@ -224,7 +226,7 @@ export function ProductReviews({
       execute: async () => {
         if (type === "product")
           await productReviewApiService.deleteReply(reviewId, session.uid);
-        else await profileApiService.deleteReplyReview(reviewId, session.uid);
+        else await getProfileReviewsPort().deleteReply(reviewId, session.uid);
         await refresh();
       },
     });
@@ -319,12 +321,16 @@ export function ProductReviews({
               >
                 <div className="flex gap-3">
                   {review.reviewerAvatarUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={review.reviewerAvatarUrl}
-                      alt={review.reviewerName}
-                      className="h-11 w-11 shrink-0 rounded-full object-cover"
-                    />
+                    <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full">
+                      <Image
+                        src={review.reviewerAvatarUrl}
+                        alt={review.reviewerName}
+                        fill
+                        sizes="44px"
+                        className="object-cover"
+                        unoptimized={shouldUseUnoptimizedImage(review.reviewerAvatarUrl)}
+                      />
+                    </span>
                   ) : (
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 font-bold text-primary">
                       {review.reviewerName.slice(0, 1).toUpperCase()}
@@ -365,7 +371,7 @@ export function ProductReviews({
                                 session.uid,
                               );
                             else
-                              await profileApiService.helpfulReview(
+                              await getProfileReviewsPort().helpful(
                                 review.id,
                                 session.uid,
                               );

@@ -1,5 +1,5 @@
 import { ProductCard } from "@/features/product-card/ui";
-import type { ProductRecord } from "@/features/product";
+import type { ProductRecord } from "@asol/product-core";
 import {
   createProductCardViewModel,
   type ProductCardAction,

@@ -24,7 +24,7 @@ Default-deny applies to package registration, vendor SDK usage, application laye
 | Add `exports` subpath without declaration | **Denied** at resolution | Key added to `package.json` + contract test |
 | Page component writes to DB | **Denied** | Routed through `@asol/page-save-core` |
 | Service account reaches `crypto` task | **Absent** | Only if declaration + credentials exist |
-| GitHub Actions CI gate | **Absent** | Enforcement via npm scripts only |
+| GitHub Actions CI gate | **Absent for code** | Docs-only workflow when `docs/**` changes; correctness via local npm scripts |
 
 ## Enforcement mechanism
 

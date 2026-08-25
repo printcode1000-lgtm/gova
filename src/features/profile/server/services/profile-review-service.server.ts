@@ -2,7 +2,7 @@ import "server-only";
 
 import { getUserByUidQuery } from "@asol/data-core/auth";
 import { logServerSystemIssue } from "@/features/system-logs/server";
-import type { ReviewSort } from "@/features/product";
+import type { ReviewSort } from "@asol/data-core/product/entities";
 import type {
   ProfileReviewsResult,
   SaveProfileReviewInput,

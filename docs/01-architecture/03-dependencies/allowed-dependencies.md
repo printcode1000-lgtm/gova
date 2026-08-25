@@ -31,7 +31,8 @@ Application wiring modules (`src/features/**/*-ports.ts`, `src/core/composition/
 | Storage consumer | `backup-core` → `storage-core/server` | R2 via port, not direct SDK |
 | Auth token | `auth-core` → `signed-token-core` | Shared envelope algorithm |
 | Observability | `observability-core` → `data-core/browser`, `./telemetry` | Browser telemetry path |
-| Release | `release-core` → `vercel-deploy-core`, `ota-core/publishing` | Console orchestration |
+| Release | `release-core` → `vercel-deploy-core`, `ota-core/publishing`, `env-core/process` | Console orchestration and shared release-tool env load |
+| OTA tooling | `ota-core` → `env-core/process` | Same release-tool env loader as the console |
 | Deploy metadata | `vercel-deploy-core` → `account-declarations` | Safe: declarations import nothing |
 | Composition → declarations | `orders-composition` → `account-declarations/orders` | Per-account door only |
 | Composition → capability | `notifications-composition` → `notifications-core` | Wiring delivery |

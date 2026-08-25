@@ -77,7 +77,7 @@ function validateCompositionFeatureSeamRegistry(): void {
       seen.add(specifier);
 
       const match = specifier.match(/^@\/features\/([^/]+)\/(.+)$/);
-      if (!match || ['ui', 'server', 'index'].includes(match[2]!)) {
+      if (!match || ['ui', 'server', 'index', 'session', 'ports'].includes(match[2]!)) {
         addViolation(
           'Feature Doors',
           join(ROOT, 'packages', packageFolder),
@@ -145,7 +145,7 @@ export function checkFeatureDoorContract(): void {
         const target = deepAlias[1]!;
         const rest = deepAlias[2]!;
 
-        if (rest === 'ui' || rest === 'server') {
+        if (rest === 'ui' || rest === 'server' || rest === 'session' || rest === 'ports') {
           validateDoorImport(repoRel, importerFeature, target, specifier);
           continue;
         }
@@ -222,7 +222,7 @@ function validateDoorImport(
     return;
   }
 
-  const doorMatch = specifier.match(/^@\/features\/([^/]+)(?:\/(ui|server))?$/);
+  const doorMatch = specifier.match(/^@\/features\/([^/]+)(?:\/(ui|server|session|ports))?$/);
   if (specifier.startsWith('@/features/') && !doorMatch) {
     addViolation(
       'Feature Doors',
@@ -234,8 +234,17 @@ function validateDoorImport(
   }
 
   if (doorMatch) {
+    const rest = doorMatch[2];
     const door: import('../registry/application-features-registry').FeatureDoor =
-      doorMatch[2] === 'ui' ? './ui' : doorMatch[2] === 'server' ? './server' : '.';
+      rest === 'ui'
+        ? './ui'
+        : rest === 'server'
+          ? './server'
+          : rest === 'session'
+            ? './session'
+            : rest === 'ports'
+              ? './ports'
+              : '.';
     if (!target.doors.includes(door)) {
       addViolation(
         'Feature Doors',

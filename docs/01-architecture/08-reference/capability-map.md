@@ -207,7 +207,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Environment variable reading rules |
 | **Owner Package** | `@asol/env-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/env-core` · `@asol/env-core/files` |
+| **Public Gateway** | `@asol/env-core` · `@asol/env-core/files` · `@asol/env-core/process` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | none (pure logic or ports) |

@@ -6,12 +6,17 @@ import dotenv from "dotenv";
 import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 import { isValidJavaHome, resolveJavaHome } from "./android/java-home";
 import { validateRuntimeCompatibilityReference } from "./runtime-compatibility-reference";
+import {
+  classifyHost,
+  evidenceGapMessage,
+} from "./runtime-compatibility-policy";
+import { HOSTED_RUNTIME_ENV_KEYS } from "./vercel-deployment-guards";
 
 dotenv.config({ path: ".env.local", quiet: true });
 dotenv.config({ path: ".env", quiet: true });
 
 type Scenario = "all" | "development" | "web" | "production" | "android" | "ios";
-type Level = "OK" | "INSTALL" | "UPDATE" | "CONFIGURE" | "INFO" | "NOT_APPLICABLE";
+type Level = "OK" | "INSTALL" | "UPDATE" | "CONFIGURE" | "INFO" | "NOT_APPLICABLE" | "EVIDENCE_GAP";
 
 interface CheckResult {
   scenario: Exclude<Scenario, "all"> | "common";
@@ -97,6 +102,35 @@ function checkCommon(): void {
   });
 
   const referenceErrors = validateRuntimeCompatibilityReference(ROOT);
+  const host = classifyHost(process.version, platform(), referenceErrors.length === 0);
+  add({
+    scenario: "common",
+    item: "Host class",
+    level:
+      host.hostClass === "unsupported-host"
+        ? "CONFIGURE"
+        : host.hostClass === "canonical-baseline-host"
+          ? "OK"
+          : "INFO",
+    installed: host.hostClass,
+    required: "canonical-baseline-host, compatible-host, or unsupported-host",
+    action:
+      host.hostClass === "unsupported-host"
+        ? "Install Node.js 22–24. Do not rewrite lockfiles or the compatibility reference for this host."
+        : host.hostClass === "compatible-host"
+          ? "Compatible for agent work. Final source, lockfiles, and generated artifacts must still match the canonical baseline."
+          : "No action.",
+  });
+  for (const gap of host.unavailableVerifications) {
+    add({
+      scenario: "common",
+      item: gap,
+      level: "EVIDENCE_GAP",
+      installed: `${platform()} ${release()}`,
+      required: "macOS with Xcode compile/archive/sign",
+      action: evidenceGapMessage(gap),
+    });
+  }
   add({
     scenario: "common",
     item: "Immutable compatibility reference",
@@ -302,27 +336,8 @@ function checkProduction(): void {
   const keys = [...new Set(Object.values(ACCOUNT_DECLARATIONS).map((declaration) => declaration.tokenEnvVar))];
   const missing = keys.filter((key) => !envConfigured(key));
   add({ scenario: "production", item: "Vercel account tokens", level: missing.length ? "CONFIGURE" : "OK", installed: `${keys.length - missing.length}/${keys.length} configured`, required: keys.join(", "), action: missing.length ? `Configure without committing: ${missing.join(", ")}.` : "No action." });
-  add({ scenario: "production", item: "Vercel CLI", level: "INFO", installed: "ephemeral", required: "vercel@59.0.0", action: "No global install. Deployment scripts download the pinned CLI through npx." });
-  const databaseKeys = [
-    "TURSO_DATABASE_URL", "TURSO_AUTH_TOKEN",
-    "TURSO_PRODUCT_DATABASE_URL", "TURSO_PRODUCT_AUTH_TOKEN",
-    "TURSO_NOTIFICATIONS_DATABASE_URL", "TURSO_NOTIFICATIONS_AUTH_TOKEN",
-    "ORDERS_CORE_DATABASE_URL", "ORDERS_CORE_DATABASE_AUTH_TOKEN",
-    "PROFILE_CORE_DATABASE_URL", "PROFILE_CORE_DATABASE_AUTH_TOKEN",
-  ];
-  const notificationKeys = [
-    "ASOL_SESSION_SIGNING_SECRET",
-    "ASOL_NOTIFICATION_GRANT_SECRET",
-    "WEB_PUSH_VAPID_PRIVATE_KEY",
-    "NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL",
-    "NEXT_PUBLIC_ASOL_PRODUCTS_URL",
-    "NEXT_PUBLIC_ASOL_ORDERS_URL",
-    "NEXT_PUBLIC_ASOL_PROFILES_URL",
-  ];
-  const accountRuntimeKeys = Object.values(ACCOUNT_DECLARATIONS).flatMap((declaration) => [
-    ...declaration.requiredEnv,
-  ]);
-  const runtimeKeys = [...new Set([...databaseKeys, ...notificationKeys, ...accountRuntimeKeys])];
+  add({ scenario: "production", item: "Vercel CLI", level: "INFO", installed: "project-pinned vercel@59.0.0", required: "vercel@59.0.0 from package.json / node_modules", action: "No global or npx CLI drift. Deployment scripts run the pinned local binary." });
+  const runtimeKeys = [...HOSTED_RUNTIME_ENV_KEYS];
   const runtimeMissing = runtimeKeys.filter((key) => !envConfigured(key));
   add({
     scenario: "production",
@@ -384,7 +399,14 @@ function checkAndroid(): void {
 
 function checkIos(): void {
   if (platform() !== "darwin") {
-    add({ scenario: "ios", item: "iOS toolchain", level: "NOT_APPLICABLE", installed: `${platform()} ${release()}`, required: "macOS with Xcode", action: "Build and sign iOS only on a Mac. The source and Swift Package Manager configuration remain portable." });
+    add({
+      scenario: "ios",
+      item: "iOS toolchain",
+      level: "EVIDENCE_GAP",
+      installed: `${platform()} ${release()}`,
+      required: "macOS with Xcode",
+      action: evidenceGapMessage("ios-compile-sign"),
+    });
     return;
   }
   const xcode = commandVersion("xcodebuild", ["-version"]);
@@ -403,7 +425,15 @@ function printReport(): void {
     action: result.action,
   })));
   const blocking = results.filter((result) => ["INSTALL", "UPDATE", "CONFIGURE"].includes(result.level));
-  console.log(`Summary: ${results.filter((result) => result.level === "OK").length} ready, ${blocking.length} action(s), ${results.filter((result) => result.level === "INFO").length} informational.`);
+  const evidenceGaps = results.filter((result) => result.level === "EVIDENCE_GAP");
+  console.log(
+    `Summary: ${results.filter((result) => result.level === "OK").length} ready, ${blocking.length} action(s), ${results.filter((result) => result.level === "INFO").length} informational, ${evidenceGaps.length} evidence gap(s).`,
+  );
+  if (evidenceGaps.length) {
+    for (const gap of evidenceGaps) {
+      console.log(`Evidence gap (not passing): ${gap.item} — ${gap.action}`);
+    }
+  }
   if (blocking.length) process.exitCode = 1;
 }
 

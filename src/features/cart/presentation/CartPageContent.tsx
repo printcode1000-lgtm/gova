@@ -22,7 +22,7 @@ import {
   updateCartItemQuantity,
 } from "@/features/cart/application/cart-store";
 import { useCart } from "@/features/cart/presentation/hooks/use-cart";
-import { useSession } from "@/features/auth/ui";
+import { useSessionRuntime } from "@/shared/session-runtime";
 import { useTranslation } from "@/shared/i18n";
 import { notifications } from "@/features/notifications";
 import { useCartDiscountQuote } from "@/features/seller-discounts/ui";
@@ -36,7 +36,7 @@ export function CartPageContent() {
   const router = useRouter();
   const { locale } = useTranslation();
   const copy = cartPageCopy(locale);
-  const { session, isLoading: isSessionLoading } = useSession();
+  const { session, isLoading: isSessionLoading } = useSessionRuntime();
   const { items, totalQuantity } = useCart();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState("");

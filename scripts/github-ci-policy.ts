@@ -1,0 +1,168 @@
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+
+/**
+ * Local GitHub CI policy.
+ *
+ * GitHub Actions must not run for ordinary project changes. The only allowed
+ * workflow is docs-only, and it must be path-filtered to `docs/**`.
+ *
+ * This module is invoked by local npm scripts and `architecture:check`. It is
+ * not a GitHub job and must never be wired to `push` for the whole tree.
+ */
+
+const ROOT = process.cwd();
+const DOCS_WORKFLOW = "docs.yml";
+
+export const ALLOWED_WORKFLOW_FILES = [DOCS_WORKFLOW] as const;
+
+const FORBIDDEN_EVENTS = [
+  "pull_request",
+  "pull_request_target",
+  "workflow_dispatch",
+  "schedule",
+  "repository_dispatch",
+  "workflow_call",
+  "issue_comment",
+  "release",
+  "merge_group",
+] as const;
+
+const FORBIDDEN_COMMANDS = [
+  "npm test",
+  "npm run lint",
+  "npm run typecheck",
+  "npm run build",
+  "npm run build:static",
+  "npm run architecture:check",
+  "npm run services:build",
+  "npm run services:sync",
+  "npm run test:",
+] as const;
+
+/** Extra CI configs that must not reappear. Checked locally only — never as a GitHub job. */
+export const FORBIDDEN_CI_PATHS = [
+  ".travis.yml",
+  "azure-pipelines.yml",
+  "Jenkinsfile",
+  ".gitlab-ci.yml",
+  "appveyor.yml",
+  ".mergify.yml",
+  "bitbucket-pipelines.yml",
+  path.join(".circleci", "config.yml"),
+  path.join(".github", "dependabot.yml"),
+  path.join("scripts", "verify-ci-coverage.ts"),
+] as const;
+
+function listWorkflowYamlFiles(dir: string, prefix = ""): string[] {
+  if (!existsSync(dir)) return [];
+  const names = readdirSync(dir, { withFileTypes: true });
+  const out: string[] = [];
+  for (const entry of names) {
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      out.push(...listWorkflowYamlFiles(path.join(dir, entry.name), rel));
+      continue;
+    }
+    if (/\.ya?ml$/i.test(entry.name)) out.push(rel);
+  }
+  return out.sort();
+}
+
+function stripYamlComments(source: string): string {
+  return source.replace(/(^|[^:])#.*$/gm, "$1");
+}
+
+export function docsWorkflowViolations(source: string): string[] {
+  const errors: string[] = [];
+  const body = stripYamlComments(source);
+  if (!/^name:\s*docs\s*$/m.test(body)) {
+    errors.push("Docs workflow name must be exactly `docs`.");
+  }
+  if (!/^on:\s*$/m.test(body) || !/^\s{2}push:\s*$/m.test(body)) {
+    errors.push("Docs workflow must trigger only on push.");
+  }
+  if (!/^\s{4}branches:\s*$/m.test(body) || !/^\s{6}-\s*main\s*$/m.test(body)) {
+    errors.push("Docs workflow must be limited to the main branch.");
+  }
+  if (!/^\s{4}paths:\s*$/m.test(body) || !/^\s{6}-\s*["']docs\/\*\*["']\s*$/m.test(body)) {
+    errors.push("Docs workflow must declare paths: docs/** so it never runs for non-docs changes.");
+  }
+  if (/\bpaths-ignore\s*:/.test(body)) {
+    errors.push("Docs workflow must not use paths-ignore; only a positive docs/** path filter is allowed.");
+  }
+  if (!/^ {2}docs:\s*$/m.test(body)) {
+    errors.push("Docs workflow job id must be `docs`.");
+  }
+  if (!body.includes("npm run docs:check")) {
+    errors.push("Docs workflow must run `npm run docs:check`.");
+  }
+  for (const event of FORBIDDEN_EVENTS) {
+    const asKey = new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m");
+    const asOnList = new RegExp(`\\bon:\\s*\\[?[^\\n]*\\b${event}\\b`);
+    if (asKey.test(body) || asOnList.test(body)) {
+      errors.push(`GitHub event ${event} is forbidden; only path-filtered push to main is allowed.`);
+    }
+  }
+  for (const command of FORBIDDEN_COMMANDS) {
+    if (body.includes(command)) {
+      errors.push(`Docs workflow must not run code CI command: ${command}`);
+    }
+  }
+  return errors;
+}
+
+export function collectGithubCiPolicyErrors(root = ROOT): string[] {
+  const errors: string[] = [];
+  const workflowsDir = path.join(root, ".github", "workflows");
+  const prTemplate = path.join(root, ".github", "pull_request_template.md");
+  if (existsSync(prTemplate)) {
+    errors.push("Pull request templates are forbidden; work lands on main directly.");
+  }
+  for (const relative of FORBIDDEN_CI_PATHS) {
+    if (existsSync(path.join(root, relative))) {
+      errors.push(`Forbidden CI/config path must not exist: ${relative.replace(/\\/g, "/")}`);
+    }
+  }
+  if (!existsSync(workflowsDir)) {
+    errors.push("Missing .github/workflows/docs.yml — docs-only CI is the single allowed workflow.");
+    return errors;
+  }
+  const files = listWorkflowYamlFiles(workflowsDir);
+  if (files.length !== 1 || files[0] !== DOCS_WORKFLOW) {
+    errors.push(
+      `Only ${DOCS_WORKFLOW} may exist under .github/workflows. Found: ${files.join(", ") || "(none)"}.`,
+    );
+  }
+  const docsPath = path.join(workflowsDir, DOCS_WORKFLOW);
+  if (existsSync(docsPath)) {
+    errors.push(...docsWorkflowViolations(readFileSync(docsPath, "utf8")));
+  }
+  const protectPath = path.join(root, "scripts", "protect-main-branch.ts");
+  if (existsSync(protectPath)) {
+    const protect = readFileSync(protectPath, "utf8");
+    if (!protect.includes("Applying branch protection is forbidden")) {
+      errors.push("protect-main-branch.ts must refuse to apply branch protection.");
+    }
+    if (/REQUIRED_STATUS_CHECKS\s*=\s*\[[^\]]*'verify'/.test(protect)) {
+      errors.push("protect-main-branch.ts must not require a GitHub status check.");
+    }
+  }
+  return errors;
+}
+
+export function verifyGithubCiPolicy(): string[] {
+  return collectGithubCiPolicyErrors();
+}
+
+const executedDirectly = process.argv[1]?.replace(/\\/g, "/").endsWith("/scripts/github-ci-policy.ts");
+if (executedDirectly) {
+  const errors = verifyGithubCiPolicy();
+  if (errors.length > 0) {
+    console.error("GitHub CI policy failed:");
+    for (const error of errors) console.error(`- ${error}`);
+    process.exitCode = 1;
+  } else {
+    console.log("GitHub CI policy passed: docs-only path-filtered workflow; no general CI.");
+  }
+}

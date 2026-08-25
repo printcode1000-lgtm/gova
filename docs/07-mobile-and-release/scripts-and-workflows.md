@@ -23,16 +23,19 @@ npm run test:compositions
 npm run test:account-declarations
 npm run test:data-core                # every database + offline schema parity
 npm run test:orders-core               # the order domain
-npm run ci:coverage                    # every package gate actually runs in CI
+npm run github:ci-policy               # local guard: only docs/** GitHub workflow exists
+npm run docs:check                     # documentation contract (also the docs workflow)
 
 # Service deployments — the only check that builds what Vercel builds
 npm run services:sync            # refresh the six generated/ mirrors
 npm run services:verify          # every module edge resolves inside each upload
 npm run services:build           # next build in all six service folders
 
-# GitHub repository administration (rule 6)
-npm run github:protect -- --dry-run
-npm run github:protect
+# GitHub repository administration
+npm run github:protect -- --status     # confirm main has no branch protection
+npm run github:protect -- --remove     # delete leftover protection (apply is forbidden)
+npm run github:block-branches -- --dry-run
+npm run github:ci-policy
 
 # Schema & database
 npm run db:drizzle -- generate
@@ -53,6 +56,11 @@ npm run deploy:all:publish      # commit + push main only
 npm run deploy:all:services     # six CLI service deploys
 npm run deploy:all:main         # verify GitHub-linked gova READY
 npm run data-access:sync-public
+
+npm run secrets:backup
+npm run secrets:restore
+npm run secrets:verify             # names/paths only: present/empty/missing/file-present/file-missing
+npm run secrets:key:init
 
 # Cloudflare R2
 npm run r2:sync:cors
@@ -234,33 +242,26 @@ counts fell from 101/236/57/178 to 79/220/62/162 and nothing turned red.
 The verifier re-reads each upload and resolves every edge inside it — relative
 paths, `@/` paths, and `@asol/<package>/<door>` through the mirrored package's
 own `exports` map, so an undeclared door is reported rather than quietly
-resolved by path. It is in `deploy:all` preflight, in `verify:all`, and in CI.
+resolved by path. It is in `deploy:all` preflight and in `verify:all`.
+
+## GitHub CI and `main`
+
+See [github-ci-policy.md](./github-ci-policy.md). GitHub Actions is not a
+correctness gate. Code pushes to `main` run no workflows. A commit that touches
+`docs/**` runs the docs workflow only.
 
 ## Branch protection
 
 **There is no branch protection on `main`, deliberately.**
-`GET /repos/{repo}/branches/main/protection` returns `404`.
+`GET /repos/{repo}/branches/main/protection` must return `404`.
 
-`npm run github:protect` (`scripts/protect-main-branch.ts`) still applies it, and
-`npm run github:protect -- --remove` takes it off again — the state the repository
-runs in. Both read back to verify rather than trusting the response code, and
-`--dry-run` sends nothing. The credential is `GITHUB_ADMIN_TOKEN` in `.env.local`
-— see [14. Environment Variables](./14-environment-variables.md#github-repository-administration).
+`npm run github:protect` refuses to apply protection. `npm run github:protect -- --remove`
+deletes a leftover rule. `npm run github:protect -- --status` reads it back.
+The credential is `GITHUB_ADMIN_TOKEN` in `.env.local`.
 
-The rule was removed because it never enforced anything. `enforce_admins` was off
-so that `deploy:all` could push to `main` directly, and the owner is the only
-collaborator — so every real push bypassed every rule and announced it:
-`Bypassed rule violations for refs/heads/main`. A required review that no one can
-satisfy and a required check that is skipped on every push are not protection;
-they are a warning printed during releases.
-
-A push must succeed regardless of what the code does. `verify` still runs in CI on
-every push, and its result is reporting, not a gate — pushing broken code to `main`
-is allowed on purpose, because the alternative is a release path that can be
-blocked by a failing check no one can override.
-
-Put it back only if the repository gains a second developer and releases start
-going through pull requests.
+A push to `main` must succeed regardless of what the code does. Local npm
+scripts and `deploy:all` preflight remain the reviewer. There is no required
+GitHub status check.
 
 ## main is the only branch
 
@@ -293,8 +294,8 @@ The hooks live in a tracked directory rather than `.git/hooks` so they ship with
 the repository; `core.hooksPath` is pointed at `.githooks` by the `prepare` npm
 script, which npm runs on install. `.gitattributes` pins the directory to LF —
 `core.autocrlf` is on here, and a CRLF shebang fails as `/bin/sh^M` on a fresh
-checkout, which is exactly when the checks matter most. `git push --no-verify`
-bypasses all of them, deliberately, for the one-off case.
+checkout, which is exactly when the checks matter most. `git push --no-verify` bypasses local hooks. Git cannot remove that flag.
+Do not use it to push any ref other than `main`.
 
 `10-main-only` is the only check. Two others existed briefly — one refusing to
 push while `public/sync_data` was dirty, one for the `secrets:backup` output in
@@ -314,7 +315,7 @@ Nothing blocks a push to `main`, in any form, from any credential. Not
 | `GET /rules/branches/main` | `[]` — the `main-only` ruleset excludes it |
 | `GET /branches/main/protection` | `404` — no protection rule exists |
 | Local hooks | only `10-main-only`, which never inspects a push to `main` |
-| CI | `verify` reports; it gates nothing |
+| GitHub Actions | skipped unless the commit touches `docs/**`; then docs-only |
 
 Force pushes, non-fast-forward pushes, and pushes carrying failing code all
 succeed. That last one is deliberate: a release path that a failing check can
@@ -332,5 +333,5 @@ break it. `productionBranch` is the literal string `main`, so **renaming the
 branch would**. That is the concrete reason `main` is never renamed, on top of
 being the only branch this repository allows.
 
-Nothing in `deploy:all`, `deploy:push`, or `.github/workflows/native-core.yml`
-creates a branch, so no release or CI path is affected either way.
+Nothing in `deploy:all` or `deploy:push` creates a branch, so no release path
+is affected either way.

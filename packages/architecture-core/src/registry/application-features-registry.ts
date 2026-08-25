@@ -8,7 +8,7 @@
  * `permittedDependencies` edges.
  */
 
-export type FeatureDoor = '.' | './ui' | './server';
+export type FeatureDoor = '.' | './ui' | './server' | './session' | './ports';
 export type FeatureRuntimeTarget = 'web' | 'android' | 'ios' | 'server' | 'service';
 
 export interface ApplicationFeature {
@@ -76,10 +76,10 @@ const CLIENT_UI: SurfaceFlags = [true, false, true];
 
 export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
   feature('account-bridge', 'Application wiring for cross-account notification identity bridging', ['.'], WEB, ['@asol/account-bridge'], ['notifications']),
-  feature('advertisements', 'Home advertisements surfaces (hero slider, featured marquee, trending ribbon)', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/hero-slider-core', '@asol/featured-marquee-core', '@asol/trending-ribbon-core'], ['auth', 'product', 'product-card', 'profile', 'storage'], FULL),
+  feature('advertisements', 'Home advertisements surfaces (hero slider, featured marquee, trending ribbon)', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/hero-slider-core', '@asol/featured-marquee-core', '@asol/trending-ribbon-core', '@asol/auth-core'], ['product', 'product-card', 'storage'], FULL),
   feature('app-reset', 'Client application reset orchestration', ['.'], WEB, [], ['notifications']),
-  feature('auth', 'Authentication, session, registration, and account deletion UI/services', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/auth-core'], ['app-reset', 'notifications', 'page-save', 'profile', 'storage', 'system-logs'], FULL),
-  feature('cart', 'Shopping cart client and server orchestration', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], ['auth', 'notifications', 'profile', 'seller-discounts'], FULL),
+  feature('auth', 'Authentication, session, registration, and account deletion UI/services', ['.', './ui', './server', './session'], WEB_MOBILE_SERVER, ['@asol/auth-core', '@asol/data-core'], ['app-reset', 'notifications', 'page-save', 'storage', 'system-logs'], FULL),
+  feature('cart', 'Shopping cart client and server orchestration', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/product-core'], ['notifications', 'seller-discounts'], FULL),
   feature('catalog-studio', 'Developer catalog studio editing surfaces', ['.', './server'], WEB_MOBILE_SERVER, ['@asol/catalog-core'], ['auth', 'page-save'], FULL),
   feature('categories', 'Category browsing and seller discovery presentation', ['.', './ui'], WEB_MOBILE_SERVER, ['@asol/catalog-core'], ['profile', 'seller-card'], FULL),
   feature('contact', 'Contact actions and seller contact orchestration', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], [], FULL),
@@ -100,14 +100,14 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
   feature('orders', 'Orders presentation and server orchestration', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/orders-core'], ['auth', 'cart', 'notifications', 'profile', 'system-logs'], FULL),
   feature('ota', 'OTA application wiring and server surfaces', ['.', './server'], WEB_SERVER, ['@asol/ota-core'], ['auth', 'categories', 'system-logs'], [false, true, false]),
   feature('page-save', 'Page-save gateway application wiring and hooks', ['.', './ui'], WEB_MOBILE, ['@asol/page-save-core'], ['onboarding', 'storage'], CLIENT_UI),
-  feature('page-snapshot', 'Page snapshot application wiring', ['.'], WEB_MOBILE, ['@asol/page-snapshot-core'], ['auth'], CLIENT_UI),
+  feature('page-snapshot', 'Page snapshot application wiring', ['.', './ports'], WEB_MOBILE, ['@asol/page-snapshot-core'], [], CLIENT_UI),
   feature('password-recovery', 'Password recovery flows', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], ['auth'], FULL),
-  feature('pharmacy-profile-catalog', 'Pharmacy profile catalog editing', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], ['auth', 'page-save', 'product'], FULL),
-  feature('product', 'Product detail, style editors, and product services', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/product-core', '@asol/product-style-core'], ['auth', 'cart', 'categories', 'favorites', 'location', 'page-save', 'pharmacy-profile-catalog', 'product-card', 'profile', 'sharing', 'specialty-chat', 'storage', 'system-logs', 'vehicle-catalog'], FULL),
+  feature('pharmacy-profile-catalog', 'Pharmacy profile catalog editing', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/product-core'], ['page-save', 'product'], FULL),
+  feature('product', 'Product detail, style editors, and product services', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/product-core', '@asol/product-style-core'], ['cart', 'categories', 'favorites', 'location', 'page-save', 'product-card', 'sharing', 'specialty-chat', 'storage', 'system-logs', 'vehicle-catalog'], FULL),
   feature('product-card', 'Product card view-model and presentation', ['.', './ui'], WEB_MOBILE, [], ['favorites', 'product'], CLIENT_UI),
   feature('product-search', 'Product search panel and page', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], ['categories', 'product', 'product-card', 'profile', 'seller-card', 'storage'], FULL),
   feature('profile', 'Seller/user profile surfaces', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], ['advertisements', 'auth', 'categories', 'follow', 'location', 'page-save', 'page-snapshot', 'product', 'profile-products', 'profile-working-hours', 'seller-card', 'seller-discounts', 'sharing', 'specialty-chat', 'storage', 'system-logs'], FULL),
-  feature('profile-products', 'Profile products tabs presentation', ['.', './ui'], WEB_MOBILE, [], ['categories', 'page-snapshot', 'pharmacy-profile-catalog', 'product', 'product-card', 'product-search', 'profile'], CLIENT_UI),
+  feature('profile-products', 'Profile products tabs presentation', ['.', './ui'], WEB_MOBILE, ['@asol/product-core', '@asol/data-core'], ['categories', 'page-snapshot', 'pharmacy-profile-catalog', 'product', 'product-card', 'product-search'], CLIENT_UI),
   feature('profile-working-hours', 'Working hours card presentation', ['.', './ui'], WEB_MOBILE, [], [], CLIENT_UI),
   feature('qr-code', 'QR code generation helpers', ['.'], WEB),
   feature('release-commands', 'Release build-job client and server wiring', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/release-core'], ['google-play-console'], FULL),
@@ -135,10 +135,20 @@ export function featureDoorSpecifiers(feature: ApplicationFeature): readonly str
 }
 
 export function isFeatureDoorSpecifier(specifier: string): { feature: string; door: FeatureDoor } | null {
-  const match = specifier.match(/^@\/features\/([^/]+)(?:\/(ui|server))?$/);
+  const match = specifier.match(/^@\/features\/([^/]+)(?:\/(ui|server|session|ports))?$/);
   if (!match) return null;
   const feature = match[1]!;
-  const door: FeatureDoor = match[2] === 'ui' ? './ui' : match[2] === 'server' ? './server' : '.';
+  const rest = match[2];
+  const door: FeatureDoor =
+    rest === 'ui'
+      ? './ui'
+      : rest === 'server'
+        ? './server'
+        : rest === 'session'
+          ? './session'
+          : rest === 'ports'
+            ? './ports'
+            : '.';
   const entry = featureByName(feature);
   if (!entry || !entry.doors.includes(door)) return null;
   return { feature, door };

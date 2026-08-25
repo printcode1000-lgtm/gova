@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ImagePlus, Loader2 } from "lucide-react";
 
 import { ASOL_API_ROUTES, asolApi } from "@/core/api";
-import { useSession } from "@/features/auth/ui";
+import { useSessionRuntime } from "@/shared/session-runtime";
 import { useStoreDetails } from "@/features/profile/presentation/hooks/use-store-details";
 import { StorageProfiles, type StoredImage } from "@asol/storage-core";
 import {
@@ -44,7 +44,7 @@ export function CustomRequestPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sellerUid = (searchParams.get("sellerUid") ?? "").trim();
-  const { session, isLoading } = useSession();
+  const { session, isLoading } = useSessionRuntime();
   const { locale, isRTL, t } = useTranslation();
   const { details: sellerDetails, isLoading: isLoadingSeller } =
     useStoreDetails(sellerUid || undefined);

@@ -5,9 +5,12 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import {
+  appStoreConnectCredentialsAreReady,
+  googlePlayCredentialsAreReady,
   requireGooglePlayProductionNativeVersion,
   requireIosProductionNativeVersion,
 } from "@asol/ota-core/publishing";
+import { loadReleaseToolEnvironment } from "@asol/env-core/process";
 import { getOtaApprovalServerConfig } from "@asol/ota-core/publishing";
 import { BUILD_COMMAND_CATALOG, findBuildCommand, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../console";
 import { nextBuildJobActivity, nextBuildJobStage } from "../console";
@@ -204,6 +207,7 @@ export function lastMeaningfulLine(output: string): string | undefined {
 }
 
 export function commandReadiness(command: BuildCommandCatalogEntry): BuildCommandReadiness {
+  loadReleaseToolEnvironment();
   const missingEnv = command.requiredEnv
     .filter((requirement) => !releaseConsolePorts.releaseRequirementSatisfied(requirement))
     .map((requirement) => requirement.split("|")[0] as string);
@@ -323,8 +327,11 @@ async function writtenRecently(jobId: string): Promise<boolean> {
 }
 
 async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
+  loadReleaseToolEnvironment();
   const snapshot: ReleaseVersionSnapshot = {
     contentCurrent: releaseConsolePorts.currentWebContentVersion,
+    androidReady: googlePlayCredentialsAreReady(),
+    iosReady: appStoreConnectCredentialsAreReady(),
   };
   try {
     const gradle = await fs.readFile(
@@ -337,15 +344,12 @@ async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
   try {
     snapshot.androidProduction = await requireGooglePlayProductionNativeVersion();
   } catch (error) {
-    snapshot.platformTruthError =
-      error instanceof Error ? error.message : String(error);
+    snapshot.androidTruthError = error instanceof Error ? error.message : String(error);
   }
   try {
     snapshot.iosProduction = await requireIosProductionNativeVersion();
   } catch (error) {
-    snapshot.platformTruthError =
-      snapshot.platformTruthError ??
-      (error instanceof Error ? error.message : String(error));
+    snapshot.iosTruthError = error instanceof Error ? error.message : String(error);
   }
 
   const manifestUrl = getOtaApprovalServerConfig().manifestUrl;

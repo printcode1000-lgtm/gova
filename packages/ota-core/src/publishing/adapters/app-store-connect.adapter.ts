@@ -6,6 +6,20 @@ import { assertNativeVersion } from "../../domain/versioning/content-version";
 
 const APP_STORE_CONNECT_API = "https://api.appstoreconnect.apple.com/v1";
 
+export function appStoreConnectCredentialsAreReady(
+  env: NodeJS.ProcessEnv = process.env,
+  cwd = process.cwd(),
+): boolean {
+  const keyId = env.APP_STORE_CONNECT_API_KEY_KEY_ID?.trim() ?? "";
+  const issuerId = env.APP_STORE_CONNECT_API_KEY_ISSUER_ID?.trim() ?? "";
+  const keyPath = env.APP_STORE_CONNECT_API_KEY_KEY_FILEPATH?.trim() ?? "";
+  if (!keyId || !issuerId || !keyPath) return false;
+  const resolved = path.isAbsolute(keyPath) ? keyPath : path.resolve(cwd, keyPath);
+  return existsSync(resolved);
+}
+
+export const APP_STORE_LIVE_VERSION_STATES = ["READY_FOR_DISTRIBUTION"] as const;
+
 function resolveAppStoreConnectConfig(): {
   keyId: string;
   issuerId: string;
@@ -89,9 +103,9 @@ export async function requireIosProductionNativeVersion(): Promise<string> {
   }
 
   const versions = await appStoreConnectGet<{
-    data?: Array<{ attributes?: { versionString?: string; appStoreState?: string } }>;
+    data?: Array<{ attributes?: { versionString?: string; appVersionState?: string } }>;
   }>(
-    `${APP_STORE_CONNECT_API}/apps/${encodeURIComponent(appId)}/appStoreVersions?filter[appStoreState]=READY_FOR_SALE&limit=50`,
+    `${APP_STORE_CONNECT_API}/apps/${encodeURIComponent(appId)}/appStoreVersions?filter[appVersionState]=${APP_STORE_LIVE_VERSION_STATES.join(",")}&limit=50`,
     token,
   );
 
@@ -101,7 +115,7 @@ export async function requireIosProductionNativeVersion(): Promise<string> {
 
   if (candidates.length === 0) {
     throw new Error(
-      `No READY_FOR_SALE iOS version found for bundle id ${config.bundleId}.`,
+      `No READY_FOR_DISTRIBUTION iOS version found for bundle id ${config.bundleId}.`,
     );
   }
 

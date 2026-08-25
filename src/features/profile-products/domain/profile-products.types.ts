@@ -1,7 +1,5 @@
-'use client';
-
-import type { ProductRecord } from '@/features/product';
-import type { ProfileSpecialtiesSelection } from '@/features/profile';
+import type { ProductRecord } from '@asol/product-core';
+import type { ProfileSpecialtiesSelection } from './profile-specialties.entity';
 
 export type ProfileProductsTabsMode = 'edit' | 'preview';
 

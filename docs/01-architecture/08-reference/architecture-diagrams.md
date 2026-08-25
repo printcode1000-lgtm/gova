@@ -142,7 +142,8 @@ Client bootstrap
   npm run build (full gate)
 ```
 
-No GitHub Actions path — Vercel executes build on push to `main`.
+No general GitHub Actions path. Code pushes to `main` have no GitHub CI. Docs
+changes run `.github/workflows/docs.yml` only.
 
 ## Service deployment topology
 

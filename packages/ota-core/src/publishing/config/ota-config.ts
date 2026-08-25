@@ -1,7 +1,7 @@
 import { createPublicKey } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import dotenv from "dotenv";
+import { loadReleaseToolEnvironment } from "@asol/env-core/process";
 import { canonicalOtaManifestPayload } from "../../domain/release/signature-payload";
 import type { OtaManifestPayload, OtaManifest } from "../../domain/release/manifest-types";
 
@@ -12,8 +12,7 @@ export const DEFAULT_NATIVE_VERSION = "0.0.0";
 export type { OtaManifestPayload, OtaManifest };
 
 export function loadOtaEnvironment(): void {
-  if (existsSync(".env.local")) dotenv.config({ path: ".env.local" });
-  else if (existsSync(".env")) dotenv.config({ path: ".env" });
+  loadReleaseToolEnvironment();
 }
 
 export function getOtaPrefix(): string {

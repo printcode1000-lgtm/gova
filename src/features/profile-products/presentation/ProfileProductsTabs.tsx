@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import { ChevronDown, Plus, Search, Star } from "lucide-react";
 import { ProductSearchPanel } from "@/features/product-search/ui";
-import type { ProductRecord } from "@/features/product";
+import type { ProductRecord } from "@asol/product-core";
 import {
   isPharmacyProfileBucket,
   PharmacyNestedTabs,

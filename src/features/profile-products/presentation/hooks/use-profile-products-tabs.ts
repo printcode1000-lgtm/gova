@@ -4,12 +4,12 @@ import * as React from "react";
 import { useSnapshotState } from "@/features/page-snapshot";
 import { categoryService } from "@/features/categories";
 import { productApiService } from "@/features/product/ui";
-import type { ProductRecord } from "@/features/product";
+import type { ProductRecord } from "@asol/product-core";
 import {
   EMPTY_PROFILE_SPECIALTIES,
   type ProfileSpecialtiesSelection,
-} from "@/features/profile";
-import { profileService } from "@/features/profile/ui";
+} from "../../domain/profile-specialties.entity";
+import { getProfileSpecialtiesPort } from "../../ports/profile-specialties.port";
 import { useTranslation } from "@/shared/i18n";
 import type {
   ProfileProductsFilters,
@@ -69,7 +69,7 @@ export function useProfileProductsTabs({
     }
     let cancelled = false;
     setIsLoadingTabs(true);
-    profileService
+    getProfileSpecialtiesPort()
       .getSpecialties(uid)
       .then((next) => {
         if (!cancelled) {

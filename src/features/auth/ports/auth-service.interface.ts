@@ -6,7 +6,7 @@ import type {
   UpdateProfileInput,
   UserProfile,
 } from '../domain/profile.entity';
-import type { ProfileSpecialtiesSelection } from '@/features/profile';
+import type { ProfileSpecialtiesSelection } from '@asol/data-core/profile/entities';
 
 export interface LoginResult {
   uid: string;

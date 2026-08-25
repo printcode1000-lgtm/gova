@@ -39,15 +39,15 @@ These are **registered** dual owners, not bypasses:
 
 | Assumed exception | Reality |
 |---|---|
-| GitHub Actions skips checks | No workflows — npm scripts only |
+| GitHub Actions skips checks | Only the docs workflow exists, and only for `docs/**`. Code pushes have no GitHub CI. |
 | `eslint-disable no-restricted-imports` | Forbidden without ADR |
 | Test files import DB drivers | Scanned unless in approved data-core test paths |
 | One-off script needs Drizzle | Use `@asol/data-core/tooling` |
-| Preview deployment skips architecture | Vercel runs build chain |
+| Preview deployment skips architecture | Local `npm run build` / `deploy:all` preflight remain the architecture gates. Vercel hosted builds do not re-run them. GitHub does not require checks on `main`. |
 
 ## git push --no-verify
 
-Bypasses local pre-push hook (`10-main-only`) only — does not skip Vercel build gates.
+Bypasses local pre-push hook (`10-main-only`) only — does not add GitHub required checks. Pushing to `main` stays unrestricted.
 
 ## Source Map
 

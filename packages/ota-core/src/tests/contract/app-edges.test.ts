@@ -23,6 +23,7 @@ const DECLARED_APP_EDGES = new Set<string>([]);
 const DECLARED_PACKAGE_DOORS = new Set([
   '@asol/data-core/browser',
   '@asol/data-core/ota',
+  '@asol/env-core/process',
   '@asol/native-core',
 ]);
 

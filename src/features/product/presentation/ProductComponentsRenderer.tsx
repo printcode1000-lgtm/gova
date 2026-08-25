@@ -6,10 +6,10 @@ import {
   ProductComponentFrame,
   ProductField,
 } from "./ProductComponentPrimitives";
-import { ProductAddToCartButton } from "./ProductAddToCartButton";
+import { ProductAddToCartButton } from "@/features/cart/ui";
 import { ProductImageEditors } from "./ProductImageEditors";
 import { ProductImageGallery } from "./ProductImageGallery";
-import { ProductPharmacySpecs } from "@/features/pharmacy-profile-catalog/ui";
+import { getPharmacySpecsSlot } from "../ports/pharmacy-specs-slot.port";
 import { ProductPropertySpecs } from "./ProductPropertySpecs";
 import { ProductRatingSettings } from "./ProductRatingSettings";
 import { ProductReviews } from "./ProductReviews";
@@ -210,15 +210,16 @@ export function ProductComponentsRenderer({
         }
 
         if (key === "pharmacySpecs") {
+          const PharmacySpecs = getPharmacySpecsSlot();
           return (
             <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
-              <ProductPharmacySpecs
-                mode={mode}
-                config={config}
-                details={product}
-                ownerUid={ownerUid}
-                onChange={onProductChange}
-              />
+              {PharmacySpecs({
+                mode,
+                config,
+                details: product,
+                ownerUid,
+                onChange: onProductChange,
+              })}
             </ProductComponentFrame>
           );
         }

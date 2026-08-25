@@ -1,0 +1,36 @@
+# Docs-only GitHub Actions workflow.
+#
+# This is the only allowed workflow. It must never run for a push that does not
+# touch `docs/**`. Code, packages, scripts, and configuration push to `main`
+# with no GitHub CI. Local `npm run github:ci-policy` enforces this contract;
+# that guard is not itself a GitHub job.
+name: docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Documentation contract
+        run: npm run docs:check

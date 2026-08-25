@@ -23,3 +23,8 @@ export * from './presentation/style-editors/vehicle-specs/ProductVehicleSpecsSty
 export * from './application/services/product-api-service';
 export * from './application/services/product-review-api-service';
 /* END GENERATED FEATURE DOOR EXPORTS */
+export {
+  registerPharmacyInitialDetailsPort,
+} from './ports/pharmacy-initial-details.port';
+export { registerPharmacySpecsSlot } from './ports/pharmacy-specs-slot.port';
+export { registerProfileReviewsPort } from './ports/profile-reviews.port';

@@ -1,4 +1,7 @@
 import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+
 import {
   generatedGateIds,
   resolveGeneratedGate,
@@ -19,33 +22,64 @@ if (contractErrors.length > 0) {
   process.exit(1);
 }
 
+function spawnWithoutShell(command: string, args: string[]) {
+  return spawnSync(command, args, {
+    cwd: process.cwd(),
+    env: process.env,
+    stdio: 'inherit',
+    shell: false,
+    windowsHide: true,
+  });
+}
+
+function nextBin(): string {
+  const candidate = path.join(process.cwd(), 'node_modules', 'next', 'dist', 'bin', 'next');
+  if (!existsSync(candidate)) {
+    throw new Error('Pinned Next.js binary is missing; generated gates cannot spawn `next` through a shell.');
+  }
+  return candidate;
+}
+
+function tsxBin(): string {
+  const candidate = path.join(process.cwd(), 'node_modules', 'tsx', 'dist', 'cli.mjs');
+  if (!existsSync(candidate)) {
+    throw new Error('Pinned tsx binary is missing; generated gates cannot spawn `npx tsx` through a shell.');
+  }
+  return candidate;
+}
+
 function runNpmScript(script: string) {
   const npmCli = process.env.npm_execpath?.trim();
   if (npmCli) {
-    return spawnSync(process.execPath, [npmCli, 'run', script], {
-      cwd: process.cwd(),
-      env: process.env,
-      stdio: 'inherit',
-    });
+    return spawnWithoutShell(process.execPath, [npmCli, 'run', script]);
   }
 
   if (process.platform === 'win32') {
     if (!/^[A-Za-z0-9:_-]+$/.test(script)) {
       throw new Error(`Unsafe npm script name for Windows command execution: ${script}`);
     }
-    return spawnSync(process.env.ComSpec?.trim() || 'cmd.exe', ['/d', '/s', '/c', `npm.cmd run ${script}`], {
-      cwd: process.cwd(),
-      env: process.env,
-      stdio: 'inherit',
-      windowsHide: true,
-    });
+    return spawnWithoutShell(process.env.ComSpec?.trim() || 'cmd.exe', [
+      '/d',
+      '/s',
+      '/c',
+      `npm.cmd run ${script}`,
+    ]);
   }
 
-  return spawnSync('npm', ['run', script], {
-    cwd: process.cwd(),
-    env: process.env,
-    stdio: 'inherit',
-  });
+  return spawnWithoutShell('npm', ['run', script]);
+}
+
+function runGateCommand(command: string) {
+  const parts = command.trim().split(/\s+/).filter(Boolean);
+  if (parts[0] === 'next') {
+    return spawnWithoutShell(process.execPath, [nextBin(), ...parts.slice(1)]);
+  }
+  if (parts[0] === 'npx' && parts[1] === 'tsx') {
+    return spawnWithoutShell(process.execPath, [tsxBin(), ...parts.slice(2)]);
+  }
+  throw new Error(
+    `Unsupported generated-gate command ${command}. Spawn must use executable plus args without a shell (DEP0190).`,
+  );
 }
 
 const steps = resolveGeneratedGate(gateId);
@@ -57,12 +91,7 @@ for (let index = 0; index < steps.length; index += 1) {
   console.log(`\n[gate:${gateId}] ${index + 1}/${steps.length}: ${label}`);
   const result = step.kind === 'npm-script'
     ? runNpmScript(step.value)
-    : spawnSync(step.value, {
-        cwd: process.cwd(),
-        env: process.env,
-        shell: true,
-        stdio: 'inherit',
-      });
+    : runGateCommand(step.value);
   if (result.error) throw result.error;
   if (result.status !== 0) process.exit(result.status ?? 1);
 }

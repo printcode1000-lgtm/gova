@@ -105,12 +105,16 @@ On first load, `cleanLegacyStore()`:
 
 ---
 
-## `useSession()`
+## `useSession()` / `useSessionRuntime()`
 
-**File:** `src/features/auth/presentation/SessionProvider.tsx`
+**Auth internals:** `src/features/auth/presentation/SessionProvider.tsx` exposes `useSession()`.
+
+**Other application features in the cycle subgraph** (profile, cart, product, page-snapshot, pharmacy-profile-catalog, profile-products) read session through `useSessionRuntime()` from `src/shared/session-runtime/`. That shared module is outside `APPLICATION_CYCLE_SUBGRAPH`, so those features do not import `@/features/auth` for session context.
+
+`SessionProvider` also mounts `SessionRuntimeProvider` with the same value.
 
 ```tsx
-const { session, isLoggedIn, isGuest, isLoading, setSession, refreshSession } = useSession();
+const { session, isLoggedIn, isGuest, isLoading, setSession, refreshSession } = useSessionRuntime();
 ```
 
 Mounted in root `layout.tsx` inside `AppQueryProvider`.
@@ -144,15 +148,16 @@ Saving profile updates server (`PUT /api/auth/profile`) and rewrites IDB via `sa
 
 ```
 packages/auth-core/
+src/shared/session-runtime/
 src/features/auth/
-├── entities/session.entity.ts
-├── services/session-api-service.ts
-├── services/account-deletion-api-service.ts
-├── components/AccountDeletionPageContent.tsx
+├── domain/session.entity.ts
+├── application/services/session-api-service.ts
+├── application/services/account-deletion-api-service.ts
+├── presentation/AccountDeletionPageContent.tsx
 ├── server/auth-core-ports.server.ts
 ├── server/auth-core-bootstrap.server.ts
-├── components/SessionProvider.tsx
-└── hooks/
+├── presentation/SessionProvider.tsx
+└── presentation/hooks/
     ├── use-login.ts
     ├── use-register.ts
     ├── use-logout.ts
@@ -168,7 +173,7 @@ packages/data-core/src/browser/asol-db/index.ts
 
 | Do | Don't |
 |---|---|
-| Use `useSession()` in UI | Read IDB from components directly |
+| Use `useSession()` inside auth, `useSessionRuntime()` in other cycle-subgraph UI | Read IDB from components directly |
 | Use `sessionService` from hooks | Store session in React Query or localStorage |
 | Use `useLogout()` for logout | Call HTTP logout before clearing IDB |
 | Keep guest browsing in `useGuestSession` | Mix guest id into `auth/current` |

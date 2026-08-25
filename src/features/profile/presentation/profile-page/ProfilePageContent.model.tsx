@@ -1,7 +1,7 @@
 "use client";
 
-import { useSession } from "@/features/auth/ui";
-import { isSuperAdmin } from "@/features/auth";
+import { useSessionRuntime } from "@/shared/session-runtime";
+import { isSuperAdminSession } from "@asol/auth-core";
 import { usePageSnapshot } from "@/features/page-snapshot";
 import { useProfilePublicContacts } from "@/features/profile/presentation/hooks/use-profile-public-contacts";
 import { useProfilePublicFulfillmentSettings } from "@/features/profile/presentation/hooks/use-profile-public-fulfillment-settings";
@@ -46,9 +46,9 @@ const { t, locale } = useTranslation();
 
 const router = useRouter();
 
-const { session, isLoggedIn, isLoading, setSession } = useSession();
+const { session, isLoggedIn, isLoading, setSession } = useSessionRuntime();
 
-const superAdmin = isSuperAdmin(session);
+const superAdmin = isSuperAdminSession(session);
 
 const searchParams = useSearchParams();
 

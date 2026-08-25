@@ -1,7 +1,7 @@
 import "server-only";
 
 import { imageStorageOrchestrator } from "@asol/storage-core/server";
-import { isSuperAdminIdentity } from "@/features/auth";
+import { isSuperAdminIdentity } from "@asol/auth-core/server";
 import { homeHeroSliderRepository } from "@asol/data-core/advertisements";
 import { createHomeHeroSliderService } from "@asol/hero-slider-core/server";
 

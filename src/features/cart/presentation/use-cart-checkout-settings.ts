@@ -5,8 +5,9 @@ import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
   type ProfileFulfillmentSettings,
-} from "@/features/profile";
-import { profileService } from "@/features/profile/ui";
+} from "../domain/profile-fulfillment.entity";
+import { reportSystemIssue } from "@asol/system-logs-core";
+import { getProfileCheckoutPort } from "../ports/profile-checkout.port";
 
 export function useCartCheckoutSettings(sellerIds: string[]) {
   const [sellerSettings, setSellerSettings] = React.useState<
@@ -18,16 +19,21 @@ export function useCartCheckoutSettings(sellerIds: string[]) {
   React.useEffect(() => {
     let cancelled = false;
     const load = async () => {
+      const port = getProfileCheckoutPort();
       const entries = await Promise.all(
         sellerIds.map(async (sellerId) => {
           try {
-            const settings =
-              await profileService.getFulfillmentSettings(sellerId);
+            const settings = await port.getFulfillmentSettings(sellerId);
             return [
               sellerId,
               normalizeProfileFulfillmentSettings(settings),
             ] as const;
-          } catch {
+          } catch (error) {
+            reportSystemIssue({
+              feature: "Cart",
+              operation: "load-seller-fulfillment-settings",
+              error,
+            });
             return [sellerId, EMPTY_PROFILE_FULFILLMENT_SETTINGS] as const;
           }
         }),
@@ -46,12 +52,17 @@ export function useCartCheckoutSettings(sellerIds: string[]) {
       setQualifiedDeliveryAvailable(false);
       return;
     }
-    void profileService
+    void getProfileCheckoutPort()
       .getUsersBySpecialty(46, 132, 0, 1)
       .then((users) => {
         if (!cancelled) setQualifiedDeliveryAvailable(users.length > 0);
       })
-      .catch(() => {
+      .catch((error) => {
+        reportSystemIssue({
+          feature: "Cart",
+          operation: "load-qualified-delivery-availability",
+          error,
+        });
         if (!cancelled) setQualifiedDeliveryAvailable(false);
       });
     return () => {

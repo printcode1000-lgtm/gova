@@ -41,18 +41,26 @@ export function ReleaseCurrentVersions({ versions, t }: {
   const unavailable = t("releaseConsole.confirmRun.versionUnavailable");
   return <section className="space-y-2" aria-label={t("releaseConsole.confirmRun.versionSummaryTitle")}>
     <h3 className="font-semibold">{t("releaseConsole.confirmRun.versionSummaryTitle")}</h3>
-    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
-      <VersionCard label={t("releaseConsole.confirmRun.currentAppVersion")}
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
+      <VersionCard label={t("releaseConsole.confirmRun.currentAndroidProductionVersion")}
         value={versions.androidProduction ?? unavailable} />
       <VersionCard label={t("releaseConsole.confirmRun.currentAndroidVersion")}
         value={versions.androidCurrent ?? unavailable} />
+      <VersionCard label={t("releaseConsole.confirmRun.currentIosProductionVersion")}
+        value={versions.iosProduction ?? unavailable} />
       <VersionCard label={t("releaseConsole.confirmRun.currentContentVersion")}
         value={versions.contentCurrent ?? unavailable} />
       <VersionCard label={t("releaseConsole.confirmRun.currentOtaVersion")}
         value={versions.otaCurrent ?? unavailable} />
     </div>
-    {versions.platformTruthError ? (
-      <p className="text-sm text-destructive">{versions.platformTruthError}</p>
+    {versions.androidTruthError ? (
+      <p className="text-sm text-destructive">{versions.androidTruthError}</p>
+    ) : null}
+    {versions.iosTruthError ? (
+      <p className="text-sm text-destructive">{versions.iosTruthError}</p>
+    ) : null}
+    {versions.iosReady === false ? (
+      <p className="text-sm text-destructive">{t("releaseConsole.confirmRun.appStoreCredentialsMissing")}</p>
     ) : null}
   </section>;
 }

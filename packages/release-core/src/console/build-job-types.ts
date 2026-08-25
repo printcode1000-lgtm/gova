@@ -74,7 +74,10 @@ export interface ReleaseVersionSnapshot {
   iosProduction?: string;
   contentCurrent?: string;
   otaCurrent?: string;
-  platformTruthError?: string;
+  androidTruthError?: string;
+  iosTruthError?: string;
+  androidReady?: boolean;
+  iosReady?: boolean;
 }
 
 export interface PaginatedBuildJobs {

@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import * as React from "react";
-import type { StoredImage } from "@asol/storage-core";
+import { shouldUseUnoptimizedImage, type StoredImage } from "@asol/storage-core";
 
 type Point = { x: number; y: number };
 const distance = (a: Point, b: Point) => Math.hypot(b.x - a.x, b.y - a.y);
@@ -172,21 +173,26 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
         onPointerCancel={pointerEnd}
         onPointerLeave={clearGesture}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={active.url}
-          alt=""
-          loading="eager"
-          fetchPriority="high"
-          draggable={false}
-          onLoad={() =>
-            setLoaded((current) => new Set(current).add(active.url))
-          }
-          className={`h-full w-full select-none object-cover transition-[opacity,transform] duration-300 ${loaded.has(active.url) ? "opacity-100" : "opacity-0"}`}
+        <div
+          className={`relative h-full w-full select-none transition-[opacity,transform] duration-300 ${loaded.has(active.url) ? "opacity-100" : "opacity-0"}`}
           style={{
             transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
           }}
-        />
+        >
+          <Image
+            src={active.url}
+            alt=""
+            fill
+            priority
+            draggable={false}
+            sizes="100vw"
+            unoptimized={shouldUseUnoptimizedImage(active.url)}
+            onLoad={() =>
+              setLoaded((current) => new Set(current).add(active.url))
+            }
+            className="object-cover"
+          />
+        </div>
       </div>
       {validImages.length > 1 ? (
         <div
@@ -199,22 +205,22 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
               type="button"
               aria-label={`الصورة ${index + 1}`}
               aria-pressed={activeIndex === index}
-              onPointerUp={(event) => {
+              onPointerUp={() => {
                 select(index);
               }}
-              className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 sm:h-20 sm:w-20 ${activeIndex === index ? "border-primary" : "border-transparent"}`}
+              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 sm:h-20 sm:w-20 ${activeIndex === index ? "border-primary" : "border-transparent"}`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={image.url}
                 alt=""
-                loading="lazy"
-                decoding="async"
+                fill
                 draggable={false}
+                sizes="80px"
+                unoptimized={shouldUseUnoptimizedImage(image.url)}
                 onLoad={() =>
                   setLoaded((current) => new Set(current).add(image.url))
                 }
-                className="h-full w-full select-none object-cover"
+                className="select-none object-cover"
               />
             </button>
           ))}

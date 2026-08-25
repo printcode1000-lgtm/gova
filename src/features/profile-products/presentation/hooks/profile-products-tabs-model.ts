@@ -1,6 +1,6 @@
 import { CATEGORY_CONSTANTS, categoryService } from "@/features/categories";
-import type { ProductRecord } from "@/features/product";
-import type { ProfileSpecialtiesSelection } from "@/features/profile";
+import type { ProductRecord } from "@asol/product-core";
+import type { ProfileSpecialtiesSelection } from "../../domain/profile-specialties.entity";
 import type {
   ProfileProductsFilters,
   ProfileProductsMainTab,

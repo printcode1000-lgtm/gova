@@ -59,6 +59,13 @@ registerBrowserPorts(); // idempotent
 
 Server ports register once from `src/instrumentation.ts` via `registerAppServerPorts()`.
 
+Application-to-application ports that invert cycle-subgraph edges (cart checkout profile lookup, product pharmacy slots, profile-products specialties, product review avatars) register from:
+
+- `src/core/composition/browser-application-ports.ts`
+- `src/core/composition/server-application-ports.ts`
+
+called by the two composition roots.
+
 `src/core/composition/tests/ports-registry.test.ts` lists every required registration — omissions fail the test.
 
 ## Architecture contracts (enforcement data)

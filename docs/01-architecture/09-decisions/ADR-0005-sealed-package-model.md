@@ -30,7 +30,7 @@ Enforcement engine: `@asol/architecture-core` invoked by `npm run architecture:c
 
 - Positive: Default deny; closure verifiable; agents have canonical ownership map
 - Negative: Higher upfront cost for new features; scan failures require door discipline
-- No GitHub Actions — npm build chain is the CI equivalent
+- No general GitHub Actions — local npm build chain is the correctness equivalent; docs-only CI is path-filtered to `docs/**`
 
 ## Source Map
 

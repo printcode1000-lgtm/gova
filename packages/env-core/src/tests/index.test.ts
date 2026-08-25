@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
@@ -14,6 +14,12 @@ import {
   requireEnv,
 } from '../index';
 import { readEnvFiles } from '../domain/env-files';
+import {
+  loadReleaseToolEnvironment,
+  parseReleaseEnvFileText,
+  RELEASE_TOOL_ENV_FILES,
+  resolveReleaseToolEnvironmentSources,
+} from '../domain/load-release-environment';
 
 const ROOT = process.cwd();
 
@@ -23,8 +29,8 @@ const manifest = JSON.parse(readFileSync(path.join(ROOT, 'packages/env-core/pack
 };
 assert.deepEqual(
   Object.keys(manifest.exports),
-  ['.', './files'],
-  'Two doors on the node line: reading a variable is browser-safe, reading a .env file is not.',
+  ['.', './files', './process'],
+  'Three doors: browser-safe readers, .env file parsing, and Node process loading.',
 );
 
 const readEnvSource = readFileSync(path.join(ROOT, 'packages/env-core/src/domain/read-env.ts'), 'utf8');
@@ -91,4 +97,99 @@ assert.deepEqual(readEnvFiles([path.join(dir, 'nope')]), {}, 'A missing file is 
 writeFileSync(base, 'TOKEN=abc \n');
 assert.equal(readEnvFiles([base]).TOKEN, 'abc ');
 
-console.log('@asol/env-core contract: 2 doors, blank-is-absent pinned, .env precedence pinned.');
+assert.deepEqual(
+  [...RELEASE_TOOL_ENV_FILES],
+  ['.env.local', '.env', 'fastlane/.env'],
+  'Release-tool files are ordered: local, then base, then Fastlane.',
+);
+
+const parsedEmpty = parseReleaseEnvFileText(
+  'PRESENT=from-file\nEMPTY=\n# comment\nexport EXPORTED=1\nGOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64=secret-value\n',
+);
+assert.equal(parsedEmpty.PRESENT, 'from-file');
+assert.equal(parsedEmpty.EMPTY, '');
+assert.equal(parsedEmpty.EXPORTED, '1');
+assert.equal(
+  parsedEmpty.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64,
+  'secret-value',
+  'Parser keeps values; tests may read fixtures but production loading must never log them.',
+);
+
+const releaseDir = mkdtempSync(path.join(os.tmpdir(), 'env-core-release-'));
+const fastlaneDir = path.join(releaseDir, 'fastlane');
+mkdirSync(fastlaneDir, { recursive: true });
+writeFileSync(
+  path.join(releaseDir, '.env.local'),
+  'SHARED=from-local\nEMPTY_LOCAL=\nONLY_LOCAL=1\nPROCESS_WINS=from-local\n',
+);
+writeFileSync(
+  path.join(releaseDir, '.env'),
+  'SHARED=from-base\nEMPTY_LOCAL=from-base\nONLY_BASE=play-from-env\nFASTLANE_ONLY=\nGOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64=base-secret\n',
+);
+writeFileSync(
+  path.join(fastlaneDir, '.env'),
+  'FASTLANE_ONLY=from-fastlane\nGOOGLE_PLAY_JSON_KEY_FILE=from-fastlane\nONLY_BASE=should-not-win\n',
+);
+
+const fakeEnv: NodeJS.ProcessEnv = { PROCESS_WINS: 'from-process' };
+loadReleaseToolEnvironment({
+  cwd: releaseDir,
+  env: fakeEnv,
+});
+assert.equal(fakeEnv.PROCESS_WINS, 'from-process', 'Existing process values win.');
+assert.equal(fakeEnv.SHARED, 'from-local', '.env.local fills missing keys.');
+assert.equal(
+  fakeEnv.EMPTY_LOCAL,
+  'from-base',
+  'Empty .env.local declarations do not mask a later non-empty .env value.',
+);
+assert.equal(
+  fakeEnv.ONLY_BASE,
+  'play-from-env',
+  'An existing .env.local without Google keys does not suppress valid keys in .env.',
+);
+assert.equal(fakeEnv.ONLY_LOCAL, '1');
+assert.equal(
+  fakeEnv.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64,
+  'base-secret',
+  '.env supplies a still-missing Google Play key.',
+);
+assert.equal(fakeEnv.FASTLANE_ONLY, 'from-fastlane', 'fastlane/.env supplies a still-missing release key.');
+assert.equal(fakeEnv.ONLY_BASE, 'play-from-env', 'Later files cannot overwrite a non-empty earlier value.');
+assert.equal(fakeEnv.GOOGLE_PLAY_JSON_KEY_FILE, 'from-fastlane');
+
+const logged: string[] = [];
+const originalLog = console.log;
+const originalError = console.error;
+console.log = (...args: unknown[]) => {
+  logged.push(args.map(String).join(' '));
+};
+console.error = (...args: unknown[]) => {
+  logged.push(args.map(String).join(' '));
+};
+try {
+  loadReleaseToolEnvironment({ cwd: releaseDir, env: {} });
+} finally {
+  console.log = originalLog;
+  console.error = originalError;
+}
+assert.equal(logged.join('\n').includes('base-secret'), false, 'No secret value is logged.');
+assert.equal(logged.join('\n').includes('from-fastlane'), false, 'No Fastlane secret value is logged.');
+
+const sources = resolveReleaseToolEnvironmentSources({
+  cwd: releaseDir,
+  env: { PROCESS_WINS: 'from-process' },
+});
+const byKey = Object.fromEntries(sources.map((entry) => [entry.key, entry.source]));
+assert.equal(byKey.PROCESS_WINS, 'process');
+assert.equal(byKey.SHARED, '.env.local');
+assert.equal(byKey.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64, '.env');
+assert.equal(byKey.GOOGLE_PLAY_JSON_KEY_FILE, 'fastlane/.env');
+assert.equal(
+  sources.some((entry) => JSON.stringify(entry).includes('base-secret')),
+  false,
+  'Source reports never include secret values.',
+);
+
+console.log('@asol/env-core contract: 3 doors, blank-is-absent pinned, release-tool precedence pinned.');
+

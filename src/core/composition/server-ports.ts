@@ -48,4 +48,9 @@ export async function registerAppServerPorts(): Promise<void> {
 
   const { registerDataCorePorts } = await import('@/features/data/server');
   registerDataCorePorts();
+
+  const { registerServerApplicationPorts } = await import(
+    './server-application-ports'
+  );
+  registerServerApplicationPorts();
 }

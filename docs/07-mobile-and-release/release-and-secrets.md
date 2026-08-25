@@ -83,8 +83,37 @@ The contract test asserts this through the source rather than by producing an ar
 present on every machine, and a test that silently skips when a binary is missing is worse than no
 test at all.
 
-The CLIs — `secrets:backup`, `secrets:restore`, `secrets:key:init` — decide *when*; the package
+The CLIs — `secrets:backup`, `secrets:restore`, `secrets:verify`, `secrets:key:init` — decide *when*; the package
 decides *how*, and the test fails if a CLI starts doing its own cryptography.
+
+### `secrets:verify`
+
+`npm run secrets:verify` is a read-only reporter. It prints **key names** and
+**file paths** with one of:
+
+| Status | Meaning |
+| :-- | :-- |
+| `present` | The named environment key has a non-empty value |
+| `empty` | The named key exists but is blank |
+| `missing` | The named key is unset |
+| `file-present` | The named path exists on disk |
+| `file-missing` | The named path is absent |
+
+It never prints secret values. Use it to see what restore still owes a machine
+without dumping `.env` into a log.
+
+### Auto-restore for release commands
+
+`scripts/ensure-release-secrets-restored.ts` restores the portable archive only
+when **required credentials for the requested command scope are missing**,
+`ASOL_SECRET_ARCHIVE_PASSWORD` is set, and `config/secret-archive-latest.zip.enc`
+exists. Non-interactive runs never wait for a TTY: they fail with an actionable
+message naming missing **keys/paths**, not values. Do not invent secrets.
+
+Agent worktrees (including nested `.claude/worktrees/**` clones) are excluded
+from archive discovery. App Store Connect `.p8` keys are covered by the
+`config/secret-backup-paths.json` `.p8` extension and `AuthKey_*.p8` name
+pattern; never commit a plaintext key.
 
 ### What is committed, and why both files are
 

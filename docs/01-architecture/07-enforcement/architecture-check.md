@@ -18,7 +18,7 @@ npm run architecture:check
 
 Included in: `npm run build`, `npm run build:static`, `verify:*` scripts.
 
-**No GitHub Actions** — `.github/workflows` is empty. Vercel and local developers run the same npm gates.
+GitHub Actions does not run this check. The only remote workflow is docs-only (`docs/**`). See [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 ## CLI preflight (application-specific)
 
@@ -26,6 +26,10 @@ Before scan, `scripts/architecture-check.ts` runs:
 
 | Preflight | Source |
 |---|---|
+| Runtime compatibility reference | `scripts/runtime-compatibility-reference.ts` |
+| Generated Build/Test gate contract | `scripts/generated-gate-contract.ts` |
+| GitHub CI policy | `scripts/github-ci-policy.ts` |
+| Agent knowledge documentation | `scripts/docs/check.ts` |
 | Storage profiles validation | `@asol/storage-core/server` `validateStorageProfilesAtStartup()` |
 | Category data validation | `src/features/categories/infrastructure/validation.engine.ts` |
 
@@ -38,10 +42,11 @@ These stay in the CLI because `@asol/architecture-core` MUST NOT import applicat
 | 1 | `checkCapabilityOwnershipContract` | Registry ↔ disk parity for `@asol/*` |
 | 2 | `checkApplicationFeatureRegistryContract` | `APPLICATION_FEATURES` ↔ `src/features/*`; forbidden roots (`src/modules`, …) |
 | 3 | `checkPackageCycleContract` | Circular `@asol/*` deps |
-| 4 | `checkPageSaveGatewayContract` | Single-door page-save |
-| 5 | `checkPageSaveWriteGatewayContract` | Write ownership |
-| 6 | `checkRepositorySweepContract` | Default-deny sweep over the whole tree |
-| 7 | `checkIsolatedDeploymentBackendContract` | Every account composition root pins its backend |
+| 4 | `checkApplicationCycleContract` | Circular clusters in `APPLICATION_CYCLE_SUBGRAPH` (no allowlist) |
+| 5 | `checkPageSaveGatewayContract` | Single-door page-save |
+| 6 | `checkPageSaveWriteGatewayContract` | Write ownership |
+| 7 | `checkRepositorySweepContract` | Default-deny sweep over the whole tree |
+| 8 | `checkIsolatedDeploymentBackendContract` | Every account composition root pins its backend |
 | 8 | `checkRuntimeTargetContract` | No `force-dynamic` page inside the static export |
 | 9 | `checkFeatureDoorContract` | Cross-feature imports only through declared doors |
 | 10 | `checkFeatureDependencyContract` | Actual vs declared feature deps; no stale/unknown edges |

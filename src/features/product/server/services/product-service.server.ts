@@ -18,7 +18,7 @@ import {
 import { StorageProfiles } from "@asol/storage-core";
 import { categoryService } from "@/features/categories";
 import { imageStorageService } from "@/features/storage/server";
-import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/server";
+import { getPharmacyProductLookupPort } from "../../ports/pharmacy-product-lookup.port";
 
 function resolveStoredProductImageProfileId(image: ProductImage): string {
   // Legacy rows omit storageProfileId and live on the original product bucket.
@@ -66,7 +66,7 @@ export class ProductService {
   constructor(private repository: ProductRepository = productRepository) {}
 
   async get(id: string): Promise<ProductRecord> {
-    const pharmacyProduct = await pharmacyProfileCatalogService.getProduct(id);
+    const pharmacyProduct = await getPharmacyProductLookupPort().getProduct(id);
     if (pharmacyProduct) return pharmacyProduct;
     if (!isSafeProductId(id)) throw new Error("invalidProduct");
     const product = await this.repository.findById(id);
@@ -89,8 +89,8 @@ export class ProductService {
       throw new Error("invalidProduct");
     }
     const products = await this.repository.findByOwnerAndCategory(uid, mainCategoryId, subcategoryId);
-    if (pharmacyProfileCatalogService.isPharmacyProductBucket(mainCategoryId, subcategoryId)) {
-      const pharmacyProducts = await pharmacyProfileCatalogService.listProducts(uid);
+    if (getPharmacyProductLookupPort().isPharmacyProductBucket(mainCategoryId, subcategoryId)) {
+      const pharmacyProducts = await getPharmacyProductLookupPort().listProducts(uid);
       const productIds = new Set(products.map((product) => product.id));
       return [
         ...pharmacyProducts.filter((product) => !productIds.has(product.id)),
@@ -127,7 +127,7 @@ export class ProductService {
   }
 
   async update(input: UpdateProductInput): Promise<ProductRecord> {
-    const fixedPharmacyProduct = await pharmacyProfileCatalogService.updateFixedProduct(
+    const fixedPharmacyProduct = await getPharmacyProductLookupPort().updateFixedProduct(
       input.id,
       input.uid,
       normalizeProductDetails(input),
@@ -154,7 +154,7 @@ export class ProductService {
   }
 
   async delete(id: string, uid: string): Promise<void> {
-    if (await pharmacyProfileCatalogService.hideFixedProduct(id, uid)) return;
+    if (await getPharmacyProductLookupPort().hideFixedProduct(id, uid)) return;
     const existing = await this.get(id);
     if (!uid || existing.uid !== uid) throw new Error("productForbidden");
     const deleted = await this.repository.delete(id, uid);

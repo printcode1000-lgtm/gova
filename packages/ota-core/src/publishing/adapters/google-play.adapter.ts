@@ -107,6 +107,24 @@ function toStatus(
   };
 }
 
+export function googlePlayCredentialsAreReady(
+  env: NodeJS.ProcessEnv = process.env,
+  cwd = process.cwd(),
+): boolean {
+  if (env.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64?.trim()) return true;
+  const componentEmail =
+    env.GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_EMAIL?.trim() ||
+    env.GOOGLE_PLAY_SERVICE_ACCOUNT_EMAIL?.trim();
+  if (env.GOOGLE_PLAY_SERVICE_ACCOUNT_PRIVATE_KEY_BASE64?.trim() && componentEmail) {
+    return true;
+  }
+  const configured = env.GOOGLE_PLAY_JSON_KEY_FILE?.trim();
+  if (configured) {
+    return existsSync(path.resolve(cwd, configured));
+  }
+  return existsSync(path.resolve(cwd, DEFAULT_KEY_FILE));
+}
+
 export async function resolveGooglePlayCredentials() {
   const config = resolveGooglePlayConsoleConfig();
   const fromEnv = decodeServiceAccountFromEnvironment();

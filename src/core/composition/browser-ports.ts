@@ -7,8 +7,9 @@ import { registerOtaCorePorts } from '@/features/ota';
 import { registerAccountBridgePorts } from '@/features/account-bridge';
 import { registerDataCoreBrowserPorts } from '@/features/data';
 import { registerPageSaveCorePorts } from '@/features/page-save';
-import { registerPageSnapshotCorePorts } from '@/features/page-snapshot';
+import { registerPageSnapshotCorePorts } from '@/features/page-snapshot/ports';
 import { registerSystemLogsCoreBrowserPorts } from '@/features/system-logs';
+import { registerBrowserApplicationPorts } from './browser-application-ports';
 
 /**
  * The composition root for every browser-side port a sealed package names.
@@ -39,4 +40,5 @@ export function registerBrowserPorts(): void {
   registerPageSaveCorePorts();
   registerPageSnapshotCorePorts();
   registerSystemLogsCoreBrowserPorts();
+  registerBrowserApplicationPorts();
 }

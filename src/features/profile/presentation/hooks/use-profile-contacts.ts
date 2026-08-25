@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from '@/shared/i18n';
-import { useSession } from '@/features/auth/ui';
+import { useSessionRuntime } from '@/shared/session-runtime';
 import type { ProfileContactsData } from '../../domain/profile-contacts.entity';
 import { profileService } from '../../application/services/profile-service';
 import { mergePrimaryContacts } from '../../application/utils/merge-primary-contacts';
@@ -22,7 +22,7 @@ function isContactsDirty(
 
 export function useProfileContacts() {
   const { formatApiError } = useTranslation();
-  const { session } = useSession();
+  const { session } = useSessionRuntime();
   const uid = session?.uid ?? '';
   const queryClient = useQueryClient();
 

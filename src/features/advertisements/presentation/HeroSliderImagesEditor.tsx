@@ -9,16 +9,20 @@ import {
   StorageImageManager,
   type StorageImageManagerHandle,
 } from "@/features/storage/ui";
-import { STOREFRONT_IMAGES_CONFIG } from "@/features/profile/ui";
 import type { HeroSliderConfig, HeroSliderSlide } from "./HeroSlider";
 import {
   DEFAULT_HOME_HERO_TRANSITION,
   DEFAULT_HOME_HERO_TRANSITION_DURATION,
 } from "@asol/hero-slider-core";
 
-const storefrontSlots = STOREFRONT_IMAGES_CONFIG.slots.map(
-  parseStorageImageManagerConfig,
-);
+const HERO_SLIDER_IMAGE_SLOTS = [
+  { id: "hero-slide-1", storageProfileId: "cover", maxItems: 1, aspectRatio: "landscape", allowReplace: true },
+  { id: "hero-slide-2", storageProfileId: "cover", maxItems: 1, aspectRatio: "landscape", allowReplace: true },
+  { id: "hero-slide-3", storageProfileId: "cover", maxItems: 1, aspectRatio: "landscape", allowReplace: true },
+  { id: "hero-slide-4", storageProfileId: "cover", maxItems: 1, aspectRatio: "landscape", allowReplace: true },
+] as const;
+
+const storefrontSlots = HERO_SLIDER_IMAGE_SLOTS.map(parseStorageImageManagerConfig);
 const MAX_PROFILE_SLIDES = storefrontSlots.length;
 
 interface HeroSliderImagesEditorProps {

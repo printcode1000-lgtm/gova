@@ -30,6 +30,8 @@ import { checkPageSaveGatewayContract } from './checks/page-save-gateway-contrac
 import { checkApplicationFeatureRegistryContract } from './checks/application-features-contract';
 import { checkFeatureDoorContract } from './checks/feature-door-contract';
 import { checkFeatureDependencyContract } from './checks/feature-dependency-contract';
+import { checkApplicationCycleContract } from './checks/application-cycle-contract';
+import { checkRepositoryHygieneContract } from './checks/repository-hygiene-contract';
 import { checkFeatureApplicationDoorPurityContract } from './checks/feature-application-door-purity-contract';
 import { checkArchitectureDocsDriftContract } from './checks/architecture-docs-drift-contract';
 import { printReport, reportNativeSurface } from './checks/file-analysis';
@@ -65,6 +67,8 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   checkCapabilityOwnershipContract();
   checkApplicationFeatureRegistryContract();
   checkPackageCycleContract();
+  checkApplicationCycleContract();
+  checkRepositoryHygieneContract();
   checkPageSaveGatewayContract();
   checkPageSaveWriteGatewayContract();
   checkRepositorySweepContract();

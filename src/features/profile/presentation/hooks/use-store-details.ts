@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@/shared/i18n";
-import { useSession } from "@/features/auth/ui";
+import { useSessionRuntime } from "@/shared/session-runtime";
 import {
   EMPTY_STORE_DETAILS,
   type StoreDetailsData,
@@ -26,7 +26,7 @@ export function useStoreDetails(
   initialData?: StoreDetailsData,
 ) {
   const { t } = useTranslation();
-  const { session } = useSession();
+  const { session } = useSessionRuntime();
   const uid = targetUid || session?.uid || "";
   const queryClient = useQueryClient();
 

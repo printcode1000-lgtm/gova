@@ -3,7 +3,7 @@ import { calculateSellerShipping } from "@/features/cart";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   type ProfileFulfillmentSettings,
-} from "@/features/profile";
+} from "../domain/profile-fulfillment.entity";
 
 export function sellerIdsFromCartItems(items: CartItem[]) {
   return Array.from(new Set(items.map((item) => item.sellerId))).filter(Boolean);

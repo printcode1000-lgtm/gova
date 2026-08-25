@@ -81,4 +81,4 @@ npm run architecture:check
 `test:branding-core` regenerates first, verifies dimensions/transparency,
 compares duplicated Android resource copies byte-for-byte, pins every consumer,
 and confirms `npm run dev` and the Google Play package remain unchanged. It
-gates `build`, `build:static`, `test`, and the required CI workflow.
+gates `build`, `build:static`, and `test`. It is not a GitHub required check.

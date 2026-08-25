@@ -13,7 +13,7 @@
 # Deletions (`git push origin --delete <branch>`) arrive with a zero local sha and are
 # allowed through: removing a stray branch is the outcome this check exists to protect.
 #
-# Full rationale: docs/01-architecture/data-layers/22-scripts-and-workflows.md
+# Full rationale: docs/07-mobile-and-release/scripts-and-workflows.md
 
 blocked=0
 
@@ -34,8 +34,7 @@ done
 
 if [ "$blocked" -ne 0 ]; then
   echo "" >&2
-  echo "main is the only branch in this repository. Commit to main and push that," >&2
-  echo "or use 'git push --no-verify' if you genuinely need a one-off branch." >&2
+  echo "main is the only branch in this repository. Commit to main and push that." >&2
   exit 1
 fi
 

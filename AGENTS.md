@@ -128,8 +128,8 @@ Required / kept: `active:` for press feedback, `focus-visible:` for accessibilit
 | `npm run build:static` | Static export (`output: 'export'`) for Capacitor/OTA. **Overwrites the release `out/` output** — never run it merely to check a change. |
 | `npm run preview:static` | Serves `out/` on port **5500**. |
 | `npm run typecheck` / `npm run lint` | Fast pre-checks. |
-| `npm run architecture:check` | Isolation, architecture, and agent-knowledge/runtime graph contracts. |
-| `npm test` | Full suite, wider than what `build` runs. |
+| `npm run architecture:check` | Isolation, architecture, agent-knowledge/runtime graph, and the local GitHub CI policy (docs-only workflow). |
+| `npm test` | Full suite, wider than what `build` runs. **Not** GitHub CI. Code pushes to `main` run no GitHub jobs unless `docs/**` changed. |
 
 Ports: `dev` **3001**, local production **3002** where configured by the project workflow, static preview **5500**. `server:stop` is kept for checked/manual flows and targets local dev port 3001.
 

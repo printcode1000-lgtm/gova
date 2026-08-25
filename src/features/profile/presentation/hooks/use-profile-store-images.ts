@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
-import { useSession } from "@/features/auth/ui";
+import { useSessionRuntime } from "@/shared/session-runtime";
 import type {
   SaveStoreImagesInput,
   StoreImagesData,
@@ -25,7 +25,7 @@ export function useProfileStoreImages(
   targetUid?: string,
   initialData?: StoreImagesData,
 ) {
-  const { session } = useSession();
+  const { session } = useSessionRuntime();
   const uid = targetUid || session?.uid || "";
   const queryClient = useQueryClient();
 

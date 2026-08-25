@@ -54,8 +54,8 @@ src/
 | **Owns** | Home advertisements surfaces (hero slider, featured marquee, trending ribbon) |
 | **Public Doors** | `@/features/advertisements` · `@/features/advertisements/ui` · `@/features/advertisements/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | `@asol/hero-slider-core`, `@asol/featured-marquee-core`, `@asol/trending-ribbon-core` |
-| **Permitted Feature Dependencies** | `auth`, `product`, `product-card`, `profile`, `storage` |
+| **Capability Owners** | `@asol/hero-slider-core`, `@asol/featured-marquee-core`, `@asol/trending-ribbon-core`, `@asol/auth-core` |
+| **Permitted Feature Dependencies** | `product`, `product-card`, `storage` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### app-reset
@@ -78,10 +78,10 @@ src/
 | **Feature** | `auth` |
 | **Source** | `src/features/auth/` |
 | **Owns** | Authentication, session, registration, and account deletion UI/services |
-| **Public Doors** | `@/features/auth` · `@/features/auth/ui` · `@/features/auth/server` |
+| **Public Doors** | `@/features/auth` · `@/features/auth/ui` · `@/features/auth/server` · `@/features/auth/session` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | `@asol/auth-core` |
-| **Permitted Feature Dependencies** | `app-reset`, `notifications`, `page-save`, `profile`, `storage`, `system-logs` |
+| **Capability Owners** | `@asol/auth-core`, `@asol/data-core` |
+| **Permitted Feature Dependencies** | `app-reset`, `notifications`, `page-save`, `storage`, `system-logs` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### cart
@@ -93,8 +93,8 @@ src/
 | **Owns** | Shopping cart client and server orchestration |
 | **Public Doors** | `@/features/cart` · `@/features/cart/ui` · `@/features/cart/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `auth`, `notifications`, `profile`, `seller-discounts` |
+| **Capability Owners** | `@asol/product-core` |
+| **Permitted Feature Dependencies** | `notifications`, `seller-discounts` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### catalog-studio
@@ -364,10 +364,10 @@ src/
 | **Feature** | `page-snapshot` |
 | **Source** | `src/features/page-snapshot/` |
 | **Owns** | Page snapshot application wiring |
-| **Public Doors** | `@/features/page-snapshot` |
+| **Public Doors** | `@/features/page-snapshot` · `@/features/page-snapshot/ports` |
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | `@asol/page-snapshot-core` |
-| **Permitted Feature Dependencies** | `auth` |
+| **Permitted Feature Dependencies** | _(none)_ |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### password-recovery
@@ -392,8 +392,8 @@ src/
 | **Owns** | Pharmacy profile catalog editing |
 | **Public Doors** | `@/features/pharmacy-profile-catalog` · `@/features/pharmacy-profile-catalog/ui` · `@/features/pharmacy-profile-catalog/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `auth`, `page-save`, `product` |
+| **Capability Owners** | `@asol/product-core` |
+| **Permitted Feature Dependencies** | `page-save`, `product` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### product
@@ -406,7 +406,7 @@ src/
 | **Public Doors** | `@/features/product` · `@/features/product/ui` · `@/features/product/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/product-core`, `@asol/product-style-core` |
-| **Permitted Feature Dependencies** | `auth`, `cart`, `categories`, `favorites`, `location`, `page-save`, `pharmacy-profile-catalog`, `product-card`, `profile`, `sharing`, `specialty-chat`, `storage`, `system-logs`, `vehicle-catalog` |
+| **Permitted Feature Dependencies** | `cart`, `categories`, `favorites`, `location`, `page-save`, `product-card`, `sharing`, `specialty-chat`, `storage`, `system-logs`, `vehicle-catalog` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### product-card
@@ -457,8 +457,8 @@ src/
 | **Owns** | Profile products tabs presentation |
 | **Public Doors** | `@/features/profile-products` · `@/features/profile-products/ui` |
 | **Runtime Targets** | `web`, `android`, `ios` |
-| **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `categories`, `page-snapshot`, `pharmacy-profile-catalog`, `product`, `product-card`, `product-search`, `profile` |
+| **Capability Owners** | `@asol/product-core`, `@asol/data-core` |
+| **Permitted Feature Dependencies** | `categories`, `page-snapshot`, `pharmacy-profile-catalog`, `product`, `product-card`, `product-search` |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### profile-working-hours

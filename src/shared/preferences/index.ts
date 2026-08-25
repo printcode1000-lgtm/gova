@@ -22,5 +22,3 @@ export {
   useThemePreferences,
 } from '@/shared/theme/runtime';
 export type { ThemeContextValue } from '@/shared/theme/runtime';
-
-export { useTranslation } from '@/shared/i18n';

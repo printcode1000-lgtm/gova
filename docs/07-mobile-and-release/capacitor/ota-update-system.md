@@ -383,6 +383,14 @@ publisher withheld `app.state` from the manifest, along with
 built before it existed computes a different canonical string and rejects the
 manifest outright. Both omissions are announced in the publish output.
 
+## Shipping platforms
+
+`config/shipping-platforms.json` is the explicit store-distribution declaration.
+Android `storeDistribution` is `true` (Google Play production is live truth).
+iOS `storeDistribution` is `false` and must keep `notLiveReason`. OTA must not
+treat missing App Store Connect credentials as “iOS is disabled.” See
+[ota-core-module.md](../../05-platform-features/sealed-packages/ota-core-module.md) §5.
+
 ## Dedicated OTA Storage & Architecture
 
 OTA releases live on their own dedicated Cloudflare R2 account (`21fce63d15897aaa0b68fae1360a1810`), bucket `ota`, under the prefix `app-updates/`.

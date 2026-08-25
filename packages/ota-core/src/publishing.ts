@@ -79,6 +79,7 @@ export {
 } from "./publishing/truth/live-play-release";
 export {
   resolveGooglePlayCredentials,
+  googlePlayCredentialsAreReady,
   createGooglePlayAuthClient,
   readLiveTrackVersionCodes,
   readLiveTrackVersionCodesStrict,
@@ -86,7 +87,22 @@ export {
   type GooglePlayCredentialStatus,
   type LivePlayRelease as GooglePlayLiveRelease,
 } from "./publishing/adapters/google-play.adapter";
-export { requireIosProductionNativeVersion } from "./publishing/adapters/app-store-connect.adapter";
+export {
+  requireIosProductionNativeVersion,
+  appStoreConnectCredentialsAreReady,
+  APP_STORE_LIVE_VERSION_STATES,
+} from "./publishing/adapters/app-store-connect.adapter";
+export {
+  readShippingPlatformsDeclaration,
+  enabledStoreDistributionPlatforms,
+  parseShippingPlatformsDeclaration,
+  SHIPPING_PLATFORMS_PATH,
+  type ShippingPlatformsDeclaration,
+} from "./publishing/config/shipping-platforms";
+export {
+  resolveOtaNativeCompatibilityLine,
+  type OtaNativeCompatibilityLine,
+} from "./publishing/truth/store-production-truth";
 export {
   readCurrentVersions,
   type CurrentVersions,

@@ -64,7 +64,7 @@ Static and test-based bypass prevention. Runtime security (auth, CSRF) is separa
 
 ## No GitHub Actions escape hatch
 
-`.github/workflows` is empty. Bypass prevention relies on npm scripts run locally and on Vercel build — there is no alternate CI path with weaker checks.
+General GitHub CI is forbidden. The only workflow is `.github/workflows/docs.yml`, path-filtered to `docs/**`. Code pushes to `main` run no GitHub jobs. Correctness remains local npm scripts and `deploy:all` preflight. Local `npm run github:ci-policy` rejects a general workflow before it is reintroduced; that guard is not itself a GitHub `push` job. See [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 ## Source Map
 

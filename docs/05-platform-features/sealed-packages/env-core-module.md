@@ -15,6 +15,17 @@ missing required key throws, and which of two legacy spellings wins.
 | :--- | :--- | :--- | :--- |
 | `.` | `@asol/env-core` | Anything | `readOptionalEnv`, `readEnv`, `requireEnv`, `firstEnv`, `hasEnv`, `readBooleanEnv`, `readListEnv` |
 | `./files` | `@asol/env-core/files` | Node only | `readEnvFiles` — `.env.local` then `.env`, for tooling that runs outside Next.js |
+| `./process` | `@asol/env-core/process` | Node only | `loadReleaseToolEnvironment` / `resolveReleaseToolEnvironmentSources` — fills `process.env` for release tools |
+
+`./process` is Node-only. `loadReleaseToolEnvironment` applies this precedence
+and **never logs values**:
+
+1. Existing process environment
+2. `.env.local` fills missing keys
+3. `.env` fills keys still missing
+4. `fastlane/.env` fills keys still missing
+
+Empty declarations are unconfigured and do not mask a later non-empty value.
 
 ## The rule
 
