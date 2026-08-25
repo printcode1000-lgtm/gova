@@ -8,8 +8,9 @@ import {
   simulationUserByRole,
   type SimulationProgressStep,
   type SimulationRunResult,
+  type UserPageDefinition,
 } from "@asol/simulation-core";
-import { FlaskConical, Layers3, MonitorSmartphone, Play } from "lucide-react";
+import { FlaskConical, Layers3, MonitorSmartphone, Play, PlayCircle } from "lucide-react";
 import * as React from "react";
 
 import { getClientRuntimeContext } from "@/core/config/runtime-context.client";
@@ -19,11 +20,15 @@ import { Button } from "@/shared/ui/button";
 import { beginSimulationActorSession } from "../application/services/simulation-actor-session";
 import { IframeSimulationExecutionPort } from "../infrastructure/iframe-simulation-execution.port";
 import { internalCatalogImagePool } from "../infrastructure/internal-catalog-image-pool";
-import { SimulationProgressPanel } from "./SimulationProgressPanel";
+import {
+  SimulationProgressPanel,
+  type SimulationProgressRun,
+} from "./SimulationProgressPanel";
 import { SimulationUsersStatus } from "./SimulationUsersStatus";
 import { simulationRuntimeLabel } from "./simulation-runtime-label";
 
 const initialPage = USER_PAGE_REGISTRY[0];
+type PageInteraction = UserPageDefinition["interactions"][number];
 
 export function SuperAdminSimulationPage() {
   const { session, isLoading } = useSession();
@@ -35,6 +40,8 @@ export function SuperAdminSimulationPage() {
   const [steps, setSteps] = React.useState<readonly SimulationProgressStep[]>([]);
   const [result, setResult] = React.useState<SimulationRunResult | null>(null);
   const [runningId, setRunningId] = React.useState("");
+  const [isRunningAll, setIsRunningAll] = React.useState(false);
+  const [batchRuns, setBatchRuns] = React.useState<readonly SimulationProgressRun[]>([]);
 
   const selectedPage = React.useMemo(
     () => USER_PAGE_REGISTRY.find((page) => page.id === selectedPageId) ?? initialPage,
@@ -44,6 +51,7 @@ export function SuperAdminSimulationPage() {
   const selectedInteraction =
     selectedInteractions.find((interaction) => interaction.id === selectedInteractionId) ??
     selectedInteractions[0];
+  const busy = Boolean(runningId) || isRunningAll;
 
   const selectPage = (pageId: string) => {
     const page = USER_PAGE_REGISTRY.find((candidate) => candidate.id === pageId);
@@ -51,47 +59,137 @@ export function SuperAdminSimulationPage() {
     setSelectedInteractionId(page?.interactions[0]?.id ?? "");
   };
 
-  const runSelectedInteraction = async () => {
-    if (!selectedPage || !selectedInteraction) return;
-
-    setRunningId(selectedInteraction.id);
-    setResult(null);
-    setSteps([]);
-
-    const user =
-      selectedInteraction.actor === "buyer" ||
-      selectedInteraction.actor === "seller" ||
-      selectedInteraction.actor === "delivery"
-        ? simulationUserByRole(selectedInteraction.actor)
-        : undefined;
+  const executeInteraction = async (
+    page: UserPageDefinition,
+    interaction: PageInteraction,
+    onProgress: (next: readonly SimulationProgressStep[]) => void,
+  ): Promise<SimulationRunResult> => {
+    let runResult: SimulationRunResult = {
+      succeeded: false,
+      runtime,
+      pageId: page.id,
+      interactionId: interaction.id,
+      steps: [],
+      error: "simulationExecutionDidNotStart",
+    };
     let restoreSession: (() => Promise<void>) | undefined;
 
     try {
-      const actor = user ?? (selectedInteraction.actor === "guest" ? "guest" : "any");
+      const user =
+        interaction.actor === "buyer" || interaction.actor === "seller" || interaction.actor === "delivery"
+          ? simulationUserByRole(interaction.actor)
+          : undefined;
+      const actor = user ?? (interaction.actor === "guest" ? "guest" : "any");
       restoreSession = await beginSimulationActorSession(actor);
-      const next = await runPageInteraction({
+      runResult = await runPageInteraction({
         runtime,
-        page: selectedPage,
-        interaction: selectedInteraction,
+        page,
+        interaction,
         user,
         internalCatalogImages: internalCatalogImagePool(),
         port: new IframeSimulationExecutionPort(),
-        onProgress: setSteps,
+        onProgress,
       });
-      setResult(next);
-      setSteps(next.steps);
     } catch (error) {
-      setResult({
+      runResult = {
         succeeded: false,
         runtime,
-        pageId: selectedPage.id,
-        interactionId: selectedInteraction.id,
+        pageId: page.id,
+        interactionId: interaction.id,
         steps: [],
         error: error instanceof Error ? error.message : String(error),
-      });
-    } finally {
+      };
+    }
+
+    try {
       await restoreSession?.();
+    } catch (error) {
+      const restoreError = error instanceof Error ? error.message : String(error);
+      runResult = {
+        ...runResult,
+        succeeded: false,
+        error: runResult.error
+          ? `${runResult.error}\nsimulationSessionRestoreFailed: ${restoreError}`
+          : `simulationSessionRestoreFailed: ${restoreError}`,
+      };
+    }
+
+    return runResult;
+  };
+
+  const runSelectedInteraction = async () => {
+    if (!selectedPage || !selectedInteraction || busy) return;
+
+    setRunningId(selectedInteraction.id);
+    setBatchRuns([]);
+    setResult(null);
+    setSteps([]);
+
+    try {
+      const next = await executeInteraction(selectedPage, selectedInteraction, setSteps);
+      setResult(next);
+      setSteps(next.steps);
+    } finally {
       setRunningId("");
+    }
+  };
+
+  const runAllInteractions = async () => {
+    if (busy) return;
+
+    const initialRuns: SimulationProgressRun[] = USER_PAGE_REGISTRY.flatMap((page) =>
+      page.interactions.map((interaction) => ({
+        id: `${page.id}:${interaction.id}`,
+        pageId: page.id,
+        pageLabel: page.label,
+        interactionId: interaction.id,
+        interactionLabel: interaction.label,
+        status: "pending" as const,
+        steps: [],
+      })),
+    );
+
+    setIsRunningAll(true);
+    setResult(null);
+    setSteps([]);
+    setBatchRuns(initialRuns);
+
+    try {
+      for (const page of USER_PAGE_REGISTRY) {
+        for (const interaction of page.interactions) {
+          const runId = `${page.id}:${interaction.id}`;
+          setSelectedPageId(page.id);
+          setSelectedInteractionId(interaction.id);
+          setBatchRuns((current) =>
+            current.map((run) =>
+              run.id === runId ? { ...run, status: "running", steps: [], error: undefined } : run,
+            ),
+          );
+
+          const next = await executeInteraction(page, interaction, (nextSteps) => {
+            setBatchRuns((current) =>
+              current.map((run) =>
+                run.id === runId ? { ...run, status: "running", steps: nextSteps } : run,
+              ),
+            );
+          });
+
+          setBatchRuns((current) =>
+            current.map((run) =>
+              run.id === runId
+                ? {
+                    ...run,
+                    status: next.succeeded ? "passed" : "failed",
+                    steps: next.steps,
+                    error: next.error,
+                  }
+                : run,
+            ),
+          );
+        }
+      }
+    } finally {
+      setIsRunningAll(false);
     }
   };
 
@@ -130,24 +228,42 @@ export function SuperAdminSimulationPage() {
 
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(320px,1fr)] xl:items-start">
           <div className="grid grid-cols-2 items-start gap-4">
-            <label className="min-w-0 space-y-2">
-              <span className="block text-sm font-semibold text-on-surface">الصفحة</span>
-              <select
-                value={selectedPage?.id ?? ""}
-                onChange={(event) => selectPage(event.target.value)}
-                disabled={Boolean(runningId)}
-                className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
+            <div className="min-w-0 space-y-3">
+              <label className="block space-y-2">
+                <span className="block text-sm font-semibold text-on-surface">الصفحة</span>
+                <select
+                  value={selectedPage?.id ?? ""}
+                  onChange={(event) => selectPage(event.target.value)}
+                  disabled={busy}
+                  className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {USER_PAGE_REGISTRY.map((page) => (
+                    <option key={page.id} value={page.id}>
+                      {page.label} — {page.route}
+                    </option>
+                  ))}
+                </select>
+                {selectedPage ? (
+                  <span className="block text-xs text-on-surface-variant">{selectedPage.description}</span>
+                ) : null}
+              </label>
+
+              <Button
+                type="button"
+                onClick={() => void runAllInteractions()}
+                disabled={busy || USER_PAGE_REGISTRY.length === 0}
+                className="w-full"
               >
-                {USER_PAGE_REGISTRY.map((page) => (
-                  <option key={page.id} value={page.id}>
-                    {page.label} — {page.route}
-                  </option>
-                ))}
-              </select>
-              {selectedPage ? (
-                <span className="block text-xs text-on-surface-variant">{selectedPage.description}</span>
-              ) : null}
-            </label>
+                {isRunningAll ? (
+                  <span className="animate-pulse">جارٍ تشغيل كل الصفحات</span>
+                ) : (
+                  <>
+                    <PlayCircle className="h-4 w-4" />
+                    تشغيل كل الصفحات والأحداث
+                  </>
+                )}
+              </Button>
+            </div>
 
             <div className="min-w-0 space-y-3">
               <label className="block space-y-2">
@@ -156,7 +272,7 @@ export function SuperAdminSimulationPage() {
                   key={selectedPage?.id ?? "no-page"}
                   value={selectedInteraction?.id ?? ""}
                   onChange={(event) => setSelectedInteractionId(event.target.value)}
-                  disabled={Boolean(runningId) || !selectedPage}
+                  disabled={busy || !selectedPage}
                   className="h-11 w-full rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {selectedInteractions.map((interaction) => (
@@ -173,7 +289,7 @@ export function SuperAdminSimulationPage() {
               <Button
                 type="button"
                 onClick={() => void runSelectedInteraction()}
-                disabled={Boolean(runningId) || !selectedPage || !selectedInteraction}
+                disabled={busy || !selectedPage || !selectedInteraction}
                 className="w-full"
               >
                 {runningId ? (
@@ -188,7 +304,13 @@ export function SuperAdminSimulationPage() {
             </div>
           </div>
 
-          <SimulationProgressPanel steps={steps} error={result?.error} />
+          <SimulationProgressPanel
+            steps={steps}
+            error={result?.error}
+            succeeded={result?.succeeded}
+            running={Boolean(runningId)}
+            runs={batchRuns}
+          />
         </div>
       </section>
 

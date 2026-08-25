@@ -15,12 +15,22 @@ progress on the same screen:
 
 - The page selector lists every entry in `USER_PAGE_REGISTRY`.
 - The interaction selector lists the real user interactions declared for the
-  currently selected page.
+  currently selected page and is rebuilt when the selected page changes.
 - `SimulationProgressPanel` is one shared execution monitor. It is not a
   selector and shows the current or most recent E2E execution progress.
-- The Run button executes the selected interaction in place without navigating
-  to a page-specific simulation screen.
-- Page and interaction selection are locked while an execution is active so
+- The per-event Run button executes the selected interaction in place without
+  navigating to a page-specific simulation screen.
+- The Run All button below the page selector executes every interaction for
+  every registry page sequentially: all interactions for the first page, then
+  all interactions for the next page, until the registry is exhausted.
+- A failed interaction is recorded and does not abort the remaining batch. The
+  monitor records the pass/fail state and the actual code error message for
+  each failed interaction.
+- During a batch, the shared monitor groups entries by page and keeps each page's
+  real interactions in execution order with their step-level progress.
+- The monitor Copy button copies the complete visible execution log, including
+  page, interaction, pass/fail state, steps, and code error messages.
+- Page and interaction selection are locked while any execution is active so
   the shared progress monitor always describes one stable run.
 
 ## Boundaries
