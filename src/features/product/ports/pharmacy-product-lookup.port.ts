@@ -12,17 +12,31 @@ export interface PharmacyProductLookupPort {
   hideFixedProduct(id: string, uid: string): Promise<boolean>;
 }
 
-let pharmacyProductLookupPort: PharmacyProductLookupPort | null = null;
+type PharmacyProductLookupPortRegistry = typeof globalThis & {
+  __asolPharmacyProductLookupPort?: PharmacyProductLookupPort;
+};
+
+/**
+ * Keep the application registration on the process global rather than in module
+ * scope. During local Next.js/Turbopack development this module can be reloaded
+ * without re-running the instrumentation composition root; module-local state
+ * would then reset to null and make valid requests fail with
+ * "PharmacyProductLookupPort is not registered".
+ */
+function registry(): PharmacyProductLookupPortRegistry {
+  return globalThis as PharmacyProductLookupPortRegistry;
+}
 
 export function registerPharmacyProductLookupPort(
   port: PharmacyProductLookupPort,
 ): void {
-  pharmacyProductLookupPort = port;
+  registry().__asolPharmacyProductLookupPort = port;
 }
 
 export function getPharmacyProductLookupPort(): PharmacyProductLookupPort {
-  if (!pharmacyProductLookupPort) {
+  const port = registry().__asolPharmacyProductLookupPort;
+  if (!port) {
     throw new Error('PharmacyProductLookupPort is not registered');
   }
-  return pharmacyProductLookupPort;
+  return port;
 }
