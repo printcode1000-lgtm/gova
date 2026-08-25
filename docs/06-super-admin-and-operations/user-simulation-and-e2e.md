@@ -32,6 +32,9 @@ progress on the same screen:
   real interactions in execution order with their step-level progress.
 - The monitor Copy button copies the complete visible execution log, including
   page, interaction, pass/fail state, steps, and code error messages.
+- The monitor **Copy errors only** button copies only failed entries using exactly
+  the page label, interaction label, and actual error message. It works for both
+  a single interaction and a Run All batch and omits successful runs and step logs.
 - Page and interaction selection are locked while any execution is active so
   the shared progress monitor always describes one stable run.
 

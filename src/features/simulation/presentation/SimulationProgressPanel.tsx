@@ -23,6 +23,8 @@ type SimulationProgressPanelProps = {
   succeeded?: boolean;
   running?: boolean;
   runs?: readonly SimulationProgressRun[];
+  pageLabel?: string;
+  interactionLabel?: string;
 };
 
 function statusLabel(status: SimulationProgressRunStatus) {
@@ -80,6 +82,32 @@ function buildCopyText(
   return lines.join("\n");
 }
 
+function buildErrorsOnlyText(
+  error: string | undefined,
+  runs: readonly SimulationProgressRun[],
+  pageLabel: string | undefined,
+  interactionLabel: string | undefined,
+) {
+  const failedRuns = runs.filter((run) => Boolean(run.error));
+  const lines: string[] = [];
+
+  if (failedRuns.length > 0) {
+    for (const run of failedRuns) {
+      if (lines.length > 0) lines.push("");
+      lines.push(`الصفحة: ${run.pageLabel}`);
+      lines.push(`الإجراء: ${run.interactionLabel}`);
+      lines.push(`الخطأ: ${run.error}`);
+    }
+    return lines.join("\n");
+  }
+
+  if (error && pageLabel && interactionLabel) {
+    return [`الصفحة: ${pageLabel}`, `الإجراء: ${interactionLabel}`, `الخطأ: ${error}`].join("\n");
+  }
+
+  return "";
+}
+
 async function copyText(text: string) {
   if (navigator.clipboard?.writeText) {
     await navigator.clipboard.writeText(text);
@@ -122,9 +150,17 @@ export function SimulationProgressPanel({
   succeeded,
   running = false,
   runs = [],
+  pageLabel,
+  interactionLabel,
 }: SimulationProgressPanelProps) {
   const [copied, setCopied] = React.useState(false);
+  const [errorsCopied, setErrorsCopied] = React.useState(false);
   const hasContent = runs.length > 0 || steps.length > 0 || Boolean(error) || succeeded !== undefined || running;
+  const errorsOnlyText = React.useMemo(
+    () => buildErrorsOnlyText(error, runs, pageLabel, interactionLabel),
+    [error, runs, pageLabel, interactionLabel],
+  );
+  const hasErrors = errorsOnlyText.length > 0;
   const pageGroups = React.useMemo(() => {
     const groups: Array<{ pageId: string; pageLabel: string; runs: SimulationProgressRun[] }> = [];
     for (const run of runs) {
@@ -149,19 +185,41 @@ export function SimulationProgressPanel({
     }
   };
 
+  const handleCopyErrors = async () => {
+    if (!hasErrors) return;
+    try {
+      await copyText(errorsOnlyText);
+      setErrorsCopied(true);
+      window.setTimeout(() => setErrorsCopied(false), 1500);
+    } catch {
+      setErrorsCopied(false);
+    }
+  };
+
   return (
     <section className="space-y-3 rounded-2xl border border-outline-variant bg-surface p-4" aria-live="polite">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-bold text-on-surface">متابعة تنفيذ E2E</h2>
-        <button
-          type="button"
-          onClick={() => void handleCopy()}
-          disabled={!hasContent}
-          className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
-          {copied ? "تم النسخ" : "نسخ"}
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => void handleCopyErrors()}
+            disabled={!hasErrors}
+            className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {errorsCopied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+            {errorsCopied ? "تم نسخ الأخطاء" : "نسخ الأخطاء فقط"}
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleCopy()}
+            disabled={!hasContent}
+            className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+            {copied ? "تم النسخ" : "نسخ"}
+          </button>
+        </div>
       </div>
 
       {runs.length > 0 ? (

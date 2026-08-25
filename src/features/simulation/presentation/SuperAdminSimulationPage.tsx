@@ -316,6 +316,8 @@ export function SuperAdminSimulationPage() {
             succeeded={result?.succeeded}
             running={Boolean(runningId)}
             runs={batchRuns}
+            pageLabel={selectedPage?.label}
+            interactionLabel={selectedInteraction?.label}
           />
         </div>
       </section>
