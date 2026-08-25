@@ -101,7 +101,7 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
   );
 
   const enableThisDevice = React.useCallback(async (): Promise<boolean> => {
-    if (!session?.uid) {
+    if (!session?.uid || !session.phone) {
       showNotice(t("notifications.deviceCard.loginRequired"), "error");
       return false;
     }
@@ -175,7 +175,10 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
   }, [permissionBlocked, syncAfterPermissionChange]);
 
   React.useEffect(() => {
-    if (!session?.uid) return;
+    if (!session?.uid || !session.phone) {
+      accountMutedRef.current = false;
+      return;
+    }
     void notifications
       .getPushPreference({ uid: session.uid, phone: session.phone })
       .then((preference) => {
@@ -191,7 +194,7 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
 
   const updateDeviceNotifications = React.useCallback(
     async (enabled: boolean) => {
-      if (!session?.uid || deviceBusy) return;
+      if (!session?.uid || !session.phone || deviceBusy) return;
       setDeviceBusy(true);
       clearNotice();
       try {

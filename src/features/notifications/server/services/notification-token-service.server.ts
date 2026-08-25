@@ -26,6 +26,27 @@ function trimmedText(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
+/**
+ * Compare phone identities by digits rather than display formatting. Sessions may
+ * carry `+20 10...` while the account row carries `010...`; those are the same
+ * Egyptian number and must not be rejected as a different account.
+ */
+function normalizedIdentityPhone(value: unknown): string {
+  const digits = trimmedText(value).replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.startsWith("20") && digits.length === 12) {
+    return `0${digits.slice(2)}`;
+  }
+  return digits;
+}
+
+function identityPhoneMatches(left: unknown, right: unknown): boolean {
+  const normalizedLeft = normalizedIdentityPhone(left);
+  return Boolean(
+    normalizedLeft && normalizedLeft === normalizedIdentityPhone(right),
+  );
+}
+
 function toAccountDeviceSummary(
   registration: RegisteredNotificationToken,
 ): AccountDeviceSummary {
@@ -61,7 +82,7 @@ export class NotificationTokenService {
     const token = trimmedText(input?.token);
     const deviceId = trimmedText(input?.deviceId);
     const user = await this.users.execute(uid);
-    if (!user || user.phone !== phone) throw new Error("forbidden");
+    if (!user || !identityPhoneMatches(user.phone, phone)) throw new Error("forbidden");
     if (!deviceId || deviceId.length > 200)
       throw new Error("notificationDeviceIdInvalid");
     if (token.length < 20 || token.length > 8192)
@@ -92,7 +113,7 @@ export class NotificationTokenService {
   async remove(input: DeleteNotificationTokenInput): Promise<void> {
     const user = await this.users.execute(trimmedText(input?.uid));
     const phone = trimmedText(input?.phone);
-    if (!user || !phone || user.phone !== phone) {
+    if (!user || !identityPhoneMatches(user.phone, phone)) {
       throw new Error("forbidden");
     }
     return this.deleteToken.execute({ ...input, uid: user.uid });
@@ -114,7 +135,7 @@ export class NotificationTokenService {
     phone: string;
   }): Promise<AccountDevicesResult> {
     const user = await this.users.execute(trimmedText(identity?.uid));
-    if (!user || user.phone !== trimmedText(identity?.phone)) {
+    if (!user || !identityPhoneMatches(user.phone, identity?.phone)) {
       throw new Error("forbidden");
     }
     const tokens = await this.listTokens.byUid(user.uid);
@@ -126,7 +147,7 @@ export class NotificationTokenService {
     phone: string,
   ): Promise<NotificationDeliveryPreference> {
     const user = await this.users.execute(trimmedText(uid));
-    if (!user || user.phone !== trimmedText(phone)) throw new Error("forbidden");
+    if (!user || !identityPhoneMatches(user.phone, phone)) throw new Error("forbidden");
     return this.getPushPreferenceQuery.execute(user.uid);
   }
 
@@ -141,7 +162,7 @@ export class NotificationTokenService {
     pushEnabled: boolean,
   ): Promise<NotificationDeliveryPreference> {
     const user = await this.users.execute(trimmedText(uid));
-    if (!user || user.phone !== trimmedText(phone)) throw new Error("forbidden");
+    if (!user || !identityPhoneMatches(user.phone, phone)) throw new Error("forbidden");
     return this.setPushPreferenceCommand.execute(user.uid, pushEnabled);
   }
 }
