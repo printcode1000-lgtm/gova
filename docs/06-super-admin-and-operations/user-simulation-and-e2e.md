@@ -7,6 +7,8 @@ runtime classification, fixed simulation identities, random internal-image
 selection, execution progress, and discovery guard. The Super Admin surface is
 available at `/super-admin/simulation`.
 
+The binding rule for all simulation implementation is [Simulation Source-of-Truth Contract](../09-agent-knowledge/contracts/simulation-source-of-truth.md). Simulation must execute the same code paths used by real users and must never add compatibility layers or duplicate production business logic.
+
 ## Super Admin execution surface
 
 `/super-admin/simulation` is the single primary control surface for page-level
@@ -40,7 +42,8 @@ progress on the same screen:
   same-origin frame and dispatches the declared user action there. It does not
   render a copy of the original page UI.
 - The existing application handlers, hooks, services, APIs, repositories,
-  database backend, and storage configuration remain authoritative.
+  database backend, validation/normalization functions, and storage configuration remain authoritative.
+- Simulation selectors are exact instrumentation. Missing declared targets fail explicitly; the execution port does not search for semantic or generic fallback targets.
 - Static Out, Android, and iOS use the configured remote Business API. They do
   not assume that App Router handlers exist in the static bundle.
 - Scenarios are intentionally empty in version one. A page interaction remains
@@ -54,6 +57,8 @@ seller, and delivery identities through the real authentication and profile
 services. It is idempotent for accounts whose configured password still
 matches. Existing accounts with different credentials are reported as real
 failures rather than overwritten.
+
+Simulation does not own a separate phone-number validator or normalizer. The identities pass through the same `@asol/auth-core` canonical Egyptian mobile-phone rule used by real registration, login, profile updates, and password recovery. Invalid simulation identity data must therefore fail through the real auth path rather than being repaired by simulation-specific logic.
 
 The Super Admin user-status cards show the exact Arabic catalog names returned
 by the same category objects used during bootstrap. Seller cards show the

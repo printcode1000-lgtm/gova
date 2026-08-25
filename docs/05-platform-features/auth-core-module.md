@@ -4,7 +4,7 @@
 
 ## 1. Summary & Core Mission
 
-`@asol/auth-core` is the sealed workspace package that owns authentication domain logic for ASOL: password hashing, signed session tokens, registration/login/profile validation schemas, auth operations, and account deletion orchestration.
+`@asol/auth-core` is the sealed workspace package that owns authentication domain logic for ASOL: password hashing, signed session tokens, registration/login/profile validation schemas, canonical Egyptian mobile-phone validation and normalization, auth operations, and account deletion orchestration.
 
 Located at `packages/auth-core/`, it replaces scattered auth utilities that previously lived under `src/features/auth/` and `src/features/account-deletion/`. The app wires concrete repositories and storage ports through `src/features/auth/server/auth-core-bootstrap.server.ts`.
 
@@ -18,7 +18,7 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 
 | Door | Import | Safe for | Contents |
 | :--- | :--- | :--- | :--- |
-| Browser / shared | `@asol/auth-core` | Client components, hooks, shared validation | Constants, entities, Zod schemas (`createRegistrationSchema`, `createLoginSchema`, `createProfileSchema`) |
+| Browser / shared | `@asol/auth-core` | Client components, hooks, shared validation | Constants, entities, canonical phone validation/normalization, Zod schemas (`createRegistrationSchema`, `createLoginSchema`, `createProfileSchema`) |
 | Server | `@asol/auth-core/server` | API routes, server services, bootstrap | Password hashing (scrypt), session token sign/verify, `AuthOperationsService`, `AccountDeletionService`, normalization helpers, super-admin guards |
 
 **Do not** deep-import from `packages/auth-core/src/**`. Use only the two doors above, per [module-isolation-rules.md](../01-architecture/02-packages/module-isolation-rules.md).
@@ -50,6 +50,13 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 ---
 
 ## 4. Security Model
+
+### Phone numbers
+
+- `packages/auth-core/src/domain/phone.ts` is the single source of truth for Egyptian mobile-phone validation and normalization.
+- Registration, login, profile validation, server auth operations, and password recovery all use this same owner; consumers must not copy its prefixes, regexes, length checks, or normalization rules.
+- Accepted canonical storage form is the 11-digit local Egyptian mobile number. A `+20`/`20` spelling is normalized to the same local form before storage or lookup.
+- Invalid server-side inputs are rejected even if a caller bypasses the browser Zod schema.
 
 ### Passwords
 
@@ -142,7 +149,7 @@ npm run test:auth-core
 
 Included in `npm run test`, `npm run build`, and `npm run build:static`.
 
-Package tests cover: constants, scrypt hash/verify, session token sign/verify, and export surface integrity (browser door must not expose server-only symbols).
+Package tests cover: constants, canonical phone validation/normalization, scrypt hash/verify, session token sign/verify, and export surface integrity (browser door must not expose server-only symbols).
 
 ---
 

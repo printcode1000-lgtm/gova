@@ -5,7 +5,9 @@ import {
   MIN_PASSWORD_LENGTH,
   assertPasswordMeetsMinimum,
   createRegistrationSchema,
+  egyptianMobilePhoneValidationIssue,
   isAccountDeletionPhraseValid,
+  normalizeEgyptianMobilePhone,
   readPasswordInput,
 } from '../index';
 import * as runtimeApi from '../index';
@@ -26,13 +28,14 @@ export function runConstantsTest() {
   console.log('✅ auth-core constants test passed');
 }
 
-export function runPasswordInputTest() {
-  assert.equal(readPasswordInput('0258'), '0258');
-  assert.equal(readPasswordInput('0258')?.length, 4);
-  assert.equal(assertPasswordMeetsMinimum('0258'), '0258');
-  assert.throws(() => assertPasswordMeetsMinimum(258), /passwordTooShort/);
-  assert.throws(() => assertPasswordMeetsMinimum('258'), /passwordTooShort/);
-  assert.throws(() => assertPasswordMeetsMinimum('123'), /passwordTooShort/);
+export function runPhoneTest() {
+  assert.equal(normalizeEgyptianMobilePhone('010 1234 5678'), '01012345678');
+  assert.equal(normalizeEgyptianMobilePhone('+20 10 1234 5678'), '01012345678');
+  assert.equal(serverApi.normalizeAuthPhone('+20 10 1234 5678'), '01012345678');
+  assert.equal(egyptianMobilePhoneValidationIssue(''), 'required');
+  assert.equal(egyptianMobilePhoneValidationIssue('010000000001'), 'length');
+  assert.equal(egyptianMobilePhoneValidationIssue('01312345678'), 'prefix');
+  assert.throws(() => normalizeEgyptianMobilePhone('010000000001'), /invalidEgyptianMobilePhone:length/);
 
   const schema = createRegistrationSchema((key) => key);
   assert.equal(
@@ -45,6 +48,27 @@ export function runPasswordInputTest() {
     }).success,
     true,
   );
+  assert.equal(
+    schema.safeParse({
+      phone: '010000000001',
+      password: '0258',
+      confirmPassword: '0258',
+      email: '',
+      phoneVerified: true,
+    }).success,
+    false,
+  );
+
+  console.log('✅ auth-core phone test passed');
+}
+
+export function runPasswordInputTest() {
+  assert.equal(readPasswordInput('0258'), '0258');
+  assert.equal(readPasswordInput('0258')?.length, 4);
+  assert.equal(assertPasswordMeetsMinimum('0258'), '0258');
+  assert.throws(() => assertPasswordMeetsMinimum(258), /passwordTooShort/);
+  assert.throws(() => assertPasswordMeetsMinimum('258'), /passwordTooShort/);
+  assert.throws(() => assertPasswordMeetsMinimum('123'), /passwordTooShort/);
 
   console.log('✅ auth-core password input test passed');
 }
@@ -68,6 +92,7 @@ export function runSessionTokenTest() {
 
 export function runPublicSurfaceTest() {
   assert.equal(typeof runtimeApi.createLoginSchema, 'function');
+  assert.equal(typeof runtimeApi.normalizeEgyptianMobilePhone, 'function');
   assert.equal(typeof runtimeApi.isAccountDeletionPhraseValid, 'function');
   assert.equal(typeof runtimeApi.ACCOUNT_DELETION_TABLE_REGISTRY, 'object');
   assert.equal(typeof serverApi.AuthOperationsService, 'function');
@@ -144,19 +169,16 @@ export async function runSuperAdminAccountDeletionTest() {
 
   const service = new serverApi.AccountDeletionService(fakeRepo, fakeStorage);
 
-  // 1. Super admin deletion forbidden
   await assert.rejects(
     () => service.deleteBySuperAdmin('super-admin-uid'),
     /accountDeletionSuperAdminForbidden/,
   );
 
-  // 2. Non-existent user
   await assert.rejects(
     () => service.deleteBySuperAdmin('non-existent'),
     /userNotFound/,
   );
 
-  // 3. Normal user deletion
   const result = await service.deleteBySuperAdmin('user-123');
   assert.equal(result.deleted, true);
   assert.equal(result.imagesDeleted, 1);
@@ -175,6 +197,7 @@ export async function runSuperAdminAccountDeletionTest() {
 async function main() {
   console.log('🚀 Running @asol/auth-core test suite...\n');
   runConstantsTest();
+  runPhoneTest();
   runPasswordInputTest();
   await runPasswordTest();
   runSessionTokenTest();

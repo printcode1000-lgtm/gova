@@ -4,6 +4,8 @@
 
 The `src/features/password-recovery` module provides an independent password recovery flow via email. The user begins with their registered phone number, receives a 6-digit verification code, and sets a new password upon code verification.
 
+Phone validation and normalization are not owned by password recovery. `normalizeRecoveryPhone()` delegates to the canonical Egyptian mobile-phone rule exported by `@asol/auth-core`; the recovery layer only maps an invalid canonical phone to the recovery-specific error key. This keeps registration, login, profile updates, recovery, and simulation on one phone source of truth.
+
 ## User Flow
 
 1. The user navigates to `/forgot-password` and enters their registered Egyptian phone number.
@@ -74,6 +76,7 @@ npm run db:schema:sync
 
 - `src/features/password-recovery/server/services/password-recovery-service.server.ts`: Flow logic and security rules.
 - `src/features/password-recovery/server/services/password-recovery-email-service.server.ts`: Gmail dispatch service.
+- `packages/auth-core/src/domain/phone.ts`: Canonical Egyptian mobile-phone validation and normalization shared with the real auth flows.
 - `packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts`: Challenge storage repository.
 - `src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx`: Multi-step UI component.
 - `src/app/api/auth/password-recovery/*`: API routes.
