@@ -95,9 +95,7 @@ export const INTERACTION_BASELINE: InteractionBaseline = {
     "interactionSourceCount": 76,
     "eventIds": [
       "open-page",
-      "password-request",
-      "password-verify",
-      "password-reset"
+      "password-request"
     ]
   },
   "/home": {
