@@ -486,6 +486,7 @@ export function CartPageContent() {
             ) : null}
             <button
               type="button"
+              data-simulation-event="cart-checkout"
               disabled={isSubmitting || isSessionLoading}
               onClick={submitOrder}
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-on-primary transition disabled:cursor-not-allowed disabled:opacity-60"
