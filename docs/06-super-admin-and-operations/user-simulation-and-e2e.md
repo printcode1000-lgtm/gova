@@ -45,6 +45,10 @@ services. It is idempotent for accounts whose configured password still
 matches. Existing accounts with different credentials are reported as real
 failures rather than overwritten.
 
+The Super Admin user-status cards also show the profile setup applied during
+bootstrap: seller accounts receive one valid main category plus one valid
+sub-category, while delivery accounts receive the delivery-services category.
+
 ## Internal Images
 
 Image-requiring adapters must build their candidate pool from main or child
