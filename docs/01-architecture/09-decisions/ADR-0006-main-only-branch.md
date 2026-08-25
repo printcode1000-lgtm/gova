@@ -6,7 +6,7 @@ Accepted (2026-08)
 
 ## Context
 
-Ephemeral agent branches (`claude/*`, `cursor/*`) accumulated with no unique work. Multiple branches complicated cloud agent workflows where unpushed work is lost when containers terminate.
+Provider-generated ephemeral branches accumulated with no unique work. Multiple branches complicated remote workspace workflows where unpushed work is lost when containers terminate.
 
 ## Decision
 
@@ -25,12 +25,12 @@ Push **to** `main` is unrestricted (no branch protection, no required checks).
 - Negative: No PR review workflow; relies on local build gates as reviewer
 - Pre-push hook only runs when `core.hooksPath` points at `.githooks` (npm `prepare`)
 
-Removed hooks that blocked push for dirty `public/sync_data` — rule moved to `CLAUDE.md` rule 11 (commit in same change, not gate push).
+Hooks that blocked pushes for dirty `public/sync_data` were removed; the preservation requirement remains documented as release policy instead of blocking every push.
 
 ## Source Map
 
 - Hook: `.githooks/pre-push.d/10-main-only`
-- Agent rules: `AGENTS.md` §1 rule 10, `CLAUDE.md` rule 10
+- Project-wide branch policy: [Scripts and Workflows](../../07-mobile-and-release/scripts-and-workflows.md)
 - GitHub CI: [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md)
 
 ## Related Documents

@@ -63,7 +63,6 @@ export const DOCS_WORKFLOW_PATH_FILTERS = [
   "CLAUDE.md",
   "GEMINI.md",
   ".agents/**",
-  ".cursor/rules/**",
   "scripts/docs/**",
   "scripts/architecture/**",
   "scripts/architecture-check.ts",

@@ -40,8 +40,6 @@ shipping declaration and App Store Connect credentials; missing credentials do
 not implicitly enable or disable the platform. The API key is passed explicitly
 to `upload_to_testflight`, so the enabled release path remains non-interactive.
 
-For complete Mac/iOS setup and automated agent instructions, see [ios-mac-execution-agent-prompt.md](./ios-mac-execution-agent-prompt.md).
-
 ## Safety
 
 Any lane using `upload_to_play_store` must remain on `Release` only. The `npm run android:r8:validate` validator fails if `ReleaseNoR8` or `no_r8` appears inside a lane publishing to Play.

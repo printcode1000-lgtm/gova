@@ -36,7 +36,7 @@ export const RUNTIME_DEFINITIONS: readonly RuntimeDefinition[] = [
       'Next.js development runtime on port 3001; Capacitor can optionally live-reload from it through CAPACITOR_SERVER_URL.',
     tags: ['development', 'dev', 'next dev', 'port 3001', 'live reload', 'capacitor live reload'],
     commandNames: ['dev', 'dev:checked'],
-    configPaths: ['next.config.ts', '.cursor/environment.json', 'capacitor.config.ts'],
+    configPaths: ['next.config.ts', 'capacitor.config.ts'],
   },
   {
     id: 'web',

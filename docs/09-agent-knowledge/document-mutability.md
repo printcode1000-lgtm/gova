@@ -6,7 +6,7 @@ Not every file under `docs/` (plus the small set of root agent-instruction surfa
 
 ## Scope
 
-Applies to every file under `docs/`, and to `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agents/rules/agent-instructions.md`, and `.cursor/rules/session-standards.mdc`. A path outside these prefixes is not classified by this contract.
+Applies to every file under `docs/`, and to `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and `.agents/rules/agent-instructions.md`. A path outside these prefixes is not classified by this contract.
 
 ## The Three Classes
 
@@ -16,7 +16,7 @@ Applies to every file under `docs/`, and to `AGENTS.md`, `CLAUDE.md`, `GEMINI.md
 | `editable` | Operational and application documentation that must stay current with behavior, without redefining a protected contract. | Any agent doing the matching feature/operational work, as part of that change. |
 | `generated` | Overwrite-only outputs produced by a generator from live repository/registry facts. | Never hand-edited. Change the source, registry, or generator, then regenerate. |
 
-A path not explicitly listed as `editable` or `generated` in the registry, but that falls under `docs/`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agents/`, or `.cursor/rules/`, is **default-deny classified as `protected`**. Silence in the registry is never permission.
+A path not explicitly listed as `editable` or `generated` in the registry, but that falls under `docs/`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, or `.agents/`, is **default-deny classified as `protected`**. Silence in the registry is never permission.
 
 ## Authorization for Protected Changes
 
@@ -68,7 +68,7 @@ Do not weaken these messages to a single line or a bare exit code. An agent hitt
 A change to behavior, an API, a data contract, configuration, or an operational step updates the matching **editable** document in the same change (see [Documentation Update Policy](./contracts/documentation-update-policy.md)). It does not touch:
 
 - `docs/01-architecture/`, `docs/09-agent-knowledge/contracts/`, `runtime-contract.md`, `document-mutability.md`/`.json`, or the other protected entries in the registry;
-- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agents/rules/agent-instructions.md`, `.cursor/rules/session-standards.mdc`;
+- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agents/rules/agent-instructions.md`;
 - anything under `docs/09-agent-knowledge/generated/` or the other generated entries.
 
 If a task genuinely requires changing one of these — a new binding rule, a new protected contract, a runtime-topology change — that is a distinct, deliberate action: use the authorization marker or environment variable, update `document-mutability.json` if the set of protected/editable/generated paths changed, and say explicitly in the change description that a protected contract was modified and why.

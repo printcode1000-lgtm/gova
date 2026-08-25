@@ -121,7 +121,6 @@ export function validateDocumentMutabilityRegistry(registry = loadDocumentMutabi
     'CLAUDE.md',
     'GEMINI.md',
     '.agents/rules/agent-instructions.md',
-    '.cursor/rules/session-standards.mdc',
   ];
   for (const required of requiredProtected) {
     const found = registry.entries.some(
@@ -148,8 +147,7 @@ export function classifyDocumentationPath(
     path === 'AGENTS.md' ||
     path === 'CLAUDE.md' ||
     path === 'GEMINI.md' ||
-    path.startsWith('.agents/') ||
-    path.startsWith('.cursor/rules/');
+    path.startsWith('.agents/');
   if (!isDocLike && !registry.entries.some((entry) => path === normalizePath(entry.path) || path.startsWith(`${normalizePath(entry.path).replace(/\/$/, '')}/`))) {
     return undefined;
   }
@@ -184,7 +182,7 @@ export function classifyDocumentationPath(
     };
   }
 
-  if (path.startsWith('docs/') || path === 'AGENTS.md' || path === 'CLAUDE.md' || path === 'GEMINI.md' || path.startsWith('.agents/') || path.startsWith('.cursor/rules/')) {
+  if (path.startsWith('docs/') || path === 'AGENTS.md' || path === 'CLAUDE.md' || path === 'GEMINI.md' || path.startsWith('.agents/')) {
     return {
       path,
       classification: 'protected',
@@ -296,7 +294,6 @@ export function listClassifiedDocumentationFiles(registry = loadDocumentMutabili
     'CLAUDE.md',
     'GEMINI.md',
     '.agents/rules/agent-instructions.md',
-    '.cursor/rules/session-standards.mdc',
   ];
   const paths = [...docs, ...surfaces].sort();
   return paths

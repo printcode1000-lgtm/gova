@@ -31,7 +31,7 @@ All 41 packages in `CAPABILITY_PACKAGES`, all application layers under `src/`, s
 
 ## Change Impact
 
-Rule changes require ADR under [09-decisions/](../09-decisions/), registry updates, enforcement code changes, and agent instruction updates (`AGENTS.md`, `.cursor/rules/`).
+Rule changes require ADR under [09-decisions/](../09-decisions/), registry updates, enforcement code changes, and synchronized project-wide instruction surfaces.
 
 ---
 

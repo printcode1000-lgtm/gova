@@ -60,7 +60,6 @@ function requireAgentMarkers(): string[] {
     'CLAUDE.md',
     'GEMINI.md',
     '.agents/rules/agent-instructions.md',
-    '.cursor/rules/session-standards.mdc',
   ];
   const markers = [
     'scripts/docs/context.ts',

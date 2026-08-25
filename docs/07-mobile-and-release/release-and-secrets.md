@@ -112,7 +112,7 @@ when **required credentials for the requested command scope are missing**,
 exists. Non-interactive runs never wait for a TTY: they fail with an actionable
 message naming missing **keys/paths**, not values. Do not invent secrets.
 
-Agent worktrees (including nested `.claude/worktrees/**` clones) are excluded
+Nested agent worktree clones are excluded
 from archive discovery. App Store Connect `.p8` keys are covered by the
 `config/secret-backup-paths.json` `.p8` extension and `AuthKey_*.p8` name
 pattern; never commit a plaintext key.

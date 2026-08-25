@@ -1,8 +1,8 @@
 import { promptHidden } from "./archive-crypto";
 
 /**
- * Cursor Cloud / non-interactive restore reads this env var instead of a TTY prompt.
- * Set it in Cloud Agents → Secrets; never commit the value.
+ * Non-interactive restore reads this env var instead of a TTY prompt.
+ * Set it through the execution environment's secret store; never commit the value.
  */
 export const SECRET_ARCHIVE_PASSWORD_ENV_VAR = "ASOL_SECRET_ARCHIVE_PASSWORD";
 
@@ -18,7 +18,7 @@ export async function resolveArchivePassword(label: string): Promise<string> {
 
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     throw new Error(
-      `A real interactive terminal is required for the private-key password, or set ${SECRET_ARCHIVE_PASSWORD_ENV_VAR} for non-interactive restore (Cloud Agents → Secrets).`,
+      `A real interactive terminal is required for the private-key password, or set ${SECRET_ARCHIVE_PASSWORD_ENV_VAR} through the execution environment for non-interactive restore.`,
     );
   }
 

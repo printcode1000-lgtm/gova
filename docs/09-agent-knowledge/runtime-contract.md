@@ -47,7 +47,7 @@ static preview     Android WebView      iOS WebView
 
 | Surface | Primary source/config | Build/runtime artifact | Critical difference |
 |---|---|---|---|
-| Development | `package.json`, `next.config.ts`, `.cursor/environment.json` | live Next dev server | Development-only guards, hot reload, local storage/database behavior and optional native live reload can differ from release behavior. |
+| Development | `package.json`, `next.config.ts`, `capacitor.config.ts` | live Next dev server | Development-only guards, hot reload, local storage/database behavior and optional native live reload can differ from release behavior. |
 | Web | `src/app/`, `next.config.ts`, service/deployment configuration | `.next` | Server Components, route handlers, server APIs, Vercel function tracing, Turso/network behavior and deployment topology exist here. |
 | Static `out/` | `next.config.ts`, `scripts/build-static.ts`, `@asol/ota-core` | `out/` | No App Router API handlers are shipped. Images are unoptimized and API calls must use the configured remote origin. |
 | Android | `android/`, `capacitor.config.ts`, `@asol/native-core`, Fastlane/release tooling | `out/` + Android project → APK/AAB | WebView + Android permissions/plugins/resources/push/R8/signing/store behavior. |

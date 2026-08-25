@@ -16,7 +16,7 @@ explicit positive path filter covering:
 
 - `docs/**`
 - `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`
-- `.agents/**`, `.cursor/rules/**`
+- `.agents/**`
 - `scripts/docs/**`, `scripts/architecture/**`, `scripts/architecture-check.ts`
 - `scripts/runtime/**`, `scripts/github-ci-policy.ts`
 - `package.json`, `package-lock.json`

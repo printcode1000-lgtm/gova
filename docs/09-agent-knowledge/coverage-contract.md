@@ -9,7 +9,7 @@ This file defines the documentation/knowledge goals that must remain true for ev
 | Goal | Required state | Enforcement / source |
 |---|---|---|
 | Agent-first entry | An agent has one canonical starting point and domain navigation instead of guessing file names. | `docs/README.md`; required domain `README.md` files; `scripts/docs/check.ts`. |
-| Read-before-edit | Every supported agent instruction surface tells the agent to obtain task context before editing. | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agents/rules/agent-instructions.md`, `.cursor/rules/session-standards.mdc`; marker validation in `scripts/docs/check.ts`. |
+| Read-before-edit | Every supported agent instruction surface tells the agent to obtain task context before editing. | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agents/rules/agent-instructions.md`; marker validation in `scripts/docs/check.ts`. |
 | Five application surfaces | Development, Web, Static `out/`, Android and iOS are always visible and must all be evaluated. | `runtime-contract.md`; runtime nodes/artifact topology; mandatory Context Pack section; graph contract checks. |
 | Generated truth vs intentional truth | Derivable inventories come from the repository; hand-written docs explain intent, invariants and policy. | `generation-and-drift.md`, generators, architecture registries. |
 | Stable ownership | Packages/features/services/domains are explicit graph owners, not inferred ad hoc by an agent. | package manifests + architecture capability registry + `src/features/*` + `services/*` + `domain-registry.json`. |

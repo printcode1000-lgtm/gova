@@ -34,7 +34,6 @@ The authoritative list is `docs/09-agent-knowledge/document-mutability.json` (`c
 | `docs/04-ui-components/page-snapshot-system.md` | Page snapshot system contract |
 | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md` | Primary agent instruction surfaces |
 | `.agents/rules/agent-instructions.md` | Agents rules instruction surface |
-| `.cursor/rules/session-standards.mdc` | Cursor always-on session standards |
 
 Treat this table as a convenience index, not the source of truth: the registry can gain new protected entries without this table being regenerated. When in doubt, check `document-mutability.json` for the current entry, or run the classification described in [Document Mutability](../document-mutability.md).
 
@@ -47,7 +46,7 @@ Treat this table as a convenience index, not the source of truth: the registry c
 - **Runtime/knowledge contracts** (`runtime-contract.md`, `coverage-contract.md`, `knowledge-schema.md`, `context-packs.md`, `generation-and-drift.md`, `authoring-standard.md`, `agent-protocol.md`, this mutability system): these define how every agent discovers context and what "safe" means project-wide. An uncontrolled edit here silently changes the ground rules every other change is checked against.
 - **`docs/01-architecture/`**: package boundaries, isolation rules, and enforcement scripts are the mechanism that stops sealed packages from being bypassed. Documentation here is normative, not descriptive.
 - **Release/CI/touch-UI/page-snapshot contracts**: each backs a hard invariant enforced elsewhere (branch policy, GitHub Actions scope, touch-only interaction, page snapshot adoption). Loosening the doc without the matching enforcement change would document a rule that no longer holds.
-- **Agent instruction surfaces**: `AGENTS.md`/`CLAUDE.md`/`GEMINI.md`/`.agents/rules/agent-instructions.md`/`.cursor/rules/session-standards.mdc` are what every agent (including this one) reads first. They must not drift out of sync with each other or be edited casually mid-feature-task.
+- **Agent instruction surfaces**: `AGENTS.md`/`CLAUDE.md`/`GEMINI.md`/`.agents/rules/agent-instructions.md` carry the same project-wide rules. They must not drift out of sync with each other or be edited casually mid-feature-task.
 
 ## What To Do Instead of Editing a Protected Doc
 

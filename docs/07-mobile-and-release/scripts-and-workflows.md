@@ -263,9 +263,8 @@ GitHub status check.
 ## main is the only branch
 
 `main` is the sole branch of this repository. Ten others existed at one point and
-every one of them was created automatically — Claude Code sessions under
-`claude/*`, Cursor cloud agents under `cursor/*`. None held work that `main` did
-not already have; the largest diff among them was an empty commit pushed to
+every one of them was created automatically by ephemeral development sessions.
+None held work that `main` did not already have; the largest diff among them was an empty commit pushed to
 retrigger CI. They were deleted in one sweep, and the rule is enforced locally
 from that point on.
 
@@ -274,10 +273,9 @@ from that point on.
 the outcome the check protects, not something to block.
 
 This is the enforcement layer, and its limit is worth stating plainly: it runs
-only in a checkout that has `core.hooksPath` set. A Cursor cloud agent, a Claude
-Code cloud session, or the GitHub web UI can still create a branch. Agents
-working in this repository are told not to by rule 10 of `CLAUDE.md`; the hook
-covers the local path and nothing beyond it.
+only in a checkout that has `core.hooksPath` set. A remote workspace or the
+GitHub web UI can still create a branch. The project-wide branch policy forbids
+that path; the hook covers the local checkout and nothing beyond it.
 
 ## The pre-push hook
 
@@ -298,8 +296,8 @@ Do not use it to push any ref other than `main`.
 push while `public/sync_data` was dirty, one for the `secrets:backup` output in
 `config/` — and both were removed on purpose. They enforced a real rule, but they
 enforced it by holding back the push, and a push to `main` is not supposed to be
-held back for any reason. The rule they encoded now lives in `CLAUDE.md` rule 11
-as a rule rather than a gate. `10-main-only` stays because what it refuses is not
+held back for any reason. The preservation requirement they encoded remains a
+release rule rather than a push gate. `10-main-only` stays because what it refuses is not
 a push to `main` at all.
 
 ### What is unrestricted on `main`

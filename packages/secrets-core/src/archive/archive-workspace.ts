@@ -48,7 +48,6 @@ const EXCLUDED_DIRECTORY_NAMES = new Set([
 
 const EXCLUDED_RELATIVE_DIRECTORY_PREFIXES = [
   ".claude/worktrees/",
-  ".cursor/worktrees/",
 ];
 
 export function shouldSkipSecretDiscoveryDirectory(

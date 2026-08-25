@@ -42,7 +42,6 @@ const NOT_SOURCE = new Set([
   'docs',
   'public',
   '.claude',
-  '.cursor',
   '.github',
   '.vscode',
   '.deploy-all',

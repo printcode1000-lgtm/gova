@@ -43,4 +43,4 @@ Repository-wide architectural principles. Implementation mechanics are in [07-en
 
 ## Change Impact
 
-Principle changes require ADR, registry update, enforcement changes, and agent instruction updates (`AGENTS.md`, `.cursor/rules/`).
+Principle changes require ADR, registry updates, enforcement changes, and synchronized project-wide instruction surfaces.

@@ -1,6 +1,6 @@
 # Working Rules
 
-Binding on any agent (Claude Code or otherwise) working on this project.
+Binding on every agent and developer working on this project.
 
 1. **Documentation and architecture before and during any change (mandatory).** The documentation system is the primary entry point for understanding and working on the project:
    - To understand the project or its structure, start with `docs/README.md`, then `docs/09-agent-knowledge/README.md`, and use the generated Knowledge Graph and catalogs.
@@ -12,7 +12,7 @@ Binding on any agent (Claude Code or otherwise) working on this project.
 2. **Browser-based verification is forbidden.** Never use browser tools, preview tools, or computer-control tools to test or verify code. Use code analysis, tests, and non-visual tools only.
 3. **Communicate in Arabic.** Always reply to the user in Arabic. Code, paths, and commands may remain in the repository's language.
 4. **Keep responses extremely concise.** Answer with the shortest wording possible without losing essential meaning. No filler, repetition, or unrelated content.
-5. **English documentation inside `docs/` only.** All project documentation must be written in English and live inside `docs/`. Files such as `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` are agent instruction surfaces, not substitutes for project documentation.
+5. **English documentation inside `docs/` only.** All project documentation must be written in English and live inside `docs/`. Root instruction surfaces are agent instructions, not substitutes for project documentation.
 6. **Touch-only UI (mandatory).** Before any UI change, verify that `src/app/globals.css` exists. Inside `src/` and `packages/`, never use `hover:`, `group-hover:`, `:hover`, `cursor-pointer`, `cursor: pointer`, or DOM `title`. Use `active:`, `focus-visible:`, and `aria-label` where appropriate. Do not reintroduce desktop-browser behaviors already disabled by `globals.css`. The protected governing policy is `docs/04-ui-components/touch-interaction-policy.md`.
 7. **The UI policy is a protected contract.** Read `docs/04-ui-components/touch-interaction-policy.md` before any interaction or UI-related change. Do not modify this policy during normal work unless the user explicitly authorizes changing the contract itself; feature documentation must apply it, not redefine it.
 8. **Single responsibility per file (mandatory).** Every file must have one clear responsibility and one primary reason to change. Do not mix UI, API, domain logic, or unrelated concerns in the same file. If a second responsibility appears, split the file. `index`/barrel files limited to re-exports are allowed.

@@ -41,7 +41,6 @@ const AGENT_ENTRY_SURFACES = [
   'CLAUDE.md',
   'GEMINI.md',
   '.agents/rules/agent-instructions.md',
-  '.cursor/rules/session-standards.mdc',
 ] as const;
 
 const REQUIRED_AGENT_MARKERS = [

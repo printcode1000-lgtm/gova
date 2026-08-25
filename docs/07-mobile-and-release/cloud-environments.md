@@ -1,6 +1,6 @@
 # Cloud Environments & Remote Workspaces (gova)
 
-This repository is pre-configured to run seamlessly across all major cloud development and cloud agent environments.
+This repository supports cloud development and remote workspaces through project-wide, provider-independent rules.
 
 ## 1. GitHub Codespaces & Dev Containers
 
@@ -26,11 +26,12 @@ bash scripts/cloud-setup.sh
 npm run architecture:check
 ```
 
-## 3. Cursor Cloud Agents
+## 3. Remote Workspace Baseline
 
-Repo-level config: [`.cursor/environment.json`](file:///.cursor/environment.json).
-See [`cursor-cloud-agents.md`](file:///docs/07-mobile-and-release/cursor-cloud-agents.md) for secrets and runtime details.
+All remote workspaces use the same repository requirements:
 
-## 4. Codex Cloud
-
-See [`codex-cloud-environments.md`](file:///docs/07-mobile-and-release/codex-cloud-environments.md).
+- Node `>=22 <25` and npm `>=11 <12`.
+- `npm ci` for dependency installation.
+- Runtime secrets supplied through the workspace secret store, never committed files.
+- Project-wide instructions from the root instruction surfaces and task context from `scripts/docs/context.ts`.
+- Non-visual verification through tests, type checks, lint, architecture checks, runtime checks, and builds when required.

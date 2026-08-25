@@ -18,7 +18,7 @@ Read [Project Runtime Contract](../09-agent-knowledge/runtime-contract.md) befor
 - Release/environment handling → [Release and Secrets](./release-and-secrets.md).
 - Repository commands → [Scripts and Workflows](./scripts-and-workflows.md).
 - GitHub Actions / `main` push policy → [GitHub CI Policy](./github-ci-policy.md).
-- Cloud workspaces → [Cloud Environments](./cloud-environments.md), [Codex Cloud Environments](./codex-cloud-environments.md), [Cursor Cloud Agents](./cursor-cloud-agents.md).
+- Cloud workspaces → [Cloud Environments](./cloud-environments.md).
 
 ## Artifact Topology
 

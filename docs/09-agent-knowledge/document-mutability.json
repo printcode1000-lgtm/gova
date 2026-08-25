@@ -120,22 +120,17 @@
     {
       "class": "protected",
       "path": "CLAUDE.md",
-      "reason": "Claude agent instruction surface"
+      "reason": "Compatibility instruction surface carrying project-wide rules"
     },
     {
       "class": "protected",
       "path": "GEMINI.md",
-      "reason": "Gemini agent instruction surface"
+      "reason": "Compatibility instruction surface carrying project-wide rules"
     },
     {
       "class": "protected",
       "path": ".agents/rules/agent-instructions.md",
       "reason": "Agents rules instruction surface"
-    },
-    {
-      "class": "protected",
-      "path": ".cursor/rules/session-standards.mdc",
-      "reason": "Cursor always-on session standards"
     },
     {
       "class": "editable",

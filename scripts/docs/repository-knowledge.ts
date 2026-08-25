@@ -192,7 +192,6 @@ function configurationPaths(): string[] {
     'eslint.config.js',
     'capacitor.config.ts',
     '.vercelignore',
-    '.cursor/environment.json',
     'android/gradle.properties',
     'android/app/build.gradle',
     'android/app/build.gradle.kts',

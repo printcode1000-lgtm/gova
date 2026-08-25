@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Agent-first, repository-grounded architecture documentation for coding agents (Claude Code, Codex, Cursor, and similar). A future agent MUST be able to determine capability ownership, package boundaries, allowed dependencies, composition roots, runtime boundaries, mandatory gateways, infrastructure ownership, enforcement mechanisms, and safe extension rules from this directory alone.
+Agent-first, repository-grounded architecture documentation for every coding agent. A future agent MUST be able to determine capability ownership, package boundaries, allowed dependencies, composition roots, runtime boundaries, mandatory gateways, infrastructure ownership, enforcement mechanisms, and safe extension rules from this directory alone.
 
 ## Scope
 
@@ -76,4 +76,4 @@ docs/01-architecture/
 
 ## Change Impact
 
-Restructuring this tree requires updating all cross-references in `docs/`, `AGENTS.md`, `CLAUDE.md`, `.cursor/rules/`, and any code comments pointing at old paths.
+Restructuring this tree requires updating all cross-references in `docs/`, the root instruction surfaces, and any code comments pointing at old paths.

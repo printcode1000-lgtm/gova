@@ -3,8 +3,8 @@
 # Refuses to push any branch other than `main`.
 #
 # `main` is the only branch this repository has. Every branch that used to exist was
-# created automatically — by a Claude Code session or a Cursor cloud agent — and none of
-# them carried work that main did not already have. The cleanup is only worth doing once,
+# created automatically by ephemeral development sessions, and none of them carried work
+# that main did not already have. The cleanup is only worth doing once,
 # so the boundary is enforced here rather than remembered.
 #
 # Reads the `pre-push` ref lines from stdin, replayed by the dispatcher:
