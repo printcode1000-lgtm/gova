@@ -65,6 +65,8 @@ export async function runPageInteraction(
         await input.port.setValue(action.selector, interpolate(action.value, input.user));
       } else if (action.type === "select-first-option") {
         await input.port.selectFirstOption(action.selector);
+      } else if (action.type === "press-key") {
+        await input.port.pressKey(action.selector, action.key);
       } else if (action.type === "click") {
         await input.port.click(action.selector, action.accessibleLabel);
       } else if (action.type === "set-internal-image") {
