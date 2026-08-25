@@ -45,9 +45,11 @@ services. It is idempotent for accounts whose configured password still
 matches. Existing accounts with different credentials are reported as real
 failures rather than overwritten.
 
-The Super Admin user-status cards also show the profile setup applied during
-bootstrap: seller accounts receive one valid main category plus one valid
-sub-category, while delivery accounts receive the delivery-services category.
+The Super Admin user-status cards show the exact Arabic catalog names returned
+by the same category objects used during bootstrap. Seller cards show the
+selected main category name and selected sub-category name. Delivery cards show
+the selected delivery-services category name. These values come from the
+server bootstrap result rather than from static UI labels.
 
 ## Internal Images
 
