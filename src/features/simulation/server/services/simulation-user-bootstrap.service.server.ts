@@ -7,32 +7,63 @@ import { EMPTY_STORE_DETAILS } from "@/features/profile";
 import { profileService } from "@/features/profile/server";
 import type {
   SimulationUserBootstrapResult,
+  SimulationUserSpecialtySelection,
   SimulationUsersBootstrapResponse,
 } from "../../domain/simulation-user-bootstrap.types";
 
-function sellerSpecialties() {
+interface SimulationSpecialtyAssignment {
+  values: {
+    main: number[];
+    sub: Record<string, number[]>;
+  };
+  selection?: SimulationUserSpecialtySelection;
+}
+
+function sellerSpecialties(): SimulationSpecialtyAssignment {
   const main = categoryService
     .getProfileMainOptions()
     .find((item) => item.id !== CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID);
-  if (!main) return { main: [] as number[], sub: {} as Record<string, number[]> };
+  if (!main) return { values: { main: [], sub: {} } };
+
   const child = categoryService
     .getProfileSubOptions(main.id, main.isCollection)
     .find((item) => item.selectable !== false && !item.isDoctorAppointmentGroup);
   const childId = child?.originalId ?? child?.id;
+  const validChildId =
+    typeof childId === "number" && Number.isInteger(childId) ? childId : undefined;
+
   return {
-    main: [main.id],
-    sub: typeof childId === "number" && Number.isInteger(childId)
-      ? { [String(main.id)]: [childId] }
-      : {},
+    values: {
+      main: [main.id],
+      sub: validChildId !== undefined ? { [String(main.id)]: [validChildId] } : {},
+    },
+    selection: {
+      main: { id: main.id, nameAr: main.nameAr },
+      ...(child && validChildId !== undefined
+        ? { sub: { id: validChildId, nameAr: child.nameAr } }
+        : {}),
+    },
   };
 }
 
-function specialtiesFor(user: SimulationUser) {
+function specialtiesFor(user: SimulationUser): SimulationSpecialtyAssignment {
   if (user.role === "delivery") {
-    return { main: [CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID], sub: {} };
+    const delivery = categoryService
+      .getProfileMainOptions()
+      .find((item) => item.id === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID);
+    return {
+      values: { main: [CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID], sub: {} },
+      ...(delivery
+        ? {
+            selection: {
+              main: { id: delivery.id, nameAr: delivery.nameAr },
+            },
+          }
+        : {}),
+    };
   }
   if (user.role === "seller") return sellerSpecialties();
-  return { main: [], sub: {} };
+  return { values: { main: [], sub: {} } };
 }
 
 async function ensureSimulationUser(
@@ -60,8 +91,14 @@ async function ensureSimulationUser(
       storeName: user.storeName,
       storeDescription: `حساب محاكاة ثابت — ${user.storeName}`,
     });
-    await profileService.saveSpecialties({ uid, ...specialtiesFor(user) });
-    return { id: user.id, uid, status: existing.exists ? "ready" : "created" };
+    const specialtyAssignment = specialtiesFor(user);
+    await profileService.saveSpecialties({ uid, ...specialtyAssignment.values });
+    return {
+      id: user.id,
+      uid,
+      status: existing.exists ? "ready" : "created",
+      specialtySelection: specialtyAssignment.selection,
+    };
   } catch (error) {
     return {
       id: user.id,
