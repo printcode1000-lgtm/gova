@@ -97,7 +97,9 @@ async function ensureSimulationUser(
       id: user.id,
       uid,
       status: existing.exists ? "ready" : "created",
-      specialtySelection: specialtyAssignment.selection,
+      ...(specialtyAssignment.selection
+        ? { specialtySelection: specialtyAssignment.selection }
+        : {}),
     };
   } catch (error) {
     return {
