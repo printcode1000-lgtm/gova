@@ -59,7 +59,7 @@ export function PasswordRecoveryPageContent() {
             {errorMessage && <div className="p-3 rounded bg-error/15 text-error text-sm text-center">{errorMessage}</div>}
 
             {recovery.step === 'phone' && (
-              <form onSubmit={submitPhone} className="auth-card space-y-5">
+              <form data-simulation-event="password-request" onSubmit={submitPhone} className="auth-card space-y-5">
                 <label className="space-y-2 block">
                   <span className="text-sm font-semibold flex items-center gap-2"><Smartphone className="h-4 w-4 text-primary" />{t('auth.passwordRecovery.phone')}</span>
                   <div className="relative">
@@ -73,7 +73,7 @@ export function PasswordRecoveryPageContent() {
             )}
 
             {recovery.step === 'code' && (
-              <form onSubmit={submitCode} className="auth-card space-y-5">
+              <form data-simulation-event="password-verify" onSubmit={submitCode} className="auth-card space-y-5">
                 <div className="rounded bg-primary/10 p-3 text-sm text-on-surface-variant flex gap-2"><Mail className="h-5 w-5 text-primary shrink-0" /><span>{recovery.maskedEmail ? t('auth.passwordRecovery.sentTo', { email: recovery.maskedEmail }) : t('auth.passwordRecovery.genericSent')}</span></div>
                 <label className="space-y-2 block">
                   <span className="text-sm font-semibold">{t('auth.passwordRecovery.code')}</span>
@@ -85,7 +85,7 @@ export function PasswordRecoveryPageContent() {
             )}
 
             {recovery.step === 'password' && (
-              <form onSubmit={submitPassword} className="auth-card space-y-5">
+              <form data-simulation-event="password-reset" onSubmit={submitPassword} className="auth-card space-y-5">
                 <PasswordField label={t('auth.passwordRecovery.newPassword')} value={password} onChange={setPassword} visible={showPassword} toggle={() => setShowPassword((value) => !value)} />
                 <PasswordField label={t('auth.passwordRecovery.confirmPassword')} value={confirmPassword} onChange={setConfirmPassword} visible={showPassword} />
                 <SubmitButton loading={recovery.isLoading} label={t('auth.passwordRecovery.savePassword')} />

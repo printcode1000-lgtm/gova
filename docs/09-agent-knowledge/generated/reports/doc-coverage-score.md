@@ -7,9 +7,9 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **94**
+Owners scored: **96**
 Average coverage: **81%**
-Weak owners (<70%): **12**
+Weak owners (<70%): **13**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -23,6 +23,7 @@ Weak owners (<70%): **12**
 | `src/features/navigation` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/network` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/ota` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
+| `src/features/simulation` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/splash` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/voice-input` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `packages/account-declarations` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
@@ -37,6 +38,7 @@ Weak owners (<70%): **12**
 | `packages/secrets-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/service-runtime-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/signed-token-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
+| `packages/simulation-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/system-logs-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `services/notifications` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/products` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |

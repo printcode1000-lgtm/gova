@@ -158,7 +158,7 @@
     "tsx": "4.23.12",
     "typescript": "5.9.3"
   },
-  "packageLockDigest": "db6ddbef4df0fbd49aea189e5bfd3b8938e49d690955135a5cdab81f4bb9b04a",
+  "packageLockDigest": "bb0a1fe740cc48c5470b94ac94b3bd008df307e0b5846eab4e2a6d2bbe15904e",
   "workspacePackages": {
     "account-bridge": "@asol/account-bridge@0.1.0",
     "account-declarations": "@asol/account-declarations@0.1.0",
@@ -194,6 +194,7 @@
     "service-mirror-core": "@asol/service-mirror-core@0.1.0",
     "service-runtime-core": "@asol/service-runtime-core@0.1.0",
     "signed-token-core": "@asol/signed-token-core@0.1.0",
+    "simulation-core": "@asol/simulation-core@0.1.0",
     "storage-core": "@asol/storage-core@0.1.0",
     "storage-image-manager-core": "@asol/storage-image-manager-core@0.1.0",
     "sub2main-composition": "@asol/sub2main-composition@0.1.0",

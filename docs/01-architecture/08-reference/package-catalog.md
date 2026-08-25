@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 41 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 42 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -496,6 +496,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Test Gate** | `npm run test:signed-token-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
+### @asol/simulation-core
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/simulation-core` |
+| **Folder** | `packages/simulation-core/` |
+| **Purpose** | Real-user page interaction simulation and coverage discovery |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` · `./discovery` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run architecture:check` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
 ### @asol/storage-core
 
 | Field | Value |
@@ -598,4 +612,4 @@ This Markdown file is **generated** and verified by `architecture:check`.
 
 | Metric | Value |
 |---|---|
-| Packages | 41 |
+| Packages | 42 |

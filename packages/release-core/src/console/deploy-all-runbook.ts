@@ -48,6 +48,7 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
       branch("types", "TypeScript type check", "typecheck", "npm"),
       branch("architecture", "module and import boundaries", "architecture:check", "npm"),
       branch("tests", "full test suite", "test", "npm"),
+      branch("simulation-coverage", "real-user simulation coverage and discovery drift", "simulation:coverage", "npm"),
     ],
   },
   {

@@ -130,7 +130,7 @@ export function ContactPageContent() {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[1.35fr_.65fr]">
-        <form onSubmit={submit} className="space-y-5 rounded-3xl border border-outline/30 bg-surface p-6 shadow-sm md:p-8">
+        <form data-simulation-event="contact-submit" onSubmit={submit} className="space-y-5 rounded-3xl border border-outline/30 bg-surface p-6 shadow-sm md:p-8">
           <div className="grid gap-4 md:grid-cols-2">
             <Field icon={faUser} label={c.name}><input required minLength={2} value={form.name} onChange={(event) => set("name", event.target.value)} /></Field>
             <Field icon={faEnvelope} label={c.email}><input required type="email" value={form.email} onChange={(event) => set("email", event.target.value)} /></Field>
@@ -153,7 +153,7 @@ export function ContactPageContent() {
             <ContactLine icon={faEnvelope} text="suezbazaar@gmail.com" href="mailto:suezbazaar@gmail.com" />
             <ContactLine icon={faClock} text={c.hours} />
             <ContactLine icon={faLocationDot} text={c.location} />
-            <div className="mt-5 flex flex-wrap gap-3">{SOCIALS.map((social) => <a key={social.label} href={social.href} target="_blank" rel="noreferrer" aria-label={social.label} className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-xl text-primary transition-transform"><FontAwesomeIcon icon={social.icon} /></a>)}</div>
+            <div className="mt-5 flex flex-wrap gap-3">{SOCIALS.map((social) => <a data-simulation-event="contact-channel" key={social.label} href={social.href} target="_blank" rel="noreferrer" aria-label={social.label} className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-xl text-primary transition-transform"><FontAwesomeIcon icon={social.icon} /></a>)}</div>
           </section>
           <section className="rounded-3xl border border-outline/30 bg-surface p-6 text-center shadow-sm">
             <Image src="/images/qr-code.png" width={180} height={180} alt={c.qr} className="mx-auto rounded-xl" />

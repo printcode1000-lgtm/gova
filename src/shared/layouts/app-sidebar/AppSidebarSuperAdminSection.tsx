@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ChevronDown,
+  FlaskConical,
   Megaphone,
   ScrollText,
   ShieldCheck,
@@ -148,6 +149,7 @@ export function AppSidebarSuperAdminSection({
           >
             <SuperAdminLink href="/super-admin/logs" icon={<ScrollText className={sidebarSmallIconClass} />} label="سجل أحداث النظام" className={itemClass} onClose={onClose} />
             <SuperAdminLink href="/super-admin/users" icon={<Users className={sidebarSmallIconClass} />} label="إدارة حسابات المستخدمين" className={itemClass} onClose={onClose} />
+            <SuperAdminLink href="/super-admin/simulation" icon={<FlaskConical className={sidebarSmallIconClass} />} label="محاكاة المستخدم وE2E" className={itemClass} onClose={onClose} />
           </SuperAdminGroup>
         </div>
       )}

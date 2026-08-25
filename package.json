@@ -141,6 +141,8 @@
     "deploy:all:publish": "npx tsx scripts/deploy-all.ts --phase=publish",
     "deploy:all:services": "npx tsx scripts/deploy-all.ts --phase=services",
     "deploy:all:main": "npx tsx scripts/deploy-all.ts --phase=main",
+    "simulation:coverage": "npx tsx packages/simulation-core/src/tests/index.test.ts && npx tsx scripts/check-simulation-coverage.ts",
+    "simulation:discovery:update": "npx tsx scripts/update-simulation-discovery.ts",
     "deploy:push": "npx tsx scripts/deploy-push.ts",
     "deploy:push:main": "npx tsx scripts/deploy-push.ts --vercel-target=none",
     "deploy:push:all": "npx tsx scripts/deploy-push.ts --vercel-target=all",

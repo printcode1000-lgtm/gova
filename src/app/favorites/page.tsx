@@ -65,6 +65,7 @@ export default function FavoritesPage() {
 
       <div className="mb-5 grid grid-cols-2 rounded-xl bg-surface-container p-1">
         <button
+          data-simulation-event="favorites-products"
           type="button"
           onClick={() => setActiveTab("product")}
           className={cn(
@@ -81,6 +82,7 @@ export default function FavoritesPage() {
           </span>
         </button>
         <button
+          data-simulation-event="favorites-sellers"
           type="button"
           onClick={() => setActiveTab("seller")}
           className={cn(

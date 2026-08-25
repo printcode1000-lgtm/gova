@@ -165,6 +165,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run services:build` | `npx tsx scripts/build-all-services.ts` |
 | `npm run services:sync` | `npx tsx scripts/sync-all-service-sources.ts` |
 | `npm run services:verify` | `npx tsx scripts/verify-service-mirrors.ts` |
+| `npm run simulation:coverage` | `npx tsx packages/simulation-core/src/tests/index.test.ts && npx tsx scripts/check-simulation-coverage.ts` |
+| `npm run simulation:discovery:update` | `npx tsx scripts/update-simulation-discovery.ts` |
 | `npm run smoke:deployed` | `npx tsx scripts/check-deployed-origins.ts` |
 | `npm run smoke:production` | `npx tsx scripts/check-production-smoke.ts` |
 | `npm run smoke:services` | `npx tsx scripts/check-service-smoke.ts` |

@@ -353,6 +353,14 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     mayImportApp: false,
   },
   {
+    folder: 'simulation-core',
+    name: '@asol/simulation-core',
+    owns: 'Real-user page interaction simulation and coverage discovery',
+    layer: 'capability',
+    vendorModules: [],
+    mayImportApp: false,
+  },
+  {
     folder: 'storage-core',
     name: '@asol/storage-core',
     owns: 'Object storage (R2/S3) access',

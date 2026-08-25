@@ -11,7 +11,7 @@ Canonical inventory of every application feature under `src/features/`.
 
 ## Scope
 
-All 47 registered features. Sealed packages are listed in [package-catalog.md](./package-catalog.md).
+All 48 registered features. Sealed packages are listed in [package-catalog.md](./package-catalog.md).
 
 ## Source of Truth
 
@@ -552,6 +552,19 @@ src/
 | **Permitted Feature Dependencies** | `product`, `profile`, `qr-code`, `system-logs` |
 | **Surfaces** | browser=false · server=true · ui=true |
 
+### simulation
+
+| Field | Value |
+|---|---|
+| **Feature** | `simulation` |
+| **Source** | `src/features/simulation/` |
+| **Owns** | Super-admin real-user interaction simulation and runtime adapters |
+| **Public Doors** | `@/features/simulation` · `@/features/simulation/ui` · `@/features/simulation/server` |
+| **Runtime Targets** | `web`, `android`, `ios`, `server` |
+| **Capability Owners** | `@asol/simulation-core` |
+| **Permitted Feature Dependencies** | `auth`, `categories`, `profile` |
+| **Surfaces** | browser=true · server=true · ui=true |
+
 ### specialty-chat
 
 | Field | Value |
@@ -647,7 +660,7 @@ src/
 
 | Metric | Value |
 |---|---|
-| Application features | 47 |
-| Features with UI door | 32 |
-| Features with server door | 26 |
-| Sealed capability packages | 41 |
+| Application features | 48 |
+| Features with UI door | 33 |
+| Features with server door | 27 |
+| Sealed capability packages | 42 |

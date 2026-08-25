@@ -17,7 +17,7 @@ Entries: **29**
 | android | `android.permission.READ_EXTERNAL_STORAGE` | `android/app/src/main/AndroidManifest.xml` | `src/features/storage` | `@asol/backup-core`, `@asol/env-core`, `@asol/storage-core`, `@asol/storage-image-manager-core` | AndroidManifest permission/component |
 | android | `android.permission.READ_MEDIA_IMAGES` | `android/app/src/main/AndroidManifest.xml` | unknown | `@asol/env-core`, `@asol/google-play-store-assets-core` | AndroidManifest permission/component |
 | android | `android.permission.READ_MEDIA_VIDEO` | `android/app/src/main/AndroidManifest.xml` | unknown | `@asol/env-core` | AndroidManifest permission/component |
-| android | `android.permission.READ_MEDIA_VISUAL_USER_SELECTED` | `android/app/src/main/AndroidManifest.xml` | unknown | `@asol/env-core` | AndroidManifest permission/component |
+| android | `android.permission.READ_MEDIA_VISUAL_USER_SELECTED` | `android/app/src/main/AndroidManifest.xml` | unknown | `@asol/env-core`, `@asol/simulation-core` | AndroidManifest permission/component |
 | android | `android.permission.RECEIVE_BOOT_COMPLETED` | `android/app/src/main/AndroidManifest.xml` | unknown | unknown | AndroidManifest permission/component |
 | android | `android.permission.RECORD_AUDIO` | `android/app/src/main/AndroidManifest.xml` | unknown | unknown | AndroidManifest permission/component |
 | android | `android.permission.WRITE_EXTERNAL_STORAGE` | `android/app/src/main/AndroidManifest.xml` | `src/features/storage` | `@asol/backup-core`, `@asol/storage-core`, `@asol/storage-image-manager-core` | AndroidManifest permission/component |

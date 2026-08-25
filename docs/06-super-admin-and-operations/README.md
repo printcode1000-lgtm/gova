@@ -13,6 +13,7 @@ Operational behavior for privileged administration, catalog operations, cloud-ac
 - Operational status → [Operation Monitor](./operation-monitor.md)
 - Logs → [Super Admin Live Logs](./super-admin-live-logs.md)
 - Impersonation → [Super Admin User Impersonation](./super-admin-user-impersonation.md)
+- Real-user interaction simulation → [User Simulation and E2E](./user-simulation-and-e2e.md)
 
 ## Safety Boundary
 

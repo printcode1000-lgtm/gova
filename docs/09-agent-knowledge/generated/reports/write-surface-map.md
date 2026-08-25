@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **361**
-Unproven gateway paths: **141**
+Detected write-like surfaces: **363**
+Unproven gateway paths: **143**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -143,6 +143,8 @@ Unproven gateway paths: **141**
 | `packages/service-mirror-core/src/tests/index.test.ts` | `@asol/service-mirror-core` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/signed-token-core/src/domain/signed-envelope.ts` | `@asol/signed-token-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/signed-token-core/src/tests/index.test.ts` | `@asol/signed-token-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/simulation-core/src/discovery/interaction-source-discovery.ts` | `@asol/simulation-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/simulation-core/src/runtime/simulation-runner.ts` | `@asol/simulation-core` | publish | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/storage-core/src/domain/accounts/account-registry.ts` | `@asol/storage-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/storage-core/src/domain/images/stored-image.types.ts` | `@asol/storage-core` | upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/storage-core/src/index.ts` | `@asol/storage-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |

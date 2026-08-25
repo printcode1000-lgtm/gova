@@ -8,10 +8,10 @@
 | Metric | Value |
 |---|---:|
 | Graph version | 2 |
-| Nodes | 3666 |
-| Edges | 32723 |
+| Nodes | 3709 |
+| Edges | 33129 |
 | Dangling edges | 0 |
-| Owner nodes with dependency relationships | 94 / 94 |
+| Owner nodes with dependency relationships | 96 / 96 |
 | Mandatory application runtime nodes | 5 / 5 |
 
 ## Nodes by Kind
@@ -19,37 +19,37 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 245 |
+| command | 247 |
 | config | 12 |
-| document | 242 |
+| document | 243 |
 | domain | 10 |
 | environment-key | 226 |
 | external-dependency | 106 |
-| feature | 47 |
-| package | 41 |
-| route | 173 |
+| feature | 48 |
+| package | 42 |
+| route | 176 |
 | runtime | 7 |
-| script | 127 |
+| script | 129 |
 | service | 6 |
-| source | 2210 |
-| test | 210 |
+| source | 2242 |
+| test | 211 |
 
 ## Edges by Kind
 
 | Kind | Count |
 |---|---:|
-| affects-runtime | 10267 |
-| belongs-to | 2108 |
+| affects-runtime | 10437 |
+| belongs-to | 2139 |
 | configured-by | 16 |
 | consumes | 6 |
-| contains | 355 |
+| contains | 358 |
 | declares-dependency | 95 |
-| documents | 4864 |
-| imports | 8103 |
-| invokes | 342 |
+| documents | 4920 |
+| imports | 8198 |
+| invokes | 345 |
 | produces | 18 |
-| references | 2182 |
-| related-to | 3408 |
-| targets-runtime | 341 |
-| tests | 301 |
+| references | 2192 |
+| related-to | 3443 |
+| targets-runtime | 343 |
+| tests | 302 |
 | uses-environment | 317 |

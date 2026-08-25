@@ -43,13 +43,13 @@ export function LoginPageContent() {
             </div>
             {error && <div className="p-3 text-sm rounded bg-error/15 text-error text-center font-medium animate-in fade-in duration-200">{error}</div>}
             <FormProvider {...form}>
-              <form onSubmit={onSubmit} className="space-y-6" noValidate>
+              <form data-simulation-event="login-submit" onSubmit={onSubmit} className="space-y-6" noValidate>
                 <Controller name="phone" control={form.control} render={({ field, fieldState }) => (
                   <div className="space-y-2">
                     <span className="text-sm font-semibold flex items-center gap-2 text-on-surface"><Smartphone className="h-4 w-4 text-primary" />{t('auth.login.phone')}</span>
                     <div className="relative">
                       <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">+20</span>
-                      <input type="tel" inputMode="tel" maxLength={11} placeholder={t('auth.login.phonePlaceholder')} className={cn('auth-input ps-12 w-full', fieldState.error && 'border-error')} value={field.value} onChange={(e) => field.onChange(e.target.value.replace(/\D/g, '').slice(0, 11))} />
+                      <input name="phone" type="tel" inputMode="tel" maxLength={11} placeholder={t('auth.login.phonePlaceholder')} className={cn('auth-input ps-12 w-full', fieldState.error && 'border-error')} value={field.value} onChange={(e) => field.onChange(e.target.value.replace(/\D/g, '').slice(0, 11))} />
                     </div>
                     {fieldState.error && <p className="text-xs text-error">{fieldState.error.message}</p>}
                   </div>
@@ -58,7 +58,7 @@ export function LoginPageContent() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold flex items-center gap-2 text-on-surface"><Lock className="h-4 w-4 text-primary" />{t('auth.login.password')}</span>
-                      <Link href="/forgot-password" className="text-xs text-primary">{t('auth.login.forgotPassword')}</Link>
+                      <Link data-simulation-event="login-forgot-password" href="/forgot-password" className="text-xs text-primary">{t('auth.login.forgotPassword')}</Link>
                     </div>
                     <div className="relative">
                       <input name="password" autoComplete="current-password" type={showPassword ? 'text' : 'password'} placeholder={t('auth.login.passwordPlaceholder')} className={cn('auth-input pe-10 w-full', fieldState.error && 'border-error')} value={field.value} onChange={field.onChange} />
@@ -70,12 +70,12 @@ export function LoginPageContent() {
                 <button type="submit" disabled={isSubmitting || !form.formState.isValid} className="w-full auth-cta h-12 text-sm font-semibold">
                   {isSubmitting ? <><Loader2 className="h-4 w-4 animate-spin me-2" />{t('auth.login.submitting')}</> : <><LogIn className="h-4 w-4 me-2" />{t('auth.login.submit')}</>}
                 </button>
-                <button type="button" className="asol-auth-secondary-btn asol-control h-12 text-sm" onClick={() => { startGuestSession(); router.push('/home'); }}><User className="h-4 w-4 inline me-2" />{t('auth.login.continueAsGuest')}</button>
+                <button data-simulation-event="login-as-guest" type="button" className="asol-auth-secondary-btn asol-control h-12 text-sm" onClick={() => { startGuestSession(); router.push('/home'); }}><User className="h-4 w-4 inline me-2" />{t('auth.login.continueAsGuest')}</button>
               </form>
             </FormProvider>
             <div className="text-center space-y-3">
               <div className="relative"><div className="absolute inset-0 flex items-center"><span className="w-full border-t border-outline-variant" /></div><div className="relative flex justify-center"><span className="asol-field-surface px-2 text-xs text-on-surface-variant uppercase">{t('auth.login.newHere')}</span></div></div>
-              <Link href="/registration" className="block"><button type="button" className="asol-auth-outline-btn asol-control h-12 text-sm group">{t('auth.login.createAccount')}<ArrowRight className="h-4 w-4 inline ms-2 transition-transform" /></button></Link>
+              <Link data-simulation-event="login-registration" href="/registration" className="block"><button type="button" className="asol-auth-outline-btn asol-control h-12 text-sm group">{t('auth.login.createAccount')}<ArrowRight className="h-4 w-4 inline ms-2 transition-transform" /></button></Link>
             </div>
           </div>
         </div>
