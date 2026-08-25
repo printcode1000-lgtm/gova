@@ -71,6 +71,7 @@ export function HeroSliderSlide({
       key={`${slide.priority}-${index}`}
       style={slideStyle}
       className={slideClass}
+      data-simulation-event={mode === "view" && isActive ? "home-promotion" : undefined}
       onClick={() => onSlideClick(slide.action)}
       role={mode === "view" ? "button" : undefined}
       tabIndex={mode === "view" && isActive ? 0 : -1}
