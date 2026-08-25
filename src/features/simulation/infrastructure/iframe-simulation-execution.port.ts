@@ -74,6 +74,18 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
     await this.wait(250);
   }
 
+  async pressKey(selector: string, key: string): Promise<void> {
+    const target = this.target(selector);
+    const view = target.ownerDocument.defaultView;
+    if (!view || !(target instanceof view.HTMLElement)) {
+      throw new Error(`simulationInteractionTargetNotKeyboardAccessible:${selector}`);
+    }
+    target.focus();
+    target.dispatchEvent(new view.KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
+    target.dispatchEvent(new view.KeyboardEvent("keyup", { key, bubbles: true, cancelable: true }));
+    await this.wait(250);
+  }
+
   async click(selector: string, _accessibleLabel?: string): Promise<void> {
     const target = this.target(selector);
     const view = target.ownerDocument.defaultView;
