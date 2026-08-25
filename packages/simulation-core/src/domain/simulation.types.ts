@@ -19,6 +19,7 @@ export interface SimulationUser {
 export type SimulationDriverAction =
   | { type: "set-value"; selector: string; value: string }
   | { type: "select-first-option"; selector: string }
+  | { type: "press-key"; selector: string; key: string }
   | { type: "click"; selector: string; accessibleLabel?: string }
   | { type: "set-internal-image"; selector: string }
   | { type: "submit"; selector: string }
@@ -70,6 +71,7 @@ export interface SimulationExecutionPort {
   loadPage(path: string): Promise<void>;
   setValue(selector: string, value: string): Promise<void>;
   selectFirstOption(selector: string): Promise<void>;
+  pressKey(selector: string, key: string): Promise<void>;
   click(selector: string, accessibleLabel?: string): Promise<void>;
   setInternalImage(selector: string, sourcePath: string): Promise<void>;
   submit(selector: string): Promise<void>;
