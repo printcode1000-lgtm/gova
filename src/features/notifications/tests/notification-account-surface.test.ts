@@ -34,6 +34,13 @@ const apiService = source(
 const commands = source(
   "src/features/notifications/application/public/notification-commands.ts",
 );
+const deviceToggle = source(
+  "src/features/settings/presentation/use-notification-device-toggle.ts",
+);
+const rootLayout = source("src/app/layout.tsx");
+const preferencesProvider = source(
+  "src/shared/preferences/PreferencesProvider.tsx",
+);
 
 // The identity is the verified session on both routes, never the payload.
 for (const route of [devicesRoute, selfTestRoute]) {
@@ -50,12 +57,28 @@ assert.match(selfTestRoute, /locale/);
 
 // A listing proves ownership and never carries the delivery credential.
 assert.match(tokenService, /async listForAccount/);
-assert.match(tokenService, /user\.phone !== trimmedText\(identity\?\.phone\)/);
+assert.match(tokenService, /identityPhoneMatches\(user\.phone, identity\?\.phone\)/);
+assert.match(tokenService, /normalizedIdentityPhone/);
 const summaryMapper = tokenService.slice(
   tokenService.indexOf("function toAccountDeviceSummary"),
   tokenService.indexOf("export class NotificationTokenService"),
 );
 assert.doesNotMatch(summaryMapper, /\btoken:/);
+
+// Incomplete legacy sessions must never issue account notification requests.
+assert.match(deviceToggle, /if \(!session\?\.uid \|\| !session\.phone\)/);
+assert.match(
+  deviceToggle,
+  /if \(!session\?\.uid \|\| !session\.phone \|\| deviceBusy\) return;/,
+);
+
+// Notification UI is always below the locale runtime. This guards the prompt's
+// useTranslation() dependency and prevents provider-order regressions.
+assert.match(
+  rootLayout,
+  /<PreferencesProvider>[\s\S]*<NotificationsFeatureBridge>/,
+);
+assert.match(preferencesProvider, /<LocaleRuntimeProvider/);
 
 // The self test authorises one uid — the verified caller's — and no other.
 assert.match(selfTestService, /uids: \[user\.uid\]/);
