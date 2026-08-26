@@ -113,6 +113,31 @@ key with no local value is reported and skipped.
 project has OIDC enabled (`oidcTokenConfig.enabled`), and that is what the
 Sandbox SDK authenticates with; a copied token would be stale within the hour.
 
+## Running it from a local dev server
+
+The page works in development, but two things differ and both are properties of
+localhost, not of the feature:
+
+- **The callback cannot reach you.** The sandbox POSTs to
+  `ASOL_DEPLOY_CALLBACK_BASE_URL` or the request origin, and a sandbox on
+  Vercel's network cannot open `http://localhost:3001`. The run is still
+  tracked — the console polls the sandbox directly — but the result email is
+  only sent if that variable points at a publicly reachable origin.
+- **The OIDC token expires.** `VERCEL_OIDC_TOKEN` in `.env.local` lasts about
+  twelve hours. Refresh it without clobbering the rest of the file:
+
+```bash
+npx vercel env pull .vercel/.env.pull --environment=production --yes
+```
+
+Then copy that file's `VERCEL_OIDC_TOKEN` line over the one in `.env.local`.
+
+`ASOL_DEPLOY_CALLBACK_SECRET` and `ASOL_DEPLOY_REPOSITORY_URL` must exist in
+`.env.local` too; the local secret is unrelated to the project's, because the
+same process both issues and verifies it. Missing keys are what the page's
+"إعدادات ناقصة" panel lists, and in development that panel is about `.env.local`,
+never about Vercel.
+
 ## Files
 
 | File | Responsibility |
