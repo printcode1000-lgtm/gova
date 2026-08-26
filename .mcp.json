@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "serena": {
+      "command": "C:/Users/hesham/AppData/Local/Programs/Python/Python310/Scripts/uvx.exe",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--project",
+        "C:/Users/hesham/Desktop/gova"
+      ]
+    },
+    "augment-context-engine": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "auggie-context-mcp"
+      ]
+    }
+  }
+}
