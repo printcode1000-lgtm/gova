@@ -14,6 +14,7 @@ import {
 } from "./remote-deploy-contracts";
 
 const SANDBOX_NAME = "asol-gova-deploy-all";
+const MAIN_BRANCH = "main";
 /**
  * Sandbox lifetime, in minutes.
  *
@@ -154,6 +155,17 @@ async function commandOutput(
     throw new Error(`${cmd} failed (${result.exitCode})${detail ? `: ${detail.slice(-2_000)}` : ""}`);
   }
   return result.stdout();
+}
+
+/** For steps whose failure is a legitimate outcome; the caller says which. */
+async function commandAllowingFailure(
+  sandbox: Sandbox,
+  cmd: string,
+  args: string[],
+  timeoutMs = 180_000,
+): Promise<boolean> {
+  const result = await sandbox.runCommand({ cmd, args, cwd: sandbox.cwd, timeoutMs });
+  return result.exitCode === 0;
 }
 
 async function fileExists(sandbox: Sandbox, relativePath: string): Promise<boolean> {
@@ -345,9 +357,19 @@ export async function startRemoteDeployAll(input: {
   await sandbox.fs.writeFile(workspacePath(sandbox, LOG_FILE), "", "utf8");
 
   try {
-    await commandOutput(sandbox, "git", ["fetch", "origin", "main"]);
-    await commandOutput(sandbox, "git", ["checkout", "-B", "main", "origin/main"]);
-    await commandOutput(sandbox, "git", ["reset", "--hard", "origin/main"]);
+    // The sandbox clone is shallow and detached: it has no `origin/main`
+    // remote-tracking ref, and `checkout -B main origin/main` failed with
+    // "'origin/main' is not a commit". Fetch, then build the branch from
+    // FETCH_HEAD, which exists whatever shape the clone arrived in.
+    //
+    // `--unshallow` matters beyond tidiness: GitHub refuses a push from a
+    // shallow clone ("shallow update not allowed"), and `deploy:all` publishes
+    // by pushing `main`. It fails on an already-complete repository — the
+    // persistent sandbox's second run — so its failure is not an error.
+    await commandAllowingFailure(sandbox, "git", ["fetch", "--unshallow", "--no-tags", "origin", "main"]);
+    await commandOutput(sandbox, "git", ["fetch", "--no-tags", "origin", "main"]);
+    await commandOutput(sandbox, "git", ["checkout", "-B", MAIN_BRANCH, "FETCH_HEAD"]);
+    await commandOutput(sandbox, "git", ["reset", "--hard", "FETCH_HEAD"]);
     await commandOutput(sandbox, "git", ["clean", "-fd", "-e", `${STATE_DIRECTORY}/`]);
     await commandOutput(sandbox, "git", ["config", "user.name", "ASOL Production Deploy"]);
     await commandOutput(sandbox, "git", ["config", "user.email", "deploy@asol.app"]);

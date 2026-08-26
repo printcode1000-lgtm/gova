@@ -30,6 +30,13 @@ browser (super admin)
 The sandbox is persistent and named `asol-gova-deploy-all`, so a reopened
 console reattaches to a release already in progress.
 
+Its clone arrives **shallow and detached**, so the checkout builds `main` from
+`FETCH_HEAD` rather than an `origin/main` tracking ref that does not exist, and
+deepens the history first (`git fetch --unshallow`): GitHub refuses a push from
+a shallow clone, and pushing `main` is how the publish phase ships. Deepening
+fails on an already-complete repository — the persistent sandbox's second run —
+and that failure is expected and ignored.
+
 ## Secret handling
 
 - The browser receives **no** deployment credential, ever.

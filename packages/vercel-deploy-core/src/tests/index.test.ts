@@ -145,6 +145,24 @@ async function runTests(): Promise<void> {
   );
   console.log('  ✔ Sandbox limits default to the Hobby plan ceiling.');
 
+  // The sandbox clone arrives shallow and detached: there is no origin/main to
+  // check out, and GitHub refuses a push from a shallow clone — which is how
+  // deploy:all publishes.
+  const sandboxCode = sandboxSource
+    .split(/\r?\n/)
+    .filter((line) => {
+      const trimmed = line.trim();
+      return !trimmed.startsWith('//') && !trimmed.startsWith('*') && !trimmed.startsWith('/*');
+    })
+    .join(' ');
+  assert(
+    !sandboxCode.includes('origin/main'),
+    'The release checkout must not depend on an origin/main tracking ref',
+  );
+  assert(sandboxSource.includes('"FETCH_HEAD"'), 'The release branch is built from FETCH_HEAD');
+  assert(sandboxSource.includes('"--unshallow"'), 'The clone is deepened so the publish push is accepted');
+  console.log('  ✔ Release checkout survives a shallow, detached clone.');
+
   console.log('\n✅ All @asol/vercel-deploy-core tests passed successfully!');
 }
 
