@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, RefreshCw, Rocket, ShieldAlert } from "lucide-react";
+import { Clipboard, Loader2, RefreshCw, Rocket, ShieldAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
@@ -10,6 +10,7 @@ import { productionDeployStageLabel } from "@/features/release-commands/domain/p
 import { useProductionDeploy } from "@/features/release-commands/presentation/hooks/use-production-deploy";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
+import { NativeCore } from "@asol/native-core";
 import {
   REMOTE_DEPLOY_ALL_CONFIRMATION,
   REMOTE_DEPLOY_ALL_STAGES,
@@ -90,8 +91,9 @@ export function ProductionDeployPage() {
 
       <section className="space-y-3 rounded-lg border p-3">
         <label className="block text-sm font-medium" htmlFor="production-deploy-confirmation">
-          اكتب «{REMOTE_DEPLOY_ALL_CONFIRMATION}» للتأكيد
+          اكتب عبارة التأكيد
         </label>
+        <ConfirmationPhrase onApply={setConfirmation} />
         <Input
           id="production-deploy-confirmation"
           value={confirmation}
@@ -170,5 +172,43 @@ export function ProductionDeployPage() {
         </pre>
       </section>
     </main>
+  );
+}
+
+/**
+ * The confirmation phrase, selectable and copyable.
+ *
+ * Typing it by hand on a phone is what the deliberate friction is for, not a
+ * transcription error: tapping the phrase fills the field and copies it, and
+ * the text itself stays selectable for a manual copy.
+ */
+function ConfirmationPhrase(props: { onApply: (value: string) => void }) {
+  const [copied, setCopied] = React.useState(false);
+
+  const apply = () => {
+    props.onApply(REMOTE_DEPLOY_ALL_CONFIRMATION);
+    void NativeCore.writeClipboard({ string: REMOTE_DEPLOY_ALL_CONFIRMATION }).then(() => {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2_000);
+    });
+  };
+
+  return (
+    <div className="asol-selectable flex flex-wrap items-center justify-between gap-2">
+      <code className="select-all rounded bg-muted px-2 py-1 font-mono text-sm" dir="ltr">
+        {REMOTE_DEPLOY_ALL_CONFIRMATION}
+      </code>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        aria-label="نسخ عبارة التأكيد"
+        className="h-8 shrink-0 px-2 active:scale-[0.98]"
+        onClick={apply}
+      >
+        <Clipboard className="h-3.5 w-3.5" aria-hidden />
+        {copied ? "تم النسخ" : "نسخ العبارة"}
+      </Button>
+    </div>
   );
 }

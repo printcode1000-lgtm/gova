@@ -130386,6 +130386,12 @@
     },
     {
       "from": "route:/super-admin/production-deploy:page",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/production-deploy:page",
       "to": "package:@asol/notifications-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -217692,6 +217698,12 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
+      "to": "package:@asol/native-core",
+      "kind": "imports",
+      "detail": "@asol/native-core"
     },
     {
       "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
