@@ -44,6 +44,7 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
     id: "source",
     label: "source quality and architecture",
     branches: [
+      branch("knowledge", "generated knowledge is current", "docs:generate", "npm"),
       branch("lint", "lint", "lint", "npm"),
       branch("types", "TypeScript type check", "typecheck", "npm"),
       branch("architecture", "module and import boundaries", "architecture:check", "npm"),

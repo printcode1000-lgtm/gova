@@ -65,6 +65,7 @@ assert.throws(() => parseFlags(["--force"]), /Unknown option/);
 for (const required of [
   "doctor:environment:production",
   "vercel:accounts:check",
+  "docs:generate",
   "lint",
   "typecheck",
   "architecture:check",
