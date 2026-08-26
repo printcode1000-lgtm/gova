@@ -40,6 +40,7 @@ const packageJson = JSON.parse(readFileSync(path.join(ROOT, "package.json"), "ut
   packageManager?: string;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
+  overrides?: Record<string, string>;
   allowScripts?: Record<string, boolean>;
 };
 const lock = JSON.parse(readFileSync(path.join(ROOT, "package-lock.json"), "utf8")) as {
@@ -103,6 +104,33 @@ function isSandboxPreloadedOptionalProblem(problem: string): boolean {
   const packagePath = problem.slice(problem.lastIndexOf(" ") + 1);
   const relativePath = path.relative(ROOT, packagePath).split(path.sep).join("/");
   return relativePath.startsWith("node_modules/") && lock.packages?.[relativePath]?.optional === true;
+}
+
+/**
+ * npm 11.11 in the Sandbox flags a root override as invalid even when its
+ * version exactly matches both package-lock.json and the declared override.
+ * That is an npm reporting defect, not an incompatible dependency. The rule is
+ * deliberately limited to the remote Sandbox and leaves all other invalid
+ * dependencies release-blocking.
+ */
+function isSandboxLockedOverrideProblem(problem: string): boolean {
+  if (process.env.ASOL_REMOTE_DEPLOY_SANDBOX !== "1" || !problem.startsWith("invalid: ")) {
+    return false;
+  }
+  const packagePath = problem.slice(problem.lastIndexOf(" ") + 1);
+  const relativePath = path.relative(ROOT, packagePath).split(path.sep).join("/");
+  if (!relativePath.startsWith("node_modules/")) return false;
+  const packageName = relativePath.slice("node_modules/".length);
+  const expectedVersion = lock.packages?.[relativePath]?.version;
+  return Boolean(
+    expectedVersion &&
+      packageJson.overrides?.[packageName] === expectedVersion &&
+      problem.startsWith(`invalid: ${packageName}@${expectedVersion} `),
+  );
+}
+
+function isAcceptedSandboxGraphProblem(problem: string): boolean {
+  return isSandboxPreloadedOptionalProblem(problem) || isSandboxLockedOverrideProblem(problem);
 }
 
 function checkCommon(): void {
@@ -181,8 +209,8 @@ function checkCommon(): void {
   if (graphResult.status !== 0 && graphProblems.length === 0) {
     graphProblems.push((graphResult.stderr || "npm ls --all failed").trim());
   }
-  const ignoredSandboxOptionalProblems = graphProblems.filter(isSandboxPreloadedOptionalProblem);
-  graphProblems = graphProblems.filter((problem) => !isSandboxPreloadedOptionalProblem(problem));
+  const ignoredSandboxProblems = graphProblems.filter(isAcceptedSandboxGraphProblem);
+  graphProblems = graphProblems.filter((problem) => !isAcceptedSandboxGraphProblem(problem));
   add({
     scenario: "common",
     item: "npm peer and transitive graph",
@@ -191,8 +219,8 @@ function checkCommon(): void {
     required: "No invalid, missing, extraneous, or peer-incompatible package anywhere in the installed tree",
     action: graphProblems.length
       ? graphProblems.slice(0, 5).join("; ")
-      : ignoredSandboxOptionalProblems.length
-        ? `Ignored ${ignoredSandboxOptionalProblems.length} preloaded, lockfile-optional Sandbox artifact(s).`
+      : ignoredSandboxProblems.length
+        ? `Ignored ${ignoredSandboxProblems.length} lockfile-proven Sandbox npm reporting artifact(s).`
         : "No action.",
   });
 

@@ -40,6 +40,11 @@ lockfile-optional artifacts preloaded by the Sandbox image when npm reports
 them as extraneous. Missing, invalid, peer-incompatible, and non-optional
 extraneous packages still fail preflight.
 
+The Sandbox's npm 11.11 can also report a root dependency override as invalid
+despite an exact match with both `package-lock.json` and the declared override.
+The doctor accepts only that lockfile-proven Sandbox report; every other invalid
+dependency still fails preflight.
+
 Its clone arrives **shallow and detached**, so the checkout builds `main` from
 `FETCH_HEAD` rather than an `origin/main` tracking ref that does not exist, and
 deepens the history first (`git fetch --unshallow`): GitHub refuses a push from

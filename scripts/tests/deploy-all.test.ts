@@ -226,5 +226,11 @@ assert.match(
   /ASOL_REMOTE_DEPLOY_SANDBOX: "1"/,
   "the remote runner must identify its isolated install so the doctor ignores only Sandbox-preloaded optional packages.",
 );
+const environmentDoctor = readFileSync(new URL("../check-environment-requirements.ts", import.meta.url), "utf8");
+assert.match(
+  environmentDoctor,
+  /isSandboxLockedOverrideProblem/,
+  "the production doctor must recognize npm 11.11's false invalid report for a lockfile-matched Sandbox override.",
+);
 
 console.log("deploy:all guard tests passed.");
