@@ -35,6 +35,11 @@ The Sandbox image does not provide `make`. Its Node 24-compatible
 otherwise infer an unnecessary `node-gyp` rebuild. The runner therefore skips
 install scripts and loads that binary before it starts `deploy:all`.
 
+The sandbox marker also lets the environment doctor disregard only
+lockfile-optional artifacts preloaded by the Sandbox image when npm reports
+them as extraneous. Missing, invalid, peer-incompatible, and non-optional
+extraneous packages still fail preflight.
+
 Its clone arrives **shallow and detached**, so the checkout builds `main` from
 `FETCH_HEAD` rather than an `origin/main` tracking ref that does not exist, and
 deepens the history first (`git fetch --unshallow`): GitHub refuses a push from

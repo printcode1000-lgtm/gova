@@ -73,6 +73,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_PROVISIONING` | server/tooling | 13 | `npm run db:provision:turso`, `npm run db:schema:sync:release`, `npm run db:schema:sync`, `scripts/provision-turso.ts`, `scripts/schema-sync.ts`, `scripts/setup-turso-db.ts` |
 | `ASOL_RELEASE_CHECK_ATTEMPTS` | server/tooling | 1 | `scripts/check-deployed-release.ts` |
 | `ASOL_REMOTE_DEPLOY_REQUEST_ID` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
+| `ASOL_REMOTE_DEPLOY_SANDBOX` | server/tooling | 1 | `scripts/check-environment-requirements.ts` |
 | `ASOL_REMOTE_DEPLOY_SANDBOX_NAME` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_SCHEMA_SYNC_EXACT` | server/tooling | 1 | `scripts/schema-sync.ts` |
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server/tooling | 2 | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` |

@@ -43,7 +43,7 @@ const packageJson = JSON.parse(readFileSync(path.join(ROOT, "package.json"), "ut
   allowScripts?: Record<string, boolean>;
 };
 const lock = JSON.parse(readFileSync(path.join(ROOT, "package-lock.json"), "utf8")) as {
-  packages?: Record<string, { version?: string }>;
+  packages?: Record<string, { version?: string; optional?: boolean }>;
 };
 
 const results: CheckResult[] = [];
@@ -86,6 +86,23 @@ function majorOf(version: string): number {
 
 function envConfigured(key: string): boolean {
   return Boolean(process.env[key]?.trim());
+}
+
+/**
+ * Vercel Sandboxes preload unsupported optional artifacts into their shared
+ * workspace. The remote release runner deliberately installs without lifecycle
+ * scripts so it can use better-sqlite3's bundled binary; npm then reports those
+ * already-present optional artifacts as extraneous. They are not part of the
+ * project graph, so retain every real npm problem and ignore only this narrow,
+ * lockfile-proven sandbox condition.
+ */
+function isSandboxPreloadedOptionalProblem(problem: string): boolean {
+  if (process.env.ASOL_REMOTE_DEPLOY_SANDBOX !== "1" || !problem.startsWith("extraneous: ")) {
+    return false;
+  }
+  const packagePath = problem.slice(problem.lastIndexOf(" ") + 1);
+  const relativePath = path.relative(ROOT, packagePath).split(path.sep).join("/");
+  return relativePath.startsWith("node_modules/") && lock.packages?.[relativePath]?.optional === true;
 }
 
 function checkCommon(): void {
@@ -164,13 +181,19 @@ function checkCommon(): void {
   if (graphResult.status !== 0 && graphProblems.length === 0) {
     graphProblems.push((graphResult.stderr || "npm ls --all failed").trim());
   }
+  const ignoredSandboxOptionalProblems = graphProblems.filter(isSandboxPreloadedOptionalProblem);
+  graphProblems = graphProblems.filter((problem) => !isSandboxPreloadedOptionalProblem(problem));
   add({
     scenario: "common",
     item: "npm peer and transitive graph",
     level: graphProblems.length ? "UPDATE" : "OK",
     installed: graphProblems.length ? `${graphProblems.length} problem(s)` : "npm ls --all is valid",
     required: "No invalid, missing, extraneous, or peer-incompatible package anywhere in the installed tree",
-    action: graphProblems.length ? graphProblems.slice(0, 5).join("; ") : "No action.",
+    action: graphProblems.length
+      ? graphProblems.slice(0, 5).join("; ")
+      : ignoredSandboxOptionalProblems.length
+        ? `Ignored ${ignoredSandboxOptionalProblems.length} preloaded, lockfile-optional Sandbox artifact(s).`
+        : "No action.",
   });
 
   const npmVersion = commandVersion("npm", ["--version"]);

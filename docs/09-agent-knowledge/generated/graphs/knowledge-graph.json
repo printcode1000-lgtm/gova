@@ -16285,6 +16285,19 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_REMOTE_DEPLOY_SANDBOX",
+      "kind": "environment-key",
+      "name": "ASOL_REMOTE_DEPLOY_SANDBOX",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_remote_deploy_sandbox",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_REMOTE_DEPLOY_SANDBOX_NAME",
       "kind": "environment-key",
       "name": "ASOL_REMOTE_DEPLOY_SANDBOX_NAME",
@@ -104802,6 +104815,11 @@
     },
     {
       "from": "feature:release-commands",
+      "to": "external-dependency:better-sqlite3",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:release-commands",
       "to": "external-dependency:fflate",
       "kind": "imports"
     },
@@ -131541,6 +131559,11 @@
     },
     {
       "from": "script:scripts/check-environment-requirements.ts",
+      "to": "environment-key:ASOL_REMOTE_DEPLOY_SANDBOX",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/check-environment-requirements.ts",
       "to": "environment-key:JAVA_HOME",
       "kind": "uses-environment"
     },
@@ -133071,6 +133094,12 @@
       "from": "script:scripts/run-remote-deploy-all.mjs",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/run-remote-deploy-all.mjs",
+      "to": "external-dependency:better-sqlite3",
+      "kind": "imports",
+      "detail": "better-sqlite3"
     },
     {
       "from": "script:scripts/run-remote-deploy-all.mjs",
@@ -239081,6 +239110,12 @@
     },
     {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",
+      "to": "external-dependency:better-sqlite3",
+      "kind": "imports",
+      "detail": "better-sqlite3"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/release-commands.test.ts",
       "to": "external-dependency:fflate",
       "kind": "imports",
       "detail": "fflate"
@@ -239150,6 +239185,11 @@
       "to": "source:src/features/release-commands/server/services/build-job-runner.server.ts",
       "kind": "imports",
       "detail": "../server/services/build-job-runner.server"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/release-commands.test.ts",
+      "to": "external-dependency:better-sqlite3",
+      "kind": "tests"
     },
     {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",

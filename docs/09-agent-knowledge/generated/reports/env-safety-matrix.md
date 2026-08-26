@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **231**
+Keys: **232**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -75,6 +75,7 @@ Keys: **231**
 | `ASOL_PROVISIONING` | server-only | unknown | `npm run db:provision:turso`, `npm run db:schema:sync`, `npm run db:schema:sync:release`, `packages/data-core/src/tooling/drop-factory-reset-tables.ts`, `packages/data-core/src/tooling/reset-advertisements-db.ts`, `packages/data-core/src/tooling/sync-users-sqlite-to-turso.ts`, `packages/storage-core/src/server/providers/provider-resolver.ts`, `packages/storage-core/src/tests/integration/parameterized-store.test.ts`, `scripts/provision-turso.ts`, `scripts/schema-sync.ts`, `scripts/setup-turso-db.ts`, `scripts/test-data-health-environment.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_RELEASE_CHECK_ATTEMPTS` | server-only | unknown | `scripts/check-deployed-release.ts` | ota/release | server-only | npm run runtime:check:changed |
 | `ASOL_REMOTE_DEPLOY_REQUEST_ID` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_REMOTE_DEPLOY_SANDBOX` | server-only | unknown | `scripts/check-environment-requirements.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_REMOTE_DEPLOY_SANDBOX_NAME` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SCHEMA_SYNC_EXACT` | server-only | unknown | `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server-only | unknown | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |

@@ -44,7 +44,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `profile-products` | feature | 1 | 0 | 3 | 0 | 1 | 11 |
 | `profile-working-hours` | feature | 2 | 0 | 3 | 0 | 1 | 3 |
 | `qr-code` | feature | 1 | 1 | 0 | 0 | 1 | 2 |
-| `release-commands` | feature | 3 | 2 | 12 | 0 | 1 | 15 |
+| `release-commands` | feature | 3 | 2 | 12 | 0 | 1 | 16 |
 | `seller-card` | feature | 1 | 0 | 5 | 0 | 4 | 6 |
 | `seller-discounts` | feature | 1 | 1 | 7 | 0 | 2 | 7 |
 | `settings` | feature | 2 | 2 | 2 | 0 | 0 | 13 |

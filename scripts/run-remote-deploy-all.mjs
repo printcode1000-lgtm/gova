@@ -185,7 +185,10 @@ async function main() {
   }
   if (outcome.exitCode === 0) {
     await patchSnapshot({ stage: "preflight" });
-    outcome = await runStep("npm", ["run", "deploy:all"], { CI: "1" });
+    outcome = await runStep("npm", ["run", "deploy:all"], {
+      CI: "1",
+      ASOL_REMOTE_DEPLOY_SANDBOX: "1",
+    });
   }
 
   const finishedAt = new Date().toISOString();

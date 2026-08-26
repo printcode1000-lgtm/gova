@@ -16285,6 +16285,19 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_REMOTE_DEPLOY_SANDBOX",
+      "kind": "environment-key",
+      "name": "ASOL_REMOTE_DEPLOY_SANDBOX",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_remote_deploy_sandbox",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_REMOTE_DEPLOY_SANDBOX_NAME",
       "kind": "environment-key",
       "name": "ASOL_REMOTE_DEPLOY_SANDBOX_NAME",

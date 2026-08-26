@@ -8,8 +8,8 @@
 | Metric | Value |
 |---|---:|
 | Graph version | 2 |
-| Nodes | 3743 |
-| Edges | 33466 |
+| Nodes | 3744 |
+| Edges | 33471 |
 | Dangling edges | 0 |
 | Owner nodes with dependency relationships | 96 / 96 |
 | Mandatory application runtime nodes | 5 / 5 |
@@ -23,7 +23,7 @@
 | config | 12 |
 | document | 248 |
 | domain | 10 |
-| environment-key | 231 |
+| environment-key | 232 |
 | external-dependency | 107 |
 | feature | 48 |
 | package | 42 |
@@ -45,11 +45,11 @@
 | contains | 361 |
 | declares-dependency | 96 |
 | documents | 4956 |
-| imports | 8278 |
+| imports | 8281 |
 | invokes | 346 |
 | produces | 18 |
 | references | 2218 |
 | related-to | 3517 |
 | targets-runtime | 345 |
-| tests | 304 |
-| uses-environment | 327 |
+| tests | 305 |
+| uses-environment | 328 |
