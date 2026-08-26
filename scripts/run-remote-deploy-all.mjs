@@ -175,7 +175,14 @@ async function main() {
   await patchSnapshot({ requestId, status: "running", stage: "dependencies" });
   await appendLog(`[remote-deploy] request ${requestId} started at ${new Date().toISOString()}\n`);
 
-  let outcome = await runStep("npm", ["ci", "--no-audit", "--no-fund"]);
+  // better-sqlite3 bundles the Linux Node 24 binary this sandbox needs. npm 11
+  // nevertheless infers a node-gyp rebuild from its binding.gyp, but Vercel
+  // Sandboxes intentionally do not include make. Keep the bundled binary and
+  // prove it can load before starting the irreversible release pipeline.
+  let outcome = await runStep("npm", ["ci", "--ignore-scripts", "--no-audit", "--no-fund"]);
+  if (outcome.exitCode === 0) {
+    outcome = await runStep("node", ["-e", "require('better-sqlite3')"]);
+  }
   if (outcome.exitCode === 0) {
     await patchSnapshot({ stage: "preflight" });
     outcome = await runStep("npm", ["run", "deploy:all"], { CI: "1" });

@@ -909,6 +909,10 @@ async function verifyProductionDeployConsole() {
     remoteRunner.includes("npm") && remoteRunner.includes("deploy:all"),
     "the remote runner must run deploy:all itself rather than reimplement it",
   );
+  assert.ok(
+    remoteRunner.includes('"--ignore-scripts"') && remoteRunner.includes("require('better-sqlite3')"),
+    "the sandbox install must keep and verify better-sqlite3's bundled Linux binary instead of requiring make",
+  );
 
   // No deployment secret may leave the server: the archive password is only
   // ever handed to the sandbox command.

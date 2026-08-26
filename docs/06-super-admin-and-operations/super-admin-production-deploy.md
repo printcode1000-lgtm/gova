@@ -22,13 +22,18 @@ browser (super admin)
   → POST /api/super-admin/production-deploy      (session-authenticated)
     → @asol/vercel-deploy-core/remote-deploy-sandbox
       → sandbox: node scripts/run-remote-deploy-all.mjs
-        → npm ci
+        → npm ci --ignore-scripts, then verify the bundled SQLite binary
         → npm run deploy:all
       → POST /api/super-admin/production-deploy/callback   (shared secret)
 ```
 
 The sandbox is persistent and named `asol-gova-deploy-all`, so a reopened
 console reattaches to a release already in progress.
+
+The Sandbox image does not provide `make`. Its Node 24-compatible
+`better-sqlite3` Linux binary is already bundled with the package, but npm can
+otherwise infer an unnecessary `node-gyp` rebuild. The runner therefore skips
+install scripts and loads that binary before it starts `deploy:all`.
 
 Its clone arrives **shallow and detached**, so the checkout builds `main` from
 `FETCH_HEAD` rather than an `origin/main` tracking ref that does not exist, and
