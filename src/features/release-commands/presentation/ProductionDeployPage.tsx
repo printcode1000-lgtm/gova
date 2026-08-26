@@ -73,7 +73,7 @@ export function ProductionDeployPage() {
   const timings = snapshot ? stageTimings(snapshot, now) : new Map();
 
   return (
-    <main dir="rtl" className="mx-auto w-full max-w-3xl space-y-4 p-4 pb-24">
+    <main dir="rtl" className="mx-auto w-full max-w-3xl min-w-0 space-y-4 p-4 pb-24">
       <header className="space-y-1">
         <h1 className="flex items-center gap-2 text-xl font-bold">
           <Rocket className="h-5 w-5" aria-hidden />
@@ -144,13 +144,13 @@ export function ProductionDeployPage() {
           <RefreshCw className="h-4 w-4" aria-hidden />
           الحالة
         </h2>
-        <dl className="grid grid-cols-2 gap-2 text-sm">
+        <dl className="grid grid-cols-1 gap-x-2 gap-y-1 text-sm sm:grid-cols-2">
           <dt className="text-muted-foreground">الحالة</dt>
           <dd>{snapshot?.status ?? "…"}</dd>
           <dt className="text-muted-foreground">المرحلة</dt>
           <dd>{snapshot ? productionDeployStageLabel(snapshot.stage) : "…"}</dd>
           <dt className="text-muted-foreground">المعرّف</dt>
-          <dd dir="ltr">{snapshot?.requestId ?? "—"}</dd>
+          <dd dir="ltr" className="break-all">{snapshot?.requestId ?? "—"}</dd>
           <dt className="text-muted-foreground">البريد</dt>
           <dd>{snapshot?.emailStatus ?? "—"}</dd>
           <dt className="flex items-center gap-1 text-muted-foreground">
@@ -194,15 +194,20 @@ export function ProductionDeployPage() {
         ) : null}
       </section>
 
-      <section className="space-y-2 rounded-lg border p-3">
+      <section className="min-w-0 space-y-2 rounded-lg border p-3">
         <h2 className="text-sm font-semibold">السجل</h2>
-        <pre
-          ref={logRef}
-          dir="ltr"
-          className="max-h-80 overflow-auto rounded bg-muted p-2 text-xs leading-5"
-        >
-          {result?.logTail || "لا يوجد سجل بعد."}
-        </pre>
+        {/* overflow-x-auto + overflow-y-auto: scroll in both directions. */}
+        {/* whitespace-pre: preserves log formatting without forcing line-wrap. */}
+        {/* min-w-0: prevents the pre from escaping its flex/grid container. */}
+        <div className="min-w-0 overflow-x-auto">
+          <pre
+            ref={logRef}
+            dir="ltr"
+            className="max-h-80 min-w-0 overflow-y-auto whitespace-pre rounded bg-muted p-2 text-xs leading-5"
+          >
+            {result?.logTail || "لا يوجد سجل بعد."}
+          </pre>
+        </div>
       </section>
     </main>
   );
