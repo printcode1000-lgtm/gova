@@ -159,7 +159,7 @@ export function MobileOnboardingNav({
   if (showCompletion) {
     return (
       <div className="sticky top-0 z-50 asol-onboarding-sticky-bar border-b px-4 py-3">
-        <Button variant="outline" className="w-full" onClick={onStepNavigate}>
+        <Button ui={{ uid: 'onboarding.progress.back-to-steps-dQG5I6', id: 'onboarding.progress.back-to-steps', kind: 'action', action: 'back-to-steps', part: 'progress' }} variant="outline" className="w-full" onClick={onStepNavigate}>
           {t('onboarding.progress.backToSteps')}
         </Button>
       </div>
@@ -178,7 +178,7 @@ export function MobileOnboardingNav({
     <div className="sticky top-0 z-50 asol-onboarding-sticky-bar border-b">
       <div className="px-4 py-3 space-y-3">
         <div className="flex items-center gap-3">
-          <Button
+          <Button ui={{ uid: 'onboarding.progress.previous-step-pkl3Gx', id: 'onboarding.progress.previous-step', kind: 'action', action: 'previous-step', part: 'progress' }}
             variant="ghost"
             size="icon"
             onClick={prevStep}
@@ -203,7 +203,7 @@ export function MobileOnboardingNav({
             </div>
           </div>
 
-          <Button
+          <Button ui={{ uid: 'onboarding.progress.next-step-z3QvMw', id: 'onboarding.progress.next-step', kind: 'action', action: 'next-step', part: 'progress' }}
             variant="ghost"
             size="icon"
             onClick={nextStep}
@@ -215,7 +215,7 @@ export function MobileOnboardingNav({
         </div>
 
         {allComplete && onShowCompletion && (
-          <Button variant="secondary" className="w-full" onClick={onShowCompletion}>
+          <Button ui={{ uid: 'onboarding.progress.view-completion-814Jf1', id: 'onboarding.progress.view-completion', kind: 'action', action: 'show-completion', part: 'progress' }} variant="secondary" className="w-full" onClick={onShowCompletion}>
             {t('onboarding.page.viewSuccessScreen')}
           </Button>
         )}
@@ -263,7 +263,7 @@ export function StepNavigation({
 
   return (
     <div className="flex items-center justify-between pt-6 border-t">
-      <Button
+      <Button ui={{ uid: 'onboarding.nav.previous-gDH0aK', id: 'onboarding.nav.previous', kind: 'action', action: 'previous-step', part: 'nav' }}
         variant="ghost"
         onClick={() => {
           if (onPrev) onPrev();
@@ -278,11 +278,11 @@ export function StepNavigation({
 
       <div className="flex items-center gap-3">
         {showSkip && !isComplete && (
-          <Button variant="ghost" onClick={nextStep} disabled={isSubmitting}>
+          <Button ui={{ uid: 'onboarding.nav.skip-jR9Khn', id: 'onboarding.nav.skip', kind: 'action', action: 'skip-step', part: 'nav' }} variant="ghost" onClick={nextStep} disabled={isSubmitting}>
             {t('onboarding.nav.skip')}
           </Button>
         )}
-        <Button onClick={handleNext} disabled={isSubmitting} className="gap-2">
+        <Button ui={{ uid: 'onboarding.nav.next-SfQgs1', id: 'onboarding.nav.next', kind: 'action', action: 'next-step', part: 'nav' }} onClick={handleNext} disabled={isSubmitting} className="gap-2">
           {isSubmitting ? (
             <>
               <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />

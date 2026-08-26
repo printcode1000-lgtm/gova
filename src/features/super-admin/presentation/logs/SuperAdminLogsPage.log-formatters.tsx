@@ -26,6 +26,8 @@ import {
   getSystemLogsSnapshot,
   setSystemLogCaptureEnabled,
   subscribeToSystemLogs,
+  formatSystemLogEntryForCopy,
+  formatSystemLogsForCopy,
   type SystemLogEntry,
   type SystemLogLevel,
 } from "@/features/system-logs";
@@ -64,33 +66,11 @@ export const sections: Array<{
 ];
 
 export function formatForCopy(entries: SystemLogEntry[]) {
-  return entries.map(formatEntryForCopy).join("\n\n");
+  return formatSystemLogsForCopy(entries);
 }
 
 export function formatEntryForCopy(entry: SystemLogEntry) {
-  const source = entry.sourceFile
-    ? `${entry.sourceFile}:${entry.sourceLine ?? "?"}:${entry.sourceColumn ?? "?"}`
-    : "غير متاح";
-  return redactSystemLogText(
-    [
-      `المستوى: ${entry.level}`,
-      `الطريقة: ${entry.consoleMethod}`,
-      `المنصة: ${entry.platform}`,
-      `الصفحة: ${entry.page}`,
-      `النوع: ${entry.errorName ?? "غير محدد"}`,
-      `المصدر: ${source}`,
-      `أول ظهور: ${entry.firstOccurredAt}`,
-      `آخر ظهور: ${entry.lastOccurredAt}`,
-      `عدد مرات التكرار: ${entry.occurrences}`,
-      `وكيل المستخدم: ${entry.userAgent}`,
-      `الميزة: ${entry.feature ?? "غير محدد"}`,
-      `العملية: ${entry.operation ?? "غير محددة"}`,
-      `الرسالة:\n${entry.message}`,
-      entry.stack ? `تتبع المكدس:\n${entry.stack}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n"),
-  );
+  return formatSystemLogEntryForCopy(entry);
 }
 
 export function cloudSource(entry: PersistentSystemLogEntry) {

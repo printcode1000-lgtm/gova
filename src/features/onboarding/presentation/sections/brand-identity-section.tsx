@@ -93,7 +93,7 @@ export function BrandIdentitySection() {
             hint={`${brandIdentity.mission.length}/300`}
             error={errors.mission}
           >
-            <FormTextarea
+            <FormTextarea ui={{ uid: 'onboarding.brand-identity.mission-T93XC3', id: 'onboarding.brand-identity.mission', kind: 'field', part: 'form' }}
               id="mission"
               value={brandIdentity.mission}
               onChange={(e) => updateBrandIdentity({ mission: e.target.value })}
@@ -111,7 +111,7 @@ export function BrandIdentitySection() {
             hint={`${brandIdentity.vision.length}/300`}
             error={errors.vision}
           >
-            <FormTextarea
+            <FormTextarea ui={{ uid: 'onboarding.brand-identity.vision-f4RNvM', id: 'onboarding.brand-identity.vision', kind: 'field', part: 'form' }}
               id="vision"
               value={brandIdentity.vision}
               onChange={(e) => updateBrandIdentity({ vision: e.target.value })}
@@ -148,14 +148,14 @@ export function BrandIdentitySection() {
             </div>
 
             <div className="flex gap-2">
-              <Input
+              <Input ui={{ uid: 'onboarding.brand-identity.new-usp-Uk0WbA', id: 'onboarding.brand-identity.new-usp', kind: 'field', part: 'usp' }}
                 value={newUSP}
                 onChange={(e) => setNewUSP(e.target.value)}
                 placeholder={t('onboarding.brandIdentity.uspPlaceholder')}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUSP())}
                 disabled={brandIdentity.uniqueSellingPoints.length >= 5}
               />
-              <Button
+              <Button ui={{ uid: 'onboarding.brand-identity.add-usp-J5aXQc', id: 'onboarding.brand-identity.add-usp', kind: 'action', action: 'add-usp', part: 'usp' }}
                 type="button"
                 onClick={addUSP}
                 disabled={!newUSP.trim() || brandIdentity.uniqueSellingPoints.length >= 5}

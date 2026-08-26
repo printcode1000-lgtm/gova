@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/sha
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
 import { Label } from '@/shared/ui/label';
 import { cn } from '@/shared/utils';
+import type { UiDescriptor } from '@asol/ui-registry-core';
 import type { ReturnPolicyType } from '@/features/onboarding/domain/types';
 
 const POLICY_TYPES: ReturnPolicyType[] = [
@@ -18,6 +19,17 @@ const POLICY_TYPES: ReturnPolicyType[] = [
   'store_credit',
   'no_returns',
 ];
+
+/**
+ * Each policy option is registered from its own stable domain id, so the uid
+ * never depends on the rendered order of POLICY_TYPES.
+ */
+const POLICY_TYPE_UI = {
+  full_returns: { uid: 'onboarding.returns.policy-full-returns-Y8J2DR', id: 'onboarding.returns.policy-full-returns', kind: 'field', action: 'select-policy', part: 'policy' },
+  exchange_only: { uid: 'onboarding.returns.policy-exchange-only-T2WHzq', id: 'onboarding.returns.policy-exchange-only', kind: 'field', action: 'select-policy', part: 'policy' },
+  store_credit: { uid: 'onboarding.returns.policy-store-credit-75R1vi', id: 'onboarding.returns.policy-store-credit', kind: 'field', action: 'select-policy', part: 'policy' },
+  no_returns: { uid: 'onboarding.returns.policy-no-returns-2Pfo4H', id: 'onboarding.returns.policy-no-returns', kind: 'field', action: 'select-policy', part: 'policy' },
+} as const satisfies Record<ReturnPolicyType, UiDescriptor>;
 
 const REFUND_METHODS = ['original', 'store_credit', 'choice'] as const;
 const RETURN_PERIODS = ['7', '14', '30', '60', '90'] as const;
@@ -61,7 +73,7 @@ export function ReturnsSection() {
                       : 'border-border',
                   )}
                 >
-                  <RadioGroupItem value={policy} id={policy} className="mt-0.5" />
+                  <RadioGroupItem ui={POLICY_TYPE_UI[policy]} value={policy} id={policy} className="mt-0.5" />
                   <div className="flex-1">
                     <Label htmlFor={policy} className="font-medium">
                       {t(`onboarding.returns.policyTypes.${policy}.label`)}
@@ -85,7 +97,7 @@ export function ReturnsSection() {
                 >
                   <div className="flex items-center gap-2">
                     <CalendarDays className="h-5 w-5 text-muted-foreground" />
-                    <FormSelect
+                    <FormSelect ui={{ uid: 'onboarding.returns.return-period-NE7mB4', id: 'onboarding.returns.return-period', kind: 'field', part: 'form' }}
                       value={returns.returnPeriod.toString()}
                       onValueChange={(v) => updateReturns({ returnPeriod: parseInt(v) })}
                       options={RETURN_PERIODS.map((value) => ({
@@ -97,7 +109,7 @@ export function ReturnsSection() {
                 </FormField>
 
                 <FormField label={t('onboarding.returns.refundMethod')} htmlFor="refundMethod">
-                  <FormSelect
+                  <FormSelect ui={{ uid: 'onboarding.returns.refund-method-B9j88E', id: 'onboarding.returns.refund-method', kind: 'field', part: 'form' }}
                     value={returns.refundMethod}
                     onValueChange={(v) => updateReturns({ refundMethod: v as 'original' | 'store_credit' | 'choice' })}
                     options={REFUND_METHODS.map((value) => ({
@@ -113,7 +125,7 @@ export function ReturnsSection() {
                 htmlFor="policyDescription"
                 hint={t('onboarding.returns.policyDescriptionHint')}
               >
-                <FormTextarea
+                <FormTextarea ui={{ uid: 'onboarding.returns.policy-description-pO9fsl', id: 'onboarding.returns.policy-description', kind: 'field', part: 'form' }}
                   id="policyDescription"
                   value={returns.policyDescription}
                   onChange={(e) => updateReturns({ policyDescription: e.target.value })}

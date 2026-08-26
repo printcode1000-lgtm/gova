@@ -142,7 +142,7 @@ export function ShippingQuotePanel({
         <div className="grid gap-3 border-t border-primary/15 px-3 py-3 sm:grid-cols-[180px_1fr_auto] sm:items-end">
           <label className="space-y-1 text-xs font-semibold">
             قيمة الشحن الأساسية بالجنيه
-            <Input
+            <Input ui={{ uid: "orders.shipping-quote.amount-U6PMk0", id: "orders.shipping-quote.amount", kind: "field", part: "quote" }}
               type="number"
               min={0}
               step="0.01"
@@ -154,7 +154,7 @@ export function ShippingQuotePanel({
           </label>
           <label className="space-y-1 text-xs font-semibold">
             توضيح اختياري للمشتري
-            <Textarea
+            <Textarea ui={{ uid: "orders.shipping-quote.notes-0CoZxW", id: "orders.shipping-quote.notes", kind: "field", part: "quote" }}
               value={notes}
               onChange={(event) => setNotes(event.target.value)}
               maxLength={1000}

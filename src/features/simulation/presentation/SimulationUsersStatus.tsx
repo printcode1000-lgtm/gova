@@ -19,7 +19,7 @@ export function SimulationUsersStatus() {
             تسعة حسابات ثابتة تُنشأ أو تُراجع في قاعدة بيانات البيئة الحالية.
           </p>
         </div>
-        <Button
+        <Button ui={{ uid: "super-admin.simulation.ensure-users-7q2o4Z", id: "super-admin.simulation.ensure-users", kind: "action", action: "ensure-simulation-users", part: "status" }}
           type="button"
           variant="outline"
           onClick={() => void state.ensure()}

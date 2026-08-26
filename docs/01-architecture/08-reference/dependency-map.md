@@ -331,6 +331,10 @@ ALLOWED_TO_IMPORT → `@asol/orders-core`
 
 `@asol/trending-ribbon-core` has no production `@asol/*` imports.
 
+### @asol/ui-registry-core
+
+`@asol/ui-registry-core` has no production `@asol/*` imports.
+
 ### @asol/vercel-deploy-core
 
 `@asol/vercel-deploy-core`
@@ -340,5 +344,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 42 |
+| Packages | 43 |
 | Import edges | 55 |

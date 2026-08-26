@@ -46,7 +46,7 @@ export function DevCloudBackupPage() {
             إنشاء وفحص ومقارنة وتحديث نسخ Turso وCloudflare R2 من بيئة التطوير فقط. كل العمليات تعمل على النسخ المحفوظة المنشأة من النظام.
           </p>
         </div>
-        <Button type="button" variant="outline" onClick={() => void page.load()} disabled={page.busy === "load"}>
+        <Button ui={{ uid: "dev-cloud-backup.refresh-u5w8xX", id: "dev-cloud-backup.refresh", kind: "action", action: "reload", part: "toolbar" }} type="button" variant="outline" onClick={() => void page.load()} disabled={page.busy === "load"}>
           <RefreshCw className="h-4 w-4" />
           تحديث
         </Button>

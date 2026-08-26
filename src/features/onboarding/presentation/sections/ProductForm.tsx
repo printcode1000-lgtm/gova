@@ -92,7 +92,7 @@ export function ProductForm({
           required
           error={errors.title}
         >
-          <FormInput
+          <FormInput ui={{ uid: "onboarding.product-form.title-6kY8Ue", id: "onboarding.product-form.title", kind: "field", part: "form" }}
             id="title"
             value={product.title}
             onChange={(event) => onChange({ title: event.target.value })}
@@ -107,7 +107,7 @@ export function ProductForm({
           required
           error={errors.category}
         >
-          <FormSelect
+          <FormSelect ui={{ uid: "onboarding.product-form.category-kstVM4", id: "onboarding.product-form.category", kind: "field", part: "form" }}
             value={product.category}
             onValueChange={(value) => onChange({ category: value })}
             options={categories.map((category) => ({
@@ -126,7 +126,7 @@ export function ProductForm({
         required
         error={errors.description}
       >
-        <FormTextarea
+        <FormTextarea ui={{ uid: "onboarding.product-form.description-cRPL2S", id: "onboarding.product-form.description", kind: "field", part: "form" }}
           id="description"
           value={product.description}
           onChange={(event) => onChange({ description: event.target.value })}
@@ -196,7 +196,7 @@ export function ProductForm({
         >
           <div className="relative">
             <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <FormInput
+            <FormInput ui={{ uid: "onboarding.product-form.base-price-4GFs92", id: "onboarding.product-form.base-price", kind: "field", part: "form" }}
               id="basePrice"
               type="number"
               value={product.basePrice || ""}
@@ -218,7 +218,7 @@ export function ProductForm({
         >
           <div className="relative">
             <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <FormInput
+            <FormInput ui={{ uid: "onboarding.product-form.discount-price-QiIE71", id: "onboarding.product-form.discount-price", kind: "field", part: "form" }}
               id="discountPrice"
               type="number"
               value={product.discountPrice || ""}
@@ -243,7 +243,7 @@ export function ProductForm({
             {t("onboarding.products.featuredDesc")}
           </p>
         </div>
-        <Switch
+        <Switch ui={{ uid: "onboarding.product-form.featured-7cmVoD", id: "onboarding.product-form.featured", kind: "field", action: "toggle-featured", part: "form" }}
           checked={product.isFeatured}
           onCheckedChange={(checked) => onChange({ isFeatured: checked })}
         />
@@ -259,7 +259,7 @@ export function ProductForm({
               {t("onboarding.products.variantsDesc")}
             </p>
           </div>
-          <Button variant="outline" size="sm" onClick={addVariant} className="gap-2">
+          <Button ui={{ uid: "onboarding.product-form.add-variant-z4UvRP", id: "onboarding.product-form.add-variant", kind: "action", action: "add-variant", part: "variants" }} variant="outline" size="sm" onClick={addVariant} className="gap-2">
             <Plus className="h-4 w-4" />
             {t("onboarding.products.addVariant")}
           </Button>
@@ -347,7 +347,7 @@ export function ProductForm({
       </div>
 
       <div className="flex justify-end gap-3 border-t pt-4">
-        <Button variant="outline" onClick={onCancel}>
+        <Button ui={{ uid: "onboarding.product-form.cancel-2EF4QD", id: "onboarding.product-form.cancel", kind: "action", action: "cancel", part: "form-footer" }} variant="outline" onClick={onCancel}>
           {t("onboarding.common.cancel")}
         </Button>
       </div>

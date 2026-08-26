@@ -86,7 +86,7 @@ export function ContactInfoSection() {
         <CardContent className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
             <FormField label={t('onboarding.contactInfo.phoneNumber')} htmlFor="phoneNumber" required error={errors.phoneNumber}>
-              <FormInput
+              <FormInput ui={{ uid: 'onboarding.contact-info.phone-number-41YRCS', id: 'onboarding.contact-info.phone-number', kind: 'field', part: 'form' }}
                 id="phoneNumber"
                 value={contactInfo.phoneNumber}
                 onChange={(e) => updateContactInfo({ phoneNumber: e.target.value })}
@@ -97,7 +97,7 @@ export function ContactInfoSection() {
             </FormField>
 
             <FormField label={t('onboarding.contactInfo.whatsappNumber')} htmlFor="whatsappNumber" hint={t('onboarding.common.optional')}>
-              <FormInput
+              <FormInput ui={{ uid: 'onboarding.contact-info.whatsapp-number-E5i4Y5', id: 'onboarding.contact-info.whatsapp-number', kind: 'field', part: 'form' }}
                 id="whatsappNumber"
                 value={contactInfo.whatsappNumber}
                 onChange={(e) => updateContactInfo({ whatsappNumber: e.target.value })}
@@ -109,7 +109,7 @@ export function ContactInfoSection() {
 
           <div className="grid gap-6 lg:grid-cols-2">
             <FormField label={t('onboarding.contactInfo.email')} htmlFor="email" required error={errors.email}>
-              <FormInput
+              <FormInput ui={{ uid: 'onboarding.contact-info.email-5BREY3', id: 'onboarding.contact-info.email', kind: 'field', part: 'form' }}
                 id="email"
                 value={contactInfo.email}
                 onChange={(e) => updateContactInfo({ email: e.target.value })}
@@ -120,7 +120,7 @@ export function ContactInfoSection() {
             </FormField>
 
             <FormField label={t('onboarding.contactInfo.website')} htmlFor="website" error={errors.website} hint={t('onboarding.common.optional')}>
-              <FormInput
+              <FormInput ui={{ uid: 'onboarding.contact-info.website-6FlYrn', id: 'onboarding.contact-info.website', kind: 'field', part: 'form' }}
                 id="website"
                 value={contactInfo.website}
                 onChange={(e) => updateContactInfo({ website: e.target.value })}

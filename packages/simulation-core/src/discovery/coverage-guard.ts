@@ -1,6 +1,7 @@
 import { USER_PAGE_REGISTRY } from "../registries/user-page-registry";
 import { INTERACTION_BASELINE } from "./interaction-baseline";
 import { discoverPageInteractionSources } from "./interaction-source-discovery";
+import { discoverSimulationInstrumentation } from "./simulation-instrumentation-discovery";
 import { discoverUserPages } from "./user-page-discovery";
 
 export interface SimulationCoverageReport {
@@ -13,7 +14,34 @@ function sameValues(left: readonly string[], right: readonly string[]): boolean 
   return left.length === right.length && left.every((value, index) => value === right[index]);
 }
 
+function assertRegisteredTargetsExist(root: string): void {
+  const instrumentedTargets = new Set(
+    discoverSimulationInstrumentation(root).map((target) => `${target.kind}:${target.id}`),
+  );
+  const missing = new Set<string>();
+  for (const page of USER_PAGE_REGISTRY) {
+    for (const interaction of page.interactions) {
+      for (const action of interaction.actions) {
+        if (action.type === "wait") continue;
+        const key = `${action.target.kind}:${action.target.id}`;
+        if (!instrumentedTargets.has(key)) missing.add(`${page.id}:${interaction.id}:${key}`);
+      }
+      if (interaction.unavailableWhen) {
+        const target = interaction.unavailableWhen.target;
+        const key = `${target.kind}:${target.id}`;
+        if (!instrumentedTargets.has(key)) missing.add(`${page.id}:${interaction.id}:${key}`);
+      }
+    }
+  }
+  if (missing.size > 0) {
+    throw new Error(
+      `simulationTargetRegistryDrift\nMissing UI instrumentation:\n${[...missing].sort().join("\n")}`,
+    );
+  }
+}
+
 export function assertSimulationCoverage(root = process.cwd()): SimulationCoverageReport {
+  assertRegisteredTargetsExist(root);
   const discovered = discoverUserPages(root);
   const actualRoutes = discovered.map((page) => page.route);
   const registeredRoutes = USER_PAGE_REGISTRY.map((page) => page.route).sort((a, b) => a.localeCompare(b));

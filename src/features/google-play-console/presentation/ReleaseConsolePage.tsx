@@ -36,7 +36,7 @@ export function ReleaseConsolePage() {
         <p className="mt-1 text-sm text-on-surface-variant">{t("releaseConsole.subtitle")}</p></header>
       <Tabs value={active} onValueChange={select}>
         <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1">
-          {tabs.map((tab) => <TabsTrigger key={tab.id} value={tab.id} className="gap-2">
+          {tabs.map((tab) => <TabsTrigger key={tab.id} ui={tab.ui} value={tab.id} className="gap-2">
             <tab.icon className="h-4 w-4" />{t(tab.labelKey)}</TabsTrigger>)}
         </TabsList>
         {tabs.map((tab) => <TabsContent key={tab.id} value={tab.id} className="mt-4">

@@ -10,6 +10,7 @@ export {
   PersistentSystemLogApiService,
   persistentSystemLogApiService,
 } from './application/services/persistent-system-log-api-service';
+export * from './application/system-log-copy-text';
 export * from './application/system-log-store';
 export * from './application/system-logs-core-bootstrap';
 /* END GENERATED FEATURE DOOR EXPORTS */

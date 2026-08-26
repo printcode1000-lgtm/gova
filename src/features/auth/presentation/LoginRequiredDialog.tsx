@@ -58,10 +58,10 @@ export function LoginRequiredDialog({
         </div>
 
         <DialogFooter className="gap-2 px-6 pb-6 pt-2 sm:flex-col sm:space-x-0">
-          <Button asChild size="lg" className="w-full rounded-xl">
+          <Button ui={{ uid: "auth.login-required.sign-in-U4FYdd", id: "auth.login-required.sign-in", kind: "action", action: "navigate-sign-in", part: "dialog-footer" }} asChild size="lg" className="w-full rounded-xl">
             <Link href={signInHref}>{signInLabel}</Link>
           </Button>
-          <Button
+          <Button ui={{ uid: "auth.login-required.cancel-AMw7D2", id: "auth.login-required.cancel", kind: "action", action: "cancel", part: "dialog-footer" }}
             type="button"
             size="lg"
             variant="ghost"

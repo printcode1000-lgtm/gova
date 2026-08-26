@@ -29,7 +29,7 @@ export function AndroidReleasePathActions({
 
   return (
     <div className="mt-2 flex flex-wrap items-center gap-2">
-      <Button
+      <Button ui={{ uid: "release-console.android-paths.open-outputs-PXYR0B", id: "release-console.android-paths.open-outputs", kind: "action", action: "open-outputs", part: "actions" }}
         disabled={busy}
         variant="outline"
         onClick={() => void start({ commandId: "android-open-outputs" })}
@@ -44,7 +44,7 @@ export function AndroidReleasePathActions({
       {openOutputsRunning && openOutputsJob ? (
         <StopButton cancel={cancel} job={openOutputsJob} t={t} />
       ) : null}
-      <Button
+      <Button ui={{ uid: "release-console.android-paths.preview-I4nRLG", id: "release-console.android-paths.preview", kind: "action", action: "open-preview", part: "actions" }}
         disabled={previewState === "checking"}
         variant="outline"
         onClick={() => void openPreview()}

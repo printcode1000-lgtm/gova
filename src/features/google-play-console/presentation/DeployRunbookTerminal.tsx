@@ -59,11 +59,11 @@ export function TerminalOutput(props: { text: string }) {
 export function TerminalActions(props: { onCopy: () => void; onClear: () => void }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Button variant="outline" size="sm" className="shrink-0" onClick={props.onCopy}>
+      <Button ui={{ uid: "deploy-runbook.terminal.copy-IkfF09", id: "deploy-runbook.terminal.copy", kind: "action", action: "copy-output", part: "terminal" }} variant="outline" size="sm" className="shrink-0" onClick={props.onCopy}>
         <Clipboard className="h-4 w-4" />
         نسخ
       </Button>
-      <Button variant="outline" size="sm" className="shrink-0" onClick={props.onClear}>
+      <Button ui={{ uid: "deploy-runbook.terminal.clear-8A2xQ5", id: "deploy-runbook.terminal.clear", kind: "action", action: "clear-output", part: "terminal" }} variant="outline" size="sm" className="shrink-0" onClick={props.onClear}>
         <Eraser className="h-4 w-4" />
         مسح العرض
       </Button>

@@ -14,7 +14,7 @@ const INTERACTION_PATTERN = /\b(onClick|onSubmit|onChange|onPointerDown|onKeyDow
  * addressing metadata, never a behavioural change of the page itself.
  */
 const SIMULATION_INSTRUMENTATION_PATTERN =
-  /\s(?:data-simulation-(?:target|field|list-item|file)|simulation(?:TargetId|ListItemId|FileId|Index))=(?:"[^"]*"|'[^']*'|\{(?:[^{}]|\{[^{}]*\})*\})/g;
+  /\s(?:data-simulation-(?:target|field|list-item|file)|simulation(?:TargetId|ListItemId|FileId|Index))=(?:"[^"]*"|'[^']*'|\{(?:[^{}]|\{[^{}]*\})*\})|\bsimulation\s*:\s*\{\s*kind\s*:\s*["'](?:event|field|list-item|file|state)["']\s*,\s*id\s*:\s*["'][^"']*["']\s*\}/g;
 
 function resolveSourceFile(root: string, importer: string, specifier: string): string | null {
   let candidate: string;

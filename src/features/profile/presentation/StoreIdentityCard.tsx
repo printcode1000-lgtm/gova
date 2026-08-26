@@ -281,7 +281,7 @@ export const StoreIdentityCard = React.forwardRef<
         <Label htmlFor="storeName">
           {t("onboarding.storeIdentity.storeName")}
         </Label>
-        <Input
+        <Input ui={{ uid: "profile.store-identity.store-name-RsAC2H", id: "profile.store-identity.store-name", kind: "field", part: "form" }}
           id="storeName"
           value={details.storeName}
           onChange={(event) => updateField("storeName", event.target.value)}
@@ -295,7 +295,7 @@ export const StoreIdentityCard = React.forwardRef<
         <Label htmlFor="storeDescription">
           {t("onboarding.storeIdentity.storeDescription")}
         </Label>
-        <Textarea
+        <Textarea ui={{ uid: "profile.store-identity.store-description-lOL6Hr", id: "profile.store-identity.store-description", kind: "field", part: "form" }}
           id="storeDescription"
           data-simulation-field="profile-store-description"
           value={details.storeDescription}
@@ -316,7 +316,7 @@ export const StoreIdentityCard = React.forwardRef<
         <Label htmlFor="storeStory">
           {t("onboarding.storeIdentity.storeStory")}
         </Label>
-        <Textarea
+        <Textarea ui={{ uid: "profile.store-identity.store-story-whJZ1n", id: "profile.store-identity.store-story", kind: "field", part: "form" }}
           id="storeStory"
           value={details.storeStory}
           onChange={(event) => updateField("storeStory", event.target.value)}

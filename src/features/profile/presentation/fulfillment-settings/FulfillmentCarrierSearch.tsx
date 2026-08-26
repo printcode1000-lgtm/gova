@@ -52,7 +52,7 @@ export function FulfillmentCarrierSearch({
         >
           <div className="relative min-w-0 flex-1">
             <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
+            <Input ui={{ uid: "profile.fulfillment.carrier-search-P0D9JA", id: "profile.fulfillment.carrier-search", kind: "field", part: "carriers" }}
               id="deliveryProviderSearch"
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}

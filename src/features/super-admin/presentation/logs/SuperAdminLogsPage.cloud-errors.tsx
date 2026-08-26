@@ -123,7 +123,7 @@ export function CloudErrorsContainer({
           <span className="rounded-full bg-destructive/10 px-3 py-1 text-xs font-bold text-destructive">
             {filtered.length} / {cloudErrors.length}
           </span>
-          <Button
+          <Button ui={{ uid: "super-admin.cloud-errors.refresh-P5wMi1", id: "super-admin.cloud-errors.refresh", kind: "action", action: "refresh-cloud-errors", part: "toolbar" }}
             type="button"
             size="icon"
             variant="outline"
@@ -139,7 +139,7 @@ export function CloudErrorsContainer({
               )}
             />
           </Button>
-          <Button
+          <Button ui={{ uid: "super-admin.cloud-errors.copy-all-cZlrH3", id: "super-admin.cloud-errors.copy-all", kind: "action", action: "copy-all-errors", part: "toolbar" }}
             type="button"
             size="sm"
             variant="outline"

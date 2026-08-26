@@ -63,10 +63,10 @@ function CompletionScreen({
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button variant="outline" size="lg" onClick={onEdit}>
+        <Button ui={{ uid: 'onboarding.completion.edit-setup-N0TT38', id: 'onboarding.completion.edit-setup', kind: 'action', action: 'edit-setup', part: 'completion' }} variant="outline" size="lg" onClick={onEdit}>
           {t('onboarding.completion.editSetup')}
         </Button>
-        <Button variant="outline" size="lg" onClick={reset}>
+        <Button ui={{ uid: 'onboarding.completion.start-over-d3T20G', id: 'onboarding.completion.start-over', kind: 'action', action: 'reset-onboarding', part: 'completion' }} variant="outline" size="lg" onClick={reset}>
           {t('onboarding.completion.startOver')}
         </Button>
       </div>
@@ -169,7 +169,7 @@ export function OnboardingPage() {
               <OnboardingSidebar onStepNavigate={handleStepNavigate} />
 
               {isComplete && showCompletion && (
-                <Button
+                <Button ui={{ uid: 'onboarding.page.show-completion-zSW5qt', id: 'onboarding.page.show-completion', kind: 'action', action: 'show-completion', part: 'footer' }}
                   variant="secondary"
                   className="w-full"
                   onClick={() => setShowCompletion(true)}

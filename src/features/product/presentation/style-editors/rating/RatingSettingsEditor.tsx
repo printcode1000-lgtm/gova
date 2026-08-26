@@ -42,7 +42,7 @@ export function RatingSettingsEditor({
       <h3 className="text-sm font-bold">{labels.title}</h3>
 
       <div className="flex items-center gap-2">
-        <Checkbox
+        <Checkbox ui={{ uid: "product.style.rating-enabled-xw1yNf", id: "product.style.rating-enabled", kind: "field", part: "rating" }}
           id="rating-settings-enabled"
           checked={enabled}
           onCheckedChange={(checked) =>
@@ -62,7 +62,7 @@ export function RatingSettingsEditor({
           onValueChange={(value: RatingMode) => onChange({ enabled, mode: value })}
           disabled={disabled || !enabled}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger ui={{ uid: "product.style.rating-mode-23KL7U", id: "product.style.rating-mode", kind: "field", part: "rating" }} className="w-full">
             <SelectValue placeholder={labels.placeholder} />
           </SelectTrigger>
           <SelectContent>

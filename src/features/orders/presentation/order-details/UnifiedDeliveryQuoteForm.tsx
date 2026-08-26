@@ -40,7 +40,7 @@ export function UnifiedDeliveryQuoteForm({
     <div className="grid gap-3 border-t border-primary/15 p-4 sm:grid-cols-2 lg:grid-cols-[160px_160px_1fr_auto] lg:items-end">
       <label className="space-y-1 text-xs font-semibold">
         قيمة التوصيل
-        <Input
+        <Input ui={{ uid: "orders.delivery-quote.base-amount-5b8ZwD", id: "orders.delivery-quote.base-amount", kind: "field", part: "quote" }}
           type="number"
           min={0}
           step="0.01"
@@ -53,7 +53,7 @@ export function UnifiedDeliveryQuoteForm({
       {candidateRequiresSpecialVehicle ? (
         <label className="space-y-1 text-xs font-semibold">
           سيارة النقل مرة واحدة
-          <Input
+          <Input ui={{ uid: "orders.delivery-quote.vehicle-amount-ZPo0HL", id: "orders.delivery-quote.vehicle-amount", kind: "field", part: "quote" }}
             type="number"
             min={0}
             step="0.01"
@@ -66,7 +66,7 @@ export function UnifiedDeliveryQuoteForm({
       ) : null}
       <label className="space-y-1 text-xs font-semibold">
         تفاصيل المسار والمدة
-        <Textarea
+        <Textarea ui={{ uid: "orders.delivery-quote.notes-ZELQ2o", id: "orders.delivery-quote.notes", kind: "field", part: "quote" }}
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
           maxLength={1000}

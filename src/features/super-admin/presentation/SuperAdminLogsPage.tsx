@@ -281,7 +281,7 @@ export function SuperAdminLogsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-xl border bg-card p-2">
-          <Button
+          <Button ui={{ uid: "super-admin.logs.toggle-capture-us09GH", id: "super-admin.logs.toggle-capture", kind: "action", action: "toggle-capture", part: "toolbar" }}
             type="button"
             size="icon"
             variant={captureEnabled ? "secondary" : "outline"}
@@ -294,7 +294,7 @@ export function SuperAdminLogsPage() {
               <Play className="h-4 w-4" />
             )}
           </Button>
-          <Button
+          <Button ui={{ uid: "super-admin.logs.clear-all-nzqW6R", id: "super-admin.logs.clear-all", kind: "action", action: "stage-clear-all-logs", part: "toolbar" }}
             type="button"
             size="icon"
             variant="outline"
@@ -404,7 +404,7 @@ export function SuperAdminLogsPage() {
             {section.title}
           </h2>
           <div className="flex gap-2">
-            <Button
+            <Button ui={{ uid: "super-admin.logs.copy-section-0J9YPC", id: "super-admin.logs.copy-section", kind: "action", action: "copy-section", part: "section-toolbar" }}
               type="button"
               size="icon"
               variant="outline"
@@ -414,7 +414,7 @@ export function SuperAdminLogsPage() {
             >
               <ClipboardCopy className="h-4 w-4" />
             </Button>
-            <Button
+            <Button ui={{ uid: "super-admin.logs.clear-section-otioP7", id: "super-admin.logs.clear-section", kind: "action", action: "stage-clear-section", part: "section-toolbar" }}
               type="button"
               size="icon"
               variant="outline"

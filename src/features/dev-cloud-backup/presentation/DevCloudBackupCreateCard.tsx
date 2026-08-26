@@ -27,7 +27,7 @@ export function DevCloudBackupCreateCard({
         <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800">
           تحفظ النسخة كل قواعد Turso المتاحة في البيئة وكل كائنات R2 في الحسابين، بلا أي استثناء.
         </div>
-        <Button type="button" onClick={onCreate} disabled={!devAllowed || busy === "create"}>
+        <Button ui={{ uid: "dev-cloud-backup.create-s71BQD", id: "dev-cloud-backup.create", kind: "action", action: "create-backup", part: "create" }} type="button" onClick={onCreate} disabled={!devAllowed || busy === "create"}>
           <FileArchive className="h-4 w-4" />
           {busy === "create" ? "جاري إنشاء النسخة" : "إنشاء zip كامل"}
         </Button>

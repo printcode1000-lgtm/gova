@@ -323,6 +323,9 @@
       "@asol/trending-ribbon-core/server": [
         "./packages/trending-ribbon-core/src/server.ts"
       ],
+      "@asol/ui-registry-core": [
+        "./packages/ui-registry-core/src/index.ts"
+      ],
       "@asol/vercel-deploy-core": [
         "./packages/vercel-deploy-core/src/index.ts"
       ],

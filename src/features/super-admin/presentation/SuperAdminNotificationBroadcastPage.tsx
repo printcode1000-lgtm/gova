@@ -192,7 +192,7 @@ export function SuperAdminNotificationBroadcastPage() {
         <div className="grid gap-4">
           <div className="space-y-2">
             <Label htmlFor="broadcast-title">العنوان</Label>
-            <Input
+            <Input ui={{ uid: "super-admin.broadcast.title-4YC9TA", id: "super-admin.broadcast.title", kind: "field", part: "form" }}
               id="broadcast-title"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
@@ -201,7 +201,7 @@ export function SuperAdminNotificationBroadcastPage() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="broadcast-body">الرسالة</Label>
-            <Textarea
+            <Textarea ui={{ uid: "super-admin.broadcast.body-4SVqRL", id: "super-admin.broadcast.body", kind: "field", part: "form" }}
               id="broadcast-body"
               value={body}
               onChange={(event) => setBody(event.target.value)}
@@ -210,7 +210,7 @@ export function SuperAdminNotificationBroadcastPage() {
             />
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button
+            <Button ui={{ uid: "super-admin.broadcast.reload-recipients-9K63L4", id: "super-admin.broadcast.reload-recipients", kind: "action", action: "load-recipients", part: "actions" }}
               type="button"
               variant="outline"
               onClick={() => void load()}
@@ -219,7 +219,7 @@ export function SuperAdminNotificationBroadcastPage() {
               <RefreshCw className="me-2 h-4 w-4" />
               تحديث المستلمين
             </Button>
-            <Button
+            <Button ui={{ uid: "super-admin.broadcast.send-xTjVS2", id: "super-admin.broadcast.send", kind: "action", action: "send-broadcast", part: "actions" }}
               type="button"
               onClick={() => void send(false)}
               disabled={
@@ -235,7 +235,7 @@ export function SuperAdminNotificationBroadcastPage() {
                 ? `تأكيد الإرسال إلى ${selected.size} مستخدم`
                 : "إرسال للمحدد"}
             </Button>
-            <Button
+            <Button ui={{ uid: "super-admin.broadcast.send-test-33fBmH", id: "super-admin.broadcast.send-test", kind: "action", action: "send-test-broadcast", part: "actions" }}
               type="button"
               variant="secondary"
               onClick={() => void send(true)}
@@ -321,7 +321,7 @@ export function SuperAdminNotificationBroadcastPage() {
       <section className="rounded-xl border bg-card">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
           <h2 className="font-semibold">المستلمون</h2>
-          <Button
+          <Button ui={{ uid: "super-admin.broadcast.toggle-all-recipients-kz2RGW", id: "super-admin.broadcast.toggle-all-recipients", kind: "action", action: "toggle-all-recipients", part: "recipients" }}
             type="button"
             size="sm"
             variant="outline"

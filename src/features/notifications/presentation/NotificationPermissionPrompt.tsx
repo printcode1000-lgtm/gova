@@ -108,7 +108,7 @@ export function NotificationPermissionPrompt({
         </div>
 
         <DialogFooter className="gap-2 px-6 pb-6 pt-2 sm:flex-col sm:space-x-0">
-          <Button
+          <Button ui={{ uid: "notifications.permission-prompt.enable-UNg4lD", id: "notifications.permission-prompt.enable", kind: "action", action: "enable-notifications", part: "prompt" }}
             type="button"
             size="lg"
             disabled={busy}
@@ -132,7 +132,7 @@ export function NotificationPermissionPrompt({
                   : "notifications.permissionPrompt.enable",
             )}
           </Button>
-          <Button
+          <Button ui={{ uid: "notifications.permission-prompt.later-eMpgQ6", id: "notifications.permission-prompt.later", kind: "action", action: "dismiss-prompt", part: "prompt" }}
             type="button"
             size="lg"
             variant="ghost"

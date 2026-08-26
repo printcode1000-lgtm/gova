@@ -15,6 +15,19 @@
       }
     },
     {
+      "name": "UiRegistry - تطبيق الطلبات المعلّقة",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "ui-registry:apply-pending"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Tools",
+        "order": 2
+      }
+    },
+    {
       "name": "Secrets Key Init - تهيئة مفتاح النسخ المشفر",
       "request": "launch",
       "type": "node",

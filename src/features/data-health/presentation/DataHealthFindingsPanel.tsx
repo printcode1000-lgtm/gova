@@ -198,7 +198,7 @@ export function DataHealthFindingsPanel(props: {
             صفحة {props.page} من {props.pageCount}
           </span>
           <div className="flex gap-1">
-            <Button
+            <Button ui={{ uid: "data-health.findings.previous-page-HvCYL4", id: "data-health.findings.previous-page", kind: "action", action: "previous-page", part: "pagination" }}
               size="icon"
               variant="outline"
               aria-label="الصفحة السابقة"
@@ -207,7 +207,7 @@ export function DataHealthFindingsPanel(props: {
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
-            <Button
+            <Button ui={{ uid: "data-health.findings.next-page-XI5b99", id: "data-health.findings.next-page", kind: "action", action: "next-page", part: "pagination" }}
               size="icon"
               variant="outline"
               aria-label="الصفحة التالية"
@@ -230,7 +230,7 @@ export function DataHealthFindingsPanel(props: {
             لا توجد عناصر محددة تلقائيًا. ستظهر معاينة جديدة وتُعاد مطابقة كل بصمة قبل التنفيذ.
           </p>
         </div>
-        <Button
+        <Button ui={{ uid: "data-health.findings.create-plan-1wbnPY", id: "data-health.findings.create-plan", kind: "action", action: "create-cleanup-plan", part: "footer" }}
           type="button"
           variant="destructive"
           disabled={props.planning || props.selectedCount === 0}
@@ -251,7 +251,7 @@ export function DataHealthFindingsPanel(props: {
             يشمل الطلبات العادية والمخصصة والمختلطة وكل السجلات التابعة وصور الطلبات المخصصة. يتم حذف الصور والبيانات فعليًا بدون أرشفة أو جدولة حذف.
           </p>
         </div>
-        <Button
+        <Button ui={{ uid: "data-health.findings.create-order-purge-plan-9OqtkM", id: "data-health.findings.create-order-purge-plan", kind: "action", action: "create-order-purge-plan", part: "footer" }}
           type="button"
           variant="destructive"
           disabled={props.orderPurgeBusy}

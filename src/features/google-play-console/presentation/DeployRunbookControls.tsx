@@ -68,7 +68,7 @@ export function RunbookPanel(props: {
         }
       >
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <Button
+          <Button ui={{ uid: "deploy-runbook.controls.select-all-v4wrX5", id: "deploy-runbook.controls.select-all", kind: "action", action: "select-all", part: "selection" }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set(allIds))}
@@ -76,7 +76,7 @@ export function RunbookPanel(props: {
             <CheckSquare className="h-4 w-4 shrink-0" />
             تفعيل الكل
           </Button>
-          <Button
+          <Button ui={{ uid: "deploy-runbook.controls.select-none-q9bRsA", id: "deploy-runbook.controls.select-none", kind: "action", action: "select-none", part: "selection" }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set())}
@@ -84,14 +84,14 @@ export function RunbookPanel(props: {
             <Square className="h-4 w-4 shrink-0" />
             تجاوز الكل
           </Button>
-          <Button
+          <Button ui={{ uid: "deploy-runbook.controls.select-safe-mSNY7v", id: "deploy-runbook.controls.select-safe", kind: "action", action: "select-safe", part: "selection" }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set(safeIds))}
           >
             الفروع الآمنة فقط
           </Button>
-          <Button
+          <Button ui={{ uid: "deploy-runbook.controls.select-dangerous-9fJZtW", id: "deploy-runbook.controls.select-dangerous", kind: "action", action: "select-dangerous", part: "selection" }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set(dangerousIds))}

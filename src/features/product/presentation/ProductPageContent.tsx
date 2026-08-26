@@ -138,7 +138,7 @@ export function ProductPageContent({
           imageUrl: details.images.find((image) => image.url)?.url,
         }}
         trigger={
-          <Button data-simulation-target="product-share" type="button" variant="outline" className="gap-2">
+          <Button ui={{ uid: "product.share-m9IepD", id: "product.share", kind: "action", action: "share-product", part: "actions", simulation: { kind: "event", id: "product-share" } }} type="button" variant="outline" className="gap-2">
             <Share2 className="h-4 w-4" />
             {locale === "ar" ? "مشاركة المنتج" : "Share product"}
           </Button>
@@ -147,7 +147,7 @@ export function ProductPageContent({
     ) : null;
   const profileAction =
     mode === "view" && product?.uid ? (
-      <Button asChild variant="outline" className="gap-2">
+      <Button ui={{ uid: "product.owner-profile-ruTId9", id: "product.owner-profile", kind: "action", action: "open-owner-profile", part: "actions" }} asChild variant="outline" className="gap-2">
         <Link
           data-simulation-target="product-owner-profile"
           href={`/profile?mode=preview&uid=${encodeURIComponent(product.uid)}`}
@@ -218,8 +218,7 @@ export function ProductPageContent({
     }
   };
   const contactAction = mode === "view" && product?.uid ? (
-    <Button
-      data-simulation-target="product-contact"
+    <Button ui={{ uid: "product.contact-owner-4l2mEW", id: "product.contact-owner", kind: "action", action: "contact-owner", part: "actions", simulation: { kind: "event", id: "product-contact" } }}
       type="button"
       variant="outline"
       className="gap-2"

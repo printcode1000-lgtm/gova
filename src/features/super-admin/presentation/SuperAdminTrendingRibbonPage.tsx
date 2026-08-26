@@ -283,7 +283,7 @@ export function SuperAdminTrendingRibbonPage() {
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-52 space-y-2">
             <Label htmlFor="check-interval">الفترة بالدقائق</Label>
-            <Input
+            <Input ui={{ uid: "super-admin.trending-ribbon.check-interval-P84Ols", id: "super-admin.trending-ribbon.check-interval", kind: "field", part: "settings" }}
               id="check-interval"
               type="number"
               min={5}
@@ -305,7 +305,7 @@ export function SuperAdminTrendingRibbonPage() {
               {interval} دقيقة
             </Button>
           ))}
-          <Button
+          <Button ui={{ uid: "super-admin.trending-ribbon.reload-settings-34fAPK", id: "super-admin.trending-ribbon.reload-settings", kind: "action", action: "reload", part: "settings" }}
             type="button"
             variant="outline"
             onClick={() => void load()}
@@ -333,7 +333,7 @@ export function SuperAdminTrendingRibbonPage() {
           <Label htmlFor="badge-label-input" className="font-semibold text-base block">
             شارة العنوان (Badge Label)
           </Label>
-          <Input
+          <Input ui={{ uid: "super-admin.trending-ribbon.badge-label-BTA6QI", id: "super-admin.trending-ribbon.badge-label", kind: "field", part: "badge" }}
             id="badge-label-input"
             placeholder="مثال: home.trending.label أو الأكثر طلباً"
             value={badgeLabel}
@@ -354,7 +354,7 @@ export function SuperAdminTrendingRibbonPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1">
             <Label htmlFor="new-item-label">النص المعروض</Label>
-            <Input
+            <Input ui={{ uid: "super-admin.trending-ribbon.new-item-label-J00CtF", id: "super-admin.trending-ribbon.new-item-label", kind: "field", part: "new-item" }}
               id="new-item-label"
               placeholder="مثال: خصم 20% على العطور"
               value={newItemLabel}
@@ -363,7 +363,7 @@ export function SuperAdminTrendingRibbonPage() {
           </div>
           <div className="space-y-1">
             <Label htmlFor="new-item-action">الإجراء / الرابط</Label>
-            <Input
+            <Input ui={{ uid: "super-admin.trending-ribbon.new-item-action-7aGP0n", id: "super-admin.trending-ribbon.new-item-action", kind: "field", part: "new-item" }}
               id="new-item-action"
               placeholder="مثال: /profile أو معرف المنتج"
               value={newItemAction}
@@ -375,7 +375,7 @@ export function SuperAdminTrendingRibbonPage() {
           </div>
         </div>
         <div className="mt-3 flex justify-end">
-          <Button
+          <Button ui={{ uid: "super-admin.trending-ribbon.add-item-8mOipK", id: "super-admin.trending-ribbon.add-item", kind: "action", action: "add-item", part: "new-item" }}
             type="button"
             onClick={addItem}
             disabled={!newItemLabel.trim() || !newItemAction.trim()}
@@ -391,7 +391,7 @@ export function SuperAdminTrendingRibbonPage() {
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-semibold">النصوص المضافة ({items.length})</h2>
           <div className="flex gap-2">
-            <Button
+            <Button ui={{ uid: "super-admin.trending-ribbon.reload-items-iT9oDK", id: "super-admin.trending-ribbon.reload-items", kind: "action", action: "reload-items", part: "items" }}
               type="button"
               variant="outline"
               size="sm"

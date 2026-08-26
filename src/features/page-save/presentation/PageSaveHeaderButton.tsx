@@ -4,6 +4,7 @@ import { Check, Save } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 import {
   acknowledgePageSaveResult,
   getPageSaveSnapshot,
@@ -17,11 +18,19 @@ import { PageSaveDialog } from "./PageSaveDialog";
 
 const SUCCESS_FLASH_MS = 1800;
 
-function simulationTargetForPageSave(registrationId: string | null): string | undefined {
-  if (registrationId === "profile-edit") return "profile-save";
-  if (registrationId === "pharmacy-catalog-manager") return "pharmacy-save";
-  if (registrationId === "custom-request") return "custom-request-submit";
-  return undefined;
+const PAGE_SAVE_SIMULATION_BY_REGISTRATION = {
+  "profile-edit": { simulation: { kind: "event", id: "profile-save" } },
+  "pharmacy-catalog-manager": { simulation: { kind: "event", id: "pharmacy-save" } },
+  "custom-request": { simulation: { kind: "event", id: "custom-request-submit" } },
+} as const satisfies Record<string, Pick<UiDescriptor, "simulation">>;
+
+function simulationForPageSave(registrationId: string | null): UiDescriptor["simulation"] | undefined {
+  if (!registrationId || !Object.hasOwn(PAGE_SAVE_SIMULATION_BY_REGISTRATION, registrationId)) {
+    return undefined;
+  }
+  return PAGE_SAVE_SIMULATION_BY_REGISTRATION[
+    registrationId as keyof typeof PAGE_SAVE_SIMULATION_BY_REGISTRATION
+  ].simulation;
 }
 
 export function PageSaveHeaderButton() {
@@ -79,6 +88,7 @@ export function PageSaveHeaderButton() {
   }, [successFlash]);
 
   const isSaving = snapshot.isSaving || snapshot.phase === "saving";
+  const simulation = simulationForPageSave(snapshot.registrationId);
   const visible =
     snapshot.isDirty ||
     snapshot.hasPersistedPending ||
@@ -96,7 +106,14 @@ export function PageSaveHeaderButton() {
   return (
     <>
       <button
-        data-simulation-target={simulationTargetForPageSave(snapshot.registrationId)}
+        {...uiAttributes({
+          uid: "app.header.page-save-pN948A",
+          id: "app.header.page-save",
+          kind: "action",
+          action: "open-page-save",
+          part: "save",
+          simulation,
+        })}
         type="button"
         id="header-page-save-button"
         onClick={handleOpen}

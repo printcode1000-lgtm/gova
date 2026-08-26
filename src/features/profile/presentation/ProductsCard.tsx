@@ -291,14 +291,14 @@ export const ProductsCard = React.forwardRef<
               <label className="text-xs font-semibold text-on-surface">
                 {locale === 'ar' ? 'عنوان شريط الأكثر رواجًا' : 'Trending title'}
               </label>
-              <Input
+              <Input ui={{ uid: "profile.products.trending-label-SPQER4", id: "profile.products.trending-label", kind: "field", part: "showcase" }}
                 value={showcase.trending.label}
                 maxLength={80}
                 onChange={(event) => updateTrendingLabel(event.target.value)}
               />
             </div>
             <div className="flex gap-2">
-              <Input
+              <Input ui={{ uid: "profile.products.new-trending-text-9Ds1MH", id: "profile.products.new-trending-text", kind: "field", part: "showcase" }}
                 value={newTrendingText}
                 onChange={(event) => setNewTrendingText(event.target.value)}
                 onKeyDown={(event) => {

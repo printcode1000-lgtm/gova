@@ -317,7 +317,7 @@ export function DeveloperCategorySelector() {
                 value={mainCategoryId}
                 onValueChange={handleMainCategoryChange}
               >
-                <SelectTrigger>
+                <SelectTrigger ui={{ uid: "dev.category-selector.main-category-rTR36M", id: "dev.category-selector.main-category", kind: "field", part: "form" }}>
                   <SelectValue placeholder="اختر تصنيفًا رئيسيًا" />
                 </SelectTrigger>
                 <SelectContent>
@@ -340,7 +340,7 @@ export function DeveloperCategorySelector() {
                 onValueChange={handleSubcategoryChange}
                 disabled={!mainCategoryId || subcategoryOptions.length === 0}
               >
-                <SelectTrigger>
+                <SelectTrigger ui={{ uid: "dev.category-selector.subcategory-2yXIiQ", id: "dev.category-selector.subcategory", kind: "field", part: "form" }}>
                   <SelectValue
                     placeholder={
                       mainCategoryId && subcategoryOptions.length === 0

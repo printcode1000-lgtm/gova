@@ -99,7 +99,7 @@ export const HeroSliderEditor = React.forwardRef<
         </div>
         <div className="flex gap-2">
           {onCancel && (
-            <Button
+            <Button ui={{ uid: "hero-slider-editor.cancel-nE07Ui", id: "hero-slider-editor.cancel", kind: "action", action: "cancel", part: "toolbar" }}
               type="button"
               variant="outline"
               size="sm"
@@ -133,7 +133,7 @@ export const HeroSliderEditor = React.forwardRef<
           <Label htmlFor="hero-template-transition-duration">
             مدة الانتقال الافتراضية (مللي ثانية)
           </Label>
-          <Input
+          <Input ui={{ uid: "hero-slider-editor.template-transition-duration-Ts8XHR", id: "hero-slider-editor.template-transition-duration", kind: "field", part: "template" }}
             id="hero-template-transition-duration"
             type="number"
             min={0}
@@ -146,7 +146,7 @@ export const HeroSliderEditor = React.forwardRef<
           />
         </div>
         <div className="flex items-end sm:col-span-2">
-          <Button
+          <Button ui={{ uid: "hero-slider-editor.apply-template-5UUeWM", id: "hero-slider-editor.apply-template", kind: "action", action: "apply-transition-template", part: "template" }}
             type="button"
             variant="secondary"
             size="sm"
@@ -166,7 +166,7 @@ export const HeroSliderEditor = React.forwardRef<
           </Button>
         </div>
         <div className="flex items-end gap-3 pb-2">
-          <Switch
+          <Switch ui={{ uid: "hero-slider-editor.autoplay-NEsc6o", id: "hero-slider-editor.autoplay", kind: "field", action: "toggle-autoplay", part: "template" }}
             id="hero-autoplay"
             checked={value.autoPlay}
             onCheckedChange={(autoPlay) => onChange({ ...value, autoPlay })}
@@ -174,7 +174,7 @@ export const HeroSliderEditor = React.forwardRef<
           <Label htmlFor="hero-autoplay">تشغيل تلقائي</Label>
         </div>
         <div className="flex items-end gap-3 pb-2">
-          <Switch
+          <Switch ui={{ uid: "hero-slider-editor.loop-c9EBLn", id: "hero-slider-editor.loop", kind: "field", action: "toggle-loop", part: "template" }}
             id="hero-loop"
             checked={value.loop}
             onCheckedChange={(loop) => onChange({ ...value, loop })}
@@ -364,7 +364,7 @@ export const HeroSliderEditor = React.forwardRef<
             </div>
           </fieldset>
         ))}
-        <Button
+        <Button ui={{ uid: "hero-slider-editor.add-slide-Gt7bcE", id: "hero-slider-editor.add-slide", kind: "action", action: "add-slide", part: "slides" }}
           type="button"
           variant="outline"
           className="w-full"

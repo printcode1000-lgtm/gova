@@ -28,7 +28,7 @@ export function DataHealthHistoryPanel({
             <History className="h-4 w-4" />
             سجل الفحوصات
           </div>
-          <Button
+          <Button ui={{ uid: "data-health.history.clear-runs-54IYBD", id: "data-health.history.clear-runs", kind: "action", action: "clear-run-history", part: "history" }}
             type="button"
             size="sm"
             variant="outline"
@@ -64,7 +64,7 @@ export function DataHealthHistoryPanel({
             <ShieldCheck className="h-4 w-4" />
             تدقيق التنظيف
           </div>
-          <Button
+          <Button ui={{ uid: "data-health.history.clear-audit-V4POBR", id: "data-health.history.clear-audit", kind: "action", action: "clear-cleanup-audit", part: "history" }}
             type="button"
             size="sm"
             variant="outline"
@@ -105,7 +105,7 @@ export function DataHealthHistoryPanel({
             <ShieldCheck className="h-4 w-4" />
             الحجر الصحي
           </div>
-          <Button
+          <Button ui={{ uid: "data-health.history.clear-quarantine-IWlW3x", id: "data-health.history.clear-quarantine", kind: "action", action: "clear-quarantine", part: "history" }}
             type="button"
             size="sm"
             variant="outline"

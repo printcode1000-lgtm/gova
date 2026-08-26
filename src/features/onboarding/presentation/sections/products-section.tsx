@@ -109,7 +109,7 @@ export function ProductsSection() {
               <p className="text-sm text-muted-foreground mb-4 max-w-sm">
                 {t('onboarding.products.emptyDesc')}
               </p>
-              <Button onClick={handleCreateProduct} className="gap-2">
+              <Button ui={{ uid: 'onboarding.products.add-first-q56BSN', id: 'onboarding.products.add-first', kind: 'action', action: 'create-product', part: 'empty-state' }} onClick={handleCreateProduct} className="gap-2">
                 <Plus className="h-4 w-4" />
                 {t('onboarding.products.addFirst')}
               </Button>
@@ -140,7 +140,7 @@ export function ProductsSection() {
                 </div>
               ))}
 
-              <Button variant="outline" onClick={handleCreateProduct} className="w-full gap-2">
+              <Button ui={{ uid: 'onboarding.products.add-another-Y6W1yC', id: 'onboarding.products.add-another', kind: 'action', action: 'create-product', part: 'list-footer' }} variant="outline" onClick={handleCreateProduct} className="w-full gap-2">
                 <Plus className="h-4 w-4" />
                 {t('onboarding.products.addAnother')}
               </Button>

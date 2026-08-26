@@ -133,7 +133,7 @@ export function DiscountEditor({
 
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         <Field label={ar ? "عنوان العرض" : "Title"} description={ar ? "اسم واضح وقصير يراه العميل." : "A clear, short name customers will see."}>
-          <Input
+          <Input ui={{ uid: "seller-discounts.title-AC5Jyj", id: "seller-discounts.title", kind: "field", part: "form" }}
             value={discount.title}
             onChange={(event) => set("title", event.target.value)}
             maxLength={90}
@@ -209,14 +209,14 @@ export function DiscountEditor({
           />
         </Field>
         <Field label={ar ? "كود الكوبون" : "Coupon code"} description={ar ? "الكود الذي يدخله العميل للاستفادة من العرض." : "Code customers enter to redeem the offer."}>
-          <Input
+          <Input ui={{ uid: "seller-discounts.coupon-code-1yw9uT", id: "seller-discounts.coupon-code", kind: "field", part: "form" }}
             value={discount.couponCode}
             onChange={(event) => set("couponCode", event.target.value)}
             placeholder={ar ? "مثال: WELCOME10" : "Example: WELCOME10"}
           />
         </Field>
         <Field label={ar ? "منتج الهدية" : "Gift product ID"} description={ar ? "معرّف المنتج الذي سيُضاف مجانًا." : "ID of the product added as a free gift."}>
-          <Input
+          <Input ui={{ uid: "seller-discounts.gift-product-id-9Hby4z", id: "seller-discounts.gift-product-id", kind: "field", part: "scope" }}
             value={discount.scope.giftProductId}
             onChange={(event) =>
               onChange((current) => ({
@@ -228,21 +228,21 @@ export function DiscountEditor({
           />
         </Field>
         <Field label={ar ? "منتجات محددة" : "Product IDs"} description={ar ? "معرّفات المنتجات المشمولة، مفصولة بفواصل." : "Included product IDs, separated by commas."}>
-          <Input
+          <Input ui={{ uid: "seller-discounts.product-ids-G4KqSy", id: "seller-discounts.product-ids", kind: "field", part: "scope" }}
             value={discount.scope.productIds.join(", ")}
             onChange={(event) => setScopeText("productIds", event.target.value)}
             placeholder={ar ? "مثال: product-1, product-2" : "Example: product-1, product-2"}
           />
         </Field>
         <Field label={ar ? "تصنيفات محددة" : "Category IDs"} description={ar ? "معرّفات التصنيفات المشمولة، مفصولة بفواصل." : "Included category IDs, separated by commas."}>
-          <Input
+          <Input ui={{ uid: "seller-discounts.category-ids-XvXG2b", id: "seller-discounts.category-ids", kind: "field", part: "scope" }}
             value={discount.scope.categoryIds.join(", ")}
             onChange={(event) => setScopeText("categoryIds", event.target.value)}
             placeholder={ar ? "مثال: category-1, category-2" : "Example: category-1, category-2"}
           />
         </Field>
         <Field label={ar ? "منتجات الباقة" : "Bundle product IDs"} description={ar ? "معرّفات المنتجات التي يجب شراؤها معًا." : "Product IDs that must be purchased together."}>
-          <Input
+          <Input ui={{ uid: "seller-discounts.bundle-product-ids-4DBFT3", id: "seller-discounts.bundle-product-ids", kind: "field", part: "scope" }}
             value={discount.scope.bundleProductIds.join(", ")}
             onChange={(event) =>
               setScopeText("bundleProductIds", event.target.value)
@@ -251,7 +251,7 @@ export function DiscountEditor({
           />
         </Field>
         <Field label={ar ? "منتجات مستثناة" : "Excluded product IDs"} description={ar ? "منتجات لا ينطبق عليها العرض، مفصولة بفواصل." : "Products excluded from the offer, separated by commas."}>
-          <Input
+          <Input ui={{ uid: "seller-discounts.excluded-product-ids-FF3AsX", id: "seller-discounts.excluded-product-ids", kind: "field", part: "scope" }}
             value={discount.scope.excludedProductIds.join(", ")}
             onChange={(event) =>
               setScopeText("excludedProductIds", event.target.value)
@@ -260,7 +260,7 @@ export function DiscountEditor({
           />
         </Field>
         <Field label={ar ? "بداية العرض" : "Starts at"} description={ar ? "التاريخ والوقت اللذان يبدأ عندهما العرض." : "Date and time when the offer begins."}>
-          <Input
+          <Input ui={{ uid: "seller-discounts.starts-at-N92UQX", id: "seller-discounts.starts-at", kind: "field", part: "schedule" }}
             type="datetime-local"
             value={discount.startsAt.slice(0, 16)}
             onChange={(event) => set("startsAt", event.target.value)}
@@ -268,7 +268,7 @@ export function DiscountEditor({
           />
         </Field>
         <Field label={ar ? "نهاية العرض" : "Ends at"} description={ar ? "التاريخ والوقت اللذان يتوقف عندهما العرض." : "Date and time when the offer ends."}>
-          <Input
+          <Input ui={{ uid: "seller-discounts.ends-at-ok8XV3", id: "seller-discounts.ends-at", kind: "field", part: "schedule" }}
             type="datetime-local"
             value={discount.endsAt.slice(0, 16)}
             onChange={(event) => set("endsAt", event.target.value)}

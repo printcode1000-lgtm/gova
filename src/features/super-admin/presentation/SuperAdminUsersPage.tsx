@@ -225,7 +225,7 @@ export function SuperAdminUsersPage() {
       <section className="grid gap-3 rounded-lg border bg-surface p-3 md:grid-cols-[1.5fr_1fr_0.7fr_0.7fr_auto]">
         <label className="space-y-1">
           <span className="text-xs text-on-surface-variant">بحث عام</span>
-          <Input
+          <Input ui={{ uid: "super-admin.users.query-GwD1jm", id: "super-admin.users.query", kind: "field", part: "filters" }}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="اسم، هاتف، بريد، UID"
@@ -233,7 +233,7 @@ export function SuperAdminUsersPage() {
         </label>
         <label className="space-y-1">
           <span className="text-xs text-on-surface-variant">التخصص</span>
-          <Input
+          <Input ui={{ uid: "super-admin.users.specialty-bCZ9GW", id: "super-admin.users.specialty", kind: "field", part: "filters" }}
             value={specialty}
             onChange={(event) => setSpecialty(event.target.value)}
             placeholder="pharmacies أو delivery"
@@ -242,7 +242,7 @@ export function SuperAdminUsersPage() {
         </label>
         <label className="space-y-1">
           <span className="text-xs text-on-surface-variant">أقل منتجات</span>
-          <Input
+          <Input ui={{ uid: "super-admin.users.min-products-G3pF0t", id: "super-admin.users.min-products", kind: "field", part: "filters" }}
             value={minProducts}
             onChange={(event) => setMinProducts(event.target.value)}
             inputMode="numeric"
@@ -250,7 +250,7 @@ export function SuperAdminUsersPage() {
         </label>
         <label className="space-y-1">
           <span className="text-xs text-on-surface-variant">أكثر منتجات</span>
-          <Input
+          <Input ui={{ uid: "super-admin.users.max-products-38XEgN", id: "super-admin.users.max-products", kind: "field", part: "filters" }}
             value={maxProducts}
             onChange={(event) => setMaxProducts(event.target.value)}
             inputMode="numeric"
@@ -265,7 +265,7 @@ export function SuperAdminUsersPage() {
             />
             لديهم منتجات
           </label>
-          <Button type="button" onClick={search} disabled={loading}>
+          <Button ui={{ uid: "super-admin.users.search-U4dE50", id: "super-admin.users.search", kind: "action", action: "search-users", part: "toolbar" }} type="button" onClick={search} disabled={loading}>
             <Search className="h-4 w-4" />
             {loading ? "بحث..." : "بحث"}
           </Button>

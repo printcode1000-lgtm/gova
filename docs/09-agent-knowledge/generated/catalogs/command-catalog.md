@@ -242,11 +242,13 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:storage-image-manager-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:sub2main-composition` | `Tooling` | 1 |  | 1 |
 | `npm run test:submain-composition` | `Tooling` | 1 |  | 1 |
+| `npm run test:super-admin-ui-inspector` | `Tooling` | 1 |  | 0 |
 | `npm run test:super-admin-users` | `Tooling` | 2 |  | 0 |
 | `npm run test:system-logs` | `Tooling` | 3 |  | 1 |
 | `npm run test:system-logs-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:trending-ribbon-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:turso-read-retry` | `Tooling` | 1 |  | 0 |
+| `npm run test:ui-registry-core` | `Tooling` | 3 |  | 0 |
 | `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run typecheck` | `Tooling` | 0 |  | 0 |
 | `npm run validate-storage-profiles` | `Tooling` | 1 |  | 0 |

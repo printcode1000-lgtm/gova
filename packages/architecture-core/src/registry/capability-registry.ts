@@ -401,6 +401,14 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     mayImportApp: false,
   },
   {
+    folder: 'ui-registry-core',
+    name: '@asol/ui-registry-core',
+    owns: 'UiRegistry identity contract, page registry, and DOM attribute builders',
+    layer: 'capability',
+    vendorModules: [],
+    mayImportApp: false,
+  },
+  {
     folder: 'trending-ribbon-core',
     name: '@asol/trending-ribbon-core',
     owns: 'Trending ribbon UI capability',

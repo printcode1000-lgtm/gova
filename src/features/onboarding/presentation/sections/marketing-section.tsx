@@ -85,9 +85,9 @@ export function MarketingSection() {
         <CardContent>
           <Tabs defaultValue="featured" className="space-y-6">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="featured">{t('onboarding.marketing.tabs.featured')}</TabsTrigger>
-              <TabsTrigger value="coupons">{t('onboarding.marketing.tabs.coupons')}</TabsTrigger>
-              <TabsTrigger value="campaigns">{t('onboarding.marketing.tabs.campaigns')}</TabsTrigger>
+              <TabsTrigger ui={{ uid: 'onboarding.marketing.tab-featured-i7Mrb4', id: 'onboarding.marketing.tab-featured', kind: 'action', action: 'select-featured-tab', part: 'tabs' }} value="featured">{t('onboarding.marketing.tabs.featured')}</TabsTrigger>
+              <TabsTrigger ui={{ uid: 'onboarding.marketing.tab-coupons-R5QMnN', id: 'onboarding.marketing.tab-coupons', kind: 'action', action: 'select-coupons-tab', part: 'tabs' }} value="coupons">{t('onboarding.marketing.tabs.coupons')}</TabsTrigger>
+              <TabsTrigger ui={{ uid: 'onboarding.marketing.tab-campaigns-bEX5BE', id: 'onboarding.marketing.tab-campaigns', kind: 'action', action: 'select-campaigns-tab', part: 'tabs' }} value="campaigns">{t('onboarding.marketing.tabs.campaigns')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="featured" className="space-y-4">
@@ -147,13 +147,13 @@ export function MarketingSection() {
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   <FormField label={t('onboarding.marketing.couponCode')} htmlFor="couponCode">
                     <div className="flex gap-2">
-                      <FormInput
+                      <FormInput ui={{ uid: 'onboarding.marketing.coupon-code-3IOCSi', id: 'onboarding.marketing.coupon-code', kind: 'field', part: 'coupon-form' }}
                         id="couponCode"
                         value={newCoupon.code}
                         onChange={(e) => setNewCoupon({ ...newCoupon, code: e.target.value.toUpperCase() })}
                         className="font-mono uppercase"
                       />
-                      <Button
+                      <Button ui={{ uid: 'onboarding.marketing.generate-coupon-code-e3kMcV', id: 'onboarding.marketing.generate-coupon-code', kind: 'action', action: 'generate-coupon-code', part: 'coupon-form' }}
                         variant="outline"
                         size="icon"
                         onClick={() => setNewCoupon({ ...newCoupon, code: generateCouponCode() })}
@@ -164,7 +164,7 @@ export function MarketingSection() {
                   </FormField>
 
                   <FormField label={t('onboarding.marketing.discountType')} htmlFor="discountType">
-                    <FormSelect
+                    <FormSelect ui={{ uid: 'onboarding.marketing.coupon-discount-type-62gFeq', id: 'onboarding.marketing.coupon-discount-type', kind: 'field', part: 'coupon-form' }}
                       value={newCoupon.discountType || 'percentage'}
                       onValueChange={(v) =>
                         setNewCoupon({ ...newCoupon, discountType: v as 'percentage' | 'fixed' })
@@ -183,7 +183,7 @@ export function MarketingSection() {
                       ) : (
                         <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       )}
-                      <FormInput
+                      <FormInput ui={{ uid: 'onboarding.marketing.coupon-discount-value-mqXVQ7', id: 'onboarding.marketing.coupon-discount-value', kind: 'field', part: 'coupon-form' }}
                         type="number"
                         value={newCoupon.discountValue}
                         onChange={(e) => setNewCoupon({ ...newCoupon, discountValue: parseFloat(e.target.value) || 0 })}
@@ -197,7 +197,7 @@ export function MarketingSection() {
                   <FormField label={t('onboarding.marketing.minPurchase')} htmlFor="minPurchase">
                     <div className="relative">
                       <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <FormInput
+                      <FormInput ui={{ uid: 'onboarding.marketing.coupon-min-purchase-Ys8aoF', id: 'onboarding.marketing.coupon-min-purchase', kind: 'field', part: 'coupon-form' }}
                         type="number"
                         value={newCoupon.minPurchase}
                         onChange={(e) => setNewCoupon({ ...newCoupon, minPurchase: parseFloat(e.target.value) || 0 })}
@@ -208,7 +208,7 @@ export function MarketingSection() {
                   </FormField>
                 </div>
 
-                <Button onClick={addCoupon} className="gap-2">
+                <Button ui={{ uid: 'onboarding.marketing.add-coupon-4HY99G', id: 'onboarding.marketing.add-coupon', kind: 'action', action: 'add-coupon', part: 'coupon-form' }} onClick={addCoupon} className="gap-2">
                   <Plus className="h-4 w-4" />
                   {t('onboarding.marketing.createCouponBtn')}
                 </Button>

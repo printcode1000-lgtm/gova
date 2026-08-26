@@ -3454,6 +3454,20 @@
       ]
     },
     {
+      "id": "command:test:super-admin-ui-inspector",
+      "kind": "command",
+      "name": "npm run test:super-admin-ui-inspector",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:super-admin-ui-inspector",
+        "run",
+        "super-admin-ui-inspector",
+        "test",
+        "test:super-admin-ui-inspector"
+      ]
+    },
+    {
       "id": "command:test:super-admin-users",
       "kind": "command",
       "name": "npm run test:super-admin-users",
@@ -3521,6 +3535,20 @@
         "test",
         "test:turso-read-retry",
         "turso-read-retry"
+      ]
+    },
+    {
+      "id": "command:test:ui-registry-core",
+      "kind": "command",
+      "name": "npm run test:ui-registry-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:ui-registry-core",
+        "run",
+        "test",
+        "test:ui-registry-core",
+        "ui-registry-core"
       ]
     },
     {
@@ -5892,6 +5920,7 @@
         "@asol/system-logs-core/server",
         "@asol/trending-ribbon-core",
         "@asol/trending-ribbon-core/server",
+        "@asol/ui-registry-core",
         "@asol/vercel-deploy-core",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
         "@asol/vercel-deploy-core/remote-deploy-sandbox",
@@ -5960,6 +5989,7 @@
         "packages/submain-composition/",
         "packages/system-logs-core/",
         "packages/trending-ribbon-core/",
+        "packages/ui-registry-core/",
         "packages/vercel-deploy-core/",
         "regenerate",
         "registries",
@@ -6042,6 +6072,7 @@
         "@asol/system-logs-core",
         "@asol/system-logs-core/server",
         "@asol/trending-ribbon-core",
+        "@asol/ui-registry-core",
         "@asol/vercel-deploy-core",
         "application_features",
         "architecture",
@@ -6188,6 +6219,7 @@
         "@asol/submain-composition",
         "@asol/system-logs-core",
         "@asol/trending-ribbon-core",
+        "@asol/ui-registry-core",
         "@asol/vercel-deploy-core",
         "application_features",
         "architecture",
@@ -6254,6 +6286,7 @@
         "packages/submain-composition/",
         "packages/system-logs-core/",
         "packages/trending-ribbon-core/",
+        "packages/ui-registry-core/",
         "packages/vercel-deploy-core/",
         "regenerate",
         "registries",
@@ -9452,6 +9485,53 @@
       ]
     },
     {
+      "id": "document:docs/04-ui-components/ui-attribute-system.md",
+      "kind": "document",
+      "name": "UI Attribute System",
+      "path": "docs/04-ui-components/ui-attribute-system.md",
+      "summary": "`@asol/ui-registry-core` is the single owner of `UiRegistry`, the typed identity system for page and UI diagnostics. `data-ui-uid` is its **sole source of truth**: the canonical address used for search, inspection, diagnostics, future references, and developer conversation. `data",
+      "tags": [
+        "@asol/ui-registry-core",
+        "`@asol/ui-registry-core` is the single owner of `uiregistry`, the typed identity system for page and ui diagnostics. `data-ui-uid` is its **sole source of truth**: the canonical address used for search, inspection, diagnostics, future references, and developer conversation. `data",
+        "address",
+        "and",
+        "attribute",
+        "canonical",
+        "conversation",
+        "data",
+        "data-ui-uid",
+        "developer",
+        "diagnostics",
+        "docs/04-ui-components/ui-attribute-system",
+        "docs/04-ui-components/ui-attribute-system.md",
+        "for",
+        "future",
+        "identity",
+        "inspection",
+        "is",
+        "its",
+        "md",
+        "of",
+        "owner",
+        "page",
+        "references",
+        "search",
+        "single",
+        "sole",
+        "source",
+        "src/shared/ui",
+        "src/shared/ui/",
+        "system",
+        "the",
+        "truth",
+        "typed",
+        "ui",
+        "ui attribute system",
+        "uiregistry",
+        "used"
+      ]
+    },
+    {
       "id": "document:docs/05-platform-features/auth-core-module.md",
       "kind": "document",
       "name": "`@asol/auth-core` Architecture & Consolidation",
@@ -11710,6 +11790,7 @@
         "/super-admin/simulation",
         "@asol/auth-core",
         "@asol/simulation-core",
+        "@asol/ui-registry-core",
         "`@asol/simulation-core` owns the user-page registry, interaction contracts, runtime classification, fixed simulation identities, random internal-image selection, execution progress, and discovery guard. the super admin surface is available at `/super-admin/simulation`.",
         "admin",
         "and",
@@ -21477,6 +21558,29 @@
       ]
     },
     {
+      "id": "package:@asol/ui-registry-core",
+      "kind": "package",
+      "name": "@asol/ui-registry-core",
+      "path": "packages/ui-registry-core",
+      "summary": "UiRegistry identity contract, page registry, and DOM attribute builders; Layer: capability; Public exports: .",
+      "tags": [
+        ".",
+        "@asol/ui-registry-core",
+        "and",
+        "attribute",
+        "builders",
+        "capability",
+        "contract",
+        "dom",
+        "identity",
+        "packages/ui-registry-core",
+        "page",
+        "registry",
+        "uiregistry",
+        "uiregistry identity contract, page registry, and dom attribute builders"
+      ]
+    },
+    {
       "id": "package:@asol/vercel-deploy-core",
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
@@ -29258,6 +29362,17 @@
       "tags": [
         "packages/architecture-core/src/checks/touch-interaction-contract",
         "packages/architecture-core/src/checks/touch-interaction-contract.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "kind": "source",
+      "name": "ui-attribute-contract.ts",
+      "path": "packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/ui-attribute-contract",
+        "packages/architecture-core/src/checks/ui-attribute-contract.ts",
         "ts"
       ]
     },
@@ -37067,6 +37182,17 @@
       ]
     },
     {
+      "id": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "kind": "source",
+      "name": "simulation-instrumentation-discovery.ts",
+      "path": "packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "tags": [
+        "packages/simulation-core/src/discovery/simulation-instrumentation-discovery",
+        "packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/simulation-core/src/discovery/user-page-discovery.ts",
       "kind": "source",
       "name": "user-page-discovery.ts",
@@ -37992,6 +38118,204 @@
       "tags": [
         "packages/trending-ribbon-core/src/server/trending-ribbon-service",
         "packages/trending-ribbon-core/src/server/trending-ribbon-service.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "kind": "source",
+      "name": "route-matching.ts",
+      "path": "packages/ui-registry-core/src/domain/route-matching.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/route-matching",
+        "packages/ui-registry-core/src/domain/route-matching.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "kind": "source",
+      "name": "ui-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-attributes",
+        "packages/ui-registry-core/src/domain/ui-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "kind": "source",
+      "name": "ui-component-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-component-attributes",
+        "packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "kind": "source",
+      "name": "ui-data-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-data-attributes",
+        "packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "kind": "source",
+      "name": "ui-descriptor.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-descriptor",
+        "packages/ui-registry-core/src/domain/ui-descriptor.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "kind": "source",
+      "name": "ui-element-kind.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-element-kind",
+        "packages/ui-registry-core/src/domain/ui-element-kind.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "kind": "source",
+      "name": "ui-page-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-page-attributes",
+        "packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "kind": "source",
+      "name": "ui-page-definition.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-page-definition",
+        "packages/ui-registry-core/src/domain/ui-page-definition.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "kind": "source",
+      "name": "ui-simulation-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-simulation-attributes",
+        "packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "kind": "source",
+      "name": "ui-simulation-target.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-simulation-target",
+        "packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "kind": "source",
+      "name": "ui-state-value.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-state-value",
+        "packages/ui-registry-core/src/domain/ui-state-value.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "kind": "source",
+      "name": "ui-state.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-state.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-state",
+        "packages/ui-registry-core/src/domain/ui-state.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "kind": "source",
+      "name": "ui-token.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-token.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-token",
+        "packages/ui-registry-core/src/domain/ui-token.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "kind": "source",
+      "name": "ui-uid-generator.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-uid-generator",
+        "packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "source",
+      "name": "ui-uid.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-uid.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-uid",
+        "packages/ui-registry-core/src/domain/ui-uid.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/ui-registry-core/src/index.ts",
+      "tags": [
+        "packages/ui-registry-core/src/index",
+        "packages/ui-registry-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "kind": "source",
+      "name": "resolve-ui-page.ts",
+      "path": "packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "tags": [
+        "packages/ui-registry-core/src/registry/resolve-ui-page",
+        "packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "kind": "source",
+      "name": "ui-page-registry.ts",
+      "path": "packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "tags": [
+        "packages/ui-registry-core/src/registry/ui-page-registry",
+        "packages/ui-registry-core/src/registry/ui-page-registry.ts",
         "ts"
       ]
     },
@@ -50282,6 +50606,17 @@
       ]
     },
     {
+      "id": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "kind": "source",
+      "name": "SuperAdminUiAttributeInspector.tsx",
+      "path": "src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "tags": [
+        "src/features/super-admin/presentation/superadminuiattributeinspector",
+        "src/features/super-admin/presentation/superadminuiattributeinspector.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
       "kind": "source",
       "name": "SuperAdminUsersPage.tsx",
@@ -50290,6 +50625,39 @@
         "src/features/super-admin/presentation/superadminuserspage",
         "src/features/super-admin/presentation/superadminuserspage.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "kind": "source",
+      "name": "ui-attribute-inspector-model.ts",
+      "path": "src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "tags": [
+        "src/features/super-admin/presentation/ui-attribute-inspector-model",
+        "src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "kind": "source",
+      "name": "ui-inspector-element-picker.ts",
+      "path": "src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "tags": [
+        "src/features/super-admin/presentation/ui-inspector-element-picker",
+        "src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "kind": "source",
+      "name": "ui-registration-proposal.ts",
+      "path": "src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "tags": [
+        "src/features/super-admin/presentation/ui-registration-proposal",
+        "src/features/super-admin/presentation/ui-registration-proposal.ts",
+        "ts"
       ]
     },
     {
@@ -50414,6 +50782,17 @@
         "src/features/system-logs/application/superadminerrorfloatingbutton",
         "src/features/system-logs/application/superadminerrorfloatingbutton.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "kind": "source",
+      "name": "system-log-copy-text.ts",
+      "path": "src/features/system-logs/application/system-log-copy-text.ts",
+      "tags": [
+        "src/features/system-logs/application/system-log-copy-text",
+        "src/features/system-logs/application/system-log-copy-text.ts",
+        "ts"
       ]
     },
     {
@@ -51426,6 +51805,28 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "source",
+      "name": "ui-primitive-attributes.ts",
+      "path": "src/shared/ui/ui-primitive-attributes.ts",
+      "tags": [
+        "src/shared/ui/ui-primitive-attributes",
+        "src/shared/ui/ui-primitive-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/shared/ui/UiPageBoundary.tsx",
+      "kind": "source",
+      "name": "UiPageBoundary.tsx",
+      "path": "src/shared/ui/UiPageBoundary.tsx",
+      "tags": [
+        "src/shared/ui/uipageboundary",
+        "src/shared/ui/uipageboundary.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/shared/utils.ts",
       "kind": "source",
       "name": "utils.ts",
@@ -51540,6 +51941,18 @@
       "tags": [
         "packages/architecture-core/src/tests/index",
         "packages/architecture-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "kind": "test",
+      "name": "ui-attribute-guard.test.ts",
+      "path": "packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/ui-attribute-guard",
+        "packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
         "test",
         "ts"
       ]
@@ -52951,6 +53364,30 @@
       ]
     },
     {
+      "id": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/ui-registry-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/ui-registry-core/src/tests/index",
+        "packages/ui-registry-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "kind": "test",
+      "name": "per-instance-registration.test.ts",
+      "path": "packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "tags": [
+        "packages/ui-registry-core/src/tests/per-instance-registration",
+        "packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -53952,6 +54389,18 @@
       "tags": [
         "src/features/super-admin/tests/super-admin-user-deletion",
         "src/features/super-admin/tests/super-admin-user-deletion.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "kind": "test",
+      "name": "ui-attribute-inspector.test.ts",
+      "path": "src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "tags": [
+        "src/features/super-admin/tests/ui-attribute-inspector",
+        "src/features/super-admin/tests/ui-attribute-inspector.test.ts",
         "test",
         "ts"
       ]
@@ -57495,6 +57944,16 @@
       "kind": "uses-environment"
     },
     {
+      "from": "command:test:super-admin-ui-inspector",
+      "to": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:super-admin-ui-inspector",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:test:super-admin-users",
       "to": "test:src/features/super-admin/tests/super-admin-impersonation-notification-flow.test.ts",
       "kind": "invokes"
@@ -57561,6 +58020,26 @@
     },
     {
       "from": "command:test:turso-read-retry",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:ui-registry-core",
+      "to": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:ui-registry-core",
+      "to": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:ui-registry-core",
+      "to": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:ui-registry-core",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -63225,6 +63704,18 @@
     },
     {
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "references",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "references",
+      "detail": "packages/ui-registry-core/"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "references",
       "detail": "@asol/vercel-deploy-core"
@@ -63653,6 +64144,12 @@
       "to": "package:@asol/trending-ribbon-core",
       "kind": "references",
       "detail": "@asol/trending-ribbon-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/dependency-map.md",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "references",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "document:docs/01-architecture/08-reference/dependency-map.md",
@@ -64214,6 +64711,18 @@
       "to": "package:@asol/trending-ribbon-core",
       "kind": "references",
       "detail": "packages/trending-ribbon-core/"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/package-catalog.md",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "references",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/package-catalog.md",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "references",
+      "detail": "packages/ui-registry-core/"
     },
     {
       "from": "document:docs/01-architecture/08-reference/package-catalog.md",
@@ -67206,6 +67715,12 @@
       "detail": "./touch-interaction-policy.md"
     },
     {
+      "from": "document:docs/04-ui-components/README.md",
+      "to": "document:docs/04-ui-components/ui-attribute-system.md",
+      "kind": "references",
+      "detail": "./ui-attribute-system.md"
+    },
+    {
       "from": "document:docs/04-ui-components/theme-system.md",
       "to": "domain:ui-components",
       "kind": "belongs-to"
@@ -67274,6 +67789,29 @@
       "to": "source:packages/architecture-core/src/checks/touch-interaction-contract.ts",
       "kind": "references",
       "detail": "packages/architecture-core/src/checks/touch-interaction-contract.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "domain:ui-components",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "references",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "source:src/shared/ui/card.tsx",
+      "kind": "references",
+      "detail": "src/shared/ui"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "source:src/shared/ui/card.tsx",
+      "kind": "references",
+      "detail": "src/shared/ui/"
     },
     {
       "from": "document:docs/05-platform-features/auth-core-module.md",
@@ -70036,6 +70574,12 @@
       "to": "package:@asol/simulation-core",
       "kind": "references",
       "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/user-simulation-and-e2e.md",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "references",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
@@ -73894,6 +74438,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "documents",
       "detail": "packages/"
@@ -74345,6 +74895,18 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/architecture-core/src/checks/touch-interaction-contract.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
       "kind": "documents",
       "detail": "packages/architecture-core/"
     },
@@ -78538,6 +79100,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/simulation-core/src/discovery/user-page-discovery.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -79036,6 +79604,114 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/vercel-deploy-core/src/index.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -79145,6 +79821,18 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/architecture-core/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
       "kind": "documents",
       "detail": "packages/architecture-core/"
     },
@@ -79847,6 +80535,18 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/trending-ribbon-core/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -92902,7 +93602,31 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -92969,6 +93693,12 @@
     {
       "from": "domain:platform-features",
       "to": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/system-logs/application/system-log-copy-text.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -93557,6 +94287,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:src/features/super-admin/tests/super-admin-user-deletion.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -95092,7 +95828,31 @@
     },
     {
       "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
       "to": "source:src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
       "kind": "documents",
       "detail": "src/features/super-admin/"
     },
@@ -95159,6 +95919,12 @@
     {
       "from": "domain:super-admin-and-operations",
       "to": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "kind": "documents",
+      "detail": "src/features/system-logs/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/system-logs/application/system-log-copy-text.ts",
       "kind": "documents",
       "detail": "src/features/system-logs/"
     },
@@ -95261,6 +96027,12 @@
     {
       "from": "domain:super-admin-and-operations",
       "to": "test:src/features/super-admin/tests/super-admin-user-deletion.test.ts",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
       "kind": "documents",
       "detail": "src/features/super-admin/"
     },
@@ -102730,7 +103502,31 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -102797,6 +103593,12 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/system-logs/application/system-log-copy-text.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -103289,6 +104091,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/super-admin/tests/super-admin-user-deletion.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -103954,6 +104762,11 @@
       "kind": "imports"
     },
     {
+      "from": "feature:google-play-console",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports"
+    },
+    {
       "from": "feature:home",
       "to": "external-dependency:next",
       "kind": "imports"
@@ -104109,6 +104922,11 @@
       "kind": "imports"
     },
     {
+      "from": "feature:onboarding",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports"
+    },
+    {
       "from": "feature:orders",
       "to": "external-dependency:lucide-react",
       "kind": "imports"
@@ -104231,6 +105049,11 @@
     {
       "from": "feature:page-save",
       "to": "package:@asol/system-logs-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:page-save",
+      "to": "package:@asol/ui-registry-core",
       "kind": "imports"
     },
     {
@@ -104366,6 +105189,11 @@
     {
       "from": "feature:pharmacy-profile-catalog",
       "to": "package:@asol/product-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:pharmacy-profile-catalog",
+      "to": "package:@asol/ui-registry-core",
       "kind": "imports"
     },
     {
@@ -105354,6 +106182,11 @@
       "kind": "imports"
     },
     {
+      "from": "feature:super-admin",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports"
+    },
+    {
       "from": "feature:system-logs",
       "to": "external-dependency:lucide-react",
       "kind": "imports"
@@ -105381,6 +106214,11 @@
     {
       "from": "feature:system-logs",
       "to": "feature:page-save",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:system-logs",
+      "to": "package:@asol/native-core",
       "kind": "imports"
     },
     {
@@ -105461,6 +106299,11 @@
     {
       "from": "package:@asol/architecture-core",
       "to": "package:@asol/ota-core",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/architecture-core",
+      "to": "package:@asol/ui-registry-core",
       "kind": "imports"
     },
     {
@@ -108830,6 +109673,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/api/dev/catalog-studio:handler",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/api/dev/catalog-studio/images:handler",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -108991,6 +109840,12 @@
     {
       "from": "route:/api/dev/catalog-studio/images:handler",
       "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/catalog-studio/images:handler",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -121853,6 +122708,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/api/super-admin/dev-cloud-backup/backups/restore-saved:handler",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/api/super-admin/dev-cloud-backup/backups/update-saved:handler",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -125921,6 +126782,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/delete-account:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -126101,6 +126968,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/delete-account:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/dev/catalog-studio:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -126157,6 +127030,12 @@
     {
       "from": "route:/dev/catalog-studio:page",
       "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/catalog-studio:page",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126323,6 +127202,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/dev/category-selector:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/dev/cloud-accounts:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -126419,6 +127304,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/dev/data-health:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/dev/deploy-all:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -126487,6 +127378,12 @@
     {
       "from": "route:/dev/deploy-all:page",
       "to": "package:@asol/release-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/deploy-all:page",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126567,6 +127464,12 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
+    },
+    {
+      "from": "route:/dev/dev-cloud-backup:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/dev/google-play-console:page",
@@ -126953,6 +127856,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/dev/notification-tests:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/dev/ota-releases:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -127056,6 +127965,12 @@
     },
     {
       "from": "route:/dev/release-console:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/release-console:page",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -127149,6 +128064,12 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/forgot-password:page",
@@ -127427,6 +128348,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/login:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/notifications:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -127691,6 +128618,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/orders:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/orders/[orderId]:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -127787,6 +128720,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/orders/[orderId]:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/orders/details:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -127879,6 +128818,12 @@
     {
       "from": "route:/orders/details:page",
       "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128129,6 +129074,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/product:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/profile:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -128291,6 +129242,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/profile:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/profile/pharmacy-catalog:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -128377,6 +129334,12 @@
     {
       "from": "route:/profile/pharmacy-catalog:page",
       "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile/pharmacy-catalog:page",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128557,6 +129520,12 @@
     {
       "from": "route:/registration:page",
       "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128795,6 +129764,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/s/product:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/s/profile:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -128965,6 +129940,12 @@
     {
       "from": "route:/s/profile:page",
       "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129683,6 +130664,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/super-admin/featured-marquee:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/super-admin/google-play-console:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -129941,6 +130928,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/super-admin/hero-slider:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/super-admin/logs:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -130135,6 +131128,12 @@
     {
       "from": "route:/super-admin/logs:page",
       "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/logs:page",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130337,6 +131336,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/super-admin/notifications-broadcast:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/super-admin/ota-releases:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -130446,6 +131451,12 @@
     },
     {
       "from": "route:/super-admin/production-deploy:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/production-deploy:page",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -130511,6 +131522,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/super-admin/simulation:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/super-admin/simulation/[pageId]:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -130567,6 +131584,12 @@
     {
       "from": "route:/super-admin/simulation/[pageId]:page",
       "to": "package:@asol/simulation-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/simulation/[pageId]:page",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130769,6 +131792,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/super-admin/trending-ribbon:page",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/super-admin/users:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -130963,6 +131992,12 @@
     {
       "from": "route:/super-admin/users:page",
       "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/users:page",
+      "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -137038,6 +138073,42 @@
       "detail": "./architecture-types"
     },
     {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "imports",
+      "detail": "./architecture-types"
+    },
+    {
       "from": "source:packages/architecture-core/src/checks/vendor-ownership-contract.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -137342,6 +138413,12 @@
       "to": "source:packages/architecture-core/src/checks/repository-sweep-contract.ts",
       "kind": "imports",
       "detail": "./checks/repository-sweep-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/ui-attribute-contract"
     },
     {
       "from": "source:packages/architecture-core/src/index.ts",
@@ -137666,6 +138743,12 @@
       "to": "source:packages/architecture-core/src/checks/touch-interaction-contract.ts",
       "kind": "imports",
       "detail": "./checks/touch-interaction-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/runner.ts",
+      "to": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/ui-attribute-contract"
     },
     {
       "from": "source:packages/architecture-core/src/runner.ts",
@@ -168068,6 +169151,12 @@
     },
     {
       "from": "source:packages/simulation-core/src/discovery/coverage-guard.ts",
+      "to": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "kind": "imports",
+      "detail": "./simulation-instrumentation-discovery"
+    },
+    {
+      "from": "source:packages/simulation-core/src/discovery/coverage-guard.ts",
       "to": "source:packages/simulation-core/src/discovery/user-page-discovery.ts",
       "kind": "imports",
       "detail": "./user-page-discovery"
@@ -168179,6 +169268,42 @@
       "to": "source:packages/simulation-core/src/discovery/discovery.types.ts",
       "kind": "imports",
       "detail": "./discovery.types"
+    },
+    {
+      "from": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "to": "source:packages/simulation-core/src/domain/simulation.types.ts",
+      "kind": "imports",
+      "detail": "../domain/simulation.types"
     },
     {
       "from": "source:packages/simulation-core/src/discovery/user-page-discovery.ts",
@@ -171733,6 +172858,792 @@
       "to": "source:packages/trending-ribbon-core/src/domain/trending-ribbon.schema.ts",
       "kind": "imports",
       "detail": "../domain/trending-ribbon.schema"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-data-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "kind": "imports",
+      "detail": "./ui-descriptor"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-simulation-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "kind": "imports",
+      "detail": "./ui-state-value"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "kind": "imports",
+      "detail": "./ui-token"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "imports",
+      "detail": "./ui-uid"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-data-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "kind": "imports",
+      "detail": "./ui-state-value"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "kind": "imports",
+      "detail": "./ui-state"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "kind": "imports",
+      "detail": "./ui-token"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "kind": "imports",
+      "detail": "./ui-element-kind"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "kind": "imports",
+      "detail": "./ui-simulation-target"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "kind": "imports",
+      "detail": "./ui-state"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "imports",
+      "detail": "./ui-uid"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-data-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "kind": "imports",
+      "detail": "./ui-page-definition"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "kind": "imports",
+      "detail": "./ui-token"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "imports",
+      "detail": "./ui-uid"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "imports",
+      "detail": "./ui-uid"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "kind": "imports",
+      "detail": "./ui-simulation-target"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "kind": "imports",
+      "detail": "./ui-token"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "kind": "imports",
+      "detail": "./ui-state"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "kind": "imports",
+      "detail": "./ui-token"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "imports",
+      "detail": "./ui-uid"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-component-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-data-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-descriptor"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-element-kind"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-page-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-page-definition"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-simulation-target"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-state"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-uid-generator"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-uid"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "kind": "imports",
+      "detail": "./registry/resolve-ui-page"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "kind": "imports",
+      "detail": "./registry/ui-page-registry"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "to": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "kind": "imports",
+      "detail": "../domain/route-matching"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "kind": "imports",
+      "detail": "../domain/ui-page-definition"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "to": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "kind": "imports",
+      "detail": "./ui-page-registry"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "kind": "imports",
+      "detail": "../domain/ui-page-definition"
     },
     {
       "from": "source:packages/vercel-deploy-core/src/index.ts",
@@ -195638,6 +197549,12 @@
     },
     {
       "from": "source:src/features/google-play-console/presentation/tabs/tab-registry.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/features/google-play-console/presentation/tabs/tab-registry.ts",
       "to": "source:src/features/google-play-console/presentation/tabs/BuildPublishTab.tsx",
       "kind": "imports",
       "detail": "./BuildPublishTab"
@@ -200720,6 +202637,12 @@
     },
     {
       "from": "source:src/features/onboarding/presentation/form-components.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/features/onboarding/presentation/form-components.tsx",
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
@@ -202031,6 +203954,12 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/onboarding/presentation/sections/returns-section.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/features/onboarding/presentation/sections/returns-section.tsx",
@@ -205517,6 +207446,12 @@
     },
     {
       "from": "source:src/features/page-save/presentation/PageSaveDialog.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/features/page-save/presentation/PageSaveDialog.tsx",
       "to": "source:src/features/page-save/application/utils/page-save-operation-description.ts",
       "kind": "imports",
       "detail": "../application/utils/page-save-operation-description"
@@ -205592,6 +207527,12 @@
       "to": "package:@asol/page-save-core",
       "kind": "imports",
       "detail": "@asol/page-save-core"
+    },
+    {
+      "from": "source:src/features/page-save/presentation/PageSaveHeaderButton.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/features/page-save/presentation/PageSaveHeaderButton.tsx",
@@ -207221,6 +209162,12 @@
       "from": "source:src/features/pharmacy-profile-catalog/presentation/PharmacySelect.tsx",
       "to": "feature:pharmacy-profile-catalog",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/presentation/PharmacySelect.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/features/pharmacy-profile-catalog/presentation/PharmacySelect.tsx",
@@ -224815,6 +226762,90 @@
       "detail": "@/shared/ui/label"
     },
     {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "package:@asol/native-core",
+      "kind": "imports",
+      "detail": "@asol/native-core"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "source:src/features/auth/index.ts",
+      "kind": "imports",
+      "detail": "@/features/auth"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "source:src/features/auth/ui.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/ui"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "kind": "imports",
+      "detail": "./ui-attribute-inspector-model"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "kind": "imports",
+      "detail": "./ui-inspector-element-picker"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "kind": "imports",
+      "detail": "./ui-registration-proposal"
+    },
+    {
       "from": "source:src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -224927,6 +226958,108 @@
       "to": "source:src/shared/ui/input.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/input"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts",
@@ -225242,6 +227375,12 @@
     },
     {
       "from": "source:src/features/super-admin/ui.ts",
+      "to": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "kind": "imports",
+      "detail": "./presentation/SuperAdminUiAttributeInspector"
+    },
+    {
+      "from": "source:src/features/super-admin/ui.ts",
       "to": "source:src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
       "kind": "imports",
       "detail": "./presentation/SuperAdminUsersPage"
@@ -225458,6 +227597,12 @@
     },
     {
       "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "to": "package:@asol/native-core",
+      "kind": "imports",
+      "detail": "@asol/native-core"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
       "to": "package:@asol/system-logs-core",
       "kind": "imports",
       "detail": "@asol/system-logs-core"
@@ -225488,6 +227633,12 @@
     },
     {
       "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "to": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "kind": "imports",
+      "detail": "@/features/system-logs/application/system-log-copy-text"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
       "to": "source:src/features/system-logs/application/system-log-store.ts",
       "kind": "imports",
       "detail": "@/features/system-logs/application/system-log-store"
@@ -225497,6 +227648,42 @@
       "to": "source:src/features/system-logs/domain/persistent-system-log.entity.ts",
       "kind": "imports",
       "detail": "@/features/system-logs/domain/persistent-system-log.entity"
+    },
+    {
+      "from": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "to": "feature:system-logs",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "to": "package:@asol/system-logs-core",
+      "kind": "imports",
+      "detail": "@asol/system-logs-core"
     },
     {
       "from": "source:src/features/system-logs/application/system-log-store.ts",
@@ -225785,6 +227972,12 @@
       "to": "source:src/features/system-logs/application/services/persistent-system-log-api-service.ts",
       "kind": "imports",
       "detail": "./application/services/persistent-system-log-api-service"
+    },
+    {
+      "from": "source:src/features/system-logs/index.ts",
+      "to": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "kind": "imports",
+      "detail": "./application/system-log-copy-text"
     },
     {
       "from": "source:src/features/system-logs/index.ts",
@@ -227403,6 +229596,12 @@
     },
     {
       "from": "source:src/shared/layouts/AppHeader.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/layouts/AppHeader.tsx",
       "to": "source:src/features/cart/ui.ts",
       "kind": "imports",
       "detail": "@/features/cart/ui"
@@ -227476,9 +229675,21 @@
     },
     {
       "from": "source:src/shared/layouts/AppShell.tsx",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/navigation"
+    },
+    {
+      "from": "source:src/shared/layouts/AppShell.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/shared/layouts/AppShell.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/shared/layouts/AppShell.tsx",
@@ -227594,6 +229805,12 @@
       "to": "package:@asol/storage-core",
       "kind": "imports",
       "detail": "@asol/storage-core"
+    },
+    {
+      "from": "source:src/shared/layouts/AppSidebar.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/shared/layouts/AppSidebar.tsx",
@@ -227737,6 +229954,12 @@
     },
     {
       "from": "source:src/shared/layouts/BottomNavBar.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/layouts/BottomNavBar.tsx",
       "to": "source:src/features/favorites/index.ts",
       "kind": "imports",
       "detail": "@/features/favorites"
@@ -227850,6 +230073,12 @@
       "to": "source:src/shared/layouts/AppShell.tsx",
       "kind": "imports",
       "detail": "@/shared/layouts/AppShell"
+    },
+    {
+      "from": "source:src/shared/layouts/ShellLayout.tsx",
+      "to": "source:src/shared/ui/UiPageBoundary.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/UiPageBoundary"
     },
     {
       "from": "source:src/shared/preferences/app-preferences-storage.ts",
@@ -228695,6 +230924,18 @@
     },
     {
       "from": "source:src/shared/ui/button.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/button.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
+    },
+    {
+      "from": "source:src/shared/ui/button.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -228778,6 +231019,18 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/checkbox.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/checkbox.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
     },
     {
       "from": "source:src/shared/ui/checkbox.tsx",
@@ -229161,6 +231414,18 @@
     },
     {
       "from": "source:src/shared/ui/input.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/input.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
+    },
+    {
+      "from": "source:src/shared/ui/input.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -229401,6 +231666,18 @@
     },
     {
       "from": "source:src/shared/ui/radio-group.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/radio-group.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
+    },
+    {
+      "from": "source:src/shared/ui/radio-group.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -229447,6 +231724,18 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/select.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/select.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
     },
     {
       "from": "source:src/shared/ui/select.tsx",
@@ -229524,6 +231813,18 @@
     },
     {
       "from": "source:src/shared/ui/switch.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/switch.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
+    },
+    {
+      "from": "source:src/shared/ui/switch.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -229567,6 +231868,18 @@
     },
     {
       "from": "source:src/shared/ui/tabs.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/tabs.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
+    },
+    {
+      "from": "source:src/shared/ui/tabs.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -229604,6 +231917,18 @@
     },
     {
       "from": "source:src/shared/ui/textarea.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/textarea.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
+    },
+    {
+      "from": "source:src/shared/ui/textarea.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -229638,6 +231963,80 @@
       "to": "source:src/shared/ui/switch.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/switch"
+    },
+    {
+      "from": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/UiPageBoundary.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/UiPageBoundary.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/UiPageBoundary.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/UiPageBoundary.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/UiPageBoundary.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/UiPageBoundary.tsx",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/navigation"
+    },
+    {
+      "from": "source:src/shared/ui/UiPageBoundary.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/UiPageBoundary.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/shared/utils.ts",
@@ -230103,6 +232502,64 @@
     {
       "from": "test:packages/architecture-core/src/tests/index.test.ts",
       "to": "package:@asol/architecture-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "imports",
+      "detail": "../checks/architecture-types"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "kind": "imports",
+      "detail": "../checks/ui-attribute-contract"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "package:@asol/ui-registry-core",
       "kind": "tests"
     },
     {
@@ -236156,6 +238613,88 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "to": "source:packages/ui-registry-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "source:packages/ui-registry-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -239670,6 +242209,70 @@
     {
       "from": "test:src/features/super-admin/tests/super-admin-user-deletion.test.ts",
       "to": "package:@asol/auth-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "kind": "imports",
+      "detail": "../presentation/ui-attribute-inspector-model"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "kind": "imports",
+      "detail": "../presentation/ui-inspector-element-picker"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "kind": "imports",
+      "detail": "../presentation/ui-registration-proposal"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "feature:super-admin",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "to": "package:@asol/ui-registry-core",
       "kind": "tests"
     },
     {

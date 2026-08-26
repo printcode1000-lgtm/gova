@@ -144,7 +144,7 @@ export function DeveloperBadge() {
                 </Link>
               </DropdownMenuItem>
               {page.path === '/' && (
-                <Button
+                <Button ui={{ uid: 'dev.developer-badge.toggle-splash-nav-lTk8oE', id: 'dev.developer-badge.toggle-splash-nav', kind: 'action', action: 'toggle-splash-nav', part: 'menu' }}
                   variant={isSplashNavEnabled ? 'default' : 'destructive'}
                   size="sm"
                   onClick={(event) => {

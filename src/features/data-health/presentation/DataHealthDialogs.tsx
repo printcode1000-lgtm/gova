@@ -130,17 +130,17 @@ function CleanupPlanDialog({
           <div className="select-all rounded-md bg-muted p-2 text-sm font-semibold">
             {plan?.confirmationText}
           </div>
-          <Input
+          <Input ui={{ uid: "data-health.plan-dialog.confirmation-T28K1D", id: "data-health.plan-dialog.confirmation", kind: "field", part: "confirmation" }}
             value={confirmationText}
             onChange={(event) => setConfirmationText(event.target.value)}
             autoComplete="off"
           />
         </div>
         <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={() => setPlan(null)}>
+          <Button ui={{ uid: "data-health.plan-dialog.cancel-1BXAzX", id: "data-health.plan-dialog.cancel", kind: "action", action: "cancel", part: "dialog-footer" }} variant="outline" onClick={() => setPlan(null)}>
             إلغاء
           </Button>
-          <Button
+          <Button ui={{ uid: "data-health.plan-dialog.confirm-H8cx3F", id: "data-health.plan-dialog.confirm", kind: "action", action: "stage-plan-execution", part: "dialog-footer" }}
             disabled={cleaning || !plan || confirmationText !== plan.confirmationText}
             onClick={stagePlanExecution}
           >
@@ -203,21 +203,21 @@ function OrderPurgeDialog({
           <div className="select-all rounded-md bg-muted p-2 text-sm font-semibold">
             {orderPurgePlan?.confirmationText}
           </div>
-          <Input
+          <Input ui={{ uid: "data-health.order-purge-dialog.confirmation-vMFMZ3", id: "data-health.order-purge-dialog.confirmation", kind: "field", part: "confirmation" }}
             value={orderPurgeConfirmation}
             onChange={(event) => setOrderPurgeConfirmation(event.target.value)}
             autoComplete="off"
           />
         </div>
         <DialogFooter className="gap-2">
-          <Button
+          <Button ui={{ uid: "data-health.order-purge-dialog.cancel-1fBQND", id: "data-health.order-purge-dialog.cancel", kind: "action", action: "cancel", part: "dialog-footer" }}
             variant="outline"
             disabled={orderPurgeBusy}
             onClick={() => setOrderPurgePlan(null)}
           >
             إلغاء
           </Button>
-          <Button
+          <Button ui={{ uid: "data-health.order-purge-dialog.confirm-KNb66D", id: "data-health.order-purge-dialog.confirm", kind: "action", action: "stage-order-purge", part: "dialog-footer" }}
             disabled={
               orderPurgeBusy ||
               !orderPurgePlan ||

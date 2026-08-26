@@ -174,7 +174,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
               }))
             }
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger ui={{ uid: "profile.fulfillment.shipping-pricing-mode-ih0EJI", id: "profile.fulfillment.shipping-pricing-mode", kind: "field", part: "shipping" }} className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -191,7 +191,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
           {safeSettings.shippingPricing.mode === "flat" ? (
             <div className="space-y-2">
               <Label htmlFor="shippingFlatRate">{text.flatRate}</Label>
-              <Input
+              <Input ui={{ uid: "profile.fulfillment.flat-rate-1v4uEV", id: "profile.fulfillment.flat-rate", kind: "field", part: "shipping" }}
                 id="shippingFlatRate"
                 type="number"
                 min={0}
@@ -214,7 +214,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
             <Label htmlFor="shippingSpecialVehicleFee">
               {text.specialVehicleFee}
             </Label>
-            <Input
+            <Input ui={{ uid: "profile.fulfillment.special-vehicle-fee-2pRxC0", id: "profile.fulfillment.special-vehicle-fee", kind: "field", part: "shipping" }}
               id="shippingSpecialVehicleFee"
               type="number"
               min={0}
@@ -237,7 +237,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
               <Label htmlFor="shippingFreeThreshold">
                 {text.freeShippingThreshold}
               </Label>
-              <Input
+              <Input ui={{ uid: "profile.fulfillment.free-threshold-JxW3bc", id: "profile.fulfillment.free-threshold", kind: "field", part: "shipping" }}
                 id="shippingFreeThreshold"
                 type="number"
                 min={0}
@@ -267,7 +267,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
 
         <div className="space-y-2">
           <Label htmlFor="shippingNotes">{text.shippingNotes}</Label>
-          <Textarea
+          <Textarea ui={{ uid: "profile.fulfillment.shipping-notes-6A7WVg", id: "profile.fulfillment.shipping-notes", kind: "field", part: "shipping" }}
             id="shippingNotes"
             value={safeSettings.shippingPricing.notes}
             onChange={(event) =>
@@ -320,7 +320,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
 
         <div className="space-y-2">
           <Label htmlFor="returnWindowDays">{text.returnWindowDays}</Label>
-          <Input
+          <Input ui={{ uid: "profile.fulfillment.return-window-days-ZRYy72", id: "profile.fulfillment.return-window-days", kind: "field", part: "returns" }}
             id="returnWindowDays"
             type="number"
             min={0}
@@ -352,7 +352,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
               }))
             }
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger ui={{ uid: "profile.fulfillment.return-shipping-payer-rU9AMx", id: "profile.fulfillment.return-shipping-payer", kind: "field", part: "returns" }} className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -365,7 +365,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
 
         <div className="space-y-2">
           <Label htmlFor="returnPolicyText">{text.policyText}</Label>
-          <Textarea
+          <Textarea ui={{ uid: "profile.fulfillment.return-policy-text-3X6pyz", id: "profile.fulfillment.return-policy-text", kind: "field", part: "returns" }}
             id="returnPolicyText"
             value={settings.returns.policyText}
             onChange={(event) =>

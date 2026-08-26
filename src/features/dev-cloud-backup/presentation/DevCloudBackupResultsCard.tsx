@@ -88,7 +88,7 @@ export function DevCloudBackupResultsCard({
           <DevCloudBackupDetail label="الحجم" value={sizeText(updatedZip.sizeBytes)} />
           <DevCloudBackupDetail label="الجداول" value={String(updatedZip.tableCount)} />
           <DevCloudBackupDetail label="صور R2" value={String(updatedZip.r2ObjectCount)} />
-          <Button
+          <Button ui={{ uid: "dev-cloud-backup.download-result-F5MGOG", id: "dev-cloud-backup.download-result", kind: "action", action: "download-backup", part: "results" }}
             type="button"
             size="sm"
             variant="outline"

@@ -55,7 +55,7 @@ export function MerchantInfoSection() {
         <CardContent className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
             <FormField label={t('onboarding.merchantInfo.yourName')} htmlFor="merchantName" required error={errors.merchantName}>
-              <FormInput
+              <FormInput ui={{ uid: 'onboarding.merchant-info.merchant-name-89HUhH', id: 'onboarding.merchant-info.merchant-name', kind: 'field', part: 'form' }}
                 id="merchantName"
                 value={merchantInfo.merchantName}
                 onChange={(e) => updateMerchantInfo({ merchantName: e.target.value })}
@@ -65,7 +65,7 @@ export function MerchantInfoSection() {
             </FormField>
 
             <FormField label={t('onboarding.merchantInfo.businessType')} htmlFor="businessType" required error={errors.businessType}>
-              <FormSelect
+              <FormSelect ui={{ uid: 'onboarding.merchant-info.business-type-w8PI3X', id: 'onboarding.merchant-info.business-type', kind: 'field', part: 'form' }}
                 value={merchantInfo.businessType as string}
                 onValueChange={(v) => updateMerchantInfo({ businessType: v as BusinessType })}
                 options={constants.businessTypes.map((b) => ({
@@ -81,7 +81,7 @@ export function MerchantInfoSection() {
           {showBusinessFields && (
             <div className="space-y-6 animate-in slide-in-from-top-2 duration-200">
               <FormField label={t('onboarding.merchantInfo.companyName')} htmlFor="companyName" required={showBusinessFields} error={errors.companyName}>
-                <FormInput
+                <FormInput ui={{ uid: 'onboarding.merchant-info.company-name-1PGUGk', id: 'onboarding.merchant-info.company-name', kind: 'field', part: 'form' }}
                   id="companyName"
                   value={merchantInfo.companyName || ''}
                   onChange={(e) => updateMerchantInfo({ companyName: e.target.value })}
@@ -92,7 +92,7 @@ export function MerchantInfoSection() {
 
               <div className="grid gap-6 lg:grid-cols-2">
                 <FormField label={t('onboarding.merchantInfo.registrationNumber')} htmlFor="registrationNumber" hint={t('onboarding.common.optional')}>
-                  <FormInput
+                  <FormInput ui={{ uid: 'onboarding.merchant-info.registration-number-F2UO6Q', id: 'onboarding.merchant-info.registration-number', kind: 'field', part: 'form' }}
                     id="registrationNumber"
                     value={merchantInfo.registrationNumber || ''}
                     onChange={(e) => updateMerchantInfo({ registrationNumber: e.target.value })}
@@ -101,7 +101,7 @@ export function MerchantInfoSection() {
                 </FormField>
 
                 <FormField label={t('onboarding.merchantInfo.taxId')} htmlFor="taxId" hint={t('onboarding.common.optional')}>
-                  <FormInput
+                  <FormInput ui={{ uid: 'onboarding.merchant-info.tax-id-bLWG5W', id: 'onboarding.merchant-info.tax-id', kind: 'field', part: 'form' }}
                     id="taxId"
                     value={merchantInfo.taxId || ''}
                     onChange={(e) => updateMerchantInfo({ taxId: e.target.value })}
@@ -113,7 +113,7 @@ export function MerchantInfoSection() {
           )}
 
           <FormField label={t('onboarding.merchantInfo.yearsInBusiness')} htmlFor="businessAge" hint={t('onboarding.merchantInfo.yearsHint')}>
-            <FormSelect
+            <FormSelect ui={{ uid: 'onboarding.merchant-info.business-age-a2UoXJ', id: 'onboarding.merchant-info.business-age', kind: 'field', part: 'form' }}
               value={merchantInfo.businessAge?.toString() || ''}
               onValueChange={(v) => updateMerchantInfo({ businessAge: v ? parseInt(v) : '' })}
               options={BUSINESS_AGE_VALUES.map((value, index) => ({

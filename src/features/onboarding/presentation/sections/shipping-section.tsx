@@ -97,7 +97,7 @@ export function ShippingSection() {
               <p className="text-sm text-muted-foreground mb-4">
                 {t('onboarding.shipping.emptyDesc')}
               </p>
-              <Button onClick={addShippingMethod} className="gap-2">
+              <Button ui={{ uid: 'onboarding.shipping.add-method-TV9Fq2', id: 'onboarding.shipping.add-method', kind: 'action', action: 'add-shipping-method', part: 'empty-state' }} onClick={addShippingMethod} className="gap-2">
                 <Plus className="h-4 w-4" />
                 {t('onboarding.shipping.addMethod')}
               </Button>
@@ -206,7 +206,7 @@ export function ShippingSection() {
                 </div>
               ))}
 
-              <Button variant="outline" onClick={addShippingMethod} className="w-full gap-2">
+              <Button ui={{ uid: 'onboarding.shipping.add-another-method-vX8VJ3', id: 'onboarding.shipping.add-another-method', kind: 'action', action: 'add-shipping-method', part: 'list-footer' }} variant="outline" onClick={addShippingMethod} className="w-full gap-2">
                 <Plus className="h-4 w-4" />
                 {t('onboarding.shipping.addAnother')}
               </Button>
@@ -231,7 +231,7 @@ export function ShippingSection() {
                 {t('onboarding.shipping.enablePickupDesc')}
               </p>
             </div>
-            <Switch
+            <Switch ui={{ uid: 'onboarding.shipping.pickup-available-Ba96gu', id: 'onboarding.shipping.pickup-available', kind: 'field', action: 'toggle-pickup', part: 'pickup' }}
               checked={shipping.pickupAvailable}
               onCheckedChange={(checked) => updateShipping({ pickupAvailable: checked })}
             />
@@ -239,7 +239,7 @@ export function ShippingSection() {
 
           {shipping.pickupAvailable && (
             <FormField label={t('onboarding.shipping.pickupAddress')} htmlFor="pickupAddress">
-              <FormInput
+              <FormInput ui={{ uid: 'onboarding.shipping.pickup-address-9lRiBD', id: 'onboarding.shipping.pickup-address', kind: 'field', part: 'form' }}
                 id="pickupAddress"
                 value={shipping.pickupAddress}
                 onChange={(e) => updateShipping({ pickupAddress: e.target.value })}

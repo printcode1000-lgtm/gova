@@ -372,7 +372,7 @@ export function SuperAdminNotificationTestsPage() {
             <Smartphone className="h-5 w-5 text-primary" />
             <h2 className="font-semibold">حالة الجهاز والتسجيل</h2>
           </div>
-          <Button variant="outline" size="sm" onClick={() => void refreshStatus()} disabled={statusBusy}>
+          <Button ui={{ uid: "super-admin.notification-tests.refresh-status-81VXDC", id: "super-admin.notification-tests.refresh-status", kind: "action", action: "refresh-status", part: "status" }} variant="outline" size="sm" onClick={() => void refreshStatus()} disabled={statusBusy}>
             {statusBusy ? <Loader2 className="me-2 h-4 w-4 animate-spin" /> : <RefreshCw className="me-2 h-4 w-4" />}
             تحديث الحالة
           </Button>
@@ -386,15 +386,15 @@ export function SuperAdminNotificationTestsPage() {
           <StatusCard label="اختبارات محفوظة" value={String(status?.centerTestCount ?? 0)} ok={Boolean(status?.centerTestCount)} />
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          <Button onClick={() => void enableNotifications()} disabled={statusBusy}>
+          <Button ui={{ uid: "super-admin.notification-tests.enable-aam1RE", id: "super-admin.notification-tests.enable", kind: "action", action: "enable-notifications", part: "status" }} onClick={() => void enableNotifications()} disabled={statusBusy}>
             <ShieldCheck className="me-2 h-4 w-4" />
             تفعيل أو إعادة تسجيل الجهاز
           </Button>
-          <Button variant="outline" onClick={() => void notifications.openPermissionSettings()}>
+          <Button ui={{ uid: "super-admin.notification-tests.open-settings-R5Ypn9", id: "super-admin.notification-tests.open-settings", kind: "action", action: "open-permission-settings", part: "status" }} variant="outline" onClick={() => void notifications.openPermissionSettings()}>
             <ExternalLink className="me-2 h-4 w-4" />
             فتح إعدادات التطبيق
           </Button>
-          <Button variant="outline" onClick={() => void syncNotificationCenter()} disabled={statusBusy}>
+          <Button ui={{ uid: "super-admin.notification-tests.sync-center-LOl9KH", id: "super-admin.notification-tests.sync-center", kind: "action", action: "sync-notification-center", part: "status" }} variant="outline" onClick={() => void syncNotificationCenter()} disabled={statusBusy}>
             <RefreshCw className="me-2 h-4 w-4" />
             مزامنة الشريط مع صفحة الإشعارات
           </Button>
@@ -432,24 +432,24 @@ export function SuperAdminNotificationTestsPage() {
           <h2 className="mb-4 font-semibold">إعداد الاختبار</h2>
           <div className="grid gap-4">
             <div className="grid grid-cols-2 gap-2">
-              <Button type="button" variant={mode === "local" ? "default" : "outline"} onClick={() => setMode("local")}>
+              <Button ui={{ uid: "super-admin.notification-tests.mode-local-Mb7X2H", id: "super-admin.notification-tests.mode-local", kind: "action", action: "select-local-mode", part: "mode" }} type="button" variant={mode === "local" ? "default" : "outline"} onClick={() => setMode("local")}>
                 <Smartphone className="me-2 h-4 w-4" />اختبار محلي
               </Button>
-              <Button type="button" variant={mode === "push" ? "default" : "outline"} onClick={() => setMode("push")}>
+              <Button ui={{ uid: "super-admin.notification-tests.mode-push-Jf2C2A", id: "super-admin.notification-tests.mode-push", kind: "action", action: "select-push-mode", part: "mode" }} type="button" variant={mode === "push" ? "default" : "outline"} onClick={() => setMode("push")}>
                 <Wifi className="me-2 h-4 w-4" />Push حقيقي
               </Button>
             </div>
             <div className="space-y-2">
               <Label htmlFor="notification-test-title">العنوان</Label>
-              <Input id="notification-test-title" value={title} maxLength={120} onChange={(event) => setTitle(event.target.value)} />
+              <Input ui={{ uid: "super-admin.notification-tests.title-6ucZ8Z", id: "super-admin.notification-tests.title", kind: "field", part: "form" }} id="notification-test-title" value={title} maxLength={120} onChange={(event) => setTitle(event.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="notification-test-body">النص</Label>
-              <Textarea id="notification-test-body" value={body} maxLength={1000} rows={4} onChange={(event) => setBody(event.target.value)} />
+              <Textarea ui={{ uid: "super-admin.notification-tests.body-ALXBj2", id: "super-admin.notification-tests.body", kind: "field", part: "form" }} id="notification-test-body" value={body} maxLength={1000} rows={4} onChange={(event) => setBody(event.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="notification-test-route">الرابط الداخلي</Label>
-              <Input id="notification-test-route" value={routeHref} dir="ltr" onChange={(event) => setRouteHref(event.target.value)} />
+              <Input ui={{ uid: "super-admin.notification-tests.route-02cmBT", id: "super-admin.notification-tests.route", kind: "field", part: "form" }} id="notification-test-route" value={routeHref} dir="ltr" onChange={(event) => setRouteHref(event.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="notification-test-batch-size">عدد الإشعارات المتتالية</Label>
@@ -464,7 +464,7 @@ export function SuperAdminNotificationTestsPage() {
               </select>
               <p className="text-xs text-muted-foreground">استخدم التأخير لتضع التطبيق في الخلفية أو تقفل الشاشة. لا تغلق التطبيق قبل أن ينتهي العد التنازلي.</p>
             </div>
-            <Button onClick={() => void runTest()} disabled={busy}>
+            <Button ui={{ uid: "super-admin.notification-tests.run-xc3MkQ", id: "super-admin.notification-tests.run", kind: "action", action: "run-test", part: "submit" }} onClick={() => void runTest()} disabled={busy}>
               {busy ? <Loader2 className="me-2 h-4 w-4 animate-spin" /> : <Send className="me-2 h-4 w-4" />}
               {countdown !== null ? `الإرسال بعد ${countdown}` : mode === "local" ? "تشغيل الاختبار المحلي" : "إرسال Push إلى حسابي"}
             </Button>

@@ -7,7 +7,7 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **96**
+Owners scored: **97**
 Average coverage: **81%**
 Weak owners (<70%): **13**
 
@@ -40,6 +40,7 @@ Weak owners (<70%): **13**
 | `packages/signed-token-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/simulation-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/system-logs-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
+| `packages/ui-registry-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `services/notifications` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/products` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/sub2main` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |

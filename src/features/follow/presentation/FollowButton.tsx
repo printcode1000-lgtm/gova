@@ -182,7 +182,7 @@ export function FollowButton({
 
   return (
     <>
-      <Button
+      <Button ui={{ uid: "follow.toggle-67YSTM", id: "follow.toggle", kind: "action", action: "open-follow-dialog", part: "primary" }}
         data-simulation-target={simulationTargetId}
         type="button"
         variant={active && !canManage ? "secondary" : "outline"}
@@ -231,7 +231,7 @@ export function FollowButton({
                     {formatCount(count, locale)}
                   </span>
                 </div>
-                <Button
+                <Button ui={{ uid: "follow.dialog.notify-followers-X9TWY5", id: "follow.dialog.notify-followers", kind: "action", action: "open-notify-followers", part: "dialog" }}
                   type="button"
                   variant="outline"
                   className="w-full justify-start gap-2"
@@ -276,7 +276,7 @@ export function FollowButton({
                   <Label htmlFor={`follower-notification-title-${targetId}`}>
                     {t("follow.dialog.notification.titleLabel")}
                   </Label>
-                  <Input
+                  <Input ui={{ uid: "follow.dialog.notification-title-V3MF1S", id: "follow.dialog.notification-title", kind: "field", part: "dialog" }}
                     id={`follower-notification-title-${targetId}`}
                     value={notificationTitle}
                     maxLength={120}
@@ -291,7 +291,7 @@ export function FollowButton({
                   <Label htmlFor={`follower-notification-body-${targetId}`}>
                     {t("follow.dialog.notification.messageLabel")}
                   </Label>
-                  <Textarea
+                  <Textarea ui={{ uid: "follow.dialog.notification-body-T7WPo6", id: "follow.dialog.notification-body", kind: "field", part: "dialog" }}
                     id={`follower-notification-body-${targetId}`}
                     value={notificationBody}
                     maxLength={1000}
@@ -321,7 +321,7 @@ export function FollowButton({
             <div className="mt-4 flex justify-end gap-2">
               {dialogMode === "confirm_follow" || dialogMode === "confirm_unfollow" ? (
                 <>
-                  <Button
+                  <Button ui={{ uid: "follow.dialog.cancel-sY4H81", id: "follow.dialog.cancel", kind: "action", action: "cancel", part: "dialog-footer" }}
                     type="button"
                     variant="ghost"
                     onClick={() => setDialogMode(null)}
@@ -329,7 +329,7 @@ export function FollowButton({
                   >
                     إلغاء
                   </Button>
-                  <Button
+                  <Button ui={{ uid: "follow.dialog.confirm-PG61Dl", id: "follow.dialog.confirm", kind: "action", action: "confirm", part: "dialog-footer" }}
                     type="button"
                     onClick={runMutation}
                     disabled={isMutating}
@@ -343,7 +343,7 @@ export function FollowButton({
                 </>
               ) : dialogMode === "notify_followers" ? (
                 <>
-                  <Button
+                  <Button ui={{ uid: "follow.dialog.owner-actions-m6nu1L", id: "follow.dialog.owner-actions", kind: "action", action: "open-owner-actions", part: "dialog-footer" }}
                     type="button"
                     variant="ghost"
                     onClick={() => setDialogMode("owner_actions")}
@@ -351,7 +351,7 @@ export function FollowButton({
                   >
                     {t("follow.dialog.notification.back")}
                   </Button>
-                  <Button
+                  <Button ui={{ uid: "follow.dialog.send-notification-Ojkt6S", id: "follow.dialog.send-notification", kind: "action", action: "send-follower-notification", part: "dialog-footer" }}
                     type="button"
                     className="gap-2"
                     onClick={() => void sendFollowerNotification()}
@@ -368,7 +368,7 @@ export function FollowButton({
                   </Button>
                 </>
               ) : (
-                <Button type="button" onClick={() => setDialogMode(null)}>
+                <Button ui={{ uid: "follow.dialog.close-j0lNFc", id: "follow.dialog.close", kind: "action", action: "close", part: "dialog-footer" }} type="button" onClick={() => setDialogMode(null)}>
                   {textForDialog.action}
                 </Button>
               )}

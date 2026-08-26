@@ -99,7 +99,7 @@ export function SuperAdminImpersonationBanner() {
             أنت الآن داخل حساب {session.phone || session.uid} بصلاحيات كاملة.
           </span>
         </div>
-        <Button type="button" size="sm" variant="outline" onClick={stop}>
+        <Button ui={{ uid: "super-admin.impersonation.stop-n16Ir7", id: "super-admin.impersonation.stop", kind: "action", action: "stop-impersonation", part: "banner" }} type="button" size="sm" variant="outline" onClick={stop}>
           إنهاء الانتحال والعودة للسوبر أدمن
         </Button>
       </div>

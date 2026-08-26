@@ -3454,6 +3454,20 @@
       ]
     },
     {
+      "id": "command:test:super-admin-ui-inspector",
+      "kind": "command",
+      "name": "npm run test:super-admin-ui-inspector",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:super-admin-ui-inspector",
+        "run",
+        "super-admin-ui-inspector",
+        "test",
+        "test:super-admin-ui-inspector"
+      ]
+    },
+    {
       "id": "command:test:super-admin-users",
       "kind": "command",
       "name": "npm run test:super-admin-users",
@@ -3521,6 +3535,20 @@
         "test",
         "test:turso-read-retry",
         "turso-read-retry"
+      ]
+    },
+    {
+      "id": "command:test:ui-registry-core",
+      "kind": "command",
+      "name": "npm run test:ui-registry-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:ui-registry-core",
+        "run",
+        "test",
+        "test:ui-registry-core",
+        "ui-registry-core"
       ]
     },
     {
@@ -5892,6 +5920,7 @@
         "@asol/system-logs-core/server",
         "@asol/trending-ribbon-core",
         "@asol/trending-ribbon-core/server",
+        "@asol/ui-registry-core",
         "@asol/vercel-deploy-core",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
         "@asol/vercel-deploy-core/remote-deploy-sandbox",
@@ -5960,6 +5989,7 @@
         "packages/submain-composition/",
         "packages/system-logs-core/",
         "packages/trending-ribbon-core/",
+        "packages/ui-registry-core/",
         "packages/vercel-deploy-core/",
         "regenerate",
         "registries",
@@ -6042,6 +6072,7 @@
         "@asol/system-logs-core",
         "@asol/system-logs-core/server",
         "@asol/trending-ribbon-core",
+        "@asol/ui-registry-core",
         "@asol/vercel-deploy-core",
         "application_features",
         "architecture",
@@ -6188,6 +6219,7 @@
         "@asol/submain-composition",
         "@asol/system-logs-core",
         "@asol/trending-ribbon-core",
+        "@asol/ui-registry-core",
         "@asol/vercel-deploy-core",
         "application_features",
         "architecture",
@@ -6254,6 +6286,7 @@
         "packages/submain-composition/",
         "packages/system-logs-core/",
         "packages/trending-ribbon-core/",
+        "packages/ui-registry-core/",
         "packages/vercel-deploy-core/",
         "regenerate",
         "registries",
@@ -9452,6 +9485,53 @@
       ]
     },
     {
+      "id": "document:docs/04-ui-components/ui-attribute-system.md",
+      "kind": "document",
+      "name": "UI Attribute System",
+      "path": "docs/04-ui-components/ui-attribute-system.md",
+      "summary": "`@asol/ui-registry-core` is the single owner of `UiRegistry`, the typed identity system for page and UI diagnostics. `data-ui-uid` is its **sole source of truth**: the canonical address used for search, inspection, diagnostics, future references, and developer conversation. `data",
+      "tags": [
+        "@asol/ui-registry-core",
+        "`@asol/ui-registry-core` is the single owner of `uiregistry`, the typed identity system for page and ui diagnostics. `data-ui-uid` is its **sole source of truth**: the canonical address used for search, inspection, diagnostics, future references, and developer conversation. `data",
+        "address",
+        "and",
+        "attribute",
+        "canonical",
+        "conversation",
+        "data",
+        "data-ui-uid",
+        "developer",
+        "diagnostics",
+        "docs/04-ui-components/ui-attribute-system",
+        "docs/04-ui-components/ui-attribute-system.md",
+        "for",
+        "future",
+        "identity",
+        "inspection",
+        "is",
+        "its",
+        "md",
+        "of",
+        "owner",
+        "page",
+        "references",
+        "search",
+        "single",
+        "sole",
+        "source",
+        "src/shared/ui",
+        "src/shared/ui/",
+        "system",
+        "the",
+        "truth",
+        "typed",
+        "ui",
+        "ui attribute system",
+        "uiregistry",
+        "used"
+      ]
+    },
+    {
       "id": "document:docs/05-platform-features/auth-core-module.md",
       "kind": "document",
       "name": "`@asol/auth-core` Architecture & Consolidation",
@@ -11710,6 +11790,7 @@
         "/super-admin/simulation",
         "@asol/auth-core",
         "@asol/simulation-core",
+        "@asol/ui-registry-core",
         "`@asol/simulation-core` owns the user-page registry, interaction contracts, runtime classification, fixed simulation identities, random internal-image selection, execution progress, and discovery guard. the super admin surface is available at `/super-admin/simulation`.",
         "admin",
         "and",
@@ -21477,6 +21558,29 @@
       ]
     },
     {
+      "id": "package:@asol/ui-registry-core",
+      "kind": "package",
+      "name": "@asol/ui-registry-core",
+      "path": "packages/ui-registry-core",
+      "summary": "UiRegistry identity contract, page registry, and DOM attribute builders; Layer: capability; Public exports: .",
+      "tags": [
+        ".",
+        "@asol/ui-registry-core",
+        "and",
+        "attribute",
+        "builders",
+        "capability",
+        "contract",
+        "dom",
+        "identity",
+        "packages/ui-registry-core",
+        "page",
+        "registry",
+        "uiregistry",
+        "uiregistry identity contract, page registry, and dom attribute builders"
+      ]
+    },
+    {
       "id": "package:@asol/vercel-deploy-core",
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
@@ -29258,6 +29362,17 @@
       "tags": [
         "packages/architecture-core/src/checks/touch-interaction-contract",
         "packages/architecture-core/src/checks/touch-interaction-contract.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "kind": "source",
+      "name": "ui-attribute-contract.ts",
+      "path": "packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/ui-attribute-contract",
+        "packages/architecture-core/src/checks/ui-attribute-contract.ts",
         "ts"
       ]
     },
@@ -37067,6 +37182,17 @@
       ]
     },
     {
+      "id": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "kind": "source",
+      "name": "simulation-instrumentation-discovery.ts",
+      "path": "packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+      "tags": [
+        "packages/simulation-core/src/discovery/simulation-instrumentation-discovery",
+        "packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/simulation-core/src/discovery/user-page-discovery.ts",
       "kind": "source",
       "name": "user-page-discovery.ts",
@@ -37992,6 +38118,204 @@
       "tags": [
         "packages/trending-ribbon-core/src/server/trending-ribbon-service",
         "packages/trending-ribbon-core/src/server/trending-ribbon-service.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/route-matching.ts",
+      "kind": "source",
+      "name": "route-matching.ts",
+      "path": "packages/ui-registry-core/src/domain/route-matching.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/route-matching",
+        "packages/ui-registry-core/src/domain/route-matching.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "kind": "source",
+      "name": "ui-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-attributes",
+        "packages/ui-registry-core/src/domain/ui-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "kind": "source",
+      "name": "ui-component-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-component-attributes",
+        "packages/ui-registry-core/src/domain/ui-component-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "kind": "source",
+      "name": "ui-data-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-data-attributes",
+        "packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "kind": "source",
+      "name": "ui-descriptor.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-descriptor",
+        "packages/ui-registry-core/src/domain/ui-descriptor.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "kind": "source",
+      "name": "ui-element-kind.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-element-kind.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-element-kind",
+        "packages/ui-registry-core/src/domain/ui-element-kind.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "kind": "source",
+      "name": "ui-page-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-page-attributes",
+        "packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "kind": "source",
+      "name": "ui-page-definition.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-page-definition",
+        "packages/ui-registry-core/src/domain/ui-page-definition.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "kind": "source",
+      "name": "ui-simulation-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-simulation-attributes",
+        "packages/ui-registry-core/src/domain/ui-simulation-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "kind": "source",
+      "name": "ui-simulation-target.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-simulation-target",
+        "packages/ui-registry-core/src/domain/ui-simulation-target.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "kind": "source",
+      "name": "ui-state-value.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-state-value.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-state-value",
+        "packages/ui-registry-core/src/domain/ui-state-value.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "kind": "source",
+      "name": "ui-state.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-state.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-state",
+        "packages/ui-registry-core/src/domain/ui-state.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "kind": "source",
+      "name": "ui-token.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-token.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-token",
+        "packages/ui-registry-core/src/domain/ui-token.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "kind": "source",
+      "name": "ui-uid-generator.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-uid-generator",
+        "packages/ui-registry-core/src/domain/ui-uid-generator.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "source",
+      "name": "ui-uid.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-uid.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-uid",
+        "packages/ui-registry-core/src/domain/ui-uid.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/ui-registry-core/src/index.ts",
+      "tags": [
+        "packages/ui-registry-core/src/index",
+        "packages/ui-registry-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "kind": "source",
+      "name": "resolve-ui-page.ts",
+      "path": "packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+      "tags": [
+        "packages/ui-registry-core/src/registry/resolve-ui-page",
+        "packages/ui-registry-core/src/registry/resolve-ui-page.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "kind": "source",
+      "name": "ui-page-registry.ts",
+      "path": "packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "tags": [
+        "packages/ui-registry-core/src/registry/ui-page-registry",
+        "packages/ui-registry-core/src/registry/ui-page-registry.ts",
         "ts"
       ]
     },
@@ -50282,6 +50606,17 @@
       ]
     },
     {
+      "id": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "kind": "source",
+      "name": "SuperAdminUiAttributeInspector.tsx",
+      "path": "src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "tags": [
+        "src/features/super-admin/presentation/superadminuiattributeinspector",
+        "src/features/super-admin/presentation/superadminuiattributeinspector.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
       "kind": "source",
       "name": "SuperAdminUsersPage.tsx",
@@ -50290,6 +50625,39 @@
         "src/features/super-admin/presentation/superadminuserspage",
         "src/features/super-admin/presentation/superadminuserspage.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "kind": "source",
+      "name": "ui-attribute-inspector-model.ts",
+      "path": "src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+      "tags": [
+        "src/features/super-admin/presentation/ui-attribute-inspector-model",
+        "src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "kind": "source",
+      "name": "ui-inspector-element-picker.ts",
+      "path": "src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+      "tags": [
+        "src/features/super-admin/presentation/ui-inspector-element-picker",
+        "src/features/super-admin/presentation/ui-inspector-element-picker.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "kind": "source",
+      "name": "ui-registration-proposal.ts",
+      "path": "src/features/super-admin/presentation/ui-registration-proposal.ts",
+      "tags": [
+        "src/features/super-admin/presentation/ui-registration-proposal",
+        "src/features/super-admin/presentation/ui-registration-proposal.ts",
+        "ts"
       ]
     },
     {
@@ -50414,6 +50782,17 @@
         "src/features/system-logs/application/superadminerrorfloatingbutton",
         "src/features/system-logs/application/superadminerrorfloatingbutton.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/system-logs/application/system-log-copy-text.ts",
+      "kind": "source",
+      "name": "system-log-copy-text.ts",
+      "path": "src/features/system-logs/application/system-log-copy-text.ts",
+      "tags": [
+        "src/features/system-logs/application/system-log-copy-text",
+        "src/features/system-logs/application/system-log-copy-text.ts",
+        "ts"
       ]
     },
     {
@@ -51426,6 +51805,28 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "source",
+      "name": "ui-primitive-attributes.ts",
+      "path": "src/shared/ui/ui-primitive-attributes.ts",
+      "tags": [
+        "src/shared/ui/ui-primitive-attributes",
+        "src/shared/ui/ui-primitive-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/shared/ui/UiPageBoundary.tsx",
+      "kind": "source",
+      "name": "UiPageBoundary.tsx",
+      "path": "src/shared/ui/UiPageBoundary.tsx",
+      "tags": [
+        "src/shared/ui/uipageboundary",
+        "src/shared/ui/uipageboundary.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/shared/utils.ts",
       "kind": "source",
       "name": "utils.ts",
@@ -51540,6 +51941,18 @@
       "tags": [
         "packages/architecture-core/src/tests/index",
         "packages/architecture-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "kind": "test",
+      "name": "ui-attribute-guard.test.ts",
+      "path": "packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/ui-attribute-guard",
+        "packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
         "test",
         "ts"
       ]
@@ -52951,6 +53364,30 @@
       ]
     },
     {
+      "id": "test:packages/ui-registry-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/ui-registry-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/ui-registry-core/src/tests/index",
+        "packages/ui-registry-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "kind": "test",
+      "name": "per-instance-registration.test.ts",
+      "path": "packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "tags": [
+        "packages/ui-registry-core/src/tests/per-instance-registration",
+        "packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -53952,6 +54389,18 @@
       "tags": [
         "src/features/super-admin/tests/super-admin-user-deletion",
         "src/features/super-admin/tests/super-admin-user-deletion.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "kind": "test",
+      "name": "ui-attribute-inspector.test.ts",
+      "path": "src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "tags": [
+        "src/features/super-admin/tests/ui-attribute-inspector",
+        "src/features/super-admin/tests/ui-attribute-inspector.test.ts",
         "test",
         "ts"
       ]

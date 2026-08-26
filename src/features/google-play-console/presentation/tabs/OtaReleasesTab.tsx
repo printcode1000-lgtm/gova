@@ -19,10 +19,10 @@ export function OtaReleasesTab() {
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap justify-end gap-2">
-        <Button variant="outline" disabled={ota.busy} onClick={() => void ota.refresh()}>
+        <Button ui={{ uid: "release-console.ota.refresh-WPqR9E", id: "release-console.ota.refresh", kind: "action", action: "refresh-ota", part: "toolbar" }} variant="outline" disabled={ota.busy} onClick={() => void ota.refresh()}>
           <RefreshCw className="h-4 w-4" />{t("releaseConsole.actions.refresh")}
         </Button>
-        <Button variant="secondary" disabled={ota.busy} onClick={() => void ota.download()}>
+        <Button ui={{ uid: "release-console.ota.download-test-633aRH", id: "release-console.ota.download-test", kind: "action", action: "download-test-bundle", part: "toolbar" }} variant="secondary" disabled={ota.busy} onClick={() => void ota.download()}>
           <CloudDownload className="h-4 w-4" />{t("releaseConsole.ota.downloadTest")}
         </Button>
       </div>
@@ -51,14 +51,14 @@ export function OtaReleasesTab() {
           </div>
           <section className="flex flex-wrap items-end gap-3 rounded-md border bg-surface p-4">
             <label className="grid gap-1 text-sm"><span>{t("releaseConsole.ota.rollout")}</span>
-              <Input className="w-28" type="number" min={release.rolloutPercentage} max="100"
+              <Input ui={{ uid: "release-console.ota.rollout-bIDnK9", id: "release-console.ota.rollout", kind: "field", part: "rollout" }} className="w-28" type="number" min={release.rolloutPercentage} max="100"
                 value={ota.rollout} onChange={(event) => ota.setRollout(Number(event.target.value))} /></label>
-            <Button variant={release.approved ? "destructive" : "default"} disabled={ota.busy}
+            <Button ui={{ uid: "release-console.ota.change-approval-LmR7fT", id: "release-console.ota.change-approval", kind: "action", action: "change-approval", part: "rollout" }} variant={release.approved ? "destructive" : "default"} disabled={ota.busy}
               onClick={() => void ota.changeApproval(!release.approved)}>
               {release.approved ? <Ban className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
               {t(release.approved ? "releaseConsole.ota.revoke" : "releaseConsole.ota.approve")}
             </Button>
-            <Button variant="outline" onClick={() => void ota.copyManifest()}>
+            <Button ui={{ uid: "release-console.ota.copy-manifest-LE3PFR", id: "release-console.ota.copy-manifest", kind: "action", action: "copy-manifest", part: "rollout" }} variant="outline" onClick={() => void ota.copyManifest()}>
               <ClipboardCopy className="h-4 w-4" />{t("releaseConsole.ota.copyManifest")}
             </Button>
           </section>

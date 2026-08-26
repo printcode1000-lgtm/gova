@@ -247,7 +247,7 @@ export function ProductSearchPanel({
       <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
         <div className="relative">
           <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-          <Input
+          <Input ui={{ uid: "product-search.query-hAl4PO", id: "product-search.query", kind: "field", part: "search" }}
             data-simulation-field="search-query"
             value={query}
             onChange={(event) => setQuery(event.target.value)}

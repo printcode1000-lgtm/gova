@@ -1,9 +1,10 @@
 "use client";
 
-import { Bug, ChevronLeft, ListPlus } from "lucide-react";
+import { Bug, Check, ChevronLeft, ClipboardCopy, ListPlus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { mergeLiveAndPersistentCounts } from "@asol/system-logs-core";
+import { NativeCore } from "@asol/native-core";
 
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
 import { useSession } from "@/features/auth/ui";
@@ -15,9 +16,20 @@ import {
   getSystemLogsSnapshot,
   subscribeToSystemLogs,
 } from "@/features/system-logs/application/system-log-store";
+import {
+  formatSystemLogsForCopy,
+  type CopyableSystemLogEntry,
+} from "@/features/system-logs/application/system-log-copy-text";
 
 const REFRESH_MS = 20_000;
 const LOGS_ROUTE = "/super-admin/logs";
+/** How long the expanded toolbar stays open before folding back to the count. */
+const COLLAPSE_MS = 6_000;
+/** Shared shell so the collapsed badge and the expanded toolbar sit identically. */
+const FLOATING_POSITION_CLASS =
+  "fixed bottom-[calc(5.5rem+var(--asol-safe-area-bottom))] end-4 z-[145] " +
+  "rounded-full border border-error/40 bg-error text-xs font-bold " +
+  "text-on-error shadow-lg shadow-error/25";
 
 export function SuperAdminErrorFloatingButton() {
   const router = useRouter();
@@ -29,6 +41,9 @@ export function SuperAdminErrorFloatingButton() {
     getSystemLogsSnapshot,
   );
   const [persistentLogs, setPersistentLogs] = useState<PersistentSystemLogEntry[]>([]);
+  const [copied, setCopied] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const toolbarRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
   const logOperations = usePageSaveOperationScope({
     id: "system-logs-floating",
@@ -68,6 +83,32 @@ export function SuperAdminErrorFloatingButton() {
     };
   }, [authorized, session?.sessionToken]);
 
+  // The toolbar folds itself back to the bare count so it never keeps covering
+  // page content after the tap that opened it. `copied` restarts the countdown
+  // so the copy confirmation is always visible.
+  useEffect(() => {
+    if (!expanded) return;
+    const timer = window.setTimeout(() => setExpanded(false), COLLAPSE_MS);
+    return () => window.clearTimeout(timer);
+  }, [expanded, copied]);
+
+  // Any touch that leaves the toolbar folds it back immediately, so it behaves
+  // like a transient overlay rather than a permanent bar.
+  useEffect(() => {
+    if (!expanded) return;
+    const onOutside = (event: Event) => {
+      const target = event.target as Node | null;
+      if (target && toolbarRef.current?.contains(target)) return;
+      setExpanded(false);
+    };
+    document.addEventListener("pointerdown", onOutside, true);
+    window.addEventListener("blur", onOutside);
+    return () => {
+      document.removeEventListener("pointerdown", onOutside, true);
+      window.removeEventListener("blur", onOutside);
+    };
+  }, [expanded]);
+
   const errorCount = useMemo(() => {
     const liveErrorCount = liveLogs
       .filter((entry) => entry.level === "error")
@@ -77,6 +118,32 @@ export function SuperAdminErrorFloatingButton() {
     );
     return mergeLiveAndPersistentCounts(liveErrorCount, persistentLogs, liveFingerprints);
   }, [liveLogs, persistentLogs]);
+
+  // Live entries win over their persisted twin so a repeated error is copied
+  // once, matching how `errorCount` counts it.
+  const errorEntries = useMemo<CopyableSystemLogEntry[]>(() => {
+    const live = liveLogs.filter((entry) => entry.level === "error");
+    const liveFingerprints = new Set(live.map((entry) => entry.fingerprint));
+    return [
+      ...live,
+      ...persistentLogs.filter(
+        (entry) =>
+          entry.level === "error" && !liveFingerprints.has(entry.fingerprint),
+      ),
+    ];
+  }, [liveLogs, persistentLogs]);
+
+  const copyErrorLogs = async () => {
+    try {
+      await NativeCore.writeClipboard({
+        string: formatSystemLogsForCopy(errorEntries),
+      });
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1_500);
+    } catch (error) {
+      console.warn("[SystemLogs] Failed to copy error logs.", error);
+    }
+  };
 
   const stageClearAllLogs = () => {
     logOperations.stage({
@@ -100,25 +167,46 @@ export function SuperAdminErrorFloatingButton() {
         }
       },
     });
+    setExpanded(false);
   };
 
   if (!authorized || errorCount === 0) return null;
 
+  if (!expanded) {
+    return (
+      <button
+        type="button"
+        onClick={() => setExpanded(true)}
+        className={
+          FLOATING_POSITION_CLASS +
+          " flex h-8 min-w-8 items-center justify-center px-2 " +
+          "active:bg-error/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
+        }
+        aria-expanded={false}
+        aria-label={`أخطاء النظام: ${errorCount} — عرض الأدوات`}
+      >
+        <span className="tabular-nums">{errorCount}</span>
+      </button>
+    );
+  }
+
   return (
     <>
       <div
+        ref={toolbarRef}
         className={
-          "fixed bottom-[calc(5.5rem+var(--asol-safe-area-bottom))] end-4 z-[145] " +
-          "flex max-w-[calc(100vw-2rem)] items-stretch gap-0.5 rounded-full " +
-          "border border-error/40 bg-error p-0.5 text-xs font-bold text-on-error " +
-          "shadow-lg shadow-error/25"
+          FLOATING_POSITION_CLASS +
+          " flex max-w-[calc(100vw-2rem)] items-stretch gap-0.5 p-0.5"
         }
         role="group"
         aria-label={`أخطاء النظام: ${errorCount}`}
       >
         <button
           type="button"
-          onClick={() => router.push(LOGS_ROUTE)}
+          onClick={() => {
+            setExpanded(false);
+            router.push(LOGS_ROUTE);
+          }}
           className="flex items-center gap-1 rounded-full px-2 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
           aria-label={`فتح سجل الأخطاء: ${errorCount}`}
         >
@@ -128,6 +216,21 @@ export function SuperAdminErrorFloatingButton() {
           </span>
           <span className="tabular-nums">{errorCount}</span>
           <ChevronLeft className="h-3.5 w-3.5 shrink-0" />
+        </button>
+        <span className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
+        <button
+          type="button"
+          onClick={() => void copyErrorLogs()}
+          className="rounded-full px-1.5 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
+          aria-label={
+            copied ? "تم نسخ قائمة الأخطاء" : `نسخ قائمة الأخطاء: ${errorCount}`
+          }
+        >
+          {copied ? (
+            <Check className="h-3.5 w-3.5 shrink-0" />
+          ) : (
+            <ClipboardCopy className="h-3.5 w-3.5 shrink-0" />
+          )}
         </button>
         <span className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
         <button

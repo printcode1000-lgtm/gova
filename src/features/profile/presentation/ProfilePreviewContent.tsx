@@ -210,8 +210,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         imageUrl: storeImages.avatarUrl || storeImages.coverUrl,
                       }}
                       trigger={
-                        <Button
-                          data-simulation-target="profile-share"
+                        <Button ui={{ uid: "profile-preview.share-k2xSN8", id: "profile-preview.share", kind: "action", action: "share-profile", part: "actions", simulation: { kind: "event", id: "profile-share" } }}
                           type="button"
                           variant="outline"
                           className={`${ACTION_TILE_CLASS} border-input  `}
@@ -229,8 +228,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       }
                     />
                     {!props.isOwner ? (
-                      <Button
-                        data-simulation-target="profile-contact"
+                      <Button ui={{ uid: "profile-preview.contact-owner-8nEnzn", id: "profile-preview.contact-owner", kind: "action", action: "contact-owner", part: "actions", simulation: { kind: "event", id: "profile-contact" } }}
                         type="button"
                         variant="outline"
                         className={`${ACTION_TILE_CLASS} border-input  `}
@@ -258,8 +256,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                     {storeDetails.profileShowcase?.customRequestEnabled &&
                     session?.uid &&
                     (!props.isOwner || props.isSuperAdmin) ? (
-                      <Button
-                        data-simulation-target="profile-custom-request"
+                      <Button ui={{ uid: "profile-preview.custom-request-RK4Jqi", id: "profile-preview.custom-request", kind: "action", action: "open-custom-request", part: "actions", simulation: { kind: "event", id: "profile-custom-request" } }}
                         type="button"
                         variant="outline"
                         className={`${ACTION_TILE_CLASS} border-input  `}

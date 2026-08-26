@@ -5,6 +5,9 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/shared/utils';
+import { type UiDescriptor } from '@asol/ui-registry-core';
+
+import { uiPrimitiveAttributes } from './ui-primitive-attributes';
 
 const Select = SelectPrimitive.Root;
 
@@ -14,15 +17,17 @@ const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & { ui?: UiDescriptor }
+>(({ className, children, disabled, ui, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
+    disabled={disabled}
     className={cn(
       'asol-control asol-field-surface flex w-full items-center justify-between border border-input text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
       className
     )}
     {...props}
+    {...uiPrimitiveAttributes('select-trigger', ui, disabled ? 'disabled' : undefined)}
   >
     {children}
     <SelectPrimitive.Icon asChild>

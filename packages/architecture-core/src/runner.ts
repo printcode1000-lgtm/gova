@@ -6,6 +6,7 @@ import { ROOT, SRC, SCRIPTS, violations, walk, rel } from './checks/architecture
 import { checkNotificationModuleContract } from './checks/notification-contract';
 import { checkDeadContractRules } from './checks/storage-core-contract';
 import { checkTouchInteractionContract } from './checks/touch-interaction-contract';
+import { checkUiAttributeContract } from './checks/ui-attribute-contract';
 import { checkMapLibreWorkerContract } from './checks/maplibre-worker-contract';
 import {
   checkFile,
@@ -122,6 +123,7 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
     checkVendorOwnershipContract(file, content);
   }
   checkTouchInteractionContract();
+  checkUiAttributeContract();
   checkMapLibreWorkerContract();
   checkGeneratedDataAccessArtifacts();
   checkSystemLogsBootstrapContract();

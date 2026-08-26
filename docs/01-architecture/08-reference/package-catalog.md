@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 42 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 43 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -580,6 +580,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Test Gate** | `npm run test:system-logs-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
+### @asol/ui-registry-core
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/ui-registry-core` |
+| **Folder** | `packages/ui-registry-core/` |
+| **Purpose** | UiRegistry identity contract, page registry, and DOM attribute builders |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run test:ui-registry-core` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
 ### @asol/trending-ribbon-core
 
 | Field | Value |
@@ -612,4 +626,4 @@ This Markdown file is **generated** and verified by `architecture:check`.
 
 | Metric | Value |
 |---|---|
-| Packages | 42 |
+| Packages | 43 |

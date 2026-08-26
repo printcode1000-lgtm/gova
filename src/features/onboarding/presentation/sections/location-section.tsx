@@ -75,7 +75,7 @@ export function LocationSection() {
         <CardContent className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
             <FormField label={t('onboarding.location.country')} htmlFor="country" required error={errors.country}>
-              <FormSelect
+              <FormSelect ui={{ uid: 'onboarding.location.country-ZUTvz1', id: 'onboarding.location.country', kind: 'field', part: 'form' }}
                 value={location.country}
                 onValueChange={(v) => updateLocation({ country: v })}
                 options={constants.countries.map((c) => ({
@@ -88,7 +88,7 @@ export function LocationSection() {
             </FormField>
 
             <FormField label={t('onboarding.location.city')} htmlFor="city" required error={errors.city}>
-              <FormInput
+              <FormInput ui={{ uid: 'onboarding.location.city-L0aVzc', id: 'onboarding.location.city', kind: 'field', part: 'form' }}
                 id="city"
                 value={location.city}
                 onChange={(e) => updateLocation({ city: e.target.value })}
@@ -99,7 +99,7 @@ export function LocationSection() {
           </div>
 
           <FormField label={t('onboarding.location.address')} htmlFor="address" required error={errors.address}>
-            <FormInput
+            <FormInput ui={{ uid: 'onboarding.location.address-QDsd6M', id: 'onboarding.location.address', kind: 'field', part: 'form' }}
               id="address"
               value={location.address}
               onChange={(e) => updateLocation({ address: e.target.value })}
@@ -109,7 +109,7 @@ export function LocationSection() {
           </FormField>
 
           <FormField label={t('onboarding.location.postalCode')} htmlFor="postalCode" hint={t('onboarding.common.optional')}>
-            <FormInput
+            <FormInput ui={{ uid: 'onboarding.location.postal-code-1BYVKu', id: 'onboarding.location.postal-code', kind: 'field', part: 'form' }}
               id="postalCode"
               value={location.postalCode}
               onChange={(e) => updateLocation({ postalCode: e.target.value })}

@@ -249,7 +249,7 @@ export function CustomRequestPageContent() {
             <label className="text-sm font-bold" htmlFor="custom-request-title">
               {copy.titleLabel}
             </label>
-            <Input
+            <Input ui={{ uid: "custom-request.title-Y0o924", id: "custom-request.title", kind: "field", part: "form" }}
               id="custom-request-title"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
@@ -262,7 +262,7 @@ export function CustomRequestPageContent() {
             <label className="text-sm font-bold" htmlFor="custom-request-description">
               {copy.descriptionLabel}
             </label>
-            <Textarea
+            <Textarea ui={{ uid: "custom-request.description-F29LC5", id: "custom-request.description", kind: "field", part: "form" }}
               id="custom-request-description"
               data-simulation-field="custom-request-description"
               value={description}

@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 248 |
+| command | 250 |
 | config | 12 |
-| document | 248 |
+| document | 249 |
 | domain | 10 |
 | environment-key | 232 |
 | external-dependency | 107 |
 | feature | 48 |
-| package | 42 |
+| package | 43 |
 | route | 179 |
 | runtime | 7 |
 | script | 131 |
 | service | 6 |
-| source | 2257 |
-| test | 213 |
+| source | 2284 |
+| test | 217 |
 
 ## Domains
 
@@ -85,6 +85,7 @@
 | @asol/submain-composition | `packages/submain-composition` | Composition root for the submain account; Layer: composition; Public exports: . |
 | @asol/system-logs-core | `packages/system-logs-core` | System log capture and persistence contract; Layer: capability; Public exports: ., ./server |
 | @asol/trending-ribbon-core | `packages/trending-ribbon-core` | Trending ribbon UI capability; Layer: capability; Public exports: ., ./server |
+| @asol/ui-registry-core | `packages/ui-registry-core` | UiRegistry identity contract, page registry, and DOM attribute builders; Layer: capability; Public exports: . |
 | @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel deployment orchestration; Layer: capability; Public exports: ., ./remote-deploy-contracts, ./remote-deploy-sandbox |
 
 ## Features

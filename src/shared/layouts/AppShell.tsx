@@ -1,6 +1,7 @@
 'use client';
 
 import type { CSSProperties, ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
 
 import { useOpenInAsolHeaderPrompt } from '@/features/sharing';
 
@@ -8,6 +9,7 @@ import { AppHeader } from './AppHeader';
 import { BottomNavBar } from './BottomNavBar';
 import { BOTTOM_NAV_CLEARANCE } from './bottom-nav-layout';
 import { PageSaveRuntimeInit } from '@/features/page-save/ui';
+import { resolveUiPage, uiPageAttributes } from '@asol/ui-registry-core';
 
 interface AppShellProps {
   children: ReactNode;
@@ -18,6 +20,7 @@ interface AppShellProps {
  */
 export function AppShell({ children }: AppShellProps) {
   const installPrompt = useOpenInAsolHeaderPrompt();
+  const page = resolveUiPage(usePathname());
   const shellStyle = {
     '--asol-header-install-height': installPrompt ? '3rem' : '0px',
   } as CSSProperties;
@@ -29,6 +32,7 @@ export function AppShell({ children }: AppShellProps) {
       <PageSaveRuntimeInit />
       <AppHeader installPrompt={installPrompt} />
       <main
+        {...uiPageAttributes(page)}
         className="asol-canvas asol-shell-main min-h-screen"
         style={{ paddingBottom: BOTTOM_NAV_CLEARANCE }}
       >

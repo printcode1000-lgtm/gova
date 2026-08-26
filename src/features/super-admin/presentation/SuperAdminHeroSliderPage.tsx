@@ -181,7 +181,7 @@ export function SuperAdminHeroSliderPage() {
       <main className="container mx-auto max-w-6xl px-4 py-8">
         <div className="rounded-lg border border-destructive/30 bg-card px-4 py-6">
           <p className="text-sm text-destructive">{message}</p>
-          <Button
+          <Button ui={{ uid: "super-admin.hero-slider.reload-7xQtZK", id: "super-admin.hero-slider.reload", kind: "action", action: "reload", part: "toolbar" }}
             type="button"
             variant="outline"
             className="mt-4"
@@ -251,7 +251,7 @@ export function SuperAdminHeroSliderPage() {
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-52 space-y-2">
             <Label htmlFor="check-interval">الفترة بالدقائق</Label>
-            <Input
+            <Input ui={{ uid: "super-admin.hero-slider.check-interval-YL9yfX", id: "super-admin.hero-slider.check-interval", kind: "field", part: "settings" }}
               id="check-interval"
               type="number"
               min={5}

@@ -25,6 +25,7 @@ import { SystemLogCollector } from "@/features/system-logs/ui";
 import { SystemLogErrorBoundary } from "@/features/system-logs/ui";
 import { SuperAdminErrorFloatingButton } from "@/features/system-logs/ui";
 import { SuperAdminImpersonationBanner } from "@/features/super-admin/ui";
+import { SuperAdminUiAttributeInspector } from "@/features/super-admin/ui";
 import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
 import { FeatureFlagController } from "@/features/feature-flags";
@@ -112,6 +113,7 @@ export default function RootLayout({
                           <ShareDeepLinkController />
                           <VoiceInputController />
                           <SuperAdminImpersonationBanner />
+                          <SuperAdminUiAttributeInspector />
                           <SuperAdminErrorFloatingButton />
                           <DeveloperBadge />
                         </OtaUpdateProvider>

@@ -109,7 +109,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
             <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
             {t("onboarding.contactInfo.email")}
           </Label>
-          <Input
+          <Input ui={{ uid: "profile.registration.email-w4ce6P", id: "profile.registration.email", kind: "field", part: "account" }}
             value={form.email}
             onChange={(e) => updateField("email", e.target.value)}
             placeholder={t("onboarding.contactInfo.emailPlaceholder")}
@@ -124,7 +124,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
         </div>
 
         <div className="space-y-2">
-          <Button
+          <Button ui={{ uid: "profile.registration.toggle-password-QyiV32", id: "profile.registration.toggle-password", kind: "action", action: "toggle-password-form", part: "password" }}
             type="button"
             variant="ghost"
             size="sm"
@@ -146,7 +146,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                 <Label htmlFor="currentPassword" className="text-xs sm:text-sm">
                   {t("onboarding.contactInfo.currentPassword")}
                 </Label>
-                <Input
+                <Input ui={{ uid: "profile.registration.current-password-4AZhBQ", id: "profile.registration.current-password", kind: "field", part: "password" }}
                   id="currentPassword"
                   type="password"
                   value={form.currentPassword}
@@ -170,7 +170,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                 <Label htmlFor="newPassword" className="text-xs sm:text-sm">
                   {t("onboarding.contactInfo.newPassword")}
                 </Label>
-                <Input
+                <Input ui={{ uid: "profile.registration.new-password-M0iC2C", id: "profile.registration.new-password", kind: "field", part: "password" }}
                   id="newPassword"
                   type="password"
                   value={form.newPassword}
@@ -192,7 +192,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                 <Label htmlFor="confirmPassword" className="text-xs sm:text-sm">
                   {t("onboarding.contactInfo.confirmPassword")}
                 </Label>
-                <Input
+                <Input ui={{ uid: "profile.registration.confirm-password-QW9mB3", id: "profile.registration.confirm-password", kind: "field", part: "password" }}
                   id="confirmPassword"
                   type="password"
                   value={form.confirmPassword}

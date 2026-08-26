@@ -24,7 +24,7 @@ export function DataHealthFilters(props: {
     <section className="grid gap-2 rounded-md border bg-surface p-3 md:grid-cols-2 xl:grid-cols-[1.4fr_repeat(4,0.7fr)_auto]">
       <label className="relative">
         <Search className="absolute start-3 top-3 h-4 w-4 text-on-surface-variant" />
-        <Input
+        <Input ui={{ uid: "data-health.filters.query-2MLMO6", id: "data-health.filters.query", kind: "field", part: "filters" }}
           value={props.query}
           onChange={(event) => props.setQuery(event.target.value)}
           placeholder="بحث بالمالك أو المعرف أو وصف المشكلة"

@@ -30,6 +30,7 @@ import {
 import { FocusTrap } from "focus-trap-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/shared/utils";
+import { uiAttributes } from "@asol/ui-registry-core";
 import { useTranslation } from "@/shared/i18n";
 import {
   useAppPreferences,
@@ -235,6 +236,7 @@ export const AppSidebar = React.memo(function AppSidebar({
 
         <FocusTrap active={isOpen}>
           <div
+            {...uiAttributes({ uid: "app.sidebar-0sFX57", id: "app.sidebar", kind: "region", part: "sidebar" })}
             ref={sidebarRef}
             role="dialog"
             aria-modal={isOpen}
@@ -253,6 +255,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 {t("sidebar.menu")}
               </span>
               <button
+                {...uiAttributes({ uid: "app.sidebar.close-J3PUqo", id: "app.sidebar.close", kind: "action", action: "close", part: "close" })}
                 type="button"
                 className={cn(
                   "asol-control-icon flex items-center justify-center rounded-full active:opacity-80",

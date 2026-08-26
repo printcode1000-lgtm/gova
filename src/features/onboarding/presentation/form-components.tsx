@@ -15,6 +15,7 @@ import {
 } from '@/shared/ui/select';
 import { Badge } from '@/shared/ui/badge';
 import { useTranslation } from '@/shared/i18n';
+import type { UiDescriptor } from '@asol/ui-registry-core';
 
 interface FormFieldProps {
   label: string;
@@ -55,9 +56,10 @@ export function FormField({
   );
 }
 
-interface FormInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
+  /** Per-instance UiRegistry identity, supplied by the calling section. */
+  ui?: UiDescriptor;
 }
 
 export function FormInput({ error, className, ...props }: FormInputProps) {
@@ -69,9 +71,10 @@ export function FormInput({ error, className, ...props }: FormInputProps) {
   );
 }
 
-interface FormTextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string;
+  /** Per-instance UiRegistry identity, supplied by the calling section. */
+  ui?: UiDescriptor;
 }
 
 export function FormTextarea({ error, className, ...props }: FormTextareaProps) {
@@ -84,6 +87,8 @@ export function FormTextarea({ error, className, ...props }: FormTextareaProps) 
 }
 
 interface FormSelectProps {
+  /** Per-instance UiRegistry identity, supplied by the calling section. */
+  ui?: UiDescriptor;
   value: string;
   onValueChange: (value: string) => void;
   options: { value: string; label: string }[];
@@ -93,6 +98,7 @@ interface FormSelectProps {
 }
 
 export function FormSelect({
+  ui,
   value,
   onValueChange,
   options,
@@ -102,7 +108,7 @@ export function FormSelect({
 }: FormSelectProps) {
   return (
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
-      <SelectTrigger className={cn(error && 'border-destructive')}>
+      <SelectTrigger ui={ui} className={cn(error && 'border-destructive')}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

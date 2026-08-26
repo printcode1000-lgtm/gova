@@ -67,7 +67,7 @@ return (
                     <Mail className="h-4 w-4 text-muted-foreground" />
                     {t('onboarding.contactInfo.email')}
                   </Label>
-                  <Input
+                  <Input ui={{ uid: 'profile.contact.primary-email-eJHx5o', id: 'profile.contact.primary-email', kind: 'field', part: 'primary' }}
                     value={localData.emails.find((e) => e.id === 'primary')?.email || ''}
                     onChange={(e) => updateEmail('primary', { email: e.target.value })}
                     placeholder={t('onboarding.contactInfo.emailPlaceholder')}
@@ -79,7 +79,7 @@ return (
                 {/* Password Change Section */}
                 {!readOnly && (
                   <div className="space-y-2">
-                    <Button
+                    <Button ui={{ uid: 'profile.contact.toggle-password-xs20PV', id: 'profile.contact.toggle-password', kind: 'action', action: 'toggle-password-form', part: 'password' }}
                       variant="ghost"
                       size="sm"
                       className="w-full justify-start gap-2"
@@ -93,7 +93,7 @@ return (
                       <div className="space-y-4 pt-4">
                         <div className="space-y-2">
                           <Label htmlFor="currentPassword">{t('onboarding.contactInfo.currentPassword')}</Label>
-                          <Input
+                          <Input ui={{ uid: 'profile.contact.current-password-f4RHGb', id: 'profile.contact.current-password', kind: 'field', part: 'password' }}
                             id="currentPassword"
                             type="password"
                             value={passwordData.currentPassword}
@@ -103,7 +103,7 @@ return (
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="newPassword">{t('onboarding.contactInfo.newPassword')}</Label>
-                          <Input
+                          <Input ui={{ uid: 'profile.contact.new-password-QXC1u7', id: 'profile.contact.new-password', kind: 'field', part: 'password' }}
                             id="newPassword"
                             type="password"
                             value={passwordData.newPassword}
@@ -113,7 +113,7 @@ return (
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="confirmPassword">{t('onboarding.contactInfo.confirmPassword')}</Label>
-                          <Input
+                          <Input ui={{ uid: 'profile.contact.confirm-password-JJ8pJH', id: 'profile.contact.confirm-password', kind: 'field', part: 'password' }}
                             id="confirmPassword"
                             type="password"
                             value={passwordData.confirmPassword}
@@ -234,7 +234,7 @@ return (
                     <span style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
-                    <Button
+                    <Button ui={{ uid: 'profile.contact.add-email-2UgRs5', id: 'profile.contact.add-email', kind: 'action', action: 'add-email', part: 'emails' }}
                       variant="outline"
                       size="sm"
                       onClick={addEmail}
@@ -360,7 +360,7 @@ return (
                     <span style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
-                    <Button
+                    <Button ui={{ uid: 'profile.contact.add-website-nQM78h', id: 'profile.contact.add-website', kind: 'action', action: 'add-website', part: 'websites' }}
                       variant="outline"
                       size="sm"
                       onClick={addWebsite}

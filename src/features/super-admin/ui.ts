@@ -7,6 +7,7 @@
 export * from './presentation/SuperAdminFeaturedMarqueePage';
 export * from './presentation/SuperAdminHeroSliderPage';
 export * from './presentation/SuperAdminImpersonationBanner';
+export * from './presentation/SuperAdminUiAttributeInspector';
 export * from './presentation/SuperAdminLogsPage';
 export * from './presentation/SuperAdminNotificationBroadcastPage';
 export * from './presentation/SuperAdminNotificationTestsPage';

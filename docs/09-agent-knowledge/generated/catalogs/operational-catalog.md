@@ -256,11 +256,13 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:storage-image-manager-core` | `npx tsx packages/storage-image-manager-core/src/tests/index.test.ts` |
 | `npm run test:sub2main-composition` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/sub2main-composition/src/tests/index.test.ts` |
 | `npm run test:submain-composition` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/submain-composition/src/tests/index.test.ts` |
+| `npm run test:super-admin-ui-inspector` | `npx tsx src/features/super-admin/tests/ui-attribute-inspector.test.ts` |
 | `npm run test:super-admin-users` | `npx tsx src/features/super-admin/tests/super-admin-user-deletion.test.ts && npx tsx src/features/super-admin/tests/super-admin-impersonation-notification-flow.test.ts` |
 | `npm run test:system-logs` | `npm run test:system-logs-core && npx tsx src/features/system-logs/tests/system-log-security.test.ts && cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts` |
 | `npm run test:system-logs-core` | `npx tsx packages/system-logs-core/src/tests/index.test.ts` |
 | `npm run test:trending-ribbon-core` | `npx tsx packages/trending-ribbon-core/src/tests/index.test.ts` |
 | `npm run test:turso-read-retry` | `npx tsx packages/data-core/src/core/database/tests/turso-read-retry.test.ts` |
+| `npm run test:ui-registry-core` | `npx tsx packages/ui-registry-core/src/tests/index.test.ts && npx tsx packages/ui-registry-core/src/tests/per-instance-registration.test.ts && npx tsx packages/architecture-core/src/tests/ui-attribute-guard.test.ts` |
 | `npm run test:vercel-deploy-core` | `npx tsx packages/vercel-deploy-core/src/tests/index.test.ts` |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run validate-storage-profiles` | `npx tsx packages/storage-core/scripts/validate-storage-profiles.ts` |

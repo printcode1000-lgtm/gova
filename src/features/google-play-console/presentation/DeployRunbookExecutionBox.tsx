@@ -98,7 +98,7 @@ export function ExecutionBox(props: {
             </p>
           ) : null}
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-            <Button
+            <Button ui={{ uid: "deploy-runbook.execution.start-NVT7Gg", id: "deploy-runbook.execution.start", kind: "action", action: "start-run", part: "execution" }}
               className="w-full sm:w-auto"
               disabled={props.locked || props.confirmation !== props.exactPhrase}
               onClick={props.onStart}
@@ -111,7 +111,7 @@ export function ExecutionBox(props: {
               {props.locked ? "قيد التشغيل" : "تشغيل"}
             </Button>
             {props.activeJob ? (
-              <Button variant="destructive" className="w-full sm:w-auto" onClick={props.onCancel}>
+              <Button ui={{ uid: "deploy-runbook.execution.cancel-K6Ga4z", id: "deploy-runbook.execution.cancel", kind: "action", action: "cancel-run", part: "execution" }} variant="destructive" className="w-full sm:w-auto" onClick={props.onCancel}>
                 <StopCircle className="h-4 w-4" />
                 إيقاف
               </Button>
@@ -148,7 +148,7 @@ function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: s
         </button>
         {" "}لتأكيد أن الأمر قد يدفع وينشر إنتاجياً.
       </p>
-      <Button
+      <Button ui={{ uid: "deploy-runbook.execution.copy-phrase-FiE69A", id: "deploy-runbook.execution.copy-phrase", kind: "action", action: "copy-confirmation-phrase", part: "execution" }}
         type="button"
         variant="outline"
         size="sm"

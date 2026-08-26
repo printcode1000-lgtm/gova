@@ -86,8 +86,8 @@ export function ProductionDeployPage() {
       </header>
 
       <div className="grid grid-cols-2 gap-2" role="tablist" aria-label="نوع النشر">
-        <Button type="button" role="tab" aria-selected={tab === "deploy:all"} variant={tab === "deploy:all" ? "default" : "outline"} onClick={() => setTab("deploy:all")}>Deploy All</Button>
-        <Button type="button" role="tab" aria-selected={tab === "deploy:push"} variant={tab === "deploy:push" ? "default" : "outline"} onClick={() => setTab("deploy:push")}>Deploy Push</Button>
+        <Button ui={{ uid: "production-deploy.tab-deploy-all-S2g8ZZ", id: "production-deploy.tab-deploy-all", kind: "action", action: "select-deploy-all-tab", part: "tabs" }} type="button" role="tab" aria-selected={tab === "deploy:all"} variant={tab === "deploy:all" ? "default" : "outline"} onClick={() => setTab("deploy:all")}>Deploy All</Button>
+        <Button ui={{ uid: "production-deploy.tab-deploy-push-QZMUS1", id: "production-deploy.tab-deploy-push", kind: "action", action: "select-deploy-push-tab", part: "tabs" }} type="button" role="tab" aria-selected={tab === "deploy:push"} variant={tab === "deploy:push" ? "default" : "outline"} onClick={() => setTab("deploy:push")}>Deploy Push</Button>
       </div>
 
       {readiness && !readiness.ready ? (
@@ -111,7 +111,7 @@ export function ProductionDeployPage() {
           اكتب عبارة التأكيد
         </label>
         <ConfirmationPhrase onApply={setConfirmation} />
-        <Input
+        <Input ui={{ uid: "production-deploy.confirmation-G1gYy2", id: "production-deploy.confirmation", kind: "field", part: "execution" }}
           id="production-deploy-confirmation"
           value={confirmation}
           dir="ltr"
@@ -119,7 +119,7 @@ export function ProductionDeployPage() {
           aria-label="عبارة تأكيد النشر"
           onChange={(event) => setConfirmation(event.target.value)}
         />
-        <Button
+        <Button ui={{ uid: "production-deploy.start-5p1eeC", id: "production-deploy.start", kind: "action", action: "start-production-deploy", part: "execution" }}
           type="button"
           disabled={!armed}
           aria-label="بدء النشر إلى الإنتاج"
@@ -239,7 +239,7 @@ function ConfirmationPhrase(props: { onApply: (value: string) => void }) {
       <code className="select-all rounded bg-muted px-2 py-1 font-mono text-sm" dir="ltr">
         {REMOTE_DEPLOY_ALL_CONFIRMATION}
       </code>
-      <Button
+      <Button ui={{ uid: "production-deploy.copy-phrase-e0wHqS", id: "production-deploy.copy-phrase", kind: "action", action: "copy-confirmation-phrase", part: "execution" }}
         type="button"
         variant="outline"
         size="sm"

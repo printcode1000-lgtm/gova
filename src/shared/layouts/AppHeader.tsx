@@ -14,6 +14,7 @@ import {
   type AsolInstallPrompt,
 } from '@/features/sharing';
 import { PageSaveHeaderButton } from '@/features/page-save/ui';
+import { uiAttributes } from '@asol/ui-registry-core';
 
 import { AppSidebar } from './AppSidebar';
 
@@ -43,7 +44,7 @@ export function AppHeader({
 
   return (
     <>
-      <header className={cn(
+      <header {...uiAttributes({ uid: 'app.header-D7X3uK', id: 'app.header', kind: 'region', part: 'top' })} className={cn(
         "fixed top-0 w-full z-50 pt-[var(--asol-app-header-inset)] shadow-sm border-b border-outline-variant rounded-b-2xl",
         resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'
       )}>
@@ -52,6 +53,7 @@ export function AppHeader({
         <div className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
           <div className="flex items-center gap-3">
             <button
+              {...uiAttributes({ uid: 'app.header.menu-xS4nIG', id: 'app.header.menu', kind: 'action', action: 'open-sidebar', part: 'menu' })}
               type="button"
               id="header-menu-button"
               className={cn(
@@ -76,6 +78,7 @@ export function AppHeader({
             <PageSaveHeaderButton />
 
             <Link
+              {...uiAttributes({ uid: 'app.header.search-C0Ynx3', id: 'app.header.search', kind: 'action', action: 'navigate-search', part: 'search' })}
               href="/search"
               id="header-search-button"
               data-simulation-target={pathname === '/home' ? 'home-search' : undefined}
@@ -94,6 +97,7 @@ export function AppHeader({
             </Link>
 
             <Link
+              {...uiAttributes({ uid: 'app.header.cart-Y4wePh', id: 'app.header.cart', kind: 'action', action: 'navigate-cart', part: 'cart' })}
               href="/cart"
               id="header-cart-button"
               data-simulation-target="nav-cart"

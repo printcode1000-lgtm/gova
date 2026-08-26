@@ -57,7 +57,7 @@ export function DataHealthPage() {
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button
+          <Button ui={{ uid: "data-health.export-json-Rxa0Sz", id: "data-health.export-json", kind: "action", action: "export-json", part: "toolbar" }}
             type="button"
             size="icon"
             variant="outline"
@@ -67,7 +67,7 @@ export function DataHealthPage() {
           >
             <FileJson className="h-4 w-4" />
           </Button>
-          <Button
+          <Button ui={{ uid: "data-health.export-csv-zXMJ1B", id: "data-health.export-csv", kind: "action", action: "export-csv", part: "toolbar" }}
             type="button"
             size="icon"
             variant="outline"
@@ -77,7 +77,7 @@ export function DataHealthPage() {
           >
             <Download className="h-4 w-4" />
           </Button>
-          <Button type="button" onClick={page.scan} disabled={page.loading}>
+          <Button ui={{ uid: "data-health.scan-xXu578", id: "data-health.scan", kind: "action", action: "run-scan", part: "toolbar" }} type="button" onClick={page.scan} disabled={page.loading}>
             <RefreshCw className={`h-4 w-4 ${page.loading ? "animate-spin" : ""}`} />
             {page.loading ? "جاري الفحص" : "فحص جديد"}
           </Button>
@@ -117,9 +117,9 @@ export function DataHealthPage() {
         }}
       >
         <TabsList className="w-full justify-start overflow-x-auto">
-          <TabsTrigger value="findings">النتائج</TabsTrigger>
-          <TabsTrigger value="schema">مقارنة البنية</TabsTrigger>
-          <TabsTrigger value="history">السجل والتدقيق</TabsTrigger>
+          <TabsTrigger ui={{ uid: "data-health.tab-findings-I7s8xO", id: "data-health.tab-findings", kind: "action", action: "select-findings-tab", part: "tabs" }} value="findings">النتائج</TabsTrigger>
+          <TabsTrigger ui={{ uid: "data-health.tab-schema-M6eymK", id: "data-health.tab-schema", kind: "action", action: "select-schema-tab", part: "tabs" }} value="schema">مقارنة البنية</TabsTrigger>
+          <TabsTrigger ui={{ uid: "data-health.tab-history-xdlp2W", id: "data-health.tab-history", kind: "action", action: "select-history-tab", part: "tabs" }} value="history">السجل والتدقيق</TabsTrigger>
         </TabsList>
 
         <TabsContent value="findings">

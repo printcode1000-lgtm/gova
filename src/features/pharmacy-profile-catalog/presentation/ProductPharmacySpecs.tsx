@@ -320,7 +320,7 @@ export function ProductPharmacySpecs({
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {config.pharmacyCategory ? (
-        <PharmacySelect
+        <PharmacySelect ui={{ uid: "pharmacy-catalog.specs.category-K7ccOS", id: "pharmacy-catalog.specs.category", kind: "field", part: "specs" }}
           label="التصنيف الرئيسي"
           value={selectedCategory ? String(selectedCategory.id) : ""}
           disabled={categories.length === 0}
@@ -333,7 +333,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.pharmacySubcategory ? (
-        <PharmacySelect
+        <PharmacySelect ui={{ uid: "pharmacy-catalog.specs.subcategory-bl01Lc", id: "pharmacy-catalog.specs.subcategory", kind: "field", part: "specs" }}
           label="التصنيف الفرعي"
           value={selectedSubcategory ? String(selectedSubcategory.id) : ""}
           disabled={subcategories.length === 0}
@@ -372,7 +372,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.form ? (
-        <PharmacySelect
+        <PharmacySelect ui={{ uid: "pharmacy-catalog.specs.form-AbS623", id: "pharmacy-catalog.specs.form", kind: "field", part: "specs" }}
           label="شكل الدواء"
           value={selectedForm?.id ?? ""}
           disabled={forms.length === 0}
@@ -385,7 +385,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.concentration ? (
-        <PharmacySelect
+        <PharmacySelect ui={{ uid: "pharmacy-catalog.specs.strength-IfRd6w", id: "pharmacy-catalog.specs.strength", kind: "field", part: "specs" }}
           label="التركيز"
           value={selectedStrength?.id ?? ""}
           disabled={strengths.length === 0}

@@ -113,7 +113,7 @@ export function StoreIdentitySection() {
         <CardContent className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
             <FormField label={t('onboarding.storeIdentity.storeName')} htmlFor="storeName" required error={errors.storeName}>
-              <FormInput
+              <FormInput ui={{ uid: 'onboarding.store-identity.store-name-uoWh3D', id: 'onboarding.store-identity.store-name', kind: 'field', part: 'form' }}
                 id="storeName"
                 value={storeIdentity.storeName}
                 onChange={(e) => updateStoreIdentity({ storeName: e.target.value })}
@@ -123,7 +123,7 @@ export function StoreIdentitySection() {
             </FormField>
 
             <FormField label={t('onboarding.storeIdentity.storeCategory')} htmlFor="storeCategory" required error={errors.storeCategory}>
-              <FormSelect
+              <FormSelect ui={{ uid: 'onboarding.store-identity.store-category-W7KlKN', id: 'onboarding.store-identity.store-category', kind: 'field', part: 'form' }}
                 value={storeIdentity.storeCategory}
                 onValueChange={(v) => updateStoreIdentity({ storeCategory: v })}
                 options={constants.storeCategories.map((c) => ({
@@ -143,7 +143,7 @@ export function StoreIdentitySection() {
             hint={`${storeIdentity.storeDescription.length}/500`}
             error={errors.storeDescription}
           >
-            <FormTextarea
+            <FormTextarea ui={{ uid: 'onboarding.store-identity.store-description-43W1KQ', id: 'onboarding.store-identity.store-description', kind: 'field', part: 'form' }}
               id="storeDescription"
               value={storeIdentity.storeDescription}
               onChange={(e) => updateStoreIdentity({ storeDescription: e.target.value })}
@@ -159,7 +159,7 @@ export function StoreIdentitySection() {
             htmlFor="storeStory"
             hint={t('onboarding.storeIdentity.storyHint')}
           >
-            <FormTextarea
+            <FormTextarea ui={{ uid: 'onboarding.store-identity.store-story-Cm95SJ', id: 'onboarding.store-identity.store-story', kind: 'field', part: 'form' }}
               id="storeStory"
               value={storeIdentity.storeStory}
               onChange={(e) => updateStoreIdentity({ storeStory: e.target.value })}

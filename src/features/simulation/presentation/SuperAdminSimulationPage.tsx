@@ -263,7 +263,7 @@ export function SuperAdminSimulationPage() {
                 ) : null}
               </label>
 
-              <Button
+              <Button ui={{ uid: "super-admin.simulation.run-all-93SxHl", id: "super-admin.simulation.run-all", kind: "action", action: "run-all-interactions", part: "actions" }}
                 type="button"
                 onClick={() => void runAllInteractions()}
                 disabled={busy || USER_PAGE_REGISTRY.length === 0}
@@ -301,7 +301,7 @@ export function SuperAdminSimulationPage() {
                 ) : null}
               </label>
 
-              <Button
+              <Button ui={{ uid: "super-admin.simulation.run-selected-IZvz5s", id: "super-admin.simulation.run-selected", kind: "action", action: "run-selected-interaction", part: "actions" }}
                 type="button"
                 onClick={() => void runSelectedInteraction()}
                 disabled={busy || !selectedPage || !selectedInteraction}

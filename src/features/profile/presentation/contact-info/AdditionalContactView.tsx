@@ -126,7 +126,7 @@ return (
                     <span style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
-                    <Button
+                    <Button ui={{ uid: 'profile.additional-contact.add-email-aSN14x', id: 'profile.additional-contact.add-email', kind: 'action', action: 'add-email', part: 'emails' }}
                       variant="outline"
                       size="sm"
                       onClick={addEmail}
@@ -252,7 +252,7 @@ return (
                     <span style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
-                    <Button
+                    <Button ui={{ uid: 'profile.additional-contact.add-website-B3XH9C', id: 'profile.additional-contact.add-website', kind: 'action', action: 'add-website', part: 'websites' }}
                       variant="outline"
                       size="sm"
                       onClick={addWebsite}

@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Button } from "@/shared/ui/button";
+import { uiAttributes } from "@asol/ui-registry-core";
 import {
   Dialog,
   DialogContent,
@@ -85,7 +86,7 @@ export function PageSaveDialog() {
         if (!next && !isSaving) handleClose();
       }}
     >
-      <DialogContent className="z-[100] w-[calc(100%-2rem)] max-w-md overflow-hidden rounded-[1.75rem] border-primary/20 p-0 shadow-2xl duration-300 data-[state=closed]:zoom-out-50 data-[state=open]:zoom-in-50 [&>button.absolute]:hidden">
+      <DialogContent {...uiAttributes({ uid: "page-save.dialog-CfGhr4", id: "page-save.dialog", kind: "region", part: "dialog" })} className="z-[100] w-[calc(100%-2rem)] max-w-md overflow-hidden rounded-[1.75rem] border-primary/20 p-0 shadow-2xl duration-300 data-[state=closed]:zoom-out-50 data-[state=open]:zoom-in-50 [&>button.absolute]:hidden">
         <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-primary/5 to-background px-6 pb-5 pt-7">
           <div className="absolute -end-12 -top-16 h-40 w-40 rounded-full bg-primary/15 blur-3xl" />
           <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg shadow-primary/25">
@@ -201,9 +202,16 @@ export function PageSaveDialog() {
 
         <DialogFooter className="flex-row flex-nowrap gap-2 px-6 pb-6 pt-2 sm:flex-row sm:space-x-0">
           <Button
-            data-simulation-target="page-save-execute"
             type="button"
             size="lg"
+            ui={{
+              uid: "page-save.dialog.execute-Ox5spc",
+              id: "page-save.dialog.execute",
+              kind: "action",
+              action: "execute",
+              part: "confirm",
+              simulation: { kind: "event", id: "page-save-execute" },
+            }}
             className="min-w-0 flex-1 rounded-xl"
             disabled={!dialog?.canSave || isSaving}
             onClick={handleExecute}
@@ -215,6 +223,7 @@ export function PageSaveDialog() {
             type="button"
             size="lg"
             variant="ghost"
+            ui={{ uid: "page-save.dialog.close-TDE6xt", id: "page-save.dialog.close", kind: "action", action: "close", part: "cancel" }}
             onClick={handleClose}
             className="min-w-0 flex-1 rounded-xl"
             disabled={isSaving}

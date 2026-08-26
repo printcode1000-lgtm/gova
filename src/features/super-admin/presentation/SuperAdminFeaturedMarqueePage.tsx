@@ -300,7 +300,7 @@ export function SuperAdminFeaturedMarqueePage() {
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-52 space-y-2">
             <Label htmlFor="check-interval">الفترة بالدقائق</Label>
-            <Input
+            <Input ui={{ uid: "super-admin.featured-marquee.check-interval-K57juN", id: "super-admin.featured-marquee.check-interval", kind: "field", part: "settings" }}
               id="check-interval"
               type="number"
               min={5}
@@ -322,7 +322,7 @@ export function SuperAdminFeaturedMarqueePage() {
               {interval} دقيقة
             </Button>
           ))}
-          <Button
+          <Button ui={{ uid: "super-admin.featured-marquee.reload-settings-QvFS5N", id: "super-admin.featured-marquee.reload-settings", kind: "action", action: "reload", part: "settings" }}
             type="button"
             variant="outline"
             onClick={() => void load()}
@@ -351,7 +351,7 @@ export function SuperAdminFeaturedMarqueePage() {
         <div className="flex gap-2">
           <div className="flex-1 space-y-1">
             <Label htmlFor="new-product-id">معرف المنتج Product ID</Label>
-            <Input
+            <Input ui={{ uid: "super-admin.featured-marquee.new-product-id-bGl51Q", id: "super-admin.featured-marquee.new-product-id", kind: "field", part: "new-item" }}
               id="new-product-id"
               placeholder="مثال: 3a1b2c-..."
               value={newProductId}
@@ -362,7 +362,7 @@ export function SuperAdminFeaturedMarqueePage() {
             />
           </div>
           <div className="flex items-end">
-            <Button
+            <Button ui={{ uid: "super-admin.featured-marquee.add-product-mh41B1", id: "super-admin.featured-marquee.add-product", kind: "action", action: "add-product", part: "new-item" }}
               type="button"
               onClick={() => void addProduct()}
               disabled={!newProductId.trim()}
@@ -387,7 +387,7 @@ export function SuperAdminFeaturedMarqueePage() {
             </h2>
           </div>
           <div className="flex gap-2">
-            <Button
+            <Button ui={{ uid: "super-admin.featured-marquee.reload-items-Y8binQ", id: "super-admin.featured-marquee.reload-items", kind: "action", action: "reload-items", part: "items" }}
               type="button"
               variant="outline"
               size="sm"
