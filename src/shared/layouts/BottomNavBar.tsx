@@ -64,6 +64,7 @@ export function BottomNavBar() {
           <Link
             key={href}
             id={`nav-item-${href.slice(1)}`}
+            data-simulation-target={href === '/favorites' ? 'nav-favorites' : undefined}
             href={href}
             className={cn(
               'relative flex min-w-[2.2rem] flex-col items-center justify-center rounded-2xl px-2 py-0.5 no-underline transition-all duration-200 active:scale-90',

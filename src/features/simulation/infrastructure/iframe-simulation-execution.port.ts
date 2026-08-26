@@ -4,6 +4,9 @@ import { asolApi } from "@/core/api/asol-api-client";
 const LOAD_TIMEOUT_MS = 20_000;
 const TARGET_TIMEOUT_MS = 5_000;
 const TARGET_POLL_MS = 50;
+const SETTLE_GRACE_MS = 800;
+const SETTLE_QUIET_MS = 400;
+const SETTLE_TIMEOUT_MS = 5_000;
 
 function editableValue(element: Element, value: string): void {
   const view = element.ownerDocument.defaultView;
@@ -23,6 +26,7 @@ function targetAttribute(target: SimulationTarget): string {
   if (target.kind === "event") return "data-simulation-target";
   if (target.kind === "field") return "data-simulation-field";
   if (target.kind === "list-item") return "data-simulation-list-item";
+  if (target.kind === "state") return "data-simulation-state";
   return "data-simulation-file";
 }
 
@@ -73,7 +77,7 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
     const selector = targetSelector(target);
     const matches = this.documentNode().querySelectorAll(selector);
     if (matches.length === 0) throw new Error(`simulationInteractionTargetMissing:${targetLabel(target)}`);
-    if (matches.length > 1 && target.kind !== "list-item") {
+    if (matches.length > 1 && target.kind !== "list-item" && target.kind !== "state") {
       throw new Error(`simulationInteractionTargetAmbiguous:${targetLabel(target)}`);
     }
     return matches[0]!;
@@ -164,6 +168,47 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
       await this.wait(TARGET_POLL_MS);
     }
     throw new Error(`simulationInteractionTargetTimeout:${targetLabel(target)}`);
+  }
+
+  async hasTarget(target: SimulationTarget): Promise<boolean> {
+    try {
+      return Boolean(this.documentNode().querySelector(targetSelector(target)));
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Waits for the frame to stop completing network work before it is removed.
+   *
+   * A click that submits an order returns as soon as the handler fires, so
+   * disposing immediately aborts the real request in flight and the server sees
+   * an empty body. A fixed grace covers the common fast request, then the
+   * resource timeline is polled until nothing new has completed for a quiet
+   * window, bounded so a permanently busy page cannot stall the run.
+   */
+  async settle(): Promise<void> {
+    const view = this.iframe?.contentWindow;
+    if (!view) return;
+    await this.wait(SETTLE_GRACE_MS);
+    const startedAt = Date.now();
+    let completed = -1;
+    let quietSince = Date.now();
+    while (Date.now() - startedAt < SETTLE_TIMEOUT_MS) {
+      let current: number;
+      try {
+        current = view.performance.getEntriesByType("resource").length;
+      } catch {
+        return;
+      }
+      if (current !== completed) {
+        completed = current;
+        quietSince = Date.now();
+      } else if (Date.now() - quietSince >= SETTLE_QUIET_MS) {
+        return;
+      }
+      await this.wait(TARGET_POLL_MS * 2);
+    }
   }
 
   wait(milliseconds: number): Promise<void> {

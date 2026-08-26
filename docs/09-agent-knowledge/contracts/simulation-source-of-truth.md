@@ -22,6 +22,21 @@ Compatibility layers, fallback behavior, permissive substitutes, and simulation-
 
 If the real target or real code path cannot be executed, the simulation must fail loudly. The fix is to correct the registry, instrumentation, test data, or real application integration — never to add a compatibility layer.
 
+Simulation must never be made shallower to keep a board green. Removing depth from an interaction so it stops reporting a problem is a compatibility layer by another name: it converts an unanswered question into a false answer.
+
+## Unavailable Is A Reported State, Not A Pass
+
+There is exactly one sanctioned alternative to failing, and it is not a softened failure. An interaction may declare the real state the page renders when the data it needs does not exist — an empty list, a missing record — through the same instrumentation contract as any other target. When a declared target is missing **and** that state is present, the run is reported `unavailable`.
+
+This is bound by four rules:
+
+- `unavailable` requires the application's own rendered state to say so. It must never be inferred from a timeout, a retry, an absent element, or a guess.
+- The state is consulted only after a target has actually gone missing, so it can never mask a working path.
+- A missing target with no such declared state remains an explicit failure.
+- `unavailable` is not success. It must be visually and textually distinct from a pass, and excluded from error reports rather than from the record.
+
+The remedy for a persistent `unavailable` is environment or identity data, never a fallback in the execution port and never a reduction in what the interaction exercises.
+
 ## Allowed Simulation Infrastructure
 
 Simulation may contain orchestration and transport adapters whose only responsibility is to invoke the real application surface, for example loading the real page in a same-origin iframe and dispatching the native event on the exact declared element. Such infrastructure must not contain application/business decisions or alternate behavior.
@@ -36,6 +51,7 @@ An interaction action declares a typed `SimulationTarget` — a `{ kind, id }` p
 | `field` | `data-simulation-field` | Exactly one real editable input, textarea, or select. |
 | `file` | `data-simulation-file` | Exactly one real `<input type="file">`. |
 | `list-item` | `data-simulation-list-item` | A repeated row of a real list; resolves to the first marked element in document order. |
+| `state` | `data-simulation-state` | A real rendered state rather than a control, such as a page's own empty state. Probed for presence only, never acted on. |
 
 For `event`, `field`, and `file`, a missing marker and a duplicated marker are both explicit failures. `list-item` is the one kind whose id is deliberately shared by every row of one real list, so first-in-document-order is the declared contract rather than a fallback search; a list marks every row instead of threading a positional index through the component tree.
 

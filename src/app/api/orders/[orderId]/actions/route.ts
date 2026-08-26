@@ -1,4 +1,4 @@
-import { apiSuccess } from "@/core/api/api-response";
+import { apiSuccess, readJsonBody } from "@/core/api/api-response";
 import { runTracedBusinessRoute } from "@/core/api/traced-route";
 import type { ActionInput } from "@/features/orders/server";
 import { executeOrderAction } from "@/features/orders/server";
@@ -16,7 +16,7 @@ export async function POST(
   return runTracedBusinessRoute("POST /api/orders/:orderId/actions", async () => {
     try {
       const { orderId } = await params;
-      const body = (await request.json()) as ActionInput;
+      const body = await readJsonBody<ActionInput>(request);
       return apiSuccess(await executeOrderAction(orderId, body));
     } catch (error) {
       return mapOrderError(error);

@@ -4,6 +4,7 @@ export type {
   SimulationExecutionPort,
   SimulationProgressStatus,
   SimulationProgressStep,
+  SimulationRunOutcome,
   SimulationRunResult,
   SimulationRuntime,
   SimulationRuntimeInput,

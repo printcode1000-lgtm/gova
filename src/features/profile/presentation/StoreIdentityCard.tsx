@@ -297,6 +297,7 @@ export const StoreIdentityCard = React.forwardRef<
         </Label>
         <Textarea
           id="storeDescription"
+          data-simulation-field="profile-store-description"
           value={details.storeDescription}
           onChange={(event) =>
             updateField("storeDescription", event.target.value)

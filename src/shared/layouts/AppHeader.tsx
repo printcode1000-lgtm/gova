@@ -96,6 +96,7 @@ export function AppHeader({
             <Link
               href="/cart"
               id="header-cart-button"
+              data-simulation-target="nav-cart"
               className={cn(
                 "asol-control-icon relative flex items-center justify-center rounded-full transition-all duration-200",
                 isCartActive

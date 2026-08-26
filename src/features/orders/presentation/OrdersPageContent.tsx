@@ -111,7 +111,7 @@ export function OrdersPageContent() {
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
       ) : items.length === 0 ? (
-        <section className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
+        <section data-simulation-state="orders-empty" className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
           <ClipboardList className="mx-auto h-10 w-10 text-muted-foreground" />
           <h2 className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
           <p className="mt-2 text-sm text-muted-foreground">

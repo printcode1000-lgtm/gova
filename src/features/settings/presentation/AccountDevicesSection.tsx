@@ -62,7 +62,7 @@ export function AccountDevicesSection({
           {state.t("notifications.accountDevices.loadError")}
         </p>
       ) : devices.length === 0 ? (
-        <p className="rounded-lg bg-surface-variant px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
+        <p data-simulation-state="account-devices-empty" className="rounded-lg bg-surface-variant px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
           {state.t("notifications.accountDevices.empty")}
         </p>
       ) : (

@@ -1,12 +1,17 @@
 "use client";
 
-import type { SimulationProgressStep } from "@asol/simulation-core";
-import { Check, CheckCircle2, Circle, Copy, Loader2, XCircle } from "lucide-react";
+import type { SimulationProgressStep, SimulationRunOutcome } from "@asol/simulation-core";
+import { Check, CheckCircle2, Circle, Copy, Loader2, MinusCircle, XCircle } from "lucide-react";
 import * as React from "react";
 
 import { simulationProgressClipboard } from "./simulation-progress-clipboard";
 
-export type SimulationProgressRunStatus = "pending" | "running" | "passed" | "failed";
+export type SimulationProgressRunStatus =
+  | "pending"
+  | "running"
+  | "passed"
+  | "failed"
+  | "unavailable";
 
 export type SimulationProgressRun = {
   id: string;
@@ -23,7 +28,7 @@ export type SimulationProgressRun = {
 type SimulationProgressPanelProps = {
   steps: readonly SimulationProgressStep[];
   error?: string;
-  succeeded?: boolean;
+  outcome?: SimulationRunOutcome;
   running?: boolean;
   runs?: readonly SimulationProgressRun[];
   pageLabel?: string;
@@ -34,6 +39,7 @@ type SimulationProgressPanelProps = {
 function statusLabel(status: SimulationProgressRunStatus) {
   if (status === "passed") return "نجح";
   if (status === "failed") return "فشل";
+  if (status === "unavailable") return "غير متاح";
   if (status === "running") return "جارٍ التنفيذ";
   return "بانتظار التنفيذ";
 }
@@ -41,14 +47,16 @@ function statusLabel(status: SimulationProgressRunStatus) {
 function statusIcon(status: SimulationProgressRunStatus) {
   if (status === "passed") return <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden />;
   if (status === "failed") return <XCircle className="h-4 w-4 shrink-0 text-error" aria-hidden />;
+  if (status === "unavailable") return <MinusCircle className="h-4 w-4 shrink-0 text-on-surface-variant" aria-hidden />;
   if (status === "running") return <Loader2 className="h-4 w-4 shrink-0 animate-spin text-secondary" aria-hidden />;
   return <Circle className="h-4 w-4 shrink-0 text-on-surface-variant" aria-hidden />;
 }
 
-function singleStatusLabel(succeeded: boolean | undefined, running: boolean) {
+function singleStatusLabel(outcome: SimulationRunOutcome | undefined, running: boolean) {
   if (running) return "جارٍ التنفيذ";
-  if (succeeded === true) return "نجح";
-  if (succeeded === false) return "فشل";
+  if (outcome === "passed") return "نجح";
+  if (outcome === "unavailable") return "غير متاح";
+  if (outcome === "failed") return "فشل";
   return "لم يبدأ";
 }
 
@@ -59,7 +67,7 @@ function pageText(label: string, route?: string) {
 function buildCopyText(
   steps: readonly SimulationProgressStep[],
   error: string | undefined,
-  succeeded: boolean | undefined,
+  outcome: SimulationRunOutcome | undefined,
   running: boolean,
   runs: readonly SimulationProgressRun[],
 ) {
@@ -82,7 +90,7 @@ function buildCopyText(
     return lines.join("\n");
   }
 
-  lines.push(`الحالة: ${singleStatusLabel(succeeded, running)}`);
+  lines.push(`الحالة: ${singleStatusLabel(outcome, running)}`);
   for (const step of steps) {
     lines.push(`[${step.status}] ${step.label}${step.detail ? ` — ${step.detail}` : ""}`);
   }
@@ -139,7 +147,7 @@ function StepList({ steps }: { steps: readonly SimulationProgressStep[] }) {
 export function SimulationProgressPanel({
   steps,
   error,
-  succeeded,
+  outcome,
   running = false,
   runs = [],
   pageLabel,
@@ -148,7 +156,7 @@ export function SimulationProgressPanel({
 }: SimulationProgressPanelProps) {
   const [copied, setCopied] = React.useState(false);
   const [errorsCopied, setErrorsCopied] = React.useState(false);
-  const hasContent = runs.length > 0 || steps.length > 0 || Boolean(error) || succeeded !== undefined || running;
+  const hasContent = runs.length > 0 || steps.length > 0 || Boolean(error) || outcome !== undefined || running;
   const errorsOnlyText = React.useMemo(
     () => buildErrorsOnlyText(error, runs, pageLabel, pageRoute, interactionLabel),
     [error, runs, pageLabel, pageRoute, interactionLabel],
@@ -170,7 +178,7 @@ export function SimulationProgressPanel({
   const handleCopy = async () => {
     if (!hasContent) return;
     try {
-      await simulationProgressClipboard.write(buildCopyText(steps, error, succeeded, running, runs));
+      await simulationProgressClipboard.write(buildCopyText(steps, error, outcome, running, runs));
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -215,6 +223,11 @@ export function SimulationProgressPanel({
         </div>
       </div>
 
+      <div
+        tabIndex={0}
+        aria-label="سجل تنفيذ E2E"
+        className="min-h-0 min-w-0 max-h-[55vh] overflow-y-auto overscroll-contain rounded-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary sm:max-h-[60vh]"
+      >
       {runs.length > 0 ? (
         <div className="min-w-0 space-y-4">
           {pageGroups.map((group) => (
@@ -249,7 +262,7 @@ export function SimulationProgressPanel({
             </section>
           ))}
         </div>
-      ) : steps.length === 0 && !error && succeeded === undefined && !running ? (
+      ) : steps.length === 0 && !error && outcome === undefined && !running ? (
         <p className="text-sm text-on-surface-variant">اختر حدثًا لبدء التنفيذ.</p>
       ) : (
         <div className="min-w-0 space-y-3">
@@ -260,7 +273,7 @@ export function SimulationProgressPanel({
             </div>
           ) : null}
           <div className="text-sm font-semibold text-on-surface">
-            الحالة: {singleStatusLabel(succeeded, running)}
+            الحالة: {singleStatusLabel(outcome, running)}
           </div>
           {steps.length > 0 ? <StepList steps={steps} /> : null}
           {error ? (
@@ -270,6 +283,7 @@ export function SimulationProgressPanel({
           ) : null}
         </div>
       )}
+      </div>
     </section>
   );
 }

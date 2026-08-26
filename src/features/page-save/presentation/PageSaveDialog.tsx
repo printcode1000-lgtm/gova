@@ -201,6 +201,7 @@ export function PageSaveDialog() {
 
         <DialogFooter className="flex-row flex-nowrap gap-2 px-6 pb-6 pt-2 sm:flex-row sm:space-x-0">
           <Button
+            data-simulation-target="page-save-execute"
             type="button"
             size="lg"
             className="min-w-0 flex-1 rounded-xl"

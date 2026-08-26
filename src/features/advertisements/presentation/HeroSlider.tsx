@@ -379,7 +379,7 @@ export function HeroSlider({
         )}
 
         {!hasSlides && !(isViewMode && probingEntries.length > 0) && (
-          <div className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
+          <div data-simulation-state="home-promotion-empty" className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
             {mode !== "view"
               ? t("heroSlider.addSlide")
               : t("heroSlider.noSlides")}

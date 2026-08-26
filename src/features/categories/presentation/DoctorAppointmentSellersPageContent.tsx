@@ -99,7 +99,7 @@ export function DoctorAppointmentSellersPageContent({
       </div>
 
       {!filteredUsers || filteredUsers.length === 0 ? (
-        <p className="text-center text-sm text-on-surface-variant">
+        <p data-simulation-state="doctor-empty" className="text-center text-sm text-on-surface-variant">
           {normalizedSearchText
             ? locale === "ar"
               ? "لا توجد نتائج مطابقة"

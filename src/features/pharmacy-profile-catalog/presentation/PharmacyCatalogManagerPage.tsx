@@ -285,7 +285,10 @@ export function PharmacyCatalogManagerPage() {
         {!catalog && busy ? (
           <LoadingFrame compact />
         ) : (
-          <section className="grid min-h-[620px] overflow-hidden rounded-lg border border-outline-variant bg-surface lg:grid-cols-[300px_330px_1fr]">
+          <section
+            data-simulation-state={categories.length === 0 ? "pharmacy-catalog-empty" : undefined}
+            className="grid min-h-[620px] overflow-hidden rounded-lg border border-outline-variant bg-surface lg:grid-cols-[300px_330px_1fr]"
+          >
             <ManagerColumn
               title={text.mainCategories}
               actionLabel={text.addMain}
@@ -369,7 +372,7 @@ export function PharmacyCatalogManagerPage() {
 
             <ManagerColumn title={text.products} disabled={busy}>
               {products.length === 0 ? (
-                <p className="rounded-lg border border-dashed border-outline-variant p-8 text-center text-sm text-on-surface-variant">
+                <p data-simulation-state="pharmacy-products-empty" className="rounded-lg border border-dashed border-outline-variant p-8 text-center text-sm text-on-surface-variant">
                   {text.emptyProducts}
                 </p>
               ) : (

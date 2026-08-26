@@ -264,6 +264,7 @@ export function CustomRequestPageContent() {
             </label>
             <Textarea
               id="custom-request-description"
+              data-simulation-field="custom-request-description"
               value={description}
               onChange={(event) => {
                 setDescription(event.target.value);

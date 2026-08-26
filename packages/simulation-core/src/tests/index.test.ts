@@ -48,6 +48,7 @@ const instrumentedSourceFiles = [
   "packages/storage-image-manager-core/src/components/StorageImageManager.tsx",
   "src/app/favorites/page.tsx",
   "src/app/privacy-policy/page.tsx",
+  "src/features/advertisements/presentation/HeroSlider.tsx",
   "src/features/advertisements/presentation/HeroSliderSlide.tsx",
   "src/features/auth/presentation/AccountDeletionPageContent.tsx",
   "src/features/auth/presentation/LoginPageContent.tsx",
@@ -62,9 +63,12 @@ const instrumentedSourceFiles = [
   "src/features/favorites/presentation/FavoriteButton.tsx",
   "src/features/follow/presentation/FollowButton.tsx",
   "src/features/home/presentation/CategoriesGrid.tsx",
+  "src/features/notifications/presentation/NotificationsEmptyState.tsx",
   "src/features/notifications/presentation/NotificationsPageContent.tsx",
   "src/features/orders/presentation/OrderActionButton.tsx",
+  "src/features/orders/presentation/OrderDetailsPageContent.tsx",
   "src/features/orders/presentation/OrdersPageContent.tsx",
+  "src/features/page-save/presentation/PageSaveDialog.tsx",
   "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
   "src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
   "src/features/pharmacy-profile-catalog/presentation/PharmacyCatalogManagerPage.tsx",
@@ -77,6 +81,7 @@ const instrumentedSourceFiles = [
   "src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
   "src/features/profile/presentation/CustomRequestPageContent.tsx",
   "src/features/profile/presentation/ProfilePreviewContent.tsx",
+  "src/features/profile/presentation/StoreIdentityCard.tsx",
   "src/features/seller-card/presentation/SellerCard.tsx",
   "src/features/settings/presentation/AccountDevicesSection.tsx",
   "src/features/settings/presentation/NotificationDeviceToggleSection.tsx",
@@ -86,6 +91,7 @@ const instrumentedSourceFiles = [
   "src/features/specialty-chat/presentation/ChatThreadPageContent.tsx",
   "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
   "src/shared/layouts/AppHeader.tsx",
+  "src/shared/layouts/BottomNavBar.tsx",
   "src/shared/ui/toggle-switch.tsx",
 ];
 const sourceFiles = instrumentedSourceFiles
@@ -111,6 +117,26 @@ for (const page of USER_PAGE_REGISTRY) {
         `${page.id}:${interaction.id} target ${action.target.kind}:${action.target.id} must have source instrumentation.`,
       );
     }
+  }
+}
+
+for (const page of USER_PAGE_REGISTRY) {
+  for (const interaction of page.interactions) {
+    const precondition = interaction.unavailableWhen;
+    if (!precondition) continue;
+    assert.equal(
+      precondition.target.kind,
+      "state",
+      `${page.id}:${interaction.id} must declare its precondition as a state target.`,
+    );
+    assert.ok(
+      precondition.reason.trim().length > 0,
+      `${page.id}:${interaction.id} must explain why it can be unavailable.`,
+    );
+    assert.ok(
+      sourceFiles.includes(`"${precondition.target.id}"`),
+      `${page.id}:${interaction.id} precondition state:${precondition.target.id} must have source instrumentation.`,
+    );
   }
 }
 

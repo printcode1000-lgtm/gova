@@ -26,7 +26,7 @@ export function apiSuccess<T>(data: T, status = 200): NextResponse {
 export function apiError(
   message: string,
   status = 400,
-  options: { skipPersistence?: boolean } = {},
+  options: { skipPersistence?: boolean; cause?: unknown } = {},
 ): NextResponse {
   const clientMessage = sanitizeApiErrorCodeForClient(message, status);
   if (
@@ -35,7 +35,10 @@ export function apiError(
     !message.includes('/api/system-logs')
   ) {
     void logServerSystemIssue({
-      error: new Error(message),
+      // The caller's original error carries the real stack. Creating one here
+      // instead would record a trace that points at this logger, which is what
+      // made persisted API failures untraceable.
+      error: options.cause instanceof Error ? options.cause : new Error(message),
       feature: 'BusinessAPI',
       operation: 'api-error-response',
       statusCode: status,

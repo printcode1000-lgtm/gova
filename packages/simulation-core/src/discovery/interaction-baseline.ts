@@ -33,8 +33,7 @@ export const INTERACTION_BASELINE: InteractionBaseline = {
     "interactionSourceCount": 624,
     "eventIds": [
       "open-page",
-      "doctor-open",
-      "doctor-load-more"
+      "doctor-open"
     ]
   },
   "/categories/[categoryId]/sellers/[subcategoryId]": {
@@ -42,8 +41,7 @@ export const INTERACTION_BASELINE: InteractionBaseline = {
     "interactionSourceCount": 624,
     "eventIds": [
       "open-page",
-      "seller-open",
-      "sellers-load-more"
+      "seller-open"
     ]
   },
   "/collections/[collectionId]": {
@@ -143,7 +141,6 @@ export const INTERACTION_BASELINE: InteractionBaseline = {
     "interactionSourceCount": 670,
     "eventIds": [
       "open-page",
-      "orders-load-more",
       "orders-open"
     ]
   },
@@ -191,6 +188,7 @@ export const INTERACTION_BASELINE: InteractionBaseline = {
       "open-page",
       "profile-follow",
       "profile-share",
+      "profile-custom-request",
       "profile-contact",
       "profile-save"
     ]

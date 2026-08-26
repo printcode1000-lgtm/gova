@@ -55,9 +55,10 @@ export async function runPageInteraction(
     begin("environment", input.runtime);
     pass("environment", `المسار الفعلي للبيئة: ${input.runtime}`);
 
-    begin("page", input.page.samplePath);
-    await input.port.loadPage(input.page.samplePath);
-    pass("page", input.page.samplePath);
+    const entryPath = input.interaction.entryPath ?? input.page.samplePath;
+    begin("page", entryPath);
+    await input.port.loadPage(entryPath);
+    pass("page", entryPath);
 
     begin("interaction", input.interaction.label);
     for (const action of input.interaction.actions) {
@@ -87,7 +88,7 @@ export async function runPageInteraction(
     begin("result");
     pass("result", "اكتمل التفاعل داخل التطبيق الحقيقي دون Mock.");
     return {
-      succeeded: true,
+      outcome: "passed",
       runtime: input.runtime,
       pageId: input.page.id,
       interactionId: input.interaction.id,
@@ -96,21 +97,32 @@ export async function runPageInteraction(
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     const active = steps.find((step) => step.status === "running");
+
+    // The page's own empty state is the authority on whether the environment
+    // has anything to act on. Asking it only after a target actually went
+    // missing keeps the successful path free of extra probing.
+    const unavailableWhen = input.interaction.unavailableWhen;
+    const unavailable =
+      unavailableWhen !== undefined &&
+      message.startsWith("simulationInteractionTarget") &&
+      (await input.port.hasTarget(unavailableWhen.target).catch(() => false));
+
     if (active) {
-      active.status = "failed";
-      active.detail = message;
+      active.status = unavailable ? "unavailable" : "failed";
+      active.detail = unavailable ? unavailableWhen!.reason : message;
       active.completedAt = new Date().toISOString();
     }
     publish();
     return {
-      succeeded: false,
+      outcome: unavailable ? "unavailable" : "failed",
       runtime: input.runtime,
       pageId: input.page.id,
       interactionId: input.interaction.id,
       steps,
-      error: message,
+      ...(unavailable ? {} : { error: message }),
     };
   } finally {
+    await input.port.settle().catch(() => undefined);
     input.port.dispose();
   }
 }

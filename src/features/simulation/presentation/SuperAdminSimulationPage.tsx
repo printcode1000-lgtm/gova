@@ -66,7 +66,7 @@ export function SuperAdminSimulationPage() {
   ): Promise<SimulationRunResult> => {
     let latestSteps: readonly SimulationProgressStep[] = [];
     let runResult: SimulationRunResult = {
-      succeeded: false,
+      outcome: "failed",
       runtime,
       pageId: page.id,
       interactionId: interaction.id,
@@ -96,7 +96,7 @@ export function SuperAdminSimulationPage() {
       });
     } catch (error) {
       runResult = {
-        succeeded: false,
+        outcome: "failed",
         runtime,
         pageId: page.id,
         interactionId: interaction.id,
@@ -111,7 +111,7 @@ export function SuperAdminSimulationPage() {
       const restoreError = error instanceof Error ? error.message : String(error);
       runResult = {
         ...runResult,
-        succeeded: false,
+        outcome: "failed",
         error: runResult.error
           ? `${runResult.error}\nsimulationSessionRestoreFailed: ${restoreError}`
           : `simulationSessionRestoreFailed: ${restoreError}`,
@@ -186,7 +186,7 @@ export function SuperAdminSimulationPage() {
               run.id === runId
                 ? {
                     ...run,
-                    status: next.succeeded ? ("passed" as const) : ("failed" as const),
+                    status: next.outcome,
                     steps: next.steps,
                     error: next.error,
                   }
@@ -322,7 +322,7 @@ export function SuperAdminSimulationPage() {
           <SimulationProgressPanel
             steps={steps}
             error={result?.error}
-            succeeded={result?.succeeded}
+            outcome={result?.outcome}
             running={Boolean(runningId)}
             runs={batchRuns}
             pageLabel={selectedPage?.label}

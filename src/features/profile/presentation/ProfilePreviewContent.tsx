@@ -259,6 +259,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                     session?.uid &&
                     (!props.isOwner || props.isSuperAdmin) ? (
                       <Button
+                        data-simulation-target="profile-custom-request"
                         type="button"
                         variant="outline"
                         className={`${ACTION_TILE_CLASS} border-input  `}

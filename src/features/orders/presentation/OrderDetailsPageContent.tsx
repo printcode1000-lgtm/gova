@@ -133,7 +133,7 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
 
   if (!details) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-10">
+      <main data-simulation-state="order-details-missing" className="mx-auto max-w-4xl px-4 py-10">
         <BackToOrders />
         <p className="mt-6 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error || text.notFound}

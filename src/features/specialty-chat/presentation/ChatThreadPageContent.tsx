@@ -134,7 +134,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
 
   if (!conversation) {
     return (
-      <main className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
+      <main data-simulation-state="chat-conversation-missing" className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
         <MessageCircle className="h-12 w-12 text-muted-foreground" />
         <h1 className="mt-4 text-xl font-bold">
           {locale === "ar" ? "المحادثة غير موجودة على هذا الجهاز" : "Conversation not found on this device"}

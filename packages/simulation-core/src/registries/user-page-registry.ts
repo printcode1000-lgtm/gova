@@ -1,5 +1,6 @@
 import type {
   PageInteractionDefinition,
+  SimulationDriverAction,
   SimulationTarget,
   SimulationUserRole,
   UserPageDefinition,
@@ -22,6 +23,18 @@ function listItemTarget(id: string): SimulationTarget {
 
 function fileTarget(id: string): SimulationTarget {
   return { kind: "file", id };
+}
+
+function stateTarget(id: string): SimulationTarget {
+  return { kind: "state", id };
+}
+
+/** Declares the real empty state that makes an interaction inapplicable here. */
+function unavailableWhen(
+  id: string,
+  reason: string,
+): { target: SimulationTarget; reason: string } {
+  return { target: stateTarget(id), reason };
 }
 
 function openInteraction(route: string): PageInteractionDefinition {
@@ -134,12 +147,120 @@ function searchPreparationActions() {
   ];
 }
 
+/**
+ * Prerequisite paths.
+ *
+ * Some real targets only exist once the user has already walked a real path:
+ * a cart row needs something in the cart, a product action needs an opened
+ * product. These helpers replay that path through the same controls a user
+ * touches, so the interaction reaches its declared target without any seeded
+ * state or simulation-only shortcut. The frame follows each real navigation.
+ */
+const SEARCH_ENTRY_PATH = "/search";
+const PRODUCT_ADD_CART_TARGET = eventTarget("product-add-cart");
+const PRODUCT_FAVORITE_TARGET = eventTarget("product-favorite");
+const NAV_CART_TARGET = eventTarget("nav-cart");
+const NAV_FAVORITES_TARGET = eventTarget("nav-favorites");
+const REACH_TIMEOUT_MS = 8_000;
+
+function openFirstResultActions(
+  mode: "products" | "sellers",
+  accessibleLabel: string,
+): readonly SimulationDriverAction[] {
+  return [
+    ...(mode === "sellers"
+      ? [{ type: "click" as const, target: eventTarget("search-sellers-mode"), accessibleLabel: "البائعون" }]
+      : []),
+    ...searchPreparationActions(),
+    { type: "wait-for-target", target: SEARCH_RESULT_TARGET, timeoutMs: REACH_TIMEOUT_MS },
+    { type: "click", target: SEARCH_RESULT_TARGET, accessibleLabel },
+  ];
+}
+
+function reachThenClick(
+  target: SimulationTarget,
+  accessibleLabel: string,
+): readonly SimulationDriverAction[] {
+  return [
+    { type: "wait-for-target", target, timeoutMs: REACH_TIMEOUT_MS },
+    { type: "click", target, accessibleLabel },
+  ];
+}
+
+/** Opens the first real product from real search, then runs the product action. */
+function productInteraction(
+  id: string,
+  label: string,
+  description: string,
+  actor: Actor = "any",
+): PageInteractionDefinition {
+  return {
+    id,
+    label,
+    description,
+    actor,
+    entryPath: SEARCH_ENTRY_PATH,
+    actions: [
+      ...openFirstResultActions("products", "فتح منتج"),
+      ...reachThenClick(eventTarget(id), label),
+    ],
+  };
+}
+
+/**
+ * Page Save is a two-step real gateway: the header button opens the dialog and
+ * the dialog's Execute button runs the work. Stopping at the header button
+ * would report success without ever saving, so both steps are declared.
+ */
+function pageSaveActions(
+  headerTargetId: string,
+  label: string,
+): readonly SimulationDriverAction[] {
+  return [
+    ...reachThenClick(eventTarget(headerTargetId), label),
+    ...reachThenClick(eventTarget("page-save-execute"), "تنفيذ الحفظ"),
+  ];
+}
+
+/** Opens the real custom-request form from a real seller profile. */
+function openCustomRequestActions(): readonly SimulationDriverAction[] {
+  return [
+    ...openFirstResultActions("sellers", "فتح بائع"),
+    ...reachThenClick(eventTarget("profile-custom-request"), "طلب مخصص"),
+  ];
+}
+
+/** Fills the cart through the real product path, then opens the real cart. */
+function cartInteraction(
+  id: string,
+  label: string,
+  description: string,
+  target: SimulationTarget,
+): PageInteractionDefinition {
+  return {
+    id,
+    label,
+    description,
+    actor: "buyer",
+    entryPath: SEARCH_ENTRY_PATH,
+    actions: [
+      ...openFirstResultActions("products", "فتح منتج"),
+      ...reachThenClick(PRODUCT_ADD_CART_TARGET, "إضافة إلى السلة"),
+      { type: "click", target: NAV_CART_TARGET, accessibleLabel: "السلة" },
+      ...reachThenClick(target, label),
+    ],
+  };
+}
+
 export const USER_PAGE_REGISTRY: readonly UserPageDefinition[] = [
   page("splash", "/", "/", "البداية", "شاشة بدء تجربة المستخدم والانتقال التلقائي بعد التهيئة."),
   page("home", "/home", "/home", "الرئيسية", "الكتالوج والعروض ونقاط الدخول الأساسية.", [
     click("home-search", "فتح البحث", "الانتقال من الرئيسية إلى البحث."),
     clickFirstOf("home-category", "اختيار كتالوج", "فتح أول كتالوج متاح للمستخدم."),
-    click("home-promotion", "فتح عرض", "تشغيل إجراء العرض النشط الفعلي."),
+    {
+      ...click("home-promotion", "فتح عرض", "تشغيل إجراء العرض النشط الفعلي."),
+      unavailableWhen: unavailableWhen("home-promotion-empty", "لا يوجد عرض نشط مُهيّأ في هذه البيئة."),
+    },
   ]),
   page("login", "/login", "/login", "تسجيل الدخول", "الدخول بحساب حقيقي أو كضيف.", [
     submit("login-submit", "تسجيل الدخول", "إرسال الهاتف وكلمة المرور عبر نموذج الدخول الحقيقي.", "buyer", [
@@ -208,36 +329,89 @@ export const USER_PAGE_REGISTRY: readonly UserPageDefinition[] = [
     },
   ]),
   page("cart", "/cart", "/cart", "السلة", "عناصر السلة والكميات وإنشاء الطلب.", [
-    clickFirstOf("cart-increase", "زيادة الكمية", "زيادة كمية أول عنصر فعلي.", "buyer"),
-    clickFirstOf("cart-decrease", "خفض الكمية", "خفض كمية أول عنصر فعلي.", "buyer"),
-    clickFirstOf("cart-remove", "إزالة عنصر", "إزالة أول عنصر عبر مخزن السلة الحقيقي.", "buyer"),
-    click("cart-checkout", "تنفيذ الطلب", "إرسال محتوى السلة إلى مسار إنشاء الطلب.", "buyer"),
+    cartInteraction("cart-increase", "زيادة الكمية", "إضافة أول منتج حقيقي إلى السلة ثم زيادة كميته.", listItemTarget("cart-increase")),
+    cartInteraction("cart-decrease", "خفض الكمية", "إضافة أول منتج حقيقي إلى السلة ثم خفض كميته.", listItemTarget("cart-decrease")),
+    cartInteraction("cart-remove", "إزالة عنصر", "إضافة أول منتج حقيقي إلى السلة ثم إزالته عبر مخزن السلة.", listItemTarget("cart-remove")),
+    cartInteraction("cart-checkout", "تنفيذ الطلب", "إضافة أول منتج حقيقي إلى السلة ثم إرسالها إلى مسار إنشاء الطلب.", eventTarget("cart-checkout")),
   ]),
   page("favorites", "/favorites", "/favorites", "المفضلة", "المنتجات والبائعون المحفوظون على الجهاز.", [
     click("favorites-products", "عرض المنتجات", "اختيار تبويب المنتجات."),
     click("favorites-sellers", "عرض البائعين", "اختيار تبويب البائعين."),
-    clickFirstOf("favorites-open", "فتح عنصر محفوظ", "فتح أول عنصر محفوظ فعليًا."),
+    {
+      id: "favorites-open",
+      label: "فتح عنصر محفوظ",
+      description: "حفظ أول منتج حقيقي من مساره الفعلي ثم فتحه من المفضلة.",
+      actor: "any",
+      entryPath: SEARCH_ENTRY_PATH,
+      actions: [
+        ...openFirstResultActions("products", "فتح منتج"),
+        ...reachThenClick(PRODUCT_FAVORITE_TARGET, "تبديل المفضلة"),
+        { type: "click", target: NAV_FAVORITES_TARGET, accessibleLabel: "المفضلة" },
+        ...reachThenClick(listItemTarget("favorites-open"), "فتح عنصر محفوظ"),
+      ],
+    },
   ]),
   page("product", "/product", "/product", "المنتج", "تفاصيل المنتج وإجراءات الشراء والحفظ والمشاركة.", [
-    click("product-add-cart", "إضافة إلى السلة", "إضافة المنتج الحالي عبر خدمة السلة.", "buyer"),
-    click("product-favorite", "تبديل المفضلة", "حفظ أو إزالة المنتج على الجهاز.", "any"),
-    click("product-share", "مشاركة المنتج", "فتح مسار المشاركة المناسب للمنصة."),
-    click("product-review", "إرسال تقييم", "إرسال تقييم المنتج إلى الخدمة الحقيقية.", "buyer"),
-    click("product-contact", "مراسلة صاحب المنتج", "فتح محادثة المنتج مع البائع عبر خدمة المحادثة الحقيقية.", "buyer"),
-    click("product-owner-profile", "فتح ملف صاحب المنتج", "الانتقال إلى الملف الشخصي لصاحب المنتج."),
+    productInteraction("product-add-cart", "إضافة إلى السلة", "فتح أول منتج حقيقي ثم إضافته عبر خدمة السلة.", "buyer"),
+    productInteraction("product-favorite", "تبديل المفضلة", "فتح أول منتج حقيقي ثم حفظه أو إزالته على الجهاز.", "any"),
+    productInteraction("product-share", "مشاركة المنتج", "فتح أول منتج حقيقي ثم تشغيل مسار المشاركة المناسب للمنصة."),
+    productInteraction("product-review", "إرسال تقييم", "فتح أول منتج حقيقي ثم فتح تقييمه عبر الخدمة الحقيقية.", "buyer"),
+    productInteraction("product-contact", "مراسلة صاحب المنتج", "فتح أول منتج حقيقي ثم بدء محادثته مع البائع.", "buyer"),
+    productInteraction("product-owner-profile", "فتح ملف صاحب المنتج", "فتح أول منتج حقيقي ثم الانتقال إلى ملف صاحبه.", "buyer"),
   ]),
   page("product-share", "/s/product", "/s/product", "رابط منتج مشترك", "فتح المنتج عبر رابط المشاركة العام."),
   page("profile", "/profile", "/profile", "الملف الشخصي", "عرض وتحرير ملف المستخدم ومنتجاته.", [
     click("profile-follow", "متابعة البائع", "تشغيل خدمة المتابعة الحقيقية.", "buyer"),
     click("profile-share", "مشاركة الملف", "فتح مشاركة الملف المناسبة للمنصة."),
-    click("profile-contact", "التواصل مع البائع", "فتح قناة التواصل الفعلية.", "buyer"),
-    click("profile-save", "حفظ التعديلات", "تنفيذ التغييرات المجهزة عبر Page Save.", "seller"),
+    {
+      id: "profile-custom-request",
+      label: "فتح طلب مخصص",
+      description: "فتح ملف أول بائع حقيقي ثم فتح نموذج الطلب المخصص الخاص به.",
+      actor: "buyer",
+      entryPath: SEARCH_ENTRY_PATH,
+      actions: openCustomRequestActions(),
+    },
+    {
+      id: "profile-contact",
+      label: "التواصل مع البائع",
+      description: "فتح ملف أول بائع حقيقي من بحث البائعين ثم فتح قناة التواصل الفعلية.",
+      actor: "buyer",
+      entryPath: SEARCH_ENTRY_PATH,
+      actions: [
+        ...openFirstResultActions("sellers", "فتح بائع"),
+        ...reachThenClick(eventTarget("profile-contact"), "التواصل مع البائع"),
+      ],
+    },
+    {
+      id: "profile-save",
+      label: "حفظ التعديلات",
+      description: "تجهيز تغيير حقيقي في وصف المتجر من نموذج التحرير الفعلي ثم تنفيذه عبر Page Save.",
+      actor: "seller",
+      entryPath: "/profile?mode=edit",
+      actions: [
+        { type: "wait-for-target", target: fieldTarget("profile-store-description"), timeoutMs: REACH_TIMEOUT_MS },
+        { type: "set-value", target: fieldTarget("profile-store-description"), value: "وصف محاكاة — {{storeName}}" },
+        ...pageSaveActions("profile-save", "حفظ التعديلات"),
+      ],
+    },
   ]),
   page("profile-share", "/s/profile", "/s/profile", "رابط ملف مشترك", "فتح الملف عبر رابط المشاركة العام."),
   page("pharmacy-catalog", "/profile/pharmacy-catalog", "/profile/pharmacy-catalog", "كتالوج الصيدلية", "إدارة ظهور عناصر كتالوج الصيدلية.", [
-    clickFirstOf("pharmacy-category", "اختيار قسم", "اختيار قسم فعلي من الكتالوج.", "seller"),
-    clickFirstOf("pharmacy-toggle", "تبديل ظهور منتج", "تجهيز تغيير ظهور منتج.", "seller"),
-    click("pharmacy-save", "حفظ الكتالوج", "تنفيذ التغييرات عبر Page Save.", "seller"),
+    {
+      ...clickFirstOf("pharmacy-category", "اختيار قسم", "اختيار قسم فعلي من الكتالوج.", "seller"),
+      unavailableWhen: unavailableWhen("pharmacy-catalog-empty", "حساب البائع لا يملك كتالوج صيدلية بأقسام."),
+    },
+    {
+      ...clickFirstOf("pharmacy-toggle", "تبديل ظهور منتج", "تجهيز تغيير ظهور منتج.", "seller"),
+      unavailableWhen: unavailableWhen("pharmacy-products-empty", "قسم الكتالوج الحالي لا يحتوي منتجات."),
+    },
+    {
+      id: "pharmacy-save",
+      label: "حفظ الكتالوج",
+      description: "تنفيذ تغييرات الكتالوج المجهزة عبر بوابة Page Save الحقيقية بخطوتيها.",
+      actor: "seller",
+      actions: pageSaveActions("pharmacy-save", "حفظ الكتالوج"),
+    },
   ]),
   page("settings", "/settings", "/settings", "الإعدادات", "إعدادات التطبيق والتحديث والبيانات المحلية.", [
     click("settings-check-update", "فحص التحديث", "تشغيل فحص OTA الحقيقي المتاح للبيئة."),
@@ -247,30 +421,76 @@ export const USER_PAGE_REGISTRY: readonly UserPageDefinition[] = [
   page("notification-settings", "/settings/notifications", "/settings/notifications", "إعدادات الإشعارات", "الأذونات والأجهزة وتفضيلات الإشعارات.", [
     click("notifications-permission", "فحص الإذن", "قراءة إذن النظام الحقيقي."),
     click("notifications-test", "إرسال إشعار تجريبي", "إرسال الاختبار الذاتي عبر الخدمة الحقيقية.", "buyer"),
-    clickFirstOf("notifications-revoke-device", "إلغاء جهاز", "إلغاء أول جهاز مسجل للحساب.", "buyer"),
+    {
+      ...clickFirstOf("notifications-revoke-device", "إلغاء جهاز", "إلغاء أول جهاز مسجل للحساب.", "buyer"),
+      unavailableWhen: unavailableWhen("account-devices-empty", "لا توجد أجهزة مسجّلة لهذا الحساب."),
+    },
   ]),
   page("notifications", "/notifications", "/notifications", "مركز الإشعارات", "قراءة وفتح وإخفاء الإشعارات.", [
     clickFirstOf("notification-filter", "تغيير الفلتر", "اختيار فلتر إشعارات فعلي."),
-    clickFirstOf("notification-read", "تعليم كمقروء", "تحديث حالة أول إشعار.", "buyer"),
-    clickFirstOf("notification-open", "فتح إشعار", "تنفيذ وجهة أول إشعار."),
-    clickFirstOf("notification-dismiss", "إخفاء إشعار", "إخفاء أول إشعار من المركز.", "buyer"),
+    {
+      ...clickFirstOf("notification-read", "تعليم كمقروء", "تحديث حالة أول إشعار.", "buyer"),
+      unavailableWhen: unavailableWhen("notifications-empty", "لا توجد إشعارات في هذا التبويب."),
+    },
+    {
+      ...clickFirstOf("notification-open", "فتح إشعار", "تنفيذ وجهة أول إشعار."),
+      unavailableWhen: unavailableWhen("notifications-empty", "لا توجد إشعارات في هذا التبويب."),
+    },
+    {
+      ...clickFirstOf("notification-dismiss", "إخفاء إشعار", "إخفاء أول إشعار من المركز.", "buyer"),
+      unavailableWhen: unavailableWhen("notifications-empty", "لا توجد إشعارات في هذا التبويب."),
+    },
   ]),
   page("notification-chat", "/notifications/chat", "/notifications/chat", "محادثة إشعار", "قراءة وإرسال رد في محادثة الطلب المتخصص.", [
-    submit("chat-reply", "إرسال رد", "إرسال الرد عبر خدمة المحادثة والإشعارات.", "buyer"),
+    {
+      ...submit("chat-reply", "إرسال رد", "إرسال الرد عبر خدمة المحادثة والإشعارات.", "buyer"),
+      unavailableWhen: unavailableWhen("chat-conversation-missing", "لا توجد محادثة محفوظة على هذا الجهاز."),
+    },
   ]),
   page("orders", "/orders", "/orders", "الطلبات", "قائمة الطلبات الفعلية حسب الحساب.", [
-    click("orders-load-more", "تحميل مزيد من الطلبات", "قراءة الدفعة التالية من خدمة الطلبات.", "buyer"),
-    clickFirstOf("orders-open", "فتح طلب", "فتح أول طلب فعلي.", "buyer"),
+    {
+      ...clickFirstOf("orders-open", "فتح طلب", "فتح أول طلب فعلي.", "buyer"),
+      unavailableWhen: unavailableWhen("orders-empty", "لا توجد طلبات على هذا الحساب."),
+    },
   ]),
   page("order-details-static", "/orders/details", "/orders/details", "تفاصيل الطلب الثابتة", "تفاصيل طلب عبر query في Static Out.", [
-    clickFirstOf("order-action", "تنفيذ إجراء متاح", "تنفيذ أول إجراء مسموح بحسب حالة الطلب ودور المستخدم.", "buyer"),
+    {
+      ...clickFirstOf("order-action", "تنفيذ إجراء متاح", "تنفيذ أول إجراء مسموح بحسب حالة الطلب ودور المستخدم.", "buyer"),
+      unavailableWhen: unavailableWhen("order-details-missing", "لا يوجد طلب حقيقي على هذا المسار."),
+    },
   ]),
   page("order-details", "/orders/[orderId]", "/orders/simulation-order", "تفاصيل الطلب", "تفاصيل ومسار عمليات الطلب على Web.", [
-    clickFirstOf("order-action", "تنفيذ إجراء متاح", "تنفيذ أول إجراء مسموح بحسب حالة الطلب ودور المستخدم.", "buyer"),
+    {
+      ...clickFirstOf("order-action", "تنفيذ إجراء متاح", "تنفيذ أول إجراء مسموح بحسب حالة الطلب ودور المستخدم.", "buyer"),
+      unavailableWhen: unavailableWhen("order-details-missing", "لا يوجد طلب حقيقي على هذا المسار."),
+    },
   ]),
   page("custom-request", "/custom-request", "/custom-request", "طلب مخصص", "إنشاء طلب مخصص لبائع.", [
-    click("custom-request-submit", "إرسال الطلب المخصص", "تنفيذ إنشاء الطلب عبر بوابة Page Save الحقيقية.", "buyer"),
-    internalImage("custom-request-image", "إضافة صورة داخلية", "اختيار صورة عشوائية من الكتالوجات الداخلية ورفعها.", "buyer"),
+    {
+      id: "custom-request-submit",
+      label: "إرسال الطلب المخصص",
+      description: "فتح نموذج الطلب المخصص لبائع حقيقي وكتابة وصفه ثم تنفيذه عبر بوابة Page Save.",
+      actor: "buyer",
+      entryPath: SEARCH_ENTRY_PATH,
+      actions: [
+        ...openCustomRequestActions(),
+        { type: "wait-for-target", target: fieldTarget("custom-request-description"), timeoutMs: REACH_TIMEOUT_MS },
+        { type: "set-value", target: fieldTarget("custom-request-description"), value: "طلب مخصص للمحاكاة من {{storeName}}" },
+        ...pageSaveActions("custom-request-submit", "إرسال الطلب المخصص"),
+      ],
+    },
+    {
+      id: "custom-request-image",
+      label: "إضافة صورة داخلية",
+      description: "فتح نموذج الطلب المخصص لبائع حقيقي ثم اختيار صورة عشوائية من الكتالوجات الداخلية ورفعها.",
+      actor: "buyer",
+      entryPath: SEARCH_ENTRY_PATH,
+      actions: [
+        ...openCustomRequestActions(),
+        { type: "wait-for-target", target: fileTarget("custom-request-image"), timeoutMs: REACH_TIMEOUT_MS },
+        { type: "set-internal-image", target: fileTarget("custom-request-image") },
+      ],
+    },
   ]),
   page("specialty-request", "/specialty-request", "/specialty-request", "طلب متخصص", "اختيار تخصص وإرسال طلب للمختصين.", [
     clickFirstOf("specialty-main", "اختيار تخصص رئيسي", "اختيار أول تخصص فعلي."),
@@ -307,11 +527,13 @@ export const USER_PAGE_REGISTRY: readonly UserPageDefinition[] = [
   ]),
   page("sellers", "/categories/[categoryId]/sellers/[subcategoryId]", "/categories/1/sellers/1", "البائعون", "البائعون المتاحون لقسم محدد.", [
     clickFirstOf("seller-open", "فتح بائع", "فتح أول بائع فعلي."),
-    click("sellers-load-more", "تحميل مزيد من البائعين", "قراءة الدفعة التالية من بائعي القسم."),
+
   ]),
   page("doctor-appointment", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/20/doctor-appointment/300", "حجز طبيب", "مقدمو الخدمة لتخصص طبي محدد.", [
-    clickFirstOf("doctor-open", "فتح مقدم خدمة", "فتح أول مقدم خدمة فعلي."),
-    click("doctor-load-more", "تحميل مزيد من مقدمي الخدمة", "قراءة الدفعة التالية من مقدمي الخدمة."),
+    {
+      ...clickFirstOf("doctor-open", "فتح مقدم خدمة", "فتح أول مقدم خدمة فعلي."),
+      unavailableWhen: unavailableWhen("doctor-empty", "لا يوجد مقدمو خدمة في هذا التخصص."),
+    },
   ]),
 ] as const;
 

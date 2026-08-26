@@ -55,7 +55,7 @@ export function SuperAdminPageSimulation({ page }: { page: UserPageDefinition })
       setSteps(next.steps);
     } catch (error) {
       setResult({
-        succeeded: false,
+        outcome: "failed",
         runtime,
         pageId: page.id,
         interactionId: interaction.id,

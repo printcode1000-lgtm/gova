@@ -23,6 +23,10 @@ registerOrdersCorePorts();
 export function mapOrderError(error: unknown) {
   const message =
     error instanceof Error ? error.message : "Internal Server Error";
+  // `readJsonBody` raises this for a malformed or truncated payload — a client
+  // that disconnected mid-request, for example. It is the client's problem, not
+  // a server fault, so it must not reach the 500 branch and be persisted.
+  if (message === "invalidJsonBody") return apiError(message, 400);
   if (message === "userNotFound") return apiError(message, 401);
   if (message === "Forbidden" || message.includes("only"))
     return apiError(message, 403);
@@ -48,5 +52,7 @@ export function mapOrderError(error: unknown) {
   ) {
     return apiError(message, 400);
   }
-  return apiError(message, 500);
+  // Passing the original error keeps the real stack: `apiError` would otherwise
+  // log a fresh Error created at the logging site, which points nowhere useful.
+  return apiError(message, 500, { cause: error });
 }

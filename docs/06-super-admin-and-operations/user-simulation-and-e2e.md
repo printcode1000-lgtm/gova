@@ -36,6 +36,9 @@ progress on the same screen:
 - The monitor **Copy errors only** button copies only failed entries using exactly
   the page label, interaction label, and actual error message. It works for both
   a single interaction and a Run All batch and omits successful runs and step logs.
+- The monitor keeps its title and copy controls fixed and scrolls its entries
+  vertically inside a bounded region, so a Run All batch stays readable without
+  pushing the rest of the control surface off screen.
 - Page and interaction selection are locked while any execution is active so
   the shared progress monitor always describes one stable run.
 
@@ -83,6 +86,55 @@ control, not on a simulation-only button.
 
 Interaction discovery strips these markers before fingerprinting a page, so
 adding or moving instrumentation is not by itself an interaction change.
+
+## Prerequisite Paths
+
+Some declared targets only exist after the user has already walked a real path:
+a cart row needs something in the cart, a product action needs an opened
+product, the Page Save button only renders once a real change is staged. An
+interaction may therefore declare an `entryPath` — the real path it starts from
+— and then navigate the same frame through real controls until its target
+renders. The execution frame follows every real navigation, so a chain such as
+search → open the first result → add to cart → open the cart is one interaction
+made entirely of real user actions.
+
+This is not seeded state and not a shortcut: every step is a real control on a
+real page, and any missing step still fails loudly at the exact target it could
+not reach. `entryPath` is omitted for an interaction whose target is already
+present on the page itself.
+
+Page Save is a two-step real gateway. The header button opens the dialog and the
+dialog's Execute button runs the work, so a save interaction declares both;
+stopping at the header button would report success without ever saving.
+
+The frame is not torn down the moment the last action returns. A click that
+submits an order comes back as soon as its handler fires, so the port waits for
+the frame to stop completing network work first; disposing mid-request left the
+server reading a truncated body and reporting a server fault for what was a
+complete user action.
+
+## Unavailable Is Not A Failure
+
+An interaction may declare `unavailableWhen`: the real empty state the page
+renders when the data it needs does not exist — an empty orders list, a catalog
+with no sections, a conversation not on this device. Those states carry a
+`data-simulation-state` marker, and the runner consults them **only after** a
+target actually went missing, so the successful path costs nothing.
+
+The run is then reported `unavailable` rather than `failed`, and it is excluded
+from **Copy errors only**. The distinction is the point of the whole board:
+
+- `failed` — the declared target was missing while the page had every reason to
+  render it. A real defect.
+- `unavailable` — the page itself says it has nothing to act on. The
+  application is behaving correctly and the environment simply has no data.
+
+`unavailable` is never inferred from a fallback search, a timeout, or a guess;
+it requires the application's own rendered state to say so. A missing target
+with no such marker stays an explicit failure. The fix for a persistent
+`unavailable` is the environment or the identity data — never a shortcut in the
+execution port, and never a shallower interaction that stops exercising the real
+path.
 
 ## Simulation Users
 

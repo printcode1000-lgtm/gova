@@ -23,8 +23,15 @@ export interface SimulationUser {
  *   or duplicated marker is an explicit failure.
  * - `list-item` marks a repeated row of a real list, so it resolves to the
  *   first marked element in document order by contract.
+ * - `state` marks a real rendered state rather than a control — the page's own
+ *   empty state, for example. It is only ever probed for presence.
  */
-export type SimulationTargetKind = "event" | "field" | "list-item" | "file";
+export type SimulationTargetKind =
+  | "event"
+  | "field"
+  | "list-item"
+  | "file"
+  | "state";
 
 export interface SimulationTarget {
   kind: SimulationTargetKind;
@@ -46,6 +53,23 @@ export interface PageInteractionDefinition {
   label: string;
   description: string;
   actor: "guest" | SimulationUserRole | "any";
+  /**
+   * Real path this interaction starts from, when its target only exists after
+   * the user has walked a real prerequisite path — searching for a product
+   * before a cart has anything in it, for example. The declared actions then
+   * navigate the same frame through real controls until the target renders.
+   * Omitted for an interaction whose target is present on the page itself.
+   */
+  entryPath?: string;
+  /**
+   * Real state the page renders when the data this interaction needs does not
+   * exist — an empty orders list, a catalog with no sections. When an action
+   * cannot find its target and this marker is present, the run is reported
+   * unavailable rather than failed: the application is behaving correctly and
+   * the environment simply has nothing to act on. A missing target with no such
+   * marker stays an explicit failure.
+   */
+  unavailableWhen?: { target: SimulationTarget; reason: string };
   actions: readonly SimulationDriverAction[];
 }
 
@@ -62,7 +86,14 @@ export type SimulationProgressStatus =
   | "pending"
   | "running"
   | "passed"
-  | "failed";
+  | "failed"
+  | "unavailable";
+
+/**
+ * `unavailable` is not a pass and not a defect: the declared real target could
+ * not be reached because the page itself reports it has no such data yet.
+ */
+export type SimulationRunOutcome = "passed" | "failed" | "unavailable";
 
 export interface SimulationProgressStep {
   id: string;
@@ -74,7 +105,7 @@ export interface SimulationProgressStep {
 }
 
 export interface SimulationRunResult {
-  succeeded: boolean;
+  outcome: SimulationRunOutcome;
   runtime: SimulationRuntime;
   pageId: string;
   interactionId: string;
@@ -91,6 +122,13 @@ export interface SimulationExecutionPort {
   setInternalImage(target: SimulationTarget, sourcePath: string): Promise<void>;
   submit(target: SimulationTarget): Promise<void>;
   waitForTarget(target: SimulationTarget, timeoutMs?: number): Promise<void>;
+  hasTarget(target: SimulationTarget): Promise<boolean>;
+  /**
+   * Lets real work the last action started finish before the frame is torn
+   * down. Dropping the frame mid-request leaves the server reading a truncated
+   * body, which surfaces as a server fault for what was a complete user action.
+   */
+  settle(): Promise<void>;
   wait(milliseconds: number): Promise<void>;
   dispose(): void;
 }
