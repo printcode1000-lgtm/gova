@@ -22,6 +22,7 @@ import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
 
 import { useLogin } from './hooks/use-login';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function LoginPageContent() {
   const router = useRouter();
@@ -43,13 +44,13 @@ export function LoginPageContent() {
             </div>
             {error && <div className="p-3 text-sm rounded bg-error/15 text-error text-center font-medium animate-in fade-in duration-200">{error}</div>}
             <FormProvider {...form}>
-              <form data-simulation-target="login-submit" onSubmit={onSubmit} className="space-y-6" noValidate>
+              <form {...uiAttributes({ uid: "login-submit-T5809e", id: "login-submit", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "login-submit" } })} onSubmit={onSubmit} className="space-y-6" noValidate>
                 <Controller name="phone" control={form.control} render={({ field, fieldState }) => (
                   <div className="space-y-2">
                     <span className="text-sm font-semibold flex items-center gap-2 text-on-surface"><Smartphone className="h-4 w-4 text-primary" />{t('auth.login.phone')}</span>
                     <div className="relative">
                       <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">+20</span>
-                      <input data-simulation-field="login-phone" name="phone" type="tel" inputMode="tel" maxLength={11} placeholder={t('auth.login.phonePlaceholder')} className={cn('auth-input ps-12 w-full', fieldState.error && 'border-error')} value={field.value} onChange={(e) => field.onChange(e.target.value.replace(/\D/g, '').slice(0, 11))} />
+                      <input {...uiAttributes({ uid: "login-phone-ChBI52", id: "login-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "login-phone" } })} name="phone" type="tel" inputMode="tel" maxLength={11} placeholder={t('auth.login.phonePlaceholder')} className={cn('auth-input ps-12 w-full', fieldState.error && 'border-error')} value={field.value} onChange={(e) => field.onChange(e.target.value.replace(/\D/g, '').slice(0, 11))} />
                     </div>
                     {fieldState.error && <p className="text-xs text-error">{fieldState.error.message}</p>}
                   </div>
@@ -58,10 +59,10 @@ export function LoginPageContent() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold flex items-center gap-2 text-on-surface"><Lock className="h-4 w-4 text-primary" />{t('auth.login.password')}</span>
-                      <Link data-simulation-target="login-forgot-password" href="/forgot-password" className="text-xs text-primary">{t('auth.login.forgotPassword')}</Link>
+                      <Link {...uiAttributes({ uid: "login-forgot-password-ryS56k", id: "login-forgot-password", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "login-forgot-password" } })} href="/forgot-password" className="text-xs text-primary">{t('auth.login.forgotPassword')}</Link>
                     </div>
                     <div className="relative">
-                      <input data-simulation-field="login-password" name="password" autoComplete="current-password" type={showPassword ? 'text' : 'password'} placeholder={t('auth.login.passwordPlaceholder')} className={cn('auth-input pe-10 w-full', fieldState.error && 'border-error')} value={field.value} onChange={field.onChange} />
+                      <input {...uiAttributes({ uid: 'login-password-34nKhf', id: 'login-password', kind: 'field', interaction: { type: 'type', valueContract: 'password' }, simulation: { kind: 'field', id: 'login-password' } })} name="password" autoComplete="current-password" type={showPassword ? 'text' : 'password'} placeholder={t('auth.login.passwordPlaceholder')} className={cn('auth-input pe-10 w-full', fieldState.error && 'border-error')} value={field.value} onChange={field.onChange} />
                       <button type="button" className="absolute end-0 top-0 h-full px-3 text-on-surface-variant" onClick={() => setShowPassword((s) => !s)} tabIndex={-1} aria-label={t('auth.login.showPassword')}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
                     </div>
                     {fieldState.error && <p className="text-xs text-error">{fieldState.error.message}</p>}
@@ -70,12 +71,12 @@ export function LoginPageContent() {
                 <button type="submit" disabled={isSubmitting || !form.formState.isValid} className="w-full auth-cta h-12 text-sm font-semibold">
                   {isSubmitting ? <><Loader2 className="h-4 w-4 animate-spin me-2" />{t('auth.login.submitting')}</> : <><LogIn className="h-4 w-4 me-2" />{t('auth.login.submit')}</>}
                 </button>
-                <button data-simulation-target="login-as-guest" type="button" className="asol-auth-secondary-btn asol-control h-12 text-sm" onClick={() => { startGuestSession(); router.push('/home'); }}><User className="h-4 w-4 inline me-2" />{t('auth.login.continueAsGuest')}</button>
+                <button {...uiAttributes({ uid: "login-as-guest-vWqA9D", id: "login-as-guest", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "login-as-guest" } })} type="button" className="asol-auth-secondary-btn asol-control h-12 text-sm" onClick={() => { startGuestSession(); router.push('/home'); }}><User className="h-4 w-4 inline me-2" />{t('auth.login.continueAsGuest')}</button>
               </form>
             </FormProvider>
             <div className="text-center space-y-3">
               <div className="relative"><div className="absolute inset-0 flex items-center"><span className="w-full border-t border-outline-variant" /></div><div className="relative flex justify-center"><span className="asol-field-surface px-2 text-xs text-on-surface-variant uppercase">{t('auth.login.newHere')}</span></div></div>
-              <Link data-simulation-target="login-registration" href="/registration" className="block"><button type="button" className="asol-auth-outline-btn asol-control h-12 text-sm group">{t('auth.login.createAccount')}<ArrowRight className="h-4 w-4 inline ms-2 transition-transform" /></button></Link>
+              <Link {...uiAttributes({ uid: "login-registration-L8f73Y", id: "login-registration", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "login-registration" } })} href="/registration" className="block"><button type="button" className="asol-auth-outline-btn asol-control h-12 text-sm group">{t('auth.login.createAccount')}<ArrowRight className="h-4 w-4 inline ms-2 transition-transform" /></button></Link>
             </div>
           </div>
         </div>

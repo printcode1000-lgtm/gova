@@ -20,6 +20,7 @@ import {
 import { PharmacyCategoryIcon } from "./PharmacyCategoryIcon";
 
 import { text, CreateCategoryDialog, IconButton, ManagerColumn, ProductManagerCard, StatusBadge, VisibilityButton, LoadingFrame, MessageFrame } from "./catalog-manager/PharmacyCatalogManagerPage.dialogs";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 import {
   buildAddPharmacyProductHref,
   sortedPharmacyCategories,
@@ -28,6 +29,8 @@ import {
   type PharmacyCatalogEditDialog,
 } from "./catalog-manager/PharmacyCatalogManagerPage.model";
 
+
+const PHARMACY_TOGGLE_UI: UiDescriptor = { uid: "pharmacy-toggle-l9ZwPk", id: "pharmacy-toggle", kind: "item", interaction: { type: "toggle" }, simulation: { kind: "list-item", id: "pharmacy-toggle" } };
 export function PharmacyCatalogManagerPage() {
   const { formatApiError } = useTranslation();
   const searchParams = useSearchParams();
@@ -285,8 +288,7 @@ export function PharmacyCatalogManagerPage() {
         {!catalog && busy ? (
           <LoadingFrame compact />
         ) : (
-          <section
-            data-simulation-state={categories.length === 0 ? "pharmacy-catalog-empty" : undefined}
+          <section {...uiAttributes({ uid: "pharmacy-catalog-empty-fYw1eB", id: "pharmacy-catalog-empty", kind: "region", simulation: { kind: "state", id: "pharmacy-catalog-empty" } })}
             className="grid min-h-[620px] overflow-hidden rounded-lg border border-outline-variant bg-surface lg:grid-cols-[300px_330px_1fr]"
           >
             <ManagerColumn
@@ -304,8 +306,7 @@ export function PharmacyCatalogManagerPage() {
                       : "border-outline-variant"
                   } ${category.status === "hidden" ? "opacity-55" : ""}`}
                 >
-                  <button
-                    data-simulation-list-item="pharmacy-category"
+                  <button {...uiAttributes({ uid: "pharmacy-category-06QfVC", id: "pharmacy-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "pharmacy-category" } })}
                     type="button"
                     onClick={() => setActiveCategoryId(category.id)}
                     className="flex min-w-0 flex-1 items-center gap-2 text-start"
@@ -372,7 +373,7 @@ export function PharmacyCatalogManagerPage() {
 
             <ManagerColumn title={text.products} disabled={busy}>
               {products.length === 0 ? (
-                <p data-simulation-state="pharmacy-products-empty" className="rounded-lg border border-dashed border-outline-variant p-8 text-center text-sm text-on-surface-variant">
+                <p {...uiAttributes({ uid: "pharmacy-products-empty-BrW6Lv", id: "pharmacy-products-empty", kind: "region", simulation: { kind: "state", id: "pharmacy-products-empty" } })} className="rounded-lg border border-dashed border-outline-variant p-8 text-center text-sm text-on-surface-variant">
                   {text.emptyProducts}
                 </p>
               ) : (
@@ -383,7 +384,7 @@ export function PharmacyCatalogManagerPage() {
                       product={product}
                       disabled={busy}
                       onToggle={() => toggleProduct(product)}
-                      simulationToggleListItemId="pharmacy-toggle"
+                      toggleUi={PHARMACY_TOGGLE_UI}
                     />
                   ))}
                 </div>

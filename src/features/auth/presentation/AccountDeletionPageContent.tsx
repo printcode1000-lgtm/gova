@@ -22,6 +22,7 @@ import { clearAllClientStorage } from '@/features/app-reset';
 import { useTranslation } from "@/shared/i18n";
 import { accountDeletionApiService } from "../application/services/account-deletion-api-service";
 import { notifications } from "@/features/notifications";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const COPY = {
   ar: {
@@ -247,8 +248,7 @@ export function AccountDeletionPageContent() {
           />
         </label>
         <label className="flex items-start gap-3 rounded-xl border border-error/20 p-4">
-          <input
-            data-simulation-target="account-delete-stage"
+          <input {...uiAttributes({ uid: "account-delete-stage-yWONK1", id: "account-delete-stage", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "account-delete-stage" } })}
             type="checkbox"
             checked={accepted}
             onChange={(e) => setAccepted(e.target.checked)}

@@ -13,6 +13,7 @@ import {
 } from "@/features/categories/presentation/category-grid-styles";
 import { useTranslation } from "@/shared/i18n";
 import type { CategoryTree } from "@/features/categories";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface CategorySubcategoriesPageProps {
   categoryTree: CategoryTree;
@@ -137,9 +138,8 @@ export function CategorySubcategoriesPage({
               const altText = name || "Subcategory image";
 
               return (
-                <button
+                <button {...uiAttributes({ uid: "category-item-N5DI5e", id: "category-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "category-item" } })}
                   key={item.id}
-                  data-simulation-list-item="category-item"
                   type="button"
                   className={categoryTileClassName}
                   onClick={() => {

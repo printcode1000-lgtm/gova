@@ -34,6 +34,7 @@ import { AdminCopyValue } from "./AdminCopyValue";
 import { productPageClipboard } from "./product-page-clipboard";
 import { productPageRouteModel } from "./product-page-route-model";
 import { useProductPageLoader } from "./use-product-page-loader";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 function getProductImageKeysFingerprint(
   images: ProductDetails["images"],
@@ -43,6 +44,8 @@ function getProductImageKeysFingerprint(
   );
 }
 
+
+const PRODUCT_FAVORITE_UI: UiDescriptor = { uid: "product-favorite-6pOZr6", id: "product-favorite", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-favorite" } };
 export function ProductPageContent({
   initialProduct = null,
 }: {
@@ -138,7 +141,7 @@ export function ProductPageContent({
           imageUrl: details.images.find((image) => image.url)?.url,
         }}
         trigger={
-          <Button ui={{ uid: "product.share-m9IepD", id: "product.share", kind: "action", action: "share-product", part: "actions", simulation: { kind: "event", id: "product-share" } }} type="button" variant="outline" className="gap-2">
+          <Button ui={{ uid: "product.share-m9IepD", id: "product.share", kind: "action", action: "share-product", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-share" } }} type="button" variant="outline" className="gap-2">
             <Share2 className="h-4 w-4" />
             {locale === "ar" ? "مشاركة المنتج" : "Share product"}
           </Button>
@@ -148,8 +151,7 @@ export function ProductPageContent({
   const profileAction =
     mode === "view" && product?.uid ? (
       <Button ui={{ uid: "product.owner-profile-ruTId9", id: "product.owner-profile", kind: "action", action: "open-owner-profile", part: "actions" }} asChild variant="outline" className="gap-2">
-        <Link
-          data-simulation-target="product-owner-profile"
+        <Link {...uiAttributes({ uid: "product-owner-profile-G7Eesj", id: "product-owner-profile", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-owner-profile" } })}
           href={`/profile?mode=preview&uid=${encodeURIComponent(product.uid)}`}
         >
           <UserCircle className="h-4 w-4" />
@@ -163,7 +165,7 @@ export function ProductPageContent({
         item={favoriteFromProductCard(createProductCardViewModel(product))}
         label={locale === "ar" ? "المفضلة" : "Favorite"}
         className="h-10 w-auto gap-2 rounded-xl px-4"
-        simulationTargetId="product-favorite"
+        ui={PRODUCT_FAVORITE_UI}
       />
     ) : null;
 
@@ -218,7 +220,7 @@ export function ProductPageContent({
     }
   };
   const contactAction = mode === "view" && product?.uid ? (
-    <Button ui={{ uid: "product.contact-owner-4l2mEW", id: "product.contact-owner", kind: "action", action: "contact-owner", part: "actions", simulation: { kind: "event", id: "product-contact" } }}
+    <Button ui={{ uid: "product.contact-owner-4l2mEW", id: "product.contact-owner", kind: "action", action: "contact-owner", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-contact" } }}
       type="button"
       variant="outline"
       className="gap-2"

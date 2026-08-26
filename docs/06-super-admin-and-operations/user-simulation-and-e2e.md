@@ -42,6 +42,43 @@ progress on the same screen:
 - Page and interaction selection are locked while any execution is active so
   the shared progress monitor always describes one stable run.
 
+## UiRegistry is the only source of simulation targets
+
+`@asol/ui-registry-core` owns identity, interaction, value contracts, and the
+generated target catalog. `@asol/simulation-core` consumes that package through
+its public door and adds scenarios; the dependency never points the other way.
+
+**Forbidden targeting.** Simulation may not resolve an element by a CSS
+selector, a DOM index, text or a label, `data-ui-id`, `data-ui-component`, or a
+`data-simulation-*` attribute. `architecture:check` fails on each of these with
+the file, line, uid, route and reason.
+
+**The generated registry.** `UI_SIMULATION_REGISTRY` is generated from the
+descriptors that already exist in source plus `UI_PAGE_REGISTRY` — there is no
+hand-maintained target list to drift. Regenerate it with
+`npm run ui-registry:simulation:generate`; `architecture:check` fails when the
+committed file differs from source. Its `routes` come from the import graph, so
+they are a superset: a page that provably cannot render an element is rejected,
+while a shell barrel can make an element look reachable from many routes.
+
+**Compatibility.** `data-simulation-*` attributes are still emitted, by the
+package builder only, with exactly the values they had before. The executor no
+longer reads them; they remain for external consumers and for the discovery
+scanner. Removing them is a separate, guarded change: the guard already refuses
+any manual emission outside `@asol/ui-registry-core`, and the emitter is the one
+place that would have to change.
+
+**Lifecycle.** Deleting or renaming a registered element removes its uid from
+the generated registry, so the scenario that named it fails at load with
+`simulationTargetNotRegistered`, and `simulation:coverage` fails with the page,
+interaction and reason. Adding a descriptor with `interaction` and `simulation`
+makes it discoverable by coverage and by
+`npm run ui-registry:simulation:report`, which prints route, uid, semantic id,
+interaction, value contract, simulation id and the scenarios that reference it.
+
+**Rule for new work.** Every new simulated UI element needs an explicit uid, an
+explicit `interaction`, and a scenario that references its simulation id.
+
 ## Boundaries
 
 - Discovery, execution, and presentation are separate modules.
@@ -51,7 +88,7 @@ progress on the same screen:
 - The execution driver may type into real editable fields, select the first real enabled option from an exact `<select>` target, dispatch real keyboard events, and wait for an exact asynchronously rendered target. These operations prepare real UI prerequisites; they are not fallback selector resolution.
 - The existing application handlers, hooks, services, APIs, repositories,
   database backend, validation/normalization functions, and storage configuration remain authoritative.
-- Interaction definitions carry typed simulation targets, never CSS selectors. The execution port is the only module that knows how a target maps to a DOM attribute, and missing declared targets fail explicitly; it does not search for semantic or generic fallback targets. When a target also has a super-admin diagnostic identity, declare `simulation: { kind, id }` in its `UiDescriptor`; `@asol/ui-registry-core` owns that descriptor contract and emits the same execution marker, keeping both records synchronized. The dependency direction is one-way: `@asol/simulation-core` discovers the emitted markers in source and never imports the UiRegistry package. The descriptor's `uid` is the element's identity for diagnostics; the simulation `id` remains the separate execution address, and neither replaces the other.
+- Interaction definitions carry registered UiRegistry uids, never CSS selectors. The execution port is the only module that knows how a target maps to a DOM attribute, and missing declared targets fail explicitly; it does not search for semantic or generic fallback targets. When a target also has a super-admin diagnostic identity, declare `simulation: { kind, id }` in its `UiDescriptor`; `@asol/ui-registry-core` owns that descriptor contract and emits the same execution marker, keeping both records synchronized. The dependency direction is one-way: `@asol/simulation-core` consumes `@asol/ui-registry-core` through its public door, and the UiRegistry package never imports simulation-core. The descriptor's `uid` is the identity **and** the locator; the simulation `id` remains a separate scenario name that resolves to exactly one uid.
 - Static Out, Android, and iOS use the configured remote Business API. They do
   not assume that App Router handlers exist in the static bundle.
 - Scenarios are intentionally empty in version one. A page interaction remains
@@ -61,22 +98,30 @@ progress on the same screen:
 
 ## Interaction Targets
 
-An interaction action addresses a `SimulationTarget` — a `{ kind, id }` pair
-declared in `USER_PAGE_REGISTRY`. Registry definitions never contain a CSS
-selector, an `aria-label`, a field name, or a positional expression. The
-execution port is the only module that maps a target to the DOM:
+An interaction action addresses a registered element by its uid. Scenario
+definitions never contain a CSS selector, an `aria-label`, a field name, or a
+positional expression; they name a simulation id, which the generated registry
+resolves to exactly one uid at load time:
 
-| Kind | DOM attribute | Resolution |
+| Registered field | What it is | Used for |
 |---|---|---|
-| `event` | `data-simulation-target` | Exactly one element; missing or duplicated is an explicit failure. |
-| `field` | `data-simulation-field` | Exactly one editable input, textarea, or select. |
-| `list-item` | `data-simulation-list-item` | A repeated row of a real list; resolves to the first marked element in document order. |
-| `file` | `data-simulation-file` | Exactly one real `<input type="file">`. |
+| `uid` | `data-ui-uid`, minted once per element | **The only locator.** The adapter queries `[data-ui-uid="…"]` and nothing else. |
+| `id` | Semantic name (`cart-checkout`) | Diagnostics and reports. Never a locator. |
+| `interaction.type` | `tap` / `type` / `select` / `toggle` / `upload` | Validated against the step before the DOM is touched. |
+| `interaction.valueContract` | A named shape (`phone-number`, `quantity`, …) | Validates the value a scenario supplies. |
+| `simulation.id` | Scenario/event name | How a scenario refers to the element; resolves to one uid. |
+| `simulation.kind` | `event` / `field` / `list-item` / `file` / `state` | Preserved internally so each family keeps its previous resolution behaviour. |
 
-Because `list-item` is the declared contract for repeated rows, a list marks
-**every** row with the same id rather than threading an index through the
-component tree. `event`, `field`, and `file` stay strictly unique, so a marker
-accidentally rendered twice fails loudly instead of silently picking one.
+A step is therefore `{ targetUid, interaction, value? }`. Before it runs, the
+runner resolves the uid through the generated `UiSimulationRegistry`, checks the
+page can render it, checks the requested interaction is the registered one, and
+checks the value against the declared contract.
+
+Multiplicity is a registry fact rather than an attribute choice: a descriptor
+the registry marks `repeated` — a row rendered once per item of a real list —
+resolves to the first match in document order, exactly as `list-item` did.
+Everything else must match exactly once; zero or two matches is an explicit
+failure that names the uid.
 
 Instrumentation is addressing metadata only. It never changes rendering, never
 adds a behavior the real user does not have, and never authorizes a second

@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Plus, ScanLine, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { NativeCore } from "@asol/native-core";
 
@@ -17,6 +18,8 @@ import {
   type InspectedElement,
 } from "./ui-inspector-element-picker";
 import { buildRegistrationProposal } from "./ui-registration-proposal";
+import { buildPendingRegistrationRequest } from "./ui-pending-registration";
+import { uiRegistryPendingApiService } from "../application/services/ui-registry-pending-api-service";
 
 type CopyState = "idle" | "copied" | "failed";
 
@@ -62,6 +65,9 @@ export function SuperAdminUiAttributeInspector() {
   const [copiedText, setCopiedText] = useState("");
   const [copyState, setCopyState] = useState<CopyState>("idle");
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string> | null>(null);
+  const [selectedDomId, setSelectedDomId] = useState<string | undefined>(undefined);
+  const [pendingState, setPendingState] = useState<"idle" | "queued" | "failed">("idle");
+  const pathname = usePathname();
   const selectedRef = useRef<InspectedElement | null>(null);
   const selectedOutlineRef = useRef<{ outline: string; outlineOffset: string } | null>(null);
 
@@ -106,6 +112,8 @@ export function SuperAdminUiAttributeInspector() {
       const tree = attributeTreeFor(selected);
       const ownAttributes = attributesFor(selected);
       setSelectedAttributes(ownAttributes);
+      setSelectedDomId(selected.getAttribute("id") ?? undefined);
+      setPendingState("idle");
       const text = formatInspectorOutput(ownAttributes, tree);
       setCopiedText(text);
       void NativeCore.writeClipboard({ string: text }).then((result) => {
@@ -135,9 +143,15 @@ export function SuperAdminUiAttributeInspector() {
   if (!authorized) return null;
 
   const status = enabled
-    ? copyState === "failed"
-      ? "تعذر النسخ"
-      : copiedText || "المس أي عنصر لنسخ Attributes"
+    ? pendingState === "queued"
+      ? `تمت إضافة الطلب إلى قائمة UiRegistry المعلّقة
+${copiedText}`
+      : pendingState === "failed"
+        ? `تعذر إرسال الطلب المعلّق
+${copiedText}`
+        : copyState === "failed"
+          ? "تعذر النسخ"
+          : copiedText || "المس أي عنصر لنسخ Attributes"
     : "فحص Attributes";
   const missingUid = enabled && selectedAttributes !== null && selectedUiUid(selectedAttributes) === null;
 
@@ -150,6 +164,25 @@ export function SuperAdminUiAttributeInspector() {
     void NativeCore.writeClipboard({ string: proposal }).then((result) => {
       setCopyState(result.ok ? "copied" : "failed");
     });
+
+    // The copy is for the developer at hand; the queued request is what makes
+    // the registration survive the session and block the next deploy until a
+    // developer applies it. Both carry the same safe metadata and nothing else.
+    const request = buildPendingRegistrationRequest(
+      selectedAttributes,
+      pathname,
+      selectedDomId,
+      Math.random,
+    );
+    const token = session?.sessionToken;
+    if (!request || !token) {
+      setPendingState("failed");
+      return;
+    }
+    void uiRegistryPendingApiService
+      .submit(request, token)
+      .then(() => setPendingState("queued"))
+      .catch(() => setPendingState("failed"));
   };
 
   return (

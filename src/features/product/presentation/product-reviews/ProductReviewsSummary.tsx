@@ -1,6 +1,7 @@
 "use client";
 
 import { Stars } from "./ProductReviews.review-formatting";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function ProductReviewsSummary({
   average,
@@ -27,8 +28,7 @@ export function ProductReviewsSummary({
         <span className="text-sm text-muted-foreground">({total})</span>
       </button>
       {canRate ? (
-        <button
-          data-simulation-target="product-review"
+        <button {...uiAttributes({ uid: "product-review-GBBl45", id: "product-review", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-review" } })}
           type="button"
           aria-label="إرسال تقييم"
           onClick={onRate}

@@ -16,7 +16,10 @@ import {
 } from "@/features/favorites";
 import { useTranslation } from "@/shared/i18n";
 import { cn } from "@/shared/utils";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
+
+const FAVORITES_OPEN_UI: UiDescriptor = { uid: "favorites-open-g10UQZ", id: "favorites-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "favorites-open" } };
 export default function FavoritesPage() {
   const router = useRouter();
   const { isRTL } = useTranslation();
@@ -64,8 +67,7 @@ export default function FavoritesPage() {
       </header>
 
       <div className="mb-5 grid grid-cols-2 rounded-xl bg-surface-container p-1">
-        <button
-          data-simulation-target="favorites-products"
+        <button {...uiAttributes({ uid: "favorites-products-aAVb4f", id: "favorites-products", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "favorites-products" } })}
           type="button"
           onClick={() => setActiveTab("product")}
           className={cn(
@@ -81,8 +83,7 @@ export default function FavoritesPage() {
             {productCount}
           </span>
         </button>
-        <button
-          data-simulation-target="favorites-sellers"
+        <button {...uiAttributes({ uid: "favorites-sellers-VcECw3", id: "favorites-sellers", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "favorites-sellers" } })}
           type="button"
           onClick={() => setActiveTab("seller")}
           className={cn(
@@ -130,7 +131,7 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
-                simulationListItemId="favorites-open"
+                ui={FAVORITES_OPEN_UI}
                 onOpen={() => router.push(card.href || "/search")}
               />
             );
@@ -145,7 +146,7 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
-                simulationListItemId="favorites-open"
+                ui={FAVORITES_OPEN_UI}
                 onOpen={() => router.push(card.href || "/search")}
               />
             );

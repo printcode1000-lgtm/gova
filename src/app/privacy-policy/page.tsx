@@ -1,4 +1,5 @@
 import React from 'react';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -100,7 +101,7 @@ export default function PrivacyPolicyPage() {
             </h2>
             <p className="text-on-surface-variant">
               لأي استفسار أو ملاحظات، يمكنكم التواصل عبر البريد الإلكتروني:{''}
-              <a data-simulation-target="privacy-email" href="mailto:suezbazaar@gmail.com" className="text-primary">
+              <a {...uiAttributes({ uid: "privacy-email-Bq0E7M", id: "privacy-email", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "privacy-email" } })} href="mailto:suezbazaar@gmail.com" className="text-primary">
                 suezbazaar@gmail.com
               </a>
             </p>

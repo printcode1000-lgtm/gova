@@ -11,6 +11,7 @@ import {
 import { NativeCore } from "@asol/native-core";
 import { useStorageProfileUpload } from "../hooks/use-storage-profile-upload";
 import { imageUploadQueue } from "../services/image-upload-queue";
+import { isUiUid, uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 import {
   buildImageUploadDraftKey,
   createImageUploadDraft,
@@ -214,12 +215,8 @@ export function parseStorageImageManagerConfig(
   ) {
     throw new Error(`Invalid storageScope for ${config.id}`);
   }
-  if (
-    config.simulationFileId !== undefined &&
-    (typeof config.simulationFileId !== "string" ||
-      !/^[a-z0-9-]+$/.test(config.simulationFileId))
-  ) {
-    throw new Error(`Invalid simulationFileId for ${config.id}`);
+  if (config.ui !== undefined && !isUiUid((config.ui as UiDescriptor).uid)) {
+    throw new Error(`Invalid UiRegistry descriptor for ${config.id}`);
   }
 
   return {
@@ -231,10 +228,7 @@ export function parseStorageImageManagerConfig(
     deleteFromStorageOnRemove: config.deleteFromStorageOnRemove !== false,
     storageScope:
       typeof config.storageScope === "string" ? config.storageScope : undefined,
-    simulationFileId:
-      typeof config.simulationFileId === "string"
-        ? config.simulationFileId
-        : undefined,
+    ui: config.ui as UiDescriptor | undefined,
   };
 }
 
@@ -1006,7 +1000,7 @@ const StorageImageSlot = React.forwardRef<
 
       <input
         ref={inputRef}
-        data-simulation-file={index === 0 ? config.simulationFileId : undefined}
+        {...(index === 0 && config.ui ? uiAttributes(config.ui) : {})}
         type="file"
         accept="image/*"
         className="hidden"

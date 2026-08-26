@@ -50,7 +50,10 @@ const MIGRATION_SOURCES = [
     family: 'profile',
     shards: PROFILE_SHARDS,
     dirs: [path.join(SRC, 'core/database/profile/migrations')],
-    files: [path.join(SRC, 'domains/data-health/db/metadata-schema.ts')],
+    files: [
+      path.join(SRC, 'domains/data-health/db/metadata-schema.ts'),
+      path.join(SRC, 'domains/ui-registry/db/pending-schema.ts'),
+    ],
   },
   {
     family: 'marketplace-orders',

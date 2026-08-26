@@ -40,6 +40,7 @@ import {
   type NotificationFilter,
 } from "./notifications-page-model";
 import { NotificationsEmptyState } from "./NotificationsEmptyState";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function NotificationsPageContent() {
   const router = useRouter();
@@ -171,9 +172,8 @@ export function NotificationsPageContent() {
             const color = FILTER_COLORS[item.id];
             const active = filter === item.id;
             return (
-              <button
+              <button {...uiAttributes({ uid: "notification-filter-bvMK2l", id: "notification-filter", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-filter" } })}
                 key={item.id}
-                data-simulation-list-item="notification-filter"
                 type="button"
                 onClick={() => selectFilter(item.id)}
                 aria-pressed={active}
@@ -386,8 +386,7 @@ function NotificationGroupCard({
             </p>
             <div className="flex flex-wrap gap-2">
               {group.unreadCount > 0 ? (
-                <button
-                  data-simulation-list-item="notification-read"
+                <button {...uiAttributes({ uid: "notification-read-15IATb", id: "notification-read", kind: "item", interaction: { type: "toggle" }, simulation: { kind: "list-item", id: "notification-read" } })}
                   type="button"
                   onClick={onRead}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold"
@@ -397,8 +396,7 @@ function NotificationGroupCard({
                 </button>
               ) : null}
               {(group.latest.route?.href || group.category === NotificationCategories.Chat) ? (
-                <button
-                  data-simulation-list-item="notification-open"
+                <button {...uiAttributes({ uid: "notification-open-9HZKVZ", id: "notification-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-open" } })}
                   type="button"
                   onClick={onOpen}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-on-primary"
@@ -408,8 +406,7 @@ function NotificationGroupCard({
                 </button>
               ) : null}
               {canArchive ? (
-                <button
-                  data-simulation-list-item="notification-dismiss"
+                <button {...uiAttributes({ uid: "notification-dismiss-46S7bK", id: "notification-dismiss", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-dismiss" } })}
                   type="button"
                   onClick={onDismiss}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-on-surface-variant"

@@ -1,7 +1,13 @@
+import {
+  uiSimulationTarget,
+  uiSimulationUidForSimulationId,
+} from "@asol/ui-registry-core";
+
 import type {
   PageInteractionDefinition,
   SimulationDriverAction,
   SimulationTarget,
+  SimulationTargetKind,
   SimulationUserRole,
   UserPageDefinition,
 } from "../domain/simulation.types";
@@ -9,24 +15,54 @@ import type {
 type Actor = "guest" | SimulationUserRole | "any";
 type FieldInput = Readonly<{ target: SimulationTarget; value: string }>;
 
+/**
+ * Resolves a declared scenario/event id to the registered element it names.
+ *
+ * Scenarios are still written in the vocabulary a person uses — "the checkout
+ * button" — but what comes out is the uid, taken from the generated
+ * UiSimulationRegistry. An id that no longer resolves throws here, at module
+ * load, instead of failing later as a missing DOM element: a renamed control
+ * breaks the scenario that depended on it, loudly and in one place.
+ */
+function target(kind: SimulationTargetKind, simulationId: string): SimulationTarget {
+  const uid = uiSimulationUidForSimulationId(simulationId);
+  if (!uid) {
+    throw new Error(
+      `simulationTargetNotRegistered:${kind}:${simulationId} — no UiRegistry descriptor declares this simulation id, or more than one does.`,
+    );
+  }
+  const record = uiSimulationTarget(uid)!;
+  if (kind !== "state" && !record.interaction) {
+    throw new Error(
+      `simulationTargetHasNoInteraction:${simulationId} (uid ${uid}) — add an interaction to its descriptor.`,
+    );
+  }
+  return {
+    targetUid: uid,
+    interaction: record.interaction?.type ?? "tap",
+    kind,
+    simulationId,
+  };
+}
+
 function eventTarget(id: string): SimulationTarget {
-  return { kind: "event", id };
+  return target("event", id);
 }
 
 function fieldTarget(id: string): SimulationTarget {
-  return { kind: "field", id };
+  return target("field", id);
 }
 
 function listItemTarget(id: string): SimulationTarget {
-  return { kind: "list-item", id };
+  return target("list-item", id);
 }
 
 function fileTarget(id: string): SimulationTarget {
-  return { kind: "file", id };
+  return target("file", id);
 }
 
 function stateTarget(id: string): SimulationTarget {
-  return { kind: "state", id };
+  return target("state", id);
 }
 
 /** Declares the real empty state that makes an interaction inapplicable here. */

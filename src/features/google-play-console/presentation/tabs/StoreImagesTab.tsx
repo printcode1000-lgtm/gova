@@ -20,7 +20,13 @@ export function StoreImagesTab() {
   return (
     <section className="space-y-4">
       <div className="grid gap-3 rounded-md border bg-surface p-4 md:grid-cols-[10rem_14rem_1fr]">
-        <Input ui={{ uid: "release-console.store-images.language-8GGWPc", id: "release-console.store-images.language", kind: "field", part: "toolbar" }} value={store.language} onChange={(event) => store.setLanguage(event.target.value)} />
+        <Input
+          ui={{
+            uid: "release-console.store-images.language-8GGWPc",
+            id: "release-console.store-images.language",
+            kind: "field",
+            part: "toolbar",
+          }} value={store.language} onChange={(event) => store.setLanguage(event.target.value)} />
         <select
           className="h-10 rounded-md border bg-background px-3"
           value={store.imageType}
@@ -30,7 +36,13 @@ export function StoreImagesTab() {
             <option key={type} value={type}>{t(`releaseConsole.imageTypes.${type}`)}</option>
           ))}
         </select>
-        <Input ui={{ uid: "release-console.store-images.upload-d8TGuM", id: "release-console.store-images.upload", kind: "field", part: "upload" }}
+        <Input
+          ui={{
+            uid: "release-console.store-images.upload-d8TGuM",
+            id: "release-console.store-images.upload",
+            kind: "field",
+            part: "upload",
+          }}
           type="file"
           accept="image/png,image/jpeg"
           multiple

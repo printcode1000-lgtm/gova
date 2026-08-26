@@ -77,11 +77,10 @@ export function AppHeader({
 
             <PageSaveHeaderButton />
 
-            <Link
+            <Link {...uiAttributes({ uid: 'home-search-r8SiS9', id: 'home-search', kind: 'action', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'home-search' } })}
               {...uiAttributes({ uid: 'app.header.search-C0Ynx3', id: 'app.header.search', kind: 'action', action: 'navigate-search', part: 'search' })}
               href="/search"
               id="header-search-button"
-              data-simulation-target={pathname === '/home' ? 'home-search' : undefined}
               className={cn(
                 "asol-control-icon flex items-center justify-center rounded-full transition-all duration-200",
                 isSearchActive
@@ -96,11 +95,10 @@ export function AppHeader({
               <Search className="w-5 h-5" />
             </Link>
 
-            <Link
+            <Link {...uiAttributes({ uid: 'nav-cart-a5OnHB', id: 'nav-cart', kind: 'action', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'nav-cart' } })}
               {...uiAttributes({ uid: 'app.header.cart-Y4wePh', id: 'app.header.cart', kind: 'action', action: 'navigate-cart', part: 'cart' })}
               href="/cart"
               id="header-cart-button"
-              data-simulation-target="nav-cart"
               className={cn(
                 "asol-control-icon relative flex items-center justify-center rounded-full transition-all duration-200",
                 isCartActive

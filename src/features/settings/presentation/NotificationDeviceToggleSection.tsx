@@ -5,11 +5,14 @@ import { cn } from "@/shared/utils";
 
 import { SettingsToggleRow } from "./SettingsToggleRow";
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 /**
  * This device's push controls: the blocked-permission recovery actions, or the
  * per-device switch, plus whatever notice explains the current state.
  */
+
+const NOTIFICATIONS_PERMISSION_UI: UiDescriptor = { uid: "notifications-permission-2Bg0Jo", id: "notifications-permission", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "notifications-permission" } };
 export function NotificationDeviceToggleSection({
   state,
 }: {
@@ -37,8 +40,7 @@ export function NotificationDeviceToggleSection({
               state.canOpenSettings && "sm:grid-cols-2",
             )}
           >
-            <button
-              data-simulation-target="notifications-permission"
+            <button {...uiAttributes(NOTIFICATIONS_PERMISSION_UI)}
               type="button"
               disabled={state.deviceBusy}
               onClick={() => void state.recheckPermission()}
@@ -63,7 +65,7 @@ export function NotificationDeviceToggleSection({
         </div>
       ) : (
         <SettingsToggleRow
-          simulationTargetId="notifications-permission"
+          ui={NOTIFICATIONS_PERMISSION_UI}
           emphasised
           title={state.t("notifications.deviceCard.toggleTitle")}
           description={state.t("notifications.deviceCard.toggleDescription")}

@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **363**
+Detected write-like surfaces: **364**
 Unproven gateway paths: **143**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -157,7 +157,7 @@ Unproven gateway paths: **143**
 | `packages/storage-core/src/tests/contract/package-independence.test.ts` | `@asol/storage-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-core/src/tests/index.test.ts` | `@asol/storage-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-core/src/tests/integration/parameterized-store.test.ts` | `@asol/storage-core` | delete, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `packages/storage-image-manager-core/src/components/storage-image-manager.types.ts` | `@asol/storage-image-manager-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `packages/storage-image-manager-core/src/components/storage-image-manager.types.ts` | `@asol/storage-image-manager-core` | upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-image-manager-core/src/components/StorageImageManager.tsx` | `@asol/storage-image-manager-core` | delete, save, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts` | `@asol/storage-image-manager-core` | delete, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-image-manager-core/src/processing/image-processor.client.ts` | `@asol/storage-image-manager-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -335,7 +335,7 @@ Unproven gateway paths: **143**
 | `src/features/profile/domain/profile-specialties.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/store-details.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/user-profile-row.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/profile/presentation/CustomRequestPageContent.tsx` | `profile` | save | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/profile/presentation/CustomRequestPageContent.tsx` | `profile` | save, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/presentation/FulfillmentSettingsCard.tsx` | `profile` | delete, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/profile/presentation/ProductsCard.tsx` | `profile` | delete, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/profile/presentation/store-identity/StoreIdentityImagesEditor.tsx` | `profile` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -367,6 +367,7 @@ Unproven gateway paths: **143**
 | `src/features/super-admin/presentation/SuperAdminUsersPage.tsx` | `super-admin` | delete, save | `@asol/page-save-core, @asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts` | `super-admin` | save | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/server/services/super-admin-user-service.server.ts` | `super-admin` | delete | `@asol/data-core` | yes | `` | development, web | medium |
+| `src/features/super-admin/server/services/ui-registry-pending.server.ts` | `super-admin` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/super-admin/tests/super-admin-user-deletion.test.ts` | `super-admin` | delete, save | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/voice-input/application/voice-input-scanner.ts` | `voice-input` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/shared/installation/installation-bootstrap.ts` | `unknown` | update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |

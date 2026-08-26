@@ -18,8 +18,9 @@ import { reportSystemIssue } from '@asol/system-logs-core';
 import type { StorageImageManagerHandle } from "@/features/storage/ui";
 import { useSuperAdminHeroSliderSave } from "./use-super-admin-hero-slider-save";
 import { usePageSaveRegistration } from "@/features/page-save/ui";
+import type { UiDescriptor } from "@asol/ui-registry-core";
 
-const quickIntervals = [5, 15, 30, 60];
+
 
 const loadErrorMessages: Record<string, string> = {
   forbidden: "غير مصرح لك بهذه العملية.",
@@ -29,6 +30,16 @@ function formatLoadError(error: unknown): string {
   const rawMessage = error instanceof Error ? error.message : "";
   return loadErrorMessages[rawMessage] ?? rawMessage ?? "تعذر تحميل الإعدادات.";
 }
+
+/** One descriptor per preset value; the identity is the interval itself. */
+const INTERVAL_PRESETS = [5, 15, 30, 60] as const;
+
+const INTERVAL_PRESET_UI: Record<(typeof INTERVAL_PRESETS)[number], UiDescriptor> = {
+  5: { uid: "super-admin.hero-slider.interval-preset.5-KADI7m", id: "super-admin.hero-slider.interval-preset.5", kind: "action", action: "set-check-interval", part: "settings" },
+  15: { uid: "super-admin.hero-slider.interval-preset.15-L8AcHW", id: "super-admin.hero-slider.interval-preset.15", kind: "action", action: "set-check-interval", part: "settings" },
+  30: { uid: "super-admin.hero-slider.interval-preset.30-LsTN4z", id: "super-admin.hero-slider.interval-preset.30", kind: "action", action: "set-check-interval", part: "settings" },
+  60: { uid: "super-admin.hero-slider.interval-preset.60-7HY6Zs", id: "super-admin.hero-slider.interval-preset.60", kind: "action", action: "set-check-interval", part: "settings" },
+};
 
 export function SuperAdminHeroSliderPage() {
   const router = useRouter();
@@ -264,8 +275,9 @@ export function SuperAdminHeroSliderPage() {
               }}
             />
           </div>
-          {quickIntervals.map((interval) => (
+          {INTERVAL_PRESETS.map((interval) => (
             <Button
+              ui={INTERVAL_PRESET_UI[interval]}
               key={interval}
               type="button"
               size="sm"

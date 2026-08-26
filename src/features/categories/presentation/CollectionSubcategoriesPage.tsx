@@ -7,6 +7,7 @@ import * as React from "react";
 
 import { useTranslation } from "@/shared/i18n";
 import type { CollectionDisplay } from "@/features/categories";
+import { uiAttributes } from "@asol/ui-registry-core";
 import {
   categoryGridClassName,
   categoryTileClassName,
@@ -89,9 +90,8 @@ export function CollectionSubcategoriesPage({
             const altText = name || "Category image";
 
             return (
-              <Link
+              <Link {...uiAttributes({ uid: "collection-item-XJ5IGf", id: "collection-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "collection-item" } })}
                 key={item.id}
-                data-simulation-list-item="collection-item"
                 href={`/categories/${item.id}`}
                 className={categoryTileClassName}
                 aria-label={altText}

@@ -12,6 +12,8 @@ import { cn } from '@/shared/utils';
 import type { DocumentType, VerificationDocument } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
 import { NativeCore, isCancelledError } from '@asol/native-core';
+import type { UiDescriptor } from '@asol/ui-registry-core';
+import { uiAttributes } from '@asol/ui-registry-core';
 
 const DOCUMENT_TYPES: DocumentType[] = [
   'business_license',
@@ -26,6 +28,32 @@ const AVAILABLE_BADGES = [
   { id: 'top_rated', icon: '⭐' },
   { id: 'eco_friendly', icon: '🌱' },
 ] as const;
+
+/**
+ * One descriptor per document type and per badge, keyed by the same domain
+ * constants that drive the lists. The identity never depends on the rendered
+ * order, the translation, or the upload state.
+ */
+const DOCUMENT_REMOVE_UI = {
+  business_license: { uid: 'onboarding.verification.document-remove.business-license-GGx8Vg', id: 'onboarding.verification.document-remove.business-license', kind: 'action', action: 'remove-document', part: 'documents' },
+  tax_certificate: { uid: 'onboarding.verification.document-remove.tax-certificate-02HcXE', id: 'onboarding.verification.document-remove.tax-certificate', kind: 'action', action: 'remove-document', part: 'documents' },
+  id_card: { uid: 'onboarding.verification.document-remove.id-card-Vk9RRD', id: 'onboarding.verification.document-remove.id-card', kind: 'action', action: 'remove-document', part: 'documents' },
+  bank_statement: { uid: 'onboarding.verification.document-remove.bank-statement-ETT15U', id: 'onboarding.verification.document-remove.bank-statement', kind: 'action', action: 'remove-document', part: 'documents' },
+} as const satisfies Record<DocumentType, UiDescriptor>;
+
+const DOCUMENT_UPLOAD_UI = {
+  business_license: { uid: 'onboarding.verification.document-upload.business-license-KPQp5j', id: 'onboarding.verification.document-upload.business-license', kind: 'action', action: 'upload-document', part: 'documents' },
+  tax_certificate: { uid: 'onboarding.verification.document-upload.tax-certificate-jIDx9l', id: 'onboarding.verification.document-upload.tax-certificate', kind: 'action', action: 'upload-document', part: 'documents' },
+  id_card: { uid: 'onboarding.verification.document-upload.id-card-0gBa4B', id: 'onboarding.verification.document-upload.id-card', kind: 'action', action: 'upload-document', part: 'documents' },
+  bank_statement: { uid: 'onboarding.verification.document-upload.bank-statement-HUs2Gv', id: 'onboarding.verification.document-upload.bank-statement', kind: 'action', action: 'upload-document', part: 'documents' },
+} as const satisfies Record<DocumentType, UiDescriptor>;
+
+const BADGE_UI = {
+  verified: { uid: 'onboarding.verification.badge.verified-UL3ogs', id: 'onboarding.verification.badge.verified', kind: 'action', action: 'toggle-badge', part: 'badges' },
+  fast_shipper: { uid: 'onboarding.verification.badge.fast-shipper-8sK7rK', id: 'onboarding.verification.badge.fast-shipper', kind: 'action', action: 'toggle-badge', part: 'badges' },
+  top_rated: { uid: 'onboarding.verification.badge.top-rated-9AErqN', id: 'onboarding.verification.badge.top-rated', kind: 'action', action: 'toggle-badge', part: 'badges' },
+  eco_friendly: { uid: 'onboarding.verification.badge.eco-friendly-O6X3o6', id: 'onboarding.verification.badge.eco-friendly', kind: 'action', action: 'toggle-badge', part: 'badges' },
+} as const satisfies Record<(typeof AVAILABLE_BADGES)[number]['id'], UiDescriptor>;
 
 export function VerificationSection() {
   const { t } = useTranslation();
@@ -172,6 +200,7 @@ export function VerificationSection() {
 
                   {uploadedDoc ? (
                     <Button
+                      ui={DOCUMENT_REMOVE_UI[docType]}
                       variant="ghost"
                       size="sm"
                       onClick={() => removeDocument(uploadedDoc.id)}
@@ -182,6 +211,7 @@ export function VerificationSection() {
                   ) : (
                     <div className="relative">
                       <Button
+                        ui={DOCUMENT_UPLOAD_UI[docType]}
                         variant="outline"
                         size="sm"
                         disabled={isUploading}
@@ -222,6 +252,7 @@ export function VerificationSection() {
               const isSelected = verification.requestedBadges.includes(badge.id);
               return (
                 <button
+                  {...uiAttributes(BADGE_UI[badge.id])}
                   key={badge.id}
                   type="button"
                   onClick={() => toggleBadge(badge.id)}

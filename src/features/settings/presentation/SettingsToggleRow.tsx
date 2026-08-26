@@ -1,6 +1,7 @@
 "use client";
 
 import { ToggleSwitch } from "@/shared/ui/toggle-switch";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 interface SettingsToggleRowProps {
   title: string;
@@ -8,7 +9,8 @@ interface SettingsToggleRowProps {
   checked: boolean;
   disabled?: boolean;
   emphasised?: boolean;
-  simulationTargetId?: string;
+  /** Registered UiRegistry descriptor for this instance, from the caller. */
+  ui?: UiDescriptor;
   onChange: (next: boolean) => void;
 }
 
@@ -19,7 +21,7 @@ export function SettingsToggleRow({
   checked,
   disabled = false,
   emphasised = false,
-  simulationTargetId,
+  ui,
   onChange,
 }: SettingsToggleRowProps) {
   return (
@@ -37,7 +39,7 @@ export function SettingsToggleRow({
         </p>
       </div>
       <ToggleSwitch
-        data-simulation-target={simulationTargetId}
+        ui={ui}
         checked={checked}
         onChange={onChange}
         label={title}

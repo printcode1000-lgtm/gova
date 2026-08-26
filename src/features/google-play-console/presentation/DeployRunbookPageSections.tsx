@@ -22,14 +22,28 @@ export function Header() {
 export function TabButtons(props: { tab: DeployTab; setTab: (tab: DeployTab) => void }) {
   return (
     <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-      <Button ui={{ uid: "deploy-runbook.tab-deploy-all-J49BXV", id: "deploy-runbook.tab-deploy-all", kind: "action", action: "select-deploy-all-tab", part: "tabs" }}
+      <Button
+        ui={{
+          uid: "deploy-runbook.tab-deploy-all-J49BXV",
+          id: "deploy-runbook.tab-deploy-all",
+          kind: "action",
+          action: "select-deploy-all-tab",
+          part: "tabs",
+        }}
         className="w-full sm:w-auto"
         variant={props.tab === "deploy-all" ? "default" : "outline"}
         onClick={() => props.setTab("deploy-all")}
       >
         Deploy All
       </Button>
-      <Button ui={{ uid: "deploy-runbook.tab-deploy-push-mI1N1Q", id: "deploy-runbook.tab-deploy-push", kind: "action", action: "select-deploy-push-tab", part: "tabs" }}
+      <Button
+        ui={{
+          uid: "deploy-runbook.tab-deploy-push-mI1N1Q",
+          id: "deploy-runbook.tab-deploy-push",
+          kind: "action",
+          action: "select-deploy-push-tab",
+          part: "tabs",
+        }}
         className="w-full sm:w-auto"
         variant={props.tab === "deploy-push" ? "default" : "outline"}
         onClick={() => props.setTab("deploy-push")}

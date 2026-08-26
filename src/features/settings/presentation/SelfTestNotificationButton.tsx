@@ -3,6 +3,7 @@
 import { Send } from "lucide-react";
 
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 /** Sends this account a fixed test push, to prove delivery works end to end. */
 export function SelfTestNotificationButton({
@@ -22,8 +23,7 @@ export function SelfTestNotificationButton({
           {state.t("notifications.selfTest.description")}
         </p>
       </div>
-      <button
-        data-simulation-target="notifications-test"
+      <button {...uiAttributes({ uid: "notifications-test-R1JHBH", id: "notifications-test", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "notifications-test" } })}
         type="button"
         disabled={state.selfTestBusy}
         onClick={() => void state.sendSelfTest()}

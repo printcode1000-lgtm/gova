@@ -70,7 +70,13 @@ export function PlayTracksTab() {
         <section className="space-y-3 rounded-md border bg-surface p-4">
           <h2 className="font-semibold">{t("releaseConsole.tracks.update")}</h2>
           <TrackSelect value={track} onChange={setTrack} />
-          <Input ui={{ uid: "release-console.tracks.version-code-A2cEvY", id: "release-console.tracks.version-code", kind: "field", part: "form" }} value={versionCode} onChange={(event) => setVersionCode(event.target.value)}
+          <Input
+            ui={{
+              uid: "release-console.tracks.version-code-A2cEvY",
+              id: "release-console.tracks.version-code",
+              kind: "field",
+              part: "form",
+            }} value={versionCode} onChange={(event) => setVersionCode(event.target.value)}
             placeholder={t("releaseConsole.tracks.versionCode")} dir="ltr" />
           <select className="h-10 w-full rounded-md border bg-background px-3" value={status}
             onChange={(event) => setStatus(event.target.value as typeof status)}>
@@ -78,10 +84,22 @@ export function PlayTracksTab() {
               <option key={value} value={value}>{t(`releaseConsole.tracks.status.${value}`)}</option>
             ))}
           </select>
-          <Input ui={{ uid: "release-console.tracks.rollout-fraction-WPgf15", id: "release-console.tracks.rollout-fraction", kind: "field", part: "form" }} type="number" min="0" max="1" step="0.05" value={fraction}
+          <Input
+            ui={{
+              uid: "release-console.tracks.rollout-fraction-WPgf15",
+              id: "release-console.tracks.rollout-fraction",
+              kind: "field",
+              part: "form",
+            }} type="number" min="0" max="1" step="0.05" value={fraction}
             onChange={(event) => setFraction(event.target.value)}
             placeholder={t("releaseConsole.tracks.rollout")} />
-          <Textarea ui={{ uid: "release-console.tracks.changelog-8W3PHm", id: "release-console.tracks.changelog", kind: "field", part: "form" }} value={notes} onChange={(event) => setNotes(event.target.value)}
+          <Textarea
+            ui={{
+              uid: "release-console.tracks.changelog-8W3PHm",
+              id: "release-console.tracks.changelog",
+              kind: "field",
+              part: "form",
+            }} value={notes} onChange={(event) => setNotes(event.target.value)}
             placeholder={t("releaseConsole.tracks.changelog")} />
         </section>
         <section className="space-y-3 rounded-md border bg-surface p-4">
@@ -91,13 +109,26 @@ export function PlayTracksTab() {
             <ArrowRight className="h-4 w-4" />
             <TrackSelect value={toTrack} onChange={setToTrack} />
           </div>
-          <Button ui={{ uid: "release-console.tracks.promote-f6y1cZ", id: "release-console.tracks.promote", kind: "action", action: "promote-track", part: "actions" }} disabled={!versionCode || tracks.busy} onClick={() => void promote()}>
+          <Button
+            ui={{
+              uid: "release-console.tracks.promote-f6y1cZ",
+              id: "release-console.tracks.promote",
+              kind: "action",
+              action: "promote-track",
+              part: "actions",
+            }} disabled={!versionCode || tracks.busy} onClick={() => void promote()}>
             {t("releaseConsole.tracks.promote")}
           </Button>
           <label className="block border-t pt-3 text-sm">
             <span className="mb-2 flex items-center gap-2 font-medium"><FileUp className="h-4 w-4" />
               {t("releaseConsole.tracks.mapping")}</span>
-            <Input ui={{ uid: "release-console.tracks.mapping-file-5IDV0f", id: "release-console.tracks.mapping-file", kind: "field", part: "actions" }} type="file" accept="text/plain" onChange={(event) => void mapping(event.target.files)} />
+            <Input
+              ui={{
+                uid: "release-console.tracks.mapping-file-5IDV0f",
+                id: "release-console.tracks.mapping-file",
+                kind: "field",
+                part: "actions",
+              }} type="file" accept="text/plain" onChange={(event) => void mapping(event.target.files)} />
           </label>
         </section>
       </div>

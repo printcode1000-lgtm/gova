@@ -11,6 +11,7 @@ import type {
 } from "@/features/seller-card";
 import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { FavoriteButton, favoriteFromSellerCard } from "@/features/favorites";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 interface SellerCardProps {
   card: SellerCardViewModel;
@@ -18,7 +19,8 @@ interface SellerCardProps {
   actions?: SellerCardAction[];
   className?: string;
   favoriteEnabled?: boolean;
-  simulationListItemId?: string;
+  /** Registered UiRegistry descriptor for this instance, from the caller. */
+  ui?: UiDescriptor;
   onOpen?: (
     event: React.MouseEvent<HTMLButtonElement>,
     card: SellerCardViewModel,
@@ -78,7 +80,7 @@ export function SellerCard({
   actions = [],
   className = "",
   favoriteEnabled,
-  simulationListItemId,
+  ui,
   onOpen,
 }: SellerCardProps) {
   const horizontal = variant === "linked-provider" || variant === "compact";
@@ -98,7 +100,7 @@ export function SellerCard({
         />
       ) : null}
       <button
-        data-simulation-list-item={simulationListItemId}
+        {...(ui ? uiAttributes(ui) : {})}
         type="button"
         onClick={(event) => onOpen?.(event, card)}
         className={`w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${

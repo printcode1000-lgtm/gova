@@ -47,6 +47,7 @@ import { ProfileProductsPreview } from "./ProfileProductsPreview";
 import { ProfileFulfillmentPreviewCard } from "./ProfilePreviewInformation";
 import { ProfilePreviewSectionHeading } from "./ProfilePreviewSectionHeading";
 import { ProfileStorySection } from "./ProfileStorySection";
+import type { UiDescriptor } from "@asol/ui-registry-core";
 
 interface ProfilePreviewContentProps {
   locale: "ar" | "en";
@@ -71,6 +72,8 @@ interface ProfilePreviewContentProps {
   };
 }
 
+
+const PROFILE_FOLLOW_UI: UiDescriptor = { uid: "profile-follow-b9hOQF", id: "profile-follow", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "profile-follow" } };
 export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
   const router = useRouter();
   const {
@@ -184,7 +187,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                 {previewUid ? (
                   <div className="flex flex-wrap items-center gap-2">
                     <FollowButton
-                      simulationTargetId="profile-follow"
+                      ui={PROFILE_FOLLOW_UI}
                       targetType="store"
                       targetId={previewUid}
                       targetOwnerUid={previewUid}
@@ -210,7 +213,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         imageUrl: storeImages.avatarUrl || storeImages.coverUrl,
                       }}
                       trigger={
-                        <Button ui={{ uid: "profile-preview.share-k2xSN8", id: "profile-preview.share", kind: "action", action: "share-profile", part: "actions", simulation: { kind: "event", id: "profile-share" } }}
+                        <Button ui={{ uid: "profile-preview.share-k2xSN8", id: "profile-preview.share", kind: "action", action: "share-profile", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "profile-share" } }}
                           type="button"
                           variant="outline"
                           className={`${ACTION_TILE_CLASS} border-input  `}
@@ -228,7 +231,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       }
                     />
                     {!props.isOwner ? (
-                      <Button ui={{ uid: "profile-preview.contact-owner-8nEnzn", id: "profile-preview.contact-owner", kind: "action", action: "contact-owner", part: "actions", simulation: { kind: "event", id: "profile-contact" } }}
+                      <Button ui={{ uid: "profile-preview.contact-owner-8nEnzn", id: "profile-preview.contact-owner", kind: "action", action: "contact-owner", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "profile-contact" } }}
                         type="button"
                         variant="outline"
                         className={`${ACTION_TILE_CLASS} border-input  `}
@@ -256,7 +259,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                     {storeDetails.profileShowcase?.customRequestEnabled &&
                     session?.uid &&
                     (!props.isOwner || props.isSuperAdmin) ? (
-                      <Button ui={{ uid: "profile-preview.custom-request-RK4Jqi", id: "profile-preview.custom-request", kind: "action", action: "open-custom-request", part: "actions", simulation: { kind: "event", id: "profile-custom-request" } }}
+                      <Button ui={{ uid: "profile-preview.custom-request-RK4Jqi", id: "profile-preview.custom-request", kind: "action", action: "open-custom-request", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "profile-custom-request" } }}
                         type="button"
                         variant="outline"
                         className={`${ACTION_TILE_CLASS} border-input  `}

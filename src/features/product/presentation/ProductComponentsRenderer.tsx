@@ -19,6 +19,7 @@ import type {
 } from "./product-component.types";
 import { ProductVehicleSpecs } from "./ProductVehicleSpecs";
 import type { StorageImageManagerHandle } from "@/features/storage/ui";
+import type { UiDescriptor } from "@asol/ui-registry-core";
 import {
   PRODUCT_COMPONENT_FIELDS,
   PRODUCT_COMPONENT_TITLES,
@@ -55,6 +56,8 @@ function writeValue(
   } as ProductDetails;
 }
 
+
+const PRODUCT_ADD_CART_UI: UiDescriptor = { uid: "product-add-cart-IC6TTn", id: "product-add-cart", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-add-cart" } };
 export function ProductComponentsRenderer({
   mode,
   components,
@@ -164,7 +167,7 @@ export function ProductComponentsRenderer({
                     sellerId={ownerUid}
                     product={product}
                     mainCategoryId={mainCategoryId}
-                    simulationTargetId="product-add-cart"
+                    ui={PRODUCT_ADD_CART_UI}
                   />
                 ) : null}
                 {config.favorite ? (

@@ -149,6 +149,9 @@
       "@asol/data-core/super-admin": [
         "./packages/data-core/src/domains/super-admin/index.server.ts"
       ],
+      "@asol/data-core/ui-registry": [
+        "./packages/data-core/src/domains/ui-registry/index.server.ts"
+      ],
       "@asol/data-core/system-logs": [
         "./packages/data-core/src/domains/system-logs/index.server.ts"
       ],

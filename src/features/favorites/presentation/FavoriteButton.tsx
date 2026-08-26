@@ -7,15 +7,17 @@ import { cn } from "@/shared/utils";
 
 import type { FavoriteItemInput } from "../domain/favorite.entity";
 import { useFavorites } from "./hooks/FavoritesProvider";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 interface FavoriteButtonProps {
   item: FavoriteItemInput;
   className?: string;
   label?: React.ReactNode;
-  simulationTargetId?: string;
+  /** Registered UiRegistry descriptor for this instance, from the caller. */
+  ui?: UiDescriptor;
 }
 
-export function FavoriteButton({ item, className, label, simulationTargetId }: FavoriteButtonProps) {
+export function FavoriteButton({ item, className, label, ui }: FavoriteButtonProps) {
   const { isFavorite, isLoading, toggleFavorite } = useFavorites();
   const [isMutating, setIsMutating] = React.useState(false);
   const active = isFavorite(item.type, item.targetId);
@@ -34,7 +36,7 @@ export function FavoriteButton({ item, className, label, simulationTargetId }: F
 
   return (
     <button
-      data-simulation-target={simulationTargetId}
+      {...(ui ? uiAttributes(ui) : {})}
       type="button"
       aria-label={active ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
       onClick={(event) => void handleClick(event)}

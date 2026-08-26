@@ -31,8 +31,19 @@ import { productApiService } from "@/features/product/ui";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 import { usePageSaveRegistration } from "@/features/page-save/ui";
+import type { UiDescriptor } from "@asol/ui-registry-core";
 
 import { ResolvedItem, getProductName, getProductPrice, getProductImage, buildProductAction } from "./featured-marquee/SuperAdminFeaturedMarqueePage.product-display";
+
+/** One descriptor per preset value; the identity is the interval itself. */
+const INTERVAL_PRESETS = [5, 15, 30, 60] as const;
+
+const INTERVAL_PRESET_UI: Record<(typeof INTERVAL_PRESETS)[number], UiDescriptor> = {
+  5: { uid: "super-admin.featured-marquee.interval-preset.5-97EYTN", id: "super-admin.featured-marquee.interval-preset.5", kind: "action", action: "set-check-interval", part: "settings" },
+  15: { uid: "super-admin.featured-marquee.interval-preset.15-dRQj7h", id: "super-admin.featured-marquee.interval-preset.15", kind: "action", action: "set-check-interval", part: "settings" },
+  30: { uid: "super-admin.featured-marquee.interval-preset.30-fjB8a2", id: "super-admin.featured-marquee.interval-preset.30", kind: "action", action: "set-check-interval", part: "settings" },
+  60: { uid: "super-admin.featured-marquee.interval-preset.60-XbQ8qc", id: "super-admin.featured-marquee.interval-preset.60", kind: "action", action: "set-check-interval", part: "settings" },
+};
 
 export function SuperAdminFeaturedMarqueePage() {
   const router = useRouter();
@@ -311,8 +322,9 @@ export function SuperAdminFeaturedMarqueePage() {
               }
             />
           </div>
-          {[5, 15, 30, 60].map((interval) => (
+          {INTERVAL_PRESETS.map((interval) => (
             <Button
+              ui={INTERVAL_PRESET_UI[interval]}
               key={interval}
               type="button"
               size="sm"

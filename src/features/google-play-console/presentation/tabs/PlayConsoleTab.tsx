@@ -15,7 +15,14 @@ export function PlayConsoleTab() {
   return (
     <section className="space-y-4">
       <div className="flex justify-end">
-        <Button ui={{ uid: "release-console.play-console.refresh-O5PMgw", id: "release-console.play-console.refresh", kind: "action", action: "refresh-play-console", part: "toolbar" }} variant="outline" disabled={busy} onClick={() => void refresh()}>
+        <Button
+          ui={{
+            uid: "release-console.play-console.refresh-O5PMgw",
+            id: "release-console.play-console.refresh",
+            kind: "action",
+            action: "refresh-play-console",
+            part: "toolbar",
+          }} variant="outline" disabled={busy} onClick={() => void refresh()}>
           <RefreshCw className={busy ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
           {t("releaseConsole.actions.refresh")}
         </Button>

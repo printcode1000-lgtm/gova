@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { shouldUseUnoptimizedImage } from "@asol/storage-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 import {
   getHeroImageStyle,
@@ -67,11 +68,10 @@ export function HeroSliderSlide({
     });
 
   return (
-    <div
+    <div {...uiAttributes({ uid: "home-promotion-N611zJ", id: "home-promotion", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "home-promotion" } })}
       key={`${slide.priority}-${index}`}
       style={slideStyle}
       className={slideClass}
-      data-simulation-target={mode === "view" && isActive ? "home-promotion" : undefined}
       onClick={() => onSlideClick(slide.action)}
       role={mode === "view" ? "button" : undefined}
       tabIndex={mode === "view" && isActive ? 0 : -1}

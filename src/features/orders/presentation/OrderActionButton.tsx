@@ -3,6 +3,7 @@
 import { Loader2, PackageCheck, XCircle } from "lucide-react";
 
 import { commandLabel } from "./order-labels";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function OrderActionButton({
   action,
@@ -25,8 +26,7 @@ export function OrderActionButton({
   const danger = tone === "danger";
   const isDisabled = Boolean(busyAction) || disabled;
   return (
-    <button
-      data-simulation-list-item="order-action"
+    <button {...uiAttributes({ uid: "order-action-74IPMa", id: "order-action", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "order-action" } })}
       type="button"
       disabled={isDisabled}
       onClick={onClick}

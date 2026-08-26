@@ -3578,6 +3578,65 @@
       ]
     },
     {
+      "id": "command:ui-registry:apply-pending",
+      "kind": "command",
+      "name": "npm run ui-registry:apply-pending",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "apply-pending",
+        "npm",
+        "npm run ui-registry:apply-pending",
+        "run",
+        "ui-registry",
+        "ui-registry:apply-pending"
+      ]
+    },
+    {
+      "id": "command:ui-registry:pending:check",
+      "kind": "command",
+      "name": "npm run ui-registry:pending:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "npm",
+        "npm run ui-registry:pending:check",
+        "pending",
+        "run",
+        "ui-registry",
+        "ui-registry:pending:check"
+      ]
+    },
+    {
+      "id": "command:ui-registry:simulation:generate",
+      "kind": "command",
+      "name": "npm run ui-registry:simulation:generate",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "generate",
+        "npm",
+        "npm run ui-registry:simulation:generate",
+        "run",
+        "simulation",
+        "ui-registry",
+        "ui-registry:simulation:generate"
+      ]
+    },
+    {
+      "id": "command:ui-registry:simulation:report",
+      "kind": "command",
+      "name": "npm run ui-registry:simulation:report",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run ui-registry:simulation:report",
+        "report",
+        "run",
+        "simulation",
+        "ui-registry",
+        "ui-registry:simulation:report"
+      ]
+    },
+    {
       "id": "command:validate-storage-profiles",
       "kind": "command",
       "name": "npm run validate-storage-profiles",
@@ -5857,6 +5916,7 @@
         "@asol/data-core/system-logs",
         "@asol/data-core/telemetry",
         "@asol/data-core/tooling",
+        "@asol/data-core/ui-registry",
         "@asol/data-health-core",
         "@asol/data-health-core/server",
         "@asol/dev-core",
@@ -9491,6 +9551,7 @@
       "path": "docs/04-ui-components/ui-attribute-system.md",
       "summary": "`@asol/ui-registry-core` is the single owner of `UiRegistry`, the typed identity system for page and UI diagnostics. `data-ui-uid` is its **sole source of truth**: the canonical address used for search, inspection, diagnostics, future references, and developer conversation. `data",
       "tags": [
+        "@asol/data-core/ui-registry",
         "@asol/ui-registry-core",
         "`@asol/ui-registry-core` is the single owner of `uiregistry`, the typed identity system for page and ui diagnostics. `data-ui-uid` is its **sole source of truth**: the canonical address used for search, inspection, diagnostics, future references, and developer conversation. `data",
         "address",
@@ -9513,6 +9574,8 @@
         "md",
         "of",
         "owner",
+        "packages/architecture-core/src/checks/ui-registry-coverage",
+        "packages/architecture-core/src/checks/ui-registry-coverage.ts",
         "page",
         "references",
         "search",
@@ -9524,6 +9587,7 @@
         "system",
         "the",
         "truth",
+        "ts",
         "typed",
         "ui",
         "ui attribute system",
@@ -20763,7 +20827,7 @@
       "kind": "package",
       "name": "@asol/data-core",
       "path": "packages/data-core",
-      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling",
+      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling, ./ui-registry",
       "tags": [
         ".",
         "./account-deletion",
@@ -20798,6 +20862,7 @@
         "./system-logs",
         "./telemetry",
         "./tooling",
+        "./ui-registry",
         "/account-deletion",
         "/advertisements",
         "/auth",
@@ -20830,6 +20895,7 @@
         "/system-logs",
         "/telemetry",
         "/tooling",
+        "/ui-registry",
         "@asol/data-core",
         "@libsql/client",
         "access",
@@ -23546,6 +23612,22 @@
       ]
     },
     {
+      "id": "route:/api/super-admin/ui-registry/pending:handler",
+      "kind": "route",
+      "name": "/api/super-admin/ui-registry/pending",
+      "path": "src/app/api/super-admin/ui-registry/pending/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/super-admin/ui-registry/pending",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/super-admin/ui-registry/pending/route",
+        "src/app/api/super-admin/ui-registry/pending/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "route:/api/super-admin/users/delete:handler",
       "kind": "route",
       "name": "/api/super-admin/users/delete",
@@ -25981,6 +26063,83 @@
       "tags": [
         "scripts/test-runtime-context",
         "scripts/test-runtime-context.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/apply-pending-runner.ts",
+      "kind": "script",
+      "name": "apply-pending-runner.ts",
+      "path": "scripts/ui-registry/apply-pending-runner.ts",
+      "tags": [
+        "scripts/ui-registry/apply-pending-runner",
+        "scripts/ui-registry/apply-pending-runner.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/apply-pending.ts",
+      "kind": "script",
+      "name": "apply-pending.ts",
+      "path": "scripts/ui-registry/apply-pending.ts",
+      "tags": [
+        "scripts/ui-registry/apply-pending",
+        "scripts/ui-registry/apply-pending.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/check-pending.ts",
+      "kind": "script",
+      "name": "check-pending.ts",
+      "path": "scripts/ui-registry/check-pending.ts",
+      "tags": [
+        "scripts/ui-registry/check-pending",
+        "scripts/ui-registry/check-pending.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/generate-simulation-registry.ts",
+      "kind": "script",
+      "name": "generate-simulation-registry.ts",
+      "path": "scripts/ui-registry/generate-simulation-registry.ts",
+      "tags": [
+        "scripts/ui-registry/generate-simulation-registry",
+        "scripts/ui-registry/generate-simulation-registry.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/pending-source-resolver.ts",
+      "kind": "script",
+      "name": "pending-source-resolver.ts",
+      "path": "scripts/ui-registry/pending-source-resolver.ts",
+      "tags": [
+        "scripts/ui-registry/pending-source-resolver",
+        "scripts/ui-registry/pending-source-resolver.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/simulation-registry-model.ts",
+      "kind": "script",
+      "name": "simulation-registry-model.ts",
+      "path": "scripts/ui-registry/simulation-registry-model.ts",
+      "tags": [
+        "scripts/ui-registry/simulation-registry-model",
+        "scripts/ui-registry/simulation-registry-model.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/simulation-report.ts",
+      "kind": "script",
+      "name": "simulation-report.ts",
+      "path": "scripts/ui-registry/simulation-report.ts",
+      "tags": [
+        "scripts/ui-registry/simulation-report",
+        "scripts/ui-registry/simulation-report.ts",
         "ts"
       ]
     },
@@ -29377,6 +29536,28 @@
       ]
     },
     {
+      "id": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
+      "kind": "source",
+      "name": "ui-registry-coverage.ts",
+      "path": "packages/architecture-core/src/checks/ui-registry-coverage.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/ui-registry-coverage",
+        "packages/architecture-core/src/checks/ui-registry-coverage.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/checks/ui-simulation-contract.ts",
+      "kind": "source",
+      "name": "ui-simulation-contract.ts",
+      "path": "packages/architecture-core/src/checks/ui-simulation-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/ui-simulation-contract",
+        "packages/architecture-core/src/checks/ui-simulation-contract.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/architecture-core/src/checks/vendor-ownership-contract.ts",
       "kind": "source",
       "name": "vendor-ownership-contract.ts",
@@ -32172,6 +32353,42 @@
       "tags": [
         "packages/data-core/src/domains/system-logs/index",
         "packages/data-core/src/domains/system-logs/index.server.ts",
+        "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/ui-registry/db/pending-schema.ts",
+      "kind": "source",
+      "name": "pending-schema.ts",
+      "path": "packages/data-core/src/domains/ui-registry/db/pending-schema.ts",
+      "tags": [
+        "packages/data-core/src/domains/ui-registry/db/pending-schema",
+        "packages/data-core/src/domains/ui-registry/db/pending-schema.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/ui-registry/index.server.ts",
+      "kind": "source",
+      "name": "index.server.ts",
+      "path": "packages/data-core/src/domains/ui-registry/index.server.ts",
+      "tags": [
+        "packages/data-core/src/domains/ui-registry/index",
+        "packages/data-core/src/domains/ui-registry/index.server.ts",
+        "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/ui-registry/repositories/ui-registry-pending.repository.server.ts",
+      "kind": "source",
+      "name": "ui-registry-pending.repository.server.ts",
+      "path": "packages/data-core/src/domains/ui-registry/repositories/ui-registry-pending.repository.server.ts",
+      "tags": [
+        "packages/data-core/src/domains/ui-registry/repositories/ui-registry-pending",
+        "packages/data-core/src/domains/ui-registry/repositories/ui-registry-pending.repository.server.ts",
+        "repository",
         "server",
         "ts"
       ]
@@ -37182,6 +37399,17 @@
       ]
     },
     {
+      "id": "source:packages/simulation-core/src/discovery/registry-coverage.ts",
+      "kind": "source",
+      "name": "registry-coverage.ts",
+      "path": "packages/simulation-core/src/discovery/registry-coverage.ts",
+      "tags": [
+        "packages/simulation-core/src/discovery/registry-coverage",
+        "packages/simulation-core/src/discovery/registry-coverage.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/simulation-core/src/discovery/simulation-instrumentation-discovery.ts",
       "kind": "source",
       "name": "simulation-instrumentation-discovery.ts",
@@ -38188,6 +38416,17 @@
       ]
     },
     {
+      "id": "source:packages/ui-registry-core/src/domain/ui-interaction.ts",
+      "kind": "source",
+      "name": "ui-interaction.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-interaction.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-interaction",
+        "packages/ui-registry-core/src/domain/ui-interaction.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
       "kind": "source",
       "name": "ui-page-attributes.ts",
@@ -38298,6 +38537,39 @@
       ]
     },
     {
+      "id": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
+      "kind": "source",
+      "name": "pending-request-validation.ts",
+      "path": "packages/ui-registry-core/src/pending/pending-request-validation.ts",
+      "tags": [
+        "packages/ui-registry-core/src/pending/pending-request-validation",
+        "packages/ui-registry-core/src/pending/pending-request-validation.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/pending/pending-request.ts",
+      "kind": "source",
+      "name": "pending-request.ts",
+      "path": "packages/ui-registry-core/src/pending/pending-request.ts",
+      "tags": [
+        "packages/ui-registry-core/src/pending/pending-request",
+        "packages/ui-registry-core/src/pending/pending-request.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/pending/source-locator-match.ts",
+      "kind": "source",
+      "name": "source-locator-match.ts",
+      "path": "packages/ui-registry-core/src/pending/source-locator-match.ts",
+      "tags": [
+        "packages/ui-registry-core/src/pending/source-locator-match",
+        "packages/ui-registry-core/src/pending/source-locator-match.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
       "kind": "source",
       "name": "resolve-ui-page.ts",
@@ -38316,6 +38588,51 @@
       "tags": [
         "packages/ui-registry-core/src/registry/ui-page-registry",
         "packages/ui-registry-core/src/registry/ui-page-registry.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/simulation/generated/ui-simulation-registry.ts",
+      "kind": "source",
+      "name": "ui-simulation-registry.ts",
+      "path": "packages/ui-registry-core/src/simulation/generated/ui-simulation-registry.ts",
+      "tags": [
+        "packages/ui-registry-core/src/simulation/generated/ui-simulation-registry",
+        "packages/ui-registry-core/src/simulation/generated/ui-simulation-registry.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/simulation/simulation-registry.ts",
+      "kind": "source",
+      "name": "simulation-registry.ts",
+      "path": "packages/ui-registry-core/src/simulation/simulation-registry.ts",
+      "tags": [
+        "packages/ui-registry-core/src/simulation/simulation-registry",
+        "packages/ui-registry-core/src/simulation/simulation-registry.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/simulation/simulation-registry.types.ts",
+      "kind": "source",
+      "name": "simulation-registry.types.ts",
+      "path": "packages/ui-registry-core/src/simulation/simulation-registry.types.ts",
+      "tags": [
+        "packages/ui-registry-core/src/simulation/simulation-registry",
+        "packages/ui-registry-core/src/simulation/simulation-registry.types.ts",
+        "ts",
+        "types"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/simulation/value-contracts.ts",
+      "kind": "source",
+      "name": "value-contracts.ts",
+      "path": "packages/ui-registry-core/src/simulation/value-contracts.ts",
+      "tags": [
+        "packages/ui-registry-core/src/simulation/value-contracts",
+        "packages/ui-registry-core/src/simulation/value-contracts.ts",
         "ts"
       ]
     },
@@ -40371,6 +40688,17 @@
       "tags": [
         "src/app/api/super-admin/simulation/users/route",
         "src/app/api/super-admin/simulation/users/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/super-admin/ui-registry/pending/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/super-admin/ui-registry/pending/route.ts",
+      "tags": [
+        "src/app/api/super-admin/ui-registry/pending/route",
+        "src/app/api/super-admin/ui-registry/pending/route.ts",
         "ts"
       ]
     },
@@ -44271,6 +44599,18 @@
         "src/features/google-play-console/presentation/components/use-android-static-preview",
         "src/features/google-play-console/presentation/components/use-android-static-preview.ts",
         "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
+      "kind": "source",
+      "name": "deploy-runbook-controls.ui.ts",
+      "path": "src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
+      "tags": [
+        "src/features/google-play-console/presentation/deploy-runbook-controls",
+        "src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
+        "ts",
+        "ui"
       ]
     },
     {
@@ -50427,6 +50767,17 @@
       ]
     },
     {
+      "id": "source:src/features/super-admin/application/services/ui-registry-pending-api-service.ts",
+      "kind": "source",
+      "name": "ui-registry-pending-api-service.ts",
+      "path": "src/features/super-admin/application/services/ui-registry-pending-api-service.ts",
+      "tags": [
+        "src/features/super-admin/application/services/ui-registry-pending-api-service",
+        "src/features/super-admin/application/services/ui-registry-pending-api-service.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/super-admin/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -50650,6 +51001,17 @@
       ]
     },
     {
+      "id": "source:src/features/super-admin/presentation/ui-pending-registration.ts",
+      "kind": "source",
+      "name": "ui-pending-registration.ts",
+      "path": "src/features/super-admin/presentation/ui-pending-registration.ts",
+      "tags": [
+        "src/features/super-admin/presentation/ui-pending-registration",
+        "src/features/super-admin/presentation/ui-pending-registration.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/super-admin/presentation/ui-registration-proposal.ts",
       "kind": "source",
       "name": "ui-registration-proposal.ts",
@@ -50715,6 +51077,18 @@
         "server",
         "src/features/super-admin/server/services/super-admin-user-service",
         "src/features/super-admin/server/services/super-admin-user-service.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/ui-registry-pending.server.ts",
+      "kind": "source",
+      "name": "ui-registry-pending.server.ts",
+      "path": "src/features/super-admin/server/services/ui-registry-pending.server.ts",
+      "tags": [
+        "server",
+        "src/features/super-admin/server/services/ui-registry-pending",
+        "src/features/super-admin/server/services/ui-registry-pending.server.ts",
         "ts"
       ]
     },
@@ -51958,6 +52332,30 @@
       ]
     },
     {
+      "id": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
+      "kind": "test",
+      "name": "ui-registry-coverage.test.ts",
+      "path": "packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/ui-registry-coverage",
+        "packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/architecture-core/src/tests/ui-simulation-guard.test.ts",
+      "kind": "test",
+      "name": "ui-simulation-guard.test.ts",
+      "path": "packages/architecture-core/src/tests/ui-simulation-guard.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/ui-simulation-guard",
+        "packages/architecture-core/src/tests/ui-simulation-guard.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/auth-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -53052,6 +53450,17 @@
       ]
     },
     {
+      "id": "test:packages/simulation-core/src/tests/__probe.ts",
+      "kind": "test",
+      "name": "__probe.ts",
+      "path": "packages/simulation-core/src/tests/__probe.ts",
+      "tags": [
+        "packages/simulation-core/src/tests/__probe",
+        "packages/simulation-core/src/tests/__probe.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/simulation-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -53059,6 +53468,18 @@
       "tags": [
         "packages/simulation-core/src/tests/index",
         "packages/simulation-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/simulation-core/src/tests/uid-targeting.test.ts",
+      "kind": "test",
+      "name": "uid-targeting.test.ts",
+      "path": "packages/simulation-core/src/tests/uid-targeting.test.ts",
+      "tags": [
+        "packages/simulation-core/src/tests/uid-targeting",
+        "packages/simulation-core/src/tests/uid-targeting.test.ts",
         "test",
         "ts"
       ]
@@ -53388,6 +53809,18 @@
       ]
     },
     {
+      "id": "test:packages/ui-registry-core/src/tests/simulation-registry.test.ts",
+      "kind": "test",
+      "name": "simulation-registry.test.ts",
+      "path": "packages/ui-registry-core/src/tests/simulation-registry.test.ts",
+      "tags": [
+        "packages/ui-registry-core/src/tests/simulation-registry",
+        "packages/ui-registry-core/src/tests/simulation-registry.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -53611,6 +54044,30 @@
       "tags": [
         "scripts/tests/vercelignore-contract",
         "scripts/tests/vercelignore-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/ui-registry/tests/deploy-gate.test.ts",
+      "kind": "test",
+      "name": "deploy-gate.test.ts",
+      "path": "scripts/ui-registry/tests/deploy-gate.test.ts",
+      "tags": [
+        "scripts/ui-registry/tests/deploy-gate",
+        "scripts/ui-registry/tests/deploy-gate.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/ui-registry/tests/pending-flow.test.ts",
+      "kind": "test",
+      "name": "pending-flow.test.ts",
+      "path": "scripts/ui-registry/tests/pending-flow.test.ts",
+      "tags": [
+        "scripts/ui-registry/tests/pending-flow",
+        "scripts/ui-registry/tests/pending-flow.test.ts",
         "test",
         "ts"
       ]

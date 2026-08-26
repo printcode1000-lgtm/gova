@@ -22,6 +22,7 @@ import { ProductSearchResults } from "./ProductSearchResults";
 import { defaultFieldKeys } from "./product-search-fields";
 import type { ProductSearchPanelProps } from "./product-search-panel.types";
 import { runProductSearchPanelRequest } from "./product-search-panel-request";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function ProductSearchPanel({
   variant,
@@ -173,8 +174,7 @@ export function ProductSearchPanel({
   const categoryControls =
     fixedMainCategoryId && fixedSubcategoryId ? null : (
       <div className="grid gap-2 sm:grid-cols-2">
-        <select
-          data-simulation-field="search-main-category"
+        <select {...uiAttributes({ uid: "search-main-category-76NCg1", id: "search-main-category", kind: "field", interaction: { type: "select" }, simulation: { kind: "field", id: "search-main-category" } })}
           value={mainCategoryId}
           onChange={(event) => {
             setMainCategoryId(event.target.value);
@@ -192,8 +192,7 @@ export function ProductSearchPanel({
             </option>
           ))}
         </select>
-        <select
-          data-simulation-field="search-subcategory"
+        <select {...uiAttributes({ uid: "search-subcategory-HX5YZy", id: "search-subcategory", kind: "field", interaction: { type: "select" }, simulation: { kind: "field", id: "search-subcategory" } })}
           value={subcategoryId}
           disabled={!mainCategory}
           onChange={(event) => {
@@ -219,8 +218,7 @@ export function ProductSearchPanel({
       {!isCompact ? (
         <div className="flex gap-2">
           {(["products", "sellers"] as ProductSearchMode[]).map((item) => (
-            <button
-              data-simulation-target={item === "sellers" ? "search-sellers-mode" : undefined}
+            <button {...uiAttributes({ uid: "search-sellers-mode-GBOEa3", id: "search-sellers-mode", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "search-sellers-mode" } })}
               key={item}
               type="button"
               onClick={() => setActiveMode(item)}
@@ -247,8 +245,7 @@ export function ProductSearchPanel({
       <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
         <div className="relative">
           <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-          <Input ui={{ uid: "product-search.query-hAl4PO", id: "product-search.query", kind: "field", part: "search" }}
-            data-simulation-field="search-query"
+          <Input ui={{ uid: "product-search.query-hAl4PO", id: "product-search.query", kind: "field", part: "search", interaction: { type: "type", valueContract: "search-term" }, simulation: { kind: "field", id: "search-query" }}}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={(event) => {

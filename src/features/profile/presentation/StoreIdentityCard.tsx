@@ -295,9 +295,8 @@ export const StoreIdentityCard = React.forwardRef<
         <Label htmlFor="storeDescription">
           {t("onboarding.storeIdentity.storeDescription")}
         </Label>
-        <Textarea ui={{ uid: "profile.store-identity.store-description-lOL6Hr", id: "profile.store-identity.store-description", kind: "field", part: "form" }}
+        <Textarea ui={{ uid: "profile.store-identity.store-description-lOL6Hr", id: "profile.store-identity.store-description", kind: "field", part: "form", interaction: { type: "type", valueContract: "long-text" }, simulation: { kind: "field", id: "profile-store-description" }}}
           id="storeDescription"
-          data-simulation-field="profile-store-description"
           value={details.storeDescription}
           onChange={(event) =>
             updateField("storeDescription", event.target.value)

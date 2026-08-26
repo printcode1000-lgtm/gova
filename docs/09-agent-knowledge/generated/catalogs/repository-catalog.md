@@ -10,7 +10,7 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 250 |
+| command | 254 |
 | config | 12 |
 | document | 249 |
 | domain | 10 |
@@ -18,12 +18,12 @@
 | external-dependency | 107 |
 | feature | 48 |
 | package | 43 |
-| route | 179 |
+| route | 180 |
 | runtime | 7 |
-| script | 131 |
+| script | 138 |
 | service | 6 |
-| source | 2284 |
-| test | 217 |
+| source | 2303 |
+| test | 224 |
 
 ## Domains
 
@@ -51,7 +51,7 @@
 | @asol/backup-core | `packages/backup-core` | Backup orchestration over storage ports; Layer: capability; Public exports: ., ./server |
 | @asol/branding-core | `packages/branding-core` | App icon identity and generated branding assets; Layer: capability; Public exports: ., ./tooling |
 | @asol/catalog-core | `packages/catalog-core` | Category catalog domain; Layer: capability; Public exports: ., ./server |
-| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling |
+| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling, ./ui-registry |
 | @asol/data-health-core | `packages/data-health-core` | Schema health and data integrity checks; Layer: capability; Public exports: ., ./server |
 | @asol/dev-core | `packages/dev-core` | Developer-only tooling surfaces; Layer: capability; Public exports: ., ./server |
 | @asol/env-core | `packages/env-core` | Environment variable reading rules; Layer: capability; Public exports: ., ./files, ./process |

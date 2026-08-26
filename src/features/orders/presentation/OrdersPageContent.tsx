@@ -20,6 +20,7 @@ import {
 } from "./order-labels";
 import type { OrderListItem, OrderListResponse } from "./order-types";
 import { ordersPageCopy } from "./orders-page-copy";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const PAGE_SIZE = 5;
 
@@ -111,7 +112,7 @@ export function OrdersPageContent() {
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
       ) : items.length === 0 ? (
-        <section data-simulation-state="orders-empty" className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
+        <section {...uiAttributes({ uid: "orders-empty-ib4VM2", id: "orders-empty", kind: "region", simulation: { kind: "state", id: "orders-empty" } })} className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
           <ClipboardList className="mx-auto h-10 w-10 text-muted-foreground" />
           <h2 className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -125,9 +126,8 @@ export function OrdersPageContent() {
               const id = String(order.id);
               const detailRole = primaryViewerRole(viewerRoles, admin);
               return (
-                <Link
+                <Link {...uiAttributes({ uid: "orders-open-0xH8x3", id: "orders-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "orders-open" } })}
                   key={id}
-                  data-simulation-list-item="orders-open"
                   href={`/orders/details?orderId=${encodeURIComponent(id)}&role=${detailRole}`}
                   className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm transition"
                 >
@@ -191,8 +191,7 @@ export function OrdersPageContent() {
 
           {hasMore ? (
             <div className="mt-6 flex justify-center">
-              <button
-                data-simulation-target="orders-load-more"
+              <button {...uiAttributes({ uid: "orders-load-more-ONCD9F", id: "orders-load-more", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "orders-load-more" } })}
                 type="button"
                 onClick={() => void loadOrders()}
                 disabled={loadingMore}

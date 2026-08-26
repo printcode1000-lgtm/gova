@@ -5,6 +5,8 @@ import { ROOT, addViolation } from "./architecture-types";
 
 /** `@asol/ui-registry-core` owns every UiRegistry contract; the guard reads it there. */
 const REGISTRY_OWNER = join(ROOT, "packages", "ui-registry-core", "src");
+/** The enforcement package quotes every attribute it forbids. */
+const GUARD_OWNER = join(ROOT, "packages", "architecture-core", "src", "checks");
 const REGISTRY_PATH = join(REGISTRY_OWNER, "registry", "ui-page-registry.ts");
 const APP_ROOT = join(ROOT, "src", "app");
 const MANUAL_ATTRIBUTE = /\bdata-ui-(?:uid|id|page|component|state|action|part|item-id)\s*=/;
@@ -45,6 +47,10 @@ const GENERIC_HELPERS = [
   join(ROOT, "src", "shared", "ui"),
   join(REGISTRY_OWNER, "domain", "ui-component-attributes.ts"),
 ];
+
+/** The exact shape of a descriptor's `simulation` field, which is not a descriptor. */
+const SIMULATION_FIELD_SHAPE =
+  /^\s*kind:\s*["'](?:event|field|list-item|file|state)["']\s*,\s*id:\s*["'][^"']+["']\s*$/;
 
 /** A uid must be a source literal; anything computed cannot be stable. */
 const COMPUTED_UID = /\buid:\s*(?!["'])/;
@@ -180,6 +186,13 @@ function descriptorRegistryLiterals(file: string, source: string): DescriptorLit
       const memberBrace = cursor + member.index + member[0].lastIndexOf("{");
       const memberBody = balancedObject(body, memberBrace);
       if (memberBody === null) break;
+      // `simulation: { kind, id }` and `interaction: { type }` are fields of a
+      // descriptor, not descriptors. Their `id` is a scenario name, and asking
+      // them for a uid would report every registered element as unregistered.
+      if (/(?:simulation|interaction)\s*:\s*$/.test(body.slice(0, memberBrace))) {
+        cursor = memberBrace + memberBody.length + 2;
+        continue;
+      }
       literals.push({
         file,
         line: source.slice(0, braceIndex + 1 + memberBrace).split("\n").length,
@@ -271,6 +284,9 @@ export function checkUiAttributeContract(): void {
   for (const directory of [join(ROOT, "src"), join(ROOT, "packages")]) {
     for (const file of sourceFilesUnder(directory)) {
       if (file.startsWith(REGISTRY_OWNER)) continue;
+      // The guards quote every attribute they forbid; scanning them would
+      // report the rule text itself as a violation.
+      if (file.startsWith(GUARD_OWNER)) continue;
       const fileSource = readFileSync(file, "utf8");
       scanManualAttributes(file, fileSource);
 
@@ -301,6 +317,10 @@ export function checkUiAttributeContract(): void {
         // no id of its own and carries the forwarded uid; a literal that
         // declares an id needs its own uid, spread or not.
         if (!/\bid:\s*["'`]/.test(literal.body)) continue;
+        // `simulation: { kind, id }` is a *field* of a descriptor. Its `id` is
+        // a scenario name and it never carries a uid, so reading it as a
+        // descriptor would report every simulated element as unregistered.
+        if (SIMULATION_FIELD_SHAPE.test(literal.body) && !/\buid:/.test(literal.body)) continue;
         const uid = literal.body.match(/\buid:\s*["']([^"']*)["']/)?.[1];
         if (uid === undefined) {
           // A uid built at render time — from an index, a key, a template, or

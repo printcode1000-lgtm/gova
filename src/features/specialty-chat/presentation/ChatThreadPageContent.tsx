@@ -22,6 +22,7 @@ import { useTranslation } from "@/shared/i18n";
 import { cn } from "@/shared/utils";
 import { specialtyChatClient } from "../application/specialty-chat-client";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
+import { uiAttributes } from "@asol/ui-registry-core";
 import {
   chatMessageDayKey,
   formatChatMessageDay,
@@ -134,7 +135,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
 
   if (!conversation) {
     return (
-      <main data-simulation-state="chat-conversation-missing" className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
+      <main {...uiAttributes({ uid: "chat-conversation-missing-TXa01l", id: "chat-conversation-missing", kind: "region", simulation: { kind: "state", id: "chat-conversation-missing" } })} className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
         <MessageCircle className="h-12 w-12 text-muted-foreground" />
         <h1 className="mt-4 text-xl font-bold">
           {locale === "ar" ? "المحادثة غير موجودة على هذا الجهاز" : "Conversation not found on this device"}
@@ -240,8 +241,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
                 placeholder={locale === "ar" ? "اكتب رسالة..." : "Write a message..."}
                 className="max-h-28 min-h-11 min-w-0 flex-1 resize-none rounded-xl border border-outline-variant bg-surface-container px-3 py-2.5 text-sm outline-none focus:border-primary"
               />
-              <button
-                data-simulation-target="chat-reply"
+              <button {...uiAttributes({ uid: "chat-reply-j1I7FI", id: "chat-reply", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "chat-reply" } })}
                 type="button"
                 disabled={replying || !reply.trim()}
                 onClick={() => void sendReply()}

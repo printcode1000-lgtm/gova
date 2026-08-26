@@ -19,7 +19,7 @@ import { uiAttributes, type UiDescriptor } from '@asol/ui-registry-core';
 const NAV_ITEM_UI = {
   home: { uid: 'app.bottom-nav.home-X9BdD9', id: 'app.bottom-nav.home', kind: 'action', action: 'navigate-home', part: 'item' },
   notifications: { uid: 'app.bottom-nav.notifications-3tXfie', id: 'app.bottom-nav.notifications', kind: 'action', action: 'navigate-notifications', part: 'item' },
-  favorites: { uid: 'app.bottom-nav.favorites-41rYgS', id: 'app.bottom-nav.favorites', kind: 'action', action: 'navigate-favorites', part: 'item', simulation: { kind: 'event', id: 'nav-favorites' } },
+  favorites: { uid: 'app.bottom-nav.favorites-41rYgS', id: 'app.bottom-nav.favorites', kind: 'action', action: 'navigate-favorites', part: 'item', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'nav-favorites' } },
   orders: { uid: 'app.bottom-nav.orders-t7L2as', id: 'app.bottom-nav.orders', kind: 'action', action: 'navigate-orders', part: 'item' },
 } as const satisfies Record<string, UiDescriptor>;
 

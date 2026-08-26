@@ -1,4 +1,5 @@
 import type { SimulationExecutionPort, SimulationTarget } from "@asol/simulation-core";
+import { uiSimulationSelector, uiSimulationTarget } from "@asol/ui-registry-core";
 import { asolApi } from "@/core/api/asol-api-client";
 
 const LOAD_TIMEOUT_MS = 20_000;
@@ -22,24 +23,20 @@ function editableValue(element: Element, value: string): void {
   element.dispatchEvent(new view.Event("change", { bubbles: true }));
 }
 
-function targetAttribute(target: SimulationTarget): string {
-  if (target.kind === "event") return "data-simulation-target";
-  if (target.kind === "field") return "data-simulation-field";
-  if (target.kind === "list-item") return "data-simulation-list-item";
-  if (target.kind === "state") return "data-simulation-state";
-  return "data-simulation-file";
-}
-
-function escapeAttributeValue(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-}
-
+/**
+ * The one query this adapter may make.
+ *
+ * Not a CSS class, not a semantic id, not a label, not an nth-child: a
+ * registered uid and nothing else. Every other locator describes how the page
+ * happens to look today, and simulation that depends on appearance breaks on a
+ * restyle while claiming the feature broke.
+ */
 function targetSelector(target: SimulationTarget): string {
-  return `[${targetAttribute(target)}="${escapeAttributeValue(target.id)}"]`;
+  return uiSimulationSelector(target.targetUid);
 }
 
 function targetLabel(target: SimulationTarget): string {
-  return `${target.kind}:${target.id}`;
+  return `${target.simulationId}(${target.targetUid})`;
 }
 
 export class IframeSimulationExecutionPort implements SimulationExecutionPort {
@@ -77,8 +74,15 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
     const selector = targetSelector(target);
     const matches = this.documentNode().querySelectorAll(selector);
     if (matches.length === 0) throw new Error(`simulationInteractionTargetMissing:${targetLabel(target)}`);
-    if (matches.length > 1 && target.kind !== "list-item" && target.kind !== "state") {
-      throw new Error(`simulationInteractionTargetAmbiguous:${targetLabel(target)}`);
+    // Multiplicity is a registry fact, not a guess: a descriptor rendered once
+    // per row of a real list resolves to the first row by contract, and
+    // anything else that matches twice is an ambiguity the run must not paper
+    // over by picking one.
+    const registered = uiSimulationTarget(target.targetUid);
+    if (matches.length > 1 && !registered?.repeated) {
+      throw new Error(
+        `simulationInteractionTargetAmbiguous:${targetLabel(target)} matched ${matches.length} elements`,
+      );
     }
     return matches[0]!;
   }

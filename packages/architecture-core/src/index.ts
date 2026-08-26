@@ -56,6 +56,14 @@ export { checkFeatureDependencyContract } from './checks/feature-dependency-cont
 export { checkFeatureApplicationDoorPurityContract } from './checks/feature-application-door-purity-contract';
 export { checkArchitectureDocsDriftContract } from './checks/architecture-docs-drift-contract';
 export { checkUiAttributeContract } from './checks/ui-attribute-contract';
+export {
+  UI_REGISTRY_COVERAGE_EXCEPTIONS,
+  checkUiRegistryCoverageContract,
+  collectUiRegistryUsages,
+  type UiRegistryCoverageException,
+  type UiRegistryUsage,
+} from './checks/ui-registry-coverage';
+export { checkUiSimulationContract } from './checks/ui-simulation-contract';
 export { checkPackageSealContract } from './checks/package-seal-contract';
 export { checkCapabilityOwnershipContract } from './checks/capability-ownership-contract';
 export { checkRepositorySweepContract } from './checks/repository-sweep-contract';

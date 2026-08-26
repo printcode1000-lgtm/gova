@@ -73,7 +73,14 @@ export function AndroidReleaseRunbookTree(props: {
         }
       >
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <Button ui={{ uid: "release-console.runbook-tree.select-all-e1KCtu", id: "release-console.runbook-tree.select-all", kind: "action", action: "select-all", part: "selection" }}
+          <Button
+            ui={{
+              uid: "release-console.runbook-tree.select-all-e1KCtu",
+              id: "release-console.runbook-tree.select-all",
+              kind: "action",
+              action: "select-all",
+              part: "selection",
+            }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set(allIds))}
@@ -81,7 +88,14 @@ export function AndroidReleaseRunbookTree(props: {
             <CheckSquare className="h-4 w-4 shrink-0" />
             {props.t("releaseConsole.androidPaths.selectAll")}
           </Button>
-          <Button ui={{ uid: "release-console.runbook-tree.select-none-Sob3hC", id: "release-console.runbook-tree.select-none", kind: "action", action: "select-none", part: "selection" }}
+          <Button
+            ui={{
+              uid: "release-console.runbook-tree.select-none-Sob3hC",
+              id: "release-console.runbook-tree.select-none",
+              kind: "action",
+              action: "select-none",
+              part: "selection",
+            }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set())}
@@ -89,14 +103,28 @@ export function AndroidReleaseRunbookTree(props: {
             <Square className="h-4 w-4 shrink-0" />
             {props.t("releaseConsole.androidPaths.selectNone")}
           </Button>
-          <Button ui={{ uid: "release-console.runbook-tree.select-safe-oEY9r2", id: "release-console.runbook-tree.select-safe", kind: "action", action: "select-safe", part: "selection" }}
+          <Button
+            ui={{
+              uid: "release-console.runbook-tree.select-safe-oEY9r2",
+              id: "release-console.runbook-tree.select-safe",
+              kind: "action",
+              action: "select-safe",
+              part: "selection",
+            }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set(safeIds))}
           >
             {props.t("releaseConsole.androidPaths.selectSafe")}
           </Button>
-          <Button ui={{ uid: "release-console.runbook-tree.select-dangerous-Lc8QnP", id: "release-console.runbook-tree.select-dangerous", kind: "action", action: "select-dangerous", part: "selection" }}
+          <Button
+            ui={{
+              uid: "release-console.runbook-tree.select-dangerous-Lc8QnP",
+              id: "release-console.runbook-tree.select-dangerous",
+              kind: "action",
+              action: "select-dangerous",
+              part: "selection",
+            }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set(dangerousIds))}

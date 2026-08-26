@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { isUiUid, parseUiUid } from "@asol/ui-registry-core";
+import {
+  isUiUid,
+  parseUiUid,
+  validateUiRegistryPendingRequest,
+} from "@asol/ui-registry-core";
 
 import {
   formatInspectorOutput,
@@ -10,6 +14,7 @@ import {
   selectedUiUid,
 } from "../presentation/ui-attribute-inspector-model";
 import { pickInspectedElement } from "../presentation/ui-inspector-element-picker";
+import { buildPendingRegistrationRequest } from "../presentation/ui-pending-registration";
 import { buildRegistrationProposal } from "../presentation/ui-registration-proposal";
 
 const ELEMENT_NODE = 1;
@@ -234,5 +239,70 @@ assert.match(
   inspectorSource,
   /return element !== null && element\.closest\(`\[\$\{INSPECTOR_CONTROL_ATTRIBUTE\}\]`\) !== null;/,
 );
+
+// ── Pending registration request ───────────────────────────────────────────
+// A registered element never needs one; an unregistered one produces a request
+// built only from safe metadata.
+const pendingForUnregistered = buildPendingRegistrationRequest(
+  { "data-ui": "component", "data-ui-component": "button" },
+  "/orders/private-order-id",
+  "orders-cancel-button",
+  sequenceRandom(7),
+);
+assert.ok(pendingForUnregistered, "an unregistered element must be queueable");
+assert.ok(isUiUid(pendingForUnregistered.uid));
+// The route is the registry template, never the path that carried the order id.
+assert.equal(pendingForUnregistered.locator.route, "/orders/[orderId]");
+assert.equal(pendingForUnregistered.locator.component, "button");
+assert.equal(pendingForUnregistered.locator.anchor, "orders-cancel-button");
+assert.equal(pendingForUnregistered.descriptor.id, "pending.orders.details.button");
+const pendingJson = JSON.stringify(pendingForUnregistered);
+assert.ok(!pendingJson.includes("private-order-id"), "a route value must never be queued");
+
+// A templated DOM id is not a stable anchor, so the request carries none and
+// the apply tool refuses rather than guessing.
+assert.equal(
+  buildPendingRegistrationRequest(
+    { "data-ui-component": "button" },
+    "/home",
+    "nav-item-Home 42",
+    sequenceRandom(8),
+  )?.locator.anchor,
+  null,
+);
+
+// A published identity and simulation address survive into the request.
+const pendingForPublished = buildPendingRegistrationRequest(
+  {
+    "data-ui": "action",
+    "data-ui-id": "orders.cancel",
+    "data-ui-action": "cancel",
+    "data-simulation-target": "order-cancel",
+  },
+  "/orders",
+  undefined,
+  sequenceRandom(9),
+);
+assert.equal(pendingForPublished?.descriptor.id, "orders.cancel");
+assert.deepEqual(pendingForPublished?.descriptor.simulation, { kind: "event", id: "order-cancel" });
+
+// The queue submission is guarded by the same validator the server runs.
+const validated = validateUiRegistryPendingRequest(pendingForUnregistered);
+assert.ok(validated.ok, `the inspector must produce a server-acceptable request`);
+
+// The inspector submits through the authenticated super-admin service, and only
+// when a session token exists.
+assert.match(inspectorSource, /uiRegistryPendingApiService[\s\S]{0,20}\.submit\(request, token\)/);
+assert.match(inspectorSource, /const token = session\?\.sessionToken;/);
+assert.match(inspectorSource, /if \(!request \|\| !token\)/);
+const pendingService = readFileSync(
+  path.join(
+    process.cwd(),
+    "src/features/super-admin/application/services/ui-registry-pending-api-service.ts",
+  ),
+  "utf8",
+);
+assert.match(pendingService, /"x-asol-session-token": sessionToken/);
+assert.match(pendingService, /asolApi\.post/);
 
 console.log("Super-admin UI attribute inspector contract tests passed.");

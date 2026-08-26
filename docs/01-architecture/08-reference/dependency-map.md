@@ -141,6 +141,9 @@ ALLOWED_TO_IMPORT → `@asol/system-logs-core/server`
 `@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/trending-ribbon-core`
 
+`@asol/data-core`
+ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
+
 ### @asol/data-health-core
 
 `@asol/data-health-core` has no production `@asol/*` imports.
@@ -289,7 +292,8 @@ ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
 
 ### @asol/simulation-core
 
-`@asol/simulation-core` has no production `@asol/*` imports.
+`@asol/simulation-core`
+ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
 
 ### @asol/storage-core
 
@@ -309,6 +313,9 @@ ALLOWED_TO_IMPORT → `@asol/storage-core`
 
 `@asol/storage-image-manager-core`
 ALLOWED_TO_IMPORT → `@asol/system-logs-core`
+
+`@asol/storage-image-manager-core`
+ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
 
 ### @asol/sub2main-composition
 
@@ -345,4 +352,4 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 | Metric | Value |
 |---|---|
 | Packages | 43 |
-| Import edges | 55 |
+| Import edges | 58 |

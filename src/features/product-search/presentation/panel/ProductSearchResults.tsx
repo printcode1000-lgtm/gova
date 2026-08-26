@@ -5,7 +5,10 @@ import { createProductCardViewModel } from "@/features/product-card";
 import { createSellerCardViewModel } from "@/features/seller-card";
 import type { ProductSearchMode } from "@/features/product-search";
 import type { UserProfileRow } from "@/features/profile";
+import type { UiDescriptor } from "@asol/ui-registry-core";
 
+
+const SEARCH_RESULT_UI: UiDescriptor = { uid: "search-result-PE6WW4", id: "search-result", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "search-result" } };
 export function ProductSearchResults({
   activeMode,
   isCompact,
@@ -31,7 +34,7 @@ export function ProductSearchResults({
               key={product.id}
               card={card}
               variant="search"
-              simulationListItemId="search-result"
+              ui={SEARCH_RESULT_UI}
               onOpen={() => onOpen(card.href)}
             />
           );
@@ -49,7 +52,7 @@ export function ProductSearchResults({
             key={seller.uid}
             card={card}
             variant="search"
-            simulationListItemId="search-result"
+            ui={SEARCH_RESULT_UI}
             onOpen={() => onOpen(card.href)}
           />
         );

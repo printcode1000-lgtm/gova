@@ -26,7 +26,7 @@ Ctrl + Shift + P
 Terminal: Clear
 
 
-# قواعد الرسم 
+# قواعد الرسم
 Graph Schema
 Relationship Graph in JSON format only,
 
@@ -43,5 +43,10 @@ splash.tagline السويس بين ايديك
 0     ادمن
 1   مشتري
 2   بائع
-3   مقدم خدمة 
+3   مقدم خدمة
 
+# حذف ملف يمنع تشغيل الجت و يسبب مشكلة تعليق الجت
+C:/Users/hesham/Desktop/gova/.git/index.lock
+
+# مستودع الكود على جيت هاب  
+printcode1000-lgtm/gova

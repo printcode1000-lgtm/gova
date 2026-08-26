@@ -61,7 +61,14 @@ export function StoreTextTab() {
           </section>
         ))}
         <div className="flex gap-2">
-          <Button ui={{ uid: "release-console.store-text.add-language-sI0y21", id: "release-console.store-text.add-language", kind: "action", action: "add-listing-language", part: "footer" }} variant="outline" onClick={() => store.setListings([...store.listings, { language: "en-US" }])}>
+          <Button
+            ui={{
+              uid: "release-console.store-text.add-language-sI0y21",
+              id: "release-console.store-text.add-language",
+              kind: "action",
+              action: "add-listing-language",
+              part: "footer",
+            }} variant="outline" onClick={() => store.setListings([...store.listings, { language: "en-US" }])}>
             <Plus className="h-4 w-4" />{t("releaseConsole.text.addLanguage")}
           </Button>
         </div>

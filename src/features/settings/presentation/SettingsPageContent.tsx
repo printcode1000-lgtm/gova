@@ -20,6 +20,7 @@ import { useOtaUpdate } from "@asol/ota-core";
 import { registerBrowserPorts } from "@/core/composition/browser-ports";
 import { publicEnv } from "@/core/config/public-env";
 import { notifications } from "@/features/notifications";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 // Sealed packages name ports; the application supplies them. Registered at module load so the
 // hook below has telemetry and the super-admin predicate before its first render. Unregistered
@@ -158,8 +159,7 @@ export function SettingsPageContent() {
               {t("ota.settings.restart")}
             </button>
           ) : null}
-          <button
-            data-simulation-target="settings-check-update"
+          <button {...uiAttributes({ uid: "settings-check-update-P5F6mv", id: "settings-check-update", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "settings-check-update" } })}
             type="button"
             onClick={() => void ota.checkNow()}
             disabled={ota.busy}
@@ -182,8 +182,7 @@ export function SettingsPageContent() {
         </div>
       </section>
 
-      <Link
-        data-simulation-target="settings-notifications"
+      <Link {...uiAttributes({ uid: "settings-notifications-0fUSb9", id: "settings-notifications", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "settings-notifications" } })}
         href="/settings/notifications"
         className="asol-control flex w-full items-center justify-center rounded-xl border border-outline-variant px-6 py-3 font-semibold text-on-surface"
       >
@@ -193,8 +192,7 @@ export function SettingsPageContent() {
       {/* Footer actions — restore/clear is a destructive dev-facing reset, visible to super admins only */}
       {isSuperAdmin(session) ? (
         <footer className="flex flex-col items-center justify-center gap-4 pt-12 md:flex-row-reverse">
-          <button
-            data-simulation-target="settings-clear-data"
+          <button {...uiAttributes({ uid: "settings-clear-data-BOVk0K", id: "settings-clear-data", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "settings-clear-data" } })}
             type="button"
             disabled={clearing}
             className="asol-control flex w-full items-center justify-center gap-2 rounded-xl border-2 border-error/30 bg-gradient-to-r from-error/10 to-error/5 px-6 py-3 font-semibold text-error shadow-lg shadow-error/10 transition-all md:w-auto disabled:opacity-60"

@@ -31,6 +31,7 @@ import { cartPageCopy } from "./cart-page-copy";
 import { buildCartSellerGroups, sellerIdsFromCartItems } from "./cart-seller-groups";
 import { submitCartOrder } from "./cart-order-submit";
 import { useCartCheckoutSettings } from "./use-cart-checkout-settings";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function CartPageContent() {
   const router = useRouter();
@@ -289,8 +290,7 @@ export function CartPageContent() {
                                 </span>
                               ) : null}
                             </div>
-                            <button
-                              data-simulation-list-item="cart-remove"
+                            <button {...uiAttributes({ uid: "cart-remove-SlqB5g", id: "cart-remove", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "cart-remove" } })}
                               type="button"
                               onClick={() => void removeCartItem(item.id)}
                               className="rounded-full p-2 text-muted-foreground transition"
@@ -302,8 +302,7 @@ export function CartPageContent() {
 
                           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                             <div className="inline-flex items-center overflow-hidden rounded-lg border border-outline-variant">
-                              <button
-                                data-simulation-list-item="cart-decrease"
+                              <button {...uiAttributes({ uid: "cart-decrease-AyGe00", id: "cart-decrease", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "cart-decrease" } })}
                                 type="button"
                                 onClick={() =>
                                   void updateCartItemQuantity(
@@ -319,8 +318,7 @@ export function CartPageContent() {
                               <span className="min-w-10 px-3 text-center text-sm font-bold">
                                 {item.quantity}
                               </span>
-                              <button
-                                data-simulation-list-item="cart-increase"
+                              <button {...uiAttributes({ uid: "cart-increase-EKf2uz", id: "cart-increase", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "cart-increase" } })}
                                 type="button"
                                 onClick={() =>
                                   void updateCartItemQuantity(
@@ -487,9 +485,8 @@ export function CartPageContent() {
                 {submitError}
               </p>
             ) : null}
-            <button
+            <button {...uiAttributes({ uid: "cart-checkout-0A1kX4", id: "cart-checkout", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "cart-checkout" } })}
               type="button"
-              data-simulation-target="cart-checkout"
               disabled={isSubmitting || isSessionLoading}
               onClick={submitOrder}
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-on-primary transition disabled:cursor-not-allowed disabled:opacity-60"

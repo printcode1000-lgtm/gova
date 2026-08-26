@@ -126,6 +126,10 @@
       "types": "./src/domains/super-admin/index.server.ts",
       "default": "./src/domains/super-admin/index.server.ts"
     },
+    "./ui-registry": {
+      "types": "./src/domains/ui-registry/index.server.ts",
+      "default": "./src/domains/ui-registry/index.server.ts"
+    },
     "./system-logs": {
       "types": "./src/domains/system-logs/index.server.ts",
       "default": "./src/domains/system-logs/index.server.ts"

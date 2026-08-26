@@ -1,4 +1,4 @@
-import { UI_UID_ATTRIBUTE } from "@asol/ui-registry-core";
+import { UI_UID_ATTRIBUTE, uiSimulationTarget } from "@asol/ui-registry-core";
 
 const UI_ATTRIBUTE_PREFIX = "data-ui";
 const SIMULATION_ATTRIBUTE_PREFIX = "data-simulation-";
@@ -55,6 +55,31 @@ export function formatInspectorOutput(
 ): string {
   const uid = selectedUiUid(selected);
   const header = uid ? `${UI_UID_ATTRIBUTE}=${JSON.stringify(uid)}` : `${UI_UID_ATTRIBUTE}=(missing)`;
+  const simulation = selectedSimulationSummary(selected);
   const tree = formatUiAttributeTree(nodes);
-  return tree ? `${header}\n${tree}` : header;
+  return [header, simulation, tree].filter(Boolean).join("\n");
+}
+
+/**
+ * What simulation knows about the selected element.
+ *
+ * The DOM carries the uid; everything else — how the element is exercised, what
+ * a scenario may type into it, which event id refers to it — lives in the
+ * generated registry. Reading it here means the inspector reports the
+ * registered truth rather than whatever attributes happen to sit on the node.
+ */
+export function selectedSimulationSummary(
+  attributes: Readonly<Record<string, string>> | undefined,
+): string | null {
+  const uid = selectedUiUid(attributes);
+  if (!uid) return null;
+  const target = uiSimulationTarget(uid);
+  if (!target) return null;
+  const lines = [`interaction=${JSON.stringify(target.interaction?.type ?? "presence")}`];
+  if (target.interaction?.valueContract) {
+    lines.push(`valueContract=${JSON.stringify(target.interaction.valueContract)}`);
+  }
+  if (target.simulationId) lines.push(`simulationId=${JSON.stringify(target.simulationId)}`);
+  if (target.repeated) lines.push("repeated=true");
+  return lines.join("\n");
 }

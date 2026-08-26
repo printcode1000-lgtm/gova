@@ -17,6 +17,7 @@ import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { Textarea } from "@/shared/ui/textarea";
 import { useSession } from "@/features/auth/ui";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 import {
   followDialogText,
   targetLabels,
@@ -33,7 +34,8 @@ interface FollowButtonProps {
   isSuperAdmin?: boolean;
   targetLabel?: string;
   className?: string;
-  simulationTargetId?: string;
+  /** Registered UiRegistry descriptor for this instance, from the caller. */
+  ui?: UiDescriptor;
 }
 
 export function FollowButton({
@@ -45,7 +47,7 @@ export function FollowButton({
   isSuperAdmin = false,
   targetLabel,
   className,
-  simulationTargetId,
+  ui,
 }: FollowButtonProps) {
   const { t, locale } = useTranslation();
   const { session } = useSession();
@@ -183,7 +185,7 @@ export function FollowButton({
   return (
     <>
       <Button ui={{ uid: "follow.toggle-67YSTM", id: "follow.toggle", kind: "action", action: "open-follow-dialog", part: "primary" }}
-        data-simulation-target={simulationTargetId}
+        {...(ui ? uiAttributes(ui) : {})}
         type="button"
         variant={active && !canManage ? "secondary" : "outline"}
         onClick={openPrimaryDialog}

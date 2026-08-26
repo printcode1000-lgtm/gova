@@ -30,7 +30,14 @@ export function JobsTab() {
       <div className="space-y-3 rounded-md border bg-surface p-3">
         {selected ? <div className="flex justify-between gap-2"><strong>{selected.id}</strong>
           {selected.status === "running" || selected.status === "queued" ? (
-            <Button ui={{ uid: "release-console.jobs.cancel-27PWNB", id: "release-console.jobs.cancel", kind: "action", action: "cancel-job", part: "jobs" }} size="sm" variant="outline" onClick={() => void jobs.cancel(selected)}>
+            <Button
+              ui={{
+                uid: "release-console.jobs.cancel-27PWNB",
+                id: "release-console.jobs.cancel",
+                kind: "action",
+                action: "cancel-job",
+                part: "jobs",
+              }} size="sm" variant="outline" onClick={() => void jobs.cancel(selected)}>
               <Square className="h-4 w-4" />{t("releaseConsole.actions.cancel")}
             </Button>
           ) : null}</div> : null}

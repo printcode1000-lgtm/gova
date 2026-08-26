@@ -210,7 +210,7 @@ export function PageSaveDialog() {
               kind: "action",
               action: "execute",
               part: "confirm",
-              simulation: { kind: "event", id: "page-save-execute" },
+              interaction: { type: "tap" }, simulation: { kind: "event", id: "page-save-execute" },
             }}
             className="min-w-0 flex-1 rounded-xl"
             disabled={!dialog?.canSave || isSaving}

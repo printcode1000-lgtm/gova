@@ -43,10 +43,24 @@ export function ReleaseJobStopDialog({ job, t, onConfirm, onCancel }: {
           </p>
         </div>
         <DialogFooter>
-          <Button ui={{ uid: "release-console.stop-dialog.keep-running-y6nJkK", id: "release-console.stop-dialog.keep-running", kind: "action", action: "keep-running", part: "footer" }} variant="outline" onClick={onCancel}>
+          <Button
+            ui={{
+              uid: "release-console.stop-dialog.keep-running-y6nJkK",
+              id: "release-console.stop-dialog.keep-running",
+              kind: "action",
+              action: "keep-running",
+              part: "footer",
+            }} variant="outline" onClick={onCancel}>
             {t("releaseConsole.stopConfirm.keepRunning")}
           </Button>
-          <Button ui={{ uid: "release-console.stop-dialog.confirm-stop-XSB1wn", id: "release-console.stop-dialog.confirm-stop", kind: "action", action: "confirm-stop", part: "footer" }} variant="destructive" onClick={onConfirm}>
+          <Button
+            ui={{
+              uid: "release-console.stop-dialog.confirm-stop-XSB1wn",
+              id: "release-console.stop-dialog.confirm-stop",
+              kind: "action",
+              action: "confirm-stop",
+              part: "footer",
+            }} variant="destructive" onClick={onConfirm}>
             {t("releaseConsole.stopConfirm.confirm")}
           </Button>
         </DialogFooter>

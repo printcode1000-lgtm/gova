@@ -9,6 +9,7 @@ import { SellerCard } from "@/features/seller-card/ui";
 import { useUsersBySpecialty } from "@/features/profile/ui";
 import { createSellerCardViewModel, sellerCardTitle } from "@/features/seller-card";
 import { useTranslation } from "@/shared/i18n";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 interface DoctorAppointmentSellersPageContentProps {
   categoryId: number;
@@ -17,6 +18,8 @@ interface DoctorAppointmentSellersPageContentProps {
   specialtyImage: string;
 }
 
+
+const DOCTOR_OPEN_UI: UiDescriptor = { uid: "doctor-open-bV5IRx", id: "doctor-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "doctor-open" } };
 export function DoctorAppointmentSellersPageContent({
   categoryId,
   specialtyId,
@@ -99,7 +102,7 @@ export function DoctorAppointmentSellersPageContent({
       </div>
 
       {!filteredUsers || filteredUsers.length === 0 ? (
-        <p data-simulation-state="doctor-empty" className="text-center text-sm text-on-surface-variant">
+        <p {...uiAttributes({ uid: "doctor-empty-PkeW6Q", id: "doctor-empty", kind: "region", simulation: { kind: "state", id: "doctor-empty" } })} className="text-center text-sm text-on-surface-variant">
           {normalizedSearchText
             ? locale === "ar"
               ? "لا توجد نتائج مطابقة"
@@ -119,7 +122,7 @@ export function DoctorAppointmentSellersPageContent({
                 key={user.uid}
                 card={card}
                 variant="doctor-sellers"
-                simulationListItemId="doctor-open"
+                ui={DOCTOR_OPEN_UI}
                 onOpen={() => router.push(card.href)}
               />
             );
@@ -129,8 +132,7 @@ export function DoctorAppointmentSellersPageContent({
 
       {users && users.length === limit ? (
         <div className="mt-6 text-center">
-          <button
-            data-simulation-target="doctor-load-more"
+          <button {...uiAttributes({ uid: "doctor-load-more-4AV97U", id: "doctor-load-more", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "doctor-load-more" } })}
             type="button"
             onClick={loadMore}
             disabled={isLoading}

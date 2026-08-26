@@ -19,6 +19,7 @@ import type {
 } from "@/features/product-card";
 import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { FavoriteButton, favoriteFromProductCard } from "@/features/favorites";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 interface ProductCardProps {
   card: ProductCardViewModel;
@@ -26,7 +27,8 @@ interface ProductCardProps {
   actions?: ProductCardAction[];
   className?: string;
   favoriteEnabled?: boolean;
-  simulationListItemId?: string;
+  /** Registered UiRegistry descriptor for this instance, from the caller. */
+  ui?: UiDescriptor;
   onOpen?: (
     event: React.MouseEvent<HTMLButtonElement>,
     card: ProductCardViewModel,
@@ -87,7 +89,7 @@ export function ProductCard({
   actions = [],
   className = "",
   favoriteEnabled,
-  simulationListItemId,
+  ui,
   onOpen,
 }: ProductCardProps) {
   const isFeatured = variant === "featured-marquee";
@@ -107,7 +109,7 @@ export function ProductCard({
         />
       ) : null}
       <button
-        data-simulation-list-item={simulationListItemId}
+        {...(ui ? uiAttributes(ui) : {})}
         type="button"
         onClick={(event) => onOpen?.(event, card)}
         className="block w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"

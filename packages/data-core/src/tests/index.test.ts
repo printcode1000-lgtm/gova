@@ -58,6 +58,7 @@ const EXPECTED_DOORS = [
   './seller-discounts',
   './super-admin',
   './system-logs',
+  './ui-registry',
   './auth/entities',
   './follow/entities',
   './pharmacy-profile-catalog/entities',
@@ -236,6 +237,9 @@ const DECLARED_PACKAGE_DOORS = new Set([
   // Reading rules only. Which keys this package needs stays here; what "unset" means does not.
   '@asol/env-core/files',
   '@asol/orders-core',
+  // The pending UiRegistry queue stores registration requests whose shape and
+  // validation belong to the registry, not to this package.
+  '@asol/ui-registry-core',
   '@asol/auth-core',
   '@asol/auth-core/server',
   '@asol/dev-core',

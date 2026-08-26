@@ -16,6 +16,7 @@ import {
   SQLITE_DIRECTORY,
 } from "../core/database/environment";
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../domains/data-health/db/metadata-schema";
+import { UI_REGISTRY_PENDING_STATEMENTS } from "../domains/ui-registry/db/pending-schema";
 import { ensureSystemLogsSchema } from "./ensure-system-logs-schema";
 
 function ensureDatabase(dbPath: string, createScript: string): void {
@@ -78,6 +79,10 @@ try {
   }
   ensureSystemLogsSchema(profileDatabase);
   profileDatabase.exec(DATA_HEALTH_METADATA_STATEMENTS.join(";\n"));
+  // The pending UiRegistry queue lives in the same system-ops shard and is
+  // created from TypeScript DDL, so the local source database needs it before
+  // the shard split can copy it.
+  profileDatabase.exec(UI_REGISTRY_PENDING_STATEMENTS.join(";\n"));
   console.log("Profile source schema ready for shard split");
 } finally {
   profileDatabase.close();

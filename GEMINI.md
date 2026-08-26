@@ -18,3 +18,25 @@ Binding on every agent and developer working on this project.
 8. **Single responsibility per file (mandatory).** Every file must have one clear responsibility and one primary reason to change. Do not mix UI, API, domain logic, or unrelated concerns in the same file. If a second responsibility appears, split the file. `index`/barrel files limited to re-exports are allowed.
 9. **Respect all runtime environments.** Any change that is not exclusively development-only must be evaluated against Development, Production Web, Static `out/`, Android, and iOS, following `docs/09-agent-knowledge/runtime-contract.md` and the applicable `npm run runtime:check` checks. Code and pages under the `dev` scope are evaluated only for Development, while also ensuring they do not leak into or become required dependencies of release environments.
 10. **These rules are globally mandatory and cannot be bypassed.** The nine rules above bind every agent and developer working on this project and must not be overridden, weakened, bypassed, or worked around. Agents and developers may create additional instruction files solely to support their own work. Such files remain independent and local to their owner; they do not change documentation behavior, reclassify or modify protected or generated documentation, become global rules for others, conflict with these rules, or override them.
+11. Project-specific rules, repository architecture constraints, and project documentation always take precedence over generic Skills, MCP instructions, and tool guidance. MCP/tool instructions define how a tool should be used, but they must never override or conflict with repository rules or project-specific architectural requirements. When instructions overlap or conflict, follow this priority order: **Project rules and documentation → Task-specific instructions → Skills → MCP/tool guidance**.
+
+## Active MCP Servers & Skills Reference
+
+### Configured MCP Servers (4 Active)
+1. **`augment-context-engine`**: Semantic codebase querying and code search (`query_codebase`).
+2. **`sequential-thinking`**: Structured multi-step reasoning and dynamic architectural problem-solving.
+3. **`serena`**: AST-based semantic code analysis, symbol/reference tracing (`find_symbol`, `find_referencing_symbols`, `find_declaration`), diagnostics, and memory management.
+4. **`sourcegraph`**: Deep repository search, diff analysis, and multi-file code exploration.
+
+### Available Skills (10 Active)
+1. **`agy-customizations`**: Antigravity IDE customization and configuration guide (rules, skills, plugins, hooks).
+2. **`android-cli`**: Android command-line tools, build workflows, emulator management, and UI inspection.
+3. **`antigravity-guide`**: Reference guide for Antigravity IDE commands, SDKs, and workflows.
+4. **`code-review-and-quality`**: Rigorous code review covering correctness, security, isolation, and performance.
+5. **`deep-analysis-before-change`**: Architectural dependency and contract analysis prior to code modifications.
+6. **`package-boundary-enforcer`**: Strict package isolation enforcement and prevention of deep imports (`packages/*`).
+7. **`systematic-debugging`**: Structured 4-phase debugging methodology for root-cause diagnosis.
+8. **`vercel-react-best-practices`**: React and Next.js performance optimization guidelines from Vercel Engineering.
+9. **`verification-before-completion`**: Non-visual verification, automated test suites, and runtime contract validation.
+10. **`writing-plans`**: Detailed technical implementation plans and architectural proposals.
+

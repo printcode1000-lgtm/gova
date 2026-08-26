@@ -9,6 +9,8 @@ import { SellerCard } from "@/features/seller-card/ui";
 import { useUsersBySpecialty } from "@/features/profile/ui";
 import { createSellerCardViewModel, sellerCardTitle } from "@/features/seller-card";
 import { useTranslation } from "@/shared/i18n";
+import type { UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface SellersPageContentProps {
   categoryId: number;
@@ -18,6 +20,8 @@ interface SellersPageContentProps {
   subcategoryImage: string;
 }
 
+
+const SELLER_OPEN_UI: UiDescriptor = { uid: "seller-open-gu26VS", id: "seller-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "seller-open" } };
 export function SellersPageContent({
   categoryId,
   subcategoryId,
@@ -122,7 +126,7 @@ export function SellersPageContent({
                 key={user.uid}
                 card={card}
                 variant="category-sellers"
-                simulationListItemId="seller-open"
+                ui={SELLER_OPEN_UI}
                 onOpen={() => router.push(card.href)}
               />
             );
@@ -132,8 +136,7 @@ export function SellersPageContent({
 
       {users && users.length === limit ? (
         <div className="mt-6 text-center">
-          <button
-            data-simulation-target="sellers-load-more"
+          <button {...uiAttributes({ uid: "sellers-load-more-W7FMgN", id: "sellers-load-more", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "sellers-load-more" } })}
             type="button"
             onClick={loadMore}
             disabled={isLoading}

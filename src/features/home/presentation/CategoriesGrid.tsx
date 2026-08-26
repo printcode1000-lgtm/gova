@@ -11,6 +11,7 @@ import {
   categoryTileTitleClassName,
 } from "@/features/categories/ui";
 import { useTranslation } from "@/shared/i18n";
+import { uiAttributes } from "@asol/ui-registry-core";
 import {
   CATEGORY_CONSTANTS,
   type CategoryDisplay,
@@ -37,10 +38,9 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
           const name = locale === "ar" ? cat.nameAr : cat.nameEn;
           const imgSrc = cat.imageUrl;
           return (
-            <Link
+            <Link {...uiAttributes({ uid: "home-category-BxYuR3", id: "home-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "home-category" } })}
               key={cat.id}
               href={getCategoryHref(cat)}
-              data-simulation-list-item="home-category"
               className={categoryTileClassName}
               aria-label={name}
             >

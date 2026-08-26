@@ -30,7 +30,14 @@ export function BundleAnalysisTab() {
           {artifacts.map((item) => <option key={`${item.jobId}:${item.name}`}
             value={`${item.jobId}:${item.name}`}>{item.name}</option>)}
         </select>
-        <Button ui={{ uid: "release-console.bundle-analysis.analyze-GG03B4", id: "release-console.bundle-analysis.analyze", kind: "action", action: "analyze-bundle", part: "analysis" }} disabled={!chosen || bundle.busy}
+        <Button
+          ui={{
+            uid: "release-console.bundle-analysis.analyze-GG03B4",
+            id: "release-console.bundle-analysis.analyze",
+            kind: "action",
+            action: "analyze-bundle",
+            part: "analysis",
+          }} disabled={!chosen || bundle.busy}
           onClick={() => chosen && void bundle.analyze(chosen.jobId, chosen.name)}>
           <Search className="h-4 w-4" />{t("releaseConsole.analysis.analyze")}
         </Button>
@@ -74,7 +81,14 @@ export function BundleAnalysisTab() {
             onChange={(event) => setLeft(event.target.value)} placeholder={t("releaseConsole.analysis.leftSha")} />
           <input className="h-10 rounded-md border bg-background px-3" value={right}
             onChange={(event) => setRight(event.target.value)} placeholder={t("releaseConsole.analysis.rightSha")} />
-          <Button ui={{ uid: "release-console.bundle-analysis.compare-T4JKcB", id: "release-console.bundle-analysis.compare", kind: "action", action: "compare-bundles", part: "analysis" }} disabled={!left || !right || bundle.busy} onClick={() => void bundle.compare(left, right)}>
+          <Button
+            ui={{
+              uid: "release-console.bundle-analysis.compare-T4JKcB",
+              id: "release-console.bundle-analysis.compare",
+              kind: "action",
+              action: "compare-bundles",
+              part: "analysis",
+            }} disabled={!left || !right || bundle.busy} onClick={() => void bundle.compare(left, right)}>
             {t("releaseConsole.analysis.compare")}
           </Button>
         </div>

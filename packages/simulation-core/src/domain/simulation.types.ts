@@ -1,3 +1,5 @@
+import type { UiInteractionType } from "@asol/ui-registry-core";
+
 export type SimulationRuntime =
   | "static-out"
   | "android"
@@ -33,9 +35,22 @@ export type SimulationTargetKind =
   | "file"
   | "state";
 
+/**
+ * What a scenario step points at.
+ *
+ * The identity is the registered `data-ui-uid` and nothing else. `kind` is
+ * carried alongside only so the runner can keep each family's existing
+ * behaviour — notably that a list row resolves to the first match — and it is
+ * derived from the registry, never written by hand.
+ */
 export interface SimulationTarget {
+  /** Registered UiRegistry uid. The only locator simulation may use. */
+  targetUid: string;
+  /** Registered interaction the step performs. */
+  interaction: UiInteractionType;
   kind: SimulationTargetKind;
-  id: string;
+  /** Scenario/event id this target was declared with, for reports. */
+  simulationId: string;
 }
 
 export type SimulationDriverAction =

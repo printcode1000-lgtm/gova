@@ -6,13 +6,15 @@ import { reportSystemIssue } from "@asol/system-logs-core";
 import type { ProductDetails } from "@asol/product-core";
 
 import { addCartItem } from "../application/cart-store";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 interface ProductAddToCartButtonProps {
   productId: string;
   sellerId: string;
   product: ProductDetails;
   mainCategoryId: string;
-  simulationTargetId?: string;
+  /** Registered UiRegistry descriptor for this instance, from the caller. */
+  ui?: UiDescriptor;
 }
 
 function numberValue(value: string) {
@@ -25,7 +27,7 @@ export function ProductAddToCartButton({
   sellerId,
   product,
   mainCategoryId,
-  simulationTargetId,
+  ui,
 }: ProductAddToCartButtonProps) {
   const [added, setAdded] = React.useState(false);
   const [isAdding, setIsAdding] = React.useState(false);
@@ -62,7 +64,7 @@ export function ProductAddToCartButton({
 
   return (
     <button
-      data-simulation-target={simulationTargetId}
+      {...(ui ? uiAttributes(ui) : {})}
       type="button"
       aria-label="إضافة إلى السلة"
       onClick={() => void handleAdd()}

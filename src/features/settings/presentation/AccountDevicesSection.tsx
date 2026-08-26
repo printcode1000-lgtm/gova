@@ -10,6 +10,7 @@ import {
   sortAccountDevices,
 } from "./account-devices-model";
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 /**
  * Every device registered on the account, with a way to revoke one.
@@ -62,7 +63,7 @@ export function AccountDevicesSection({
           {state.t("notifications.accountDevices.loadError")}
         </p>
       ) : devices.length === 0 ? (
-        <p data-simulation-state="account-devices-empty" className="rounded-lg bg-surface-variant px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
+        <p {...uiAttributes({ uid: "account-devices-empty-RP4KoU", id: "account-devices-empty", kind: "region", simulation: { kind: "state", id: "account-devices-empty" } })} className="rounded-lg bg-surface-variant px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
           {state.t("notifications.accountDevices.empty")}
         </p>
       ) : (
@@ -90,8 +91,7 @@ export function AccountDevicesSection({
                     })}
                   </p>
                 </div>
-                <button
-                  data-simulation-list-item="notifications-revoke-device"
+                <button {...uiAttributes({ uid: "notifications-revoke-device-H2bryb", id: "notifications-revoke-device", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notifications-revoke-device" } })}
                   type="button"
                   disabled={state.revokingDeviceId === device.deviceId}
                   onClick={() => void state.revokeAccountDevice(device.deviceId)}

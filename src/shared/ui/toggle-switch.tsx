@@ -1,5 +1,6 @@
 "use client";
 
+import type { UiDescriptor } from "@asol/ui-registry-core";
 import { Switch } from "@/shared/ui/switch";
 
 interface ToggleSwitchProps {
@@ -7,7 +8,8 @@ interface ToggleSwitchProps {
   onChange: (next: boolean) => void;
   label: string;
   disabled?: boolean;
-  "data-simulation-target"?: string;
+  /** Registered UiRegistry descriptor for this instance, from the caller. */
+  ui?: UiDescriptor;
 }
 
 export function ToggleSwitch({
@@ -15,11 +17,11 @@ export function ToggleSwitch({
   onChange,
   label,
   disabled = false,
-  "data-simulation-target": simulationTarget,
+  ui,
 }: ToggleSwitchProps) {
   return (
     <Switch
-      data-simulation-target={simulationTarget}
+      ui={ui}
       checked={checked}
       onCheckedChange={onChange}
       disabled={disabled}

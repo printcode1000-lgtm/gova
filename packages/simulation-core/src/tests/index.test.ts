@@ -3,6 +3,12 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
+  ambiguousUiSimulationIds,
+  isUiUid,
+  uiSimulationTarget,
+} from "@asol/ui-registry-core";
+
+import {
   pickRandomSimulationImage,
   resolveSimulationRuntime,
   SIMULATION_SCENARIOS,
@@ -43,82 +49,51 @@ const registrySource = readFileSync(new URL("../registries/user-page-registry.ts
 assert.doesNotMatch(registrySource, /\bselector\b/, "Simulation registry must not use CSS selectors.");
 assert.doesNotMatch(registrySource, /data-simulation-event/, "Simulation registry must use typed targets.");
 
-const repositoryRoot = process.cwd();
-const instrumentedSourceFiles = [
-  "packages/storage-image-manager-core/src/components/StorageImageManager.tsx",
-  "src/app/favorites/page.tsx",
-  "src/app/privacy-policy/page.tsx",
-  "src/features/advertisements/presentation/HeroSlider.tsx",
-  "src/features/advertisements/presentation/HeroSliderSlide.tsx",
-  "src/features/auth/presentation/AccountDeletionPageContent.tsx",
-  "src/features/auth/presentation/LoginPageContent.tsx",
-  "src/features/auth/presentation/RegistrationPageContent.tsx",
-  "src/features/cart/presentation/CartPageContent.tsx",
-  "src/features/cart/presentation/ProductAddToCartButton.tsx",
-  "src/features/categories/presentation/CategorySubcategoriesPage.tsx",
-  "src/features/categories/presentation/CollectionSubcategoriesPage.tsx",
-  "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-  "src/features/categories/presentation/SellersPageContent.tsx",
-  "src/features/contact/presentation/ContactPageContent.tsx",
-  "src/features/favorites/presentation/FavoriteButton.tsx",
-  "src/features/follow/presentation/FollowButton.tsx",
-  "src/features/home/presentation/CategoriesGrid.tsx",
-  "src/features/notifications/presentation/NotificationsEmptyState.tsx",
-  "src/features/notifications/presentation/NotificationsPageContent.tsx",
-  "src/features/orders/presentation/OrderActionButton.tsx",
-  "src/features/orders/presentation/OrderDetailsPageContent.tsx",
-  "src/features/orders/presentation/OrdersPageContent.tsx",
-  "src/features/page-save/presentation/PageSaveDialog.tsx",
-  "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
-  "src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
-  "src/features/pharmacy-profile-catalog/presentation/PharmacyCatalogManagerPage.tsx",
-  "src/features/pharmacy-profile-catalog/presentation/catalog-manager/PharmacyCatalogManagerPage.dialogs.tsx",
-  "src/features/product-card/presentation/ProductCard.tsx",
-  "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-  "src/features/product-search/presentation/panel/ProductSearchResults.tsx",
-  "src/features/product/presentation/ProductComponentsRenderer.tsx",
-  "src/features/product/presentation/ProductPageContent.tsx",
-  "src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-  "src/features/profile/presentation/CustomRequestPageContent.tsx",
-  "src/features/profile/presentation/ProfilePreviewContent.tsx",
-  "src/features/profile/presentation/StoreIdentityCard.tsx",
-  "src/features/seller-card/presentation/SellerCard.tsx",
-  "src/features/settings/presentation/AccountDevicesSection.tsx",
-  "src/features/settings/presentation/NotificationDeviceToggleSection.tsx",
-  "src/features/settings/presentation/SelfTestNotificationButton.tsx",
-  "src/features/settings/presentation/SettingsPageContent.tsx",
-  "src/features/settings/presentation/SettingsToggleRow.tsx",
-  "src/features/specialty-chat/presentation/ChatThreadPageContent.tsx",
-  "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-  "src/shared/layouts/AppHeader.tsx",
-  "src/shared/layouts/BottomNavBar.tsx",
-  "src/shared/ui/toggle-switch.tsx",
-];
-const sourceFiles = instrumentedSourceFiles
-  .map((file) => readFileSync(join(repositoryRoot, file), "utf8"))
-  .join("\n");
-
-assert.doesNotMatch(sourceFiles, /data-simulation-event/, "Simulation DOM instrumentation must use typed attributes.");
+/**
+ * Targeting is a registry question now.
+ *
+ * The old assertions read source for `data-simulation-*` strings, which proved
+ * only that some element somewhere carried a matching attribute. These prove
+ * the property that matters: every step names a uid the generated
+ * UiSimulationRegistry knows, on a page that can render it, with the
+ * interaction that element is registered for.
+ */
 for (const page of USER_PAGE_REGISTRY) {
   for (const interaction of page.interactions) {
-    for (const action of interaction.actions) {
-      if (action.type === "wait") continue;
-      const attribute =
-        action.target.kind === "event"
-          ? "data-simulation-target"
-          : action.target.kind === "field"
-            ? "data-simulation-field"
-            : action.target.kind === "list-item"
-              ? "data-simulation-list-item"
-              : "data-simulation-file";
-      assert.ok(sourceFiles.includes(attribute), `${attribute} must exist in source instrumentation.`);
+    const targets = [
+      ...interaction.actions.flatMap((action) => (action.type === "wait" ? [] : [action.target])),
+      ...(interaction.unavailableWhen ? [interaction.unavailableWhen.target] : []),
+    ];
+    for (const target of targets) {
       assert.ok(
-        sourceFiles.includes(`"${action.target.id}"`) || sourceFiles.includes(`'${action.target.id}'`),
-        `${page.id}:${interaction.id} target ${action.target.kind}:${action.target.id} must have source instrumentation.`,
+        isUiUid(target.targetUid),
+        `${page.id}:${interaction.id} must target a generated uid, got "${target.targetUid}".`,
+      );
+      const record = uiSimulationTarget(target.targetUid);
+      assert.ok(
+        record,
+        `${page.id}:${interaction.id} targets uid ${target.targetUid}, which is not in the generated registry.`,
+      );
+      assert.ok(
+        record.routes.includes(page.route),
+        `${page.id}:${interaction.id} targets uid ${target.targetUid}, which ${page.route} cannot render.`,
+      );
+      if (target.kind === "state") continue;
+      assert.ok(
+        record.interaction,
+        `${page.id}:${interaction.id} targets uid ${target.targetUid}, which declares no interaction.`,
+      );
+      assert.equal(
+        record.interaction.type,
+        target.interaction,
+        `${page.id}:${interaction.id} performs "${target.interaction}" on a "${record.interaction.type}" target.`,
       );
     }
   }
 }
+
+// One event id names one element. Two would make a scenario ambiguous.
+assert.deepEqual(ambiguousUiSimulationIds(), [], "a simulation id must resolve to exactly one uid");
 
 for (const page of USER_PAGE_REGISTRY) {
   for (const interaction of page.interactions) {
@@ -132,10 +107,6 @@ for (const page of USER_PAGE_REGISTRY) {
     assert.ok(
       precondition.reason.trim().length > 0,
       `${page.id}:${interaction.id} must explain why it can be unavailable.`,
-    );
-    assert.ok(
-      sourceFiles.includes(`"${precondition.target.id}"`),
-      `${page.id}:${interaction.id} precondition state:${precondition.target.id} must have source instrumentation.`,
     );
   }
 }

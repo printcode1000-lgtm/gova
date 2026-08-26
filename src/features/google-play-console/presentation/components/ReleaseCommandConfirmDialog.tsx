@@ -130,7 +130,13 @@ export function ReleaseCommandConfirmDialog({
           {requiredPhrase && pending?.confirmationPhrase !== requiredPhrase ? (
             <div className="space-y-1">
               <p>{t("releaseConsole.build.confirmationExact").replace("{{phrase}}", requiredPhrase)}</p>
-              <Input ui={{ uid: "release-console.confirm-dialog.phrase-omuI3X", id: "release-console.confirm-dialog.phrase", kind: "field", part: "confirmation" }} value={phrase} placeholder={requiredPhrase} dir="ltr"
+              <Input
+                ui={{
+                  uid: "release-console.confirm-dialog.phrase-omuI3X",
+                  id: "release-console.confirm-dialog.phrase",
+                  kind: "field",
+                  part: "confirmation",
+                }} value={phrase} placeholder={requiredPhrase} dir="ltr"
                 onChange={(event) => setPhrase(event.target.value)} />
             </div>
           ) : null}
@@ -139,10 +145,24 @@ export function ReleaseCommandConfirmDialog({
           ) : null}
         </div>
         <DialogFooter className="border-t pt-3">
-          <Button ui={{ uid: "release-console.confirm-dialog.cancel-l5VVLg", id: "release-console.confirm-dialog.cancel", kind: "action", action: "cancel", part: "footer" }} variant="outline" onClick={onCancel}>{t("releaseConsole.confirmRun.cancel")}</Button>
+          <Button
+            ui={{
+              uid: "release-console.confirm-dialog.cancel-l5VVLg",
+              id: "release-console.confirm-dialog.cancel",
+              kind: "action",
+              action: "cancel",
+              part: "footer",
+            }} variant="outline" onClick={onCancel}>{t("releaseConsole.confirmRun.cancel")}</Button>
           {/* Disabled while another job holds the page, so confirming late
               cannot start a second command. */}
-          <Button ui={{ uid: "release-console.confirm-dialog.confirm-M9XOdo", id: "release-console.confirm-dialog.confirm", kind: "action", action: "confirm-run", part: "footer" }} disabled={locked || !phraseSatisfied
+          <Button
+            ui={{
+              uid: "release-console.confirm-dialog.confirm-M9XOdo",
+              id: "release-console.confirm-dialog.confirm",
+              kind: "action",
+              action: "confirm-run",
+              part: "footer",
+            }} disabled={locked || !phraseSatisfied
             || !minimumNativeVersionSatisfied || !requiredParametersSatisfied}
             onClick={() => onConfirm({
               parameters: { ...(pending?.parameters ?? {}), ...parameters },

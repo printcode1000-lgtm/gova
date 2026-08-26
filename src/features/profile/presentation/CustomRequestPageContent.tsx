@@ -18,6 +18,7 @@ import { buildPageSaveOperationDescription } from "@/features/page-save";
 import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
 import { useTranslation } from "@/shared/i18n";
+import type { UiDescriptor } from "@asol/ui-registry-core";
 
 function normalizeCustomRequestImages(
   images: Array<StoredImage | null | undefined>,
@@ -40,6 +41,8 @@ type ResultState = { kind: "error"; message: string } | null;
  * a shared URL, a future entry point — without depending on the profile page
  * model still being mounted.
  */
+
+const CUSTOM_REQUEST_IMAGE_UI: UiDescriptor = { uid: "custom-request-image-uLJM8K", id: "custom-request-image", kind: "field", interaction: { type: "upload", valueContract: "internal-image" }, simulation: { kind: "file", id: "custom-request-image" } };
 export function CustomRequestPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -262,9 +265,8 @@ export function CustomRequestPageContent() {
             <label className="text-sm font-bold" htmlFor="custom-request-description">
               {copy.descriptionLabel}
             </label>
-            <Textarea ui={{ uid: "custom-request.description-F29LC5", id: "custom-request.description", kind: "field", part: "form" }}
+            <Textarea ui={{ uid: "custom-request.description-F29LC5", id: "custom-request.description", kind: "field", part: "form", interaction: { type: "type", valueContract: "long-text" }, simulation: { kind: "field", id: "custom-request-description" }}}
               id="custom-request-description"
-              data-simulation-field="custom-request-description"
               value={description}
               onChange={(event) => {
                 setDescription(event.target.value);
@@ -296,8 +298,7 @@ export function CustomRequestPageContent() {
                   }}
                   config={{
                     id: `custom-request-image-${index + 1}`,
-                    simulationFileId:
-                      index === 0 ? "custom-request-image" : undefined,
+                    ui: index === 0 ? CUSTOM_REQUEST_IMAGE_UI : undefined,
                     storageProfileId: StorageProfiles.SpicialOrder,
                     storageScope: "custom-request",
                     maxItems: 1,

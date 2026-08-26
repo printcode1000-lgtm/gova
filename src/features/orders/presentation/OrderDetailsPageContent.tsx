@@ -49,6 +49,7 @@ import { OrderLevelActions, ShipmentsPanel } from "./order-details/OrderDetailsP
 import { ReturnsPanel } from "./order-details/OrderDetailsPageContent.returns";
 import { BuyerDeliveryAddressPanel } from "./order-details/OrderDetailsPageContent.buyer-delivery";
 import { useOrderDetailsAutoRefresh } from "./OrderNotificationsController";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
   const { formatApiError } = useTranslation();
@@ -133,7 +134,7 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
 
   if (!details) {
     return (
-      <main data-simulation-state="order-details-missing" className="mx-auto max-w-4xl px-4 py-10">
+      <main {...uiAttributes({ uid: "order-details-missing-7HYrD3", id: "order-details-missing", kind: "region", simulation: { kind: "state", id: "order-details-missing" } })} className="mx-auto max-w-4xl px-4 py-10">
         <BackToOrders />
         <p className="mt-6 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error || text.notFound}

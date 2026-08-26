@@ -38,7 +38,6 @@ Weak owners (<70%): **13**
 | `packages/secrets-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/service-runtime-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/signed-token-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
-| `packages/simulation-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/system-logs-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/ui-registry-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `services/notifications` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
@@ -78,6 +77,7 @@ Weak owners (<70%): **13**
 | `packages/products-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/profiles-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/service-mirror-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/simulation-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/storage-image-manager-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/sub2main-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/submain-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

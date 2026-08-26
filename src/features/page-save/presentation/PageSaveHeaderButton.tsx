@@ -18,19 +18,58 @@ import { PageSaveDialog } from "./PageSaveDialog";
 
 const SUCCESS_FLASH_MS = 1800;
 
-const PAGE_SAVE_SIMULATION_BY_REGISTRATION = {
-  "profile-edit": { simulation: { kind: "event", id: "profile-save" } },
-  "pharmacy-catalog-manager": { simulation: { kind: "event", id: "pharmacy-save" } },
-  "custom-request": { simulation: { kind: "event", id: "custom-request-submit" } },
-} as const satisfies Record<string, Pick<UiDescriptor, "simulation">>;
+/**
+ * The save button is one control, but each page it serves is a different
+ * registered element: the scenario that saves a profile is not the one that
+ * submits a custom request. Each registration therefore owns a complete
+ * descriptor, so one simulation id keeps resolving to exactly one uid.
+ */
+const PAGE_SAVE_UI_BY_REGISTRATION = {
+  "profile-edit": {
+    uid: "profile-save-Pwo7A2",
+    id: "profile-save",
+    kind: "action",
+    action: "open-page-save",
+    part: "save",
+    interaction: { type: "tap" },
+    simulation: { kind: "event", id: "profile-save" },
+  },
+  "pharmacy-catalog-manager": {
+    uid: "pharmacy-save-wk68NN",
+    id: "pharmacy-save",
+    kind: "action",
+    action: "open-page-save",
+    part: "save",
+    interaction: { type: "tap" },
+    simulation: { kind: "event", id: "pharmacy-save" },
+  },
+  "custom-request": {
+    uid: "custom-request-submit-IyKED5",
+    id: "custom-request-submit",
+    kind: "action",
+    action: "open-page-save",
+    part: "save",
+    interaction: { type: "tap" },
+    simulation: { kind: "event", id: "custom-request-submit" },
+  },
+} as const satisfies Record<string, UiDescriptor>;
 
-function simulationForPageSave(registrationId: string | null): UiDescriptor["simulation"] | undefined {
-  if (!registrationId || !Object.hasOwn(PAGE_SAVE_SIMULATION_BY_REGISTRATION, registrationId)) {
-    return undefined;
+/** The unregistered fallback for a page that declares no save scenario. */
+const PAGE_SAVE_DEFAULT_UI: UiDescriptor = {
+  uid: "app.header.page-save-pN948A",
+  id: "app.header.page-save",
+  kind: "action",
+  action: "open-page-save",
+  part: "save",
+};
+
+function pageSaveDescriptor(registrationId: string | null): UiDescriptor {
+  if (!registrationId || !Object.hasOwn(PAGE_SAVE_UI_BY_REGISTRATION, registrationId)) {
+    return PAGE_SAVE_DEFAULT_UI;
   }
-  return PAGE_SAVE_SIMULATION_BY_REGISTRATION[
-    registrationId as keyof typeof PAGE_SAVE_SIMULATION_BY_REGISTRATION
-  ].simulation;
+  return PAGE_SAVE_UI_BY_REGISTRATION[
+    registrationId as keyof typeof PAGE_SAVE_UI_BY_REGISTRATION
+  ];
 }
 
 export function PageSaveHeaderButton() {
@@ -88,7 +127,6 @@ export function PageSaveHeaderButton() {
   }, [successFlash]);
 
   const isSaving = snapshot.isSaving || snapshot.phase === "saving";
-  const simulation = simulationForPageSave(snapshot.registrationId);
   const visible =
     snapshot.isDirty ||
     snapshot.hasPersistedPending ||
@@ -106,14 +144,7 @@ export function PageSaveHeaderButton() {
   return (
     <>
       <button
-        {...uiAttributes({
-          uid: "app.header.page-save-pN948A",
-          id: "app.header.page-save",
-          kind: "action",
-          action: "open-page-save",
-          part: "save",
-          simulation,
-        })}
+        {...uiAttributes(pageSaveDescriptor(snapshot.registrationId ?? null))}
         type="button"
         id="header-page-save-button"
         onClick={handleOpen}

@@ -12,6 +12,7 @@ import {
 
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
+import { uiAttributes } from "@asol/ui-registry-core";
 import { Label } from "@/shared/ui/label";
 import { Switch } from "@/shared/ui/switch";
 import { StorageProfiles, type StoredImage } from "@asol/storage-core";
@@ -115,6 +116,13 @@ export const HeroSliderEditor = React.forwardRef<
         <div className="space-y-2">
           <Label htmlFor="hero-template-transition">انتقال الشرائح الجديدة</Label>
           <select
+            {...uiAttributes({
+              uid: "hero-slider-editor.template-transition-7PUD5Q",
+              id: "hero-slider-editor.template-transition",
+              kind: "field",
+              action: "set-template-transition",
+              part: "template",
+            })}
             id="hero-template-transition"
             className="asol-control asol-field-surface w-full border border-input px-3 text-sm"
             value={templateTransition}

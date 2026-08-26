@@ -16,6 +16,7 @@ import {
   type PharmacyProfileCatalogView,
 } from "../../domain/pharmacy-profile-catalog.types";
 import { PharmacyCategoryIcon } from "../PharmacyCategoryIcon";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 export const text = {
   title: "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0635\u064a\u062f\u0644\u064a\u0629",
@@ -188,12 +189,13 @@ export function ProductManagerCard({
   product,
   disabled,
   onToggle,
-  simulationToggleListItemId,
+  toggleUi,
 }: {
   product: PharmacyProfileCatalogProductView;
   disabled?: boolean;
   onToggle: () => void;
-  simulationToggleListItemId?: string;
+  /** Registered descriptor for this row's visibility toggle, from the caller. */
+  toggleUi?: UiDescriptor;
 }) {
   return (
     <article className={`rounded-lg border border-outline-variant bg-surface-container-low p-2 ${product.status === "hidden" ? "opacity-55" : ""}`}>
@@ -212,7 +214,7 @@ export function ProductManagerCard({
               hidden={product.status === "hidden"}
               disabled={disabled}
               onClick={onToggle}
-              simulationListItemId={simulationToggleListItemId}
+              ui={toggleUi}
             />
           </div>
         </div>
@@ -233,16 +235,17 @@ export function VisibilityButton({
   hidden,
   disabled,
   onClick,
-  simulationListItemId,
+  ui,
 }: {
   hidden: boolean;
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
-  simulationListItemId?: string;
+  /** Registered UiRegistry descriptor for this instance, from the caller. */
+  ui?: UiDescriptor;
 }) {
   return (
     <button
-      data-simulation-list-item={simulationListItemId}
+      {...(ui ? uiAttributes(ui) : {})}
       type="button"
       disabled={disabled}
       onClick={onClick}
