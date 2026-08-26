@@ -29,6 +29,8 @@ export async function POST(request: Request) {
         adminUid: admin.uid,
         confirmation: body?.confirmation ?? "",
         callbackUrl: callbackUrl(request),
+        command: body?.command,
+        target: body?.target,
       }),
   );
 }

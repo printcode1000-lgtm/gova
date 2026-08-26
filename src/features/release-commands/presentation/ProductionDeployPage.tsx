@@ -50,6 +50,8 @@ export function ProductionDeployPage() {
   const authorized = isSuperAdmin(session);
   const { result, running, starting, error, start } = useProductionDeploy();
   const [confirmation, setConfirmation] = React.useState("");
+  const [tab, setTab] = React.useState<"deploy:all" | "deploy:push">("deploy:all");
+  const [target, setTarget] = React.useState<PushTarget>("all");
   const logRef = React.useRef<HTMLPreElement | null>(null);
   const now = useTickingClock(running);
 
@@ -83,6 +85,11 @@ export function ProductionDeployPage() {
         </p>
       </header>
 
+      <div className="grid grid-cols-2 gap-2" role="tablist" aria-label="نوع النشر">
+        <Button type="button" role="tab" aria-selected={tab === "deploy:all"} variant={tab === "deploy:all" ? "default" : "outline"} onClick={() => setTab("deploy:all")}>Deploy All</Button>
+        <Button type="button" role="tab" aria-selected={tab === "deploy:push"} variant={tab === "deploy:push" ? "default" : "outline"} onClick={() => setTab("deploy:push")}>Deploy Push</Button>
+      </div>
+
       {readiness && !readiness.ready ? (
         <section className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm">
           <p className="flex items-center gap-2 font-semibold">
@@ -98,6 +105,8 @@ export function ProductionDeployPage() {
       ) : null}
 
       <section className="space-y-3 rounded-lg border p-3">
+        {tab === "deploy:push" ? <label className="block text-sm font-medium" htmlFor="production-deploy-target">هدف Deploy Push</label> : null}
+        {tab === "deploy:push" ? <select id="production-deploy-target" value={target} onChange={(event) => setTarget(event.target.value as PushTarget)} className="h-10 w-full rounded-md border bg-background px-3 text-sm" aria-label="هدف Deploy Push">{PUSH_TARGETS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select> : null}
         <label className="block text-sm font-medium" htmlFor="production-deploy-confirmation">
           اكتب عبارة التأكيد
         </label>
@@ -117,7 +126,7 @@ export function ProductionDeployPage() {
           className="w-full active:scale-[0.99] focus-visible:ring-2"
           onClick={() => {
             setConfirmation("");
-            void start();
+            void start(tab, target);
           }}
         >
           {starting || running ? (
@@ -125,7 +134,7 @@ export function ProductionDeployPage() {
           ) : (
             <Rocket className="h-4 w-4" aria-hidden />
           )}
-          {running ? "جارٍ النشر…" : "Deploy All"}
+          {running ? "جارٍ النشر…" : tab === "deploy:all" ? "Deploy All" : "Deploy Push"}
         </Button>
         {error ? <p className="text-sm text-destructive">{errorText(error)}</p> : null}
       </section>
@@ -198,6 +207,9 @@ export function ProductionDeployPage() {
     </main>
   );
 }
+
+type PushTarget = "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
+const PUSH_TARGETS: readonly [PushTarget, string][] = [["all", "كل الأهداف"], ["main", "التطبيق الرئيسي"], ["notifications", "الإشعارات"], ["products", "المنتجات"], ["orders", "الطلبات"], ["profiles", "الملفات الشخصية"], ["submain", "Submain"], ["sub2main", "Sub2main"]];
 
 /**
  * The confirmation phrase, selectable and copyable.

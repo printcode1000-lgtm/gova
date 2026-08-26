@@ -93,6 +93,8 @@ export async function startProductionDeploy(input: {
   adminUid: string;
   confirmation: string;
   callbackUrl: string;
+  command?: "deploy:all" | "deploy:push";
+  target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
 }): Promise<RemoteDeployAllResult> {
   if (input.confirmation?.trim() !== REMOTE_DEPLOY_ALL_CONFIRMATION) {
     throw new Error("productionDeployConfirmationRequired");
@@ -102,6 +104,8 @@ export async function startProductionDeploy(input: {
   return startRemoteDeployAll({
     initiatedByUid: input.adminUid,
     callbackUrl: input.callbackUrl,
+    command: input.command,
+    target: input.target,
   }).catch(translateSandboxError);
 }
 

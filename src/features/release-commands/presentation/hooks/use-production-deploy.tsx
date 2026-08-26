@@ -18,7 +18,7 @@ export interface ProductionDeployState {
   running: boolean;
   starting: boolean;
   error: string;
-  start(): Promise<void>;
+  start(command?: "deploy:all" | "deploy:push", target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main"): Promise<void>;
 }
 
 /**
@@ -72,14 +72,14 @@ export function useProductionDeploy(): ProductionDeployState {
     };
   }, [headers]);
 
-  const start = React.useCallback(async () => {
+  const start = React.useCallback(async (command: "deploy:all" | "deploy:push" = "deploy:all", target: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main" = "all") => {
     if (!headers || starting) return;
     setStarting(true);
     setError("");
     try {
       setResult(
         await productionDeployApiService.start(
-          { confirmation: REMOTE_DEPLOY_ALL_CONFIRMATION },
+          { confirmation: REMOTE_DEPLOY_ALL_CONFIRMATION, command, target },
           headers,
         ),
       );

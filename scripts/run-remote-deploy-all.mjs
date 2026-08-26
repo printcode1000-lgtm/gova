@@ -33,6 +33,8 @@ function argumentValue(name) {
 
 const requestId =
   argumentValue("request-id") || process.env.ASOL_REMOTE_DEPLOY_REQUEST_ID?.trim() || "";
+const command = argumentValue("command") === "deploy:push" ? "deploy:push" : "deploy:all";
+const target = argumentValue("target") || "all";
 
 async function readSnapshot() {
   try {
@@ -185,7 +187,9 @@ async function main() {
   }
   if (outcome.exitCode === 0) {
     await patchSnapshot({ stage: "preflight" });
-    outcome = await runStep("npm", ["run", "deploy:all"], {
+    outcome = await runStep("npm", command === "deploy:push"
+      ? ["run", "deploy:push", "--", `--vercel-target=${target}`]
+      : ["run", "deploy:all"], {
       CI: "1",
       ASOL_REMOTE_DEPLOY_SANDBOX: "1",
     });
@@ -201,7 +205,7 @@ async function main() {
           status: "failed",
           finishedAt,
           exitCode: outcome.exitCode,
-          error: (outcome.error ?? "deploy:all failed.").slice(0, 2_000),
+          error: (outcome.error ?? `${command} failed.`).slice(0, 2_000),
         },
   );
 

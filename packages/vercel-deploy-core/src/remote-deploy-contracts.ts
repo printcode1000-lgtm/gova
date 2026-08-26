@@ -44,6 +44,8 @@ export interface RemoteDeployAllSnapshot {
   sandboxName: string;
   sandboxSessionId?: string;
   initiatedByUid?: string;
+  command?: "deploy:all" | "deploy:push";
+  target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
   startedAt?: string;
   updatedAt: string;
   finishedAt?: string;
@@ -77,6 +79,8 @@ export interface RemoteDeployAllResult {
 
 export interface StartRemoteDeployAllInput {
   confirmation: string;
+  command?: "deploy:all" | "deploy:push";
+  target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
 }
 
 export interface RemoteDeployAllCallbackInput {

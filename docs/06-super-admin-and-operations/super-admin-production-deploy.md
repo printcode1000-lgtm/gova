@@ -11,6 +11,9 @@ The release console under `/dev/release-console` stays development-only. This
 page is the production surface, and it adds nothing to the pipeline: `deploy:all`
 remains the single release gate, unchanged.
 
+The page also exposes a **Deploy Push** tab. It runs `deploy:push` in the same
+Sandbox and lets the super admin select `all`, `main`, or one isolated service.
+
 Before its architecture guard, the pipeline regenerates the repository knowledge
 snapshots. This keeps a fresh Sandbox clone valid even when a generated catalog
 has drifted from the committed source.

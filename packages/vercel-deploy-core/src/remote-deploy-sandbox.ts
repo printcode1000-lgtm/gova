@@ -305,6 +305,8 @@ async function postTerminalCallback(
 export async function startRemoteDeployAll(input: {
   initiatedByUid: string;
   callbackUrl: string;
+  command?: "deploy:all" | "deploy:push";
+  target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
 }): Promise<RemoteDeployAllResult> {
   const config = deployEnvironment();
   const sandbox = await Sandbox.getOrCreate({
@@ -349,6 +351,8 @@ export async function startRemoteDeployAll(input: {
     sandboxName: SANDBOX_NAME,
     sandboxSessionId: sandbox.currentSession().sessionId,
     initiatedByUid: input.initiatedByUid,
+    command: input.command ?? "deploy:all",
+    target: input.target ?? "all",
     startedAt: now,
     updatedAt: now,
     emailStatus: "pending",
@@ -376,7 +380,12 @@ export async function startRemoteDeployAll(input: {
 
     await sandbox.runCommand({
       cmd: "node",
-      args: ["scripts/run-remote-deploy-all.mjs", `--request-id=${requestId}`],
+      args: [
+        "scripts/run-remote-deploy-all.mjs",
+        `--request-id=${requestId}`,
+        `--command=${input.command ?? "deploy:all"}`,
+        `--target=${input.target ?? "all"}`,
+      ],
       cwd: sandbox.cwd,
       detached: true,
       timeoutMs: Math.max(sandboxTimeoutMs() - 60_000, 60_000),
