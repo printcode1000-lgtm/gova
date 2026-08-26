@@ -196,6 +196,7 @@ silently remain on an older framework release.
    build, architecture, web, static, Android, iOS, and affected service checks
    before the reference may be deliberately rewritten.
 
-The `uuid` override is pinned to `11.1.1` because Capacitor CLI's current
-`xcode` dependency otherwise resolves a vulnerable older UUID line. `postcss`
+The `uuid` override is pinned to `14.0.1`: it satisfies the Vercel CLI's exact
+requirement and Capacitor CLI's `xcode` dependency while avoiding an older UUID
+line. `postcss`
 is pinned to `8.5.25` for the verified Tailwind/Next toolchain.
