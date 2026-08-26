@@ -118,26 +118,6 @@ function clearStaleGitIndexLock(): void {
   );
 }
 
-function failedReport(
-  target: string,
-  comment: string,
-  message: string,
-): VercelDeploymentReport {
-  const project =
-    target === "main"
-      ? "gova"
-      : (ACCOUNT_DECLARATIONS[target]?.project ?? `asol-${target}`);
-  return {
-    target,
-    project,
-    account: "unknown",
-    comment,
-    state: "ERROR",
-    message,
-    verifiedAt: new Date().toISOString(),
-  };
-}
-
 function printFinalSummary(reports: VercelDeploymentReport[]): void {
   if (reports.length === 0) return;
   console.log("\n[deploy:all] Final verified production report");
@@ -535,6 +515,29 @@ function assertSomethingToDeploy(flags: DeployFlags): void {
   }
 }
 
+/**
+ * A full Sandbox preflight can take long enough for another release to advance
+ * main. Refuse before staging a commit: that newer tree did not pass this run's
+ * preflight, and rebasing it here would silently publish unchecked code.
+ */
+function assertOriginMainDidNotAdvance(): void {
+  git(["fetch", "origin", MAIN_BRANCH]);
+  const localHead = git(["rev-parse", "HEAD"]);
+  const remoteHead = git(["rev-parse", `origin/${MAIN_BRANCH}`]);
+  if (localHead === remoteHead) return;
+
+  try {
+    git(["merge-base", "--is-ancestor", localHead, `origin/${MAIN_BRANCH}`]);
+  } catch {
+    return;
+  }
+
+  throw new Error(
+    `origin/${MAIN_BRANCH} advanced during preflight; no deployment commit was created. ` +
+      "Restart deploy:all so the current main tree receives the full preflight.",
+  );
+}
+
 /** What to run if the push landed but a deployment did not. */
 function printRollbackGuidance(revision: string): void {
   console.error(
@@ -628,6 +631,7 @@ async function runPublishPhase(flags: DeployFlags, selection: PhaseSelection): P
   runSelectedPublishBranch(selection, "scratch-files", () => assertNoScratchFiles(flags));
   runSelectedPublishBranch(selection, "release-manifest", () => assertReleaseManifestNotDowngraded(flags));
   runSelectedPublishBranch(selection, "non-empty-release", () => assertSomethingToDeploy(flags));
+  runSelectedPublishBranch(selection, "origin-main-current", assertOriginMainDidNotAdvance);
 
   if (selectedIncludes(selection, "secrets-backup")) {
     announceBranch("[deploy:all]", { id: "secrets-backup", command: "secrets:backup", label: "encrypted secrets backup" });
@@ -726,6 +730,57 @@ async function runServicePhase(
   return report;
 }
 
+async function runMainPhase(
+  selection: PhaseSelection,
+  publishContext: PublishContext,
+): Promise<VercelDeploymentReport> {
+  const mainReport = await verifyMainDeployment({
+    revision: publishContext.revision,
+    comment: publishContext.mainComment,
+  });
+
+  const servingBranch = selectedIncludes(selection, "main-serving");
+  let serving = false;
+  if (servingBranch) {
+    try {
+      await runDeploymentNpmScript("release:check", {
+        logPrefix: "deploy:all",
+        env: { ASOL_RELEASE_REVISION: publishContext.revision },
+      });
+      serving = true;
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      if (mainReport.state === "READY") {
+        throw new Error(`Vercel reported READY, but production is not serving this build: ${detail}`);
+      }
+      throw new Error(
+        `${mainReport.message || `Main deployment is ${mainReport.state}.`} ` +
+          `Production is not serving this build either: ${detail}`,
+      );
+    }
+  }
+
+  if (mainReport.state !== "READY" && !serving) {
+    throw new Error(mainReport.message || `Main deployment is ${mainReport.state}.`);
+  }
+  if (mainReport.state !== "READY") {
+    console.log(
+      `[deploy:all] Vercel reported ${mainReport.state}, but production is serving this build — ` +
+        "treating the main target as deployed.",
+    );
+  }
+
+  if (selectedIncludes(selection, "deployed-smoke")) {
+    announceBranch("[deploy:all]", {
+      id: "deployed-smoke",
+      command: "smoke:deployed",
+      label: "deployed origins answer their data routes",
+    });
+    await runDeploymentNpmScript("smoke:deployed", { logPrefix: "deploy:all" });
+  }
+  return mainReport;
+}
+
 async function main(): Promise<void> {
   const { flags, phase } = parseArgv(process.argv.slice(2));
 
@@ -751,6 +806,7 @@ async function main(): Promise<void> {
 
   let publishContext = resolvePublishContext(phase, readDeployAllState());
   const reports: VercelDeploymentReport[] = [];
+  const completedInBatch = new Set<DeployAllPhaseId>();
 
   // Announce the run to tooling outside this process. Preflight phases rewrite
   // tracked files as they go, and a guard that answers a dirty tree by pushing
@@ -760,6 +816,7 @@ async function main(): Promise<void> {
   try {
   await ensureReleaseSecretsRestored("deploy:all");
   for (const phaseId of phasesToRun) {
+    if (completedInBatch.has(phaseId)) continue;
     console.log(`\n[deploy:all] ── phase: ${phaseId} ──`);
     try {
       if (phaseId === "preflight") {
@@ -782,21 +839,50 @@ async function main(): Promise<void> {
       }
 
       if ((SERVICE_PHASE_IDS as readonly string[]).includes(phaseId)) {
-        if (!phaseHasSelectedBranches(phase, phaseId)) {
-          console.log(`[deploy:all] SKIP phase "${phaseId}": no selected runbook branches.`);
-          markPhaseComplete(phaseId);
-          continue;
-        }
         publishContext = resolvePublishContext(phase, readDeployAllState());
         if (!publishContext.revision) {
           throw new Error(
             'Publish phase has not run yet. Run "npm run deploy:all -- --phase=publish" first.',
           );
         }
-        const report = await runServicePhase(phaseId as DeployAllServicePhaseId, publishContext);
-        reports.push(report);
-        markPhaseComplete(phaseId);
-        console.log(`[deploy:all] Phase "${phaseId}" completed (${report.state}).`);
+        const servicePhases = phasesToRun.filter(
+          (candidate): candidate is DeployAllServicePhaseId =>
+            (SERVICE_PHASE_IDS as readonly string[]).includes(candidate) && !completedInBatch.has(candidate),
+        );
+        for (const servicePhase of servicePhases) {
+          if (phaseHasSelectedBranches(phase, servicePhase)) continue;
+          console.log(`[deploy:all] SKIP phase "${servicePhase}": no selected runbook branches.`);
+          markPhaseComplete(servicePhase);
+          completedInBatch.add(servicePhase);
+        }
+        const includeMain = phasesToRun.includes("main") && selectedIncludes(phase, "main-ready");
+        const phaseTasks: Array<{ phaseId: DeployAllPhaseId; task: Promise<VercelDeploymentReport> }> =
+          servicePhases.filter((servicePhase) => phaseHasSelectedBranches(phase, servicePhase)).map((servicePhase) => ({
+            phaseId: servicePhase,
+            task: runServicePhase(servicePhase, publishContext),
+          }));
+        if (includeMain) {
+          phaseTasks.push({ phaseId: "main", task: runMainPhase(phase, publishContext) });
+        }
+        console.log("[deploy:all] Starting all selected Vercel targets, then waiting for one combined report...");
+        const outcomes = await Promise.allSettled(phaseTasks.map((entry) => entry.task));
+        const failures: string[] = [];
+        outcomes.forEach((outcome, index) => {
+          const task = phaseTasks[index]!;
+          completedInBatch.add(task.phaseId);
+          if (outcome.status === "fulfilled") {
+            reports.push(outcome.value);
+            markPhaseComplete(task.phaseId);
+            return;
+          }
+          if (outcome.reason instanceof DeploymentNpmScriptError && outcome.reason.report) {
+            reports.push(outcome.reason.report);
+          }
+          failures.push(
+            `${task.phaseId}: ${outcome.reason instanceof Error ? outcome.reason.message : String(outcome.reason)}`,
+          );
+        });
+        if (failures.length > 0) throw new Error(`Vercel target failures: ${failures.join(" | ")}`);
         continue;
       }
 
@@ -807,65 +893,10 @@ async function main(): Promise<void> {
           continue;
         }
         publishContext = resolvePublishContext(phase, readDeployAllState());
-        const mainReport = await verifyMainDeployment({
-          revision: publishContext.revision,
-          comment: publishContext.mainComment,
-        });
+        const mainReport = await runMainPhase(phase, publishContext);
         reports.unshift(mainReport);
-
-        // READY describes the deployment; it does not say what production
-        // serves. Ask production directly — and ask precisely when Vercel's
-        // verdict was inconclusive, because that is when the answer decides
-        // whether anything is actually wrong. A run once reported TIMEOUT here
-        // while production was serving an older build and answering 200 on
-        // every route: no status code could tell those apart, only the build id.
-        const servingBranch = selectedIncludes(phase, "main-serving");
-        let serving = false;
-        if (servingBranch) {
-          try {
-            await runDeploymentNpmScript("release:check", {
-              logPrefix: "deploy:all",
-              env: { ASOL_RELEASE_REVISION: publishContext.revision },
-            });
-            serving = true;
-          } catch (error) {
-            const detail = error instanceof Error ? error.message : String(error);
-            if (mainReport.state === "READY") {
-              throw new Error(
-                `Vercel reported READY, but production is not serving this build: ${detail}`,
-              );
-            }
-            throw new Error(
-              `${mainReport.message || `Main deployment is ${mainReport.state}.`} ` +
-                `Production is not serving this build either: ${detail}`,
-            );
-          }
-        }
-
-        if (mainReport.state !== "READY" && !serving) {
-          throw new Error(mainReport.message || `Main deployment is ${mainReport.state}.`);
-        }
-        if (mainReport.state !== "READY") {
-          console.log(
-            `[deploy:all] Vercel reported ${mainReport.state}, but production is serving this build — ` +
-              "treating the main target as deployed.",
-          );
-        }
-
-        // Local smoke:services builds are not these URLs. The static/mobile
-        // bundle calls the deployed origins; ask them after the build identity
-        // check so a wrong or broken account stops the release here.
-        if (selectedIncludes(phase, "deployed-smoke")) {
-          announceBranch("[deploy:all]", {
-            id: "deployed-smoke",
-            command: "smoke:deployed",
-            label: "deployed origins answer their data routes",
-          });
-          await runDeploymentNpmScript("smoke:deployed", { logPrefix: "deploy:all" });
-        }
-
         markPhaseComplete("main");
-        console.log(`[deploy:all] Phase "main" completed (${serving ? "SERVING" : mainReport.state}).`);
+        console.log(`[deploy:all] Phase "main" completed (${mainReport.state}).`);
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

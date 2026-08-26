@@ -144,6 +144,7 @@ export const DEPLOY_ALL_RUNBOOK: readonly DeployAllRunbookPhase[] = [
         label: "Git revision",
         branches: [
           branch("clear-git-lock", "clear abandoned git lock only", "git:index-lock:clear-stale", "git"),
+          branch("origin-main-current", "origin/main unchanged since preflight", "git:fetch+merge-base", "git"),
           branch("stage-tree", "stage deployment tree", "git:add -A", "git", true),
           branch("commit-tree", "create deployment commit", "git:commit", "git", true),
           branch("verify-clean-tree", "verify committed tree is stable", "git:status --porcelain", "git"),

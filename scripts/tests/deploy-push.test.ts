@@ -3,6 +3,7 @@
  */
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import { __testables as deployPushTestables } from "../deploy-push";
 import { __testables } from "../deploy-push-target-choice";
@@ -76,6 +77,12 @@ assert.equal(RELEASE_MANIFEST, "public/asol-web-manifest.json");
 assert.equal(FAIL_PREFIX, "[deploy:push] FAILED —");
 assert.match(formatSuccessLine([]), /main Vercel production target is READY/);
 assert.match(formatSuccessLine(["products"]), /main and products/);
+const deployPushSource = readFileSync(new URL("../deploy-push.ts", import.meta.url), "utf8");
+assert.match(
+  deployPushSource,
+  /Promise\.allSettled\(\[\s*deploySelectedAccounts\(/,
+  "deploy:push must start all selected isolated targets and main verification together.",
+);
 for (const entry of ["debug.log", "notes.tmp", "src/__probe__.ts", "scratchpad/out.txt"]) {
   assert.ok(
     SCRATCH_FILE_PATTERNS.some((pattern) => pattern.test(entry)),

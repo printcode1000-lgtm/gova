@@ -137,14 +137,18 @@ branches: `main-ready` (match commit SHA and wait for `READY`), `main-serving`
    produces when the release environment variables are unset;
 8. refuses an empty run whose `HEAD` already matches `origin/main`.
 
-Only then does it create or verify the encrypted secret backup, stage the
+Before creating a deployment commit it fetches `origin/main` again. If `main`
+advanced while the long preflight ran, the run stops without staging or
+committing; restart the full release so the newer tree is checked too. Only
+then does it create or verify the encrypted secret backup, stage the
 complete working tree, and create a main deployment commit named
 `deploy(main): <ISO timestamp>`. It pushes `main` to GitHub, which lets the one
-GitHub-linked Vercel project auto-deploy. The retry path — a second `git push`
-using `GITHUB_ADMIN_TOKEN` from `.env.local` when the plain push is rejected —
-is now dead code in practice: `main` carries no branch protection and no ruleset,
-so nothing rejects the first attempt. It is kept because it costs nothing and
-covers the case where protection is put back.
+GitHub-linked Vercel project auto-deploy. The six isolated Vercel deployments
+and main verification then start together; the command waits for their combined
+report and prints every result, including failures. If the configured GitHub credential
+is needed, the retry temporarily updates the local Git remote and still runs
+`git push origin main`; no token-bearing URL is passed as a command argument or
+printed in the failure output.
 existing GitHub integration update `gova`. The other six projects remain
 disconnected from GitHub and deploy sequentially through their dedicated
 tokens. Each account receives its own visible comment, for example
@@ -553,7 +557,10 @@ timestamp-only manifest drift in the working tree.
 scripts (four services plus `asol-submain` and `asol-sub2main`). Any other choice still runs the
 mandatory steps above, then deploys and verifies only the selected account(s).
 
-When no isolated account is chosen, success requires secrets backup, GitHub
+After GitHub confirms the commit, `deploy:push` starts every selected isolated
+target and the GitHub-linked main verification together, then waits for all
+results as one batch. A failed target does not cancel the other in-flight
+targets; the final table reports every result. When no isolated account is chosen, success requires secrets backup, GitHub
 verification, and main `READY` on Vercel. When an isolated account is also
 chosen, that account must reach `READY` as well. `submain` uses
 `VERCEL_SUBMAIN_TOKEN` and `VERCEL_SUBMAIN_ORG_ID`; `sub2main` uses

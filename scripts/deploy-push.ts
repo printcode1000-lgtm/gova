@@ -351,6 +351,50 @@ async function verifyMainDeployment(input: {
   });
 }
 
+async function deploySelectedAccounts(input: {
+  targets: readonly DeployPushTarget[];
+  timestamp: string;
+  revision: string;
+  runId: string;
+}): Promise<VercelDeploymentReport[]> {
+  const outcomes = await Promise.allSettled(
+    input.targets.map(async (target) => {
+      const deployment = ISOLATED_DEPLOYS[target];
+      const comment = `deploy(${deployment.target}): ${input.timestamp} @ ${input.revision.slice(0, 12)}`;
+      const report = await runDeploymentNpmScript(deployment.script, {
+        logPrefix: "deploy:push",
+        captureReport: true,
+        env: {
+          ASOL_DEPLOYMENT_RUN_ID: `${input.runId}-${deployment.target}`,
+          ASOL_DEPLOYMENT_REVISION: input.revision,
+          ASOL_DEPLOYMENT_COMMENT: comment,
+        },
+      });
+      if (!report) throw new Error(`${deployment.script} returned no deployment report.`);
+      return report;
+    }),
+  );
+
+  const reports: VercelDeploymentReport[] = [];
+  const failures: string[] = [];
+  for (const outcome of outcomes) {
+    if (outcome.status === "fulfilled") {
+      reports.push(outcome.value);
+      continue;
+    }
+    if (outcome.reason instanceof DeploymentNpmScriptError && outcome.reason.report) {
+      reports.push(outcome.reason.report);
+    }
+    failures.push(outcome.reason instanceof Error ? outcome.reason.message : String(outcome.reason));
+  }
+  if (failures.length > 0) {
+    const error = new Error(`One or more isolated deployments failed: ${failures.join(" | ")}`);
+    Object.assign(error, { reports });
+    throw error;
+  }
+  return reports;
+}
+
 function verifyGitHubPush(revision: string): void {
   console.log("[deploy:push] Verifying origin/main matches the pushed commit...");
   execFileSync("git", ["fetch", "origin", MAIN_BRANCH], {
@@ -452,45 +496,31 @@ async function main(): Promise<void> {
     return;
   }
 
-  const reports: VercelDeploymentReport[] = [];
+  const [isolatedOutcome, mainOutcome] = await Promise.allSettled([
+    deploySelectedAccounts({ targets: isolatedTargets, timestamp, revision, runId }),
+    verifyMainDeployment({ revision, comment: mainComment }),
+  ]);
+  const reports: VercelDeploymentReport[] =
+    isolatedOutcome.status === "fulfilled"
+      ? isolatedOutcome.value
+      : ((isolatedOutcome.reason as { reports?: VercelDeploymentReport[] }).reports ?? []);
 
-  for (const isolatedTarget of isolatedTargets) {
-    const deployment = ISOLATED_DEPLOYS[isolatedTarget];
-    const comment = `deploy(${deployment.target}): ${timestamp} @ ${revision.slice(0, 12)}`;
-    try {
-      const report = await runDeploymentNpmScript(deployment.script, {
-        logPrefix: "deploy:push",
-        captureReport: true,
-        env: {
-          ASOL_DEPLOYMENT_RUN_ID: `${runId}-${deployment.target}`,
-          ASOL_DEPLOYMENT_REVISION: revision,
-          ASOL_DEPLOYMENT_COMMENT: comment,
-        },
-      });
-      if (!report) {
-        fail(`${deployment.script} returned no deployment report.`, revision);
-        return;
-      }
-      reports.push(report);
-    } catch (error) {
-      const report = error instanceof DeploymentNpmScriptError ? error.report : undefined;
-      const message = error instanceof Error ? error.message : String(error);
-      if (report) reports.push(report);
-      if (reports.length > 0) printFinalSummary(reports);
-      fail(`${deployment.script}: ${message}`, revision);
-      return;
-    }
-  }
-
-  let mainReport: VercelDeploymentReport;
-  try {
-    mainReport = await verifyMainDeployment({ revision, comment: mainComment });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
+  if (isolatedOutcome.status === "rejected" || mainOutcome.status === "rejected") {
+    if (mainOutcome.status === "fulfilled") reports.unshift(mainOutcome.value);
     if (reports.length > 0) printFinalSummary(reports);
-    fail(`main Vercel verification failed: ${message}`, revision);
+    const isolatedMessage =
+      isolatedOutcome.status === "rejected"
+        ? (isolatedOutcome.reason instanceof Error ? isolatedOutcome.reason.message : String(isolatedOutcome.reason))
+        : undefined;
+    const mainMessage =
+      mainOutcome.status === "rejected"
+        ? (mainOutcome.reason instanceof Error ? mainOutcome.reason.message : String(mainOutcome.reason))
+        : undefined;
+    fail([isolatedMessage, mainMessage].filter(Boolean).join(" | "), revision);
     return;
   }
+
+  const mainReport = mainOutcome.value;
 
   reports.unshift(mainReport);
   if (mainReport.state !== "READY") {

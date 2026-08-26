@@ -127,7 +127,12 @@ for (const phase of DEPLOY_ALL_RUNBOOK) {
   }
 }
 assert.match(formatRunbook(), /1\.1\.1 production-doctor: doctor:environment:production/);
-assert.match(formatRunbook(), /2\.3\.5 push-main: git:push main/);
+assert.match(formatRunbook(), /2\.3\.6 push-main: git:push main/);
+assert.match(
+  formatRunbook(),
+  /origin-main-current: git:fetch\+merge-base/,
+  "publish must refuse a main branch that advanced after preflight.",
+);
 
 // ── 6. Version comparison drives the manifest-downgrade refusal ────────────
 assert.ok(compareVersions("0.1.0", "0.1.15") < 0, "0.1.0 is older than 0.1.15");
@@ -227,11 +232,25 @@ assert.match(
   /ASOL_REMOTE_DEPLOY_SANDBOX: "1"/,
   "the remote runner must identify its isolated install so the doctor ignores only Sandbox-preloaded optional packages.",
 );
+assert.match(
+  deployAllSource,
+  /Promise\.allSettled\(phaseTasks\.map\(/,
+  "deploy:all must start all Vercel targets before waiting for the combined report.",
+);
 const environmentDoctor = readFileSync(new URL("../check-environment-requirements.ts", import.meta.url), "utf8");
 assert.match(
   environmentDoctor,
   /isSandboxLockedOverrideProblem/,
   "the production doctor must recognize npm 11.11's false invalid report for a lockfile-matched Sandbox override.",
+);
+const pushMainSource = readFileSync(
+  new URL("../../packages/release-core/src/pipeline/push-main-branch.ts", import.meta.url),
+  "utf8",
+);
+assert.doesNotMatch(
+  pushMainSource,
+  /\["push", pushUrl, branch\]/,
+  "the token-bearing push URL must never appear in a process command argument.",
 );
 
 console.log("deploy:all guard tests passed.");

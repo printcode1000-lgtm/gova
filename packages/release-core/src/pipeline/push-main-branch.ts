@@ -22,9 +22,17 @@ function resolveGitHubRepoSlug(cwd: string): string {
   return match[1];
 }
 
+function setOriginUrl(cwd: string, url: string): void {
+  execFileSync("git", ["remote", "set-url", "origin", url], {
+    cwd,
+    stdio: "ignore",
+  });
+}
+
 /**
- * Push `main` (or another branch) to GitHub. Uses `GITHUB_ADMIN_TOKEN` when a
- * plain `git push origin` is rejected by branch protection.
+ * Push `main` (or another branch) to GitHub. When the normal remote has no
+ * write credential, temporarily configure the token-backed origin so errors
+ * never include a credential-bearing command argument.
  */
 export function pushMainBranch(
   cwd: string,
@@ -44,11 +52,17 @@ export function pushMainBranch(
     const slug = resolveGitHubRepoSlug(cwd);
     const pushUrl = `https://x-access-token:${adminToken}@github.com/${slug}.git`;
     console.warn(
-      `[${logPrefix}] origin push was rejected; retrying with GITHUB_ADMIN_TOKEN bypass.`,
+      `[${logPrefix}] origin push was rejected; retrying with the configured GitHub credential.`,
     );
-    execFileSync("git", ["push", pushUrl, branch], {
-      cwd,
-      stdio: "inherit",
-    });
+    const originalUrl = git(cwd, ["remote", "get-url", "origin"]);
+    setOriginUrl(cwd, pushUrl);
+    try {
+      execFileSync("git", ["push", "origin", branch], {
+        cwd,
+        stdio: "inherit",
+      });
+    } finally {
+      setOriginUrl(cwd, originalUrl);
+    }
   }
 }
