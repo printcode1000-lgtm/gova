@@ -236116,6 +236116,12 @@
     },
     {
       "from": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
+      "to": "source:packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
+      "kind": "imports",
+      "detail": "../remote-deploy-sandbox"
+    },
+    {
+      "from": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "tests"
     },

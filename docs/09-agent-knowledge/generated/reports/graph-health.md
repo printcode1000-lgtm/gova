@@ -9,7 +9,7 @@
 |---|---:|
 | Graph version | 2 |
 | Nodes | 3742 |
-| Edges | 33453 |
+| Edges | 33454 |
 | Dangling edges | 0 |
 | Owner nodes with dependency relationships | 96 / 96 |
 | Mandatory application runtime nodes | 5 / 5 |
@@ -45,7 +45,7 @@
 | contains | 361 |
 | declares-dependency | 96 |
 | documents | 4954 |
-| imports | 8273 |
+| imports | 8274 |
 | invokes | 346 |
 | produces | 18 |
 | references | 2218 |

@@ -94,7 +94,7 @@ The page lists any that are missing instead of failing silently.
 
 | Variable | Purpose |
 |----------|---------|
-| `VERCEL_OIDC_TOKEN` | authenticates the Sandbox API (injected by Vercel) |
+| `VERCEL_OIDC_TOKEN` | local development only — see below |
 | `ASOL_SECRET_ARCHIVE_PASSWORD` | lets `deploy:all` restore its own secrets in the sandbox |
 | `ASOL_DEPLOY_CALLBACK_SECRET` | authenticates the runner's terminal callback |
 | `ASOL_DEPLOY_NOTIFICATION_EMAIL` | recipient of the result email |
@@ -109,9 +109,13 @@ onto the `gova` project from the local `.env.local`/`.env`, generating
 deriving the repository URL from `origin`. It never invents any other value: a
 key with no local value is reported and skipped.
 
-`VERCEL_OIDC_TOKEN` is not pushed, ever. Vercel injects it per request when the
-project has OIDC enabled (`oidcTokenConfig.enabled`), and that is what the
-Sandbox SDK authenticates with; a copied token would be stale within the hour.
+`VERCEL_OIDC_TOKEN` is not pushed, ever, and on Vercel it is not an environment
+variable at all: with OIDC enabled on the project (`oidcTokenConfig.enabled`),
+the token arrives per request as the `x-vercel-oidc-token` header and the
+Sandbox SDK reads it from the request context. The readiness check therefore
+accepts *either* that variable (local development) or running on Vercel; a
+project with OIDC disabled fails at the first Sandbox call with the SDK's own
+message rather than being reported as unconfigured.
 
 ## Running it from a local dev server
 

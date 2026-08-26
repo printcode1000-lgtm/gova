@@ -43,7 +43,9 @@ function requiredEnvironment(
   env: NodeJS.ProcessEnv = process.env,
 ): RemoteDeployAllReadiness {
   const missingConfiguration: string[] = [];
-  if (!env.VERCEL_OIDC_TOKEN?.trim()) missingConfiguration.push("VERCEL_OIDC_TOKEN");
+  if (!vercelCredentialsAvailable(env)) {
+    missingConfiguration.push("VERCEL_OIDC_TOKEN (or run on Vercel with OIDC enabled)");
+  }
   if (!env.ASOL_SECRET_ARCHIVE_PASSWORD?.trim()) {
     missingConfiguration.push("ASOL_SECRET_ARCHIVE_PASSWORD");
   }
@@ -63,6 +65,22 @@ function requiredEnvironment(
     missingConfiguration.push("ASOL_DEPLOY_REPOSITORY_URL or GITHUB_REPOSITORY");
   }
   return { ready: missingConfiguration.length === 0, missingConfiguration };
+}
+
+/**
+ * Whether the Sandbox SDK will find a Vercel identity to authenticate with.
+ *
+ * On Vercel the OIDC token is **not** an environment variable: it arrives per
+ * request as the `x-vercel-oidc-token` header and the SDK reads it from the
+ * request context. Only local development uses `VERCEL_OIDC_TOKEN`, pulled with
+ * `vercel env pull`. Demanding the variable in production reported the feature
+ * as unconfigured on a project where OIDC was enabled and working.
+ *
+ * This stays a configuration pre-check, not an auth probe: a project with OIDC
+ * disabled fails at the first Sandbox call, with the SDK's own message.
+ */
+function vercelCredentialsAvailable(env: NodeJS.ProcessEnv): boolean {
+  return Boolean(env.VERCEL_OIDC_TOKEN?.trim() || env.VERCEL?.trim() || env.VERCEL_ENV?.trim());
 }
 
 function resolveRepositoryUrl(env: NodeJS.ProcessEnv): string | null {

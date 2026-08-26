@@ -12,6 +12,7 @@ import {
   runVercel,
   deployAccountService,
 } from '../index';
+import { remoteDeployAllReadiness } from '../remote-deploy-sandbox';
 import {
   REMOTE_DEPLOY_ALL_STAGES,
   idleRemoteDeployAllSnapshot,
@@ -102,6 +103,31 @@ async function runTests(): Promise<void> {
   const idle = idleRemoteDeployAllSnapshot('probe');
   assert(idle.requestId === null && idle.status === 'idle', 'Idle snapshot carries no run');
   console.log('  ✔ Remote deploy contracts cover every deploy:all phase.');
+
+  // On Vercel the OIDC token is a per-request header, not an environment
+  // variable: requiring the variable reported a working project as unconfigured.
+  const deployEnv: NodeJS.ProcessEnv = {
+    ASOL_SECRET_ARCHIVE_PASSWORD: 'x',
+    ASOL_DEPLOY_CALLBACK_SECRET: 'x',
+    ASOL_DEPLOY_NOTIFICATION_EMAIL: 'release@example.com',
+    PASSWORD_RECOVERY_GMAIL_USER: 'sender@example.com',
+    PASSWORD_RECOVERY_GMAIL_APP_PASSWORD: 'x',
+    ASOL_DEPLOY_REPOSITORY_URL: 'https://github.com/owner/repo.git',
+  };
+  assert(
+    remoteDeployAllReadiness({ ...deployEnv, VERCEL: '1' }).ready,
+    'Running on Vercel with OIDC enabled counts as configured',
+  );
+  assert(
+    remoteDeployAllReadiness({ ...deployEnv, VERCEL_OIDC_TOKEN: 'local-token' }).ready,
+    'A pulled local OIDC token counts as configured',
+  );
+  const noCredentials = remoteDeployAllReadiness(deployEnv);
+  assert(
+    !noCredentials.ready && noCredentials.missingConfiguration.some((key) => key.includes('OIDC')),
+    'Neither host nor token means the missing item is named',
+  );
+  console.log('  ✔ Remote deploy readiness accepts request-context OIDC on Vercel.');
 
   console.log('\n✅ All @asol/vercel-deploy-core tests passed successfully!');
 }
