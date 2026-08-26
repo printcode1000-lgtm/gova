@@ -397,7 +397,11 @@ async function deploySelectedAccounts(input: {
 
 function verifyGitHubPush(revision: string): void {
   console.log("[deploy:push] Verifying origin/main matches the pushed commit...");
-  execFileSync("git", ["fetch", "origin", MAIN_BRANCH], {
+  // Fetch with an explicit refspec so origin/main is always written as a
+  // remote-tracking ref. A plain `git fetch origin main` only updates
+  // FETCH_HEAD in shallow or detached clones (e.g. the Vercel Sandbox), which
+  // leaves `git rev-parse origin/main` failing with "ambiguous argument".
+  execFileSync("git", ["fetch", "origin", `${MAIN_BRANCH}:refs/remotes/origin/${MAIN_BRANCH}`], {
     cwd: ROOT,
     stdio: "inherit",
   });
