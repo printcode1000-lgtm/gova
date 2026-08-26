@@ -14,8 +14,42 @@ import {
 } from "./remote-deploy-contracts";
 
 const SANDBOX_NAME = "asol-gova-deploy-all";
-const SANDBOX_TIMEOUT_MS = 2 * 60 * 60 * 1000;
-const COMMAND_TIMEOUT_MS = SANDBOX_TIMEOUT_MS - 60_000;
+/**
+ * Sandbox lifetime, in minutes.
+ *
+ * The Hobby plan rejects anything above 45 minutes outright — the create call
+ * fails with a 400 and the console shows an internal error — so that is the
+ * default. A Pro plan allows up to a day: raise
+ * `ASOL_DEPLOY_SANDBOX_TIMEOUT_MINUTES` there, because a full `deploy:all`
+ * (preflight, publish, six service deploys, main verification) can outlast 45
+ * minutes and a sandbox that expires mid-release takes the run down with it.
+ */
+const DEFAULT_SANDBOX_TIMEOUT_MINUTES = 45;
+const MAX_SANDBOX_TIMEOUT_MINUTES = 24 * 60;
+const DEFAULT_SANDBOX_VCPUS = 2;
+const MAX_SANDBOX_VCPUS = 8;
+
+function positiveNumber(raw: string | undefined, fallback: number, max: number): number {
+  const parsed = Number.parseInt(raw?.trim() ?? "", 10);
+  if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+  return Math.min(parsed, max);
+}
+
+function sandboxTimeoutMs(env: NodeJS.ProcessEnv = process.env): number {
+  return (
+    positiveNumber(
+      env.ASOL_DEPLOY_SANDBOX_TIMEOUT_MINUTES,
+      DEFAULT_SANDBOX_TIMEOUT_MINUTES,
+      MAX_SANDBOX_TIMEOUT_MINUTES,
+    ) *
+    60 *
+    1000
+  );
+}
+
+function sandboxVcpus(env: NodeJS.ProcessEnv = process.env): number {
+  return positiveNumber(env.ASOL_DEPLOY_SANDBOX_VCPUS, DEFAULT_SANDBOX_VCPUS, MAX_SANDBOX_VCPUS);
+}
 const STATE_DIRECTORY = ".deploy-all";
 const STATE_FILE = `${STATE_DIRECTORY}/remote-run.json`;
 const LOG_FILE = `${STATE_DIRECTORY}/remote.log`;
@@ -200,10 +234,44 @@ export async function getRemoteDeployAllResult(): Promise<RemoteDeployAllResult>
     };
   }
   return {
-    snapshot: await readSnapshot(sandbox),
+    snapshot: await expireStaleRun(sandbox, await readSnapshot(sandbox)),
     logTail: await readLogTail(sandbox),
     readiness,
   };
+}
+
+/**
+ * A run whose sandbox outlived its timeout never reports back.
+ *
+ * The runner posts the terminal callback itself, so the one ending it cannot
+ * announce is the one the platform killed — on the Hobby plan that is any
+ * release longer than 45 minutes. Without this the console would poll a
+ * `running` snapshot forever. Recorded on the sandbox so the console notifies
+ * once, exactly like any other failure.
+ */
+async function expireStaleRun(
+  sandbox: Sandbox,
+  snapshot: RemoteDeployAllSnapshot,
+): Promise<RemoteDeployAllSnapshot> {
+  if (isRemoteDeployAllTerminal(snapshot.status) || snapshot.status === "idle") return snapshot;
+  const startedAt = Date.parse(snapshot.startedAt ?? snapshot.updatedAt);
+  if (!Number.isFinite(startedAt)) return snapshot;
+  if (Date.now() - startedAt <= sandboxTimeoutMs() + 2 * 60_000) return snapshot;
+
+  const finishedAt = new Date().toISOString();
+  const expired: RemoteDeployAllSnapshot = {
+    ...snapshot,
+    status: "failed",
+    updatedAt: finishedAt,
+    finishedAt,
+    exitCode: snapshot.exitCode ?? 1,
+    error:
+      snapshot.error ??
+      "The deploy sandbox reached its time limit before the release finished. " +
+        "Raise ASOL_DEPLOY_SANDBOX_TIMEOUT_MINUTES (a Hobby plan caps it at 45).",
+  };
+  await writeSnapshot(sandbox, expired).catch(() => undefined);
+  return expired;
 }
 
 async function postTerminalCallback(
@@ -243,8 +311,8 @@ export async function startRemoteDeployAll(input: {
       : { type: "git", url: config.repositoryUrl, revision: "main" },
     runtime: "node24",
     persistent: true,
-    timeout: SANDBOX_TIMEOUT_MS,
-    resources: { vcpus: 4 },
+    timeout: sandboxTimeoutMs(),
+    resources: { vcpus: sandboxVcpus() },
   });
   await sandbox.fs.mkdir(workspacePath(sandbox, STATE_DIRECTORY), { recursive: true });
 
@@ -289,7 +357,7 @@ export async function startRemoteDeployAll(input: {
       args: ["scripts/run-remote-deploy-all.mjs", `--request-id=${requestId}`],
       cwd: sandbox.cwd,
       detached: true,
-      timeoutMs: COMMAND_TIMEOUT_MS,
+      timeoutMs: Math.max(sandboxTimeoutMs() - 60_000, 60_000),
       env: {
         ASOL_SECRET_ARCHIVE_PASSWORD: config.archivePassword,
         ASOL_DEPLOY_CALLBACK_SECRET: config.callbackSecret,

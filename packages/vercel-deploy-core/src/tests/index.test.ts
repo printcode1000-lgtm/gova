@@ -129,6 +129,22 @@ async function runTests(): Promise<void> {
   );
   console.log('  ✔ Remote deploy readiness accepts request-context OIDC on Vercel.');
 
+  // The Hobby plan rejects a sandbox timeout above 45 minutes with a 400, which
+  // reached the console as an internal error. The default must stay within it.
+  const sandboxSource = readFileSync(
+    path.join(process.cwd(), 'packages', 'vercel-deploy-core', 'src', 'remote-deploy-sandbox.ts'),
+    'utf-8',
+  );
+  assert(
+    sandboxSource.includes('const DEFAULT_SANDBOX_TIMEOUT_MINUTES = 45'),
+    'The default sandbox timeout must not exceed the Hobby plan limit',
+  );
+  assert(
+    sandboxSource.includes('ASOL_DEPLOY_SANDBOX_TIMEOUT_MINUTES'),
+    'A longer sandbox lifetime must be reachable by configuration',
+  );
+  console.log('  ✔ Sandbox limits default to the Hobby plan ceiling.');
+
   console.log('\n✅ All @asol/vercel-deploy-core tests passed successfully!');
 }
 

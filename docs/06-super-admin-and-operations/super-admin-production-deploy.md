@@ -63,6 +63,20 @@ sandbox → dependencies → preflight → publish → notifications → product
   → orders → profiles → submain → sub2main → main → complete
 ```
 
+## Plan limits
+
+The sandbox is created with a lifetime and a size, and both are capped by the
+Vercel plan. A Hobby plan **rejects any timeout above 45 minutes** — the create
+call fails with a 400 and the console shows an internal error — so the defaults
+are 45 minutes and 2 vCPUs.
+
+A full `deploy:all` (preflight, publish, six service deploys, main
+verification) can outlast 45 minutes. When it does, the platform kills the
+sandbox mid-release: the runner never sends its callback, and the console marks
+the run failed with the reason once it observes that the sandbox outlived its
+limit. On a Pro plan raise `ASOL_DEPLOY_SANDBOX_TIMEOUT_MINUTES` (up to a day)
+before relying on this page for a full release.
+
 ## One release at a time
 
 `startRemoteDeployAll` refuses a second start while a run is `preparing` or
@@ -102,6 +116,8 @@ The page lists any that are missing instead of failing silently.
 | `ASOL_DEPLOY_REPOSITORY_URL` or `GITHUB_REPOSITORY` | repository the sandbox clones |
 | `ASOL_DEPLOY_REPOSITORY_TOKEN` | optional; only needed while the repository is private |
 | `ASOL_DEPLOY_CALLBACK_BASE_URL` | optional; overrides the origin used to build the callback URL |
+| `ASOL_DEPLOY_SANDBOX_TIMEOUT_MINUTES` | optional; sandbox lifetime, default 45 |
+| `ASOL_DEPLOY_SANDBOX_VCPUS` | optional; sandbox size, default 2 |
 
 `npm run deploy:env:push` writes every one of these — except `VERCEL_OIDC_TOKEN` —
 onto the `gova` project from the local `.env.local`/`.env`, generating
