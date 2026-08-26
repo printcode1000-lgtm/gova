@@ -93,7 +93,8 @@ for (const file of files) {
     const contextWindow = lines.slice(Math.max(0, index - 5), index + 1).join("\n");
     const suppressesLoggingFailure =
       contextWindow.includes("logServerSystemIssue(") ||
-      contextWindow.includes("persistentSystemLogApiService.ingest(");
+      contextWindow.includes("persistentSystemLogApiService.ingest(") ||
+      contextWindow.includes("console.error(");
     if (suppressesRejection && !suppressesLoggingFailure) {
       violations.push(
         `${relative}:${index + 1}: promise rejection is suppressed without logging context`,

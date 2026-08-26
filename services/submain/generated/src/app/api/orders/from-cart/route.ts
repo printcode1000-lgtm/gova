@@ -1,4 +1,4 @@
-import { apiSuccess } from "@/core/api/api-response";
+import { apiSuccess, readJsonBody } from "@/core/api/api-response";
 import { resolveCartPrices } from "@/features/cart/server";
 import { createMultiSellerDeliveryDraft } from "@/features/cart";
 import { calculateSellerShipping } from "@/features/cart";
@@ -63,7 +63,7 @@ function shippingForSeller(
 export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/orders/from-cart", async () => {
     try {
-      const body = (await request.json()) as FromCartInput;
+      const body = await readJsonBody<FromCartInput>(request);
       const actor = actorFromInput(
         { uid: body.uid, phone: body.phone },
         "buyer",

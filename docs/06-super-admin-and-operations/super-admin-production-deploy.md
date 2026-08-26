@@ -128,6 +128,9 @@ service, which is why the in-app message is raised on a poll. The email is sent
 from the callback instead, so a release that finishes while nobody is watching
 still reaches the release mailbox.
 
+If recording either notification outcome fails, the server records the failure
+in its runtime log; the release snapshot remains available for a later retry.
+
 Message text for both channels is built by one pure module,
 `src/features/release-commands/domain/production-deploy-report.ts`.
 

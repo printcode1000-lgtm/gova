@@ -47,6 +47,10 @@ function runTests(): void {
     !collectSpecifiers(`const x = notRequired('./skipped');`).includes('./skipped'),
     'M2: a call that merely contains the letters is not treated as a module edge',
   );
+  assert(
+    !collectSpecifiers(`// the reason comes from 'not-a-package'\nconst value = 1;`).includes('not-a-package'),
+    'M2: prose comments are not treated as module imports',
+  );
   console.log('  ✔ require(), createRequire handles, and dynamic imports followed (M6 / M2).');
 
   // Test M3: Outside src/ throws

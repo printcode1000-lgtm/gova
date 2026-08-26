@@ -8,3 +8,7 @@ export function verifySqliteRuntime(): void {
     database.close();
   }
 }
+
+if (process.argv[1]?.endsWith('verify-sqlite-runtime.ts')) {
+  verifySqliteRuntime();
+}

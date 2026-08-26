@@ -181,7 +181,7 @@ async function main() {
   // prove it can load before starting the irreversible release pipeline.
   let outcome = await runStep("npm", ["ci", "--ignore-scripts", "--no-audit", "--no-fund"]);
   if (outcome.exitCode === 0) {
-    outcome = await runStep("node", ["-e", "require('better-sqlite3')"]);
+    outcome = await runStep("npx", ["tsx", "packages/data-core/src/tooling/verify-sqlite-runtime.ts"]);
   }
   if (outcome.exitCode === 0) {
     await patchSnapshot({ stage: "preflight" });

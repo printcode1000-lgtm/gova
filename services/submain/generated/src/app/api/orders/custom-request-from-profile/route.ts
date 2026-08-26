@@ -1,4 +1,4 @@
-import { apiSuccess } from "@/core/api/api-response";
+import { apiSuccess, readJsonBody } from "@/core/api/api-response";
 import { StorageProfiles } from "@asol/storage-core";
 import { authService } from "@/features/auth/server";
 import { notificationsServer } from "@/features/notifications/server";
@@ -31,7 +31,7 @@ function firstCarrier(settings: Awaited<ReturnType<typeof profileService.getFulf
 export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/orders/custom-request-from-profile", async () => {
     try {
-      const body = (await request.json()) as CustomRequestFromProfileInput;
+      const body = await readJsonBody<CustomRequestFromProfileInput>(request);
       const actor = actorFromInput({ uid: body.uid, phone: body.phone }, "buyer");
       const notificationGrants = notificationsServer.createGrantIssuer(body.uid);
       const sellerUid = body.sellerUid?.trim();

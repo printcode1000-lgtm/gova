@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T00:26:19.725Z",
+  "generatedAt": "2026-08-26T02:06:00.228Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 398,
+  "fileCount": 400,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -19,6 +19,7 @@
     "packages/auth-core/src/domain/constants.ts",
     "packages/auth-core/src/domain/entities.ts",
     "packages/auth-core/src/domain/password-input.ts",
+    "packages/auth-core/src/domain/phone.ts",
     "packages/auth-core/src/domain/super-admin.ts",
     "packages/auth-core/src/index.ts",
     "packages/auth-core/src/ports/account-deletion.port.ts",
@@ -325,6 +326,7 @@
     "src/core/config/server-env.ts",
     "src/core/config/server-env.values.ts",
     "src/core/config/server-env/server-env.values.auth-notifications.ts",
+    "src/core/config/server-env/server-env.values.production-deploy.ts",
     "src/core/config/server-env/server-env.values.turso-env.ts",
     "src/core/config/system-logs.server.ts",
     "src/features/auth/domain/profile.entity.ts",

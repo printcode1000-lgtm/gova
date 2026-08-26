@@ -26,7 +26,7 @@ export function apiSuccess<T>(data: T, status = 200): NextResponse {
 export function apiError(
   message: string,
   status = 400,
-  options: { skipPersistence?: boolean } = {},
+  options: { skipPersistence?: boolean; cause?: unknown } = {},
 ): NextResponse {
   const clientMessage = sanitizeApiErrorCodeForClient(message, status);
   if (
@@ -35,7 +35,10 @@ export function apiError(
     !message.includes('/api/system-logs')
   ) {
     void logServerSystemIssue({
-      error: new Error(message),
+      // The caller's original error carries the real stack. Creating one here
+      // instead would record a trace that points at this logger, which is what
+      // made persisted API failures untraceable.
+      error: options.cause instanceof Error ? options.cause : new Error(message),
       feature: 'BusinessAPI',
       operation: 'api-error-response',
       statusCode: status,
@@ -92,7 +95,17 @@ export function mapServiceError(error: unknown): NextResponse {
     error instanceof Error ? error.message : 'Internal Server Error';
   const knownCodes = KNOWN_BUSINESS_API_ERROR_CODES.filter(
     (code) =>
-      !['forbidden', 'invalidJsonBody', 'internalServerError', 'unexpectedError', 'requestFailed', 'invalidLoginResponse'].includes(code),
+      ![
+        'forbidden',
+        'invalidJsonBody',
+        'internalServerError',
+        'unexpectedError',
+        'requestFailed',
+        'invalidLoginResponse',
+        'productionDeployAlreadyRunning',
+        'productionDeployNotConfigured',
+        'productionDeployCallbackRejected',
+      ].includes(code),
   );
   if (knownCodes.includes(message as (typeof knownCodes)[number])) {
     if (!isQuietMappedServiceError(message)) {
@@ -122,6 +135,21 @@ export function mapServiceError(error: unknown): NextResponse {
   if (message === 'accountDeletionSuperAdminForbidden') {
     void logMappedServiceError(error, message, 403);
     return apiError(message, 403);
+  }
+
+  // A release is one process at a time, and the console must be able to tell
+  // "someone else is deploying" from "the deploy failed".
+  if (message === 'productionDeployAlreadyRunning') {
+    void logMappedServiceError(error, message, 409);
+    return apiError(message, 409, { skipPersistence: true });
+  }
+  if (message === 'productionDeployCallbackRejected') {
+    void logMappedServiceError(error, message, 403);
+    return apiError(message, 403);
+  }
+  if (message === 'productionDeployNotConfigured') {
+    void logMappedServiceError(error, message, 503);
+    return apiError(message, 503, { skipPersistence: true });
   }
 
   if (message === 'passwordRecoveryNotConfigured') {

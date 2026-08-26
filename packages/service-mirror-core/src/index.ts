@@ -26,6 +26,46 @@ const SPECIFIER_PATTERNS = [
   /(?:^|[^\w$.])[\w$]*[Rr]equire\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
 ];
 
+function removeComments(content: string): string {
+  let result = '';
+  let quote: '"' | "'" | '`' | null = null;
+  for (let index = 0; index < content.length; index += 1) {
+    const character = content[index];
+    const next = content[index + 1];
+    if (quote) {
+      result += character;
+      if (character === '\\') {
+        result += next ?? '';
+        index += 1;
+      } else if (character === quote) {
+        quote = null;
+      }
+      continue;
+    }
+    if (character === '"' || character === "'" || character === '`') {
+      quote = character;
+      result += character;
+      continue;
+    }
+    if (character === '/' && next === '/') {
+      const end = content.indexOf('\n', index);
+      if (end === -1) break;
+      result += '\n';
+      index = end;
+      continue;
+    }
+    if (character === '/' && next === '*') {
+      const end = content.indexOf('*/', index + 2);
+      const comment = content.slice(index, end === -1 ? content.length : end + 2);
+      result += comment.replace(/[^\n]/g, '');
+      index = end === -1 ? content.length : end + 1;
+      continue;
+    }
+    result += character;
+  }
+  return result;
+}
+
 function waitForRetry(milliseconds: number): void {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
 }
@@ -97,10 +137,11 @@ export function readOutputOverride(): string | null {
 
 export function collectSpecifiers(content: string): string[] {
   const found = new Set<string>();
+  const code = removeComments(content);
   for (const pattern of SPECIFIER_PATTERNS) {
     pattern.lastIndex = 0;
     let match: RegExpExecArray | null;
-    while ((match = pattern.exec(content)) !== null) found.add(match[1]);
+    while ((match = pattern.exec(code)) !== null) found.add(match[1]);
   }
   return [...found];
 }

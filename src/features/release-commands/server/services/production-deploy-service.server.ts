@@ -79,7 +79,9 @@ export async function getProductionDeployStatus(adminUid: string): Promise<Remot
     await recordRemoteDeployAllNotification({
       requestId: snapshot.requestId,
       inAppNotified: true,
-    }).catch(() => undefined);
+    }).catch((error) => {
+      console.error("Failed to record the production deploy in-app notification.", error);
+    });
   }
   return notificationsServer.attachGrants(
     { ...result, snapshot: { ...snapshot, inAppNotified: issued || snapshot.inAppNotified } },
@@ -138,7 +140,9 @@ export async function handleProductionDeployCallback(input: {
       requestId: snapshot.requestId,
       emailStatus: "failed",
       emailError: (error instanceof Error ? error.message : String(error)).slice(0, 500),
-    }).catch(() => undefined);
+    }).catch((recordError) => {
+      console.error("Failed to record the production deploy email failure.", recordError);
+    });
   }
   return { received: true };
 }

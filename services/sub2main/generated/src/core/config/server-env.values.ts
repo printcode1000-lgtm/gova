@@ -20,6 +20,12 @@ export {
   getTursoAdvertisementsRuntimeCredentials,
 } from "./server-env/server-env.values.turso-env";
 export type { FirebaseAdminServiceAccountConfig, R2CloudflareCredentials } from "./server-env/server-env.values.turso-env";
+export {
+  getProductionDeployCallbackBaseUrl,
+  getProductionDeployCallbackSecret,
+  getProductionDeployMailConfig,
+} from "./server-env/server-env.values.production-deploy";
+export type { ProductionDeployMailConfig } from "./server-env/server-env.values.production-deploy";
 export { requireEnv, getMobilePushUnlockKeyBuffer, isMobilePushUnlockConfigured, getOptionalMobilePushServerCredentialBlob } from "./server-env/server-env.values.auth-notifications";
 /**
  * `getOtaApprovalServerConfig` is deliberately NOT re-exported here.
