@@ -21,6 +21,11 @@ import {
   productionDeployNotification,
   productionDeployStageLabel,
 } from "@/features/release-commands/domain/production-deploy-report";
+import {
+  deployElapsedMs,
+  formatDeployDuration,
+  stageTimings,
+} from "@/features/release-commands/domain/production-deploy-timing";
 import { detectImageContentType, readImageDimensions, validateGooglePlayImage } from "@asol/google-play-store-assets-core/images";
 import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "@asol/ota-core/publishing";
 import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "@asol/native-core/scripts/validate-android-r8-policy";
@@ -64,6 +69,7 @@ import {
   startBuildJob,
   trackBuildJobProcess,
 } from "../server/services/build-job-runner.server";
+import { releaseRequirementSatisfied } from "@/features/google-play-console/server";
 import {
   analyzeBundleArtifact,
   changedBuildArtifacts,
@@ -700,9 +706,22 @@ for (const imageType of ["phoneScreenshots", "sevenInchScreenshots", "tenInchScr
   assert.equal(validateGooglePlayImage({ imageType, contentType: "image/jpeg", size: 10, dimensions: { width: 320, height: 320 }, existingCount: 8 }).ok, false);
 }
 
-const notReady = commandReadiness({ ...BUILD_COMMAND_CATALOG[0], requiredEnv: ["ASOL_TEST_ENV_THAT_DOES_NOT_EXIST"] } as BuildCommandCatalogEntry);
-assert.equal(notReady.ready, false); assert.deepEqual(notReady.missingEnv, ["ASOL_TEST_ENV_THAT_DOES_NOT_EXIST"]);
-assert.throws(() => assertCommandReadiness({ ...BUILD_COMMAND_CATALOG[0], requiredEnv: ["ASOL_TEST_ENV_THAT_DOES_NOT_EXIST"] } as BuildCommandCatalogEntry), /MissingEnvironment/);
+// A missing variable blocks a command only when the encrypted archive cannot
+// supply it — `releaseRequirementSatisfied` falls back to the archive on
+// purpose. This used to assert "not ready" outright, which silently depended on
+// the developer's machine holding no ASOL_SECRET_ARCHIVE_PASSWORD: setting one
+// turned every requirement satisfiable and failed the test on a correct tree.
+const absentRequirement = { ...BUILD_COMMAND_CATALOG[0], requiredEnv: ["ASOL_TEST_ENV_THAT_DOES_NOT_EXIST"] } as BuildCommandCatalogEntry;
+const archiveCanRestore = releaseRequirementSatisfied("ASOL_TEST_ENV_THAT_DOES_NOT_EXIST");
+const notReady = commandReadiness(absentRequirement);
+assert.equal(notReady.ready, archiveCanRestore);
+if (archiveCanRestore) {
+  assert.deepEqual(notReady.missingEnv, []);
+  assert.doesNotThrow(() => assertCommandReadiness(absentRequirement));
+} else {
+  assert.deepEqual(notReady.missingEnv, ["ASOL_TEST_ENV_THAT_DOES_NOT_EXIST"]);
+  assert.throws(() => assertCommandReadiness(absentRequirement), /MissingEnvironment/);
+}
 
 function bytes(length: number): Uint8Array { return Uint8Array.from({ length }, (_, index) => (index * 31) % 251); }
 console.log("Release console security, locking, restart recovery, R8, diagnostics, image, and bundle-analysis tests passed.");
@@ -903,6 +922,44 @@ async function verifyProductionDeployConsole() {
     sandboxSource.match(/config\.archivePassword/g)?.length,
     1,
     "the archive password is passed to the sandbox command and nowhere else",
+  );
+
+  // Durations come from the sandbox's own timestamps, so a console opened
+  // halfway through a release still reports them, and a reopened one does not
+  // restart the count.
+  assert.equal(formatDeployDuration(0), "0:00");
+  assert.equal(formatDeployDuration(65_000), "1:05");
+  assert.equal(formatDeployDuration(3_725_000), "1:02:05");
+  assert.equal(formatDeployDuration(-5_000), "0:00", "a skewed clock must not print a negative");
+
+  const timed = {
+    ...failedSnapshot,
+    status: "running" as const,
+    startedAt: "2026-08-26T00:00:00.000Z",
+    finishedAt: undefined,
+    stageHistory: [
+      { stage: "dependencies" as const, startedAt: "2026-08-26T00:00:00.000Z", finishedAt: "2026-08-26T00:02:00.000Z" },
+      { stage: "preflight" as const, startedAt: "2026-08-26T00:02:00.000Z" },
+    ],
+  };
+  const nowMs = Date.parse("2026-08-26T00:05:00.000Z");
+  assert.equal(deployElapsedMs(timed, nowMs), 5 * 60_000, "an unfinished run counts up to now");
+  assert.equal(
+    deployElapsedMs({ ...timed, finishedAt: "2026-08-26T00:03:00.000Z" }, nowMs),
+    3 * 60_000,
+    "a finished run stops at its finish",
+  );
+  const spans = stageTimings(timed, nowMs);
+  assert.equal(spans.get("dependencies")?.elapsedMs, 2 * 60_000);
+  assert.equal(spans.get("dependencies")?.running, false);
+  assert.equal(spans.get("preflight")?.elapsedMs, 3 * 60_000);
+  assert.equal(spans.get("preflight")?.running, true);
+  assert.equal(stageTimings({ ...timed, stageHistory: undefined }, nowMs).size, 0);
+
+  // The runner is what writes those spans; the console never times its own poll.
+  assert.ok(
+    remoteRunner.includes("advanceStageHistory") && remoteRunner.includes("closeStageHistory"),
+    "the remote runner must record and close stage spans",
   );
 
   const callbackService = await readFile(

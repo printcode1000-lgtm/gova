@@ -8,8 +8,8 @@
 | Metric | Value |
 |---|---:|
 | Graph version | 2 |
-| Nodes | 3742 |
-| Edges | 33454 |
+| Nodes | 3743 |
+| Edges | 33466 |
 | Dangling edges | 0 |
 | Owner nodes with dependency relationships | 96 / 96 |
 | Mandatory application runtime nodes | 5 / 5 |
@@ -31,21 +31,21 @@
 | runtime | 7 |
 | script | 131 |
 | service | 6 |
-| source | 2256 |
+| source | 2257 |
 | test | 213 |
 
 ## Edges by Kind
 
 | Kind | Count |
 |---|---:|
-| affects-runtime | 10516 |
-| belongs-to | 2156 |
+| affects-runtime | 10521 |
+| belongs-to | 2157 |
 | configured-by | 16 |
 | consumes | 6 |
 | contains | 361 |
 | declares-dependency | 96 |
-| documents | 4954 |
-| imports | 8274 |
+| documents | 4956 |
+| imports | 8278 |
 | invokes | 346 |
 | produces | 18 |
 | references | 2218 |

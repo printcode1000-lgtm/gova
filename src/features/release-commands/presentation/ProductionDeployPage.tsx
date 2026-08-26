@@ -1,12 +1,17 @@
 "use client";
 
-import { Clipboard, Loader2, RefreshCw, Rocket, ShieldAlert } from "lucide-react";
+import { Clipboard, Loader2, RefreshCw, Rocket, ShieldAlert, Timer } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import { isSuperAdmin } from "@/features/auth";
 import { useSession } from "@/features/auth/ui";
 import { productionDeployStageLabel } from "@/features/release-commands/domain/production-deploy-report";
+import {
+  deployElapsedMs,
+  formatDeployDuration,
+  stageTimings,
+} from "@/features/release-commands/domain/production-deploy-timing";
 import { useProductionDeploy } from "@/features/release-commands/presentation/hooks/use-production-deploy";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -46,6 +51,7 @@ export function ProductionDeployPage() {
   const { result, running, starting, error, start } = useProductionDeploy();
   const [confirmation, setConfirmation] = React.useState("");
   const logRef = React.useRef<HTMLPreElement | null>(null);
+  const now = useTickingClock(running);
 
   React.useEffect(() => {
     if (!isLoading && !authorized) router.replace(session ? "/home" : "/login");
@@ -61,6 +67,8 @@ export function ProductionDeployPage() {
   const readiness = result?.readiness;
   const armed = confirmation.trim() === REMOTE_DEPLOY_ALL_CONFIRMATION && !running && !starting;
   const currentIndex = snapshot ? TIMELINE.indexOf(snapshot.stage) : -1;
+  const totalElapsed = snapshot ? deployElapsedMs(snapshot, now) : null;
+  const timings = snapshot ? stageTimings(snapshot, now) : new Map();
 
   return (
     <main dir="rtl" className="mx-auto w-full max-w-3xl space-y-4 p-4 pb-24">
@@ -136,23 +144,39 @@ export function ProductionDeployPage() {
           <dd dir="ltr">{snapshot?.requestId ?? "—"}</dd>
           <dt className="text-muted-foreground">البريد</dt>
           <dd>{snapshot?.emailStatus ?? "—"}</dd>
+          <dt className="flex items-center gap-1 text-muted-foreground">
+            <Timer className="h-3.5 w-3.5" aria-hidden />
+            المدة
+          </dt>
+          <dd dir="ltr" className="font-mono tabular-nums">
+            {totalElapsed === null ? "—" : formatDeployDuration(totalElapsed)}
+          </dd>
         </dl>
         <ol className="space-y-1 text-sm">
-          {TIMELINE.map((stage, index) => (
-            <li
-              key={stage}
-              className={
-                currentIndex > index
-                  ? "text-muted-foreground"
-                  : currentIndex === index
-                    ? "font-semibold"
-                    : "opacity-60"
-              }
-            >
-              {currentIndex > index ? "✓ " : currentIndex === index ? "• " : "○ "}
-              {productionDeployStageLabel(stage)}
-            </li>
-          ))}
+          {TIMELINE.map((stage, index) => {
+            const timing = timings.get(stage);
+            return (
+              <li
+                key={stage}
+                className={
+                  "flex items-baseline justify-between gap-2 " +
+                  (currentIndex > index
+                    ? "text-muted-foreground"
+                    : currentIndex === index
+                      ? "font-semibold"
+                      : "opacity-60")
+                }
+              >
+                <span>
+                  {currentIndex > index ? "✓ " : currentIndex === index ? "• " : "○ "}
+                  {productionDeployStageLabel(stage)}
+                </span>
+                <span dir="ltr" className="font-mono text-xs tabular-nums">
+                  {timing ? formatDeployDuration(timing.elapsedMs) : ""}
+                </span>
+              </li>
+            );
+          })}
         </ol>
         {snapshot?.status === "failed" && snapshot.error ? (
           <p className="rounded border border-destructive/40 bg-destructive/5 p-2 text-sm text-destructive">
@@ -211,4 +235,23 @@ function ConfirmationPhrase(props: { onApply: (value: string) => void }) {
       </Button>
     </div>
   );
+}
+
+/**
+ * A clock that only ticks while something is running.
+ *
+ * The durations themselves come from the sandbox's timestamps; this exists so
+ * the running one advances between polls instead of jumping every five seconds.
+ */
+function useTickingClock(active: boolean): number {
+  const [now, setNow] = React.useState(() => Date.now());
+
+  React.useEffect(() => {
+    setNow(Date.now());
+    if (!active) return;
+    const timer = window.setInterval(() => setNow(Date.now()), 1_000);
+    return () => window.clearInterval(timer);
+  }, [active]);
+
+  return now;
 }

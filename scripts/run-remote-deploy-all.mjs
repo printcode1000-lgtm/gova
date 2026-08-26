@@ -49,9 +49,40 @@ async function readSnapshot() {
   }
 }
 
+/**
+ * Close the open stage and open the next one.
+ *
+ * The console reads durations from this list rather than timing its own poll:
+ * a page opened halfway through a release must still show how long every
+ * earlier stage took, and a reopened page must not start counting again.
+ */
+function advanceStageHistory(history, stage, at) {
+  const spans = Array.isArray(history) ? [...history] : [];
+  const open = spans[spans.length - 1];
+  if (open && !open.finishedAt) {
+    if (open.stage === stage) return spans;
+    spans[spans.length - 1] = { ...open, finishedAt: at };
+  }
+  spans.push({ stage, startedAt: at });
+  return spans;
+}
+
+function closeStageHistory(history, at) {
+  const spans = Array.isArray(history) ? [...history] : [];
+  const open = spans[spans.length - 1];
+  if (open && !open.finishedAt) spans[spans.length - 1] = { ...open, finishedAt: at };
+  return spans;
+}
+
 /** Merge a patch into the state file. The console polls this file, never the process. */
 async function patchSnapshot(patch) {
-  const snapshot = { ...(await readSnapshot()), ...patch, updatedAt: new Date().toISOString() };
+  const current = await readSnapshot();
+  const at = new Date().toISOString();
+  const stageHistory =
+    patch.stage && patch.stage !== current.stage
+      ? advanceStageHistory(current.stageHistory, patch.stage, at)
+      : current.stageHistory;
+  const snapshot = { ...current, stageHistory, ...patch, updatedAt: at };
   await writeFile(STATE_FILE, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
   return snapshot;
 }
@@ -151,10 +182,12 @@ async function main() {
   }
 
   const finishedAt = new Date().toISOString();
+  const stageHistory = closeStageHistory((await readSnapshot()).stageHistory, finishedAt);
   const snapshot = await patchSnapshot(
     outcome.exitCode === 0
-      ? { status: "succeeded", stage: "complete", finishedAt, exitCode: 0, error: undefined }
+      ? { stageHistory, status: "succeeded", stage: "complete", finishedAt, exitCode: 0, error: undefined }
       : {
+          stageHistory,
           status: "failed",
           finishedAt,
           exitCode: outcome.exitCode,

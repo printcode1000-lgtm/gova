@@ -54,6 +54,10 @@ The run's state file and log live in the sandbox under `.deploy-all/`
 | `.deploy-all/remote.lock` | presence marks an owned run |
 
 `GET /api/super-admin/production-deploy` returns `{ snapshot, logTail, readiness }`.
+The snapshot also carries `stageHistory` — one span per stage, closed when the
+next begins — which is where the console's elapsed time and per-stage durations
+come from. They are never timed by the page: a console opened halfway through a
+release, or reopened after being closed, must report the same numbers.
 Stages follow the pipeline's own phase banners
 (`[deploy:all] ── phase: <id> ──`), so the phase list never drifts from
 `DEPLOY_ALL_PHASE_ORDER`:
