@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **90**
+Findings: **91**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -95,6 +95,7 @@ Findings: **90**
 | `missing-file` | `docs/07-mobile-and-release/capacitor/ota-update-system.md` | `scripts/test-ota-native-compatibility.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/capacitor/ota-update-system.md` | `src/features/release-commands/domain/content-version.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/capacitor/ota-update-system.md` | `src/features/super-admin/presentation/SuperAdminOtaReleasesPage.tsx` | documentation mentions a missing repository path |
+| `missing-file` | `docs/07-mobile-and-release/deployment-targets.md` | `packages/native-core/android/build/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/release-and-secrets.md` | `scripts/lib/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/08-troubleshooting/problems/ota-publish-static-export-failures.md` | `scripts/ota-publish.ts` | documentation mentions a missing repository path |
 | `missing-package` | `docs/01-architecture/04-composition/dependency-wiring.md` | `@asol/my-feature-core` | documentation mentions unknown package @asol/my-feature-core |
