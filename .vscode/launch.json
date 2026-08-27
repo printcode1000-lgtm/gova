@@ -28,6 +28,19 @@
       }
     },
     {
+      "name": "Project Intelligence - إعادة تدريب وتحديث المعرفة",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "intelligence:retrain"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Tools",
+        "order": 3
+      }
+    },
+    {
       "name": "Secrets Key Init - تهيئة مفتاح النسخ المشفر",
       "request": "launch",
       "type": "node",

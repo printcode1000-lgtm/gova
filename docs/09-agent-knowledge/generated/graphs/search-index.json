@@ -1568,6 +1568,20 @@
       ]
     },
     {
+      "id": "command:intelligence:retrain",
+      "kind": "command",
+      "name": "npm run intelligence:retrain",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "intelligence",
+        "intelligence:retrain",
+        "npm",
+        "npm run intelligence:retrain",
+        "retrain",
+        "run"
+      ]
+    },
+    {
       "id": "command:ios:push:validate",
       "kind": "command",
       "name": "npm run ios:push:validate",
@@ -3423,6 +3437,20 @@
         "signed-token-core",
         "test",
         "test:signed-token-core"
+      ]
+    },
+    {
+      "id": "command:test:sqlite-reconnect",
+      "kind": "command",
+      "name": "npm run test:sqlite-reconnect",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:sqlite-reconnect",
+        "run",
+        "sqlite-reconnect",
+        "test",
+        "test:sqlite-reconnect"
       ]
     },
     {
@@ -19366,6 +19394,20 @@
       ]
     },
     {
+      "id": "external-dependency:@radix-ui/react-dismissable-layer",
+      "kind": "external-dependency",
+      "name": "@radix-ui/react-dismissable-layer",
+      "summary": "External package imported by repository source",
+      "tags": [
+        "@radix-ui/react-dismissable-layer",
+        "dependency",
+        "external",
+        "external dependency npm package",
+        "npm",
+        "package"
+      ]
+    },
+    {
       "id": "external-dependency:@radix-ui/react-dropdown-menu",
       "kind": "external-dependency",
       "name": "@radix-ui/react-dropdown-menu",
@@ -25909,6 +25951,17 @@
       ]
     },
     {
+      "id": "script:scripts/retrain-project-intelligence.ts",
+      "kind": "script",
+      "name": "retrain-project-intelligence.ts",
+      "path": "scripts/retrain-project-intelligence.ts",
+      "tags": [
+        "scripts/retrain-project-intelligence",
+        "scripts/retrain-project-intelligence.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/run-drizzle-kit.ts",
       "kind": "script",
       "name": "run-drizzle-kit.ts",
@@ -28126,6 +28179,17 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "source",
+      "name": "cached-sqlite-connection.ts",
+      "path": "packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "tags": [
+        "packages/data-core/src/core/database/cached-sqlite-connection",
+        "packages/data-core/src/core/database/cached-sqlite-connection.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "source",
       "name": "database-client.interface.ts",
@@ -28360,6 +28424,17 @@
       "tags": [
         "packages/data-core/src/core/database/sqlite-db-client",
         "packages/data-core/src/core/database/sqlite-db-client.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "kind": "source",
+      "name": "sqlite-file-identity.ts",
+      "path": "packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "tags": [
+        "packages/data-core/src/core/database/sqlite-file-identity",
+        "packages/data-core/src/core/database/sqlite-file-identity.ts",
         "ts"
       ]
     },
@@ -50091,6 +50166,17 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "kind": "source",
+      "name": "overlay-chrome-branch.tsx",
+      "path": "src/shared/ui/overlay-chrome-branch.tsx",
+      "tags": [
+        "src/shared/ui/overlay-chrome-branch",
+        "src/shared/ui/overlay-chrome-branch.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/shared/ui/overlay-chrome.ts",
       "kind": "source",
       "name": "overlay-chrome.ts",
@@ -50444,6 +50530,18 @@
       "tags": [
         "packages/data-core/src/core/database-runtime-policy",
         "packages/data-core/src/core/database-runtime-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "kind": "test",
+      "name": "cached-sqlite-connection.test.ts",
+      "path": "packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "tags": [
+        "packages/data-core/src/core/database/tests/cached-sqlite-connection",
+        "packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
         "test",
         "ts"
       ]

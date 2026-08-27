@@ -2,24 +2,25 @@
 
 ## High-Level Architecture
 
-The Gova application is architected around modular independence, sealed package boundaries, and strict multi-runtime compatibility.
+The Gova application is architected around modular independence, sealed package boundaries, workload partitioning across microservices, and strict multi-runtime compatibility.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                            CLIENT RUNTIMES                                  │
 │  Development (Next dev) │ Web (.next) │ Static out/ │ Android │ iOS         │
 └───────────────────────┬──────────────────────┬──────────────────────────────┘
-                        │                      │
-        ┌───────────────▼──────────────┐       │ (Direct Client Reads)
-        │   Main App (gova / Vercel)   │       │
-        │ - User auth & sessions       │       ▼
-        │ - Write mutations & orders   │ ┌────────────────────────────────────┐
-        │ - Notification grants        │ │      Standalone Services           │
-        └───────────────┬──────────────┘ │ - asol-products (Read catalog)     │
-                        │                │ - asol-orders   (Read order list)  │
-      ┌─────────────────┴─────────────┐  │ - asol-profiles (Read profiles)    │
-      ▼                               ▼  │ - asol-notifications (Delivery)    │
-┌──────────────┐             ┌────────┐  └────────────────────────────────────┘
+                        │                      │ (Client Bridge Routing)
+        ┌───────────────▼──────────────┐       ▼
+        │   Main App (gova / Vercel)   │ ┌────────────────────────────────────┐
+        │ - User auth & sessions       │ │      Microservices Cluster         │
+        │ - Super-admin operations     │ │ - asol-products (Read catalog)     │
+        │ - Notification grant signing │ │ - asol-orders   (Read order list)  │
+        │ - Storage presigned URL auth │ │ - asol-profiles (Read profiles)    │
+        └───────────────┬──────────────┘ │ - asol-submain  (Search & checkout)│
+                        │                │ - asol-sub2main (Merchant updates) │
+      ┌─────────────────┴─────────────┐  │ - asol-notifications (Push deliv)  │
+      ▼                               ▼  └────────────────────────────────────┘
+┌──────────────┐             ┌────────┐
 │ Turso Shards │             │   R2   │
 │  (DB Data)   │             │ (Media)│
 └──────────────┘             └────────┘
@@ -79,7 +80,7 @@ Application code (`src/`) strictly follows an unidirectional layer flow enforced
   Domain Repositories (Data Access)
       │
       ▼
-  Database Client (Drizzle ORM Engine)
+  Database Client (Drizzle ORM Engine & CachedSqliteConnection)
       │
       ▼
   Storage Engine (Turso LibSQL / Better-SQLite3)
@@ -90,11 +91,24 @@ Application code (`src/`) strictly follows an unidirectional layer flow enforced
 - `fetch()` calls outside `AsolApiClient` are strictly prohibited in application code.
 - Raw SQL and Drizzle queries MUST live inside `@asol/data-core` domain repositories.
 
+## Middleware, Proxy & Server Initialization
+
+1. **API Proxy & CORS Preflight (`src/proxy.ts`)**:
+   - Matches `/api/:path*` requests and manages cross-origin access using `getCorsOrigins()`.
+   - Enforces strict allowed headers: `Content-Type, Authorization, Accept, X-Asol-Session-Token, X-Asol-Trace-Id`.
+   - Returns HTTP 204 for preflight `OPTIONS` requests and binds matching CORS headers.
+2. **Server Port Initialization (`src/instrumentation.ts`)**:
+   - Executes during Node.js server startup (`NEXT_RUNTIME === 'nodejs'`).
+   - Dynamically loads and runs `registerAppServerPorts()` from `src/core/composition/server-ports.ts`, binding all abstract ports before any API route or server service processes requests.
+3. **Exact Composition Feature Seams (`COMPOSITION_FEATURE_SEAMS`)**:
+   - Microservice composition packages (`*-composition`) are strictly limited to exact file imports registered in `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`.
+   - Broad feature barrel imports (`@/features/*`) are rejected to prevent accidental credential or dependency leakage into isolated service deployments.
+
 ## Sealed Package Taxonomy
 
-The monorepo contains 41 sealed packages organized into 5 layers:
+The monorepo contains **43 sealed packages** organized into 5 layers:
 
-1. **Capability Packages (`*-core`, 33 packages)**:
+1. **Capability Packages (`*-core`, 34 packages)**:
    - Encapsulate domain logic, UI widgets, or infrastructure drivers.
    - Must NOT import `@/` application code (`mayImportApp: false`).
 2. **Composition Packages (`*-composition`, 6 packages)**:
@@ -103,7 +117,7 @@ The monorepo contains 41 sealed packages organized into 5 layers:
 3. **Declarations Package (`account-declarations`, 1 package)**:
    - Pure data describing deployment accounts and endpoints. Zero runtime imports.
 4. **Bridge Package (`account-bridge`, 1 package)**:
-   - Browser/device runtime logic for cross-account identity and notification routing.
+   - Browser/device runtime logic for cross-account identity, workload routing, and notification grant delivery.
 5. **Enforcement Package (`architecture-core`, 1 package)**:
    - AST parser, architecture rules, registry schemas, and `architecture:check` CLI engine.
 
@@ -117,6 +131,9 @@ The monorepo contains 41 sealed packages organized into 5 layers:
    - Page Form Writes: `@asol/page-save-core`
    - Push Notifications: `@asol/notifications-core`
    - OTA Updates: `@asol/ota-core`
+   - UI Diagnostic Identity: `@asol/ui-registry-core`
 3. **Single Responsibility Principle (SRP)**: Every source file has exactly one clear reason to change. UI, domain logic, and API calls must not be mixed.
 4. **Touch-First Interaction**: Hover styles (`:hover`, `hover:`, `group-hover:`) and pointer cursors (`cursor-pointer`) are forbidden in application source.
-5. **Default Deny**: Unregistered packages, undeclared vendor SDK imports, or unmapped feature directories fail `npm run architecture:check`.
+5. **UID-First UI Registration**: Every interactive or structural element registered in UiRegistry must declare an immutable `uid` (`<prefix>-<Base62-suffix>`). Shared primitives take per-instance `ui` props.
+6. **Overlay Chrome Dismiss Isolation**: Floating tools (DevBadge, SuperAdminUiAttributeInspector, SuperAdminErrorFloatingButton) must carry `data-asol-overlay-chrome` and wrap in `DismissableLayerBranch`.
+7. **Default Deny**: Unregistered packages, undeclared vendor SDK imports, or unmapped feature directories fail `npm run architecture:check`.

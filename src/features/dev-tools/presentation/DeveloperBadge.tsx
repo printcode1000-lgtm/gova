@@ -15,6 +15,7 @@ import {
 } from '@/shared/ui/dropdown-menu';
 import { isDevelopment } from '@/core/config';
 import { OVERLAY_CHROME_ATTRIBUTE } from '@/shared/ui/overlay-chrome';
+import { OverlayChromeBranch } from '@/shared/ui/overlay-chrome-branch';
 import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@asol/data-core/browser';
 
 const pages = [
@@ -123,11 +124,10 @@ export function DeveloperBadge() {
   }
 
   return (
-    <div
+    <OverlayChromeBranch
       ref={badgeRef}
       className="fixed z-[140] active:opacity-90"
       style={{ left: position.x, top: position.y }}
-      {...{ [OVERLAY_CHROME_ATTRIBUTE]: 'true' }}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
     >
@@ -168,6 +168,6 @@ export function DeveloperBadge() {
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>
+    </OverlayChromeBranch>
   );
 }

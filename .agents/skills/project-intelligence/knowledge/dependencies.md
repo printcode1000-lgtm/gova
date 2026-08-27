@@ -64,6 +64,36 @@ External third-party SDKs are strictly sealed behind owning capability packages.
 
 ---
 
+## Feature Internal Vocabulary & Structure Boundaries
+
+Application features under `src/features/*` must strictly adhere to the approved internal directory vocabulary enforced by `packages/architecture-core`:
+
+- **Approved `src/` Roots**: `app`, `core`, `features`, `shared`.
+- **Approved Feature Subdirectories**:
+  - `domain/`: Pure business entities, schemas, calculations, and domain types.
+  - `application/`: Application services, use cases, and client state managers.
+  - `presentation/`: React UI components, cards, forms, and client views.
+  - `infrastructure/`: External drivers and infrastructure bridges.
+  - `ports/`: Abstract port definitions and adapter bindings.
+  - `server/`: Server-only services, route handlers, and database adapters.
+  - `tests/`: Feature unit, integration, and contract tests.
+- **Forbidden App Roots**: `modules`, `components`, `hooks`, `lib`, `theme`, `locales`.
+
+---
+
+## Composition Feature Seams (`COMPOSITION_FEATURE_SEAMS`)
+
+Composition packages (`*-composition`) are deployment roots. To prevent broad imports from dragging unrelated dependencies or credentials into isolated microservices, composition packages may bypass feature doors only through exact paths declared in `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`:
+
+- `@asol/notifications-composition`: `@/features/data/ports/data-core-runtime-config-ports`
+- `@asol/orders-composition`: `@/features/auth/domain/super-admin`, `@/features/data/ports/data-core-runtime-config-ports`
+- `@asol/products-composition`: Product services, search services, pharmacy catalog lookup ports, and runtime config ports.
+- `@asol/profiles-composition`: Profile bootstrap services and runtime config ports.
+- `@asol/submain-composition`: Cart catalogue pricing, product search services, and runtime config ports.
+- `@asol/sub2main-composition`: Pharmacy catalog services, product mutation services, profile bootstrap services, image storage bootstrap services, and runtime config ports.
+
+---
+
 ## Circular Dependency Prevention & Port-Adapter Pattern
 
 To prevent tight coupling and circular dependencies across features:

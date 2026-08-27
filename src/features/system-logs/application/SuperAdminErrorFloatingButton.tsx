@@ -25,6 +25,7 @@ import {
   OVERLAY_CHROME_ATTRIBUTE,
   isOverlayChromeTarget,
 } from "@/shared/ui/overlay-chrome";
+import { OverlayChromeBranch } from "@/shared/ui/overlay-chrome-branch";
 
 const REFRESH_MS = 20_000;
 const LOGS_ROUTE = "/super-admin/logs";
@@ -179,25 +180,27 @@ export function SuperAdminErrorFloatingButton() {
 
   if (!expanded) {
     return (
-      <button
-        type="button"
-        onClick={() => setExpanded(true)}
-        className={
-          FLOATING_POSITION_CLASS +
-          " flex h-8 min-w-8 items-center justify-center px-2 " +
-          "active:bg-error/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
-        }
-        aria-expanded={false}
-        aria-label={`أخطاء النظام: ${errorCount} — عرض الأدوات`}
-        {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
-      >
-        <span className="tabular-nums">{errorCount}</span>
-      </button>
+      <OverlayChromeBranch className="contents">
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className={
+            FLOATING_POSITION_CLASS +
+            " flex h-8 min-w-8 items-center justify-center px-2 " +
+            "active:bg-error/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
+          }
+          aria-expanded={false}
+          aria-label={`أخطاء النظام: ${errorCount} — عرض الأدوات`}
+          {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
+        >
+          <span className="tabular-nums">{errorCount}</span>
+        </button>
+      </OverlayChromeBranch>
     );
   }
 
   return (
-    <>
+    <OverlayChromeBranch className="contents">
       <div
         ref={toolbarRef}
         className={
@@ -249,6 +252,6 @@ export function SuperAdminErrorFloatingButton() {
           <ListPlus className="h-3.5 w-3.5 shrink-0" />
         </button>
       </div>
-    </>
+    </OverlayChromeBranch>
   );
 }

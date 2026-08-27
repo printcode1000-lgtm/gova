@@ -138,9 +138,9 @@ Several scopes can be mounted at once (a product page shows both the editor and 
   unchecked staged operations without running them
 - **Close** only closes the dialog; it preserves items and their staged
   checked/unchecked state exactly
-- Tapping overlay chrome (the super-admin inspector, the floating error
-  toolbar, or the development badge) does not close the dialog; tapping the
-  dimmed overlay or Close still does
+- Tapping the inspector tool (or other overlay chrome) does not close the
+  dialog. While the inspector is enabled, outside taps do not close it either
+  so elements on the dialog can be picked. Close and Escape still dismiss it.
 - Execute and Close remain on one non-wrapping footer row at every viewport
 - While save runs, controls are disabled and a short saving label appears
 - On failure the dialog stays open and shows `pageSave.failure`; `snapshot.lastResult` carries `"success" | "failure"`

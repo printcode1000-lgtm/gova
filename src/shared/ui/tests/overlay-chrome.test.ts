@@ -3,7 +3,9 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import {
+  INSPECTOR_ACTIVE_ATTRIBUTE,
   OVERLAY_CHROME_ATTRIBUTE,
+  isInspectorActive,
   isOutsideDismissExempt,
   isOverlayChromeTarget,
   preventDismissForOverlayChrome,
@@ -64,6 +66,40 @@ preventDismissForOverlayChrome({
 });
 assert.equal(prevented, true);
 
+const overlayHit = node({});
+prevented = false;
+preventDismissForOverlayChrome({
+  preventDefault() {
+    prevented = true;
+  },
+  target: overlayHit as EventTarget,
+  detail: {
+    originalEvent: {
+      target: overlayHit as EventTarget,
+      composedPath() {
+        return [child as EventTarget];
+      },
+    },
+  },
+});
+assert.equal(prevented, true);
+
+const inactiveRoot = node({});
+assert.equal(isInspectorActive(inactiveRoot), false);
+assert.equal(isInspectorActive(node({ [INSPECTOR_ACTIVE_ATTRIBUTE]: "true" })), true);
+
+prevented = false;
+preventDismissForOverlayChrome(
+  {
+    preventDefault() {
+      prevented = true;
+    },
+    target: overlayHit as EventTarget,
+  },
+  node({ [INSPECTOR_ACTIVE_ATTRIBUTE]: "true" }),
+);
+assert.equal(prevented, true);
+
 const root = process.cwd();
 const dialogSource = readFileSync(path.join(root, "src/shared/ui/dialog.tsx"), "utf8");
 assert.match(dialogSource, /preventDismissForOverlayChrome\(event\)/);
@@ -84,20 +120,27 @@ const inspectorSource = readFileSync(
   path.join(root, "src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx"),
   "utf8",
 );
-assert.match(inspectorSource, /OVERLAY_CHROME_ATTRIBUTE/);
+assert.match(inspectorSource, /OverlayChromeBranch/);
+assert.match(inspectorSource, /INSPECTOR_ACTIVE_ATTRIBUTE/);
+
+const branchSource = readFileSync(
+  path.join(root, "src/shared/ui/overlay-chrome-branch.tsx"),
+  "utf8",
+);
+assert.match(branchSource, /DismissableLayerBranch/);
 
 const errorButtonSource = readFileSync(
   path.join(root, "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx"),
   "utf8",
 );
-assert.match(errorButtonSource, /OVERLAY_CHROME_ATTRIBUTE/);
+assert.match(errorButtonSource, /OverlayChromeBranch/);
 assert.match(errorButtonSource, /isOverlayChromeTarget/);
 
 const developerBadgeSource = readFileSync(
   path.join(root, "src/features/dev-tools/presentation/DeveloperBadge.tsx"),
   "utf8",
 );
-assert.match(developerBadgeSource, /OVERLAY_CHROME_ATTRIBUTE/);
+assert.match(developerBadgeSource, /OverlayChromeBranch/);
 
 const sidebarSource = readFileSync(
   path.join(root, "src/shared/layouts/AppSidebar.tsx"),

@@ -18,6 +18,7 @@ import {
   isRetrySafeTursoRead,
   withTursoReadRetry,
 } from "./turso-read-retry";
+import { CachedSqliteConnection } from "./cached-sqlite-connection";
 
 const nodeRequire = createRequire(import.meta.url);
 
@@ -76,7 +77,7 @@ function extractReferencedTables(
 }
 
 export class ShardedRawDatabaseClient {
-  private sqliteConnections = new Map<DatabaseShardName, any>();
+  private sqliteConnections = new Map<DatabaseShardName, CachedSqliteConnection<any>>();
   private tursoConnections = new Map<DatabaseShardName, Client>();
 
   constructor(
@@ -134,15 +135,20 @@ export class ShardedRawDatabaseClient {
 
   private sqlite(shard: DatabaseShardName): any {
     const existing = this.sqliteConnections.get(shard);
-    if (existing) return existing;
-    const sqliteModule = nodeRequire("better-sqlite3");
-    const Database = sqliteModule.default ?? sqliteModule;
-    const db = new Database(
+    if (existing) return existing.get();
+    const connection = new CachedSqliteConnection(
       path.join(SQLITE_DIRECTORY, sqliteFileNameForShard(shard)),
+      (databasePath) => {
+        const sqliteModule = nodeRequire("better-sqlite3");
+        const Database = sqliteModule.default ?? sqliteModule;
+        const db = new Database(databasePath);
+        db.pragma("foreign_keys = ON");
+        return db;
+      },
+      (db) => db,
     );
-    db.pragma("foreign_keys = ON");
-    this.sqliteConnections.set(shard, db);
-    return db;
+    this.sqliteConnections.set(shard, connection);
+    return connection.get();
   }
 
   private turso(shard: DatabaseShardName): Client {

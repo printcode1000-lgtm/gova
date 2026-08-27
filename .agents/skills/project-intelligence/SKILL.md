@@ -33,3 +33,5 @@ Start with the [Knowledge Index](./knowledge/INDEX.md) to discover the core arch
    At the end of every investigation or task, consolidate new findings into the knowledge files and record unresolved areas.
 5. **No Knowledge Pollution**:
    Keep facts structured, concise, verified, and traceable to code. Avoid storing raw logs, code duplicates, or speculative notes.
+6. **Retraining & Verification Cycle**:
+   Trigger full intelligence retraining via `npm run intelligence:retrain` and enforce zero architectural regressions via `npm run architecture:check`.

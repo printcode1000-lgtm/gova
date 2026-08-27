@@ -2,11 +2,11 @@
 
 ## Package Inventory Overview
 
-The repository manages **41 sealed packages** under `packages/`, categorized across 5 architectural layers. Every package is registered in `packages/architecture-core/src/registry/capability-registry.ts`.
+The repository manages **43 sealed packages** under `packages/`, categorized across 5 architectural layers. Every package is registered in `packages/architecture-core/src/registry/capability-registry.ts`.
 
 ---
 
-## 1. Capability Packages (`*-core`, 33 Packages)
+## 1. Capability Packages (`*-core`, 34 Packages)
 
 | Package | Ownership Statement | Owned Vendor SDKs | Key Public Doors |
 |---|---|---|---|
@@ -42,7 +42,7 @@ The repository manages **41 sealed packages** under `packages/`, categorized acr
 | `@asol/storage-image-manager-core` | Image compression, client upload queues, and image manager UI | `none` | `.`, `./queue`, `./ui` |
 | `@asol/system-logs-core` | System audit log collection, schema, and persistence contracts | `none` | `.`, `./collector`, `./types` |
 | `@asol/trending-ribbon-core` | Trending ribbon UI component and badge rendering | `none` | `.`, `./ui` |
-| `@asol/ui-registry-core` | UiRegistry DOM diagnostic attribute builders and simulation contracts | `none` | `.`, `./registry`, `./attributes` |
+| `@asol/ui-registry-core` | UiRegistry identity contract, page registry, DOM attribute builders, UID minting, and pending queue validation | `none` | `.` (Single Door Only) |
 | `@asol/vercel-deploy-core` | Vercel deployment orchestration, API tokens, and project management | `@vercel/sandbox` | `.`, `./deployer` |
 
 ---
@@ -55,8 +55,8 @@ Composition packages are the **only packages** permitted to import application c
 2. `@asol/orders-composition`: Composition root for `services/orders` (binds order querying and shard routing).
 3. `@asol/products-composition`: Composition root for `services/products` (binds catalog read operations).
 4. `@asol/profiles-composition`: Composition root for `services/profiles` (binds merchant profile read operations).
-5. `@asol/submain-composition`: Composition root for `asol-submain` auxiliary deployment target.
-6. `@asol/sub2main-composition`: Composition root for `asol-sub2main` secondary auxiliary deployment target.
+5. `@asol/submain-composition`: Composition root for `asol-submain` (binds search endpoints and buyer order checkout workflows).
+6. `@asol/sub2main-composition`: Composition root for `asol-sub2main` (binds merchant writes, product mutations, and storage uploads).
 
 ---
 
@@ -72,7 +72,7 @@ Composition packages are the **only packages** permitted to import application c
 ## 4. Bridge Package (`account-bridge`, 1 Package)
 
 - **`@asol/account-bridge`**:
-  - Client-side runtime for multi-account identity, cross-account notification grant transport, and device push token registration across accounts.
+  - Client-side runtime for multi-account identity, workload request routing (`submain`/`sub2main`), cross-account notification grant transport, and direct mobile push delivery via local encrypted credential store.
   - Runs in the browser and mobile native shells.
 
 ---

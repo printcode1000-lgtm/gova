@@ -9,9 +9,10 @@ import { isSuperAdmin } from "@/features/auth";
 import { useSession } from "@/features/auth/ui";
 import { uiAttributes } from "@asol/ui-registry-core";
 import {
+  INSPECTOR_ACTIVE_ATTRIBUTE,
   INSPECTOR_CONTROL_ATTRIBUTE,
-  OVERLAY_CHROME_ATTRIBUTE,
 } from "@/shared/ui/overlay-chrome";
+import { OverlayChromeBranch } from "@/shared/ui/overlay-chrome-branch";
 
 import {
   formatInspectorOutput,
@@ -89,6 +90,17 @@ export function SuperAdminUiAttributeInspector() {
     setSelectedAttributes(null);
     clearSelection();
   }, [authorized]);
+
+  useEffect(() => {
+    if (!enabled) {
+      document.documentElement.removeAttribute(INSPECTOR_ACTIVE_ATTRIBUTE);
+      return;
+    }
+    document.documentElement.setAttribute(INSPECTOR_ACTIVE_ATTRIBUTE, "true");
+    return () => {
+      document.documentElement.removeAttribute(INSPECTOR_ACTIVE_ATTRIBUTE);
+    };
+  }, [enabled]);
 
   useEffect(() => {
     if (!enabled) {
@@ -188,9 +200,9 @@ ${copiedText}`
   };
 
   return (
-    <div
-      className="pointer-events-none fixed bottom-[calc(10rem+var(--asol-safe-area-bottom))] end-4 z-[150] flex max-w-[calc(100vw-2rem)] items-center gap-2"
-      {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true", [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
+    <OverlayChromeBranch
+      className="pointer-events-auto fixed bottom-[calc(10rem+var(--asol-safe-area-bottom))] end-4 z-[150] flex max-w-[calc(100vw-2rem)] items-center gap-2"
+      {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true" }}
     >
       {enabled ? (
         <pre className="max-h-32 max-w-64 overflow-auto whitespace-pre-wrap break-words rounded-2xl bg-surface px-3 py-2 text-xs font-semibold text-on-surface shadow-lg" dir="ltr">
@@ -237,6 +249,6 @@ ${copiedText}`
       >
         {enabled ? copyState === "copied" ? <Check className="h-5 w-5" /> : <X className="h-5 w-5" /> : <ScanLine className="h-5 w-5" />}
       </button>
-    </div>
+    </OverlayChromeBranch>
   );
 }

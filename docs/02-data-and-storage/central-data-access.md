@@ -76,6 +76,29 @@ runtimes. Repositories request one of these logical sources:
 Marketplace orders use their typed `MarketplaceDb` port and the shared shard
 router. The adapter resolves each table to its declared order shard.
 
+### SQLite connection reuse
+
+Every local SQLite adapter caches its connection through
+`core/database/cached-sqlite-connection.ts`. The cache is keyed by the file
+identity (device and inode) that `core/database/sqlite-file-identity.ts` reads
+from the database path, not by process lifetime.
+
+This matters because a local database rebuild — `db:create:*`, a dev cloud
+restore, a shard split — unlinks the file and writes a new one at the same path.
+A connection held across that swap stays bound to the unlinked inode: reads keep
+returning the old rows and every write fails with
+`SQLITE_READONLY: attempt to write a readonly database` until the dev server is
+restarted. Comparing the identity before reusing a cached connection makes the
+rebuild cost one reconnect instead.
+
+The dev migration guards (`ensure-*-migrations.ts`) are keyed by the same
+identity, so a rebuilt file has its migrations applied instead of inheriting the
+previous file's "already migrated" state. Production Turso adapters are
+unaffected: they hold no file handle.
+
+`npm run test:sqlite-reconnect` pins both halves of this behavior — reuse on an
+untouched file, reconnect after a replacement.
+
 ## Import rules
 
 - Every import from outside the package uses a declared door:

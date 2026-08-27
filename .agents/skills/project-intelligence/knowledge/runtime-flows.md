@@ -6,11 +6,11 @@
 [User Touch Event]
        │
        ▼
-[DOM Element with data-ui-* attributes] (UiRegistry diagnostic identity)
+[DOM Element with data-ui-uid and data-ui-* attributes] (UiRegistry diagnostic identity)
        │
        ▼
 [React UI Component] (Uses active: / focus-visible: styles; NO hover)
-       │
+       │ (Overlay Chrome: Wrapped in DismissableLayerBranch to prevent closing dialogs)
        ▼
 [Page Snapshot Provider] (Captures UI scroll & state changes)
        │
@@ -19,6 +19,8 @@
 ```
 
 - **Touch Interaction Contract**: All interactions are touch-first. Hover states, hover-triggered menus, and cursor-pointer styles are forbidden across all surfaces.
+- **UID-First Contract**: Interactive and structural elements carry immutable `data-ui-uid` addresses. Shared primitives (`Button`, `Input`, `Select`) receive descriptors via `ui` props at usage sites.
+- **Overlay Chrome Isolation**: Floating tools (DevBadge, SuperAdminUiAttributeInspector, Error button) set `data-asol-overlay-chrome` and do not close parent dialogs on touch.
 
 ---
 
@@ -48,28 +50,41 @@
 
 ---
 
-## 3. Microservice Read Routing Flow (`service-bridge`)
+## 3. Microservice Routing & Workload Partitioning Flow (`service-bridge`)
 
 ```text
-[Client UI requests Catalog / Orders / Profile Data]
+[Client UI requests API Operation]
        │
        ▼
-[AsolApiClient -> Service Bridge Module]
+[AsolApiClient -> Service Bridge Module in @asol/account-bridge]
        │
-       ├── Product Reads   ──► https://asol-products.vercel.app/api/products
-       ├── Order List      ──► https://asol-orders.vercel.app/api/orders
-       ├── Profile Reads   ──► https://asol-profiles.vercel.app/api/profile
+       ├── Read Operations:
+       │   ├── Product Reads     ──► https://asol-products.vercel.app/api/products
+       │   ├── Order List        ──► https://asol-orders.vercel.app/api/orders
+       │   └── Profile Reads     ──► https://asol-profiles.vercel.app/api/profile/...
        │
-       └── All Writes & Enriched Reads ──► https://gova-swart.vercel.app/api/...
+       ├── Search & Checkout Workload (submain):
+       │   ├── Search Queries    ──► https://asol-submain.vercel.app/api/search/...
+       │   └── Order Placements  ──► https://asol-submain.vercel.app/api/orders/from-cart
+       │
+       ├── Merchant Mutations Workload (sub2main):
+       │   ├── Product Writes    ──► https://asol-sub2main.vercel.app/api/products [POST/PUT/DELETE]
+       │   ├── Profile Updates   ──► https://asol-sub2main.vercel.app/api/profile/editor [PUT]
+       │   └── Direct Media Put  ──► https://asol-sub2main.vercel.app/api/storage/images/upload
+       │
+       └── Central Authority (gova main):
+           ├── Auth & Session    ──► https://gova-swart.vercel.app/api/auth/...
+           ├── Super Admin Ops   ──► https://gova-swart.vercel.app/api/super-admin/...
+           └── Grant Signing     ──► https://gova-swart.vercel.app/api/notifications/grant
 ```
 
-- **Why reads go to services**: High-traffic read requests are offloaded to dedicated Vercel accounts and dedicated Turso read replicas.
-- **Why writes stay on `gova`**: Mutations often span multiple shards (e.g. creating an order updates orders shard, product inventory, and merchant profile stats) and require central transactional consistency.
+- **Workload Partitioning**: Dedicated microservice deployments prevent high-volume catalog browsing and checkout traffic from exhausting serverless execution limits or database connection pools on the primary authentication authority.
 
 ---
 
-## 4. Push Notification Delivery Flow (`notification-bridge`)
+## 4. Push Notification Delivery Flows (`notification-bridge`)
 
+### Path A: Server Delivery via `asol-notifications` Service
 ```text
 [Main App (gova)] Event occurs (e.g., Order Placed, Merchant Chat Message)
        │
@@ -95,7 +110,19 @@
        └── iOS (APNs via Apple Push Notification Service)
 ```
 
-- **Key Security Invariant**: `gova` owns the user data but holds no push credentials. `asol-notifications` holds credentials but cannot create grants on its own. The client carries the tamper-proof grant.
+### Path B: Native Direct Mobile Push Delivery
+```text
+[Capacitor Native App (Android / iOS)]
+       │
+       ▼
+[Direct Delivery: deliverNotificationGrantsFromNative in @asol/account-bridge]
+       │
+       ├── Reads encrypted local credential store (ensureMobilePushCredentials)
+       ├── Obtains FCM Access Token via OAuth2 Service Account
+       └── Dispatches FCM HTTP v1 / APNs messages directly from device
+```
+
+- **Key Security Invariant**: `gova` owns user data but holds no push credentials. `asol-notifications` holds credentials but cannot generate grants without the shared HMAC secret.
 
 ---
 
@@ -190,4 +217,73 @@
        ├── Checks native plugin compatibility baseline
        ├── Downloads and unzips payload in background
        └── Activates new web assets on next app launch
+```
+
+---
+
+## 9. Deploy-All Wave Orchestration & Resume Checkpoint Flow
+
+```text
+[Developer runs: npm run deploy:all]
+       │
+       ▼
+[Phase 1: Preflight Wave]
+       ├── Documentation Gate (docs:ci)
+       ├── Architecture Gate (architecture:check)
+       ├── UiRegistry Pending Gate (ui-registry:pending:check)
+       ├── Contract & Unit Tests Gate (npm run test)
+       ├── Runtime Compatibility Gate (runtime:check)
+       └── Storage Profiles Gate (validate-storage-profiles)
+       │
+       ▼
+[Phase 2: Service Mirror Sync & Build]
+       └── Sync sources into services/* via @asol/service-mirror-core
+       │
+       ▼
+[Phase 3: Service Deployments Wave (notifications, products, orders, profiles, submain, sub2main)]
+       └── Checkpoint recorded on disk per branch upon successful Vercel deploy
+       │
+       ▼
+[Phase 4: Main Application Deployment (gova)]
+       └── Deploy main Next.js web application to Vercel
+       │
+       ▼
+[Phase 5: Post-Deploy Smoke Verification]
+       └── Run smoke:services, smoke:production, smoke:deployed
+       │
+       ▼
+[Phase 6: Mobile Builds & OTA Publish]
+       └── Fastlane mobile bundles & ota:publish
+```
+
+- **Branch Checkpoint & Resume**: If an intermediate phase fails (e.g. temporary Vercel deploy timeout on one service), the state is recorded. Rerunning `deploy:all` or `--branch=<name>` skips completed branches whose input hashes match and resumes execution from the smallest failed branch.
+
+---
+
+## 10. UiRegistry Pending Request Lifecycle Flow
+
+```text
+[Super-Admin clicks "Add to UiRegistry" on Unregistered Element]
+       │
+       ├── 1. Inspector mintage: Generates immutable <prefix>-<Base62-suffix> UID
+       ├── 2. Sanitization: Captures safe DOM id, component marker, and UI_PAGE_REGISTRY route template (PII stripped)
+       └── 3. Dispatches POST /api/super-admin/ui-registry/pending
+       │
+       ▼
+[Server: Validates super-admin session & route template membership]
+       │
+       ▼
+[@asol/data-core: Stores request in ui_registry_pending_requests on system-ops shard]
+       │
+       ▼
+[Developer runs: npm run ui-registry:apply-pending]
+       │
+       ├── Reads open pending requests from system-ops database
+       ├── Locates single matching AST site in source code (fails if 0 or >1 matches)
+       ├── Rewrites JSX/TSX with typed uiAttributes descriptor + minted UID
+       └── Marks request status as resolved in system-ops database
+       │
+       ▼
+[Release Gate: npm run ui-registry:pending:check]
+       └── Verifies zero unresolved pending requests before deploy:all can proceed
 ```

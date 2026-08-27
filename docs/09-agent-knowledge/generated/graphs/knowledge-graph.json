@@ -1568,6 +1568,20 @@
       ]
     },
     {
+      "id": "command:intelligence:retrain",
+      "kind": "command",
+      "name": "npm run intelligence:retrain",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "intelligence",
+        "intelligence:retrain",
+        "npm",
+        "npm run intelligence:retrain",
+        "retrain",
+        "run"
+      ]
+    },
+    {
       "id": "command:ios:push:validate",
       "kind": "command",
       "name": "npm run ios:push:validate",
@@ -3423,6 +3437,20 @@
         "signed-token-core",
         "test",
         "test:signed-token-core"
+      ]
+    },
+    {
+      "id": "command:test:sqlite-reconnect",
+      "kind": "command",
+      "name": "npm run test:sqlite-reconnect",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:sqlite-reconnect",
+        "run",
+        "sqlite-reconnect",
+        "test",
+        "test:sqlite-reconnect"
       ]
     },
     {
@@ -19366,6 +19394,20 @@
       ]
     },
     {
+      "id": "external-dependency:@radix-ui/react-dismissable-layer",
+      "kind": "external-dependency",
+      "name": "@radix-ui/react-dismissable-layer",
+      "summary": "External package imported by repository source",
+      "tags": [
+        "@radix-ui/react-dismissable-layer",
+        "dependency",
+        "external",
+        "external dependency npm package",
+        "npm",
+        "package"
+      ]
+    },
+    {
       "id": "external-dependency:@radix-ui/react-dropdown-menu",
       "kind": "external-dependency",
       "name": "@radix-ui/react-dropdown-menu",
@@ -25909,6 +25951,17 @@
       ]
     },
     {
+      "id": "script:scripts/retrain-project-intelligence.ts",
+      "kind": "script",
+      "name": "retrain-project-intelligence.ts",
+      "path": "scripts/retrain-project-intelligence.ts",
+      "tags": [
+        "scripts/retrain-project-intelligence",
+        "scripts/retrain-project-intelligence.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/run-drizzle-kit.ts",
       "kind": "script",
       "name": "run-drizzle-kit.ts",
@@ -28126,6 +28179,17 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "source",
+      "name": "cached-sqlite-connection.ts",
+      "path": "packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "tags": [
+        "packages/data-core/src/core/database/cached-sqlite-connection",
+        "packages/data-core/src/core/database/cached-sqlite-connection.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "source",
       "name": "database-client.interface.ts",
@@ -28360,6 +28424,17 @@
       "tags": [
         "packages/data-core/src/core/database/sqlite-db-client",
         "packages/data-core/src/core/database/sqlite-db-client.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "kind": "source",
+      "name": "sqlite-file-identity.ts",
+      "path": "packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "tags": [
+        "packages/data-core/src/core/database/sqlite-file-identity",
+        "packages/data-core/src/core/database/sqlite-file-identity.ts",
         "ts"
       ]
     },
@@ -50091,6 +50166,17 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "kind": "source",
+      "name": "overlay-chrome-branch.tsx",
+      "path": "src/shared/ui/overlay-chrome-branch.tsx",
+      "tags": [
+        "src/shared/ui/overlay-chrome-branch",
+        "src/shared/ui/overlay-chrome-branch.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/shared/ui/overlay-chrome.ts",
       "kind": "source",
       "name": "overlay-chrome.ts",
@@ -50444,6 +50530,18 @@
       "tags": [
         "packages/data-core/src/core/database-runtime-policy",
         "packages/data-core/src/core/database-runtime-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "kind": "test",
+      "name": "cached-sqlite-connection.test.ts",
+      "path": "packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "tags": [
+        "packages/data-core/src/core/database/tests/cached-sqlite-connection",
+        "packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
         "test",
         "ts"
       ]
@@ -54534,6 +54632,16 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:intelligence:retrain",
+      "to": "script:scripts/retrain-project-intelligence.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:intelligence:retrain",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:ios:push:validate",
       "to": "source:packages/native-core/scripts/validate-ios-push-policy.ts",
       "kind": "invokes"
@@ -55481,6 +55589,11 @@
     {
       "from": "command:test:data-core",
       "to": "command:test:data-health-core",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:data-core",
+      "to": "command:test:sqlite-reconnect",
       "kind": "invokes"
     },
     {
@@ -56477,6 +56590,21 @@
       "from": "command:test:signed-token-core",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:sqlite-reconnect",
+      "to": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:sqlite-reconnect",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:sqlite-reconnect",
+      "to": "environment-key:NODE_OPTIONS",
+      "kind": "uses-environment"
     },
     {
       "from": "command:test:storage-core",
@@ -74119,6 +74247,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -74240,6 +74374,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/data-core/src/core/database/sqlite-db-client.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -78781,6 +78921,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/data-core/src/core/database/tests/shard-sql-routing.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -79591,6 +79737,12 @@
     },
     {
       "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
@@ -79712,6 +79864,12 @@
     {
       "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/core/database/sqlite-db-client.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
     },
@@ -81301,6 +81459,12 @@
     },
     {
       "from": "domain:data-and-storage",
+      "to": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
       "to": "test:packages/data-core/src/core/database/tests/shard-sql-routing.test.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
@@ -82196,6 +82360,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/restore-project-secrets.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/retrain-project-intelligence.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -133228,6 +133398,17 @@
       "detail": "@asol/secrets-core"
     },
     {
+      "from": "script:scripts/retrain-project-intelligence.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/retrain-project-intelligence.ts",
+      "to": "script:scripts/child-process-env.ts",
+      "kind": "imports",
+      "detail": "./child-process-env"
+    },
+    {
       "from": "script:scripts/run-drizzle-kit.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -138886,6 +139067,12 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/advertisements-sqlite-db-client.ts",
+      "to": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "imports",
+      "detail": "./cached-sqlite-connection"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/advertisements-sqlite-db-client.ts",
       "to": "source:packages/data-core/src/core/database/ensure-advertisements-migrations.ts",
       "kind": "imports",
       "detail": "./ensure-advertisements-migrations"
@@ -139000,6 +139187,33 @@
       "to": "external-dependency:drizzle-orm",
       "kind": "imports",
       "detail": "drizzle-orm/sqlite-core"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "to": "external-dependency:server-only",
+      "kind": "imports",
+      "detail": "server-only"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "to": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "kind": "imports",
+      "detail": "./sqlite-file-identity"
     },
     {
       "from": "source:packages/data-core/src/core/database/database-client.interface.ts",
@@ -139117,6 +139331,18 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/ensure-advertisements-migrations.ts",
+      "to": "source:packages/data-core/src/core/database/environment.ts",
+      "kind": "imports",
+      "detail": "./environment"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/ensure-advertisements-migrations.ts",
+      "to": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "kind": "imports",
+      "detail": "./sqlite-file-identity"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/ensure-advertisements-migrations.ts",
       "to": "source:packages/data-core/src/core/node-require.ts",
       "kind": "imports",
       "detail": "../node-require"
@@ -139150,6 +139376,12 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/ensure-migrations.ts",
+      "to": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "kind": "imports",
+      "detail": "./sqlite-file-identity"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/ensure-migrations.ts",
       "to": "source:packages/data-core/src/core/node-require.ts",
       "kind": "imports",
       "detail": "../node-require"
@@ -139183,6 +139415,12 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/ensure-notifications-migrations.ts",
+      "to": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "kind": "imports",
+      "detail": "./sqlite-file-identity"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/ensure-notifications-migrations.ts",
       "to": "source:packages/data-core/src/core/node-require.ts",
       "kind": "imports",
       "detail": "../node-require"
@@ -139213,6 +139451,12 @@
       "to": "source:packages/data-core/src/core/database/environment.ts",
       "kind": "imports",
       "detail": "./environment"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/ensure-product-migrations.ts",
+      "to": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "kind": "imports",
+      "detail": "./sqlite-file-identity"
     },
     {
       "from": "source:packages/data-core/src/core/database/ensure-product-migrations.ts",
@@ -139315,6 +139559,12 @@
       "to": "source:packages/data-core/src/core/database/abstract-database-client.ts",
       "kind": "imports",
       "detail": "./abstract-database-client"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/notifications-sqlite-db-client.ts",
+      "to": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "imports",
+      "detail": "./cached-sqlite-connection"
     },
     {
       "from": "source:packages/data-core/src/core/database/notifications-sqlite-db-client.ts",
@@ -139459,6 +139709,12 @@
       "to": "source:packages/data-core/src/core/database/abstract-database-client.ts",
       "kind": "imports",
       "detail": "./abstract-database-client"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/product-sqlite-db-client.ts",
+      "to": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "imports",
+      "detail": "./cached-sqlite-connection"
     },
     {
       "from": "source:packages/data-core/src/core/database/product-sqlite-db-client.ts",
@@ -139753,6 +140009,12 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/sharded-raw-database-client.ts",
+      "to": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "imports",
+      "detail": "./cached-sqlite-connection"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/sharded-raw-database-client.ts",
       "to": "source:packages/data-core/src/core/database/database-shards.ts",
       "kind": "imports",
       "detail": "./database-shards"
@@ -139804,6 +140066,12 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/sqlite-db-client.ts",
+      "to": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "imports",
+      "detail": "./cached-sqlite-connection"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/sqlite-db-client.ts",
       "to": "source:packages/data-core/src/core/database/ensure-migrations.ts",
       "kind": "imports",
       "detail": "./ensure-migrations"
@@ -139831,6 +140099,27 @@
       "to": "source:packages/data-core/src/ports/telemetry.ts",
       "kind": "imports",
       "detail": "../../ports/telemetry"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "to": "external-dependency:server-only",
+      "kind": "imports",
+      "detail": "server-only"
     },
     {
       "from": "source:packages/data-core/src/core/database/turso-db-client.ts",
@@ -191571,6 +191860,12 @@
     },
     {
       "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "to": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome-branch"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
       "to": "source:src/shared/ui/overlay-chrome.ts",
       "kind": "imports",
       "detail": "@/shared/ui/overlay-chrome"
@@ -226597,6 +226892,12 @@
     },
     {
       "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome-branch"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
       "to": "source:src/shared/ui/overlay-chrome.ts",
       "kind": "imports",
       "detail": "@/shared/ui/overlay-chrome"
@@ -227515,6 +227816,12 @@
       "to": "source:src/features/system-logs/domain/persistent-system-log.entity.ts",
       "kind": "imports",
       "detail": "@/features/system-logs/domain/persistent-system-log.entity"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "to": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome-branch"
     },
     {
       "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
@@ -231408,6 +231715,49 @@
       "detail": "@/shared/utils"
     },
     {
+      "from": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "to": "external-dependency:@radix-ui/react-dismissable-layer",
+      "kind": "imports",
+      "detail": "@radix-ui/react-dismissable-layer"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
       "from": "source:src/shared/ui/overlay-chrome.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -232831,6 +233181,64 @@
     },
     {
       "from": "test:packages/data-core/src/core/database-runtime-policy.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "external-dependency:better-sqlite3",
+      "kind": "imports",
+      "detail": "better-sqlite3"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "source:packages/data-core/src/core/database/cached-sqlite-connection.ts",
+      "kind": "imports",
+      "detail": "../cached-sqlite-connection"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "source:packages/data-core/src/core/database/sqlite-file-identity.ts",
+      "kind": "imports",
+      "detail": "../sqlite-file-identity"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
+      "to": "external-dependency:better-sqlite3",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts",
       "to": "package:@asol/data-core",
       "kind": "tests"
     },

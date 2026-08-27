@@ -64,7 +64,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/backup-core` | package | 7 | 2 | 139 | 0 | 11 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 41 | 0 | 8 | 1 |
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |
-| `@asol/data-core` | package | 56 | 24 | 146 | 0 | 162 | 21 |
+| `@asol/data-core` | package | 56 | 25 | 146 | 0 | 162 | 21 |
 | `@asol/data-health-core` | package | 7 | 2 | 139 | 0 | 45 | 0 |
 | `@asol/dev-core` | package | 8 | 1 | 142 | 0 | 10 | 0 |
 | `@asol/env-core` | package | 6 | 1 | 145 | 0 | 15 | 1 |

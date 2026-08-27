@@ -122,6 +122,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run github:block-branches` | `npx tsx scripts/block-branch-creation.ts` |
 | `npm run github:ci-policy` | `npx tsx scripts/github-ci-policy.ts` |
 | `npm run github:protect` | `npx tsx scripts/protect-main-branch.ts` |
+| `npm run intelligence:retrain` | `npx tsx scripts/retrain-project-intelligence.ts` |
 | `npm run ios:push:validate` | `npx tsx packages/native-core/scripts/validate-ios-push-policy.ts` |
 | `npm run ios:spm:normalize` | `npx tsx packages/native-core/scripts/normalize-capacitor-spm-paths.ts` |
 | `npm run lint` | `eslint .` |
@@ -195,7 +196,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:composition-ports` | `npx tsx src/core/composition/tests/ports-registry.test.ts` |
 | `npm run test:compositions` | `npm run test:notifications-composition && npm run test:products-composition && npm run test:orders-composition && npm run test:profiles-composition && npm run test:submain-composition && npm run test:sub2main-composition` |
 | `npm run test:console-command-parity` | `npx tsx src/features/release-commands/tests/console-command-parity.test.ts` |
-| `npm run test:data-core` | `npm run test:data-health-core && npm run test:backup-core && npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts` |
+| `npm run test:data-core` | `npm run test:data-health-core && npm run test:backup-core && npm run test:sqlite-reconnect && npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts` |
 | `npm run test:data-health` | `npx tsx scripts/test-data-health-environment.ts && cross-env NODE_OPTIONS=<redacted> npx tsx src/features/data-health/tests/development-guard.test.ts && npx tsx packages/data-core/src/domains/data-health/tests/data-health-policy.test.ts && cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/data-health/tests/order-purge.test.ts` |
 | `npm run test:data-health-core` | `npx tsx packages/data-health-core/src/tests/index.test.ts` |
 | `npm run test:delivery-planner` | `npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts` |
@@ -254,6 +255,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:sharing` | `npx tsx src/features/sharing/tests/sharing-module.test.ts && npx tsx src/features/qr-code/tests/qr-code-module.test.ts` |
 | `npm run test:shipping-pricing` | `npx tsx src/features/cart/tests/shipping-pricing.test.ts` |
 | `npm run test:signed-token-core` | `npx tsx packages/signed-token-core/src/tests/index.test.ts` |
+| `npm run test:sqlite-reconnect` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts` |
 | `npm run test:storage-core` | `npx tsx packages/storage-core/src/tests/index.test.ts` |
 | `npm run test:storage-image-manager-core` | `npx tsx packages/storage-image-manager-core/src/tests/index.test.ts` |
 | `npm run test:store-name-draft` | `npx tsx src/features/profile/tests/store-name-draft.test.ts && npx tsx src/features/profile/tests/profile-edit-navigation.test.ts` |

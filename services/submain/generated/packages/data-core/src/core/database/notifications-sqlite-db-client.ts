@@ -6,21 +6,25 @@ import { dataCoreRuntimeConfig } from '../../ports/runtime-config';
 import { createDrizzleDevLogger } from '../../ports/telemetry';
 import { NOTIFICATIONS_SQLITE_DB_PATH } from "./environment";
 import { AbstractDatabaseClient } from "./abstract-database-client";
+import { CachedSqliteConnection } from "./cached-sqlite-connection";
 
 export class NotificationsSQLiteDatabaseClient extends AbstractDatabaseClient {
-  private _db: any = null;
+  private readonly connection = new CachedSqliteConnection(
+    NOTIFICATIONS_SQLITE_DB_PATH,
+    (databasePath) => new (nodeRequire("better-sqlite3"))(databasePath),
+    (sqlite) => {
+      const { drizzle } = nodeRequire("drizzle-orm/better-sqlite3");
+      const db = drizzle(
+        sqlite,
+        dataCoreRuntimeConfig().isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
+      );
+      ensureNotificationsDevMigrations(db);
+      return db;
+    },
+  );
 
   get db(): any {
-    if (this._db) return this._db;
-    const { drizzle } = nodeRequire("drizzle-orm/better-sqlite3");
-    const Database = nodeRequire("better-sqlite3");
-    const sqlite = new Database(NOTIFICATIONS_SQLITE_DB_PATH);
-    this._db = drizzle(
-      sqlite,
-      dataCoreRuntimeConfig().isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
-    );
-    ensureNotificationsDevMigrations(this._db);
-    return this._db;
+    return this.connection.get();
   }
 
   async rawExecute(sql: string, params: any[] = []): Promise<any[]> {

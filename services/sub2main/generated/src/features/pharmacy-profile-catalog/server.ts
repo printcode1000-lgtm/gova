@@ -6,3 +6,4 @@
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
 export * from './server/services/pharmacy-profile-catalog.service.server';
 /* END GENERATED FEATURE DOOR EXPORTS */
+export { registerPharmacyCatalogProductLookupPort } from './server/register-pharmacy-catalog-product-lookup-port';

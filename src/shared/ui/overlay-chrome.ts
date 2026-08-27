@@ -1,5 +1,6 @@
 export const OVERLAY_CHROME_ATTRIBUTE = "data-asol-overlay-chrome";
 export const INSPECTOR_CONTROL_ATTRIBUTE = "data-asol-ui-inspector-control";
+export const INSPECTOR_ACTIVE_ATTRIBUTE = "data-asol-ui-inspector-active";
 
 type ClosestLike = {
   getAttribute?: (name: string) => string | null;
@@ -43,13 +44,38 @@ export function isOutsideDismissExempt(target: EventTarget | null | undefined): 
   return isOverlayChromeTarget(target) || isDialogLayerTarget(target);
 }
 
+export function isInspectorActive(
+  root: ClosestLike | null = typeof document === "undefined" ? null : document.documentElement,
+): boolean {
+  const value = root?.getAttribute?.(INSPECTOR_ACTIVE_ATTRIBUTE);
+  return value === "" || value === "true";
+}
+
 type DismissEvent = {
   preventDefault: () => void;
   target?: EventTarget | null;
-  detail?: { originalEvent?: { target?: EventTarget | null } };
+  detail?: {
+    originalEvent?: {
+      target?: EventTarget | null;
+      composedPath?: () => EventTarget[];
+    };
+  };
 };
 
-export function preventDismissForOverlayChrome(event: DismissEvent): void {
-  const originalTarget = event.detail?.originalEvent?.target ?? event.target;
-  if (isOverlayChromeTarget(originalTarget)) event.preventDefault();
+export function dismissEventTarget(event: DismissEvent): EventTarget | null | undefined {
+  const original = event.detail?.originalEvent;
+  const path = original?.composedPath?.();
+  if (path && path.length > 0) return path[0];
+  return original?.target ?? event.target;
+}
+
+export function preventDismissForOverlayChrome(
+  event: DismissEvent,
+  inspectorRoot?: ClosestLike | null,
+): void {
+  if (isInspectorActive(inspectorRoot)) {
+    event.preventDefault();
+    return;
+  }
+  if (isOverlayChromeTarget(dismissEventTarget(event))) event.preventDefault();
 }

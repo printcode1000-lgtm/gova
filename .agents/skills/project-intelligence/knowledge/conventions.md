@@ -28,15 +28,25 @@
 
 ---
 
-## 3. UI Attribute System & UiRegistry
+## 3. UI Attribute System & UID-First UiRegistry
 
-- All interactive and key structural components must include typed `data-ui-*` diagnostic attributes generated via `@asol/ui-registry-core`.
-- Enables automated real-user simulation and UI attribute inspection in Super Admin mode without fragile DOM selectors.
-- Enforced by `packages/architecture-core/src/tests/ui-attribute-guard.test.ts`.
+- **Sole Source of Truth (`data-ui-uid`)**: Every registered page, region, action, field, item, and shared component instance must declare an immutable `data-ui-uid` (`<prefix>-<Base62-suffix>`).
+- **One-Time Minting**: The Base62 suffix (6 characters, at least 1 uppercase and 1 digit) is minted once during development and hardcoded into source. Never generate UIDs on a render path.
+- **Per-Instance Registration**: Shared primitives (`Button`, `Input`, `Select`, `Textarea`, `Switch`, etc.) never declare internal fallback UIDs. The usage site passes an explicit `ui?: UiDescriptor` prop.
+- **Unregistered Fallback**: Elements without stable identities emit only `data-ui-component` and remain deliberately unregistered until addressed via the pending queue.
+- **Enforcement**: Guarded by `packages/architecture-core/src/tests/ui-attribute-guard.test.ts` and `npm run test:ui-registry-core`.
 
 ---
 
-## 4. Port-Adapter Composition Pattern
+## 4. Overlay Chrome Isolation (`DismissableLayerBranch`)
+
+- Diagnostic overlays (DevBadge, SuperAdminUiAttributeInspector, SuperAdminErrorFloatingButton) must carry the `data-asol-overlay-chrome` DOM attribute.
+- All floating diagnostic components must be wrapped in Radix `DismissableLayerBranch` so that touching or interacting with them does not trigger an outside-dismiss on open modal dialogs (e.g. `PageSaveDialog`).
+- When the Super-Admin UI inspector is active, `data-asol-ui-inspector-active` is placed on `document.documentElement` to suppress outside-pointer dismissals across all active dialogs.
+
+---
+
+## 5. Port-Adapter Composition Pattern
 
 - Capability packages (`*-core`) declare abstract **ports** (e.g. `StoragePort`, `PushDeliveryPort`).
 - Application features implement **adapters** matching these ports.
@@ -45,18 +55,19 @@
 
 ---
 
-## 5. Testing & Release Gate Conventions
+## 6. Testing & Release Gate Conventions
 
 - Releases are gated by **local npm scripts** rather than GitHub Actions:
   - `npm run architecture:check`: AST boundary and vendor ownership verification.
   - `npm run docs:ci`: Documentation coverage, mutability check, and dead link scanner.
   - `npm run runtime:check`: 5-surface runtime compatibility checks.
+  - `npm run ui-registry:pending:check`: Preflight verification that no open UiRegistry pending requests remain.
   - `npm test` / `test:*-core`: Package unit and contract tests.
 - **Git workflow**: `main` is the only active development and release branch.
 
 ---
 
-## 6. Communication & Documentation Conventions
+## 7. Communication & Documentation Conventions
 
 - All project documentation inside `docs/` is in **English**.
 - User communication by agents in this repository is strictly in **Arabic**.

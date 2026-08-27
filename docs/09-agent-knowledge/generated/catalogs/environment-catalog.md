@@ -165,7 +165,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `NEXT_PUBLIC_SUPER_ADMIN_UID` | client-visible | 2 | `npm run test:notifications`, `packages/auth-core/src/domain/super-admin.ts` |
 | `NEXT_RUNTIME` | server/tooling | 3 | `services/sub2main/src/instrumentation.ts`, `services/submain/src/instrumentation.ts`, `src/instrumentation.ts` |
 | `NODE_ENV` | server/tooling | 7 | `npm run test:release-commands`, `packages/observability-core/src/ports/index.ts`, `packages/storage-core/src/server/providers/provider-resolver.ts`, `src/core/config/public-env.ts`, `src/core/config/runtime-context.server.ts`, `packages/storage-core/src/tests/integration/parameterized-store.test.ts` |
-| `NODE_OPTIONS` | server/tooling | 20 | `npm run test:account-deletion-schema`, `npm run test:auth-email-uniqueness`, `npm run test:backup-core`, `npm run test:catalog-studio`, `npm run test:data-health`, `npm run test:dev-cloud-backup` |
+| `NODE_OPTIONS` | server/tooling | 21 | `npm run test:account-deletion-schema`, `npm run test:auth-email-uniqueness`, `npm run test:backup-core`, `npm run test:catalog-studio`, `npm run test:data-health`, `npm run test:dev-cloud-backup` |
 | `OLD_R2_PUBLIC_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-r2-image-public-url.ts` |
 | `ORDERS_CORE_DATABASE_AUTH_TOKEN` | server/tooling | 0 |  |
 | `ORDERS_CORE_DATABASE_URL` | server/tooling | 1 | `services/submain/src/app/api/health/route.ts` |

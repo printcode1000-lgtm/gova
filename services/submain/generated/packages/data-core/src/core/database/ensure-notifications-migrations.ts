@@ -2,16 +2,21 @@ import { nodeRequire } from '../node-require';
 import 'server-only';
 
 import path from 'path';
-import { isDevRuntime } from './environment';
+import { isDevRuntime, NOTIFICATIONS_SQLITE_DB_PATH } from './environment';
+import { readSqliteFileIdentity, type SqliteFileIdentity } from './sqlite-file-identity';
 
-let migrationsRun = false;
+// Keyed by file identity, not a boolean: a local rebuild puts a brand-new file at
+// the same path, and that file needs the migrations applied again.
+let migratedFile: SqliteFileIdentity = null;
 
 /**
  * Applies Drizzle migrations to the local notifications SQLite database on the
  * first server request in development.
  */
 export function ensureNotificationsDevMigrations(db: { db?: unknown } | unknown): void {
-  if (!isDevRuntime() || migrationsRun) return;
+  if (!isDevRuntime()) return;
+  const fileIdentity = readSqliteFileIdentity(NOTIFICATIONS_SQLITE_DB_PATH);
+  if (fileIdentity !== null && fileIdentity === migratedFile) return;
 
   try {
     const { migrate } = nodeRequire('drizzle-orm/better-sqlite3/migrator');
@@ -27,7 +32,7 @@ export function ensureNotificationsDevMigrations(db: { db?: unknown } | unknown)
     );
 
     migrate(database, { migrationsFolder });
-    migrationsRun = true;
+    migratedFile = fileIdentity;
   } catch (error) {
     console.error('❌ Failed to run local notifications SQLite migrations:', error);
   }

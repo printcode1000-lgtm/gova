@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27T04:44:32.949Z",
+  "generatedAt": "2026-08-27T06:39:00.296Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 401,
+  "fileCount": 403,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -47,6 +47,7 @@
     "packages/data-core/src/core/database/abstract-database-client.ts",
     "packages/data-core/src/core/database/advertisements-sqlite-db-client.ts",
     "packages/data-core/src/core/database/advertisements-turso-db-client.ts",
+    "packages/data-core/src/core/database/cached-sqlite-connection.ts",
     "packages/data-core/src/core/database/database-client.interface.ts",
     "packages/data-core/src/core/database/database-shards.ts",
     "packages/data-core/src/core/database/drizzle-libsql.server.ts",
@@ -65,6 +66,7 @@
     "packages/data-core/src/core/database/schema.ts",
     "packages/data-core/src/core/database/sharded-raw-database-client.ts",
     "packages/data-core/src/core/database/sqlite-db-client.ts",
+    "packages/data-core/src/core/database/sqlite-file-identity.ts",
     "packages/data-core/src/core/database/turso-db-client.ts",
     "packages/data-core/src/core/database/turso-read-retry.ts",
     "packages/data-core/src/core/index.ts",

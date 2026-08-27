@@ -108,6 +108,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run github:block-branches` | `Tooling` | 1 |  | 0 |
 | `npm run github:ci-policy` | `Tooling` | 1 |  | 0 |
 | `npm run github:protect` | `Tooling` | 1 |  | 0 |
+| `npm run intelligence:retrain` | `Tooling` | 1 |  | 0 |
 | `npm run ios:push:validate` | `iOS`, `Tooling` | 1 |  | 0 |
 | `npm run ios:spm:normalize` | `iOS`, `Tooling` | 1 |  | 0 |
 | `npm run lint` | `Tooling` | 0 |  | 0 |
@@ -181,7 +182,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:composition-ports` | `Tooling` | 1 |  | 0 |
 | `npm run test:compositions` | `Tooling` | 6 |  | 0 |
 | `npm run test:console-command-parity` | `Tooling` | 1 |  | 0 |
-| `npm run test:data-core` | `Tooling` | 4 |  | 0 |
+| `npm run test:data-core` | `Tooling` | 5 |  | 0 |
 | `npm run test:data-health` | `Tooling` | 4 |  | 1 |
 | `npm run test:data-health-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
@@ -240,6 +241,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:sharing` | `Tooling` | 2 |  | 0 |
 | `npm run test:shipping-pricing` | `Tooling` | 1 |  | 0 |
 | `npm run test:signed-token-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:sqlite-reconnect` | `Tooling` | 1 |  | 1 |
 | `npm run test:storage-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:storage-image-manager-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:store-name-draft` | `Tooling` | 2 |  | 0 |

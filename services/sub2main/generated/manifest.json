@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27T04:44:34.776Z",
+  "generatedAt": "2026-08-27T06:39:02.313Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 416,
+  "fileCount": 419,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -57,6 +57,7 @@
     "packages/data-core/src/core/database/abstract-database-client.ts",
     "packages/data-core/src/core/database/advertisements-sqlite-db-client.ts",
     "packages/data-core/src/core/database/advertisements-turso-db-client.ts",
+    "packages/data-core/src/core/database/cached-sqlite-connection.ts",
     "packages/data-core/src/core/database/database-client.interface.ts",
     "packages/data-core/src/core/database/database-shards.ts",
     "packages/data-core/src/core/database/drizzle-libsql.server.ts",
@@ -75,6 +76,7 @@
     "packages/data-core/src/core/database/schema.ts",
     "packages/data-core/src/core/database/sharded-raw-database-client.ts",
     "packages/data-core/src/core/database/sqlite-db-client.ts",
+    "packages/data-core/src/core/database/sqlite-file-identity.ts",
     "packages/data-core/src/core/database/turso-db-client.ts",
     "packages/data-core/src/core/database/turso-read-retry.ts",
     "packages/data-core/src/core/index.ts",
@@ -398,6 +400,7 @@
     "src/features/pharmacy-profile-catalog/index.ts",
     "src/features/pharmacy-profile-catalog/infrastructure/pharmacy-static-catalog.loader.ts",
     "src/features/pharmacy-profile-catalog/server.ts",
+    "src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
     "src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog-service-parts/pharmacy-profile-catalog.service.part-01.ts",
     "src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog-service-parts/pharmacy-profile-catalog.service.part-02.ts",
     "src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog-service-parts/pharmacy-profile-catalog.service.part-03.ts",
