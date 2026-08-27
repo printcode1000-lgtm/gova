@@ -172,6 +172,10 @@ async function runTests(): Promise<void> {
   );
   assert(sandboxSource.includes('"FETCH_HEAD"'), 'The release branch is built from FETCH_HEAD');
   assert(sandboxSource.includes('"--unshallow"'), 'The clone is deepened so the publish push is accepted');
+  assert(
+    sandboxSource.includes('["checkout", "-f", "-B", MAIN_BRANCH, "FETCH_HEAD"]'),
+    'A persistent sandbox must discard generated mirror drift before switching to the fetched main revision',
+  );
   console.log('  ✔ Release checkout survives a shallow, detached clone.');
 
   console.log('\n✅ All @asol/vercel-deploy-core tests passed successfully!');

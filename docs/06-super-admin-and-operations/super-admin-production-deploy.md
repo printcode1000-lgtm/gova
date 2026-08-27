@@ -73,6 +73,12 @@ a shallow clone, and pushing `main` is how the publish phase ships. Deepening
 fails on an already-complete repository — the persistent sandbox's second run —
 and that failure is expected and ignored.
 
+Because the Sandbox is persistent, a completed release can leave regenerated
+service mirrors different from the next fetched `main`. Environment setup uses
+a forced checkout of `FETCH_HEAD` to discard only that disposable Sandbox
+workspace drift before the new run; `.deploy-all/` remains excluded from the
+following cleanup so its state and logs survive.
+
 ## Secret handling
 
 - The browser receives **no** deployment credential, ever.

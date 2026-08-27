@@ -375,7 +375,10 @@ export async function startRemoteDeployAll(input: {
     // persistent sandbox's second run — so its failure is not an error.
     await commandAllowingFailure(sandbox, "git", ["fetch", "--unshallow", "--no-tags", "origin", "main"]);
     await commandOutput(sandbox, "git", ["fetch", "--no-tags", "origin", "main"]);
-    await commandOutput(sandbox, "git", ["checkout", "-B", MAIN_BRANCH, "FETCH_HEAD"]);
+    // A persistent sandbox can retain generated mirror changes from the
+    // previous release. Force the branch switch so those disposable outputs,
+    // including untracked files that now exist in main, cannot block setup.
+    await commandOutput(sandbox, "git", ["checkout", "-f", "-B", MAIN_BRANCH, "FETCH_HEAD"]);
     await commandOutput(sandbox, "git", ["reset", "--hard", "FETCH_HEAD"]);
     await commandOutput(sandbox, "git", ["clean", "-fd", "-e", `${STATE_DIRECTORY}/`]);
     await commandOutput(sandbox, "git", ["config", "user.name", "ASOL Production Deploy"]);
