@@ -91,6 +91,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run deploy:push:all` | `npx tsx scripts/deploy-push.ts --vercel-target=all` |
 | `npm run deploy:push:main` | `npx tsx scripts/deploy-push.ts --vercel-target=none` |
 | `npm run deploy:redeploy-main` | `npx tsx scripts/redeploy-main-vercel.ts` |
+| `npm run deploy:revision` | `npx tsx scripts/deploy-revision.ts` |
 | `npm run dev` | `next dev --turbo --port 3001` |
 | `npm run dev:checked` | `npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --turbo --port 3001` |
 | `npm run docs:check` | `npx tsx scripts/docs/check.ts` |

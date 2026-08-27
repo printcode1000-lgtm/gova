@@ -6,6 +6,7 @@ import path from "node:path";
 import {
   collectGithubCiPolicyErrors,
   docsWorkflowViolations,
+  deploymentWorkflowViolations,
   DOCS_WORKFLOW_PATH_FILTERS,
   FORBIDDEN_CI_PATHS,
   verifyGithubCiPolicy,
@@ -16,7 +17,12 @@ const live = verifyGithubCiPolicy();
 assert.deepEqual(live, [], live.join("\n"));
 
 const docsSource = readFileSync(path.join(process.cwd(), ".github", "workflows", "docs.yml"), "utf8");
+const deploySource = readFileSync(path.join(process.cwd(), ".github", "workflows", "deploy-main.yml"), "utf8");
 assert.equal(docsWorkflowViolations(docsSource).length, 0, docsWorkflowViolations(docsSource).join("\n"));
+assert.equal(deploymentWorkflowViolations(deploySource).length, 0, deploymentWorkflowViolations(deploySource).join("\n"));
+assert.ok(deploymentWorkflowViolations(deploySource.replace("id-token: write", "id-token: read")).some((error) => error.includes("id-token: write")));
+assert.ok(deploymentWorkflowViolations(`${deploySource}\n      - run: npm test\n`).some((error) => error.includes("shell commands")));
+assert.ok(deploymentWorkflowViolations(deploySource.replace("github.sha", "github.ref")).some((error) => error.includes("github.sha")));
 
 assert.ok(
   docsWorkflowViolations(docsSource.replace("fetch-depth: 0", "fetch-depth: 1")).some((error) =>
@@ -164,6 +170,7 @@ const fixtureRoot = mkdtempSync(path.join(os.tmpdir(), "github-ci-policy-"));
 try {
   mkdirSync(path.join(fixtureRoot, ".github", "workflows"), { recursive: true });
   writeFileSync(path.join(fixtureRoot, ".github", "workflows", "docs.yml"), docsSource);
+  writeFileSync(path.join(fixtureRoot, ".github", "workflows", "deploy-main.yml"), deploySource);
   writeFileSync(path.join(fixtureRoot, ".travis.yml"), "language: node_js\n");
   const extraCi = collectGithubCiPolicyErrors(fixtureRoot);
   assert.ok(extraCi.some((error) => error.includes(".travis.yml")), extraCi.join("\n"));
@@ -183,7 +190,7 @@ jobs:
   );
   const extraWorkflow = collectGithubCiPolicyErrors(fixtureRoot);
   assert.ok(
-    extraWorkflow.some((error) => error.includes("Only docs.yml may exist")),
+    extraWorkflow.some((error) => error.includes("Only deploy-main.yml, docs.yml may exist")),
     extraWorkflow.join("\n"),
   );
 } finally {

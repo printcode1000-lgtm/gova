@@ -1110,6 +1110,20 @@
       ]
     },
     {
+      "id": "command:deploy:revision",
+      "kind": "command",
+      "name": "npm run deploy:revision",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "deploy",
+        "deploy:revision",
+        "npm",
+        "npm run deploy:revision",
+        "revision",
+        "run"
+      ]
+    },
+    {
       "id": "command:dev",
       "kind": "command",
       "name": "npm run dev",
@@ -6084,6 +6098,7 @@
         "@asol/trending-ribbon-core/server",
         "@asol/ui-registry-core",
         "@asol/vercel-deploy-core",
+        "@asol/vercel-deploy-core/github-push-identity",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
         "@asol/vercel-deploy-core/remote-deploy-sandbox",
         "application_features",
@@ -11849,45 +11864,48 @@
       "kind": "document",
       "name": "Super Admin Production Deploy",
       "path": "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "summary": "`/super-admin/production-deploy` lets the super admin run the full release — the same `npm run deploy:all` pipeline — from the production web application, follow it stage by stage, and receive the outcome by in-app notification and by email.",
+      "summary": "Every GitHub `push` event for `main` also reaches the machine-only `/api/super-admin/production-deploy/github` endpoint using GitHub OIDC. The endpoint accepts only this repository's `deploy-main.yml`, pins the sandbox to the token's SHA, and launches `deploy:revision` for all ta",
       "tags": [
-        "/super-admin/production-deploy",
-        "`/super-admin/production-deploy` lets the super admin run the full release — the same `npm run deploy:all` pipeline — from the production web application, follow it stage by stage, and receive the outcome by in-app notification and by email.",
+        "/api/super-admin/production-deploy/github",
+        "accepts",
         "admin",
         "all",
+        "also",
         "and",
-        "application",
-        "by",
         "deploy",
+        "deploy-main",
         "docs/06-super-admin-and-operations/super-admin-production-deploy",
         "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-        "email",
-        "follow",
-        "from",
-        "full",
-        "in-app",
-        "it",
-        "lets",
+        "endpoint",
+        "event",
+        "every",
+        "every github `push` event for `main` also reaches the machine-only `/api/super-admin/production-deploy/github` endpoint using github oidc. the endpoint accepts only this repository's `deploy-main.yml`, pins the sandbox to the token's sha, and launches `deploy:revision` for all ta",
+        "for",
+        "github",
+        "launches",
+        "machine-only",
+        "main",
         "md",
         "mjs",
-        "notification",
-        "npm",
-        "outcome",
+        "oidc",
+        "only",
         "packages/vercel-deploy-core/src/remote-deploy-contracts",
         "packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
         "packages/vercel-deploy-core/src/remote-deploy-sandbox",
         "packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
-        "pipeline",
+        "pins",
         "production",
-        "receive",
-        "release",
-        "run",
-        "same",
+        "push",
+        "reaches",
+        "repository",
+        "revision",
+        "sandbox",
         "scripts/push-production-deploy-env",
         "scripts/push-production-deploy-env.ts",
         "scripts/run-remote-deploy-all",
         "scripts/run-remote-deploy-all.mjs",
         "server",
+        "sha",
         "src/features/release-commands/domain/production-deploy-report",
         "src/features/release-commands/domain/production-deploy-report.ts",
         "src/features/release-commands/presentation/productiondeploypage",
@@ -11896,13 +11914,17 @@
         "src/features/release-commands/server/services/production-deploy-email.server.ts",
         "src/features/release-commands/server/services/production-deploy-service",
         "src/features/release-commands/server/services/production-deploy-service.server.ts",
-        "stage",
         "super",
         "super admin production deploy",
+        "ta",
         "the",
+        "this",
+        "to",
+        "token",
         "ts",
         "tsx",
-        "web"
+        "using",
+        "yml"
       ]
     },
     {
@@ -13021,36 +13043,47 @@
       "kind": "document",
       "name": "GitHub CI Policy",
       "path": "docs/07-mobile-and-release/github-ci-policy.md",
-      "summary": "GitHub Actions is not a general application correctness gate. Direct pushes to `main` must not wait on reviews, pull requests, branch protection, or required status checks.",
+      "summary": "GitHub Actions is not a general application correctness gate. Direct pushes to `main` must not wait on reviews, pull requests, branch protection, or required status checks. Every push dispatches production deployment of that exact revision; this is release orchestration, not corr",
       "tags": [
         "actions",
         "application",
         "branch",
         "checks",
         "ci",
+        "corr",
         "correctness",
+        "deployment",
         "direct",
+        "dispatches",
         "docs/07-mobile-and-release/github-ci-policy",
         "docs/07-mobile-and-release/github-ci-policy.md",
+        "every",
+        "exact",
         "gate",
         "general",
         "github",
-        "github actions is not a general application correctness gate. direct pushes to `main` must not wait on reviews, pull requests, branch protection, or required status checks.",
+        "github actions is not a general application correctness gate. direct pushes to `main` must not wait on reviews, pull requests, branch protection, or required status checks. every push dispatches production deployment of that exact revision; this is release orchestration, not corr",
         "github ci policy",
         "is",
         "main",
         "md",
         "must",
         "not",
+        "of",
         "on",
         "or",
+        "orchestration",
         "policy",
+        "production",
         "protection",
         "pull",
+        "push",
         "pushes",
+        "release",
         "requests",
         "required",
         "reviews",
+        "revision",
         "scripts/architecture-check",
         "scripts/architecture-check.ts",
         "scripts/block-branch-creation",
@@ -13067,6 +13100,8 @@
         "scripts/tests/github-ci-policy.test.ts",
         "status",
         "test",
+        "that",
+        "this",
         "to",
         "ts",
         "wait"
@@ -20044,6 +20079,21 @@
       ]
     },
     {
+      "id": "external-dependency:jose",
+      "kind": "external-dependency",
+      "name": "jose",
+      "summary": "Declared dependency range observed: ^6.2.3",
+      "tags": [
+        "^6.2.3",
+        "dependency",
+        "external",
+        "external dependency npm package",
+        "jose",
+        "npm",
+        "package"
+      ]
+    },
+    {
       "id": "external-dependency:lucide-react",
       "kind": "external-dependency",
       "name": "lucide-react",
@@ -21842,17 +21892,20 @@
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
       "path": "packages/vercel-deploy-core",
-      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./remote-deploy-contracts, ./remote-deploy-sandbox",
+      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./remote-deploy-contracts, ./remote-deploy-sandbox",
       "tags": [
         ".",
+        "./github-push-identity",
         "./remote-deploy-contracts",
         "./remote-deploy-sandbox",
+        "/github-push-identity",
         "/remote-deploy-contracts",
         "/remote-deploy-sandbox",
         "@asol/vercel-deploy-core",
         "@vercel/sandbox",
         "capability",
         "deployment",
+        "jose",
         "orchestration",
         "packages/vercel-deploy-core",
         "vercel",
@@ -23787,6 +23840,22 @@
       ]
     },
     {
+      "id": "route:/api/super-admin/production-deploy/github:handler",
+      "kind": "route",
+      "name": "/api/super-admin/production-deploy/github",
+      "path": "src/app/api/super-admin/production-deploy/github/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/super-admin/production-deploy/github",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/super-admin/production-deploy/github/route",
+        "src/app/api/super-admin/production-deploy/github/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "route:/api/super-admin/simulation/users:handler",
       "kind": "route",
       "name": "/api/super-admin/simulation/users",
@@ -25286,6 +25355,17 @@
       "tags": [
         "scripts/deploy-push",
         "scripts/deploy-push.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/deploy-revision.ts",
+      "kind": "script",
+      "name": "deploy-revision.ts",
+      "path": "scripts/deploy-revision.ts",
+      "tags": [
+        "scripts/deploy-revision",
+        "scripts/deploy-revision.ts",
         "ts"
       ]
     },
@@ -36876,6 +36956,17 @@
       ]
     },
     {
+      "id": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
+      "kind": "source",
+      "name": "github-push-identity.ts",
+      "path": "packages/vercel-deploy-core/src/github-push-identity.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/github-push-identity",
+        "packages/vercel-deploy-core/src/github-push-identity.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/vercel-deploy-core/src/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -38905,6 +38996,17 @@
       "tags": [
         "src/app/api/super-admin/production-deploy/callback/route",
         "src/app/api/super-admin/production-deploy/callback/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/super-admin/production-deploy/github/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/super-admin/production-deploy/github/route.ts",
+      "tags": [
+        "src/app/api/super-admin/production-deploy/github/route",
+        "src/app/api/super-admin/production-deploy/github/route.ts",
         "ts"
       ]
     },
@@ -47788,6 +47890,18 @@
         "server",
         "src/features/release-commands/server/services/production-deploy-email",
         "src/features/release-commands/server/services/production-deploy-email.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
+      "kind": "source",
+      "name": "production-deploy-notification-delivery.server.ts",
+      "path": "src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
+      "tags": [
+        "server",
+        "src/features/release-commands/server/services/production-deploy-notification-delivery",
+        "src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
         "ts"
       ]
     },

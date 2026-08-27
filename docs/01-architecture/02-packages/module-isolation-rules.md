@@ -69,7 +69,7 @@ Only declared doors are importable. Enforced by four independent layers (see [En
 
 ### Rule 6 — Branch and release gates
 
-`main` is the only branch. Release quality is gated by local npm scripts in the build chain, not by GitHub Actions. The only GitHub workflow is docs-focused and path-filtered to documentation/agent/docs tooling surfaces; see [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
+`main` is the only branch. Release quality is gated by local npm scripts in the build chain, not by GitHub Actions. GitHub has two narrow workflows: path-filtered docs validation and an OIDC-authenticated production deployment dispatcher for every `main` push; see [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 **Agent action:** Commit and push to `main`. Run `npm run build` or at minimum `npm run architecture:check` before claiming done. See ADR-0006.
 
@@ -199,7 +199,7 @@ Rules 2, 5, and 7 are enforced by **four independent layers** — any one alone 
 
 Preflight (in CLI only): storage profile validation, category data validation, GitHub CI policy.
 
-Gates run via npm scripts in `build`, `build:static`, `verify:*`. GitHub Actions is docs-only. See [architecture-check.md](../07-enforcement/architecture-check.md) and [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
+Gates run via npm scripts in `build`, `build:static`, `verify:*`. GitHub Actions does not run general correctness CI; its deployment workflow only dispatches an already-pushed SHA. See [architecture-check.md](../07-enforcement/architecture-check.md) and [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 ---
 

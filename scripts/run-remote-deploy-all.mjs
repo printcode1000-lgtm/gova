@@ -37,7 +37,11 @@ function hasFlag(name) {
 
 const requestId =
   argumentValue("request-id") || process.env.ASOL_REMOTE_DEPLOY_REQUEST_ID?.trim() || "";
-const command = argumentValue("command") === "deploy:push" ? "deploy:push" : "deploy:all";
+const requestedCommand = argumentValue("command");
+const command = ["deploy:all", "deploy:push", "deploy:revision"].includes(requestedCommand)
+  ? requestedCommand
+  : "deploy:all";
+const revision = argumentValue("revision");
 const target = argumentValue("target") || "all";
 const deployAllResumeMode = argumentValue("deploy-all-resume-mode") || "full";
 const deployAllBranch = argumentValue("deploy-all-branch");
@@ -212,9 +216,12 @@ async function main() {
   if (outcome.exitCode === 0) {
     await patchSnapshot({ stage: "preflight" });
     const extraDeployAllArgs = command === "deploy:all" ? deployAllArgs() : [];
-    outcome = await runStep("npm", command === "deploy:push"
+    const commandArgs = command === "deploy:push"
       ? ["run", "deploy:push", "--", `--vercel-target=${target}`]
-      : ["run", "deploy:all", ...(extraDeployAllArgs.length > 0 ? ["--", ...extraDeployAllArgs] : [])], {
+      : command === "deploy:revision"
+        ? ["run", "deploy:revision", "--", `--revision=${revision}`]
+        : ["run", "deploy:all", ...(extraDeployAllArgs.length > 0 ? ["--", ...extraDeployAllArgs] : [])];
+    outcome = await runStep("npm", commandArgs, {
       CI: "1",
       ASOL_REMOTE_DEPLOY_SANDBOX: "1",
     });
@@ -222,6 +229,9 @@ async function main() {
 
   const finishedAt = new Date().toISOString();
   const stageHistory = closeStageHistory((await readSnapshot()).stageHistory, finishedAt);
+  const failureDetail = outcome.exitCode === 0
+    ? undefined
+    : `${outcome.error ?? `${command} failed.`}\n${(await readLogTail()).slice(-5_000)}`.slice(-6_000);
   const snapshot = await patchSnapshot(
     outcome.exitCode === 0
       ? { stageHistory, status: "succeeded", stage: "complete", finishedAt, exitCode: 0, error: undefined }
@@ -230,7 +240,7 @@ async function main() {
           status: "failed",
           finishedAt,
           exitCode: outcome.exitCode,
-          error: (outcome.error ?? `${command} failed.`).slice(0, 2_000),
+          error: failureDetail,
         },
   );
 
@@ -245,7 +255,7 @@ main().catch(async (error) => {
     status: "failed",
     finishedAt,
     exitCode: 1,
-    error: String(error?.message ?? error).slice(0, 2_000),
+    error: `${String(error?.message ?? error)}\n${(await readLogTail()).slice(-5_000)}`.slice(-6_000),
   }).catch(() => null);
   await rm(LOCK_DIRECTORY, { recursive: true, force: true }).catch(() => undefined);
   if (snapshot) await postTerminalCallback(snapshot);

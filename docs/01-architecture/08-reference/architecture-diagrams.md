@@ -142,7 +142,8 @@ Client bootstrap
   npm run build (full gate)
 ```
 
-No general GitHub Actions path. Code pushes to `main` have no GitHub CI. Docs
+No general GitHub Actions correctness path. Code pushes to `main` dispatch only
+the OIDC-authenticated production deployment. Docs
 changes run `.github/workflows/docs.yml` only.
 
 ## Service deployment topology

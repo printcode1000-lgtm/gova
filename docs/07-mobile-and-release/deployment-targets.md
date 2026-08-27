@@ -21,8 +21,10 @@ configuration changes.
 ## Seven Vercel accounts
 
 Five read-only or push-only targets are not the primary GitHub-linked main
-application, and none of them may be called by it directly: every crossing goes
-through a browser-only bridge. Two additional accounts (`submain`, `sub2main`)
+application. Normal product traffic crosses through browser-only bridges. The
+sole server-to-server exception is the terminal production-deploy callback: it
+may POST an already signed, single-use notification grant to the notifications
+service so the super-admin result does not depend on an open browser. Two additional accounts (`submain`, `sub2main`)
 host the same full application codebase for isolated UI work and are updated
 only through their CLI deploy commands.
 
@@ -60,15 +62,22 @@ to omit that target or make it a requirement of the main hosted build.
 
 ## One-command production deployment
 
-GitHub Actions is not a release gate. Direct `git push origin main` has **no
-GitHub CI** unless the commit also touches `docs/**`, in which case only the
-docs workflow runs. See [github-ci-policy.md](./github-ci-policy.md).
+GitHub Actions is not a correctness gate. Every direct `git push origin main`
+dispatches `deploy:revision` for the authenticated pushed SHA. It deploys the
+six isolated projects and waits for the GitHub-linked main project, then sends
+the super-admin push notification and email from the terminal callback. A docs
+change additionally runs the path-filtered docs workflow. See
+[github-ci-policy.md](./github-ci-policy.md).
 Two commands still push `main` to production from a local `main` working tree:
 
 ```bash
 npm run deploy:all    # full preflight, then publish
 npm run deploy:push   # publish only — no lint/build/test gates
 ```
+
+The internal `npm run deploy:revision -- --revision=<sha>` command is reserved
+for the authenticated automation path. It requires a clean checkout at that
+exact full SHA and never stages, commits, or pushes.
 
 ### `deploy:all` — full release gate
 

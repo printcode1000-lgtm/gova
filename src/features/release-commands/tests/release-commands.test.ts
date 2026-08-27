@@ -874,7 +874,11 @@ async function verifyProductionDeployConsole() {
   };
   const okSnapshot = { ...failedSnapshot, status: "succeeded" as const, stage: "complete" as const, error: undefined };
 
-  const failureNotification = productionDeployNotification({ snapshot: failedSnapshot, uids: ["admin-1"] });
+  const failureNotification = productionDeployNotification({
+    snapshot: failedSnapshot,
+    uids: ["admin-1"],
+    logTail: "target=submain, account=team-1, project=asol-submain, state=ERROR, code=BUILD_FAILED",
+  });
   const successNotification = productionDeployNotification({ snapshot: okSnapshot, uids: ["admin-1"] });
   assert.notEqual(failureNotification.title, successNotification.title);
   assert.notEqual(failureNotification.dedupeKey, successNotification.dedupeKey);
@@ -884,6 +888,8 @@ async function verifyProductionDeployConsole() {
     failureNotification.body?.includes(productionDeployStageLabel("submain")),
     "a failed deploy must name the stage it stopped at",
   );
+  assert.match(failureNotification.body ?? "", /account=team-1/);
+  assert.match(failureNotification.body ?? "", /code=BUILD_FAILED/);
 
   const failureEmail = productionDeployEmail({ snapshot: failedSnapshot, logTail: "tail-line" });
   assert.notEqual(failureEmail.subject, productionDeployEmail({ snapshot: okSnapshot, logTail: "" }).subject);

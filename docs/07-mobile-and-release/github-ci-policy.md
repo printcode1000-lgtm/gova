@@ -2,14 +2,23 @@
 
 GitHub Actions is not a general application correctness gate. Direct pushes to
 `main` must not wait on reviews, pull requests, branch protection, or required
-status checks.
+status checks. Every push dispatches production deployment of that exact
+revision; this is release orchestration, not correctness CI.
 
 ## What runs remotely
 
 | Change in the commit | GitHub Actions |
 |---|---|
-| Ordinary application/native code only (outside the docs-aware path filter) | **Nothing.** `git push origin main` completes with no CI. |
-| Documentation, agent instruction surfaces, docs/knowledge/runtime tooling, or related package manifests listed below | **Docs workflow** (`.github/workflows/docs.yml`) |
+| Every push to `main` | **Deploy workflow** (`.github/workflows/deploy-main.yml`) |
+| Documentation, agent instruction surfaces, docs/knowledge/runtime tooling, or related package manifests listed below | **Docs workflow** (`.github/workflows/docs.yml`) in addition to deploy |
+
+The deploy workflow has one job and one action (`actions/github-script@v7`). It
+checks out no source, runs no shell command, and receives no GitHub secret. Its
+OIDC token is accepted only for this repository, the `push` event, `main`, the
+fixed workflow path, and the pushed commit SHA. The API runs `deploy:revision`
+inside the existing isolated Vercel Sandbox, deploys all six isolated accounts,
+and verifies the GitHub-linked main project at the same SHA. It never commits or
+pushes. The job polls to a terminal result and reports deployment failure.
 
 The docs workflow triggers on `push` and `pull_request` to `main` with an
 explicit positive path filter covering:
@@ -33,7 +42,7 @@ and knowledge validation suite.
 
 ## What must not exist
 
-- Any other file under `.github/workflows/`
+- Any workflow other than `docs.yml` and `deploy-main.yml`
 - `pull_request_target` / `workflow_dispatch` / `schedule` triggers
 - Pull-request templates or required PR merge
 - Branch protection or any active rule that can reject or delay an update to `main`
@@ -83,7 +92,7 @@ Credential: `GITHUB_ADMIN_TOKEN` in `.env.local`. Never print the token.
 
 ## Source map
 
-- Workflow: `.github/workflows/docs.yml`
+- Workflows: `.github/workflows/docs.yml`, `.github/workflows/deploy-main.yml`
 - Policy: `scripts/github-ci-policy.ts`
 - Tests: `scripts/tests/github-ci-policy.test.ts`
 - Protection script: `scripts/protect-main-branch.ts`

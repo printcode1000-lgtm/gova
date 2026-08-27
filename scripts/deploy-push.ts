@@ -395,6 +395,65 @@ async function deploySelectedAccounts(input: {
   return reports;
 }
 
+/**
+ * Deploy a commit that is already on main without creating or pushing another
+ * commit. This is the GitHub-push automation path; the caller authenticates
+ * the event and the sandbox pins HEAD before reaching this function.
+ */
+export async function deployExistingRevision(revision: string): Promise<void> {
+  const normalizedRevision = revision.trim().toLowerCase();
+  if (!/^[0-9a-f]{40}$/.test(normalizedRevision)) {
+    throw new Error("--revision must be a full 40-character Git commit SHA.");
+  }
+  if (git(["rev-parse", "HEAD"]).toLowerCase() !== normalizedRevision) {
+    throw new Error("The checked-out HEAD does not match --revision.");
+  }
+  if (git(["status", "--porcelain"])) {
+    throw new Error("The revision deployment requires a clean working tree.");
+  }
+
+  const targets = [...ALL_DEPLOY_PUSH_TARGETS];
+  await ensureReleaseSecretsRestored("deploy:revision");
+  assertMainDeploymentCredentials();
+  await assertVercelAccountsForTargets(targets);
+
+  const timestamp = new Date().toISOString();
+  const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${normalizedRevision.slice(0, 12)}`;
+  const mainComment = `deploy(revision): ${timestamp} @ ${normalizedRevision.slice(0, 12)}`;
+  const [isolatedOutcome, mainOutcome] = await Promise.allSettled([
+    deploySelectedAccounts({ targets, timestamp, revision: normalizedRevision, runId }),
+    verifyMainDeployment({ revision: normalizedRevision, comment: mainComment }),
+  ]);
+  const reports = isolatedOutcome.status === "fulfilled"
+    ? isolatedOutcome.value
+    : ((isolatedOutcome.reason as { reports?: VercelDeploymentReport[] }).reports ?? []);
+  if (mainOutcome.status === "fulfilled") reports.unshift(mainOutcome.value);
+  printFinalSummary(reports);
+  const failures = [
+    isolatedOutcome.status === "rejected" ? isolatedOutcome.reason : null,
+    mainOutcome.status === "rejected" ? mainOutcome.reason : null,
+  ].filter(Boolean);
+  if (mainOutcome.status === "fulfilled" && mainOutcome.value.state !== "READY") {
+    failures.push(new Error(`main deployment is ${mainOutcome.value.state}: ${mainOutcome.value.message}`));
+  }
+  if (failures.length > 0) {
+    const reportDetails = reports.filter((report) => report.state !== "READY").map((report) => [
+      `target=${report.target}`,
+      `account=${report.account}`,
+      `project=${report.project}`,
+      `state=${report.state}`,
+      report.errorCode ? `code=${report.errorCode}` : null,
+      `message=${report.message}`,
+      report.url ? `url=${report.url}` : null,
+    ].filter(Boolean).join(", "));
+    throw new Error([
+      ...failures.map((error) => error instanceof Error ? error.message : String(error)),
+      ...reportDetails,
+    ].join("\n"));
+  }
+  console.log(`[deploy:revision] SUCCESS — main and ${targets.length} isolated Vercel targets are READY at ${normalizedRevision.slice(0, 12)}.`);
+}
+
 function verifyGitHubPush(revision: string): void {
   console.log("[deploy:push] Verifying origin/main matches the pushed commit...");
   // Fetch with an explicit refspec so origin/main is always written as a

@@ -17,12 +17,14 @@ import {
 } from "@asol/vercel-deploy-core/remote-deploy-sandbox";
 
 import { getProductionDeployCallbackSecret } from "@/core/config/server-env";
+import { SUPER_ADMIN_UID } from "@/features/auth";
 import { notificationsServer } from "@/features/notifications/server";
 import {
   productionDeployEmail,
   productionDeployNotification,
 } from "@/features/release-commands/domain/production-deploy-report";
 import { sendProductionDeployEmail } from "@/features/release-commands/server/services/production-deploy-email.server";
+import { deliverProductionDeployNotificationGrants } from "@/features/release-commands/server/services/production-deploy-notification-delivery.server";
 
 /**
  * The super admin's production entry point to `deploy:all`.
@@ -74,7 +76,11 @@ export async function getProductionDeployStatus(adminUid: string): Promise<Remot
 
   const grants = notificationsServer.createGrantIssuer(adminUid);
   const issued = grants.issue(
-    productionDeployNotification({ snapshot, uids: [snapshot.initiatedByUid ?? adminUid] }),
+    productionDeployNotification({
+      snapshot,
+      uids: [snapshot.initiatedByUid ?? adminUid],
+      logTail: result.logTail,
+    }),
   );
   if (issued) {
     await recordRemoteDeployAllNotification({
@@ -112,6 +118,28 @@ export async function startProductionDeploy(input: {
   }).catch(translateSandboxError);
 }
 
+/** Start the exact revision authenticated by the GitHub OIDC route. */
+export async function startGitHubProductionDeploy(input: {
+  revision: string;
+  callbackUrl: string;
+}): Promise<RemoteDeployAllResult> {
+  if (!remoteDeployAllReadiness().ready) throw new Error("productionDeployNotConfigured");
+  return startRemoteDeployAll({
+    initiatedByUid: SUPER_ADMIN_UID,
+    callbackUrl: input.callbackUrl,
+    command: "deploy:revision",
+    target: "all",
+    revision: input.revision,
+  }).catch(translateSandboxError);
+}
+
+export async function getGitHubProductionDeployStatus(
+  requestId: string,
+): Promise<RemoteDeployAllResult | null> {
+  const result = await getRemoteDeployAllResult().catch(translateSandboxError);
+  return result.snapshot.requestId === requestId ? result : null;
+}
+
 /**
  * Terminal report from the sandbox runner.
  *
@@ -132,6 +160,25 @@ export async function handleProductionDeployCallback(input: {
   if (!snapshot?.requestId || !isRemoteDeployAllTerminal(snapshot.status)) {
     return { received: true };
   }
+  if (!snapshot.inAppNotified) {
+    try {
+      const grants = notificationsServer.createGrantIssuer(SUPER_ADMIN_UID);
+      grants.issue(productionDeployNotification({
+        snapshot,
+        uids: [SUPER_ADMIN_UID],
+        logTail: input.payload.logTail ?? "",
+      }));
+      const issued = grants.toArray();
+      await deliverProductionDeployNotificationGrants(issued);
+      await recordRemoteDeployAllNotification({
+        requestId: snapshot.requestId,
+        inAppNotified: true,
+      });
+    } catch (error) {
+      console.error("Failed to deliver the production deploy in-app notification.", error);
+    }
+  }
+
   if (snapshot.emailStatus === "sent") return { received: true };
 
   try {

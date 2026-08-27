@@ -41,21 +41,28 @@ function succeeded(snapshot: RemoteDeployAllSnapshot): boolean {
   return snapshot.status === "succeeded";
 }
 
+function commandLabel(snapshot: RemoteDeployAllSnapshot): string {
+  return snapshot.command ?? "deploy:all";
+}
+
 export function productionDeployNotification(input: {
   snapshot: RemoteDeployAllSnapshot;
   uids: readonly string[];
+  logTail?: string;
 }): SendNotificationToUsersInput {
   const { snapshot } = input;
   const ok = succeeded(snapshot);
+  const failureDetail = [snapshot.error?.slice(-2_400), input.logTail?.slice(-800)]
+    .filter((value, index, values): value is string => Boolean(value?.trim()) && values.indexOf(value) === index)
+    .join("\n")
+    .slice(-2_800);
   return {
     uids: [...input.uids],
     dedupeKey: `production-deploy:${snapshot.requestId ?? "unknown"}:${snapshot.status}`,
     title: ok ? "اكتمل النشر إلى الإنتاج" : "فشل النشر إلى الإنتاج",
     body: ok
-      ? "تم تنفيذ deploy:all بالكامل ونجحت جميع المراحل."
-      : `توقف deploy:all عند مرحلة ${productionDeployStageLabel(snapshot.stage)}: ${
-          snapshot.error ?? "سبب غير معروف"
-        }`,
+      ? `تم تنفيذ ${commandLabel(snapshot)} بالكامل ونجحت جميع المراحل.`
+      : `توقف ${commandLabel(snapshot)} عند مرحلة ${productionDeployStageLabel(snapshot.stage)}. التفاصيل:\n${failureDetail || "سبب غير معروف"}`,
     locale: "ar",
     category: NotificationCategories.System,
     priority: ok ? NotificationPriorities.Normal : NotificationPriorities.High,

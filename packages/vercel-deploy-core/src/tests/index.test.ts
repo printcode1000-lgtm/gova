@@ -18,6 +18,11 @@ import {
   idleRemoteDeployAllSnapshot,
   isRemoteDeployAllTerminal,
 } from '../remote-deploy-contracts';
+import {
+  GITHUB_DEPLOY_WORKFLOW,
+  resolveDeploymentRepository,
+  validateGitHubPushClaims,
+} from '../github-push-identity';
 
 function assert(condition: boolean, message: string): void {
   if (!condition) {
@@ -115,6 +120,35 @@ async function runTests(): Promise<void> {
   );
   console.log('  ✔ Remote deploy contracts cover every deploy:all phase.');
 
+  const repository = 'owner/repo';
+  const validClaims = {
+    repository,
+    ref: 'refs/heads/main',
+    event_name: 'push',
+    workflow_ref: `${repository}/${GITHUB_DEPLOY_WORKFLOW}@refs/heads/main`,
+    sub: `repo:${repository}:ref:refs/heads/main`,
+    sha: 'a'.repeat(40),
+    actor: 'release-actor',
+    run_id: '123',
+  };
+  const githubIdentity = validateGitHubPushClaims(validClaims, repository);
+  assert(githubIdentity.revision === 'a'.repeat(40), 'GitHub identity returns the authenticated SHA');
+  assert(
+    resolveDeploymentRepository({ ASOL_DEPLOY_REPOSITORY_URL: 'https://github.com/owner/repo.git' }) === repository,
+    'GitHub identity derives the allowed repository from deploy configuration',
+  );
+  let rejectedWrongWorkflow = false;
+  try {
+    validateGitHubPushClaims(
+      { ...validClaims, workflow_ref: `${repository}/.github/workflows/other.yml@refs/heads/main` },
+      repository,
+    );
+  } catch {
+    rejectedWrongWorkflow = true;
+  }
+  assert(rejectedWrongWorkflow, 'GitHub identity rejects any other workflow');
+  console.log('  ✔ GitHub push identity pins repository, main, workflow, event, and revision.');
+
   // On Vercel the OIDC token is a per-request header, not an environment
   // variable: requiring the variable reported a working project as unconfigured.
   const deployEnv: NodeJS.ProcessEnv = {
@@ -173,8 +207,12 @@ async function runTests(): Promise<void> {
   assert(sandboxSource.includes('"FETCH_HEAD"'), 'The release branch is built from FETCH_HEAD');
   assert(sandboxSource.includes('"--unshallow"'), 'The clone is deepened so the publish push is accepted');
   assert(
-    sandboxSource.includes('["checkout", "-f", "-B", MAIN_BRANCH, "FETCH_HEAD"]'),
+    sandboxSource.includes('["checkout", "-f", "-B", MAIN_BRANCH, checkoutRevision]'),
     'A persistent sandbox must discard generated mirror drift before switching to the fetched main revision',
+  );
+  assert(
+    sandboxSource.includes('"merge-base"') && sandboxSource.includes('checkoutRevision'),
+    'Automated revision deploys verify ancestry and check out the authenticated SHA',
   );
   console.log('  ✔ Release checkout survives a shallow, detached clone.');
 

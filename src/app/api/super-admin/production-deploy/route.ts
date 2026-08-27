@@ -29,7 +29,10 @@ export async function POST(request: Request) {
         adminUid: admin.uid,
         confirmation: body?.confirmation ?? "",
         callbackUrl: callbackUrl(request),
-        command: body?.command,
+        command:
+          body?.command === "deploy:all" || body?.command === "deploy:push"
+            ? body.command
+            : undefined,
         target: body?.target,
         deployAllOptions: body?.deployAllOptions,
       }),

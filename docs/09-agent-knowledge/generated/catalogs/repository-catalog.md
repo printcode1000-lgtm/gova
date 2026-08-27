@@ -10,19 +10,19 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 261 |
+| command | 262 |
 | config | 12 |
 | document | 250 |
 | domain | 10 |
 | environment-key | 236 |
-| external-dependency | 106 |
+| external-dependency | 107 |
 | feature | 48 |
 | package | 43 |
-| route | 180 |
+| route | 181 |
 | runtime | 7 |
-| script | 155 |
+| script | 156 |
 | service | 6 |
-| source | 2118 |
+| source | 2121 |
 | test | 232 |
 
 ## Domains
@@ -86,7 +86,7 @@
 | @asol/system-logs-core | `packages/system-logs-core` | System log capture and persistence contract; Layer: capability; Public exports: ., ./server |
 | @asol/trending-ribbon-core | `packages/trending-ribbon-core` | Trending ribbon UI capability; Layer: capability; Public exports: ., ./server |
 | @asol/ui-registry-core | `packages/ui-registry-core` | UiRegistry identity contract, page registry, and DOM attribute builders; Layer: capability; Public exports: . |
-| @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel deployment orchestration; Layer: capability; Public exports: ., ./remote-deploy-contracts, ./remote-deploy-sandbox |
+| @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./remote-deploy-contracts, ./remote-deploy-sandbox |
 
 ## Features
 

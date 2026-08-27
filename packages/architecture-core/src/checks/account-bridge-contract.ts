@@ -1,7 +1,7 @@
 import { addViolation, extractImports, rel } from './architecture-types';
 
 /**
- * The two doors `@asol/vercel-deploy-core` publishes besides its root.
+ * The declared runtime doors `@asol/vercel-deploy-core` publishes besides its root.
  *
  * Rule 5 forbids reaching *into* a sealed package, not importing a declared
  * door — the same exception `@asol/account-bridge/notifications` already has.
@@ -11,6 +11,7 @@ import { addViolation, extractImports, rel } from './architecture-types';
  * listed here is still a deep import.
  */
 const VERCEL_DEPLOY_CORE_DOORS = new Set([
+  '@asol/vercel-deploy-core/github-push-identity',
   '@asol/vercel-deploy-core/remote-deploy-contracts',
   '@asol/vercel-deploy-core/remote-deploy-sandbox',
 ]);

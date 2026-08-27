@@ -11,8 +11,11 @@ test moved into the package it tests. Import `@asol/account-bridge/notifications
 ## Why it exists
 
 The main app and the notifications service are deployed to two different Vercel
-accounts, and neither may call each other. Something still has to connect them.
-That something is the client.
+accounts. Normal application notification traffic is connected by the client.
+One server-only operational exception exists: after a production deployment
+finishes, its authenticated callback posts an already signed, single-use grant
+to the notifications service so the super-admin result is delivered without an
+open browser. The grant remains the only send authority.
 
 ```text
                      client (this module)
@@ -76,6 +79,7 @@ service hop on web.
 Web:     main app ──grant──► browser ──grant──► notifications service ──► FCM/APNs/WebPush
 Native:  main app ──grant──► device ──tokens──► main app
                               └── FCM HTTP v1 (credentials unlocked once)
+Deploy:  terminal callback ──signed grant──► notifications service ──► super admin
 ```
 
 Hooking the transport rather than each caller means no route or component has to
@@ -128,6 +132,8 @@ bearer token. The grant is the only authority for the notifications service.
 
 **Browser only for scheduling.** Every entry point returns early when `window`
 is undefined, so importing it during SSR or a static export is harmless.
+The production-deploy callback does not use that scheduler; its focused server
+adapter posts only grants already issued for the fixed super-admin recipient.
 
 **Grants are opaque on web.** The web path reads a signed string and posts it
 unchanged. Native delivery additionally parses the verified send payload returned

@@ -17,12 +17,17 @@
     "./remote-deploy-sandbox": {
       "types": "./src/remote-deploy-sandbox.ts",
       "default": "./src/remote-deploy-sandbox.ts"
+    },
+    "./github-push-identity": {
+      "types": "./src/github-push-identity.ts",
+      "default": "./src/github-push-identity.ts"
     }
   },
   "scripts": {
     "test": "npx tsx src/tests/index.test.ts"
   },
   "dependencies": {
-    "@vercel/sandbox": "^3.1.0"
+    "@vercel/sandbox": "^3.1.0",
+    "jose": "^6.2.3"
   }
 }

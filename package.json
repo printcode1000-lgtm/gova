@@ -155,6 +155,7 @@
     "simulation:coverage": "npx tsx packages/simulation-core/src/tests/index.test.ts && npx tsx packages/simulation-core/src/tests/uid-targeting.test.ts && npx tsx scripts/check-simulation-coverage.ts",
     "simulation:discovery:update": "npx tsx scripts/update-simulation-discovery.ts",
     "deploy:push": "npx tsx scripts/deploy-push.ts",
+    "deploy:revision": "npx tsx scripts/deploy-revision.ts",
     "deploy:push:main": "npx tsx scripts/deploy-push.ts --vercel-target=none",
     "deploy:push:all": "npx tsx scripts/deploy-push.ts --vercel-target=all",
     "doctor:environment": "npx tsx scripts/check-environment-requirements.ts --scenario=all",

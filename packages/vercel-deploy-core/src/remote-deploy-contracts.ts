@@ -28,6 +28,7 @@ export const REMOTE_DEPLOY_ALL_STAGES = [
 
 export type RemoteDeployAllStage = (typeof REMOTE_DEPLOY_ALL_STAGES)[number];
 export type RemoteDeployAllEmailStatus = "pending" | "sent" | "failed";
+export type RemoteDeployCommand = "deploy:all" | "deploy:push" | "deploy:revision";
 export type RemoteDeployAllResumeMode = "full" | "from-branch" | "rerun-branch" | "rerun-failed";
 
 export interface RemoteDeployAllOptions {
@@ -51,7 +52,9 @@ export interface RemoteDeployAllSnapshot {
   sandboxName: string;
   sandboxSessionId?: string;
   initiatedByUid?: string;
-  command?: "deploy:all" | "deploy:push";
+  command?: RemoteDeployCommand;
+  /** Exact main commit selected by the authenticated GitHub push event. */
+  revision?: string;
   target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
   deployAllOptions?: RemoteDeployAllOptions;
   startedAt?: string;
@@ -87,7 +90,8 @@ export interface RemoteDeployAllResult {
 
 export interface StartRemoteDeployAllInput {
   confirmation: string;
-  command?: "deploy:all" | "deploy:push";
+  command?: RemoteDeployCommand;
+  revision?: string;
   target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
   deployAllOptions?: RemoteDeployAllOptions;
 }

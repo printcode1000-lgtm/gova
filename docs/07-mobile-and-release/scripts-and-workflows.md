@@ -244,8 +244,9 @@ resolved by path. It is in `deploy:all` preflight and in `verify:all`.
 ## GitHub CI and `main`
 
 See [github-ci-policy.md](./github-ci-policy.md). GitHub Actions is not a
-correctness gate. Code pushes to `main` run no workflows. A commit that touches
-`docs/**` runs the docs workflow only.
+correctness gate. Every push to `main` starts the OIDC-authenticated deployment
+workflow for the exact pushed SHA; a commit that touches `docs/**` also runs the
+path-filtered docs workflow.
 
 ## Branch protection
 

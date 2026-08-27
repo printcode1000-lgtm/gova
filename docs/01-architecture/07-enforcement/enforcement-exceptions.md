@@ -39,7 +39,7 @@ These are **registered** dual owners, not bypasses:
 
 | Assumed exception | Reality |
 |---|---|
-| GitHub Actions skips checks | Only the docs workflow exists, and only for `docs/**`. Code pushes have no GitHub CI. |
+| GitHub Actions skips correctness checks | Docs validation and OIDC-only deployment dispatch exist; code correctness remains local. |
 | `eslint-disable no-restricted-imports` | Forbidden without ADR |
 | Test files import DB drivers | Scanned unless in approved data-core test paths |
 | One-off script needs Drizzle | Use `@asol/data-core/tooling` |

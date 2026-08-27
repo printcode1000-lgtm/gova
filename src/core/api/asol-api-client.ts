@@ -252,6 +252,39 @@ export class AsolApiClient {
     }
   }
 
+  /** POST JSON to an explicit sibling-service URL through the HTTP gateway. */
+  async postAbsoluteJson<T>(
+    url: string,
+    body: unknown,
+    options: AsolApiRequestOptions = {},
+  ): Promise<T> {
+    this.assertOnline('POST', url, options.suppressErrorLog);
+    const parsedUrl = new URL(url);
+    if (!['https:', 'http:'].includes(parsedUrl.protocol)) {
+      throw new Error(`Unsupported URL protocol: ${parsedUrl.protocol}`);
+    }
+    try {
+      return await trackAsolApiRequest('POST', url, false, async () => {
+        const response = await asolHttpFetch(parsedUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            ...options.headers,
+          },
+          body: JSON.stringify(body),
+          credentials: 'omit',
+          signal: options.signal,
+          cache: options.cache ?? 'no-store',
+        });
+        const data = await this.parseResponse<T>(response, 'manual');
+        return { data, response };
+      });
+    } catch (error) {
+      this.logAndThrow('POST', url, error, options.suppressErrorLog);
+    }
+  }
+
   /** Load binary data from an explicit HTTP(S) URL through the HTTP gateway. */
   async getAbsoluteBinary(url: string, options: AsolApiRequestOptions = {}): Promise<ArrayBuffer> {
     this.assertOnline('GET', url, options.suppressErrorLog);

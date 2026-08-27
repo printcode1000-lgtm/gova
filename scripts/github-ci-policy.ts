@@ -4,9 +4,8 @@ import path from "node:path";
 /**
  * Local GitHub CI policy.
  *
- * GitHub Actions is documentation-focused. Ordinary code-only pushes should not
- * run full application CI. The docs workflow is path-filtered to documentation,
- * agent instruction surfaces, and docs/knowledge/runtime tooling.
+ * GitHub Actions has two narrow jobs: documentation validation and an OIDC-only
+ * production deploy dispatcher. Application correctness remains local.
  *
  * This module is invoked by local npm scripts and `architecture:check`. It is
  * not a general application CI job.
@@ -14,8 +13,9 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 const DOCS_WORKFLOW = "docs.yml";
+const DEPLOY_WORKFLOW = "deploy-main.yml";
 
-export const ALLOWED_WORKFLOW_FILES = [DOCS_WORKFLOW] as const;
+export const ALLOWED_WORKFLOW_FILES = [DEPLOY_WORKFLOW, DOCS_WORKFLOW] as const;
 
 const FORBIDDEN_EVENTS = [
   "pull_request_target",
@@ -221,6 +221,46 @@ export function docsWorkflowViolations(source: string): string[] {
   return errors;
 }
 
+export function deploymentWorkflowViolations(source: string): string[] {
+  const errors: string[] = [];
+  const body = stripYamlComments(source);
+  if (!/^name:\s*deploy-main\s*$/m.test(body)) errors.push("Deployment workflow name must be exactly `deploy-main`.");
+  if (!/^ {2}push:\s*$/m.test(body) || !/^ {4}branches:\s*$/m.test(body) || !/^ {6}- main\s*$/m.test(body)) {
+    errors.push("Deployment workflow must trigger only on push to main.");
+  }
+  for (const event of [...FORBIDDEN_EVENTS, "pull_request"] as const) {
+    if (new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m").test(body)) {
+      errors.push(`GitHub event ${event} is forbidden for the deployment workflow.`);
+    }
+  }
+  for (const required of [
+    "id-token: write",
+    "contents: read",
+    "group: asol-production-main",
+    "cancel-in-progress: false",
+    "actions/github-script@v7",
+    "asol-production-deploy",
+    "/api/super-admin/production-deploy/github",
+    "github.sha",
+    "status === 'succeeded'",
+    "status === 'failed'",
+  ]) {
+    if (!body.includes(required)) errors.push(`Deployment workflow is missing required contract: ${required}`);
+  }
+  if (/^\s*(?:-\s*)?run:/m.test(body)) errors.push("Deployment workflow must not execute shell commands.");
+  if (/actions\/checkout@/i.test(body)) errors.push("Deployment workflow must not check out repository source.");
+  if (/\$\{\{\s*secrets\./.test(body)) errors.push("Deployment workflow must not consume GitHub secrets.");
+  const actions = [...body.matchAll(/^\s*(?:-\s*)?uses:\s*(\S+)\s*$/gm)].map((match) => match[1]!.replace(/['"]/g, ""));
+  if (actions.length !== 1 || actions[0] !== "actions/github-script@v7") {
+    errors.push(`Deployment workflow must use only actions/github-script@v7. Found: ${actions.join(", ") || "(none)"}.`);
+  }
+  const jobIds = docsWorkflowJobIds(body);
+  if (jobIds.length !== 1 || jobIds[0] !== "deploy") {
+    errors.push(`Deployment workflow must contain exactly one job named deploy. Found: ${jobIds.join(", ") || "(none)"}.`);
+  }
+  return errors;
+}
+
 export function collectGithubCiPolicyErrors(root = ROOT): string[] {
   const errors: string[] = [];
   const workflowsDir = path.join(root, ".github", "workflows");
@@ -230,15 +270,18 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
     if (existsSync(path.join(root, relative))) errors.push(`Forbidden CI/config path must not exist: ${relative.replace(/\\/g, "/")}`);
   }
   if (!existsSync(workflowsDir)) {
-    errors.push("Missing .github/workflows/docs.yml — docs-focused CI is the single allowed workflow.");
+    errors.push("Missing .github/workflows — docs and deployment workflows are required.");
     return errors;
   }
   const files = listWorkflowYamlFiles(workflowsDir);
-  if (files.length !== 1 || files[0] !== DOCS_WORKFLOW) {
-    errors.push(`Only ${DOCS_WORKFLOW} may exist under .github/workflows. Found: ${files.join(", ") || "(none)"}.`);
+  if (files.length !== ALLOWED_WORKFLOW_FILES.length || files.some((file, index) => file !== ALLOWED_WORKFLOW_FILES[index])) {
+    errors.push(`Only ${ALLOWED_WORKFLOW_FILES.join(", ")} may exist under .github/workflows. Found: ${files.join(", ") || "(none)"}.`);
   }
   const docsPath = path.join(workflowsDir, DOCS_WORKFLOW);
   if (existsSync(docsPath)) errors.push(...docsWorkflowViolations(readFileSync(docsPath, "utf8")));
+  const deployPath = path.join(workflowsDir, DEPLOY_WORKFLOW);
+  if (existsSync(deployPath)) errors.push(...deploymentWorkflowViolations(readFileSync(deployPath, "utf8")));
+  else errors.push(`Missing .github/workflows/${DEPLOY_WORKFLOW}.`);
   const protectPath = path.join(root, "scripts", "protect-main-branch.ts");
   if (existsSync(protectPath)) {
     const protect = readFileSync(protectPath, "utf8");
@@ -263,6 +306,6 @@ if (executedDirectly) {
     for (const error of errors) console.error(`- ${error}`);
     process.exitCode = 1;
   } else {
-    console.log("GitHub CI policy passed: docs-focused path-filtered workflow; no general app CI.");
+    console.log("GitHub CI policy passed: docs validation plus OIDC-only main deployment; no general app CI.");
   }
 }

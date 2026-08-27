@@ -1,0 +1,70 @@
+# Dispatches main pushes to the production deployment sandbox. The runner gets
+# no repository deployment secrets: GitHub OIDC authenticates this exact
+# workflow to the main application's narrow machine endpoint.
+name: deploy-main
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: asol-production-main
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - name: Deploy pushed revision to every production account
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const endpoint = 'https://gova-swart.vercel.app/api/super-admin/production-deploy/github';
+            const audience = 'asol-production-deploy';
+            const pushedRevision = '${{ github.sha }}';
+            core.info(`Dispatching authenticated main revision ${pushedRevision}.`);
+            const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+            const request = async (method, requestId = '') => {
+              const token = await core.getIDToken(audience);
+              const url = requestId ? `${endpoint}?requestId=${encodeURIComponent(requestId)}` : endpoint;
+              return fetch(url, {
+                method,
+                headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+              });
+            };
+
+            let started;
+            const startDeadline = Date.now() + 55 * 60 * 1000;
+            while (Date.now() < startDeadline) {
+              const response = await request('POST');
+              if (response.status === 202) {
+                started = await response.json();
+                break;
+              }
+              if ([404, 409, 502, 503, 504].includes(response.status)) {
+                core.info(`Deploy endpoint returned ${response.status}; retrying.`);
+                await sleep(20_000);
+                continue;
+              }
+              throw new Error(`Deploy start rejected (${response.status}): ${await response.text()}`);
+            }
+            const requestId = started?.snapshot?.requestId;
+            if (!requestId) throw new Error('Deploy did not start before the retry deadline.');
+
+            for (;;) {
+              await sleep(20_000);
+              const response = await request('GET', requestId);
+              if (!response.ok) throw new Error(`Deploy status failed (${response.status}): ${await response.text()}`);
+              const result = await response.json();
+              const status = result?.snapshot?.status;
+              const stage = result?.snapshot?.stage;
+              core.info(`Production deploy ${requestId}: ${status} / ${stage}`);
+              if (status === 'succeeded') break;
+              if (status === 'failed') throw new Error(result?.snapshot?.error || 'Production deploy failed.');
+            }

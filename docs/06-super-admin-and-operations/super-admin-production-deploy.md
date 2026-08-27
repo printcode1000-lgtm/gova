@@ -1,5 +1,17 @@
 # Super Admin Production Deploy
 
+Every GitHub `push` event for `main` also reaches the machine-only
+`/api/super-admin/production-deploy/github` endpoint using GitHub OIDC. The
+endpoint accepts only this repository's `deploy-main.yml`, pins the sandbox to
+the token's SHA, and launches `deploy:revision` for all targets. No Vercel,
+repository, archive, email, or notification secret is stored in GitHub.
+
+The terminal sandbox callback delivers the signed in-app notification directly
+to the notifications service and sends email independently. Failure messages
+include the failed target/account/project, state, provider error code and
+message, plus the diagnostic log tail; email retains a longer log tail. Console
+polling remains a fallback, so delivery does not require the page to stay open.
+
 ## Purpose
 
 `/super-admin/production-deploy` lets the super admin run the full release —
