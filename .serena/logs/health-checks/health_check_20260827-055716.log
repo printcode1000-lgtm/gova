@@ -1,0 +1,151 @@
+INFO  2026-08-27 05:57:16,463 serena.cli:health_check:949 - Starting health check for project: /home/hesham/gova
+INFO  2026-08-27 05:57:16,463 serena.cli:health_check:953 - Creating SerenaAgent with disabled dashboard...
+INFO  2026-08-27 05:57:16,464 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/ios/.gitignore
+INFO  2026-08-27 05:57:16,466 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/.serena/.gitignore
+INFO  2026-08-27 05:57:16,471 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/android/.gitignore
+INFO  2026-08-27 05:57:16,477 serena.agent:__init__:631 - Will record tool usage statistics with token count estimator: CHAR_COUNT.
+INFO  2026-08-27 05:57:16,479 serena.agent:__init__:635 - Starting Serena server (version=1.7.0, process id=116931, parent process id=116916; language backend=LSP); Python version=3.13.15, platform=Linux-7.0.0-30-generic-x86_64-with-glibc2.39
+INFO  2026-08-27 05:57:16,480 serena.agent:__init__:639 - Configuration file: /home/hesham/.serena/serena_config.yml
+INFO  2026-08-27 05:57:16,480 serena.agent:__init__:640 - Available projects: gova
+INFO  2026-08-27 05:57:16,480 serena.agent:__init__:641 - Loaded tools (52): create_text_file, replace_content, replace_in_files, delete_lines, replace_lines, insert_at_line, replace_symbol_body, insert_after_symbol, insert_before_symbol, read_file, list_dir, find_file, search_for_pattern, restart_language_server, get_symbols_overview, find_symbol, find_referencing_symbols, find_implementations, find_declaration, get_diagnostics_for_file, get_diagnostics_for_symbol, rename_symbol, safe_delete_symbol, write_memory, read_memory, list_memories, delete_memory, rename_memory, edit_memory, execute_shell_command, open_dashboard, activate_project, remove_project, get_current_config, onboarding, initial_instructions, serena_info, jet_brains_find_symbol, jet_brains_move, jet_brains_safe_delete, jet_brains_inline_symbol, jet_brains_find_referencing_symbols, jet_brains_get_symbols_overview, jet_brains_type_hierarchy, jet_brains_find_declaration, jet_brains_find_implementations, jet_brains_rename, jet_brains_debug, jet_brains_run_inspections, jet_brains_list_inspections, list_queryable_projects, query_project
+INFO  2026-08-27 05:57:16,480 serena.config.serena_config:determine_language_backend:1452 - Using language backend from global configuration: LSP
+INFO  2026-08-27 05:57:16,506 serena.config.serena_config:start:329 - Loading project instance for RegisteredProject[project_root=/home/hesham/gova, project_config=ProjectConfig[project_name=gova]] starting ...
+INFO  2026-08-27 05:57:16,507 serena.project:__init__:46 - Serena project data folder: /home/hesham/gova/.serena
+INFO  2026-08-27 05:57:16,507 serena.project:start:329 - Gathering ignore spec for project gova starting ...
+INFO  2026-08-27 05:57:16,507 serena.util.file_system:start:329 - Loading of .gitignore files starting ...
+INFO  2026-08-27 05:57:16,507 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/.gitignore
+INFO  2026-08-27 05:57:16,508 serena.config.serena_config:stop:336 - Loading project instance for RegisteredProject[project_root=/home/hesham/gova, project_config=ProjectConfig[project_name=gova]] completed in 0.001 seconds
+INFO  2026-08-27 05:57:16,508 serena.agent:activate_project_from_path_or_name:1351 - Found registered project 'gova' at path /home/hesham/gova
+INFO  2026-08-27 05:57:16,508 serena.agent:_activate_project:1219 - Activating gova at /home/hesham/gova
+INFO  2026-08-27 05:57:16,508 serena.task_executor:issue_task:217 - Scheduling Task-1:init_project_services
+INFO  2026-08-27 05:57:16,508 serena.agent:_update_active_modes:1127 - Active modes (2): editing, interactive
+INFO  2026-08-27 05:57:16,514 serena.agent:_create_base_toolset:813 - Number of exposed tools: 29
+INFO  2026-08-27 05:57:16,583 serena.task_executor:_process_task_queue:139 - Starting execution of Task-1:init_project_services
+INFO  2026-08-27 05:57:16,585 serena.agent:__init__:681 - Number of exposed tools: 29. Exposed tools: ['activate_project', 'create_text_file', 'delete_memory', 'edit_memory', 'execute_shell_command', 'find_declaration', 'find_file', 'find_implementations', 'find_referencing_symbols', 'find_symbol', 'get_current_config', 'get_diagnostics_for_file', 'get_symbols_overview', 'initial_instructions', 'insert_after_symbol', 'insert_before_symbol', 'list_dir', 'list_memories', 'onboarding', 'read_file', 'read_memory', 'rename_memory', 'rename_symbol', 'replace_content', 'replace_in_files', 'replace_symbol_body', 'safe_delete_symbol', 'search_for_pattern', 'write_memory']
+INFO  2026-08-27 05:57:16,586 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/ios/.gitignore
+INFO  2026-08-27 05:57:16,589 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/.serena/.gitignore
+INFO  2026-08-27 05:57:16,589 serena.agent:_update_active_tools:1145 - Active tools (29): activate_project, create_text_file, delete_memory, edit_memory, execute_shell_command, find_declaration, find_file, find_implementations, find_referencing_symbols, find_symbol, get_current_config, get_diagnostics_for_file, get_symbols_overview, initial_instructions, insert_after_symbol, insert_before_symbol, list_dir, list_memories, onboarding, read_file, read_memory, rename_memory, rename_symbol, replace_content, replace_in_files, replace_symbol_body, safe_delete_symbol, search_for_pattern, write_memory
+INFO  2026-08-27 05:57:16,587 serena.task_executor:start:329 - Task-1:init_project_services starting ...
+INFO  2026-08-27 05:57:16,591 serena.agent:start:329 - Language server initialization starting ...
+INFO  2026-08-27 05:57:16,591 serena.project:create_language_server_manager:517 - Creating language server manager for /home/hesham/gova
+INFO  2026-08-27 05:57:16,592 serena.project:_ignored_patterns:203 - Waiting for ignored patterns to become available ...
+INFO  2026-08-27 05:57:16,596 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/android/.gitignore
+INFO  2026-08-27 05:57:16,603 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/android/app/.gitignore
+INFO  2026-08-27 05:57:16,606 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/ios/App/CapApp-SPM/.gitignore
+INFO  2026-08-27 05:57:16,615 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/packages/native-core/android/.gitignore
+INFO  2026-08-27 05:57:16,629 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/android/app/.gitignore
+INFO  2026-08-27 05:57:16,632 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/ios/App/CapApp-SPM/.gitignore
+INFO  2026-08-27 05:57:16,637 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/packages/native-core/android/.gitignore
+INFO  2026-08-27 05:57:16,943 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/pstore-0.2.1/.gitignore
+INFO  2026-08-27 05:57:16,945 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/claide-1.1.0/.gitignore
+INFO  2026-08-27 05:57:16,950 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/uber-0.1.0/.gitignore
+INFO  2026-08-27 05:57:16,959 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/mini_mime-1.1.5/.gitignore
+INFO  2026-08-27 05:57:16,963 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/faraday-cookie_jar-0.0.8/.gitignore
+INFO  2026-08-27 05:57:16,968 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/pstore-0.2.1/.gitignore
+INFO  2026-08-27 05:57:16,969 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/claide-1.1.0/.gitignore
+INFO  2026-08-27 05:57:16,970 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/uber-0.1.0/.gitignore
+INFO  2026-08-27 05:57:16,972 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/abbrev-0.1.2/.gitignore
+INFO  2026-08-27 05:57:16,974 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/mini_mime-1.1.5/.gitignore
+INFO  2026-08-27 05:57:16,975 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/gh_inspector-1.1.3/.gitignore
+INFO  2026-08-27 05:57:16,977 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/terminal-table-3.0.2/.gitignore
+INFO  2026-08-27 05:57:16,978 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/faraday-cookie_jar-0.0.8/.gitignore
+INFO  2026-08-27 05:57:16,981 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/retriable-3.8.0/.gitignore
+INFO  2026-08-27 05:57:16,982 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/abbrev-0.1.2/.gitignore
+INFO  2026-08-27 05:57:16,982 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/gh_inspector-1.1.3/.gitignore
+INFO  2026-08-27 05:57:16,986 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/terminal-table-3.0.2/.gitignore
+INFO  2026-08-27 05:57:16,987 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/nkf-0.3.0/.gitignore
+INFO  2026-08-27 05:57:16,987 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/retriable-3.8.0/.gitignore
+INFO  2026-08-27 05:57:16,988 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/nkf-0.3.0/.gitignore
+INFO  2026-08-27 05:57:16,992 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/digest-crc-0.7.0/.gitignore
+INFO  2026-08-27 05:57:16,993 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/digest-crc-0.7.0/.gitignore
+INFO  2026-08-27 05:57:16,996 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/http-cookie-1.0.8/.gitignore
+INFO  2026-08-27 05:57:16,998 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/http-cookie-1.0.8/.gitignore
+INFO  2026-08-27 05:57:17,001 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/declarative-0.0.20/.gitignore
+INFO  2026-08-27 05:57:17,003 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/declarative-0.0.20/.gitignore
+INFO  2026-08-27 05:57:17,007 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/naturally-2.3.0/.gitignore
+INFO  2026-08-27 05:57:17,009 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/naturally-2.3.0/.gitignore
+INFO  2026-08-27 05:57:17,014 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/benchmark-0.5.0/.gitignore
+INFO  2026-08-27 05:57:17,018 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/domain_name-0.6.20240107/.gitignore
+INFO  2026-08-27 05:57:17,018 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/benchmark-0.5.0/.gitignore
+INFO  2026-08-27 05:57:17,022 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/fastlane-sirp-1.1.0/.gitignore
+INFO  2026-08-27 05:57:17,026 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/domain_name-0.6.20240107/.gitignore
+INFO  2026-08-27 05:57:17,029 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/simctl-1.6.10/.gitignore
+INFO  2026-08-27 05:57:17,030 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/fastlane-sirp-1.1.0/.gitignore
+INFO  2026-08-27 05:57:17,033 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/ostruct-0.6.3/.gitignore
+INFO  2026-08-27 05:57:17,036 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/commander-4.6.0/.gitignore
+INFO  2026-08-27 05:57:17,037 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/simctl-1.6.10/.gitignore
+INFO  2026-08-27 05:57:17,038 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/atomos-0.1.3/.gitignore
+INFO  2026-08-27 05:57:17,040 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/ostruct-0.6.3/.gitignore
+INFO  2026-08-27 05:57:17,043 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/commander-4.6.0/.gitignore
+INFO  2026-08-27 05:57:17,044 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/xcpretty-0.4.1/.gitignore
+INFO  2026-08-27 05:57:17,048 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/atomos-0.1.3/.gitignore
+INFO  2026-08-27 05:57:17,051 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/xcpretty-0.4.1/.gitignore
+INFO  2026-08-27 05:57:17,061 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/nanaimo-0.4.0/.gitignore
+INFO  2026-08-27 05:57:17,067 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/word_wrap-1.0.0/.gitignore
+INFO  2026-08-27 05:57:17,085 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/nanaimo-0.4.0/.gitignore
+INFO  2026-08-27 05:57:17,086 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/highline-2.0.3/.gitignore
+INFO  2026-08-27 05:57:17,090 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/word_wrap-1.0.0/.gitignore
+INFO  2026-08-27 05:57:17,099 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/representable-3.2.0/.gitignore
+INFO  2026-08-27 05:57:17,109 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/highline-2.0.3/.gitignore
+INFO  2026-08-27 05:57:17,110 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/representable-3.2.0/.gitignore
+INFO  2026-08-27 05:57:17,112 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/trailblazer-option-0.1.2/.gitignore
+INFO  2026-08-27 05:57:17,115 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/trailblazer-option-0.1.2/.gitignore
+INFO  2026-08-27 05:57:17,477 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/simctl-1.6.10/fastlane-plugin-simctl/.gitignore
+INFO  2026-08-27 05:57:17,481 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/simctl-1.6.10/fastlane-plugin-simctl/.gitignore
+INFO  2026-08-27 05:57:17,744 serena.cli:health_check:956 - SerenaAgent created successfully
+INFO  2026-08-27 05:57:17,745 serena.cli:health_check:959 - Searching for analyzable files...
+INFO  2026-08-27 05:57:17,747 serena.project:_ignore_spec:187 - Waiting for ignore spec to become available ...
+INFO  2026-08-27 05:57:17,914 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/simctl-1.6.10/spec/SampleApp/.gitignore
+INFO  2026-08-27 05:57:17,923 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/simctl-1.6.10/spec/SampleApp/.gitignore
+INFO  2026-08-27 05:57:19,057 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/fastlane-2.237.0/fastlane/lib/fastlane/plugins/template/.gitignore
+INFO  2026-08-27 05:57:19,169 serena.util.file_system:_load_gitignore_files:165 - Processing .gitignore file: /home/hesham/gova/vendor/bundle/ruby/3.2.0/gems/fastlane-2.237.0/fastlane/lib/fastlane/plugins/template/.gitignore
+INFO  2026-08-27 05:57:19,238 serena.util.file_system:stop:336 - Loading of .gitignore files completed in 2.731 seconds
+INFO  2026-08-27 05:57:19,312 serena.util.file_system:stop:336 - Loading of .gitignore files completed in 2.857 seconds
+INFO  2026-08-27 05:57:19,373 serena.project:stop:336 - Gathering ignore spec for project gova completed in 2.866 seconds
+INFO  2026-08-27 05:57:19,373 serena.project:stop:336 - Gathering ignore spec for project gova completed in 2.918 seconds
+INFO  2026-08-27 05:57:19,375 serena.project:_ignore_spec:190 - Ignore spec is now available for project; proceeding
+INFO  2026-08-27 05:57:19,380 serena.project:_ignored_patterns:206 - Ignored patterns are now available for project; proceeding
+INFO  2026-08-27 05:57:19,381 sensai.util.logging:start:329 - Language server startup (language=typescript) starting ...
+INFO  2026-08-27 05:57:19,387 serena.ls_manager:create_language_server:58 - Creating language server instance for /home/hesham/gova, language=typescript.
+INFO  2026-08-27 05:57:19,674 solidlsp.ls:start:3180 - Starting language server typescript for /home/hesham/gova
+INFO  2026-08-27 05:57:19,675 solidlsp.language_servers.typescript_language_server:_start_server:447 - Starting TypeScript server process
+INFO  2026-08-27 05:57:19,675 solidlsp.ls_process:_start:519 - Starting language server process via command: ['/home/hesham/.serena/language_servers/static/TypeScriptLanguageServer/ts-lsp/node_modules/.bin/typescript-language-server', '--stdio']
+INFO  2026-08-27 05:57:19,701 solidlsp.initialize_params:_apply_updates:61 - Workspace folders: ['/home/hesham/gova']
+INFO  2026-08-27 05:57:19,703 solidlsp.language_servers.typescript_language_server:_start_server:451 - Sending initialize request from LSP client to LSP server and awaiting response
+INFO  2026-08-27 05:57:19,876 solidlsp.language_servers.typescript_language_server:window_log_message:384 - LSP: window/logMessage: {'type': 3, 'message': 'Using Typescript version (workspace) 5.9.3 from path "/home/hesham/gova/node_modules/typescript/lib/tsserver.js"'}
+INFO  2026-08-27 05:57:19,886 solidlsp.language_servers.typescript_language_server:handle_typescript_version:392 - TypeScript server version notification received: {'version': '5.9.3', 'source': 'workspace'}
+INFO  2026-08-27 05:57:19,887 solidlsp.language_servers.typescript_language_server:_start_server:467 - TypeScript server is ready
+INFO  2026-08-27 05:57:19,887 solidlsp.language_servers.typescript_language_server:_start_server:476 - Waiting for TypeScript project indexing to complete (if async)...
+INFO  2026-08-27 05:57:19,887 solidlsp.language_servers.typescript_language_server:_start_server:478 - TypeScript project indexing complete
+INFO  2026-08-27 05:57:19,887 sensai.util.logging:stop:336 - Language server startup (language=typescript) completed in 0.506 seconds
+INFO  2026-08-27 05:57:19,888 sensai.util.logging:start:329 - Initialising file change notifier (polling for baseline) starting ...
+INFO  2026-08-27 05:57:23,899 serena.cli:health_check:968 - Found analyzable file: capacitor.config.ts
+INFO  2026-08-27 05:57:23,902 serena.cli:health_check:982 - Testing GetSymbolsOverviewTool on file: capacitor.config.ts
+INFO  2026-08-27 05:57:23,902 serena.task_executor:issue_task:217 - Scheduling Task-2:<lambda>
+INFO  2026-08-27 05:57:24,475 sensai.util.logging:stop:336 - Initialising file change notifier (polling for baseline) completed in 4.587 seconds
+INFO  2026-08-27 05:57:24,476 serena.agent:stop:336 - Language server initialization completed in 7.885 seconds
+INFO  2026-08-27 05:57:24,476 serena.task_executor:stop:336 - Task-1:init_project_services completed in 7.889 seconds
+INFO  2026-08-27 05:57:24,476 serena.task_executor:_process_task_queue:139 - Starting execution of Task-2:<lambda>
+INFO  2026-08-27 05:57:24,476 serena.task_executor:start:329 - Task-2:<lambda> starting ...
+INFO  2026-08-27 05:57:25,199 serena.task_executor:stop:336 - Task-2:<lambda> completed in 0.723 seconds
+INFO  2026-08-27 05:57:25,200 serena.cli:health_check:984 - GetSymbolsOverviewTool returned: [{'name': 'config', 'kind': 'Constant'}, {'name': 'default', 'kind': 'Constant'}, {'name': 'includePlugins', 'kind': 'Constant'}, {'name': 'liveReloadUrl', 'kind': 'Constant'}]
+INFO  2026-08-27 05:57:25,200 serena.cli:health_check:1000 - No class or function found, using first available symbol
+INFO  2026-08-27 05:57:25,200 serena.cli:health_check:1004 - Using symbol for testing: config (kind: Constant)
+INFO  2026-08-27 05:57:25,200 serena.cli:health_check:1007 - Testing FindSymbolTool for symbol: config
+INFO  2026-08-27 05:57:25,200 serena.task_executor:issue_task:217 - Scheduling Task-3:<lambda>
+INFO  2026-08-27 05:57:25,300 serena.task_executor:_process_task_queue:139 - Starting execution of Task-3:<lambda>
+INFO  2026-08-27 05:57:25,301 serena.task_executor:start:329 - Task-3:<lambda> starting ...
+INFO  2026-08-27 05:57:25,303 serena.task_executor:stop:336 - Task-3:<lambda> completed in 0.002 seconds
+INFO  2026-08-27 05:57:25,303 serena.cli:health_check:1013 - FindSymbolTool found 1 matches for symbol config
+INFO  2026-08-27 05:57:25,303 serena.cli:health_check:1016 - Testing FindReferencingSymbolsTool for symbol: config
+INFO  2026-08-27 05:57:25,304 serena.task_executor:issue_task:217 - Scheduling Task-4:<lambda>
+INFO  2026-08-27 05:57:25,403 serena.task_executor:_process_task_queue:139 - Starting execution of Task-4:<lambda>
+INFO  2026-08-27 05:57:25,403 serena.task_executor:start:329 - Task-4:<lambda> starting ...
+INFO  2026-08-27 05:57:25,403 serena.ls_manager:sync_file_system_changes:274 - Polling file system for changes to source files ...
+INFO  2026-08-27 05:57:25,501 solidlsp.language_servers.typescript_language_server:progress_handler:421 - TypeScript LSP progress [35d1a99c-8ac4-4ba0-b2eb-67853b1a3691]: started - Initializing JS/TS language features…
+INFO  2026-08-27 05:57:27,622 serena.ls_manager:sync_file_system_changes:276 - File system polling complete; 0 change events sent to language servers.
+INFO  2026-08-27 05:57:34,375 solidlsp.language_servers.typescript_language_server:progress_handler:432 - TypeScript LSP progress [35d1a99c-8ac4-4ba0-b2eb-67853b1a3691]: ended - 
+INFO  2026-08-27 05:57:34,376 solidlsp.language_servers.typescript_language_server:_wait_for_cross_file_references_if_needed:553 - TypeScript cross-file indexing complete
+INFO  2026-08-27 05:57:34,506 serena.task_executor:stop:336 - Task-4:<lambda> completed in 9.103 seconds
+INFO  2026-08-27 05:57:34,506 serena.cli:health_check:1021 - FindReferencingSymbolsTool found 1 references for symbol config
+INFO  2026-08-27 05:57:34,507 serena.cli:health_check:1029 - Health check completed successfully
