@@ -17,6 +17,14 @@ The sidebar body is a flex column with `overflow-y-auto`; it applies
 `[&>*]:shrink-0` so a card that grows (super admin, settings) never squeezes the
 cards above it. Growth is absorbed by scrolling, not by shrinking siblings.
 
+## Overlay chrome and other dialogs
+
+A pointer on overlay chrome (the attribute inspector, the floating error
+toolbar, or the development badge) or on another `role="dialog"` (for example
+`PageSaveDialog`) does not close the sidebar. The dimmed backdrop still closes
+it. The sidebar focus trap uses the same exemption so those controls remain
+tappable. `npm run test:overlay-chrome` pins this.
+
 ## Super admin section
 
 - Visible only when `isSuperAdmin(session)` is true.

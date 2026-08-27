@@ -3048,6 +3048,20 @@
       ]
     },
     {
+      "id": "command:test:overlay-chrome",
+      "kind": "command",
+      "name": "npm run test:overlay-chrome",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:overlay-chrome",
+        "overlay-chrome",
+        "run",
+        "test",
+        "test:overlay-chrome"
+      ]
+    },
+    {
       "id": "command:test:page-save-core",
       "kind": "command",
       "name": "npm run test:page-save-core",
@@ -50077,6 +50091,17 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "source",
+      "name": "overlay-chrome.ts",
+      "path": "src/shared/ui/overlay-chrome.ts",
+      "tags": [
+        "src/shared/ui/overlay-chrome",
+        "src/shared/ui/overlay-chrome.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/shared/ui/product-style-card.tsx",
       "kind": "source",
       "name": "product-style-card.tsx",
@@ -52950,6 +52975,18 @@
       "tags": [
         "src/shared/theme/runtime/__tests__/theme-runtime",
         "src/shared/theme/runtime/__tests__/theme-runtime.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "kind": "test",
+      "name": "overlay-chrome.test.ts",
+      "path": "src/shared/ui/tests/overlay-chrome.test.ts",
+      "tags": [
+        "src/shared/ui/tests/overlay-chrome",
+        "src/shared/ui/tests/overlay-chrome.test.ts",
         "test",
         "ts"
       ]

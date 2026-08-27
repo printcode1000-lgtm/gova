@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
 import { isDevelopment } from '@/core/config';
+import { OVERLAY_CHROME_ATTRIBUTE } from '@/shared/ui/overlay-chrome';
 import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@asol/data-core/browser';
 
 const pages = [
@@ -124,8 +125,9 @@ export function DeveloperBadge() {
   return (
     <div
       ref={badgeRef}
-      className="fixed z-50 cursor-grab active:cursor-grabbing"
+      className="fixed z-[140] active:opacity-90"
       style={{ left: position.x, top: position.y }}
+      {...{ [OVERLAY_CHROME_ATTRIBUTE]: 'true' }}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
     >
@@ -135,7 +137,11 @@ export function DeveloperBadge() {
             ASOL DEV
           </Badge>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-64 max-h-[80vh] overflow-y-auto">
+        <DropdownMenuContent
+          align="start"
+          className="w-64 max-h-[80vh] overflow-y-auto"
+          {...{ [OVERLAY_CHROME_ATTRIBUTE]: 'true' }}
+        >
           <DropdownMenuLabel>صفحات المشروع</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {pages.map((page) => (

@@ -45,6 +45,7 @@ import { useStoreDetails } from "@/features/profile/ui";
 import { useProfileStoreImages } from "@/features/profile/ui";
 import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { Button } from "@/shared/ui/button";
+import { isOutsideDismissExempt } from "@/shared/ui/overlay-chrome";
 
 import { AppSidebarProps } from "./app-sidebar/AppSidebar.sidebar-model";
 import {
@@ -122,6 +123,7 @@ export const AppSidebar = React.memo(function AppSidebar({
     if (!isOpen) return;
 
     const handlePointerOutside = (event: PointerEvent) => {
+      if (isOutsideDismissExempt(event.target)) return;
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target as Node)
@@ -234,7 +236,13 @@ export const AppSidebar = React.memo(function AppSidebar({
           )}
         />
 
-        <FocusTrap active={isOpen}>
+        <FocusTrap
+          active={isOpen}
+          focusTrapOptions={{
+            allowOutsideClick: (event) => isOutsideDismissExempt(event.target),
+            clickOutsideDeactivates: false,
+          }}
+        >
           <div
             {...uiAttributes({ uid: "app.sidebar-0sFX57", id: "app.sidebar", kind: "region", part: "sidebar" })}
             ref={sidebarRef}

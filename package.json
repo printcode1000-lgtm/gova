@@ -251,6 +251,7 @@
     "test:cloud-accounts": "npx tsx src/features/super-admin/tests/cloud-accounts-emails.test.ts",
     "test:super-admin-users": "npx tsx src/features/super-admin/tests/super-admin-user-deletion.test.ts && npx tsx src/features/super-admin/tests/super-admin-impersonation-notification-flow.test.ts",
     "test:super-admin-ui-inspector": "npx tsx src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+    "test:overlay-chrome": "npx tsx src/shared/ui/tests/overlay-chrome.test.ts && npm run test:super-admin-ui-inspector",
     "github:protect": "npx tsx scripts/protect-main-branch.ts",
     "github:block-branches": "npx tsx scripts/block-branch-creation.ts",
     "github:ci-policy": "npx tsx scripts/github-ci-policy.ts",

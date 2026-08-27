@@ -3048,6 +3048,20 @@
       ]
     },
     {
+      "id": "command:test:overlay-chrome",
+      "kind": "command",
+      "name": "npm run test:overlay-chrome",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:overlay-chrome",
+        "overlay-chrome",
+        "run",
+        "test",
+        "test:overlay-chrome"
+      ]
+    },
+    {
       "id": "command:test:page-save-core",
       "kind": "command",
       "name": "npm run test:page-save-core",
@@ -50077,6 +50091,17 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "source",
+      "name": "overlay-chrome.ts",
+      "path": "src/shared/ui/overlay-chrome.ts",
+      "tags": [
+        "src/shared/ui/overlay-chrome",
+        "src/shared/ui/overlay-chrome.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/shared/ui/product-style-card.tsx",
       "kind": "source",
       "name": "product-style-card.tsx",
@@ -52950,6 +52975,18 @@
       "tags": [
         "src/shared/theme/runtime/__tests__/theme-runtime",
         "src/shared/theme/runtime/__tests__/theme-runtime.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "kind": "test",
+      "name": "overlay-chrome.test.ts",
+      "path": "src/shared/ui/tests/overlay-chrome.test.ts",
+      "tags": [
+        "src/shared/ui/tests/overlay-chrome",
+        "src/shared/ui/tests/overlay-chrome.test.ts",
         "test",
         "ts"
       ]
@@ -56103,6 +56140,21 @@
     },
     {
       "from": "command:test:ota-core",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:overlay-chrome",
+      "to": "command:test:super-admin-ui-inspector",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:overlay-chrome",
+      "to": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:overlay-chrome",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -191518,6 +191570,12 @@
       "detail": "@/shared/ui/dropdown-menu"
     },
     {
+      "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
       "from": "source:src/features/dev-tools/presentation/DeveloperCategorySelector.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -226538,6 +226596,12 @@
       "detail": "./ui-registration-proposal"
     },
     {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
       "from": "source:src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -227451,6 +227515,12 @@
       "to": "source:src/features/system-logs/domain/persistent-system-log.entity.ts",
       "kind": "imports",
       "detail": "@/features/system-logs/domain/persistent-system-log.entity"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome"
     },
     {
       "from": "source:src/features/system-logs/application/system-log-copy-text.ts",
@@ -229677,6 +229747,12 @@
     },
     {
       "from": "source:src/shared/layouts/AppSidebar.tsx",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
+      "from": "source:src/shared/layouts/AppSidebar.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -231088,6 +231164,12 @@
     },
     {
       "from": "source:src/shared/ui/dialog.tsx",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
+      "from": "source:src/shared/ui/dialog.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -231134,6 +231216,12 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/dropdown-menu.tsx",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome"
     },
     {
       "from": "source:src/shared/ui/dropdown-menu.tsx",
@@ -231318,6 +231406,31 @@
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/overlay-chrome.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
     },
     {
       "from": "source:src/shared/ui/product-style-card.tsx",
@@ -242753,6 +242866,42 @@
     {
       "from": "test:src/shared/theme/runtime/__tests__/theme-runtime.test.ts",
       "to": "source:src/shared/theme/runtime/storage.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "../overlay-chrome"
+    },
+    {
+      "from": "test:src/shared/ui/tests/overlay-chrome.test.ts",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
       "kind": "tests"
     }
   ]

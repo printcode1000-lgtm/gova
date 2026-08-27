@@ -8,6 +8,10 @@ import { NativeCore } from "@asol/native-core";
 import { isSuperAdmin } from "@/features/auth";
 import { useSession } from "@/features/auth/ui";
 import { uiAttributes } from "@asol/ui-registry-core";
+import {
+  INSPECTOR_CONTROL_ATTRIBUTE,
+  OVERLAY_CHROME_ATTRIBUTE,
+} from "@/shared/ui/overlay-chrome";
 
 import {
   formatInspectorOutput,
@@ -22,8 +26,6 @@ import { buildPendingRegistrationRequest } from "./ui-pending-registration";
 import { uiRegistryPendingApiService } from "../application/services/ui-registry-pending-api-service";
 
 type CopyState = "idle" | "copied" | "failed";
-
-const INSPECTOR_CONTROL_ATTRIBUTE = "data-asol-ui-inspector-control";
 
 /** True for the inspector's own controls, which are never selectable. */
 function isInspectorControl(element: InspectedElement | null): boolean {
@@ -188,7 +190,7 @@ ${copiedText}`
   return (
     <div
       className="pointer-events-none fixed bottom-[calc(10rem+var(--asol-safe-area-bottom))] end-4 z-[150] flex max-w-[calc(100vw-2rem)] items-center gap-2"
-      {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true" }}
+      {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true", [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
     >
       {enabled ? (
         <pre className="max-h-32 max-w-64 overflow-auto whitespace-pre-wrap break-words rounded-2xl bg-surface px-3 py-2 text-xs font-semibold text-on-surface shadow-lg" dir="ltr">

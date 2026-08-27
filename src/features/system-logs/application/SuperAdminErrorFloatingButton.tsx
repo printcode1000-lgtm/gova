@@ -21,6 +21,10 @@ import {
   type CopyableSystemLogEntry,
 } from "@/features/system-logs/application/system-log-copy-text";
 import { isEventTargetInside } from "@/features/system-logs/application/is-event-target-inside";
+import {
+  OVERLAY_CHROME_ATTRIBUTE,
+  isOverlayChromeTarget,
+} from "@/shared/ui/overlay-chrome";
 
 const REFRESH_MS = 20_000;
 const LOGS_ROUTE = "/super-admin/logs";
@@ -99,6 +103,7 @@ export function SuperAdminErrorFloatingButton() {
     if (!expanded) return;
     const onOutside = (event: Event) => {
       if (isEventTargetInside(toolbarRef.current, event.target)) return;
+      if (isOverlayChromeTarget(event.target)) return;
       setExpanded(false);
     };
     document.addEventListener("pointerdown", onOutside, true);
@@ -184,6 +189,7 @@ export function SuperAdminErrorFloatingButton() {
         }
         aria-expanded={false}
         aria-label={`أخطاء النظام: ${errorCount} — عرض الأدوات`}
+        {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
       >
         <span className="tabular-nums">{errorCount}</span>
       </button>
@@ -200,6 +206,7 @@ export function SuperAdminErrorFloatingButton() {
         }
         role="group"
         aria-label={`أخطاء النظام: ${errorCount}`}
+        {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
       >
         <button
           type="button"

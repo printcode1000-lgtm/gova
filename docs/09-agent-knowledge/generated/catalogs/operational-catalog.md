@@ -227,6 +227,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:orders-core` | `npx tsx packages/orders-core/src/tests/index.test.ts` |
 | `npm run test:orders-module` | `npx tsx packages/orders-core/src/tests/orders-service-module-contract.test.ts && npx tsx src/features/orders/tests/order-party-helpers.test.ts` |
 | `npm run test:ota-core` | `npx tsx packages/ota-core/src/tests/index.test.ts` |
+| `npm run test:overlay-chrome` | `npx tsx src/shared/ui/tests/overlay-chrome.test.ts && npm run test:super-admin-ui-inspector` |
 | `npm run test:page-save-core` | `npx tsx packages/page-save-core/src/tests/index.test.ts && npx tsx packages/page-save-core/src/tests/header-visibility.test.ts && npx tsx packages/page-save-core/src/tests/journal-recovery.test.ts && npx tsx src/features/page-save/tests/page-save-ownership.test.ts && npx tsx src/features/page-save/tests/page-save-write-surface.test.ts` |
 | `npm run test:page-snapshot-core` | `npx tsx packages/page-snapshot-core/src/tests/index.test.ts` |
 | `npm run test:password-recovery` | `npx tsx src/features/password-recovery/tests/password-recovery-policy.test.ts` |

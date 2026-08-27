@@ -159,7 +159,10 @@ logs.
 - SSE refresh plus 20s polling fallback
 
 Persisted entries are marked as saved. The floating error button deduplicates
-live and persisted counts by fingerprint.
+live and persisted counts by fingerprint. It is overlay chrome: tapping it
+while `PageSaveDialog` or another shared dialog is open does not dismiss that
+dialog, and tapping the inspector or development badge does not fold the
+expanded error toolbar.
 
 Neither the page nor the floating button clears logs on tap. Both stage a
 `delete` operation in `@asol/page-save-core` (`super-admin-logs` and

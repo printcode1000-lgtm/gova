@@ -213,6 +213,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:orders-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:orders-module` | `Tooling` | 2 |  | 0 |
 | `npm run test:ota-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:overlay-chrome` | `Tooling` | 2 |  | 0 |
 | `npm run test:page-save-core` | `Tooling` | 5 |  | 0 |
 | `npm run test:page-snapshot-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:password-recovery` | `Tooling` | 1 |  | 0 |
