@@ -8,12 +8,13 @@ import type { IDatabaseClient } from "../../../core/database/database-client.int
 import {
   DEFAULT_FEATURED_MARQUEE_CONFIG,
   FEATURED_MARQUEE_ID,
+  normalizeFeaturedMarqueeConfig,
   type FeaturedMarqueeConfig,
   type FeaturedMarqueeRecord,
 } from "@asol/featured-marquee-core";
 
 function parseConfig(value: string): FeaturedMarqueeConfig {
-  return JSON.parse(value) as FeaturedMarqueeConfig;
+  return normalizeFeaturedMarqueeConfig(JSON.parse(value));
 }
 
 export class FeaturedMarqueeRepository {

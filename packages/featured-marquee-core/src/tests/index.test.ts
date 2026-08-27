@@ -8,6 +8,7 @@ import {
   FEATURED_MARQUEE_SECTION_TITLE,
   clampFeaturedMarqueeCheckInterval,
   featuredMarqueeConfigSchema,
+  normalizeFeaturedMarqueeConfig,
 } from "../index";
 import { createFeaturedMarqueeService } from "../server";
 
@@ -25,6 +26,19 @@ function runValidationTest() {
   assert.equal(clampFeaturedMarqueeCheckInterval(1), 5);
   assert.equal(clampFeaturedMarqueeCheckInterval(1500), 1440);
   console.log("✅ featured-marquee-core validation test passed");
+}
+
+function runNormalizeTest() {
+  assert.deepEqual(normalizeFeaturedMarqueeConfig([]), { productIds: [] });
+  assert.deepEqual(normalizeFeaturedMarqueeConfig(["product-1"]), {
+    productIds: ["product-1"],
+  });
+  assert.deepEqual(
+    normalizeFeaturedMarqueeConfig({ productIds: ["product-2"] }),
+    { productIds: ["product-2"] },
+  );
+  assert.throws(() => normalizeFeaturedMarqueeConfig(["../bad"]));
+  console.log("✅ featured-marquee-core normalize test passed");
 }
 
 async function runServiceTest() {
@@ -67,6 +81,7 @@ async function main() {
   console.log("🚀 Running @asol/featured-marquee-core test suite...\n");
   runContractTest();
   runValidationTest();
+  runNormalizeTest();
   await runServiceTest();
   console.log("\n🎉 All @asol/featured-marquee-core tests passed successfully!");
 }

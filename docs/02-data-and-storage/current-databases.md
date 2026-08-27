@@ -211,6 +211,10 @@ Primary tables include:
 - `featured_marquee`
 - `trending_ribbon`
 
+Featured marquee reads normalize the legacy `product_ids_json` array into the
+current `{ "productIds": [...] }` config contract. Repository saves persist the
+current object shape.
+
 ### Layers
 
 | Layer | Files |

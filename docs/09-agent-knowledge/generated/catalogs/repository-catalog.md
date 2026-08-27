@@ -22,24 +22,8 @@
 | runtime | 7 |
 | script | 155 |
 | service | 6 |
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-| source | 2116 |
-=======
-| source | 2115 |
->>>>>>> theirs
-=======
-| source | 2115 |
->>>>>>> theirs
-=======
-| source | 2115 |
->>>>>>> theirs
-=======
-| source | 2115 |
->>>>>>> theirs
-| test | 231 |
+| source | 2118 |
+| test | 232 |
 
 ## Domains
 

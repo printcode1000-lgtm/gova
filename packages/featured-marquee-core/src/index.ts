@@ -16,3 +16,4 @@ export {
   featuredMarqueeConfigSchema,
   featuredMarqueeSeedSchema,
 } from "./domain/featured-marquee.schema";
+export { normalizeFeaturedMarqueeConfig } from "./domain/featured-marquee-normalize";
