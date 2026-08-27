@@ -37,14 +37,15 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
         {displayCategories.map((cat, index) => {
           const name = locale === "ar" ? cat.nameAr : cat.nameEn;
           const imgSrc = cat.imageUrl;
+          const categoryKey = cat.canonicalKey ?? `${cat.kind}-${cat.id}`;
           return (
             <Link {...uiAttributes({ uid: "home-category-BxYuR3", id: "home-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "home-category" } })}
-              key={cat.id}
+              key={categoryKey}
               href={getCategoryHref(cat)}
               className={categoryTileClassName}
               aria-label={name}
             >
-              <div className={categoryTileImageClassName}>
+              <div key="media" className={categoryTileImageClassName}>
                 <Image
                   src={imgSrc}
                   alt={name}
@@ -53,7 +54,7 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
                   className="object-cover"
                 />
               </div>
-              <span className={categoryTileTitleClassName}>
+              <span key="label" className={categoryTileTitleClassName}>
                 {name}
               </span>
             </Link>

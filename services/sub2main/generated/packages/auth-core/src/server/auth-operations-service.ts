@@ -6,7 +6,11 @@ import type {
   UpdateProfileInput,
   UserProfile,
 } from '../domain/entities';
-import type { AuthUserRepositoryPort, ProfileSpecialtiesPort } from '../ports/auth-repository.port';
+import type {
+  AuthUserRepositoryPort,
+  ProfileSpecialtiesPort,
+  ProfileStoreNamePort,
+} from '../ports/auth-repository.port';
 import { assertPasswordMeetsMinimum } from '../domain/password-input';
 import { normalizeAuthEmail, normalizeAuthPhone } from './normalize';
 import { hashPassword, verifyPassword } from './password';
@@ -17,6 +21,7 @@ export class AuthOperationsService {
   constructor(
     private users: AuthUserRepositoryPort,
     private specialties: ProfileSpecialtiesPort,
+    private storeNames: ProfileStoreNamePort,
   ) {}
 
   async register(formData: RegistrationInput): Promise<{ uid: string }> {
@@ -36,6 +41,11 @@ export class AuthOperationsService {
       updated_at: new Date().toISOString(),
       deleted_at: null,
     });
+
+    const storeName = formData.storeName?.trim();
+    if (storeName) {
+      await this.storeNames.saveStoreName(uid, storeName);
+    }
 
     return { uid };
   }

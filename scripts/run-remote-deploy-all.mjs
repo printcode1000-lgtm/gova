@@ -31,10 +31,34 @@ function argumentValue(name) {
   return found ? found.slice(prefix.length) : "";
 }
 
+function hasFlag(name) {
+  return process.argv.slice(2).includes(`--${name}`);
+}
+
 const requestId =
   argumentValue("request-id") || process.env.ASOL_REMOTE_DEPLOY_REQUEST_ID?.trim() || "";
 const command = argumentValue("command") === "deploy:push" ? "deploy:push" : "deploy:all";
 const target = argumentValue("target") || "all";
+const deployAllResumeMode = argumentValue("deploy-all-resume-mode") || "full";
+const deployAllBranch = argumentValue("deploy-all-branch");
+const deployAllServiceSmokeRebuild = hasFlag("deploy-all-service-smoke-rebuild");
+
+function deployAllArgs() {
+  const args = [];
+  if (deployAllResumeMode === "from-branch") {
+    if (!deployAllBranch) throw new Error("--deploy-all-branch is required for --deploy-all-resume-mode=from-branch.");
+    args.push(`--from-branch=${deployAllBranch}`);
+  } else if (deployAllResumeMode === "rerun-branch") {
+    if (!deployAllBranch) throw new Error("--deploy-all-branch is required for --deploy-all-resume-mode=rerun-branch.");
+    args.push(`--rerun-branch=${deployAllBranch}`);
+  } else if (deployAllResumeMode === "rerun-failed") {
+    args.push("--rerun-failed");
+  } else if (deployAllResumeMode !== "full") {
+    throw new Error(`Unknown deploy:all resume mode "${deployAllResumeMode}".`);
+  }
+  if (deployAllServiceSmokeRebuild) args.push("--service-smoke-rebuild");
+  return args;
+}
 
 async function readSnapshot() {
   try {
@@ -187,9 +211,10 @@ async function main() {
   }
   if (outcome.exitCode === 0) {
     await patchSnapshot({ stage: "preflight" });
+    const extraDeployAllArgs = command === "deploy:all" ? deployAllArgs() : [];
     outcome = await runStep("npm", command === "deploy:push"
       ? ["run", "deploy:push", "--", `--vercel-target=${target}`]
-      : ["run", "deploy:all"], {
+      : ["run", "deploy:all", ...(extraDeployAllArgs.length > 0 ? ["--", ...extraDeployAllArgs] : [])], {
       CI: "1",
       ASOL_REMOTE_DEPLOY_SANDBOX: "1",
     });

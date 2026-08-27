@@ -17,6 +17,7 @@ Read [Project Runtime Contract](../09-agent-knowledge/runtime-contract.md) befor
 - Deployment topology → [Deployment Targets](./deployment-targets.md).
 - Release/environment handling → [Release and Secrets](./release-and-secrets.md).
 - Repository commands → [Scripts and Workflows](./scripts-and-workflows.md).
+- Resuming, retrying or speeding up `deploy:all` → [deploy:all Resume, Checkpoints and Parallel Preflight](./deploy-all-resume-and-checkpoints.md).
 - GitHub Actions / `main` push policy → [GitHub CI Policy](./github-ci-policy.md).
 - Cloud workspaces → [Cloud Environments](./cloud-environments.md).
 

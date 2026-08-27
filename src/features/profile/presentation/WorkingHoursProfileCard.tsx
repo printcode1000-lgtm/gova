@@ -30,7 +30,7 @@ export const WorkingHoursProfileCard = React.forwardRef<
     error,
     saveAsync,
     applySaved,
-  } = useStoreDetails();
+  } = useStoreDetails(undefined, undefined, { ignoreStoreNameDirty: true });
   const label = locale === "ar" ? "مواعيد العمل" : "Working hours";
 
   React.useImperativeHandle(

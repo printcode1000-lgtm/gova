@@ -2,6 +2,12 @@ import { execFileSync } from 'child_process';
 import { existsSync, rmSync } from 'fs';
 import path from 'path';
 
+import {
+  discardServiceBuild,
+  serviceInputHash,
+  storeServiceBuild,
+} from './service-build-cache';
+
 /**
  * Builds all four service deployments exactly as Vercel builds them.
  *
@@ -41,6 +47,10 @@ function main(): void {
     }
 
     console.log(`\n[services:build] Building ${service} the way Vercel builds it...`);
+    // Hashed before the build, from the mirror that was just refreshed: this is
+    // the exact input `smoke:services` must match before it may reuse the output.
+    const inputHash = serviceInputHash(ROOT, service);
+    let built = false;
     try {
       // Each service is its own project, not a workspace of the root: a root `npm ci`
       // installs nothing for it. Locally these folders already have `node_modules` from
@@ -54,6 +64,7 @@ function main(): void {
 
       run('npx', ['next', 'build'], serviceDir);
       console.log(`[services:build] ${service}: OK`);
+      built = true;
     } catch {
       failures.push(`${service}: next build failed`);
       console.error(`[services:build] ${service}: FAILED`);
@@ -61,6 +72,16 @@ function main(): void {
       // The build output is not what gets uploaded — the CLI uploads the folder and
       // Vercel builds remotely. Leaving `.next` behind would put a large untracked
       // directory inside a folder that `deploy:all` is about to upload.
+      //
+      // A successful build is moved out rather than deleted, so `smoke:services`
+      // can start exactly this output instead of producing it again. The service
+      // folder is left just as clean either way.
+      if (built) {
+        storeServiceBuild(service, serviceDir, inputHash);
+        console.log(`[services:build] ${service}: build parked for smoke:services reuse.`);
+      } else {
+        discardServiceBuild(service);
+      }
       rmSync(path.join(serviceDir, '.next'), { recursive: true, force: true });
     }
   }

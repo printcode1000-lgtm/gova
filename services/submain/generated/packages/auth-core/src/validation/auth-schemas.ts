@@ -26,6 +26,7 @@ export function createRegistrationSchema(t: AuthTranslateFn) {
       phone: phoneField,
       password: z.string().min(MIN_PASSWORD_LENGTH, t('auth.validation.passwordMinLength')),
       email: z.string().email(t('auth.validation.emailInvalid')).optional().or(z.literal('')),
+      storeName: z.string().max(120).optional().or(z.literal('')),
       confirmPassword: z.string().min(1, t('auth.validation.confirmPasswordRequired')),
       phoneVerified: z.boolean().refine((val) => val === true, {
         message: t('auth.validation.phoneVerification'),

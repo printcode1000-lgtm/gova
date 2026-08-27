@@ -26,7 +26,7 @@ export function useRegister() {
   const registrationSchema = useMemo(() => createRegistrationSchema(t), [t]);
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
-    defaultValues: { phone: '', password: '', confirmPassword: '', email: '', phoneVerified: false },
+    defaultValues: { phone: '', password: '', confirmPassword: '', email: '', storeName: '', phoneVerified: false },
     mode: 'onChange',
   });
   const password = useWatch({ control: form.control, name: 'password' }) ?? '';

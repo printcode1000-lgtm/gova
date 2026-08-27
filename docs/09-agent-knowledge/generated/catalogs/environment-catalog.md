@@ -46,6 +46,8 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_DEPLOY_CALLBACK_SECRET` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_DEPLOY_CALLBACK_URL` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_DEPLOY_REPOSITORY_URL` | server/tooling | 1 | `scripts/push-production-deploy-env.ts` |
+| `ASOL_DEPLOY_REVISION_AT_START` | server/tooling | 1 | `scripts/deploy-all.ts` |
+| `ASOL_DEPLOY_RUN_ID` | server/tooling | 3 | `scripts/deploy-all.ts`, `scripts/gate-step-checkpoints.ts`, `scripts/tests/deploy-all-resume.test.ts` |
 | `ASOL_IOS_BUNDLE_ID` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_IOS_EXPORT_METHOD` | server/tooling | 0 |  |
 | `ASOL_IOS_TEAM_ID` | server/tooling | 1 | `src/core/config/server-env/server-env.values.turso-env.ts` |
@@ -79,9 +81,11 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server/tooling | 2 | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` |
 | `ASOL_SERVICE_SMOKE_ONLY` | server/tooling | 1 | `scripts/check-service-smoke.ts` |
 | `ASOL_SERVICE_SMOKE_PORT` | server/tooling | 1 | `scripts/check-service-smoke.ts` |
+| `ASOL_SERVICE_SMOKE_REBUILD` | server/tooling | 3 | `scripts/deploy-all.ts`, `scripts/service-build-cache.ts`, `scripts/tests/deploy-all-resume.test.ts` |
 | `ASOL_SESSION_SIGNING_SECRET` | server/tooling | 6 | `npm run test:follow`, `npm run test:notifications`, `scripts/probe-notifications-service.ts`, `packages/auth-core/src/ports/session-signing-secret.port.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_SMOKE_PORT` | server/tooling | 1 | `scripts/check-production-smoke.ts` |
 | `ASOL_STATIC_PREVIEW_API_BASE_URL` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
+| `ASOL_TEST_DEPLOY_TOKEN` | server/tooling | 1 | `packages/release-core/src/tests/index.test.ts` |
 | `ASOL_WEB_BUNDLE_READY` | server/tooling | 1 | `scripts/build-android-signed.ts` |
 | `CAPACITOR_SERVER_URL` | server/tooling | 0 |  |
 | `CI` | server/tooling | 1 | `scripts/schema-sync.ts` |

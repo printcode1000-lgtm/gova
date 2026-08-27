@@ -19,4 +19,12 @@ assert.match(model, /PROFILE_EDIT_SNAPSHOT_SCROLL_IDS/);
 assert.match(model, /resyncScrollToActiveTab\(\)/);
 assert.match(runtime, /profile-edit-/);
 
+const registrationCard = source('src/features/profile/presentation/ProfileRegistrationInfoCard.tsx');
+assert.match(registrationCard, /useStoreDetails/);
+assert.match(registrationCard, /auth\.storeName\.label/);
+assert.match(registrationCard, /updateField\("storeName"/);
+
+const storeDetailsHook = source('src/features/profile/presentation/hooks/use-store-details.ts');
+assert.match(storeDetailsHook, /store-name-draft/);
+
 console.log('Profile edit navigation tests passed.');

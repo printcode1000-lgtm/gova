@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **232**
+Keys: **236**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -48,6 +48,8 @@ Keys: **232**
 | `ASOL_DEPLOY_CALLBACK_SECRET` | server-only | dangerous | `scripts/run-remote-deploy-all.mjs` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_DEPLOY_CALLBACK_URL` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_REPOSITORY_URL` | server-only | unknown | `scripts/push-production-deploy-env.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_DEPLOY_REVISION_AT_START` | server-only | unknown | `scripts/deploy-all.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_DEPLOY_RUN_ID` | server-only | unknown | `scripts/deploy-all.ts`, `scripts/gate-step-checkpoints.ts`, `scripts/tests/deploy-all-resume.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_IOS_BUNDLE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `ASOL_IOS_EXPORT_METHOD` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_IOS_TEAM_ID` | server-only | unknown | `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
@@ -81,9 +83,11 @@ Keys: **232**
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server-only | unknown | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SERVICE_SMOKE_ONLY` | server-only | unknown | `scripts/check-service-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SERVICE_SMOKE_PORT` | server-only | unknown | `scripts/check-service-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_SERVICE_SMOKE_REBUILD` | server-only | unknown | `scripts/deploy-all.ts`, `scripts/service-build-cache.ts`, `scripts/tests/deploy-all-resume.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SESSION_SIGNING_SECRET` | server-only | dangerous | `npm run test:follow`, `npm run test:notifications`, `packages/auth-core/src/ports/session-signing-secret.port.ts`, `scripts/probe-notifications-service.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_SMOKE_PORT` | server-only | unknown | `scripts/check-production-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_STATIC_PREVIEW_API_BASE_URL` | server-only | unknown | `packages/ota-core/scripts/serve-static.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_TEST_DEPLOY_TOKEN` | server-only | dangerous | `packages/release-core/src/tests/index.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_WEB_BUNDLE_READY` | server-only | unknown | `scripts/build-android-signed.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `CAPACITOR_SERVER_URL` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `CI` | server-only | unknown | `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |

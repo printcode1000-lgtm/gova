@@ -2656,6 +2656,20 @@
       ]
     },
     {
+      "id": "command:test:deploy-all-resume",
+      "kind": "command",
+      "name": "npm run test:deploy-all-resume",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "deploy-all-resume",
+        "npm",
+        "npm run test:deploy-all-resume",
+        "run",
+        "test",
+        "test:deploy-all-resume"
+      ]
+    },
+    {
       "id": "command:test:deploy-runbook-execution",
       "kind": "command",
       "name": "npm run test:deploy-runbook-execution",
@@ -3423,6 +3437,20 @@
         "storage-image-manager-core",
         "test",
         "test:storage-image-manager-core"
+      ]
+    },
+    {
+      "id": "command:test:store-name-draft",
+      "kind": "command",
+      "name": "npm run test:store-name-draft",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:store-name-draft",
+        "run",
+        "store-name-draft",
+        "test",
+        "test:store-name-draft"
       ]
     },
     {
@@ -12797,6 +12825,55 @@
       ]
     },
     {
+      "id": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "kind": "document",
+      "name": "deploy:all Resume, Checkpoints and Parallel Preflight",
+      "path": "docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "summary": "Explain how `npm run deploy:all` resumes, what it is allowed to reuse from an earlier run, how preflight branches are scheduled concurrently, and which steps may never be skipped for any reason.",
+      "tags": [
+        "@asol/native-core",
+        "all",
+        "allowed",
+        "an",
+        "and",
+        "any",
+        "are",
+        "be",
+        "branches",
+        "checkpoints",
+        "concurrently",
+        "deploy",
+        "deploy:all resume, checkpoints and parallel preflight",
+        "docs/07-mobile-and-release/deploy-all-resume-and-checkpoints",
+        "docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+        "earlier",
+        "explain",
+        "explain how `npm run deploy:all` resumes, what it is allowed to reuse from an earlier run, how preflight branches are scheduled concurrently, and which steps may never be skipped for any reason.",
+        "for",
+        "from",
+        "how",
+        "is",
+        "it",
+        "may",
+        "md",
+        "never",
+        "npm",
+        "parallel",
+        "preflight",
+        "reason",
+        "resume",
+        "resumes",
+        "reuse",
+        "run",
+        "scheduled",
+        "skipped",
+        "steps",
+        "to",
+        "what",
+        "which"
+      ]
+    },
+    {
       "id": "document:docs/07-mobile-and-release/deployment-targets.md",
       "kind": "document",
       "name": "Deployment Targets",
@@ -16079,6 +16156,32 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_DEPLOY_REVISION_AT_START",
+      "kind": "environment-key",
+      "name": "ASOL_DEPLOY_REVISION_AT_START",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_deploy_revision_at_start",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_DEPLOY_RUN_ID",
+      "kind": "environment-key",
+      "name": "ASOL_DEPLOY_RUN_ID",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_deploy_run_id",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_IOS_BUNDLE_ID",
       "kind": "environment-key",
       "name": "ASOL_IOS_BUNDLE_ID",
@@ -16508,6 +16611,19 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
+      "kind": "environment-key",
+      "name": "ASOL_SERVICE_SMOKE_REBUILD",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_service_smoke_rebuild",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_SESSION_SIGNING_SECRET",
       "kind": "environment-key",
       "name": "ASOL_SESSION_SIGNING_SECRET",
@@ -16540,6 +16656,19 @@
       "summary": "Server/tooling environment key name",
       "tags": [
         "asol_static_preview_api_base_url",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_TEST_DEPLOY_TOKEN",
+      "kind": "environment-key",
+      "name": "ASOL_TEST_DEPLOY_TOKEN",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_test_deploy_token",
         "environment",
         "server",
         "server tooling environment",
@@ -25093,6 +25222,17 @@
       ]
     },
     {
+      "id": "script:scripts/deployed-origin-resolution.ts",
+      "kind": "script",
+      "name": "deployed-origin-resolution.ts",
+      "path": "scripts/deployed-origin-resolution.ts",
+      "tags": [
+        "scripts/deployed-origin-resolution",
+        "scripts/deployed-origin-resolution.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/docs/api-and-write-catalogs.ts",
       "kind": "script",
       "name": "api-and-write-catalogs.ts",
@@ -25419,6 +25559,17 @@
       "tags": [
         "scripts/fastlane-secret-policy",
         "scripts/fastlane-secret-policy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/gate-step-checkpoints.ts",
+      "kind": "script",
+      "name": "gate-step-checkpoints.ts",
+      "path": "scripts/gate-step-checkpoints.ts",
+      "tags": [
+        "scripts/gate-step-checkpoints",
+        "scripts/gate-step-checkpoints.ts",
         "ts"
       ]
     },
@@ -25859,6 +26010,17 @@
       "tags": [
         "scripts/send-coordinator-completion-email",
         "scripts/send-coordinator-completion-email.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/service-build-cache.ts",
+      "kind": "script",
+      "name": "service-build-cache.ts",
+      "path": "scripts/service-build-cache.ts",
+      "tags": [
+        "scripts/service-build-cache",
+        "scripts/service-build-cache.ts",
         "ts"
       ]
     },
@@ -34890,6 +35052,50 @@
       ]
     },
     {
+      "id": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "kind": "source",
+      "name": "branch-checkpoints.ts",
+      "path": "packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/branch-checkpoints",
+        "packages/release-core/src/pipeline/branch-checkpoints.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "kind": "source",
+      "name": "branch-resume.ts",
+      "path": "packages/release-core/src/pipeline/branch-resume.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/branch-resume",
+        "packages/release-core/src/pipeline/branch-resume.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "kind": "source",
+      "name": "error-summary.ts",
+      "path": "packages/release-core/src/pipeline/error-summary.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/error-summary",
+        "packages/release-core/src/pipeline/error-summary.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "kind": "source",
+      "name": "input-hash.ts",
+      "path": "packages/release-core/src/pipeline/input-hash.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/input-hash",
+        "packages/release-core/src/pipeline/input-hash.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/release-core/src/pipeline/phases.ts",
       "kind": "source",
       "name": "phases.ts",
@@ -34897,6 +35103,17 @@
       "tags": [
         "packages/release-core/src/pipeline/phases",
         "packages/release-core/src/pipeline/phases.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "kind": "source",
+      "name": "preflight-graph.ts",
+      "path": "packages/release-core/src/pipeline/preflight-graph.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/preflight-graph",
+        "packages/release-core/src/pipeline/preflight-graph.ts",
         "ts"
       ]
     },
@@ -40362,6 +40579,17 @@
       ]
     },
     {
+      "id": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "kind": "source",
+      "name": "OptionalRegistrationFields.tsx",
+      "path": "src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "tags": [
+        "src/features/auth/presentation/optionalregistrationfields",
+        "src/features/auth/presentation/optionalregistrationfields.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/auth/presentation/OtpInput.tsx",
       "kind": "source",
       "name": "OtpInput.tsx",
@@ -40435,6 +40663,17 @@
       "tags": [
         "src/features/auth/presentation/sessionprovider",
         "src/features/auth/presentation/sessionprovider.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "kind": "source",
+      "name": "StoreNameInput.tsx",
+      "path": "src/features/auth/presentation/StoreNameInput.tsx",
+      "tags": [
+        "src/features/auth/presentation/storenameinput",
+        "src/features/auth/presentation/storenameinput.tsx",
         "tsx"
       ]
     },
@@ -46570,6 +46809,17 @@
       ]
     },
     {
+      "id": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "kind": "source",
+      "name": "store-name-draft.ts",
+      "path": "src/features/profile/presentation/hooks/store-name-draft.ts",
+      "tags": [
+        "src/features/profile/presentation/hooks/store-name-draft",
+        "src/features/profile/presentation/hooks/store-name-draft.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/profile/presentation/hooks/use-profile-carrier-labels.ts",
       "kind": "source",
       "name": "use-profile-carrier-labels.ts",
@@ -51592,6 +51842,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/deploy-all-resume.test.ts",
+      "kind": "test",
+      "name": "deploy-all-resume.test.ts",
+      "path": "scripts/tests/deploy-all-resume.test.ts",
+      "tags": [
+        "scripts/tests/deploy-all-resume",
+        "scripts/tests/deploy-all-resume.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/deploy-all.test.ts",
       "kind": "test",
       "name": "deploy-all.test.ts",
@@ -52413,6 +52675,18 @@
       "tags": [
         "src/features/profile/tests/profiles-service-module-contract",
         "src/features/profile/tests/profiles-service-module-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "kind": "test",
+      "name": "store-name-draft.test.ts",
+      "path": "src/features/profile/tests/store-name-draft.test.ts",
+      "tags": [
+        "src/features/profile/tests/store-name-draft",
+        "src/features/profile/tests/store-name-draft.test.ts",
         "test",
         "ts"
       ]
@@ -55179,6 +55453,16 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:test:deploy-all-resume",
+      "to": "test:scripts/tests/deploy-all-resume.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deploy-all-resume",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:test:deploy-runbook-execution",
       "to": "test:scripts/architecture/deploy-runbook-execution.test.ts",
       "kind": "invokes"
@@ -55191,6 +55475,11 @@
     {
       "from": "command:test:deployment-tools",
       "to": "command:github:ci-policy",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
+      "to": "command:test:deploy-all-resume",
       "kind": "invokes"
     },
     {
@@ -56095,6 +56384,21 @@
     },
     {
       "from": "command:test:storage-image-manager-core",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:store-name-draft",
+      "to": "test:src/features/profile/tests/profile-edit-navigation.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:store-name-draft",
+      "to": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:store-name-draft",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -69766,6 +70070,41 @@
       "detail": "scripts/docs/context.ts"
     },
     {
+      "from": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "to": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
+      "kind": "references",
+      "detail": "./capacitor/release-command-center.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "to": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "kind": "references",
+      "detail": "./deployment-targets.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "to": "document:docs/07-mobile-and-release/release-and-secrets.md",
+      "kind": "references",
+      "detail": "./release-and-secrets.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "to": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "kind": "references",
+      "detail": "./scripts-and-workflows.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "to": "package:@asol/native-core",
+      "kind": "references",
+      "detail": "@asol/native-core"
+    },
+    {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
@@ -70037,6 +70376,12 @@
       "to": "document:docs/07-mobile-and-release/cloud-environments.md",
       "kind": "references",
       "detail": "./cloud-environments.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "kind": "references",
+      "detail": "./deploy-all-resume-and-checkpoints.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
@@ -77294,7 +77639,37 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/release-core/src/pipeline/phases.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/release-core/src/pipeline/preflight-graph.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -81302,6 +81677,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/deployed-origin-resolution.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/docs/api-and-write-catalogs.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -81477,6 +81858,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/fastlane-secret-policy.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/gate-step-checkpoints.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -81717,6 +82104,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/send-coordinator-completion-email.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/service-build-cache.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -84200,6 +84593,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/deploy-all-resume.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/deploy-all.test.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -86450,6 +86849,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/auth/presentation/OtpInput.tsx",
       "kind": "documents",
       "detail": "src/features/"
@@ -86487,6 +86892,12 @@
     {
       "from": "domain:platform-features",
       "to": "source:src/features/auth/presentation/SessionProvider.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/auth/presentation/StoreNameInput.tsx",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -89762,6 +90173,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/profile/presentation/hooks/use-profile-carrier-labels.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -91509,6 +91926,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:src/features/profile/tests/profiles-service-module-contract.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/profile/tests/store-name-draft.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -96404,6 +96827,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/auth/presentation/OtpInput.tsx",
       "kind": "documents",
       "detail": "src/features/"
@@ -96441,6 +96870,12 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/auth/presentation/SessionProvider.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/auth/presentation/StoreNameInput.tsx",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -99716,6 +100151,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/profile/presentation/hooks/use-profile-carrier-labels.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -101367,6 +101808,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/profile/tests/profiles-service-module-contract.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/profile/tests/store-name-draft.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -130681,6 +131128,12 @@
       "kind": "affects-runtime"
     },
     {
+      "from": "script:scripts/build-all-services.ts",
+      "to": "script:scripts/service-build-cache.ts",
+      "kind": "imports",
+      "detail": "./service-build-cache"
+    },
+    {
       "from": "script:scripts/build-android-debug.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -130920,6 +131373,12 @@
     },
     {
       "from": "script:scripts/check-deployed-origins.ts",
+      "to": "script:scripts/deployed-origin-resolution.ts",
+      "kind": "imports",
+      "detail": "./deployed-origin-resolution"
+    },
+    {
+      "from": "script:scripts/check-deployed-origins.ts",
       "to": "script:scripts/load-release-env.ts",
       "kind": "imports",
       "detail": "./load-release-env"
@@ -131057,6 +131516,12 @@
     },
     {
       "from": "script:scripts/check-service-smoke.ts",
+      "to": "script:scripts/service-build-cache.ts",
+      "kind": "imports",
+      "detail": "./service-build-cache"
+    },
+    {
+      "from": "script:scripts/check-service-smoke.ts",
       "to": "environment-key:ASOL_SERVICE_SMOKE_ONLY",
       "kind": "uses-environment"
     },
@@ -131160,6 +131625,21 @@
       "to": "script:scripts/load-release-env.ts",
       "kind": "imports",
       "detail": "./load-release-env"
+    },
+    {
+      "from": "script:scripts/deploy-all.ts",
+      "to": "environment-key:ASOL_DEPLOY_REVISION_AT_START",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/deploy-all.ts",
+      "to": "environment-key:ASOL_DEPLOY_RUN_ID",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/deploy-all.ts",
+      "to": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
+      "kind": "uses-environment"
     },
     {
       "from": "script:scripts/deploy-all.ts",
@@ -131318,6 +131798,17 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/deployed-origin-resolution.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/deployed-origin-resolution.ts",
+      "to": "package:@asol/native-core",
+      "kind": "imports",
+      "detail": "@asol/native-core"
     },
     {
       "from": "script:scripts/docs/api-and-write-catalogs.ts",
@@ -131966,6 +132457,22 @@
       "detail": "./ensure-release-secrets-restored"
     },
     {
+      "from": "script:scripts/gate-step-checkpoints.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/gate-step-checkpoints.ts",
+      "to": "package:@asol/release-core",
+      "kind": "imports",
+      "detail": "@asol/release-core"
+    },
+    {
+      "from": "script:scripts/gate-step-checkpoints.ts",
+      "to": "environment-key:ASOL_DEPLOY_RUN_ID",
+      "kind": "uses-environment"
+    },
+    {
       "from": "script:scripts/generate-app-init-public.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -132520,6 +133027,12 @@
     },
     {
       "from": "script:scripts/run-generated-gate.ts",
+      "to": "script:scripts/gate-step-checkpoints.ts",
+      "kind": "imports",
+      "detail": "./gate-step-checkpoints"
+    },
+    {
+      "from": "script:scripts/run-generated-gate.ts",
       "to": "script:scripts/generated-gate-contract.ts",
       "kind": "imports",
       "detail": "./generated-gate-contract"
@@ -132717,6 +133230,22 @@
     {
       "from": "script:scripts/send-coordinator-completion-email.ts",
       "to": "environment-key:PASSWORD_RECOVERY_GMAIL_USER",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/service-build-cache.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/service-build-cache.ts",
+      "to": "package:@asol/release-core",
+      "kind": "imports",
+      "detail": "@asol/release-core"
+    },
+    {
+      "from": "script:scripts/service-build-cache.ts",
+      "to": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
       "kind": "uses-environment"
     },
     {
@@ -166127,9 +166656,39 @@
     },
     {
       "from": "source:packages/release-core/src/index.ts",
+      "to": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "kind": "imports",
+      "detail": "./pipeline/branch-checkpoints"
+    },
+    {
+      "from": "source:packages/release-core/src/index.ts",
+      "to": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "kind": "imports",
+      "detail": "./pipeline/branch-resume"
+    },
+    {
+      "from": "source:packages/release-core/src/index.ts",
+      "to": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "kind": "imports",
+      "detail": "./pipeline/error-summary"
+    },
+    {
+      "from": "source:packages/release-core/src/index.ts",
+      "to": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "kind": "imports",
+      "detail": "./pipeline/input-hash"
+    },
+    {
+      "from": "source:packages/release-core/src/index.ts",
       "to": "source:packages/release-core/src/pipeline/phases.ts",
       "kind": "imports",
       "detail": "./pipeline/phases"
+    },
+    {
+      "from": "source:packages/release-core/src/index.ts",
+      "to": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "kind": "imports",
+      "detail": "./pipeline/preflight-graph"
     },
     {
       "from": "source:packages/release-core/src/index.ts",
@@ -166148,6 +166707,150 @@
       "to": "source:packages/release-core/src/pipeline/state.ts",
       "kind": "imports",
       "detail": "./pipeline/state"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "to": "source:packages/release-core/src/console/deploy-all-runbook.ts",
+      "kind": "imports",
+      "detail": "../console/deploy-all-runbook"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "to": "source:packages/release-core/src/pipeline/state.ts",
+      "kind": "imports",
+      "detail": "./state"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "to": "source:packages/release-core/src/console/deploy-all-runbook.ts",
+      "kind": "imports",
+      "detail": "../console/deploy-all-runbook"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "to": "source:packages/release-core/src/pipeline/phases.ts",
+      "kind": "imports",
+      "detail": "./phases"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
     },
     {
       "from": "source:packages/release-core/src/pipeline/phases.ts",
@@ -166178,6 +166881,42 @@
       "from": "source:packages/release-core/src/pipeline/phases.ts",
       "to": "package:@asol/release-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "to": "source:packages/release-core/src/console/deploy-all-runbook.ts",
+      "kind": "imports",
+      "detail": "../console/deploy-all-runbook"
     },
     {
       "from": "source:packages/release-core/src/pipeline/push-main-branch.ts",
@@ -184329,12 +185068,6 @@
     },
     {
       "from": "source:src/features/auth/presentation/EmailInput.tsx",
-      "to": "external-dependency:lucide-react",
-      "kind": "imports",
-      "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/auth/presentation/EmailInput.tsx",
       "to": "external-dependency:react-hook-form",
       "kind": "imports",
       "detail": "react-hook-form"
@@ -185042,6 +185775,60 @@
       "detail": "@/shared/i18n"
     },
     {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "feature:auth",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "source:src/features/auth/presentation/EmailInput.tsx",
+      "kind": "imports",
+      "detail": "@/features/auth/presentation/EmailInput"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "kind": "imports",
+      "detail": "@/features/auth/presentation/StoreNameInput"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "to": "source:src/shared/i18n/index.ts",
+      "kind": "imports",
+      "detail": "@/shared/i18n"
+    },
+    {
       "from": "source:src/features/auth/presentation/OtpInput.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -185415,15 +186202,15 @@
     },
     {
       "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",
-      "to": "source:src/features/auth/presentation/EmailInput.tsx",
-      "kind": "imports",
-      "detail": "@/features/auth/presentation/EmailInput"
-    },
-    {
-      "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",
       "to": "source:src/features/auth/presentation/hooks/use-register.ts",
       "kind": "imports",
       "detail": "./hooks/use-register"
+    },
+    {
+      "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",
+      "to": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "kind": "imports",
+      "detail": "@/features/auth/presentation/OptionalRegistrationFields"
     },
     {
       "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",
@@ -185526,6 +186313,66 @@
       "to": "source:src/shared/session-runtime/index.ts",
       "kind": "imports",
       "detail": "@/shared/session-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "feature:auth",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "external-dependency:react-hook-form",
+      "kind": "imports",
+      "detail": "react-hook-form"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "source:src/shared/i18n/index.ts",
+      "kind": "imports",
+      "detail": "@/shared/i18n"
+    },
+    {
+      "from": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "to": "source:src/shared/utils.ts",
+      "kind": "imports",
+      "detail": "@/shared/utils"
     },
     {
       "from": "source:src/features/auth/server.ts",
@@ -214464,6 +215311,36 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "to": "feature:profile",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:src/features/profile/presentation/hooks/use-profile-carrier-labels.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -214882,6 +215759,12 @@
       "to": "source:src/features/profile/domain/store-details.entity.ts",
       "kind": "imports",
       "detail": "../../domain/store-details.entity"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/use-store-details.ts",
+      "to": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "kind": "imports",
+      "detail": "./store-name-draft"
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-store-details.ts",
@@ -216595,6 +217478,12 @@
     },
     {
       "from": "source:src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "to": "source:src/features/profile/presentation/hooks/use-store-details.ts",
+      "kind": "imports",
+      "detail": "@/features/profile/presentation/hooks/use-store-details"
+    },
+    {
+      "from": "source:src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
       "to": "source:src/features/profile/presentation/profile-save-controller.ts",
       "kind": "imports",
       "detail": "./profile-save-controller"
@@ -218164,6 +219053,12 @@
       "to": "package:@asol/native-core",
       "kind": "imports",
       "detail": "@asol/native-core"
+    },
+    {
+      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
+      "to": "package:@asol/release-core",
+      "kind": "imports",
+      "detail": "@asol/release-core/console"
     },
     {
       "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
@@ -235698,6 +236593,11 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/release-core/src/tests/index.test.ts",
+      "to": "environment-key:ASOL_TEST_DEPLOY_TOKEN",
+      "kind": "uses-environment"
+    },
+    {
       "from": "test:packages/secrets-core/src/tests/index.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -237699,6 +238599,65 @@
       "from": "test:scripts/architecture/import-without-composition.test.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "package:@asol/release-core",
+      "kind": "imports",
+      "detail": "@asol/release-core"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "script:scripts/deployed-origin-resolution.ts",
+      "kind": "imports",
+      "detail": "../deployed-origin-resolution"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "script:scripts/gate-step-checkpoints.ts",
+      "kind": "imports",
+      "detail": "../gate-step-checkpoints"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "script:scripts/service-build-cache.ts",
+      "kind": "imports",
+      "detail": "../service-build-cache"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "package:@asol/release-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "script:scripts/deployed-origin-resolution.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "script:scripts/gate-step-checkpoints.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "script:scripts/service-build-cache.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "environment-key:ASOL_DEPLOY_RUN_ID",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:scripts/tests/deploy-all-resume.test.ts",
+      "to": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
+      "kind": "uses-environment"
     },
     {
       "from": "test:scripts/tests/deploy-all.test.ts",
@@ -240480,6 +241439,47 @@
     },
     {
       "from": "test:src/features/profile/tests/profiles-service-module-contract.test.ts",
+      "to": "feature:profile",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "to": "feature:profile",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "to": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "kind": "imports",
+      "detail": "../presentation/hooks/store-name-draft"
+    },
+    {
+      "from": "test:src/features/profile/tests/store-name-draft.test.ts",
       "to": "feature:profile",
       "kind": "tests"
     },

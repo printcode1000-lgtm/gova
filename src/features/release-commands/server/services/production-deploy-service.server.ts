@@ -6,6 +6,7 @@ import {
   REMOTE_DEPLOY_ALL_CONFIRMATION,
   isRemoteDeployAllTerminal,
   type RemoteDeployAllCallbackInput,
+  type RemoteDeployAllOptions,
   type RemoteDeployAllResult,
 } from "@asol/vercel-deploy-core/remote-deploy-contracts";
 import {
@@ -95,6 +96,7 @@ export async function startProductionDeploy(input: {
   callbackUrl: string;
   command?: "deploy:all" | "deploy:push";
   target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
+  deployAllOptions?: RemoteDeployAllOptions;
 }): Promise<RemoteDeployAllResult> {
   if (input.confirmation?.trim() !== REMOTE_DEPLOY_ALL_CONFIRMATION) {
     throw new Error("productionDeployConfirmationRequired");
@@ -106,6 +108,7 @@ export async function startProductionDeploy(input: {
     callbackUrl: input.callbackUrl,
     command: input.command,
     target: input.target,
+    deployAllOptions: input.deployAllOptions,
   }).catch(translateSandboxError);
 }
 

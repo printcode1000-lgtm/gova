@@ -27,6 +27,21 @@ assert.doesNotMatch(loginPage, /continueToApp/);
 assert.doesNotMatch(loginPage, /handleContinue/);
 assert.doesNotMatch(login, /submitted: mutation\.isSuccess/);
 assert.match(registration, /queueRegistrationSuccessToast\(\)/);
+assert.match(
+  registration,
+  /return sessionService\.saveSession\(/,
+  'registration must await session persistence the same way login does',
+);
+assert.doesNotMatch(
+  registration,
+  /profileService\.saveStoreDetails/,
+  'store name at registration is persisted by the register API, not a client profile write',
+);
+const optionalFields = source('src/features/auth/presentation/OptionalRegistrationFields.tsx');
+assert.match(optionalFields, /StoreNameInput/);
+const bootstrap = source('src/features/auth/server/auth-core-bootstrap.server.ts');
+assert.match(bootstrap, /saveStoreName/);
+assert.match(bootstrap, /upsertStoreDetailsCommand/);
 assert.doesNotMatch(registrationPage, /if \(submitted\)/);
 assert.doesNotMatch(registrationPage, /continueToApp/);
 assert.doesNotMatch(registrationPage, /handleContinue/);

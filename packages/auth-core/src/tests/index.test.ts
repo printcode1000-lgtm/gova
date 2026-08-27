@@ -13,11 +13,14 @@ import {
 import * as runtimeApi from '../index';
 import * as serverApi from '../server';
 import {
+  AuthOperationsService,
   createSignedSessionToken,
   hashPassword,
   registerSessionSigningSecret,
   verifyPassword,
   verifySignedSessionToken,
+  type AuthUserRecord,
+  type AuthUserRepositoryPort,
 } from '../server';
 
 export function runConstantsTest() {
@@ -125,6 +128,69 @@ export async function runImageDeletionRetryTest() {
   console.log('✅ auth-core image deletion retry test passed');
 }
 
+function createMemoryUsers(): AuthUserRepositoryPort {
+  const byUid = new Map<string, AuthUserRecord>();
+  return {
+    async createUser(input) {
+      byUid.set(input.uid, {
+        uid: input.uid,
+        phone: input.phone,
+        email: input.email,
+        password: input.password,
+      });
+    },
+    async getByPhone(phone) {
+      return [...byUid.values()].find((user) => user.phone === phone) ?? null;
+    },
+    async getByUid(uid) {
+      return byUid.get(uid) ?? null;
+    },
+    async getByEmail(email) {
+      return [...byUid.values()].find((user) => user.email === email) ?? null;
+    },
+    async update() {},
+    async updateLastLogin() {},
+  };
+}
+
+export async function runRegistrationStoreNameTest() {
+  const saved: Array<{ uid: string; storeName: string }> = [];
+  const service = new AuthOperationsService(
+    createMemoryUsers(),
+    { getProfileSpecialties: async () => ({ main: [], sub: {} }) },
+    {
+      saveStoreName: async (uid, storeName) => {
+        saved.push({ uid, storeName });
+      },
+    },
+  );
+
+  const created = await service.register({
+    phone: '01026546550',
+    password: '0258',
+    storeName: '  متجر الاختبار  ',
+  });
+  assert.match(created.uid, /^usr_/);
+  assert.deepEqual(saved, [{ uid: created.uid, storeName: 'متجر الاختبار' }]);
+
+  saved.length = 0;
+  await service.register({
+    phone: '01126546550',
+    password: '0258',
+    storeName: '   ',
+  });
+  assert.deepEqual(saved, []);
+
+  saved.length = 0;
+  await service.register({
+    phone: '01226546550',
+    password: '0258',
+  });
+  assert.deepEqual(saved, []);
+
+  console.log('✅ auth-core registration store name test passed');
+}
+
 export async function runSuperAdminAccountDeletionTest() {
   serverApi.registerSuperAdminIdentity(() => ({
     uid: 'super-admin-uid',
@@ -203,6 +269,7 @@ async function main() {
   runSessionTokenTest();
   runPublicSurfaceTest();
   await runImageDeletionRetryTest();
+  await runRegistrationStoreNameTest();
   await runSuperAdminAccountDeletionTest();
   console.log('\n🎉 All @asol/auth-core tests passed successfully!');
 }

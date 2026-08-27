@@ -2656,6 +2656,20 @@
       ]
     },
     {
+      "id": "command:test:deploy-all-resume",
+      "kind": "command",
+      "name": "npm run test:deploy-all-resume",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "deploy-all-resume",
+        "npm",
+        "npm run test:deploy-all-resume",
+        "run",
+        "test",
+        "test:deploy-all-resume"
+      ]
+    },
+    {
       "id": "command:test:deploy-runbook-execution",
       "kind": "command",
       "name": "npm run test:deploy-runbook-execution",
@@ -3423,6 +3437,20 @@
         "storage-image-manager-core",
         "test",
         "test:storage-image-manager-core"
+      ]
+    },
+    {
+      "id": "command:test:store-name-draft",
+      "kind": "command",
+      "name": "npm run test:store-name-draft",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:store-name-draft",
+        "run",
+        "store-name-draft",
+        "test",
+        "test:store-name-draft"
       ]
     },
     {
@@ -12797,6 +12825,55 @@
       ]
     },
     {
+      "id": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "kind": "document",
+      "name": "deploy:all Resume, Checkpoints and Parallel Preflight",
+      "path": "docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "summary": "Explain how `npm run deploy:all` resumes, what it is allowed to reuse from an earlier run, how preflight branches are scheduled concurrently, and which steps may never be skipped for any reason.",
+      "tags": [
+        "@asol/native-core",
+        "all",
+        "allowed",
+        "an",
+        "and",
+        "any",
+        "are",
+        "be",
+        "branches",
+        "checkpoints",
+        "concurrently",
+        "deploy",
+        "deploy:all resume, checkpoints and parallel preflight",
+        "docs/07-mobile-and-release/deploy-all-resume-and-checkpoints",
+        "docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+        "earlier",
+        "explain",
+        "explain how `npm run deploy:all` resumes, what it is allowed to reuse from an earlier run, how preflight branches are scheduled concurrently, and which steps may never be skipped for any reason.",
+        "for",
+        "from",
+        "how",
+        "is",
+        "it",
+        "may",
+        "md",
+        "never",
+        "npm",
+        "parallel",
+        "preflight",
+        "reason",
+        "resume",
+        "resumes",
+        "reuse",
+        "run",
+        "scheduled",
+        "skipped",
+        "steps",
+        "to",
+        "what",
+        "which"
+      ]
+    },
+    {
       "id": "document:docs/07-mobile-and-release/deployment-targets.md",
       "kind": "document",
       "name": "Deployment Targets",
@@ -16079,6 +16156,32 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_DEPLOY_REVISION_AT_START",
+      "kind": "environment-key",
+      "name": "ASOL_DEPLOY_REVISION_AT_START",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_deploy_revision_at_start",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_DEPLOY_RUN_ID",
+      "kind": "environment-key",
+      "name": "ASOL_DEPLOY_RUN_ID",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_deploy_run_id",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_IOS_BUNDLE_ID",
       "kind": "environment-key",
       "name": "ASOL_IOS_BUNDLE_ID",
@@ -16508,6 +16611,19 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
+      "kind": "environment-key",
+      "name": "ASOL_SERVICE_SMOKE_REBUILD",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_service_smoke_rebuild",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_SESSION_SIGNING_SECRET",
       "kind": "environment-key",
       "name": "ASOL_SESSION_SIGNING_SECRET",
@@ -16540,6 +16656,19 @@
       "summary": "Server/tooling environment key name",
       "tags": [
         "asol_static_preview_api_base_url",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_TEST_DEPLOY_TOKEN",
+      "kind": "environment-key",
+      "name": "ASOL_TEST_DEPLOY_TOKEN",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_test_deploy_token",
         "environment",
         "server",
         "server tooling environment",
@@ -25093,6 +25222,17 @@
       ]
     },
     {
+      "id": "script:scripts/deployed-origin-resolution.ts",
+      "kind": "script",
+      "name": "deployed-origin-resolution.ts",
+      "path": "scripts/deployed-origin-resolution.ts",
+      "tags": [
+        "scripts/deployed-origin-resolution",
+        "scripts/deployed-origin-resolution.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/docs/api-and-write-catalogs.ts",
       "kind": "script",
       "name": "api-and-write-catalogs.ts",
@@ -25419,6 +25559,17 @@
       "tags": [
         "scripts/fastlane-secret-policy",
         "scripts/fastlane-secret-policy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/gate-step-checkpoints.ts",
+      "kind": "script",
+      "name": "gate-step-checkpoints.ts",
+      "path": "scripts/gate-step-checkpoints.ts",
+      "tags": [
+        "scripts/gate-step-checkpoints",
+        "scripts/gate-step-checkpoints.ts",
         "ts"
       ]
     },
@@ -25859,6 +26010,17 @@
       "tags": [
         "scripts/send-coordinator-completion-email",
         "scripts/send-coordinator-completion-email.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/service-build-cache.ts",
+      "kind": "script",
+      "name": "service-build-cache.ts",
+      "path": "scripts/service-build-cache.ts",
+      "tags": [
+        "scripts/service-build-cache",
+        "scripts/service-build-cache.ts",
         "ts"
       ]
     },
@@ -34890,6 +35052,50 @@
       ]
     },
     {
+      "id": "source:packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "kind": "source",
+      "name": "branch-checkpoints.ts",
+      "path": "packages/release-core/src/pipeline/branch-checkpoints.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/branch-checkpoints",
+        "packages/release-core/src/pipeline/branch-checkpoints.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/branch-resume.ts",
+      "kind": "source",
+      "name": "branch-resume.ts",
+      "path": "packages/release-core/src/pipeline/branch-resume.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/branch-resume",
+        "packages/release-core/src/pipeline/branch-resume.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "kind": "source",
+      "name": "error-summary.ts",
+      "path": "packages/release-core/src/pipeline/error-summary.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/error-summary",
+        "packages/release-core/src/pipeline/error-summary.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "kind": "source",
+      "name": "input-hash.ts",
+      "path": "packages/release-core/src/pipeline/input-hash.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/input-hash",
+        "packages/release-core/src/pipeline/input-hash.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/release-core/src/pipeline/phases.ts",
       "kind": "source",
       "name": "phases.ts",
@@ -34897,6 +35103,17 @@
       "tags": [
         "packages/release-core/src/pipeline/phases",
         "packages/release-core/src/pipeline/phases.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/preflight-graph.ts",
+      "kind": "source",
+      "name": "preflight-graph.ts",
+      "path": "packages/release-core/src/pipeline/preflight-graph.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/preflight-graph",
+        "packages/release-core/src/pipeline/preflight-graph.ts",
         "ts"
       ]
     },
@@ -40362,6 +40579,17 @@
       ]
     },
     {
+      "id": "source:src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "kind": "source",
+      "name": "OptionalRegistrationFields.tsx",
+      "path": "src/features/auth/presentation/OptionalRegistrationFields.tsx",
+      "tags": [
+        "src/features/auth/presentation/optionalregistrationfields",
+        "src/features/auth/presentation/optionalregistrationfields.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/auth/presentation/OtpInput.tsx",
       "kind": "source",
       "name": "OtpInput.tsx",
@@ -40435,6 +40663,17 @@
       "tags": [
         "src/features/auth/presentation/sessionprovider",
         "src/features/auth/presentation/sessionprovider.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/auth/presentation/StoreNameInput.tsx",
+      "kind": "source",
+      "name": "StoreNameInput.tsx",
+      "path": "src/features/auth/presentation/StoreNameInput.tsx",
+      "tags": [
+        "src/features/auth/presentation/storenameinput",
+        "src/features/auth/presentation/storenameinput.tsx",
         "tsx"
       ]
     },
@@ -46570,6 +46809,17 @@
       ]
     },
     {
+      "id": "source:src/features/profile/presentation/hooks/store-name-draft.ts",
+      "kind": "source",
+      "name": "store-name-draft.ts",
+      "path": "src/features/profile/presentation/hooks/store-name-draft.ts",
+      "tags": [
+        "src/features/profile/presentation/hooks/store-name-draft",
+        "src/features/profile/presentation/hooks/store-name-draft.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/profile/presentation/hooks/use-profile-carrier-labels.ts",
       "kind": "source",
       "name": "use-profile-carrier-labels.ts",
@@ -51592,6 +51842,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/deploy-all-resume.test.ts",
+      "kind": "test",
+      "name": "deploy-all-resume.test.ts",
+      "path": "scripts/tests/deploy-all-resume.test.ts",
+      "tags": [
+        "scripts/tests/deploy-all-resume",
+        "scripts/tests/deploy-all-resume.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/deploy-all.test.ts",
       "kind": "test",
       "name": "deploy-all.test.ts",
@@ -52413,6 +52675,18 @@
       "tags": [
         "src/features/profile/tests/profiles-service-module-contract",
         "src/features/profile/tests/profiles-service-module-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/profile/tests/store-name-draft.test.ts",
+      "kind": "test",
+      "name": "store-name-draft.test.ts",
+      "path": "src/features/profile/tests/store-name-draft.test.ts",
+      "tags": [
+        "src/features/profile/tests/store-name-draft",
+        "src/features/profile/tests/store-name-draft.test.ts",
         "test",
         "ts"
       ]

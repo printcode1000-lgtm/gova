@@ -185,8 +185,9 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:data-health` | `Tooling` | 4 |  | 1 |
 | `npm run test:data-health-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
+| `npm run test:deploy-all-resume` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-runbook-execution` | `Tooling` | 1 |  | 0 |
-| `npm run test:deployment-tools` | `Tooling` | 13 |  | 0 |
+| `npm run test:deployment-tools` | `Tooling` | 14 |  | 0 |
 | `npm run test:dev-cloud-backup` | `Tooling` | 1 |  | 1 |
 | `npm run test:dev-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:env-core` | `Tooling` | 1 |  | 0 |
@@ -240,6 +241,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:signed-token-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:storage-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:storage-image-manager-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:store-name-draft` | `Tooling` | 2 |  | 0 |
 | `npm run test:sub2main-composition` | `Tooling` | 1 |  | 1 |
 | `npm run test:submain-composition` | `Tooling` | 1 |  | 1 |
 | `npm run test:super-admin-ui-inspector` | `Tooling` | 1 |  | 0 |

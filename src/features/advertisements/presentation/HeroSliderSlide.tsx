@@ -69,7 +69,6 @@ export function HeroSliderSlide({
 
   return (
     <div {...uiAttributes({ uid: "home-promotion-N611zJ", id: "home-promotion", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "home-promotion" } })}
-      key={`${slide.priority}-${index}`}
       style={slideStyle}
       className={slideClass}
       onClick={() => onSlideClick(slide.action)}

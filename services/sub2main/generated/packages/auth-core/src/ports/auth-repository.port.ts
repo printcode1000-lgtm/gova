@@ -28,3 +28,7 @@ export interface AuthUserRepositoryPort {
 export interface ProfileSpecialtiesPort {
   getProfileSpecialties(uid: string): Promise<ProfileSpecialtiesSelection>;
 }
+
+export interface ProfileStoreNamePort {
+  saveStoreName(uid: string, storeName: string): Promise<void>;
+}

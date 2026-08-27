@@ -19,8 +19,11 @@ import { NativeCore } from "@asol/native-core";
 import {
   REMOTE_DEPLOY_ALL_CONFIRMATION,
   REMOTE_DEPLOY_ALL_STAGES,
+  type RemoteDeployAllOptions,
+  type RemoteDeployAllResumeMode,
   type RemoteDeployAllStage,
 } from "@asol/vercel-deploy-core/remote-deploy-contracts";
+import { deployAllBranchIds } from "@asol/release-core/console";
 
 const TIMELINE: readonly RemoteDeployAllStage[] = REMOTE_DEPLOY_ALL_STAGES.filter(
   (stage) => stage !== "idle",
@@ -52,6 +55,9 @@ export function ProductionDeployPage() {
   const [confirmation, setConfirmation] = React.useState("");
   const [tab, setTab] = React.useState<"deploy:all" | "deploy:push">("deploy:all");
   const [target, setTarget] = React.useState<PushTarget>("all");
+  const [resumeMode, setResumeMode] = React.useState<RemoteDeployAllResumeMode>("full");
+  const [branchId, setBranchId] = React.useState(DEPLOY_ALL_BRANCH_IDS[0] ?? "");
+  const [serviceSmokeRebuild, setServiceSmokeRebuild] = React.useState(false);
   const logRef = React.useRef<HTMLPreElement | null>(null);
   const now = useTickingClock(running);
 
@@ -67,7 +73,17 @@ export function ProductionDeployPage() {
 
   const snapshot = result?.snapshot;
   const readiness = result?.readiness;
-  const armed = confirmation.trim() === REMOTE_DEPLOY_ALL_CONFIRMATION && !running && !starting;
+  const branchRequired = tab === "deploy:all" && (resumeMode === "from-branch" || resumeMode === "rerun-branch");
+  const deployAllOptions: RemoteDeployAllOptions = {
+    resumeMode,
+    branchId: branchRequired ? branchId : undefined,
+    serviceSmokeRebuild,
+  };
+  const armed =
+    confirmation.trim() === REMOTE_DEPLOY_ALL_CONFIRMATION &&
+    !running &&
+    !starting &&
+    (!branchRequired || Boolean(branchId));
   const currentIndex = snapshot ? TIMELINE.indexOf(snapshot.stage) : -1;
   const totalElapsed = snapshot ? deployElapsedMs(snapshot, now) : null;
   const timings = snapshot ? stageTimings(snapshot, now) : new Map();
@@ -105,8 +121,21 @@ export function ProductionDeployPage() {
       ) : null}
 
       <section className="space-y-3 rounded-lg border p-3">
-        {tab === "deploy:push" ? <label className="block text-sm font-medium" htmlFor="production-deploy-target">هدف Deploy Push</label> : null}
-        {tab === "deploy:push" ? <select id="production-deploy-target" value={target} onChange={(event) => setTarget(event.target.value as PushTarget)} className="h-10 w-full rounded-md border bg-background px-3 text-sm" aria-label="هدف Deploy Push">{PUSH_TARGETS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select> : null}
+        {tab === "deploy:push" ? (
+          <>
+            <label className="block text-sm font-medium" htmlFor="production-deploy-target">هدف Deploy Push</label>
+            <select id="production-deploy-target" value={target} onChange={(event) => setTarget(event.target.value as PushTarget)} className="h-10 w-full rounded-md border bg-background px-3 text-sm" aria-label="هدف Deploy Push">{PUSH_TARGETS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+          </>
+        ) : (
+          <DeployAllOptions
+            resumeMode={resumeMode}
+            setResumeMode={setResumeMode}
+            branchId={branchId}
+            setBranchId={setBranchId}
+            serviceSmokeRebuild={serviceSmokeRebuild}
+            setServiceSmokeRebuild={setServiceSmokeRebuild}
+          />
+        )}
         <label className="block text-sm font-medium" htmlFor="production-deploy-confirmation">
           اكتب عبارة التأكيد
         </label>
@@ -126,7 +155,7 @@ export function ProductionDeployPage() {
           className="w-full active:scale-[0.99] focus-visible:ring-2"
           onClick={() => {
             setConfirmation("");
-            void start(tab, target);
+            void start(tab, target, tab === "deploy:all" ? deployAllOptions : undefined);
           }}
         >
           {starting || running ? (
@@ -153,6 +182,10 @@ export function ProductionDeployPage() {
           <dd dir="ltr" className="break-all">{snapshot?.requestId ?? "—"}</dd>
           <dt className="text-muted-foreground">البريد</dt>
           <dd>{snapshot?.emailStatus ?? "—"}</dd>
+          <dt className="text-muted-foreground">الأمر</dt>
+          <dd dir="ltr">{snapshot?.command ?? "—"}</dd>
+          <dt className="text-muted-foreground">وضع Deploy All</dt>
+          <dd>{snapshot?.deployAllOptions ? deployAllModeLabel(snapshot.deployAllOptions) : "—"}</dd>
           <dt className="flex items-center gap-1 text-muted-foreground">
             <Timer className="h-3.5 w-3.5" aria-hidden />
             المدة
@@ -215,6 +248,70 @@ export function ProductionDeployPage() {
 
 type PushTarget = "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
 const PUSH_TARGETS: readonly [PushTarget, string][] = [["all", "كل الأهداف"], ["main", "التطبيق الرئيسي"], ["notifications", "الإشعارات"], ["products", "المنتجات"], ["orders", "الطلبات"], ["profiles", "الملفات الشخصية"], ["submain", "Submain"], ["sub2main", "Sub2main"]];
+const DEPLOY_ALL_BRANCH_IDS = deployAllBranchIds();
+const DEPLOY_ALL_RESUME_MODES: readonly [RemoteDeployAllResumeMode, string][] = [
+  ["full", "تشغيل كامل"],
+  ["from-branch", "استكمال من فرع"],
+  ["rerun-branch", "إعادة فرع واحد"],
+  ["rerun-failed", "استكمال من أول فشل محفوظ"],
+];
+
+function deployAllModeLabel(options: RemoteDeployAllOptions): string {
+  const mode = DEPLOY_ALL_RESUME_MODES.find(([value]) => value === (options.resumeMode ?? "full"))?.[1] ?? "تشغيل كامل";
+  const branch = options.branchId ? ` (${options.branchId})` : "";
+  const rebuild = options.serviceSmokeRebuild ? " + rebuild smoke" : "";
+  return `${mode}${branch}${rebuild}`;
+}
+
+function DeployAllOptions(props: {
+  resumeMode: RemoteDeployAllResumeMode;
+  setResumeMode: (value: RemoteDeployAllResumeMode) => void;
+  branchId: string;
+  setBranchId: (value: string) => void;
+  serviceSmokeRebuild: boolean;
+  setServiceSmokeRebuild: (value: boolean) => void;
+}) {
+  const needsBranch = props.resumeMode === "from-branch" || props.resumeMode === "rerun-branch";
+  return (
+    <div className="space-y-3">
+      <label className="block text-sm font-medium" htmlFor="production-deploy-resume-mode">وضع Deploy All</label>
+      <select
+        id="production-deploy-resume-mode"
+        value={props.resumeMode}
+        onChange={(event) => props.setResumeMode(event.target.value as RemoteDeployAllResumeMode)}
+        className="h-10 w-full rounded-md border bg-background px-3 text-sm"
+        aria-label="وضع Deploy All"
+      >
+        {DEPLOY_ALL_RESUME_MODES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+      </select>
+      {needsBranch ? (
+        <>
+          <label className="block text-sm font-medium" htmlFor="production-deploy-branch">فرع runbook</label>
+          <select
+            id="production-deploy-branch"
+            value={props.branchId}
+            onChange={(event) => props.setBranchId(event.target.value)}
+            className="h-10 w-full rounded-md border bg-background px-3 text-sm"
+            aria-label="فرع runbook"
+            dir="ltr"
+          >
+            {DEPLOY_ALL_BRANCH_IDS.map((id) => <option key={id} value={id}>{id}</option>)}
+          </select>
+        </>
+      ) : null}
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={props.serviceSmokeRebuild}
+          onChange={(event) => props.setServiceSmokeRebuild(event.target.checked)}
+          className="h-5 w-5 rounded border active:scale-95 focus-visible:ring-2"
+          aria-label="إجبار smoke services على إعادة البناء"
+        />
+        <span>إجبار smoke:services على إعادة البناء</span>
+      </label>
+    </div>
+  );
+}
 
 /**
  * The confirmation phrase, selectable and copyable.

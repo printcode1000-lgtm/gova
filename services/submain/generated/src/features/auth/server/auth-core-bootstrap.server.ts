@@ -17,7 +17,11 @@ import {
   updateUserCommand,
 } from '@asol/data-core/auth';
 import { accountDeletionRepository } from '@asol/data-core/account-deletion';
-import { getProfileSpecialtiesQuery } from '@asol/data-core/profile';
+import {
+  EMPTY_STORE_DETAILS,
+  getProfileSpecialtiesQuery,
+  upsertStoreDetailsCommand,
+} from '@asol/data-core/profile';
 
 function toAuthUserRecord(user: {
   uid: string;
@@ -51,9 +55,21 @@ const authUserRepository: AuthUserRepositoryPort = {
   updateLastLogin: (uid) => updateLastLoginCommand.execute(uid),
 };
 
-export const authOperationsService = new AuthOperationsService(authUserRepository, {
-  getProfileSpecialties: (uid) => getProfileSpecialtiesQuery.execute(uid),
-});
+export const authOperationsService = new AuthOperationsService(
+  authUserRepository,
+  {
+    getProfileSpecialties: (uid) => getProfileSpecialtiesQuery.execute(uid),
+  },
+  {
+    saveStoreName: async (uid, storeName) => {
+      await upsertStoreDetailsCommand.execute({
+        uid,
+        ...EMPTY_STORE_DETAILS,
+        storeName,
+      });
+    },
+  },
+);
 
 export const accountDeletionService = new AccountDeletionService(
   accountDeletionRepository,

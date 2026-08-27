@@ -22,6 +22,31 @@ import {
   writeDeployAllState,
 } from "@asol/release-core";
 import {
+  type BranchResumePlan,
+  type DeployBranchCheckpoint,
+  assertKnownBranchId,
+  assertPreflightGraphInvariants,
+  buildPreflightGraph,
+  decideCheckpointSkip,
+  deploymentStateProvesPhase,
+  failedBranchIds,
+  findBranchCheckpoint,
+  findRunbookBranch,
+  hashDocumentationGateSources,
+  isCheckpointSkippablePhase,
+  hashServiceInputs,
+  hashSharedGateSources,
+  planFromBranch,
+  planPreflightWaves,
+  planRerunBranch,
+  planRerunFailed,
+  readBranchCheckpoints,
+  recordBranchCheckpoint,
+  resumeFromBranchCommand,
+  smallestRetryCommand,
+  summarizeBranchError,
+} from "@asol/release-core";
+import {
   DeploymentNpmScriptError,
   runDeploymentNpmScript,
 } from "@asol/release-core";
@@ -142,6 +167,8 @@ interface DeployFlags {
   allowManifestDowngrade: boolean;
   allowScratchFiles: boolean;
   continueOnError: boolean;
+  /** Force `smoke:services` to rebuild each service instead of reusing the `services:build` output. */
+  serviceSmokeRebuild: boolean;
 }
 
 interface PhaseSelection {
@@ -150,6 +177,16 @@ interface PhaseSelection {
   fromPhase?: DeployAllPhaseId;
   revisionOverride?: string;
   selectedBranches?: ReadonlySet<string>;
+  /**
+   * Whether this invocation is a resume of an earlier run.
+   *
+   * A full `npm run deploy:all` proves the release from nothing and never
+   * consults a checkpoint. Reuse is only ever offered to a run that explicitly
+   * asked to continue one.
+   */
+  resume?: boolean;
+  /** What the operator asked for, echoed in the run header. */
+  resumeDescription?: string;
 }
 
 interface ParsedArgv {
@@ -163,15 +200,30 @@ const DEPLOY_FLAG_NAMES = new Set([
   "--allow-manifest-downgrade",
   "--allow-scratch-files",
   "--continue-on-error",
+  "--service-smoke-rebuild",
+  "--rerun-failed",
 ]);
+
+const VALUE_FLAG_PREFIXES = [
+  "--phase=",
+  "--from-phase=",
+  "--from-branch=",
+  "--rerun-branch=",
+  "--revision=",
+  "--runbook-branches=",
+] as const;
 
 function parseFlags(argv: readonly string[]): DeployFlags {
   const unknown = argv.filter(
-    (arg) => !DEPLOY_FLAG_NAMES.has(arg) && !arg.startsWith("--phase=") && !arg.startsWith("--from-phase=") && !arg.startsWith("--revision=") && !arg.startsWith("--runbook-branches=") && arg !== "--list-phases",
+    (arg) =>
+      !DEPLOY_FLAG_NAMES.has(arg) &&
+      !VALUE_FLAG_PREFIXES.some((prefix) => arg.startsWith(prefix)) &&
+      arg !== "--list-phases",
   );
   if (unknown.length > 0) {
     throw new Error(
-      `Unknown option(s): ${unknown.join(", ")}. Known deploy flags: ${[...DEPLOY_FLAG_NAMES].join(", ")}; phase flags: --phase=<id>, --from-phase=<id>, --revision=<sha>, --list-phases.`,
+      `Unknown option(s): ${unknown.join(", ")}. Known deploy flags: ${[...DEPLOY_FLAG_NAMES].join(", ")}; ` +
+        `selection flags: ${VALUE_FLAG_PREFIXES.map((prefix) => `${prefix}<value>`).join(", ")}, --list-phases.`,
     );
   }
   return {
@@ -180,6 +232,7 @@ function parseFlags(argv: readonly string[]): DeployFlags {
     allowManifestDowngrade: argv.includes("--allow-manifest-downgrade"),
     allowScratchFiles: argv.includes("--allow-scratch-files"),
     continueOnError: argv.includes("--continue-on-error"),
+    serviceSmokeRebuild: argv.includes("--service-smoke-rebuild"),
   };
 }
 
@@ -207,25 +260,105 @@ function parseSelectedBranches(argv: readonly string[]): ReadonlySet<string> | u
   return new Set(selected);
 }
 
+function parseBranchArg(
+  argv: readonly string[],
+  prefix: "--from-branch=" | "--rerun-branch=",
+): string | undefined {
+  const entry = argv.find((arg) => arg.startsWith(prefix));
+  const value = entry?.slice(prefix.length).trim();
+  if (entry && !value) {
+    throw new Error(`${prefix}<runbookBranchId> requires a branch id.`);
+  }
+  return value || undefined;
+}
+
+/**
+ * One selector per run.
+ *
+ * `--phase`, `--from-phase`, `--from-branch`, `--rerun-branch` and
+ * `--rerun-failed` all answer the same question — where does this run start —
+ * and two answers cannot both be honoured. Refusing here is what keeps a
+ * mistyped resume from quietly running more of the release than was asked for.
+ */
+function assertSingleSelector(selectors: readonly (string | undefined)[]): void {
+  const given = selectors.filter((value): value is string => Boolean(value));
+  if (given.length > 1) {
+    throw new Error(
+      "Use exactly one of --phase=<id>, --from-phase=<id>, --from-branch=<id>, --rerun-branch=<id>, --rerun-failed — not both. " +
+        `Given: ${given.join(", ")}.`,
+    );
+  }
+}
+
+function selectionFromPlan(
+  plan: BranchResumePlan,
+  revisionOverride: string | undefined,
+  explicitBranches: ReadonlySet<string> | undefined,
+): PhaseSelection {
+  return {
+    listPhases: false,
+    onlyPhase: plan.onlyPhase,
+    fromPhase: plan.fromPhase,
+    revisionOverride,
+    // An explicit --runbook-branches list narrows the plan further; it never widens it.
+    selectedBranches: explicitBranches
+      ? new Set([...plan.selectedBranches].filter((id) => explicitBranches.has(id)))
+      : plan.selectedBranches,
+    resume: true,
+    resumeDescription: plan.description,
+  };
+}
+
 function parseArgv(argv: readonly string[]): ParsedArgv {
   const flags = parseFlags(argv);
   const revisionOverride = parseRevisionArg(argv);
   const selectedBranches = parseSelectedBranches(argv);
   if (argv.includes("--list-phases")) {
-    return { flags, phase: { listPhases: true } };
+    return { flags, phase: { listPhases: true, resume: false } };
   }
 
   const onlyPhaseRaw = parsePhaseArg(argv, "--phase=");
   const fromPhaseRaw = parsePhaseArg(argv, "--from-phase=");
-  if (onlyPhaseRaw && fromPhaseRaw) {
-    throw new Error("Use either --phase=<id> or --from-phase=<id>, not both.");
+  const fromBranchRaw = parseBranchArg(argv, "--from-branch=");
+  const rerunBranchRaw = parseBranchArg(argv, "--rerun-branch=");
+  const rerunFailed = argv.includes("--rerun-failed");
+  assertSingleSelector([
+    onlyPhaseRaw && `--phase=${onlyPhaseRaw}`,
+    fromPhaseRaw && `--from-phase=${fromPhaseRaw}`,
+    fromBranchRaw && `--from-branch=${fromBranchRaw}`,
+    rerunBranchRaw && `--rerun-branch=${rerunBranchRaw}`,
+    rerunFailed ? "--rerun-failed" : undefined,
+  ]);
+
+  if (fromBranchRaw) {
+    assertKnownBranchId(fromBranchRaw);
+    return { flags, phase: selectionFromPlan(planFromBranch(fromBranchRaw), revisionOverride, selectedBranches) };
+  }
+
+  if (rerunBranchRaw) {
+    assertKnownBranchId(rerunBranchRaw);
+    return { flags, phase: selectionFromPlan(planRerunBranch(rerunBranchRaw), revisionOverride, selectedBranches) };
+  }
+
+  if (rerunFailed) {
+    return {
+      flags,
+      phase: selectionFromPlan(planRerunFailed(failedBranchIds()), revisionOverride, selectedBranches),
+    };
   }
 
   if (onlyPhaseRaw) {
     if (onlyPhaseRaw === SERVICES_PHASE_ALIAS) {
       return {
         flags,
-        phase: { listPhases: false, onlyPhase: SERVICES_PHASE_ALIAS, revisionOverride, selectedBranches },
+        phase: {
+          listPhases: false,
+          onlyPhase: SERVICES_PHASE_ALIAS,
+          revisionOverride,
+          selectedBranches,
+          resume: true,
+          resumeDescription: `run only the "${SERVICES_PHASE_ALIAS}" phase alias`,
+        },
       };
     }
     if (!isDeployAllPhaseId(onlyPhaseRaw)) {
@@ -235,7 +368,14 @@ function parseArgv(argv: readonly string[]): ParsedArgv {
     }
     return {
       flags,
-      phase: { listPhases: false, onlyPhase: onlyPhaseRaw, revisionOverride, selectedBranches },
+      phase: {
+        listPhases: false,
+        onlyPhase: onlyPhaseRaw,
+        revisionOverride,
+        selectedBranches,
+        resume: true,
+        resumeDescription: `run only phase "${onlyPhaseRaw}"`,
+      },
     };
   }
 
@@ -247,7 +387,14 @@ function parseArgv(argv: readonly string[]): ParsedArgv {
     }
     return {
       flags,
-      phase: { listPhases: false, fromPhase: fromPhaseRaw, revisionOverride, selectedBranches },
+      phase: {
+        listPhases: false,
+        fromPhase: fromPhaseRaw,
+        revisionOverride,
+        selectedBranches,
+        resume: true,
+        resumeDescription: `resume from phase "${fromPhaseRaw}"`,
+      },
     };
   }
 
@@ -257,6 +404,8 @@ function parseArgv(argv: readonly string[]): ParsedArgv {
       listPhases: false,
       revisionOverride,
       selectedBranches,
+      resume: Boolean(selectedBranches),
+      resumeDescription: selectedBranches ? "run the explicitly selected runbook branches" : undefined,
     },
   };
 }
@@ -307,7 +456,269 @@ function announceBranch(prefix: string, item: { id: string; command: string; lab
   console.log(`${prefix} branch ${item.id}: ${item.command}${item.label ? ` — ${item.label}` : ""}`);
 }
 
-function printPhaseRetryHint(failedPhase: DeployAllPhaseId): void {
+/**
+ * What every branch of this run did, and why.
+ *
+ * A resumed run's most important output is not the failure — it is the list of
+ * what it did not do. A report that says "preflight passed" after reusing nine
+ * checkpoints is a different claim from one that proved nine gates, and an
+ * operator deciding whether to publish needs to be able to tell them apart
+ * without reading the scrollback.
+ */
+type BranchRunStatus = "completed" | "skipped" | "failed";
+
+interface BranchOutcome {
+  branchId: string;
+  phase: string;
+  command: string;
+  status: BranchRunStatus;
+  /** True only when a valid checkpoint — matching SHA and input hash — replaced the run. */
+  fromCheckpoint: boolean;
+  detail: string;
+  durationMs: number;
+}
+
+interface RunContext {
+  runId: string;
+  /**
+   * Identifier every child gate sees for this invocation.
+   *
+   * `build` and `build:static` share a long list of source checks. Within one
+   * deploy run they read the same source, so the second gate may reuse the
+   * first gate's result — but only inside the same invocation, which this id
+   * scopes. A separate `npm run build` has no such id and re-proves everything.
+   */
+  gateRunId: string;
+  /** HEAD when the run started; what preflight checkpoints are recorded against. */
+  headRevision: string;
+  checkpoints: DeployBranchCheckpoint[];
+  resume: boolean;
+  ledger: BranchOutcome[];
+  /** Earliest branch this run failed on, which is the one worth retrying first. */
+  firstFailedBranchId?: string;
+  /** Set once the deployment commit is on GitHub, so failures after it can offer a rollback. */
+  pushedRevision?: string;
+  sourceHash?: string;
+  documentationSourceHash?: string;
+}
+
+function createRunContext(selection: PhaseSelection): RunContext {
+  let headRevision = "";
+  try {
+    headRevision = git(["rev-parse", "HEAD"]);
+  } catch {
+    // A repository without a commit cannot be resumed against a SHA; every
+    // checkpoint comparison then refuses to skip, which is the safe answer.
+  }
+  const state = readDeployAllState();
+  const resolvedHead = selection.revisionOverride?.trim() || headRevision;
+  return {
+    runId: state?.runId ?? "",
+    gateRunId: `${new Date().toISOString().replace(/[^0-9]/g, "").slice(0, 17)}-${resolvedHead.slice(0, 12)}`,
+    headRevision: resolvedHead,
+    checkpoints: readBranchCheckpoints(),
+    resume: selection.resume === true,
+    ledger: [],
+  };
+}
+
+/**
+ * Content hash of the source every shared gate reads, computed once per run.
+ *
+ * Once, not per branch: preflight rewrites generated files while it runs, and a
+ * hash recomputed between branches would report a different input for two
+ * branches that read the same source. The question a checkpoint answers is
+ * "has the source changed since the run that proved this", and the run's own
+ * starting state is the only stable way to ask it.
+ */
+function sourceHashFor(context: RunContext): string {
+  if (context.sourceHash === undefined) {
+    context.sourceHash = hashSharedGateSources(ROOT);
+  }
+  return context.sourceHash;
+}
+
+function documentationSourceHashFor(context: RunContext): string {
+  if (context.documentationSourceHash === undefined) {
+    context.documentationSourceHash = hashDocumentationGateSources(ROOT);
+  }
+  return context.documentationSourceHash;
+}
+
+function preflightInputHashFor(context: RunContext, branchId: string): string {
+  return branchId === "knowledge" || branchId === "architecture"
+    ? documentationSourceHashFor(context)
+    : sourceHashFor(context);
+}
+
+function recordOutcome(context: RunContext, outcome: BranchOutcome): void {
+  context.ledger.push(outcome);
+  if (outcome.status === "failed" && !context.firstFailedBranchId) {
+    context.firstFailedBranchId = outcome.branchId;
+  }
+}
+
+/**
+ * Run one runbook branch, with the checkpoint rules applied.
+ *
+ * The reuse decision lives in `@asol/release-core` and is deliberately
+ * conservative: a preflight verification may be replaced by a recorded success
+ * at the same SHA and input hash, and nothing else may. An effectful branch —
+ * the secret backup, a git write, a remote deployment, production verification
+ * — is only ever skipped when the deployment state itself records its phase as
+ * complete for this exact revision, which is a record of the effect rather than
+ * a record of a check.
+ */
+async function executeBranch(
+  context: RunContext,
+  branch: { branchId: string; phase: string; command: string; label?: string },
+  options: {
+    selected: boolean;
+    revision: string;
+    inputHash: string;
+    groupOutput?: boolean;
+    run: () => Promise<void> | void;
+  },
+): Promise<void> {
+  const startedAt = new Date().toISOString();
+  const startedMs = Date.now();
+
+  if (!options.selected) {
+    skippedBranch("[deploy:all]", {
+      id: branch.branchId,
+      label: branch.label ?? branch.branchId,
+      command: branch.command,
+      kind: "npm",
+    });
+    recordOutcome(context, {
+      branchId: branch.branchId,
+      phase: branch.phase,
+      command: branch.command,
+      status: "skipped",
+      fromCheckpoint: false,
+      detail: "not selected by this run",
+      durationMs: 0,
+    });
+    return;
+  }
+
+  if (context.resume) {
+    const decision = decideCheckpointSkip({
+      branchId: branch.branchId,
+      phaseId: branch.phase,
+      revision: options.revision,
+      inputHash: options.inputHash,
+      checkpoints: context.checkpoints,
+    });
+    let skip = decision.skip;
+    let reason = decision.reason;
+    if (!skip && !isCheckpointSkippablePhase(branch.phase)) {
+      const recorded = findBranchCheckpoint(branch.branchId, context.checkpoints);
+      const proven = deploymentStateProvesPhase(readDeployAllState(), branch.phase, options.revision);
+      if (
+        proven &&
+        recorded?.status === "success" &&
+        recorded.revision === options.revision &&
+        recorded.inputHash === options.inputHash
+      ) {
+        skip = true;
+        reason = `deployment state records phase "${branch.phase}" complete for revision ${options.revision.slice(0, 12)}`;
+      }
+    }
+    if (skip) {
+      console.log(`[deploy:all] SKIP ${branch.branchId}: ${branch.command} — ${reason}`);
+      recordOutcome(context, {
+        branchId: branch.branchId,
+        phase: branch.phase,
+        command: branch.command,
+        status: "skipped",
+        fromCheckpoint: true,
+        detail: reason,
+        durationMs: 0,
+      });
+      return;
+    }
+  }
+
+  announceBranch("[deploy:all]", { id: branch.branchId, command: branch.command, label: branch.label });
+  try {
+    await options.run();
+    const finishedAt = new Date().toISOString();
+    context.checkpoints = recordBranchCheckpoint(
+      {
+        branchId: branch.branchId,
+        phase: branch.phase,
+        command: branch.command,
+        status: "success",
+        startedAt,
+        finishedAt,
+        revision: options.revision,
+        inputHash: options.inputHash,
+      },
+      context.runId,
+    );
+    recordOutcome(context, {
+      branchId: branch.branchId,
+      phase: branch.phase,
+      command: branch.command,
+      status: "completed",
+      fromCheckpoint: false,
+      detail: "verified in this run",
+      durationMs: Date.now() - startedMs,
+    });
+  } catch (error) {
+    const errorSummary = summarizeBranchError(error);
+    context.checkpoints = recordBranchCheckpoint(
+      {
+        branchId: branch.branchId,
+        phase: branch.phase,
+        command: branch.command,
+        status: "failed",
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        revision: options.revision,
+        inputHash: options.inputHash,
+        errorSummary,
+      },
+      context.runId,
+    );
+    recordOutcome(context, {
+      branchId: branch.branchId,
+      phase: branch.phase,
+      command: branch.command,
+      status: "failed",
+      fromCheckpoint: false,
+      detail: errorSummary,
+      durationMs: Date.now() - startedMs,
+    });
+    throw error;
+  }
+}
+
+/**
+ * The smallest command that retries what failed.
+ *
+ * Phase-level retry is the fallback, not the offer. When the run knows which
+ * branch failed it says so first, because re-running one command is what makes
+ * an operator willing to fix and retry instead of reaching for
+ * `--skip-preflight`.
+ */
+function printRetryHint(context: RunContext, failedPhase: DeployAllPhaseId): void {
+  const branchId = context.firstFailedBranchId;
+  if (branchId) {
+    console.error(
+      `\n[deploy:all] Fix the failure, then retry the smallest possible unit:\n` +
+        `  ${smallestRetryCommand(branchId)}\n` +
+        `Or resume the release from that branch onwards:\n` +
+        `  ${resumeFromBranchCommand(branchId)}\n` +
+        `Or re-run every recorded failure from the earliest one:\n` +
+        `  npm run deploy:all -- --rerun-failed\n` +
+        `Phase-level retry remains available:\n` +
+        `  npm run deploy:all -- --phase=${failedPhase}\n` +
+        `  npm run deploy:all -- --from-phase=${failedPhase}`,
+    );
+    return;
+  }
   console.error(
     `\n[deploy:all] Fix the failure, then retry only this phase:\n` +
       `  npm run deploy:all -- --phase=${failedPhase}\n` +
@@ -316,11 +727,76 @@ function printPhaseRetryHint(failedPhase: DeployAllPhaseId): void {
   );
 }
 
+/** Completed / skipped / failed, and whether each skip came from a valid checkpoint. */
+function printBranchLedger(context: RunContext): void {
+  if (context.ledger.length === 0) return;
+  console.log("\n[deploy:all] Branch report");
+  console.table(
+    context.ledger.map((entry) => ({
+      branch: entry.branchId,
+      phase: entry.phase,
+      command: entry.command,
+      status: entry.status,
+      skippedByCheckpoint: entry.status === "skipped" ? (entry.fromCheckpoint ? "yes" : "no") : "-",
+      seconds: entry.durationMs > 0 ? Math.round(entry.durationMs / 1000) : 0,
+      detail: entry.detail,
+    })),
+  );
+  const completed = context.ledger.filter((entry) => entry.status === "completed").length;
+  const checkpointSkips = context.ledger.filter((entry) => entry.status === "skipped" && entry.fromCheckpoint).length;
+  const selectionSkips = context.ledger.filter((entry) => entry.status === "skipped" && !entry.fromCheckpoint).length;
+  const failed = context.ledger.filter((entry) => entry.status === "failed").length;
+  console.log(
+    `[deploy:all] ${completed} branch(es) verified in this run, ` +
+      `${checkpointSkips} reused from a valid checkpoint, ` +
+      `${selectionSkips} not selected, ${failed} failed.`,
+  );
+}
+
+/**
+ * Whether every branch of a phase was actually covered by this run.
+ *
+ * A phase is only "complete" when nothing in it was left out by the current
+ * selection. A checkpoint skip counts as covered — it is a recorded success at
+ * this exact revision and input hash — but a branch the operator did not select
+ * is not covered by anything, and marking the phase complete anyway would let a
+ * later `--from-phase=publish` believe a preflight ran that never did.
+ *
+ * This is what stops `--rerun-branch=lint` from certifying the whole preflight.
+ */
+function phaseFullyCovered(context: RunContext, phaseId: string): boolean {
+  const entries = context.ledger.filter((entry) => entry.phase === phaseId);
+  if (entries.length === 0) return false;
+  return entries.every(
+    (entry) => entry.status === "completed" || (entry.status === "skipped" && entry.fromCheckpoint),
+  );
+}
+
 const PREFLIGHT_STEPS = DEPLOY_ALL_PREFLIGHT_SECTIONS.flatMap((section) =>
   section.branches.map((step) => step.command),
 );
 
-async function runPreflightPhase(flags: DeployFlags, selection: PhaseSelection): Promise<void> {
+/** Independent quality checks that may share the machine, bounded so they do not starve each other. */
+const PREFLIGHT_PARALLEL_LIMIT = 4;
+
+async function runInBatches<T>(
+  items: readonly T[],
+  limit: number,
+  run: (item: T) => Promise<void>,
+): Promise<PromiseSettledResult<void>[]> {
+  const results: PromiseSettledResult<void>[] = [];
+  for (let index = 0; index < items.length; index += limit) {
+    const batch = items.slice(index, index + limit);
+    results.push(...(await Promise.allSettled(batch.map((item) => run(item)))));
+  }
+  return results;
+}
+
+async function runPreflightPhase(
+  flags: DeployFlags,
+  selection: PhaseSelection,
+  context: RunContext,
+): Promise<void> {
   if (flags.skipPreflight) {
     console.warn(
       "\n[deploy:all] ⚠ PREFLIGHT SKIPPED. Not verified before publishing:\n" +
@@ -330,34 +806,96 @@ async function runPreflightPhase(flags: DeployFlags, selection: PhaseSelection):
     return;
   }
 
-  console.log("[deploy:all] Preflight runbook:");
-  for (const section of DEPLOY_ALL_PREFLIGHT_SECTIONS) {
-    console.log(`  - ${section.id}: ${section.label}`);
-    for (const item of section.branches) {
-      console.log(`      · ${item.id}: npm run ${item.command}`);
+  const nodes = buildPreflightGraph();
+  // A missing edge is a correctness failure, not a slow run: it would let a
+  // mirror be verified before it is synced, or a build be measured before it
+  // exists. Checked here so the run stops before it starts.
+  assertPreflightGraphInvariants(nodes);
+
+  const selectedIds = new Set(
+    nodes.filter((node) => selectedIncludes(selection, node.id)).map((node) => node.id),
+  );
+  for (const node of nodes) {
+    if (selectedIds.has(node.id)) continue;
+    await executeBranch(
+      context,
+      { branchId: node.id, phase: "preflight", command: node.command },
+      { selected: false, revision: context.headRevision, inputHash: preflightInputHashFor(context, node.id), run: () => {} },
+    );
+  }
+
+  const waves = planPreflightWaves(nodes, selectedIds);
+  console.log("[deploy:all] Preflight execution plan:");
+  waves.forEach((wave, index) => {
+    console.log(
+      `  ${index + 1}. ${wave.mode}: ${wave.nodes.map((node) => `${node.id} (${node.command})`).join(", ")}`,
+    );
+  });
+
+  for (const wave of waves) {
+    if (wave.mode === "exclusive") {
+      const node = wave.nodes[0]!;
+      console.log(`\n[deploy:all] Preflight step (${node.sectionId}): ${node.id}`);
+      // Exclusive branches fail fast. Everything after a broken build would be
+      // measuring a build that does not exist.
+      await executeBranch(
+        context,
+        { branchId: node.id, phase: "preflight", command: node.command },
+        {
+          selected: true,
+          revision: context.headRevision,
+          inputHash: preflightInputHashFor(context, node.id),
+          run: () => runDeploymentNpmScript(node.command, { logPrefix: "deploy:all" }).then(() => undefined),
+        },
+      );
+      continue;
+    }
+
+    console.log(
+      `\n[deploy:all] Preflight wave (parallel): ${wave.nodes.map((node) => node.id).join(", ")}`,
+    );
+    const outcomes = await runInBatches(wave.nodes, PREFLIGHT_PARALLEL_LIMIT, (node) =>
+      executeBranch(
+        context,
+        { branchId: node.id, phase: "preflight", command: node.command },
+        {
+          selected: true,
+          revision: context.headRevision,
+          inputHash: preflightInputHashFor(context, node.id),
+          run: () =>
+            runDeploymentNpmScript(node.command, { logPrefix: "deploy:all", groupOutput: true }).then(
+              () => undefined,
+            ),
+        },
+      ),
+    );
+
+    // Independent checks are reported together: three failures found in one
+    // wave are one fix cycle, and three sequential runs are three.
+    const failures = outcomes
+      .map((outcome, index) => ({ outcome, node: wave.nodes[index]! }))
+      .filter((entry) => entry.outcome.status === "rejected");
+    if (failures.length > 0) {
+      const detail = failures
+        .map((entry) => {
+          const reason = (entry.outcome as PromiseRejectedResult).reason;
+          return `  - ${entry.node.id} (${entry.node.command}): ${reason instanceof Error ? reason.message : String(reason)}`;
+        })
+        .join("\n");
+      throw new Error(
+        `Preflight failed at ${failures.length} independent branch(es):\n${detail}\n` +
+          "Nothing has been committed or pushed.",
+      );
     }
   }
-  for (const section of DEPLOY_ALL_PREFLIGHT_SECTIONS) {
-    console.log(`\n[deploy:all] Preflight section: ${section.label}`);
-    for (const item of section.branches) {
-      if (!selectedIncludes(selection, item.id)) {
-        skippedBranch("[deploy:all]", item);
-        continue;
-      }
-      announceBranch("[deploy:all]", item);
-      try {
-        await runDeploymentNpmScript(item.command, { logPrefix: "deploy:all" });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        throw new Error(
-          `Preflight failed at branch "${item.id}" (${item.command}) in section "${section.label}": ${message}\n` +
-            "Nothing has been committed or pushed. Fix the failure and retry:\n" +
-            "  npm run deploy:all -- --phase=preflight",
-        );
-      }
-    }
+  if (phaseFullyCovered(context, "preflight")) {
+    console.log("[deploy:all] Preflight passed; safe to publish.");
+    return;
   }
-  console.log("[deploy:all] Preflight passed; safe to publish.");
+  console.log(
+    "[deploy:all] Selected preflight branches passed. Branches outside the selection were not run, " +
+      "so this run does not certify preflight for publishing.",
+  );
 }
 
 /**
@@ -608,92 +1146,125 @@ function resolvePublishContext(
   return { revision, runId, timestamp, mainComment };
 }
 
-function runSelectedPublishBranch(
-  selection: PhaseSelection,
-  branchId: string,
-  action: () => void,
-): void {
+function publishBranch(branchId: string): { command: string; label: string } {
   const branch = DEPLOY_ALL_RUNBOOK
     .find((phaseItem) => phaseItem.id === "publish")
     ?.sections.flatMap((section) => section.branches)
     .find((item) => item.id === branchId);
-  if (!selectedIncludes(selection, branchId)) {
-    if (branch) skippedBranch("[deploy:all]", branch);
-    return;
-  }
-  announceBranch("[deploy:all]", branch ?? { id: branchId, command: "assertion" });
-  action();
+  return { command: branch?.command ?? "assertion", label: branch?.label ?? branchId };
 }
 
-async function runPublishPhase(flags: DeployFlags, selection: PhaseSelection): Promise<PublishContext> {
-  runSelectedPublishBranch(selection, "main-branch", assertMainBranch);
-  runSelectedPublishBranch(selection, "deployment-credentials", assertDeploymentCredentials);
-  runSelectedPublishBranch(selection, "scratch-files", () => assertNoScratchFiles(flags));
-  runSelectedPublishBranch(selection, "release-manifest", () => assertReleaseManifestNotDowngraded(flags));
-  runSelectedPublishBranch(selection, "non-empty-release", () => assertSomethingToDeploy(flags));
-  runSelectedPublishBranch(selection, "origin-main-current", assertOriginMainDidNotAdvance);
+/**
+ * Run one publish branch under the checkpoint rules.
+ *
+ * Kept as the single named door for publish-phase ownership: the runbook
+ * execution contract reads this file and treats a branch as executed only when
+ * a string-literal id reaches `selectedIncludes` or this function, so a branch
+ * that appears on `/dev/deploy-all` cannot quietly stop running.
+ */
+async function runSelectedPublishBranch(
+  selection: PhaseSelection,
+  branchId: string,
+  action: () => Promise<void> | void,
+  context: RunContext,
+): Promise<void> {
+  const branch = publishBranch(branchId);
+  await executeBranch(
+    context,
+    { branchId, phase: "publish", command: branch.command, label: branch.label },
+    {
+      selected: selectedIncludes(selection, branchId),
+      revision: context.headRevision,
+      inputHash: sourceHashFor(context),
+      run: action,
+    },
+  );
+}
 
-  if (selectedIncludes(selection, "secrets-backup")) {
-    announceBranch("[deploy:all]", { id: "secrets-backup", command: "secrets:backup", label: "encrypted secrets backup" });
-    console.log("[deploy:all] Creating or verifying the encrypted secrets backup...");
-    await runDeploymentNpmScript("secrets:backup", { logPrefix: "deploy:all" });
-  } else {
-    skippedBranch("[deploy:all]", { id: "secrets-backup", label: "encrypted secrets backup", command: "secrets:backup", kind: "npm" });
-  }
+async function runPublishPhase(
+  flags: DeployFlags,
+  selection: PhaseSelection,
+  context: RunContext,
+): Promise<PublishContext> {
+  await runSelectedPublishBranch(selection, "main-branch", assertMainBranch, context);
+  await runSelectedPublishBranch(selection, "deployment-credentials", assertDeploymentCredentials, context);
+  await runSelectedPublishBranch(selection, "scratch-files", () => assertNoScratchFiles(flags), context);
+  await runSelectedPublishBranch(selection, "release-manifest", () => assertReleaseManifestNotDowngraded(flags), context);
+  await runSelectedPublishBranch(selection, "non-empty-release", () => assertSomethingToDeploy(flags), context);
+  await runSelectedPublishBranch(selection, "origin-main-current", assertOriginMainDidNotAdvance, context);
 
-  runSelectedPublishBranch(selection, "clear-git-lock", clearStaleGitIndexLock);
+  await runSelectedPublishBranch(
+    selection,
+    "secrets-backup",
+    async () => {
+      console.log("[deploy:all] Creating or verifying the encrypted secrets backup...");
+      await runDeploymentNpmScript("secrets:backup", { logPrefix: "deploy:all" });
+    },
+    context,
+  );
+
+  await runSelectedPublishBranch(selection, "clear-git-lock", clearStaleGitIndexLock, context);
 
   const timestamp = new Date().toISOString();
   const mainComment = `deploy(main): ${timestamp}`;
-  if (selectedIncludes(selection, "stage-tree")) {
-    announceBranch("[deploy:all]", { id: "stage-tree", command: "git:add -A", label: "stage deployment tree" });
-    console.log(`[deploy:all] Staging deployment tree for: ${mainComment}`);
-    execFileSync("git", ["add", "-A"], { cwd: ROOT, stdio: "inherit" });
-  } else {
-    skippedBranch("[deploy:all]", { id: "stage-tree", label: "stage deployment tree", command: "git:add -A", kind: "git" });
-  }
+  await runSelectedPublishBranch(
+    selection,
+    "stage-tree",
+    () => {
+      console.log(`[deploy:all] Staging deployment tree for: ${mainComment}`);
+      execFileSync("git", ["add", "-A"], { cwd: ROOT, stdio: "inherit" });
+    },
+    context,
+  );
 
-  if (selectedIncludes(selection, "commit-tree")) {
-    announceBranch("[deploy:all]", { id: "commit-tree", command: "git:commit", label: "create deployment commit" });
-    console.log(`[deploy:all] Creating deployment commit: ${mainComment}`);
-    const commitArgs = ["commit", "--allow-empty", "-m", mainComment];
-    if (flags.skipPreflight) {
-      commitArgs.push(
-        "-m",
-        `Preflight skipped via --skip-preflight. Not verified: ${PREFLIGHT_STEPS.join(", ")}.`,
-      );
-    }
-    execFileSync("git", commitArgs, {
-      cwd: ROOT,
-      stdio: "inherit",
-    });
-  } else {
-    skippedBranch("[deploy:all]", { id: "commit-tree", label: "create deployment commit", command: "git:commit", kind: "git" });
-  }
+  await runSelectedPublishBranch(
+    selection,
+    "commit-tree",
+    () => {
+      console.log(`[deploy:all] Creating deployment commit: ${mainComment}`);
+      const commitArgs = ["commit", "--allow-empty", "-m", mainComment];
+      if (flags.skipPreflight) {
+        commitArgs.push(
+          "-m",
+          `Preflight skipped via --skip-preflight. Not verified: ${PREFLIGHT_STEPS.join(", ")}.`,
+        );
+      }
+      execFileSync("git", commitArgs, { cwd: ROOT, stdio: "inherit" });
+    },
+    context,
+  );
 
-  if (selectedIncludes(selection, "verify-clean-tree")) {
-    announceBranch("[deploy:all]", { id: "verify-clean-tree", command: "git:status --porcelain", label: "verify committed tree is stable" });
-    if (git(["status", "--porcelain"])) {
-      throw new Error(
-        "The working tree changed while creating the deployment commit; refusing to push inconsistent source.",
-      );
-    }
-  } else {
-    skippedBranch("[deploy:all]", { id: "verify-clean-tree", label: "verify committed tree is stable", command: "git:status --porcelain", kind: "git" });
-  }
+  await runSelectedPublishBranch(
+    selection,
+    "verify-clean-tree",
+    () => {
+      if (git(["status", "--porcelain"])) {
+        throw new Error(
+          "The working tree changed while creating the deployment commit; refusing to push inconsistent source.",
+        );
+      }
+    },
+    context,
+  );
 
   const revision = git(["rev-parse", "HEAD"]);
   const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
-  if (selectedIncludes(selection, "push-main")) {
-    announceBranch("[deploy:all]", { id: "push-main", command: "git:push main", label: "push main to GitHub" });
-    console.log("[deploy:all] Pushing main to GitHub...");
-    pushMainBranch(ROOT, MAIN_BRANCH, "deploy:all");
-    console.log(
-      "[deploy:all] GitHub push completed; only the existing GitHub-linked main Vercel project will auto-deploy.",
-    );
-  } else {
-    skippedBranch("[deploy:all]", { id: "push-main", label: "push main to GitHub", command: "git:push main", kind: "git" });
-  }
+  context.runId = runId;
+  await runSelectedPublishBranch(
+    selection,
+    "push-main",
+    () => {
+      console.log("[deploy:all] Pushing main to GitHub...");
+      pushMainBranch(ROOT, MAIN_BRANCH, "deploy:all");
+      // Recorded the moment the push lands: every failure after this point must
+      // name the revision that is now public, and how to take it back.
+      context.pushedRevision = revision;
+      console.log(
+        "[deploy:all] GitHub push completed; only the existing GitHub-linked main Vercel project will auto-deploy.",
+      );
+    },
+    context,
+  );
 
   writeDeployAllState({
     revision,
@@ -710,74 +1281,136 @@ async function runPublishPhase(flags: DeployFlags, selection: PhaseSelection): P
 
 async function runServicePhase(
   phaseId: DeployAllServicePhaseId,
-  context: PublishContext,
+  publishContext: PublishContext,
+  context: RunContext,
 ): Promise<VercelDeploymentReport> {
   const deployment = SERVICE_DEPLOYS[phaseId];
-  const comment = `deploy(${deployment.target}): ${context.timestamp} @ ${context.revision.slice(0, 12)}`;
-  const report = await runDeploymentNpmScript(deployment.script, {
-    logPrefix: "deploy:all",
-    captureReport: true,
-    env: {
-      ASOL_DEPLOYMENT_RUN_ID: `${context.runId}-${deployment.target}`,
-      ASOL_DEPLOYMENT_REVISION: context.revision,
-      ASOL_DEPLOYMENT_COMMENT: comment,
+  const comment = `deploy(${deployment.target}): ${publishContext.timestamp} @ ${publishContext.revision.slice(0, 12)}`;
+  let report: VercelDeploymentReport | undefined;
+  await executeBranch(
+    context,
+    {
+      branchId: `${phaseId}-deploy-command`,
+      phase: phaseId,
+      command: deployment.script,
+      label: `${phaseId} deploy script`,
     },
-  });
-  if (!report) throw new Error("The service returned no deployment report.");
-  if (report.state !== "READY") {
-    throw new Error(report.message || `Service ${deployment.target} is ${report.state}.`);
-  }
+    {
+      selected: true,
+      revision: publishContext.revision,
+      // What this branch uploads is the mirrored service folder, so that folder
+      // — not the whole repository — is what a later run must match to reuse it.
+      inputHash: hashServiceInputs(ROOT, phaseId),
+      run: async () => {
+        report = await runDeploymentNpmScript(deployment.script, {
+          logPrefix: "deploy:all",
+          captureReport: true,
+          env: {
+            ASOL_DEPLOYMENT_RUN_ID: `${publishContext.runId}-${deployment.target}`,
+            ASOL_DEPLOYMENT_REVISION: publishContext.revision,
+            ASOL_DEPLOYMENT_COMMENT: comment,
+          },
+        });
+        if (!report) throw new Error("The service returned no deployment report.");
+        if (report.state !== "READY") {
+          throw new Error(report.message || `Service ${deployment.target} is ${report.state}.`);
+        }
+      },
+    },
+  );
+  if (!report) throw new Error(`Service ${deployment.target} produced no deployment report.`);
   return report;
 }
 
 async function runMainPhase(
   selection: PhaseSelection,
   publishContext: PublishContext,
-): Promise<VercelDeploymentReport> {
-  const mainReport = await verifyMainDeployment({
-    revision: publishContext.revision,
-    comment: publishContext.mainComment,
-  });
+  context: RunContext,
+): Promise<VercelDeploymentReport | undefined> {
+  let mainReport: VercelDeploymentReport | undefined;
+  await executeBranch(
+    context,
+    {
+      branchId: "main-ready",
+      phase: "main",
+      command: "vercel:wait-main-ready",
+      label: "match commit SHA and wait for READY",
+    },
+    {
+      selected: selectedIncludes(selection, "main-ready"),
+      revision: publishContext.revision,
+      inputHash: sourceHashFor(context),
+      run: async () => {
+        mainReport = await verifyMainDeployment({
+          revision: publishContext.revision,
+          comment: publishContext.mainComment,
+        });
+      },
+    },
+  );
+  const report = mainReport;
 
-  const servingBranch = selectedIncludes(selection, "main-serving");
   let serving = false;
-  if (servingBranch) {
-    try {
-      await runDeploymentNpmScript("release:check", {
-        logPrefix: "deploy:all",
-        env: { ASOL_RELEASE_REVISION: publishContext.revision },
-      });
-      serving = true;
-    } catch (error) {
-      const detail = error instanceof Error ? error.message : String(error);
-      if (mainReport.state === "READY") {
-        throw new Error(`Vercel reported READY, but production is not serving this build: ${detail}`);
-      }
-      throw new Error(
-        `${mainReport.message || `Main deployment is ${mainReport.state}.`} ` +
-          `Production is not serving this build either: ${detail}`,
-      );
-    }
-  }
+  await executeBranch(
+    context,
+    {
+      branchId: "main-serving",
+      phase: "main",
+      command: "release:check",
+      label: "production is serving this build",
+    },
+    {
+      selected: selectedIncludes(selection, "main-serving"),
+      revision: publishContext.revision,
+      inputHash: sourceHashFor(context),
+      run: async () => {
+        try {
+          await runDeploymentNpmScript("release:check", {
+            logPrefix: "deploy:all",
+            env: { ASOL_RELEASE_REVISION: publishContext.revision },
+          });
+          serving = true;
+        } catch (error) {
+          const detail = error instanceof Error ? error.message : String(error);
+          if (report?.state === "READY") {
+            throw new Error(`Vercel reported READY, but production is not serving this build: ${detail}`);
+          }
+          const readinessDetail =
+            report?.message ||
+            (report ? `Main deployment is ${report.state}.` : "Main deployment readiness was not queried in this branch run.");
+          throw new Error(
+            `${readinessDetail} Production is not serving this build either: ${detail}`,
+          );
+        }
+      },
+    },
+  );
 
-  if (mainReport.state !== "READY" && !serving) {
-    throw new Error(mainReport.message || `Main deployment is ${mainReport.state}.`);
+  if (report && report.state !== "READY" && !serving) {
+    throw new Error(report.message || `Main deployment is ${report.state}.`);
   }
-  if (mainReport.state !== "READY") {
+  if (report && report.state !== "READY") {
     console.log(
-      `[deploy:all] Vercel reported ${mainReport.state}, but production is serving this build — ` +
+      `[deploy:all] Vercel reported ${report.state}, but production is serving this build — ` +
         "treating the main target as deployed.",
     );
   }
 
-  if (selectedIncludes(selection, "deployed-smoke")) {
-    announceBranch("[deploy:all]", {
-      id: "deployed-smoke",
+  await executeBranch(
+    context,
+    {
+      branchId: "deployed-smoke",
+      phase: "main",
       command: "smoke:deployed",
       label: "deployed origins answer their data routes",
-    });
-    await runDeploymentNpmScript("smoke:deployed", { logPrefix: "deploy:all" });
-  }
+    },
+    {
+      selected: selectedIncludes(selection, "deployed-smoke"),
+      revision: publishContext.revision,
+      inputHash: sourceHashFor(context),
+      run: () => runDeploymentNpmScript("smoke:deployed", { logPrefix: "deploy:all" }).then(() => undefined),
+    },
+  );
   return mainReport;
 }
 
@@ -794,7 +1427,12 @@ async function main(): Promise<void> {
         "  npm run deploy:all -- --phase=preflight\n" +
         "  npm run deploy:all -- --phase=publish\n" +
         "  npm run deploy:all -- --phase=submain\n" +
-        "  npm run deploy:all -- --from-phase=notifications\n",
+        "  npm run deploy:all -- --from-phase=notifications\n" +
+        "\nBranch-level resume:\n" +
+        "  npm run deploy:all -- --from-branch=<runbookBranchId>    resume at one branch and run the rest\n" +
+        "  npm run deploy:all -- --rerun-branch=<runbookBranchId>   re-run exactly one branch\n" +
+        "  npm run deploy:all -- --rerun-failed                     resume at the earliest recorded failure\n" +
+        "  npm run deploy:all -- --service-smoke-rebuild            force smoke:services to rebuild each service\n",
     );
     return;
   }
@@ -805,6 +1443,15 @@ async function main(): Promise<void> {
     phasesToRun.every((id, index) => id === DEPLOY_ALL_PHASE_ORDER[index]);
 
   let publishContext = resolvePublishContext(phase, readDeployAllState());
+  const runContext = createRunContext(phase);
+  if (phase.resumeDescription) {
+    console.log(`[deploy:all] Resume request: ${phase.resumeDescription}.`);
+  }
+  // Child gates read these. They scope gate reuse to this invocation and this
+  // revision; neither is a secret and neither changes what a gate verifies.
+  process.env.ASOL_DEPLOY_RUN_ID = runContext.gateRunId;
+  process.env.ASOL_DEPLOY_REVISION_AT_START = runContext.headRevision;
+  if (flags.serviceSmokeRebuild) process.env.ASOL_SERVICE_SMOKE_REBUILD = "1";
   const reports: VercelDeploymentReport[] = [];
   const completedInBatch = new Set<DeployAllPhaseId>();
 
@@ -822,8 +1469,14 @@ async function main(): Promise<void> {
       if (phaseId === "preflight") {
         assertMainBranch();
         assertDeploymentCredentials();
-        await runPreflightPhase(flags, phase);
-        markPhaseComplete("preflight", { skipPreflight: flags.skipPreflight });
+        await runPreflightPhase(flags, phase, runContext);
+        if (flags.skipPreflight || phaseFullyCovered(runContext, "preflight")) {
+          markPhaseComplete("preflight", { skipPreflight: flags.skipPreflight });
+        } else {
+          console.log(
+            '[deploy:all] Phase "preflight" is not marked complete: this run did not cover every branch.',
+          );
+        }
         continue;
       }
 
@@ -833,8 +1486,20 @@ async function main(): Promise<void> {
       }
 
       if (phaseId === "publish") {
-        publishContext = await runPublishPhase(flags, phase);
-        markPhaseComplete("publish", publishContext);
+        publishContext = await runPublishPhase(flags, phase, runContext);
+        if (phaseFullyCovered(runContext, "publish")) {
+          markPhaseComplete("publish", publishContext);
+        } else {
+          writeDeployAllState({
+            ...publishContext,
+            skipPreflight: flags.skipPreflight,
+            completedPhases: readDeployAllState()?.completedPhases ?? [],
+            lastUpdated: new Date().toISOString(),
+          });
+          console.log(
+            '[deploy:all] Phase "publish" is not marked complete: this run did not cover every branch.',
+          );
+        }
         continue;
       }
 
@@ -851,19 +1516,17 @@ async function main(): Promise<void> {
         );
         for (const servicePhase of servicePhases) {
           if (phaseHasSelectedBranches(phase, servicePhase)) continue;
-          console.log(`[deploy:all] SKIP phase "${servicePhase}": no selected runbook branches.`);
-          markPhaseComplete(servicePhase);
+          console.log(
+            `[deploy:all] SKIP phase "${servicePhase}": no selected runbook branches. ` +
+              "It stays incomplete, because nothing deployed it.",
+          );
           completedInBatch.add(servicePhase);
         }
-        const includeMain = phasesToRun.includes("main") && selectedIncludes(phase, "main-ready");
         const phaseTasks: Array<{ phaseId: DeployAllPhaseId; task: Promise<VercelDeploymentReport> }> =
           servicePhases.filter((servicePhase) => phaseHasSelectedBranches(phase, servicePhase)).map((servicePhase) => ({
             phaseId: servicePhase,
-            task: runServicePhase(servicePhase, publishContext),
+            task: runServicePhase(servicePhase, publishContext, runContext),
           }));
-        if (includeMain) {
-          phaseTasks.push({ phaseId: "main", task: runMainPhase(phase, publishContext) });
-        }
         console.log("[deploy:all] Starting all selected Vercel targets, then waiting for one combined report...");
         const outcomes = await Promise.allSettled(phaseTasks.map((entry) => entry.task));
         const failures: string[] = [];
@@ -872,7 +1535,7 @@ async function main(): Promise<void> {
           completedInBatch.add(task.phaseId);
           if (outcome.status === "fulfilled") {
             reports.push(outcome.value);
-            markPhaseComplete(task.phaseId);
+            if (phaseFullyCovered(runContext, task.phaseId)) markPhaseComplete(task.phaseId);
             return;
           }
           if (outcome.reason instanceof DeploymentNpmScriptError && outcome.reason.report) {
@@ -887,26 +1550,37 @@ async function main(): Promise<void> {
       }
 
       if (phaseId === "main") {
-        if (!selectedIncludes(phase, "main-ready")) {
-          console.log('[deploy:all] SKIP phase "main": main-ready branch is not selected.');
-          markPhaseComplete("main");
+        if (!phaseHasSelectedBranches(phase, "main")) {
+          console.log(
+            '[deploy:all] SKIP phase "main": no selected runbook branches. ' +
+              "It stays incomplete, because nothing verified production.",
+          );
           continue;
         }
         publishContext = resolvePublishContext(phase, readDeployAllState());
-        const mainReport = await runMainPhase(phase, publishContext);
-        reports.unshift(mainReport);
-        markPhaseComplete("main");
-        console.log(`[deploy:all] Phase "main" completed (${mainReport.state}).`);
+        const mainReport = await runMainPhase(phase, publishContext, runContext);
+        if (mainReport) reports.unshift(mainReport);
+        if (phaseFullyCovered(runContext, "main")) markPhaseComplete("main");
+        console.log(
+          mainReport
+            ? `[deploy:all] Phase "main" completed (${mainReport.state}).`
+            : '[deploy:all] Phase "main" branch selection completed.',
+        );
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       if (error instanceof DeploymentNpmScriptError && error.report) {
         reports.push(error.report);
       }
-      printPhaseRetryHint(phaseId);
+      printRetryHint(runContext, phaseId);
+      // The rollback is only offered for a revision this run actually pushed,
+      // or one an earlier phase already published — never for a failure that
+      // stopped before the push, where there is nothing to revert.
       const rollbackRevision =
-        phaseId !== "preflight" && phaseId !== "publish" ? publishContext.revision : undefined;
+        runContext.pushedRevision ??
+        (phaseId !== "preflight" && phaseId !== "publish" ? publishContext.revision : undefined);
       fail(`phase "${phaseId}" failed — ${message}`, rollbackRevision);
+      printBranchLedger(runContext);
       printFinalSummary(reports);
       if (flags.continueOnError) {
         console.error("[deploy:all] Continuing because --continue-on-error is enabled.");
@@ -916,8 +1590,12 @@ async function main(): Promise<void> {
     }
   }
 
+  printBranchLedger(runContext);
   printFinalSummary(reports);
-  if (runningFullRelease) {
+  const coveredEveryBranch = runContext.ledger.every(
+    (entry) => entry.status === "completed" || (entry.status === "skipped" && entry.fromCheckpoint),
+  );
+  if (runningFullRelease && coveredEveryBranch) {
     reportNativeSurfaceStatus();
     console.log(formatSuccessLine(flags.skipPreflight));
     writeDeployAllState({
@@ -993,6 +1671,12 @@ export const __testables = {
   FAIL_PREFIX,
   DEPLOY_ALL_PHASE_ORDER,
   SERVICES_PHASE_ALIAS,
+  DEPLOY_FLAG_NAMES,
+  VALUE_FLAG_PREFIXES,
+  buildPreflightGraph,
+  planPreflightWaves,
+  assertPreflightGraphInvariants,
+  findRunbookBranch,
 };
 
 /**

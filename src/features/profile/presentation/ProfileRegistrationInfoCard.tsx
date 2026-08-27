@@ -9,6 +9,7 @@ import { Input } from "@/shared/ui/input";
 import { useTranslation } from "@/shared/i18n";
 import { cn } from "@/shared/utils";
 import { useProfileRegistration } from "@/features/auth/ui";
+import { useStoreDetails } from "@/features/profile/presentation/hooks/use-store-details";
 import type {
   ProfileRegistrationController,
   ProfileSectionStatus,
@@ -26,7 +27,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
   const { t } = useTranslation();
   const {
     form,
-    updateField,
+    updateField: updateRegistrationField,
     fieldErrors,
     phoneVerified,
     setPhoneVerified,
@@ -38,6 +39,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
     prepareSnapshot,
     applySaved,
   } = useProfileRegistration();
+  const { details: storeDetails, updateField } = useStoreDetails();
   const [isPasswordOpen, setIsPasswordOpen] = React.useState(false);
   const label = t("onboarding.contactInfo.primaryContact");
 
@@ -100,7 +102,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
           phone={form.phone}
           verified={phoneVerified}
           error={fieldErrors.phone}
-          onPhoneChange={(phone: string) => updateField("phone", phone)}
+          onPhoneChange={(phone: string) => updateRegistrationField("phone", phone)}
           onVerifiedChange={setPhoneVerified}
         />
 
@@ -111,7 +113,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
           </Label>
           <Input ui={{ uid: "profile.registration.email-w4ce6P", id: "profile.registration.email", kind: "field", part: "account" }}
             value={form.email}
-            onChange={(e) => updateField("email", e.target.value)}
+            onChange={(e) => updateRegistrationField("email", e.target.value)}
             placeholder={t("onboarding.contactInfo.emailPlaceholder")}
             type="email"
             className={fieldErrors.email ? "border-error" : undefined}
@@ -121,6 +123,28 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
               {fieldErrors.email}
             </p>
           ) : null}
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-xs sm:text-sm font-medium">
+            {t("auth.storeName.label")}
+          </Label>
+          <Input
+            ui={{
+              uid: "profile.registration.store-name-HgQAE0",
+              id: "profile.registration.store-name",
+              kind: "field",
+              part: "account",
+            }}
+            value={storeDetails.storeName}
+            onChange={(e) => updateField("storeName", e.target.value)}
+            placeholder={t("auth.storeName.placeholder")}
+            maxLength={120}
+            autoComplete="organization"
+          />
+          <p className="text-[10px] sm:text-xs text-on-surface-variant">
+            {t("auth.storeName.hint")}
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -151,7 +175,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   type="password"
                   value={form.currentPassword}
                   onChange={(e) =>
-                    updateField("currentPassword", e.target.value)
+                    updateRegistrationField("currentPassword", e.target.value)
                   }
                   placeholder={t(
                     "onboarding.contactInfo.currentPasswordPlaceholder",
@@ -174,7 +198,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   id="newPassword"
                   type="password"
                   value={form.newPassword}
-                  onChange={(e) => updateField("newPassword", e.target.value)}
+                  onChange={(e) => updateRegistrationField("newPassword", e.target.value)}
                   placeholder={t(
                     "onboarding.contactInfo.newPasswordPlaceholder",
                   )}
@@ -197,7 +221,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   type="password"
                   value={form.confirmPassword}
                   onChange={(e) =>
-                    updateField("confirmPassword", e.target.value)
+                    updateRegistrationField("confirmPassword", e.target.value)
                   }
                   placeholder={t(
                     "onboarding.contactInfo.confirmPasswordPlaceholder",

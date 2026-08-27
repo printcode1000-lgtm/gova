@@ -11,6 +11,13 @@ The release console under `/dev/release-console` stays development-only. This
 page is the production surface, and it adds nothing to the pipeline: `deploy:all`
 remains the single release gate, unchanged.
 
+The page exposes the same resumable `deploy:all` controls as the CLI: full run,
+resume from a runbook branch, re-run one branch, re-run from the earliest stored
+failure, and force `smoke:services` to rebuild instead of reusing the
+`services:build` output. These options are passed to the sandbox runner and
+translated into the normal CLI flags; the browser never receives a secret and
+never reimplements release logic.
+
 The page also exposes a **Deploy Push** tab. It runs `deploy:push` in the same
 Sandbox and lets the super admin select `all`, `main`, or one isolated service.
 
@@ -30,7 +37,7 @@ browser (super admin)
     → @asol/vercel-deploy-core/remote-deploy-sandbox
       → sandbox: node scripts/run-remote-deploy-all.mjs
         → npm ci --ignore-scripts, then verify the bundled SQLite binary
-        → npm run deploy:all
+        → npm run deploy:all [resume flags selected by the super admin]
       → POST /api/super-admin/production-deploy/callback   (shared secret)
 ```
 
@@ -200,7 +207,7 @@ never about Vercel.
 |------|----------------|
 | `packages/vercel-deploy-core/src/remote-deploy-contracts.ts` | snapshot, stage, and readiness shapes shared by both halves |
 | `packages/vercel-deploy-core/src/remote-deploy-sandbox.ts` | create/resume the sandbox, guard concurrency, read state |
-| `scripts/run-remote-deploy-all.mjs` | sandbox-side runner: state file, log, terminal callback |
+| `scripts/run-remote-deploy-all.mjs` | sandbox-side runner: state file, log, deploy option translation, terminal callback |
 | `scripts/push-production-deploy-env.ts` | `deploy:env:push` — syncs the configuration above to Vercel |
 | `src/features/release-commands/server/services/production-deploy-service.server.ts` | start, status, callback handling |
 | `src/features/release-commands/server/services/production-deploy-email.server.ts` | the result email |
@@ -210,5 +217,7 @@ never about Vercel.
 
 The page is a super-admin surface, not the authorization boundary: both API
 routes verify a signed super-admin session server-side, and the callback route
-verifies its shared secret. Nothing on this page can select a branch, a phase,
-or a revision — the release is always `deploy:all` on `main`.
+verifies its shared secret. The page may select a `deploy:all` resume branch,
+but it cannot select an arbitrary Git branch or revision: the sandbox always
+checks out `main`, refreshes it from `FETCH_HEAD`, and then runs the repository
+CLI.

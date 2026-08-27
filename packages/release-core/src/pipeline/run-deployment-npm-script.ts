@@ -58,6 +58,15 @@ export async function runDeploymentNpmScript(
     logPrefix: string;
     env?: Record<string, string>;
     captureReport?: boolean;
+    /**
+     * Hold this child's output and print it as one block when it exits.
+     *
+     * Streaming is right for a step that runs alone. When several branches run
+     * at once, streaming interleaves them line by line and the result names no
+     * owner for any line — which is worse than waiting, because the operator
+     * still has to read all of it to find the failure.
+     */
+    groupOutput?: boolean;
   },
 ): Promise<VercelDeploymentReport | undefined> {
   const npmCli = process.env.npm_execpath?.trim();
@@ -81,6 +90,7 @@ export async function runDeploymentNpmScript(
   }
 
   const capture = options.captureReport === true;
+  const grouped = !capture && options.groupOutput === true;
   const logPrefix = options.logPrefix;
 
   console.log(`\n[${logPrefix}] Starting ${script}...`);
@@ -88,15 +98,31 @@ export async function runDeploymentNpmScript(
   const child: ChildProcess = spawn(command, args, {
     cwd: process.cwd(),
     env: childProcessEnvForDeployment(options.env),
-    stdio: capture ? ["ignore", "pipe", "pipe"] : "inherit",
+    stdio: capture || grouped ? ["ignore", "pipe", "pipe"] : "inherit",
     shell: false,
     windowsHide: true,
   });
 
   if (!capture) {
+    const buffered: string[] = [];
+    if (grouped) {
+      child.stdout?.on("data", (chunk: Buffer) => buffered.push(chunk.toString()));
+      child.stderr?.on("data", (chunk: Buffer) => buffered.push(chunk.toString()));
+    }
+    const flush = (): void => {
+      if (!grouped) return;
+      const text = buffered.join("").trimEnd();
+      if (text.length > 0) {
+        console.log(`\n[${logPrefix}] ── output of ${script} ──\n${text}\n[${logPrefix}] ── end of ${script} ──`);
+      }
+    };
     return new Promise((resolve, reject) => {
-      child.once("error", reject);
+      child.once("error", (error) => {
+        flush();
+        reject(error);
+      });
       child.once("exit", (code, signal) => {
+        flush();
         if (code === 0) {
           console.log(`[${logPrefix}] Completed ${script}.`);
           resolve(undefined);

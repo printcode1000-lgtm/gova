@@ -94,7 +94,7 @@ See [contact-and-account-deletion.md](../00-overview/contact-and-account-deletio
 
 ### `AuthOperationsService`
 
-Handles registration, login, profile update, email/phone normalization, and `getUserPhone(uid)` (server-only via `AuthService`, not the client `IAuthService` facade). Depends on `AuthUserRepositoryPort` and optional `ProfileSpecialtiesPort` (injected in bootstrap).
+Handles registration (including optional store-name seed onto the profile identity columns), login, profile update, email/phone normalization, and `getUserPhone(uid)` (server-only via `AuthService`, not the client `IAuthService` facade). Depends on `AuthUserRepositoryPort`, `ProfileSpecialtiesPort`, and `ProfileStoreNamePort` (injected in bootstrap).
 
 ### `AccountDeletionService`
 
@@ -130,10 +130,17 @@ src/app/api/account/delete/route.ts
 
 ### Registration UI
 
-The optional email field is inside a native collapsible section labeled
-`Optional` and is collapsed by default. Expanding it reveals the email input
-and its password-recovery explanation; the field remains part of the same
-registration form and validation contract.
+The optional email and alias (store name) fields sit inside a native collapsible
+section labeled `Optional`, collapsed by default. Expanding it reveals the email
+input with its password-recovery explanation, and the alias input. Both remain
+part of the same registration form and validation contract.
+
+A non-empty alias is persisted during `AuthOperationsService.register` through
+`upsertStoreDetails` — the same `user_profiles.store_name` / `store_name_search`
+columns later edited on `/profile?mode=edit` in the Registration tab and the
+Store identity tab. An empty or omitted alias writes nothing. The client
+registration hook does not call `profileService.saveStoreDetails`; that write
+belongs to page-save on the profile editor, not to account creation.
 
 ### Logout simplification
 

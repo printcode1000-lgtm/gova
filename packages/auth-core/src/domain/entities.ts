@@ -53,6 +53,7 @@ export interface RegistrationInput {
   phone: string;
   password: string;
   email?: string;
+  storeName?: string;
 }
 
 export interface LoginInput {

@@ -28,6 +28,13 @@ export const REMOTE_DEPLOY_ALL_STAGES = [
 
 export type RemoteDeployAllStage = (typeof REMOTE_DEPLOY_ALL_STAGES)[number];
 export type RemoteDeployAllEmailStatus = "pending" | "sent" | "failed";
+export type RemoteDeployAllResumeMode = "full" | "from-branch" | "rerun-branch" | "rerun-failed";
+
+export interface RemoteDeployAllOptions {
+  resumeMode?: RemoteDeployAllResumeMode;
+  branchId?: string;
+  serviceSmokeRebuild?: boolean;
+}
 
 /** One stage of the run, closed when the next stage begins. */
 export interface RemoteDeployAllStageSpan {
@@ -46,6 +53,7 @@ export interface RemoteDeployAllSnapshot {
   initiatedByUid?: string;
   command?: "deploy:all" | "deploy:push";
   target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
+  deployAllOptions?: RemoteDeployAllOptions;
   startedAt?: string;
   updatedAt: string;
   finishedAt?: string;
@@ -81,6 +89,7 @@ export interface StartRemoteDeployAllInput {
   confirmation: string;
   command?: "deploy:all" | "deploy:push";
   target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
+  deployAllOptions?: RemoteDeployAllOptions;
 }
 
 export interface RemoteDeployAllCallbackInput {

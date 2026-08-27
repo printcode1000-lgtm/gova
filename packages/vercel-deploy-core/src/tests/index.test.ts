@@ -102,6 +102,17 @@ async function runTests(): Promise<void> {
   assert(!isRemoteDeployAllTerminal('running') && !isRemoteDeployAllTerminal('preparing'), 'Active statuses are not terminal');
   const idle = idleRemoteDeployAllSnapshot('probe');
   assert(idle.requestId === null && idle.status === 'idle', 'Idle snapshot carries no run');
+  const contractsSource = readFileSync(
+    path.join(process.cwd(), 'packages', 'vercel-deploy-core', 'src', 'remote-deploy-contracts.ts'),
+    'utf-8',
+  );
+  assert(
+    contractsSource.includes('RemoteDeployAllOptions') &&
+      contractsSource.includes('"from-branch"') &&
+      contractsSource.includes('"rerun-branch"') &&
+      contractsSource.includes('"rerun-failed"'),
+    'Remote deploy contract carries deploy:all resume options',
+  );
   console.log('  ✔ Remote deploy contracts cover every deploy:all phase.');
 
   // On Vercel the OIDC token is a per-request header, not an environment

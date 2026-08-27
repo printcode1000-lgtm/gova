@@ -48,6 +48,7 @@ export type {
   AuthUserRecord,
   AuthUserRepositoryPort,
   ProfileSpecialtiesPort,
+  ProfileStoreNamePort,
 } from './ports/auth-repository.port';
 
 export type {

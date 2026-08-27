@@ -96,7 +96,7 @@ export function CollectionSubcategoriesPage({
                 className={categoryTileClassName}
                 aria-label={altText}
               >
-                <div className={categoryTileImageClassName}>
+                <div key="media" className={categoryTileImageClassName}>
                   <Image
                     src={imageSrc}
                     alt={altText}
@@ -104,7 +104,7 @@ export function CollectionSubcategoriesPage({
                     className="object-cover transition-opacity"
                   />
                 </div>
-                <span className={categoryTileTitleClassName}>{name}</span>
+                <span key="label" className={categoryTileTitleClassName}>{name}</span>
               </Link>
             );
           })}

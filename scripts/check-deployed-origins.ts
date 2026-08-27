@@ -1,4 +1,8 @@
 #!/usr/bin/env tsx
+import {
+  ACCOUNT_ORIGIN_ENV,
+  resolveDeployedOrigin,
+} from "./deployed-origin-resolution";
 import { loadReleaseEnvironment } from "./load-release-env";
 import {
   bodyReportsUnconfiguredPort,
@@ -36,15 +40,7 @@ interface OriginProbe {
   readonly body?: unknown;
 }
 
-const ACCOUNT_ENV: Record<string, string> = {
-  main: "NEXT_PUBLIC_ASOL_API_BASE_URL",
-  profiles: "NEXT_PUBLIC_ASOL_PROFILES_URL",
-  products: "NEXT_PUBLIC_ASOL_PRODUCTS_URL",
-  orders: "NEXT_PUBLIC_ASOL_ORDERS_URL",
-  notifications: "NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL",
-  submain: "NEXT_PUBLIC_ASOL_SUBMAIN_URL",
-  sub2main: "NEXT_PUBLIC_ASOL_SUB2MAIN_URL",
-};
+const ACCOUNT_ENV = ACCOUNT_ORIGIN_ENV;
 
 function buildProbes(): OriginProbe[] {
   const main = mainDeployedSmokeProbe();
@@ -77,19 +73,14 @@ function buildProbes(): OriginProbe[] {
 
 const PROBES = buildProbes();
 
-function requiredOrigin(envVar: string): string {
-  const value = process.env[envVar]?.trim().replace(/\/$/, "");
-  if (!value) {
-    throw new Error(
-      `[deployed-smoke] required environment variable ${envVar} is missing or empty. ` +
-        "Do not skip an account — set the same NEXT_PUBLIC_ASOL_* URL the static build bakes in.",
+async function probeOrigin(probe: OriginProbe): Promise<string | null> {
+  const resolved = resolveDeployedOrigin(probe.account);
+  if (resolved.source === "declaration") {
+    console.log(
+      `[deployed-smoke] ${probe.account}: using the declared production origin ${resolved.origin} (${resolved.envVar} is unset).`,
     );
   }
-  return value;
-}
-
-async function probeOrigin(probe: OriginProbe): Promise<string | null> {
-  const origin = requiredOrigin(probe.envVar);
+  const origin = resolved.origin;
   const url = `${origin}${probe.path}`;
   try {
     const response = await fetch(url, {

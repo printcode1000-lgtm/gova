@@ -897,6 +897,22 @@ async function verifyProductionDeployConsole() {
   // The runner reads the pipeline's own phase banner; the two must not drift.
   const remoteRunner = await readFile("scripts/run-remote-deploy-all.mjs", "utf8");
   const deployAllSource = await readFile("scripts/deploy-all.ts", "utf8");
+  const productionDeployPage = await readFile(
+    "src/features/release-commands/presentation/ProductionDeployPage.tsx",
+    "utf8",
+  );
+  const productionDeployHook = await readFile(
+    "src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
+    "utf8",
+  );
+  const productionDeployRoute = await readFile(
+    "src/app/api/super-admin/production-deploy/route.ts",
+    "utf8",
+  );
+  const productionDeployService = await readFile(
+    "src/features/release-commands/server/services/production-deploy-service.server.ts",
+    "utf8",
+  );
   assert.ok(
     deployAllSource.includes("[deploy:all] ── phase: ${phaseId} ──"),
     "deploy:all must keep printing the phase banner the remote runner parses",
@@ -912,6 +928,25 @@ async function verifyProductionDeployConsole() {
   assert.ok(
     remoteRunner.includes('"--ignore-scripts"') && remoteRunner.includes("verify-sqlite-runtime.ts"),
     "the sandbox install must keep and verify better-sqlite3's bundled Linux binary instead of requiring make",
+  );
+  assert.ok(
+    productionDeployPage.includes("DeployAllOptions") &&
+      productionDeployPage.includes("deployAllBranchIds") &&
+      productionDeployPage.includes("serviceSmokeRebuild"),
+    "the super-admin production deploy page must expose deploy:all branch resume and service-smoke rebuild controls",
+  );
+  assert.ok(
+    productionDeployHook.includes("deployAllOptions") &&
+      productionDeployRoute.includes("deployAllOptions") &&
+      productionDeployService.includes("deployAllOptions"),
+    "deploy:all options must travel from the super-admin page through the API service to the sandbox",
+  );
+  assert.ok(
+    remoteRunner.includes("--from-branch=") &&
+      remoteRunner.includes("--rerun-branch=") &&
+      remoteRunner.includes("--rerun-failed") &&
+      remoteRunner.includes("--service-smoke-rebuild"),
+    "the remote runner must translate super-admin deploy:all options into the same CLI flags",
   );
 
   // No deployment secret may leave the server: the archive password is only

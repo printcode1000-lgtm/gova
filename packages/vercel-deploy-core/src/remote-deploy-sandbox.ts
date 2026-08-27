@@ -8,6 +8,7 @@ import {
   isRemoteDeployAllTerminal,
   type RemoteDeployAllCallbackInput,
   type RemoteDeployAllEmailStatus,
+  type RemoteDeployAllOptions,
   type RemoteDeployAllReadiness,
   type RemoteDeployAllResult,
   type RemoteDeployAllSnapshot,
@@ -307,6 +308,7 @@ export async function startRemoteDeployAll(input: {
   callbackUrl: string;
   command?: "deploy:all" | "deploy:push";
   target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
+  deployAllOptions?: RemoteDeployAllOptions;
 }): Promise<RemoteDeployAllResult> {
   const config = deployEnvironment();
   const sandbox = await Sandbox.getOrCreate({
@@ -353,6 +355,7 @@ export async function startRemoteDeployAll(input: {
     initiatedByUid: input.initiatedByUid,
     command: input.command ?? "deploy:all",
     target: input.target ?? "all",
+    deployAllOptions: input.command === "deploy:push" ? undefined : input.deployAllOptions,
     startedAt: now,
     updatedAt: now,
     emailStatus: "pending",
@@ -385,6 +388,9 @@ export async function startRemoteDeployAll(input: {
         `--request-id=${requestId}`,
         `--command=${input.command ?? "deploy:all"}`,
         `--target=${input.target ?? "all"}`,
+        `--deploy-all-resume-mode=${input.deployAllOptions?.resumeMode ?? "full"}`,
+        ...(input.deployAllOptions?.branchId ? [`--deploy-all-branch=${input.deployAllOptions.branchId}`] : []),
+        ...(input.deployAllOptions?.serviceSmokeRebuild ? ["--deploy-all-service-smoke-rebuild"] : []),
       ],
       cwd: sandbox.cwd,
       detached: true,

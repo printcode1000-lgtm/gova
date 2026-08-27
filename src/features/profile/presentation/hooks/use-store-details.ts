@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useTranslation } from "@/shared/i18n";
 import { useSessionRuntime } from "@/shared/session-runtime";
 import {
@@ -10,6 +10,13 @@ import {
 } from "../../domain/store-details.entity";
 import { profileService } from "../../application/services/profile-service";
 import { reportSystemIssue } from '@asol/system-logs-core';
+import {
+  commitSharedStoreName,
+  hydrateSharedStoreName,
+  readSharedStoreName,
+  subscribeSharedStoreName,
+  writeSharedStoreName,
+} from "./store-name-draft";
 
 const storeDetailsQueryKey = (uid: string) =>
   ["profile", "store-details", uid] as const;
@@ -24,6 +31,7 @@ function isStoreDetailsDirty(
 export function useStoreDetails(
   targetUid?: string,
   initialData?: StoreDetailsData,
+  options?: { ignoreStoreNameDirty?: boolean },
 ) {
   const { t } = useTranslation();
   const { session } = useSessionRuntime();
@@ -41,11 +49,22 @@ export function useStoreDetails(
   const [baseline, setBaseline] =
     useState<StoreDetailsData>(EMPTY_STORE_DETAILS);
 
+  const sharedStoreName = useSyncExternalStore(
+    (onChange) => subscribeSharedStoreName(uid, onChange),
+    () => readSharedStoreName(uid, details.storeName),
+    () => readSharedStoreName(uid, details.storeName),
+  );
+  const displayedDetails = useMemo(
+    () => ({ ...details, storeName: sharedStoreName }),
+    [details, sharedStoreName],
+  );
+
   useEffect(() => {
     if (!detailsQuery.data) return;
+    hydrateSharedStoreName(uid, detailsQuery.data.storeName);
     setDetails(detailsQuery.data);
     setBaseline(detailsQuery.data);
-  }, [detailsQuery.data]);
+  }, [detailsQuery.data, uid]);
 
   useEffect(() => {
     if (detailsQuery.error) {
@@ -57,11 +76,17 @@ export function useStoreDetails(
     }
   }, [detailsQuery.error]);
 
-  const isDirty = isStoreDetailsDirty(details, baseline);
+  const isDirty = options?.ignoreStoreNameDirty
+    ? isStoreDetailsDirty(
+        { ...displayedDetails, storeName: baseline.storeName },
+        baseline,
+      )
+    : isStoreDetailsDirty(displayedDetails, baseline);
 
   const applySaved = useCallback(
     (saved: StoreDetailsData) => {
       queryClient.setQueryData(storeDetailsQueryKey(uid), saved);
+      commitSharedStoreName(uid, saved.storeName);
       setDetails(saved);
       setBaseline(saved);
     },
@@ -88,9 +113,12 @@ export function useStoreDetails(
       field: K,
       value: StoreDetailsData[K],
     ) => {
+      if (field === "storeName") {
+        writeSharedStoreName(uid, value as string);
+      }
       setDetails((current) => ({ ...current, [field]: value }));
     },
-    [],
+    [uid],
   );
 
   const error = useMemo(() => {
@@ -105,12 +133,12 @@ export function useStoreDetails(
   }, [detailsQuery.error, saveMutation.error, t]);
 
   const saveAsync = async () => {
-    await saveMutation.mutateAsync(details);
+    await saveMutation.mutateAsync(displayedDetails);
     return true;
   };
 
   return {
-    details,
+    details: displayedDetails,
     updateField,
     isDirty,
     isLoading: (!session && !targetUid) || detailsQuery.isLoading,

@@ -199,8 +199,9 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:data-health` | `npx tsx scripts/test-data-health-environment.ts && cross-env NODE_OPTIONS=<redacted> npx tsx src/features/data-health/tests/development-guard.test.ts && npx tsx packages/data-core/src/domains/data-health/tests/data-health-policy.test.ts && cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/data-health/tests/order-purge.test.ts` |
 | `npm run test:data-health-core` | `npx tsx packages/data-health-core/src/tests/index.test.ts` |
 | `npm run test:delivery-planner` | `npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts` |
+| `npm run test:deploy-all-resume` | `npx tsx scripts/tests/deploy-all-resume.test.ts` |
 | `npm run test:deploy-runbook-execution` | `npx tsx scripts/architecture/deploy-runbook-execution.test.ts` |
-| `npm run test:deployment-tools` | `npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/release-secret-wiring.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy` |
+| `npm run test:deployment-tools` | `npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npm run test:deploy-all-resume && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/release-secret-wiring.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy` |
 | `npm run test:dev-cloud-backup` | `cross-env NODE_OPTIONS=<redacted> npx tsx src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `npm run test:dev-core` | `npx tsx packages/dev-core/src/tests/index.test.ts` |
 | `npm run test:env-core` | `npx tsx packages/env-core/src/tests/index.test.ts` |
@@ -254,6 +255,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:signed-token-core` | `npx tsx packages/signed-token-core/src/tests/index.test.ts` |
 | `npm run test:storage-core` | `npx tsx packages/storage-core/src/tests/index.test.ts` |
 | `npm run test:storage-image-manager-core` | `npx tsx packages/storage-image-manager-core/src/tests/index.test.ts` |
+| `npm run test:store-name-draft` | `npx tsx src/features/profile/tests/store-name-draft.test.ts && npx tsx src/features/profile/tests/profile-edit-navigation.test.ts` |
 | `npm run test:sub2main-composition` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/sub2main-composition/src/tests/index.test.ts` |
 | `npm run test:submain-composition` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/submain-composition/src/tests/index.test.ts` |
 | `npm run test:super-admin-ui-inspector` | `npx tsx src/features/super-admin/tests/ui-attribute-inspector.test.ts` |

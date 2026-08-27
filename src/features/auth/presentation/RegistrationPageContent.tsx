@@ -8,7 +8,7 @@ import { FormProvider } from 'react-hook-form';
 
 import { AuthHero } from '@/features/auth/presentation/AuthHero';
 import { AuthMobileBrand } from '@/features/auth/presentation/AuthMobileBrand';
-import { EmailInput } from '@/features/auth/presentation/EmailInput';
+import { OptionalRegistrationFields } from '@/features/auth/presentation/OptionalRegistrationFields';
 import { PasswordInput } from '@/features/auth/presentation/PasswordInput';
 import { PasswordStrength } from '@/features/auth/presentation/PasswordStrength';
 import { PhoneVerification } from '@/features/auth/presentation/PhoneVerification';
@@ -40,7 +40,7 @@ export function RegistrationPageContent() {
                   <PasswordInput name="password" />
                   {password.length > 0 && <PasswordStrength password={password} />}
                   <PasswordInput name="confirmPassword" />
-                  <EmailInput />
+                  <OptionalRegistrationFields />
                 </div>
                 <div className="space-y-3">
                   {!phoneVerified && <p className="text-xs text-on-surface-variant flex items-center gap-1.5"><Shield className="h-3.5 w-3.5" />{t('auth.registration.phoneVerificationRequired')}</p>}

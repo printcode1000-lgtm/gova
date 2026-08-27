@@ -18,6 +18,11 @@ export function deployAllStatePath(): string {
   return STATE_FILE;
 }
 
+/** Directory every durable deploy artifact shares, including branch checkpoints. */
+export function deployAllStateDir(): string {
+  return STATE_DIR;
+}
+
 export function readDeployAllState(): DeployAllRunState | undefined {
   if (!existsSync(STATE_FILE)) return undefined;
   try {

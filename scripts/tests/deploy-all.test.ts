@@ -28,6 +28,10 @@ const {
   FAIL_PREFIX,
   DEPLOY_ALL_PHASE_ORDER,
   SERVICES_PHASE_ALIAS,
+  buildPreflightGraph,
+  planPreflightWaves,
+  assertPreflightGraphInvariants,
+  findRunbookBranch,
 } = __testables;
 
 // ── 1. Importing the module must not have deployed ─────────────────────────
@@ -251,6 +255,171 @@ assert.doesNotMatch(
   pushMainSource,
   /\["push", pushUrl, branch\]/,
   "the token-bearing push URL must never appear in a process command argument.",
+);
+
+
+// ── 12. Branch-level resume is the smallest retry the CLI offers ───────────
+//
+// Phase-level retry re-runs eighteen preflight commands to reach the one that
+// failed, which is the cost that makes `--skip-preflight` tempting. These
+// selectors exist to remove that trade.
+const fromBranch = parseArgv(["--from-branch=service-smoke"]);
+assert.equal(fromBranch.phase.fromPhase, "preflight", "--from-branch resumes at the branch's own phase.");
+assert.equal(fromBranch.phase.resume, true, "A branch resume is a resume, so checkpoints may be consulted.");
+assert.ok(
+  fromBranch.phase.selectedBranches?.has("service-smoke"),
+  "--from-branch must run the branch it names.",
+);
+assert.ok(
+  fromBranch.phase.selectedBranches?.has("push-main"),
+  "--from-branch must still run the irreversible branches that follow it.",
+);
+assert.ok(
+  !fromBranch.phase.selectedBranches?.has("lint"),
+  "--from-branch must not re-run what precedes the named branch.",
+);
+
+const rerunBranch = parseArgv(["--rerun-branch=lint"]);
+assert.equal(rerunBranch.phase.onlyPhase, "preflight");
+assert.deepEqual([...(rerunBranch.phase.selectedBranches ?? [])], ["lint"], "--rerun-branch runs one branch.");
+
+const rerunDeployedSmoke = parseArgv(["--rerun-branch=deployed-smoke"]);
+assert.equal(rerunDeployedSmoke.phase.onlyPhase, "main");
+assert.deepEqual(
+  [...(rerunDeployedSmoke.phase.selectedBranches ?? [])],
+  ["deployed-smoke"],
+  "--rerun-branch must be able to target deployed smoke without pulling in main-ready.",
+);
+
+assert.throws(() => parseArgv(["--from-branch=nope"]), /Unknown runbook branch id/);
+assert.throws(() => parseArgv(["--rerun-branch="]), /requires a branch id/);
+assert.throws(
+  () => parseArgv(["--from-branch=lint", "--rerun-branch=types"]),
+  /exactly one of/,
+  "Two start points cannot both be honoured.",
+);
+assert.throws(() => parseArgv(["--phase=preflight", "--from-branch=lint"]), /exactly one of/);
+assert.throws(() => parseArgv(["--from-phase=publish", "--rerun-failed"]), /exactly one of/);
+
+// ── 13. Backward compatibility of the phase selectors ─────────────────────
+const phaseOnly = parseArgv(["--phase=preflight"]);
+assert.equal(phaseOnly.phase.onlyPhase, "preflight");
+assert.deepEqual(resolvePhasesToRun(phaseOnly.phase), ["preflight"]);
+const fromPhase = parseArgv(["--from-phase=submain"]);
+assert.equal(fromPhase.phase.fromPhase, "submain");
+assert.deepEqual(resolvePhasesToRun(fromPhase.phase), ["submain", "sub2main", "main"]);
+const noSelector = parseArgv([]);
+assert.equal(noSelector.phase.resume, false, "A full release proves everything and consults no checkpoint.");
+assert.deepEqual(resolvePhasesToRun(noSelector.phase), [...DEPLOY_ALL_PHASE_ORDER]);
+
+// ── 14. New flags are known; a typo still is not ──────────────────────────
+assert.equal(parseFlags(["--service-smoke-rebuild"]).serviceSmokeRebuild, true);
+assert.equal(parseFlags([]).serviceSmokeRebuild, false, "Service build reuse is the default.");
+assert.doesNotThrow(() => parseFlags(["--rerun-failed"]));
+assert.throws(() => parseFlags(["--rerun-faild"]), /Unknown option/);
+
+// ── 15. The preflight graph keeps its ordering while adding concurrency ───
+const preflightGraph = buildPreflightGraph();
+assert.doesNotThrow(() => assertPreflightGraphInvariants(preflightGraph));
+const preflightWaves = planPreflightWaves(preflightGraph);
+const waveIndex = (branchId: string): number =>
+  preflightWaves.findIndex((wave) => wave.nodes.some((node) => node.id === branchId));
+assert.ok(waveIndex("smoke") > waveIndex("server-build"), "smoke:production needs the server build.");
+assert.ok(waveIndex("static-build") > waveIndex("server-build"), "The static export stays the last build.");
+assert.ok(
+  waveIndex("service-smoke") > waveIndex("service-builds"),
+  "Services are probed only after they build the way Vercel builds them.",
+);
+assert.ok(
+  waveIndex("service-mirror-verify") > waveIndex("service-mirror-sync"),
+  "A mirror is verified after it is synced.",
+);
+assert.ok(
+  preflightWaves.some((wave) => wave.mode === "parallel" && wave.nodes.length > 1),
+  "Independent quality checks must run concurrently, or the DAG bought nothing.",
+);
+assert.equal(findRunbookBranch("push-main")?.phaseId, "publish");
+
+// ── 16. The executor records, reports and never skips an effect ───────────
+assert.match(
+  deployAllSource,
+  /recordBranchCheckpoint\(/,
+  "Every branch result must be written to the durable checkpoint store.",
+);
+assert.match(
+  deployAllSource,
+  /printBranchLedger\(/,
+  "A run must print which branches ran, which were skipped, and why.",
+);
+assert.match(
+  deployAllSource,
+  /smallestRetryCommand\(/,
+  "A failure must offer the smallest retry, not only the phase-level one.",
+);
+assert.match(
+  deployAllSource,
+  /runContext\.pushedRevision/,
+  "A failure after the push must name the revision that is already public.",
+);
+assert.match(
+  deployAllSource,
+  /decideCheckpointSkip\(/,
+  "Checkpoint reuse must go through the package rule, not a local shortcut.",
+);
+assert.doesNotMatch(
+  deployAllSource,
+  /phaseTasks\.push\(\{\s*phaseId:\s*"main"/,
+  "Main verification must run after service deployments, not inside the service batch.",
+);
+assert.doesNotMatch(
+  deployAllSource,
+  /The main deployment was never queried/,
+  "A main sub-branch retry must not fail before it reaches the selected branch.",
+);
+
+const serviceSmokeSource = readFileSync(new URL("../check-service-smoke.ts", import.meta.url), "utf8");
+assert.match(
+  serviceSmokeSource,
+  /returnServiceBuild\(/,
+  "The smoke gate must move the build back out of services/*, never leave it there.",
+);
+assert.match(
+  serviceSmokeSource,
+  /rmSync\(path\.join\(serviceDir, "\.next"\)/,
+  "No .next may survive inside a folder the Vercel CLI uploads verbatim.",
+);
+assert.match(
+  serviceSmokeSource,
+  /serviceSmokeRebuildRequested\(/,
+  "Forcing the old rebuild behavior must stay available.",
+);
+
+const deployedSmokeSource = readFileSync(new URL("../check-deployed-origins.ts", import.meta.url), "utf8");
+assert.match(
+  deployedSmokeSource,
+  /resolveDeployedOrigin\(/,
+  "smoke:deployed must resolve origins through the shared declaration-backed resolver.",
+);
+const originResolutionSource = readFileSync(
+  new URL("../deployed-origin-resolution.ts", import.meta.url),
+  "utf8",
+);
+assert.match(
+  originResolutionSource,
+  /@asol\/native-core/,
+  "Canonical origins must come from the same declarations the static build bakes in.",
+);
+assert.match(
+  originResolutionSource,
+  /if \(fromEnv\) return \{ origin: fromEnv, source: "environment"/,
+  "An explicit environment override must still win over the declared origin.",
+);
+
+const gateRunnerSource = readFileSync(new URL("../run-generated-gate.ts", import.meta.url), "utf8");
+assert.match(
+  gateRunnerSource,
+  /isReusableGateStep\(step\)/,
+  "Only read-only gate steps may be reused between build and build:static.",
 );
 
 console.log("deploy:all guard tests passed.");

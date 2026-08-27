@@ -7,6 +7,7 @@ import { productionDeployApiService } from "@/features/release-commands/applicat
 import {
   REMOTE_DEPLOY_ALL_CONFIRMATION,
   isRemoteDeployAllTerminal,
+  type RemoteDeployAllOptions,
   type RemoteDeployAllResult,
 } from "@asol/vercel-deploy-core/remote-deploy-contracts";
 
@@ -18,7 +19,11 @@ export interface ProductionDeployState {
   running: boolean;
   starting: boolean;
   error: string;
-  start(command?: "deploy:all" | "deploy:push", target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main"): Promise<void>;
+  start(
+    command?: "deploy:all" | "deploy:push",
+    target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main",
+    deployAllOptions?: RemoteDeployAllOptions,
+  ): Promise<void>;
 }
 
 /**
@@ -72,14 +77,18 @@ export function useProductionDeploy(): ProductionDeployState {
     };
   }, [headers]);
 
-  const start = React.useCallback(async (command: "deploy:all" | "deploy:push" = "deploy:all", target: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main" = "all") => {
+  const start = React.useCallback(async (
+    command: "deploy:all" | "deploy:push" = "deploy:all",
+    target: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main" = "all",
+    deployAllOptions?: RemoteDeployAllOptions,
+  ) => {
     if (!headers || starting) return;
     setStarting(true);
     setError("");
     try {
       setResult(
         await productionDeployApiService.start(
-          { confirmation: REMOTE_DEPLOY_ALL_CONFIRMATION, command, target },
+          { confirmation: REMOTE_DEPLOY_ALL_CONFIRMATION, command, target, deployAllOptions },
           headers,
         ),
       );

@@ -8,6 +8,12 @@ import {
   type GeneratedGateId,
 } from './generated-gates';
 import { verifyGeneratedGateContract } from './generated-gate-contract';
+import {
+  currentDeployRunId,
+  gateStepAlreadyProven,
+  isReusableGateStep,
+  recordGateStep,
+} from './gate-step-checkpoints';
 
 const gateId = process.argv[2] as GeneratedGateId | undefined;
 if (!gateId || !generatedGateIds().includes(gateId)) {
@@ -84,14 +90,36 @@ function runGateCommand(command: string) {
 
 const steps = resolveGeneratedGate(gateId);
 console.log(`[gate:${gateId}] ${steps.length} generated step(s).`);
+if (currentDeployRunId()) {
+  console.log(
+    `[gate:${gateId}] Deploy run ${currentDeployRunId()}: a read-only step already proved in this run, ` +
+      'against the same source hash, is reused instead of being run a second time.',
+  );
+}
 
 for (let index = 0; index < steps.length; index += 1) {
   const step = steps[index]!;
   const label = step.kind === 'npm-script' ? `npm run ${step.value}` : step.value;
   console.log(`\n[gate:${gateId}] ${index + 1}/${steps.length}: ${label}`);
+
+  // Reuse is offered only to read-only verification steps, only inside one
+  // deploy run, and only for an unchanged source hash. Everything else — the
+  // generators, the mirror sync, the database steps and the build itself —
+  // always runs.
+  if (isReusableGateStep(step)) {
+    const proven = gateStepAlreadyProven(step.value);
+    if (proven) {
+      console.log(
+        `[gate:${gateId}] REUSED: ${label} already passed in gate "${proven.gateId}" at ${proven.finishedAt} for the same source hash.`,
+      );
+      continue;
+    }
+  }
+
   const result = step.kind === 'npm-script'
     ? runNpmScript(step.value)
     : runGateCommand(step.value);
   if (result.error) throw result.error;
   if (result.status !== 0) process.exit(result.status ?? 1);
+  if (isReusableGateStep(step)) recordGateStep(step.value, gateId);
 }

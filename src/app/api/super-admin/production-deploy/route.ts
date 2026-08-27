@@ -31,6 +31,7 @@ export async function POST(request: Request) {
         callbackUrl: callbackUrl(request),
         command: body?.command,
         target: body?.target,
+        deployAllOptions: body?.deployAllOptions,
       }),
   );
 }

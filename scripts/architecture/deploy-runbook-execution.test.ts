@@ -4,7 +4,7 @@ import path from "node:path";
 
 import ts from "typescript";
 
-import { SERVICE_PHASE_IDS } from "@asol/release-core";
+import { SERVICE_PHASE_IDS, buildPreflightGraph } from "@asol/release-core";
 import {
   DEPLOY_ALL_PREFLIGHT_SECTIONS,
   DEPLOY_ALL_RUNBOOK,
@@ -21,7 +21,11 @@ import {
  * state. The branch stayed on `/dev/deploy-all` and in the docs while the
  * pipeline skipped it. Wired by hand later in `b0d5840`.
  *
- * Preflight is safe: `runPreflightPhase` iterates `DEPLOY_ALL_PREFLIGHT_SECTIONS`.
+ * Preflight is safe: `runPreflightPhase` runs the dependency graph that
+ * `buildPreflightGraph` derives from `DEPLOY_ALL_PREFLIGHT_SECTIONS`. That
+ * derivation is asserted here too, so ownership cannot be lost by a graph that
+ * quietly stops covering a declared branch.
+ *
  * Service phases are safe: `main()` runs each `SERVICE_PHASE_IDS` entry.
  * Publish and main are not — every branch there must be selected by the
  * executor via `selectedIncludes` / `runSelectedPublishBranch` with a string
@@ -35,8 +39,8 @@ const OWNERSHIP_CALLEES = new Set(["selectedIncludes", "runSelectedPublishBranch
 
 function isLoopExecutedPhase(phaseId: string): boolean {
   if (phaseId === "preflight") {
-    // `runPreflightPhase` walks DEPLOY_ALL_PREFLIGHT_SECTIONS.
-    void DEPLOY_ALL_PREFLIGHT_SECTIONS;
+    // `runPreflightPhase` walks every node of the graph built from
+    // DEPLOY_ALL_PREFLIGHT_SECTIONS; coverage of that derivation is asserted below.
     return true;
   }
   return (SERVICE_PHASE_IDS as readonly string[]).includes(phaseId);
@@ -76,7 +80,8 @@ function collectOwnedBranchIds(executorSource: string): Set<string> {
   return owned;
 }
 
-function executorIteratesPreflightSections(executorSource: string): boolean {
+/** Which named functions the executor actually calls. */
+function calledFunctionNames(executorSource: string): Set<string> {
   const sourceFile = ts.createSourceFile(
     EXECUTOR,
     executorSource,
@@ -84,20 +89,15 @@ function executorIteratesPreflightSections(executorSource: string): boolean {
     true,
     ts.ScriptKind.TS,
   );
-  let found = false;
+  const called = new Set<string>();
   const visit = (node: ts.Node): void => {
-    if (
-      ts.isForOfStatement(node) &&
-      ts.isIdentifier(node.expression) &&
-      node.expression.text === "DEPLOY_ALL_PREFLIGHT_SECTIONS"
-    ) {
-      found = true;
-      return;
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression)) {
+      called.add(node.expression.text);
     }
     ts.forEachChild(node, visit);
   };
   visit(sourceFile);
-  return found;
+  return called;
 }
 
 function executorReferencesServicePhaseIds(executorSource: string): boolean {
@@ -121,9 +121,23 @@ function executorReferencesServicePhaseIds(executorSource: string): boolean {
 }
 
 const executorSource = readFileSync(EXECUTOR, "utf8");
-assert.ok(
-  executorIteratesPreflightSections(executorSource),
-  "scripts/deploy-all.ts must still drive preflight by iterating DEPLOY_ALL_PREFLIGHT_SECTIONS.",
+const executorCalls = calledFunctionNames(executorSource);
+for (const required of ["buildPreflightGraph", "planPreflightWaves", "assertPreflightGraphInvariants"]) {
+  assert.ok(
+    executorCalls.has(required),
+    `scripts/deploy-all.ts must still drive preflight through ${required}(), derived from DEPLOY_ALL_PREFLIGHT_SECTIONS.`,
+  );
+}
+
+// The graph is the executor's only view of preflight, so it must cover every
+// declared branch. A branch missing here would be invisible rather than slow.
+const declaredPreflightBranchIds = DEPLOY_ALL_PREFLIGHT_SECTIONS.flatMap((section) =>
+  section.branches.map((branch) => branch.id),
+);
+assert.deepEqual(
+  buildPreflightGraph().map((node) => node.id),
+  declaredPreflightBranchIds,
+  "buildPreflightGraph must cover every declared preflight branch, in declaration order.",
 );
 assert.ok(
   executorReferencesServicePhaseIds(executorSource),

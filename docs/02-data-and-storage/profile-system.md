@@ -102,6 +102,8 @@ Shipping mode `by_location` stores no estimated numeric location value. It start
 
 Store details are split across real columns and tables. Store name, description, story, rating settings, custom request state, and trending label live directly on `user_profiles`. Featured products, trending items, and working hours live in dedicated tables.
 
+Registration may seed `store_name` when the optional alias field on `/registration` is filled. That write uses the same `upsertStoreDetails` command as the Store identity tab on `/profile?mode=edit`. An empty alias does not create a store-name write. The same optional alias field also appears on the Registration tab of `/profile?mode=edit`; it shares `user_profiles.store_name` with Store identity. Clearing it and saving persists an empty name. Editing either surface keeps the other in sync for the current session.
+
 Working hours are normalized by `src/features/profile-working-hours` and saved through the regular profile editor flow. They are stored in `profile_working_hours` and do not have a separate save button.
 
 ## Profile edit workspace navigation

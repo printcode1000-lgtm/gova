@@ -8,6 +8,12 @@ import {
   SERVICE_SMOKE_PROBES,
   type ServiceSmokeProbe,
 } from "./release-service-smoke-probes";
+import {
+  restoreServiceBuild,
+  returnServiceBuild,
+  serviceInputHash,
+  serviceSmokeRebuildRequested,
+} from "./service-build-cache";
 
 /**
  * Start each isolated service's build and ask it a real question.
@@ -26,13 +32,20 @@ import {
  * Runs after `services:build`, so a missing registration stops the release
  * before any account is published.
  *
- * Each service is built here rather than reused from `services:build`. That
- * step deletes its own `.next` on purpose: the CLI uploads the service folder
- * and Vercel builds it remotely, so a build directory left inside that folder
- * would be uploaded with it. This gate keeps the same invariant — it builds one
- * service, probes it, and deletes the output before moving to the next — which
- * costs a rebuild and buys a gate that leaves nothing behind and runs on its
- * own, without a preceding phase.
+ * A service is built here whenever this gate has no build it can prove matches.
+ * `services:build` now parks its output outside the service folder, keyed on a
+ * content hash of the mirrored folder, and this gate starts that exact output
+ * when the hash still matches — so a release builds each service once instead
+ * of twice, and a mirror that changed in between is still rebuilt.
+ *
+ * The invariant that forced the rebuild is unchanged, and is why the output is
+ * parked rather than left in place: the CLI uploads `services/<name>/`
+ * verbatim, so no `.next` may exist there when this gate returns. The output is
+ * moved in, probed, and moved back out in a `finally`. Running this gate alone,
+ * with no preceding phase and no cache, behaves exactly as it always did.
+ *
+ * `--rebuild` (or `deploy:all --service-smoke-rebuild`) forces the old
+ * build-every-time behavior.
  *
  * Probe definitions live in `release-service-smoke-probes.ts` so `smoke:deployed`
  * cannot drift from this table.
@@ -98,10 +111,22 @@ async function probeService(probe: ServiceProbe, port: number): Promise<string |
     return `${probe.service}: services/${probe.service} is missing`;
   }
 
-  try {
-    buildService(probe.service, serviceDir);
-  } catch {
-    return `${probe.service}: next build failed — see the output above.`;
+  const inputHash = serviceInputHash(process.cwd(), probe.service);
+  const forceRebuild = serviceSmokeRebuildRequested();
+  const reused = !forceRebuild && restoreServiceBuild(probe.service, serviceDir, inputHash);
+  if (reused) {
+    console.log(
+      `[service-smoke] ${probe.service}: reusing the services:build output for this exact mirror.`,
+    );
+  } else {
+    if (forceRebuild) {
+      console.log(`[service-smoke] ${probe.service}: rebuild forced.`);
+    }
+    try {
+      buildService(probe.service, serviceDir);
+    } catch {
+      return `${probe.service}: next build failed — see the output above.`;
+    }
   }
 
   const log: string[] = [];
@@ -158,6 +183,9 @@ async function probeService(probe: ServiceProbe, port: number): Promise<string |
   } finally {
     server.kill("SIGTERM");
     // Never leave a build directory inside a folder the CLI uploads verbatim.
+    // Moved back to the cache rather than deleted, so a later step in the same
+    // release can start it again without a third build.
+    returnServiceBuild(probe.service, serviceDir, inputHash);
     rmSync(path.join(serviceDir, ".next"), { recursive: true, force: true });
   }
 }
