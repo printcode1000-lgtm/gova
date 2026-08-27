@@ -9,6 +9,8 @@ import {
   assertKnownBranchId,
   assertPreflightGraphInvariants,
   buildPreflightGraph,
+  assertDeployAllStateIdentity,
+  decideResumeSafety,
   decideCheckpointSkip,
   deploymentStateProvesPhase,
   failedBranchIds,
@@ -16,6 +18,7 @@ import {
   hashDocumentationGateSources,
   hashSharedGateSources,
   isDeployAllPhaseId,
+  newDeployAllState,
   neverCheckpointSkippableBranchIds,
   phasePrerequisites,
   phasesFrom,
@@ -252,6 +255,71 @@ assert.throws(() => planRerunFailed([]), /No failed branch is recorded/);
 assert.equal(smallestRetryCommand('lint'), 'npm run deploy:all -- --rerun-branch=lint');
 assert.equal(resumeFromBranchCommand('lint'), 'npm run deploy:all -- --from-branch=lint');
 
+// Branch precision is safe only while the active source identity is unchanged.
+const revisionA = 'a'.repeat(40);
+const revisionB = 'b'.repeat(40);
+const fingerprintA = '1'.repeat(64);
+const fingerprintB = '2'.repeat(64);
+const completedOnA = {
+  ...newDeployAllState({ revision: revisionA, sourceFingerprint: fingerprintA }),
+  completedPhases: ['preflight'],
+};
+assert.deepEqual(
+  decideResumeSafety({
+    resumeRequested: true,
+    currentRevision: revisionA,
+    currentSourceFingerprint: fingerprintA,
+    state: completedOnA,
+  }),
+  { forceFullValidation: false },
+  'Same-revision resume keeps its precise branch plan.',
+);
+assert.equal(
+  decideResumeSafety({
+    resumeRequested: true,
+    currentRevision: revisionB,
+    currentSourceFingerprint: fingerprintA,
+    state: completedOnA,
+  }).forceFullValidation,
+  true,
+  'A new HEAD must expand branch resume back to full validation.',
+);
+assert.equal(
+  decideResumeSafety({
+    resumeRequested: true,
+    currentRevision: revisionA,
+    currentSourceFingerprint: fingerprintB,
+    state: completedOnA,
+  }).forceFullValidation,
+  true,
+  'Changed inputs on the same HEAD must expand branch resume back to full validation.',
+);
+assert.throws(
+  () =>
+    assertDeployAllStateIdentity(
+      completedOnA,
+      { revision: revisionB, sourceFingerprint: fingerprintA },
+      'Publish',
+    ),
+  /cannot use deploy proof from another source identity/,
+  'SHA-A completed phases cannot authorize SHA-B publish prerequisites.',
+);
+assert.equal(
+  deploymentStateProvesPhase(completedOnA, 'preflight', revisionB, fingerprintA),
+  false,
+  'Completed phases are not proof across revisions.',
+);
+assert.equal(
+  deploymentStateProvesPhase(completedOnA, 'preflight', revisionA, fingerprintB),
+  false,
+  'Completed phases are not proof across input fingerprints.',
+);
+assert.equal(
+  deploymentStateProvesPhase(completedOnA, 'preflight', revisionA, fingerprintA),
+  true,
+  'Same-source completed phase proof remains valid.',
+);
+
 // ── Checkpoints may replace a verification, never an effect ─────────────────
 const sampleCheckpoint = {
   branchId: 'lint',
@@ -354,7 +422,9 @@ for (const branchId of ['lint', 'types', 'server-build', 'service-smoke']) {
 
 // Only the deployment state, at the same revision, can answer for an effect.
 const provenState = {
+  schemaVersion: 2 as const,
   revision: sampleCheckpoint.revision,
+  sourceFingerprint: sampleCheckpoint.inputHash,
   runId: 'run',
   timestamp: '2026-01-01T00:00:00.000Z',
   mainComment: 'deploy(main)',
@@ -362,10 +432,10 @@ const provenState = {
   completedPhases: ['preflight', 'publish'],
   lastUpdated: '2026-01-01T00:00:00.000Z',
 };
-assert.equal(deploymentStateProvesPhase(provenState, 'publish', sampleCheckpoint.revision), true);
-assert.equal(deploymentStateProvesPhase(provenState, 'publish', 'e'.repeat(40)), false, 'A different revision proves nothing.');
-assert.equal(deploymentStateProvesPhase(provenState, 'main', sampleCheckpoint.revision), false);
-assert.equal(deploymentStateProvesPhase(undefined, 'publish', sampleCheckpoint.revision), false);
+assert.equal(deploymentStateProvesPhase(provenState, 'publish', sampleCheckpoint.revision, sampleCheckpoint.inputHash), true);
+assert.equal(deploymentStateProvesPhase(provenState, 'publish', 'e'.repeat(40), sampleCheckpoint.inputHash), false, 'A different revision proves nothing.');
+assert.equal(deploymentStateProvesPhase(provenState, 'main', sampleCheckpoint.revision, sampleCheckpoint.inputHash), false);
+assert.equal(deploymentStateProvesPhase(undefined, 'publish', sampleCheckpoint.revision, sampleCheckpoint.inputHash), false);
 
 assert.deepEqual(
   failedBranchIds([
@@ -394,10 +464,17 @@ const hashSandbox = mkdtempSync(path.join(tmpdir(), 'asol-release-core-hash-'));
 try {
   mkdirSync(path.join(hashSandbox, 'src'), { recursive: true });
   mkdirSync(path.join(hashSandbox, 'docs'), { recursive: true });
+  mkdirSync(path.join(hashSandbox, 'config'), { recursive: true });
   writeFileSync(path.join(hashSandbox, 'src', 'app.ts'), 'export const app = true;\n', 'utf8');
   writeFileSync(path.join(hashSandbox, 'docs', 'guide.md'), '# One\n', 'utf8');
   const sharedBefore = hashSharedGateSources(hashSandbox);
   const docsBefore = hashDocumentationGateSources(hashSandbox);
+  writeFileSync(path.join(hashSandbox, 'config', 'secret-archive-latest.zip.enc'), 'rotated\n', 'utf8');
+  assert.equal(
+    hashDocumentationGateSources(hashSandbox),
+    docsBefore,
+    'The modeled publish-time secret archive output does not invalidate validated source identity.',
+  );
   writeFileSync(path.join(hashSandbox, 'docs', 'guide.md'), '# Two\n', 'utf8');
   assert.equal(
     hashSharedGateSources(hashSandbox),

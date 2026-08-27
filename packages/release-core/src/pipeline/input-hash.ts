@@ -24,6 +24,8 @@ export interface ContentHashRequest {
   readonly includePaths: readonly string[];
   /** Directory names skipped anywhere in the walk. */
   readonly excludeDirectoryNames?: readonly string[];
+  /** Repository-relative files deliberately produced by a later modeled effect. */
+  readonly excludePaths?: readonly string[];
 }
 
 const DEFAULT_EXCLUDED_DIRECTORY_NAMES: readonly string[] = [
@@ -72,12 +74,17 @@ export function hashContentPaths(request: ContentHashRequest): string {
     collectFiles(path.join(request.root, normalized), normalized, excluded, collected);
   }
 
-  collected.sort((left, right) =>
+  const excludedPaths = new Set(
+    (request.excludePaths ?? []).map((entry) => entry.replace(/\\/g, "/").replace(/^\.\//, "")),
+  );
+  const included = collected.filter((file) => !excludedPaths.has(file.relativePath));
+
+  included.sort((left, right) =>
     left.relativePath < right.relativePath ? -1 : left.relativePath > right.relativePath ? 1 : 0,
   );
 
   const digest = createHash("sha256");
-  for (const file of collected) {
+  for (const file of included) {
     digest.update(file.relativePath);
     digest.update(" ");
     digest.update(createHash("sha256").update(readFileSync(file.absolutePath)).digest());
@@ -118,12 +125,25 @@ export const DOCUMENTATION_GATE_SOURCE_PATHS: readonly string[] = [
   "docs",
 ];
 
+const MODELED_PUBLISH_OUTPUT_PATHS: readonly string[] = [
+  "config/secret-archive-latest.zip.enc",
+  "config/secret-archive-latest.zip.enc.private-key.pem",
+];
+
 export function hashSharedGateSources(root: string): string {
-  return hashContentPaths({ root, includePaths: SHARED_GATE_SOURCE_PATHS });
+  return hashContentPaths({
+    root,
+    includePaths: SHARED_GATE_SOURCE_PATHS,
+    excludePaths: MODELED_PUBLISH_OUTPUT_PATHS,
+  });
 }
 
 export function hashDocumentationGateSources(root: string): string {
-  return hashContentPaths({ root, includePaths: DOCUMENTATION_GATE_SOURCE_PATHS });
+  return hashContentPaths({
+    root,
+    includePaths: DOCUMENTATION_GATE_SOURCE_PATHS,
+    excludePaths: MODELED_PUBLISH_OUTPUT_PATHS,
+  });
 }
 
 /** Everything uploaded for one isolated service deployment. */

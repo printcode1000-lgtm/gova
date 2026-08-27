@@ -16,6 +16,7 @@ import { __testables } from "../deploy-all";
 const {
   parseFlags,
   parseArgv,
+  expandUnsafeResumeToFullValidation,
   resolvePhasesToRun,
   compareVersions,
   SCRATCH_FILE_PATTERNS,
@@ -218,6 +219,30 @@ assert.deepEqual(
 assert.deepEqual(
   resolvePhasesToRun({ listPhases: false, fromPhase: "submain" }),
   ["submain", "sub2main", "main"],
+);
+
+// A changed source identity may widen validation, never silently keep a stale
+// branch selection. Diagnostic-only requests stop after full preflight so the
+// safety expansion cannot unexpectedly publish.
+assert.deepEqual(
+  resolvePhasesToRun(
+    expandUnsafeResumeToFullValidation(
+      parseArgv(["--from-branch=service-smoke"]).phase,
+      "HEAD changed",
+    ),
+  ),
+  [...DEPLOY_ALL_PHASE_ORDER],
+  "A revision-changed release resume must restart the complete release validation path.",
+);
+assert.deepEqual(
+  resolvePhasesToRun(
+    expandUnsafeResumeToFullValidation(
+      parseArgv(["--rerun-branch=service-smoke"]).phase,
+      "HEAD changed",
+    ),
+  ),
+  ["preflight"],
+  "A revision-changed diagnostic retry must re-prove preflight without unexpectedly publishing.",
 );
 
 // ── 11. Phase flags reject unknown ids and conflicting selectors ───────────

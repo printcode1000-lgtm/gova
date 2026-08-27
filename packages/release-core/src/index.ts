@@ -18,6 +18,7 @@ export * from './pipeline/input-hash';
 export * from './pipeline/error-summary';
 export * from './pipeline/branch-checkpoints';
 export * from './pipeline/branch-resume';
+export * from './pipeline/resume-safety';
 export * from './pipeline/preflight-graph';
 export * from './pipeline/run-deployment-npm-script';
 export * from './pipeline/push-main-branch';

@@ -18,6 +18,13 @@ failure, and force `smoke:services` to rebuild instead of reusing the
 translated into the normal CLI flags; the browser never receives a secret and
 never reimplements release logic.
 
+The selection sent by the page is operator intent, not authority to reuse old
+proof. After the persistent Sandbox fetches `main`, the canonical CLI compares
+its actual `HEAD` and source fingerprint with `.deploy-all/run-state.json`. A
+mismatch, missing state or legacy state expands a continuation to full
+validation before applying branch selection. The reason and effective plan are
+written to the run log. Same-revision continuations remain branch-precise.
+
 The page also exposes a **Deploy Push** tab. It runs `deploy:push` in the same
 Sandbox and lets the super admin select `all`, `main`, or one isolated service.
 

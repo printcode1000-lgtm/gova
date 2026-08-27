@@ -16,10 +16,12 @@ import {
 import {
   assertPhasePrerequisites,
   clearDeployInFlight,
+  createDeployAllState,
+  decideResumeSafety,
   markDeployInFlight,
   markPhaseComplete,
   readDeployAllState,
-  writeDeployAllState,
+  rebindDeployAllStateRevision,
 } from "@asol/release-core";
 import {
   type BranchResumePlan,
@@ -423,6 +425,17 @@ function resolvePhasesToRun(selection: PhaseSelection): DeployAllPhaseId[] {
   return [...DEPLOY_ALL_PHASE_ORDER];
 }
 
+function expandUnsafeResumeToFullValidation(selection: PhaseSelection, reason: string): PhaseSelection {
+  const diagnosticOnly = Boolean(selection.onlyPhase);
+  return {
+    listPhases: false,
+    onlyPhase: diagnosticOnly ? "preflight" : undefined,
+    resume: false,
+    resumeDescription:
+      `requested resume expanded to ${diagnosticOnly ? "full preflight" : "a full release"}: ${reason}`,
+  };
+}
+
 function requiredPrerequisites(
   phaseId: DeployAllPhaseId,
   flags: DeployFlags,
@@ -502,7 +515,7 @@ interface RunContext {
   documentationSourceHash?: string;
 }
 
-function createRunContext(selection: PhaseSelection): RunContext {
+function createRunContext(resume: boolean): RunContext {
   let headRevision = "";
   try {
     headRevision = git(["rev-parse", "HEAD"]);
@@ -511,13 +524,15 @@ function createRunContext(selection: PhaseSelection): RunContext {
     // checkpoint comparison then refuses to skip, which is the safe answer.
   }
   const state = readDeployAllState();
-  const resolvedHead = selection.revisionOverride?.trim() || headRevision;
+  // A requested deployment revision may select a remote effect to observe, but
+  // it can never relabel local validation proof. Authorization is bound to HEAD.
+  const resolvedHead = headRevision;
   return {
     runId: state?.runId ?? "",
     gateRunId: `${new Date().toISOString().replace(/[^0-9]/g, "").slice(0, 17)}-${resolvedHead.slice(0, 12)}`,
     headRevision: resolvedHead,
     checkpoints: readBranchCheckpoints(),
-    resume: selection.resume === true,
+    resume,
     ledger: [],
   };
 }
@@ -614,7 +629,12 @@ async function executeBranch(
     let reason = decision.reason;
     if (!skip && !isCheckpointSkippablePhase(branch.phase)) {
       const recorded = findBranchCheckpoint(branch.branchId, context.checkpoints);
-      const proven = deploymentStateProvesPhase(readDeployAllState(), branch.phase, options.revision);
+      const proven = deploymentStateProvesPhase(
+        readDeployAllState(),
+        branch.phase,
+        options.revision,
+        documentationSourceHashFor(context),
+      );
       if (
         proven &&
         recorded?.status === "success" &&
@@ -1250,6 +1270,15 @@ async function runPublishPhase(
   const revision = git(["rev-parse", "HEAD"]);
   const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
   context.runId = runId;
+  const committedSourceFingerprint = hashDocumentationGateSources(ROOT);
+  const validatedSourceFingerprint = documentationSourceHashFor(context);
+  rebindDeployAllStateRevision({
+    fromRevision: context.headRevision,
+    toRevision: revision,
+    validatedSourceFingerprint,
+    committedSourceFingerprint,
+    patch: { runId, timestamp, mainComment, skipPreflight: flags.skipPreflight },
+  });
   await runSelectedPublishBranch(
     selection,
     "push-main",
@@ -1265,16 +1294,6 @@ async function runPublishPhase(
     },
     context,
   );
-
-  writeDeployAllState({
-    revision,
-    runId,
-    timestamp,
-    mainComment,
-    skipPreflight: flags.skipPreflight,
-    completedPhases: readDeployAllState()?.completedPhases ?? [],
-    lastUpdated: new Date().toISOString(),
-  });
 
   return { revision, runId, timestamp, mainComment };
 }
@@ -1415,7 +1434,9 @@ async function runMainPhase(
 }
 
 async function main(): Promise<void> {
-  const { flags, phase } = parseArgv(process.argv.slice(2));
+  const parsed = parseArgv(process.argv.slice(2));
+  const { flags } = parsed;
+  let phase = parsed.phase;
 
   if (phase.listPhases) {
     console.log("[deploy:all] Phases (in order):\n" + formatPhaseList());
@@ -1437,13 +1458,42 @@ async function main(): Promise<void> {
     return;
   }
 
+  const actualHeadRevision = git(["rev-parse", "HEAD"]);
+  const actualSourceFingerprint = hashDocumentationGateSources(ROOT);
+  const priorState = readDeployAllState();
+  const resumeSafety = decideResumeSafety({
+    resumeRequested: phase.resume === true,
+    currentRevision: actualHeadRevision,
+    currentSourceFingerprint: actualSourceFingerprint,
+    state: priorState,
+  });
+  if (resumeSafety.forceFullValidation) {
+    if (flags.skipPreflight) {
+      throw new Error(
+        "--skip-preflight cannot be used when resume proof is missing or belongs to another source identity.",
+      );
+    }
+    const detail =
+      resumeSafety.reason === "revision-changed"
+        ? `stored revision ${priorState?.revision ?? "unknown"} does not match HEAD ${actualHeadRevision}`
+        : resumeSafety.reason === "input-changed"
+          ? "the source fingerprint changed since the stored run"
+          : "there is no compatible stored run state";
+    phase = expandUnsafeResumeToFullValidation(phase, detail);
+    console.warn(`[deploy:all] Resume safety: ${phase.resumeDescription}.`);
+  }
+
+  if (!phase.resume || resumeSafety.forceFullValidation) {
+    createDeployAllState({ revision: actualHeadRevision, sourceFingerprint: actualSourceFingerprint });
+  }
+
   const phasesToRun = resolvePhasesToRun(phase);
   const runningFullRelease =
     phasesToRun.length === DEPLOY_ALL_PHASE_ORDER.length &&
     phasesToRun.every((id, index) => id === DEPLOY_ALL_PHASE_ORDER[index]);
 
   let publishContext = resolvePublishContext(phase, readDeployAllState());
-  const runContext = createRunContext(phase);
+  const runContext = createRunContext(phase.resume === true);
   if (phase.resumeDescription) {
     console.log(`[deploy:all] Resume request: ${phase.resumeDescription}.`);
   }
@@ -1471,7 +1521,21 @@ async function main(): Promise<void> {
         assertDeploymentCredentials();
         await runPreflightPhase(flags, phase, runContext);
         if (flags.skipPreflight || phaseFullyCovered(runContext, "preflight")) {
-          markPhaseComplete("preflight", { skipPreflight: flags.skipPreflight });
+          // Generators are allowed inside preflight. Bind phase proof to their
+          // final deterministic output, not the tree that existed before them.
+          const finalSourceFingerprint = hashDocumentationGateSources(ROOT);
+          if (readDeployAllState()?.sourceFingerprint !== finalSourceFingerprint) {
+            createDeployAllState({
+              revision: runContext.headRevision,
+              sourceFingerprint: finalSourceFingerprint,
+            });
+          }
+          runContext.documentationSourceHash = finalSourceFingerprint;
+          markPhaseComplete(
+            "preflight",
+            { revision: runContext.headRevision, sourceFingerprint: documentationSourceHashFor(runContext) },
+            { skipPreflight: flags.skipPreflight },
+          );
         } else {
           console.log(
             '[deploy:all] Phase "preflight" is not marked complete: this run did not cover every branch.',
@@ -1482,20 +1546,22 @@ async function main(): Promise<void> {
 
       const prerequisites = requiredPrerequisites(phaseId, flags);
       if (prerequisites.length > 0) {
-        assertPhasePrerequisites(phaseId, prerequisites);
+        const prerequisiteRevision = phaseId === "publish" ? runContext.headRevision : publishContext.revision;
+        assertPhasePrerequisites(phaseId, prerequisites, {
+          revision: prerequisiteRevision,
+          sourceFingerprint: documentationSourceHashFor(runContext),
+        });
       }
 
       if (phaseId === "publish") {
         publishContext = await runPublishPhase(flags, phase, runContext);
         if (phaseFullyCovered(runContext, "publish")) {
-          markPhaseComplete("publish", publishContext);
+          markPhaseComplete(
+            "publish",
+            { revision: publishContext.revision, sourceFingerprint: documentationSourceHashFor(runContext) },
+            publishContext,
+          );
         } else {
-          writeDeployAllState({
-            ...publishContext,
-            skipPreflight: flags.skipPreflight,
-            completedPhases: readDeployAllState()?.completedPhases ?? [],
-            lastUpdated: new Date().toISOString(),
-          });
           console.log(
             '[deploy:all] Phase "publish" is not marked complete: this run did not cover every branch.',
           );
@@ -1535,7 +1601,12 @@ async function main(): Promise<void> {
           completedInBatch.add(task.phaseId);
           if (outcome.status === "fulfilled") {
             reports.push(outcome.value);
-            if (phaseFullyCovered(runContext, task.phaseId)) markPhaseComplete(task.phaseId);
+            if (phaseFullyCovered(runContext, task.phaseId)) {
+              markPhaseComplete(task.phaseId, {
+                revision: publishContext.revision,
+                sourceFingerprint: documentationSourceHashFor(runContext),
+              });
+            }
             return;
           }
           if (outcome.reason instanceof DeploymentNpmScriptError && outcome.reason.report) {
@@ -1560,7 +1631,12 @@ async function main(): Promise<void> {
         publishContext = resolvePublishContext(phase, readDeployAllState());
         const mainReport = await runMainPhase(phase, publishContext, runContext);
         if (mainReport) reports.unshift(mainReport);
-        if (phaseFullyCovered(runContext, "main")) markPhaseComplete("main");
+        if (phaseFullyCovered(runContext, "main")) {
+          markPhaseComplete("main", {
+            revision: publishContext.revision,
+            sourceFingerprint: documentationSourceHashFor(runContext),
+          });
+        }
         console.log(
           mainReport
             ? `[deploy:all] Phase "main" completed (${mainReport.state}).`
@@ -1598,12 +1674,10 @@ async function main(): Promise<void> {
   if (runningFullRelease && coveredEveryBranch) {
     reportNativeSurfaceStatus();
     console.log(formatSuccessLine(flags.skipPreflight));
-    writeDeployAllState({
-      ...publishContext,
-      skipPreflight: flags.skipPreflight,
-      completedPhases: [...DEPLOY_ALL_PHASE_ORDER],
-      lastUpdated: new Date().toISOString(),
-    });
+    const state = readDeployAllState();
+    if (!state || state.revision !== publishContext.revision) {
+      throw new Error("Final deploy state is not bound to the published revision.");
+    }
     return;
   }
 
@@ -1659,6 +1733,7 @@ function reportNativeSurfaceStatus(): void {
 export const __testables = {
   parseFlags,
   parseArgv,
+  expandUnsafeResumeToFullValidation,
   resolvePhasesToRun,
   compareVersions,
   SCRATCH_FILE_PATTERNS,

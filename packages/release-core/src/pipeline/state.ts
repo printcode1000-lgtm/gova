@@ -1,17 +1,24 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 const STATE_DIR = path.join(process.cwd(), ".deploy-all");
 const STATE_FILE = path.join(STATE_DIR, "run-state.json");
 
 export interface DeployAllRunState {
+  schemaVersion: 2;
   revision: string;
+  sourceFingerprint: string;
   runId: string;
   timestamp: string;
   mainComment: string;
   skipPreflight: boolean;
   completedPhases: string[];
   lastUpdated: string;
+}
+
+export interface DeployAllStateIdentity {
+  revision: string;
+  sourceFingerprint: string;
 }
 
 export function deployAllStatePath(): string {
@@ -26,26 +33,82 @@ export function deployAllStateDir(): string {
 export function readDeployAllState(): DeployAllRunState | undefined {
   if (!existsSync(STATE_FILE)) return undefined;
   try {
-    return JSON.parse(readFileSync(STATE_FILE, "utf8")) as DeployAllRunState;
+    const parsed = JSON.parse(readFileSync(STATE_FILE, "utf8")) as Partial<DeployAllRunState>;
+    if (
+      parsed.schemaVersion !== 2 ||
+      typeof parsed.revision !== "string" ||
+      parsed.revision.length === 0 ||
+      typeof parsed.sourceFingerprint !== "string" ||
+      parsed.sourceFingerprint.length === 0 ||
+      !Array.isArray(parsed.completedPhases) ||
+      !parsed.completedPhases.every((phase) => typeof phase === "string")
+    ) {
+      return undefined;
+    }
+    return parsed as DeployAllRunState;
   } catch {
     return undefined;
   }
 }
 
-export function writeDeployAllState(state: DeployAllRunState): void {
+function writeDeployAllState(state: DeployAllRunState): void {
   mkdirSync(STATE_DIR, { recursive: true });
-  writeFileSync(STATE_FILE, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+  const temporary = `${STATE_FILE}.${process.pid}.tmp`;
+  writeFileSync(temporary, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+  renameSync(temporary, STATE_FILE);
 }
 
-export function markPhaseComplete(phaseId: string, patch: Partial<DeployAllRunState> = {}): DeployAllRunState {
+export function newDeployAllState(identity: DeployAllStateIdentity): DeployAllRunState {
+  return {
+    schemaVersion: 2,
+    revision: identity.revision,
+    sourceFingerprint: identity.sourceFingerprint,
+    runId: "",
+    timestamp: "",
+    mainComment: "",
+    skipPreflight: false,
+    completedPhases: [],
+    lastUpdated: new Date().toISOString(),
+  };
+}
+
+export function createDeployAllState(identity: DeployAllStateIdentity): DeployAllRunState {
+  const state = newDeployAllState(identity);
+  writeDeployAllState(state);
+  return state;
+}
+
+export function assertDeployAllStateIdentity(
+  state: DeployAllRunState | undefined,
+  identity: DeployAllStateIdentity,
+  operation: string,
+): asserts state is DeployAllRunState {
+  if (!state) {
+    throw new Error(`${operation} requires an active deploy run in ${STATE_FILE}.`);
+  }
+  if (state.revision !== identity.revision || state.sourceFingerprint !== identity.sourceFingerprint) {
+    throw new Error(
+      `${operation} cannot use deploy proof from another source identity. ` +
+        `State revision ${state.revision || "unknown"}; current revision ${identity.revision || "unknown"}. ` +
+        "Start a full deploy:all validation for the current source.",
+    );
+  }
+}
+
+export function markPhaseComplete(
+  phaseId: string,
+  identity: DeployAllStateIdentity,
+  patch: Partial<Omit<DeployAllRunState, "schemaVersion" | "revision" | "sourceFingerprint" | "completedPhases">> = {},
+): DeployAllRunState {
   const current = readDeployAllState();
-  const completedPhases = [...new Set([...(current?.completedPhases ?? []), phaseId])];
+  assertDeployAllStateIdentity(current, identity, `Completing phase "${phaseId}"`);
+  const completedPhases = [...new Set([...current.completedPhases, phaseId])];
   const next: DeployAllRunState = {
-    revision: patch.revision ?? current?.revision ?? "",
-    runId: patch.runId ?? current?.runId ?? "",
-    timestamp: patch.timestamp ?? current?.timestamp ?? "",
-    mainComment: patch.mainComment ?? current?.mainComment ?? "",
-    skipPreflight: patch.skipPreflight ?? current?.skipPreflight ?? false,
+    ...current,
+    ...patch,
+    schemaVersion: 2,
+    revision: identity.revision,
+    sourceFingerprint: identity.sourceFingerprint,
     completedPhases,
     lastUpdated: new Date().toISOString(),
   };
@@ -56,9 +119,11 @@ export function markPhaseComplete(phaseId: string, patch: Partial<DeployAllRunSt
 export function assertPhasePrerequisites(
   phaseId: string,
   required: readonly string[],
+  identity: DeployAllStateIdentity,
 ): DeployAllRunState | undefined {
-  if (required.length === 0) return readDeployAllState();
   const state = readDeployAllState();
+  assertDeployAllStateIdentity(state, identity, `Phase "${phaseId}"`);
+  if (required.length === 0) return state;
   const missing = required.filter((id) => !state?.completedPhases.includes(id));
   if (missing.length > 0) {
     throw new Error(
@@ -67,10 +132,42 @@ export function assertPhasePrerequisites(
         `State file: ${STATE_FILE}`,
     );
   }
-  if (!state) {
-    throw new Error(`Phase "${phaseId}" requires a saved deploy run in ${STATE_FILE}.`);
-  }
   return state;
+}
+
+/**
+ * Move proof to the deployment commit only after the validated source fingerprint
+ * is proven unchanged. This is the sole legal cross-revision transition.
+ */
+export function rebindDeployAllStateRevision(input: {
+  fromRevision: string;
+  toRevision: string;
+  validatedSourceFingerprint: string;
+  committedSourceFingerprint: string;
+  patch?: Partial<Omit<DeployAllRunState, "schemaVersion" | "revision" | "sourceFingerprint" | "completedPhases">>;
+}): DeployAllRunState {
+  if (input.validatedSourceFingerprint !== input.committedSourceFingerprint) {
+    throw new Error(
+      "The deployment commit source fingerprint does not match the source validated by preflight.",
+    );
+  }
+  const current = readDeployAllState();
+  assertDeployAllStateIdentity(
+    current,
+    { revision: input.fromRevision, sourceFingerprint: input.validatedSourceFingerprint },
+    "Rebinding deploy proof to the deployment commit",
+  );
+  const next: DeployAllRunState = {
+    ...current,
+    ...input.patch,
+    schemaVersion: 2,
+    revision: input.toRevision,
+    sourceFingerprint: input.committedSourceFingerprint,
+    completedPhases: [...current.completedPhases],
+    lastUpdated: new Date().toISOString(),
+  };
+  writeDeployAllState(next);
+  return next;
 }
 
 const IN_FLIGHT_FILE = path.join(STATE_DIR, "in-flight.lock");

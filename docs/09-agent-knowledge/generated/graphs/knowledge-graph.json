@@ -26947,17 +26947,6 @@
       ]
     },
     {
-      "id": "source:android/local.properties",
-      "kind": "source",
-      "name": "local.properties",
-      "path": "android/local.properties",
-      "tags": [
-        "android/local",
-        "android/local.properties",
-        "properties"
-      ]
-    },
-    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",
@@ -27024,17 +27013,6 @@
         "ios/app/app/appdelegate",
         "ios/app/app/appdelegate.swift",
         "swift"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "source",
-      "name": "GoogleService-Info.plist",
-      "path": "ios/App/App/GoogleService-Info.plist",
-      "tags": [
-        "ios/app/app/googleservice-info",
-        "ios/app/app/googleservice-info.plist",
-        "plist"
       ]
     },
     {
@@ -35402,6 +35380,17 @@
       "tags": [
         "packages/release-core/src/pipeline/push-main-branch",
         "packages/release-core/src/pipeline/push-main-branch.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "kind": "source",
+      "name": "resume-safety.ts",
+      "path": "packages/release-core/src/pipeline/resume-safety.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/resume-safety",
+        "packages/release-core/src/pipeline/resume-safety.ts",
         "ts"
       ]
     },
@@ -52223,6 +52212,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/deploy-state-revision.test.ts",
+      "kind": "test",
+      "name": "deploy-state-revision.test.ts",
+      "path": "scripts/tests/deploy-state-revision.test.ts",
+      "tags": [
+        "scripts/tests/deploy-state-revision",
+        "scripts/tests/deploy-state-revision.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/docs/document-mutability.test.ts",
       "kind": "test",
       "name": "document-mutability.test.ts",
@@ -55886,6 +55887,11 @@
     {
       "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/deploy-push.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/deploy-state-revision.test.ts",
       "kind": "invokes"
     },
     {
@@ -69899,12 +69905,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
       "to": "source:packages/native-core/scripts/android-build-preflight.ts",
       "kind": "references",
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
@@ -69982,12 +69982,6 @@
       "to": "source:ios/App/App.xcodeproj/project.pbxproj",
       "kind": "references",
       "detail": "ios/App/App.xcodeproj/project.pbxproj"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
-      "to": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "references",
-      "detail": "ios/App/App/GoogleService-Info.plist"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
@@ -70492,12 +70486,6 @@
       "to": "source:android/capacitor.settings.gradle",
       "kind": "references",
       "detail": "android/capacitor.settings.gradle"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
@@ -71258,12 +71246,6 @@
       "to": "script:scripts/android/gradle.ts",
       "kind": "references",
       "detail": "scripts/android/gradle.ts"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
@@ -78199,6 +78181,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/release-core/src/pipeline/run-deployment-npm-script.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -83131,12 +83119,6 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "source:android/local.properties",
-      "kind": "documents",
-      "detail": "android/"
-    },
-    {
-      "from": "domain:mobile-and-release",
       "to": "source:android/settings.gradle",
       "kind": "documents",
       "detail": "android/"
@@ -83168,12 +83150,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:ios/App/App/AppDelegate.swift",
-      "kind": "documents",
-      "detail": "ios/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:ios/App/App/GoogleService-Info.plist",
       "kind": "documents",
       "detail": "ios/"
     },
@@ -85250,6 +85226,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/deploy-push.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/deploy-state-revision.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -134901,11 +134883,6 @@
       "kind": "affects-runtime"
     },
     {
-      "from": "source:android/local.properties",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
       "from": "source:android/settings.gradle",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -134932,11 +134909,6 @@
     },
     {
       "from": "source:ios/App/App/AppDelegate.swift",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:ios/App/App/GoogleService-Info.plist",
       "to": "runtime:ios",
       "kind": "affects-runtime"
     },
@@ -167814,6 +167786,12 @@
     },
     {
       "from": "source:packages/release-core/src/index.ts",
+      "to": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "kind": "imports",
+      "detail": "./pipeline/resume-safety"
+    },
+    {
+      "from": "source:packages/release-core/src/index.ts",
       "to": "source:packages/release-core/src/pipeline/run-deployment-npm-script.ts",
       "kind": "imports",
       "detail": "./pipeline/run-deployment-npm-script"
@@ -168073,6 +168051,42 @@
       "from": "source:packages/release-core/src/pipeline/push-main-branch.ts",
       "to": "environment-key:GITHUB_REPOSITORY",
       "kind": "uses-environment"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "to": "source:packages/release-core/src/pipeline/state.ts",
+      "kind": "imports",
+      "detail": "./state"
     },
     {
       "from": "source:packages/release-core/src/pipeline/run-deployment-npm-script.ts",
@@ -240100,6 +240114,22 @@
     {
       "from": "test:scripts/tests/deploy-push.test.ts",
       "to": "script:scripts/deploy-push.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/deploy-state-revision.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/deploy-state-revision.test.ts",
+      "to": "package:@asol/release-core",
+      "kind": "imports",
+      "detail": "@asol/release-core"
+    },
+    {
+      "from": "test:scripts/tests/deploy-state-revision.test.ts",
+      "to": "package:@asol/release-core",
       "kind": "tests"
     },
     {

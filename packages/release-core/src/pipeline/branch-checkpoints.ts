@@ -216,8 +216,10 @@ export function deploymentStateProvesPhase(
   state: DeployAllRunState | undefined,
   phaseId: string,
   revision: string,
+  sourceFingerprint: string,
 ): boolean {
-  if (!state || !revision) return false;
+  if (!state || !revision || !sourceFingerprint) return false;
   if (state.revision !== revision) return false;
+  if (state.sourceFingerprint !== sourceFingerprint) return false;
   return state.completedPhases.includes(phaseId);
 }

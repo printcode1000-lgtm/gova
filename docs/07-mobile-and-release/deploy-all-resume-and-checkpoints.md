@@ -51,6 +51,19 @@ State lives beside the existing run state:
 
 A checkpoint is only ever consulted by a run that asked to resume. A full `npm run deploy:all` proves the release from nothing.
 
+The active state uses schema version 2 and is bound to both the actual Git
+`HEAD` and a content fingerprint covering runtime, tooling, configuration and
+documentation sources. A resume request is precise only while both values still
+match. If either changed, `deploy:all` discards the active phase proof and
+expands a release continuation to a full release beginning at preflight. A
+diagnostic-only single-branch/phase request expands to full preflight only, so a
+safety decision can never unexpectedly publish.
+
+This comparison happens before branch selection. Consequently an earlier
+branch cannot disappear from the plan merely because `--from-branch` would
+normally start after it. Missing, legacy or malformed state is treated the same
+way as changed state: it authorizes no reuse.
+
 Reuse requires **all** of:
 
 1. The branch belongs to `preflight` — the only phase whose branches are verifications rather than effects.
@@ -59,6 +72,18 @@ Reuse requires **all** of:
 4. The recorded input hash equals the current one.
 
 Anything unknown is a run, not a skip: no checkpoint, an empty hash, a changed SHA, a recorded failure.
+
+`completedPhases` follows the same rule. A prerequisite is satisfied only when
+the active state revision and source fingerprint match the current release
+identity. Starting validation for a different identity creates an empty phase
+proof set; state writes cannot merge the old set into the new revision.
+
+Publish creates a new deployment commit after validating the working tree. The
+only permitted revision transition is the explicit rebind performed after Git
+commits and after the committed source fingerprint is proven byte-identical to
+the validated fingerprint. That transition carries the current preflight proof
+to the deployment commit; arbitrary `--revision` values cannot relabel local
+validation proof.
 
 ### What a checkpoint may never replace
 
@@ -172,6 +197,8 @@ The same branch table is printed on success, so a resumed run states plainly how
 6. No secret is written to any checkpoint or ledger file.
 7. No `.next` remains inside `services/*` after a run.
 8. Every gate still runs at least once per release; reuse removes repetition, never coverage.
+9. A different Git revision or source fingerprint expands resume to full validation before branch selection.
+10. Completed phases and prerequisites are valid only for the active revision and fingerprint.
 
 ## Related
 

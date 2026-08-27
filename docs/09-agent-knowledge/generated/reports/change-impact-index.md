@@ -86,7 +86,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/product-style-core` | package | 9 | 1 | 8 | 0 | 8 | 0 |
 | `@asol/products-composition` | package | 10 | 1 | 0 | 0 | 4 | 6 |
 | `@asol/profiles-composition` | package | 8 | 1 | 0 | 0 | 6 | 3 |
-| `@asol/release-core` | package | 8 | 7 | 14 | 0 | 50 | 4 |
+| `@asol/release-core` | package | 8 | 8 | 14 | 0 | 51 | 4 |
 | `@asol/secrets-core` | package | 5 | 1 | 15 | 0 | 8 | 0 |
 | `@asol/service-mirror-core` | package | 10 | 1 | 0 | 0 | 7 | 1 |
 | `@asol/service-runtime-core` | package | 7 | 1 | 0 | 0 | 17 | 0 |

@@ -26947,17 +26947,6 @@
       ]
     },
     {
-      "id": "source:android/local.properties",
-      "kind": "source",
-      "name": "local.properties",
-      "path": "android/local.properties",
-      "tags": [
-        "android/local",
-        "android/local.properties",
-        "properties"
-      ]
-    },
-    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",
@@ -27024,17 +27013,6 @@
         "ios/app/app/appdelegate",
         "ios/app/app/appdelegate.swift",
         "swift"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "source",
-      "name": "GoogleService-Info.plist",
-      "path": "ios/App/App/GoogleService-Info.plist",
-      "tags": [
-        "ios/app/app/googleservice-info",
-        "ios/app/app/googleservice-info.plist",
-        "plist"
       ]
     },
     {
@@ -35402,6 +35380,17 @@
       "tags": [
         "packages/release-core/src/pipeline/push-main-branch",
         "packages/release-core/src/pipeline/push-main-branch.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/resume-safety.ts",
+      "kind": "source",
+      "name": "resume-safety.ts",
+      "path": "packages/release-core/src/pipeline/resume-safety.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/resume-safety",
+        "packages/release-core/src/pipeline/resume-safety.ts",
         "ts"
       ]
     },
@@ -52218,6 +52207,18 @@
       "tags": [
         "scripts/tests/deploy-push",
         "scripts/tests/deploy-push.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/deploy-state-revision.test.ts",
+      "kind": "test",
+      "name": "deploy-state-revision.test.ts",
+      "path": "scripts/tests/deploy-state-revision.test.ts",
+      "tags": [
+        "scripts/tests/deploy-state-revision",
+        "scripts/tests/deploy-state-revision.test.ts",
         "test",
         "ts"
       ]
