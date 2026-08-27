@@ -108,7 +108,7 @@ export function FormSelect({ id,
 }: FormSelectProps & { id?: string }) {
   return (
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
-      <SelectTrigger ui={ui} className={cn(error && 'border-destructive')}>
+      <SelectTrigger id={id} ui={ui} className={cn(error && 'border-destructive')}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

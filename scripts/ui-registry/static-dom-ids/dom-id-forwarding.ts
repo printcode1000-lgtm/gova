@@ -21,7 +21,9 @@ function isWrapperTag(tag: ts.JsxTagNameExpression): boolean {
     text === "Controller" ||
     text === "Select" ||
     text === "Dialog" ||
+    text === "DialogTrigger" ||
     text === "DropdownMenu" ||
+    text === "DropdownMenuTrigger" ||
     text === "StorageImageManager" ||
     text.endsWith("Portal") ||
     text.endsWith("Overlay") ||
