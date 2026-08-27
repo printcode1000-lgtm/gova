@@ -143,6 +143,33 @@ async function testIconHidesWhenTheUserUndoesTheEdit() {
   assert.equal(headerState(), "hidden", "reverting an edit hides the icon");
 }
 
+async function testDialogClosesBeforeTheSaveFinishes() {
+  reset();
+  let release: (() => void) | null = null;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  formScope("product-edit", [dirtyItem], async () => {
+    await pending;
+    return true;
+  });
+  openPageSaveDialog();
+
+  const execution = executePageSave();
+  await Promise.resolve();
+  assert.equal(
+    getPageSaveSnapshot().dialogOpen,
+    false,
+    "the dialog disappears the moment execute is tapped",
+  );
+  assert.equal(getPageSaveSnapshot().isSaving, true, "the save keeps running");
+
+  release!();
+  assert.equal(await execution, true);
+  assert.equal(getPageSaveSnapshot().dialogOpen, false);
+  assert.equal(getPageSaveSnapshot().lastResult, "success");
+}
+
 async function testIconStaysAfterAFailedSave() {
   reset();
   formScope("product-edit", [dirtyItem], async () => false);
@@ -325,6 +352,7 @@ async function main() {
   await testIconAppearsOnEditAndHidesAfterSave();
   await testSuccessIsAcknowledgedOnlyOnce();
   await testIconHidesWhenTheUserUndoesTheEdit();
+  await testDialogClosesBeforeTheSaveFinishes();
   await testIconStaysAfterAFailedSave();
   await testExecuteDiscardsUncheckedStagedWork();
   await testExecuteCanDiscardAllStagedWork();

@@ -626,8 +626,18 @@ export async function executePageSave(): Promise<boolean> {
     emit();
   };
 
+  // The dialog is dismissed the moment the work is accepted: the save runs in
+  // the background, and only a failure brings the dialog back to report it.
+  dialogOpen = false;
   markSaving(true);
   lastResult = null;
+
+  const failAndReopen = (): void => {
+    lastResult = "failure";
+    dialogOpen = true;
+    markSaving(false);
+    emit();
+  };
 
   // The journal opens before the first request leaves the device, so an
   // interruption anywhere below is recoverable instead of silent.
@@ -642,8 +652,7 @@ export async function executePageSave(): Promise<boolean> {
       const prepared = await active.handle.prepareForSave(selectedIds);
       if (!prepared) {
         await settle("failed");
-        lastResult = "failure";
-        markSaving(false);
+        failAndReopen();
         return false;
       }
     }
@@ -671,14 +680,12 @@ export async function executePageSave(): Promise<boolean> {
       lastResult = "success";
       emit();
     } else {
-      lastResult = "failure";
-      markSaving(false);
+      failAndReopen();
     }
     return saved;
   } catch (error) {
     await settle("failed", error);
-    lastResult = "failure";
-    markSaving(false);
+    failAndReopen();
     throw error;
   } finally {
     if (activeSaveExecutionId === active.id) {

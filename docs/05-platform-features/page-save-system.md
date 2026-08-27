@@ -142,8 +142,10 @@ Several scopes can be mounted at once (a product page shows both the editor and 
   dialog. While the inspector is enabled, outside taps do not close it either
   so elements on the dialog can be picked. Close and Escape still dismiss it.
 - Execute and Close remain on one non-wrapping footer row at every viewport
-- While save runs, controls are disabled and a short saving label appears
-- On failure the dialog stays open and shows `pageSave.failure`; `snapshot.lastResult` carries `"success" | "failure"`
+- Execute dismisses the dialog immediately; the save runs in the background and
+  the header icon carries the saving state. The dialog is never held open while
+  work is in flight
+- On failure the registry reopens the dialog and shows `pageSave.failure`; `snapshot.lastResult` carries `"success" | "failure"`
 
 After a successful save the registry marks the saved items clean immediately so the header icon hides without waiting for the next React sync. A short held-clean pass suppresses one stale dirty re-registration from React before new edits surface again.
 
