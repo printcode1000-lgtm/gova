@@ -340,17 +340,17 @@ usePageSaveRegistration({
 });
 
 const earlyView = isLoading ? (
-      <div className="container px-4 py-8 text-sm text-on-surface-variant">
+      <div id="profile.profile-page.profile-page-content.model.div" className="container px-4 py-8 text-sm text-on-surface-variant">
         {t("profile.loading")}
       </div>
     ) : !isLoggedIn && !isViewingOtherProfile ? (
-      <div className="container px-4 py-8 max-w-lg mx-auto text-center space-y-4">
-        <p className="text-on-surface-variant">{t("profile.loginRequired")}</p>
-        <Link
+      <div id="profile.profile-page.profile-page-content.model.div.2" className="container px-4 py-8 max-w-lg mx-auto text-center space-y-4">
+        <p id="profile.profile-page.profile-page-content.model.p" className="text-on-surface-variant">{t("profile.loginRequired")}</p>
+        <Link id="profile.profile-page.profile-page-content.model.link"
           href="/login"
           className="inline-flex items-center gap-2 auth-cta px-6 h-11"
         >
-          <LogIn className="h-4 w-4" />
+          <LogIn id="profile.profile-page.profile-page-content.model.log-in" className="h-4 w-4" />
           {t("sidebar.login")}
         </Link>
       </div>

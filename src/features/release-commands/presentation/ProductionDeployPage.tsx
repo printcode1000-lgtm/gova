@@ -89,30 +89,30 @@ export function ProductionDeployPage() {
   const timings = snapshot ? stageTimings(snapshot, now) : new Map();
 
   return (
-    <main dir="rtl" className="mx-auto w-full max-w-3xl min-w-0 space-y-4 p-4 pb-24">
-      <header className="space-y-1">
-        <h1 className="flex items-center gap-2 text-xl font-bold">
-          <Rocket className="h-5 w-5" aria-hidden />
+    <main id="release-commands.production-deploy-page.main" dir="rtl" className="mx-auto w-full max-w-3xl min-w-0 space-y-4 p-4 pb-24">
+      <header id="release-commands.production-deploy-page.header" className="space-y-1">
+        <h1 id="release-commands.production-deploy-page.h1" className="flex items-center gap-2 text-xl font-bold">
+          <Rocket id="release-commands.production-deploy-page.rocket" className="h-5 w-5" aria-hidden />
           النشر إلى الإنتاج
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p id="release-commands.production-deploy-page.p" className="text-sm text-muted-foreground">
           يشغّل هذا الإجراء <code>deploy:all</code> كاملًا داخل بيئة نشر معزولة، ولا تمر أي أسرار
           عبر المتصفح.
         </p>
       </header>
 
-      <div className="grid grid-cols-2 gap-2" role="tablist" aria-label="نوع النشر">
-        <Button ui={{ uid: "production-deploy.tab-deploy-all-S2g8ZZ", id: "production-deploy.tab-deploy-all", kind: "action", action: "select-deploy-all-tab", part: "tabs" }} type="button" role="tab" aria-selected={tab === "deploy:all"} variant={tab === "deploy:all" ? "default" : "outline"} onClick={() => setTab("deploy:all")}>Deploy All</Button>
-        <Button ui={{ uid: "production-deploy.tab-deploy-push-QZMUS1", id: "production-deploy.tab-deploy-push", kind: "action", action: "select-deploy-push-tab", part: "tabs" }} type="button" role="tab" aria-selected={tab === "deploy:push"} variant={tab === "deploy:push" ? "default" : "outline"} onClick={() => setTab("deploy:push")}>Deploy Push</Button>
+      <div id="release-commands.production-deploy-page.div" className="grid grid-cols-2 gap-2" role="tablist" aria-label="نوع النشر">
+        <Button id="release-commands.production-deploy-page.button" ui={{ uid: "production-deploy.tab-deploy-all-S2g8ZZ", id: "production-deploy.tab-deploy-all", kind: "action", action: "select-deploy-all-tab", part: "tabs" }} type="button" role="tab" aria-selected={tab === "deploy:all"} variant={tab === "deploy:all" ? "default" : "outline"} onClick={() => setTab("deploy:all")}>Deploy All</Button>
+        <Button id="release-commands.production-deploy-page.button.2" ui={{ uid: "production-deploy.tab-deploy-push-QZMUS1", id: "production-deploy.tab-deploy-push", kind: "action", action: "select-deploy-push-tab", part: "tabs" }} type="button" role="tab" aria-selected={tab === "deploy:push"} variant={tab === "deploy:push" ? "default" : "outline"} onClick={() => setTab("deploy:push")}>Deploy Push</Button>
       </div>
 
       {readiness && !readiness.ready ? (
-        <section className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm">
-          <p className="flex items-center gap-2 font-semibold">
-            <ShieldAlert className="h-4 w-4" aria-hidden />
+        <section id="release-commands.production-deploy-page.section" className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm">
+          <p id="release-commands.production-deploy-page.p.2" className="flex items-center gap-2 font-semibold">
+            <ShieldAlert id="release-commands.production-deploy-page.shield-alert" className="h-4 w-4" aria-hidden />
             إعدادات ناقصة على الخادم
           </p>
-          <ul className="mt-2 list-inside list-disc" dir="ltr">
+          <ul id="release-commands.production-deploy-page.ul" className="mt-2 list-inside list-disc" dir="ltr">
             {readiness.missingConfiguration.map((key) => (
               <li key={key}>{key}</li>
             ))}
@@ -120,10 +120,10 @@ export function ProductionDeployPage() {
         </section>
       ) : null}
 
-      <section className="space-y-3 rounded-lg border p-3">
+      <section id="release-commands.production-deploy-page.section.2" className="space-y-3 rounded-lg border p-3">
         {tab === "deploy:push" ? (
           <>
-            <label className="block text-sm font-medium" htmlFor="production-deploy-target">هدف Deploy Push</label>
+            <label id="release-commands.production-deploy-page.label" className="block text-sm font-medium" htmlFor="production-deploy-target">هدف Deploy Push</label>
             <select id="production-deploy-target" value={target} onChange={(event) => setTarget(event.target.value as PushTarget)} className="h-10 w-full rounded-md border bg-background px-3 text-sm" aria-label="هدف Deploy Push">{PUSH_TARGETS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
           </>
         ) : (
@@ -136,7 +136,7 @@ export function ProductionDeployPage() {
             setServiceSmokeRebuild={setServiceSmokeRebuild}
           />
         )}
-        <label className="block text-sm font-medium" htmlFor="production-deploy-confirmation">
+        <label id="release-commands.production-deploy-page.label.2" className="block text-sm font-medium" htmlFor="production-deploy-confirmation">
           اكتب عبارة التأكيد
         </label>
         <ConfirmationPhrase onApply={setConfirmation} />
@@ -148,7 +148,7 @@ export function ProductionDeployPage() {
           aria-label="عبارة تأكيد النشر"
           onChange={(event) => setConfirmation(event.target.value)}
         />
-        <Button ui={{ uid: "production-deploy.start-5p1eeC", id: "production-deploy.start", kind: "action", action: "start-production-deploy", part: "execution" }}
+        <Button id="release-commands.production-deploy-page.button.3" ui={{ uid: "production-deploy.start-5p1eeC", id: "production-deploy.start", kind: "action", action: "start-production-deploy", part: "execution" }}
           type="button"
           disabled={!armed}
           aria-label="بدء النشر إلى الإنتاج"
@@ -159,18 +159,18 @@ export function ProductionDeployPage() {
           }}
         >
           {starting || running ? (
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+            <Loader2 id="release-commands.production-deploy-page.loader2" className="h-4 w-4 animate-spin" aria-hidden />
           ) : (
-            <Rocket className="h-4 w-4" aria-hidden />
+            <Rocket id="release-commands.production-deploy-page.rocket.2" className="h-4 w-4" aria-hidden />
           )}
           {running ? "جارٍ النشر…" : tab === "deploy:all" ? "Deploy All" : "Deploy Push"}
         </Button>
-        {error ? <p className="text-sm text-destructive">{errorText(error)}</p> : null}
+        {error ? <p id="release-commands.production-deploy-page.p.3" className="text-sm text-destructive">{errorText(error)}</p> : null}
       </section>
 
-      <section className="space-y-2 rounded-lg border p-3">
-        <h2 className="flex items-center gap-2 text-sm font-semibold">
-          <RefreshCw className="h-4 w-4" aria-hidden />
+      <section id="release-commands.production-deploy-page.section.3" className="space-y-2 rounded-lg border p-3">
+        <h2 id="release-commands.production-deploy-page.h2" className="flex items-center gap-2 text-sm font-semibold">
+          <RefreshCw id="release-commands.production-deploy-page.refresh-cw" className="h-4 w-4" aria-hidden />
           الحالة
         </h2>
         <dl className="grid grid-cols-1 gap-x-2 gap-y-1 text-sm sm:grid-cols-2">
@@ -187,14 +187,14 @@ export function ProductionDeployPage() {
           <dt className="text-muted-foreground">وضع Deploy All</dt>
           <dd>{snapshot?.deployAllOptions ? deployAllModeLabel(snapshot.deployAllOptions) : "—"}</dd>
           <dt className="flex items-center gap-1 text-muted-foreground">
-            <Timer className="h-3.5 w-3.5" aria-hidden />
+            <Timer id="release-commands.production-deploy-page.timer" className="h-3.5 w-3.5" aria-hidden />
             المدة
           </dt>
           <dd dir="ltr" className="font-mono tabular-nums">
             {totalElapsed === null ? "—" : formatDeployDuration(totalElapsed)}
           </dd>
         </dl>
-        <ol className="space-y-1 text-sm">
+        <ol id="release-commands.production-deploy-page.ol" className="space-y-1 text-sm">
           {TIMELINE.map((stage, index) => {
             const timing = timings.get(stage);
             return (
@@ -221,18 +221,18 @@ export function ProductionDeployPage() {
           })}
         </ol>
         {snapshot?.status === "failed" && snapshot.error ? (
-          <p className="rounded border border-destructive/40 bg-destructive/5 p-2 text-sm text-destructive">
+          <p id="release-commands.production-deploy-page.p.4" className="rounded border border-destructive/40 bg-destructive/5 p-2 text-sm text-destructive">
             {snapshot.error}
           </p>
         ) : null}
       </section>
 
-      <section className="min-w-0 space-y-2 rounded-lg border p-3">
-        <h2 className="text-sm font-semibold">السجل</h2>
+      <section id="release-commands.production-deploy-page.section.4" className="min-w-0 space-y-2 rounded-lg border p-3">
+        <h2 id="release-commands.production-deploy-page.h2.2" className="text-sm font-semibold">السجل</h2>
         {/* overflow-x-auto + overflow-y-auto: scroll in both directions. */}
         {/* whitespace-pre: preserves log formatting without forcing line-wrap. */}
         {/* min-w-0: prevents the pre from escaping its flex/grid container. */}
-        <div className="min-w-0 overflow-x-auto">
+        <div id="release-commands.production-deploy-page.div.2" className="min-w-0 overflow-x-auto">
           <pre
             ref={logRef}
             dir="ltr"
@@ -273,8 +273,8 @@ function DeployAllOptions(props: {
 }) {
   const needsBranch = props.resumeMode === "from-branch" || props.resumeMode === "rerun-branch";
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium" htmlFor="production-deploy-resume-mode">وضع Deploy All</label>
+    <div id="release-commands.production-deploy-page.div.3" className="space-y-3">
+      <label id="release-commands.production-deploy-page.label.3" className="block text-sm font-medium" htmlFor="production-deploy-resume-mode">وضع Deploy All</label>
       <select
         id="production-deploy-resume-mode"
         value={props.resumeMode}
@@ -286,7 +286,7 @@ function DeployAllOptions(props: {
       </select>
       {needsBranch ? (
         <>
-          <label className="block text-sm font-medium" htmlFor="production-deploy-branch">فرع runbook</label>
+          <label id="release-commands.production-deploy-page.label.4" className="block text-sm font-medium" htmlFor="production-deploy-branch">فرع runbook</label>
           <select
             id="production-deploy-branch"
             value={props.branchId}
@@ -299,15 +299,15 @@ function DeployAllOptions(props: {
           </select>
         </>
       ) : null}
-      <label className="flex items-center gap-2 text-sm">
-        <input
+      <label id="release-commands.production-deploy-page.label.5" className="flex items-center gap-2 text-sm">
+        <input id="release-commands.production-deploy-page.input"
           type="checkbox"
           checked={props.serviceSmokeRebuild}
           onChange={(event) => props.setServiceSmokeRebuild(event.target.checked)}
           className="h-5 w-5 rounded border active:scale-95 focus-visible:ring-2"
           aria-label="إجبار smoke services على إعادة البناء"
         />
-        <span>إجبار smoke:services على إعادة البناء</span>
+        <span id="release-commands.production-deploy-page.span">إجبار smoke:services على إعادة البناء</span>
       </label>
     </div>
   );
@@ -332,11 +332,11 @@ function ConfirmationPhrase(props: { onApply: (value: string) => void }) {
   };
 
   return (
-    <div className="asol-selectable flex flex-wrap items-center justify-between gap-2">
+    <div id="release-commands.production-deploy-page.div.4" className="asol-selectable flex flex-wrap items-center justify-between gap-2">
       <code className="select-all rounded bg-muted px-2 py-1 font-mono text-sm" dir="ltr">
         {REMOTE_DEPLOY_ALL_CONFIRMATION}
       </code>
-      <Button ui={{ uid: "production-deploy.copy-phrase-e0wHqS", id: "production-deploy.copy-phrase", kind: "action", action: "copy-confirmation-phrase", part: "execution" }}
+      <Button id="release-commands.production-deploy-page.button.4" ui={{ uid: "production-deploy.copy-phrase-e0wHqS", id: "production-deploy.copy-phrase", kind: "action", action: "copy-confirmation-phrase", part: "execution" }}
         type="button"
         variant="outline"
         size="sm"
@@ -344,7 +344,7 @@ function ConfirmationPhrase(props: { onApply: (value: string) => void }) {
         className="h-8 shrink-0 px-2 active:scale-[0.98]"
         onClick={apply}
       >
-        <Clipboard className="h-3.5 w-3.5" aria-hidden />
+        <Clipboard id="release-commands.production-deploy-page.clipboard" className="h-3.5 w-3.5" aria-hidden />
         {copied ? "تم النسخ" : "نسخ العبارة"}
       </Button>
     </div>

@@ -127,8 +127,8 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
 
   if (isLoading) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      <main id="specialty-chat.chat-thread-page-content.main" className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 id="specialty-chat.chat-thread-page-content.loader2" className="h-6 w-6 animate-spin text-primary" />
       </main>
     );
   }
@@ -136,11 +136,11 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
   if (!conversation) {
     return (
       <main {...uiAttributes({ uid: "chat-conversation-missing-TXa01l", id: "chat-conversation-missing", kind: "region", simulation: { kind: "state", id: "chat-conversation-missing" } })} className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
-        <MessageCircle className="h-12 w-12 text-muted-foreground" />
-        <h1 className="mt-4 text-xl font-bold">
+        <MessageCircle id="specialty-chat.chat-thread-page-content.message-circle" className="h-12 w-12 text-muted-foreground" />
+        <h1 id="specialty-chat.chat-thread-page-content.h1" className="mt-4 text-xl font-bold">
           {locale === "ar" ? "المحادثة غير موجودة على هذا الجهاز" : "Conversation not found on this device"}
         </h1>
-        <Link href="/notifications?filter=chat" className="mt-5 rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary">
+        <Link id="specialty-chat.chat-thread-page-content.link" href="/notifications?filter=chat" className="mt-5 rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary">
           {locale === "ar" ? "العودة إلى المحادثات" : "Back to chats"}
         </Link>
       </main>
@@ -163,21 +163,21 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-3 pb-40 pt-3 sm:px-5">
-      <header className="sticky top-0 z-20 -mx-3 flex items-center gap-3 border-b border-outline-variant bg-surface/95 px-3 py-3 backdrop-blur sm:-mx-5 sm:px-5">
-        <Link href="/notifications?filter=chat" aria-label={locale === "ar" ? "العودة" : "Back"} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+    <main id="specialty-chat.chat-thread-page-content.main.2" className="mx-auto w-full max-w-3xl px-3 pb-40 pt-3 sm:px-5">
+      <header id="specialty-chat.chat-thread-page-content.header" className="sticky top-0 z-20 -mx-3 flex items-center gap-3 border-b border-outline-variant bg-surface/95 px-3 py-3 backdrop-blur sm:-mx-5 sm:px-5">
+        <Link id="specialty-chat.chat-thread-page-content.link.2" href="/notifications?filter=chat" aria-label={locale === "ar" ? "العودة" : "Back"} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
           <BackIcon className="h-5 w-5" />
         </Link>
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
-          <MessageCircle className="h-5 w-5" />
+        <span id="specialty-chat.chat-thread-page-content.span" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+          <MessageCircle id="specialty-chat.chat-thread-page-content.message-circle.2" className="h-5 w-5" />
         </span>
-        <span className="min-w-0">
+        <span id="specialty-chat.chat-thread-page-content.span.2" className="min-w-0">
           <strong className="block truncate text-on-surface">{title}</strong>
-          {specialty ? <span className="block truncate text-xs text-muted-foreground">{specialty}</span> : null}
+          {specialty ? <span id="specialty-chat.chat-thread-page-content.span.3" className="block truncate text-xs text-muted-foreground">{specialty}</span> : null}
         </span>
       </header>
 
-      <section className="space-y-2 py-4" aria-label={title}>
+      <section id="specialty-chat.chat-thread-page-content.section" className="space-y-2 py-4" aria-label={title}>
         {messages.map((message, index) => {
           const outgoing = message.metadata?.outgoing === true;
           const showDay = index === 0 || chatMessageDayKey(messages[index - 1].createdAt) !== chatMessageDayKey(message.createdAt);
@@ -217,18 +217,18 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
             </React.Fragment>
           );
         })}
-        <div ref={endRef} />
+        <div id="specialty-chat.chat-thread-page-content.div" ref={endRef} />
       </section>
 
-      <div
+      <div id="specialty-chat.chat-thread-page-content.div.2"
         className="fixed inset-x-0 z-40 px-3 sm:px-5"
         style={{ bottom: BOTTOM_NAV_CLEARANCE }}
       >
-        <div className="mx-auto max-w-3xl rounded-2xl border border-outline-variant bg-surface/95 p-2 shadow-xl backdrop-blur">
-          {status ? <p className="mb-2 rounded-xl bg-error/10 px-3 py-2 text-xs font-semibold text-error" role="status">{status}</p> : null}
+        <div id="specialty-chat.chat-thread-page-content.div.3" className="mx-auto max-w-3xl rounded-2xl border border-outline-variant bg-surface/95 p-2 shadow-xl backdrop-blur">
+          {status ? <p id="specialty-chat.chat-thread-page-content.p" className="mb-2 rounded-xl bg-error/10 px-3 py-2 text-xs font-semibold text-error" role="status">{status}</p> : null}
           {canReply ? (
-            <div className="flex items-end gap-2">
-              <textarea
+            <div id="specialty-chat.chat-thread-page-content.div.4" className="flex items-end gap-2">
+              <textarea id="specialty-chat.chat-thread-page-content.textarea"
                 value={reply}
                 onChange={(event) => setReply(event.target.value.slice(0, 800))}
                 onKeyDown={(event) => {
@@ -248,11 +248,11 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
                 aria-label={locale === "ar" ? "إرسال" : "Send"}
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary disabled:opacity-50"
               >
-                {replying ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+                {replying ? <Loader2 id="specialty-chat.chat-thread-page-content.loader2.2" className="h-5 w-5 animate-spin" /> : <Send id="specialty-chat.chat-thread-page-content.send" className="h-5 w-5" />}
               </button>
             </div>
           ) : (
-            <p className="px-3 py-2 text-center text-sm text-muted-foreground">
+            <p id="specialty-chat.chat-thread-page-content.p.2" className="px-3 py-2 text-center text-sm text-muted-foreground">
               {conversation.kind === "broadcast"
                 ? locale === "ar"
                   ? "ستظهر محادثة مستقلة هنا عند وصول رد من أحد مقدمي الخدمة."

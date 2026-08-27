@@ -40,7 +40,7 @@ export function HeroSliderSlide({
   onImageLoad: (index: number) => void;
   onImageError: (index: number, src: string) => void;
   onSlideClick: (action: string, isKeyboard?: boolean) => void;
-}) {
+} & { id?: string }) {
   const isFirstSlide = index === 0;
   const isActive = index === current;
   const isExiting = index === previous;

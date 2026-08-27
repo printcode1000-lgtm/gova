@@ -102,20 +102,20 @@ export const SellerDiscountsManager = React.forwardRef<
   };
 
   return (
-    <div className="space-y-4">
-      <section className="rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="text-sm font-bold text-on-surface">
+    <div id="seller-discounts.seller-discounts-manager.div" className="space-y-4">
+      <section id="seller-discounts.seller-discounts-manager.section" className="rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3">
+        <div id="seller-discounts.seller-discounts-manager.div.2" className="flex flex-wrap items-center justify-between gap-3">
+          <div id="seller-discounts.seller-discounts-manager.div.3">
+            <h3 id="seller-discounts.seller-discounts-manager.h3" className="text-sm font-bold text-on-surface">
               {ar ? "إدارة خصومات المتجر" : "Manage store offers"}
             </h3>
-            <p className="mt-1 text-xs text-on-surface-variant">
+            <p id="seller-discounts.seller-discounts-manager.p" className="mt-1 text-xs text-on-surface-variant">
               {ar
                 ? "كل عرض هنا قابل للحساب في السلة: منتجات، باقات، كوبونات، شحن، هدايا، وإجمالي مشتريات."
                 : "Each offer is a calculable rule for products, bundles, coupons, shipping, gifts, and order totals."}
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div id="seller-discounts.seller-discounts-manager.div.4" className="flex flex-wrap gap-2">
             {DISCOUNT_TYPES.map((type) => (
               <button
                 key={type}
@@ -132,24 +132,24 @@ export const SellerDiscountsManager = React.forwardRef<
       </section>
 
       {isLoading ? (
-        <div className="rounded-xl border border-outline-variant p-4 text-sm text-on-surface-variant">
+        <div id="seller-discounts.seller-discounts-manager.div.5" className="rounded-xl border border-outline-variant p-4 text-sm text-on-surface-variant">
           {ar ? "جاري تحميل الخصومات..." : "Loading discounts..."}
         </div>
       ) : null}
       {error ? (
-        <div className="rounded-xl border border-error/30 bg-error/10 p-3 text-sm text-error">
+        <div id="seller-discounts.seller-discounts-manager.div.6" className="rounded-xl border border-error/30 bg-error/10 p-3 text-sm text-error">
           {error}
         </div>
       ) : null}
       {items.length === 0 && !isLoading ? (
-        <div className="rounded-xl border border-dashed border-outline-variant p-5 text-center text-sm text-on-surface-variant">
+        <div id="seller-discounts.seller-discounts-manager.div.7" className="rounded-xl border border-dashed border-outline-variant p-5 text-center text-sm text-on-surface-variant">
           {ar
             ? "لا توجد خصومات بعد. أضف أول عرض من الأزرار بالأعلى."
             : "No offers yet. Add the first one above."}
         </div>
       ) : null}
 
-      <div className="grid gap-3">
+      <div id="seller-discounts.seller-discounts-manager.div.8" className="grid gap-3">
         {items.map((discount) => (
           <DiscountEditor
             key={discount.id}

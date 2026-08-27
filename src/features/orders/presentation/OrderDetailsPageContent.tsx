@@ -51,7 +51,7 @@ import { BuyerDeliveryAddressPanel } from "./order-details/OrderDetailsPageConte
 import { useOrderDetailsAutoRefresh } from "./OrderNotificationsController";
 import { uiAttributes } from "@asol/ui-registry-core";
 
-export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
+export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & { id?: string }) {
   const { formatApiError } = useTranslation();
   const { session, isLoading: sessionLoading } = useSession();
   const searchParams = useSearchParams();
@@ -117,7 +117,7 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
 
   if (sessionLoading || loading) {
     return (
-      <main className="flex min-h-[55vh] items-center justify-center">
+      <main id={id} className="flex min-h-[55vh] items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </main>
     );
@@ -125,7 +125,7 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
 
   if (!session?.uid) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-10 text-center">
+      <main id={id} className="mx-auto max-w-4xl px-4 py-10 text-center">
         <h1 className="text-2xl font-bold">{text.detailsTitle}</h1>
         <p className="mt-3 text-muted-foreground">{text.loginRequired}</p>
       </main>
@@ -155,7 +155,7 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
   ].some((item) => canRejectDeliveryStatus(item.status));
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+    <main id={id} className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div>
           <BackToOrders />

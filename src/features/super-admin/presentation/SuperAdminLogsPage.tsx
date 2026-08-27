@@ -246,7 +246,7 @@ export function SuperAdminLogsPage() {
 
   if (isLoading || !authorized) {
     return (
-      <main className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main id="super-admin.super-admin-logs-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري التحقق من الصلاحيات…
       </main>
     );
@@ -267,21 +267,21 @@ export function SuperAdminLogsPage() {
   };
 
   return (
-    <main className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
-      <header className="mb-6 flex flex-wrap items-start gap-3">
-        <div className="rounded-xl bg-primary/10 p-3 text-primary">
-          <ShieldCheck className="h-6 w-6" />
+    <main id="super-admin.super-admin-logs-page.main.2" className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
+      <header id="super-admin.super-admin-logs-page.header" className="mb-6 flex flex-wrap items-start gap-3">
+        <div id="super-admin.super-admin-logs-page.div" className="rounded-xl bg-primary/10 p-3 text-primary">
+          <ShieldCheck id="super-admin.super-admin-logs-page.shield-check" className="h-6 w-6" />
         </div>
-        <div className="me-auto">
-          <p className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
-          <h1 className="text-2xl font-bold">سجل النظام المباشر</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+        <div id="super-admin.super-admin-logs-page.div.2" className="me-auto">
+          <p id="super-admin.super-admin-logs-page.p" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
+          <h1 id="super-admin.super-admin-logs-page.h1" className="text-2xl font-bold">سجل النظام المباشر</h1>
+          <p id="super-admin.super-admin-logs-page.p.2" className="mt-1 text-sm text-muted-foreground">
             يجمع السجل المحلي المباشر والسجلات المحفوظة، مع فصل أخطاء السحابة
             الموثقة أدناه.
           </p>
         </div>
-        <div className="flex items-center gap-2 rounded-xl border bg-card p-2">
-          <Button ui={{ uid: "super-admin.logs.toggle-capture-us09GH", id: "super-admin.logs.toggle-capture", kind: "action", action: "toggle-capture", part: "toolbar" }}
+        <div id="super-admin.super-admin-logs-page.div.3" className="flex items-center gap-2 rounded-xl border bg-card p-2">
+          <Button id="super-admin.super-admin-logs-page.button" ui={{ uid: "super-admin.logs.toggle-capture-us09GH", id: "super-admin.logs.toggle-capture", kind: "action", action: "toggle-capture", part: "toolbar" }}
             type="button"
             size="icon"
             variant={captureEnabled ? "secondary" : "outline"}
@@ -289,12 +289,12 @@ export function SuperAdminLogsPage() {
             aria-label={captureEnabled ? "إيقاف الالتقاط" : "تشغيل الالتقاط"}
           >
             {captureEnabled ? (
-              <Pause className="h-4 w-4" />
+              <Pause id="super-admin.super-admin-logs-page.pause" className="h-4 w-4" />
             ) : (
-              <Play className="h-4 w-4" />
+              <Play id="super-admin.super-admin-logs-page.play" className="h-4 w-4" />
             )}
           </Button>
-          <Button ui={{ uid: "super-admin.logs.clear-all-nzqW6R", id: "super-admin.logs.clear-all", kind: "action", action: "stage-clear-all-logs", part: "toolbar" }}
+          <Button id="super-admin.super-admin-logs-page.button.2" ui={{ uid: "super-admin.logs.clear-all-nzqW6R", id: "super-admin.logs.clear-all", kind: "action", action: "stage-clear-all-logs", part: "toolbar" }}
             type="button"
             size="icon"
             variant="outline"
@@ -302,26 +302,26 @@ export function SuperAdminLogsPage() {
             disabled={!allLogs.length}
             aria-label="إضافة حذف جميع السجلات إلى الحفظ"
           >
-            <ListPlus className="h-4 w-4" />
+            <ListPlus id="super-admin.super-admin-logs-page.list-plus" className="h-4 w-4" />
           </Button>
         </div>
       </header>
 
       {summary && (
-        <section className="mb-6 grid gap-3 sm:grid-cols-3">
-          <article className="rounded-xl border bg-card p-4">
-            <p className="text-xs text-muted-foreground">إجمالي الأخطاء المحفوظة</p>
-            <p className="text-2xl font-bold">{summary.totalErrors}</p>
+        <section id="super-admin.super-admin-logs-page.section" className="mb-6 grid gap-3 sm:grid-cols-3">
+          <article id="super-admin.super-admin-logs-page.article" className="rounded-xl border bg-card p-4">
+            <p id="super-admin.super-admin-logs-page.p.3" className="text-xs text-muted-foreground">إجمالي الأخطاء المحفوظة</p>
+            <p id="super-admin.super-admin-logs-page.p.4" className="text-2xl font-bold">{summary.totalErrors}</p>
           </article>
-          <article className="rounded-xl border bg-card p-4">
-            <p className="text-xs text-muted-foreground">أخطاء آخر ساعة</p>
-            <p className="text-2xl font-bold text-destructive">
+          <article id="super-admin.super-admin-logs-page.article.2" className="rounded-xl border bg-card p-4">
+            <p id="super-admin.super-admin-logs-page.p.5" className="text-xs text-muted-foreground">أخطاء آخر ساعة</p>
+            <p id="super-admin.super-admin-logs-page.p.6" className="text-2xl font-bold text-destructive">
               {summary.lastHourErrors}
             </p>
           </article>
-          <article className="rounded-xl border bg-card p-4">
-            <p className="text-xs text-muted-foreground">أكثر الميزات تأثرًا</p>
-            <p className="mt-1 text-sm font-mono" dir="ltr">
+          <article id="super-admin.super-admin-logs-page.article.3" className="rounded-xl border bg-card p-4">
+            <p id="super-admin.super-admin-logs-page.p.7" className="text-xs text-muted-foreground">أكثر الميزات تأثرًا</p>
+            <p id="super-admin.super-admin-logs-page.p.8" className="mt-1 text-sm font-mono" dir="ltr">
               {summary.topFeatures.length
                 ? summary.topFeatures
                     .map((item) => `${item.feature} (${item.count})`)
@@ -332,17 +332,17 @@ export function SuperAdminLogsPage() {
         </section>
       )}
 
-      <div className="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_180px]">
-        <label className="relative">
-          <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
+      <div id="super-admin.super-admin-logs-page.div.4" className="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_180px]">
+        <label id="super-admin.super-admin-logs-page.label" className="relative">
+          <Search id="super-admin.super-admin-logs-page.search" className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input id="super-admin.super-admin-logs-page.input"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="ابحث في الرسائل والمسارات والميزات..."
             className="asol-input-decorated-start h-10 w-full rounded-md border bg-background pe-3 text-sm"
           />
         </label>
-        <select
+        <select id="super-admin.super-admin-logs-page.select"
           value={platform}
           onChange={(event) => setPlatform(event.target.value)}
           className="h-10 rounded-md border bg-background px-3 text-sm"
@@ -362,7 +362,7 @@ export function SuperAdminLogsPage() {
         onRefresh={() => setRefreshKey((value) => value + 1)}
       />
 
-      <div className="mb-5 grid grid-cols-3 gap-2 sm:gap-3">
+      <div id="super-admin.super-admin-logs-page.div.5" className="mb-5 grid grid-cols-3 gap-2 sm:gap-3">
         {sections.map((item) => {
           const TabIcon = item.icon;
           return (
@@ -397,14 +397,14 @@ export function SuperAdminLogsPage() {
         })}
       </div>
 
-      <section className="rounded-xl border bg-card">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
-          <h2 className="flex items-center gap-2 font-semibold">
+      <section id="super-admin.super-admin-logs-page.section.2" className="rounded-xl border bg-card">
+        <div id="super-admin.super-admin-logs-page.div.6" className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
+          <h2 id="super-admin.super-admin-logs-page.h2" className="flex items-center gap-2 font-semibold">
             <Icon className={cn("h-5 w-5", section.color)} />
             {section.title}
           </h2>
-          <div className="flex gap-2">
-            <Button ui={{ uid: "super-admin.logs.copy-section-0J9YPC", id: "super-admin.logs.copy-section", kind: "action", action: "copy-section", part: "section-toolbar" }}
+          <div id="super-admin.super-admin-logs-page.div.7" className="flex gap-2">
+            <Button id="super-admin.super-admin-logs-page.button.3" ui={{ uid: "super-admin.logs.copy-section-0J9YPC", id: "super-admin.logs.copy-section", kind: "action", action: "copy-section", part: "section-toolbar" }}
               type="button"
               size="icon"
               variant="outline"
@@ -412,9 +412,9 @@ export function SuperAdminLogsPage() {
               onClick={() => void copySection()}
               aria-label="نسخ القسم"
             >
-              <ClipboardCopy className="h-4 w-4" />
+              <ClipboardCopy id="super-admin.super-admin-logs-page.clipboard-copy" className="h-4 w-4" />
             </Button>
-            <Button ui={{ uid: "super-admin.logs.clear-section-otioP7", id: "super-admin.logs.clear-section", kind: "action", action: "stage-clear-section", part: "section-toolbar" }}
+            <Button id="super-admin.super-admin-logs-page.button.4" ui={{ uid: "super-admin.logs.clear-section-otioP7", id: "super-admin.logs.clear-section", kind: "action", action: "stage-clear-section", part: "section-toolbar" }}
               type="button"
               size="icon"
               variant="outline"
@@ -422,14 +422,14 @@ export function SuperAdminLogsPage() {
               onClick={() => stageClearLogSection(active)}
               aria-label="إضافة حذف القسم إلى الحفظ"
             >
-              <ListPlus className="h-4 w-4" />
+              <ListPlus id="super-admin.super-admin-logs-page.list-plus.2" className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
-        <div className="max-h-[65vh] overflow-auto p-3">
+        <div id="super-admin.super-admin-logs-page.div.8" className="max-h-[65vh] overflow-auto p-3">
           {current.length ? (
-            <div className="space-y-3">
+            <div id="super-admin.super-admin-logs-page.div.9" className="space-y-3">
               {[...current].reverse().map((entry) => (
                 <article
                   key={entry.id}
@@ -552,7 +552,7 @@ export function SuperAdminLogsPage() {
               ))}
             </div>
           ) : (
-            <p className="py-12 text-center text-sm text-muted-foreground">
+            <p id="super-admin.super-admin-logs-page.p.9" className="py-12 text-center text-sm text-muted-foreground">
               {section.empty}
             </p>
           )}

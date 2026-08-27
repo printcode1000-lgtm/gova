@@ -159,7 +159,7 @@ export default function MonitorPage() {
   }, [operations]);
 
   return (
-    <div className="monitor-container" dir="rtl">
+    <div id="dev.monitor.page.div" className="monitor-container" dir="rtl">
       {/* Dynamic Theme Styles */}
       <style dangerouslySetInnerHTML={{ __html: `
         :root[data-monitor-theme="dark"] {
@@ -677,35 +677,35 @@ export default function MonitorPage() {
       ` }} />
 
       {/* ─── HEADER ─── */}
-      <header className="header no-print">
-        <div className="header-title">
-          <h1>مراقب عمليات ASOL</h1>
-          {isLive && <span className="badge-live">مراقبة مباشرة</span>}
+      <header id="dev.monitor.page.header" className="header no-print">
+        <div id="dev.monitor.page.div.2" className="header-title">
+          <h1 id="dev.monitor.page.h1">مراقب عمليات ASOL</h1>
+          {isLive && <span id="dev.monitor.page.span" className="badge-live">مراقبة مباشرة</span>}
         </div>
-        <div className="header-actions">
-          <button className="btn" onClick={toggleTheme}>
+        <div id="dev.monitor.page.div.3" className="header-actions">
+          <button id="dev.monitor.page.button" className="btn" onClick={toggleTheme}>
             {theme === 'dark' ? '☀️ الوضع الفاتح' : '🌙 الوضع الداكن'}
           </button>
-          <button className="btn" onClick={toggleLive}>
+          <button id="dev.monitor.page.button.2" className="btn" onClick={toggleLive}>
             {isLive ? '⏸️ إيقاف البث' : '▶️ استئناف البث'}
           </button>
-          <button className="btn" onClick={clear}>
+          <button id="dev.monitor.page.button.3" className="btn" onClick={clear}>
             🗑️ مسح السجلات
           </button>
-          <button className="btn" onClick={exportJSON}>
+          <button id="dev.monitor.page.button.4" className="btn" onClick={exportJSON}>
             📥 تصدير JSON
           </button>
-          <button className="btn" onClick={exportHTML}>
+          <button id="dev.monitor.page.button.5" className="btn" onClick={exportHTML}>
             📄 تصدير HTML
           </button>
-          <button className="btn" onClick={exportPDF}>
+          <button id="dev.monitor.page.button.6" className="btn" onClick={exportPDF}>
             🖨️ طباعة PDF
           </button>
         </div>
       </header>
 
       {/* ─── TABS ─── */}
-      <nav className="tabs no-print">
+      <nav id="dev.monitor.page.nav" className="tabs no-print">
         {MONITOR_TABS.map((tab) => (
           <button
             key={tab.id}
@@ -718,11 +718,11 @@ export default function MonitorPage() {
       </nav>
 
       {/* ─── FILTERS ─── */}
-      <div className="filters-panel no-print">
-        <div className="filters-grid">
-          <div className="filter-group">
-            <label>الميزة</label>
-            <select
+      <div id="dev.monitor.page.div.4" className="filters-panel no-print">
+        <div id="dev.monitor.page.div.5" className="filters-grid">
+          <div id="dev.monitor.page.div.6" className="filter-group">
+            <label id="dev.monitor.page.label">الميزة</label>
+            <select id="dev.monitor.page.select"
               className="filter-input"
               value={filter.feature}
               onChange={(e) => setFilter({ feature: e.target.value })}
@@ -732,9 +732,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>الصفحة</label>
-            <select
+          <div id="dev.monitor.page.div.7" className="filter-group">
+            <label id="dev.monitor.page.label.2">الصفحة</label>
+            <select id="dev.monitor.page.select.2"
               className="filter-input"
               value={filter.page}
               onChange={(e) => setFilter({ page: e.target.value })}
@@ -744,9 +744,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>المكوّن</label>
-            <select
+          <div id="dev.monitor.page.div.8" className="filter-group">
+            <label id="dev.monitor.page.label.3">المكوّن</label>
+            <select id="dev.monitor.page.select.3"
               className="filter-input"
               value={filter.component}
               onChange={(e) => setFilter({ component: e.target.value })}
@@ -756,9 +756,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>الخطاف</label>
-            <select
+          <div id="dev.monitor.page.div.9" className="filter-group">
+            <label id="dev.monitor.page.label.4">الخطاف</label>
+            <select id="dev.monitor.page.select.4"
               className="filter-input"
               value={filter.hook}
               onChange={(e) => setFilter({ hook: e.target.value })}
@@ -768,9 +768,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>الخدمة</label>
-            <select
+          <div id="dev.monitor.page.div.10" className="filter-group">
+            <label id="dev.monitor.page.label.5">الخدمة</label>
+            <select id="dev.monitor.page.select.5"
               className="filter-input"
               value={filter.service}
               onChange={(e) => setFilter({ service: e.target.value })}
@@ -780,9 +780,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>المستودع</label>
-            <select
+          <div id="dev.monitor.page.div.11" className="filter-group">
+            <label id="dev.monitor.page.label.6">المستودع</label>
+            <select id="dev.monitor.page.select.6"
               className="filter-input"
               value={filter.repository}
               onChange={(e) => setFilter({ repository: e.target.value })}
@@ -792,9 +792,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>الجدول</label>
-            <select
+          <div id="dev.monitor.page.div.12" className="filter-group">
+            <label id="dev.monitor.page.label.7">الجدول</label>
+            <select id="dev.monitor.page.select.7"
               className="filter-input"
               value={filter.table}
               onChange={(e) => setFilter({ table: e.target.value })}
@@ -804,9 +804,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>الكيان</label>
-            <select
+          <div id="dev.monitor.page.div.13" className="filter-group">
+            <label id="dev.monitor.page.label.8">الكيان</label>
+            <select id="dev.monitor.page.select.8"
               className="filter-input"
               value={filter.entity}
               onChange={(e) => setFilter({ entity: e.target.value })}
@@ -816,9 +816,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>مفتاح الاستعلام</label>
-            <select
+          <div id="dev.monitor.page.div.14" className="filter-group">
+            <label id="dev.monitor.page.label.9">مفتاح الاستعلام</label>
+            <select id="dev.monitor.page.select.9"
               className="filter-input"
               value={filter.queryKey}
               onChange={(e) => setFilter({ queryKey: e.target.value })}
@@ -828,9 +828,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>نوع العملية</label>
-            <select
+          <div id="dev.monitor.page.div.15" className="filter-group">
+            <label id="dev.monitor.page.label.10">نوع العملية</label>
+            <select id="dev.monitor.page.select.10"
               className="filter-input"
               value={filter.operationType}
               onChange={(e) => setFilter({ operationType: e.target.value })}
@@ -843,9 +843,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>الحالة</label>
-            <select
+          <div id="dev.monitor.page.div.16" className="filter-group">
+            <label id="dev.monitor.page.label.11">الحالة</label>
+            <select id="dev.monitor.page.select.11"
               className="filter-input"
               value={filter.status}
               onChange={(e) => setFilter({ status: e.target.value })}
@@ -857,9 +857,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>محرك قاعدة البيانات</label>
-            <select
+          <div id="dev.monitor.page.div.17" className="filter-group">
+            <label id="dev.monitor.page.label.12">محرك قاعدة البيانات</label>
+            <select id="dev.monitor.page.select.12"
               className="filter-input"
               value={filter.dbDriver}
               onChange={(e) => setFilter({ dbDriver: e.target.value })}
@@ -870,9 +870,9 @@ export default function MonitorPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>مصدر الذاكرة المؤقتة</label>
-            <select
+          <div id="dev.monitor.page.div.18" className="filter-group">
+            <label id="dev.monitor.page.label.13">مصدر الذاكرة المؤقتة</label>
+            <select id="dev.monitor.page.select.13"
               className="filter-input"
               value={filter.cacheSource}
               onChange={(e) => setFilter({ cacheSource: e.target.value })}
@@ -886,108 +886,108 @@ export default function MonitorPage() {
           </div>
         </div>
 
-        <div className="search-bar">
-          <input
+        <div id="dev.monitor.page.div.19" className="search-bar">
+          <input id="dev.monitor.page.input"
             className="filter-input search-input"
             placeholder="ابحث في الميزات أو SQL أو الخطافات أو مفاتيح الاستعلام أو رسائل الخطأ..."
             value={filter.search}
             onChange={(e) => setFilter({ search: e.target.value })}
           />
-          <button className="btn" onClick={resetFilter}>إعادة ضبط الفلاتر</button>
+          <button id="dev.monitor.page.button.7" className="btn" onClick={resetFilter}>إعادة ضبط الفلاتر</button>
         </div>
       </div>
 
       {/* ─── TAB CONTENT: DASHBOARD ─── */}
       {activeTab === 'dashboard' && (
-        <section>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <span className="stat-title">إجمالي العمليات</span>
-              <span className="stat-value">{filteredOps.length}</span>
-              <div className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
+        <section id="dev.monitor.page.section">
+          <div id="dev.monitor.page.div.20" className="stats-grid">
+            <div id="dev.monitor.page.div.21" className="stat-card">
+              <span id="dev.monitor.page.span.2" className="stat-title">إجمالي العمليات</span>
+              <span id="dev.monitor.page.span.3" className="stat-value">{filteredOps.length}</span>
+              <div id="dev.monitor.page.div.22" className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">قراءات (SELECT)</span>
-              <span className="stat-value">{stats.totalReads}</span>
-              <div className="card-accent" style={{ '--accent': '#22c55e' } as any} />
+            <div id="dev.monitor.page.div.23" className="stat-card">
+              <span id="dev.monitor.page.span.4" className="stat-title">قراءات (SELECT)</span>
+              <span id="dev.monitor.page.span.5" className="stat-value">{stats.totalReads}</span>
+              <div id="dev.monitor.page.div.24" className="card-accent" style={{ '--accent': '#22c55e' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">كتابات (MUTATIONS)</span>
-              <span className="stat-value">{stats.totalWrites}</span>
-              <div className="card-accent" style={{ '--accent': '#ef4444' } as any} />
+            <div id="dev.monitor.page.div.25" className="stat-card">
+              <span id="dev.monitor.page.span.6" className="stat-title">كتابات (MUTATIONS)</span>
+              <span id="dev.monitor.page.span.7" className="stat-value">{stats.totalWrites}</span>
+              <div id="dev.monitor.page.div.26" className="card-accent" style={{ '--accent': '#ef4444' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">إجمالي استدعاءات قاعدة البيانات</span>
-              <span className="stat-value">{stats.totalDbCalls}</span>
-              <div className="card-accent" style={{ '--accent': '#a855f7' } as any} />
+            <div id="dev.monitor.page.div.27" className="stat-card">
+              <span id="dev.monitor.page.span.8" className="stat-title">إجمالي استدعاءات قاعدة البيانات</span>
+              <span id="dev.monitor.page.span.9" className="stat-value">{stats.totalDbCalls}</span>
+              <div id="dev.monitor.page.div.28" className="card-accent" style={{ '--accent': '#a855f7' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">إصابات الذاكرة المؤقتة</span>
-              <span className="stat-value">{stats.totalCacheHits}</span>
-              <div className="card-accent" style={{ '--accent': '#eab308' } as any} />
+            <div id="dev.monitor.page.div.29" className="stat-card">
+              <span id="dev.monitor.page.span.10" className="stat-title">إصابات الذاكرة المؤقتة</span>
+              <span id="dev.monitor.page.span.11" className="stat-value">{stats.totalCacheHits}</span>
+              <div id="dev.monitor.page.div.30" className="card-accent" style={{ '--accent': '#eab308' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">إخفاقات الذاكرة المؤقتة</span>
-              <span className="stat-value">{stats.totalCacheMisses}</span>
-              <div className="card-accent" style={{ '--accent': '#a855f7' } as any} />
+            <div id="dev.monitor.page.div.31" className="stat-card">
+              <span id="dev.monitor.page.span.12" className="stat-title">إخفاقات الذاكرة المؤقتة</span>
+              <span id="dev.monitor.page.span.13" className="stat-value">{stats.totalCacheMisses}</span>
+              <div id="dev.monitor.page.div.32" className="card-accent" style={{ '--accent': '#a855f7' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">نسبة إصابة الذاكرة المؤقتة</span>
-              <span className="stat-value">{stats.cacheHitRate}%</span>
-              <div className="card-accent" style={{ '--accent': '#eab308' } as any} />
+            <div id="dev.monitor.page.div.33" className="stat-card">
+              <span id="dev.monitor.page.span.14" className="stat-title">نسبة إصابة الذاكرة المؤقتة</span>
+              <span id="dev.monitor.page.span.15" className="stat-value">{stats.cacheHitRate}%</span>
+              <div id="dev.monitor.page.div.34" className="card-accent" style={{ '--accent': '#eab308' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">استعلامات نشطة</span>
-              <span className="stat-value">{stats.activeQueries}</span>
-              <div className="card-accent" style={{ '--accent': '#06b6d4' } as any} />
+            <div id="dev.monitor.page.div.35" className="stat-card">
+              <span id="dev.monitor.page.span.16" className="stat-title">استعلامات نشطة</span>
+              <span id="dev.monitor.page.span.17" className="stat-value">{stats.activeQueries}</span>
+              <div id="dev.monitor.page.div.36" className="card-accent" style={{ '--accent': '#06b6d4' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">تعديلات نشطة</span>
-              <span className="stat-value">{stats.activeMutations}</span>
-              <div className="card-accent" style={{ '--accent': '#f97316' } as any} />
+            <div id="dev.monitor.page.div.37" className="stat-card">
+              <span id="dev.monitor.page.span.18" className="stat-title">تعديلات نشطة</span>
+              <span id="dev.monitor.page.span.19" className="stat-value">{stats.activeMutations}</span>
+              <div id="dev.monitor.page.div.38" className="card-accent" style={{ '--accent': '#f97316' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">قراءات دون اتصال</span>
-              <span className="stat-value">{stats.offlineReads}</span>
-              <div className="card-accent" style={{ '--accent': '#64748b' } as any} />
+            <div id="dev.monitor.page.div.39" className="stat-card">
+              <span id="dev.monitor.page.span.20" className="stat-title">قراءات دون اتصال</span>
+              <span id="dev.monitor.page.span.21" className="stat-value">{stats.offlineReads}</span>
+              <div id="dev.monitor.page.div.40" className="card-accent" style={{ '--accent': '#64748b' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">قراءات متصلة</span>
-              <span className="stat-value">{stats.onlineReads}</span>
-              <div className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
+            <div id="dev.monitor.page.div.41" className="stat-card">
+              <span id="dev.monitor.page.span.22" className="stat-title">قراءات متصلة</span>
+              <span id="dev.monitor.page.span.23" className="stat-value">{stats.onlineReads}</span>
+              <div id="dev.monitor.page.div.42" className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
             </div>
-            <div className="stat-card">
-              <span className="stat-title">متوسط زمن قاعدة البيانات</span>
-              <span className="stat-value">{stats.avgExecutionTime} ms</span>
-              <div className="card-accent" style={{ '--accent': '#ef4444' } as any} />
+            <div id="dev.monitor.page.div.43" className="stat-card">
+              <span id="dev.monitor.page.span.24" className="stat-title">متوسط زمن قاعدة البيانات</span>
+              <span id="dev.monitor.page.span.25" className="stat-value">{stats.avgExecutionTime} ms</span>
+              <div id="dev.monitor.page.div.44" className="card-accent" style={{ '--accent': '#ef4444' } as any} />
             </div>
-            <div className="stat-card alert">
-              <span className="stat-title">تنبيهات N+1</span>
-              <span className="stat-value" style={{ color: '#f97316' }}>{stats.n1Alerts}</span>
-              <div className="card-accent" style={{ '--accent': '#f97316' } as any} />
+            <div id="dev.monitor.page.div.45" className="stat-card alert">
+              <span id="dev.monitor.page.span.26" className="stat-title">تنبيهات N+1</span>
+              <span id="dev.monitor.page.span.27" className="stat-value" style={{ color: '#f97316' }}>{stats.n1Alerts}</span>
+              <div id="dev.monitor.page.div.46" className="card-accent" style={{ '--accent': '#f97316' } as any} />
             </div>
-            <div className="stat-card error">
-              <span className="stat-title">استعلامات مكررة</span>
-              <span className="stat-value" style={{ color: '#ef4444' }}>{stats.duplicateAlerts}</span>
-              <div className="card-accent" style={{ '--accent': '#ef4444' } as any} />
+            <div id="dev.monitor.page.div.47" className="stat-card error">
+              <span id="dev.monitor.page.span.28" className="stat-title">استعلامات مكررة</span>
+              <span id="dev.monitor.page.span.29" className="stat-value" style={{ color: '#ef4444' }}>{stats.duplicateAlerts}</span>
+              <div id="dev.monitor.page.div.48" className="card-accent" style={{ '--accent': '#ef4444' } as any} />
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-            <div className="detail-section">
-              <div className="detail-section-title">أبطأ عمليات قاعدة البيانات</div>
+          <div id="dev.monitor.page.div.49" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div id="dev.monitor.page.div.50" className="detail-section">
+              <div id="dev.monitor.page.div.51" className="detail-section-title">أبطأ عمليات قاعدة البيانات</div>
               {stats.slowestOps.length === 0 ? (
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد استعلامات مسجّلة.</div>
+                <div id="dev.monitor.page.div.52" style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد استعلامات مسجّلة.</div>
               ) : (
-                <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid var(--border)', textAlign: 'left', color: 'var(--text-muted)' }}>
-                      <th style={{ padding: '6px' }}>الجدول</th>
-                      <th style={{ padding: '6px' }}>العملية</th>
-                      <th style={{ padding: '6px', textAlign: 'right' }}>المدة (ms)</th>
+                <table id="dev.monitor.page.table" style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
+                  <thead id="dev.monitor.page.thead">
+                    <tr id="dev.monitor.page.tr" style={{ borderBottom: '1px solid var(--border)', textAlign: 'left', color: 'var(--text-muted)' }}>
+                      <th id="dev.monitor.page.th" style={{ padding: '6px' }}>الجدول</th>
+                      <th id="dev.monitor.page.th.2" style={{ padding: '6px' }}>العملية</th>
+                      <th id="dev.monitor.page.th.3" style={{ padding: '6px', textAlign: 'right' }}>المدة (ms)</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="dev.monitor.page.tbody">
                     {stats.slowestOps.map((op) => (
                       <tr key={op.id} style={{ borderBottom: '1px solid var(--border)' }} onClick={() => selectOperation(op.id)}>
                         <td style={{ padding: '6px', fontWeight: 600 }}>{op.table}</td>
@@ -1000,11 +1000,11 @@ export default function MonitorPage() {
               )}
             </div>
 
-            <div className="detail-section">
-              <div className="detail-section-title">تحذيرات N+1 / التكرار</div>
-              <div style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div id="dev.monitor.page.div.53" className="detail-section">
+              <div id="dev.monitor.page.div.54" className="detail-section-title">تحذيرات N+1 / التكرار</div>
+              <div id="dev.monitor.page.div.55" style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {filteredOps.filter(o => o.isDuplicate || o.isN1).length === 0 ? (
-                  <div style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد مشاكل N+1 أو تكرار.</div>
+                  <div id="dev.monitor.page.div.56" style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد مشاكل N+1 أو تكرار.</div>
                 ) : (
                   filteredOps.filter(o => o.isDuplicate || o.isN1).map((op) => (
                     <div key={op.id} className="tree-node-row" onClick={() => selectOperation(op.id)} style={{ borderLeft: op.isDuplicate ? '3px solid #ef4444' : '3px solid #f97316', paddingLeft: '8px' }}>
@@ -1027,13 +1027,13 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: OPERATIONS (TREE VIEW) ─── */}
       {activeTab === 'operations' && (
-        <section className="ops-panel">
-          <div className="operations-list-card">
-            <div className="card-header">
-              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>تتبع العمليات (شجرة التدفق)</h2>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <label style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <input
+        <section id="dev.monitor.page.section.2" className="ops-panel">
+          <div id="dev.monitor.page.div.57" className="operations-list-card">
+            <div id="dev.monitor.page.div.58" className="card-header">
+              <h2 id="dev.monitor.page.h2" style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>تتبع العمليات (شجرة التدفق)</h2>
+              <div id="dev.monitor.page.div.59" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <label id="dev.monitor.page.label.14" style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <input id="dev.monitor.page.input.2"
                     type="checkbox"
                     checked={autoScroll}
                     onChange={(e) => setAutoScroll(e.target.checked)}
@@ -1041,16 +1041,16 @@ export default function MonitorPage() {
                   📌 تمرير تلقائي
                 </label>
                 {!autoScroll && (
-                  <button className="btn" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => setAutoScroll(true)}>
+                  <button id="dev.monitor.page.button.8" className="btn" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => setAutoScroll(true)}>
                     إعادة تفعيل التمرير التلقائي
                   </button>
                 )}
               </div>
             </div>
 
-            <div className="scrollable-area" ref={listContainerRef} onScroll={handleScroll}>
+            <div id="dev.monitor.page.div.60" className="scrollable-area" ref={listContainerRef} onScroll={handleScroll}>
               {treeData.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                <div id="dev.monitor.page.div.61" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
                   لا توجد عمليات مسجّلة. نفّذ استعلامات أو تصفّح التطبيق لإظهارها.
                 </div>
               ) : (
@@ -1066,14 +1066,14 @@ export default function MonitorPage() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div className="detail-section">
-              <div className="detail-section-title">كيفية تفعيل التتبع</div>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
-                <ol style={{ paddingLeft: '16px', margin: '4px 0' }}>
-                  <li>انتقل إلى صفحات المصادقة (تسجيل الدخول أو التسجيل).</li>
-                  <li>اضغط الأزرار أو املأ النماذج لتفعيل استدعاءات قاعدة البيانات والذاكرة المؤقتة.</li>
-                  <li>ستظهر العمليات هنا مباشرة في الوقت الفعلي.</li>
+          <div id="dev.monitor.page.div.62" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div id="dev.monitor.page.div.63" className="detail-section">
+              <div id="dev.monitor.page.div.64" className="detail-section-title">كيفية تفعيل التتبع</div>
+              <div id="dev.monitor.page.div.65" style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+                <ol id="dev.monitor.page.ol" style={{ paddingLeft: '16px', margin: '4px 0' }}>
+                  <li id="dev.monitor.page.li">انتقل إلى صفحات المصادقة (تسجيل الدخول أو التسجيل).</li>
+                  <li id="dev.monitor.page.li.2">اضغط الأزرار أو املأ النماذج لتفعيل استدعاءات قاعدة البيانات والذاكرة المؤقتة.</li>
+                  <li id="dev.monitor.page.li.3">ستظهر العمليات هنا مباشرة في الوقت الفعلي.</li>
                 </ol>
               </div>
             </div>
@@ -1083,10 +1083,10 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: TIMELINE / FLAME CHART ─── */}
       {activeTab === 'timeline' && (
-        <section>
-          <div className="detail-section" style={{ marginBottom: '16px' }}>
-            <label style={{ fontSize: '13px', fontWeight: 600, display: 'block', marginBottom: '6px' }}>اختر تدفق الطلب لعرض الخط الزمني:</label>
-            <select
+        <section id="dev.monitor.page.section.3">
+          <div id="dev.monitor.page.div.66" className="detail-section" style={{ marginBottom: '16px' }}>
+            <label id="dev.monitor.page.label.15" style={{ fontSize: '13px', fontWeight: 600, display: 'block', marginBottom: '6px' }}>اختر تدفق الطلب لعرض الخط الزمني:</label>
+            <select id="dev.monitor.page.select.14"
               className="filter-input"
               style={{ width: '100%', maxWidth: '400px' }}
               value={selectedFlowId}
@@ -1101,12 +1101,12 @@ export default function MonitorPage() {
           </div>
 
           {selectedFlowId && flowOps.length > 0 ? (
-            <div>
-              <div className="flame-chart-container">
-                <div style={{ fontSize: '14px', fontWeight: 700, borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
+            <div id="dev.monitor.page.div.67">
+              <div id="dev.monitor.page.div.68" className="flame-chart-container">
+                <div id="dev.monitor.page.div.69" style={{ fontSize: '14px', fontWeight: 700, borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
                   Flame Chart (مخطط جانت للطبقات)
                 </div>
-                <div className="flame-chart">
+                <div id="dev.monitor.page.div.70" className="flame-chart">
                   {/* We group flowOps by layers to construct rows */}
                   {(['ui', 'hook', 'service', 'asol-api', 'query', 'repository', 'database', 'cache'] as LayerName[]).map((layer) => {
                     const layerItems = flowOps.filter((o) => resolveMonitorLayer(o) === layer);
@@ -1148,15 +1148,15 @@ export default function MonitorPage() {
               </div>
 
               {/* Step-by-Step Timeline Replay Scrub Bar */}
-              <div className="detail-section">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <div style={{ fontSize: '14px', fontWeight: 700 }}>إعادة تشغيل الخط الزمني</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+              <div id="dev.monitor.page.div.71" className="detail-section">
+                <div id="dev.monitor.page.div.72" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <div id="dev.monitor.page.div.73" style={{ fontSize: '14px', fontWeight: 700 }}>إعادة تشغيل الخط الزمني</div>
+                  <div id="dev.monitor.page.div.74" style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                     الخطوة {replayIndex} من {flowOps.length}
                   </div>
                 </div>
 
-                <input
+                <input id="dev.monitor.page.input.3"
                   type="range"
                   min="0"
                   max={flowOps.length}
@@ -1165,7 +1165,7 @@ export default function MonitorPage() {
                   style={{ width: '100%', marginBottom: '16px' }}
                 />
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div id="dev.monitor.page.div.75" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {flowOps.slice(0, replayIndex).map((op, i) => (
                     <div
                       key={op.id}
@@ -1186,23 +1186,23 @@ export default function MonitorPage() {
               </div>
             </div>
           ) : (
-            <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>لا توجد تدفقات طلب.</div>
+            <div id="dev.monitor.page.div.76" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>لا توجد تدفقات طلب.</div>
           )}
         </section>
       )}
 
       {/* ─── TAB CONTENT: CALL GRAPH ─── */}
       {activeTab === 'call-graph' && (
-        <section>
-          <div className="svg-card">
-            <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>مخطط سلسلة الاستدعاءات (SVG)</div>
+        <section id="dev.monitor.page.section.4">
+          <div id="dev.monitor.page.div.77" className="svg-card">
+            <div id="dev.monitor.page.div.78" style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>مخطط سلسلة الاستدعاءات (SVG)</div>
             {callGraph.nodes.length === 0 ? (
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+              <div id="dev.monitor.page.div.79" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
                 لا توجد عقد في الفلتر الحالي لرسم مخطط الاستدعاء.
               </div>
             ) : (
-              <div style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
-                <svg width="100%" height="400" style={{ minWidth: '800px' }}>
+              <div id="dev.monitor.page.div.80" style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
+                <svg id="dev.monitor.page.svg" width="100%" height="400" style={{ minWidth: '800px' }}>
                   <defs>
                     <marker id="arrow" viewBox="0 0 10 10" refX="15" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                       <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--border)" />
@@ -1283,16 +1283,16 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: DEPENDENCY GRAPH ─── */}
       {activeTab === 'dependency' && (
-        <section>
-          <div className="svg-card">
-            <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>خريطة البنية: خدمة ➔ مستودع ➔ استعلام</div>
+        <section id="dev.monitor.page.section.5">
+          <div id="dev.monitor.page.div.81" className="svg-card">
+            <div id="dev.monitor.page.div.82" style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>خريطة البنية: خدمة ➔ مستودع ➔ استعلام</div>
             {dependencyGraph.nodes.length === 0 ? (
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+              <div id="dev.monitor.page.div.83" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
                 لا توجد عمليات لرسم التبعيات. نفّذ بعض الطلبات أولاً.
               </div>
             ) : (
-              <div style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
-                <svg width="100%" height="400" style={{ minWidth: '800px' }}>
+              <div id="dev.monitor.page.div.84" style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
+                <svg id="dev.monitor.page.svg.2" width="100%" height="400" style={{ minWidth: '800px' }}>
                   <defs>
                     <marker id="dep-arrow" viewBox="0 0 10 10" refX="25" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                       <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
@@ -1362,9 +1362,9 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: ANALYTICS ─── */}
       {activeTab === 'analytics' && (
-        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-          <div className="detail-section">
-            <div className="detail-section-title">أكثر الميزات نشاطاً</div>
+        <section id="dev.monitor.page.section.6" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+          <div id="dev.monitor.page.div.85" className="detail-section">
+            <div id="dev.monitor.page.div.86" className="detail-section-title">أكثر الميزات نشاطاً</div>
             {stats.mostActiveFeatures.map((f, i) => (
               <div key={f.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
                 <span>{i+1}. {f.name}</span>
@@ -1373,8 +1373,8 @@ export default function MonitorPage() {
             ))}
           </div>
 
-          <div className="detail-section">
-            <div className="detail-section-title">أكثر الصفحات نشاطاً</div>
+          <div id="dev.monitor.page.div.87" className="detail-section">
+            <div id="dev.monitor.page.div.88" className="detail-section-title">أكثر الصفحات نشاطاً</div>
             {stats.mostActivePages.map((p, i) => (
               <div key={p.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
                 <span>{i+1}. {p.name}</span>
@@ -1383,8 +1383,8 @@ export default function MonitorPage() {
             ))}
           </div>
 
-          <div className="detail-section">
-            <div className="detail-section-title">أكثر الجداول نشاطاً</div>
+          <div id="dev.monitor.page.div.89" className="detail-section">
+            <div id="dev.monitor.page.div.90" className="detail-section-title">أكثر الجداول نشاطاً</div>
             {stats.mostActiveTables.map((t, i) => (
               <div key={t.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
                 <span>{i+1}. {t.name}</span>
@@ -1393,8 +1393,8 @@ export default function MonitorPage() {
             ))}
           </div>
 
-          <div className="detail-section">
-            <div className="detail-section-title">أكثر المستودعات نشاطاً</div>
+          <div id="dev.monitor.page.div.91" className="detail-section">
+            <div id="dev.monitor.page.div.92" className="detail-section-title">أكثر المستودعات نشاطاً</div>
             {stats.mostActiveRepositories.map((r, i) => (
               <div key={r.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
                 <span>{i+1}. {r.name}</span>
@@ -1407,21 +1407,21 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: SCHEMA SYNC ─── */}
       {activeTab === 'schema-sync' && (
-        <section>
+        <section id="dev.monitor.page.section.7">
           <SchemaSyncPanel />
         </section>
       )}
 
       {/* ─── TAB CONTENT: PINNED ─── */}
       {activeTab === 'pinned' && (
-        <section>
-          <div className="operations-list-card" style={{ height: 'auto', minHeight: '300px' }}>
-            <div className="card-header">
-              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>📌 العمليات المثبتة</h2>
+        <section id="dev.monitor.page.section.8">
+          <div id="dev.monitor.page.div.93" className="operations-list-card" style={{ height: 'auto', minHeight: '300px' }}>
+            <div id="dev.monitor.page.div.94" className="card-header">
+              <h2 id="dev.monitor.page.h2.2" style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>📌 العمليات المثبتة</h2>
             </div>
-            <div className="scrollable-area">
+            <div id="dev.monitor.page.div.95" className="scrollable-area">
               {operations.filter((o) => o.pinned).length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                <div id="dev.monitor.page.div.96" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
                   لا توجد عمليات مثبتة. مرّر فوق عنصر في التتبع واضغط ⭐ للتثبيت.
                 </div>
               ) : (
@@ -1451,20 +1451,20 @@ export default function MonitorPage() {
       )}
 
       {/* ─── OPERATION DETAILS DRAWER ─── */}
-      <div className={`drawer ${activeOp ? 'open' : ''}`}>
-        <div className="drawer-header">
-          <span className="drawer-title">تفاصيل العملية</span>
-          <button className="btn" onClick={() => selectOperation(null)}>✕ إغلاق</button>
+      <div id="dev.monitor.page.div.97" className={`drawer ${activeOp ? 'open' : ''}`}>
+        <div id="dev.monitor.page.div.98" className="drawer-header">
+          <span id="dev.monitor.page.span.30" className="drawer-title">تفاصيل العملية</span>
+          <button id="dev.monitor.page.button.9" className="btn" onClick={() => selectOperation(null)}>✕ إغلاق</button>
         </div>
 
         {activeOp && (
-          <div className="drawer-body">
-            <div className="detail-section">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '14px', fontWeight: 'bold' }}>
+          <div id="dev.monitor.page.div.99" className="drawer-body">
+            <div id="dev.monitor.page.div.100" className="detail-section">
+              <div id="dev.monitor.page.div.101" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span id="dev.monitor.page.span.31" style={{ fontSize: '14px', fontWeight: 'bold' }}>
                   {activeOp.table ? `${activeOp.operationType} ${activeOp.table}` : activeOp.queryKey || 'استعلام'}
                 </span>
-                <button
+                <button id="dev.monitor.page.button.10"
                   className="btn"
                   style={{ padding: '4px 10px', fontSize: '12px' }}
                   onClick={() => togglePin(activeOp.id)}
@@ -1474,79 +1474,79 @@ export default function MonitorPage() {
               </div>
             </div>
 
-            <div className="detail-section">
-              <div className="detail-section-title">معلومات التتبع</div>
-              <div className="info-grid">
-                <span className="info-label">معرّف الارتباط:</span>
-                <span className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.correlationId.slice(0, 16)}</span>
+            <div id="dev.monitor.page.div.102" className="detail-section">
+              <div id="dev.monitor.page.div.103" className="detail-section-title">معلومات التتبع</div>
+              <div id="dev.monitor.page.div.104" className="info-grid">
+                <span id="dev.monitor.page.span.32" className="info-label">معرّف الارتباط:</span>
+                <span id="dev.monitor.page.span.33" className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.correlationId.slice(0, 16)}</span>
 
-                <span className="info-label">معرّف التدفق:</span>
-                <span className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.requestFlowId.slice(0, 16)}</span>
+                <span id="dev.monitor.page.span.34" className="info-label">معرّف التدفق:</span>
+                <span id="dev.monitor.page.span.35" className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.requestFlowId.slice(0, 16)}</span>
 
-                <span className="info-label">الميزة:</span>
-                <span className="info-value">{activeOp.feature}</span>
+                <span id="dev.monitor.page.span.36" className="info-label">الميزة:</span>
+                <span id="dev.monitor.page.span.37" className="info-value">{activeOp.feature}</span>
 
-                <span className="info-label">مسار الصفحة:</span>
-                <span className="info-value">{activeOp.page}</span>
+                <span id="dev.monitor.page.span.38" className="info-label">مسار الصفحة:</span>
+                <span id="dev.monitor.page.span.39" className="info-value">{activeOp.page}</span>
 
-                <span className="info-label">الخطاف:</span>
-                <span className="info-value">{activeOp.hook}</span>
+                <span id="dev.monitor.page.span.40" className="info-label">الخطاف:</span>
+                <span id="dev.monitor.page.span.41" className="info-value">{activeOp.hook}</span>
 
-                <span className="info-label">الخدمة:</span>
-                <span className="info-value">{activeOp.service}</span>
+                <span id="dev.monitor.page.span.42" className="info-label">الخدمة:</span>
+                <span id="dev.monitor.page.span.43" className="info-value">{activeOp.service}</span>
 
-                <span className="info-label">المستودع:</span>
-                <span className="info-value">{activeOp.repository}</span>
+                <span id="dev.monitor.page.span.44" className="info-label">المستودع:</span>
+                <span id="dev.monitor.page.span.45" className="info-value">{activeOp.repository}</span>
 
-                <span className="info-label">محرك قاعدة البيانات:</span>
-                <span className="info-value" style={{ color: activeOp.dbDriver === 'Turso-Production' ? '#ef4444' : '#22c55e' }}>
+                <span id="dev.monitor.page.span.46" className="info-label">محرك قاعدة البيانات:</span>
+                <span id="dev.monitor.page.span.47" className="info-value" style={{ color: activeOp.dbDriver === 'Turso-Production' ? '#ef4444' : '#22c55e' }}>
                   {activeOp.dbDriver}
                 </span>
 
-                <span className="info-label">الحالة:</span>
-                <span className="info-value" style={{ color: STATUS_COLORS[activeOp.status] }}>
+                <span id="dev.monitor.page.span.48" className="info-label">الحالة:</span>
+                <span id="dev.monitor.page.span.49" className="info-value" style={{ color: STATUS_COLORS[activeOp.status] }}>
                   {activeOp.status.toUpperCase()}
                 </span>
               </div>
             </div>
 
-            <div className="detail-section">
-              <div className="detail-section-title">مقاييس الأداء</div>
-              <div className="info-grid">
-                <span className="info-label">مدة التنفيذ:</span>
-                <span className="info-value" style={{ color: activeOp.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : '#22c55e', fontWeight: 800 }}>
+            <div id="dev.monitor.page.div.105" className="detail-section">
+              <div id="dev.monitor.page.div.106" className="detail-section-title">مقاييس الأداء</div>
+              <div id="dev.monitor.page.div.107" className="info-grid">
+                <span id="dev.monitor.page.span.50" className="info-label">مدة التنفيذ:</span>
+                <span id="dev.monitor.page.span.51" className="info-value" style={{ color: activeOp.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : '#22c55e', fontWeight: 800 }}>
                   {activeOp.executionTime} ms
                 </span>
 
-                <span className="info-label">فرق الذاكرة:</span>
-                <span className="info-value">
+                <span id="dev.monitor.page.span.52" className="info-label">فرق الذاكرة:</span>
+                <span id="dev.monitor.page.span.53" className="info-value">
                   {activeOp.memoryDelta != null
                     ? `${(activeOp.memoryDelta / 1024).toFixed(2)} KB`
                     : 'غير متاح (Performance.memory معطّل)'}
                 </span>
 
-                <span className="info-label">صفوف مقروءة:</span>
-                <span className="info-value">{activeOp.rowsRead}</span>
+                <span id="dev.monitor.page.span.54" className="info-label">صفوف مقروءة:</span>
+                <span id="dev.monitor.page.span.55" className="info-value">{activeOp.rowsRead}</span>
 
-                <span className="info-label">صفوف مكتوبة:</span>
-                <span className="info-value">{activeOp.rowsWritten}</span>
+                <span id="dev.monitor.page.span.56" className="info-label">صفوف مكتوبة:</span>
+                <span id="dev.monitor.page.span.57" className="info-value">{activeOp.rowsWritten}</span>
               </div>
             </div>
 
             {activeOp.httpRoute && (
-              <div className="detail-section">
-                <div className="detail-section-title">طلب HTTP (AsolApiClient)</div>
+              <div id="dev.monitor.page.div.108" className="detail-section">
+                <div id="dev.monitor.page.div.109" className="detail-section-title">طلب HTTP (AsolApiClient)</div>
                 <pre className="code-block">{`${activeOp.httpMethod ?? 'GET'} ${activeOp.httpRoute}`}</pre>
               </div>
             )}
 
             {activeOp.sql && (
-              <div className="detail-section">
-                <div className="detail-section-title">SQL المنفّذ</div>
+              <div id="dev.monitor.page.div.110" className="detail-section">
+                <div id="dev.monitor.page.div.111" className="detail-section-title">SQL المنفّذ</div>
                 <pre className="code-block">{activeOp.sql}</pre>
                 {activeOp.params && activeOp.params.length > 0 && (
-                  <div style={{ marginTop: '8px' }}>
-                    <div className="detail-section-title">معاملات الاستعلام</div>
+                  <div id="dev.monitor.page.div.112" style={{ marginTop: '8px' }}>
+                    <div id="dev.monitor.page.div.113" className="detail-section-title">معاملات الاستعلام</div>
                     <pre className="code-block">{JSON.stringify(activeOp.params, null, 2)}</pre>
                   </div>
                 )}
@@ -1554,9 +1554,9 @@ export default function MonitorPage() {
             )}
 
             {diffResult && (
-              <div className="detail-section">
-                <div className="detail-section-title">فرق نتيجة الاستعلام (قبل ➔ بعد)</div>
-                <div style={{ background: '#0f172a', padding: '10px', borderRadius: '6px', overflowX: 'auto', maxHeight: '250px' }}>
+              <div id="dev.monitor.page.div.114" className="detail-section">
+                <div id="dev.monitor.page.div.115" className="detail-section-title">فرق نتيجة الاستعلام (قبل ➔ بعد)</div>
+                <div id="dev.monitor.page.div.116" style={{ background: '#0f172a', padding: '10px', borderRadius: '6px', overflowX: 'auto', maxHeight: '250px' }}>
                   {diffResult.map((line, idx) => (
                     <span
                       key={idx}
@@ -1570,12 +1570,12 @@ export default function MonitorPage() {
             )}
 
             {activeOp.errorMessage && (
-              <div className="detail-section" style={{ borderColor: '#ef4444' }}>
-                <div className="detail-section-title" style={{ color: '#ef4444' }}>رسالة الخطأ</div>
-                <div style={{ color: '#f87171', fontSize: '13px', fontWeight: 600 }}>{activeOp.errorMessage}</div>
+              <div id="dev.monitor.page.div.117" className="detail-section" style={{ borderColor: '#ef4444' }}>
+                <div id="dev.monitor.page.div.118" className="detail-section-title" style={{ color: '#ef4444' }}>رسالة الخطأ</div>
+                <div id="dev.monitor.page.div.119" style={{ color: '#f87171', fontSize: '13px', fontWeight: 600 }}>{activeOp.errorMessage}</div>
                 {activeOp.executionStack && (
-                  <div style={{ marginTop: '8px' }}>
-                    <div className="detail-section-title" style={{ color: '#ef4444' }}>تتبع تنفيذ الخطأ</div>
+                  <div id="dev.monitor.page.div.120" style={{ marginTop: '8px' }}>
+                    <div id="dev.monitor.page.div.121" className="detail-section-title" style={{ color: '#ef4444' }}>تتبع تنفيذ الخطأ</div>
                     <pre className="code-block" style={{ color: '#f87171', background: '#181111' }}>{activeOp.executionStack}</pre>
                   </div>
                 )}

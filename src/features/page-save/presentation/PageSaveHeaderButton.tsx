@@ -171,22 +171,22 @@ export function PageSaveHeaderButton() {
         !isSaving &&
         !successFlash ? (
           <>
-            <span
+            <span id="page-save.page-save-header-button.span"
               aria-hidden="true"
               className="asol-page-save-wave pointer-events-none absolute inset-0 rounded-full"
             />
-            <span
+            <span id="page-save.page-save-header-button.span.2"
               aria-hidden="true"
               className="asol-page-save-wave asol-page-save-wave--delayed pointer-events-none absolute inset-0 rounded-full"
             />
           </>
         ) : null}
         {successFlash ? (
-          <Check className="relative z-10 h-5 w-5" aria-hidden="true" />
+          <Check id="page-save.page-save-header-button.check" className="relative z-10 h-5 w-5" aria-hidden="true" />
         ) : isSaving ? (
-          <LoadingSpinner size="sm" className="relative z-10" />
+          <LoadingSpinner id="page-save.page-save-header-button.loading-spinner" size="sm" className="relative z-10" />
         ) : (
-          <Save className="relative z-10 h-5 w-5" aria-hidden="true" />
+          <Save id="page-save.page-save-header-button.save" className="relative z-10 h-5 w-5" aria-hidden="true" />
         )}
       </button>
       <PageSaveDialog />

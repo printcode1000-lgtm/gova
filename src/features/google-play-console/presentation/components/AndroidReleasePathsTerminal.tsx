@@ -13,9 +13,9 @@ function IndicatorCard(props: {
   value: string;
   help: string;
   className?: string;
-}) {
+} & { id?: string }) {
   return (
-    <div className={props.className ?? ""}>
+    <div id={props.id} className={props.className ?? ""}>
       <div className="min-w-0 rounded-md border bg-surface p-3">
         <div className="text-xs text-on-surface-variant">{props.label}</div>
         <div className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
@@ -39,33 +39,33 @@ export function AndroidReleasePathsTerminal(props: {
   );
 
   return (
-    <section className="mt-3 grid min-w-0 grid-cols-1 gap-3">
-      <DeployRunbookCollapsible
+    <section id="google-play-console.android-release-paths-terminal.section" className="mt-3 grid min-w-0 grid-cols-1 gap-3">
+      <DeployRunbookCollapsible id="google-play-console.android-release-paths-terminal.deploy-runbook-collapsible"
         title={props.t("releaseConsole.androidPaths.executionIndicatorsTitle")}
         description={props.t("releaseConsole.androidPaths.executionIndicatorsHelp")}
       >
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-          <IndicatorCard
+        <div id="google-play-console.android-release-paths-terminal.div" className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+          <IndicatorCard id="google-play-console.android-release-paths-terminal.indicator-card"
             label={props.t("releaseConsole.androidPaths.indicatorStatus")}
             value={snapshot.status}
             help={props.t("releaseConsole.androidPaths.indicatorStatusHelp")}
           />
-          <IndicatorCard
+          <IndicatorCard id="google-play-console.android-release-paths-terminal.indicator-card.2"
             label={props.t("releaseConsole.androidPaths.indicatorCommand")}
             value={snapshot.command}
             help={props.t("releaseConsole.androidPaths.indicatorCommandHelp")}
           />
-          <IndicatorCard
+          <IndicatorCard id="google-play-console.android-release-paths-terminal.indicator-card.3"
             label={props.t("releaseConsole.androidPaths.indicatorPhase")}
             value={snapshot.phase}
             help={props.t("releaseConsole.androidPaths.indicatorPhaseHelp")}
           />
-          <IndicatorCard
+          <IndicatorCard id="google-play-console.android-release-paths-terminal.indicator-card.4"
             label={props.t("releaseConsole.androidPaths.indicatorSection")}
             value={snapshot.section}
             help={props.t("releaseConsole.androidPaths.indicatorSectionHelp")}
           />
-          <IndicatorCard
+          <IndicatorCard id="google-play-console.android-release-paths-terminal.indicator-card.5"
             label={props.t("releaseConsole.androidPaths.indicatorBranch")}
             value={snapshot.branch}
             help={props.t("releaseConsole.androidPaths.indicatorBranchHelp")}
@@ -74,17 +74,17 @@ export function AndroidReleasePathsTerminal(props: {
         </div>
       </DeployRunbookCollapsible>
 
-      <DeployRunbookCollapsible
+      <DeployRunbookCollapsible id="google-play-console.android-release-paths-terminal.deploy-runbook-collapsible.2"
         title={props.t("releaseConsole.androidPaths.terminalTitle")}
         description={props.t("releaseConsole.androidPaths.terminalHelp")}
         actions={
-          <TerminalActions
+          <TerminalActions id="google-play-console.android-release-paths-terminal.terminal-actions"
             onCopy={() => void NativeCore.writeClipboard({ string: props.log })}
             onClear={props.clearLog}
           />
         }
       >
-        <TerminalOutput text={props.log} />
+        <TerminalOutput id="google-play-console.android-release-paths-terminal.terminal-output" text={props.log} />
       </DeployRunbookCollapsible>
     </section>
   );

@@ -40,17 +40,17 @@ const sectionComponents: Record<string, React.ComponentType> = {
   marketing: MarketingSection,
 };
 
-function CompletionScreen({
+function CompletionScreen({ id,
   onEdit,
 }: {
   onEdit: () => void;
-}) {
+} & { id?: string }) {
   const { t } = useTranslation();
   const { data, reset } = useOnboardingStore();
   const storeName = data.storeIdentity.storeName || t('onboarding.completion.defaultStoreName');
 
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center space-y-6 animate-in fade-in duration-500">
+    <div id={id} className="flex flex-col items-center justify-center py-16 text-center space-y-6 animate-in fade-in duration-500">
       <div className="rounded-full asol-ring-secondary p-4">
         <PartyPopper className="h-12 w-12 text-secondary" />
       </div>
@@ -132,14 +132,14 @@ export function OnboardingPage() {
   const config = stepConfig[currentStep];
   const mainContent =
     isComplete && showCompletion ? (
-      <CompletionScreen onEdit={handleStepNavigate} />
+      <CompletionScreen id="onboarding.onboarding-page.completion-screen" onEdit={handleStepNavigate} />
     ) : (
       <>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold">{config.title}</h2>
-          <p className="text-muted-foreground">{config.description}</p>
+        <div id="onboarding.onboarding-page.div" className="mb-6">
+          <h2 id="onboarding.onboarding-page.h2" className="text-2xl font-bold">{config.title}</h2>
+          <p id="onboarding.onboarding-page.p" className="text-muted-foreground">{config.description}</p>
         </div>
-        <div
+        <div id="onboarding.onboarding-page.div.2"
           className={cn(
             'transition-opacity duration-200',
             isTransitioning ? 'opacity-0' : 'opacity-100',
@@ -152,24 +152,24 @@ export function OnboardingPage() {
 
   return (
     <OnboardingSaveBridgeProvider setImagesPending={setImagesPending}>
-      <div className="asol-onboarding-shell">
-      <div className="hidden lg:block">
-        <div className="flex">
-          <aside className="w-80 min-h-screen border-r asol-onboarding-sidebar p-6 sticky top-0">
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-bold">{t('onboarding.page.title')}</h1>
-                <p className="text-sm text-muted-foreground">
+      <div id="onboarding.onboarding-page.div.3" className="asol-onboarding-shell">
+      <div id="onboarding.onboarding-page.div.4" className="hidden lg:block">
+        <div id="onboarding.onboarding-page.div.5" className="flex">
+          <aside id="onboarding.onboarding-page.aside" className="w-80 min-h-screen border-r asol-onboarding-sidebar p-6 sticky top-0">
+            <div id="onboarding.onboarding-page.div.6" className="space-y-6">
+              <div id="onboarding.onboarding-page.div.7">
+                <h1 id="onboarding.onboarding-page.h1" className="text-xl font-bold">{t('onboarding.page.title')}</h1>
+                <p id="onboarding.onboarding-page.p.2" className="text-sm text-muted-foreground">
                   {t('onboarding.page.subtitle')}
                 </p>
               </div>
 
-              <OnboardingProgress />
+              <OnboardingProgress id="onboarding.onboarding-page.onboarding-progress" />
 
-              <OnboardingSidebar onStepNavigate={handleStepNavigate} />
+              <OnboardingSidebar id="onboarding.onboarding-page.onboarding-sidebar" onStepNavigate={handleStepNavigate} />
 
               {isComplete && showCompletion && (
-                <Button ui={{ uid: 'onboarding.page.show-completion-zSW5qt', id: 'onboarding.page.show-completion', kind: 'action', action: 'show-completion', part: 'footer' }}
+                <Button id="onboarding.onboarding-page.button" ui={{ uid: 'onboarding.page.show-completion-zSW5qt', id: 'onboarding.page.show-completion', kind: 'action', action: 'show-completion', part: 'footer' }}
                   variant="secondary"
                   className="w-full"
                   onClick={() => setShowCompletion(true)}
@@ -181,22 +181,22 @@ export function OnboardingPage() {
             </div>
           </aside>
 
-          <main className="flex-1 p-8 asol-onboarding-main">
-            <div className="max-w-3xl mx-auto">{mainContent}</div>
+          <main id="onboarding.onboarding-page.main" className="flex-1 p-8 asol-onboarding-main">
+            <div id="onboarding.onboarding-page.div.8" className="max-w-3xl mx-auto">{mainContent}</div>
           </main>
         </div>
       </div>
 
-      <div className="lg:hidden">
-        <MobileOnboardingNav
+      <div id="onboarding.onboarding-page.div.9" className="lg:hidden">
+        <MobileOnboardingNav id="onboarding.onboarding-page.mobile-onboarding-nav"
           showCompletion={isComplete && showCompletion}
           onShowCompletion={() => setShowCompletion(true)}
           onStepNavigate={handleStepNavigate}
         />
 
-        <main className="px-4 py-6">
-          <div className="max-w-2xl mx-auto">
-            <div
+        <main id="onboarding.onboarding-page.main.2" className="px-4 py-6">
+          <div id="onboarding.onboarding-page.div.10" className="max-w-2xl mx-auto">
+            <div id="onboarding.onboarding-page.div.11"
               className={cn(
                 'transition-opacity duration-200',
                 isTransitioning ? 'opacity-0' : 'opacity-100',

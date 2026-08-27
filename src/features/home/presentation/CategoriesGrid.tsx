@@ -32,8 +32,8 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
   const { locale } = useTranslation();
 
   return (
-    <section>
-      <div className={categoryGridClassName}>
+    <section id="home.categories-grid.section">
+      <div id="home.categories-grid.div" className={categoryGridClassName}>
         {displayCategories.map((cat, index) => {
           const name = locale === "ar" ? cat.nameAr : cat.nameEn;
           const imgSrc = cat.imageUrl;

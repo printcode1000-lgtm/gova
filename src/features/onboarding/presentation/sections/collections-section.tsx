@@ -71,21 +71,21 @@ export function CollectionsSection() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FolderOpen className="h-5 w-5" />
+    <div id="onboarding.sections.collections-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.collections-section.card">
+        <CardHeader id="onboarding.sections.collections-section.card-header">
+          <CardTitle id="onboarding.sections.collections-section.card-title" className="flex items-center gap-2">
+            <FolderOpen id="onboarding.sections.collections-section.folder-open" className="h-5 w-5" />
             {t('onboarding.collections.title')}
           </CardTitle>
-          <CardDescription>{t('onboarding.collections.description')}</CardDescription>
+          <CardDescription id="onboarding.sections.collections-section.card-description">{t('onboarding.collections.description')}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent id="onboarding.sections.collections-section.card-content">
           {showForm ? (
-            <div className="space-y-6 animate-in slide-in-from-top-2 duration-200">
-              <div className="grid gap-6 lg:grid-cols-2">
-                <div className="space-y-4">
-                  <FormField label={t('onboarding.collections.name')} htmlFor="collectionName" required>
+            <div id="onboarding.sections.collections-section.div.2" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
+              <div id="onboarding.sections.collections-section.div.3" className="grid gap-6 lg:grid-cols-2">
+                <div id="onboarding.sections.collections-section.div.4" className="space-y-4">
+                  <FormField id="onboarding.sections.collections-section.form-field" label={t('onboarding.collections.name')} htmlFor="collectionName" required>
                     <FormInput ui={{ uid: 'onboarding.collections.name-OCJ9RN', id: 'onboarding.collections.name', kind: 'field', part: 'form' }}
                       id="collectionName"
                       value={newCollection.name}
@@ -94,7 +94,7 @@ export function CollectionsSection() {
                     />
                   </FormField>
 
-                  <FormField label={t('onboarding.collections.descriptionLabel')} htmlFor="collectionDesc">
+                  <FormField id="onboarding.sections.collections-section.form-field.2" label={t('onboarding.collections.descriptionLabel')} htmlFor="collectionDesc">
                     <FormTextarea ui={{ uid: 'onboarding.collections.description-mZ1FxS', id: 'onboarding.collections.description', kind: 'field', part: 'form' }}
                       id="collectionDesc"
                       value={newCollection.description}
@@ -123,9 +123,9 @@ export function CollectionsSection() {
               </div>
 
               {data.products.products.length > 0 && (
-                <div className="space-y-3">
-                  <Label className="text-base">{t('onboarding.collections.assignProducts')}</Label>
-                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                <div id="onboarding.sections.collections-section.div.5" className="space-y-3">
+                  <Label id="onboarding.sections.collections-section.label" className="text-base">{t('onboarding.collections.assignProducts')}</Label>
+                  <div id="onboarding.sections.collections-section.div.6" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {data.products.products.map((product) => (
                       <label
                         key={product.id}
@@ -147,32 +147,32 @@ export function CollectionsSection() {
                 </div>
               )}
 
-              <div className="flex justify-end gap-3 pt-4 border-t">
-                <Button ui={{ uid: 'onboarding.collections.cancel-8hbPYe', id: 'onboarding.collections.cancel', kind: 'action', action: 'cancel', part: 'form-footer' }} variant="outline" onClick={() => setShowForm(false)}>
+              <div id="onboarding.sections.collections-section.div.7" className="flex justify-end gap-3 pt-4 border-t">
+                <Button id="onboarding.sections.collections-section.button" ui={{ uid: 'onboarding.collections.cancel-8hbPYe', id: 'onboarding.collections.cancel', kind: 'action', action: 'cancel', part: 'form-footer' }} variant="outline" onClick={() => setShowForm(false)}>
                   {t('onboarding.common.cancel')}
                 </Button>
-                <Button ui={{ uid: 'onboarding.collections.create-MzGBK1', id: 'onboarding.collections.create', kind: 'action', action: 'create-collection', part: 'form-footer' }} onClick={handleCreateCollection} disabled={!newCollection.name?.trim()}>
+                <Button id="onboarding.sections.collections-section.button.2" ui={{ uid: 'onboarding.collections.create-MzGBK1', id: 'onboarding.collections.create', kind: 'action', action: 'create-collection', part: 'form-footer' }} onClick={handleCreateCollection} disabled={!newCollection.name?.trim()}>
                   {t('onboarding.collections.create')}
                 </Button>
               </div>
             </div>
           ) : data.collections.collections.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="rounded-full bg-muted p-4 mb-4">
-                <FolderOpen className="h-8 w-8 text-muted-foreground" />
+            <div id="onboarding.sections.collections-section.div.8" className="flex flex-col items-center justify-center py-12 text-center">
+              <div id="onboarding.sections.collections-section.div.9" className="rounded-full bg-muted p-4 mb-4">
+                <FolderOpen id="onboarding.sections.collections-section.folder-open.2" className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="font-medium mb-2">{t('onboarding.collections.emptyTitle')}</h3>
-              <p className="text-sm text-muted-foreground mb-4 max-w-sm">
+              <h3 id="onboarding.sections.collections-section.h3" className="font-medium mb-2">{t('onboarding.collections.emptyTitle')}</h3>
+              <p id="onboarding.sections.collections-section.p" className="text-sm text-muted-foreground mb-4 max-w-sm">
                 {t('onboarding.collections.emptyDesc')}
               </p>
-              <Button ui={{ uid: 'onboarding.collections.create-first-MREA0I', id: 'onboarding.collections.create-first', kind: 'action', action: 'open-collection-form', part: 'empty-state' }} onClick={() => setShowForm(true)} className="gap-2">
-                <Plus className="h-4 w-4" />
+              <Button id="onboarding.sections.collections-section.button.3" ui={{ uid: 'onboarding.collections.create-first-MREA0I', id: 'onboarding.collections.create-first', kind: 'action', action: 'open-collection-form', part: 'empty-state' }} onClick={() => setShowForm(true)} className="gap-2">
+                <Plus id="onboarding.sections.collections-section.plus" className="h-4 w-4" />
                 {t('onboarding.collections.createFirst')}
               </Button>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
+            <div id="onboarding.sections.collections-section.div.10" className="space-y-4">
+              <div id="onboarding.sections.collections-section.div.11" className="grid gap-4 sm:grid-cols-2">
                 {data.collections.collections.map((collection) => (
                   <div
                     key={collection.id}
@@ -214,8 +214,8 @@ export function CollectionsSection() {
                 ))}
               </div>
 
-              <Button ui={{ uid: 'onboarding.collections.create-another-2fpBjg', id: 'onboarding.collections.create-another', kind: 'action', action: 'open-collection-form', part: 'list-footer' }} variant="outline" onClick={() => setShowForm(true)} className="w-full gap-2">
-                <Plus className="h-4 w-4" />
+              <Button id="onboarding.sections.collections-section.button.4" ui={{ uid: 'onboarding.collections.create-another-2fpBjg', id: 'onboarding.collections.create-another', kind: 'action', action: 'open-collection-form', part: 'list-footer' }} variant="outline" onClick={() => setShowForm(true)} className="w-full gap-2">
+                <Plus id="onboarding.sections.collections-section.plus.2" className="h-4 w-4" />
                 {t('onboarding.collections.createAnother')}
               </Button>
             </div>
@@ -223,7 +223,7 @@ export function CollectionsSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation onNext={handleNext} showSkip />
+      <StepNavigation id="onboarding.sections.collections-section.step-navigation" onNext={handleNext} showSkip />
     </div>
   );
 }

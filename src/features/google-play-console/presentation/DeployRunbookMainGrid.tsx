@@ -28,30 +28,30 @@ export function DeployRunbookMainGrid(props: {
   onCancel: () => void;
 }) {
   return (
-    <section className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)] lg:gap-4">
-      <div className="order-2 min-w-0 space-y-3 lg:order-1">
-        <DeployRunbookCollapsible
+    <section id="google-play-console.deploy-runbook-main-grid.section" className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)] lg:gap-4">
+      <div id="google-play-console.deploy-runbook-main-grid.div" className="order-2 min-w-0 space-y-3 lg:order-1">
+        <DeployRunbookCollapsible id="google-play-console.deploy-runbook-main-grid.deploy-runbook-collapsible"
           title="مؤشرات التنفيذ"
           description="آخر مرحلة وقسم وفرع ظهر في سجل الطرفية."
         >
-          <ExecutionIndicator log={props.log} tab={props.tab} status={props.activeStatus} />
+          <ExecutionIndicator id="google-play-console.deploy-runbook-main-grid.execution-indicator" log={props.log} tab={props.tab} status={props.activeStatus} />
         </DeployRunbookCollapsible>
 
-        <DeployRunbookCollapsible
+        <DeployRunbookCollapsible id="google-play-console.deploy-runbook-main-grid.deploy-runbook-collapsible.2"
           title="الطرفية"
           description="سجل job النظام المحلي؛ يُحدَّث أثناء التشغيل."
           actions={
-            <TerminalActions
+            <TerminalActions id="google-play-console.deploy-runbook-main-grid.terminal-actions"
               onCopy={() => void NativeCore.writeClipboard({ string: props.log })}
               onClear={props.clearLog}
             />
           }
         >
-          <TerminalOutput text={props.log} />
+          <TerminalOutput id="google-play-console.deploy-runbook-main-grid.terminal-output" text={props.log} />
         </DeployRunbookCollapsible>
       </div>
 
-      <div className="order-1 min-w-0 lg:order-2">
+      <div id="google-play-console.deploy-runbook-main-grid.div.2" className="order-1 min-w-0 lg:order-2">
         <ExecutionBox
           locked={props.locked}
           activeJob={props.activeJob}

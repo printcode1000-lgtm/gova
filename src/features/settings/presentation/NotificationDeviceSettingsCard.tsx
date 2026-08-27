@@ -21,20 +21,20 @@ export function NotificationDeviceSettingsCard() {
   const state = useNotificationDeviceSettingsCard();
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-          <Bell className="h-5 w-5 text-primary" />
+    <div id="settings.notification-device-settings-card.div" className="space-y-4">
+      <div id="settings.notification-device-settings-card.div.2" className="flex items-center gap-3">
+        <span id="settings.notification-device-settings-card.span" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+          <Bell id="settings.notification-device-settings-card.bell" className="h-5 w-5 text-primary" />
         </span>
-        <div className="min-w-0">
-          <h2 className="truncate text-lg font-semibold text-on-surface">
+        <div id="settings.notification-device-settings-card.div.3" className="min-w-0">
+          <h2 id="settings.notification-device-settings-card.h2" className="truncate text-lg font-semibold text-on-surface">
             {state.isAndroidNotifications
               ? state.t("notifications.deviceCard.titleAndroid")
               : state.isIosNotifications
                 ? state.t("notifications.deviceCard.titleIos")
                 : state.t("notifications.deviceCard.titleWeb")}
           </h2>
-          <span
+          <span id="settings.notification-device-settings-card.span.2"
             className={cn(
               "mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold",
               state.permissionTone,
@@ -49,7 +49,7 @@ export function NotificationDeviceSettingsCard() {
       </div>
 
       {state.statusText ? (
-        <p
+        <p id="settings.notification-device-settings-card.p"
           className={cn(
             "rounded-xl px-3 py-2 text-sm font-medium",
             state.statusTone === "error"
@@ -62,7 +62,7 @@ export function NotificationDeviceSettingsCard() {
         </p>
       ) : null}
 
-      <div className="space-y-4 rounded-2xl asol-surface-neutral p-3 sm:p-4">
+      <div id="settings.notification-device-settings-card.div.4" className="space-y-4 rounded-2xl asol-surface-neutral p-3 sm:p-4">
         <NotificationDeviceToggleSection state={state} />
         <SelfTestNotificationButton state={state} />
         <SystemNotificationSettingsButton state={state} />

@@ -125,9 +125,9 @@ function buildErrorsOnlyText(
   return "";
 }
 
-function StepList({ steps }: { steps: readonly SimulationProgressStep[] }) {
+function StepList({ id, steps }: { steps: readonly SimulationProgressStep[] } & { id?: string }) {
   return (
-    <ol className="min-w-0 space-y-2">
+    <ol id={id} className="min-w-0 space-y-2">
       {steps.map((step) => (
         <li key={step.id} className="flex min-w-0 items-start gap-3 rounded-xl bg-surface-container-low p-3">
           {step.status === "passed" ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> :
@@ -144,7 +144,7 @@ function StepList({ steps }: { steps: readonly SimulationProgressStep[] }) {
   );
 }
 
-export function SimulationProgressPanel({
+export function SimulationProgressPanel({ id,
   steps,
   error,
   outcome,
@@ -153,7 +153,7 @@ export function SimulationProgressPanel({
   pageLabel,
   pageRoute,
   interactionLabel,
-}: SimulationProgressPanelProps) {
+}: SimulationProgressPanelProps & { id?: string }) {
   const [copied, setCopied] = React.useState(false);
   const [errorsCopied, setErrorsCopied] = React.useState(false);
   const hasContent = runs.length > 0 || steps.length > 0 || Boolean(error) || outcome !== undefined || running;
@@ -198,7 +198,7 @@ export function SimulationProgressPanel({
   };
 
   return (
-    <section className="min-w-0 space-y-3 overflow-hidden rounded-2xl border border-outline-variant bg-surface p-3 sm:p-4" aria-live="polite">
+    <section id={id} className="min-w-0 space-y-3 overflow-hidden rounded-2xl border border-outline-variant bg-surface p-3 sm:p-4" aria-live="polite">
       <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="font-bold text-on-surface">متابعة تنفيذ E2E</h2>
         <div className="grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center">

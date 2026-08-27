@@ -15,7 +15,7 @@ interface SettingsToggleRowProps {
 }
 
 /** One labelled preference row: title, explanation, and its switch. */
-export function SettingsToggleRow({
+export function SettingsToggleRow({ id,
   title,
   description,
   checked,
@@ -23,9 +23,9 @@ export function SettingsToggleRow({
   emphasised = false,
   ui,
   onChange,
-}: SettingsToggleRowProps) {
+}: SettingsToggleRowProps & { id?: string }) {
   return (
-    <div
+    <div id={id}
       className={
         emphasised
           ? "flex flex-col gap-3 rounded-xl border-2 border-primary/30 bg-primary/5 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"

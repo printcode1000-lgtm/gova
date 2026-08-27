@@ -51,7 +51,7 @@ export function DoctorAppointmentSellersPageContent({
 
   if (isLoading && offset === 0) {
     return (
-      <div className="container px-4 py-8 text-center text-sm text-on-surface-variant">
+      <div id="categories.doctor-appointment-sellers-page-content.div" className="container px-4 py-8 text-center text-sm text-on-surface-variant">
         {t("profile.loading")}
       </div>
     );
@@ -59,16 +59,16 @@ export function DoctorAppointmentSellersPageContent({
 
   if (error) {
     return (
-      <div className="container px-4 py-8 text-center text-sm text-error">
+      <div id="categories.doctor-appointment-sellers-page-content.div.2" className="container px-4 py-8 text-center text-sm text-error">
         {locale === "ar" ? "حدث خطأ أثناء تحميل البيانات" : "Error loading data"}
       </div>
     );
   }
 
   return (
-    <div className="container px-4 py-8">
-      <div className="relative mb-6 min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
-        <Image
+    <div id="categories.doctor-appointment-sellers-page-content.div.3" className="container px-4 py-8">
+      <div id="categories.doctor-appointment-sellers-page-content.div.4" className="relative mb-6 min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
+        <Image id="categories.doctor-appointment-sellers-page-content.image"
           src={specialtyImage}
           alt={
             locale === "ar"
@@ -79,18 +79,18 @@ export function DoctorAppointmentSellersPageContent({
           className="object-fill opacity-20"
           priority
         />
-        <div className="relative z-10 space-y-3">
-          <h1 className="text-2xl font-bold text-on-surface">
+        <div id="categories.doctor-appointment-sellers-page-content.div.5" className="relative z-10 space-y-3">
+          <h1 id="categories.doctor-appointment-sellers-page-content.h1" className="text-2xl font-bold text-on-surface">
             {locale === "ar"
               ? `الأطباء في ${specialtyName}`
               : `Doctors in ${specialtyName}`}
           </h1>
-          <div className="relative">
-            <Search
+          <div id="categories.doctor-appointment-sellers-page-content.div.6" className="relative">
+            <Search id="categories.doctor-appointment-sellers-page-content.search"
               className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
               aria-hidden
             />
-            <input
+            <input id="categories.doctor-appointment-sellers-page-content.input"
               type="search"
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
@@ -112,7 +112,7 @@ export function DoctorAppointmentSellersPageContent({
               : "No doctors available"}
         </p>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <div id="categories.doctor-appointment-sellers-page-content.div.7" className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {filteredUsers.map((user) => {
             const card = createSellerCardViewModel(user, {
               badge: locale === "ar" ? "طبيب" : "Doctor",
@@ -131,7 +131,7 @@ export function DoctorAppointmentSellersPageContent({
       )}
 
       {users && users.length === limit ? (
-        <div className="mt-6 text-center">
+        <div id="categories.doctor-appointment-sellers-page-content.div.8" className="mt-6 text-center">
           <button {...uiAttributes({ uid: "doctor-load-more-4AV97U", id: "doctor-load-more", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "doctor-load-more" } })}
             type="button"
             onClick={loadMore}

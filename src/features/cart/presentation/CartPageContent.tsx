@@ -132,36 +132,36 @@ export function CartPageContent() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-on-surface">{copy.title}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+    <main id="cart.cart-page-content.main" className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+      <div id="cart.cart-page-content.div" className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+        <div id="cart.cart-page-content.div.2">
+          <h1 id="cart.cart-page-content.h1" className="text-2xl font-bold text-on-surface">{copy.title}</h1>
+          <p id="cart.cart-page-content.p" className="mt-1 text-sm text-muted-foreground">
             {copy.description}
           </p>
         </div>
         {items.length > 0 ? (
-          <button
+          <button id="cart.cart-page-content.button"
             type="button"
             onClick={() => void clearCart()}
             className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 id="cart.cart-page-content.trash2" className="h-4 w-4" />
             {copy.clear}
           </button>
         ) : null}
       </div>
 
       {items.length === 0 ? (
-        <section className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted">
-            <ShoppingCart className="h-7 w-7 text-muted-foreground" />
+        <section id="cart.cart-page-content.section" className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
+          <div id="cart.cart-page-content.div.3" className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted">
+            <ShoppingCart id="cart.cart-page-content.shopping-cart" className="h-7 w-7 text-muted-foreground" />
           </div>
-          <h2 className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <h2 id="cart.cart-page-content.h2" className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
+          <p id="cart.cart-page-content.p.2" className="mt-2 text-sm text-muted-foreground">
             {copy.emptyText}
           </p>
-          <Link
+          <Link id="cart.cart-page-content.link"
             href="/home"
             className="mt-5 inline-flex rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary"
           >
@@ -169,22 +169,22 @@ export function CartPageContent() {
           </Link>
         </section>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
-          <section className="space-y-4">
+        <div id="cart.cart-page-content.div.4" className="grid gap-6 lg:grid-cols-[1fr_340px]">
+          <section id="cart.cart-page-content.section.2" className="space-y-4">
             {unifiedDeliveryAvailable ? (
-              <div className="rounded-xl border border-primary/30 bg-primary/10 p-4">
-                <div className="flex items-start gap-3">
-                  <Truck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <div>
-                    <h2 className="font-bold text-primary">
+              <div id="cart.cart-page-content.div.5" className="rounded-xl border border-primary/30 bg-primary/10 p-4">
+                <div id="cart.cart-page-content.div.6" className="flex items-start gap-3">
+                  <Truck id="cart.cart-page-content.truck" className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <div id="cart.cart-page-content.div.7">
+                    <h2 id="cart.cart-page-content.h2.2" className="font-bold text-primary">
                       توصيل موحّد لعدة بائعين
                     </h2>
-                    <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                    <p id="cart.cart-page-content.p.3" className="mt-1 text-sm leading-6 text-muted-foreground">
                       سيطلب النظام عرضًا واحدًا لجمع المنتجات من{""}
                       {sellerGroups.length} بائعين وتسليمها إليك في شحنة واحدة،
                       ولن تُحسب رسوم كل بائع بصورة منفصلة.
                     </p>
-                    <p className="mt-2 text-xs font-semibold text-on-surface">
+                    <p id="cart.cart-page-content.p.4" className="mt-2 text-xs font-semibold text-on-surface">
                       تكلفة التوصيل المنفصل المؤكدة حاليًا:{""}
                       {formatMoney(separateDeliveryEstimateMinor)}
                       {sellerGroups.some((group) => group.quoteRequired)
@@ -403,85 +403,85 @@ export function CartPageContent() {
             ))}
           </section>
 
-          <aside className="h-fit rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-            <h2 className="font-bold">{copy.summary}</h2>
-            <div className="mt-4 space-y-3 text-sm">
-              <label className="block space-y-1.5">
-                <span className="text-xs font-semibold text-muted-foreground">
+          <aside id="cart.cart-page-content.aside" className="h-fit rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+            <h2 id="cart.cart-page-content.h2.3" className="font-bold">{copy.summary}</h2>
+            <div id="cart.cart-page-content.div.8" className="mt-4 space-y-3 text-sm">
+              <label id="cart.cart-page-content.label" className="block space-y-1.5">
+                <span id="cart.cart-page-content.span" className="text-xs font-semibold text-muted-foreground">
                   {copy.coupon}
                 </span>
-                <input
+                <input id="cart.cart-page-content.input"
                   value={couponText}
                   onChange={(event) => setCouponText(event.target.value)}
                   placeholder="WELCOME10"
                   className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
                 />
-                <span className="block text-[11px] text-muted-foreground">
+                <span id="cart.cart-page-content.span.2" className="block text-[11px] text-muted-foreground">
                   {copy.couponHint}
                 </span>
               </label>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">{copy.itemCount}</span>
-                <span className="font-semibold">{totalQuantity}</span>
+              <div id="cart.cart-page-content.div.9" className="flex justify-between">
+                <span id="cart.cart-page-content.span.3" className="text-muted-foreground">{copy.itemCount}</span>
+                <span id="cart.cart-page-content.span.4" className="font-semibold">{totalQuantity}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">{copy.productsTotal}</span>
-                <span className="font-semibold">
+              <div id="cart.cart-page-content.div.10" className="flex justify-between">
+                <span id="cart.cart-page-content.span.5" className="text-muted-foreground">{copy.productsTotal}</span>
+                <span id="cart.cart-page-content.span.6" className="font-semibold">
                   {formatMoney(productsTotalMinor, locale)}
                 </span>
               </div>
               {isLoadingDiscountQuote ? (
-                <div className="flex justify-between text-primary">
-                  <span>{copy.loadingDiscounts}</span>
-                  <span>...</span>
+                <div id="cart.cart-page-content.div.11" className="flex justify-between text-primary">
+                  <span id="cart.cart-page-content.span.7">{copy.loadingDiscounts}</span>
+                  <span id="cart.cart-page-content.span.8">...</span>
                 </div>
               ) : null}
               {productsDiscountMinor > 0 ? (
-                <div className="flex justify-between text-primary">
-                  <span>خصومات المنتجات والطلبات</span>
-                  <span className="font-semibold">
+                <div id="cart.cart-page-content.div.12" className="flex justify-between text-primary">
+                  <span id="cart.cart-page-content.span.9">خصومات المنتجات والطلبات</span>
+                  <span id="cart.cart-page-content.span.10" className="font-semibold">
                     -{formatMoney(productsDiscountMinor)}
                   </span>
                 </div>
               ) : null}
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">
+              <div id="cart.cart-page-content.div.13" className="flex justify-between">
+                <span id="cart.cart-page-content.span.11" className="text-muted-foreground">
                   {unifiedDeliveryAvailable
                     ? "التوصيل الموحد"
                     : hasPendingShippingQuote
                       ? "رسوم الشحن المؤكدة حاليًا"
                       : "إجمالي الشحن"}
                 </span>
-                <span className="font-semibold">
+                <span id="cart.cart-page-content.span.12" className="font-semibold">
                   {unifiedDeliveryAvailable
                     ? "بانتظار العروض"
                     : formatMoney(shippingTotalMinor)}
                 </span>
               </div>
               {shippingDiscountMinor > 0 && !unifiedDeliveryAvailable ? (
-                <div className="flex justify-between text-primary">
-                  <span>خصم الشحن</span>
-                  <span className="font-semibold">
+                <div id="cart.cart-page-content.div.14" className="flex justify-between text-primary">
+                  <span id="cart.cart-page-content.span.13">خصم الشحن</span>
+                  <span id="cart.cart-page-content.span.14" className="font-semibold">
                     -{formatMoney(shippingDiscountMinor)}
                   </span>
                 </div>
               ) : null}
-              <div className="border-t border-outline-variant pt-3">
-                <div className="flex justify-between text-base font-bold">
-                  <span>{copy.total}</span>
-                  <span>{formatMoney(totalMinor, locale)}</span>
+              <div id="cart.cart-page-content.div.15" className="border-t border-outline-variant pt-3">
+                <div id="cart.cart-page-content.div.16" className="flex justify-between text-base font-bold">
+                  <span id="cart.cart-page-content.span.15">{copy.total}</span>
+                  <span id="cart.cart-page-content.span.16">{formatMoney(totalMinor, locale)}</span>
                 </div>
               </div>
             </div>
             {hasPendingShippingQuote ? (
-              <p className="mt-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm leading-6 text-on-surface">
+              <p id="cart.cart-page-content.p.5" className="mt-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm leading-6 text-on-surface">
                 {unifiedDeliveryAvailable
                   ? "الإجمالي مبدئي ولا يشمل التوصيل الموحد. ستظهر عروض مقدمي التوصيل في صفحة الطلب، ولن تُضاف أي قيمة إلا بعد اختيارك وموافقتك."
                   : "الإجمالي مبدئي ولا يشمل عروض الشحن حسب المكان. ستُضاف قيمة كل عرض فقط بعد موافقتك عليه من صفحة تفاصيل الطلب."}
               </p>
             ) : null}
             {submitError ? (
-              <p className="mt-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+              <p id="cart.cart-page-content.p.6" className="mt-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
                 {submitError}
               </p>
             ) : null}
@@ -492,11 +492,11 @@ export function CartPageContent() {
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-on-primary transition disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 id="cart.cart-page-content.loader2" className="h-4 w-4 animate-spin" />
               ) : null}
               {copy.submit}
             </button>
-            <p className="mt-3 text-xs leading-5 text-muted-foreground">
+            <p id="cart.cart-page-content.p.7" className="mt-3 text-xs leading-5 text-muted-foreground">
               {copy.submitHint}
             </p>
           </aside>

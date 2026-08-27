@@ -53,6 +53,7 @@ export interface ContactActionBarProps {
   label?: string;
   compact?: boolean;
   customActions?: CustomActionButton[];
+  id?: string;
 }
 
 export interface ContactOption {

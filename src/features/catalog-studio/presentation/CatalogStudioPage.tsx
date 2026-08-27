@@ -500,15 +500,15 @@ export function CatalogStudioPage() {
   );
 
   if (sessionLoading || desktopWeb === null) {
-    return <div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+    return <div id="catalog-studio.catalog-studio-page.div" className="flex min-h-[60vh] items-center justify-center"><Loader2 id="catalog-studio.catalog-studio-page.loader2" className="h-8 w-8 animate-spin text-primary" /></div>;
   }
   if (!authorized) {
-    return <div className="mx-auto mt-16 max-w-xl"><StatusBox kind="error">هذه الصفحة متاحة فقط لجلسة Super Admin أثناء التطوير.</StatusBox></div>;
+    return <div id="catalog-studio.catalog-studio-page.div.2" className="mx-auto mt-16 max-w-xl"><StatusBox id="catalog-studio.catalog-studio-page.status-box" kind="error">هذه الصفحة متاحة فقط لجلسة Super Admin أثناء التطوير.</StatusBox></div>;
   }
   if (!desktopWeb) {
     return (
-      <div className="mx-auto mt-16 max-w-xl">
-        <StatusBox kind="notice">
+      <div id="catalog-studio.catalog-studio-page.div.3" className="mx-auto mt-16 max-w-xl">
+        <StatusBox id="catalog-studio.catalog-studio-page.status-box.2" kind="notice">
           استوديو الكتالوج معطل على الهاتف وCapacitor. افتحه من متصفح تطوير على شاشة بعرض {CATALOG_STUDIO_MIN_WIDTH}px على الأقل.
         </StatusBox>
       </div>
@@ -529,45 +529,45 @@ export function CatalogStudioPage() {
   });
 
   return (
-    <main className="mx-auto w-full max-w-[1800px] space-y-4 px-4 py-6 lg:px-6" dir="rtl">
-      <header className="rounded-2xl border bg-card p-5 shadow-sm">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold">استوديو الكتالوج</h1>
-              <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-800">DEVELOPMENT ONLY</span>
-              {snapshot ? <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-800">كتالوج إصدار {snapshot.stats.schemaVersion}</span> : null}
+    <main id="catalog-studio.catalog-studio-page.main" className="mx-auto w-full max-w-[1800px] space-y-4 px-4 py-6 lg:px-6" dir="rtl">
+      <header id="catalog-studio.catalog-studio-page.header" className="rounded-2xl border bg-card p-5 shadow-sm">
+        <div id="catalog-studio.catalog-studio-page.div.4" className="flex flex-wrap items-start justify-between gap-4">
+          <div id="catalog-studio.catalog-studio-page.div.5">
+            <div id="catalog-studio.catalog-studio-page.div.6" className="flex flex-wrap items-center gap-2">
+              <h1 id="catalog-studio.catalog-studio-page.h1" className="text-2xl font-bold">استوديو الكتالوج</h1>
+              <span id="catalog-studio.catalog-studio-page.span" className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-800">DEVELOPMENT ONLY</span>
+              {snapshot ? <span id="catalog-studio.catalog-studio-page.span.2" className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-800">كتالوج إصدار {snapshot.stats.schemaVersion}</span> : null}
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">تحرير ملفات Catalog والصور والعلاقات دون قراءة أو تعديل سجلات المستخدمين.</p>
+            <p id="catalog-studio.catalog-studio-page.p" className="mt-2 text-sm text-muted-foreground">تحرير ملفات Catalog والصور والعلاقات دون قراءة أو تعديل سجلات المستخدمين.</p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Button ui={{ uid: "catalog-studio.refresh-UVazI4", id: "catalog-studio.refresh", kind: "action", action: "reload-snapshot", part: "toolbar" }} variant="outline" onClick={() => void loadSnapshot()} disabled={Boolean(busy)}>
-              <RefreshCw className={cn("me-2 h-4 w-4", busy === "load" && "animate-spin")} /> تحديث
+          <div id="catalog-studio.catalog-studio-page.div.7" className="flex flex-wrap items-center gap-2">
+            <Button id="catalog-studio.catalog-studio-page.button.2" ui={{ uid: "catalog-studio.refresh-UVazI4", id: "catalog-studio.refresh", kind: "action", action: "reload-snapshot", part: "toolbar" }} variant="outline" onClick={() => void loadSnapshot()} disabled={Boolean(busy)}>
+              <RefreshCw id="catalog-studio.catalog-studio-page.refresh-cw" className={cn("me-2 h-4 w-4", busy === "load" && "animate-spin")} /> تحديث
             </Button>
-            <Button ui={{ uid: "catalog-studio.validate-2K5oMt", id: "catalog-studio.validate", kind: "action", action: "validate-changes", part: "toolbar" }} variant="outline" onClick={() => void validateChanges()} disabled={Boolean(busy) || changedFiles.length === 0}>
-              <ClipboardCheck className="me-2 h-4 w-4" /> فحص شامل
+            <Button id="catalog-studio.catalog-studio-page.button.3" ui={{ uid: "catalog-studio.validate-2K5oMt", id: "catalog-studio.validate", kind: "action", action: "validate-changes", part: "toolbar" }} variant="outline" onClick={() => void validateChanges()} disabled={Boolean(busy) || changedFiles.length === 0}>
+              <ClipboardCheck id="catalog-studio.catalog-studio-page.clipboard-check" className="me-2 h-4 w-4" /> فحص شامل
             </Button>
           </div>
         </div>
       </header>
 
-      {error ? <StatusBox kind="error">{error}</StatusBox> : null}
-      {notice ? <StatusBox kind={validation?.valid === false ? "notice" : "success"}>{notice}</StatusBox> : null}
+      {error ? <StatusBox id="catalog-studio.catalog-studio-page.status-box.3" kind="error">{error}</StatusBox> : null}
+      {notice ? <StatusBox id="catalog-studio.catalog-studio-page.status-box.4" kind={validation?.valid === false ? "notice" : "success"}>{notice}</StatusBox> : null}
 
-      <nav className="flex flex-wrap gap-2 rounded-2xl border bg-card p-3">
+      <nav id="catalog-studio.catalog-studio-page.nav" className="flex flex-wrap gap-2 rounded-2xl border bg-card p-3">
         {(Object.keys(sectionLabels) as StudioSection[]).map((key) => (
           <SectionButton key={key} active={section === key} label={sectionLabels[key]} onClick={() => setSection(key)} />
         ))}
       </nav>
 
       {busy === "load" && !snapshot ? (
-        <div className="flex min-h-[55vh] items-center justify-center rounded-2xl border bg-card"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
+        <div id="catalog-studio.catalog-studio-page.div.8" className="flex min-h-[55vh] items-center justify-center rounded-2xl border bg-card"><Loader2 id="catalog-studio.catalog-studio-page.loader2.2" className="h-10 w-10 animate-spin text-primary" /></div>
       ) : null}
 
       {snapshot && section === "overview" ? (
-        <section className="grid gap-4 xl:grid-cols-[1fr_420px]">
-          <div className="space-y-4">
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <section id="catalog-studio.catalog-studio-page.section" className="grid gap-4 xl:grid-cols-[1fr_420px]">
+          <div id="catalog-studio.catalog-studio-page.div.9" className="space-y-4">
+            <div id="catalog-studio.catalog-studio-page.div.10" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {[
                 ["ملفات البيانات", snapshot.stats.dataFiles],
                 ["العناصر", snapshot.stats.items],
@@ -584,9 +584,9 @@ export function CatalogStudioPage() {
                 </div>
               ))}
             </div>
-            <div className="rounded-2xl border bg-card p-5">
-              <h2 className="font-bold">ملفات JSON</h2>
-              <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+            <div id="catalog-studio.catalog-studio-page.div.11" className="rounded-2xl border bg-card p-5">
+              <h2 id="catalog-studio.catalog-studio-page.h2" className="font-bold">ملفات JSON</h2>
+              <div id="catalog-studio.catalog-studio-page.div.12" className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
                 {snapshot.files.map((file) => (
                   <button
                     key={file.path}
@@ -607,36 +607,36 @@ export function CatalogStudioPage() {
               </div>
             </div>
           </div>
-          <aside className="space-y-4">
-            <div className="rounded-2xl border bg-card p-5">
-              <div className="flex items-center gap-2">
-                {snapshot.validation.valid ? <CheckCircle2 className="h-6 w-6 text-emerald-600" /> : <AlertTriangle className="h-6 w-6 text-red-600" />}
-                <h2 className="font-bold">حالة المصدر الحالي</h2>
+          <aside id="catalog-studio.catalog-studio-page.aside" className="space-y-4">
+            <div id="catalog-studio.catalog-studio-page.div.13" className="rounded-2xl border bg-card p-5">
+              <div id="catalog-studio.catalog-studio-page.div.14" className="flex items-center gap-2">
+                {snapshot.validation.valid ? <CheckCircle2 id="catalog-studio.catalog-studio-page.check-circle2" className="h-6 w-6 text-emerald-600" /> : <AlertTriangle id="catalog-studio.catalog-studio-page.alert-triangle" className="h-6 w-6 text-red-600" />}
+                <h2 id="catalog-studio.catalog-studio-page.h2.2" className="font-bold">حالة المصدر الحالي</h2>
               </div>
-              <p className="mt-3 text-sm">{snapshot.validation.valid ? "جميع العقود والعلاقات والصور سليمة." : "توجد أخطاء يجب إصلاحها قبل أي حفظ."}</p>
+              <p id="catalog-studio.catalog-studio-page.p.2" className="mt-3 text-sm">{snapshot.validation.valid ? "جميع العقود والعلاقات والصور سليمة." : "توجد أخطاء يجب إصلاحها قبل أي حفظ."}</p>
               <pre className="mt-4 max-h-96 overflow-auto rounded-xl bg-slate-950 p-3 text-xs text-slate-100" dir="ltr">{snapshot.validation.output}</pre>
             </div>
-            <button
+            <button id="catalog-studio.catalog-studio-page.button"
               type="button"
               onClick={() => openFile(snapshot.files.find((file) => file.path === "manifest.json")!)}
               className="w-full rounded-2xl border bg-card p-5 text-start"
             >
-              <Database className="mb-2 h-6 w-6 text-primary" />
-              <span className="block font-bold">البيان الوصفي</span>
-              <span className="text-sm text-muted-foreground">الإصدار {snapshot.stats.catalogVersion}</span>
+              <Database id="catalog-studio.catalog-studio-page.database" className="mb-2 h-6 w-6 text-primary" />
+              <span id="catalog-studio.catalog-studio-page.span.3" className="block font-bold">البيان الوصفي</span>
+              <span id="catalog-studio.catalog-studio-page.span.4" className="text-sm text-muted-foreground">الإصدار {snapshot.stats.catalogVersion}</span>
             </button>
           </aside>
         </section>
       ) : null}
 
       {snapshot && groupSections[section] ? (
-        <section className="grid min-h-[72vh] gap-4 lg:grid-cols-[250px_minmax(0,1fr)_360px]">
-          <aside className="rounded-2xl border bg-card p-3">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-bold">الملفات</h2>
-              <span className="text-xs text-muted-foreground">{groupFiles.length}</span>
+        <section id="catalog-studio.catalog-studio-page.section.2" className="grid min-h-[72vh] gap-4 lg:grid-cols-[250px_minmax(0,1fr)_360px]">
+          <aside id="catalog-studio.catalog-studio-page.aside.2" className="rounded-2xl border bg-card p-3">
+            <div id="catalog-studio.catalog-studio-page.div.15" className="mb-3 flex items-center justify-between">
+              <h2 id="catalog-studio.catalog-studio-page.h2.3" className="font-bold">الملفات</h2>
+              <span id="catalog-studio.catalog-studio-page.span.5" className="text-xs text-muted-foreground">{groupFiles.length}</span>
             </div>
-            <div className="space-y-1">
+            <div id="catalog-studio.catalog-studio-page.div.16" className="space-y-1">
               {groupFiles.map((file) => (
                 <button
                   key={file.path}
@@ -655,14 +655,14 @@ export function CatalogStudioPage() {
             </div>
           </aside>
 
-          <div className="min-w-0 space-y-3">
-            <div className="rounded-2xl border bg-card p-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="font-mono text-sm" dir="ltr">{selectedFile?.path}</p>
-                  <p className="text-xs text-muted-foreground">{selectedFile?.itemCount ?? 0} عنصر {selectedFile?.readOnly ? "• مولد للقراءة فقط" : ""}</p>
+          <div id="catalog-studio.catalog-studio-page.div.17" className="min-w-0 space-y-3">
+            <div id="catalog-studio.catalog-studio-page.div.18" className="rounded-2xl border bg-card p-3">
+              <div id="catalog-studio.catalog-studio-page.div.19" className="flex flex-wrap items-center justify-between gap-3">
+                <div id="catalog-studio.catalog-studio-page.div.20">
+                  <p id="catalog-studio.catalog-studio-page.p.3" className="font-mono text-sm" dir="ltr">{selectedFile?.path}</p>
+                  <p id="catalog-studio.catalog-studio-page.p.4" className="text-xs text-muted-foreground">{selectedFile?.itemCount ?? 0} عنصر {selectedFile?.readOnly ? "• مولد للقراءة فقط" : ""}</p>
                 </div>
-                <div className="flex flex-wrap gap-1">
+                <div id="catalog-studio.catalog-studio-page.div.21" className="flex flex-wrap gap-1">
                   {(["structured", "raw", "relations", "diff"] as EditorMode[]).map((editorMode) => (
                     <button
                       key={editorMode}
@@ -675,36 +675,36 @@ export function CatalogStudioPage() {
                     </button>
                   ))}
                   {selectedFile && drafts[selectedFile.path] ? (
-                    <Button ui={{ uid: "catalog-studio.file-reset-9PaoUl", id: "catalog-studio.file-reset", kind: "action", action: "reset-file", part: "file-toolbar" }} size="sm" variant="ghost" onClick={resetFile}><RotateCcw className="me-1 h-4 w-4" />تراجع الملف</Button>
+                    <Button id="catalog-studio.catalog-studio-page.button.4" ui={{ uid: "catalog-studio.file-reset-9PaoUl", id: "catalog-studio.file-reset", kind: "action", action: "reset-file", part: "file-toolbar" }} size="sm" variant="ghost" onClick={resetFile}><RotateCcw id="catalog-studio.catalog-studio-page.rotate-ccw" className="me-1 h-4 w-4" />تراجع الملف</Button>
                   ) : null}
                 </div>
               </div>
             </div>
 
             {mode === "structured" && selectedFile?.itemKey ? (
-              <div className="overflow-hidden rounded-2xl border bg-card">
-                <div className="flex flex-wrap items-center gap-2 border-b p-3">
-                  <div className="relative min-w-56 flex-1">
-                    <Search className="absolute start-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="بحث بالاسم أو ID أو أي حقل" className="asol-input-decorated-start w-full rounded-lg border bg-background py-2 pe-3 text-sm" />
+              <div id="catalog-studio.catalog-studio-page.div.22" className="overflow-hidden rounded-2xl border bg-card">
+                <div id="catalog-studio.catalog-studio-page.div.23" className="flex flex-wrap items-center gap-2 border-b p-3">
+                  <div id="catalog-studio.catalog-studio-page.div.24" className="relative min-w-56 flex-1">
+                    <Search id="catalog-studio.catalog-studio-page.search" className="absolute start-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <input id="catalog-studio.catalog-studio-page.input" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="بحث بالاسم أو ID أو أي حقل" className="asol-input-decorated-start w-full rounded-lg border bg-background py-2 pe-3 text-sm" />
                   </div>
-                  <Button ui={{ uid: "catalog-studio.item-add-YYP3Sn", id: "catalog-studio.item-add", kind: "action", action: "add-item", part: "items-toolbar" }} size="sm" variant="outline" onClick={addItem}><Plus className="me-1 h-4 w-4" />إضافة</Button>
+                  <Button id="catalog-studio.catalog-studio-page.button.5" ui={{ uid: "catalog-studio.item-add-YYP3Sn", id: "catalog-studio.item-add", kind: "action", action: "add-item", part: "items-toolbar" }} size="sm" variant="outline" onClick={addItem}><Plus id="catalog-studio.catalog-studio-page.plus" className="me-1 h-4 w-4" />إضافة</Button>
                 </div>
-                <div className="max-h-[62vh] overflow-auto">
-                  <table className="w-full min-w-[850px] text-sm">
-                    <thead className="sticky top-0 z-10 bg-muted">
-                      <tr>
-                        <th className="w-10 p-2" />
-                        <th className="p-2 text-start">الترتيب</th>
-                        <th className="p-2 text-start">ID</th>
-                        <th className="p-2 text-start">العربي</th>
-                        <th className="p-2 text-start">الإنجليزية</th>
-                        <th className="p-2 text-center">مخفي</th>
-                        <th className="p-2 text-start">الصورة/العلاقة</th>
-                        <th className="p-2 text-center">إجراءات</th>
+                <div id="catalog-studio.catalog-studio-page.div.25" className="max-h-[62vh] overflow-auto">
+                  <table id="catalog-studio.catalog-studio-page.table" className="w-full min-w-[850px] text-sm">
+                    <thead id="catalog-studio.catalog-studio-page.thead" className="sticky top-0 z-10 bg-muted">
+                      <tr id="catalog-studio.catalog-studio-page.tr">
+                        <th id="catalog-studio.catalog-studio-page.th" className="w-10 p-2" />
+                        <th id="catalog-studio.catalog-studio-page.th.2" className="p-2 text-start">الترتيب</th>
+                        <th id="catalog-studio.catalog-studio-page.th.3" className="p-2 text-start">ID</th>
+                        <th id="catalog-studio.catalog-studio-page.th.4" className="p-2 text-start">العربي</th>
+                        <th id="catalog-studio.catalog-studio-page.th.5" className="p-2 text-start">الإنجليزية</th>
+                        <th id="catalog-studio.catalog-studio-page.th.6" className="p-2 text-center">مخفي</th>
+                        <th id="catalog-studio.catalog-studio-page.th.7" className="p-2 text-start">الصورة/العلاقة</th>
+                        <th id="catalog-studio.catalog-studio-page.th.8" className="p-2 text-center">إجراءات</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="catalog-studio.catalog-studio-page.tbody">
                       {filteredRows.map(({ item, index }) => {
                         const display = displayFor(item);
                         return (
@@ -744,18 +744,18 @@ export function CatalogStudioPage() {
             ) : null}
 
             {mode === "structured" && !selectedFile?.itemKey ? (
-              <textarea value={selectedContent} onChange={(event) => selectedFile && setFileContent(selectedFile.path, event.target.value)} readOnly={selectedFile?.readOnly} className="h-[65vh] w-full rounded-2xl border bg-slate-950 p-4 font-mono text-xs text-slate-100" dir="ltr" spellCheck={false} />
+              <textarea id="catalog-studio.catalog-studio-page.textarea" value={selectedContent} onChange={(event) => selectedFile && setFileContent(selectedFile.path, event.target.value)} readOnly={selectedFile?.readOnly} className="h-[65vh] w-full rounded-2xl border bg-slate-950 p-4 font-mono text-xs text-slate-100" dir="ltr" spellCheck={false} />
             ) : null}
 
             {mode === "raw" ? (
-              <textarea value={selectedContent} onChange={(event) => selectedFile && setFileContent(selectedFile.path, event.target.value)} readOnly={selectedFile?.readOnly} className="h-[68vh] w-full rounded-2xl border bg-slate-950 p-4 font-mono text-xs text-slate-100" dir="ltr" spellCheck={false} />
+              <textarea id="catalog-studio.catalog-studio-page.textarea.2" value={selectedContent} onChange={(event) => selectedFile && setFileContent(selectedFile.path, event.target.value)} readOnly={selectedFile?.readOnly} className="h-[68vh] w-full rounded-2xl border bg-slate-950 p-4 font-mono text-xs text-slate-100" dir="ltr" spellCheck={false} />
             ) : null}
 
             {mode === "relations" ? (
-              <div className="min-h-[50vh] rounded-2xl border bg-card p-5">
-                <h3 className="flex items-center gap-2 font-bold"><Link2 className="h-5 w-5" /> علاقات العنصر المحدد</h3>
-                <div className="mt-4 space-y-2">
-                  {itemRelations.length === 0 ? <p className="text-sm text-muted-foreground">لا توجد علاقات مسجلة لهذا العنصر.</p> : itemRelations.map((relation, index) => (
+              <div id="catalog-studio.catalog-studio-page.div.26" className="min-h-[50vh] rounded-2xl border bg-card p-5">
+                <h3 id="catalog-studio.catalog-studio-page.h3" className="flex items-center gap-2 font-bold"><Link2 id="catalog-studio.catalog-studio-page.link2" className="h-5 w-5" /> علاقات العنصر المحدد</h3>
+                <div id="catalog-studio.catalog-studio-page.div.27" className="mt-4 space-y-2">
+                  {itemRelations.length === 0 ? <p id="catalog-studio.catalog-studio-page.p.5" className="text-sm text-muted-foreground">لا توجد علاقات مسجلة لهذا العنصر.</p> : itemRelations.map((relation, index) => (
                     <div key={`${relation.from}:${relation.to}:${index}`} className="rounded-xl border p-3 text-sm">
                       <p className="font-semibold">{relation.label}</p>
                       <p className="mt-1 break-all font-mono text-xs" dir="ltr">{relation.from}</p>
@@ -768,37 +768,37 @@ export function CatalogStudioPage() {
             ) : null}
 
             {mode === "diff" ? (
-              <div className="grid gap-3 xl:grid-cols-2">
-                <div className="min-w-0"><p className="mb-2 text-sm font-bold">قبل</p><pre className="h-[64vh] overflow-auto rounded-2xl bg-slate-950 p-4 text-xs text-slate-100" dir="ltr">{selectedFile?.content}</pre></div>
-                <div className="min-w-0"><p className="mb-2 text-sm font-bold">المسودة</p><pre className="h-[64vh] overflow-auto rounded-2xl bg-slate-950 p-4 text-xs text-emerald-200" dir="ltr">{selectedContent}</pre></div>
+              <div id="catalog-studio.catalog-studio-page.div.28" className="grid gap-3 xl:grid-cols-2">
+                <div id="catalog-studio.catalog-studio-page.div.29" className="min-w-0"><p id="catalog-studio.catalog-studio-page.p.6" className="mb-2 text-sm font-bold">قبل</p><pre className="h-[64vh] overflow-auto rounded-2xl bg-slate-950 p-4 text-xs text-slate-100" dir="ltr">{selectedFile?.content}</pre></div>
+                <div id="catalog-studio.catalog-studio-page.div.30" className="min-w-0"><p id="catalog-studio.catalog-studio-page.p.7" className="mb-2 text-sm font-bold">المسودة</p><pre className="h-[64vh] overflow-auto rounded-2xl bg-slate-950 p-4 text-xs text-emerald-200" dir="ltr">{selectedContent}</pre></div>
               </div>
             ) : null}
           </div>
 
-          <aside className="min-w-0 rounded-2xl border bg-card p-4">
+          <aside id="catalog-studio.catalog-studio-page.aside.3" className="min-w-0 rounded-2xl border bg-card p-4">
             {currentItem && mode === "structured" ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between gap-2">
-                  <div><p className="text-xs text-muted-foreground">العنصر المحدد</p><p className="font-mono font-bold" dir="ltr">{identityFor(currentItem)}</p></div>
-                  <div className="flex gap-1">
-                    <Button ui={{ uid: "catalog-studio.item-clone-PRMqW9", id: "catalog-studio.item-clone", kind: "action", action: "clone-item", part: "item-toolbar" }} size="icon" variant="ghost" onClick={cloneItem} aria-label="نسخ"><Copy className="h-4 w-4" /></Button>
-                    <Button ui={{ uid: "catalog-studio.item-delete-CkDQ8f", id: "catalog-studio.item-delete", kind: "action", action: "delete-item", part: "item-toolbar" }} size="icon" variant="ghost" onClick={deleteItem} aria-label="إزالة من المسودة"><Trash2 className="h-4 w-4 text-red-600" /></Button>
+              <div id="catalog-studio.catalog-studio-page.div.31" className="space-y-4">
+                <div id="catalog-studio.catalog-studio-page.div.32" className="flex items-center justify-between gap-2">
+                  <div id="catalog-studio.catalog-studio-page.div.33"><p id="catalog-studio.catalog-studio-page.p.8" className="text-xs text-muted-foreground">العنصر المحدد</p><p id="catalog-studio.catalog-studio-page.p.9" className="font-mono font-bold" dir="ltr">{identityFor(currentItem)}</p></div>
+                  <div id="catalog-studio.catalog-studio-page.div.34" className="flex gap-1">
+                    <Button id="catalog-studio.catalog-studio-page.button.6" ui={{ uid: "catalog-studio.item-clone-PRMqW9", id: "catalog-studio.item-clone", kind: "action", action: "clone-item", part: "item-toolbar" }} size="icon" variant="ghost" onClick={cloneItem} aria-label="نسخ"><Copy id="catalog-studio.catalog-studio-page.copy" className="h-4 w-4" /></Button>
+                    <Button id="catalog-studio.catalog-studio-page.button.7" ui={{ uid: "catalog-studio.item-delete-CkDQ8f", id: "catalog-studio.item-delete", kind: "action", action: "delete-item", part: "item-toolbar" }} size="icon" variant="ghost" onClick={deleteItem} aria-label="إزالة من المسودة"><Trash2 id="catalog-studio.catalog-studio-page.trash2" className="h-4 w-4 text-red-600" /></Button>
                   </div>
                 </div>
                 {currentItem.name && typeof currentItem.name === "object" ? (
-                  <div className="grid gap-3">
-                    <label className="text-sm"><span className="mb-1 block font-semibold">الاسم العربي</span><input value={nameFor(currentItem, "ar")} onChange={(event) => updateName("ar", event.target.value)} className="w-full rounded-lg border bg-background px-3 py-2" /></label>
-                    <label className="text-sm"><span className="mb-1 block font-semibold">الاسم بالإنجليزية</span><input dir="ltr" value={nameFor(currentItem, "en")} onChange={(event) => updateName("en", event.target.value)} className="w-full rounded-lg border bg-background px-3 py-2" /></label>
+                  <div id="catalog-studio.catalog-studio-page.div.35" className="grid gap-3">
+                    <label id="catalog-studio.catalog-studio-page.label" className="text-sm"><span id="catalog-studio.catalog-studio-page.span.6" className="mb-1 block font-semibold">الاسم العربي</span><input id="catalog-studio.catalog-studio-page.input.2" value={nameFor(currentItem, "ar")} onChange={(event) => updateName("ar", event.target.value)} className="w-full rounded-lg border bg-background px-3 py-2" /></label>
+                    <label id="catalog-studio.catalog-studio-page.label.2" className="text-sm"><span id="catalog-studio.catalog-studio-page.span.7" className="mb-1 block font-semibold">الاسم بالإنجليزية</span><input id="catalog-studio.catalog-studio-page.input.3" dir="ltr" value={nameFor(currentItem, "en")} onChange={(event) => updateName("en", event.target.value)} className="w-full rounded-lg border bg-background px-3 py-2" /></label>
                   </div>
                 ) : null}
                 {displayFor(currentItem) ? (
-                  <div className="rounded-xl border p-3">
-                    <label className="text-sm"><span className="mb-1 block font-semibold">ترتيب الظهور</span><input type="number" min={1} value={Number(displayFor(currentItem)?.order ?? 10)} onChange={(event) => updateDisplay("order", Math.max(1, Number(event.target.value)))} className="w-full rounded-lg border bg-background px-3 py-2" /></label>
-                    <div className="mt-3 flex items-center justify-between"><span className="text-sm font-semibold">إخفاء عالمي</span><Switch ui={{ uid: "catalog-studio.item-hidden-Lu1nsK", id: "catalog-studio.item-hidden", kind: "field", action: "toggle-hidden", part: "display" }} checked={displayFor(currentItem)?.hidden === true} onCheckedChange={(checked) => updateDisplay("hidden", checked)} /></div>
-                    {displayFor(currentItem)?.hidden === true ? <p className="mt-2 text-xs text-amber-700">سيُخفى العنصر وأبناؤه من جميع أجزاء المشروع.</p> : null}
+                  <div id="catalog-studio.catalog-studio-page.div.36" className="rounded-xl border p-3">
+                    <label id="catalog-studio.catalog-studio-page.label.3" className="text-sm"><span id="catalog-studio.catalog-studio-page.span.8" className="mb-1 block font-semibold">ترتيب الظهور</span><input id="catalog-studio.catalog-studio-page.input.4" type="number" min={1} value={Number(displayFor(currentItem)?.order ?? 10)} onChange={(event) => updateDisplay("order", Math.max(1, Number(event.target.value)))} className="w-full rounded-lg border bg-background px-3 py-2" /></label>
+                    <div id="catalog-studio.catalog-studio-page.div.37" className="mt-3 flex items-center justify-between"><span id="catalog-studio.catalog-studio-page.span.9" className="text-sm font-semibold">إخفاء عالمي</span><Switch id="catalog-studio.catalog-studio-page.switch" ui={{ uid: "catalog-studio.item-hidden-Lu1nsK", id: "catalog-studio.item-hidden", kind: "field", action: "toggle-hidden", part: "display" }} checked={displayFor(currentItem)?.hidden === true} onCheckedChange={(checked) => updateDisplay("hidden", checked)} /></div>
+                    {displayFor(currentItem)?.hidden === true ? <p id="catalog-studio.catalog-studio-page.p.10" className="mt-2 text-xs text-amber-700">سيُخفى العنصر وأبناؤه من جميع أجزاء المشروع.</p> : null}
                   </div>
                 ) : null}
-                <div className="grid gap-3">
+                <div id="catalog-studio.catalog-studio-page.div.38" className="grid gap-3">
                   {primitiveKeys.filter((key) => key in currentItem).map((key) => {
                     const value = currentItem[key];
                     if (typeof value === "boolean") {
@@ -808,36 +808,36 @@ export function CatalogStudioPage() {
                     return <label key={key} className="text-sm"><span className="mb-1 block font-mono text-xs" dir="ltr">{key}</span><input dir="ltr" value={value === null ? "" : String(value ?? "")} onChange={(event) => updatePrimitive(key, event.target.value)} className="w-full rounded-lg border bg-background px-3 py-2 text-sm" /></label>;
                   })}
                 </div>
-                <div>
-                  <div className="mb-2 flex items-center justify-between"><span className="text-sm font-bold">JSON العنصر</span><Button ui={{ uid: "catalog-studio.item-json-apply-Ib5jF8", id: "catalog-studio.item-json-apply", kind: "action", action: "apply-item-json", part: "json" }} size="sm" variant="outline" onClick={applyItemJson}><Braces className="me-1 h-4 w-4" />تطبيق</Button></div>
-                  <textarea value={itemJson} onChange={(event) => setItemJson(event.target.value)} className="h-64 w-full rounded-xl bg-slate-950 p-3 font-mono text-xs text-slate-100" dir="ltr" spellCheck={false} />
-                  {itemJsonError ? <p className="mt-1 text-xs text-red-600">{itemJsonError}</p> : null}
+                <div id="catalog-studio.catalog-studio-page.div.39">
+                  <div id="catalog-studio.catalog-studio-page.div.40" className="mb-2 flex items-center justify-between"><span id="catalog-studio.catalog-studio-page.span.10" className="text-sm font-bold">JSON العنصر</span><Button id="catalog-studio.catalog-studio-page.button.8" ui={{ uid: "catalog-studio.item-json-apply-Ib5jF8", id: "catalog-studio.item-json-apply", kind: "action", action: "apply-item-json", part: "json" }} size="sm" variant="outline" onClick={applyItemJson}><Braces id="catalog-studio.catalog-studio-page.braces" className="me-1 h-4 w-4" />تطبيق</Button></div>
+                  <textarea id="catalog-studio.catalog-studio-page.textarea.3" value={itemJson} onChange={(event) => setItemJson(event.target.value)} className="h-64 w-full rounded-xl bg-slate-950 p-3 font-mono text-xs text-slate-100" dir="ltr" spellCheck={false} />
+                  {itemJsonError ? <p id="catalog-studio.catalog-studio-page.p.11" className="mt-1 text-xs text-red-600">{itemJsonError}</p> : null}
                 </div>
               </div>
             ) : (
-              <div className="flex min-h-48 flex-col items-center justify-center text-center text-muted-foreground"><Braces className="mb-3 h-10 w-10" /><p className="text-sm">اختر عنصرًا من العرض المنظم لفتح المحرر.</p></div>
+              <div id="catalog-studio.catalog-studio-page.div.41" className="flex min-h-48 flex-col items-center justify-center text-center text-muted-foreground"><Braces id="catalog-studio.catalog-studio-page.braces.2" className="mb-3 h-10 w-10" /><p id="catalog-studio.catalog-studio-page.p.12" className="text-sm">اختر عنصرًا من العرض المنظم لفتح المحرر.</p></div>
             )}
           </aside>
         </section>
       ) : null}
 
       {snapshot && section === "assets" ? (
-        <section className="space-y-4">
-          <div className="grid gap-4 rounded-2xl border bg-card p-4 xl:grid-cols-[1fr_auto_auto_auto]">
-            <div className="relative"><Search className="absolute start-3 top-2.5 h-4 w-4 text-muted-foreground" /><input value={imageSearch} onChange={(event) => setImageSearch(event.target.value)} placeholder="بحث في مسار الصورة" className="asol-input-decorated-start w-full rounded-lg border bg-background py-2 pe-3" /></div>
-            <select value={imageRootFilter} onChange={(event) => setImageRootFilter(event.target.value as typeof imageRootFilter)} className="rounded-lg border bg-background px-3 py-2"><option value="all">كل المجلدات</option>{Object.entries(imageRootLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select>
-            <label className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm"><Switch ui={{ uid: "catalog-studio.images-only-unreferenced-A1Y1y1", id: "catalog-studio.images-only-unreferenced", kind: "field", action: "toggle-unreferenced-filter", part: "filter" }} checked={onlyUnreferenced} onCheckedChange={setOnlyUnreferenced} /> غير المستخدمة فقط</label>
-            <span className="self-center text-sm text-muted-foreground">{filteredImages.length} صورة</span>
+        <section id="catalog-studio.catalog-studio-page.section.3" className="space-y-4">
+          <div id="catalog-studio.catalog-studio-page.div.42" className="grid gap-4 rounded-2xl border bg-card p-4 xl:grid-cols-[1fr_auto_auto_auto]">
+            <div id="catalog-studio.catalog-studio-page.div.43" className="relative"><Search id="catalog-studio.catalog-studio-page.search.2" className="absolute start-3 top-2.5 h-4 w-4 text-muted-foreground" /><input id="catalog-studio.catalog-studio-page.input.5" value={imageSearch} onChange={(event) => setImageSearch(event.target.value)} placeholder="بحث في مسار الصورة" className="asol-input-decorated-start w-full rounded-lg border bg-background py-2 pe-3" /></div>
+            <select id="catalog-studio.catalog-studio-page.select" value={imageRootFilter} onChange={(event) => setImageRootFilter(event.target.value as typeof imageRootFilter)} className="rounded-lg border bg-background px-3 py-2"><option value="all">كل المجلدات</option>{Object.entries(imageRootLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select>
+            <label id="catalog-studio.catalog-studio-page.label.4" className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm"><Switch id="catalog-studio.catalog-studio-page.switch.2" ui={{ uid: "catalog-studio.images-only-unreferenced-A1Y1y1", id: "catalog-studio.images-only-unreferenced", kind: "field", action: "toggle-unreferenced-filter", part: "filter" }} checked={onlyUnreferenced} onCheckedChange={setOnlyUnreferenced} /> غير المستخدمة فقط</label>
+            <span id="catalog-studio.catalog-studio-page.span.11" className="self-center text-sm text-muted-foreground">{filteredImages.length} صورة</span>
           </div>
-          <div className="grid gap-4 xl:grid-cols-[380px_1fr]">
-            <aside className="space-y-3 rounded-2xl border bg-card p-4">
-              <h2 className="flex items-center gap-2 font-bold"><Upload className="h-5 w-5" /> رفع أو استبدال صورة</h2>
-              <select value={uploadRoot} onChange={(event) => setUploadRoot(event.target.value as CatalogStudioImageRoot)} className="w-full rounded-lg border bg-background px-3 py-2">{Object.entries(imageRootLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select>
-              <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)} className="block w-full rounded-lg border p-2 text-sm" />
-              <label className="flex items-center justify-between rounded-lg border p-3 text-sm"><span>استبدال إذا كان الاسم موجودًا</span><Switch ui={{ uid: "catalog-studio.image-replace-IBoE28", id: "catalog-studio.image-replace", kind: "field", action: "toggle-replace-image", part: "upload" }} checked={replaceImage} onCheckedChange={setReplaceImage} /></label>
-              <p className="text-xs text-muted-foreground">حد أقصى 10 MB. يتم فحص توقيع PNG/JPG/WEBP. عند الاستبدال تُنشأ نسخة استعادة خارج public.</p>
+          <div id="catalog-studio.catalog-studio-page.div.44" className="grid gap-4 xl:grid-cols-[380px_1fr]">
+            <aside id="catalog-studio.catalog-studio-page.aside.4" className="space-y-3 rounded-2xl border bg-card p-4">
+              <h2 id="catalog-studio.catalog-studio-page.h2.4" className="flex items-center gap-2 font-bold"><Upload id="catalog-studio.catalog-studio-page.upload" className="h-5 w-5" /> رفع أو استبدال صورة</h2>
+              <select id="catalog-studio.catalog-studio-page.select.2" value={uploadRoot} onChange={(event) => setUploadRoot(event.target.value as CatalogStudioImageRoot)} className="w-full rounded-lg border bg-background px-3 py-2">{Object.entries(imageRootLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select>
+              <input id="catalog-studio.catalog-studio-page.input.6" type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)} className="block w-full rounded-lg border p-2 text-sm" />
+              <label id="catalog-studio.catalog-studio-page.label.5" className="flex items-center justify-between rounded-lg border p-3 text-sm"><span id="catalog-studio.catalog-studio-page.span.12">استبدال إذا كان الاسم موجودًا</span><Switch id="catalog-studio.catalog-studio-page.switch.3" ui={{ uid: "catalog-studio.image-replace-IBoE28", id: "catalog-studio.image-replace", kind: "field", action: "toggle-replace-image", part: "upload" }} checked={replaceImage} onCheckedChange={setReplaceImage} /></label>
+              <p id="catalog-studio.catalog-studio-page.p.13" className="text-xs text-muted-foreground">حد أقصى 10 MB. يتم فحص توقيع PNG/JPG/WEBP. عند الاستبدال تُنشأ نسخة استعادة خارج public.</p>
             </aside>
-            <div className="grid max-h-[72vh] gap-3 overflow-auto sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            <div id="catalog-studio.catalog-studio-page.div.45" className="grid max-h-[72vh] gap-3 overflow-auto sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {filteredImages.map((image) => (
                 <article key={image.path} className="overflow-hidden rounded-2xl border bg-card">
                   <div className="aspect-[4/3] bg-surface-bright bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url("${image.publicUrl.replaceAll('"', "%22")}")` }} />
@@ -856,11 +856,11 @@ export function CatalogStudioPage() {
       ) : null}
 
       {snapshot && section === "audit" ? (
-        <section className="grid gap-4 xl:grid-cols-[1fr_460px]">
-          <div className="rounded-2xl border bg-card p-5">
-            <div className="flex items-center gap-2"><History className="h-5 w-5" /><h2 className="font-bold">سجل عمليات الملفات والصور</h2></div>
-            <div className="mt-4 space-y-3">
-              {snapshot.audit.length === 0 ? <p className="text-sm text-muted-foreground">لا توجد عمليات محفوظة بعد.</p> : snapshot.audit.map((entry, index) => (
+        <section id="catalog-studio.catalog-studio-page.section.4" className="grid gap-4 xl:grid-cols-[1fr_460px]">
+          <div id="catalog-studio.catalog-studio-page.div.46" className="rounded-2xl border bg-card p-5">
+            <div id="catalog-studio.catalog-studio-page.div.47" className="flex items-center gap-2"><History id="catalog-studio.catalog-studio-page.history" className="h-5 w-5" /><h2 id="catalog-studio.catalog-studio-page.h2.5" className="font-bold">سجل عمليات الملفات والصور</h2></div>
+            <div id="catalog-studio.catalog-studio-page.div.48" className="mt-4 space-y-3">
+              {snapshot.audit.length === 0 ? <p id="catalog-studio.catalog-studio-page.p.14" className="text-sm text-muted-foreground">لا توجد عمليات محفوظة بعد.</p> : snapshot.audit.map((entry, index) => (
                 <div key={`${entry.at}:${index}`} className="rounded-xl border p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2"><span className="font-mono text-xs">{entry.action}</span><time className="text-xs text-muted-foreground">{formatDateTimeDefault(entry.at)}</time></div>
                   <p className="mt-2 text-sm">{entry.details}</p>
@@ -870,19 +870,19 @@ export function CatalogStudioPage() {
               ))}
             </div>
           </div>
-          <aside className="space-y-4">
-            <div className="rounded-2xl border bg-card p-5">
-              <div className="flex items-center gap-2">{snapshot.validation.valid ? <CheckCircle2 className="h-5 w-5 text-emerald-600" /> : <ShieldAlert className="h-5 w-5 text-red-600" />}<h2 className="font-bold">التحقق الحالي</h2></div>
+          <aside id="catalog-studio.catalog-studio-page.aside.5" className="space-y-4">
+            <div id="catalog-studio.catalog-studio-page.div.49" className="rounded-2xl border bg-card p-5">
+              <div id="catalog-studio.catalog-studio-page.div.50" className="flex items-center gap-2">{snapshot.validation.valid ? <CheckCircle2 id="catalog-studio.catalog-studio-page.check-circle2.2" className="h-5 w-5 text-emerald-600" /> : <ShieldAlert id="catalog-studio.catalog-studio-page.shield-alert" className="h-5 w-5 text-red-600" />}<h2 id="catalog-studio.catalog-studio-page.h2.6" className="font-bold">التحقق الحالي</h2></div>
               <pre className="mt-4 max-h-[48vh] overflow-auto rounded-xl bg-slate-950 p-3 text-xs text-slate-100" dir="ltr">{validation?.output ?? snapshot.validation.output}</pre>
             </div>
-            <div className="rounded-2xl border bg-card p-5">
-              <h3 className="font-bold">حماية الكتابة</h3>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                <li>• كشف تغيير الملف خارجيًا باستخدام SHA-256.</li>
-                <li>• تحقق كامل على نسخة staging.</li>
-                <li>• نسخة احتياطية كاملة للملفات المتغيرة.</li>
-                <li>• rollback تلقائي عند فشل الكتابة أو التحقق اللاحق.</li>
-                <li>• استعادة transaction من journal بعد انقطاع العملية.</li>
+            <div id="catalog-studio.catalog-studio-page.div.51" className="rounded-2xl border bg-card p-5">
+              <h3 id="catalog-studio.catalog-studio-page.h3.2" className="font-bold">حماية الكتابة</h3>
+              <ul id="catalog-studio.catalog-studio-page.ul" className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <li id="catalog-studio.catalog-studio-page.li">• كشف تغيير الملف خارجيًا باستخدام SHA-256.</li>
+                <li id="catalog-studio.catalog-studio-page.li.2">• تحقق كامل على نسخة staging.</li>
+                <li id="catalog-studio.catalog-studio-page.li.3">• نسخة احتياطية كاملة للملفات المتغيرة.</li>
+                <li id="catalog-studio.catalog-studio-page.li.4">• rollback تلقائي عند فشل الكتابة أو التحقق اللاحق.</li>
+                <li id="catalog-studio.catalog-studio-page.li.5">• استعادة transaction من journal بعد انقطاع العملية.</li>
               </ul>
             </div>
           </aside>
@@ -890,9 +890,9 @@ export function CatalogStudioPage() {
       ) : null}
 
       {changedFiles.length > 0 ? (
-        <div className="sticky bottom-3 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50/95 p-3 shadow-xl backdrop-blur dark:border-amber-900 dark:bg-amber-950/90">
-          <div className="flex items-center gap-2 text-sm text-amber-900 dark:text-amber-100"><AlertTriangle className="h-5 w-5" /><span>{changedFiles.length} ملفًا في المسودة ولم تُكتب على المصدر بعد.</span></div>
-          <div className="flex gap-2"><Button ui={{ uid: "catalog-studio.drafts-clear-Q8l5Jq", id: "catalog-studio.drafts-clear", kind: "action", action: "clear-drafts", part: "drafts" }} variant="outline" size="sm" onClick={() => setDrafts({})}><CircleOff className="me-1 h-4 w-4" />مسح المسودة</Button></div>
+        <div id="catalog-studio.catalog-studio-page.div.52" className="sticky bottom-3 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50/95 p-3 shadow-xl backdrop-blur dark:border-amber-900 dark:bg-amber-950/90">
+          <div id="catalog-studio.catalog-studio-page.div.53" className="flex items-center gap-2 text-sm text-amber-900 dark:text-amber-100"><AlertTriangle id="catalog-studio.catalog-studio-page.alert-triangle.2" className="h-5 w-5" /><span id="catalog-studio.catalog-studio-page.span.13">{changedFiles.length} ملفًا في المسودة ولم تُكتب على المصدر بعد.</span></div>
+          <div id="catalog-studio.catalog-studio-page.div.54" className="flex gap-2"><Button id="catalog-studio.catalog-studio-page.button.9" ui={{ uid: "catalog-studio.drafts-clear-Q8l5Jq", id: "catalog-studio.drafts-clear", kind: "action", action: "clear-drafts", part: "drafts" }} variant="outline" size="sm" onClick={() => setDrafts({})}><CircleOff id="catalog-studio.catalog-studio-page.circle-off" className="me-1 h-4 w-4" />مسح المسودة</Button></div>
         </div>
       ) : null}
     </main>

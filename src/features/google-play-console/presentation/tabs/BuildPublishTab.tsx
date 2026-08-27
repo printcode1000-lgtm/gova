@@ -11,7 +11,7 @@ export function BuildPublishTab() {
   const jobs = useReleaseJobs();
   const locked = jobs.locked;
   return (
-    <section className="space-y-5">
+    <section id="google-play-console.tabs.build-publish-tab.section" className="space-y-5">
       <ReleaseCommandConfirmDialog
         pending={jobs.pending}
         catalog={jobs.catalog}
@@ -21,7 +21,7 @@ export function BuildPublishTab() {
         onConfirm={(overrides) => void jobs.confirmStart(overrides)}
         onCancel={jobs.dismissStart}
       />
-      <ReleaseJobStopDialog
+      <ReleaseJobStopDialog id="google-play-console.tabs.build-publish-tab.release-job-stop-dialog"
         job={jobs.pendingCancel}
         t={t}
         onConfirm={() => void jobs.confirmCancel()}

@@ -56843,6 +56843,11 @@
     },
     {
       "from": "command:ui-registry:apply-pending",
+      "to": "environment-key:NODE_ENV",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "command:ui-registry:apply-pending",
       "to": "environment-key:NODE_OPTIONS",
       "kind": "uses-environment"
     },

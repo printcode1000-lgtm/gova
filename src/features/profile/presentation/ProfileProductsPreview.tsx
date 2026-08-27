@@ -35,7 +35,7 @@ export function ProfileProductsPreview({ uid }: ProfileProductsPreviewProps) {
   if (!uid) return null;
 
   return (
-    <ProfileProductsTabs
+    <ProfileProductsTabs id="profile.profile-products-preview.profile-products-tabs"
       ownerUid={uid}
       mode="preview"
       tabs={productsTabs.tabs}

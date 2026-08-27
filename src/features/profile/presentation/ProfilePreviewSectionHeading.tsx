@@ -3,7 +3,7 @@
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export function ProfilePreviewSectionHeading({
+export function ProfilePreviewSectionHeading({ id,
   icon,
   title,
   hint,
@@ -11,9 +11,9 @@ export function ProfilePreviewSectionHeading({
   icon: IconDefinition;
   title: string;
   hint: string;
-}) {
+} & { id?: string }) {
   return (
-    <div className="mb-5 flex items-center gap-3">
+    <div id={id} className="mb-5 flex items-center gap-3">
       <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-xl text-primary">
         <FontAwesomeIcon icon={icon} />
       </span>

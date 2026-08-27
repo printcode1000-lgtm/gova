@@ -15,7 +15,7 @@ export function ProductMainDataStyleEditor({
   onChange,
 }: ProductMainDataStyleEditorProps) {
   return (
-    <ProductStyleCard
+    <ProductStyleCard id="product.style-editors.main-data.product-main-data-style-editor.product-style-card"
       title="البيانات الرئيسية"
       visible={value.visible}
       order={value.order}
@@ -23,12 +23,12 @@ export function ProductMainDataStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div className="grid gap-2">
-        <OptionCheckbox label="الاسم" checked={value.name} disabled={disabled} onChange={(name) => onChange({ ...value, name })} />
-        <OptionCheckbox label="العلامة التجارية" checked={value.brand} disabled={disabled} onChange={(brand) => onChange({ ...value, brand })} />
-        <OptionCheckbox label="الشركة المصنعة" checked={value.manufacturer} disabled={disabled} onChange={(manufacturer) => onChange({ ...value, manufacturer })} />
-        <OptionCheckbox label="متوفر" checked={value.available} disabled={disabled} onChange={(available) => onChange({ ...value, available })} />
-        <OptionCheckbox label="وصف" checked={value.description} disabled={disabled} onChange={(description) => onChange({ ...value, description })} />
+      <div id="product.style-editors.main-data.product-main-data-style-editor.div" className="grid gap-2">
+        <OptionCheckbox id="product.style-editors.main-data.product-main-data-style-editor.option-checkbox" label="الاسم" checked={value.name} disabled={disabled} onChange={(name) => onChange({ ...value, name })} />
+        <OptionCheckbox id="product.style-editors.main-data.product-main-data-style-editor.option-checkbox.2" label="العلامة التجارية" checked={value.brand} disabled={disabled} onChange={(brand) => onChange({ ...value, brand })} />
+        <OptionCheckbox id="product.style-editors.main-data.product-main-data-style-editor.option-checkbox.3" label="الشركة المصنعة" checked={value.manufacturer} disabled={disabled} onChange={(manufacturer) => onChange({ ...value, manufacturer })} />
+        <OptionCheckbox id="product.style-editors.main-data.product-main-data-style-editor.option-checkbox.4" label="متوفر" checked={value.available} disabled={disabled} onChange={(available) => onChange({ ...value, available })} />
+        <OptionCheckbox id="product.style-editors.main-data.product-main-data-style-editor.option-checkbox.5" label="وصف" checked={value.description} disabled={disabled} onChange={(description) => onChange({ ...value, description })} />
       </div>
     </ProductStyleCard>
   );

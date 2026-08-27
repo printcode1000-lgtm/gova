@@ -6,7 +6,11 @@ import type { ReactNode } from "react";
 import { resolveUiPage, uiPageAttributes } from "@asol/ui-registry-core";
 
 /** Supplies the page identity for routes intentionally rendered without AppShell. */
-export function UiPageBoundary({ children }: { children: ReactNode }) {
+export function UiPageBoundary({ children, id }: { children: ReactNode; id?: string }) {
   const page = resolveUiPage(usePathname());
-  return <div {...uiPageAttributes(page)}>{children}</div>;
+  return (
+    <div id={id} {...uiPageAttributes(page)}>
+      {children}
+    </div>
+  );
 }

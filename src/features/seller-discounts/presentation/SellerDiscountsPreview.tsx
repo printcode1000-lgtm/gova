@@ -31,30 +31,30 @@ export function SellerDiscountsPreview({
   const visible = discounts.filter((discount) => discount.status === "active");
   if (isLoading) {
     return (
-      <section className="rounded-3xl border border-outline-variant/70 bg-surface p-4 text-sm text-on-surface-variant shadow-sm">
+      <section id="seller-discounts.seller-discounts-preview.section" className="rounded-3xl border border-outline-variant/70 bg-surface p-4 text-sm text-on-surface-variant shadow-sm">
         {ar ? "جاري تحميل عروض المتجر..." : "Loading store offers..."}
       </section>
     );
   }
   if (visible.length === 0) return null;
   return (
-    <section className="rounded-3xl border border-primary/20 bg-surface p-4 shadow-sm sm:p-6">
-      <div className="mb-4 flex items-center gap-3">
-        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-          <Percent className="h-5 w-5" />
+    <section id="seller-discounts.seller-discounts-preview.section.2" className="rounded-3xl border border-primary/20 bg-surface p-4 shadow-sm sm:p-6">
+      <div id="seller-discounts.seller-discounts-preview.div" className="mb-4 flex items-center gap-3">
+        <span id="seller-discounts.seller-discounts-preview.span" className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <Percent id="seller-discounts.seller-discounts-preview.percent" className="h-5 w-5" />
         </span>
-        <div>
-          <h2 className="text-lg font-bold">
+        <div id="seller-discounts.seller-discounts-preview.div.2">
+          <h2 id="seller-discounts.seller-discounts-preview.h2" className="text-lg font-bold">
             {ar ? "عروض وخصومات المتجر" : "Store offers"}
           </h2>
-          <p className="text-xs text-on-surface-variant">
+          <p id="seller-discounts.seller-discounts-preview.p" className="text-xs text-on-surface-variant">
             {ar
               ? "العروض المؤهلة تطبق في السلة حسب شروط كل بائع."
               : "Eligible offers apply in cart according to seller rules."}
           </p>
         </div>
       </div>
-      <div className="grid gap-3 md:grid-cols-2">
+      <div id="seller-discounts.seller-discounts-preview.div.3" className="grid gap-3 md:grid-cols-2">
         {visible.map((discount) => (
           <OfferCard key={discount.id} discount={discount} locale={locale} />
         ))}
@@ -63,13 +63,13 @@ export function SellerDiscountsPreview({
   );
 }
 
-function OfferCard({
+function OfferCard({ id,
   discount,
   locale,
 }: {
   discount: SellerDiscountRule;
   locale: "ar" | "en";
-}) {
+} & { id?: string }) {
   const ar = locale === "ar";
   const Icon =
     discount.type === "free_shipping"
@@ -82,7 +82,7 @@ function OfferCard({
             ? PackagePlus
             : Percent;
   return (
-    <article className="rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3 sm:p-4">
+    <article id={id} className="rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3 sm:p-4">
       <div className="flex items-start gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
           <Icon className="h-5 w-5" />
@@ -116,15 +116,15 @@ function OfferCard({
   );
 }
 
-function Detail({
+function Detail({ id,
   icon: Icon,
   text,
 }: {
   icon: typeof Users;
   text: string;
-}) {
+} & { id?: string }) {
   return (
-    <span className="flex items-start gap-1.5 rounded-lg bg-surface px-2 py-1.5">
+    <span id={id} className="flex items-start gap-1.5 rounded-lg bg-surface px-2 py-1.5">
       <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
       <span>{text}</span>
     </span>

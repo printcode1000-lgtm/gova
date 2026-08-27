@@ -10,6 +10,7 @@ interface ToggleSwitchProps {
   disabled?: boolean;
   /** Registered UiRegistry descriptor for this instance, from the caller. */
   ui?: UiDescriptor;
+  id?: string;
 }
 
 export function ToggleSwitch({
@@ -18,9 +19,11 @@ export function ToggleSwitch({
   label,
   disabled = false,
   ui,
-}: ToggleSwitchProps) {
+  id,
+}: ToggleSwitchProps & { id?: string }) {
   return (
     <Switch
+      id={id}
       ui={ui}
       checked={checked}
       onCheckedChange={onChange}

@@ -34,12 +34,12 @@ function previewOrUndefined(derive: () => string): string | undefined {
   }
 }
 
-export function ReleaseCurrentVersions({ versions, t }: {
+export function ReleaseCurrentVersions({ id, versions, t }: {
   versions: ReleaseVersionSnapshot;
   t: (key: string) => string;
-}) {
+} & { id?: string }) {
   const unavailable = t("releaseConsole.confirmRun.versionUnavailable");
-  return <section className="space-y-2" aria-label={t("releaseConsole.confirmRun.versionSummaryTitle")}>
+  return <section id={id} className="space-y-2" aria-label={t("releaseConsole.confirmRun.versionSummaryTitle")}>
     <h3 className="font-semibold">{t("releaseConsole.confirmRun.versionSummaryTitle")}</h3>
     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
       <VersionCard label={t("releaseConsole.confirmRun.currentAndroidProductionVersion")}
@@ -69,12 +69,12 @@ export function ReleaseCurrentVersions({ versions, t }: {
   </section>;
 }
 
-export function ReleaseSelectedVersions({ commandId, versions, parameters, t }: {
+export function ReleaseSelectedVersions({ id, commandId, versions, parameters, t }: {
   commandId: string;
   versions: ReleaseVersionSnapshot;
   parameters: Record<string, unknown>;
   t: (key: string) => string;
-}) {
+} & { id?: string }) {
   const target = targetNativeVersion(versions, parameters);
   const production = versions.androidProduction;
   const selected = [
@@ -103,7 +103,7 @@ export function ReleaseSelectedVersions({ commandId, versions, parameters, t }: 
       : null,
   ].filter((item): item is [string, string] => Boolean(item?.[1]));
   if (selected.length === 0) return null;
-  return <section className="space-y-2" aria-label={t("releaseConsole.confirmRun.planSummaryTitle")}>
+  return <section id={id} className="space-y-2" aria-label={t("releaseConsole.confirmRun.planSummaryTitle")}>
     <h3 className="font-semibold">{t("releaseConsole.confirmRun.planSummaryTitle")}</h3>
     <div className="grid gap-2 sm:grid-cols-2">
       {selected.map(([label, version]) => (
@@ -114,12 +114,12 @@ export function ReleaseSelectedVersions({ commandId, versions, parameters, t }: 
   </section>;
 }
 
-function VersionCard({ label, value, emphasized = false }: {
+function VersionCard({ id, label, value, emphasized = false }: {
   label: string;
   value: string;
   emphasized?: boolean;
-}) {
-  return <div role="status" className={`rounded-lg border p-3 ${emphasized
+} & { id?: string }) {
+  return <div id={id} role="status" className={`rounded-lg border p-3 ${emphasized
     ? "border-primary bg-primary/10"
     : "bg-muted/40"}`}>
     <p className="text-xs leading-5 text-on-surface-variant">{label}</p>

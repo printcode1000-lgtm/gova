@@ -99,15 +99,15 @@ export function LoginSuccessToast() {
       : t("auth.login.successMessage");
 
   return (
-    <div
+    <div id="auth.login-success-toast.div"
       role="status"
       aria-live="polite"
       className="fixed left-1/2 top-1/2 z-[80] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 items-start gap-3 rounded-lg border border-success/30 bg-surface px-4 py-3 text-on-surface shadow-lg"
     >
-      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" />
-      <div className="min-w-0">
-        <p className="text-sm font-bold">{title}</p>
-        <p className="text-xs">{message}</p>
+      <CheckCircle2 id="auth.login-success-toast.check-circle2" className="mt-0.5 h-5 w-5 shrink-0 text-success" />
+      <div id="auth.login-success-toast.div.2" className="min-w-0">
+        <p id="auth.login-success-toast.p" className="text-sm font-bold">{title}</p>
+        <p id="auth.login-success-toast.p.2" className="text-xs">{message}</p>
       </div>
     </div>
   );

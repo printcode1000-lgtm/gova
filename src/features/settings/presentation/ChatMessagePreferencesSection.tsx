@@ -13,8 +13,8 @@ export function ChatMessagePreferencesSection({
   state: NotificationDeviceSettingsCardState;
 }) {
   return (
-    <div className="grid gap-3">
-      <SettingsToggleRow
+    <div id="settings.chat-message-preferences-section.div" className="grid gap-3">
+      <SettingsToggleRow id="settings.chat-message-preferences-section.settings-toggle-row"
         title={state.t("notifications.deviceCard.specialtyRequestsTitle")}
         description={state.t(
           "notifications.deviceCard.specialtyRequestsDescription",
@@ -23,7 +23,7 @@ export function ChatMessagePreferencesSection({
         disabled={!state.preferencesAvailable || state.specialtyPreferenceBusy}
         onChange={(enabled) => void state.updateSpecialtyRequests(enabled)}
       />
-      <SettingsToggleRow
+      <SettingsToggleRow id="settings.chat-message-preferences-section.settings-toggle-row.2"
         title={state.t("notifications.deviceCard.productConversationsTitle")}
         description={state.t(
           "notifications.deviceCard.productConversationsDescription",
@@ -33,7 +33,7 @@ export function ChatMessagePreferencesSection({
         onChange={(enabled) => void state.updateProductConversations(enabled)}
       />
       {state.preferencesAvailable ? null : (
-        <p className="rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
+        <p id="settings.chat-message-preferences-section.p" className="rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
           {state.t("notifications.deviceCard.chatPreferencesUnavailable")}
         </p>
       )}

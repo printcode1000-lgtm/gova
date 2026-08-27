@@ -11,12 +11,12 @@ interface RouteErrorFallbackProps {
   route: string;
 }
 
-export function RouteErrorFallback({
+export function RouteErrorFallback({ id,
   error,
   reset,
   feature,
   route,
-}: RouteErrorFallbackProps) {
+}: RouteErrorFallbackProps & { id?: string }) {
   useEffect(() => {
     const enriched = new Error(
       error.digest ? `${error.message} (digest: ${error.digest})` : error.message,
@@ -32,7 +32,7 @@ export function RouteErrorFallback({
   }, [error, feature, route]);
 
   return (
-    <main className="container mx-auto max-w-lg px-4 py-12 text-center" dir="rtl">
+    <main id={id} className="container mx-auto max-w-lg px-4 py-12 text-center" dir="rtl">
       <h1 className="text-xl font-bold text-error">حدث خطأ في الصفحة</h1>
       <p className="mt-2 text-sm text-on-surface-variant">
         تم التقاط تفاصيل الخطأ. يمكنك إعادة محاولة فتح الصفحة.

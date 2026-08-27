@@ -9,8 +9,8 @@ function RegistrationFallback() {
   const { t } = useTranslation();
 
   return (
-    <div className="auth-page flex items-center justify-center">
-      <div className="text-base text-on-surface-variant">{t('auth.registration.loading')}</div>
+    <div id="registration.page.div" className="auth-page flex items-center justify-center">
+      <div id="registration.page.div.2" className="text-base text-on-surface-variant">{t('auth.registration.loading')}</div>
     </div>
   );
 }

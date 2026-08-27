@@ -243,16 +243,16 @@ export const StoreIdentityCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div className="py-10 text-center text-sm text-on-surface-variant">
+      <div id="profile.store-identity-card.div" className="py-10 text-center text-sm text-on-surface-variant">
         {t("profile.loading")}
       </div>
     );
   }
 
   return (
-    <div className="space-y-5">
+    <div id="profile.store-identity-card.div.2" className="space-y-5">
       {error || imagesError ? (
-        <div className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <div id="profile.store-identity-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error ?? imagesError}
         </div>
       ) : null}
@@ -277,12 +277,12 @@ export const StoreIdentityCard = React.forwardRef<
         />
       ) : null}
 
-      <div className="space-y-2">
-        <Label htmlFor="storeName">
+      <div id="profile.store-identity-card.div.4" className="space-y-2">
+        <Label id="profile.store-identity-card.label" htmlFor="profile.store-identity.store-name">
           {t("onboarding.storeIdentity.storeName")}
         </Label>
         <Input ui={{ uid: "profile.store-identity.store-name-RsAC2H", id: "profile.store-identity.store-name", kind: "field", part: "form" }}
-          id="storeName"
+          id="profile.store-identity.store-name"
           value={details.storeName}
           onChange={(event) => updateField("storeName", event.target.value)}
           placeholder={t("onboarding.storeIdentity.storeNamePlaceholder")}
@@ -291,12 +291,12 @@ export const StoreIdentityCard = React.forwardRef<
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="storeDescription">
+      <div id="profile.store-identity-card.div.5" className="space-y-2">
+        <Label id="profile.store-identity-card.label.2" htmlFor="profile.store-identity.store-description">
           {t("onboarding.storeIdentity.storeDescription")}
         </Label>
         <Textarea ui={{ uid: "profile.store-identity.store-description-lOL6Hr", id: "profile.store-identity.store-description", kind: "field", part: "form", interaction: { type: "type", valueContract: "long-text" }, simulation: { kind: "field", id: "profile-store-description" }}}
-          id="storeDescription"
+          id="profile.store-identity.store-description"
           value={details.storeDescription}
           onChange={(event) =>
             updateField("storeDescription", event.target.value)
@@ -306,17 +306,17 @@ export const StoreIdentityCard = React.forwardRef<
           maxLength={100}
           disabled={readOnly}
         />
-        <p className="text-end text-xs text-muted-foreground">
+        <p id="profile.store-identity-card.p" className="text-end text-xs text-muted-foreground">
           {details.storeDescription.length}/100
         </p>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="storeStory">
+      <div id="profile.store-identity-card.div.6" className="space-y-2">
+        <Label id="profile.store-identity-card.label.3" htmlFor="profile.store-identity.store-story">
           {t("onboarding.storeIdentity.storeStory")}
         </Label>
         <Textarea ui={{ uid: "profile.store-identity.store-story-whJZ1n", id: "profile.store-identity.store-story", kind: "field", part: "form" }}
-          id="storeStory"
+          id="profile.store-identity.store-story"
           value={details.storeStory}
           onChange={(event) => updateField("storeStory", event.target.value)}
           placeholder={t("onboarding.storeIdentity.storyPlaceholder")}
@@ -324,12 +324,12 @@ export const StoreIdentityCard = React.forwardRef<
           maxLength={500}
           disabled={readOnly}
         />
-        <p className="text-end text-xs text-muted-foreground">
+        <p id="profile.store-identity-card.p.2" className="text-end text-xs text-muted-foreground">
           {details.storeStory.length}/500
         </p>
       </div>
 
-      <RatingSettingsEditor
+      <RatingSettingsEditor id="profile.store-identity-card.rating-settings-editor"
         enabled={details.ratingSettings.enabled}
         mode={details.ratingSettings.mode}
         disabled={readOnly}

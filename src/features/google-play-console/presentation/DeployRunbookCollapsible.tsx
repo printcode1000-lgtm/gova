@@ -23,9 +23,9 @@ export function DeployRunbookCollapsible(props: {
   className?: string;
   contentClassName?: string;
   nested?: boolean;
-}) {
+} & { id?: string }) {
   return (
-    <details
+    <details id={props.id}
       className={cn(
         "group w-full min-w-0 max-w-full rounded-md border bg-surface",
         props.nested && "border-dashed bg-muted/20",

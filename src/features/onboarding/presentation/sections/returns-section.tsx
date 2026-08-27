@@ -46,19 +46,19 @@ export function ReturnsSection() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <RotateCcw className="h-5 w-5" />
+    <div id="onboarding.sections.returns-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.returns-section.card">
+        <CardHeader id="onboarding.sections.returns-section.card-header">
+          <CardTitle id="onboarding.sections.returns-section.card-title" className="flex items-center gap-2">
+            <RotateCcw id="onboarding.sections.returns-section.rotate-ccw" className="h-5 w-5" />
             {t('onboarding.returns.title')}
           </CardTitle>
-          <CardDescription>{t('onboarding.returns.description')}</CardDescription>
+          <CardDescription id="onboarding.sections.returns-section.card-description">{t('onboarding.returns.description')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <Label className="text-base">{t('onboarding.returns.policyType')}</Label>
-            <RadioGroup
+        <CardContent id="onboarding.sections.returns-section.card-content" className="space-y-6">
+          <div id="onboarding.sections.returns-section.div.2" className="space-y-4">
+            <Label id="onboarding.sections.returns-section.label" className="text-base">{t('onboarding.returns.policyType')}</Label>
+            <RadioGroup id="onboarding.sections.returns-section.radio-group"
               value={returns.policyType}
               onValueChange={(v) => updateReturns({ policyType: v as ReturnPolicyType })}
               className="grid gap-3 sm:grid-cols-2"
@@ -88,16 +88,16 @@ export function ReturnsSection() {
           </div>
 
           {returns.policyType !== 'no_returns' && (
-            <div className="space-y-6 animate-in slide-in-from-top-2 duration-200">
-              <div className="grid gap-6 sm:grid-cols-2">
-                <FormField
+            <div id="onboarding.sections.returns-section.div.3" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
+              <div id="onboarding.sections.returns-section.div.4" className="grid gap-6 sm:grid-cols-2">
+                <FormField id="onboarding.sections.returns-section.form-field"
                   label={t('onboarding.returns.returnPeriod')}
                   htmlFor="returnPeriod"
                   hint={t('onboarding.returns.returnPeriodHint')}
                 >
-                  <div className="flex items-center gap-2">
-                    <CalendarDays className="h-5 w-5 text-muted-foreground" />
-                    <FormSelect ui={{ uid: 'onboarding.returns.return-period-NE7mB4', id: 'onboarding.returns.return-period', kind: 'field', part: 'form' }}
+                  <div id="onboarding.sections.returns-section.div.5" className="flex items-center gap-2">
+                    <CalendarDays id="onboarding.sections.returns-section.calendar-days" className="h-5 w-5 text-muted-foreground" />
+                    <FormSelect id="onboarding.sections.returns-section.form-select" ui={{ uid: 'onboarding.returns.return-period-NE7mB4', id: 'onboarding.returns.return-period', kind: 'field', part: 'form' }}
                       value={returns.returnPeriod.toString()}
                       onValueChange={(v) => updateReturns({ returnPeriod: parseInt(v) })}
                       options={RETURN_PERIODS.map((value) => ({
@@ -108,8 +108,8 @@ export function ReturnsSection() {
                   </div>
                 </FormField>
 
-                <FormField label={t('onboarding.returns.refundMethod')} htmlFor="refundMethod">
-                  <FormSelect ui={{ uid: 'onboarding.returns.refund-method-B9j88E', id: 'onboarding.returns.refund-method', kind: 'field', part: 'form' }}
+                <FormField id="onboarding.sections.returns-section.form-field.2" label={t('onboarding.returns.refundMethod')} htmlFor="refundMethod">
+                  <FormSelect id="onboarding.sections.returns-section.form-select.2" ui={{ uid: 'onboarding.returns.refund-method-B9j88E', id: 'onboarding.returns.refund-method', kind: 'field', part: 'form' }}
                     value={returns.refundMethod}
                     onValueChange={(v) => updateReturns({ refundMethod: v as 'original' | 'store_credit' | 'choice' })}
                     options={REFUND_METHODS.map((value) => ({
@@ -120,7 +120,7 @@ export function ReturnsSection() {
                 </FormField>
               </div>
 
-              <FormField
+              <FormField id="onboarding.sections.returns-section.form-field.3"
                 label={t('onboarding.returns.policyDescription')}
                 htmlFor="policyDescription"
                 hint={t('onboarding.returns.policyDescriptionHint')}
@@ -139,7 +139,7 @@ export function ReturnsSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation onNext={handleNext} showSkip />
+      <StepNavigation id="onboarding.sections.returns-section.step-navigation" onNext={handleNext} showSkip />
     </div>
   );
 }

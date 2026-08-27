@@ -84,9 +84,9 @@ export function ProductForm({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-6 lg:grid-cols-2">
-        <FormField
+    <div id="onboarding.sections.product-form.div" className="space-y-6">
+      <div id="onboarding.sections.product-form.div.2" className="grid gap-6 lg:grid-cols-2">
+        <FormField id="onboarding.sections.product-form.form-field"
           label={t("onboarding.products.productTitle")}
           htmlFor="title"
           required
@@ -101,13 +101,13 @@ export function ProductForm({
           />
         </FormField>
 
-        <FormField
+        <FormField id="onboarding.sections.product-form.form-field.2"
           label={t("onboarding.products.category")}
           htmlFor="category"
           required
           error={errors.category}
         >
-          <FormSelect ui={{ uid: "onboarding.product-form.category-kstVM4", id: "onboarding.product-form.category", kind: "field", part: "form" }}
+          <FormSelect id="onboarding.sections.product-form.form-select" ui={{ uid: "onboarding.product-form.category-kstVM4", id: "onboarding.product-form.category", kind: "field", part: "form" }}
             value={product.category}
             onValueChange={(value) => onChange({ category: value })}
             options={categories.map((category) => ({
@@ -120,7 +120,7 @@ export function ProductForm({
         </FormField>
       </div>
 
-      <FormField
+      <FormField id="onboarding.sections.product-form.form-field.3"
         label={t("onboarding.products.descriptionLabel")}
         htmlFor="description"
         required
@@ -187,15 +187,15 @@ export function ProductForm({
         label={t("onboarding.products.productImage")}
       />
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <FormField
+      <div id="onboarding.sections.product-form.div.3" className="grid gap-6 sm:grid-cols-2">
+        <FormField id="onboarding.sections.product-form.form-field.4"
           label={t("onboarding.products.price")}
           htmlFor="basePrice"
           required
           error={errors.basePrice}
         >
-          <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <div id="onboarding.sections.product-form.div.4" className="relative">
+            <DollarSign id="onboarding.sections.product-form.dollar-sign" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <FormInput ui={{ uid: "onboarding.product-form.base-price-4GFs92", id: "onboarding.product-form.base-price", kind: "field", part: "form" }}
               id="basePrice"
               type="number"
@@ -211,13 +211,13 @@ export function ProductForm({
           </div>
         </FormField>
 
-        <FormField
+        <FormField id="onboarding.sections.product-form.form-field.5"
           label={t("onboarding.products.discountPrice")}
           htmlFor="discountPrice"
           hint={t("onboarding.common.optional")}
         >
-          <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <div id="onboarding.sections.product-form.div.5" className="relative">
+            <DollarSign id="onboarding.sections.product-form.dollar-sign.2" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <FormInput ui={{ uid: "onboarding.product-form.discount-price-QiIE71", id: "onboarding.product-form.discount-price", kind: "field", part: "form" }}
               id="discountPrice"
               type="number"
@@ -236,37 +236,37 @@ export function ProductForm({
         </FormField>
       </div>
 
-      <div className="flex items-center justify-between rounded-lg border p-4">
-        <div>
-          <Label>{t("onboarding.products.featured")}</Label>
-          <p className="text-sm text-muted-foreground">
+      <div id="onboarding.sections.product-form.div.6" className="flex items-center justify-between rounded-lg border p-4">
+        <div id="onboarding.sections.product-form.div.7">
+          <Label id="onboarding.sections.product-form.label">{t("onboarding.products.featured")}</Label>
+          <p id="onboarding.sections.product-form.p" className="text-sm text-muted-foreground">
             {t("onboarding.products.featuredDesc")}
           </p>
         </div>
-        <Switch ui={{ uid: "onboarding.product-form.featured-7cmVoD", id: "onboarding.product-form.featured", kind: "field", action: "toggle-featured", part: "form" }}
+        <Switch id="onboarding.sections.product-form.switch" ui={{ uid: "onboarding.product-form.featured-7cmVoD", id: "onboarding.product-form.featured", kind: "field", action: "toggle-featured", part: "form" }}
           checked={product.isFeatured}
           onCheckedChange={(checked) => onChange({ isFeatured: checked })}
         />
       </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <Label className="text-base">
+      <div id="onboarding.sections.product-form.div.8" className="space-y-4">
+        <div id="onboarding.sections.product-form.div.9" className="flex items-center justify-between">
+          <div id="onboarding.sections.product-form.div.10">
+            <Label id="onboarding.sections.product-form.label.2" className="text-base">
               {t("onboarding.products.variants")}
             </Label>
-            <p className="text-sm text-muted-foreground">
+            <p id="onboarding.sections.product-form.p.2" className="text-sm text-muted-foreground">
               {t("onboarding.products.variantsDesc")}
             </p>
           </div>
-          <Button ui={{ uid: "onboarding.product-form.add-variant-z4UvRP", id: "onboarding.product-form.add-variant", kind: "action", action: "add-variant", part: "variants" }} variant="outline" size="sm" onClick={addVariant} className="gap-2">
-            <Plus className="h-4 w-4" />
+          <Button id="onboarding.sections.product-form.button" ui={{ uid: "onboarding.product-form.add-variant-z4UvRP", id: "onboarding.product-form.add-variant", kind: "action", action: "add-variant", part: "variants" }} variant="outline" size="sm" onClick={addVariant} className="gap-2">
+            <Plus id="onboarding.sections.product-form.plus" className="h-4 w-4" />
             {t("onboarding.products.addVariant")}
           </Button>
         </div>
 
         {product.variants.length > 0 ? (
-          <div className="space-y-3">
+          <div id="onboarding.sections.product-form.div.11" className="space-y-3">
             {product.variants.map((variant, index) => (
               <div key={variant.id} className="space-y-4 rounded-lg border p-4">
                 <div className="flex items-center justify-between">
@@ -346,8 +346,8 @@ export function ProductForm({
         ) : null}
       </div>
 
-      <div className="flex justify-end gap-3 border-t pt-4">
-        <Button ui={{ uid: "onboarding.product-form.cancel-2EF4QD", id: "onboarding.product-form.cancel", kind: "action", action: "cancel", part: "form-footer" }} variant="outline" onClick={onCancel}>
+      <div id="onboarding.sections.product-form.div.12" className="flex justify-end gap-3 border-t pt-4">
+        <Button id="onboarding.sections.product-form.button.2" ui={{ uid: "onboarding.product-form.cancel-2EF4QD", id: "onboarding.product-form.cancel", kind: "action", action: "cancel", part: "form-footer" }} variant="outline" onClick={onCancel}>
           {t("onboarding.common.cancel")}
         </Button>
       </div>

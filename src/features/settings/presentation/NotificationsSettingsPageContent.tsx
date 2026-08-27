@@ -24,8 +24,8 @@ export function NotificationsSettingsPageContent() {
 
   if (isLoading) {
     return (
-      <div className="mx-auto w-full max-w-2xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
-        <p className="text-center text-sm text-on-surface-variant">
+      <div id="settings.notifications-settings-page-content.div" className="mx-auto w-full max-w-2xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
+        <p id="settings.notifications-settings-page-content.p" className="text-center text-sm text-on-surface-variant">
           {t("common.loading")}
         </p>
       </div>
@@ -46,9 +46,9 @@ export function NotificationsSettingsPageContent() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
-      <header className="mb-8 space-y-2 text-center sm:mb-12">
-        <h1 className="text-2xl font-bold text-primary sm:text-3xl">
+    <div id="settings.notifications-settings-page-content.div.2" className="mx-auto w-full max-w-2xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
+      <header id="settings.notifications-settings-page-content.header" className="mb-8 space-y-2 text-center sm:mb-12">
+        <h1 id="settings.notifications-settings-page-content.h1" className="text-2xl font-bold text-primary sm:text-3xl">
           {t("settings.notifications.title")}
         </h1>
       </header>

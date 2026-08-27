@@ -21,7 +21,7 @@ function optionImage(option: VehicleCatalogOption, imageRoot: string) {
     : FALLBACK_IMAGE;
 }
 
-export function ProductVehicleSpecs({
+export function ProductVehicleSpecs({ id,
   mode,
   config,
   specs,
@@ -31,7 +31,7 @@ export function ProductVehicleSpecs({
   config: ProductComponentConfig;
   specs: ProductVehicleSpecsData;
   onChange: (specs: ProductVehicleSpecsData) => void;
-}) {
+} & { id?: string }) {
   const [catalog, setCatalog] = React.useState<VehicleCatalog | null>(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -58,7 +58,7 @@ export function ProductVehicleSpecs({
 
   if (loading)
     return (
-      <p className="text-sm text-muted-foreground">جارٍ تحميل الاختيارات…</p>
+      <p id={id} className="text-sm text-muted-foreground">جارٍ تحميل الاختيارات…</p>
     );
 
   if (mode === "view") {
@@ -71,10 +71,10 @@ export function ProductVehicleSpecs({
     });
     if (selected.length === 0)
       return (
-        <p className="text-sm text-muted-foreground">لا توجد مواصفات مختارة.</p>
+        <p id={id} className="text-sm text-muted-foreground">لا توجد مواصفات مختارة.</p>
       );
     return (
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div id={id} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {selected.map(({ group, value, option }) => (
           <div
             key={group.key}
@@ -106,13 +106,13 @@ export function ProductVehicleSpecs({
   }
 
   return (
-    <div className="space-y-3">
+    <div id={id} className="space-y-3">
       {enabledGroups.map((group) => {
         const selectedId =
           specs[group.key as keyof ProductVehicleSpecsData] ?? "";
         const selectedOption = options[group.key]?.find((item) => item.id === selectedId);
         return (
-          <details
+          <details id={id}
             key={group.key}
             className="rounded-xl border bg-card"
             open={false}
@@ -131,7 +131,7 @@ export function ProductVehicleSpecs({
               {(options[group.key] ?? []).map((option) => {
                 const selected = selectedId === option.id;
                 return (
-                  <button
+                  <button id={id}
                     key={option.id}
                     type="button"
                     aria-pressed={selected}

@@ -16,18 +16,18 @@ export function StoreImagesTab() {
   const { t } = useAdminArabic();
   const store = useStoreAssets();
   useStoreImagesPageSave(store, true);
-  if (!store.snapshot) return <div className="p-4 text-sm">{t("releaseConsole.loading")}</div>;
+  if (!store.snapshot) return <div id="google-play-console.tabs.store-images-tab.div" className="p-4 text-sm">{t("releaseConsole.loading")}</div>;
   return (
-    <section className="space-y-4">
-      <div className="grid gap-3 rounded-md border bg-surface p-4 md:grid-cols-[10rem_14rem_1fr]">
-        <Input
+    <section id="google-play-console.tabs.store-images-tab.section" className="space-y-4">
+      <div id="google-play-console.tabs.store-images-tab.div.2" className="grid gap-3 rounded-md border bg-surface p-4 md:grid-cols-[10rem_14rem_1fr]">
+        <Input id="google-play-console.tabs.store-images-tab.input"
           ui={{
             uid: "release-console.store-images.language-8GGWPc",
             id: "release-console.store-images.language",
             kind: "field",
             part: "toolbar",
           }} value={store.language} onChange={(event) => store.setLanguage(event.target.value)} />
-        <select
+        <select id="google-play-console.tabs.store-images-tab.select"
           className="h-10 rounded-md border bg-background px-3"
           value={store.imageType}
           onChange={(event) => store.setImageType(event.target.value as GooglePlayImageType)}
@@ -36,7 +36,7 @@ export function StoreImagesTab() {
             <option key={type} value={type}>{t(`releaseConsole.imageTypes.${type}`)}</option>
           ))}
         </select>
-        <Input
+        <Input id="google-play-console.tabs.store-images-tab.input.2"
           ui={{
             uid: "release-console.store-images.upload-d8TGuM",
             id: "release-console.store-images.upload",
@@ -50,11 +50,11 @@ export function StoreImagesTab() {
         />
       </div>
       {store.stagedUploads.length > 0 ? (
-        <p className="text-sm text-on-surface-variant">
+        <p id="google-play-console.tabs.store-images-tab.p" className="text-sm text-on-surface-variant">
           {store.stagedUploads.length} صورة مجهزة.
         </p>
       ) : null}
-      <div className="grid gap-3 md:grid-cols-2">
+      <div id="google-play-console.tabs.store-images-tab.div.3" className="grid gap-3 md:grid-cols-2">
         {store.snapshot.images.map((group) => (
           <section key={`${group.language}:${group.imageType}`} className="rounded-md border bg-surface p-3">
             <h2 className="mb-2 text-sm font-semibold">
@@ -89,9 +89,9 @@ export function StoreImagesTab() {
           </section>
         ))}
       </div>
-      <section className="rounded-md border bg-surface p-4">
-        <h2 className="mb-3 font-semibold">{t("releaseConsole.images.backups")}</h2>
-        <div className="grid gap-2 md:grid-cols-2">
+      <section id="google-play-console.tabs.store-images-tab.section.2" className="rounded-md border bg-surface p-4">
+        <h2 id="google-play-console.tabs.store-images-tab.h2" className="mb-3 font-semibold">{t("releaseConsole.images.backups")}</h2>
+        <div id="google-play-console.tabs.store-images-tab.div.4" className="grid gap-2 md:grid-cols-2">
           {(store.snapshot.backups ?? []).map((backup) => (
             <div key={backup.name} className="flex items-center justify-between gap-2 rounded-md border p-2 text-sm">
               <span className="min-w-0 truncate" dir="ltr">{backup.name}</span>
@@ -111,11 +111,11 @@ export function StoreImagesTab() {
   );
 }
 
-function StoreImagePreview(props: { id: string; url: string; unavailableLabel: string }) {
+function StoreImagePreview(props: { id: string; url: string; unavailableLabel: string } & { id?: string }) {
   const [failed, setFailed] = React.useState(false);
   if (failed) {
     return (
-      <div
+      <div id={props.id}
         className="flex h-28 items-center justify-center bg-muted px-2 text-center text-xs text-on-surface-variant"
       >
         {props.unavailableLabel}
@@ -123,7 +123,7 @@ function StoreImagePreview(props: { id: string; url: string; unavailableLabel: s
     );
   }
   return (
-    <div className="relative h-28 w-full">
+    <div id={props.id} className="relative h-28 w-full">
       <Image
         src={props.url}
         alt={props.id}

@@ -1,12 +1,12 @@
 import { Input } from "@/shared/ui/input";
 
-export function Field({ label, value, onChange }: {
+export function Field({ id, label, value, onChange }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
-}) {
+} & { id?: string }) {
   return (
-    <label className="block">
+    <label id={id} className="block">
       <span className="text-xs text-on-surface-variant">{label}</span>
       <Input className="mt-1" value={value} onChange={(event) => onChange(event.target.value)} />
     </label>

@@ -24,7 +24,7 @@ import type { ProductSearchPanelProps } from "./product-search-panel.types";
 import { runProductSearchPanelRequest } from "./product-search-panel-request";
 import { uiAttributes } from "@asol/ui-registry-core";
 
-export function ProductSearchPanel({
+export function ProductSearchPanel({ id,
   variant,
   mode = "products",
   ownerUid = "",
@@ -36,7 +36,7 @@ export function ProductSearchPanel({
   initialSort = "relevance",
   onProductsChange,
   onLoadingChange,
-}: ProductSearchPanelProps) {
+}: ProductSearchPanelProps & { id?: string }) {
   const router = useRouter();
   const [activeMode, setActiveMode] = React.useState<ProductSearchMode>(mode);
   const [query, setQuery] = React.useState(initialQuery);
@@ -173,7 +173,7 @@ export function ProductSearchPanel({
 
   const categoryControls =
     fixedMainCategoryId && fixedSubcategoryId ? null : (
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div id="product-search.panel.product-search-panel.div" className="grid gap-2 sm:grid-cols-2">
         <select {...uiAttributes({ uid: "search-main-category-76NCg1", id: "search-main-category", kind: "field", interaction: { type: "select" }, simulation: { kind: "field", id: "search-main-category" } })}
           value={mainCategoryId}
           onChange={(event) => {
@@ -214,9 +214,9 @@ export function ProductSearchPanel({
     );
 
   return (
-    <section className={isCompact ? "space-y-3" : "space-y-5"}>
+    <section id={id} className={isCompact ? "space-y-3" : "space-y-5"}>
       {!isCompact ? (
-        <div className="flex gap-2">
+        <div id="product-search.panel.product-search-panel.div.2" className="flex gap-2">
           {(["products", "sellers"] as ProductSearchMode[]).map((item) => (
             <button {...uiAttributes({ uid: "search-sellers-mode-GBOEa3", id: "search-sellers-mode", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "search-sellers-mode" } })}
               key={item}
@@ -242,8 +242,8 @@ export function ProductSearchPanel({
 
       {categoryControls}
 
-      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
-        <div className="relative">
+      <div id="product-search.panel.product-search-panel.div.3" className="grid gap-2 sm:grid-cols-[1fr_auto]">
+        <div id="product-search.panel.product-search-panel.div.4" className="relative">
           <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
           <Input ui={{ uid: "product-search.query-hAl4PO", id: "product-search.query", kind: "field", part: "search", interaction: { type: "type", valueContract: "search-term" }, simulation: { kind: "field", id: "search-query" }}}
             value={query}
@@ -259,7 +259,7 @@ export function ProductSearchPanel({
             className="asol-input-decorated-start"
           />
           {query ? (
-            <button
+            <button id="product-search.panel.product-search-panel.button"
               type="button"
               onClick={() => setQuery("")}
               className="absolute end-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
@@ -269,7 +269,7 @@ export function ProductSearchPanel({
             </button>
           ) : null}
         </div>
-        <button
+        <button id="product-search.panel.product-search-panel.button.2"
           type="button"
           disabled={!canSearch || isLoading}
           onClick={() => void runSearch()}
@@ -293,8 +293,8 @@ export function ProductSearchPanel({
             locale={locale}
             onChange={setFieldKeys}
           />
-          <div className="grid gap-2 sm:grid-cols-[220px_180px_auto]">
-            <select
+          <div id="product-search.panel.product-search-panel.div.5" className="grid gap-2 sm:grid-cols-[220px_180px_auto]">
+            <select id="product-search.panel.product-search-panel.select"
               value={sort}
               onChange={(event) =>
                 setSort(event.target.value as ProductSearchSort)
@@ -321,7 +321,7 @@ export function ProductSearchPanel({
               </option>
             </select>
             {hasRatingFilter ? (
-              <select
+              <select id="product-search.panel.product-search-panel.select.2"
                 value={filters.minRating ?? ""}
                 onChange={(event) =>
                   setFilters((current) => ({
@@ -350,8 +350,8 @@ export function ProductSearchPanel({
               </select>
             ) : null}
             {!isCompact ? (
-              <label className="inline-flex items-center gap-2 text-xs text-on-surface">
-                <input
+              <label id="product-search.panel.product-search-panel.label" className="inline-flex items-center gap-2 text-xs text-on-surface">
+                <input id="product-search.panel.product-search-panel.input"
                   type="checkbox"
                   checked={Boolean(filters.availableOnly)}
                   onChange={(event) =>
@@ -367,8 +367,8 @@ export function ProductSearchPanel({
           </div>
         </>
       ) : (
-        <div className="grid gap-2 sm:grid-cols-[220px_180px]">
-          <select
+        <div id="product-search.panel.product-search-panel.div.6" className="grid gap-2 sm:grid-cols-[220px_180px]">
+          <select id="product-search.panel.product-search-panel.select.3"
             value={sort}
             onChange={(event) => setSort(event.target.value as SellerSearchSort)}
             className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
@@ -378,7 +378,7 @@ export function ProductSearchPanel({
             </option>
             <option value="name">{locale === "ar" ? "الاسم" : "Name"}</option>
           </select>
-          <select
+          <select id="product-search.panel.product-search-panel.select.4"
             value={sellerMinRating ?? ""}
             onChange={(event) =>
               setSellerMinRating(
@@ -399,7 +399,7 @@ export function ProductSearchPanel({
       )}
 
       {!isCompact ? (
-        <div className="text-xs text-on-surface-variant">
+        <div id="product-search.panel.product-search-panel.div.7" className="text-xs text-on-surface-variant">
           {hasSearched
             ? locale === "ar"
               ? `عدد النتائج: ${total}`

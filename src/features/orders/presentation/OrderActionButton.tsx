@@ -21,7 +21,7 @@ export function OrderActionButton({
   tone?: "normal" | "danger";
   full?: boolean;
   disabled?: boolean;
-}) {
+} & { id?: string }) {
   const busy = busyAction === `${action}:${id}` || busyAction === `${action}:`;
   const danger = tone === "danger";
   const isDisabled = Boolean(busyAction) || disabled;

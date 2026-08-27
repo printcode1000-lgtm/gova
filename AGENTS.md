@@ -19,3 +19,13 @@ Binding on every agent and developer working on this project.
 9. **Respect all runtime environments.** Any change that is not exclusively development-only must be evaluated against Development, Production Web, Static `out/`, Android, and iOS, following `docs/09-agent-knowledge/runtime-contract.md` and the applicable `npm run runtime:check` checks. Code and pages under the `dev` scope are evaluated only for Development, while also ensuring they do not leak into or become required dependencies of release environments.
 10. **These rules are globally mandatory and cannot be bypassed.** The nine rules above bind every agent and developer working on this project and must not be overridden, weakened, bypassed, or worked around. Agents and developers may create additional instruction files solely to support their own work. Such files remain independent and local to their owner; they do not change documentation behavior, reclassify or modify protected or generated documentation, become global rules for others, conflict with these rules, or override them.
 11. Project-specific rules, repository architecture constraints, and project documentation always take precedence over generic Skills, MCP instructions, and tool guidance. MCP/tool instructions define how a tool should be used, but they must never override or conflict with repository rules or project-specific architectural requirements. When instructions overlap or conflict, follow this priority order: **Project rules and documentation → Task-specific instructions → Skills → MCP/tool guidance**.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

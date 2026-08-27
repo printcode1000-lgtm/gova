@@ -56,7 +56,7 @@ export const text = {
     "\u064a\u062c\u0628 \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644 \u0644\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0635\u064a\u062f\u0644\u064a\u0629.",
 };
 
-export function CreateCategoryDialog({
+export function CreateCategoryDialog({ id,
   dialog,
   value,
   disabled,
@@ -73,7 +73,7 @@ export function CreateCategoryDialog({
   onChange: (value: string) => void;
   onClose: () => void;
   onSubmit: () => void;
-}) {
+} & { id?: string }) {
   const title =
     dialog.mode === "create"
       ? dialog.kind === "category"
@@ -84,7 +84,7 @@ export function CreateCategoryDialog({
         : text.editSubTitle;
   const placeholder = dialog.kind === "category" ? text.mainNamePlaceholder : text.subNamePlaceholder;
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
+    <div id={id} className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
       <form
         className="w-full max-w-md rounded-lg border border-outline-variant bg-surface p-4 shadow-xl"
         onSubmit={(event) => {
@@ -127,7 +127,7 @@ export function CreateCategoryDialog({
   );
 }
 
-export function IconButton({
+export function IconButton({ id,
   title,
   disabled,
   onClick,
@@ -137,9 +137,9 @@ export function IconButton({
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   children: React.ReactNode;
-}) {
+} & { id?: string }) {
   return (
-    <button
+    <button id={id}
       type="button"
       disabled={disabled}
       onClick={onClick}
@@ -151,7 +151,7 @@ export function IconButton({
   );
 }
 
-export function ManagerColumn({
+export function ManagerColumn({ id,
   title,
   actionLabel,
   disabled,
@@ -163,9 +163,9 @@ export function ManagerColumn({
   disabled?: boolean;
   onAdd?: () => void;
   children: React.ReactNode;
-}) {
+} & { id?: string }) {
   return (
-    <div className="flex min-h-0 flex-col gap-3 border-b border-outline-variant p-3 lg:border-b-0 lg:border-e">
+    <div id={id} className="flex min-h-0 flex-col gap-3 border-b border-outline-variant p-3 lg:border-b-0 lg:border-e">
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-bold text-on-surface">{title}</h2>
         {actionLabel && onAdd ? (
@@ -185,7 +185,7 @@ export function ManagerColumn({
   );
 }
 
-export function ProductManagerCard({
+export function ProductManagerCard({ id,
   product,
   disabled,
   onToggle,
@@ -196,9 +196,9 @@ export function ProductManagerCard({
   onToggle: () => void;
   /** Registered descriptor for this row's visibility toggle, from the caller. */
   toggleUi?: UiDescriptor;
-}) {
+} & { id?: string }) {
   return (
-    <article className={`rounded-lg border border-outline-variant bg-surface-container-low p-2 ${product.status === "hidden" ? "opacity-55" : ""}`}>
+    <article id={id} className={`rounded-lg border border-outline-variant bg-surface-container-low p-2 ${product.status === "hidden" ? "opacity-55" : ""}`}>
       <div className="flex gap-3">
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-surface-bright">
           {product.imageUrl ? (
@@ -223,9 +223,9 @@ export function ProductManagerCard({
   );
 }
 
-export function StatusBadge({ hidden }: { hidden: boolean }) {
+export function StatusBadge({ id, hidden }: { hidden: boolean } & { id?: string }) {
   return (
-    <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${hidden ? "bg-error/10 text-error" : "bg-primary/10 text-primary"}`}>
+    <span id={id} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${hidden ? "bg-error/10 text-error" : "bg-primary/10 text-primary"}`}>
       {hidden ? text.hidden : text.visible}
     </span>
   );
@@ -242,7 +242,7 @@ export function VisibilityButton({
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   /** Registered UiRegistry descriptor for this instance, from the caller. */
   ui?: UiDescriptor;
-}) {
+} & { id?: string }) {
   return (
     <button
       {...(ui ? uiAttributes(ui) : {})}
@@ -257,17 +257,17 @@ export function VisibilityButton({
   );
 }
 
-export function LoadingFrame({ compact = false }: { compact?: boolean }) {
+export function LoadingFrame({ id, compact = false }: { compact?: boolean } & { id?: string }) {
   return (
-    <div className={`flex items-center justify-center ${compact ? "min-h-[360px]" : "min-h-screen"}`}>
+    <div id={id} className={`flex items-center justify-center ${compact ? "min-h-[360px]" : "min-h-screen"}`}>
       <LoadingSpinner size="lg" />
     </div>
   );
 }
 
-export function MessageFrame({ message }: { message: string }) {
+export function MessageFrame({ id, message }: { message: string } & { id?: string }) {
   return (
-    <main className="grid min-h-screen place-items-center bg-background p-4">
+    <main id={id} className="grid min-h-screen place-items-center bg-background p-4">
       <p className="rounded-lg border border-outline-variant bg-surface p-5 text-center text-sm text-on-surface">
         {message}
       </p>

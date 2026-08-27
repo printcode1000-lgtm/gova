@@ -101,10 +101,10 @@ export default function RootLayout({
                         <OtaUpdateProvider>
                           <SafeAreaController />
                           <Suspense
-                            fallback={<ShellLayout>{children}</ShellLayout>}
+                            fallback={<ShellLayout id="layout.shell-layout">{children}</ShellLayout>}
                           >
                             <SnapshotProvider>
-                              <ShellLayout>{children}</ShellLayout>
+                              <ShellLayout id="layout.shell-layout.2">{children}</ShellLayout>
                             </SnapshotProvider>
                           </Suspense>
                           <NetworkStatusBanner />

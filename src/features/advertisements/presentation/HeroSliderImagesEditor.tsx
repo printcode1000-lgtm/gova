@@ -29,6 +29,7 @@ interface HeroSliderImagesEditorProps {
   value: HeroSliderConfig;
   onChange: (config: HeroSliderConfig) => void;
   onPendingChange?: (pending: boolean) => void;
+  id?: string;
 }
 
 function createSlide(image: StoredImage, index: number): HeroSliderSlide {
@@ -52,6 +53,7 @@ export const HeroSliderImagesEditor = React.forwardRef<
   value,
   onChange,
   onPendingChange,
+  id,
 }, ref) {
   const managerRefs = React.useRef<Array<StorageImageManagerHandle | null>>([]);
   const valueRef = React.useRef(value);
@@ -120,19 +122,20 @@ export const HeroSliderImagesEditor = React.forwardRef<
 
   return (
     <section
+      id={id}
       className="mt-4 rounded-xl border bg-card p-4 shadow-sm"
       aria-label="تعديل صور العرض"
     >
-      <div className="mb-4 flex items-center gap-2">
-        <ImageIcon className="h-5 w-5 text-primary" />
-        <div>
-          <h2 className="font-semibold">صور واجهة المتجر</h2>
-          <p className="text-sm text-muted-foreground">
+      <div id="advertisements.hero-slider-images-editor.div" className="mb-4 flex items-center gap-2">
+        <ImageIcon id="advertisements.hero-slider-images-editor.image-icon" className="h-5 w-5 text-primary" />
+        <div id="advertisements.hero-slider-images-editor.div.2">
+          <h2 id="advertisements.hero-slider-images-editor.h2" className="font-semibold">صور واجهة المتجر</h2>
+          <p id="advertisements.hero-slider-images-editor.p" className="text-sm text-muted-foreground">
             يمكنك إضافة أو استبدال {MAX_PROFILE_SLIDES} صور بحد أقصى. بقية إعدادات العرض ثابتة.
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div id="advertisements.hero-slider-images-editor.div.3" className="grid grid-cols-2 gap-3">
         {storefrontSlots.map((slotConfig, index) => (
           <StorageImageManager
             ref={(manager) => {

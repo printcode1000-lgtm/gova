@@ -88,18 +88,18 @@ export function SuperAdminImpersonationBanner() {
   if (!original || !session || isSuperAdmin(session)) return null;
 
   return (
-    <div
+    <div id="super-admin.super-admin-impersonation-banner.div"
       ref={bannerRef}
       className="fixed inset-x-0 top-0 z-[90] border-b border-amber-300 bg-amber-100 px-3 pb-2 pt-[calc(0.5rem+var(--asol-safe-area-top))] text-amber-950 shadow-sm"
     >
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 text-sm">
-        <div className="flex items-center gap-2">
-          <ShieldAlert className="h-4 w-4" />
-          <span>
+      <div id="super-admin.super-admin-impersonation-banner.div.2" className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 text-sm">
+        <div id="super-admin.super-admin-impersonation-banner.div.3" className="flex items-center gap-2">
+          <ShieldAlert id="super-admin.super-admin-impersonation-banner.shield-alert" className="h-4 w-4" />
+          <span id="super-admin.super-admin-impersonation-banner.span">
             أنت الآن داخل حساب {session.phone || session.uid} بصلاحيات كاملة.
           </span>
         </div>
-        <Button ui={{ uid: "super-admin.impersonation.stop-n16Ir7", id: "super-admin.impersonation.stop", kind: "action", action: "stop-impersonation", part: "banner" }} type="button" size="sm" variant="outline" onClick={stop}>
+        <Button id="super-admin.super-admin-impersonation-banner.button" ui={{ uid: "super-admin.impersonation.stop-n16Ir7", id: "super-admin.impersonation.stop", kind: "action", action: "stop-impersonation", part: "banner" }} type="button" size="sm" variant="outline" onClick={stop}>
           إنهاء الانتحال والعودة للسوبر أدمن
         </Button>
       </div>

@@ -2,13 +2,13 @@ import { AlertTriangle } from "lucide-react";
 
 import type { GooglePlayConsoleEndpointResult } from "../../domain/types";
 
-export function EndpointCard({ endpoint, availableText, unavailableText }: {
+export function EndpointCard({ id, endpoint, availableText, unavailableText }: {
   endpoint: GooglePlayConsoleEndpointResult;
   availableText: string;
   unavailableText: string;
-}) {
+} & { id?: string }) {
   return (
-    <section className="rounded-md border bg-surface p-4">
+    <section id={id} className="rounded-md border bg-surface p-4">
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-semibold">{endpoint.label}</h3>
         <span className="rounded-sm bg-muted px-2 py-1 text-xs">

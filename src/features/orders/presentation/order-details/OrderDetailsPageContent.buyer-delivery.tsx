@@ -31,21 +31,21 @@ export function BuyerDeliveryAddressPanel({
 
   if (isLoading) {
     return (
-      <div className="mb-4 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
+      <div id="orders.order-details.order-details-page-content.buyer-delivery.div" className="mb-4 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
         جاري تحميل بيانات التواصل...
       </div>
     );
   }
 
   return (
-    <div className="mb-4 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
-      <p className="leading-6 text-on-surface">{text.buyerAddressHint}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <Link
+    <div id="orders.order-details.order-details-page-content.buyer-delivery.div.2" className="mb-4 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
+      <p id="orders.order-details.order-details-page-content.buyer-delivery.p" className="leading-6 text-on-surface">{text.buyerAddressHint}</p>
+      <div id="orders.order-details.order-details-page-content.buyer-delivery.div.3" className="mt-3 flex flex-wrap gap-2">
+        <Link id="orders.order-details.order-details-page-content.buyer-delivery.link"
           href={profileHref}
           className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition"
         >
-          <MapPin className="h-4 w-4" />
+          <MapPin id="orders.order-details.order-details-page-content.buyer-delivery.map-pin" className="h-4 w-4" />
           {text.editBuyerAddressInProfile}
         </Link>
         {hasProfileAddress ? (

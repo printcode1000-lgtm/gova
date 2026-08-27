@@ -1,6 +1,6 @@
 import { Copy } from "lucide-react";
 
-export function AdminCopyValue({
+export function AdminCopyValue({ id,
   label,
   value,
   onCopy,
@@ -8,9 +8,9 @@ export function AdminCopyValue({
   label: string;
   value: string;
   onCopy: (value: string) => void | Promise<void>;
-}) {
+} & { id?: string }) {
   return (
-    <div className="rounded-lg border border-outline-variant/30 bg-surface-container-high p-3">
+    <div id={id} className="rounded-lg border border-outline-variant/30 bg-surface-container-high p-3">
       <span className="block text-on-surface-variant">{label}</span>
       <code className="mt-1 block break-all font-mono text-primary">
         {value || "-"}

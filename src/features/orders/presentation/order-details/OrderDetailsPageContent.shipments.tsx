@@ -44,7 +44,7 @@ import type { DbRow, OrderDetails, OrderRole } from "../order-types";
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 import { shipmentActionAvailability } from "./shipment-action-model";
 
-export function OrderLevelActions({
+export function OrderLevelActions({ id,
   order,
   isBuyer,
   canRejectAnyDelivery,
@@ -56,9 +56,9 @@ export function OrderLevelActions({
   canRejectAnyDelivery: boolean;
   busyAction: string;
   runAction: RunAction;
-}) {
+} & { id?: string }) {
   return (
-    <section className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+    <section id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
       <h2 className="font-bold">{text.orderActions}</h2>
       <div className="mt-3 space-y-2">
         {isBuyer && canCancelStatus(order.calculated_status) ? (
@@ -86,7 +86,7 @@ export function OrderLevelActions({
   );
 }
 
-export function ShipmentsPanel({
+export function ShipmentsPanel({ id,
   details,
   sessionUid,
   admin,
@@ -98,9 +98,9 @@ export function ShipmentsPanel({
   admin: boolean;
   busyAction: string;
   runAction: RunAction;
-}) {
+} & { id?: string }) {
   return (
-    <section className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+    <section id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
       <h2 className="font-bold">{text.shipments}</h2>
       {details.shipments.length === 0 ? (
         <p className="mt-2 text-sm text-muted-foreground">{text.noShipments}</p>
@@ -123,7 +123,7 @@ export function ShipmentsPanel({
   );
 }
 
-export function ShipmentCard({
+export function ShipmentCard({ id,
   shipment,
   details,
   sessionUid,
@@ -137,7 +137,7 @@ export function ShipmentCard({
   admin: boolean;
   busyAction: string;
   runAction: RunAction;
-}) {
+} & { id?: string }) {
   const shipmentId = String(shipment.id);
   const carrierId = String(shipment.carrier_id ?? "");
   const isCarrier = admin || sessionUid === carrierId;
@@ -153,7 +153,7 @@ export function ShipmentCard({
   } = shipmentActionAvailability(shipment.status);
 
   return (
-    <div className="rounded-lg border border-outline-variant p-3">
+    <div id={id} className="rounded-lg border border-outline-variant p-3">
       <p className="text-sm font-semibold">{statusLabel(shipment.status)}</p>
       <p className="text-xs text-muted-foreground">
         {text.carrierCompany}:{" "}
@@ -233,7 +233,7 @@ export function ShipmentCard({
   );
 }
 
-export function ShipmentItemRow({
+export function ShipmentItemRow({ id,
   shipmentItem,
   details,
   isCarrier,
@@ -245,14 +245,14 @@ export function ShipmentItemRow({
   isCarrier: boolean;
   busyAction: string;
   runAction: RunAction;
-}) {
+} & { id?: string }) {
   const shipmentItemId = String(shipmentItem.id);
   const orderItem = details.orderItems.find(
     (item) => String(item.id) === String(shipmentItem.order_item_id),
   );
   const title = String(orderItem?.product_name_snapshot ?? text.product);
   return (
-    <div className="rounded-lg bg-background p-2 text-sm">
+    <div id={id} className="rounded-lg bg-background p-2 text-sm">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <p className="font-semibold">{title}</p>

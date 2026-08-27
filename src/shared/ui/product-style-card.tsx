@@ -10,6 +10,7 @@ interface ProductStyleCardProps {
   children: React.ReactNode;
   onVisibleChange: (visible: boolean) => void;
   onOrderChange: (order: number) => void;
+  id?: string;
 }
 
 function parsePositiveInteger(value: string, fallback: number) {
@@ -25,7 +26,8 @@ export function ProductStyleCard({
   children,
   onVisibleChange,
   onOrderChange,
-}: ProductStyleCardProps) {
+  id,
+}: ProductStyleCardProps & { id?: string }) {
   const [orderText, setOrderText] = React.useState(String(order));
 
   React.useEffect(() => {
@@ -33,7 +35,7 @@ export function ProductStyleCard({
   }, [order]);
 
   return (
-    <section className="rounded-xl border border-outline-variant bg-background p-4 shadow-sm">
+    <section id={id} className="rounded-xl border border-outline-variant bg-background p-4 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-3">
         <label className="flex items-center gap-2 text-sm font-bold">
           <input
@@ -81,14 +83,16 @@ export function OptionCheckbox({
   checked,
   disabled,
   onChange,
+  id,
 }: {
   label: string;
   checked: boolean;
   disabled?: boolean;
   onChange: (checked: boolean) => void;
+  id?: string;
 }) {
   return (
-    <label className="flex items-center gap-2 text-sm">
+    <label id={id} className="flex items-center gap-2 text-sm">
       <input
         type="checkbox"
         checked={checked}

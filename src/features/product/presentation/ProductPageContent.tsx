@@ -46,11 +46,11 @@ function getProductImageKeysFingerprint(
 
 
 const PRODUCT_FAVORITE_UI: UiDescriptor = { uid: "product-favorite-6pOZr6", id: "product-favorite", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-favorite" } };
-export function ProductPageContent({
+export function ProductPageContent({ id,
   initialProduct = null,
 }: {
   initialProduct?: ProductRecord | null;
-} = {}) {
+} & { id?: string } = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {
@@ -423,21 +423,21 @@ export function ProductPageContent({
 
   if (loading || sessionLoading)
     return (
-      <div className="flex min-h-[50vh] items-center justify-center">
+      <div id={id} className="flex min-h-[50vh] items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
 
   if (error && !style)
     return (
-      <p className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
+      <p id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
         {error}
       </p>
     );
 
   if (editable && !isLoggedIn)
     return (
-      <div className="m-6 rounded-2xl border p-6 text-center">
+      <div id={id} className="m-6 rounded-2xl border p-6 text-center">
         <p>يجب تسجيل الدخول لإنشاء المنتج أو تعديله.</p>
         <Link
           href="/login"
@@ -450,13 +450,13 @@ export function ProductPageContent({
 
   if (mode === "edit" && !ownerAllowed)
     return (
-      <p className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
+      <p id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
         لا يمكنك تعديل منتج يخص مستخدمًا آخر.
       </p>
     );
 
   return (
-    <main className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6">
+    <main id={id} className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6">
       <ProductComponentsRenderer
         mode={mode}
         components={style?.components ?? createDefaultProductStyleComponents()}

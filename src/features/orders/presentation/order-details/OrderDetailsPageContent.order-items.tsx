@@ -46,15 +46,15 @@ import { CustomRequestActions } from "./OrderDetailsPageContent.custom-request-a
 
 export { CustomRequestActions };
 
-export function ProfileLinks({
+export function ProfileLinks({ id,
   sellerId,
   carrierId,
 }: {
   sellerId: string;
   carrierId: string;
-}) {
+} & { id?: string }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div id={id} className="flex flex-wrap gap-2">
       <Link
         href={`/profile?mode=view&uid=${encodeURIComponent(sellerId)}`}
         className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold"
@@ -75,7 +75,7 @@ export function ProfileLinks({
   );
 }
 
-export function OrderItemRow({
+export function OrderItemRow({ id,
   item,
   isSeller,
   isBuyer,
@@ -89,10 +89,10 @@ export function OrderItemRow({
   currency: string;
   busyAction: string;
   runAction: RunAction;
-}) {
+} & { id?: string }) {
   const itemId = String(item.id);
   return (
-    <div className="rounded-xl border border-outline-variant bg-background p-3">
+    <div id={id} className="rounded-xl border border-outline-variant bg-background p-3">
       <div className="flex gap-3">
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
           {item.product_image_snapshot ? (

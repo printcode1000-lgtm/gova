@@ -83,7 +83,7 @@ function badgeClass(tone: ProductCardViewModel["badges"][number]["tone"]) {
   return "bg-surface-container-high text-on-surface-variant";
 }
 
-export function ProductCard({
+export function ProductCard({ id,
   card,
   variant,
   actions = [],
@@ -91,7 +91,7 @@ export function ProductCard({
   favoriteEnabled,
   ui,
   onOpen,
-}: ProductCardProps) {
+}: ProductCardProps & { id?: string }) {
   const isFeatured = variant === "featured-marquee";
   const hasActions = actions.length > 0;
   const showFavorite =
@@ -101,7 +101,7 @@ export function ProductCard({
     Boolean(card.id);
 
   return (
-    <article className={`relative overflow-hidden ${variantClass[variant]} ${className}`}>
+    <article id={id} className={`relative overflow-hidden ${variantClass[variant]} ${className}`}>
       {showFavorite ? (
         <FavoriteButton
           item={favoriteFromProductCard(card)}

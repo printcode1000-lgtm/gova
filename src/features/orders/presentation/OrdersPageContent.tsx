@@ -71,57 +71,57 @@ export function OrdersPageContent() {
 
   if (sessionLoading) {
     return (
-      <main className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      <main id="orders.orders-page-content.main" className="flex min-h-[50vh] items-center justify-center">
+        <Loader2 id="orders.orders-page-content.loader2" className="h-6 w-6 animate-spin text-primary" />
       </main>
     );
   }
 
   if (!session?.uid) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-10 text-center">
-        <h1 className="text-2xl font-bold">{copy.title}</h1>
-        <p className="mt-3 text-muted-foreground">{copy.login}</p>
+      <main id="orders.orders-page-content.main.2" className="mx-auto max-w-4xl px-4 py-10 text-center">
+        <h1 id="orders.orders-page-content.h1" className="text-2xl font-bold">{copy.title}</h1>
+        <p id="orders.orders-page-content.p" className="mt-3 text-muted-foreground">{copy.login}</p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-        <div>
-          <h1 className="text-2xl font-bold">{copy.title}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{copy.description}</p>
+    <main id="orders.orders-page-content.main.3" className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+      <div id="orders.orders-page-content.div" className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+        <div id="orders.orders-page-content.div.2">
+          <h1 id="orders.orders-page-content.h1.2" className="text-2xl font-bold">{copy.title}</h1>
+          <p id="orders.orders-page-content.p.2" className="mt-1 text-sm text-muted-foreground">{copy.description}</p>
         </div>
         {admin ? (
-          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-            <ShieldCheck className="h-4 w-4" />
+          <span id="orders.orders-page-content.span" className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+            <ShieldCheck id="orders.orders-page-content.shield-check" className="h-4 w-4" />
             {copy.admin}
           </span>
         ) : null}
       </div>
 
       {error ? (
-        <p className="mb-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <p id="orders.orders-page-content.p.3" className="mb-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error}
         </p>
       ) : null}
 
       {loading ? (
-        <div className="flex min-h-[30vh] items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        <div id="orders.orders-page-content.div.3" className="flex min-h-[30vh] items-center justify-center">
+          <Loader2 id="orders.orders-page-content.loader2.2" className="h-6 w-6 animate-spin text-primary" />
         </div>
       ) : items.length === 0 ? (
         <section {...uiAttributes({ uid: "orders-empty-ib4VM2", id: "orders-empty", kind: "region", simulation: { kind: "state", id: "orders-empty" } })} className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
-          <ClipboardList className="mx-auto h-10 w-10 text-muted-foreground" />
-          <h2 className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <ClipboardList id="orders.orders-page-content.clipboard-list" className="mx-auto h-10 w-10 text-muted-foreground" />
+          <h2 id="orders.orders-page-content.h2" className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
+          <p id="orders.orders-page-content.p.4" className="mt-2 text-sm text-muted-foreground">
             {copy.emptyDescription}
           </p>
         </section>
       ) : (
         <>
-          <section className="grid gap-4 md:grid-cols-2">
+          <section id="orders.orders-page-content.section" className="grid gap-4 md:grid-cols-2">
             {items.map(({ order, viewerRoles }) => {
               const id = String(order.id);
               const detailRole = primaryViewerRole(viewerRoles, admin);
@@ -190,7 +190,7 @@ export function OrdersPageContent() {
           </section>
 
           {hasMore ? (
-            <div className="mt-6 flex justify-center">
+            <div id="orders.orders-page-content.div.4" className="mt-6 flex justify-center">
               <button {...uiAttributes({ uid: "orders-load-more-ONCD9F", id: "orders-load-more", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "orders-load-more" } })}
                 type="button"
                 onClick={() => void loadOrders()}
@@ -199,7 +199,7 @@ export function OrdersPageContent() {
               >
                 {loadingMore ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 id="orders.orders-page-content.loader2.3" className="h-4 w-4 animate-spin" />
                     {copy.loadingMore}
                   </>
                 ) : (

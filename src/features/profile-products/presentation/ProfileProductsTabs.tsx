@@ -66,7 +66,7 @@ interface ProfileProductsTabsProps {
   onRefreshProducts?: () => void | Promise<void>;
 }
 
-export function ProfileProductsTabs({
+export function ProfileProductsTabs({ id,
   mode,
   ownerUid = "",
   tabs,
@@ -90,7 +90,7 @@ export function ProfileProductsTabs({
   onAddProduct,
   onToggleFeatured,
   onRefreshProducts,
-}: ProfileProductsTabsProps) {
+}: ProfileProductsTabsProps & { id?: string }) {
   const activeMain = tabs.find((tab) => tab.id === selectedMainId) ?? tabs[0];
   const showManagement = mode === "edit";
   const isPharmacyBucket = isPharmacyProfileBucket(activeSubTab);
@@ -126,19 +126,19 @@ export function ProfileProductsTabs({
     isLoadingProducts || (showFeaturedOnly && isLoadingFeaturedProducts);
 
   if (isLoadingTabs) {
-    return <ProfileProductsTabsLoading size="lg" />;
+    return <ProfileProductsTabsLoading id={id} size="lg" />;
   }
 
   if (tabs.length === 0) {
     return (
-      <section className="space-y-3">
+      <section id={id} className="space-y-3">
         <ProfileProductsTabsEmpty label={labels.emptySpecialties} />
       </section>
     );
   }
 
   return (
-    <section className="space-y-4">
+    <section id={id} className="space-y-4">
       <div
         data-snapshot-scroll
         data-snapshot-id={`profile-products-main-${mode}-${ownerUid}`}

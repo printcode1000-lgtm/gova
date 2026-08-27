@@ -7,13 +7,13 @@ import { Button } from "@/shared/ui/button";
 import type { DeployTab } from "./DeployRunbookTypes";
 import { parseDeployRunbookLogSnapshot } from "./deploy-runbook-log-snapshot";
 
-export function ExecutionIndicator(props: { log: string; tab: DeployTab; status: string }) {
+export function ExecutionIndicator(props: { log: string; tab: DeployTab; status: string } & { id?: string }) {
   const snapshot = React.useMemo(
     () => parseDeployRunbookLogSnapshot(props.log, props.tab),
     [props.log, props.tab],
   );
   return (
-    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+    <div id={props.id} className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
       <IndicatorCard label="الحالة" value={props.status} help="حالة الـ job كما يراها مشغل الأوامر." />
       <IndicatorCard
         label="الأمر"
@@ -40,10 +40,10 @@ export function ExecutionIndicator(props: { log: string; tab: DeployTab; status:
   );
 }
 
-export function TerminalOutput(props: { text: string }) {
+export function TerminalOutput(props: { text: string } & { id?: string }) {
   const empty = "لا يوجد خرج بعد. شغّل أحد التبويبين لعرض سجل الطرفية هنا.";
   return (
-    <div
+    <div id={props.id}
       className={
         "asol-terminal-scroll min-h-48 max-h-[32rem] w-full min-w-0 " +
         "sm:min-h-64 sm:max-h-[42rem] rounded-md bg-muted"
@@ -56,9 +56,9 @@ export function TerminalOutput(props: { text: string }) {
   );
 }
 
-export function TerminalActions(props: { onCopy: () => void; onClear: () => void }) {
+export function TerminalActions(props: { onCopy: () => void; onClear: () => void } & { id?: string }) {
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div id={props.id} className="flex flex-wrap items-center gap-2">
       <Button
         ui={{
           uid: "deploy-runbook.terminal.copy-IkfF09",
@@ -90,9 +90,9 @@ function IndicatorCard(props: {
   value: string;
   help: string;
   className?: string;
-}) {
+} & { id?: string }) {
   return (
-    <div className={props.className ?? ""}>
+    <div id={props.id} className={props.className ?? ""}>
       <div className="min-w-0 rounded-md border bg-surface p-3">
         <div className="text-xs text-on-surface-variant">{props.label}</div>
         <div className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">

@@ -25,7 +25,7 @@ export interface FeaturedMarqueeProps {
   config: FeaturedMarqueeConfig;
 }
 
-export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
+export function FeaturedMarquee({ id, config }: FeaturedMarqueeProps & { id?: string }) {
   const { t } = useTranslation();
   const { sectionTitle, items, onAction } = config || {};
 
@@ -205,7 +205,7 @@ export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
   if (!hasItems) return null;
 
   return (
-    <section className="space-y-3 overflow-hidden select-none">
+    <section id={id} className="space-y-3 overflow-hidden select-none">
       <div className="flex items-center mb-4">
         <h3 className="text-lg font-semibold text-tertiary flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-tertiary animate-pulse-subtle" aria-hidden />

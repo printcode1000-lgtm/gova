@@ -11,7 +11,7 @@ const midpoint = (a: Point, b: Point): Point => ({
   y: (a.y + b.y) / 2,
 });
 
-export function ProductImageGallery({ images }: { images: StoredImage[] }) {
+export function ProductImageGallery({ id, images }: { images: StoredImage[] } & { id?: string }) {
   const validImages = React.useMemo(
     () => images.filter((image) => image.imageKey && image.url),
     [images],
@@ -49,7 +49,7 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
 
   if (validImages.length === 0) {
     return (
-      <div className="flex aspect-square w-full items-center justify-center rounded-2xl bg-muted text-sm text-muted-foreground sm:aspect-[4/3]">
+      <div id={id} className="flex aspect-square w-full items-center justify-center rounded-2xl bg-muted text-sm text-muted-foreground sm:aspect-[4/3]">
         لا توجد صور
       </div>
     );
@@ -163,7 +163,7 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
   };
 
   return (
-    <div className="w-full">
+    <div id={id} className="w-full">
       <div
         className="relative aspect-square overflow-hidden rounded-2xl bg-muted sm:aspect-[4/3]"
         style={{ touchAction: "none" }}

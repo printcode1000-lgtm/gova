@@ -124,7 +124,7 @@ export function DeveloperBadge() {
   }
 
   return (
-    <OverlayChromeBranch
+    <OverlayChromeBranch id="dev-tools.developer-badge.overlay-chrome-branch"
       ref={badgeRef}
       className="fixed z-[140] active:opacity-90"
       style={{ left: position.x, top: position.y }}
@@ -132,8 +132,8 @@ export function DeveloperBadge() {
       onTouchStart={handleTouchStart}
     >
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Badge variant="destructive" className="select-none pointer-events-auto">
+        <DropdownMenuTrigger id="dev-tools.developer-badge.dropdown-menu-trigger" asChild>
+          <Badge id="dev-tools.developer-badge.badge" variant="destructive" className="select-none pointer-events-auto">
             ASOL DEV
           </Badge>
         </DropdownMenuTrigger>
@@ -142,8 +142,8 @@ export function DeveloperBadge() {
           className="w-64 max-h-[80vh] overflow-y-auto"
           {...{ [OVERLAY_CHROME_ATTRIBUTE]: 'true' }}
         >
-          <DropdownMenuLabel>صفحات المشروع</DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          <DropdownMenuLabel id="dev-tools.developer-badge.dropdown-menu-label">صفحات المشروع</DropdownMenuLabel>
+          <DropdownMenuSeparator id="dev-tools.developer-badge.dropdown-menu-separator" />
           {pages.map((page) => (
             <div key={page.path} className="flex items-center justify-between px-2">
               <DropdownMenuItem asChild className="flex-1">

@@ -63,13 +63,31 @@ for (const command of ["ui-registry:pending:check", "ui-registry:apply-pending"]
   assert.ok(scripts[command], `npm script ${command} must exist`);
 }
 assert.match(scripts["ui-registry:apply-pending"]!, /scripts\/ui-registry\/apply-pending\.ts/);
+assert.match(
+  scripts["ui-registry:apply-pending"]!,
+  /NODE_ENV=development/,
+  "apply-pending must default to local SQLite; unset NODE_ENV is treated as production Turso",
+);
 assert.match(scripts["ui-registry:pending:check"]!, /scripts\/ui-registry\/check-pending\.ts/);
 
-// The VS Code entry that referenced the missing script now resolves.
+// Apply-pending is a Terminal Task, not a Run and Debug launch.
 const launch = readFileSync(join(ROOT, ".vscode/launch.json"), "utf8");
+assert.equal(
+  launch.includes("ui-registry:apply-pending"),
+  false,
+  "ui-registry:apply-pending must not appear in launch.json",
+);
 for (const match of launch.matchAll(/"runtimeArgs":\s*\["run",\s*"([^"]+)"\]/g)) {
   assert.ok(scripts[match[1]!], `launch.json references missing npm script ${match[1]}`);
 }
+const tasks = JSON.parse(readFileSync(join(ROOT, ".vscode/tasks.json"), "utf8")) as {
+  tasks: Array<{ script?: string; type?: string; label?: string; detail?: string }>;
+};
+const applyPendingTask = tasks.tasks.find((task) => task.script === "ui-registry:apply-pending");
+assert.ok(applyPendingTask, "tasks.json must run ui-registry:apply-pending");
+assert.equal(applyPendingTask.type, "npm");
+assert.match(applyPendingTask.label ?? "", /apply pending/i);
+assert.match(applyPendingTask.detail ?? "", /queued UiRegistry/i);
 
 // ── What the gate refuses ──────────────────────────────────────────────────
 // Blocked and pending are both open: an unresolved request is unresolved

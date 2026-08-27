@@ -3,10 +3,10 @@
 import type { BundleAnalysisDelta } from "@asol/release-core/console";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 
-export function DeltaTable({ rows, emptyText }: { rows: BundleAnalysisDelta[]; emptyText: string }) {
+export function DeltaTable({ id, rows, emptyText }: { rows: BundleAnalysisDelta[]; emptyText: string } & { id?: string }) {
   const { t } = useAdminArabic();
   return (
-    <div className="overflow-auto rounded-md border">
+    <div id={id} className="overflow-auto rounded-md border">
       <table className="w-full min-w-[40rem] text-sm" dir="ltr">
         <thead className="bg-muted">
           <tr><th className="p-2 text-left">{t("releaseConsole.delta.id")}</th>

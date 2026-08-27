@@ -86,13 +86,13 @@ const pharmacyIconMap: Record<string, IconDefinition> = {
   "fa-mortar-pestle": faMortarPestle,
 };
 
-export function PharmacyCategoryIcon({
+export function PharmacyCategoryIcon({ id,
   icon,
   className = "h-4 w-4",
 }: {
   icon?: string | null;
   className?: string;
-}) {
+} & { id?: string }) {
   const definition = pharmacyIconMap[(icon ?? "").trim()] ?? faPills;
-  return <FontAwesomeIcon icon={definition} className={className} aria-hidden />;
+  return <FontAwesomeIcon id={id} icon={definition} className={className} aria-hidden />;
 }

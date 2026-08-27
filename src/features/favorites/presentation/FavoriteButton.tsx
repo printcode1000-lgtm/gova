@@ -17,7 +17,7 @@ interface FavoriteButtonProps {
   ui?: UiDescriptor;
 }
 
-export function FavoriteButton({ item, className, label, ui }: FavoriteButtonProps) {
+export function FavoriteButton({ item, className, label, ui }: FavoriteButtonProps & { id?: string }) {
   const { isFavorite, isLoading, toggleFavorite } = useFavorites();
   const [isMutating, setIsMutating] = React.useState(false);
   const active = isFavorite(item.type, item.targetId);

@@ -13,7 +13,7 @@ import {
 import { useProfileFulfillmentSettings } from "@/features/profile/ui";
 import { useProfileCarrierLabels } from "@/features/profile/ui";
 
-export function SellerCarrierLinkPanel({
+export function SellerCarrierLinkPanel({ id,
   orderId,
   sellerOrderId,
   busyAction,
@@ -23,7 +23,7 @@ export function SellerCarrierLinkPanel({
   sellerOrderId: string;
   busyAction: string;
   runAction: RunAction;
-}) {
+} & { id?: string }) {
   const { settings: fulfillmentSettings, isLoading: loadingFulfillment } =
     useProfileFulfillmentSettings();
   const carrierUids = fulfillmentSettings.carrierUids.filter(Boolean);
@@ -44,14 +44,14 @@ export function SellerCarrierLinkPanel({
 
   if (loadingFulfillment) {
     return (
-      <div className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
+      <div id={id} className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
         جاري تحميل إعدادات الشحن...
       </div>
     );
   }
 
   return (
-    <div className="mt-3 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
+    <div id={id} className="mt-3 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
       <p className="leading-6 text-on-surface">{text.noCarrierSellerHint}</p>
       {carrierUids.length > 1 ? (
         <label className="mt-3 block space-y-1.5">
@@ -97,9 +97,9 @@ export function SellerCarrierLinkPanel({
   );
 }
 
-export function SellerFulfillmentEditPanel({ orderId }: { orderId: string }) {
+export function SellerFulfillmentEditPanel({ id, orderId }: { orderId: string } & { id?: string }) {
   return (
-    <div className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm">
+    <div id={id} className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm">
       <p className="leading-6 text-on-surface">{text.sellerFulfillmentHint}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         <Link

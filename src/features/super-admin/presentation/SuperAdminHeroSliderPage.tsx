@@ -181,7 +181,7 @@ export function SuperAdminHeroSliderPage() {
 
   if (isLoading || !authorized) {
     return (
-      <main className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main id="super-admin.super-admin-hero-slider-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري التحقق من الصلاحيات…
       </main>
     );
@@ -189,17 +189,17 @@ export function SuperAdminHeroSliderPage() {
 
   if (loadFailed) {
     return (
-      <main className="container mx-auto max-w-6xl px-4 py-8">
-        <div className="rounded-lg border border-destructive/30 bg-card px-4 py-6">
-          <p className="text-sm text-destructive">{message}</p>
-          <Button ui={{ uid: "super-admin.hero-slider.reload-7xQtZK", id: "super-admin.hero-slider.reload", kind: "action", action: "reload", part: "toolbar" }}
+      <main id="super-admin.super-admin-hero-slider-page.main.2" className="container mx-auto max-w-6xl px-4 py-8">
+        <div id="super-admin.super-admin-hero-slider-page.div" className="rounded-lg border border-destructive/30 bg-card px-4 py-6">
+          <p id="super-admin.super-admin-hero-slider-page.p" className="text-sm text-destructive">{message}</p>
+          <Button id="super-admin.super-admin-hero-slider-page.button" ui={{ uid: "super-admin.hero-slider.reload-7xQtZK", id: "super-admin.hero-slider.reload", kind: "action", action: "reload", part: "toolbar" }}
             type="button"
             variant="outline"
             className="mt-4"
             onClick={() => void load()}
             disabled={busy}
           >
-            <RefreshCw className="me-2 h-4 w-4" />
+            <RefreshCw id="super-admin.super-admin-hero-slider-page.refresh-cw" className="me-2 h-4 w-4" />
             إعادة المحاولة
           </Button>
         </div>
@@ -209,31 +209,31 @@ export function SuperAdminHeroSliderPage() {
 
   if (!config || !record) {
     return (
-      <main className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main id="super-admin.super-admin-hero-slider-page.main.3" className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري تحميل الإعدادات…
       </main>
     );
   }
 
   return (
-    <main className="container mx-auto max-w-6xl px-4 py-8">
-      <header className="mb-6 flex items-start gap-3">
-        <div className="rounded-xl bg-primary/10 p-3 text-primary">
-          <ShieldCheck className="h-6 w-6" />
+    <main id="super-admin.super-admin-hero-slider-page.main.4" className="container mx-auto max-w-6xl px-4 py-8">
+      <header id="super-admin.super-admin-hero-slider-page.header" className="mb-6 flex items-start gap-3">
+        <div id="super-admin.super-admin-hero-slider-page.div.2" className="rounded-xl bg-primary/10 p-3 text-primary">
+          <ShieldCheck id="super-admin.super-admin-hero-slider-page.shield-check" className="h-6 w-6" />
         </div>
-        <div>
-          <p className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
-          <h1 className="text-2xl font-bold">
+        <div id="super-admin.super-admin-hero-slider-page.div.3">
+          <p id="super-admin.super-admin-hero-slider-page.p.2" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
+          <h1 id="super-admin.super-admin-hero-slider-page.h1" className="text-2xl font-bold">
             إدارة Hero Slider للصفحة الرئيسية
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p id="super-admin.super-admin-hero-slider-page.p.3" className="mt-1 text-sm text-muted-foreground">
             سجل واحد يتحكم مباشرة في المكوّن داخل Home.
           </p>
         </div>
       </header>
 
       {message && (
-        <div
+        <div id="super-admin.super-admin-hero-slider-page.div.4"
           className="mb-4 rounded-lg border bg-card px-4 py-3 text-sm"
           role="status"
         >
@@ -241,29 +241,29 @@ export function SuperAdminHeroSliderPage() {
         </div>
       )}
 
-      <section className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div>
-          <p className="text-xs text-muted-foreground">الإصدار</p>
-          <p className="font-semibold">{record.version}</p>
+      <section id="super-admin.super-admin-hero-slider-page.section" className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div id="super-admin.super-admin-hero-slider-page.div.5">
+          <p id="super-admin.super-admin-hero-slider-page.p.4" className="text-xs text-muted-foreground">الإصدار</p>
+          <p id="super-admin.super-admin-hero-slider-page.p.5" className="font-semibold">{record.version}</p>
         </div>
-        <div>
-          <p className="text-xs text-muted-foreground">آخر تحديث</p>
-          <p className="text-sm">
+        <div id="super-admin.super-admin-hero-slider-page.div.6">
+          <p id="super-admin.super-admin-hero-slider-page.p.6" className="text-xs text-muted-foreground">آخر تحديث</p>
+          <p id="super-admin.super-admin-hero-slider-page.p.7" className="text-sm">
             {formatDateTimeDefault(record.updatedAt)}
           </p>
         </div>
       </section>
 
-      <section className="mb-6 rounded-xl border bg-card p-4">
-        <div className="mb-3 flex items-center gap-2">
-          <RefreshCw className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold">فترة البحث عن تحديثات</h2>
+      <section id="super-admin.super-admin-hero-slider-page.section.2" className="mb-6 rounded-xl border bg-card p-4">
+        <div id="super-admin.super-admin-hero-slider-page.div.7" className="mb-3 flex items-center gap-2">
+          <RefreshCw id="super-admin.super-admin-hero-slider-page.refresh-cw.2" className="h-5 w-5 text-primary" />
+          <h2 id="super-admin.super-admin-hero-slider-page.h2" className="font-semibold">فترة البحث عن تحديثات</h2>
         </div>
-        <div className="flex flex-wrap items-end gap-3">
-          <div className="min-w-52 space-y-2">
-            <Label htmlFor="check-interval">الفترة بالدقائق</Label>
+        <div id="super-admin.super-admin-hero-slider-page.div.8" className="flex flex-wrap items-end gap-3">
+          <div id="super-admin.super-admin-hero-slider-page.div.9" className="min-w-52 space-y-2">
+            <Label id="super-admin.super-admin-hero-slider-page.label" htmlFor="super-admin.hero-slider.check-interval">الفترة بالدقائق</Label>
             <Input ui={{ uid: "super-admin.hero-slider.check-interval-YL9yfX", id: "super-admin.hero-slider.check-interval", kind: "field", part: "settings" }}
-              id="check-interval"
+              id="super-admin.hero-slider.check-interval"
               type="number"
               min={5}
               max={1440}
@@ -291,17 +291,17 @@ export function SuperAdminHeroSliderPage() {
             </Button>
           ))}
         </div>
-        <p className="mt-3 text-xs text-muted-foreground">
+        <p id="super-admin.super-admin-hero-slider-page.p.8" className="mt-3 text-xs text-muted-foreground">
           المعاينة تعرض كل التعديلات والصور محلياً قبل تطبيقها على الصفحة
           الرئيسية.
         </p>
       </section>
 
-      <div className="mb-3 flex items-center gap-2">
-        <Eye className="h-5 w-5 text-primary" />
-        <h2 className="font-semibold">المعاينة الحية والتحرير</h2>
+      <div id="super-admin.super-admin-hero-slider-page.div.10" className="mb-3 flex items-center gap-2">
+        <Eye id="super-admin.super-admin-hero-slider-page.eye" className="h-5 w-5 text-primary" />
+        <h2 id="super-admin.super-admin-hero-slider-page.h2.2" className="font-semibold">المعاينة الحية والتحرير</h2>
       </div>
-      <HeroSlider
+      <HeroSlider id="super-admin.super-admin-hero-slider-page.hero-slider"
         mode="admin-edit"
         config={config}
         onChange={handleConfigChange}

@@ -11,22 +11,22 @@ import {
   SelectValue,
 } from "@/shared/ui/select";
 
-export function ProductComponentFrame({
+export function ProductComponentFrame({ id,
   title,
   children,
 }: {
   title: string;
   children: React.ReactNode;
-}) {
+} & { id?: string }) {
   return (
-    <section className="rounded-2xl border bg-card p-4 shadow-sm sm:p-5">
+    <section id={id} className="rounded-2xl border bg-card p-4 shadow-sm sm:p-5">
       <h3 className="mb-4 text-lg font-bold">{title}</h3>
       {children}
     </section>
   );
 }
 
-export function ProductField({
+export function ProductField({ id,
   label,
   value,
   mode,
@@ -40,14 +40,14 @@ export function ProductField({
   onChange: (value: string) => void;
   type?: React.HTMLInputTypeAttribute | "boolean";
   multiline?: boolean;
-}) {
+} & { id?: string }) {
   const { t, locale } = useTranslation();
 
   if (mode === "view") {
     if (type === "boolean") {
       const boolValue = value === "true";
       return (
-        <div className="rounded-xl bg-muted/40 px-3 py-2.5">
+        <div id={id} className="rounded-xl bg-muted/40 px-3 py-2.5">
           <p className="text-xs text-muted-foreground">{label}</p>
           <p className="mt-1 font-medium">
             {boolValue ? t("product.boolean.yes") : t("product.boolean.no")}
@@ -56,7 +56,7 @@ export function ProductField({
       );
     }
     return (
-      <div className="rounded-xl bg-muted/40 px-3 py-2.5">
+      <div id={id} className="rounded-xl bg-muted/40 px-3 py-2.5">
         <p className="text-xs text-muted-foreground">{label}</p>
         <p className="mt-1 whitespace-pre-wrap break-words font-medium">{value || "—"}</p>
       </div>
@@ -65,7 +65,7 @@ export function ProductField({
 
   if (type === "boolean") {
     return (
-      <label className="space-y-1.5 text-sm font-medium">
+      <label id={id} className="space-y-1.5 text-sm font-medium">
         <span>{label}</span>
         <Select
           value={value || "false"}
@@ -90,7 +90,7 @@ export function ProductField({
   const className =
     "asol-control asol-field-surface w-full border border-input px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
   return (
-    <label className="space-y-1.5 text-sm font-medium">
+    <label id={id} className="space-y-1.5 text-sm font-medium">
       <span>{label}</span>
       {multiline ? (
         <textarea

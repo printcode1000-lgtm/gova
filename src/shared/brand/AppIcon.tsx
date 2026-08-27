@@ -15,11 +15,11 @@ interface AppIconProps {
   className?: string;
 }
 
-export default function AppIcon({ size = 'lg', className = '' }: AppIconProps) {
+export default function AppIcon({ id, size = 'lg', className = '' }: AppIconProps & { id?: string }) {
   const sizes = sizeClasses[size];
 
   return (
-    <div className={`relative ${className}`}>
+    <div id={id} className={`relative ${className}`}>
       <Image
         src={withBasePath(BRANDING_WEB_APP_ICON_PATH)}
         alt="Asol App Icon"

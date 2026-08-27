@@ -8,7 +8,7 @@ interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export function LoadingSpinner({ size = 'md', className, ...props }: LoadingSpinnerProps) {
+export function LoadingSpinner({ size = 'md', className, ...props }: LoadingSpinnerProps & { id?: string }) {
   const sizeClasses = {
     sm: 'w-4 h-4',
     md: 'w-8 h-8',

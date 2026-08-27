@@ -8,13 +8,13 @@ interface HeroSliderImageProbeProps {
 }
 
 /** Loads slide images off-screen in view mode before they enter the carousel. */
-export function HeroSliderImageProbe({
+export function HeroSliderImageProbe({ id,
   src,
   onLoad,
   onError,
-}: HeroSliderImageProbeProps) {
+}: HeroSliderImageProbeProps & { id?: string }) {
   return (
-    <Image
+    <Image id={id}
       src={src}
       alt=""
       width={1}

@@ -36,12 +36,12 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
     strength <= 1 ? 'bg-error' : strength === 2 ? 'bg-warning' : strength === 3 ? 'bg-primary' : 'bg-success';
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-on-surface-variant">{t('auth.password.strength')}</span>
-        <span className="text-xs font-medium text-on-surface">{strengthLabel}</span>
+    <div id="auth.password-strength.div" className="space-y-2">
+      <div id="auth.password-strength.div.2" className="flex items-center justify-between">
+        <span id="auth.password-strength.span" className="text-xs text-on-surface-variant">{t('auth.password.strength')}</span>
+        <span id="auth.password-strength.span.2" className="text-xs font-medium text-on-surface">{strengthLabel}</span>
       </div>
-      <div className="flex gap-1">
+      <div id="auth.password-strength.div.3" className="flex gap-1">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
@@ -49,7 +49,7 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
           />
         ))}
       </div>
-      <ul className="space-y-1">
+      <ul id="auth.password-strength.ul" className="space-y-1">
         {REQUIREMENT_KEYS.map((req, i) => (
           <li
             key={req.key}

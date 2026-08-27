@@ -11,27 +11,27 @@ export function SimulationUsersStatus() {
   if (!state.allowed) return null;
 
   return (
-    <section className="min-w-0 space-y-3 rounded-2xl border border-outline-variant bg-surface p-3 sm:p-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <h2 className="font-bold text-on-surface">مستخدمو المحاكاة</h2>
-          <p className="break-words text-xs text-on-surface-variant">
+    <section id="simulation.simulation-users-status.section" className="min-w-0 space-y-3 rounded-2xl border border-outline-variant bg-surface p-3 sm:p-4">
+      <div id="simulation.simulation-users-status.div" className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div id="simulation.simulation-users-status.div.2" className="min-w-0">
+          <h2 id="simulation.simulation-users-status.h2" className="font-bold text-on-surface">مستخدمو المحاكاة</h2>
+          <p id="simulation.simulation-users-status.p" className="break-words text-xs text-on-surface-variant">
             تسعة حسابات ثابتة تُنشأ أو تُراجع في قاعدة بيانات البيئة الحالية.
           </p>
         </div>
-        <Button ui={{ uid: "super-admin.simulation.ensure-users-7q2o4Z", id: "super-admin.simulation.ensure-users", kind: "action", action: "ensure-simulation-users", part: "status" }}
+        <Button id="simulation.simulation-users-status.button" ui={{ uid: "super-admin.simulation.ensure-users-7q2o4Z", id: "super-admin.simulation.ensure-users", kind: "action", action: "ensure-simulation-users", part: "status" }}
           type="button"
           variant="outline"
           onClick={() => void state.ensure()}
           disabled={state.busy}
           className="w-full shrink-0 sm:w-auto"
         >
-          {state.busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+          {state.busy ? <Loader2 id="simulation.simulation-users-status.loader2" className="h-4 w-4 animate-spin" /> : <RefreshCw id="simulation.simulation-users-status.refresh-cw" className="h-4 w-4" />}
           مراجعة الحسابات
         </Button>
       </div>
-      {state.error ? <p className="break-words rounded-xl bg-error/10 p-3 text-sm text-error">{state.error}</p> : null}
-      <div className="grid min-w-0 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      {state.error ? <p id="simulation.simulation-users-status.p.2" className="break-words rounded-xl bg-error/10 p-3 text-sm text-error">{state.error}</p> : null}
+      <div id="simulation.simulation-users-status.div.3" className="grid min-w-0 gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {SIMULATION_USERS.map((user) => {
           const result = state.users.find((candidate) => candidate.id === user.id);
           const failed = result?.status === "failed";

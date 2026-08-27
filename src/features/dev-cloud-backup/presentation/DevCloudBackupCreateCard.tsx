@@ -18,27 +18,27 @@ export function DevCloudBackupCreateCard({
   onCreate: () => void;
 }) {
   return (
-    <div className="rounded-md border bg-surface p-4">
-      <div className="flex items-center gap-2 font-semibold">
-        <CloudDownload className="h-5 w-5" />
+    <div id="dev-cloud-backup.dev-cloud-backup-create-card.div" className="rounded-md border bg-surface p-4">
+      <div id="dev-cloud-backup.dev-cloud-backup-create-card.div.2" className="flex items-center gap-2 font-semibold">
+        <CloudDownload id="dev-cloud-backup.dev-cloud-backup-create-card.cloud-download" className="h-5 w-5" />
         إنشاء نسخة جديدة
       </div>
-      <div className="mt-4 grid gap-3">
-        <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800">
+      <div id="dev-cloud-backup.dev-cloud-backup-create-card.div.3" className="mt-4 grid gap-3">
+        <div id="dev-cloud-backup.dev-cloud-backup-create-card.div.4" className="rounded-md border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800">
           تحفظ النسخة كل قواعد Turso المتاحة في البيئة وكل كائنات R2 في الحسابين، بلا أي استثناء.
         </div>
-        <Button ui={{ uid: "dev-cloud-backup.create-s71BQD", id: "dev-cloud-backup.create", kind: "action", action: "create-backup", part: "create" }} type="button" onClick={onCreate} disabled={!devAllowed || busy === "create"}>
-          <FileArchive className="h-4 w-4" />
+        <Button id="dev-cloud-backup.dev-cloud-backup-create-card.button" ui={{ uid: "dev-cloud-backup.create-s71BQD", id: "dev-cloud-backup.create", kind: "action", action: "create-backup", part: "create" }} type="button" onClick={onCreate} disabled={!devAllowed || busy === "create"}>
+          <FileArchive id="dev-cloud-backup.dev-cloud-backup-create-card.file-archive" className="h-4 w-4" />
           {busy === "create" ? "جاري إنشاء النسخة" : "إنشاء zip كامل"}
         </Button>
       </div>
       {created ? (
-        <div className="mt-4 grid gap-2 rounded-md bg-muted p-3 text-sm">
-          <DevCloudBackupDetail label="الملف" value={created.fileName} ltr />
-          <DevCloudBackupDetail label="الحجم" value={sizeText(created.sizeBytes)} />
-          <DevCloudBackupDetail label="الجداول" value={String(created.tableCount)} />
-          <DevCloudBackupDetail label="السجلات" value={String(created.rowCount)} />
-          <DevCloudBackupDetail label="صور R2" value={String(created.r2ObjectCount)} />
+        <div id="dev-cloud-backup.dev-cloud-backup-create-card.div.5" className="mt-4 grid gap-2 rounded-md bg-muted p-3 text-sm">
+          <DevCloudBackupDetail id="dev-cloud-backup.dev-cloud-backup-create-card.dev-cloud-backup-detail" label="الملف" value={created.fileName} ltr />
+          <DevCloudBackupDetail id="dev-cloud-backup.dev-cloud-backup-create-card.dev-cloud-backup-detail.2" label="الحجم" value={sizeText(created.sizeBytes)} />
+          <DevCloudBackupDetail id="dev-cloud-backup.dev-cloud-backup-create-card.dev-cloud-backup-detail.3" label="الجداول" value={String(created.tableCount)} />
+          <DevCloudBackupDetail id="dev-cloud-backup.dev-cloud-backup-create-card.dev-cloud-backup-detail.4" label="السجلات" value={String(created.rowCount)} />
+          <DevCloudBackupDetail id="dev-cloud-backup.dev-cloud-backup-create-card.dev-cloud-backup-detail.5" label="صور R2" value={String(created.r2ObjectCount)} />
         </div>
       ) : null}
     </div>

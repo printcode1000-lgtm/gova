@@ -21,7 +21,7 @@ import {
 } from "./product-reviews/ProductReviewDialogs";
 import { ProductReviewsSummary } from "./product-reviews/ProductReviewsSummary";
 
-export function ProductReviews({
+export function ProductReviews({ id,
   productId,
   targetUid,
   ownerUid,
@@ -39,7 +39,7 @@ export function ProductReviews({
   targetEnabled: boolean;
   commentsEnabled: boolean;
   type?: "product" | "profile";
-}) {
+} & { id?: string }) {
   const { session, isLoggedIn } = useSessionRuntime();
   const [result, setResult] = React.useState<ProductReviewsResult | null>(null);
   const [sort, setSort] = React.useState<ReviewSort>("newest");
@@ -242,7 +242,7 @@ export function ProductReviews({
   const average = result?.average ?? 0,
     total = result?.total ?? 0;
   return (
-    <div className="space-y-5">
+    <div id={id} className="space-y-5">
       <ProductReviewsSummary
         average={average}
         total={total}

@@ -26,46 +26,46 @@ export function ExecutionBox(props: {
   onCancel: () => void;
 }) {
   return (
-    <aside className="min-w-0 w-full space-y-3">
-      <header className="rounded-md border bg-surface p-3 sm:p-4">
-        <h2 className="font-semibold">التنفيذ</h2>
-        <p className="mt-1 text-xs text-on-surface-variant">
+    <aside id="google-play-console.deploy-runbook-execution-box.aside" className="min-w-0 w-full space-y-3">
+      <header id="google-play-console.deploy-runbook-execution-box.header" className="rounded-md border bg-surface p-3 sm:p-4">
+        <h2 id="google-play-console.deploy-runbook-execution-box.h2" className="font-semibold">التنفيذ</h2>
+        <p id="google-play-console.deploy-runbook-execution-box.p" className="mt-1 text-xs text-on-surface-variant">
           شغّل أو أوقف job النظام المحلي بعد مراجعة الأمر وعبارة التأكيد.
         </p>
       </header>
 
-      <DeployRunbookCollapsible
+      <DeployRunbookCollapsible id="google-play-console.deploy-runbook-execution-box.deploy-runbook-collapsible"
         title="معاينة الأمر"
         description="الأمر الذي سيُنفَّذ فعلياً عبر job النظام."
       >
-        <div className="min-w-0 overflow-x-auto rounded-md bg-muted p-3 text-xs">
+        <div id="google-play-console.deploy-runbook-execution-box.div" className="min-w-0 overflow-x-auto rounded-md bg-muted p-3 text-xs">
           <code className="block min-w-0 whitespace-pre-wrap break-all text-left" dir="ltr">
             {props.commandPreview}
           </code>
-          <p className="mt-2 break-words text-on-surface-variant">
+          <p id="google-play-console.deploy-runbook-execution-box.p.2" className="mt-2 break-words text-on-surface-variant">
             راجع المعاينة قبل التشغيل؛ السجل الكامل يظهر في الطرفية.
           </p>
         </div>
       </DeployRunbookCollapsible>
 
-      <DeployRunbookCollapsible
+      <DeployRunbookCollapsible id="google-play-console.deploy-runbook-execution-box.deploy-runbook-collapsible.2"
         title="خيارات الأمان"
         description="تجاوزات حساسة للنشر والـ manifest والملفات المؤقتة."
       >
-        <div className="grid gap-2">
-          <Option
+        <div id="google-play-console.deploy-runbook-execution-box.div.2" className="grid gap-2">
+          <Option id="google-play-console.deploy-runbook-execution-box.option"
             checked={props.allowEmpty}
             onChange={props.setAllowEmpty}
             label="السماح بتنفيذ فارغ"
             help="يسمح بإعادة نشر نفس commit أو إنشاء commit فارغ عند الحاجة."
           />
-          <Option
+          <Option id="google-play-console.deploy-runbook-execution-box.option.2"
             checked={props.allowManifestDowngrade}
             onChange={props.setAllowManifestDowngrade}
             label="السماح بخفض manifest"
             help="يتجاوز حماية خفض releaseId/version. لا تستخدمه إلا إذا كان الخفض مقصوداً."
           />
-          <Option
+          <Option id="google-play-console.deploy-runbook-execution-box.option.3"
             checked={props.allowScratchFiles}
             onChange={props.setAllowScratchFiles}
             label="السماح بملفات scratch"
@@ -74,15 +74,15 @@ export function ExecutionBox(props: {
         </div>
       </DeployRunbookCollapsible>
 
-      <DeployRunbookCollapsible
+      <DeployRunbookCollapsible id="google-play-console.deploy-runbook-execution-box.deploy-runbook-collapsible.3"
         title="تشغيل وإيقاف"
         description="عبارة التأكيد مطلوبة قبل بدء أي نشر إنتاجي."
       >
-        <div className="space-y-3">
-          <div className="space-y-1">
-            <label className="block space-y-1 text-sm">
-              <span>عبارة التأكيد</span>
-              <input
+        <div id="google-play-console.deploy-runbook-execution-box.div.3" className="space-y-3">
+          <div id="google-play-console.deploy-runbook-execution-box.div.4" className="space-y-1">
+            <label id="google-play-console.deploy-runbook-execution-box.label" className="block space-y-1 text-sm">
+              <span id="google-play-console.deploy-runbook-execution-box.span">عبارة التأكيد</span>
+              <input id="google-play-console.deploy-runbook-execution-box.input"
                 className="w-full rounded-md border bg-background p-2 text-left"
                 dir="ltr"
                 value={props.confirmation}
@@ -93,12 +93,12 @@ export function ExecutionBox(props: {
             <ConfirmationPhraseHelp exactPhrase={props.exactPhrase} onApply={props.setConfirmation} />
           </div>
           {props.startError ? (
-            <p className="rounded-md bg-error-container p-2 text-sm text-on-error-container break-words">
+            <p id="google-play-console.deploy-runbook-execution-box.p.3" className="rounded-md bg-error-container p-2 text-sm text-on-error-container break-words">
               {props.startError}
             </p>
           ) : null}
-          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-            <Button
+          <div id="google-play-console.deploy-runbook-execution-box.div.5" className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+            <Button id="google-play-console.deploy-runbook-execution-box.button.2"
               ui={{
                 uid: "deploy-runbook.execution.start-NVT7Gg",
                 id: "deploy-runbook.execution.start",
@@ -111,14 +111,14 @@ export function ExecutionBox(props: {
               onClick={props.onStart}
             >
               {props.locked ? (
-                <LoaderCircle className="h-4 w-4 animate-spin" />
+                <LoaderCircle id="google-play-console.deploy-runbook-execution-box.loader-circle" className="h-4 w-4 animate-spin" />
               ) : (
-                <Play className="h-4 w-4" />
+                <Play id="google-play-console.deploy-runbook-execution-box.play" className="h-4 w-4" />
               )}
               {props.locked ? "قيد التشغيل" : "تشغيل"}
             </Button>
             {props.activeJob ? (
-              <Button
+              <Button id="google-play-console.deploy-runbook-execution-box.button.3"
                 ui={{
                   uid: "deploy-runbook.execution.cancel-K6Ga4z",
                   id: "deploy-runbook.execution.cancel",
@@ -126,7 +126,7 @@ export function ExecutionBox(props: {
                   action: "cancel-run",
                   part: "execution",
                 }} variant="destructive" className="w-full sm:w-auto" onClick={props.onCancel}>
-                <StopCircle className="h-4 w-4" />
+                <StopCircle id="google-play-console.deploy-runbook-execution-box.stop-circle" className="h-4 w-4" />
                 إيقاف
               </Button>
             ) : null}
@@ -149,10 +149,10 @@ function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: s
   };
 
   return (
-    <div className="asol-selectable flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant">
-      <p className="min-w-0 break-words">
+    <div id="google-play-console.deploy-runbook-execution-box.div.6" className="asol-selectable flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant">
+      <p id="google-play-console.deploy-runbook-execution-box.p.4" className="min-w-0 break-words">
         يجب كتابة{" "}
-        <button
+        <button id="google-play-console.deploy-runbook-execution-box.button"
           type="button"
           className="font-mono text-primary underline-offset-2 active:underline"
           dir="ltr"
@@ -162,7 +162,7 @@ function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: s
         </button>
         {" "}لتأكيد أن الأمر قد يدفع وينشر إنتاجياً.
       </p>
-      <Button
+      <Button id="google-play-console.deploy-runbook-execution-box.button.4"
         ui={{
           uid: "deploy-runbook.execution.copy-phrase-FiE69A",
           id: "deploy-runbook.execution.copy-phrase",
@@ -176,7 +176,7 @@ function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: s
         className="h-7 shrink-0 px-2"
         onClick={applyPhrase}
       >
-        <Clipboard className="h-3.5 w-3.5" />
+        <Clipboard id="google-play-console.deploy-runbook-execution-box.clipboard" className="h-3.5 w-3.5" />
         {copied ? "تم النسخ" : "نسخ العبارة"}
       </Button>
     </div>

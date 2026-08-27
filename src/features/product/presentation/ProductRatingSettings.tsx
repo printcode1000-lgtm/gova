@@ -2,18 +2,18 @@
 
 import type { ProductRatingData } from "@/features/product";
 
-export function ProductRatingSettings({
+export function ProductRatingSettings({ id,
   rating,
   onChange,
 }: {
   rating: ProductRatingData;
   onChange: (rating: ProductRatingData) => void;
-}) {
+} & { id?: string }) {
   const set = (next: Partial<ProductRatingData>) =>
     onChange({ ...rating, ...next });
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div id={id} className="grid gap-4 sm:grid-cols-2">
       <label className="flex items-center gap-3 rounded-xl border p-3">
         <input
           type="checkbox"

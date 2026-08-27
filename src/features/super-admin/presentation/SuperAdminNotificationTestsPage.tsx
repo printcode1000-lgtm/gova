@@ -339,76 +339,76 @@ export function SuperAdminNotificationTestsPage() {
 
   if (isLoading || !authorized) {
     return (
-      <main className="container px-4 py-8 text-sm text-muted-foreground">
+      <main id="super-admin.super-admin-notification-tests-page.main" className="container px-4 py-8 text-sm text-muted-foreground">
         جاري التحقق من الصلاحيات...
       </main>
     );
   }
 
   return (
-    <main className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
-      <header className="mb-6 flex items-start gap-3">
-        <div className="rounded-xl bg-primary/10 p-3 text-primary">
-          <BellRing className="h-6 w-6" />
+    <main id="super-admin.super-admin-notification-tests-page.main.2" className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
+      <header id="super-admin.super-admin-notification-tests-page.header" className="mb-6 flex items-start gap-3">
+        <div id="super-admin.super-admin-notification-tests-page.div" className="rounded-xl bg-primary/10 p-3 text-primary">
+          <BellRing id="super-admin.super-admin-notification-tests-page.bell-ring" className="h-6 w-6" />
         </div>
-        <div>
-          <p className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
-          <h1 className="text-2xl font-bold">اختبارات الإشعارات</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+        <div id="super-admin.super-admin-notification-tests-page.div.2">
+          <p id="super-admin.super-admin-notification-tests-page.p" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
+          <h1 id="super-admin.super-admin-notification-tests-page.h1" className="text-2xl font-bold">اختبارات الإشعارات</h1>
+          <p id="super-admin.super-admin-notification-tests-page.p.2" className="mt-1 text-sm text-muted-foreground">
             اختبر القنوات والنغمة محليًا أو عبر المسار الحقيقي للخادم وFCM. اختبار Push مقيّد بحساب السوبر أدمن فقط.
           </p>
         </div>
       </header>
 
       {message ? (
-        <div className="mb-5 rounded-lg border bg-card px-4 py-3 text-sm" role="status">
+        <div id="super-admin.super-admin-notification-tests-page.div.3" className="mb-5 rounded-lg border bg-card px-4 py-3 text-sm" role="status">
           {message}
         </div>
       ) : null}
 
-      <section className="mb-5 rounded-xl border bg-card p-4">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Smartphone className="h-5 w-5 text-primary" />
-            <h2 className="font-semibold">حالة الجهاز والتسجيل</h2>
+      <section id="super-admin.super-admin-notification-tests-page.section" className="mb-5 rounded-xl border bg-card p-4">
+        <div id="super-admin.super-admin-notification-tests-page.div.4" className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div id="super-admin.super-admin-notification-tests-page.div.5" className="flex items-center gap-2">
+            <Smartphone id="super-admin.super-admin-notification-tests-page.smartphone" className="h-5 w-5 text-primary" />
+            <h2 id="super-admin.super-admin-notification-tests-page.h2" className="font-semibold">حالة الجهاز والتسجيل</h2>
           </div>
-          <Button ui={{ uid: "super-admin.notification-tests.refresh-status-81VXDC", id: "super-admin.notification-tests.refresh-status", kind: "action", action: "refresh-status", part: "status" }} variant="outline" size="sm" onClick={() => void refreshStatus()} disabled={statusBusy}>
-            {statusBusy ? <Loader2 className="me-2 h-4 w-4 animate-spin" /> : <RefreshCw className="me-2 h-4 w-4" />}
+          <Button id="super-admin.super-admin-notification-tests-page.button" ui={{ uid: "super-admin.notification-tests.refresh-status-81VXDC", id: "super-admin.notification-tests.refresh-status", kind: "action", action: "refresh-status", part: "status" }} variant="outline" size="sm" onClick={() => void refreshStatus()} disabled={statusBusy}>
+            {statusBusy ? <Loader2 id="super-admin.super-admin-notification-tests-page.loader2" className="me-2 h-4 w-4 animate-spin" /> : <RefreshCw id="super-admin.super-admin-notification-tests-page.refresh-cw" className="me-2 h-4 w-4" />}
             تحديث الحالة
           </Button>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-          <StatusCard label="المنصة" value={status?.platform ?? "—"} ok={status?.platform === "android" || status?.platform === "ios"} />
-          <StatusCard label="إذن الإشعارات" value={NOTIFICATION_PERMISSION_LABELS[status?.permission ?? ""] ?? status?.permission ?? "—"} ok={status?.permission === "granted"} />
-          <StatusCard label="Push مدعوم" value={status?.pushSupported ? "نعم" : "لا"} ok={Boolean(status?.pushSupported)} />
-          <StatusCard label="الجهاز مفعّل" value={status?.deviceEnabled ? "نعم" : "لا"} ok={Boolean(status?.deviceEnabled)} />
-          <StatusCard label="رموز الحساب" value={String(status?.recipient?.tokenCount ?? 0)} ok={Boolean(status?.recipient?.tokenCount)} />
-          <StatusCard label="اختبارات محفوظة" value={String(status?.centerTestCount ?? 0)} ok={Boolean(status?.centerTestCount)} />
+        <div id="super-admin.super-admin-notification-tests-page.div.6" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+          <StatusCard id="super-admin.super-admin-notification-tests-page.status-card" label="المنصة" value={status?.platform ?? "—"} ok={status?.platform === "android" || status?.platform === "ios"} />
+          <StatusCard id="super-admin.super-admin-notification-tests-page.status-card.2" label="إذن الإشعارات" value={NOTIFICATION_PERMISSION_LABELS[status?.permission ?? ""] ?? status?.permission ?? "—"} ok={status?.permission === "granted"} />
+          <StatusCard id="super-admin.super-admin-notification-tests-page.status-card.3" label="Push مدعوم" value={status?.pushSupported ? "نعم" : "لا"} ok={Boolean(status?.pushSupported)} />
+          <StatusCard id="super-admin.super-admin-notification-tests-page.status-card.4" label="الجهاز مفعّل" value={status?.deviceEnabled ? "نعم" : "لا"} ok={Boolean(status?.deviceEnabled)} />
+          <StatusCard id="super-admin.super-admin-notification-tests-page.status-card.5" label="رموز الحساب" value={String(status?.recipient?.tokenCount ?? 0)} ok={Boolean(status?.recipient?.tokenCount)} />
+          <StatusCard id="super-admin.super-admin-notification-tests-page.status-card.6" label="اختبارات محفوظة" value={String(status?.centerTestCount ?? 0)} ok={Boolean(status?.centerTestCount)} />
         </div>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button ui={{ uid: "super-admin.notification-tests.enable-aam1RE", id: "super-admin.notification-tests.enable", kind: "action", action: "enable-notifications", part: "status" }} onClick={() => void enableNotifications()} disabled={statusBusy}>
-            <ShieldCheck className="me-2 h-4 w-4" />
+        <div id="super-admin.super-admin-notification-tests-page.div.7" className="mt-4 flex flex-wrap gap-2">
+          <Button id="super-admin.super-admin-notification-tests-page.button.2" ui={{ uid: "super-admin.notification-tests.enable-aam1RE", id: "super-admin.notification-tests.enable", kind: "action", action: "enable-notifications", part: "status" }} onClick={() => void enableNotifications()} disabled={statusBusy}>
+            <ShieldCheck id="super-admin.super-admin-notification-tests-page.shield-check" className="me-2 h-4 w-4" />
             تفعيل أو إعادة تسجيل الجهاز
           </Button>
-          <Button ui={{ uid: "super-admin.notification-tests.open-settings-R5Ypn9", id: "super-admin.notification-tests.open-settings", kind: "action", action: "open-permission-settings", part: "status" }} variant="outline" onClick={() => void notifications.openPermissionSettings()}>
-            <ExternalLink className="me-2 h-4 w-4" />
+          <Button id="super-admin.super-admin-notification-tests-page.button.3" ui={{ uid: "super-admin.notification-tests.open-settings-R5Ypn9", id: "super-admin.notification-tests.open-settings", kind: "action", action: "open-permission-settings", part: "status" }} variant="outline" onClick={() => void notifications.openPermissionSettings()}>
+            <ExternalLink id="super-admin.super-admin-notification-tests-page.external-link" className="me-2 h-4 w-4" />
             فتح إعدادات التطبيق
           </Button>
-          <Button ui={{ uid: "super-admin.notification-tests.sync-center-LOl9KH", id: "super-admin.notification-tests.sync-center", kind: "action", action: "sync-notification-center", part: "status" }} variant="outline" onClick={() => void syncNotificationCenter()} disabled={statusBusy}>
-            <RefreshCw className="me-2 h-4 w-4" />
+          <Button id="super-admin.super-admin-notification-tests-page.button.4" ui={{ uid: "super-admin.notification-tests.sync-center-LOl9KH", id: "super-admin.notification-tests.sync-center", kind: "action", action: "sync-notification-center", part: "status" }} variant="outline" onClick={() => void syncNotificationCenter()} disabled={statusBusy}>
+            <RefreshCw id="super-admin.super-admin-notification-tests-page.refresh-cw.2" className="me-2 h-4 w-4" />
             مزامنة الشريط مع صفحة الإشعارات
           </Button>
         </div>
         {status?.recipient ? (
-          <p className="mt-3 text-xs text-muted-foreground">
+          <p id="super-admin.super-admin-notification-tests-page.p.3" className="mt-3 text-xs text-muted-foreground">
             المنصات المسجلة: {status.recipient.platforms.join("، ") || "—"} · المزودون: {status.recipient.providers.join("، ") || "—"}. اختبار Push يصل إلى الأجهزة المسجلة لهذا الحساب فقط.
           </p>
         ) : null}
       </section>
 
-      <section className="mb-5 rounded-xl border bg-card p-4">
-        <h2 className="mb-4 font-semibold">اختر قناة الاختبار</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <section id="super-admin.super-admin-notification-tests-page.section.2" className="mb-5 rounded-xl border bg-card p-4">
+        <h2 id="super-admin.super-admin-notification-tests-page.h2.2" className="mb-4 font-semibold">اختر قناة الاختبار</h2>
+        <div id="super-admin.super-admin-notification-tests-page.div.8" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {NOTIFICATION_TEST_SCENARIOS.map((item) => (
             <button
               key={item.id}
@@ -427,78 +427,78 @@ export function SuperAdminNotificationTestsPage() {
         </div>
       </section>
 
-      <section className="mb-5 grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-xl border bg-card p-4">
-          <h2 className="mb-4 font-semibold">إعداد الاختبار</h2>
-          <div className="grid gap-4">
-            <div className="grid grid-cols-2 gap-2">
-              <Button ui={{ uid: "super-admin.notification-tests.mode-local-Mb7X2H", id: "super-admin.notification-tests.mode-local", kind: "action", action: "select-local-mode", part: "mode" }} type="button" variant={mode === "local" ? "default" : "outline"} onClick={() => setMode("local")}>
-                <Smartphone className="me-2 h-4 w-4" />اختبار محلي
+      <section id="super-admin.super-admin-notification-tests-page.section.3" className="mb-5 grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
+        <div id="super-admin.super-admin-notification-tests-page.div.9" className="rounded-xl border bg-card p-4">
+          <h2 id="super-admin.super-admin-notification-tests-page.h2.3" className="mb-4 font-semibold">إعداد الاختبار</h2>
+          <div id="super-admin.super-admin-notification-tests-page.div.10" className="grid gap-4">
+            <div id="super-admin.super-admin-notification-tests-page.div.11" className="grid grid-cols-2 gap-2">
+              <Button id="super-admin.super-admin-notification-tests-page.button.5" ui={{ uid: "super-admin.notification-tests.mode-local-Mb7X2H", id: "super-admin.notification-tests.mode-local", kind: "action", action: "select-local-mode", part: "mode" }} type="button" variant={mode === "local" ? "default" : "outline"} onClick={() => setMode("local")}>
+                <Smartphone id="super-admin.super-admin-notification-tests-page.smartphone.2" className="me-2 h-4 w-4" />اختبار محلي
               </Button>
-              <Button ui={{ uid: "super-admin.notification-tests.mode-push-Jf2C2A", id: "super-admin.notification-tests.mode-push", kind: "action", action: "select-push-mode", part: "mode" }} type="button" variant={mode === "push" ? "default" : "outline"} onClick={() => setMode("push")}>
-                <Wifi className="me-2 h-4 w-4" />Push حقيقي
+              <Button id="super-admin.super-admin-notification-tests-page.button.6" ui={{ uid: "super-admin.notification-tests.mode-push-Jf2C2A", id: "super-admin.notification-tests.mode-push", kind: "action", action: "select-push-mode", part: "mode" }} type="button" variant={mode === "push" ? "default" : "outline"} onClick={() => setMode("push")}>
+                <Wifi id="super-admin.super-admin-notification-tests-page.wifi" className="me-2 h-4 w-4" />Push حقيقي
               </Button>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="notification-test-title">العنوان</Label>
+            <div id="super-admin.super-admin-notification-tests-page.div.12" className="space-y-2">
+              <Label id="super-admin.super-admin-notification-tests-page.label" htmlFor="notification-test-title">العنوان</Label>
               <Input ui={{ uid: "super-admin.notification-tests.title-6ucZ8Z", id: "super-admin.notification-tests.title", kind: "field", part: "form" }} id="notification-test-title" value={title} maxLength={120} onChange={(event) => setTitle(event.target.value)} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="notification-test-body">النص</Label>
+            <div id="super-admin.super-admin-notification-tests-page.div.13" className="space-y-2">
+              <Label id="super-admin.super-admin-notification-tests-page.label.2" htmlFor="notification-test-body">النص</Label>
               <Textarea ui={{ uid: "super-admin.notification-tests.body-ALXBj2", id: "super-admin.notification-tests.body", kind: "field", part: "form" }} id="notification-test-body" value={body} maxLength={1000} rows={4} onChange={(event) => setBody(event.target.value)} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="notification-test-route">الرابط الداخلي</Label>
+            <div id="super-admin.super-admin-notification-tests-page.div.14" className="space-y-2">
+              <Label id="super-admin.super-admin-notification-tests-page.label.3" htmlFor="notification-test-route">الرابط الداخلي</Label>
               <Input ui={{ uid: "super-admin.notification-tests.route-02cmBT", id: "super-admin.notification-tests.route", kind: "field", part: "form" }} id="notification-test-route" value={routeHref} dir="ltr" onChange={(event) => setRouteHref(event.target.value)} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="notification-test-batch-size">عدد الإشعارات المتتالية</Label>
+            <div id="super-admin.super-admin-notification-tests-page.div.15" className="space-y-2">
+              <Label id="super-admin.super-admin-notification-tests-page.label.4" htmlFor="notification-test-batch-size">عدد الإشعارات المتتالية</Label>
               <select id="notification-test-batch-size" className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={batchSize} onChange={(event) => setBatchSize(Number(event.target.value))}>
                 {notificationTestBatchSizeOptions.map((count) => <option key={count} value={count}>{count === 1 ? "إشعار واحد" : `${count} إشعارات متتالية`}</option>)}
               </select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="notification-test-delay">التأخير</Label>
+            <div id="super-admin.super-admin-notification-tests-page.div.16" className="space-y-2">
+              <Label id="super-admin.super-admin-notification-tests-page.label.5" htmlFor="notification-test-delay">التأخير</Label>
               <select id="notification-test-delay" className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={delaySeconds} onChange={(event) => setDelaySeconds(Number(event.target.value))}>
                 {notificationTestDelayOptions.map((seconds) => <option key={seconds} value={seconds}>{seconds === 0 ? "فوري" : `بعد ${seconds} ثوانٍ`}</option>)}
               </select>
-              <p className="text-xs text-muted-foreground">استخدم التأخير لتضع التطبيق في الخلفية أو تقفل الشاشة. لا تغلق التطبيق قبل أن ينتهي العد التنازلي.</p>
+              <p id="super-admin.super-admin-notification-tests-page.p.4" className="text-xs text-muted-foreground">استخدم التأخير لتضع التطبيق في الخلفية أو تقفل الشاشة. لا تغلق التطبيق قبل أن ينتهي العد التنازلي.</p>
             </div>
-            <Button ui={{ uid: "super-admin.notification-tests.run-xc3MkQ", id: "super-admin.notification-tests.run", kind: "action", action: "run-test", part: "submit" }} onClick={() => void runTest()} disabled={busy}>
-              {busy ? <Loader2 className="me-2 h-4 w-4 animate-spin" /> : <Send className="me-2 h-4 w-4" />}
+            <Button id="super-admin.super-admin-notification-tests-page.button.7" ui={{ uid: "super-admin.notification-tests.run-xc3MkQ", id: "super-admin.notification-tests.run", kind: "action", action: "run-test", part: "submit" }} onClick={() => void runTest()} disabled={busy}>
+              {busy ? <Loader2 id="super-admin.super-admin-notification-tests-page.loader2.2" className="me-2 h-4 w-4 animate-spin" /> : <Send id="super-admin.super-admin-notification-tests-page.send" className="me-2 h-4 w-4" />}
               {countdown !== null ? `الإرسال بعد ${countdown}` : mode === "local" ? "تشغيل الاختبار المحلي" : "إرسال Push إلى حسابي"}
             </Button>
           </div>
         </div>
 
-        <div className="rounded-xl border bg-card p-4">
-          <h2 className="mb-4 font-semibold">المتوقع</h2>
+        <div id="super-admin.super-admin-notification-tests-page.div.17" className="rounded-xl border bg-card p-4">
+          <h2 id="super-admin.super-admin-notification-tests-page.h2.4" className="mb-4 font-semibold">المتوقع</h2>
           <dl className="space-y-3 text-sm">
-            <Detail label="القناة" value={scenario.channelId} mono />
-            <Detail label="الأهمية" value={String(channel?.importance ?? "—")} />
-            <Detail label="الصوت" value={scenario.audible ? "custom_notification.mp3" : "بدون صوت"} />
-            <Detail label="الاهتزاز" value={channel?.vibration ? "مفعّل" : "متوقف"} />
-            <Detail label="الفئة" value={scenario.category} />
-            <Detail label="الأولوية" value={scenario.priority} />
+            <Detail id="super-admin.super-admin-notification-tests-page.detail" label="القناة" value={scenario.channelId} mono />
+            <Detail id="super-admin.super-admin-notification-tests-page.detail.2" label="الأهمية" value={String(channel?.importance ?? "—")} />
+            <Detail id="super-admin.super-admin-notification-tests-page.detail.3" label="الصوت" value={scenario.audible ? "custom_notification.mp3" : "بدون صوت"} />
+            <Detail id="super-admin.super-admin-notification-tests-page.detail.4" label="الاهتزاز" value={channel?.vibration ? "مفعّل" : "متوقف"} />
+            <Detail id="super-admin.super-admin-notification-tests-page.detail.5" label="الفئة" value={scenario.category} />
+            <Detail id="super-admin.super-admin-notification-tests-page.detail.6" label="الأولوية" value={scenario.priority} />
           </dl>
           {remoteResult ? (
-            <div className="mt-5 rounded-lg border bg-muted/40 p-3 text-sm">
-              <p className="flex items-center gap-2 font-semibold"><CheckCircle2 className="h-4 w-4 text-primary" />نتيجة Push</p>
-              <p className="mt-2">الحالة: <strong>{formatTestResultStatus(remoteResult.results[0]?.status ?? "failed")}</strong></p>
-              <p>الرموز: <strong>{remoteResult.results[0]?.tokenCount ?? 0}</strong></p>
-              <p className="break-all" dir="ltr">{remoteResult.dedupeKey}</p>
+            <div id="super-admin.super-admin-notification-tests-page.div.18" className="mt-5 rounded-lg border bg-muted/40 p-3 text-sm">
+              <p id="super-admin.super-admin-notification-tests-page.p.5" className="flex items-center gap-2 font-semibold"><CheckCircle2 id="super-admin.super-admin-notification-tests-page.check-circle2" className="h-4 w-4 text-primary" />نتيجة Push</p>
+              <p id="super-admin.super-admin-notification-tests-page.p.6" className="mt-2">الحالة: <strong>{formatTestResultStatus(remoteResult.results[0]?.status ?? "failed")}</strong></p>
+              <p id="super-admin.super-admin-notification-tests-page.p.7">الرموز: <strong>{remoteResult.results[0]?.tokenCount ?? 0}</strong></p>
+              <p id="super-admin.super-admin-notification-tests-page.p.8" className="break-all" dir="ltr">{remoteResult.dedupeKey}</p>
             </div>
           ) : null}
         </div>
       </section>
 
-      <section className="rounded-xl border bg-card p-4">
-        <div className="mb-4 flex items-center gap-2"><Clock3 className="h-5 w-5 text-primary" /><h2 className="font-semibold">آخر اختبارات هذه الجلسة</h2></div>
-        {history.length === 0 ? <p className="text-sm text-muted-foreground">لم يُجرَ أي اختبار بعد.</p> : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[680px] text-sm">
-              <thead><tr className="border-b text-muted-foreground"><th className="p-2 text-start">الوقت</th><th className="p-2 text-start">النوع</th><th className="p-2 text-start">السيناريو</th><th className="p-2 text-start">القناة</th><th className="p-2 text-start">النتيجة</th><th className="p-2 text-start">المركز</th><th className="p-2 text-start">الرموز</th></tr></thead>
-              <tbody>{history.map((item) => <tr key={item.id} className="border-b last:border-0"><td className="p-2">{item.at}</td><td className="p-2">{item.mode === "local" ? "محلي" : "Push"}</td><td className="p-2">{getNotificationTestScenario(item.scenarioId)?.label}</td><td className="p-2 font-mono text-xs" dir="ltr">{item.channelId}</td><td className="p-2">{formatStoredTestResultStatus(item.status)}</td><td className="p-2">{item.centerStatus === "saved" ? "محفوظ" : item.centerStatus === "pending" ? "ينتظر المزامنة" : "مفقود"}</td><td className="p-2">{item.tokenCount}</td></tr>)}</tbody>
+      <section id="super-admin.super-admin-notification-tests-page.section.4" className="rounded-xl border bg-card p-4">
+        <div id="super-admin.super-admin-notification-tests-page.div.19" className="mb-4 flex items-center gap-2"><Clock3 id="super-admin.super-admin-notification-tests-page.clock3" className="h-5 w-5 text-primary" /><h2 id="super-admin.super-admin-notification-tests-page.h2.5" className="font-semibold">آخر اختبارات هذه الجلسة</h2></div>
+        {history.length === 0 ? <p id="super-admin.super-admin-notification-tests-page.p.9" className="text-sm text-muted-foreground">لم يُجرَ أي اختبار بعد.</p> : (
+          <div id="super-admin.super-admin-notification-tests-page.div.20" className="overflow-x-auto">
+            <table id="super-admin.super-admin-notification-tests-page.table" className="w-full min-w-[680px] text-sm">
+              <thead id="super-admin.super-admin-notification-tests-page.thead"><tr id="super-admin.super-admin-notification-tests-page.tr" className="border-b text-muted-foreground"><th id="super-admin.super-admin-notification-tests-page.th" className="p-2 text-start">الوقت</th><th id="super-admin.super-admin-notification-tests-page.th.2" className="p-2 text-start">النوع</th><th id="super-admin.super-admin-notification-tests-page.th.3" className="p-2 text-start">السيناريو</th><th id="super-admin.super-admin-notification-tests-page.th.4" className="p-2 text-start">القناة</th><th id="super-admin.super-admin-notification-tests-page.th.5" className="p-2 text-start">النتيجة</th><th id="super-admin.super-admin-notification-tests-page.th.6" className="p-2 text-start">المركز</th><th id="super-admin.super-admin-notification-tests-page.th.7" className="p-2 text-start">الرموز</th></tr></thead>
+              <tbody id="super-admin.super-admin-notification-tests-page.tbody">{history.map((item) => <tr key={item.id} className="border-b last:border-0"><td className="p-2">{item.at}</td><td className="p-2">{item.mode === "local" ? "محلي" : "Push"}</td><td className="p-2">{getNotificationTestScenario(item.scenarioId)?.label}</td><td className="p-2 font-mono text-xs" dir="ltr">{item.channelId}</td><td className="p-2">{formatStoredTestResultStatus(item.status)}</td><td className="p-2">{item.centerStatus === "saved" ? "محفوظ" : item.centerStatus === "pending" ? "ينتظر المزامنة" : "مفقود"}</td><td className="p-2">{item.tokenCount}</td></tr>)}</tbody>
             </table>
           </div>
         )}
@@ -507,10 +507,10 @@ export function SuperAdminNotificationTestsPage() {
   );
 }
 
-function StatusCard({ label, value, ok }: { label: string; value: string; ok: boolean }) {
-  return <div className="rounded-lg border p-3"><p className="text-xs text-muted-foreground">{label}</p><p className={`mt-1 font-semibold ${ok ? "text-emerald-600" : "text-amber-600"}`}>{value}</p></div>;
+function StatusCard({ id, label, value, ok }: { label: string; value: string; ok: boolean } & { id?: string }) {
+  return <div id={id} className="rounded-lg border p-3"><p className="text-xs text-muted-foreground">{label}</p><p className={`mt-1 font-semibold ${ok ? "text-emerald-600" : "text-amber-600"}`}>{value}</p></div>;
 }
 
-function Detail({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
-  return <div className="flex items-start justify-between gap-3 border-b pb-2"><dt className="text-muted-foreground">{label}</dt><dd className={mono ? "font-mono text-xs" : "font-medium"} dir={mono ? "ltr" : undefined}>{value}</dd></div>;
+function Detail({ id, label, value, mono = false }: { label: string; value: string; mono?: boolean } & { id?: string }) {
+  return <div id={id} className="flex items-start justify-between gap-3 border-b pb-2"><dt className="text-muted-foreground">{label}</dt><dd className={mono ? "font-mono text-xs" : "font-medium"} dir={mono ? "ltr" : undefined}>{value}</dd></div>;
 }

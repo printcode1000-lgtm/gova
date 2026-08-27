@@ -53,7 +53,7 @@ import { deliveryStopAddress } from "./order-delivery-stop-model";
 
 export { deliveryStopAddress } from "./order-delivery-stop-model";
 
-export function SellerOrderCard({
+export function SellerOrderCard({ id,
   sellerOrder,
   details,
   sessionUid,
@@ -71,7 +71,7 @@ export function SellerOrderCard({
   isBuyer: boolean;
   busyAction: string;
   runAction: RunAction;
-}) {
+} & { id?: string }) {
   const sellerId = String(sellerOrder.seller_id ?? "");
   const carrierId = carrierFromSellerOrder(sellerOrder, [
     ...details.orderItems,
@@ -110,7 +110,7 @@ export function SellerOrderCard({
   const fulfillmentSnapshot = parseSellerOrderFulfillmentSnapshot(sellerOrder);
 
   return (
-    <article className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+    <article id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-outline-variant pb-3">
         <div>
           <h2 className="font-bold">{profileName(sellerProfile, sellerId)}</h2>

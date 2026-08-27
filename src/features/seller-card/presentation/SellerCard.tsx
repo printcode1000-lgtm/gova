@@ -74,7 +74,7 @@ function badgeClass(tone: SellerCardViewModel["badges"][number]["tone"]) {
   return "bg-surface-container-high text-on-surface-variant";
 }
 
-export function SellerCard({
+export function SellerCard({ id,
   card,
   variant,
   actions = [],
@@ -82,7 +82,7 @@ export function SellerCard({
   favoriteEnabled,
   ui,
   onOpen,
-}: SellerCardProps) {
+}: SellerCardProps & { id?: string }) {
   const horizontal = variant === "linked-provider" || variant === "compact";
   const showFavorite =
     (favoriteEnabled ??
@@ -92,7 +92,7 @@ export function SellerCard({
     Boolean(card.uid);
 
   return (
-    <article className={`relative ${variantClass[variant]} ${className}`}>
+    <article id={id} className={`relative ${variantClass[variant]} ${className}`}>
       {showFavorite ? (
         <FavoriteButton
           item={favoriteFromSellerCard(card)}

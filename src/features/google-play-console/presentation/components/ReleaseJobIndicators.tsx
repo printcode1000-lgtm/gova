@@ -48,11 +48,11 @@ export function SecondaryAction({ id, label, icon, job, disabled, start, cancel,
   start: (input: { commandId: string }) => Promise<unknown>;
   cancel: (job: BuildJobRecord) => Promise<unknown>;
   t: (key: string, params?: Record<string, string>) => string;
-}) {
+} & { id?: string }) {
   const running = Boolean(job && RUNNING_STATUSES.has(job.status));
   const Icon = SECONDARY_ICONS[icon];
   return <>
-    <Button variant="outline" disabled={disabled} onClick={() => void start({ commandId: id })}>
+    <Button id={id} variant="outline" disabled={disabled} onClick={() => void start({ commandId: id })}>
       {running ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Icon className="h-4 w-4" />}
       {running ? runningLabel(job, t) : t(label)}
     </Button>
@@ -60,17 +60,17 @@ export function SecondaryAction({ id, label, icon, job, disabled, start, cancel,
   </>;
 }
 
-export function StatusChip({ job, t }: {
+export function StatusChip({ id, job, t }: {
   job: BuildJobRecord;
   t: (key: string, params?: Record<string, string>) => string;
-}) {
+} & { id?: string }) {
   const running = RUNNING_STATUSES.has(job.status);
   const tone = running ? "bg-muted text-on-surface"
     : job.status === "succeeded" ? "bg-primary-container text-on-primary-container"
       : "bg-error-container text-on-error-container";
   const Icon = running ? LoaderCircle : job.status === "succeeded" ? CheckCircle2 : XCircle;
   return (
-    <p
+    <p id={id}
       role="status"
       className={`mt-2 flex flex-nowrap items-center gap-2 overflow-x-auto rounded-md p-2 text-xs ${tone}`}
     >
@@ -100,13 +100,13 @@ export function StatusChip({ job, t }: {
 }
 
 /** Stop button — only rendered while that command's own job is in flight. */
-export function StopButton({ job, cancel, t }: {
+export function StopButton({ id, job, cancel, t }: {
   job: BuildJobRecord;
   cancel: (job: BuildJobRecord) => Promise<unknown>;
   t: (key: string) => string;
-}) {
+} & { id?: string }) {
   return (
-    <Button variant="destructive" onClick={() => void cancel(job)}
+    <Button id={id} variant="destructive" onClick={() => void cancel(job)}
       title={`${t("releaseConsole.androidPaths.stop")} ${job.id}`}>
       <Square className="h-4 w-4" />{t("releaseConsole.androidPaths.stop")}
     </Button>

@@ -2,15 +2,15 @@ import * as React from "react";
 
 import { cn } from "@/shared/utils";
 
-export function StatusBox({
+export function StatusBox({ id,
   kind,
   children,
 }: {
   kind: "error" | "success" | "notice";
   children: React.ReactNode;
-}) {
+} & { id?: string }) {
   return (
-    <div
+    <div id={id}
       className={cn(
         "rounded-xl border px-4 py-3 text-sm",
         kind === "error" &&

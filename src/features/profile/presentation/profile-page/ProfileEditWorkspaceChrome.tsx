@@ -29,15 +29,15 @@ function profileEditTabLabels(
   };
 }
 
-export function ProfileEditTabsBar({
+export function ProfileEditTabsBar({ id,
   model,
 }: {
   model: ProfilePageContentModel;
-}) {
+} & { id?: string }) {
   const labels = profileEditTabLabels(model.t, model.locale);
 
   return (
-    <div className="order-2 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
+    <div id={id} className="order-2 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
       <div
         ref={model.tabsScrollRef}
         data-snapshot-id="profile-edit-tabs-scroll"
@@ -49,7 +49,7 @@ export function ProfileEditTabsBar({
           const active = model.activeTab === section;
 
           return (
-            <button
+            <button id={id}
               key={section}
               ref={(node) => {
                 model.navButtonRefs.current[section] = node;
@@ -123,15 +123,15 @@ export function ProfileEditTabsBar({
   );
 }
 
-export function ProfileEditSaveFeedback({
+export function ProfileEditSaveFeedback({ id,
   model,
 }: {
   model: ProfilePageContentModel;
-}) {
+} & { id?: string }) {
   if (!model.saveError) return null;
 
   return (
-    <div className="order-1 w-full max-w-full overflow-hidden rounded-3xl border border-error/20 bg-error/5 p-3 shadow-lg shadow-error/5 backdrop-blur-xl sm:p-4">
+    <div id={id} className="order-1 w-full max-w-full overflow-hidden rounded-3xl border border-error/20 bg-error/5 p-3 shadow-lg shadow-error/5 backdrop-blur-xl sm:p-4">
       <p className="inline-flex items-center gap-2 text-sm font-semibold text-error">
         <FontAwesomeIcon icon={faTriangleExclamation} className="h-4 w-4" />
         {model.saveError}
@@ -140,13 +140,13 @@ export function ProfileEditSaveFeedback({
   );
 }
 
-export function ProfileEditCarouselControls({
+export function ProfileEditCarouselControls({ id,
   model,
 }: {
   model: ProfilePageContentModel;
-}) {
+} & { id?: string }) {
   return (
-    <div
+    <div id={id}
       className="flex items-center justify-center gap-4 border-t border-outline-variant/50 py-3"
       aria-hidden="true"
     >

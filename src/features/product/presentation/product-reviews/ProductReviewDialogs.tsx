@@ -4,7 +4,7 @@ import type { ProductReview } from "@/features/product";
  * Composition surfaces only. Persisting a review or a seller reply is staged
  * work owned by `@asol/page-save-core`, so neither dialog carries a save button.
  */
-export function ProductReviewDialog({
+export function ProductReviewDialog({ id,
   comment,
   commentsEnabled,
   editing,
@@ -20,9 +20,9 @@ export function ProductReviewDialog({
   onClose: () => void;
   onCommentChange: (value: string) => void;
   onRatingChange: (value: number) => void;
-}) {
+} & { id?: string }) {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+    <div id={id} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
       <div
         role="dialog"
         aria-modal="true"
@@ -65,7 +65,7 @@ export function ProductReviewDialog({
   );
 }
 
-export function ProductReviewReplyDialog({
+export function ProductReviewReplyDialog({ id,
   replyText,
   onClose,
   onReplyTextChange,
@@ -73,9 +73,9 @@ export function ProductReviewReplyDialog({
   replyText: string;
   onClose: () => void;
   onReplyTextChange: (value: string) => void;
-}) {
+} & { id?: string }) {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+    <div id={id} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
       <div
         role="dialog"
         aria-modal="true"

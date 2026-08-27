@@ -22,14 +22,14 @@ export function OtaReleaseChanges({ diff, history, currentId, baseId, onBaseChan
     rightUncompressedBytes: file.currentSize ?? 0,
   })) as Parameters<typeof DeltaTable>[0]["rows"];
   return (
-    <section className="space-y-3 rounded-md border bg-surface p-4">
-      <select className="h-10 w-full rounded-md border bg-background px-3" value={baseId}
+    <section id="google-play-console.ota-release-changes.section" className="space-y-3 rounded-md border bg-surface p-4">
+      <select id="google-play-console.ota-release-changes.select" className="h-10 w-full rounded-md border bg-background px-3" value={baseId}
         onChange={(event) => onBaseChange(event.target.value)} dir="ltr">
         <option value="">{emptyText}</option>
         {candidates.map((item) => <option key={item.releaseId} value={item.releaseId}>
           {item.version} / {item.releaseId}</option>)}
       </select>
-      <DeltaTable rows={rows} emptyText={emptyText} />
+      <DeltaTable id="google-play-console.ota-release-changes.delta-table" rows={rows} emptyText={emptyText} />
     </section>
   );
 }

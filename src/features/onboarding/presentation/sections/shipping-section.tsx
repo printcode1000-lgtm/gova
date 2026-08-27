@@ -74,36 +74,36 @@ export function ShippingSection() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Truck className="h-5 w-5" />
+    <div id="onboarding.sections.shipping-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.shipping-section.card">
+        <CardHeader id="onboarding.sections.shipping-section.card-header">
+          <CardTitle id="onboarding.sections.shipping-section.card-title" className="flex items-center gap-2">
+            <Truck id="onboarding.sections.shipping-section.truck" className="h-5 w-5" />
             {t('onboarding.shipping.title')}
           </CardTitle>
-          <CardDescription>{t('onboarding.shipping.description')}</CardDescription>
+          <CardDescription id="onboarding.sections.shipping-section.card-description">{t('onboarding.shipping.description')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent id="onboarding.sections.shipping-section.card-content" className="space-y-6">
           {errors.methods && (
-            <p className="text-sm text-destructive">{errors.methods}</p>
+            <p id="onboarding.sections.shipping-section.p" className="text-sm text-destructive">{errors.methods}</p>
           )}
 
           {shipping.methods.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <div className="rounded-full bg-muted p-4 mb-4">
-                <Truck className="h-8 w-8 text-muted-foreground" />
+            <div id="onboarding.sections.shipping-section.div.2" className="flex flex-col items-center justify-center py-8 text-center">
+              <div id="onboarding.sections.shipping-section.div.3" className="rounded-full bg-muted p-4 mb-4">
+                <Truck id="onboarding.sections.shipping-section.truck.2" className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="font-medium mb-2">{t('onboarding.shipping.emptyTitle')}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <h3 id="onboarding.sections.shipping-section.h3" className="font-medium mb-2">{t('onboarding.shipping.emptyTitle')}</h3>
+              <p id="onboarding.sections.shipping-section.p.2" className="text-sm text-muted-foreground mb-4">
                 {t('onboarding.shipping.emptyDesc')}
               </p>
-              <Button ui={{ uid: 'onboarding.shipping.add-method-TV9Fq2', id: 'onboarding.shipping.add-method', kind: 'action', action: 'add-shipping-method', part: 'empty-state' }} onClick={addShippingMethod} className="gap-2">
-                <Plus className="h-4 w-4" />
+              <Button id="onboarding.sections.shipping-section.button" ui={{ uid: 'onboarding.shipping.add-method-TV9Fq2', id: 'onboarding.shipping.add-method', kind: 'action', action: 'add-shipping-method', part: 'empty-state' }} onClick={addShippingMethod} className="gap-2">
+                <Plus id="onboarding.sections.shipping-section.plus" className="h-4 w-4" />
                 {t('onboarding.shipping.addMethod')}
               </Button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div id="onboarding.sections.shipping-section.div.4" className="space-y-4">
               {shipping.methods.map((method) => (
                 <div
                   key={method.id}
@@ -206,8 +206,8 @@ export function ShippingSection() {
                 </div>
               ))}
 
-              <Button ui={{ uid: 'onboarding.shipping.add-another-method-vX8VJ3', id: 'onboarding.shipping.add-another-method', kind: 'action', action: 'add-shipping-method', part: 'list-footer' }} variant="outline" onClick={addShippingMethod} className="w-full gap-2">
-                <Plus className="h-4 w-4" />
+              <Button id="onboarding.sections.shipping-section.button.2" ui={{ uid: 'onboarding.shipping.add-another-method-vX8VJ3', id: 'onboarding.shipping.add-another-method', kind: 'action', action: 'add-shipping-method', part: 'list-footer' }} variant="outline" onClick={addShippingMethod} className="w-full gap-2">
+                <Plus id="onboarding.sections.shipping-section.plus.2" className="h-4 w-4" />
                 {t('onboarding.shipping.addAnother')}
               </Button>
             </div>
@@ -215,30 +215,30 @@ export function ShippingSection() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
+      <Card id="onboarding.sections.shipping-section.card.2">
+        <CardHeader id="onboarding.sections.shipping-section.card-header.2">
+          <CardTitle id="onboarding.sections.shipping-section.card-title.2" className="flex items-center gap-2">
+            <MapPin id="onboarding.sections.shipping-section.map-pin" className="h-5 w-5" />
             {t('onboarding.shipping.pickupTitle')}
           </CardTitle>
-          <CardDescription>{t('onboarding.shipping.pickupDesc')}</CardDescription>
+          <CardDescription id="onboarding.sections.shipping-section.card-description.2">{t('onboarding.shipping.pickupDesc')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label>{t('onboarding.shipping.enablePickup')}</Label>
-              <p className="text-sm text-muted-foreground">
+        <CardContent id="onboarding.sections.shipping-section.card-content.2" className="space-y-4">
+          <div id="onboarding.sections.shipping-section.div.5" className="flex items-center justify-between">
+            <div id="onboarding.sections.shipping-section.div.6">
+              <Label id="onboarding.sections.shipping-section.label">{t('onboarding.shipping.enablePickup')}</Label>
+              <p id="onboarding.sections.shipping-section.p.3" className="text-sm text-muted-foreground">
                 {t('onboarding.shipping.enablePickupDesc')}
               </p>
             </div>
-            <Switch ui={{ uid: 'onboarding.shipping.pickup-available-Ba96gu', id: 'onboarding.shipping.pickup-available', kind: 'field', action: 'toggle-pickup', part: 'pickup' }}
+            <Switch id="onboarding.sections.shipping-section.switch" ui={{ uid: 'onboarding.shipping.pickup-available-Ba96gu', id: 'onboarding.shipping.pickup-available', kind: 'field', action: 'toggle-pickup', part: 'pickup' }}
               checked={shipping.pickupAvailable}
               onCheckedChange={(checked) => updateShipping({ pickupAvailable: checked })}
             />
           </div>
 
           {shipping.pickupAvailable && (
-            <FormField label={t('onboarding.shipping.pickupAddress')} htmlFor="pickupAddress">
+            <FormField id="onboarding.sections.shipping-section.form-field" label={t('onboarding.shipping.pickupAddress')} htmlFor="pickupAddress">
               <FormInput ui={{ uid: 'onboarding.shipping.pickup-address-9lRiBD', id: 'onboarding.shipping.pickup-address', kind: 'field', part: 'form' }}
                 id="pickupAddress"
                 value={shipping.pickupAddress}
@@ -250,7 +250,7 @@ export function ShippingSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation onNext={handleNext} showSkip />
+      <StepNavigation id="onboarding.sections.shipping-section.step-navigation" onNext={handleNext} showSkip />
     </div>
   );
 }

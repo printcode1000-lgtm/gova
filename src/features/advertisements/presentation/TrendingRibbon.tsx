@@ -20,7 +20,7 @@ export interface TrendingRibbonProps {
   config: TrendingRibbonConfig;
 }
 
-export function TrendingRibbon({ config }: TrendingRibbonProps) {
+export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: string }) {
   const { t, isRTL } = useTranslation();
   const { label, items, onAction } = config || {};
 
@@ -209,7 +209,7 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
   const displayLabel = label.includes(".") ? t(label) : label;
 
   return (
-    <div
+    <div id={id}
       dir={isRTL ? "rtl" : "ltr"}
       ref={containerRef}
       onPointerDown={handlePointerDown}

@@ -50,16 +50,16 @@ export const ProfileContactsCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div className="py-10 text-center text-sm text-on-surface-variant">
+      <div id="profile.profile-contacts-card.div" className="py-10 text-center text-sm text-on-surface-variant">
         {t('profile.loading')}
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div id="profile.profile-contacts-card.div.2" className="space-y-4">
       {error ? (
-        <div className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <div id="profile.profile-contacts-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error}
         </div>
       ) : null}

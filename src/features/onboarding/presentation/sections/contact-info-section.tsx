@@ -77,15 +77,15 @@ export function ContactInfoSection() {
   const availablePlatforms = SOCIAL_PLATFORMS.filter((p) => !addedPlatforms.includes(p));
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('onboarding.contactInfo.title')}</CardTitle>
-          <CardDescription>{t('onboarding.contactInfo.description')}</CardDescription>
+    <div id="onboarding.sections.contact-info-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.contact-info-section.card">
+        <CardHeader id="onboarding.sections.contact-info-section.card-header">
+          <CardTitle id="onboarding.sections.contact-info-section.card-title">{t('onboarding.contactInfo.title')}</CardTitle>
+          <CardDescription id="onboarding.sections.contact-info-section.card-description">{t('onboarding.contactInfo.description')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <FormField label={t('onboarding.contactInfo.phoneNumber')} htmlFor="phoneNumber" required error={errors.phoneNumber}>
+        <CardContent id="onboarding.sections.contact-info-section.card-content" className="space-y-6">
+          <div id="onboarding.sections.contact-info-section.div.2" className="grid gap-6 lg:grid-cols-2">
+            <FormField id="onboarding.sections.contact-info-section.form-field" label={t('onboarding.contactInfo.phoneNumber')} htmlFor="phoneNumber" required error={errors.phoneNumber}>
               <FormInput ui={{ uid: 'onboarding.contact-info.phone-number-41YRCS', id: 'onboarding.contact-info.phone-number', kind: 'field', part: 'form' }}
                 id="phoneNumber"
                 value={contactInfo.phoneNumber}
@@ -96,7 +96,7 @@ export function ContactInfoSection() {
               />
             </FormField>
 
-            <FormField label={t('onboarding.contactInfo.whatsappNumber')} htmlFor="whatsappNumber" hint={t('onboarding.common.optional')}>
+            <FormField id="onboarding.sections.contact-info-section.form-field.2" label={t('onboarding.contactInfo.whatsappNumber')} htmlFor="whatsappNumber" hint={t('onboarding.common.optional')}>
               <FormInput ui={{ uid: 'onboarding.contact-info.whatsapp-number-E5i4Y5', id: 'onboarding.contact-info.whatsapp-number', kind: 'field', part: 'form' }}
                 id="whatsappNumber"
                 value={contactInfo.whatsappNumber}
@@ -107,8 +107,8 @@ export function ContactInfoSection() {
             </FormField>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <FormField label={t('onboarding.contactInfo.email')} htmlFor="email" required error={errors.email}>
+          <div id="onboarding.sections.contact-info-section.div.3" className="grid gap-6 lg:grid-cols-2">
+            <FormField id="onboarding.sections.contact-info-section.form-field.3" label={t('onboarding.contactInfo.email')} htmlFor="email" required error={errors.email}>
               <FormInput ui={{ uid: 'onboarding.contact-info.email-5BREY3', id: 'onboarding.contact-info.email', kind: 'field', part: 'form' }}
                 id="email"
                 value={contactInfo.email}
@@ -119,7 +119,7 @@ export function ContactInfoSection() {
               />
             </FormField>
 
-            <FormField label={t('onboarding.contactInfo.website')} htmlFor="website" error={errors.website} hint={t('onboarding.common.optional')}>
+            <FormField id="onboarding.sections.contact-info-section.form-field.4" label={t('onboarding.contactInfo.website')} htmlFor="website" error={errors.website} hint={t('onboarding.common.optional')}>
               <FormInput ui={{ uid: 'onboarding.contact-info.website-6FlYrn', id: 'onboarding.contact-info.website', kind: 'field', part: 'form' }}
                 id="website"
                 value={contactInfo.website}
@@ -131,14 +131,14 @@ export function ContactInfoSection() {
             </FormField>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-sm font-medium">{t('onboarding.contactInfo.socialLinks')}</Label>
-                <p className="text-xs text-muted-foreground">{t('onboarding.contactInfo.socialHint')}</p>
+          <div id="onboarding.sections.contact-info-section.div.4" className="space-y-4">
+            <div id="onboarding.sections.contact-info-section.div.5" className="flex items-center justify-between">
+              <div id="onboarding.sections.contact-info-section.div.6">
+                <Label id="onboarding.sections.contact-info-section.label" className="text-sm font-medium">{t('onboarding.contactInfo.socialLinks')}</Label>
+                <p id="onboarding.sections.contact-info-section.p" className="text-xs text-muted-foreground">{t('onboarding.contactInfo.socialHint')}</p>
               </div>
               {availablePlatforms.length > 0 && (
-                <div className="flex flex-wrap gap-1">
+                <div id="onboarding.sections.contact-info-section.div.7" className="flex flex-wrap gap-1">
                   {availablePlatforms.map((platform) => (
                     <Button
                       key={platform}
@@ -156,7 +156,7 @@ export function ContactInfoSection() {
             </div>
 
             {contactInfo.socialLinks.length > 0 && (
-              <div className="space-y-3">
+              <div id="onboarding.sections.contact-info-section.div.8" className="space-y-3">
                 {contactInfo.socialLinks.map((link) => (
                   <div key={link.platform} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                     <span className="text-sm font-medium">
@@ -187,7 +187,7 @@ export function ContactInfoSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation onNext={handleNext} showSkip />
+      <StepNavigation id="onboarding.sections.contact-info-section.step-navigation" onNext={handleNext} showSkip />
     </div>
   );
 }

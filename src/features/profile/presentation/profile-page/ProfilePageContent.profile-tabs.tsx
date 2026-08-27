@@ -40,7 +40,7 @@ export const PROFILE_EDIT_TAB_ICONS: Record<ProfileEditTab, IconDefinition> = {
   discounts: faPercent,
 };
 
-export function ProfileEditSectionFrame({
+export function ProfileEditSectionFrame({ id,
   children,
   icon,
   title,
@@ -54,9 +54,9 @@ export function ProfileEditSectionFrame({
   locale: string;
   color: string;
   hideHeader?: boolean;
-}) {
+} & { id?: string }) {
   return (
-    <section
+    <section id={id}
       className="rounded-3xl border bg-surface/90 p-3 shadow-lg shadow-primary/5 sm:p-4"
       style={{ borderColor: `${color}44` }}
     >

@@ -57,21 +57,21 @@ export function CategoriesSection() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Tag className="h-5 w-5" />
+    <div id="onboarding.sections.categories-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.categories-section.card">
+        <CardHeader id="onboarding.sections.categories-section.card-header">
+          <CardTitle id="onboarding.sections.categories-section.card-title" className="flex items-center gap-2">
+            <Tag id="onboarding.sections.categories-section.tag" className="h-5 w-5" />
             {t('onboarding.categories.title')}
           </CardTitle>
-          <CardDescription>{t('onboarding.categories.description')}</CardDescription>
+          <CardDescription id="onboarding.sections.categories-section.card-description">{t('onboarding.categories.description')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent id="onboarding.sections.categories-section.card-content" className="space-y-4">
           {errors.categories && (
-            <p className="text-sm text-destructive">{errors.categories}</p>
+            <p id="onboarding.sections.categories-section.p" className="text-sm text-destructive">{errors.categories}</p>
           )}
 
-          <div className="space-y-2">
+          <div id="onboarding.sections.categories-section.div.2" className="space-y-2">
             {categories.selectedCategories.map((category) => {
               const isExpanded = expandedCategories.includes(category.id);
               const categoryConfig = constants.fashionCategories.find(
@@ -135,7 +135,7 @@ export function CategoriesSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation onNext={handleNext} showSkip />
+      <StepNavigation id="onboarding.sections.categories-section.step-navigation" onNext={handleNext} showSkip />
     </div>
   );
 }

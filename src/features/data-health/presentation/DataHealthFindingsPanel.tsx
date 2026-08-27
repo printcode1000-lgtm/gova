@@ -54,7 +54,7 @@ export function DataHealthFindingsPanel(props: {
   onPageChange: (updater: (value: number) => number) => void;
 }) {
   return (
-    <div className="space-y-3">
+    <div id="data-health.data-health-findings-panel.div" className="space-y-3">
       <DataHealthFilters
         query={props.query}
         setQuery={props.setQuery}
@@ -71,23 +71,23 @@ export function DataHealthFindingsPanel(props: {
         setCleanableOnly={props.setCleanableOnly}
       />
 
-      <section className="overflow-hidden rounded-md border bg-surface">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3 text-sm">
-          <div className="flex items-center gap-2 font-semibold">
-            <AlertTriangle className="h-4 w-4" />
+      <section id="data-health.data-health-findings-panel.section" className="overflow-hidden rounded-md border bg-surface">
+        <div id="data-health.data-health-findings-panel.div.2" className="flex flex-wrap items-center justify-between gap-2 border-b p-3 text-sm">
+          <div id="data-health.data-health-findings-panel.div.3" className="flex items-center gap-2 font-semibold">
+            <AlertTriangle id="data-health.data-health-findings-panel.alert-triangle" className="h-4 w-4" />
             {props.filtered.length} نتيجة
           </div>
-          <div className="text-xs text-on-surface-variant">
+          <div id="data-health.data-health-findings-panel.div.4" className="text-xs text-on-surface-variant">
             آخر فحص {dateText(props.report.generatedAt)}، استغرق{" "}
             {props.report.durationMs} مللي ثانية
           </div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[1120px] text-sm">
-            <thead className="bg-muted/50 text-xs text-on-surface-variant">
-              <tr>
-                <th className="w-12 p-3 text-start">
-                  <input
+        <div id="data-health.data-health-findings-panel.div.5" className="overflow-x-auto">
+          <table id="data-health.data-health-findings-panel.table" className="w-full min-w-[1120px] text-sm">
+            <thead id="data-health.data-health-findings-panel.thead" className="bg-muted/50 text-xs text-on-surface-variant">
+              <tr id="data-health.data-health-findings-panel.tr">
+                <th id="data-health.data-health-findings-panel.th" className="w-12 p-3 text-start">
+                  <input id="data-health.data-health-findings-panel.input"
                     type="checkbox"
                     aria-label="تحديد النتائج الظاهرة"
                     checked={
@@ -99,15 +99,15 @@ export function DataHealthFindingsPanel(props: {
                     onChange={props.onToggleVisible}
                   />
                 </th>
-                <th className="p-3 text-start">المشكلة</th>
-                <th className="p-3 text-start">التصنيف</th>
-                <th className="p-3 text-start">المصدر</th>
-                <th className="p-3 text-start">الحالة</th>
-                <th className="p-3 text-start">الإجراء</th>
-                <th className="w-24 p-3 text-start">فتح</th>
+                <th id="data-health.data-health-findings-panel.th.2" className="p-3 text-start">المشكلة</th>
+                <th id="data-health.data-health-findings-panel.th.3" className="p-3 text-start">التصنيف</th>
+                <th id="data-health.data-health-findings-panel.th.4" className="p-3 text-start">المصدر</th>
+                <th id="data-health.data-health-findings-panel.th.5" className="p-3 text-start">الحالة</th>
+                <th id="data-health.data-health-findings-panel.th.6" className="p-3 text-start">الإجراء</th>
+                <th id="data-health.data-health-findings-panel.th.7" className="w-24 p-3 text-start">فتح</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="data-health.data-health-findings-panel.tbody">
               {props.visible.map((issue) => (
                 <tr key={issue.id} className="border-t align-top">
                   <td className="p-3">
@@ -183,9 +183,9 @@ export function DataHealthFindingsPanel(props: {
                 </tr>
               ))}
               {props.visible.length === 0 && !props.loading ? (
-                <tr>
-                  <td colSpan={7} className="p-10 text-center text-on-surface-variant">
-                    <CheckCircle2 className="mx-auto mb-2 h-8 w-8 text-green-600" />
+                <tr id="data-health.data-health-findings-panel.tr.2">
+                  <td id="data-health.data-health-findings-panel.td" colSpan={7} className="p-10 text-center text-on-surface-variant">
+                    <CheckCircle2 id="data-health.data-health-findings-panel.check-circle2" className="mx-auto mb-2 h-8 w-8 text-green-600" />
                     لا توجد نتائج مطابقة للفلاتر الحالية.
                   </td>
                 </tr>
@@ -193,71 +193,71 @@ export function DataHealthFindingsPanel(props: {
             </tbody>
           </table>
         </div>
-        <div className="flex items-center justify-between border-t p-3 text-sm">
-          <span>
+        <div id="data-health.data-health-findings-panel.div.6" className="flex items-center justify-between border-t p-3 text-sm">
+          <span id="data-health.data-health-findings-panel.span">
             صفحة {props.page} من {props.pageCount}
           </span>
-          <div className="flex gap-1">
-            <Button ui={{ uid: "data-health.findings.previous-page-HvCYL4", id: "data-health.findings.previous-page", kind: "action", action: "previous-page", part: "pagination" }}
+          <div id="data-health.data-health-findings-panel.div.7" className="flex gap-1">
+            <Button id="data-health.data-health-findings-panel.button" ui={{ uid: "data-health.findings.previous-page-HvCYL4", id: "data-health.findings.previous-page", kind: "action", action: "previous-page", part: "pagination" }}
               size="icon"
               variant="outline"
               aria-label="الصفحة السابقة"
               disabled={props.page <= 1}
               onClick={() => props.onPageChange((value) => Math.max(1, value - 1))}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight id="data-health.data-health-findings-panel.chevron-right" className="h-4 w-4" />
             </Button>
-            <Button ui={{ uid: "data-health.findings.next-page-XI5b99", id: "data-health.findings.next-page", kind: "action", action: "next-page", part: "pagination" }}
+            <Button id="data-health.data-health-findings-panel.button.2" ui={{ uid: "data-health.findings.next-page-XI5b99", id: "data-health.findings.next-page", kind: "action", action: "next-page", part: "pagination" }}
               size="icon"
               variant="outline"
               aria-label="الصفحة التالية"
               disabled={props.page >= props.pageCount}
               onClick={() => props.onPageChange((value) => Math.min(props.pageCount, value + 1))}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft id="data-health.data-health-findings-panel.chevron-left" className="h-4 w-4" />
             </Button>
           </div>
         </div>
       </section>
 
-      <section className="flex flex-wrap items-center justify-between gap-3 rounded-md border bg-surface p-3">
-        <div>
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <ShieldCheck className="h-4 w-4 text-green-700" />
+      <section id="data-health.data-health-findings-panel.section.2" className="flex flex-wrap items-center justify-between gap-3 rounded-md border bg-surface p-3">
+        <div id="data-health.data-health-findings-panel.div.8">
+          <div id="data-health.data-health-findings-panel.div.9" className="flex items-center gap-2 text-sm font-semibold">
+            <ShieldCheck id="data-health.data-health-findings-panel.shield-check" className="h-4 w-4 text-green-700" />
             تنظيف آمن للعناصر المحددة
           </div>
-          <p className="mt-1 text-xs text-on-surface-variant">
+          <p id="data-health.data-health-findings-panel.p" className="mt-1 text-xs text-on-surface-variant">
             لا توجد عناصر محددة تلقائيًا. ستظهر معاينة جديدة وتُعاد مطابقة كل بصمة قبل التنفيذ.
           </p>
         </div>
-        <Button ui={{ uid: "data-health.findings.create-plan-1wbnPY", id: "data-health.findings.create-plan", kind: "action", action: "create-cleanup-plan", part: "footer" }}
+        <Button id="data-health.data-health-findings-panel.button.3" ui={{ uid: "data-health.findings.create-plan-1wbnPY", id: "data-health.findings.create-plan", kind: "action", action: "create-cleanup-plan", part: "footer" }}
           type="button"
           variant="destructive"
           disabled={props.planning || props.selectedCount === 0}
           onClick={props.onCreatePlan}
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 id="data-health.data-health-findings-panel.trash2" className="h-4 w-4" />
           {props.planning ? "جاري إعداد المعاينة" : `معاينة تنظيف ${props.selectedCount}`}
         </Button>
       </section>
 
-      <section className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-red-200 bg-red-50 p-3">
-        <div>
-          <div className="flex items-center gap-2 text-sm font-semibold text-red-800">
-            <Trash2 className="h-4 w-4" />
+      <section id="data-health.data-health-findings-panel.section.3" className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-red-200 bg-red-50 p-3">
+        <div id="data-health.data-health-findings-panel.div.10">
+          <div id="data-health.data-health-findings-panel.div.11" className="flex items-center gap-2 text-sm font-semibold text-red-800">
+            <Trash2 id="data-health.data-health-findings-panel.trash2.2" className="h-4 w-4" />
             حذف جميع الطلبات
           </div>
-          <p className="mt-1 text-xs text-red-700">
+          <p id="data-health.data-health-findings-panel.p.2" className="mt-1 text-xs text-red-700">
             يشمل الطلبات العادية والمخصصة والمختلطة وكل السجلات التابعة وصور الطلبات المخصصة. يتم حذف الصور والبيانات فعليًا بدون أرشفة أو جدولة حذف.
           </p>
         </div>
-        <Button ui={{ uid: "data-health.findings.create-order-purge-plan-9OqtkM", id: "data-health.findings.create-order-purge-plan", kind: "action", action: "create-order-purge-plan", part: "footer" }}
+        <Button id="data-health.data-health-findings-panel.button.4" ui={{ uid: "data-health.findings.create-order-purge-plan-9OqtkM", id: "data-health.findings.create-order-purge-plan", kind: "action", action: "create-order-purge-plan", part: "footer" }}
           type="button"
           variant="destructive"
           disabled={props.orderPurgeBusy}
           onClick={props.onCreateOrderPurgePlan}
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 id="data-health.data-health-findings-panel.trash2.3" className="h-4 w-4" />
           {props.orderPurgeBusy ? "جاري الإعداد" : "معاينة حذف جميع الطلبات"}
         </Button>
       </section>

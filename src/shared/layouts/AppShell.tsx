@@ -13,12 +13,13 @@ import { resolveUiPage, uiPageAttributes } from '@asol/ui-registry-core';
 
 interface AppShellProps {
   children: ReactNode;
+  id?: string;
 }
 
 /**
  * App shell for in-app routes (all pages except splash `/`).
  */
-export function AppShell({ children }: AppShellProps) {
+export function AppShell({ children, id }: AppShellProps) {
   const installPrompt = useOpenInAsolHeaderPrompt();
   const page = resolveUiPage(usePathname());
   const shellStyle = {
@@ -28,7 +29,7 @@ export function AppShell({ children }: AppShellProps) {
   // System insets are owned by `SafeAreaController` at the root layout, so the
   // shell only has to consume the resulting CSS variables.
   return (
-    <div style={shellStyle}>
+    <div id={id} style={shellStyle}>
       <PageSaveRuntimeInit />
       <AppHeader installPrompt={installPrompt} />
       <main

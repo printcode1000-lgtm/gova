@@ -44,12 +44,12 @@ function createNextWorkingPeriod(
   return createDefaultWorkingPeriod(dayId, index);
 }
 
-export function WorkingHoursCard({
+export function WorkingHoursCard({ id,
   mode,
   value,
   locale = "ar",
   onChange,
-}: WorkingHoursCardProps) {
+}: WorkingHoursCardProps & { id?: string }) {
   const isEdit = mode === "edit";
   const text = {
     title: locale === "ar" ? "مواعيد العمل" : "Working hours",
@@ -88,7 +88,7 @@ export function WorkingHoursCard({
   if (!isEdit && !hasAnyHours) return null;
 
   return (
-    <section className="space-y-4 rounded-xl border border-outline-variant bg-surface p-4">
+    <section id={id} className="space-y-4 rounded-xl border border-outline-variant bg-surface p-4">
       {!isEdit ? (
         <div className="flex items-start justify-between gap-3">
           <div>

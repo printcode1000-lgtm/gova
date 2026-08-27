@@ -87,25 +87,25 @@ export function PageSaveDialog() {
       }}
     >
       <DialogContent {...uiAttributes({ uid: "page-save.dialog-CfGhr4", id: "page-save.dialog", kind: "region", part: "dialog" })} className="z-[100] w-[calc(100%-2rem)] max-w-md overflow-hidden rounded-[1.75rem] border-primary/20 p-0 shadow-2xl duration-300 data-[state=closed]:zoom-out-50 data-[state=open]:zoom-in-50 [&>button.absolute]:hidden">
-        <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-primary/5 to-background px-6 pb-5 pt-7">
-          <div className="absolute -end-12 -top-16 h-40 w-40 rounded-full bg-primary/15 blur-3xl" />
-          <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg shadow-primary/25">
-            <Save className="h-8 w-8" aria-hidden="true" />
+        <div id="page-save.page-save-dialog.div" className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-primary/5 to-background px-6 pb-5 pt-7">
+          <div id="page-save.page-save-dialog.div.2" className="absolute -end-12 -top-16 h-40 w-40 rounded-full bg-primary/15 blur-3xl" />
+          <div id="page-save.page-save-dialog.div.3" className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg shadow-primary/25">
+            <Save id="page-save.page-save-dialog.save" className="h-8 w-8" aria-hidden="true" />
           </div>
-          <DialogHeader className="relative mt-5 text-center sm:text-center">
-            <DialogTitle className="text-2xl leading-tight">
+          <DialogHeader id="page-save.page-save-dialog.dialog-header" className="relative mt-5 text-center sm:text-center">
+            <DialogTitle id="page-save.page-save-dialog.dialog-title" className="text-2xl leading-tight">
               {t("pageSave.dialogTitle")}
             </DialogTitle>
-            <DialogDescription className="pt-2 text-sm leading-6 text-on-surface-variant">
+            <DialogDescription id="page-save.page-save-dialog.dialog-description" className="pt-2 text-sm leading-6 text-on-surface-variant">
               {dialog?.pageLabel ?? t("pageSave.interrupted.heading")}
             </DialogDescription>
           </DialogHeader>
         </div>
 
-        <div className="max-h-[min(50vh,20rem)] space-y-2 overflow-y-auto px-6 py-4">
+        <div id="page-save.page-save-dialog.div.4" className="max-h-[min(50vh,20rem)] space-y-2 overflow-y-auto px-6 py-4">
           {snapshot.interrupted.length > 0 ? (
-            <section className="space-y-2 rounded-2xl border border-warning/40 bg-warning/10 p-3">
-              <p className="text-xs font-semibold text-on-surface">
+            <section id="page-save.page-save-dialog.section" className="space-y-2 rounded-2xl border border-warning/40 bg-warning/10 p-3">
+              <p id="page-save.page-save-dialog.p" className="text-xs font-semibold text-on-surface">
                 {t("pageSave.interrupted.heading")}
               </p>
               {snapshot.interrupted.map((operation) => (
@@ -134,7 +134,7 @@ export function PageSaveDialog() {
             </section>
           ) : null}
           {dialog ? (
-            <p className="text-xs font-semibold text-on-surface-variant">
+            <p id="page-save.page-save-dialog.p.2" className="text-xs font-semibold text-on-surface-variant">
               {t("pageSave.itemsHeading")}
             </p>
           ) : null}
@@ -182,17 +182,17 @@ export function PageSaveDialog() {
         </div>
 
         {dialog?.requiresNavigation ? (
-          <p className="px-6 text-xs leading-5 text-on-surface-variant">
+          <p id="page-save.page-save-dialog.p.3" className="px-6 text-xs leading-5 text-on-surface-variant">
             {t("pageSave.navigationHint")}
           </p>
         ) : null}
 
         {isSaving ? (
-          <p className="px-6 pb-2 text-center text-xs font-medium text-on-surface-variant">
+          <p id="page-save.page-save-dialog.p.4" className="px-6 pb-2 text-center text-xs font-medium text-on-surface-variant">
             {t("pageSave.saving")}
           </p>
         ) : snapshot.lastResult === "failure" ? (
-          <p
+          <p id="page-save.page-save-dialog.p.5"
             role="alert"
             className="px-6 pb-2 text-center text-xs font-medium text-error"
           >
@@ -200,8 +200,8 @@ export function PageSaveDialog() {
           </p>
         ) : null}
 
-        <DialogFooter className="flex-row flex-nowrap gap-2 px-6 pb-6 pt-2 sm:flex-row sm:space-x-0">
-          <Button
+        <DialogFooter id="page-save.page-save-dialog.dialog-footer" className="flex-row flex-nowrap gap-2 px-6 pb-6 pt-2 sm:flex-row sm:space-x-0">
+          <Button id="page-save.page-save-dialog.button"
             type="button"
             size="lg"
             ui={{
@@ -216,10 +216,10 @@ export function PageSaveDialog() {
             disabled={!dialog?.canSave || isSaving}
             onClick={handleExecute}
           >
-            <Check className="me-2 h-4 w-4" />
+            <Check id="page-save.page-save-dialog.check" className="me-2 h-4 w-4" />
             {isSaving ? t("pageSave.saving") : t("pageSave.confirmSave")}
           </Button>
-          <Button
+          <Button id="page-save.page-save-dialog.button.2"
             type="button"
             size="lg"
             variant="ghost"

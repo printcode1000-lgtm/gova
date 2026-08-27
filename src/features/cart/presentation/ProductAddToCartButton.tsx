@@ -28,7 +28,7 @@ export function ProductAddToCartButton({
   product,
   mainCategoryId,
   ui,
-}: ProductAddToCartButtonProps) {
+}: ProductAddToCartButtonProps & { id?: string }) {
   const [added, setAdded] = React.useState(false);
   const [isAdding, setIsAdding] = React.useState(false);
   const canAdd = Boolean(productId && sellerId);

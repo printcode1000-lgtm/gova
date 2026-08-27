@@ -15,7 +15,7 @@ export function ProductSpecificationsStyleEditor({
   onChange,
 }: ProductSpecificationsStyleEditorProps) {
   return (
-    <ProductStyleCard
+    <ProductStyleCard id="product.style-editors.specifications.product-specifications-style-editor.product-style-card"
       title="المواصفات العامة"
       visible={value.visible}
       order={value.order}
@@ -23,13 +23,13 @@ export function ProductSpecificationsStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div className="grid gap-2">
-        <OptionCheckbox label="اللون" checked={value.color} disabled={disabled} onChange={(color) => onChange({ ...value, color })} />
-        <OptionCheckbox label="الأبعاد" checked={value.dimensions} disabled={disabled} onChange={(dimensions) => onChange({ ...value, dimensions })} />
-        <OptionCheckbox label="الحالة" checked={value.condition} disabled={disabled} onChange={(condition) => onChange({ ...value, condition })} />
-        <OptionCheckbox label="المقاس" checked={value.size} disabled={disabled} onChange={(size) => onChange({ ...value, size })} />
-        <OptionCheckbox label="الوزن" checked={value.weight} disabled={disabled} onChange={(weight) => onChange({ ...value, weight })} />
-        <OptionCheckbox label="سنة الصنع" checked={value.year} disabled={disabled} onChange={(year) => onChange({ ...value, year })} />
+      <div id="product.style-editors.specifications.product-specifications-style-editor.div" className="grid gap-2">
+        <OptionCheckbox id="product.style-editors.specifications.product-specifications-style-editor.option-checkbox" label="اللون" checked={value.color} disabled={disabled} onChange={(color) => onChange({ ...value, color })} />
+        <OptionCheckbox id="product.style-editors.specifications.product-specifications-style-editor.option-checkbox.2" label="الأبعاد" checked={value.dimensions} disabled={disabled} onChange={(dimensions) => onChange({ ...value, dimensions })} />
+        <OptionCheckbox id="product.style-editors.specifications.product-specifications-style-editor.option-checkbox.3" label="الحالة" checked={value.condition} disabled={disabled} onChange={(condition) => onChange({ ...value, condition })} />
+        <OptionCheckbox id="product.style-editors.specifications.product-specifications-style-editor.option-checkbox.4" label="المقاس" checked={value.size} disabled={disabled} onChange={(size) => onChange({ ...value, size })} />
+        <OptionCheckbox id="product.style-editors.specifications.product-specifications-style-editor.option-checkbox.5" label="الوزن" checked={value.weight} disabled={disabled} onChange={(weight) => onChange({ ...value, weight })} />
+        <OptionCheckbox id="product.style-editors.specifications.product-specifications-style-editor.option-checkbox.6" label="سنة الصنع" checked={value.year} disabled={disabled} onChange={(year) => onChange({ ...value, year })} />
       </div>
     </ProductStyleCard>
   );

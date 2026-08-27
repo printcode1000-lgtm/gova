@@ -18,7 +18,7 @@ export function ProductOrderStyleEditor({
   onChange,
 }: ProductOrderStyleEditorProps) {
   return (
-    <ProductStyleCard
+    <ProductStyleCard id="product.style-editors.order.product-order-style-editor.product-style-card"
       title="الطلب"
       visible={value.visible}
       order={value.order}
@@ -26,32 +26,32 @@ export function ProductOrderStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div className="grid gap-2">
-        <OptionCheckbox
+      <div id="product.style-editors.order.product-order-style-editor.div" className="grid gap-2">
+        <OptionCheckbox id="product.style-editors.order.product-order-style-editor.option-checkbox"
           label="السلة"
           checked={value.cart}
           disabled={disabled}
           onChange={(cart) => onChange({ ...value, cart })}
         />
-        <OptionCheckbox
+        <OptionCheckbox id="product.style-editors.order.product-order-style-editor.option-checkbox.2"
           label="المفضلة"
           checked={value.favorite}
           disabled={disabled}
           onChange={(favorite) => onChange({ ...value, favorite })}
         />
-        <OptionCheckbox
+        <OptionCheckbox id="product.style-editors.order.product-order-style-editor.option-checkbox.3"
           label="تواصل مع مقدم الخدمة"
           checked={value.contact}
           disabled={disabled}
           onChange={(contact) => onChange({ ...value, contact })}
         />
-        <OptionCheckbox
+        <OptionCheckbox id="product.style-editors.order.product-order-style-editor.option-checkbox.4"
           label="مشاركة المنتج"
           checked={value.share}
           disabled={disabled}
           onChange={(share) => onChange({ ...value, share })}
         />
-        <OptionCheckbox
+        <OptionCheckbox id="product.style-editors.order.product-order-style-editor.option-checkbox.5"
           label="بروفايل صاحب المنتج"
           checked={value.profile}
           disabled={disabled}

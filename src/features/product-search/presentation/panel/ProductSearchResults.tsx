@@ -26,7 +26,7 @@ export function ProductSearchResults({
 
   if (activeMode === "products") {
     return (
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <div id="product-search.panel.product-search-results.div" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {products.map((product) => {
           const card = createProductCardViewModel(product);
           return (
@@ -44,7 +44,7 @@ export function ProductSearchResults({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+    <div id="product-search.panel.product-search-results.div.2" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       {sellers.map((seller) => {
         const card = createSellerCardViewModel(seller);
         return (

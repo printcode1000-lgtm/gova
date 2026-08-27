@@ -22,33 +22,33 @@ import { ContactSectionHeader } from "./ContactSectionHeader";
 export function PrimaryContactView({ model }: { model: ContactInfoCardModel }) {
 const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, groupedSocialLinks } = model;
 return (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('onboarding.contactInfo.title')}</CardTitle>
-            <CardDescription>{t('onboarding.contactInfo.description')}</CardDescription>
+        <Card id="profile.contact-info.primary-contact-view.card">
+          <CardHeader id="profile.contact-info.primary-contact-view.card-header">
+            <CardTitle id="profile.contact-info.primary-contact-view.card-title">{t('onboarding.contactInfo.title')}</CardTitle>
+            <CardDescription id="profile.contact-info.primary-contact-view.card-description">{t('onboarding.contactInfo.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent id="profile.contact-info.primary-contact-view.card-content" className="space-y-6">
             {/* Primary Contact Section */}
-            <Card>
-              <CardHeader>
-                <ContactSectionHeader
+            <Card id="profile.contact-info.primary-contact-view.card.2">
+              <CardHeader id="profile.contact-info.primary-contact-view.card-header.2">
+                <ContactSectionHeader id="profile.contact-info.primary-contact-view.contact-section-header"
                   icon={Phone}
                   title={t('onboarding.contactInfo.primaryContact')}
                   description={t('onboarding.contactInfo.primaryContactHint')}
                 />
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent id="profile.contact-info.primary-contact-view.card-content.2" className="space-y-4">
                 {/* Primary WhatsApp */}
-                <div className="space-y-2">
-                  <Label className="text-sm font-semibold flex items-center gap-2 text-on-surface">
-                    <MessageCircle className="h-4 w-4 text-primary" />
+                <div id="profile.contact-info.primary-contact-view.div" className="space-y-2">
+                  <Label id="profile.contact-info.primary-contact-view.label" className="text-sm font-semibold flex items-center gap-2 text-on-surface">
+                    <MessageCircle id="profile.contact-info.primary-contact-view.message-circle" className="h-4 w-4 text-primary" />
                     {t('onboarding.contactInfo.phoneTypes.whatsapp')}
                   </Label>
-                  <div className="relative">
-                    <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
+                  <div id="profile.contact-info.primary-contact-view.div.2" className="relative">
+                    <span id="profile.contact-info.primary-contact-view.span" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
                       +20
                     </span>
-                    <input
+                    <input id="profile.contact-info.primary-contact-view.input"
                       type="tel"
                       inputMode="tel"
                       maxLength={11}
@@ -62,12 +62,12 @@ return (
                 </div>
 
                 {/* Primary Email */}
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
+                <div id="profile.contact-info.primary-contact-view.div.3" className="space-y-2">
+                  <Label id="profile.contact-info.primary-contact-view.label.2" className="text-sm font-medium flex items-center gap-2">
+                    <Mail id="profile.contact-info.primary-contact-view.mail" className="h-4 w-4 text-muted-foreground" />
                     {t('onboarding.contactInfo.email')}
                   </Label>
-                  <Input ui={{ uid: 'profile.contact.primary-email-eJHx5o', id: 'profile.contact.primary-email', kind: 'field', part: 'primary' }}
+                  <Input id="profile.contact-info.primary-contact-view.input.2" ui={{ uid: 'profile.contact.primary-email-eJHx5o', id: 'profile.contact.primary-email', kind: 'field', part: 'primary' }}
                     value={localData.emails.find((e) => e.id === 'primary')?.email || ''}
                     onChange={(e) => updateEmail('primary', { email: e.target.value })}
                     placeholder={t('onboarding.contactInfo.emailPlaceholder')}
@@ -78,43 +78,43 @@ return (
 
                 {/* Password Change Section */}
                 {!readOnly && (
-                  <div className="space-y-2">
-                    <Button ui={{ uid: 'profile.contact.toggle-password-xs20PV', id: 'profile.contact.toggle-password', kind: 'action', action: 'toggle-password-form', part: 'password' }}
+                  <div id="profile.contact-info.primary-contact-view.div.4" className="space-y-2">
+                    <Button id="profile.contact-info.primary-contact-view.button" ui={{ uid: 'profile.contact.toggle-password-xs20PV', id: 'profile.contact.toggle-password', kind: 'action', action: 'toggle-password-form', part: 'password' }}
                       variant="ghost"
                       size="sm"
                       className="w-full justify-start gap-2"
                       onClick={() => setIsPasswordOpen(!isPasswordOpen)}
                     >
-                      <Lock className="h-4 w-4" />
+                      <Lock id="profile.contact-info.primary-contact-view.lock" className="h-4 w-4" />
                       {t('onboarding.contactInfo.changePassword')}
-                      <ChevronDown className={`h-4 w-4 transition-transform ${isPasswordOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown id="profile.contact-info.primary-contact-view.chevron-down" className={`h-4 w-4 transition-transform ${isPasswordOpen ? 'rotate-180' : ''}`} />
                     </Button>
                     {isPasswordOpen && (
-                      <div className="space-y-4 pt-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="currentPassword">{t('onboarding.contactInfo.currentPassword')}</Label>
+                      <div id="profile.contact-info.primary-contact-view.div.5" className="space-y-4 pt-4">
+                        <div id="profile.contact-info.primary-contact-view.div.6" className="space-y-2">
+                          <Label id="profile.contact-info.primary-contact-view.label.3" htmlFor="profile.primary-contact.current-password">{t('onboarding.contactInfo.currentPassword')}</Label>
                           <Input ui={{ uid: 'profile.contact.current-password-f4RHGb', id: 'profile.contact.current-password', kind: 'field', part: 'password' }}
-                            id="currentPassword"
+                            id="profile.primary-contact.current-password"
                             type="password"
                             value={passwordData.currentPassword}
                             onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                             placeholder={t('onboarding.contactInfo.currentPasswordPlaceholder')}
                           />
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="newPassword">{t('onboarding.contactInfo.newPassword')}</Label>
+                        <div id="profile.contact-info.primary-contact-view.div.7" className="space-y-2">
+                          <Label id="profile.contact-info.primary-contact-view.label.4" htmlFor="profile.primary-contact.new-password">{t('onboarding.contactInfo.newPassword')}</Label>
                           <Input ui={{ uid: 'profile.contact.new-password-QXC1u7', id: 'profile.contact.new-password', kind: 'field', part: 'password' }}
-                            id="newPassword"
+                            id="profile.primary-contact.new-password"
                             type="password"
                             value={passwordData.newPassword}
                             onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                             placeholder={t('onboarding.contactInfo.newPasswordPlaceholder')}
                           />
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="confirmPassword">{t('onboarding.contactInfo.confirmPassword')}</Label>
+                        <div id="profile.contact-info.primary-contact-view.div.8" className="space-y-2">
+                          <Label id="profile.contact-info.primary-contact-view.label.5" htmlFor="profile.primary-contact.confirm-password">{t('onboarding.contactInfo.confirmPassword')}</Label>
                           <Input ui={{ uid: 'profile.contact.confirm-password-JJ8pJH', id: 'profile.contact.confirm-password', kind: 'field', part: 'password' }}
-                            id="confirmPassword"
+                            id="profile.primary-contact.confirm-password"
                             type="password"
                             value={passwordData.confirmPassword}
                             onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
@@ -129,21 +129,21 @@ return (
             </Card>
 
             {/* Additional Contact Section */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Share2 className="h-4 w-4 text-muted-foreground" />
+            <Card id="profile.contact-info.primary-contact-view.card.3">
+              <CardHeader id="profile.contact-info.primary-contact-view.card-header.3">
+                <div id="profile.contact-info.primary-contact-view.div.9" className="flex items-center justify-between">
+                  <div id="profile.contact-info.primary-contact-view.div.10">
+                    <CardTitle id="profile.contact-info.primary-contact-view.card-title.2" className="text-base flex items-center gap-2">
+                      <Share2 id="profile.contact-info.primary-contact-view.share2" className="h-4 w-4 text-muted-foreground" />
                       {t('onboarding.contactInfo.additionalContact')}
                     </CardTitle>
-                    <CardDescription className="text-xs">{t('onboarding.contactInfo.additionalContactHint')}</CardDescription>
+                    <CardDescription id="profile.contact-info.primary-contact-view.card-description.2" className="text-xs">{t('onboarding.contactInfo.additionalContactHint')}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3 sm:space-y-4">
+              <CardContent id="profile.contact-info.primary-contact-view.card-content.3" className="space-y-3 sm:space-y-4">
                 {!readOnly && (
-                  <ContactQuickAddGrid
+                  <ContactQuickAddGrid id="profile.contact-info.primary-contact-view.contact-quick-add-grid"
                     items={quickAddItems}
                     onAdd={handleAddItem}
                     title={locale === 'ar' ? 'أضف وسيلة تواصل بسرعة' : 'Quick add contact method'}
@@ -227,24 +227,24 @@ return (
 
             {/* Additional Emails */}
             {localData.emails.filter((e) => e.id !== 'primary').length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
-                    <span style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
+              <div id="profile.contact-info.primary-contact-view.div.11" className="space-y-2">
+                <div id="profile.contact-info.primary-contact-view.div.12" className="flex items-center gap-2">
+                  <span id="profile.contact-info.primary-contact-view.span.2" className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id="profile.contact-info.primary-contact-view.font-awesome-icon" icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
+                    <span id="profile.contact-info.primary-contact-view.span.3" style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
-                    <Button ui={{ uid: 'profile.contact.add-email-2UgRs5', id: 'profile.contact.add-email', kind: 'action', action: 'add-email', part: 'emails' }}
+                    <Button id="profile.contact-info.primary-contact-view.button.2" ui={{ uid: 'profile.contact.add-email-2UgRs5', id: 'profile.contact.add-email', kind: 'action', action: 'add-email', part: 'emails' }}
                       variant="outline"
                       size="sm"
                       onClick={addEmail}
                       className="gap-1 h-6 px-2 text-xs"
                     >
-                      <Plus className="h-3 w-3" />
+                      <Plus id="profile.contact-info.primary-contact-view.plus" className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
-                <div className="space-y-2">
+                <div id="profile.contact-info.primary-contact-view.div.13" className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink) => (
                     <div
                       key={emailLink.id}
@@ -283,7 +283,7 @@ return (
 
             {/* Social Links */}
             {localData.socialLinks.length > 0 && (
-              <div className="space-y-4">
+              <div id="profile.contact-info.primary-contact-view.div.14" className="space-y-4">
                 {SOCIAL_PLATFORMS.map((platform) => {
                   const platformLinks = groupedSocialLinks[platform];
                   if (!platformLinks || platformLinks.length === 0) return null;
@@ -353,24 +353,24 @@ return (
 
             {/* Websites */}
             {localData.websites.length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
-                    <span style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
+              <div id="profile.contact-info.primary-contact-view.div.15" className="space-y-2">
+                <div id="profile.contact-info.primary-contact-view.div.16" className="flex items-center gap-2">
+                  <span id="profile.contact-info.primary-contact-view.span.4" className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id="profile.contact-info.primary-contact-view.font-awesome-icon.2" icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
+                    <span id="profile.contact-info.primary-contact-view.span.5" style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
-                    <Button ui={{ uid: 'profile.contact.add-website-nQM78h', id: 'profile.contact.add-website', kind: 'action', action: 'add-website', part: 'websites' }}
+                    <Button id="profile.contact-info.primary-contact-view.button.3" ui={{ uid: 'profile.contact.add-website-nQM78h', id: 'profile.contact.add-website', kind: 'action', action: 'add-website', part: 'websites' }}
                       variant="outline"
                       size="sm"
                       onClick={addWebsite}
                       className="gap-1 h-6 px-2 text-xs"
                     >
-                      <Plus className="h-3 w-3" />
+                      <Plus id="profile.contact-info.primary-contact-view.plus.2" className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
-                <div className="space-y-2">
+                <div id="profile.contact-info.primary-contact-view.div.17" className="space-y-2">
                   {localData.websites.map((site) => (
                     <div
                       key={site.id}

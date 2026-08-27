@@ -104,17 +104,17 @@ export function StoreIdentitySection() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('onboarding.storeIdentity.title')}</CardTitle>
-          <CardDescription>{t('onboarding.storeIdentity.description')}</CardDescription>
+    <div id="onboarding.sections.store-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.store-identity-section.card">
+        <CardHeader id="onboarding.sections.store-identity-section.card-header">
+          <CardTitle id="onboarding.sections.store-identity-section.card-title">{t('onboarding.storeIdentity.title')}</CardTitle>
+          <CardDescription id="onboarding.sections.store-identity-section.card-description">{t('onboarding.storeIdentity.description')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <FormField label={t('onboarding.storeIdentity.storeName')} htmlFor="storeName" required error={errors.storeName}>
+        <CardContent id="onboarding.sections.store-identity-section.card-content" className="space-y-6">
+          <div id="onboarding.sections.store-identity-section.div.2" className="grid gap-6 lg:grid-cols-2">
+            <FormField id="onboarding.sections.store-identity-section.form-field" label={t('onboarding.storeIdentity.storeName')} htmlFor="onboarding.store-identity.store-name" required error={errors.storeName}>
               <FormInput ui={{ uid: 'onboarding.store-identity.store-name-uoWh3D', id: 'onboarding.store-identity.store-name', kind: 'field', part: 'form' }}
-                id="storeName"
+                id="onboarding.store-identity.store-name"
                 value={storeIdentity.storeName}
                 onChange={(e) => updateStoreIdentity({ storeName: e.target.value })}
                 placeholder={t('onboarding.storeIdentity.storeNamePlaceholder')}
@@ -122,8 +122,8 @@ export function StoreIdentitySection() {
               />
             </FormField>
 
-            <FormField label={t('onboarding.storeIdentity.storeCategory')} htmlFor="storeCategory" required error={errors.storeCategory}>
-              <FormSelect ui={{ uid: 'onboarding.store-identity.store-category-W7KlKN', id: 'onboarding.store-identity.store-category', kind: 'field', part: 'form' }}
+            <FormField id="onboarding.sections.store-identity-section.form-field.2" label={t('onboarding.storeIdentity.storeCategory')} htmlFor="storeCategory" required error={errors.storeCategory}>
+              <FormSelect id="onboarding.sections.store-identity-section.form-select" ui={{ uid: 'onboarding.store-identity.store-category-W7KlKN', id: 'onboarding.store-identity.store-category', kind: 'field', part: 'form' }}
                 value={storeIdentity.storeCategory}
                 onValueChange={(v) => updateStoreIdentity({ storeCategory: v })}
                 options={constants.storeCategories.map((c) => ({
@@ -136,15 +136,15 @@ export function StoreIdentitySection() {
             </FormField>
           </div>
 
-          <FormField
+          <FormField id="onboarding.sections.store-identity-section.form-field.3"
             label={t('onboarding.storeIdentity.storeDescription')}
-            htmlFor="storeDescription"
+            htmlFor="onboarding.store-identity.store-description"
             required
             hint={`${storeIdentity.storeDescription.length}/500`}
             error={errors.storeDescription}
           >
             <FormTextarea ui={{ uid: 'onboarding.store-identity.store-description-43W1KQ', id: 'onboarding.store-identity.store-description', kind: 'field', part: 'form' }}
-              id="storeDescription"
+              id="onboarding.store-identity.store-description"
               value={storeIdentity.storeDescription}
               onChange={(e) => updateStoreIdentity({ storeDescription: e.target.value })}
               placeholder={t('onboarding.storeIdentity.descriptionPlaceholder')}
@@ -154,13 +154,13 @@ export function StoreIdentitySection() {
             />
           </FormField>
 
-          <FormField
+          <FormField id="onboarding.sections.store-identity-section.form-field.4"
             label={t('onboarding.storeIdentity.storeStory')}
-            htmlFor="storeStory"
+            htmlFor="onboarding.store-identity.store-story"
             hint={t('onboarding.storeIdentity.storyHint')}
           >
             <FormTextarea ui={{ uid: 'onboarding.store-identity.store-story-Cm95SJ', id: 'onboarding.store-identity.store-story', kind: 'field', part: 'form' }}
-              id="storeStory"
+              id="onboarding.store-identity.store-story"
               value={storeIdentity.storeStory}
               onChange={(e) => updateStoreIdentity({ storeStory: e.target.value })}
               placeholder={t('onboarding.storeIdentity.storyPlaceholder')}
@@ -169,7 +169,7 @@ export function StoreIdentitySection() {
             />
           </FormField>
 
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div id="onboarding.sections.store-identity-section.div.3" className="grid gap-6 lg:grid-cols-2">
             <StorageImageManager
               ref={setLogoHandle}
               config={{
@@ -231,14 +231,14 @@ export function StoreIdentitySection() {
             />
           </div>
 
-          <FormField
+          <FormField id="onboarding.sections.store-identity-section.form-field.5"
             label={t('onboarding.storeIdentity.specialties')}
             htmlFor="storeSpecialties"
             required
             hint={t('onboarding.storeIdentity.specialtiesHint')}
             error={errors.storeSpecialties}
           >
-            <MultiSelect
+            <MultiSelect id="onboarding.sections.store-identity-section.multi-select"
               options={constants.specialties.map((s) => ({
                 value: s,
                 label: t(`onboarding.constants.specialties.${SPECIALTY_KEYS[s]}`),
@@ -251,7 +251,7 @@ export function StoreIdentitySection() {
         </CardContent>
       </Card>
 
-      <StepNavigation onNext={handleNext} showSkip />
+      <StepNavigation id="onboarding.sections.store-identity-section.step-navigation" onNext={handleNext} showSkip />
     </div>
   );
 }

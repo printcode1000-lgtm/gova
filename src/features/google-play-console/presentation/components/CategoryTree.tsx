@@ -5,7 +5,7 @@ import { SizeBar } from "./SizeBar";
 export function CategoryTree({ nodes }: { nodes: BundleAnalysisNode[] }) {
   const maximum = Math.max(0, ...nodes.map((node) => node.compressedBytes));
   return (
-    <div className="space-y-3">
+    <div id="google-play-console.category-tree.div" className="space-y-3">
       {nodes.map((node) => (
         <div key={node.id} className="rounded-md border bg-surface p-3">
           <SizeBar value={node.compressedBytes} maximum={maximum} label={node.label} />

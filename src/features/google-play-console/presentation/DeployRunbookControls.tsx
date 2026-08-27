@@ -28,7 +28,7 @@ export function RunbookPanel(props: {
   onScenarioChange: (value: string) => void;
   scenarios: readonly (readonly [string, string])[];
   extraOptions?: React.ReactNode;
-}) {
+} & { id?: string }) {
   const toggle = (id: string) => {
     const next = new Set(props.selected);
     if (next.has(id)) next.delete(id);
@@ -41,7 +41,7 @@ export function RunbookPanel(props: {
   const selectedInRunbook = allIds.filter((id) => props.selected.has(id)).length;
 
   return (
-    <section className="min-w-0 space-y-3">
+    <section id={props.id} className="min-w-0 space-y-3">
       <header className="min-w-0 rounded-md border bg-surface p-3 sm:p-4">
         <h2 className="text-lg font-semibold break-words sm:text-xl">{props.title}</h2>
         <p className="mt-1 text-sm text-on-surface-variant break-words">{props.description}</p>
@@ -145,9 +145,9 @@ export function Option(props: {
   onChange: (value: boolean) => void;
   label: string;
   help: string;
-}) {
+} & { id?: string }) {
   return (
-    <label className="block min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
+    <label id={props.id} className="block min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
       <span className="flex items-start gap-2">
         <input
           type="checkbox"

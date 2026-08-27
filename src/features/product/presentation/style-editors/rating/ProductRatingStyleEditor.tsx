@@ -16,7 +16,7 @@ export function ProductRatingStyleEditor({
   onChange,
 }: ProductRatingStyleEditorProps) {
   return (
-    <ProductStyleCard
+    <ProductStyleCard id="product.style-editors.rating.product-rating-style-editor.product-style-card"
       title="التقييم"
       visible={value.visible}
       order={value.order}
@@ -24,7 +24,7 @@ export function ProductRatingStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <RatingSettingsEditor
+      <RatingSettingsEditor id="product.style-editors.rating.product-rating-style-editor.rating-settings-editor"
         enabled={value.visible}
         mode={value.type}
         disabled={disabled}

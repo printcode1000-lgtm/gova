@@ -119,19 +119,19 @@ export function NotificationsPageContent() {
 
   if (isLoading) {
     return (
-      <main className="flex min-h-[55vh] items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      <main id="notifications.notifications-page-content.main" className="flex min-h-[55vh] items-center justify-center">
+        <Loader2 id="notifications.notifications-page-content.loader2" className="h-6 w-6 animate-spin text-primary" />
       </main>
     );
   }
 
   if (!uid) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-10 text-center">
-        <Bell className="mx-auto h-10 w-10 text-on-surface-variant" />
-        <h1 className="mt-4 text-2xl font-bold">{copy.title}</h1>
-        <p className="mt-2 text-sm text-on-surface-variant">{copy.login}</p>
-        <Link href="/login" className="mt-5 inline-flex rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary">
+      <main id="notifications.notifications-page-content.main.2" className="mx-auto max-w-4xl px-4 py-10 text-center">
+        <Bell id="notifications.notifications-page-content.bell" className="mx-auto h-10 w-10 text-on-surface-variant" />
+        <h1 id="notifications.notifications-page-content.h1" className="mt-4 text-2xl font-bold">{copy.title}</h1>
+        <p id="notifications.notifications-page-content.p" className="mt-2 text-sm text-on-surface-variant">{copy.login}</p>
+        <Link id="notifications.notifications-page-content.link" href="/login" className="mt-5 inline-flex rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary">
           {copy.signIn}
         </Link>
       </main>
@@ -139,14 +139,14 @@ export function NotificationsPageContent() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-3 py-5 sm:px-6">
-      <header className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-bold">
-            <Bell className="h-6 w-6 text-primary" aria-hidden="true" />
+    <main id="notifications.notifications-page-content.main.3" className="mx-auto w-full max-w-5xl px-3 py-5 sm:px-6">
+      <header id="notifications.notifications-page-content.header" className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+        <div id="notifications.notifications-page-content.div">
+          <h1 id="notifications.notifications-page-content.h1.2" className="flex items-center gap-2 text-2xl font-bold">
+            <Bell id="notifications.notifications-page-content.bell.2" className="h-6 w-6 text-primary" aria-hidden="true" />
             {copy.title}
           </h1>
-          <p className="mt-1 text-sm text-on-surface-variant">
+          <p id="notifications.notifications-page-content.p.2" className="mt-1 text-sm text-on-surface-variant">
             {filterSummary(filter, filteredNotifications.length, locale)}
           </p>
         </div>
@@ -158,11 +158,11 @@ export function NotificationsPageContent() {
         tonal, horizontally snapping strip, with the active tab pulsing behind
         its icon.
       */}
-      <nav
+      <nav id="notifications.notifications-page-content.nav"
         className="mb-5 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl"
         aria-label={copy.title}
       >
-        <div
+        <div id="notifications.notifications-page-content.div.2"
           data-snapshot-scroll
           data-snapshot-id="notifications-filter-tabs-scroll"
           className="flex snap-x snap-mandatory items-stretch gap-1.5 overflow-x-auto px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -238,7 +238,7 @@ export function NotificationsPageContent() {
       ) : filter === NotificationCategories.Chat ? (
         <ChatConversationList conversations={conversations} locale={locale} />
       ) : (
-        <section className="space-y-3">
+        <section id="notifications.notifications-page-content.section" className="space-y-3">
           {groups.map((group) => (
             <NotificationGroupCard
               key={group.key}
@@ -275,7 +275,7 @@ function ChatConversationList({
   locale: "ar" | "en";
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-outline-variant bg-surface shadow-sm">
+    <section id="notifications.notifications-page-content.section.2" className="overflow-hidden rounded-2xl border border-outline-variant bg-surface shadow-sm">
       {conversations.map((conversation, index) => {
         const outgoing = conversation.latest.metadata?.outgoing === true;
         const specialty = String(
@@ -343,7 +343,7 @@ function NotificationGroupCard({
   onRead: () => void;
   onOpen: () => void;
   onDismiss: () => void;
-}) {
+} & { id?: string }) {
   const Icon = categoryIcon(group.category);
   const paymentAmount = amountLabel(group.latest, locale);
   const isCritical = group.latest.priority === NotificationPriorities.Critical;

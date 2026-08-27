@@ -62,14 +62,14 @@ export function useStepConfig() {
   );
 }
 
-export function OnboardingProgress() {
+export function OnboardingProgress({ id }: { id?: string }) {
   const { t } = useTranslation();
   const { completedSteps } = useOnboardingStore();
 
   const progress = Math.round((completedSteps.length / stepOrder.length) * 100);
 
   return (
-    <div className="space-y-4">
+    <div id={id} className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">{t('onboarding.progress.title')}</h2>
@@ -89,16 +89,16 @@ export function OnboardingProgress() {
   );
 }
 
-export function OnboardingSidebar({
+export function OnboardingSidebar({ id,
   onStepNavigate,
 }: {
   onStepNavigate?: () => void;
-}) {
+} & { id?: string }) {
   const { currentStep, completedSteps, goToStep } = useOnboardingStore();
   const stepConfig = useStepConfig();
 
   return (
-    <nav className="space-y-1">
+    <nav id={id} className="space-y-1">
       {stepOrder.map((step) => {
         const config = stepConfig[step];
         const Icon = config.icon;
@@ -106,7 +106,7 @@ export function OnboardingSidebar({
         const isCurrent = step === currentStep;
 
         return (
-          <button
+          <button id={id}
             key={step}
             type="button"
             onClick={() => {
@@ -143,7 +143,7 @@ export function OnboardingSidebar({
   );
 }
 
-export function MobileOnboardingNav({
+export function MobileOnboardingNav({ id,
   showCompletion,
   onShowCompletion,
   onStepNavigate,
@@ -151,14 +151,14 @@ export function MobileOnboardingNav({
   showCompletion?: boolean;
   onShowCompletion?: () => void;
   onStepNavigate?: () => void;
-}) {
+} & { id?: string }) {
   const { t } = useTranslation();
   const { currentStep, nextStep, prevStep, completedSteps } = useOnboardingStore();
   const stepConfig = useStepConfig();
 
   if (showCompletion) {
     return (
-      <div className="sticky top-0 z-50 asol-onboarding-sticky-bar border-b px-4 py-3">
+      <div id={id} className="sticky top-0 z-50 asol-onboarding-sticky-bar border-b px-4 py-3">
         <Button ui={{ uid: 'onboarding.progress.back-to-steps-dQG5I6', id: 'onboarding.progress.back-to-steps', kind: 'action', action: 'back-to-steps', part: 'progress' }} variant="outline" className="w-full" onClick={onStepNavigate}>
           {t('onboarding.progress.backToSteps')}
         </Button>
@@ -175,7 +175,7 @@ export function MobileOnboardingNav({
   const allComplete = completedSteps.length === stepOrder.length;
 
   return (
-    <div className="sticky top-0 z-50 asol-onboarding-sticky-bar border-b">
+    <div id={id} className="sticky top-0 z-50 asol-onboarding-sticky-bar border-b">
       <div className="px-4 py-3 space-y-3">
         <div className="flex items-center gap-3">
           <Button ui={{ uid: 'onboarding.progress.previous-step-pkl3Gx', id: 'onboarding.progress.previous-step', kind: 'action', action: 'previous-step', part: 'progress' }}
@@ -236,7 +236,7 @@ export interface StepNavigationProps {
   showSkip?: boolean;
 }
 
-export function StepNavigation({
+export function StepNavigation({ id,
   onNext,
   onPrev,
   onComplete,
@@ -244,7 +244,7 @@ export function StepNavigation({
   prevLabel,
   isSubmitting,
   showSkip,
-}: StepNavigationProps) {
+}: StepNavigationProps & { id?: string }) {
   const { t } = useTranslation();
   const { nextStep, prevStep, currentStep, completedSteps } = useOnboardingStore();
   const currentIndex = stepOrder.indexOf(currentStep);
@@ -262,7 +262,7 @@ export function StepNavigation({
   };
 
   return (
-    <div className="flex items-center justify-between pt-6 border-t">
+    <div id={id} className="flex items-center justify-between pt-6 border-t">
       <Button ui={{ uid: 'onboarding.nav.previous-gDH0aK', id: 'onboarding.nav.previous', kind: 'action', action: 'previous-step', part: 'nav' }}
         variant="ghost"
         onClick={() => {

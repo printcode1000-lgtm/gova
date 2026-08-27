@@ -6,6 +6,7 @@ import { validateAgentKnowledge } from './docs/check';
 import { verifyGeneratedGateContract } from './generated-gate-contract';
 import { verifyGithubCiPolicy } from './github-ci-policy';
 import { validateRuntimeCompatibilityReference } from './runtime-compatibility-reference';
+import { checkStaticDomIds } from './ui-registry/static-dom-ids/check-static-dom-ids';
 
 /**
  * The CLI around `@asol/architecture-core`.
@@ -31,6 +32,10 @@ process.exit(
       {
         label: 'agent knowledge documentation contract failed',
         run: () => validateAgentKnowledge(),
+      },
+      {
+        label: 'static DOM id contract failed',
+        run: () => checkStaticDomIds(process.cwd()),
       },
       {
         label: 'storage-profiles.json validation failed',

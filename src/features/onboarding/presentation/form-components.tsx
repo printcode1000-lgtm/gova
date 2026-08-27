@@ -27,7 +27,7 @@ interface FormFieldProps {
   className?: string;
 }
 
-export function FormField({
+export function FormField({ id,
   label,
   htmlFor,
   error,
@@ -35,9 +35,9 @@ export function FormField({
   hint,
   children,
   className,
-}: FormFieldProps) {
+}: FormFieldProps & { id?: string }) {
   return (
-    <div className={cn('space-y-2', className)}>
+    <div id={id} className={cn('space-y-2', className)}>
       <div className="flex items-center justify-between">
         <Label htmlFor={htmlFor} className="text-sm font-medium">
           {label}
@@ -62,7 +62,7 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   ui?: UiDescriptor;
 }
 
-export function FormInput({ error, className, ...props }: FormInputProps) {
+export function FormInput({ error, className, ...props }: FormInputProps & { id?: string }) {
   return (
     <Input
       className={cn(error && 'border-destructive focus-visible:ring-destructive', className)}
@@ -77,7 +77,7 @@ interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaEle
   ui?: UiDescriptor;
 }
 
-export function FormTextarea({ error, className, ...props }: FormTextareaProps) {
+export function FormTextarea({ error, className, ...props }: FormTextareaProps & { id?: string }) {
   return (
     <Textarea
       className={cn(error && 'border-destructive focus-visible:ring-destructive', className)}
@@ -97,7 +97,7 @@ interface FormSelectProps {
   disabled?: boolean;
 }
 
-export function FormSelect({
+export function FormSelect({ id,
   ui,
   value,
   onValueChange,
@@ -105,7 +105,7 @@ export function FormSelect({
   placeholder,
   error,
   disabled,
-}: FormSelectProps) {
+}: FormSelectProps & { id?: string }) {
   return (
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
       <SelectTrigger ui={ui} className={cn(error && 'border-destructive')}>
@@ -130,13 +130,13 @@ interface MultiSelectProps {
   max?: number;
 }
 
-export function MultiSelect({
+export function MultiSelect({ id,
   options,
   value,
   onChange,
   placeholder = 'Select options',
   max,
-}: MultiSelectProps) {
+}: MultiSelectProps & { id?: string }) {
   const { t } = useTranslation();
   const resolvedPlaceholder = placeholder === 'Select options' ? t('onboarding.form.selectOptions') : placeholder;
   const [search, setSearch] = React.useState('');
@@ -158,12 +158,12 @@ export function MultiSelect({
   };
 
   return (
-    <div className="space-y-2">
+    <div id={id} className="space-y-2">
       <div className="flex flex-wrap gap-2">
         {value.map((v) => {
           const option = options.find((o) => o.value === v);
           return (
-            <Badge key={v} variant="secondary" className="gap-1 pr-1">
+            <Badge id={id} key={v} variant="secondary" className="gap-1 pr-1">
               {option?.label || v}
               <button
                 type="button"
@@ -212,12 +212,12 @@ interface CheckboxGroupProps {
   columns?: number;
 }
 
-export function CheckboxGroup({
+export function CheckboxGroup({ id,
   options,
   value,
   onChange,
   columns = 2,
-}: CheckboxGroupProps) {
+}: CheckboxGroupProps & { id?: string }) {
   const toggle = (v: string) => {
     if (value.includes(v)) {
       onChange(value.filter((x) => x !== v));
@@ -227,14 +227,14 @@ export function CheckboxGroup({
   };
 
   return (
-    <div
+    <div id={id}
       className="grid gap-2"
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
     >
       {options.map((opt) => {
         const isSelected = value.includes(opt.value);
         return (
-          <button
+          <button id={id}
             key={opt.value}
             type="button"
             onClick={() => toggle(opt.value)}

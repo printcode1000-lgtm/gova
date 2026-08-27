@@ -15,7 +15,7 @@ export function ProductPropertySpecsStyleEditor({
   onChange,
 }: ProductPropertySpecsStyleEditorProps) {
   return (
-    <ProductStyleCard
+    <ProductStyleCard id="product.style-editors.property-specs.product-property-specs-style-editor.product-style-card"
       title="مواصفات العقار"
       visible={value.visible}
       order={value.order}
@@ -23,14 +23,14 @@ export function ProductPropertySpecsStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div className="grid gap-2">
-        <OptionCheckbox label="المساحة" checked={value.area} disabled={disabled} onChange={(area) => onChange({ ...value, area })} />
-        <OptionCheckbox label="عدد الغرف" checked={value.rooms} disabled={disabled} onChange={(rooms) => onChange({ ...value, rooms })} />
-        <OptionCheckbox label="عدد الحمامات" checked={value.bathrooms} disabled={disabled} onChange={(bathrooms) => onChange({ ...value, bathrooms })} />
-        <OptionCheckbox label="نوع العقار" checked={value.type} disabled={disabled} onChange={(type) => onChange({ ...value, type })} />
-        <OptionCheckbox label="العنوان" checked={value.address} disabled={disabled} onChange={(address) => onChange({ ...value, address })} />
-        <OptionCheckbox label="الموقع" checked={value.location} disabled={disabled} onChange={(location) => onChange({ ...value, location })} />
-        <OptionCheckbox label="التشطيب" checked={value.finishing} disabled={disabled} onChange={(finishing) => onChange({ ...value, finishing })} />
+      <div id="product.style-editors.property-specs.product-property-specs-style-editor.div" className="grid gap-2">
+        <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox" label="المساحة" checked={value.area} disabled={disabled} onChange={(area) => onChange({ ...value, area })} />
+        <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox.2" label="عدد الغرف" checked={value.rooms} disabled={disabled} onChange={(rooms) => onChange({ ...value, rooms })} />
+        <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox.3" label="عدد الحمامات" checked={value.bathrooms} disabled={disabled} onChange={(bathrooms) => onChange({ ...value, bathrooms })} />
+        <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox.4" label="نوع العقار" checked={value.type} disabled={disabled} onChange={(type) => onChange({ ...value, type })} />
+        <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox.5" label="العنوان" checked={value.address} disabled={disabled} onChange={(address) => onChange({ ...value, address })} />
+        <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox.6" label="الموقع" checked={value.location} disabled={disabled} onChange={(location) => onChange({ ...value, location })} />
+        <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox.7" label="التشطيب" checked={value.finishing} disabled={disabled} onChange={(finishing) => onChange({ ...value, finishing })} />
       </div>
     </ProductStyleCard>
   );

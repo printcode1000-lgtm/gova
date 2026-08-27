@@ -138,35 +138,35 @@ export function VerificationSection() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5" />
+    <div id="onboarding.sections.verification-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.verification-section.card">
+        <CardHeader id="onboarding.sections.verification-section.card-header">
+          <CardTitle id="onboarding.sections.verification-section.card-title" className="flex items-center gap-2">
+            <ShieldCheck id="onboarding.sections.verification-section.shield-check" className="h-5 w-5" />
             {t('onboarding.verification.title')}
           </CardTitle>
-          <CardDescription>{t('onboarding.verification.description')}</CardDescription>
+          <CardDescription id="onboarding.sections.verification-section.card-description">{t('onboarding.verification.description')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between p-4 rounded-lg bg-muted">
-            <div>
-              <p className="font-medium">{t('onboarding.verification.progress')}</p>
-              <p className="text-sm text-muted-foreground">
+        <CardContent id="onboarding.sections.verification-section.card-content" className="space-y-6">
+          <div id="onboarding.sections.verification-section.div.2" className="flex items-center justify-between p-4 rounded-lg bg-muted">
+            <div id="onboarding.sections.verification-section.div.3">
+              <p id="onboarding.sections.verification-section.p" className="font-medium">{t('onboarding.verification.progress')}</p>
+              <p id="onboarding.sections.verification-section.p.2" className="text-sm text-muted-foreground">
                 {t('onboarding.verification.documentsUploaded', {
                   uploaded: verification.documents.length,
                   total: DOCUMENT_TYPES.length,
                 })}
               </p>
             </div>
-            <div className="text-right">
-              <span className="text-2xl font-bold text-primary">
+            <div id="onboarding.sections.verification-section.div.4" className="text-right">
+              <span id="onboarding.sections.verification-section.span" className="text-2xl font-bold text-primary">
                 {Math.round((verification.documents.length / DOCUMENT_TYPES.length) * 100)}%
               </span>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="font-medium">{t('onboarding.verification.uploadDocuments')}</h4>
+          <div id="onboarding.sections.verification-section.div.5" className="space-y-4">
+            <h4 id="onboarding.sections.verification-section.h4" className="font-medium">{t('onboarding.verification.uploadDocuments')}</h4>
 
             {DOCUMENT_TYPES.map((docType) => {
               const uploadedDoc = verification.documents.find((d) => d.type === docType);
@@ -238,16 +238,16 @@ export function VerificationSection() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BadgeHelp className="h-5 w-5" />
+      <Card id="onboarding.sections.verification-section.card.2">
+        <CardHeader id="onboarding.sections.verification-section.card-header.2">
+          <CardTitle id="onboarding.sections.verification-section.card-title.2" className="flex items-center gap-2">
+            <BadgeHelp id="onboarding.sections.verification-section.badge-help" className="h-5 w-5" />
             {t('onboarding.verification.badgesTitle')}
           </CardTitle>
-          <CardDescription>{t('onboarding.verification.badgesDesc')}</CardDescription>
+          <CardDescription id="onboarding.sections.verification-section.card-description.2">{t('onboarding.verification.badgesDesc')}</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 sm:grid-cols-2">
+        <CardContent id="onboarding.sections.verification-section.card-content.2">
+          <div id="onboarding.sections.verification-section.div.6" className="grid gap-3 sm:grid-cols-2">
             {AVAILABLE_BADGES.map((badge) => {
               const isSelected = verification.requestedBadges.includes(badge.id);
               return (
@@ -279,7 +279,7 @@ export function VerificationSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation onNext={handleNext} showSkip />
+      <StepNavigation id="onboarding.sections.verification-section.step-navigation" onNext={handleNext} showSkip />
     </div>
   );
 }

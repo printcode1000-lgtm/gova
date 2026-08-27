@@ -118,21 +118,21 @@ export function PharmacyNestedTabs({
   if (!catalog) return null;
 
   return (
-    <div className="space-y-2 rounded-lg border border-outline-variant bg-surface-container-low p-2">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-xs font-semibold text-on-surface">{text.sections}</div>
+    <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div" className="space-y-2 rounded-lg border border-outline-variant bg-surface-container-low p-2">
+      <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.2" className="flex flex-wrap items-center justify-between gap-2">
+        <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.3" className="text-xs font-semibold text-on-surface">{text.sections}</div>
         {showManagement ? (
-          <Link
+          <Link id="pharmacy-profile-catalog.pharmacy-nested-tabs.link"
             href={managerHref}
             className="inline-flex h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition"
           >
-            <Settings2 className="h-4 w-4" />
+            <Settings2 id="pharmacy-profile-catalog.pharmacy-nested-tabs.settings2" className="h-4 w-4" />
             {text.manage}
           </Link>
         ) : null}
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.4" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {categories.map((category) => (
           <PharmacyTabButton
             key={category.id}
@@ -144,7 +144,7 @@ export function PharmacyNestedTabs({
         ))}
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.5" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {subcategories.map((subcategory) => (
           <PharmacyTabButton
             key={subcategory.id}
@@ -160,7 +160,7 @@ export function PharmacyNestedTabs({
   );
 }
 
-function PharmacyTabButton({
+function PharmacyTabButton({ id,
   item,
   selected,
   icon,
@@ -172,9 +172,9 @@ function PharmacyTabButton({
   icon: string;
   compact?: boolean;
   onClick: () => void;
-}) {
+} & { id?: string }) {
   return (
-    <button
+    <button id={id}
       type="button"
       onClick={onClick}
       className={`inline-flex min-w-fit items-center gap-2 rounded-md border px-3 font-semibold transition ${

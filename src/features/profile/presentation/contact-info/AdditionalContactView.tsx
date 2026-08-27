@@ -25,17 +25,17 @@ const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCar
 return (
         /* Additional Contact Section without outer Card */
         <>
-          <div className="mb-6 flex items-center justify-between">
-            <ContactSectionHeader
+          <div id="profile.contact-info.additional-contact-view.div" className="mb-6 flex items-center justify-between">
+            <ContactSectionHeader id="profile.contact-info.additional-contact-view.contact-section-header"
               icon={Share2}
               title={t('onboarding.contactInfo.additionalContact')}
               description={t('onboarding.contactInfo.additionalContactHint')}
             />
           </div>
 
-          <div className="space-y-4">
+          <div id="profile.contact-info.additional-contact-view.div.2" className="space-y-4">
             {!readOnly && (
-              <ContactQuickAddGrid
+              <ContactQuickAddGrid id="profile.contact-info.additional-contact-view.contact-quick-add-grid"
                 items={quickAddItems}
                 onAdd={handleAddItem}
                 title={locale === 'ar' ? 'أضف وسيلة تواصل بسرعة' : 'Quick add contact method'}
@@ -119,24 +119,24 @@ return (
 
             {/* Additional Emails */}
             {localData.emails.filter((e) => e.id !== 'primary').length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
-                    <span style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
+              <div id="profile.contact-info.additional-contact-view.div.3" className="space-y-2">
+                <div id="profile.contact-info.additional-contact-view.div.4" className="flex items-center gap-2">
+                  <span id="profile.contact-info.additional-contact-view.span" className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon" icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
+                    <span id="profile.contact-info.additional-contact-view.span.2" style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
-                    <Button ui={{ uid: 'profile.additional-contact.add-email-aSN14x', id: 'profile.additional-contact.add-email', kind: 'action', action: 'add-email', part: 'emails' }}
+                    <Button id="profile.contact-info.additional-contact-view.button" ui={{ uid: 'profile.additional-contact.add-email-aSN14x', id: 'profile.additional-contact.add-email', kind: 'action', action: 'add-email', part: 'emails' }}
                       variant="outline"
                       size="sm"
                       onClick={addEmail}
                       className="gap-1 h-6 px-2 text-xs"
                     >
-                      <Plus className="h-3 w-3" />
+                      <Plus id="profile.contact-info.additional-contact-view.plus" className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
-                <div className="space-y-2">
+                <div id="profile.contact-info.additional-contact-view.div.5" className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink) => (
                     <div
                       key={emailLink.id}
@@ -175,7 +175,7 @@ return (
 
             {/* Social Links */}
             {localData.socialLinks.length > 0 && (
-              <div className="space-y-4">
+              <div id="profile.contact-info.additional-contact-view.div.6" className="space-y-4">
                 {SOCIAL_PLATFORMS.map((platform) => {
                   const platformLinks = groupedSocialLinks[platform];
                   if (!platformLinks || platformLinks.length === 0) return null;
@@ -245,24 +245,24 @@ return (
 
             {/* Websites */}
             {localData.websites.length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
-                    <span style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
+              <div id="profile.contact-info.additional-contact-view.div.7" className="space-y-2">
+                <div id="profile.contact-info.additional-contact-view.div.8" className="flex items-center gap-2">
+                  <span id="profile.contact-info.additional-contact-view.span.3" className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon.2" icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
+                    <span id="profile.contact-info.additional-contact-view.span.4" style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
-                    <Button ui={{ uid: 'profile.additional-contact.add-website-B3XH9C', id: 'profile.additional-contact.add-website', kind: 'action', action: 'add-website', part: 'websites' }}
+                    <Button id="profile.contact-info.additional-contact-view.button.2" ui={{ uid: 'profile.additional-contact.add-website-B3XH9C', id: 'profile.additional-contact.add-website', kind: 'action', action: 'add-website', part: 'websites' }}
                       variant="outline"
                       size="sm"
                       onClick={addWebsite}
                       className="gap-1 h-6 px-2 text-xs"
                     >
-                      <Plus className="h-3 w-3" />
+                      <Plus id="profile.contact-info.additional-contact-view.plus.2" className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
-                <div className="space-y-2">
+                <div id="profile.contact-info.additional-contact-view.div.9" className="space-y-2">
                   {localData.websites.map((site) => (
                     <div
                       key={site.id}
@@ -301,15 +301,15 @@ return (
 
             {/* Locations */}
             {localData.locations.length > 0 && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon icon={quickAddIcon('location')} className="h-4 w-4" style={{ color: quickAddColor('location') }} />
-                    <span style={{ color: quickAddColor('location') }}>{locale === 'ar' ? 'المواقع' : 'Locations'}</span>
+              <div id="profile.contact-info.additional-contact-view.div.10" className="space-y-4">
+                <div id="profile.contact-info.additional-contact-view.div.11" className="flex items-center gap-2">
+                  <span id="profile.contact-info.additional-contact-view.span.5" className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon.3" icon={quickAddIcon('location')} className="h-4 w-4" style={{ color: quickAddColor('location') }} />
+                    <span id="profile.contact-info.additional-contact-view.span.6" style={{ color: quickAddColor('location') }}>{locale === 'ar' ? 'المواقع' : 'Locations'}</span>
                   </span>
                 </div>
                 
-                <div className="space-y-4">
+                <div id="profile.contact-info.additional-contact-view.div.12" className="space-y-4">
                   {localData.locations.map((loc, idx) => (
                     <div
                       key={loc.id}

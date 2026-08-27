@@ -15,19 +15,6 @@
       }
     },
     {
-      "name": "UiRegistry - تطبيق الطلبات المعلّقة",
-      "request": "launch",
-      "type": "node",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "ui-registry:apply-pending"],
-      "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}",
-      "presentation": {
-        "group": "ASOL Tools",
-        "order": 2
-      }
-    },
-    {
       "name": "Project Intelligence - إعادة تدريب وتحديث المعرفة",
       "request": "launch",
       "type": "node",

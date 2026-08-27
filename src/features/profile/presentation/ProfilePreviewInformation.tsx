@@ -93,7 +93,7 @@ export function ProfilePreviewMetrics({
     },
   ];
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div id="profile.profile-preview-information.div" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {metrics.map((metric) => (
         <article
           key={metric.title}
@@ -192,23 +192,23 @@ export function ProfileFulfillmentPreviewCard({
   ];
 
   return (
-    <section className="h-full rounded-3xl border border-outline-variant/70 bg-surface p-5 shadow-sm sm:p-6">
-      <div className="mb-5 flex items-center gap-3">
-        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-xl text-secondary">
-          <FontAwesomeIcon icon={faTruck} />
+    <section id="profile.profile-preview-information.section" className="h-full rounded-3xl border border-outline-variant/70 bg-surface p-5 shadow-sm sm:p-6">
+      <div id="profile.profile-preview-information.div.2" className="mb-5 flex items-center gap-3">
+        <span id="profile.profile-preview-information.span" className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-xl text-secondary">
+          <FontAwesomeIcon id="profile.profile-preview-information.font-awesome-icon" icon={faTruck} />
         </span>
-        <div>
-          <h2 className="text-lg font-bold">
+        <div id="profile.profile-preview-information.div.3">
+          <h2 id="profile.profile-preview-information.h2" className="text-lg font-bold">
             {ar ? "الشحن والإرجاع" : "Shipping & returns"}
           </h2>
-          <p className="text-xs text-on-surface-variant">
+          <p id="profile.profile-preview-information.p" className="text-xs text-on-surface-variant">
             {ar
               ? "تفاصيل واضحة قبل إتمام الطلب"
               : "Clear details before ordering"}
           </p>
         </div>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div id="profile.profile-preview-information.div.4" className="grid gap-3 sm:grid-cols-2">
         {rows.map((row) => (
           <div
             key={row.label}
@@ -222,9 +222,9 @@ export function ProfileFulfillmentPreviewCard({
           </div>
         ))}
       </div>
-      <div className="mt-4 rounded-2xl border border-outline-variant/60 p-4">
-        <div className="flex items-center gap-2 font-bold">
-          <FontAwesomeIcon
+      <div id="profile.profile-preview-information.div.5" className="mt-4 rounded-2xl border border-outline-variant/60 p-4">
+        <div id="profile.profile-preview-information.div.6" className="flex items-center gap-2 font-bold">
+          <FontAwesomeIcon id="profile.profile-preview-information.font-awesome-icon.2"
             icon={fulfillment.returns.enabled ? faCircleCheck : faCircleXmark}
             className={
               fulfillment.returns.enabled ? "text-success" : "text-error"
@@ -240,12 +240,12 @@ export function ProfileFulfillmentPreviewCard({
         </div>
         {fulfillment.returns.enabled ? (
           <>
-            <p className="mt-2 text-sm text-on-surface-variant">
+            <p id="profile.profile-preview-information.p.2" className="mt-2 text-sm text-on-surface-variant">
               {ar ? "تكلفة شحن الإرجاع:" : "Return shipping paid by:"}{" "}
               <strong className="text-on-surface">{payer}</strong>
             </p>
             {fulfillment.returns.policyText ? (
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-on-surface-variant">
+              <p id="profile.profile-preview-information.p.3" className="mt-2 whitespace-pre-wrap text-sm leading-6 text-on-surface-variant">
                 {fulfillment.returns.policyText}
               </p>
             ) : null}
@@ -253,11 +253,11 @@ export function ProfileFulfillmentPreviewCard({
         ) : null}
       </div>
       {carriers.length > 0 ? (
-        <div className="mt-4">
-          <p className="mb-2 text-xs font-bold text-on-surface-variant">
+        <div id="profile.profile-preview-information.div.7" className="mt-4">
+          <p id="profile.profile-preview-information.p.4" className="mb-2 text-xs font-bold text-on-surface-variant">
             {ar ? "شركات التوصيل المتاحة" : "Available carriers"}
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div id="profile.profile-preview-information.div.8" className="flex flex-wrap gap-2">
             {carriers.map((carrier) => (
               <span
                 key={carrier.uid}
@@ -270,7 +270,7 @@ export function ProfileFulfillmentPreviewCard({
         </div>
       ) : null}
       {pricing.notes ? (
-        <p className="mt-4 rounded-xl bg-tertiary/10 p-3 text-sm leading-6 text-on-surface-variant">
+        <p id="profile.profile-preview-information.p.5" className="mt-4 rounded-xl bg-tertiary/10 p-3 text-sm leading-6 text-on-surface-variant">
           {pricing.notes}
         </p>
       ) : null}

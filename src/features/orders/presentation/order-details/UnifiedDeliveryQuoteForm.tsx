@@ -37,10 +37,10 @@ export function UnifiedDeliveryQuoteForm({
   runAction: RunAction;
 }) {
   return (
-    <div className="grid gap-3 border-t border-primary/15 p-4 sm:grid-cols-2 lg:grid-cols-[160px_160px_1fr_auto] lg:items-end">
-      <label className="space-y-1 text-xs font-semibold">
+    <div id="orders.order-details.unified-delivery-quote-form.div" className="grid gap-3 border-t border-primary/15 p-4 sm:grid-cols-2 lg:grid-cols-[160px_160px_1fr_auto] lg:items-end">
+      <label id="orders.order-details.unified-delivery-quote-form.label" className="space-y-1 text-xs font-semibold">
         قيمة التوصيل
-        <Input ui={{ uid: "orders.delivery-quote.base-amount-5b8ZwD", id: "orders.delivery-quote.base-amount", kind: "field", part: "quote" }}
+        <Input id="orders.order-details.unified-delivery-quote-form.input" ui={{ uid: "orders.delivery-quote.base-amount-5b8ZwD", id: "orders.delivery-quote.base-amount", kind: "field", part: "quote" }}
           type="number"
           min={0}
           step="0.01"
@@ -51,9 +51,9 @@ export function UnifiedDeliveryQuoteForm({
         />
       </label>
       {candidateRequiresSpecialVehicle ? (
-        <label className="space-y-1 text-xs font-semibold">
+        <label id="orders.order-details.unified-delivery-quote-form.label.2" className="space-y-1 text-xs font-semibold">
           سيارة النقل مرة واحدة
-          <Input ui={{ uid: "orders.delivery-quote.vehicle-amount-ZPo0HL", id: "orders.delivery-quote.vehicle-amount", kind: "field", part: "quote" }}
+          <Input id="orders.order-details.unified-delivery-quote-form.input.2" ui={{ uid: "orders.delivery-quote.vehicle-amount-ZPo0HL", id: "orders.delivery-quote.vehicle-amount", kind: "field", part: "quote" }}
             type="number"
             min={0}
             step="0.01"
@@ -64,9 +64,9 @@ export function UnifiedDeliveryQuoteForm({
           />
         </label>
       ) : null}
-      <label className="space-y-1 text-xs font-semibold">
+      <label id="orders.order-details.unified-delivery-quote-form.label.3" className="space-y-1 text-xs font-semibold">
         تفاصيل المسار والمدة
-        <Textarea ui={{ uid: "orders.delivery-quote.notes-ZELQ2o", id: "orders.delivery-quote.notes", kind: "field", part: "quote" }}
+        <Textarea id="orders.order-details.unified-delivery-quote-form.textarea" ui={{ uid: "orders.delivery-quote.notes-ZELQ2o", id: "orders.delivery-quote.notes", kind: "field", part: "quote" }}
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
           maxLength={1000}
@@ -74,7 +74,7 @@ export function UnifiedDeliveryQuoteForm({
           placeholder="عدد محطات الاستلام والمدة المتوقعة"
         />
       </label>
-      <button
+      <button id="orders.order-details.unified-delivery-quote-form.button"
         type="button"
         disabled={!validQuote || sending || Boolean(busyAction)}
         onClick={() =>
@@ -88,9 +88,9 @@ export function UnifiedDeliveryQuoteForm({
         className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-on-primary disabled:opacity-50"
       >
         {sending ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 id="orders.order-details.unified-delivery-quote-form.loader2" className="h-4 w-4 animate-spin" />
         ) : (
-          <Send className="h-4 w-4" />
+          <Send id="orders.order-details.unified-delivery-quote-form.send" className="h-4 w-4" />
         )}
         إرسال العرض
       </button>

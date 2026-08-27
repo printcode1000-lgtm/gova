@@ -83,14 +83,14 @@ export const HeroSliderEditor = React.forwardRef<
   };
 
   return (
-    <section
+    <section id="advertisements.hero-slider-editor.section"
       className="mt-4 rounded-xl border bg-card p-4 text-card-foreground shadow-sm"
       aria-label="تعديل العرض الرئيسي"
     >
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="font-semibold">إعدادات العرض الرئيسي</h2>
-          <p className="text-sm text-muted-foreground">
+      <div id="advertisements.hero-slider-editor.div" className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div id="advertisements.hero-slider-editor.div.2">
+          <h2 id="advertisements.hero-slider-editor.h2" className="font-semibold">إعدادات العرض الرئيسي</h2>
+          <p id="advertisements.hero-slider-editor.p" className="text-sm text-muted-foreground">
             تظهر التغييرات والصور المختارة مباشرة في المعاينة أعلاه حتى قبل
             الرفع، بينما تبقى الصفحة الرئيسية كما هي. التشغيل التلقائي ومدة كل
             شريحة والتكرار تعمل كما في Home. لكل شريحة انتقال
@@ -98,23 +98,23 @@ export const HeroSliderEditor = React.forwardRef<
             النقر على الشريحة معطّل أثناء التحرير.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div id="advertisements.hero-slider-editor.div.3" className="flex gap-2">
           {onCancel && (
-            <Button ui={{ uid: "hero-slider-editor.cancel-nE07Ui", id: "hero-slider-editor.cancel", kind: "action", action: "cancel", part: "toolbar" }}
+            <Button id="advertisements.hero-slider-editor.button" ui={{ uid: "hero-slider-editor.cancel-nE07Ui", id: "hero-slider-editor.cancel", kind: "action", action: "cancel", part: "toolbar" }}
               type="button"
               variant="outline"
               size="sm"
               onClick={onCancel}
             >
-              <RotateCcw className="me-2 h-4 w-4" /> تراجع
+              <RotateCcw id="advertisements.hero-slider-editor.rotate-ccw" className="me-2 h-4 w-4" /> تراجع
             </Button>
           )}
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-2">
-          <Label htmlFor="hero-template-transition">انتقال الشرائح الجديدة</Label>
+      <div id="advertisements.hero-slider-editor.div.4" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div id="advertisements.hero-slider-editor.div.5" className="space-y-2">
+          <Label id="advertisements.hero-slider-editor.label" htmlFor="hero-template-transition">انتقال الشرائح الجديدة</Label>
           <select
             {...uiAttributes({
               uid: "hero-slider-editor.template-transition-7PUD5Q",
@@ -137,8 +137,8 @@ export const HeroSliderEditor = React.forwardRef<
             ))}
           </select>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="hero-template-transition-duration">
+        <div id="advertisements.hero-slider-editor.div.6" className="space-y-2">
+          <Label id="advertisements.hero-slider-editor.label.2" htmlFor="hero-template-transition-duration">
             مدة الانتقال الافتراضية (مللي ثانية)
           </Label>
           <Input ui={{ uid: "hero-slider-editor.template-transition-duration-Ts8XHR", id: "hero-slider-editor.template-transition-duration", kind: "field", part: "template" }}
@@ -153,8 +153,8 @@ export const HeroSliderEditor = React.forwardRef<
             }
           />
         </div>
-        <div className="flex items-end sm:col-span-2">
-          <Button ui={{ uid: "hero-slider-editor.apply-template-5UUeWM", id: "hero-slider-editor.apply-template", kind: "action", action: "apply-transition-template", part: "template" }}
+        <div id="advertisements.hero-slider-editor.div.7" className="flex items-end sm:col-span-2">
+          <Button id="advertisements.hero-slider-editor.button.2" ui={{ uid: "hero-slider-editor.apply-template-5UUeWM", id: "hero-slider-editor.apply-template", kind: "action", action: "apply-transition-template", part: "template" }}
             type="button"
             variant="secondary"
             size="sm"
@@ -173,25 +173,25 @@ export const HeroSliderEditor = React.forwardRef<
             تطبيق الانتقال على كل الشرائح
           </Button>
         </div>
-        <div className="flex items-end gap-3 pb-2">
+        <div id="advertisements.hero-slider-editor.div.8" className="flex items-end gap-3 pb-2">
           <Switch ui={{ uid: "hero-slider-editor.autoplay-NEsc6o", id: "hero-slider-editor.autoplay", kind: "field", action: "toggle-autoplay", part: "template" }}
             id="hero-autoplay"
             checked={value.autoPlay}
             onCheckedChange={(autoPlay) => onChange({ ...value, autoPlay })}
           />
-          <Label htmlFor="hero-autoplay">تشغيل تلقائي</Label>
+          <Label id="advertisements.hero-slider-editor.label.3" htmlFor="hero-autoplay">تشغيل تلقائي</Label>
         </div>
-        <div className="flex items-end gap-3 pb-2">
+        <div id="advertisements.hero-slider-editor.div.9" className="flex items-end gap-3 pb-2">
           <Switch ui={{ uid: "hero-slider-editor.loop-c9EBLn", id: "hero-slider-editor.loop", kind: "field", action: "toggle-loop", part: "template" }}
             id="hero-loop"
             checked={value.loop}
             onCheckedChange={(loop) => onChange({ ...value, loop })}
           />
-          <Label htmlFor="hero-loop">تكرار الشرائح</Label>
+          <Label id="advertisements.hero-slider-editor.label.4" htmlFor="hero-loop">تكرار الشرائح</Label>
         </div>
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div id="advertisements.hero-slider-editor.div.10" className="mt-6 space-y-4">
         {value.slides.map((slide, index) => (
           <fieldset
             key={`${slide.priority}-${index}`}
@@ -372,7 +372,7 @@ export const HeroSliderEditor = React.forwardRef<
             </div>
           </fieldset>
         ))}
-        <Button ui={{ uid: "hero-slider-editor.add-slide-Gt7bcE", id: "hero-slider-editor.add-slide", kind: "action", action: "add-slide", part: "slides" }}
+        <Button id="advertisements.hero-slider-editor.button.3" ui={{ uid: "hero-slider-editor.add-slide-Gt7bcE", id: "hero-slider-editor.add-slide", kind: "action", action: "add-slide", part: "slides" }}
           type="button"
           variant="outline"
           className="w-full"
@@ -389,7 +389,7 @@ export const HeroSliderEditor = React.forwardRef<
             })
           }
         >
-          <Plus className="me-2 h-4 w-4" /> إضافة شريحة
+          <Plus id="advertisements.hero-slider-editor.plus" className="me-2 h-4 w-4" /> إضافة شريحة
         </Button>
       </div>
     </section>

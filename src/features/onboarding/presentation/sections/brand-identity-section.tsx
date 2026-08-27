@@ -76,17 +76,17 @@ export function BrandIdentitySection() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5" />
+    <div id="onboarding.sections.brand-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.brand-identity-section.card">
+        <CardHeader id="onboarding.sections.brand-identity-section.card-header">
+          <CardTitle id="onboarding.sections.brand-identity-section.card-title" className="flex items-center gap-2">
+            <Heart id="onboarding.sections.brand-identity-section.heart" className="h-5 w-5" />
             {t('onboarding.brandIdentity.title')}
           </CardTitle>
-          <CardDescription>{t('onboarding.brandIdentity.description')}</CardDescription>
+          <CardDescription id="onboarding.sections.brand-identity-section.card-description">{t('onboarding.brandIdentity.description')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <FormField
+        <CardContent id="onboarding.sections.brand-identity-section.card-content" className="space-y-6">
+          <FormField id="onboarding.sections.brand-identity-section.form-field"
             label={t('onboarding.brandIdentity.mission')}
             htmlFor="mission"
             required
@@ -104,7 +104,7 @@ export function BrandIdentitySection() {
             />
           </FormField>
 
-          <FormField
+          <FormField id="onboarding.sections.brand-identity-section.form-field.2"
             label={t('onboarding.brandIdentity.vision')}
             htmlFor="vision"
             required
@@ -122,20 +122,20 @@ export function BrandIdentitySection() {
             />
           </FormField>
 
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-sm font-medium">{t('onboarding.brandIdentity.usps')}</Label>
-                <p className="text-xs text-muted-foreground">
+          <div id="onboarding.sections.brand-identity-section.div.2" className="space-y-3">
+            <div id="onboarding.sections.brand-identity-section.div.3" className="flex items-center justify-between">
+              <div id="onboarding.sections.brand-identity-section.div.4">
+                <Label id="onboarding.sections.brand-identity-section.label" className="text-sm font-medium">{t('onboarding.brandIdentity.usps')}</Label>
+                <p id="onboarding.sections.brand-identity-section.p" className="text-xs text-muted-foreground">
                   {t('onboarding.brandIdentity.uspsHint')}
                 </p>
               </div>
               {errors.uniqueSellingPoints && (
-                <span className="text-xs text-destructive">{errors.uniqueSellingPoints}</span>
+                <span id="onboarding.sections.brand-identity-section.span" className="text-xs text-destructive">{errors.uniqueSellingPoints}</span>
               )}
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div id="onboarding.sections.brand-identity-section.div.5" className="flex flex-wrap gap-2">
               {brandIdentity.uniqueSellingPoints.map((usp) => (
                 <Badge key={usp} variant="secondary" className="gap-1 pl-3">
                   <Sparkles className="h-3 w-3" />
@@ -147,15 +147,15 @@ export function BrandIdentitySection() {
               ))}
             </div>
 
-            <div className="flex gap-2">
-              <Input ui={{ uid: 'onboarding.brand-identity.new-usp-Uk0WbA', id: 'onboarding.brand-identity.new-usp', kind: 'field', part: 'usp' }}
+            <div id="onboarding.sections.brand-identity-section.div.6" className="flex gap-2">
+              <Input id="onboarding.sections.brand-identity-section.input" ui={{ uid: 'onboarding.brand-identity.new-usp-Uk0WbA', id: 'onboarding.brand-identity.new-usp', kind: 'field', part: 'usp' }}
                 value={newUSP}
                 onChange={(e) => setNewUSP(e.target.value)}
                 placeholder={t('onboarding.brandIdentity.uspPlaceholder')}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUSP())}
                 disabled={brandIdentity.uniqueSellingPoints.length >= 5}
               />
-              <Button ui={{ uid: 'onboarding.brand-identity.add-usp-J5aXQc', id: 'onboarding.brand-identity.add-usp', kind: 'action', action: 'add-usp', part: 'usp' }}
+              <Button id="onboarding.sections.brand-identity-section.button" ui={{ uid: 'onboarding.brand-identity.add-usp-J5aXQc', id: 'onboarding.brand-identity.add-usp', kind: 'action', action: 'add-usp', part: 'usp' }}
                 type="button"
                 onClick={addUSP}
                 disabled={!newUSP.trim() || brandIdentity.uniqueSellingPoints.length >= 5}
@@ -165,8 +165,8 @@ export function BrandIdentitySection() {
             </div>
           </div>
 
-          <FormField label={t('onboarding.brandIdentity.brandValues')} htmlFor="brandValues" hint={t('onboarding.brandIdentity.brandValuesHint')}>
-            <CheckboxGroup
+          <FormField id="onboarding.sections.brand-identity-section.form-field.3" label={t('onboarding.brandIdentity.brandValues')} htmlFor="brandValues" hint={t('onboarding.brandIdentity.brandValuesHint')}>
+            <CheckboxGroup id="onboarding.sections.brand-identity-section.checkbox-group"
               options={constants.brandValues.map((v) => ({
                 value: v,
                 label: t(`onboarding.constants.brandValues.${BRAND_VALUE_KEYS[v]}`),
@@ -179,7 +179,7 @@ export function BrandIdentitySection() {
         </CardContent>
       </Card>
 
-      <StepNavigation onNext={handleNext} showSkip />
+      <StepNavigation id="onboarding.sections.brand-identity-section.step-navigation" onNext={handleNext} showSkip />
     </div>
   );
 }

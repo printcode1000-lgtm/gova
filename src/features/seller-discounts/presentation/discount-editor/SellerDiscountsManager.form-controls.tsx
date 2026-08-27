@@ -31,7 +31,7 @@ import {
   Toggle,
 } from "./SellerDiscountsManager.section-03";
 
-export function DiscountEditor({
+export function DiscountEditor({ id,
   discount,
   locale,
   typeLabel,
@@ -43,7 +43,7 @@ export function DiscountEditor({
   typeLabel: string;
   onRemove: () => void;
   onChange: (updater: (discount: SellerDiscountRule) => SellerDiscountRule) => void;
-}) {
+} & { id?: string }) {
   const ar = locale === "ar";
   const Icon =
     discount.type === "free_shipping"
@@ -93,7 +93,7 @@ export function DiscountEditor({
     }));
 
   return (
-    <article className="rounded-2xl border border-outline-variant bg-surface p-3 shadow-sm">
+    <article id={id} className="rounded-2xl border border-outline-variant bg-surface p-3 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -338,7 +338,7 @@ export function DiscountEditor({
   );
 }
 
-export function Field({
+export function Field({ id,
   label,
   description,
   children,
@@ -346,9 +346,9 @@ export function Field({
   label: string;
   description: string;
   children: React.ReactNode;
-}) {
+} & { id?: string }) {
   return (
-    <label className="space-y-1.5 text-xs font-semibold text-on-surface">
+    <label id={id} className="space-y-1.5 text-xs font-semibold text-on-surface">
       <span className="block">{label}</span>
       <span className="block font-normal leading-5 text-on-surface-variant">{description}</span>
       {children}

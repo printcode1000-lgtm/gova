@@ -31,7 +31,7 @@ export default async function ProfileSharePage({
     : null;
   return (
     <Suspense fallback={null}>
-      <ProfilePageContent initialPublicProfile={initialPublicProfile} />
+      <ProfilePageContent id="s.profile.page.profile-page-content" initialPublicProfile={initialPublicProfile} />
     </Suspense>
   );
 }

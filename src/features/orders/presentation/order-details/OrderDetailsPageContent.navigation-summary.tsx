@@ -101,9 +101,9 @@ export function isPendingSellerResponse(status: unknown) {
   return ["new", "waiting_for_seller_response"].includes(String(status));
 }
 
-export function BackToOrders() {
+export function BackToOrders({ id }: { id?: string }) {
   return (
-    <Link
+    <Link id={id}
       href="/orders"
       className="inline-flex items-center gap-2 text-sm text-primary"
     >
@@ -113,7 +113,7 @@ export function BackToOrders() {
   );
 }
 
-export function OrderSummary({
+export function OrderSummary({ id,
   order,
   buyerAddress,
   buyerPhone,
@@ -125,9 +125,9 @@ export function OrderSummary({
   buyerPhone: string;
   currency: string;
   hasPendingShippingQuote: boolean;
-}) {
+} & { id?: string }) {
   return (
-    <section className="mb-5 grid gap-4 md:grid-cols-3">
+    <section id={id} className="mb-5 grid gap-4 md:grid-cols-3">
       <div className="rounded-xl border border-outline-variant bg-surface p-4">
         <p className="text-sm text-muted-foreground">{text.total}</p>
         <p className="mt-1 text-xl font-bold">

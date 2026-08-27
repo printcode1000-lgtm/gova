@@ -82,22 +82,22 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
   );
 
   return (
-    <div className="space-y-6 pb-8">
-      <div className="px-4">
-        <HeroSlider config={homeHeroSliderConfig} />
+    <div id="home.home-screen.div" className="space-y-6 pb-8">
+      <div id="home.home-screen.div.2" className="px-4">
+        <HeroSlider id="home.home-screen.hero-slider" config={homeHeroSliderConfig} />
       </div>
 
-      <section className="mx-2 sm:mx-4">
-        <FeaturedMarquee config={homeFeaturedMarqueeConfig} />
+      <section id="home.home-screen.section" className="mx-2 sm:mx-4">
+        <FeaturedMarquee id="home.home-screen.featured-marquee" config={homeFeaturedMarqueeConfig} />
       </section>
 
       {homeTrendingRibbonConfig.items.length > 0 ? (
-        <section className="overflow-hidden rounded-2xl border border-error/20 shadow-sm">
-          <TrendingRibbon config={homeTrendingRibbonConfig} />
+        <section id="home.home-screen.section.2" className="overflow-hidden rounded-2xl border border-error/20 shadow-sm">
+          <TrendingRibbon id="home.home-screen.trending-ribbon" config={homeTrendingRibbonConfig} />
         </section>
       ) : null}
 
-      <div className="asol-section-tonal asol-section-tonal-primary mx-2 sm:mx-4">
+      <div id="home.home-screen.div.3" className="asol-section-tonal asol-section-tonal-primary mx-2 sm:mx-4">
         <CategoriesGrid displayCategories={displayCategories} />
       </div>
 

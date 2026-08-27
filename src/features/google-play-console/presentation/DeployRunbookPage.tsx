@@ -42,12 +42,12 @@ export function DeployRunbookPage() {
   const [confirmation, setConfirmation] = React.useState("");
 
   if (isLoading) {
-    return <main className="p-4 text-sm text-on-surface-variant">جار التحميل...</main>;
+    return <main id="google-play-console.deploy-runbook-page.main" className="p-4 text-sm text-on-surface-variant">جار التحميل...</main>;
   }
   if (!allowed) {
     return (
-      <main className="mx-auto max-w-2xl p-4 sm:p-6">
-        <div className="rounded-md bg-error-container p-4 text-on-error-container">
+      <main id="google-play-console.deploy-runbook-page.main.2" className="mx-auto max-w-2xl p-4 sm:p-6">
+        <div id="google-play-console.deploy-runbook-page.div" className="rounded-md bg-error-container p-4 text-on-error-container">
           هذه الصفحة متاحة للسوبر أدمن فقط.
         </div>
       </main>
@@ -104,19 +104,19 @@ export function DeployRunbookPage() {
     );
 
   return (
-    <main
+    <main id="google-play-console.deploy-runbook-page.main.3"
       className="mx-auto w-full min-w-0 max-w-7xl space-y-3 p-3 pb-24 sm:space-y-4 sm:p-4"
       dir="rtl"
     >
-      <Header />
-      <TabButtons tab={tab} setTab={setTab} />
+      <Header id="google-play-console.deploy-runbook-page.header" />
+      <TabButtons id="google-play-console.deploy-runbook-page.tab-buttons" tab={tab} setTab={setTab} />
 
-      <DeployRunbookCollapsible
+      <DeployRunbookCollapsible id="google-play-console.deploy-runbook-page.deploy-runbook-collapsible"
         title="ملخص الحالة"
         description="نظرة سريعة على الفروع المفعّلة وحالة التنفيذ وسلوك الخطأ."
-        badge={<StatusBadge status={activeJob?.status ?? "جاهز"} />}
+        badge={<StatusBadge id="google-play-console.deploy-runbook-page.status-badge" status={activeJob?.status ?? "جاهز"} />}
       >
-        <Summary
+        <Summary id="google-play-console.deploy-runbook-page.summary"
           selectedCount={selectedCount}
           totalCount={totalCount}
           status={activeJob?.status ?? "جاهز"}
@@ -125,7 +125,7 @@ export function DeployRunbookPage() {
       </DeployRunbookCollapsible>
 
       {tab === "deploy-all" ? (
-        <DeployAllPanel
+        <DeployAllPanel id="google-play-console.deploy-runbook-page.deploy-all-panel"
           selected={allSelected}
           setSelected={setAllSelected}
           scenario={allScenario}
@@ -136,7 +136,7 @@ export function DeployRunbookPage() {
           setSkipPreflight={setSkipPreflight}
         />
       ) : (
-        <RunbookPanel
+        <RunbookPanel id="google-play-console.deploy-runbook-page.runbook-panel"
           title="Deploy Push"
           description="المسار السريع: أسرار، commit، push، ثم تحقق Vercel للأهداف المختارة دون فحوصات build/test."
           runbook={DEPLOY_PUSH_RUNBOOK}

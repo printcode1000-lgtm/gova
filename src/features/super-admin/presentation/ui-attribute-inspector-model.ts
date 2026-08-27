@@ -1,10 +1,14 @@
-import { UI_UID_ATTRIBUTE, uiSimulationTarget } from "@asol/ui-registry-core";
+import { UI_UID_ATTRIBUTE, isUiUidPrefix, uiSimulationTarget } from "@asol/ui-registry-core";
 
 const UI_ATTRIBUTE_PREFIX = "data-ui";
 const SIMULATION_ATTRIBUTE_PREFIX = "data-simulation-";
 
-/** Only registry-owned diagnostic metadata may ever reach the clipboard. */
-function isSafeInspectorAttribute(name: string): boolean {
+/**
+ * Registry metadata plus a literal HTML id when that id is a safe prefix.
+ * Unsafe ids (resource values, labels) stay off the clipboard.
+ */
+function isSafeInspectorAttribute(name: string, value: string): boolean {
+  if (name === "id") return isUiUidPrefix(value);
   return (
     name === UI_ATTRIBUTE_PREFIX ||
     name.startsWith(`${UI_ATTRIBUTE_PREFIX}-`) ||
@@ -15,7 +19,7 @@ function isSafeInspectorAttribute(name: string): boolean {
 /** Formats only the approved diagnostic attributes for clipboard output. */
 export function formatUiAttributes(attributes: Readonly<Record<string, string>>): string {
   return Object.entries(attributes)
-    .filter(([name]) => isSafeInspectorAttribute(name))
+    .filter(([name, value]) => isSafeInspectorAttribute(name, value))
     .sort(([left], [right]) => left.localeCompare(right))
     .map(([name, value]) => `${name}=${JSON.stringify(value)}`)
     .join("\n");
@@ -41,23 +45,21 @@ export function selectedUiUid(
   return uid ? uid : null;
 }
 
+const MISSING_SELECTED_ID = "مفقود";
+
 /**
- * Inspector output always leads with the uid line so a super admin can read the
- * registry address first, then the full safe attribute tree beneath it.
- *
- * The uid is read from the **selected element's own** attributes, never from
- * the tree: an ancestor's uid belongs to the ancestor, and reporting it here
- * would make an unregistered element look registered.
+ * Inspector panel and selection clipboard: the selected element's safe HTML id,
+ * or a missing marker. Ancestors, uid, simulation, and other attributes stay
+ * off this surface.
  */
 export function formatInspectorOutput(
   selected: Readonly<Record<string, string>> | undefined,
-  nodes: readonly Readonly<Record<string, string>>[],
 ): string {
-  const uid = selectedUiUid(selected);
-  const header = uid ? `${UI_UID_ATTRIBUTE}=${JSON.stringify(uid)}` : `${UI_UID_ATTRIBUTE}=(missing)`;
-  const simulation = selectedSimulationSummary(selected);
-  const tree = formatUiAttributeTree(nodes);
-  return [header, simulation, tree].filter(Boolean).join("\n");
+  const selectedId = selected?.id;
+  if (typeof selectedId === "string" && isUiUidPrefix(selectedId)) {
+    return selectedId;
+  }
+  return MISSING_SELECTED_ID;
 }
 
 /**

@@ -50,8 +50,8 @@ export function AppHeader({
       )}>
         {/* Row height is driven by the shared variable so the content padding
             in `.asol-shell-main` can never drift out of sync with it. */}
-        <div className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
-          <div className="flex items-center gap-3">
+        <div id="shared.layouts.app-header.div" className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
+          <div id="shared.layouts.app-header.div.2" className="flex items-center gap-3">
             <button
               {...uiAttributes({ uid: 'app.header.menu-xS4nIG', id: 'app.header.menu', kind: 'action', action: 'open-sidebar', part: 'menu' })}
               type="button"
@@ -68,11 +68,11 @@ export function AppHeader({
               aria-label={t('sidebar.menu')}
               onPointerDown={toggleSidebar}
             >
-              <Menu className="w-5 h-5" />
+              <Menu id="shared.layouts.app-header.menu" className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div id="shared.layouts.app-header.div.3" className="flex items-center gap-2">
             <SpecialtyRequestComposer />
 
             <PageSaveHeaderButton />
@@ -92,7 +92,7 @@ export function AppHeader({
               aria-current={isSearchActive ? 'page' : undefined}
               aria-label={t('header.search')}
             >
-              <Search className="w-5 h-5" />
+              <Search id="shared.layouts.app-header.search" className="w-5 h-5" />
             </Link>
 
             <Link {...uiAttributes({ uid: 'nav-cart-a5OnHB', id: 'nav-cart', kind: 'action', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'nav-cart' } })}
@@ -110,9 +110,9 @@ export function AppHeader({
               aria-current={isCartActive ? 'page' : undefined}
               aria-label={t('header.cart')}
             >
-              <ShoppingCart className="w-5 h-5" />
+              <ShoppingCart id="shared.layouts.app-header.shopping-cart" className="w-5 h-5" />
               {totalQuantity > 0 ? (
-                <span
+                <span id="shared.layouts.app-header.span"
                   key={flashToken}
                   className="absolute top-2 end-2 w-2 h-2 rounded-full bg-error border border-background animate-pulse-subtle data-[flash=true]:animate-[ping_0.65s_ease-out_1]"
                   data-flash={flashToken > 0}

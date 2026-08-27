@@ -13,12 +13,12 @@ function auditTitle(entry: DbRow) {
 
 export function OrderAuditTrail({ audit }: { audit: DbRow[] }) {
   return (
-    <section className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-      <h2 className="font-bold">سجل مختصر</h2>
+    <section id="orders.order-audit-trail.section" className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+      <h2 id="orders.order-audit-trail.h2" className="font-bold">سجل مختصر</h2>
       {audit.length === 0 ? (
-        <p className="mt-2 text-sm text-muted-foreground">لا يوجد سجل بعد.</p>
+        <p id="orders.order-audit-trail.p" className="mt-2 text-sm text-muted-foreground">لا يوجد سجل بعد.</p>
       ) : (
-        <div className="mt-3 space-y-2">
+        <div id="orders.order-audit-trail.div" className="mt-3 space-y-2">
           {audit.slice(0, 8).map((entry) => (
             <div key={String(entry.id)} className="text-sm">
               <p className="font-semibold">{auditTitle(entry)}</p>

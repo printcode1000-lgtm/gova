@@ -30,18 +30,18 @@ interface RatingSettingsEditorProps {
   onChange: (next: { enabled: boolean; mode: RatingMode }) => void;
 }
 
-export function RatingSettingsEditor({
+export function RatingSettingsEditor({ id,
   enabled,
   mode,
   labels,
   disabled = false,
   onChange,
-}: RatingSettingsEditorProps) {
+}: RatingSettingsEditorProps & { id?: string }) {
   return (
-    <div className="space-y-4 rounded-xl border border-outline-variant p-4">
-      <h3 className="text-sm font-bold">{labels.title}</h3>
+    <div id={id} className="space-y-4 rounded-xl border border-outline-variant p-4">
+      <h3 id="product.style-editors.rating.rating-settings-editor.h3" className="text-sm font-bold">{labels.title}</h3>
 
-      <div className="flex items-center gap-2">
+      <div id="product.style-editors.rating.rating-settings-editor.div.2" className="flex items-center gap-2">
         <Checkbox ui={{ uid: "product.style.rating-enabled-xw1yNf", id: "product.style.rating-enabled", kind: "field", part: "rating" }}
           id="rating-settings-enabled"
           checked={enabled}
@@ -55,7 +55,7 @@ export function RatingSettingsEditor({
         </Label>
       </div>
 
-      <div className="space-y-2">
+      <div id="product.style-editors.rating.rating-settings-editor.div.3" className="space-y-2">
         <Label>{labels.mode}</Label>
         <Select
           value={mode}

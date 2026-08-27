@@ -73,11 +73,11 @@ export default function TopMarquee({ displayCategories }: TopMarqueeProps) {
   }, [handleIntersect, loopItems.length]);
 
   return (
-    <div
+    <div id="splash.top-marquee.div"
       className="absolute top-[var(--asol-safe-area-top)] inset-x-0 overflow-hidden pointer-events-none z-0"
       dir="ltr"
     >
-      <div className="splash-marquee-track splash-marquee-track--right gap-4 py-4">
+      <div id="splash.top-marquee.div.2" className="splash-marquee-track splash-marquee-track--right gap-4 py-4">
         {loopItems.map((item, index) => (
           <div 
             key={`top-${index}`} 

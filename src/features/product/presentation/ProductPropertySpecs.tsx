@@ -45,7 +45,7 @@ function readCoordinate(value: string | undefined, min: number, max: number) {
     : null;
 }
 
-export function ProductPropertySpecs({
+export function ProductPropertySpecs({ id,
   mode,
   config,
   specs,
@@ -55,7 +55,7 @@ export function ProductPropertySpecs({
   config: ProductComponentConfig;
   specs: ProductPropertySpecsData;
   onChange: (specs: ProductPropertySpecsData) => void;
-}) {
+} & { id?: string }) {
   const [mapOpen, setMapOpen] = React.useState(true);
   const [mapMessage, setMapMessage] = React.useState("");
   const latitude = readCoordinate(specs.locationLatitude, -90, 90);
@@ -111,11 +111,11 @@ export function ProductPropertySpecs({
   );
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div id={id} className="grid gap-3 sm:grid-cols-2">
       {PROPERTY_FIELDS.map(([fieldKey, label, type]) => {
         if (config[fieldKey] === false) return null;
         return (
-          <ProductField
+          <ProductField id={id}
             key={fieldKey}
             label={label}
             value={specs[fieldKey as keyof ProductPropertySpecsData] ?? ""}

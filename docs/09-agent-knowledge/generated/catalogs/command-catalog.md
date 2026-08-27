@@ -256,7 +256,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:ui-registry-core` | `Tooling` | 8 |  | 0 |
 | `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run typecheck` | `Tooling` | 0 |  | 0 |
-| `npm run ui-registry:apply-pending` | `Tooling` | 1 |  | 1 |
+| `npm run ui-registry:apply-pending` | `Tooling` | 1 |  | 2 |
 | `npm run ui-registry:pending:check` | `Tooling` | 1 |  | 1 |
 | `npm run ui-registry:simulation:generate` | `Tooling` | 1 |  | 0 |
 | `npm run ui-registry:simulation:report` | `Tooling` | 1 |  | 0 |

@@ -14,14 +14,14 @@ interface OtpInputProps {
   hasError?: boolean;
 }
 
-export function OtpInput({
+export function OtpInput({ id,
   value,
   onChange,
   onComplete,
   disabled = false,
   length = 4,
   hasError = false,
-}: OtpInputProps) {
+}: OtpInputProps & { id?: string }) {
   const { t } = useTranslation();
   const inputsRef = React.useRef<Array<HTMLInputElement | null>>([]);
   const digits = value.padEnd(length, ' ').slice(0, length).split('');
@@ -55,7 +55,7 @@ export function OtpInput({
   };
 
   return (
-    <div className="flex gap-2 justify-center" onPaste={handlePaste} dir="ltr">
+    <div id={id} className="flex gap-2 justify-center" onPaste={handlePaste} dir="ltr">
       {Array.from({ length }).map((_, index) => (
         <input
           key={index}

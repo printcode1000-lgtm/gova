@@ -47,12 +47,12 @@ export function DevCloudBackupSavedList({
   onDelete: (fileName: string) => void;
 }) {
   return (
-    <section className="overflow-hidden rounded-md border bg-surface">
-      <div className="flex items-center gap-2 border-b p-3 font-semibold">
-        <FileArchive className="h-5 w-5" />
+    <section id="dev-cloud-backup.dev-cloud-backup-saved-list.section" className="overflow-hidden rounded-md border bg-surface">
+      <div id="dev-cloud-backup.dev-cloud-backup-saved-list.div" className="flex items-center gap-2 border-b p-3 font-semibold">
+        <FileArchive id="dev-cloud-backup.dev-cloud-backup-saved-list.file-archive" className="h-5 w-5" />
         النسخ المحفوظة محليًا
       </div>
-      <div className="divide-y">
+      <div id="dev-cloud-backup.dev-cloud-backup-saved-list.div.2" className="divide-y">
         {backups.map((backup) => (
           <SavedBackupRow
             key={backup.fileName}
@@ -70,7 +70,7 @@ export function DevCloudBackupSavedList({
           />
         ))}
         {backups.length === 0 ? (
-          <div className="p-6 text-center text-sm text-on-surface-variant">
+          <div id="dev-cloud-backup.dev-cloud-backup-saved-list.div.3" className="p-6 text-center text-sm text-on-surface-variant">
             لا توجد نسخ محفوظة بعد.
           </div>
         ) : null}
@@ -79,7 +79,7 @@ export function DevCloudBackupSavedList({
   );
 }
 
-function SavedBackupRow({
+function SavedBackupRow({ id,
   backup,
   busy,
   devAllowed,
@@ -103,7 +103,7 @@ function SavedBackupRow({
   onUpdate: (fileName: string) => void;
   onRestore: (fileName: string, mode: DevCloudBackupRestoreMode) => void;
   onDelete: (fileName: string) => void;
-}) {
+} & { id?: string }) {
   const inspectBusy = operationBusyFor(busy, "inspect", backup.fileName);
   const compareBusy = operationBusyFor(busy, "compare", backup.fileName);
   const updateBusy = operationBusyFor(busy, "update", backup.fileName);
@@ -111,7 +111,7 @@ function SavedBackupRow({
   const commandDisabled = !devAllowed || savedOperationBusy;
 
   return (
-    <div className="grid gap-3 p-3 text-sm md:grid-cols-[1fr_auto]">
+    <div id={id} className="grid gap-3 p-3 text-sm md:grid-cols-[1fr_auto]">
       <div className="min-w-0">
         <div className="break-all font-medium" dir="ltr">
           {backup.fileName}

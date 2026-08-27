@@ -23,20 +23,20 @@ export function CapBuildGuide({ t }: { t: (key: string) => string }) {
 }
 
 /** One input rendered from a command's parameter schema. */
-export function Parameter({ command, schema, value, t, onChange }: {
+export function Parameter({ id, command, schema, value, t, onChange }: {
   command: BuildCommandCatalogEntry;
   schema: BuildCommandCatalogEntry["parameters"][number];
   value: unknown;
   t: (key: string) => string;
   onChange: (id: string, name: BuildParameterName, value: unknown) => void;
-}) {
+} & { id?: string }) {
   const help = command.id === "cap-build" || command.id === "release-android" ? (
     <p className="text-xs leading-5 text-on-surface-variant">
       {t(`releaseConsole.capBuild.${schema.name}`)}
     </p>
   ) : null;
   if (schema.type === "boolean") return (
-    <div className="space-y-1">
+    <div id={id} className="space-y-1">
       <label className="flex gap-2">
         <input type="checkbox" checked={value === true}
           onChange={(event) => onChange(command.id, schema.name, event.target.checked)} />
@@ -45,16 +45,16 @@ export function Parameter({ command, schema, value, t, onChange }: {
       {help}
     </div>
   );
-  if (schema.type === "string") return <Textarea value={String(value ?? "")}
+  if (schema.type === "string") return <Textarea id={id} value={String(value ?? "")}
     placeholder={t(`releaseConsole.parameters.${schema.name}`)}
     onChange={(event) => onChange(command.id, schema.name, event.target.value)} />;
   if (schema.type === "enum" && schema.name === "nativeVersionAction") return (
-    <fieldset className="space-y-2">
+    <fieldset id={id} className="space-y-2">
       <legend className="font-medium">{t("releaseConsole.parameters.nativeVersionAction")}</legend>
       <div className="grid gap-2 sm:grid-cols-2">
         {schema.values.map((item) => {
           const selected = value === item;
-          return <label key={item}
+          return <label id={id} key={item}
             className={` rounded-lg border p-3 transition-colors ${selected
               ? "border-primary bg-primary/10 ring-1 ring-primary"
               : "bg-surface"}`}>
@@ -71,7 +71,7 @@ export function Parameter({ command, schema, value, t, onChange }: {
     </fieldset>
   );
   if (schema.type === "enum") return (
-    <div className="space-y-1">
+    <div id={id} className="space-y-1">
       <label className="block font-medium" htmlFor={`${command.id}-${schema.name}`}>
         {t(`releaseConsole.parameters.${schema.name}`)}
       </label>
@@ -89,9 +89,9 @@ export function Parameter({ command, schema, value, t, onChange }: {
       {help}
     </div>
   );
-  if (schema.type === "number") return <Input type="number" min={schema.min} max={schema.max}
+  if (schema.type === "number") return <Input id={id} type="number" min={schema.min} max={schema.max}
     value={typeof value === "number" ? value : ""}
     onChange={(event) => onChange(command.id, schema.name, Number(event.target.value))} />;
-  return <Textarea placeholder={t("releaseConsole.parameters.releaseNotes")}
+  return <Textarea id={id} placeholder={t("releaseConsole.parameters.releaseNotes")}
     onChange={(event) => onChange(command.id, schema.name, { en: event.target.value })} />;
 }

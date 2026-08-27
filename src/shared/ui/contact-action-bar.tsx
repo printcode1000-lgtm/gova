@@ -43,12 +43,14 @@ export function ContactActionBar({
   label = "وسائل التواصل",
   compact = false,
   customActions,
-}: ContactActionBarProps) {
+  id,
+}: ContactActionBarProps & { id?: string }) {
   const groups = React.useMemo(() => buildContactGroups(data), [data]);
   if (groups.length === 0 && !customActions?.length) return null;
 
   return (
     <section
+      id={id}
       className={cn(
         "rounded-xl border border-outline-variant bg-surface/90 px-3 py-3 shadow-sm",
         className,
@@ -77,13 +79,13 @@ export function ContactActionBar({
   );
 }
 
-function ContactActionGroup({ group }: { group: ContactGroup }) {
+function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: string }) {
   const color = getContactVisualColor(group.id);
   const icon = getContactVisualIcon(group.id);
   if (group.options.length === 1 && isDirectGroup(group.id)) {
     const option = group.options[0]!;
     return (
-      <Button
+      <Button id={id}
         asChild
         type="button"
         size="icon"
@@ -160,10 +162,10 @@ function ContactActionGroup({ group }: { group: ContactGroup }) {
   );
 }
 
-function CustomActionButton({ action }: { action: CustomActionButtonModel }) {
+function CustomActionButton({ id, action }: { action: CustomActionButtonModel } & { id?: string }) {
   const color = action.color || "rgb(79, 70, 229)";
   return (
-    <Button
+    <Button id={id}
       type="button"
       size="icon"
       variant="outline"

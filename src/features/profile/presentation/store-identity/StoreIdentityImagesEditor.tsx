@@ -46,9 +46,9 @@ export function StoreIdentityImagesEditor({
   logoLabel: string;
 }) {
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2 overflow-x-auto border-b border-outline-variant">
-        <button
+    <div id="profile.store-identity.store-identity-images-editor.div" className="space-y-4">
+      <div id="profile.store-identity.store-identity-images-editor.div.2" className="flex gap-2 overflow-x-auto border-b border-outline-variant">
+        <button id="profile.store-identity.store-identity-images-editor.button"
           type="button"
           onClick={() => setImageTab("logo")}
           className={`flex flex-shrink-0 items-center gap-2 border-b-2 px-3 pb-3 text-xs font-medium transition-colors sm:text-sm ${
@@ -57,10 +57,10 @@ export function StoreIdentityImagesEditor({
               : "border-transparent text-on-surface-variant"
           }`}
         >
-          <ImageIcon className="h-4 w-4" />
+          <ImageIcon id="profile.store-identity.store-identity-images-editor.image-icon" className="h-4 w-4" />
           {logoLabel}
         </button>
-        <button
+        <button id="profile.store-identity.store-identity-images-editor.button.2"
           type="button"
           onClick={() => setImageTab("hero")}
           className={`flex flex-shrink-0 items-center gap-2 border-b-2 px-3 pb-3 text-xs font-medium transition-colors sm:text-sm ${
@@ -69,12 +69,12 @@ export function StoreIdentityImagesEditor({
               : "border-transparent text-on-surface-variant"
           }`}
         >
-          <LayoutTemplate className="h-4 w-4" />
+          <LayoutTemplate id="profile.store-identity.store-identity-images-editor.layout-template" className="h-4 w-4" />
           صور واجهة المتجر
         </button>
       </div>
 
-      <div className={imageTab === "logo" ? "block w-fit max-w-full" : "hidden"}>
+      <div id="profile.store-identity.store-identity-images-editor.div.3" className={imageTab === "logo" ? "block w-fit max-w-full" : "hidden"}>
         <StorageImageManager
           ref={logoManagerRef}
           config={storeLogoConfig}
@@ -84,8 +84,8 @@ export function StoreIdentityImagesEditor({
           onPendingChange={onLogoPendingChange}
         />
       </div>
-      <div className={imageTab === "hero" ? "block" : "hidden"}>
-        <HeroSlider
+      <div id="profile.store-identity.store-identity-images-editor.div.4" className={imageTab === "hero" ? "block" : "hidden"}>
+        <HeroSlider id="profile.store-identity.store-identity-images-editor.hero-slider"
           mode="images-edit"
           config={heroConfig ?? profileHeroConfig}
           onChange={onHeroImagesChange}
@@ -95,7 +95,7 @@ export function StoreIdentityImagesEditor({
       </div>
 
       {isImagesLoading || isSavingImages ? (
-        <p className="text-xs text-muted-foreground">
+        <p id="profile.store-identity.store-identity-images-editor.p" className="text-xs text-muted-foreground">
           {isSavingImages ? uploadingLabel : ""}
         </p>
       ) : null}

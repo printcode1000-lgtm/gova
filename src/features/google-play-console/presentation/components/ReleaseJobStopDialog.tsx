@@ -17,15 +17,16 @@ import type { BuildJobRecord } from "@asol/release-core/console";
  * Confirmation shown before a running job is killed. Stopping mid-build can
  * leave partial output behind, so it is never a single click.
  */
-export function ReleaseJobStopDialog({ job, t, onConfirm, onCancel }: {
+export function ReleaseJobStopDialog({ id, job, t, onConfirm, onCancel }: {
   job: BuildJobRecord | null;
   t: (key: string) => string;
   onConfirm: () => void;
   onCancel: () => void;
-}) {
+} & { id?: string }) {
   return (
     <Dialog open={Boolean(job)} onOpenChange={(open) => { if (!open) onCancel(); }}>
       <DialogContent
+        id={id}
         onPointerDownOutside={(event) => event.preventDefault()}
         onInteractOutside={(event) => event.preventDefault()}
         onFocusOutside={(event) => event.preventDefault()}

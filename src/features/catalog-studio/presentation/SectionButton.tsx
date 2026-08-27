@@ -1,6 +1,6 @@
 import { cn } from "@/shared/utils";
 
-export function SectionButton({
+export function SectionButton({ id,
   active,
   label,
   onClick,
@@ -8,9 +8,9 @@ export function SectionButton({
   active: boolean;
   label: string;
   onClick: () => void;
-}) {
+} & { id?: string }) {
   return (
-    <button
+    <button id={id}
       type="button"
       onClick={onClick}
       className={cn(

@@ -14,16 +14,16 @@ interface MonitorTreeItemProps {
   selectedId: string | null;
 }
 
-export function MonitorTreeItem({
+export function MonitorTreeItem({ id,
   node,
   onSelect,
   selectedId,
-}: MonitorTreeItemProps) {
+}: MonitorTreeItemProps & { id?: string }) {
   const [isOpen, setIsOpen] = React.useState<boolean>(true);
   const hasChildren = node.children && node.children.length > 0;
 
   return (
-    <div className="tree-node">
+    <div id={id} className="tree-node">
       <div
         className="tree-node-row"
         onClick={() => {

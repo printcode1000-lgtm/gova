@@ -36,7 +36,7 @@ import {
   DEFAULT_HOME_HERO_TRANSITION_DURATION,
 } from "@asol/hero-slider-core";
 
-export function HeroSlider({
+export function HeroSlider({ id,
   config,
   mode = "view",
   onChange,
@@ -44,7 +44,7 @@ export function HeroSlider({
   onCancel,
   imageUploadRef,
   onImagesPendingChange,
-}: HeroSliderProps) {
+}: HeroSliderProps & { id?: string }) {
   const { t } = useTranslation();
   const [draftConfig, setDraftConfig] = useState(config);
   const [current, setCurrent] = useState(0);
@@ -352,7 +352,7 @@ export function HeroSlider({
 
   if (mode === "images-edit") {
     return (
-      <HeroSliderImagesEditor
+      <HeroSliderImagesEditor id={id}
         ref={imageUploadRef}
         value={draftConfig}
         onChange={handleConfigChange}
@@ -362,7 +362,7 @@ export function HeroSlider({
   }
 
   return (
-    <div>
+    <div id={id}>
       <section
         ref={containerRef}
         onKeyDown={handleKeyDown}

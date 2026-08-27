@@ -193,13 +193,13 @@ export function SuperAdminUsersPage() {
   };
 
   if (isLoading) {
-    return <div className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
+    return <div id="super-admin.super-admin-users-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
   }
 
   if (!allowed) {
     return (
-      <div className="mx-auto max-w-2xl p-6">
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+      <div id="super-admin.super-admin-users-page.div.2" className="mx-auto max-w-2xl p-6">
+        <div id="super-admin.super-admin-users-page.div.3" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
           هذه الصفحة متاحة للسوبر أدمن فقط.
         </div>
       </div>
@@ -207,100 +207,100 @@ export function SuperAdminUsersPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-5 p-4 pb-24">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold text-on-surface">
+    <main id="super-admin.super-admin-users-page.main" className="mx-auto w-full max-w-7xl space-y-5 p-4 pb-24">
+      <header id="super-admin.super-admin-users-page.header" className="flex flex-wrap items-center justify-between gap-3">
+        <div id="super-admin.super-admin-users-page.div.4">
+          <h1 id="super-admin.super-admin-users-page.h1" className="text-2xl font-semibold text-on-surface">
             بحث المستخدمين
           </h1>
-          <p className="text-sm text-on-surface-variant">
+          <p id="super-admin.super-admin-users-page.p" className="text-sm text-on-surface-variant">
             بحث بالاسم، الهاتف، عدد المنتجات، التخصصات، فتح الحساب بصلاحياته أو حذفه نهائياً.
           </p>
         </div>
-        <div className="rounded-lg border bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <div id="super-admin.super-admin-users-page.div.5" className="rounded-lg border bg-amber-50 px-3 py-2 text-sm text-amber-800">
           الانتحال يعطي صلاحيات كاملة للحساب المختار.
         </div>
       </header>
 
-      <section className="grid gap-3 rounded-lg border bg-surface p-3 md:grid-cols-[1.5fr_1fr_0.7fr_0.7fr_auto]">
-        <label className="space-y-1">
-          <span className="text-xs text-on-surface-variant">بحث عام</span>
-          <Input ui={{ uid: "super-admin.users.query-GwD1jm", id: "super-admin.users.query", kind: "field", part: "filters" }}
+      <section id="super-admin.super-admin-users-page.section" className="grid gap-3 rounded-lg border bg-surface p-3 md:grid-cols-[1.5fr_1fr_0.7fr_0.7fr_auto]">
+        <label id="super-admin.super-admin-users-page.label" className="space-y-1">
+          <span id="super-admin.super-admin-users-page.span" className="text-xs text-on-surface-variant">بحث عام</span>
+          <Input id="super-admin.super-admin-users-page.input.2" ui={{ uid: "super-admin.users.query-GwD1jm", id: "super-admin.users.query", kind: "field", part: "filters" }}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="اسم، هاتف، بريد، UID"
           />
         </label>
-        <label className="space-y-1">
-          <span className="text-xs text-on-surface-variant">التخصص</span>
-          <Input ui={{ uid: "super-admin.users.specialty-bCZ9GW", id: "super-admin.users.specialty", kind: "field", part: "filters" }}
+        <label id="super-admin.super-admin-users-page.label.2" className="space-y-1">
+          <span id="super-admin.super-admin-users-page.span.2" className="text-xs text-on-surface-variant">التخصص</span>
+          <Input id="super-admin.super-admin-users-page.input.3" ui={{ uid: "super-admin.users.specialty-bCZ9GW", id: "super-admin.users.specialty", kind: "field", part: "filters" }}
             value={specialty}
             onChange={(event) => setSpecialty(event.target.value)}
             placeholder="pharmacies أو delivery"
             dir="ltr"
           />
         </label>
-        <label className="space-y-1">
-          <span className="text-xs text-on-surface-variant">أقل منتجات</span>
-          <Input ui={{ uid: "super-admin.users.min-products-G3pF0t", id: "super-admin.users.min-products", kind: "field", part: "filters" }}
+        <label id="super-admin.super-admin-users-page.label.3" className="space-y-1">
+          <span id="super-admin.super-admin-users-page.span.3" className="text-xs text-on-surface-variant">أقل منتجات</span>
+          <Input id="super-admin.super-admin-users-page.input.4" ui={{ uid: "super-admin.users.min-products-G3pF0t", id: "super-admin.users.min-products", kind: "field", part: "filters" }}
             value={minProducts}
             onChange={(event) => setMinProducts(event.target.value)}
             inputMode="numeric"
           />
         </label>
-        <label className="space-y-1">
-          <span className="text-xs text-on-surface-variant">أكثر منتجات</span>
-          <Input ui={{ uid: "super-admin.users.max-products-38XEgN", id: "super-admin.users.max-products", kind: "field", part: "filters" }}
+        <label id="super-admin.super-admin-users-page.label.4" className="space-y-1">
+          <span id="super-admin.super-admin-users-page.span.4" className="text-xs text-on-surface-variant">أكثر منتجات</span>
+          <Input id="super-admin.super-admin-users-page.input.5" ui={{ uid: "super-admin.users.max-products-38XEgN", id: "super-admin.users.max-products", kind: "field", part: "filters" }}
             value={maxProducts}
             onChange={(event) => setMaxProducts(event.target.value)}
             inputMode="numeric"
           />
         </label>
-        <div className="flex items-end gap-2">
-          <label className="flex h-10 items-center gap-2 whitespace-nowrap rounded-md border px-3 text-sm">
-            <input
+        <div id="super-admin.super-admin-users-page.div.6" className="flex items-end gap-2">
+          <label id="super-admin.super-admin-users-page.label.5" className="flex h-10 items-center gap-2 whitespace-nowrap rounded-md border px-3 text-sm">
+            <input id="super-admin.super-admin-users-page.input"
               type="checkbox"
               checked={withProductsOnly}
               onChange={(event) => setWithProductsOnly(event.target.checked)}
             />
             لديهم منتجات
           </label>
-          <Button ui={{ uid: "super-admin.users.search-U4dE50", id: "super-admin.users.search", kind: "action", action: "search-users", part: "toolbar" }} type="button" onClick={search} disabled={loading}>
-            <Search className="h-4 w-4" />
+          <Button id="super-admin.super-admin-users-page.button" ui={{ uid: "super-admin.users.search-U4dE50", id: "super-admin.users.search", kind: "action", action: "search-users", part: "toolbar" }} type="button" onClick={search} disabled={loading}>
+            <Search id="super-admin.super-admin-users-page.search" className="h-4 w-4" />
             {loading ? "بحث..." : "بحث"}
           </Button>
         </div>
       </section>
 
       {error ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div id="super-admin.super-admin-users-page.div.7" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {error}
         </div>
       ) : null}
 
-      <section className="overflow-hidden rounded-lg border bg-surface">
-        <div className="flex items-center justify-between border-b p-3">
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <UserRoundSearch className="h-4 w-4" />
+      <section id="super-admin.super-admin-users-page.section.2" className="overflow-hidden rounded-lg border bg-surface">
+        <div id="super-admin.super-admin-users-page.div.8" className="flex items-center justify-between border-b p-3">
+          <div id="super-admin.super-admin-users-page.div.9" className="flex items-center gap-2 text-sm font-semibold">
+            <UserRoundSearch id="super-admin.super-admin-users-page.user-round-search" className="h-4 w-4" />
             النتائج
           </div>
-          <span className="text-xs text-on-surface-variant">
+          <span id="super-admin.super-admin-users-page.span.5" className="text-xs text-on-surface-variant">
             {results.length} مستخدم
           </span>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[980px] text-sm">
-            <thead className="bg-muted/50 text-xs text-on-surface-variant">
-              <tr>
-                <th className="p-3 text-start">المستخدم</th>
-                <th className="p-3 text-start">الهاتف</th>
-                <th className="p-3 text-start">المنتجات</th>
-                <th className="p-3 text-start">التخصصات</th>
-                <th className="p-3 text-start">التواريخ</th>
-                <th className="p-3 text-start">إجراءات</th>
+        <div id="super-admin.super-admin-users-page.div.10" className="overflow-x-auto">
+          <table id="super-admin.super-admin-users-page.table" className="w-full min-w-[980px] text-sm">
+            <thead id="super-admin.super-admin-users-page.thead" className="bg-muted/50 text-xs text-on-surface-variant">
+              <tr id="super-admin.super-admin-users-page.tr">
+                <th id="super-admin.super-admin-users-page.th" className="p-3 text-start">المستخدم</th>
+                <th id="super-admin.super-admin-users-page.th.2" className="p-3 text-start">الهاتف</th>
+                <th id="super-admin.super-admin-users-page.th.3" className="p-3 text-start">المنتجات</th>
+                <th id="super-admin.super-admin-users-page.th.4" className="p-3 text-start">التخصصات</th>
+                <th id="super-admin.super-admin-users-page.th.5" className="p-3 text-start">التواريخ</th>
+                <th id="super-admin.super-admin-users-page.th.6" className="p-3 text-start">إجراءات</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="super-admin.super-admin-users-page.tbody">
               {results.map((user) => (
                 <tr key={user.uid} className="border-t align-top">
                   <td className="max-w-xs p-3">
@@ -401,8 +401,8 @@ export function SuperAdminUsersPage() {
                 </tr>
               ))}
               {results.length === 0 && !loading ? (
-                <tr>
-                  <td colSpan={6} className="p-8 text-center text-on-surface-variant">
+                <tr id="super-admin.super-admin-users-page.tr.2">
+                  <td id="super-admin.super-admin-users-page.td" colSpan={6} className="p-8 text-center text-on-surface-variant">
                     لا توجد نتائج مطابقة.
                   </td>
                 </tr>
@@ -412,8 +412,8 @@ export function SuperAdminUsersPage() {
         </div>
       </section>
 
-      <div className="flex items-center gap-2 rounded-lg border bg-amber-50 p-3 text-sm text-amber-800">
-        <ShieldAlert className="h-4 w-4" />
+      <div id="super-admin.super-admin-users-page.div.11" className="flex items-center gap-2 rounded-lg border bg-amber-50 p-3 text-sm text-amber-800">
+        <ShieldAlert id="super-admin.super-admin-users-page.shield-alert" className="h-4 w-4" />
         يتم تسجيل كل عملية انتحال أو حذف حساب في سجل النظام.
       </div>
     </main>

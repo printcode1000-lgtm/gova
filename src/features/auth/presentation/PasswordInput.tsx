@@ -12,7 +12,7 @@ interface PasswordInputProps {
   name: 'password' | 'confirmPassword';
 }
 
-export function PasswordInput({ name }: PasswordInputProps) {
+export function PasswordInput({ id, name }: PasswordInputProps & { id?: string }) {
   const { t } = useTranslation();
   const [show, setShow] = React.useState(false);
   const { control } = useFormContext<RegistrationFormData>();
@@ -27,7 +27,7 @@ export function PasswordInput({ name }: PasswordInputProps) {
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <div className="space-y-2">
+        <div id={id} className="space-y-2">
           <span className="text-sm font-semibold text-on-surface">{label}</span>
           <div className="relative">
             <input

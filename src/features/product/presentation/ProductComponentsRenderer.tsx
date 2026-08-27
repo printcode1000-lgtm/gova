@@ -58,7 +58,7 @@ function writeValue(
 
 
 const PRODUCT_ADD_CART_UI: UiDescriptor = { uid: "product-add-cart-IC6TTn", id: "product-add-cart", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-add-cart" } };
-export function ProductComponentsRenderer({
+export function ProductComponentsRenderer({ id,
   mode,
   components,
   product,
@@ -86,14 +86,14 @@ export function ProductComponentsRenderer({
   contactAction?: ReactNode;
   imageUploadRef?: RefObject<StorageImageManagerHandle | null>;
   onImagesPendingChange?: (pending: boolean) => void;
-}) {
+} & { id?: string }) {
   const visible = Object.entries(components)
     .filter(([, config]) => config.visible)
     .sort(([, a], [, b]) => Number(a.order) - Number(b.order));
 
   if (visible.length === 0) {
     return (
-      <p className="py-8 text-center text-sm text-muted-foreground">
+      <p id={id} className="py-8 text-center text-sm text-muted-foreground">
         لا توجد مكونات مفعلة للعرض.
       </p>
     );
@@ -104,7 +104,7 @@ export function ProductComponentsRenderer({
       {visible.map(([key, config]) => {
         if (key === "images") {
           return (
-            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
+            <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               {mode === "view" ? (
                 <ProductImageGallery
                   images={product.images.slice(0, Number(config.count || 1))}
@@ -134,7 +134,7 @@ export function ProductComponentsRenderer({
                 : config.type === "stars-comments";
 
           return (
-            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
+            <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               {mode === "view" ? (
                 <ProductReviews
                   productId={productId}
@@ -159,7 +159,7 @@ export function ProductComponentsRenderer({
           const showShare = config.share !== false;
           const showProfile = config.profile !== false;
           return (
-            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
+            <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               <div className="flex flex-wrap gap-2">
                 {config.cart ? (
                   <ProductAddToCartButton
@@ -185,7 +185,7 @@ export function ProductComponentsRenderer({
 
         if (key === "vehicleSpecs") {
           return (
-            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
+            <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               <ProductVehicleSpecs
                 mode={mode}
                 config={config}
@@ -200,7 +200,7 @@ export function ProductComponentsRenderer({
 
         if (key === "propertySpecs") {
           return (
-            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
+            <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               <ProductPropertySpecs
                 mode={mode}
                 config={config}
@@ -216,7 +216,7 @@ export function ProductComponentsRenderer({
         if (key === "pharmacySpecs") {
           const PharmacySpecs = getPharmacySpecsSlot();
           return (
-            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
+            <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               {PharmacySpecs({
                 mode,
                 config,
@@ -229,12 +229,12 @@ export function ProductComponentsRenderer({
         }
 
         return (
-          <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key] ?? key}>
+          <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key] ?? key}>
             <div className="grid gap-3 sm:grid-cols-2">
               {(PRODUCT_COMPONENT_FIELDS[key] ?? []).map(([fieldKey, label, kind]) => {
                 if (config[fieldKey] === false) return null;
                 return (
-                  <ProductField
+                  <ProductField id={id}
                     key={`${key}.${fieldKey}`}
                     label={label}
                     value={readValue(product, key, fieldKey)}

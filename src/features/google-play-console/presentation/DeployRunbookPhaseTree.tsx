@@ -10,14 +10,14 @@ export function PhaseBlock(props: {
   selected: Set<string>;
   help: Record<string, string>;
   onToggle: (id: string) => void;
-}) {
+} & { id?: string }) {
   const branchIds = props.phase.sections.flatMap((section) =>
     section.branches.map((item) => item.id),
   );
   const activeCount = branchIds.filter((id) => props.selected.has(id)).length;
 
   return (
-    <DeployRunbookCollapsible
+    <DeployRunbookCollapsible id={props.id}
       nested
       title={`${props.phase.id} — ${props.phase.label}`}
       description="مرحلة مستقلة في التسلسل؛ بعض الأوضاع تستأنف منها بعد فشل سابق."
@@ -47,13 +47,13 @@ function SectionBlock(props: {
   selected: Set<string>;
   help: Record<string, string>;
   onToggle: (id: string) => void;
-}) {
+} & { id?: string }) {
   const activeCount = props.section.branches.filter((item) =>
     props.selected.has(item.id),
   ).length;
 
   return (
-    <DeployRunbookCollapsible
+    <DeployRunbookCollapsible id={props.id}
       nested
       title={`${props.section.id} — ${props.section.label}`}
       description="قسم يجمع فروعاً متقاربة؛ كل فرع يمثل أمراً أو عملية واحدة."
@@ -83,12 +83,12 @@ function BranchCheckbox(props: {
   selected: boolean;
   help?: string;
   onToggle: (id: string) => void;
-}) {
+} & { id?: string }) {
   const defaultHelp =
     "فرع تنفيذي ضمن الشجرة؛ تفعيله يعني تضمينه في خطة التشغيل، وتجاوزه يعني عدم طلبه من هذا المسار.";
 
   return (
-    <label className="min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
+    <label id={props.id} className="min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
       <span className="flex flex-wrap items-start gap-2">
         <input
           type="checkbox"

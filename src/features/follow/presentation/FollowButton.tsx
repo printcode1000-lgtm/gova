@@ -107,11 +107,11 @@ export function FollowButton({
       ? t("follow.button.unfollow")
       : t("follow.button.follow");
   const icon = isLoading ? (
-    <Loader2 className="h-5 w-5 animate-spin" />
+    <Loader2 id="follow.follow-button.loader2" className="h-5 w-5 animate-spin" />
   ) : canManage ? (
-    <Users className="h-5 w-5" />
+    <Users id="follow.follow-button.users" className="h-5 w-5" />
   ) : (
-    <Heart className={cn("h-5 w-5", active && "fill-current")} />
+    <Heart id="follow.follow-button.heart" className={cn("h-5 w-5", active && "fill-current")} />
   );
 
   const openPrimaryDialog = () => {
@@ -193,47 +193,47 @@ export function FollowButton({
         className={cn(ACTION_TILE_CLASS, className)}
         style={ACTION_TILE_STYLE}
       >
-        <span className="relative flex">
+        <span id="follow.follow-button.span" className="relative flex">
           {icon}
-          <span className="absolute -top-2 -end-3 min-w-4 rounded-full bg-primary/10 px-1 text-[10px] font-semibold leading-4 text-primary">
+          <span id="follow.follow-button.span.2" className="absolute -top-2 -end-3 min-w-4 rounded-full bg-primary/10 px-1 text-[10px] font-semibold leading-4 text-primary">
             {formatCount(count, locale)}
           </span>
         </span>
-        <span className={ACTION_TILE_LABEL_CLASS}>{text}</span>
+        <span id="follow.follow-button.span.3" className={ACTION_TILE_LABEL_CLASS}>{text}</span>
       </Button>
 
       {dialogMode && textForDialog ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-sm rounded-xl bg-surface p-4 shadow-xl">
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <div id="follow.follow-button.div" className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div id="follow.follow-button.div.2" className="w-full max-w-sm rounded-xl bg-surface p-4 shadow-xl">
+            <div id="follow.follow-button.div.3" className="flex items-start gap-3">
+              <div id="follow.follow-button.div.4" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                 {dialogMode === "notify_followers" ? (
-                  <Bell className="h-5 w-5" />
+                  <Bell id="follow.follow-button.bell" className="h-5 w-5" />
                 ) : canManage ? (
-                  <Users className="h-5 w-5" />
+                  <Users id="follow.follow-button.users.2" className="h-5 w-5" />
                 ) : (
-                  <Heart className="h-5 w-5" />
+                  <Heart id="follow.follow-button.heart.2" className="h-5 w-5" />
                 )}
               </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-semibold text-on-surface">
+              <div id="follow.follow-button.div.5" className="min-w-0 flex-1">
+                <h3 id="follow.follow-button.h3" className="text-sm font-semibold text-on-surface">
                   {textForDialog.title}
                 </h3>
-                <p className="mt-1 text-xs leading-5 text-on-surface-variant">
+                <p id="follow.follow-button.p" className="mt-1 text-xs leading-5 text-on-surface-variant">
                   {textForDialog.body}
                 </p>
               </div>
             </div>
 
             {dialogMode === "owner_actions" ? (
-              <div className="mt-4 space-y-2">
-                <div className="rounded-lg border border-outline-variant bg-surface-container-low px-3 py-2 text-xs text-on-surface-variant">
+              <div id="follow.follow-button.div.6" className="mt-4 space-y-2">
+                <div id="follow.follow-button.div.7" className="rounded-lg border border-outline-variant bg-surface-container-low px-3 py-2 text-xs text-on-surface-variant">
                   {t("follow.dialog.followerCount")}:{" "}
-                  <span className="font-semibold text-on-surface">
+                  <span id="follow.follow-button.span.4" className="font-semibold text-on-surface">
                     {formatCount(count, locale)}
                   </span>
                 </div>
-                <Button ui={{ uid: "follow.dialog.notify-followers-X9TWY5", id: "follow.dialog.notify-followers", kind: "action", action: "open-notify-followers", part: "dialog" }}
+                <Button id="follow.follow-button.button" ui={{ uid: "follow.dialog.notify-followers-X9TWY5", id: "follow.dialog.notify-followers", kind: "action", action: "open-notify-followers", part: "dialog" }}
                   type="button"
                   variant="outline"
                   className="w-full justify-start gap-2"
@@ -242,31 +242,31 @@ export function FollowButton({
                     setDialogMode("notify_followers");
                   }}
                 >
-                  <Bell className="h-4 w-4" />
+                  <Bell id="follow.follow-button.bell.2" className="h-4 w-4" />
                   {t("follow.dialog.notifyFollowers")}
-                  <span className="ms-auto text-xs text-on-surface-variant">
+                  <span id="follow.follow-button.span.5" className="ms-auto text-xs text-on-surface-variant">
                     {t("follow.dialog.notification.availableBadge")}
                   </span>
                 </Button>
-                <p className="px-1 text-[11px] leading-5 text-on-surface-variant">
+                <p id="follow.follow-button.p.2" className="px-1 text-[11px] leading-5 text-on-surface-variant">
                   {t("follow.dialog.notification.deliveryHint")}
                 </p>
               </div>
             ) : null}
 
             {dialogMode === "notify_followers" ? (
-              <div className="mt-4 space-y-3">
-                <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                  <div className="rounded-lg border border-outline-variant bg-surface-container-low p-2">
-                    <span className="block text-on-surface-variant">
+              <div id="follow.follow-button.div.8" className="mt-4 space-y-3">
+                <div id="follow.follow-button.div.9" className="grid grid-cols-2 gap-2 text-center text-xs">
+                  <div id="follow.follow-button.div.10" className="rounded-lg border border-outline-variant bg-surface-container-low p-2">
+                    <span id="follow.follow-button.span.6" className="block text-on-surface-variant">
                       {t("follow.dialog.followerCount")}
                     </span>
                     <strong className="mt-1 block text-base text-on-surface">
                       {formatCount(count, locale)}
                     </strong>
                   </div>
-                  <div className="rounded-lg border border-outline-variant bg-surface-container-low p-2">
-                    <span className="block text-on-surface-variant">
+                  <div id="follow.follow-button.div.11" className="rounded-lg border border-outline-variant bg-surface-container-low p-2">
+                    <span id="follow.follow-button.span.7" className="block text-on-surface-variant">
                       {t("follow.dialog.notification.channel")}
                     </span>
                     <strong className="mt-1 block text-sm text-on-surface">
@@ -274,8 +274,8 @@ export function FollowButton({
                     </strong>
                   </div>
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor={`follower-notification-title-${targetId}`}>
+                <div id="follow.follow-button.div.12" className="space-y-1.5">
+                  <Label id="follow.follow-button.label" htmlFor={`follower-notification-title-${targetId}`}>
                     {t("follow.dialog.notification.titleLabel")}
                   </Label>
                   <Input ui={{ uid: "follow.dialog.notification-title-V3MF1S", id: "follow.dialog.notification-title", kind: "field", part: "dialog" }}
@@ -285,12 +285,12 @@ export function FollowButton({
                     onChange={(event) => setNotificationTitle(event.target.value)}
                     placeholder={t("follow.dialog.notification.titlePlaceholder")}
                   />
-                  <p className="text-end text-[10px] text-on-surface-variant">
+                  <p id="follow.follow-button.p.3" className="text-end text-[10px] text-on-surface-variant">
                     {notificationTitle.length}/120
                   </p>
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor={`follower-notification-body-${targetId}`}>
+                <div id="follow.follow-button.div.13" className="space-y-1.5">
+                  <Label id="follow.follow-button.label.2" htmlFor={`follower-notification-body-${targetId}`}>
                     {t("follow.dialog.notification.messageLabel")}
                   </Label>
                   <Textarea ui={{ uid: "follow.dialog.notification-body-T7WPo6", id: "follow.dialog.notification-body", kind: "field", part: "dialog" }}
@@ -301,29 +301,29 @@ export function FollowButton({
                     onChange={(event) => setNotificationBody(event.target.value)}
                     placeholder={t("follow.dialog.notification.messagePlaceholder")}
                   />
-                  <p className="text-end text-[10px] text-on-surface-variant">
+                  <p id="follow.follow-button.p.4" className="text-end text-[10px] text-on-surface-variant">
                     {notificationBody.length}/1000
                   </p>
                 </div>
                 {notificationResult ? (
-                  <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3 text-xs">
-                    <p className="mb-2 font-semibold text-on-surface">
+                  <div id="follow.follow-button.div.14" className="rounded-xl border border-outline-variant bg-surface-container-low p-3 text-xs">
+                    <p id="follow.follow-button.p.5" className="mb-2 font-semibold text-on-surface">
                       {t("follow.dialog.notification.resultTitle")}
                     </p>
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                      <span>{t("follow.dialog.notification.requested")}<strong className="block text-sm">{notificationResult.requested}</strong></span>
-                      <span className="text-success"><CheckCircle2 className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.delivered")}<strong className="block text-sm">{notificationResult.delivered}</strong></span>
-                      <span className="text-error"><XCircle className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.unavailable")}<strong className="block text-sm">{notificationResult.unavailable}</strong></span>
+                    <div id="follow.follow-button.div.15" className="grid grid-cols-3 gap-2 text-center">
+                      <span id="follow.follow-button.span.8">{t("follow.dialog.notification.requested")}<strong className="block text-sm">{notificationResult.requested}</strong></span>
+                      <span id="follow.follow-button.span.9" className="text-success"><CheckCircle2 id="follow.follow-button.check-circle2" className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.delivered")}<strong className="block text-sm">{notificationResult.delivered}</strong></span>
+                      <span id="follow.follow-button.span.10" className="text-error"><XCircle id="follow.follow-button.xcircle" className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.unavailable")}<strong className="block text-sm">{notificationResult.unavailable}</strong></span>
                     </div>
                   </div>
                 ) : null}
               </div>
             ) : null}
 
-            <div className="mt-4 flex justify-end gap-2">
+            <div id="follow.follow-button.div.16" className="mt-4 flex justify-end gap-2">
               {dialogMode === "confirm_follow" || dialogMode === "confirm_unfollow" ? (
                 <>
-                  <Button ui={{ uid: "follow.dialog.cancel-sY4H81", id: "follow.dialog.cancel", kind: "action", action: "cancel", part: "dialog-footer" }}
+                  <Button id="follow.follow-button.button.2" ui={{ uid: "follow.dialog.cancel-sY4H81", id: "follow.dialog.cancel", kind: "action", action: "cancel", part: "dialog-footer" }}
                     type="button"
                     variant="ghost"
                     onClick={() => setDialogMode(null)}
@@ -331,21 +331,21 @@ export function FollowButton({
                   >
                     إلغاء
                   </Button>
-                  <Button ui={{ uid: "follow.dialog.confirm-PG61Dl", id: "follow.dialog.confirm", kind: "action", action: "confirm", part: "dialog-footer" }}
+                  <Button id="follow.follow-button.button.3" ui={{ uid: "follow.dialog.confirm-PG61Dl", id: "follow.dialog.confirm", kind: "action", action: "confirm", part: "dialog-footer" }}
                     type="button"
                     onClick={runMutation}
                     disabled={isMutating}
                     className="gap-2"
                   >
                     {isMutating ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 id="follow.follow-button.loader2.2" className="h-4 w-4 animate-spin" />
                     ) : null}
                     {textForDialog.action}
                   </Button>
                 </>
               ) : dialogMode === "notify_followers" ? (
                 <>
-                  <Button ui={{ uid: "follow.dialog.owner-actions-m6nu1L", id: "follow.dialog.owner-actions", kind: "action", action: "open-owner-actions", part: "dialog-footer" }}
+                  <Button id="follow.follow-button.button.4" ui={{ uid: "follow.dialog.owner-actions-m6nu1L", id: "follow.dialog.owner-actions", kind: "action", action: "open-owner-actions", part: "dialog-footer" }}
                     type="button"
                     variant="ghost"
                     onClick={() => setDialogMode("owner_actions")}
@@ -353,7 +353,7 @@ export function FollowButton({
                   >
                     {t("follow.dialog.notification.back")}
                   </Button>
-                  <Button ui={{ uid: "follow.dialog.send-notification-Ojkt6S", id: "follow.dialog.send-notification", kind: "action", action: "send-follower-notification", part: "dialog-footer" }}
+                  <Button id="follow.follow-button.button.5" ui={{ uid: "follow.dialog.send-notification-Ojkt6S", id: "follow.dialog.send-notification", kind: "action", action: "send-follower-notification", part: "dialog-footer" }}
                     type="button"
                     className="gap-2"
                     onClick={() => void sendFollowerNotification()}
@@ -365,12 +365,12 @@ export function FollowButton({
                       count === 0
                     }
                   >
-                    {isMutating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                    {isMutating ? <Loader2 id="follow.follow-button.loader2.3" className="h-4 w-4 animate-spin" /> : <Send id="follow.follow-button.send" className="h-4 w-4" />}
                     {textForDialog.action}
                   </Button>
                 </>
               ) : (
-                <Button ui={{ uid: "follow.dialog.close-j0lNFc", id: "follow.dialog.close", kind: "action", action: "close", part: "dialog-footer" }} type="button" onClick={() => setDialogMode(null)}>
+                <Button id="follow.follow-button.button.6" ui={{ uid: "follow.dialog.close-j0lNFc", id: "follow.dialog.close", kind: "action", action: "close", part: "dialog-footer" }} type="button" onClick={() => setDialogMode(null)}>
                   {textForDialog.action}
                 </Button>
               )}

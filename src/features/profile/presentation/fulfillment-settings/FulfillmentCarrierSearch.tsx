@@ -36,22 +36,22 @@ export function FulfillmentCarrierSearch({
   selectedCount: number;
 }) {
   return (
-    <section className="space-y-4 rounded-xl border border-outline-variant p-4">
-      <div className="flex items-center gap-2">
-        <Truck className="h-5 w-5 text-primary" />
-        <h3 className="text-sm font-bold">{text.shippingMethods}</h3>
+    <section id="profile.fulfillment-settings.fulfillment-carrier-search.section" className="space-y-4 rounded-xl border border-outline-variant p-4">
+      <div id="profile.fulfillment-settings.fulfillment-carrier-search.div" className="flex items-center gap-2">
+        <Truck id="profile.fulfillment-settings.fulfillment-carrier-search.truck" className="h-5 w-5 text-primary" />
+        <h3 id="profile.fulfillment-settings.fulfillment-carrier-search.h3" className="text-sm font-bold">{text.shippingMethods}</h3>
       </div>
 
-      <div className="space-y-3">
-        <form
+      <div id="profile.fulfillment-settings.fulfillment-carrier-search.div.2" className="space-y-3">
+        <form id="profile.fulfillment-settings.fulfillment-carrier-search.form"
           className="flex gap-2"
           onSubmit={(event) => {
             event.preventDefault();
             submitSearch();
           }}
         >
-          <div className="relative min-w-0 flex-1">
-            <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <div id="profile.fulfillment-settings.fulfillment-carrier-search.div.3" className="relative min-w-0 flex-1">
+            <Search id="profile.fulfillment-settings.fulfillment-carrier-search.search" className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input ui={{ uid: "profile.fulfillment.carrier-search-P0D9JA", id: "profile.fulfillment.carrier-search", kind: "field", part: "carriers" }}
               id="deliveryProviderSearch"
               value={searchText}
@@ -60,7 +60,7 @@ export function FulfillmentCarrierSearch({
               className="asol-input-decorated-start"
             />
           </div>
-          <button
+          <button id="profile.fulfillment-settings.fulfillment-carrier-search.button"
             type="submit"
             className="h-10 shrink-0 rounded-md bg-primary px-4 text-sm font-semibold text-on-primary transition"
           >
@@ -69,15 +69,15 @@ export function FulfillmentCarrierSearch({
         </form>
 
         {isLoadingDeliveryUsers ? (
-          <p className="text-sm text-muted-foreground">
+          <p id="profile.fulfillment-settings.fulfillment-carrier-search.p" className="text-sm text-muted-foreground">
             {text.loadingProviders}
           </p>
         ) : displayedUsers.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-outline-variant p-4 text-center text-sm text-muted-foreground">
+          <p id="profile.fulfillment-settings.fulfillment-carrier-search.p.2" className="rounded-lg border border-dashed border-outline-variant p-4 text-center text-sm text-muted-foreground">
             {emptyDeliveryProvidersMessage}
           </p>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div id="profile.fulfillment-settings.fulfillment-carrier-search.div.4" className="grid gap-3 sm:grid-cols-2">
             {displayedUsers.map((user) => {
               const isSelected = selected.has(user.uid);
               const card = createSellerCardViewModel(user);
@@ -110,7 +110,7 @@ export function FulfillmentCarrierSearch({
         )}
 
         {selectedCount > 0 ? (
-          <p className="text-xs text-muted-foreground">
+          <p id="profile.fulfillment-settings.fulfillment-carrier-search.p.3" className="text-xs text-muted-foreground">
             {text.selectedCount(selectedCount)}
           </p>
         ) : null}

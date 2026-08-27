@@ -38,32 +38,32 @@ export default function ProgressIndicator({
   }, []);
 
   return (
-    <div className="w-full max-w-xs flex flex-col items-center z-10 px-4">
-      <div className="h-8 text-xs font-semibold text-on-surface-variant text-center px-4 transition-all duration-500 ease-in-out">
+    <div id="splash.progress-indicator.div" className="w-full max-w-xs flex flex-col items-center z-10 px-4">
+      <div id="splash.progress-indicator.div.2" className="h-8 text-xs font-semibold text-on-surface-variant text-center px-4 transition-all duration-500 ease-in-out">
         {status || t(PROGRESS_MESSAGE_KEYS[msgIndex])}
       </div>
 
       {details.length > 0 &&
         (canViewDetails ? (
-          <div className="mt-2 grid w-full gap-1 rounded-xl border border-outline-variant/70 bg-surface-container/70 px-3 py-2 text-center text-[11px] font-semibold text-on-surface-variant">
+          <div id="splash.progress-indicator.div.3" className="mt-2 grid w-full gap-1 rounded-xl border border-outline-variant/70 bg-surface-container/70 px-3 py-2 text-center text-[11px] font-semibold text-on-surface-variant">
             {details.map((detail) => (
               <span key={detail}>{detail}</span>
             ))}
           </div>
         ) : (
-          <LoadingSpinner size="md" className="mt-2" role="status" aria-label={t('splash.progress.loading')} />
+          <LoadingSpinner id="splash.progress-indicator.loading-spinner" size="md" className="mt-2" role="status" aria-label={t('splash.progress.loading')} />
         ))}
 
-      <div className="w-full mt-4 asol-splash-progress-track h-1 rounded-full overflow-hidden relative shadow-inner">
-        <div
+      <div id="splash.progress-indicator.div.4" className="w-full mt-4 asol-splash-progress-track h-1 rounded-full overflow-hidden relative shadow-inner">
+        <div id="splash.progress-indicator.div.5"
           className="h-full bg-primary transition-all duration-300 ease-out shadow-lg"
           style={{ width: `${progress}%` }}
         />
       </div>
 
-      <div className="flex items-center gap-1.5 mt-2">
-        <span className="text-xs font-semibold text-on-surface-variant">{t('splash.progress.loading')}</span>
-        <span className="text-xs font-semibold text-primary">{progress}%</span>
+      <div id="splash.progress-indicator.div.6" className="flex items-center gap-1.5 mt-2">
+        <span id="splash.progress-indicator.span" className="text-xs font-semibold text-on-surface-variant">{t('splash.progress.loading')}</span>
+        <span id="splash.progress-indicator.span.2" className="text-xs font-semibold text-primary">{progress}%</span>
       </div>
     </div>
   );

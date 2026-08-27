@@ -42,7 +42,7 @@ export default async function DoctorAppointmentSellersPage({
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div id="categories.category-id.doctor-appointment.specialty-id.page.div">Loading...</div>}>
       <DoctorAppointmentSellersPageContent 
         categoryId={Number(categoryId)}
         specialtyId={Number(specialtyId)}

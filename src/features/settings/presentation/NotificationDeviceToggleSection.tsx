@@ -20,9 +20,9 @@ export function NotificationDeviceToggleSection({
 }) {
   if (!state.notificationRuntimeReady) {
     return (
-      <div className="space-y-2" aria-busy="true">
-        <Skeleton className="h-20 w-full rounded-xl" />
-        <span className="sr-only">{state.t("common.loading")}</span>
+      <div id="settings.notification-device-toggle-section.div" className="space-y-2" aria-busy="true">
+        <Skeleton id="settings.notification-device-toggle-section.skeleton" className="h-20 w-full rounded-xl" />
+        <span id="settings.notification-device-toggle-section.span" className="sr-only">{state.t("common.loading")}</span>
       </div>
     );
   }
@@ -31,10 +31,10 @@ export function NotificationDeviceToggleSection({
     !state.pushSupported || !state.session?.uid || state.deviceBusy;
 
   return (
-    <div className="space-y-4">
+    <div id="settings.notification-device-toggle-section.div.2" className="space-y-4">
       {state.permissionBlocked ? (
-        <div className="space-y-3">
-          <div
+        <div id="settings.notification-device-toggle-section.div.3" className="space-y-3">
+          <div id="settings.notification-device-toggle-section.div.4"
             className={cn(
               "grid gap-2",
               state.canOpenSettings && "sm:grid-cols-2",
@@ -49,7 +49,7 @@ export function NotificationDeviceToggleSection({
               {state.t("notifications.permissionPrompt.recheck")}
             </button>
             {state.canOpenSettings ? (
-              <button
+              <button id="settings.notification-device-toggle-section.button"
                 type="button"
                 disabled={state.deviceBusy}
                 onClick={() => void state.openNotificationSettings()}
@@ -59,12 +59,12 @@ export function NotificationDeviceToggleSection({
               </button>
             ) : null}
           </div>
-          <p className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">
+          <p id="settings.notification-device-toggle-section.p" className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">
             {state.blockedNotice(state.canOpenSettings)}
           </p>
         </div>
       ) : (
-        <SettingsToggleRow
+        <SettingsToggleRow id="settings.notification-device-toggle-section.settings-toggle-row"
           ui={NOTIFICATIONS_PERMISSION_UI}
           emphasised
           title={state.t("notifications.deviceCard.toggleTitle")}
@@ -76,13 +76,13 @@ export function NotificationDeviceToggleSection({
       )}
 
       {!state.permissionBlocked && !state.pushSupported ? (
-        <p className="rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
+        <p id="settings.notification-device-toggle-section.p.2" className="rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
           {state.t("notifications.deviceCard.pushUnsupported")}
         </p>
       ) : null}
 
       {state.permissionNotice ? (
-        <p
+        <p id="settings.notification-device-toggle-section.p.3"
           className={cn(
             "rounded-lg px-3 py-2 text-sm",
             state.permissionNoticeTone === "error"

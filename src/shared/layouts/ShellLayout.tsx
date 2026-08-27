@@ -7,12 +7,12 @@ import { UiPageBoundary } from '@/shared/ui/UiPageBoundary';
 
 const ROUTES_WITHOUT_SHELL = ['/'];
 
-export function ShellLayout({ children }: { children: React.ReactNode }) {
+export function ShellLayout({ id, children }: { children: React.ReactNode } & { id?: string }) {
   const pathname = usePathname();
 
   if (ROUTES_WITHOUT_SHELL.includes(pathname)) {
-    return <UiPageBoundary>{children}</UiPageBoundary>;
+    return <UiPageBoundary id={id}>{children}</UiPageBoundary>;
   }
 
-  return <AppShell>{children}</AppShell>;
+  return <AppShell id={id}>{children}</AppShell>;
 }

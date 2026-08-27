@@ -23,19 +23,19 @@ export function ReleaseConsolePage() {
     parameters.set("tab", id);
     router.replace(`?${parameters.toString()}`, { scroll: false });
   };
-  if (isLoading) return <main className="p-4 text-sm text-on-surface-variant">{t("releaseConsole.loading")}</main>;
-  if (!allowed) return <main className="mx-auto max-w-2xl p-6" dir={isRTL ? "rtl" : "ltr"}>
-    <div className="rounded-md bg-error-container p-4 text-on-error-container">
+  if (isLoading) return <main id="google-play-console.release-console-page.main" className="p-4 text-sm text-on-surface-variant">{t("releaseConsole.loading")}</main>;
+  if (!allowed) return <main id="google-play-console.release-console-page.main.2" className="mx-auto max-w-2xl p-6" dir={isRTL ? "rtl" : "ltr"}>
+    <div id="google-play-console.release-console-page.div" className="rounded-md bg-error-container p-4 text-on-error-container">
       {t("releaseConsole.forbidden")}
     </div>
   </main>;
   return (
-    <main className="asol-release-console mx-auto w-full max-w-7xl space-y-4 p-4 pb-24"
+    <main id="google-play-console.release-console-page.main.3" className="asol-release-console mx-auto w-full max-w-7xl space-y-4 p-4 pb-24"
       dir={isRTL ? "rtl" : "ltr"}>
-      <header><h1 className="text-2xl font-semibold">{t("releaseConsole.title")}</h1>
-        <p className="mt-1 text-sm text-on-surface-variant">{t("releaseConsole.subtitle")}</p></header>
+      <header id="google-play-console.release-console-page.header"><h1 id="google-play-console.release-console-page.h1" className="text-2xl font-semibold">{t("releaseConsole.title")}</h1>
+        <p id="google-play-console.release-console-page.p" className="mt-1 text-sm text-on-surface-variant">{t("releaseConsole.subtitle")}</p></header>
       <Tabs value={active} onValueChange={select}>
-        <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1">
+        <TabsList id="google-play-console.release-console-page.tabs-list" className="flex h-auto w-full flex-wrap justify-start gap-1">
           {tabs.map((tab) => <TabsTrigger key={tab.id} ui={tab.ui} value={tab.id} className="gap-2">
             <tab.icon className="h-4 w-4" />{t(tab.labelKey)}</TabsTrigger>)}
         </TabsList>

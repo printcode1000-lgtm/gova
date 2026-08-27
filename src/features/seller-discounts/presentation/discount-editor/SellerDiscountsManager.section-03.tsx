@@ -29,7 +29,7 @@ import {
   minorCurrencyToInputValue,
 } from "@asol/format-core";
 
-export function NumberInput({
+export function NumberInput({ id,
   value,
   onChange,
   placeholder,
@@ -37,9 +37,9 @@ export function NumberInput({
   value: number;
   onChange: (value: number) => void;
   placeholder: string;
-}) {
+} & { id?: string }) {
   return (
-    <Input
+    <Input id={id}
       type="number"
       min={0}
       value={value === 0 ? "" : String(value)}
@@ -49,7 +49,7 @@ export function NumberInput({
   );
 }
 
-export function MinorCurrencyInput({
+export function MinorCurrencyInput({ id,
   value,
   onChange,
   placeholder,
@@ -57,9 +57,9 @@ export function MinorCurrencyInput({
   value: number;
   onChange: (value: number) => void;
   placeholder: string;
-}) {
+} & { id?: string }) {
   return (
-    <Input
+    <Input id={id}
       type="number"
       min={0}
       step="0.01"
@@ -71,7 +71,7 @@ export function MinorCurrencyInput({
   );
 }
 
-export function Toggle({
+export function Toggle({ id,
   active,
   label,
   onClick,
@@ -79,9 +79,9 @@ export function Toggle({
   active: boolean;
   label: string;
   onClick: () => void;
-}) {
+} & { id?: string }) {
   return (
-    <Button
+    <Button id={id}
       type="button"
       variant={active ? "default" : "outline"}
       className="h-8 rounded-full px-3 text-xs"

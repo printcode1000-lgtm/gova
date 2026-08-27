@@ -118,7 +118,7 @@ export function quickAddIcon(id: string): IconDefinition {
   return getContactVisualIcon(id);
 }
 
-export function ContactQuickAddGrid({
+export function ContactQuickAddGrid({ id,
   items,
   onAdd,
   title,
@@ -128,12 +128,12 @@ export function ContactQuickAddGrid({
   onAdd: (id: string) => void;
   title: string;
   emptyText: string;
-}) {
+} & { id?: string }) {
   const visibleItems = items.filter((item) => item.available);
   const completedItems = items.filter((item) => !item.available);
 
   return (
-    <div className="rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3 sm:p-4">
+    <div id={id} className="rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3 sm:p-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="flex items-center gap-2 text-sm font-bold text-on-surface">
           <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">

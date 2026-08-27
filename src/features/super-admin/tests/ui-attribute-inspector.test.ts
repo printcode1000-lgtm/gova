@@ -46,7 +46,19 @@ assert.equal(
   }),
   'data-ui="page"\ndata-ui-id="orders.details"\ndata-ui-state="loading"',
 );
-assert.equal(formatUiAttributes({ id: "private-value" }), "");
+assert.equal(formatUiAttributes({ id: "Private Order 42" }), "");
+assert.equal(
+  formatUiAttributes({ id: "super-admin.featured-marquee-page.h2.3" }),
+  'id="super-admin.featured-marquee-page.h2.3"',
+);
+const staticHostOutput = formatInspectorOutput({
+  id: "super-admin.featured-marquee-page.h2.4",
+  "data-ui-uid": "page-save.dialog-CfGhr4",
+});
+assert.equal(staticHostOutput, "super-admin.featured-marquee-page.h2.4");
+assert.doesNotMatch(staticHostOutput, /data-ui-uid|div\.17|section\.5|-- parent --/);
+assert.equal(formatInspectorOutput({ id: "Private Order 42" }), "مفقود");
+assert.equal(formatInspectorOutput({}), "مفقود");
 
 // ── Browser-style exact element selection ──────────────────────────────────
 // The picker returns the exact node touched, whatever its tag or registration.
@@ -85,36 +97,14 @@ const registered = {
   "data-simulation-target": "page-save-execute",
 };
 assert.equal(selectedUiUid(registered), "page-save.dialog.execute-Ox5spc");
-const registeredOutput = formatInspectorOutput(registered, [
-  registered,
-  { "data-ui-uid": "page-save.dialog-CfGhr4", "data-ui": "region" },
-]);
-assert.equal(
-  registeredOutput.split("\n")[0],
-  'data-ui-uid="page-save.dialog.execute-Ox5spc"',
-  "The uid must be the first line of the inspector output.",
-);
-assert.match(registeredOutput, /data-simulation-target="page-save-execute"/);
-assert.match(registeredOutput, /-- parent --/);
+assert.equal(formatInspectorOutput(registered), "مفقود");
 
-// An unregistered element is still selected, still outlined, and still copied;
-// only its uid is reported as missing.
+// An unregistered element is still selected; the panel copies only the HTML id.
 const unregistered = { "data-ui": "component", "data-ui-component": "button" };
 assert.equal(selectedUiUid(unregistered), null);
 assert.equal(selectedUiUid(undefined), null);
-const unregisteredOutput = formatInspectorOutput(unregistered, [unregistered]);
-assert.equal(unregisteredOutput.split("\n")[0], "data-ui-uid=(missing)");
-assert.match(unregisteredOutput, /data-ui-component="button"/);
-// An element with no UiRegistry metadata at all still reports a missing uid.
-assert.equal(formatInspectorOutput(undefined, []), "data-ui-uid=(missing)");
-
-// An ancestor's uid is the ancestor's: an unregistered element that merely sits
-// inside a registered region must still report a missing uid.
-const insideRegisteredRegion = formatInspectorOutput({}, [
-  { "data-ui-uid": "page-save.dialog-CfGhr4", "data-ui": "region" },
-]);
-assert.equal(insideRegisteredRegion.split("\n")[0], "data-ui-uid=(missing)");
-assert.match(insideRegisteredRegion, /page-save\.dialog-CfGhr4/);
+assert.equal(formatInspectorOutput(unregistered), "مفقود");
+assert.equal(formatInspectorOutput(undefined), "مفقود");
 
 // ── Add to UiRegistry proposal ─────────────────────────────────────────────
 const fullProposal = proposalFor({
@@ -208,6 +198,7 @@ assert.match(inspectorSource, /const selected = pickInspectedElement\(event\.tar
 assert.match(inspectorSource, /selected\.style\.outline = "3px solid var\(--color-primary\)"/);
 assert.match(inspectorSource, /const ownAttributes = attributesFor\(selected\);/);
 assert.match(inspectorSource, /setSelectedAttributes\(ownAttributes\)/);
+assert.match(inspectorSource, /name === "id"/);
 // The Add-to-UiRegistry decision reads only the selected element's own
 // attributes, so an ancestor uid can never hide a missing registration.
 assert.match(inspectorSource, /selectedUiUid\(selectedAttributes\) === null/);

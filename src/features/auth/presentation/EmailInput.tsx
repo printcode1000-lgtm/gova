@@ -15,9 +15,9 @@ export function EmailInput() {
       name="email"
       control={control}
       render={({ field, fieldState }) => (
-        <div className="space-y-2">
-          <span className="text-sm font-semibold text-on-surface">{t('auth.email.label')}</span>
-          <input
+        <div id="auth.email-input.div" className="space-y-2">
+          <span id="auth.email-input.span" className="text-sm font-semibold text-on-surface">{t('auth.email.label')}</span>
+          <input id="auth.email-input.input"
             type="email"
             inputMode="email"
             placeholder="example@email.com"
@@ -25,8 +25,8 @@ export function EmailInput() {
             value={field.value || ''}
             onChange={field.onChange}
           />
-          <p className="text-xs text-on-surface-variant">{t('auth.email.hint')}</p>
-          {fieldState.error && <p className="text-xs text-error">{fieldState.error.message}</p>}
+          <p id="auth.email-input.p" className="text-xs text-on-surface-variant">{t('auth.email.hint')}</p>
+          {fieldState.error && <p id="auth.email-input.p.2" className="text-xs text-error">{fieldState.error.message}</p>}
         </div>
       )}
     />

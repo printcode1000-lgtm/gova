@@ -21,25 +21,25 @@ export function DataHealthHistoryPanel({
   onClearCleanupAudit: () => void;
 }) {
   return (
-    <div className="grid gap-4 xl:grid-cols-2">
-      <section className="overflow-hidden rounded-md border bg-surface">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-          <div className="flex items-center gap-2 font-semibold">
-            <History className="h-4 w-4" />
+    <div id="data-health.data-health-history-panel.div" className="grid gap-4 xl:grid-cols-2">
+      <section id="data-health.data-health-history-panel.section" className="overflow-hidden rounded-md border bg-surface">
+        <div id="data-health.data-health-history-panel.div.2" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div id="data-health.data-health-history-panel.div.3" className="flex items-center gap-2 font-semibold">
+            <History id="data-health.data-health-history-panel.history" className="h-4 w-4" />
             سجل الفحوصات
           </div>
-          <Button ui={{ uid: "data-health.history.clear-runs-54IYBD", id: "data-health.history.clear-runs", kind: "action", action: "clear-run-history", part: "history" }}
+          <Button id="data-health.data-health-history-panel.button" ui={{ uid: "data-health.history.clear-runs-54IYBD", id: "data-health.history.clear-runs", kind: "action", action: "clear-run-history", part: "history" }}
             type="button"
             size="sm"
             variant="outline"
             disabled={history.runs.length === 0}
             onClick={onClearRunHistory}
           >
-            <ListPlus className="h-4 w-4" />
+            <ListPlus id="data-health.data-health-history-panel.list-plus" className="h-4 w-4" />
             إضافة حذف السجل للحفظ
           </Button>
         </div>
-        <div className="divide-y">
+        <div id="data-health.data-health-history-panel.div.4" className="divide-y">
           {history.runs.map((run) => (
             <div key={run.id} className="grid grid-cols-[1fr_auto] gap-2 p-3 text-sm">
               <div>
@@ -52,30 +52,30 @@ export function DataHealthHistoryPanel({
             </div>
           ))}
           {history.runs.length === 0 ? (
-            <div className="p-6 text-center text-sm text-on-surface-variant">
+            <div id="data-health.data-health-history-panel.div.5" className="p-6 text-center text-sm text-on-surface-variant">
               لا يوجد سجل بعد.
             </div>
           ) : null}
         </div>
       </section>
-      <section className="overflow-hidden rounded-md border bg-surface">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-          <div className="flex items-center gap-2 font-semibold">
-            <ShieldCheck className="h-4 w-4" />
+      <section id="data-health.data-health-history-panel.section.2" className="overflow-hidden rounded-md border bg-surface">
+        <div id="data-health.data-health-history-panel.div.6" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div id="data-health.data-health-history-panel.div.7" className="flex items-center gap-2 font-semibold">
+            <ShieldCheck id="data-health.data-health-history-panel.shield-check" className="h-4 w-4" />
             تدقيق التنظيف
           </div>
-          <Button ui={{ uid: "data-health.history.clear-audit-V4POBR", id: "data-health.history.clear-audit", kind: "action", action: "clear-cleanup-audit", part: "history" }}
+          <Button id="data-health.data-health-history-panel.button.2" ui={{ uid: "data-health.history.clear-audit-V4POBR", id: "data-health.history.clear-audit", kind: "action", action: "clear-cleanup-audit", part: "history" }}
             type="button"
             size="sm"
             variant="outline"
             disabled={history.audit.length === 0}
             onClick={onClearCleanupAudit}
           >
-            <ListPlus className="h-4 w-4" />
+            <ListPlus id="data-health.data-health-history-panel.list-plus.2" className="h-4 w-4" />
             إضافة حذف التدقيق للحفظ
           </Button>
         </div>
-        <div className="divide-y">
+        <div id="data-health.data-health-history-panel.div.8" className="divide-y">
           {history.audit.map((entry) => (
             <div key={entry.id} className="p-3 text-sm">
               <div className="flex items-center justify-between gap-2">
@@ -93,30 +93,30 @@ export function DataHealthHistoryPanel({
             </div>
           ))}
           {history.audit.length === 0 ? (
-            <div className="p-6 text-center text-sm text-on-surface-variant">
+            <div id="data-health.data-health-history-panel.div.9" className="p-6 text-center text-sm text-on-surface-variant">
               لم تُنفذ عمليات تنظيف بعد.
             </div>
           ) : null}
         </div>
       </section>
-      <section className="overflow-hidden rounded-md border bg-surface xl:col-span-2">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-          <div className="flex items-center gap-2 font-semibold">
-            <ShieldCheck className="h-4 w-4" />
+      <section id="data-health.data-health-history-panel.section.3" className="overflow-hidden rounded-md border bg-surface xl:col-span-2">
+        <div id="data-health.data-health-history-panel.div.10" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div id="data-health.data-health-history-panel.div.11" className="flex items-center gap-2 font-semibold">
+            <ShieldCheck id="data-health.data-health-history-panel.shield-check.2" className="h-4 w-4" />
             الحجر الصحي
           </div>
-          <Button ui={{ uid: "data-health.history.clear-quarantine-IWlW3x", id: "data-health.history.clear-quarantine", kind: "action", action: "clear-quarantine", part: "history" }}
+          <Button id="data-health.data-health-history-panel.button.3" ui={{ uid: "data-health.history.clear-quarantine-IWlW3x", id: "data-health.history.clear-quarantine", kind: "action", action: "clear-quarantine", part: "history" }}
             type="button"
             size="sm"
             variant="outline"
             disabled={history.quarantine.length === 0}
             onClick={onClearQuarantine}
           >
-            <ListPlus className="h-4 w-4" />
+            <ListPlus id="data-health.data-health-history-panel.list-plus.3" className="h-4 w-4" />
             إضافة تنظيف الحجر للحفظ
           </Button>
         </div>
-        <div className="divide-y">
+        <div id="data-health.data-health-history-panel.div.12" className="divide-y">
           {history.quarantine.map((entry) => (
             <div key={entry.id} className="flex flex-wrap items-center justify-between gap-3 p-3 text-sm">
               <div className="min-w-0 flex-1">
@@ -149,7 +149,7 @@ export function DataHealthHistoryPanel({
             </div>
           ))}
           {history.quarantine.length === 0 ? (
-            <div className="p-6 text-center text-sm text-on-surface-variant">
+            <div id="data-health.data-health-history-panel.div.13" className="p-6 text-center text-sm text-on-surface-variant">
               لا توجد عناصر في الحجر.
             </div>
           ) : null}

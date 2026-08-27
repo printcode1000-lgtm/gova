@@ -76,12 +76,12 @@ import { useProfilePageContentModel } from "./profile-page/ProfilePageContent.mo
 
 import { ProfilePageContentView } from "./profile-page/ProfilePageContent.view";
 
-export function ProfilePageContent({
+export function ProfilePageContent({ id,
   initialPublicProfile = null,
 }: {
   initialPublicProfile?: PublicProfileShareRecord | null;
-} = {}){
+} & { id?: string } = {}){
   const model = useProfilePageContentModel({ initialPublicProfile });
   if (model.earlyView) return model.earlyView;
-  return <ProfilePageContentView model={model} />;
+  return <ProfilePageContentView id={id} model={model} />;
 }

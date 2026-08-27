@@ -31,8 +31,9 @@ export const ProductImageEditors = React.forwardRef<
     onChange: (images: StoredImage[]) => void;
     onPendingChange?: (pending: boolean) => void;
     deferStorageDeletion?: boolean;
+    id?: string;
   }
->(function ProductImageEditors({
+>(function ProductImageEditors({ id,
   maxImages,
   mainCategoryId,
   images,
@@ -71,7 +72,7 @@ export const ProductImageEditors = React.forwardRef<
   );
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+    <div id={id} className="grid grid-cols-2 gap-3 sm:grid-cols-3">
       {slots.map((index) => {
         const slotImage = normalized[index] ?? null;
         return (

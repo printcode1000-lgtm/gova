@@ -66,16 +66,16 @@ export function LocationSection() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('onboarding.location.title')}</CardTitle>
-          <CardDescription>{t('onboarding.location.description')}</CardDescription>
+    <div id="onboarding.sections.location-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.location-section.card">
+        <CardHeader id="onboarding.sections.location-section.card-header">
+          <CardTitle id="onboarding.sections.location-section.card-title">{t('onboarding.location.title')}</CardTitle>
+          <CardDescription id="onboarding.sections.location-section.card-description">{t('onboarding.location.description')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <FormField label={t('onboarding.location.country')} htmlFor="country" required error={errors.country}>
-              <FormSelect ui={{ uid: 'onboarding.location.country-ZUTvz1', id: 'onboarding.location.country', kind: 'field', part: 'form' }}
+        <CardContent id="onboarding.sections.location-section.card-content" className="space-y-6">
+          <div id="onboarding.sections.location-section.div.2" className="grid gap-6 lg:grid-cols-2">
+            <FormField id="onboarding.sections.location-section.form-field" label={t('onboarding.location.country')} htmlFor="country" required error={errors.country}>
+              <FormSelect id="onboarding.sections.location-section.form-select" ui={{ uid: 'onboarding.location.country-ZUTvz1', id: 'onboarding.location.country', kind: 'field', part: 'form' }}
                 value={location.country}
                 onValueChange={(v) => updateLocation({ country: v })}
                 options={constants.countries.map((c) => ({
@@ -87,7 +87,7 @@ export function LocationSection() {
               />
             </FormField>
 
-            <FormField label={t('onboarding.location.city')} htmlFor="city" required error={errors.city}>
+            <FormField id="onboarding.sections.location-section.form-field.2" label={t('onboarding.location.city')} htmlFor="city" required error={errors.city}>
               <FormInput ui={{ uid: 'onboarding.location.city-L0aVzc', id: 'onboarding.location.city', kind: 'field', part: 'form' }}
                 id="city"
                 value={location.city}
@@ -98,7 +98,7 @@ export function LocationSection() {
             </FormField>
           </div>
 
-          <FormField label={t('onboarding.location.address')} htmlFor="address" required error={errors.address}>
+          <FormField id="onboarding.sections.location-section.form-field.3" label={t('onboarding.location.address')} htmlFor="address" required error={errors.address}>
             <FormInput ui={{ uid: 'onboarding.location.address-QDsd6M', id: 'onboarding.location.address', kind: 'field', part: 'form' }}
               id="address"
               value={location.address}
@@ -108,7 +108,7 @@ export function LocationSection() {
             />
           </FormField>
 
-          <FormField label={t('onboarding.location.postalCode')} htmlFor="postalCode" hint={t('onboarding.common.optional')}>
+          <FormField id="onboarding.sections.location-section.form-field.4" label={t('onboarding.location.postalCode')} htmlFor="postalCode" hint={t('onboarding.common.optional')}>
             <FormInput ui={{ uid: 'onboarding.location.postal-code-1BYVKu', id: 'onboarding.location.postal-code', kind: 'field', part: 'form' }}
               id="postalCode"
               value={location.postalCode}
@@ -119,16 +119,16 @@ export function LocationSection() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Globe className="h-5 w-5" />
+      <Card id="onboarding.sections.location-section.card.2">
+        <CardHeader id="onboarding.sections.location-section.card-header.2">
+          <CardTitle id="onboarding.sections.location-section.card-title.2" className="flex items-center gap-2">
+            <Globe id="onboarding.sections.location-section.globe" className="h-5 w-5" />
             {t('onboarding.location.shippingCountries')}
           </CardTitle>
-          <CardDescription>{t('onboarding.location.shippingCountriesDesc')}</CardDescription>
+          <CardDescription id="onboarding.sections.location-section.card-description.2">{t('onboarding.location.shippingCountriesDesc')}</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <CardContent id="onboarding.sections.location-section.card-content.2">
+          <div id="onboarding.sections.location-section.div.3" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {constants.countries.map((country) => {
               const isSelected = location.shippingRegions.some((r) => r.country === country);
               return (
@@ -155,7 +155,7 @@ export function LocationSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation onNext={handleNext} showSkip />
+      <StepNavigation id="onboarding.sections.location-section.step-navigation" onNext={handleNext} showSkip />
     </div>
   );
 }

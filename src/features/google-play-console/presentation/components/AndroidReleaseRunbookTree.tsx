@@ -27,7 +27,7 @@ export function AndroidReleaseRunbookTree(props: {
   jobs: readonly BuildJobRecord[];
   missingEnvOf: (commandId: string) => readonly string[];
   start: AndroidRunbookStart;
-}) {
+} & { id?: string }) {
   const allIds = branchIdsFromAndroidRunbook(props.runbook);
   const dangerousIds = dangerousAndroidBranchIds(props.runbook);
   const safeIds = allIds.filter((id) => !dangerousIds.includes(id));
@@ -62,7 +62,7 @@ export function AndroidReleaseRunbookTree(props: {
   };
 
   return (
-    <div className="min-w-0 space-y-3">
+    <div id={props.id} className="min-w-0 space-y-3">
       <DeployRunbookCollapsible
         title={props.t("releaseConsole.androidPaths.bulkSelectTitle")}
         description={props.t("releaseConsole.androidPaths.bulkSelectHelp")}

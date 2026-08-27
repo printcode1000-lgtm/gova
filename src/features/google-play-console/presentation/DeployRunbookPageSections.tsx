@@ -8,9 +8,9 @@ import { DEPLOY_ALL_RUNBOOK } from "@asol/release-core/console";
 import type { DeployTab } from "./DeployRunbookTypes";
 import { ALL_BRANCH_HELP, deployAllScenarios } from "./deploy-runbook-copy";
 
-export function Header() {
+export function Header({ id }: { id?: string }) {
   return (
-    <header className="space-y-2 rounded-md border bg-surface p-3 sm:p-4">
+    <header id={id} className="space-y-2 rounded-md border bg-surface p-3 sm:p-4">
       <h1 className="text-xl font-semibold sm:text-2xl">مركز تشغيل Deploy</h1>
       <p className="text-sm text-on-surface-variant">
         تنفيذ الأوامر يتم كعملية نظام مستقلة من خلال Job محلي، والصفحة تعرض الطرفية وتتحكم في التسلسل فقط.
@@ -19,9 +19,9 @@ export function Header() {
   );
 }
 
-export function TabButtons(props: { tab: DeployTab; setTab: (tab: DeployTab) => void }) {
+export function TabButtons(props: { tab: DeployTab; setTab: (tab: DeployTab) => void } & { id?: string }) {
   return (
-    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+    <div id={props.id} className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
       <Button
         ui={{
           uid: "deploy-runbook.tab-deploy-all-J49BXV",
@@ -54,13 +54,13 @@ export function TabButtons(props: { tab: DeployTab; setTab: (tab: DeployTab) => 
   );
 }
 
-export function StatusBadge(props: { status: string }) {
+export function StatusBadge(props: { status: string } & { id?: string }) {
   const running = props.status === "running" || props.status === "queued";
   const tone = running
     ? "bg-primary-container text-on-primary-container"
     : "bg-muted text-on-surface-variant";
   return (
-    <span className={`rounded-full px-2 py-0.5 text-xs ${tone}`}>
+    <span id={props.id} className={`rounded-full px-2 py-0.5 text-xs ${tone}`}>
       {props.status}
     </span>
   );
@@ -71,9 +71,9 @@ export function Summary(props: {
   totalCount: number;
   status: string;
   continueOnError: boolean;
-}) {
+} & { id?: string }) {
   return (
-    <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <section id={props.id} className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       <InfoCard
         title="الفروع المفعّلة"
         value={`${props.selectedCount} / ${props.totalCount}`}
@@ -103,9 +103,9 @@ export function DeployAllPanel(props: {
   setContinueOnError: (value: boolean) => void;
   skipPreflight: boolean;
   setSkipPreflight: (value: boolean) => void;
-}) {
+} & { id?: string }) {
   return (
-    <RunbookPanel
+    <RunbookPanel id={props.id}
       title="Deploy All"
       description="المسار الكامل: فحوصات، بناء، قواعد بيانات، خدمات، GitHub، ثم تحقق Vercel."
       runbook={DEPLOY_ALL_RUNBOOK}
@@ -147,9 +147,9 @@ function InfoCard(props: {
   value: string;
   help: string;
   className?: string;
-}) {
+} & { id?: string }) {
   return (
-    <div className={props.className ?? ""}>
+    <div id={props.id} className={props.className ?? ""}>
       <div className="min-w-0 rounded-md border bg-surface p-3">
         <div className="text-xs text-on-surface-variant">{props.title}</div>
         <div className="mt-1 text-lg font-semibold break-words">{props.value}</div>

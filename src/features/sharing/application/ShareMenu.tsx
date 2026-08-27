@@ -44,7 +44,7 @@ const destinationStyles: Record<ShareDestination, string> = {
   copy: "bg-surface-container-high text-on-surface-variant",
 };
 
-export function ShareMenu({ content, locale, trigger }: ShareMenuProps) {
+export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { id?: string }) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState("");
   const [savingQrCode, setSavingQrCode] = useState(false);
@@ -130,6 +130,7 @@ export function ShareMenu({ content, locale, trigger }: ShareMenuProps) {
     >
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent
+        id={id}
         dir={ar ? "rtl" : "ltr"}
         className="fixed inset-x-0 bottom-0 top-auto w-full max-w-none translate-x-0 translate-y-0 rounded-b-none rounded-t-[2rem] border-outline-variant/70 bg-surface/98 px-4 pb-[max(1.25rem,var(--asol-safe-area-bottom))] pt-5 shadow-2xl backdrop-blur-xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl sm:p-6"
       >
@@ -231,7 +232,7 @@ export function ShareMenu({ content, locale, trigger }: ShareMenuProps) {
   );
 }
 
-function DestinationButton({
+function DestinationButton({ id,
   children,
   destination,
   label,
@@ -241,9 +242,9 @@ function DestinationButton({
   destination: ShareDestination;
   label: string;
   onClick: () => void;
-}) {
+} & { id?: string }) {
   return (
-    <button
+    <button id={id}
       type="button"
       onClick={onClick}
       className="group flex min-w-0 flex-col items-center gap-2 rounded-2xl p-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"

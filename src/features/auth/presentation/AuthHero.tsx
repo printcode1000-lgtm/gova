@@ -9,11 +9,11 @@ interface AuthHeroProps {
   variant: 'login' | 'registration';
 }
 
-export function AuthHero({ variant }: AuthHeroProps) {
+export function AuthHero({ id, variant }: AuthHeroProps & { id?: string }) {
   const { t } = useTranslation();
 
   return (
-    <div className="auth-hero hidden lg:flex flex-col justify-between relative overflow-hidden">
+    <div id={id} className="auth-hero hidden lg:flex flex-col justify-between relative overflow-hidden">
       <div className="absolute inset-0 opacity-30 pointer-events-none">
         <div className="absolute top-20 start-20 w-72 h-72 rounded-full bg-on-primary/20 blur-3xl" />
         <div className="absolute bottom-20 end-20 w-96 h-96 rounded-full bg-success/30 blur-3xl" />

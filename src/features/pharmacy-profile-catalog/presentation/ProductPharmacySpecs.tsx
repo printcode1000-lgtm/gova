@@ -247,9 +247,9 @@ export function ProductPharmacySpecs({
 
   if (mode === "view") {
     return (
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div id="pharmacy-profile-catalog.product-pharmacy-specs.div" className="grid gap-3 sm:grid-cols-2">
         {config.pharmacyCategory ? (
-          <ProductField
+          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field"
             label="التصنيف الرئيسي"
             value={specs.pharmacyCategory}
             mode={mode}
@@ -257,7 +257,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.pharmacySubcategory ? (
-          <ProductField
+          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.2"
             label="التصنيف الفرعي"
             value={specs.pharmacySubcategory}
             mode={mode}
@@ -265,7 +265,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.nameAr ? (
-          <ProductField
+          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.3"
             label="الاسم بالعربي"
             value={specs.nameAr}
             mode={mode}
@@ -273,7 +273,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.nameEn ? (
-          <ProductField
+          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.4"
             label="الاسم بالإنجليزي"
             value={specs.nameEn}
             mode={mode}
@@ -281,7 +281,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.activeIngredient ? (
-          <ProductField
+          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.5"
             label="المادة الفعالة"
             value={specs.activeIngredient}
             mode={mode}
@@ -289,7 +289,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.form ? (
-          <ProductField
+          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.6"
             label="شكل الدواء"
             value={specs.form}
             mode={mode}
@@ -297,7 +297,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.concentration ? (
-          <ProductField
+          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.7"
             label="التركيز"
             value={specs.concentration}
             mode={mode}
@@ -305,7 +305,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.prescriptionRequired ? (
-          <ProductField
+          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.8"
             label="يتطلب روشتة"
             value={String(specs.prescriptionRequired)}
             mode={mode}
@@ -318,9 +318,9 @@ export function ProductPharmacySpecs({
   }
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div id="pharmacy-profile-catalog.product-pharmacy-specs.div.2" className="grid gap-3 sm:grid-cols-2">
       {config.pharmacyCategory ? (
-        <PharmacySelect ui={{ uid: "pharmacy-catalog.specs.category-K7ccOS", id: "pharmacy-catalog.specs.category", kind: "field", part: "specs" }}
+        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select" ui={{ uid: "pharmacy-catalog.specs.category-K7ccOS", id: "pharmacy-catalog.specs.category", kind: "field", part: "specs" }}
           label="التصنيف الرئيسي"
           value={selectedCategory ? String(selectedCategory.id) : ""}
           disabled={categories.length === 0}
@@ -333,7 +333,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.pharmacySubcategory ? (
-        <PharmacySelect ui={{ uid: "pharmacy-catalog.specs.subcategory-bl01Lc", id: "pharmacy-catalog.specs.subcategory", kind: "field", part: "specs" }}
+        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.2" ui={{ uid: "pharmacy-catalog.specs.subcategory-bl01Lc", id: "pharmacy-catalog.specs.subcategory", kind: "field", part: "specs" }}
           label="التصنيف الفرعي"
           value={selectedSubcategory ? String(selectedSubcategory.id) : ""}
           disabled={subcategories.length === 0}
@@ -346,7 +346,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.nameAr ? (
-        <ProductField
+        <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.9"
           label="الاسم بالعربي"
           value={specs.nameAr}
           mode={mode}
@@ -354,7 +354,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.nameEn ? (
-        <ProductField
+        <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.10"
           label="الاسم بالإنجليزي"
           value={specs.nameEn}
           mode={mode}
@@ -362,7 +362,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.activeIngredient ? (
-        <ProductField
+        <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.11"
           label="المادة الفعالة"
           value={specs.activeIngredient}
           mode={mode}
@@ -372,7 +372,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.form ? (
-        <PharmacySelect ui={{ uid: "pharmacy-catalog.specs.form-AbS623", id: "pharmacy-catalog.specs.form", kind: "field", part: "specs" }}
+        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.3" ui={{ uid: "pharmacy-catalog.specs.form-AbS623", id: "pharmacy-catalog.specs.form", kind: "field", part: "specs" }}
           label="شكل الدواء"
           value={selectedForm?.id ?? ""}
           disabled={forms.length === 0}
@@ -385,7 +385,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.concentration ? (
-        <PharmacySelect ui={{ uid: "pharmacy-catalog.specs.strength-IfRd6w", id: "pharmacy-catalog.specs.strength", kind: "field", part: "specs" }}
+        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.4" ui={{ uid: "pharmacy-catalog.specs.strength-IfRd6w", id: "pharmacy-catalog.specs.strength", kind: "field", part: "specs" }}
           label="التركيز"
           value={selectedStrength?.id ?? ""}
           disabled={strengths.length === 0}
@@ -398,7 +398,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.prescriptionRequired ? (
-        <ProductField
+        <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.12"
           label="يتطلب روشتة"
           value={String(specs.prescriptionRequired)}
           mode={mode}

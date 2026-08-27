@@ -244,54 +244,54 @@ export function PharmacyCatalogManagerPage() {
   });
 
   if (isLoading) {
-    return <LoadingFrame />;
+    return <LoadingFrame id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.loading-frame" />;
   }
 
   if (!session?.uid) {
-    return <MessageFrame message={text.loginRequired} />;
+    return <MessageFrame id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.message-frame" message={text.loginRequired} />;
   }
 
   if (!allowed) {
-    return <MessageFrame message={text.noAccess} />;
+    return <MessageFrame id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.message-frame.2" message={text.noAccess} />;
   }
 
   return (
-    <main className="min-h-screen bg-background px-4 py-5">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4">
-        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-          <div>
-            <Link
+    <main id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.main" className="min-h-screen bg-background px-4 py-5">
+      <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div" className="mx-auto flex max-w-7xl flex-col gap-4">
+        <header id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.header" className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+          <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.2">
+            <Link id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.link"
               href="/profile?mode=edit&tab=products"
               className="mb-2 inline-flex items-center gap-2 text-xs font-semibold text-primary"
             >
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.arrow-right" className="h-4 w-4" />
               {text.back}
             </Link>
-            <h1 className="text-2xl font-bold text-on-surface">{text.title}</h1>
-            <p className="mt-1 text-sm text-on-surface-variant">{text.subtitle}</p>
+            <h1 id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1" className="text-2xl font-bold text-on-surface">{text.title}</h1>
+            <p id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p" className="mt-1 text-sm text-on-surface-variant">{text.subtitle}</p>
           </div>
-          <Link
+          <Link id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.link.2"
             href={addProductHref}
             className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary transition"
           >
-            <PackagePlus className="h-4 w-4" />
+            <PackagePlus id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.package-plus" className="h-4 w-4" />
             {text.addProduct}
           </Link>
         </header>
 
         {error ? (
-          <p className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+          <p id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.2" className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
             {error}
           </p>
         ) : null}
 
         {!catalog && busy ? (
-          <LoadingFrame compact />
+          <LoadingFrame id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.loading-frame.2" compact />
         ) : (
           <section {...uiAttributes({ uid: "pharmacy-catalog-empty-fYw1eB", id: "pharmacy-catalog-empty", kind: "region", simulation: { kind: "state", id: "pharmacy-catalog-empty" } })}
             className="grid min-h-[620px] overflow-hidden rounded-lg border border-outline-variant bg-surface lg:grid-cols-[300px_330px_1fr]"
           >
-            <ManagerColumn
+            <ManagerColumn id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.manager-column"
               title={text.mainCategories}
               actionLabel={text.addMain}
               disabled={busy}
@@ -331,7 +331,7 @@ export function PharmacyCatalogManagerPage() {
               ))}
             </ManagerColumn>
 
-            <ManagerColumn
+            <ManagerColumn id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.manager-column.2"
               title={text.subcategories}
               actionLabel={text.addSub}
               disabled={busy || !activeCategoryId}
@@ -371,13 +371,13 @@ export function PharmacyCatalogManagerPage() {
               ))}
             </ManagerColumn>
 
-            <ManagerColumn title={text.products} disabled={busy}>
+            <ManagerColumn id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.manager-column.3" title={text.products} disabled={busy}>
               {products.length === 0 ? (
                 <p {...uiAttributes({ uid: "pharmacy-products-empty-BrW6Lv", id: "pharmacy-products-empty", kind: "region", simulation: { kind: "state", id: "pharmacy-products-empty" } })} className="rounded-lg border border-dashed border-outline-variant p-8 text-center text-sm text-on-surface-variant">
                   {text.emptyProducts}
                 </p>
               ) : (
-                <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.3" className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
                   {products.map((product) => (
                     <ProductManagerCard
                       key={product.id}
@@ -394,7 +394,7 @@ export function PharmacyCatalogManagerPage() {
         )}
       </div>
       {editDialog ? (
-        <CreateCategoryDialog
+        <CreateCategoryDialog id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.create-category-dialog"
           dialog={editDialog}
           value={editName}
           disabled={busy}

@@ -23,15 +23,28 @@ async function main(): Promise<void> {
   registerDataCorePorts();
 
   const result = await applyPendingRequests(uiRegistryPendingRepository, process.cwd());
+  console.log("Task: apply queued UiRegistry registration requests into source.");
   if (result.outcomes.length === 0) {
-    console.log("UiRegistry pending queue is empty. Nothing to apply.");
+    console.log("Queue is empty. Nothing was written.");
     return;
   }
 
-  console.log(`UiRegistry pending requests: ${result.outcomes.length}`);
-  for (const outcome of result.outcomes) {
-    if (outcome.applied) console.log(`  applied  ${outcome.request.uid} -> ${outcome.detail}`);
-    else console.error(`  pending  ${outcome.request.uid}: ${outcome.detail}`);
+  console.log(
+    `Requests: ${result.outcomes.length}. Applied: ${result.applied}. Still open: ${result.blocked}.`,
+  );
+  const applied = result.outcomes.filter((outcome) => outcome.applied);
+  const open = result.outcomes.filter((outcome) => !outcome.applied);
+  if (applied.length > 0) {
+    console.log("Applied:");
+    for (const outcome of applied) {
+      console.log(`  ${outcome.request.uid} -> ${outcome.detail}`);
+    }
+  }
+  if (open.length > 0) {
+    console.error("Still open:");
+    for (const outcome of open) {
+      console.error(`  ${outcome.request.uid}: ${outcome.detail}`);
+    }
   }
 
   // Whatever was written has to satisfy the same contract as a hand-written
@@ -54,7 +67,7 @@ async function main(): Promise<void> {
     process.exitCode = 1;
     return;
   }
-  console.log(`\nApplied ${result.applied} pending UiRegistry registration(s).`);
+  console.log(`Done. Wrote ${result.applied} registration(s) into source.`);
 }
 
 void main().catch((error: unknown) => {

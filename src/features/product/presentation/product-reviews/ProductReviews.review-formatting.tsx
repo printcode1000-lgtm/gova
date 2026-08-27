@@ -23,9 +23,9 @@ export function emptyReviewsResult(): ProductReviewsResult {
   };
 }
 
-export function Stars({ value, size = "text-lg" }: { value: number; size?: string }) {
+export function Stars({ id, value, size = "text-lg" }: { value: number; size?: string } & { id?: string }) {
   return (
-    <span className={`inline-flex ${size}`} dir="ltr">
+    <span id={id} className={`inline-flex ${size}`} dir="ltr">
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}

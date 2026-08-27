@@ -7,15 +7,15 @@ function formatDetailValue(value: unknown) {
   return String(value);
 }
 
-export function SelectedRecordDetails({
+export function SelectedRecordDetails({ id,
   title,
   record,
 }: {
   title: string;
   record: DetailRecord | null;
-}) {
+} & { id?: string }) {
   return (
-    <div className="overflow-hidden rounded-xl border bg-background/70">
+    <div id={id} className="overflow-hidden rounded-xl border bg-background/70">
       <h3 className="border-b px-4 py-3 text-sm font-bold">{title}</h3>
       {record ? (
         <dl className="divide-y text-sm">

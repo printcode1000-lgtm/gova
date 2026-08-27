@@ -147,44 +147,44 @@ export function UnifiedDeliveryPlanPanel({
   );
 
   return (
-    <section className="mb-5 overflow-hidden rounded-2xl border border-primary/30 bg-primary/5 shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-primary/20 p-4">
-        <div className="flex items-start gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-            <Route className="h-6 w-6" />
+    <section id="orders.order-details.order-details-page-content.delivery-plan.section" className="mb-5 overflow-hidden rounded-2xl border border-primary/30 bg-primary/5 shadow-sm">
+      <div id="orders.order-details.order-details-page-content.delivery-plan.div" className="flex flex-wrap items-start justify-between gap-3 border-b border-primary/20 p-4">
+        <div id="orders.order-details.order-details-page-content.delivery-plan.div.2" className="flex items-start gap-3">
+          <span id="orders.order-details.order-details-page-content.delivery-plan.span" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+            <Route id="orders.order-details.order-details-page-content.delivery-plan.route" className="h-6 w-6" />
           </span>
-          <div>
-            <h2 className="font-bold">خطة التوصيل الموحّد</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
+          <div id="orders.order-details.order-details-page-content.delivery-plan.div.3">
+            <h2 id="orders.order-details.order-details-page-content.delivery-plan.h2" className="font-bold">خطة التوصيل الموحّد</h2>
+            <p id="orders.order-details.order-details-page-content.delivery-plan.p" className="mt-1 text-sm text-muted-foreground">
               {unifiedDeliveryPlanStatusText(plan.status)}
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 text-xs font-semibold">
-          <span className="inline-flex items-center gap-1 rounded-full bg-surface px-3 py-1.5">
-            <Users className="h-3.5 w-3.5 text-primary" />
+        <div id="orders.order-details.order-details-page-content.delivery-plan.div.4" className="flex flex-wrap gap-2 text-xs font-semibold">
+          <span id="orders.order-details.order-details-page-content.delivery-plan.span.2" className="inline-flex items-center gap-1 rounded-full bg-surface px-3 py-1.5">
+            <Users id="orders.order-details.order-details-page-content.delivery-plan.users" className="h-3.5 w-3.5 text-primary" />
             {String(plan.seller_count)} بائعين
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-surface px-3 py-1.5">
-            <Truck className="h-3.5 w-3.5 text-primary" />
+          <span id="orders.order-details.order-details-page-content.delivery-plan.span.3" className="inline-flex items-center gap-1 rounded-full bg-surface px-3 py-1.5">
+            <Truck id="orders.order-details.order-details-page-content.delivery-plan.truck" className="h-3.5 w-3.5 text-primary" />
             {plan.strategy === "hybrid" ? "توصيل هجين" : "شحنة موحّدة"}
           </span>
         </div>
       </div>
 
-      <div className="grid gap-3 p-4 sm:grid-cols-3">
+      <div id="orders.order-details.order-details-page-content.delivery-plan.div.5" className="grid gap-3 p-4 sm:grid-cols-3">
         {isBuyer ? (
           <>
-            <QuoteAmount
+            <QuoteAmount id="orders.order-details.order-details-page-content.delivery-plan.quote-amount"
               label="مرجع التوصيل المنفصل المؤكد"
               value={plan.fallback_confirmed_price}
               currency={currency}
             />
-            <div className="rounded-lg bg-surface px-3 py-2">
-              <p className="text-xs text-muted-foreground">
+            <div id="orders.order-details.order-details-page-content.delivery-plan.div.6" className="rounded-lg bg-surface px-3 py-2">
+              <p id="orders.order-details.order-details-page-content.delivery-plan.p.2" className="text-xs text-muted-foreground">
                 حالة المرجع المنفصل
               </p>
-              <p className="mt-1 text-sm font-semibold">
+              <p id="orders.order-details.order-details-page-content.delivery-plan.p.3" className="mt-1 text-sm font-semibold">
                 {fallbackKnown
                   ? "قيمة مكتملة"
                   : "قيمة مبدئية وتوجد مواقع تحتاج تسعيرًا"}
@@ -192,19 +192,19 @@ export function UnifiedDeliveryPlanPanel({
             </div>
           </>
         ) : null}
-        <div className="rounded-lg bg-surface px-3 py-2">
-          <p className="text-xs text-muted-foreground">
+        <div id="orders.order-details.order-details-page-content.delivery-plan.div.7" className="rounded-lg bg-surface px-3 py-2">
+          <p id="orders.order-details.order-details-page-content.delivery-plan.p.4" className="text-xs text-muted-foreground">
             {isBuyer ? "مقدمو الخدمة المدعوون" : "محطات الاستلام في نطاق عرضك"}
           </p>
-          <p className="mt-1 text-sm font-semibold">
+          <p id="orders.order-details.order-details-page-content.delivery-plan.p.5" className="mt-1 text-sm font-semibold">
             {isBuyer ? candidates.length : activeStops.length}
           </p>
         </div>
       </div>
 
-      <div className="border-t border-primary/15 p-4">
-        <h3 className="text-sm font-bold">محطات الاستلام</h3>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <div id="orders.order-details.order-details-page-content.delivery-plan.div.8" className="border-t border-primary/15 p-4">
+        <h3 id="orders.order-details.order-details-page-content.delivery-plan.h3" className="text-sm font-bold">محطات الاستلام</h3>
+        <div id="orders.order-details.order-details-page-content.delivery-plan.div.9" className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {activeStops.map((stop, index) => (
             <div
               key={String(stop.id)}
@@ -226,9 +226,9 @@ export function UnifiedDeliveryPlanPanel({
       </div>
 
       {quotes.length > 0 ? (
-        <div className="border-t border-primary/15 p-4">
-          <h3 className="text-sm font-bold">العروض المتاحة</h3>
-          <div className="mt-3 grid gap-3 md:grid-cols-2">
+        <div id="orders.order-details.order-details-page-content.delivery-plan.div.10" className="border-t border-primary/15 p-4">
+          <h3 id="orders.order-details.order-details-page-content.delivery-plan.h3.2" className="text-sm font-bold">العروض المتاحة</h3>
+          <div id="orders.order-details.order-details-page-content.delivery-plan.div.11" className="mt-3 grid gap-3 md:grid-cols-2">
             {quotes.map((quote) => {
               const providerId = String(quote.provider_id);
               const coveredStopCount = details.deliveryPlanQuoteStops.filter(
@@ -328,7 +328,7 @@ export function UnifiedDeliveryPlanPanel({
           </div>
         </div>
       ) : (
-        <p className="border-t border-primary/15 px-4 py-3 text-sm text-muted-foreground">
+        <p id="orders.order-details.order-details-page-content.delivery-plan.p.6" className="border-t border-primary/15 px-4 py-3 text-sm text-muted-foreground">
           لم يصل عرض بعد. سيظل إجمالي الطلب دون رسوم توصيل حتى يختار المشتري
           عرضًا.
         </p>
@@ -353,7 +353,7 @@ export function UnifiedDeliveryPlanPanel({
         />
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-primary/15 p-4">
+      <div id="orders.order-details.order-details-page-content.delivery-plan.div.12" className="flex flex-wrap items-center gap-2 border-t border-primary/15 p-4">
         {isBuyer &&
         fallbackAvailable &&
         !["separate_selected", "cancelled", "completed"].includes(
@@ -391,7 +391,7 @@ export function UnifiedDeliveryPlanPanel({
         plan.status === "accepted" &&
         !allItemsReady &&
         !shipmentExists ? (
-          <p className="text-xs text-warning">
+          <p id="orders.order-details.order-details-page-content.delivery-plan.p.7" className="text-xs text-warning">
             يمكن إنشاء الشحنة بعد تجهيز جميع البائعين لعناصرهم بالكامل.
           </p>
         ) : null}

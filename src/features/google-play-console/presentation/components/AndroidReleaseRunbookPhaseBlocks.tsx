@@ -13,14 +13,14 @@ import {
   type AndroidRunbookTreeContext,
 } from "./AndroidReleaseRunbookTreeShared";
 
-export function PhaseBlock(props: AndroidRunbookTreeContext & { phase: AndroidReleaseRunbookPhase }) {
+export function PhaseBlock(props: AndroidRunbookTreeContext & { phase: AndroidReleaseRunbookPhase } & { id?: string }) {
   const branchIds = props.phase.sections.flatMap((section) =>
     section.branches.map((item) => item.id),
   );
   const phaseState = selectionState(branchIds, props.selected);
 
   return (
-    <DeployRunbookCollapsible
+    <DeployRunbookCollapsible id={props.id}
       nested
       title={`${props.phase.id} — ${props.phase.label}`}
       description={props.t("releaseConsole.androidPaths.phaseCheckboxHelp")}
@@ -51,13 +51,13 @@ export function PhaseBlock(props: AndroidRunbookTreeContext & { phase: AndroidRe
 export function SectionBlock(
   props: AndroidRunbookTreeContext & {
     section: AndroidReleaseRunbookPhase["sections"][number];
-  },
+  } & { id?: string },
 ) {
   const branchIds = props.section.branches.map((item) => item.id);
   const sectionState = selectionState(branchIds, props.selected);
 
   return (
-    <DeployRunbookCollapsible
+    <DeployRunbookCollapsible id={props.id}
       nested
       title={`${props.section.id} — ${props.section.label}`}
       description={props.t("releaseConsole.androidPaths.sectionCheckboxHelp")}

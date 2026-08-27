@@ -44,7 +44,7 @@ import type { DbRow, OrderDetails, OrderRole } from "../order-types";
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 import { CustomRequestRow } from "./OrderDetailsPageContent.custom-request-row";
 
-export function ShippingQuotePanel({
+export function ShippingQuotePanel({ id,
   sellerOrderId,
   quotes,
   currency,
@@ -60,7 +60,7 @@ export function ShippingQuotePanel({
   isBuyer: boolean;
   busyAction: string;
   runAction: RunAction;
-}) {
+} & { id?: string }) {
   const latest = [...quotes].sort(
     (left, right) => Number(right.version ?? 0) - Number(left.version ?? 0),
   )[0];
@@ -84,7 +84,7 @@ export function ShippingQuotePanel({
   };
 
   return (
-    <section className="mt-4 overflow-hidden rounded-xl border border-primary/25 bg-primary/5">
+    <section id={id} className="mt-4 overflow-hidden rounded-xl border border-primary/25 bg-primary/5">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-primary/15 px-3 py-3">
         <div className="flex items-center gap-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary">
@@ -213,7 +213,7 @@ export function ShippingQuotePanel({
   );
 }
 
-export function QuoteAmount({
+export function QuoteAmount({ id,
   label,
   value,
   currency,
@@ -223,9 +223,9 @@ export function QuoteAmount({
   value: unknown;
   currency: string;
   emphasized?: boolean;
-}) {
+} & { id?: string }) {
   return (
-    <div
+    <div id={id}
       className={`rounded-lg bg-surface px-3 py-2 ${emphasized ? "ring-1 ring-primary/30" : ""}`}
     >
       <p className="text-xs text-muted-foreground">{label}</p>

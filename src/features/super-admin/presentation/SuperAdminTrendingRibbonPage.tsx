@@ -245,7 +245,7 @@ export function SuperAdminTrendingRibbonPage() {
 
   if (sessionLoading || !authorized || !record) {
     return (
-      <main className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main id="super-admin.super-admin-trending-ribbon-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري التحقق وتحميل الإعدادات…
       </main>
     );
@@ -254,48 +254,48 @@ export function SuperAdminTrendingRibbonPage() {
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <main className="container mx-auto max-w-4xl px-4 py-8">
+    <main id="super-admin.super-admin-trending-ribbon-page.main.2" className="container mx-auto max-w-4xl px-4 py-8">
       {/* ── Header ── */}
-      <header className="mb-6 flex items-start gap-3">
-        <div className="rounded-xl bg-primary/10 p-3 text-primary">
-          <ShieldCheck className="h-6 w-6" />
+      <header id="super-admin.super-admin-trending-ribbon-page.header" className="mb-6 flex items-start gap-3">
+        <div id="super-admin.super-admin-trending-ribbon-page.div" className="rounded-xl bg-primary/10 p-3 text-primary">
+          <ShieldCheck id="super-admin.super-admin-trending-ribbon-page.shield-check" className="h-6 w-6" />
         </div>
-        <div>
-          <p className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
-          <h1 className="text-2xl font-bold">
+        <div id="super-admin.super-admin-trending-ribbon-page.div.2">
+          <p id="super-admin.super-admin-trending-ribbon-page.p" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
+          <h1 id="super-admin.super-admin-trending-ribbon-page.h1" className="text-2xl font-bold">
             إدارة شريط النصوص المتحرك (TrendingRibbon)
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p id="super-admin.super-admin-trending-ribbon-page.p.2" className="mt-1 text-sm text-muted-foreground">
             أضف أي عدد من النصوص والروابط التفاعلية للعرض في الصفحة الرئيسية.
           </p>
         </div>
       </header>
 
       {/* ── Meta ── */}
-      <section className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2">
-        <div>
-          <p className="text-xs text-muted-foreground">الإصدار</p>
-          <p className="font-semibold">{record.version}</p>
+      <section id="super-admin.super-admin-trending-ribbon-page.section" className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2">
+        <div id="super-admin.super-admin-trending-ribbon-page.div.3">
+          <p id="super-admin.super-admin-trending-ribbon-page.p.3" className="text-xs text-muted-foreground">الإصدار</p>
+          <p id="super-admin.super-admin-trending-ribbon-page.p.4" className="font-semibold">{record.version}</p>
         </div>
-        <div>
-          <p className="text-xs text-muted-foreground">آخر تحديث</p>
-          <p className="text-sm">
+        <div id="super-admin.super-admin-trending-ribbon-page.div.4">
+          <p id="super-admin.super-admin-trending-ribbon-page.p.5" className="text-xs text-muted-foreground">آخر تحديث</p>
+          <p id="super-admin.super-admin-trending-ribbon-page.p.6" className="text-sm">
             {formatDateTimeDefault(record.updatedAt)}
           </p>
         </div>
       </section>
 
       {/* ── Check Interval ── */}
-      <section className="mb-6 rounded-xl border bg-card p-4">
-        <div className="mb-3 flex items-center gap-2">
-          <RefreshCw className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold">فترة البحث عن تحديثات</h2>
+      <section id="super-admin.super-admin-trending-ribbon-page.section.2" className="mb-6 rounded-xl border bg-card p-4">
+        <div id="super-admin.super-admin-trending-ribbon-page.div.5" className="mb-3 flex items-center gap-2">
+          <RefreshCw id="super-admin.super-admin-trending-ribbon-page.refresh-cw" className="h-5 w-5 text-primary" />
+          <h2 id="super-admin.super-admin-trending-ribbon-page.h2" className="font-semibold">فترة البحث عن تحديثات</h2>
         </div>
-        <div className="flex flex-wrap items-end gap-3">
-          <div className="min-w-52 space-y-2">
-            <Label htmlFor="check-interval">الفترة بالدقائق</Label>
+        <div id="super-admin.super-admin-trending-ribbon-page.div.6" className="flex flex-wrap items-end gap-3">
+          <div id="super-admin.super-admin-trending-ribbon-page.div.7" className="min-w-52 space-y-2">
+            <Label id="super-admin.super-admin-trending-ribbon-page.label" htmlFor="super-admin.trending-ribbon.check-interval">الفترة بالدقائق</Label>
             <Input ui={{ uid: "super-admin.trending-ribbon.check-interval-P84Ols", id: "super-admin.trending-ribbon.check-interval", kind: "field", part: "settings" }}
-              id="check-interval"
+              id="super-admin.trending-ribbon.check-interval"
               type="number"
               min={5}
               max={1440}
@@ -317,13 +317,13 @@ export function SuperAdminTrendingRibbonPage() {
               {interval} دقيقة
             </Button>
           ))}
-          <Button ui={{ uid: "super-admin.trending-ribbon.reload-settings-34fAPK", id: "super-admin.trending-ribbon.reload-settings", kind: "action", action: "reload", part: "settings" }}
+          <Button id="super-admin.super-admin-trending-ribbon-page.button" ui={{ uid: "super-admin.trending-ribbon.reload-settings-34fAPK", id: "super-admin.trending-ribbon.reload-settings", kind: "action", action: "reload", part: "settings" }}
             type="button"
             variant="outline"
             onClick={() => void load()}
             disabled={busy}
           >
-            <RefreshCw className="me-2 h-4 w-4" />
+            <RefreshCw id="super-admin.super-admin-trending-ribbon-page.refresh-cw.2" className="me-2 h-4 w-4" />
             فحص الآن
           </Button>
         </div>
@@ -331,7 +331,7 @@ export function SuperAdminTrendingRibbonPage() {
 
       {/* ── Message ── */}
       {message && (
-        <div
+        <div id="super-admin.super-admin-trending-ribbon-page.div.8"
           className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
           role="status"
         >
@@ -340,9 +340,9 @@ export function SuperAdminTrendingRibbonPage() {
       )}
 
       {/* ── Badge Settings ── */}
-      <section className="mb-6 rounded-xl border bg-card p-4">
-        <div className="mb-3 space-y-2">
-          <Label htmlFor="badge-label-input" className="font-semibold text-base block">
+      <section id="super-admin.super-admin-trending-ribbon-page.section.3" className="mb-6 rounded-xl border bg-card p-4">
+        <div id="super-admin.super-admin-trending-ribbon-page.div.9" className="mb-3 space-y-2">
+          <Label id="super-admin.super-admin-trending-ribbon-page.label.2" htmlFor="badge-label-input" className="font-semibold text-base block">
             شارة العنوان (Badge Label)
           </Label>
           <Input ui={{ uid: "super-admin.trending-ribbon.badge-label-BTA6QI", id: "super-admin.trending-ribbon.badge-label", kind: "field", part: "badge" }}
@@ -351,21 +351,21 @@ export function SuperAdminTrendingRibbonPage() {
             value={badgeLabel}
             onChange={(e) => setBadgeLabel(e.target.value)}
           />
-          <p className="text-xs text-muted-foreground">
+          <p id="super-admin.super-admin-trending-ribbon-page.p.7" className="text-xs text-muted-foreground">
             النص المعروض في المربع الملون قبل الشريط. يدعم مفاتيح الترجمة أو النصوص المباشرة.
           </p>
         </div>
       </section>
 
       {/* ── Add Item ── */}
-      <section className="mb-6 rounded-xl border bg-card p-4">
-        <div className="mb-3 flex items-center gap-2">
-          <Plus className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold">إضافة نص جديد للشريط</h2>
+      <section id="super-admin.super-admin-trending-ribbon-page.section.4" className="mb-6 rounded-xl border bg-card p-4">
+        <div id="super-admin.super-admin-trending-ribbon-page.div.10" className="mb-3 flex items-center gap-2">
+          <Plus id="super-admin.super-admin-trending-ribbon-page.plus" className="h-5 w-5 text-primary" />
+          <h2 id="super-admin.super-admin-trending-ribbon-page.h2.2" className="font-semibold">إضافة نص جديد للشريط</h2>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-1">
-            <Label htmlFor="new-item-label">النص المعروض</Label>
+        <div id="super-admin.super-admin-trending-ribbon-page.div.11" className="grid gap-4 sm:grid-cols-2">
+          <div id="super-admin.super-admin-trending-ribbon-page.div.12" className="space-y-1">
+            <Label id="super-admin.super-admin-trending-ribbon-page.label.3" htmlFor="new-item-label">النص المعروض</Label>
             <Input ui={{ uid: "super-admin.trending-ribbon.new-item-label-J00CtF", id: "super-admin.trending-ribbon.new-item-label", kind: "field", part: "new-item" }}
               id="new-item-label"
               placeholder="مثال: خصم 20% على العطور"
@@ -373,8 +373,8 @@ export function SuperAdminTrendingRibbonPage() {
               onChange={(e) => setNewItemLabel(e.target.value)}
             />
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="new-item-action">الإجراء / الرابط</Label>
+          <div id="super-admin.super-admin-trending-ribbon-page.div.13" className="space-y-1">
+            <Label id="super-admin.super-admin-trending-ribbon-page.label.4" htmlFor="new-item-action">الإجراء / الرابط</Label>
             <Input ui={{ uid: "super-admin.trending-ribbon.new-item-action-7aGP0n", id: "super-admin.trending-ribbon.new-item-action", kind: "field", part: "new-item" }}
               id="new-item-action"
               placeholder="مثال: /profile أو معرف المنتج"
@@ -386,42 +386,42 @@ export function SuperAdminTrendingRibbonPage() {
             />
           </div>
         </div>
-        <div className="mt-3 flex justify-end">
-          <Button ui={{ uid: "super-admin.trending-ribbon.add-item-8mOipK", id: "super-admin.trending-ribbon.add-item", kind: "action", action: "add-item", part: "new-item" }}
+        <div id="super-admin.super-admin-trending-ribbon-page.div.14" className="mt-3 flex justify-end">
+          <Button id="super-admin.super-admin-trending-ribbon-page.button.2" ui={{ uid: "super-admin.trending-ribbon.add-item-8mOipK", id: "super-admin.trending-ribbon.add-item", kind: "action", action: "add-item", part: "new-item" }}
             type="button"
             onClick={addItem}
             disabled={!newItemLabel.trim() || !newItemAction.trim()}
           >
-            <Plus className="me-1 h-4 w-4" />
+            <Plus id="super-admin.super-admin-trending-ribbon-page.plus.2" className="me-1 h-4 w-4" />
             إضافة إلى القائمة
           </Button>
         </div>
       </section>
 
       {/* ── Items List ── */}
-      <section className="mb-6 rounded-xl border bg-card p-4">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-semibold">النصوص المضافة ({items.length})</h2>
-          <div className="flex gap-2">
-            <Button ui={{ uid: "super-admin.trending-ribbon.reload-items-iT9oDK", id: "super-admin.trending-ribbon.reload-items", kind: "action", action: "reload-items", part: "items" }}
+      <section id="super-admin.super-admin-trending-ribbon-page.section.5" className="mb-6 rounded-xl border bg-card p-4">
+        <div id="super-admin.super-admin-trending-ribbon-page.div.15" className="mb-3 flex items-center justify-between">
+          <h2 id="super-admin.super-admin-trending-ribbon-page.h2.3" className="font-semibold">النصوص المضافة ({items.length})</h2>
+          <div id="super-admin.super-admin-trending-ribbon-page.div.16" className="flex gap-2">
+            <Button id="super-admin.super-admin-trending-ribbon-page.button.3" ui={{ uid: "super-admin.trending-ribbon.reload-items-iT9oDK", id: "super-admin.trending-ribbon.reload-items", kind: "action", action: "reload-items", part: "items" }}
               type="button"
               variant="outline"
               size="sm"
               onClick={() => void load()}
               disabled={busy}
             >
-              <RefreshCw className="me-1 h-3 w-3" />
+              <RefreshCw id="super-admin.super-admin-trending-ribbon-page.refresh-cw.3" className="me-1 h-3 w-3" />
               تحديث
             </Button>
           </div>
         </div>
 
         {items.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">
+          <p id="super-admin.super-admin-trending-ribbon-page.p.8" className="py-6 text-center text-sm text-muted-foreground">
             لا توجد نصوص مضافة حالياً. أضف عناصر جديدة أعلاه.
           </p>
         ) : (
-          <div className="space-y-2">
+          <div id="super-admin.super-admin-trending-ribbon-page.div.17" className="space-y-2">
             {items.map((item, index) => (
               <div
                 key={`${item.label}-${index}`}
@@ -456,7 +456,7 @@ export function SuperAdminTrendingRibbonPage() {
         )}
 
         {items.length > 0 && (
-          <p className="mt-3 text-xs text-muted-foreground">
+          <p id="super-admin.super-admin-trending-ribbon-page.p.9" className="mt-3 text-xs text-muted-foreground">
             اسحب العناصر لإعادة الترتيب.
           </p>
         )}
@@ -464,13 +464,13 @@ export function SuperAdminTrendingRibbonPage() {
 
       {/* ── Live Preview ── */}
       {items.length > 0 && (
-        <section className="rounded-xl border bg-card p-4">
-          <div className="mb-3 flex items-center gap-2">
-            <Eye className="h-5 w-5 text-primary" />
-            <h2 className="font-semibold">المعاينة الحية</h2>
+        <section id="super-admin.super-admin-trending-ribbon-page.section.6" className="rounded-xl border bg-card p-4">
+          <div id="super-admin.super-admin-trending-ribbon-page.div.18" className="mb-3 flex items-center gap-2">
+            <Eye id="super-admin.super-admin-trending-ribbon-page.eye" className="h-5 w-5 text-primary" />
+            <h2 id="super-admin.super-admin-trending-ribbon-page.h2.4" className="font-semibold">المعاينة الحية</h2>
           </div>
-          <div className="asol-section-tonal asol-section-tonal-primary mx-1 rounded-xl p-4">
-            <TrendingRibbon config={previewConfig} />
+          <div id="super-admin.super-admin-trending-ribbon-page.div.19" className="asol-section-tonal asol-section-tonal-primary mx-1 rounded-xl p-4">
+            <TrendingRibbon id="super-admin.super-admin-trending-ribbon-page.trending-ribbon" config={previewConfig} />
           </div>
         </section>
       )}

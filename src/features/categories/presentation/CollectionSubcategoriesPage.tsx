@@ -42,10 +42,10 @@ export function CollectionSubcategoriesPage({
     : items;
 
   return (
-    <div className="space-y-5 px-4 py-5">
-      <div className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
+    <div id="categories.collection-subcategories-page.div" className="space-y-5 px-4 py-5">
+      <div id="categories.collection-subcategories-page.div.2" className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
         {heroImage && (
-          <Image
+          <Image id="categories.collection-subcategories-page.image"
             src={collection.imageUrl}
             alt={title}
             fill
@@ -53,15 +53,15 @@ export function CollectionSubcategoriesPage({
             priority
           />
         )}
-        <div className="relative z-10">
-          <h1 className="text-2xl font-bold text-on-surface">{title}</h1>
+        <div id="categories.collection-subcategories-page.div.3" className="relative z-10">
+          <h1 id="categories.collection-subcategories-page.h1" className="text-2xl font-bold text-on-surface">{title}</h1>
         </div>
-        <div className="relative">
-          <Search
+        <div id="categories.collection-subcategories-page.div.4" className="relative">
+          <Search id="categories.collection-subcategories-page.search"
             className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
             aria-hidden
           />
-          <input
+          <input id="categories.collection-subcategories-page.input"
             type="search"
             value={searchText}
             onChange={(event) => setSearchText(event.target.value)}
@@ -76,14 +76,14 @@ export function CollectionSubcategoriesPage({
       </div>
 
       {filteredItems.length === 0 ? (
-        <p className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
+        <p id="categories.collection-subcategories-page.p" className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
           {locale === "ar"
             ? "\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u062a\u0627\u0626\u062c \u0645\u0637\u0627\u0628\u0642\u0629"
             : "No matching results"}
         </p>
       ) : (
-        <div className="asol-section-tonal asol-section-tonal-primary">
-          <div className={categoryGridClassName}>
+        <div id="categories.collection-subcategories-page.div.5" className="asol-section-tonal asol-section-tonal-primary">
+          <div id="categories.collection-subcategories-page.div.6" className={categoryGridClassName}>
           {filteredItems.map((item) => {
             const name = locale === "ar" ? item.nameAr : item.nameEn;
             const imageSrc = item.imageUrl;

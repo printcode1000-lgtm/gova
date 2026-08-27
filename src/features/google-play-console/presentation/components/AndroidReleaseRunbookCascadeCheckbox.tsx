@@ -8,14 +8,14 @@ export function CascadeCheckbox(props: {
   onChange: () => void;
   label: React.ReactNode;
   help: string;
-}) {
+} & { id?: string }) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   React.useEffect(() => {
     if (inputRef.current) inputRef.current.indeterminate = Boolean(props.indeterminate);
   }, [props.indeterminate]);
 
   return (
-    <label className="block min-w-0 rounded-md border bg-surface p-3 text-sm">
+    <label id={props.id} className="block min-w-0 rounded-md border bg-surface p-3 text-sm">
       <span className="flex items-start gap-2">
         <input
           ref={inputRef}

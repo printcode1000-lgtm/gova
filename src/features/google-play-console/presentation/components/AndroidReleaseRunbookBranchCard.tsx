@@ -27,7 +27,7 @@ export function CommandBranchCard(props: {
   job: BuildJobRecord | undefined;
   missingEnv: readonly string[];
   start: AndroidRunbookStart;
-}) {
+} & { id?: string }) {
   const running = Boolean(props.job && RUNNING_STATUSES.has(props.job.status));
   const disabled = props.busy || !props.selected || props.missingEnv.length > 0;
   const defaultHelp = props.t("releaseConsole.androidPaths.branchCheckboxHelp");
@@ -36,7 +36,7 @@ export function CommandBranchCard(props: {
     : props.t("releaseConsole.androidPaths.runCommand");
 
   return (
-    <article className="min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
+    <article id={props.id} className="min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
       <label className="flex items-start gap-2">
         <input
           type="checkbox"

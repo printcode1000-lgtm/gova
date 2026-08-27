@@ -291,36 +291,36 @@ export function DeveloperCategorySelector() {
   const controlsDisabled = !isStyleLoaded;
 
   return (
-    <main className="mx-auto w-full px-4 py-8 sm:px-6" data-voice-input="off">
-      <section className="rounded-3xl border bg-card p-5 shadow-sm sm:p-8">
-        <p className="mb-2 w-full text-xs font-semibold uppercase tracking-wider text-primary">
+    <main id="dev-tools.developer-category-selector.main" className="mx-auto w-full px-4 py-8 sm:px-6" data-voice-input="off">
+      <section id="dev-tools.developer-category-selector.section" className="rounded-3xl border bg-card p-5 shadow-sm sm:p-8">
+        <p id="dev-tools.developer-category-selector.p" className="mb-2 w-full text-xs font-semibold uppercase tracking-wider text-primary">
           Developer only
         </p>
-        <h1 className="text-2xl font-bold">محدد التصنيفات</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <h1 id="dev-tools.developer-category-selector.h1" className="text-2xl font-bold">محدد التصنيفات</h1>
+        <p id="dev-tools.developer-category-selector.p.2" className="mt-2 text-sm text-muted-foreground">
           أداة لمراجعة العلاقة بين التصنيفات الرئيسية والفرعية وضبط مكونات عرض المنتج.
         </p>
 
         {isLoading ? (
-          <div className="flex min-h-48 items-center justify-center">
-            <LoadingSpinner />
+          <div id="dev-tools.developer-category-selector.div" className="flex min-h-48 items-center justify-center">
+            <LoadingSpinner id="dev-tools.developer-category-selector.loading-spinner" />
           </div>
         ) : loadError ? (
-          <p className="mt-8 rounded-2xl bg-destructive/10 p-4 text-sm text-destructive">
+          <p id="dev-tools.developer-category-selector.p.3" className="mt-8 rounded-2xl bg-destructive/10 p-4 text-sm text-destructive">
             تعذر تحميل بيانات التصنيفات.
           </p>
         ) : (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-semibold">التصنيف الرئيسي</label>
+          <div id="dev-tools.developer-category-selector.div.2" className="mt-8 grid gap-6 sm:grid-cols-2">
+            <div id="dev-tools.developer-category-selector.div.3" className="space-y-2">
+              <label id="dev-tools.developer-category-selector.label" className="text-sm font-semibold">التصنيف الرئيسي</label>
               <Select
                 value={mainCategoryId}
                 onValueChange={handleMainCategoryChange}
               >
-                <SelectTrigger ui={{ uid: "dev.category-selector.main-category-rTR36M", id: "dev.category-selector.main-category", kind: "field", part: "form" }}>
+                <SelectTrigger id="dev-tools.developer-category-selector.select-trigger" ui={{ uid: "dev.category-selector.main-category-rTR36M", id: "dev.category-selector.main-category", kind: "field", part: "form" }}>
                   <SelectValue placeholder="اختر تصنيفًا رئيسيًا" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent id="dev-tools.developer-category-selector.select-content">
                   {mainCategoryOptions.map((category) => (
                     <SelectItem
                       key={category.id}
@@ -333,14 +333,14 @@ export function DeveloperCategorySelector() {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-semibold">التصنيف الفرعي</label>
+            <div id="dev-tools.developer-category-selector.div.4" className="space-y-2">
+              <label id="dev-tools.developer-category-selector.label.2" className="text-sm font-semibold">التصنيف الفرعي</label>
               <Select
                 value={subcategoryId}
                 onValueChange={handleSubcategoryChange}
                 disabled={!mainCategoryId || subcategoryOptions.length === 0}
               >
-                <SelectTrigger ui={{ uid: "dev.category-selector.subcategory-2yXIiQ", id: "dev.category-selector.subcategory", kind: "field", part: "form" }}>
+                <SelectTrigger id="dev-tools.developer-category-selector.select-trigger.2" ui={{ uid: "dev.category-selector.subcategory-2yXIiQ", id: "dev.category-selector.subcategory", kind: "field", part: "form" }}>
                   <SelectValue
                     placeholder={
                       mainCategoryId && subcategoryOptions.length === 0
@@ -349,7 +349,7 @@ export function DeveloperCategorySelector() {
                     }
                   />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent id="dev-tools.developer-category-selector.select-content.2">
                   {subcategoryOptions.map((subcategory) => (
                     <SelectItem
                       key={subcategory.value}
@@ -363,18 +363,18 @@ export function DeveloperCategorySelector() {
             </div>
 
             <details className="group sm:col-span-2">
-              <summary className="flex list-none items-center justify-between rounded-xl border bg-muted/40 px-4 py-3 font-semibold transition-colors">
-                <span>معلومات العناصر المختارة</span>
-                <span className="text-lg text-muted-foreground transition-transform group-open:rotate-180">
+              <summary id="dev-tools.developer-category-selector.summary" className="flex list-none items-center justify-between rounded-xl border bg-muted/40 px-4 py-3 font-semibold transition-colors">
+                <span id="dev-tools.developer-category-selector.span">معلومات العناصر المختارة</span>
+                <span id="dev-tools.developer-category-selector.span.2" className="text-lg text-muted-foreground transition-transform group-open:rotate-180">
                   ^
                 </span>
               </summary>
-              <div className="mt-3 grid gap-4 lg:grid-cols-2">
-                <SelectedRecordDetails
+              <div id="dev-tools.developer-category-selector.div.5" className="mt-3 grid gap-4 lg:grid-cols-2">
+                <SelectedRecordDetails id="dev-tools.developer-category-selector.selected-record-details"
                   title="بيانات التصنيف الرئيسي"
                   record={selectedMainDetails}
                 />
-                <SelectedRecordDetails
+                <SelectedRecordDetails id="dev-tools.developer-category-selector.selected-record-details.2"
                   title="بيانات التصنيف الفرعي"
                   record={selectedSubcategoryDetails}
                 />
@@ -382,16 +382,16 @@ export function DeveloperCategorySelector() {
             </details>
 
             {mainCategoryId && subcategoryId ? (
-              <div className="space-y-6 sm:col-span-2">
-                <div className="rounded-xl border bg-muted/20 p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h2 className="font-bold">إعدادات المكونات</h2>
-                    <span className="text-xs text-muted-foreground">
+              <div id="dev-tools.developer-category-selector.div.6" className="space-y-6 sm:col-span-2">
+                <div id="dev-tools.developer-category-selector.div.7" className="rounded-xl border bg-muted/20 p-4">
+                  <div id="dev-tools.developer-category-selector.div.8" className="flex flex-wrap items-center justify-between gap-2">
+                    <h2 id="dev-tools.developer-category-selector.h2" className="font-bold">إعدادات المكونات</h2>
+                    <span id="dev-tools.developer-category-selector.span.3" className="text-xs text-muted-foreground">
                       {styleStatus === "loading" && "جاري تحميل الإعدادات..."}
                       {styleStatus === "error" && "تعذر تحميل الإعدادات"}
                     </span>
                   </div>
-                  <div className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+                  <div id="dev-tools.developer-category-selector.div.9" className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                     <ProductImagesStyleEditor
                       value={components.images}
                       disabled={controlsDisabled}
@@ -455,10 +455,10 @@ export function DeveloperCategorySelector() {
                   </div>
                 </div>
 
-                <div className="rounded-xl border p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <h2 className="font-bold">معاينة المنتج</h2>
-                    <div className="grid grid-cols-3 gap-2">
+                <div id="dev-tools.developer-category-selector.div.10" className="rounded-xl border p-4">
+                  <div id="dev-tools.developer-category-selector.div.11" className="flex flex-wrap items-center justify-between gap-3">
+                    <h2 id="dev-tools.developer-category-selector.h2.2" className="font-bold">معاينة المنتج</h2>
+                    <div id="dev-tools.developer-category-selector.div.12" className="grid grid-cols-3 gap-2">
                       {(
                         [
                           ["view", "عرض"],
@@ -482,12 +482,12 @@ export function DeveloperCategorySelector() {
                     </div>
                   </div>
 
-                  <div
+                  <div id="dev-tools.developer-category-selector.div.13"
                     key={`${mainCategoryId}-${subcategoryId}-${previewMode}`}
                     className="mt-5 space-y-4 rounded-xl bg-muted/20 p-3 sm:p-5"
                   >
                     {/* Omit productId so the non-persisted preview never queries the reviews API. */}
-                    <ProductComponentsRenderer
+                    <ProductComponentsRenderer id="dev-tools.developer-category-selector.product-components-renderer"
                       mode={previewMode}
                       components={previewStyleComponents}
                       product={previewDetails}
@@ -495,20 +495,20 @@ export function DeveloperCategorySelector() {
                       mainCategoryId={mainCategoryId}
                       ownerUid="demo-owner"
                       shareAction={
-                        <button
+                        <button id="dev-tools.developer-category-selector.button"
                           type="button"
                           className="inline-flex items-center gap-2 rounded-xl border px-4 py-2"
                         >
-                          <Share2 className="h-4 w-4" />
+                          <Share2 id="dev-tools.developer-category-selector.share2" className="h-4 w-4" />
                           مشاركة المنتج
                         </button>
                       }
                       profileAction={
-                        <button
+                        <button id="dev-tools.developer-category-selector.button.2"
                           type="button"
                           className="inline-flex items-center gap-2 rounded-xl border px-4 py-2"
                         >
-                          <UserCircle className="h-4 w-4" />
+                          <UserCircle id="dev-tools.developer-category-selector.user-circle" className="h-4 w-4" />
                           بروفايل صاحب المنتج
                         </button>
                       }

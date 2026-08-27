@@ -200,45 +200,45 @@ export function SuperAdminSimulationPage() {
     }
   };
 
-  if (isLoading) return <div className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
+  if (isLoading) return <div id="simulation.super-admin-simulation-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
   if (!isSuperAdmin(session)) {
-    return <div className="mx-auto max-w-2xl p-6 text-error">هذه الصفحة متاحة للسوبر أدمن فقط.</div>;
+    return <div id="simulation.super-admin-simulation-page.div.2" className="mx-auto max-w-2xl p-6 text-error">هذه الصفحة متاحة للسوبر أدمن فقط.</div>;
   }
 
   return (
-    <main className="mx-auto w-full min-w-0 max-w-7xl space-y-5 p-3 pb-24 sm:p-4 sm:pb-24">
-      <header className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <h1 className="flex min-w-0 items-center gap-2 text-xl font-bold text-on-surface sm:text-2xl">
-            <FlaskConical className="h-6 w-6 shrink-0" aria-hidden />
-            <span className="break-words">محاكاة المستخدم وE2E</span>
+    <main id="simulation.super-admin-simulation-page.main" className="mx-auto w-full min-w-0 max-w-7xl space-y-5 p-3 pb-24 sm:p-4 sm:pb-24">
+      <header id="simulation.super-admin-simulation-page.header" className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div id="simulation.super-admin-simulation-page.div.3" className="min-w-0">
+          <h1 id="simulation.super-admin-simulation-page.h1" className="flex min-w-0 items-center gap-2 text-xl font-bold text-on-surface sm:text-2xl">
+            <FlaskConical id="simulation.super-admin-simulation-page.flask-conical" className="h-6 w-6 shrink-0" aria-hidden />
+            <span id="simulation.super-admin-simulation-page.span" className="break-words">محاكاة المستخدم وE2E</span>
           </h1>
-          <p className="mt-1 break-words text-sm text-on-surface-variant">
+          <p id="simulation.super-admin-simulation-page.p" className="mt-1 break-words text-sm text-on-surface-variant">
             اختر الصفحة والحدث وشغّل التفاعل الحقيقي مع متابعة التنفيذ من نفس الشاشة.
           </p>
         </div>
-        <div className="flex w-full min-w-0 items-center justify-center gap-2 rounded-xl bg-primary-container px-3 py-2 text-sm text-on-primary-container sm:w-auto sm:justify-start">
-          <MonitorSmartphone className="h-4 w-4 shrink-0" aria-hidden />
-          <span className="break-words">{simulationRuntimeLabel(runtime)}</span>
+        <div id="simulation.super-admin-simulation-page.div.4" className="flex w-full min-w-0 items-center justify-center gap-2 rounded-xl bg-primary-container px-3 py-2 text-sm text-on-primary-container sm:w-auto sm:justify-start">
+          <MonitorSmartphone id="simulation.super-admin-simulation-page.monitor-smartphone" className="h-4 w-4 shrink-0" aria-hidden />
+          <span id="simulation.super-admin-simulation-page.span.2" className="break-words">{simulationRuntimeLabel(runtime)}</span>
         </div>
       </header>
 
       <SimulationUsersStatus />
 
-      <section className="min-w-0 rounded-2xl border border-outline-variant bg-surface p-3 sm:p-4">
-        <div className="mb-4 min-w-0">
-          <h2 className="font-bold text-on-surface">تشغيل محاكاة صفحات المستخدم</h2>
-          <p className="break-words text-xs text-on-surface-variant">
+      <section id="simulation.super-admin-simulation-page.section" className="min-w-0 rounded-2xl border border-outline-variant bg-surface p-3 sm:p-4">
+        <div id="simulation.super-admin-simulation-page.div.5" className="mb-4 min-w-0">
+          <h2 id="simulation.super-admin-simulation-page.h2" className="font-bold text-on-surface">تشغيل محاكاة صفحات المستخدم</h2>
+          <p id="simulation.super-admin-simulation-page.p.2" className="break-words text-xs text-on-surface-variant">
             {USER_PAGE_REGISTRY.length} صفحة مستخدم مغطاة. اختر الصفحة ثم حدث المستخدم الحقيقي المطلوب.
           </p>
         </div>
 
-        <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] xl:items-start">
-          <div className="grid min-w-0 grid-cols-1 items-start gap-4 md:grid-cols-2">
-            <div className="min-w-0 space-y-3">
-              <label className="block min-w-0 space-y-2">
-                <span className="block text-sm font-semibold text-on-surface">الصفحة</span>
-                <select
+        <div id="simulation.super-admin-simulation-page.div.6" className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] xl:items-start">
+          <div id="simulation.super-admin-simulation-page.div.7" className="grid min-w-0 grid-cols-1 items-start gap-4 md:grid-cols-2">
+            <div id="simulation.super-admin-simulation-page.div.8" className="min-w-0 space-y-3">
+              <label id="simulation.super-admin-simulation-page.label" className="block min-w-0 space-y-2">
+                <span id="simulation.super-admin-simulation-page.span.3" className="block text-sm font-semibold text-on-surface">الصفحة</span>
+                <select id="simulation.super-admin-simulation-page.select"
                   value={selectedPage?.id ?? ""}
                   onChange={(event) => selectPage(event.target.value)}
                   disabled={busy}
@@ -251,39 +251,39 @@ export function SuperAdminSimulationPage() {
                   ))}
                 </select>
                 {selectedPage ? (
-                  <div className="min-w-0 rounded-xl bg-surface-container-low p-3">
-                    <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-                      <span className="break-words text-sm font-semibold text-on-surface">{selectedPage.label}</span>
+                  <div id="simulation.super-admin-simulation-page.div.9" className="min-w-0 rounded-xl bg-surface-container-low p-3">
+                    <div id="simulation.super-admin-simulation-page.div.10" className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                      <span id="simulation.super-admin-simulation-page.span.4" className="break-words text-sm font-semibold text-on-surface">{selectedPage.label}</span>
                       <code className="max-w-full break-all rounded-md bg-surface px-2 py-1 text-[11px] font-semibold text-primary" dir="ltr">
                         {selectedPage.route}
                       </code>
                     </div>
-                    <p className="mt-1 break-words text-xs text-on-surface-variant">{selectedPage.description}</p>
+                    <p id="simulation.super-admin-simulation-page.p.3" className="mt-1 break-words text-xs text-on-surface-variant">{selectedPage.description}</p>
                   </div>
                 ) : null}
               </label>
 
-              <Button ui={{ uid: "super-admin.simulation.run-all-93SxHl", id: "super-admin.simulation.run-all", kind: "action", action: "run-all-interactions", part: "actions" }}
+              <Button id="simulation.super-admin-simulation-page.button" ui={{ uid: "super-admin.simulation.run-all-93SxHl", id: "super-admin.simulation.run-all", kind: "action", action: "run-all-interactions", part: "actions" }}
                 type="button"
                 onClick={() => void runAllInteractions()}
                 disabled={busy || USER_PAGE_REGISTRY.length === 0}
                 className="w-full"
               >
                 {isRunningAll ? (
-                  <span className="animate-pulse">جارٍ تشغيل كل الصفحات</span>
+                  <span id="simulation.super-admin-simulation-page.span.5" className="animate-pulse">جارٍ تشغيل كل الصفحات</span>
                 ) : (
                   <>
-                    <PlayCircle className="h-4 w-4" />
+                    <PlayCircle id="simulation.super-admin-simulation-page.play-circle" className="h-4 w-4" />
                     تشغيل كل الصفحات والأحداث
                   </>
                 )}
               </Button>
             </div>
 
-            <div className="min-w-0 space-y-3">
-              <label className="block min-w-0 space-y-2">
-                <span className="block text-sm font-semibold text-on-surface">أحداث المستخدم الحقيقية</span>
-                <select
+            <div id="simulation.super-admin-simulation-page.div.11" className="min-w-0 space-y-3">
+              <label id="simulation.super-admin-simulation-page.label.2" className="block min-w-0 space-y-2">
+                <span id="simulation.super-admin-simulation-page.span.6" className="block text-sm font-semibold text-on-surface">أحداث المستخدم الحقيقية</span>
+                <select id="simulation.super-admin-simulation-page.select.2"
                   key={selectedPage?.id ?? "no-page"}
                   value={selectedInteraction?.id ?? ""}
                   onChange={(event) => setSelectedInteractionId(event.target.value)}
@@ -297,21 +297,21 @@ export function SuperAdminSimulationPage() {
                   ))}
                 </select>
                 {selectedInteraction ? (
-                  <span className="block break-words text-xs text-on-surface-variant">{selectedInteraction.description}</span>
+                  <span id="simulation.super-admin-simulation-page.span.7" className="block break-words text-xs text-on-surface-variant">{selectedInteraction.description}</span>
                 ) : null}
               </label>
 
-              <Button ui={{ uid: "super-admin.simulation.run-selected-IZvz5s", id: "super-admin.simulation.run-selected", kind: "action", action: "run-selected-interaction", part: "actions" }}
+              <Button id="simulation.super-admin-simulation-page.button.2" ui={{ uid: "super-admin.simulation.run-selected-IZvz5s", id: "super-admin.simulation.run-selected", kind: "action", action: "run-selected-interaction", part: "actions" }}
                 type="button"
                 onClick={() => void runSelectedInteraction()}
                 disabled={busy || !selectedPage || !selectedInteraction}
                 className="w-full"
               >
                 {runningId ? (
-                  <span className="animate-pulse">جارٍ التنفيذ</span>
+                  <span id="simulation.super-admin-simulation-page.span.8" className="animate-pulse">جارٍ التنفيذ</span>
                 ) : (
                   <>
-                    <Play className="h-4 w-4" />
+                    <Play id="simulation.super-admin-simulation-page.play" className="h-4 w-4" />
                     تشغيل
                   </>
                 )}
@@ -319,7 +319,7 @@ export function SuperAdminSimulationPage() {
             </div>
           </div>
 
-          <SimulationProgressPanel
+          <SimulationProgressPanel id="simulation.super-admin-simulation-page.simulation-progress-panel"
             steps={steps}
             error={result?.error}
             outcome={result?.outcome}
@@ -332,10 +332,10 @@ export function SuperAdminSimulationPage() {
         </div>
       </section>
 
-      <section className="min-w-0 rounded-2xl border border-dashed border-outline-variant bg-surface p-4 text-center sm:p-5">
-        <Layers3 className="mx-auto h-7 w-7 text-on-surface-variant" aria-hidden />
-        <h2 className="mt-2 font-bold text-on-surface">حاوية السيناريوهات</h2>
-        <p className="mt-1 break-words text-sm text-on-surface-variant">
+      <section id="simulation.super-admin-simulation-page.section.2" className="min-w-0 rounded-2xl border border-dashed border-outline-variant bg-surface p-4 text-center sm:p-5">
+        <Layers3 id="simulation.super-admin-simulation-page.layers3" className="mx-auto h-7 w-7 text-on-surface-variant" aria-hidden />
+        <h2 id="simulation.super-admin-simulation-page.h2.2" className="mt-2 font-bold text-on-surface">حاوية السيناريوهات</h2>
+        <p id="simulation.super-admin-simulation-page.p.4" className="mt-1 break-words text-sm text-on-surface-variant">
           {SIMULATION_SCENARIOS.length === 0 ? "فارغة في الإصدار الأول كما هو مخطط." : `${SIMULATION_SCENARIOS.length} سيناريو`}
         </p>
       </section>
