@@ -93,7 +93,7 @@
     "test:compositions": "npm run test:notifications-composition && npm run test:products-composition && npm run test:orders-composition && npm run test:profiles-composition && npm run test:submain-composition && npm run test:sub2main-composition",
     "test:shard-routing": "npx tsx packages/data-core/src/core/database/tests/shard-sql-routing.test.ts",
     "test:turso-read-retry": "npx tsx packages/data-core/src/core/database/tests/turso-read-retry.test.ts",
-    "test:system-logs": "npm run test:system-logs-core && npx tsx src/features/system-logs/tests/system-log-security.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
+    "test:system-logs": "npm run test:system-logs-core && npx tsx src/features/system-logs/tests/system-log-security.test.ts && npx tsx src/features/system-logs/tests/is-event-target-inside.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
     "test:system-logs-core": "npx tsx packages/system-logs-core/src/tests/index.test.ts",
     "test:shipping-pricing": "npx tsx src/features/cart/tests/shipping-pricing.test.ts",
     "test:delivery-planner": "npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts",

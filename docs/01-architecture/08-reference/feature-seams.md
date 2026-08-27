@@ -9,7 +9,7 @@ The only exact application paths listed here belong to composition/service-mirro
 
 - `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`
 
-Current inventory: **28** exact composition seam path(s).
+Current inventory: **29** exact composition seam path(s).
 
 | Composition package | Exact application module |
 | --- | --- |
@@ -21,6 +21,7 @@ Current inventory: **28** exact composition seam path(s).
 | `products-composition` | `@/features/product-search/server/services/product-search-products.server` |
 | `products-composition` | `@/features/product-search/server/services/product-search-fields.server` |
 | `products-composition` | `@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server` |
+| `products-composition` | `@/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port` |
 | `products-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
 | `products-composition` | `@/features/data/ports/data-core-specialty-catalog-port` |
 | `products-composition` | `@/features/product-search/domain/product-search.types` |

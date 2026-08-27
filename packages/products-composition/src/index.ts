@@ -6,6 +6,7 @@ import { searchProducts } from '@/features/product-search/server/services/produc
 import { getEnabledProductSearchFields } from '@/features/product-search/server/services/product-search-fields.server';
 import { categoryService } from '@/features/categories';
 import { pharmacyProfileCatalogService } from '@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server';
+import { registerPharmacyCatalogProductLookupPort } from '@/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port';
 import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-core-runtime-config-ports';
 import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/ports/data-core-specialty-catalog-port';
 
@@ -27,6 +28,10 @@ import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/ports/data
 registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
 // This account reads profile rows, so it also needs the specialty-column catalog.
 registerDataCoreSpecialtyCatalogPort();
+// productService.listByOwnerAndCategory always calls this port, even for
+// non-pharmacy buckets. Without it, GET /api/products on this account is 500
+// while /api/health stays 200.
+registerPharmacyCatalogProductLookupPort();
 
 /**
  * Re-exported so a route has exactly one door, types included. A type-only import costs

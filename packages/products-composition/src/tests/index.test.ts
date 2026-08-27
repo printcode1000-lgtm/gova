@@ -88,6 +88,19 @@ function runTests(): void {
   assertProductsEnv(complete);
   console.log('  ✔ D5: missing required keys throw and name themselves; complete env passes.');
 
+  // productService.listByOwnerAndCategory always calls this port. The products
+  // account has no instrumentation, so a missing registration is a 500 on every
+  // browser GET /api/products while /api/health stays 200.
+  const compositionSource = readFileSync(
+    path.join(process.cwd(), 'packages/products-composition/src/index.ts'),
+    'utf8',
+  );
+  assert(
+    compositionSource.includes('registerPharmacyCatalogProductLookupPort()'),
+    'products-composition must register PharmacyProductLookupPort at module load',
+  );
+  console.log('  ✔ PharmacyProductLookupPort is registered from the products composition root.');
+
   console.log('✅ @asol/products-composition tests passed!\n');
 }
 

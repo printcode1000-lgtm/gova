@@ -10343,6 +10343,7 @@
       "path": "docs/05-platform-features/products-service-module.md",
       "summary": "An independent deployment that serves product **reads**. It lives in `services/products/`, runs on its own Vercel account, and reads the product database on its own Turso account (`hesham103`).",
       "tags": [
+        "@asol/products-composition",
         "account",
         "an",
         "an independent deployment that serves product **reads**. it lives in `services/products/`, runs on its own vercel account, and reads the product database on its own turso account (`hesham103`).",
@@ -13784,26 +13785,27 @@
       "kind": "document",
       "name": "PharmacyProductLookupPort Is Not Registered",
       "path": "docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
-      "summary": "Local development can intermittently throw:",
+      "summary": "Requests fail with:",
       "tags": [
-        "can",
-        "development",
+        "@asol/products-composition",
         "docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered",
         "docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
-        "intermittently",
+        "fail",
         "is",
-        "local",
-        "local development can intermittently throw:",
         "md",
         "not",
+        "packages/products-composition/src/tests/index",
+        "packages/products-composition/src/tests/index.test.ts",
         "pharmacyproductlookupport",
         "pharmacyproductlookupport is not registered",
         "registered",
+        "requests",
+        "requests fail with:",
         "src/features/product/tests/pharmacy-product-lookup-port-registry",
         "src/features/product/tests/pharmacy-product-lookup-port-registry.test.ts",
         "test",
-        "throw",
-        "ts"
+        "ts",
+        "with"
       ]
     },
     {
@@ -45421,6 +45423,17 @@
       ]
     },
     {
+      "id": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "kind": "source",
+      "name": "register-pharmacy-catalog-product-lookup-port.ts",
+      "path": "src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "tags": [
+        "src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port",
+        "src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog-service-parts/pharmacy-profile-catalog.service.part-01.ts",
       "kind": "source",
       "name": "pharmacy-profile-catalog.service.part-01.ts",
@@ -49084,6 +49097,17 @@
       "tags": [
         "src/features/super-admin/ui",
         "src/features/super-admin/ui.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "kind": "source",
+      "name": "is-event-target-inside.ts",
+      "path": "src/features/system-logs/application/is-event-target-inside.ts",
+      "tags": [
+        "src/features/system-logs/application/is-event-target-inside",
+        "src/features/system-logs/application/is-event-target-inside.ts",
         "ts"
       ]
     },
@@ -52883,6 +52907,18 @@
       ]
     },
     {
+      "id": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "kind": "test",
+      "name": "is-event-target-inside.test.ts",
+      "path": "src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "tags": [
+        "src/features/system-logs/tests/is-event-target-inside",
+        "src/features/system-logs/tests/is-event-target-inside.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/system-logs/tests/system-log-security.test.ts",
       "kind": "test",
       "name": "system-log-security.test.ts",
@@ -56498,6 +56534,11 @@
     {
       "from": "command:test:system-logs",
       "to": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:system-logs",
+      "to": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
       "kind": "invokes"
     },
     {
@@ -67343,6 +67384,12 @@
     },
     {
       "from": "document:docs/05-platform-features/products-service-module.md",
+      "to": "package:@asol/products-composition",
+      "kind": "references",
+      "detail": "@asol/products-composition"
+    },
+    {
+      "from": "document:docs/05-platform-features/products-service-module.md",
       "to": "package:@asol/storage-core",
       "kind": "references",
       "detail": "packages/storage-core/src/config/storage-profiles.json"
@@ -70914,6 +70961,18 @@
       "from": "document:docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
+      "to": "package:@asol/products-composition",
+      "kind": "references",
+      "detail": "@asol/products-composition"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
+      "to": "test:packages/products-composition/src/tests/index.test.ts",
+      "kind": "references",
+      "detail": "packages/products-composition/src/tests/index.test.ts"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
@@ -89482,6 +89541,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog-service-parts/pharmacy-profile-catalog.service.part-01.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -91432,6 +91497,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/system-logs/application/pre-auth-failure-reporter.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -92063,6 +92134,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -93682,6 +93759,12 @@
     },
     {
       "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "kind": "documents",
+      "detail": "src/features/system-logs/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
       "to": "source:src/features/system-logs/application/pre-auth-failure-reporter.ts",
       "kind": "documents",
       "detail": "src/features/system-logs/"
@@ -93823,6 +93906,12 @@
       "to": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
       "kind": "documents",
       "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "kind": "documents",
+      "detail": "src/features/system-logs/"
     },
     {
       "from": "domain:super-admin-and-operations",
@@ -99460,6 +99549,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog-service-parts/pharmacy-profile-catalog.service.part-01.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -101410,6 +101505,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/system-logs/application/pre-auth-failure-reporter.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -101945,6 +102046,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -111833,6 +111940,12 @@
     {
       "from": "route:/api/pharmacy-profile-catalog:handler",
       "to": "feature:pharmacy-profile-catalog",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/pharmacy-profile-catalog:handler",
+      "to": "feature:product",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -166064,6 +166177,12 @@
     },
     {
       "from": "source:packages/products-composition/src/index.ts",
+      "to": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "kind": "imports",
+      "detail": "@/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port"
+    },
+    {
+      "from": "source:packages/products-composition/src/index.ts",
       "to": "source:src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server.ts",
       "kind": "imports",
       "detail": "@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server"
@@ -208612,9 +208731,48 @@
     },
     {
       "from": "source:src/features/pharmacy-profile-catalog/server.ts",
+      "to": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "kind": "imports",
+      "detail": "./server/register-pharmacy-catalog-product-lookup-port"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/server.ts",
       "to": "source:src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server.ts",
       "kind": "imports",
       "detail": "./server/services/pharmacy-profile-catalog.service.server"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "to": "feature:pharmacy-profile-catalog",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "to": "external-dependency:server-only",
+      "kind": "imports",
+      "detail": "server-only"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "to": "source:src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server.ts",
+      "kind": "imports",
+      "detail": "./services/pharmacy-profile-catalog.service.server"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "to": "source:src/features/product/server.ts",
+      "kind": "imports",
+      "detail": "@/features/product/server"
     },
     {
       "from": "source:src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog-service-parts/pharmacy-profile-catalog.service.part-01.ts",
@@ -226995,6 +227153,36 @@
       "detail": "./presentation/SuperAdminUsersPage"
     },
     {
+      "from": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "to": "feature:system-logs",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:src/features/system-logs/application/pre-auth-failure-reporter.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -227233,6 +227421,12 @@
       "to": "source:src/features/page-save/ui.ts",
       "kind": "imports",
       "detail": "@/features/page-save/ui"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "to": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "kind": "imports",
+      "detail": "@/features/system-logs/application/is-event-target-inside"
     },
     {
       "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
@@ -242361,6 +242555,47 @@
     {
       "from": "test:src/features/super-admin/tests/ui-attribute-inspector.test.ts",
       "to": "package:@asol/ui-registry-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "to": "feature:system-logs",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "to": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "kind": "imports",
+      "detail": "../application/is-event-target-inside"
+    },
+    {
+      "from": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "to": "feature:system-logs",
       "kind": "tests"
     },
     {

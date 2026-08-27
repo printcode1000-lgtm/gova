@@ -10343,6 +10343,7 @@
       "path": "docs/05-platform-features/products-service-module.md",
       "summary": "An independent deployment that serves product **reads**. It lives in `services/products/`, runs on its own Vercel account, and reads the product database on its own Turso account (`hesham103`).",
       "tags": [
+        "@asol/products-composition",
         "account",
         "an",
         "an independent deployment that serves product **reads**. it lives in `services/products/`, runs on its own vercel account, and reads the product database on its own turso account (`hesham103`).",
@@ -13784,26 +13785,27 @@
       "kind": "document",
       "name": "PharmacyProductLookupPort Is Not Registered",
       "path": "docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
-      "summary": "Local development can intermittently throw:",
+      "summary": "Requests fail with:",
       "tags": [
-        "can",
-        "development",
+        "@asol/products-composition",
         "docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered",
         "docs/08-troubleshooting/problems/pharmacy-product-lookup-port-not-registered.md",
-        "intermittently",
+        "fail",
         "is",
-        "local",
-        "local development can intermittently throw:",
         "md",
         "not",
+        "packages/products-composition/src/tests/index",
+        "packages/products-composition/src/tests/index.test.ts",
         "pharmacyproductlookupport",
         "pharmacyproductlookupport is not registered",
         "registered",
+        "requests",
+        "requests fail with:",
         "src/features/product/tests/pharmacy-product-lookup-port-registry",
         "src/features/product/tests/pharmacy-product-lookup-port-registry.test.ts",
         "test",
-        "throw",
-        "ts"
+        "ts",
+        "with"
       ]
     },
     {
@@ -45421,6 +45423,17 @@
       ]
     },
     {
+      "id": "source:src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "kind": "source",
+      "name": "register-pharmacy-catalog-product-lookup-port.ts",
+      "path": "src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+      "tags": [
+        "src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port",
+        "src/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog-service-parts/pharmacy-profile-catalog.service.part-01.ts",
       "kind": "source",
       "name": "pharmacy-profile-catalog.service.part-01.ts",
@@ -49084,6 +49097,17 @@
       "tags": [
         "src/features/super-admin/ui",
         "src/features/super-admin/ui.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/system-logs/application/is-event-target-inside.ts",
+      "kind": "source",
+      "name": "is-event-target-inside.ts",
+      "path": "src/features/system-logs/application/is-event-target-inside.ts",
+      "tags": [
+        "src/features/system-logs/application/is-event-target-inside",
+        "src/features/system-logs/application/is-event-target-inside.ts",
         "ts"
       ]
     },
@@ -52878,6 +52902,18 @@
       "tags": [
         "src/features/super-admin/tests/ui-attribute-inspector",
         "src/features/super-admin/tests/ui-attribute-inspector.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "kind": "test",
+      "name": "is-event-target-inside.test.ts",
+      "path": "src/features/system-logs/tests/is-event-target-inside.test.ts",
+      "tags": [
+        "src/features/system-logs/tests/is-event-target-inside",
+        "src/features/system-logs/tests/is-event-target-inside.test.ts",
         "test",
         "ts"
       ]

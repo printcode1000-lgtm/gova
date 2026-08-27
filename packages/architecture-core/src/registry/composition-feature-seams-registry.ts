@@ -23,6 +23,7 @@ export const COMPOSITION_FEATURE_SEAMS = {
     '@/features/product-search/server/services/product-search-products.server',
     '@/features/product-search/server/services/product-search-fields.server',
     '@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server',
+    '@/features/pharmacy-profile-catalog/server/register-pharmacy-catalog-product-lookup-port',
     '@/features/data/ports/data-core-runtime-config-ports',
     '@/features/data/ports/data-core-specialty-catalog-port',
     '@/features/product-search/domain/product-search.types',

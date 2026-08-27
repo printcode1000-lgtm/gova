@@ -4,7 +4,9 @@
 
 `/dev/cloud-accounts` is a read-only reference, development-only.
 
-It lives under `/dev`, not `/super-admin`, and is not in the sidebar. That scope
+It lives under `/dev`, not `/super-admin`, and is not in the sidebar; it is
+reached from the floating developer badge menu (`DeveloperBadge`), which lists
+the `/dev` routes in development only. That scope
 is what keeps it out of every shipped surface: `app/dev` is excluded from the
 static export by `STATIC_ROUTE_IGNORELIST`, so it never reaches the mobile
 bundle or `out/`, and the route returns 404 outside development. Under

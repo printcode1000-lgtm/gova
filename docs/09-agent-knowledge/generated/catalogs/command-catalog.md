@@ -246,7 +246,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:submain-composition` | `Tooling` | 1 |  | 1 |
 | `npm run test:super-admin-ui-inspector` | `Tooling` | 1 |  | 0 |
 | `npm run test:super-admin-users` | `Tooling` | 2 |  | 0 |
-| `npm run test:system-logs` | `Tooling` | 3 |  | 1 |
+| `npm run test:system-logs` | `Tooling` | 4 |  | 1 |
 | `npm run test:system-logs-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:trending-ribbon-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:turso-read-retry` | `Tooling` | 1 |  | 0 |

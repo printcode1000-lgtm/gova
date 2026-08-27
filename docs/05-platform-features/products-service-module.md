@@ -59,6 +59,11 @@ The [service bridge](service-bridge-module.md) runs in the browser and decides
 per request which origin should answer. On the server it always answers "main
 app", so a server-rendered request can never be pointed at the products account.
 
+This account has no `instrumentation.ts`. `productService.listByOwnerAndCategory`
+always calls `PharmacyProductLookupPort`, including for non-pharmacy buckets, so
+`@asol/products-composition` registers that adapter at module load. Without it,
+`GET /api/products` returns 500 while `/api/health` stays 200.
+
 ## Environment
 
 | Variable | Main app | Products service |

@@ -20,6 +20,7 @@ import {
   formatSystemLogsForCopy,
   type CopyableSystemLogEntry,
 } from "@/features/system-logs/application/system-log-copy-text";
+import { isEventTargetInside } from "@/features/system-logs/application/is-event-target-inside";
 
 const REFRESH_MS = 20_000;
 const LOGS_ROUTE = "/super-admin/logs";
@@ -97,8 +98,7 @@ export function SuperAdminErrorFloatingButton() {
   useEffect(() => {
     if (!expanded) return;
     const onOutside = (event: Event) => {
-      const target = event.target as Node | null;
-      if (target && toolbarRef.current?.contains(target)) return;
+      if (isEventTargetInside(toolbarRef.current, event.target)) return;
       setExpanded(false);
     };
     document.addEventListener("pointerdown", onOutside, true);

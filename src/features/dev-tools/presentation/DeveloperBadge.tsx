@@ -25,6 +25,8 @@ const pages = [
   { path: '/dev/dev-cloud-backup', name: 'النسخ السحابي للتطوير' },
   { path: '/dev/release-console', name: 'وحدة الإصدار' },
   { path: '/dev/deploy-all', name: 'تشغيل Deploy' },
+  { path: '/dev/cloud-accounts', name: 'الحسابات السحابية' },
+  { path: '/dev/notification-tests', name: 'اختبارات الإشعارات' },
 ];
 
 const SPLASH_NAV_TOGGLE_KEY = 'asol-dev-splash-nav-toggle';
