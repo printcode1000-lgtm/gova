@@ -22,14 +22,10 @@ export const COLLAPSED_SUPER_ADMIN_GROUPS = {
 
 export type SuperAdminGroupKey = keyof typeof COLLAPSED_SUPER_ADMIN_GROUPS;
 
-type SuperAdminInnerSurfaceKey = SuperAdminGroupKey | "cloud";
-
-function superAdminInnerSurface(variant: SuperAdminInnerSurfaceKey) {
+function superAdminInnerSurface(variant: SuperAdminGroupKey) {
   switch (variant) {
     case "content":
       return "bg-surface-container-low";
-    case "cloud":
-      return "bg-primary-container/15";
     case "notifications":
       return "bg-secondary-container/20";
     case "system":
