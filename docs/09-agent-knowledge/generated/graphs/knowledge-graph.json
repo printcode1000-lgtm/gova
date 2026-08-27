@@ -3707,6 +3707,36 @@
       ]
     },
     {
+      "id": "command:ui-registry:static-dom-ids:apply",
+      "kind": "command",
+      "name": "npm run ui-registry:static-dom-ids:apply",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "apply",
+        "npm",
+        "npm run ui-registry:static-dom-ids:apply",
+        "run",
+        "static-dom-ids",
+        "ui-registry",
+        "ui-registry:static-dom-ids:apply"
+      ]
+    },
+    {
+      "id": "command:ui-registry:static-dom-ids:check",
+      "kind": "command",
+      "name": "npm run ui-registry:static-dom-ids:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "npm",
+        "npm run ui-registry:static-dom-ids:check",
+        "run",
+        "static-dom-ids",
+        "ui-registry",
+        "ui-registry:static-dom-ids:check"
+      ]
+    },
+    {
       "id": "command:validate-storage-profiles",
       "kind": "command",
       "name": "npm run validate-storage-profiles",
@@ -5533,6 +5563,8 @@
         "scripts/github-ci-policy.ts",
         "scripts/runtime-compatibility-reference",
         "scripts/runtime-compatibility-reference.ts",
+        "scripts/ui-registry/static-dom-ids/check-static-dom-ids",
+        "scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
         "sealed",
         "src/features/categories/infrastructure/validation",
         "src/features/categories/infrastructure/validation.engine.ts",
@@ -26343,6 +26375,149 @@
       "tags": [
         "scripts/ui-registry/simulation-report",
         "scripts/ui-registry/simulation-report.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "kind": "script",
+      "name": "apply-id-forwarding.ts",
+      "path": "scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/apply-id-forwarding",
+        "scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+      "kind": "script",
+      "name": "apply-static-dom-ids.ts",
+      "path": "scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/apply-static-dom-ids",
+        "scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "kind": "script",
+      "name": "apply-to-repo.ts",
+      "path": "scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/apply-to-repo",
+        "scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "kind": "script",
+      "name": "check-static-dom-ids.ts",
+      "path": "scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/check-static-dom-ids",
+        "scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+      "kind": "script",
+      "name": "component-host-policy.ts",
+      "path": "scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/component-host-policy",
+        "scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "kind": "script",
+      "name": "dom-id-forwarding.ts",
+      "path": "scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/dom-id-forwarding",
+        "scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/file-semantic.ts",
+      "kind": "script",
+      "name": "file-semantic.ts",
+      "path": "scripts/ui-registry/static-dom-ids/file-semantic.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/file-semantic",
+        "scripts/ui-registry/static-dom-ids/file-semantic.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "kind": "script",
+      "name": "literal-html-ids.ts",
+      "path": "scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/literal-html-ids",
+        "scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "kind": "script",
+      "name": "plan-static-dom-ids.ts",
+      "path": "scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/plan-static-dom-ids",
+        "scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "kind": "script",
+      "name": "repeating-definitions.ts",
+      "path": "scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/repeating-definitions",
+        "scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+      "kind": "script",
+      "name": "run-static-dom-id-check.ts",
+      "path": "scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/run-static-dom-id-check",
+        "scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "kind": "script",
+      "name": "tsx-hosts.ts",
+      "path": "scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/tsx-hosts",
+        "scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
+      "kind": "script",
+      "name": "visible-host-tags.ts",
+      "path": "scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/visible-host-tags",
+        "scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
         "ts"
       ]
     },
@@ -52228,6 +52403,18 @@
       ]
     },
     {
+      "id": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "kind": "test",
+      "name": "static-dom-ids.test.ts",
+      "path": "scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "tags": [
+        "scripts/ui-registry/tests/static-dom-ids",
+        "scripts/ui-registry/tests/static-dom-ids.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/app/api/notifications/test/self/route.ts",
       "kind": "test",
       "name": "route.ts",
@@ -56758,6 +56945,11 @@
     },
     {
       "from": "command:test:ui-registry-core",
+      "to": "command:ui-registry:static-dom-ids:check",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:ui-registry-core",
       "to": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
       "kind": "invokes"
     },
@@ -56794,6 +56986,11 @@
     {
       "from": "command:test:ui-registry-core",
       "to": "test:scripts/ui-registry/tests/pending-flow.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:ui-registry-core",
+      "to": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
       "kind": "invokes"
     },
     {
@@ -56883,6 +57080,36 @@
     },
     {
       "from": "command:ui-registry:simulation:report",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:ui-registry:static-dom-ids:apply",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:ui-registry:static-dom-ids:apply",
+      "to": "runtime:static-out",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:ui-registry:static-dom-ids:apply",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:ui-registry:static-dom-ids:check",
+      "to": "script:scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:ui-registry:static-dom-ids:check",
+      "to": "runtime:static-out",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:ui-registry:static-dom-ids:check",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -60771,6 +60998,12 @@
       "to": "script:scripts/runtime-compatibility-reference.ts",
       "kind": "references",
       "detail": "scripts/runtime-compatibility-reference.ts"
+    },
+    {
+      "from": "document:docs/01-architecture/07-enforcement/architecture-check.md",
+      "to": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "kind": "references",
+      "detail": "scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts"
     },
     {
       "from": "document:docs/01-architecture/07-enforcement/architecture-check.md",
@@ -82586,6 +82819,84 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/file-semantic.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/update-simulation-discovery.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -85029,6 +85340,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/ui-registry/tests/pending-flow.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -131456,6 +131773,12 @@
     },
     {
       "from": "script:scripts/architecture-check.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "kind": "imports",
+      "detail": "./ui-registry/static-dom-ids/check-static-dom-ids"
+    },
+    {
+      "from": "script:scripts/architecture-check.ts",
       "to": "source:src/features/categories/infrastructure/validation.engine.ts",
       "kind": "imports",
       "detail": "../src/features/categories/infrastructure/validation.engine"
@@ -133995,6 +134318,245 @@
       "to": "package:@asol/ui-registry-core",
       "kind": "imports",
       "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "kind": "imports",
+      "detail": "./apply-to-repo"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "kind": "imports",
+      "detail": "./check-static-dom-ids"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "kind": "imports",
+      "detail": "./dom-id-forwarding"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "kind": "imports",
+      "detail": "./apply-id-forwarding"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "kind": "imports",
+      "detail": "./apply-to-repo"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "kind": "imports",
+      "detail": "./literal-html-ids"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "kind": "imports",
+      "detail": "./plan-static-dom-ids"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "kind": "imports",
+      "detail": "./apply-to-repo"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+      "kind": "imports",
+      "detail": "./component-host-policy"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "kind": "imports",
+      "detail": "./dom-id-forwarding"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "kind": "imports",
+      "detail": "./plan-static-dom-ids"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "kind": "imports",
+      "detail": "./repeating-definitions"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "kind": "imports",
+      "detail": "./tsx-hosts"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+      "kind": "imports",
+      "detail": "./component-host-policy"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "kind": "imports",
+      "detail": "./tsx-hosts"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/file-semantic.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+      "kind": "imports",
+      "detail": "./component-host-policy"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/file-semantic.ts",
+      "kind": "imports",
+      "detail": "./file-semantic"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "kind": "imports",
+      "detail": "./literal-html-ids"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "kind": "imports",
+      "detail": "./repeating-definitions"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "kind": "imports",
+      "detail": "./tsx-hosts"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
+      "kind": "imports",
+      "detail": "./visible-host-tags"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "kind": "imports",
+      "detail": "./tsx-hosts"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "kind": "imports",
+      "detail": "./check-static-dom-ids"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "script:scripts/update-simulation-discovery.ts",
@@ -239822,6 +240384,99 @@
     {
       "from": "test:scripts/ui-registry/tests/pending-flow.test.ts",
       "to": "script:scripts/ui-registry/pending-source-resolver.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "kind": "imports",
+      "detail": "../static-dom-ids/apply-to-repo"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "kind": "imports",
+      "detail": "../static-dom-ids/dom-id-forwarding"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/file-semantic.ts",
+      "kind": "imports",
+      "detail": "../static-dom-ids/file-semantic"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "kind": "imports",
+      "detail": "../static-dom-ids/literal-html-ids"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "kind": "imports",
+      "detail": "../static-dom-ids/plan-static-dom-ids"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "source:src/shared/ui/button.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/button"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "source:src/shared/ui/select.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/select"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/file-semantic.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "source:src/shared/ui/button.tsx",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "to": "source:src/shared/ui/select.tsx",
       "kind": "tests"
     },
     {

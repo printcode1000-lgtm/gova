@@ -113,6 +113,7 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
+          id={id}
           type="button"
           size="icon"
           variant="outline"

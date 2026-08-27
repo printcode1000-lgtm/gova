@@ -3707,6 +3707,36 @@
       ]
     },
     {
+      "id": "command:ui-registry:static-dom-ids:apply",
+      "kind": "command",
+      "name": "npm run ui-registry:static-dom-ids:apply",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "apply",
+        "npm",
+        "npm run ui-registry:static-dom-ids:apply",
+        "run",
+        "static-dom-ids",
+        "ui-registry",
+        "ui-registry:static-dom-ids:apply"
+      ]
+    },
+    {
+      "id": "command:ui-registry:static-dom-ids:check",
+      "kind": "command",
+      "name": "npm run ui-registry:static-dom-ids:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "npm",
+        "npm run ui-registry:static-dom-ids:check",
+        "run",
+        "static-dom-ids",
+        "ui-registry",
+        "ui-registry:static-dom-ids:check"
+      ]
+    },
+    {
       "id": "command:validate-storage-profiles",
       "kind": "command",
       "name": "npm run validate-storage-profiles",
@@ -5533,6 +5563,8 @@
         "scripts/github-ci-policy.ts",
         "scripts/runtime-compatibility-reference",
         "scripts/runtime-compatibility-reference.ts",
+        "scripts/ui-registry/static-dom-ids/check-static-dom-ids",
+        "scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
         "sealed",
         "src/features/categories/infrastructure/validation",
         "src/features/categories/infrastructure/validation.engine.ts",
@@ -26343,6 +26375,149 @@
       "tags": [
         "scripts/ui-registry/simulation-report",
         "scripts/ui-registry/simulation-report.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "kind": "script",
+      "name": "apply-id-forwarding.ts",
+      "path": "scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/apply-id-forwarding",
+        "scripts/ui-registry/static-dom-ids/apply-id-forwarding.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+      "kind": "script",
+      "name": "apply-static-dom-ids.ts",
+      "path": "scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/apply-static-dom-ids",
+        "scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "kind": "script",
+      "name": "apply-to-repo.ts",
+      "path": "scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/apply-to-repo",
+        "scripts/ui-registry/static-dom-ids/apply-to-repo.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "kind": "script",
+      "name": "check-static-dom-ids.ts",
+      "path": "scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/check-static-dom-ids",
+        "scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+      "kind": "script",
+      "name": "component-host-policy.ts",
+      "path": "scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/component-host-policy",
+        "scripts/ui-registry/static-dom-ids/component-host-policy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "kind": "script",
+      "name": "dom-id-forwarding.ts",
+      "path": "scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/dom-id-forwarding",
+        "scripts/ui-registry/static-dom-ids/dom-id-forwarding.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/file-semantic.ts",
+      "kind": "script",
+      "name": "file-semantic.ts",
+      "path": "scripts/ui-registry/static-dom-ids/file-semantic.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/file-semantic",
+        "scripts/ui-registry/static-dom-ids/file-semantic.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "kind": "script",
+      "name": "literal-html-ids.ts",
+      "path": "scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/literal-html-ids",
+        "scripts/ui-registry/static-dom-ids/literal-html-ids.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "kind": "script",
+      "name": "plan-static-dom-ids.ts",
+      "path": "scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/plan-static-dom-ids",
+        "scripts/ui-registry/static-dom-ids/plan-static-dom-ids.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "kind": "script",
+      "name": "repeating-definitions.ts",
+      "path": "scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/repeating-definitions",
+        "scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+      "kind": "script",
+      "name": "run-static-dom-id-check.ts",
+      "path": "scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/run-static-dom-id-check",
+        "scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "kind": "script",
+      "name": "tsx-hosts.ts",
+      "path": "scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/tsx-hosts",
+        "scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
+      "kind": "script",
+      "name": "visible-host-tags.ts",
+      "path": "scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
+      "tags": [
+        "scripts/ui-registry/static-dom-ids/visible-host-tags",
+        "scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
         "ts"
       ]
     },
@@ -52223,6 +52398,18 @@
       "tags": [
         "scripts/ui-registry/tests/pending-flow",
         "scripts/ui-registry/tests/pending-flow.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "kind": "test",
+      "name": "static-dom-ids.test.ts",
+      "path": "scripts/ui-registry/tests/static-dom-ids.test.ts",
+      "tags": [
+        "scripts/ui-registry/tests/static-dom-ids",
+        "scripts/ui-registry/tests/static-dom-ids.test.ts",
         "test",
         "ts"
       ]

@@ -79,6 +79,7 @@ function componentUsageNeedsId(
   bindings: Map<string, string>,
   multiplicity: ReturnType<typeof hostMultiplicity>,
   locals: Set<string>,
+  sourceFile: ts.SourceFile,
 ): boolean {
   if (isNonDomRootComponent(name)) return false;
   if (templateWouldDuplicate(file, node, multiplicity)) return false;
@@ -87,9 +88,29 @@ function componentUsageNeedsId(
     return multiplicity.repeatingFiles.has(imported) || isSharedUiFile(imported);
   }
   if (locals.has(name)) {
+    if (isDynamicComponentAlias(sourceFile, name)) return false;
     return multiplicity.repeatingSymbols.has(symbolKey(file, name));
   }
   return true;
+}
+
+function isDynamicComponentAlias(sourceFile: ts.SourceFile, name: string): boolean {
+  let alias = false;
+  function visit(node: ts.Node): void {
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === name && node.initializer) {
+      const init = node.initializer;
+      if (
+        !ts.isArrowFunction(init) &&
+        !ts.isFunctionExpression(init) &&
+        !(ts.isCallExpression(init) && init.expression.getText().includes("forwardRef"))
+      ) {
+        alias = true;
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(sourceFile);
+  return alias;
 }
 
 function localComponentNames(sourceFile: ts.SourceFile): Set<string> {
@@ -144,7 +165,7 @@ export function planStaticDomIds(sources: Map<string, string>): StaticDomIdEdit[
           });
         } else if (
           componentName &&
-          componentUsageNeedsId(file, componentName, opening, bindings, multiplicity, locals)
+          componentUsageNeedsId(file, componentName, opening, bindings, multiplicity, locals, sourceFile)
         ) {
           edits.push({
             file,

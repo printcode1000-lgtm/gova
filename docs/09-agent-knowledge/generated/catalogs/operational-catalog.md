@@ -267,13 +267,15 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:system-logs-core` | `npx tsx packages/system-logs-core/src/tests/index.test.ts` |
 | `npm run test:trending-ribbon-core` | `npx tsx packages/trending-ribbon-core/src/tests/index.test.ts` |
 | `npm run test:turso-read-retry` | `npx tsx packages/data-core/src/core/database/tests/turso-read-retry.test.ts` |
-| `npm run test:ui-registry-core` | `npx tsx packages/ui-registry-core/src/tests/index.test.ts && npx tsx packages/ui-registry-core/src/tests/per-instance-registration.test.ts && npx tsx packages/architecture-core/src/tests/ui-attribute-guard.test.ts && npx tsx packages/architecture-core/src/tests/ui-registry-coverage.test.ts && npx tsx packages/ui-registry-core/src/tests/simulation-registry.test.ts && npx tsx packages/architecture-core/src/tests/ui-simulation-guard.test.ts && npx tsx scripts/ui-registry/tests/pending-flow.test.ts && npx tsx scripts/ui-registry/tests/deploy-gate.test.ts` |
+| `npm run test:ui-registry-core` | `npx tsx packages/ui-registry-core/src/tests/index.test.ts && npx tsx packages/ui-registry-core/src/tests/per-instance-registration.test.ts && npx tsx packages/architecture-core/src/tests/ui-attribute-guard.test.ts && npx tsx packages/architecture-core/src/tests/ui-registry-coverage.test.ts && npx tsx packages/ui-registry-core/src/tests/simulation-registry.test.ts && npx tsx packages/architecture-core/src/tests/ui-simulation-guard.test.ts && npx tsx scripts/ui-registry/tests/pending-flow.test.ts && npx tsx scripts/ui-registry/tests/deploy-gate.test.ts && npx tsx scripts/ui-registry/tests/static-dom-ids.test.ts && npm run ui-registry:static-dom-ids:check` |
 | `npm run test:vercel-deploy-core` | `npx tsx packages/vercel-deploy-core/src/tests/index.test.ts` |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run ui-registry:apply-pending` | `cross-env NODE_ENV=<redacted> NODE_OPTIONS=<redacted> npx tsx scripts/ui-registry/apply-pending.ts` |
 | `npm run ui-registry:pending:check` | `cross-env NODE_OPTIONS=<redacted> npx tsx scripts/ui-registry/check-pending.ts` |
 | `npm run ui-registry:simulation:generate` | `npx tsx scripts/ui-registry/generate-simulation-registry.ts` |
 | `npm run ui-registry:simulation:report` | `npx tsx scripts/ui-registry/simulation-report.ts` |
+| `npm run ui-registry:static-dom-ids:apply` | `npx tsx scripts/ui-registry/static-dom-ids/apply-static-dom-ids.ts` |
+| `npm run ui-registry:static-dom-ids:check` | `npx tsx scripts/ui-registry/static-dom-ids/run-static-dom-id-check.ts` |
 | `npm run validate-storage-profiles` | `npx tsx packages/storage-core/scripts/validate-storage-profiles.ts` |
 | `npm run validate:app-versions` | `npx tsx packages/ota-core/scripts/validate-app-versions.ts` |
 | `npm run validate:error-logging` | `npx tsx scripts/validate-error-logging.ts` |

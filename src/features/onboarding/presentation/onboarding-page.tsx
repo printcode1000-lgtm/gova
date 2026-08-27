@@ -203,7 +203,7 @@ export function OnboardingPage() {
               )}
             >
               {isComplete && showCompletion ? (
-                <CompletionScreen onEdit={handleStepNavigate} />
+                <CompletionScreen id="onboarding.onboarding-page.completion-screen.2" onEdit={handleStepNavigate} />
               ) : (
                 <CurrentSection />
               )}
