@@ -14012,6 +14012,49 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md",
+      "kind": "document",
+      "name": "Every SQLite-backed product reads back empty (`PRAGMA` executed with `run()`)",
+      "path": "docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md",
+      "summary": "In development (`dataSource: \"local\"` → the SQLite backend), `GET /api/products?id=<existing id>` answers **200** with a fully blank `ProductRecord`:",
+      "tags": [
+        "/api/products",
+        "200",
+        "answers",
+        "back",
+        "backend",
+        "blank",
+        "datasource",
+        "development",
+        "docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product",
+        "docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md",
+        "empty",
+        "every",
+        "every sqlite-backed product reads back empty (`pragma` executed with `run()`)",
+        "executed",
+        "existing",
+        "fully",
+        "get",
+        "id",
+        "in",
+        "in development (`datasource: \"local\"` → the sqlite backend), `get /api/products?id=<existing id>` answers **200** with a fully blank `productrecord`:",
+        "local",
+        "md",
+        "packages/data-core/src/core/database/sqlite-statement-execution",
+        "packages/data-core/src/core/database/sqlite-statement-execution.ts",
+        "pragma",
+        "product",
+        "productrecord",
+        "reads",
+        "run",
+        "sqlite",
+        "sqlite-backed",
+        "the",
+        "ts",
+        "with"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/static-mobile-push-pem-audit-false-positive.md",
       "kind": "document",
       "name": "Static Build: Mobile Push Security Audit Flags PEM Parsing Code",
@@ -28690,6 +28733,17 @@
       "tags": [
         "packages/data-core/src/core/database/sqlite-file-identity",
         "packages/data-core/src/core/database/sqlite-file-identity.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/core/database/sqlite-statement-execution.ts",
+      "kind": "source",
+      "name": "sqlite-statement-execution.ts",
+      "path": "packages/data-core/src/core/database/sqlite-statement-execution.ts",
+      "tags": [
+        "packages/data-core/src/core/database/sqlite-statement-execution",
+        "packages/data-core/src/core/database/sqlite-statement-execution.ts",
         "ts"
       ]
     },

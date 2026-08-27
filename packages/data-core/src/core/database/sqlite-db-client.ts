@@ -7,6 +7,7 @@ import { createDrizzleDevLogger } from '../../ports/telemetry';
 import { AbstractDatabaseClient } from './abstract-database-client';
 import { CachedSqliteConnection } from './cached-sqlite-connection';
 import { PRIMARY_SQLITE_DB_PATH } from './environment';
+import { executeSqliteStatement } from './sqlite-statement-execution';
 
 export class SQLiteDatabaseClient extends AbstractDatabaseClient {
   private readonly connection = new CachedSqliteConnection(
@@ -32,16 +33,7 @@ export class SQLiteDatabaseClient extends AbstractDatabaseClient {
     const db = new Database(PRIMARY_SQLITE_DB_PATH);
 
     try {
-      const stmt = db.prepare(sql);
-      if (
-        sql.trim().toUpperCase().startsWith('SELECT') ||
-        /\bRETURNING\b/i.test(sql)
-      ) {
-        return stmt.all(...params);
-      }
-
-      const info = stmt.run(...params);
-      return [info];
+      return executeSqliteStatement(db.prepare(sql), params);
     } finally {
       db.close();
     }
