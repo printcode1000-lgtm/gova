@@ -186142,12 +186142,6 @@
     },
     {
       "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",
-      "to": "external-dependency:@hookform/resolvers",
-      "kind": "imports",
-      "detail": "@hookform/resolvers/zod"
-    },
-    {
-      "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
@@ -186172,21 +186166,9 @@
     },
     {
       "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",
-      "to": "package:@asol/auth-core",
-      "kind": "imports",
-      "detail": "@asol/auth-core"
-    },
-    {
-      "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",
       "to": "package:@asol/ui-registry-core",
       "kind": "imports",
       "detail": "@asol/ui-registry-core"
-    },
-    {
-      "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",
-      "to": "source:src/features/auth/application/hooks/use-guest-session.ts",
-      "kind": "imports",
-      "detail": "@/features/auth/application/hooks/use-guest-session"
     },
     {
       "from": "source:src/features/auth/presentation/RegistrationPageContent.tsx",

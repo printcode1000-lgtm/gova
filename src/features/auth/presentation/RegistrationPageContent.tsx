@@ -1,6 +1,5 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Loader2, Shield } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
@@ -12,10 +11,8 @@ import { OptionalRegistrationFields } from '@/features/auth/presentation/Optiona
 import { PasswordInput } from '@/features/auth/presentation/PasswordInput';
 import { PasswordStrength } from '@/features/auth/presentation/PasswordStrength';
 import { PhoneVerification } from '@/features/auth/presentation/PhoneVerification';
-import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
 import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
-import { createRegistrationSchema, type RegistrationFormData } from '@asol/auth-core';
 
 import { useRegister } from './hooks/use-register';
 import { uiAttributes } from "@asol/ui-registry-core";

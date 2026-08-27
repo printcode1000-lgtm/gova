@@ -60,7 +60,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/account-bridge` | package | 13 | 5 | 26 | 0 | 13 | 4 |
 | `@asol/account-declarations` | package | 13 | 8 | 12 | 0 | 30 | 0 |
 | `@asol/architecture-core` | package | 18 | 7 | 0 | 0 | 7 | 8 |
-| `@asol/auth-core` | package | 11 | 6 | 142 | 0 | 59 | 2 |
+| `@asol/auth-core` | package | 11 | 6 | 142 | 0 | 58 | 2 |
 | `@asol/backup-core` | package | 7 | 2 | 139 | 0 | 11 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 41 | 0 | 8 | 1 |
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |
