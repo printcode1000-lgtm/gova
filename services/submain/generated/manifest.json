@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T02:06:00.228Z",
+  "generatedAt": "2026-08-27T04:44:32.949Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 400,
+  "fileCount": 401,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -135,6 +135,7 @@
     "packages/data-core/src/domains/product/index.server.ts",
     "packages/data-core/src/domains/product/repositories/product-repository.ts",
     "packages/data-core/src/domains/product/repositories/product-review-repository.ts",
+    "packages/data-core/src/domains/product/repositories/product-select-columns.ts",
     "packages/data-core/src/domains/profile/entities/index.ts",
     "packages/data-core/src/domains/profile/entities/profile-contacts.entity.ts",
     "packages/data-core/src/domains/profile/entities/profile-fulfillment-settings.entity.ts",

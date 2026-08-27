@@ -14,6 +14,10 @@ import type {
   ProductRecord,
   ProductStatus,
 } from "@asol/product-core";
+import {
+  productSelectColumns,
+  productTableColumnNames,
+} from "./product-select-columns";
 
 export {
   mapProductRow,
@@ -21,9 +25,16 @@ export {
 } from "@asol/product-core/server";
 
 export class ProductRepository {
+  private async productTableColumns(): Promise<Set<string>> {
+    const columnRows = await productsDataSource.execute("PRAGMA table_info(products)");
+    return productTableColumnNames(columnRows);
+  }
+
   async findById(id: string): Promise<ProductRecord | null> {
+    const existingColumns = await this.productTableColumns();
+    const columns = productSelectColumns(existingColumns);
     const rows = (await productsDataSource.execute(
-      `SELECT ${PRODUCT_COLUMNS.join(", ")} FROM products WHERE id = ? LIMIT 1`,
+      `SELECT ${columns} FROM products WHERE id = ? LIMIT 1`,
       [id],
     )) as ProductRow[];
     return rows[0] ? mapProductRow(rows[0]) : null;
@@ -34,8 +45,12 @@ export class ProductRepository {
     mainCategoryId: string,
     subcategoryId: string,
   ): Promise<ProductRecord[]> {
+    const existingColumns = await this.productTableColumns();
+    const columns = productSelectColumns(existingColumns);
+    const statusFilter = existingColumns.has("status") ? " AND status != 'archived'" : "";
+    const orderColumn = existingColumns.has("created_at") ? "created_at" : "id";
     const rows = (await productsDataSource.execute(
-      `SELECT ${PRODUCT_COLUMNS.join(", ")} FROM products WHERE uid = ? AND main_category_id = ? AND subcategory_id = ? AND status != 'archived' ORDER BY created_at DESC`,
+      `SELECT ${columns} FROM products WHERE uid = ? AND main_category_id = ? AND subcategory_id = ?${statusFilter} ORDER BY ${orderColumn} DESC`,
       [uid, mainCategoryId, subcategoryId],
     )) as ProductRow[];
     return rows.map(mapProductRow);

@@ -29759,6 +29759,17 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "kind": "source",
+      "name": "product-select-columns.ts",
+      "path": "packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "tags": [
+        "packages/data-core/src/domains/product/repositories/product-select-columns",
+        "packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/domains/profile/entities/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -50602,6 +50613,18 @@
       "tags": [
         "packages/data-core/src/domains/notifications/tests/notification-token-cardinality",
         "packages/data-core/src/domains/notifications/tests/notification-token-cardinality.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "kind": "test",
+      "name": "product-select-columns.test.ts",
+      "path": "packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "tags": [
+        "packages/data-core/src/domains/product/tests/product-select-columns",
+        "packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
         "test",
         "ts"
       ]

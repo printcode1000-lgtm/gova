@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T02:06:06.756Z",
+  "generatedAt": "2026-08-27T04:44:34.776Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 415,
+  "fileCount": 416,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -144,6 +144,7 @@
     "packages/data-core/src/domains/product/index.server.ts",
     "packages/data-core/src/domains/product/repositories/product-repository.ts",
     "packages/data-core/src/domains/product/repositories/product-review-repository.ts",
+    "packages/data-core/src/domains/product/repositories/product-select-columns.ts",
     "packages/data-core/src/domains/profile/entities/index.ts",
     "packages/data-core/src/domains/profile/entities/profile-contacts.entity.ts",
     "packages/data-core/src/domains/profile/entities/profile-fulfillment-settings.entity.ts",

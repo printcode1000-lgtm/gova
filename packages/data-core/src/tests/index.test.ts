@@ -195,6 +195,8 @@ assert.equal(
   'With nothing registered, an IndexedDB read must still run.',
 );
 
+await import('../domains/product/tests/product-select-columns.test.ts');
+
 await assert.rejects(
   telemetry.traceDatabaseQuery(
     { driver: 'SQLite-Dev', sql: 'SELECT 1', params: [], table: '' },

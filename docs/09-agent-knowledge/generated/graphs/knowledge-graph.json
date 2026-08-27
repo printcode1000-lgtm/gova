@@ -29759,6 +29759,17 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "kind": "source",
+      "name": "product-select-columns.ts",
+      "path": "packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "tags": [
+        "packages/data-core/src/domains/product/repositories/product-select-columns",
+        "packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/domains/profile/entities/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -50602,6 +50613,18 @@
       "tags": [
         "packages/data-core/src/domains/notifications/tests/notification-token-cardinality",
         "packages/data-core/src/domains/notifications/tests/notification-token-cardinality.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "kind": "test",
+      "name": "product-select-columns.test.ts",
+      "path": "packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "tags": [
+        "packages/data-core/src/domains/product/tests/product-select-columns",
+        "packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
         "test",
         "ts"
       ]
@@ -74825,6 +74848,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/data-core/src/domains/profile/entities/index.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -78749,6 +78778,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -80285,6 +80320,12 @@
     },
     {
       "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/domains/profile/entities/index.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
@@ -81252,6 +81293,12 @@
     {
       "from": "domain:data-and-storage",
       "to": "test:packages/data-core/src/domains/notifications/tests/notification-token-cardinality.test.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
     },
@@ -145093,6 +145140,12 @@
       "detail": "../../../core"
     },
     {
+      "from": "source:packages/data-core/src/domains/product/repositories/product-repository.ts",
+      "to": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "kind": "imports",
+      "detail": "./product-select-columns"
+    },
+    {
       "from": "source:packages/data-core/src/domains/product/repositories/product-review-repository.ts",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -145124,6 +145177,42 @@
       "to": "source:packages/data-core/src/domains/product/entities/index.ts",
       "kind": "imports",
       "detail": "../entities"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "to": "package:@asol/product-core",
+      "kind": "imports",
+      "detail": "@asol/product-core/server"
     },
     {
       "from": "source:packages/data-core/src/domains/profile/entities/index.ts",
@@ -233421,6 +233510,47 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "to": "source:packages/data-core/src/domains/product/repositories/product-select-columns.ts",
+      "kind": "imports",
+      "detail": "../repositories/product-select-columns"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -233518,6 +233648,12 @@
       "to": "source:packages/data-core/src/ports/telemetry.ts",
       "kind": "imports",
       "detail": "../ports/telemetry.ts"
+    },
+    {
+      "from": "test:packages/data-core/src/tests/index.test.ts",
+      "to": "test:packages/data-core/src/domains/product/tests/product-select-columns.test.ts",
+      "kind": "imports",
+      "detail": "../domains/product/tests/product-select-columns.test.ts"
     },
     {
       "from": "test:packages/data-core/src/tests/index.test.ts",

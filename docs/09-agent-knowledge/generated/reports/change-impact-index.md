@@ -64,7 +64,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/backup-core` | package | 7 | 2 | 139 | 0 | 11 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 41 | 0 | 8 | 1 |
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |
-| `@asol/data-core` | package | 56 | 23 | 146 | 0 | 162 | 21 |
+| `@asol/data-core` | package | 56 | 24 | 146 | 0 | 162 | 21 |
 | `@asol/data-health-core` | package | 7 | 2 | 139 | 0 | 45 | 0 |
 | `@asol/dev-core` | package | 8 | 1 | 142 | 0 | 10 | 0 |
 | `@asol/env-core` | package | 6 | 1 | 145 | 0 | 15 | 1 |
@@ -82,7 +82,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/ota-core` | package | 35 | 26 | 31 | 0 | 40 | 13 |
 | `@asol/page-save-core` | package | 29 | 3 | 0 | 0 | 8 | 0 |
 | `@asol/page-snapshot-core` | package | 8 | 1 | 0 | 0 | 3 | 0 |
-| `@asol/product-core` | package | 9 | 1 | 139 | 0 | 26 | 0 |
+| `@asol/product-core` | package | 9 | 1 | 139 | 0 | 27 | 0 |
 | `@asol/product-style-core` | package | 9 | 1 | 8 | 0 | 8 | 0 |
 | `@asol/products-composition` | package | 8 | 1 | 0 | 0 | 4 | 6 |
 | `@asol/profiles-composition` | package | 8 | 1 | 0 | 0 | 6 | 3 |
