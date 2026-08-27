@@ -1,7 +1,21 @@
 {
   "mcpServers": {
+    "augment-context-engine": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "auggie-context-mcp"
+      ]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
     "serena": {
-      "command": "C:/Users/hesham/AppData/Local/Programs/Python/Python310/Scripts/uvx.exe",
+      "command": "uvx",
       "args": [
         "--from",
         "git+https://github.com/oraios/serena",
@@ -10,14 +24,14 @@
         "--context",
         "ide-assistant",
         "--project",
-        "C:/Users/hesham/Desktop/gova"
+        "/home/hesham/gova"
       ]
     },
-    "augment-context-engine": {
+    "sourcegraph": {
       "command": "npx",
       "args": [
         "-y",
-        "auggie-context-mcp"
+        "@sourcegraph/mcp-server"
       ]
     }
   }
