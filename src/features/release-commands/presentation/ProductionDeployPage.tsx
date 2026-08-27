@@ -332,7 +332,7 @@ function ConfirmationPhrase(props: { onApply: (value: string) => void }) {
   };
 
   return (
-    <div id="release-commands.production-deploy-page.div.4" className="asol-selectable flex flex-wrap items-center justify-between gap-2">
+    <div id="release-commands.production-deploy-page.div.4" className="flex flex-wrap items-center justify-between gap-2">
       <code className="select-all rounded bg-muted px-2 py-1 font-mono text-sm" dir="ltr">
         {REMOTE_DEPLOY_ALL_CONFIRMATION}
       </code>

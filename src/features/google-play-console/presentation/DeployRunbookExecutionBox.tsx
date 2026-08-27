@@ -149,7 +149,7 @@ function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: s
   };
 
   return (
-    <div id="google-play-console.deploy-runbook-execution-box.div.6" className="asol-selectable flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant">
+    <div id="google-play-console.deploy-runbook-execution-box.div.6" className="flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant">
       <p id="google-play-console.deploy-runbook-execution-box.p.4" className="min-w-0 break-words">
         يجب كتابة{" "}
         <button id="google-play-console.deploy-runbook-execution-box.button"

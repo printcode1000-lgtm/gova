@@ -421,13 +421,20 @@ export function SuperAdminFeaturedMarqueePage() {
             {items.map((item, index) => (
               <div
                 key={item.productId}
-                draggable
-                onDragStart={() => handleDragStart(index)}
                 onDragOver={(event) => handleDragOver(event, index)}
                 onDragEnd={handleDragEnd}
                 className="flex items-center gap-3 rounded-lg border bg-surface p-2 transition-colors"
               >
-                <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-muted-foreground" />
+                <span
+                  data-drag-handle
+                  draggable
+                  onDragStart={() => handleDragStart(index)}
+                  role="button"
+                  aria-label="اسحب لإعادة ترتيب المنتج"
+                  className="shrink-0 touch-none"
+                >
+                  <GripVertical className="h-4 w-4 text-muted-foreground" />
+                </span>
 
                 <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md bg-surface-bright">
                   {item.isLoading ? (

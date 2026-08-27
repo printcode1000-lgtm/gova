@@ -133,7 +133,7 @@ export function DeveloperBadge() {
     >
       <DropdownMenu>
         <DropdownMenuTrigger id="dev-tools.developer-badge.dropdown-menu-trigger" asChild>
-          <Badge id="dev-tools.developer-badge.badge" variant="destructive" className="select-none pointer-events-auto">
+          <Badge id="dev-tools.developer-badge.badge" variant="destructive" className="pointer-events-auto">
             ASOL DEV
           </Badge>
         </DropdownMenuTrigger>

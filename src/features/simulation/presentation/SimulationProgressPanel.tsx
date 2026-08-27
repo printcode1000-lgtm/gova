@@ -136,7 +136,7 @@ function StepList({ id, steps }: { steps: readonly SimulationProgressStep[] } & 
                 <Circle className="mt-0.5 h-4 w-4 shrink-0 text-on-surface-variant" />}
           <div className="min-w-0 flex-1 break-words">
             <div className="text-sm font-semibold text-on-surface">{step.label}</div>
-            {step.detail ? <div className="asol-selectable break-words text-xs text-on-surface-variant">{step.detail}</div> : null}
+            {step.detail ? <div className="break-words text-xs text-on-surface-variant">{step.detail}</div> : null}
           </div>
         </li>
       ))}
@@ -252,7 +252,7 @@ export function SimulationProgressPanel({ id,
                     </div>
                     {run.steps.length > 0 ? <StepList steps={run.steps} /> : null}
                     {run.error ? (
-                      <div className="asol-selectable break-words rounded-lg bg-error/10 p-3 text-xs text-error">
+                      <div className="break-words rounded-lg bg-error/10 p-3 text-xs text-error">
                         <span className="font-bold">رسالة الخطأ: </span>{run.error}
                       </div>
                     ) : null}
@@ -277,7 +277,7 @@ export function SimulationProgressPanel({ id,
           </div>
           {steps.length > 0 ? <StepList steps={steps} /> : null}
           {error ? (
-            <div className="asol-selectable break-words rounded-xl bg-error/10 p-3 text-sm text-error">
+            <div className="break-words rounded-xl bg-error/10 p-3 text-sm text-error">
               <span className="font-bold">رسالة الخطأ: </span>{error}
             </div>
           ) : null}

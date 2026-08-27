@@ -16,6 +16,9 @@ interaction styling across the whole codebase.
 | `focus:` | Allowed only where the control is genuinely keyboard-driven (inputs). Prefer `focus-visible:`. |
 | `transition-*` | Kept. Motion serves touch as much as it serves pointers. |
 | `title` on a DOM element | Forbidden. It renders the browser hover tooltip, which no touch user can trigger. Use `aria-label`. A `title` **prop on a React component** is ordinary data and is allowed. |
+| Text selection | **Always allowed, with no exception.** Every string the application paints must be copyable, everywhere, including inside buttons, menu items, badges and rows. |
+| `select-none` / `user-select: none` / `-webkit-touch-callout: none` | Forbidden. They are the only ways text stops being copyable, so they are gone from the codebase. |
+| `draggable` on an element carrying text | Forbidden. HTML drag-and-drop claims the gesture and the text underneath stops being selectable. Put `draggable` on the drag handle alone, marked `data-drag-handle`. |
 
 A control that previously communicated its interactivity only through hover must
 be given an `active:` state instead — never left with no feedback at all.
@@ -33,17 +36,42 @@ removes the desktop affordances the browser adds by itself:
 - `-webkit-text-size-adjust: 100%` — the OS must not rescale text on rotation.
 - `overscroll-behavior-y: none` on `body` — no browser pull-to-refresh or
   rubber-band chaining behind the application shell.
-- `user-select: none` + `-webkit-touch-callout: none` on interactive elements
-  (`button`, `a`, `label`, `summary`, and the `button`/`tab`/`menuitem`/`option`
-  roles) — a long press must not start a text selection or open the OS callout.
-  Inputs, textareas, `contenteditable`, and anything marked `.asol-selectable`
-  opt back in to normal text selection.
+- `user-select: text` + `-webkit-touch-callout: default` on `html` — text
+  selection is inherited by every element and is never taken away (see
+  [Copyable Text](#copyable-text)).
 - Scrollbars hidden (`scrollbar-width: none` and a zero-size
   `::-webkit-scrollbar`) — scrolling itself is untouched; only the desktop
   gutter is gone.
 
-Add `.asol-selectable` to any element whose text the user must be able to copy
-(order numbers, tracking codes, error identifiers).
+## Copyable Text
+
+Every string the application paints must be selectable and copyable — order
+numbers, tracking codes, error identifiers, product names, prices, ids, labels
+inside buttons and menu items. There is no exemption, and no opt-in class: the
+baseline in `globals.css` grants selection on `html` and nothing takes it away.
+
+The rule is stated positively because the failure mode is silent. A user who
+cannot copy an id has no way to tell whether the application forbade it or the
+gesture simply missed; they retype the value by hand, or they abandon it.
+
+Two consequences are accepted deliberately:
+
+- A long press on a control may start a text selection, or open the OS callout on
+  iOS. Copyability is worth more than a perfectly clean press.
+- Dragging inside a menu, a carousel or a marquee may select text. Where a
+  horizontal gesture must keep working, constrain it with `touch-action`
+  (`touch-pan-y` / `touch-pan-x`), never by suppressing selection.
+
+`.asol-selectable` no longer exists. It was an opt-in for a default that is now
+universal, and any new occurrence is a regression.
+
+### Reordering by drag
+
+`draggable` hands the element's whole surface to HTML drag-and-drop, so the text
+inside it stops being selectable. A reorderable row therefore carries the
+`draggable` attribute on its grab handle only — an icon-sized element with no
+text of its own, marked `data-drag-handle` so the build gate can recognize it —
+while the row keeps the `onDragOver` / `onDragEnd` drop handling.
 
 ### Wide tables, given that the scrollbar is gone
 
@@ -105,6 +133,14 @@ scans every `.ts`, `.tsx`, and `.css` file under `src/` and `packages/` and fail
 selector, and any `cursor-pointer` / `cursor: pointer`.
 It also fails on a `title` attribute placed on a lowercase (DOM) JSX tag,
 keying on the case of the nearest opening tag so component props keep working.
+
+The same check enforces copyable text: it fails on `user-select: none` (and its
+`userSelect` / `-webkit-` spellings), on `-webkit-touch-callout: none`, on the
+Tailwind `select-none` class wherever a line reads as styling (`className`,
+`class=`, `cn(`, `@apply` — so `select-none` as a "deselect all" action id is
+untouched), and on any `draggable` attribute that is not on an element marked
+`data-drag-handle` (`draggable={false}` is the opposite of the problem and is
+left alone).
 
 There are no exemptions — `/dev` tooling pages are held to the same rule so the
 guard never needs an allowlist that can quietly grow.

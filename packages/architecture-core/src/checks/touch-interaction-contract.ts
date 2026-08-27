@@ -13,6 +13,13 @@ import { ROOT, addViolation } from './architecture-types';
  * only honest touch feedback, the second never fires on touch but keeps keyboard
  * and accessibility navigation usable.
  *
+ * The same reasoning applies to text selection, in the opposite direction: every
+ * string the application paints must be copyable, with no exception. Anything
+ * that suppresses selection is therefore forbidden here — including `draggable`,
+ * which hands the gesture to HTML drag-and-drop and silently makes the text
+ * underneath unselectable. A row that reorders by dragging must carry the
+ * `draggable` attribute on its drag handle (marked `data-drag-handle`) only.
+ *
  * Policy: docs/04-ui-components/touch-interaction-policy.md
  */
 const SCANNED_ROOTS = ['src', 'packages'] as const;
@@ -29,6 +36,12 @@ const POLICY_DOC = 'See docs/04-ui-components/touch-interaction-policy.md';
 interface ForbiddenPattern {
   readonly pattern: RegExp;
   readonly message: string;
+  /**
+   * Some forbidden tokens are also legitimate identifiers elsewhere — `select-none`
+   * is both a Tailwind class and the action id of a "deselect all" button. When set,
+   * the line must also look like styling for the match to count.
+   */
+  readonly requiredContext?: RegExp;
 }
 
 const FORBIDDEN_PATTERNS: readonly ForbiddenPattern[] = [
@@ -45,6 +58,22 @@ const FORBIDDEN_PATTERNS: readonly ForbiddenPattern[] = [
   {
     pattern: /\bcursor-pointer\b|cursor:\s*pointer/,
     message: 'Pointer cursor. A touch screen has no cursor to style.',
+  },
+  {
+    pattern: /(?:-webkit-)?user-select:\s*none|userSelect:\s*['"`]none/,
+    message:
+      'Suppressed text selection. Every string the application paints must be copyable.',
+  },
+  {
+    pattern: /\bselect-none\b/,
+    requiredContext: /className|class=|@apply|\bcn\(/,
+    message:
+      'Tailwind select-none. Every string the application paints must be copyable.',
+  },
+  {
+    pattern: /-webkit-touch-callout:\s*none|WebkitTouchCallout:\s*['"`]none/,
+    message:
+      'Suppressed OS text callout. Every string the application paints must be copyable.',
   },
 ];
 
@@ -79,6 +108,30 @@ function reportDomTitleAttributes(rel: string, content: string): void {
   }
 }
 
+/**
+ * `draggable` gives the element's whole surface to HTML drag-and-drop, so any text
+ * inside it stops being selectable — the exact regression the copyability rule
+ * exists to prevent. Reordering stays possible by moving the attribute onto the
+ * grab handle, which carries `data-drag-handle` and no text of its own.
+ * `draggable={false}` is the opposite of the problem and is left alone.
+ */
+function reportDraggableElements(rel: string, content: string): void {
+  for (const match of content.matchAll(/\bdraggable\b(?!\s*=\s*\{false\})/g)) {
+    const line = content.slice(0, match.index).split('\n').length;
+    const openingTagStart = content.lastIndexOf('<', match.index);
+    const tag = content.slice(openingTagStart, match.index);
+    if (tag.includes('data-drag-handle')) continue;
+
+    addViolation(
+      'shared',
+      `${rel}:${line}`,
+      'draggable on an element that carries text makes that text unselectable. ' +
+        'Move it to the drag handle and mark the handle `data-drag-handle`. ' +
+        POLICY_DOC,
+    );
+  }
+}
+
 function collectFiles(dir: string): string[] {
   const files: string[] = [];
   for (const entry of readdirSync(dir)) {
@@ -100,11 +153,15 @@ export function checkTouchInteractionContract(): void {
       if (rel.startsWith(SELF_PREFIX)) continue;
       const content = readFileSync(file, 'utf8');
 
-      if (file.endsWith('.tsx')) reportDomTitleAttributes(rel, content);
+      if (file.endsWith('.tsx')) {
+        reportDomTitleAttributes(rel, content);
+        reportDraggableElements(rel, content);
+      }
 
       for (const [index, line] of content.split('\n').entries()) {
-        for (const { pattern, message } of FORBIDDEN_PATTERNS) {
+        for (const { pattern, message, requiredContext } of FORBIDDEN_PATTERNS) {
           if (!pattern.test(line)) continue;
+          if (requiredContext && !requiredContext.test(line)) continue;
           addViolation('shared', `${rel}:${index + 1}`, `${message} ${POLICY_DOC}`);
         }
       }

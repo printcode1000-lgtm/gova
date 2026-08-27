@@ -710,8 +710,6 @@ export function CatalogStudioPage() {
                         return (
                           <tr
                             key={`${identityFor(item)}:${index}`}
-                            draggable
-                            onDragStart={() => setDragIndex(index)}
                             onDragOver={(event) => event.preventDefault()}
                             onDrop={() => {
                               if (dragIndex !== null) reorder(dragIndex, index);
@@ -720,7 +718,18 @@ export function CatalogStudioPage() {
                             onClick={() => setSelectedIndex(index)}
                             className={cn("border-b", selectedIndex === index && "bg-primary/10")}
                           >
-                            <td className="p-2"><GripVertical className="h-4 w-4 text-muted-foreground" /></td>
+                            <td className="p-2">
+                              <span
+                                data-drag-handle
+                                draggable
+                                onDragStart={() => setDragIndex(index)}
+                                role="button"
+                                aria-label="اسحب لإعادة الترتيب"
+                                className="inline-flex touch-none"
+                              >
+                                <GripVertical className="h-4 w-4 text-muted-foreground" />
+                              </span>
+                            </td>
                             <td className="p-2 font-mono">{String(display?.order ?? "—")}</td>
                             <td className="p-2 font-mono text-xs" dir="ltr">{identityFor(item)}</td>
                             <td className="max-w-52 truncate p-2">{nameFor(item, "ar") || String(item.value ?? "—")}</td>

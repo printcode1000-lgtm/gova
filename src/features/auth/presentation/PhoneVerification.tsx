@@ -129,7 +129,7 @@ export function PhoneVerification({ id,
               <span id="auth.phone-verification.span" className="text-sm font-semibold text-on-surface">{t('auth.phone.label')}</span>
               <div id="auth.phone-verification.div.3" className="flex items-center gap-2">
                 <div id="auth.phone-verification.div.4" className="relative flex-1">
-                  <span id="auth.phone-verification.span.2" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
+                  <span id="auth.phone-verification.span.2" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">
                     +20
                   </span>
                   <input id="auth.phone-verification.input"
@@ -262,7 +262,7 @@ export function PhoneVerification({ id,
         </span>
         <div id="auth.phone-verification.div.10" className="flex items-center gap-2">
           <div id="auth.phone-verification.div.11" className="relative min-w-0 flex-1">
-            <span id="auth.phone-verification.span.8" className="absolute start-3 top-1/2 -translate-y-1/2 select-none text-xs sm:text-sm text-on-surface-variant">
+            <span id="auth.phone-verification.span.8" className="absolute start-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-on-surface-variant">
               +20
             </span>
             <input id="auth.phone-verification.input.2"

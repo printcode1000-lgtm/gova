@@ -226,7 +226,7 @@ export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: stri
           window.clearTimeout(longPressTimerRef.current);
         }
       }}
-      className="asol-section-tonal-error overflow-hidden relative flex items-center py-2 mx-2 sm:mx-4 rounded-xl touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto select-none"
+      className="asol-section-tonal-error overflow-hidden relative flex items-center py-2 mx-2 sm:mx-4 rounded-xl touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto"
     >
       <div className="flex items-center gap-2 px-4 z-10 border-s border-outline-variant/40 shrink-0 asol-tonal-error rounded-e-xl py-1">
         <TrendingUp

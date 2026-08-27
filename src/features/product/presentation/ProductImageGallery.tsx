@@ -174,7 +174,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
         onPointerLeave={clearGesture}
       >
         <div
-          className={`relative h-full w-full select-none transition-[opacity,transform] duration-300 ${loaded.has(active.url) ? "opacity-100" : "opacity-0"}`}
+          className={`relative h-full w-full transition-[opacity,transform] duration-300 ${loaded.has(active.url) ? "opacity-100" : "opacity-0"}`}
           style={{
             transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
           }}
@@ -220,7 +220,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
                 onLoad={() =>
                   setLoaded((current) => new Set(current).add(image.url))
                 }
-                className="select-none object-cover"
+                className="object-cover"
               />
             </button>
           ))}

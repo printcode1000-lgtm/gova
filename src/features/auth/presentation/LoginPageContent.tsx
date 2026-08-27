@@ -49,7 +49,7 @@ export function LoginPageContent() {
                   <div id="auth.login-page-content.div.7" className="space-y-2">
                     <span id="auth.login-page-content.span" className="text-sm font-semibold flex items-center gap-2 text-on-surface"><Smartphone id="auth.login-page-content.smartphone" className="h-4 w-4 text-primary" />{t('auth.login.phone')}</span>
                     <div id="auth.login-page-content.div.8" className="relative">
-                      <span id="auth.login-page-content.span.2" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">+20</span>
+                      <span id="auth.login-page-content.span.2" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">+20</span>
                       <input {...uiAttributes({ uid: "login-phone-ChBI52", id: "login-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "login-phone" } })} name="phone" type="tel" inputMode="tel" maxLength={11} placeholder={t('auth.login.phonePlaceholder')} className={cn('auth-input ps-12 w-full', fieldState.error && 'border-error')} value={field.value} onChange={(e) => field.onChange(e.target.value.replace(/\D/g, '').slice(0, 11))} />
                     </div>
                     {fieldState.error && <p id="auth.login-page-content.p.2" className="text-xs text-error">{fieldState.error.message}</p>}

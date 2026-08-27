@@ -45,7 +45,7 @@ return (
                     {t('onboarding.contactInfo.phoneTypes.whatsapp')}
                   </Label>
                   <div id="profile.contact-info.primary-contact-view.div.2" className="relative">
-                    <span id="profile.contact-info.primary-contact-view.span" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
+                    <span id="profile.contact-info.primary-contact-view.span" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">
                       +20
                     </span>
                     <input id="profile.contact-info.primary-contact-view.input"
@@ -193,7 +193,7 @@ return (
                           style={{ color: quickAddColor(type) }}
                         />
                         <div className="flex-1 relative">
-                          <span className="absolute start-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-on-surface-variant select-none">
+                          <span className="absolute start-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-on-surface-variant">
                             +20
                           </span>
                           <input

@@ -85,7 +85,7 @@ return (
                           style={{ color: quickAddColor(type) }}
                         />
                         <div className="flex-1 relative">
-                          <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
+                          <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">
                             +20
                           </span>
                           <input

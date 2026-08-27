@@ -425,13 +425,20 @@ export function SuperAdminTrendingRibbonPage() {
             {items.map((item, index) => (
               <div
                 key={`${item.label}-${index}`}
-                draggable
-                onDragStart={() => handleDragStart(index)}
                 onDragOver={(e) => handleDragOver(e, index)}
                 onDragEnd={handleDragEnd}
                 className="flex items-center gap-3 rounded-lg border bg-surface p-3 transition-colors"
               >
-                <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-muted-foreground" />
+                <span
+                  data-drag-handle
+                  draggable
+                  onDragStart={() => handleDragStart(index)}
+                  role="button"
+                  aria-label="اسحب لإعادة الترتيب"
+                  className="shrink-0 touch-none"
+                >
+                  <GripVertical className="h-4 w-4 text-muted-foreground" />
+                </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{item.label}</p>
                   <p className="truncate text-xs text-muted-foreground">
