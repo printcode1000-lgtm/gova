@@ -16,6 +16,9 @@
 | Edges | 34261 |
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
@@ -45,7 +48,11 @@
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
 | source | 2116 |
+=======
+| source | 2115 |
+>>>>>>> theirs
 =======
 | source | 2115 |
 >>>>>>> theirs
@@ -64,8 +71,13 @@
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
 | affects-runtime | 10701 |
 | belongs-to | 2228 |
+=======
+| affects-runtime | 10691 |
+| belongs-to | 2229 |
+>>>>>>> theirs
 =======
 | affects-runtime | 10691 |
 | belongs-to | 2229 |

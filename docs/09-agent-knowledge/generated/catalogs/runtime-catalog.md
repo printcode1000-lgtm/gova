@@ -16,9 +16,15 @@ The project has five mandatory application surfaces — Development, Web, Static
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
 | Static out | Static Next.js export in out/. It has no bundled src/app/api handlers and must use a remote API base URL; it is the web payload copied into native shells. | 27 | 2 | 1 | 1658 |
 | Tooling | Repository scripts, generators, validation, deployment orchestration and release tooling executed by Node/npm. | 261 | 3 | 0 | 178 |
 | Web | Server-capable Next.js web application. Production builds produce .next and deployment may run on Vercel/serverless infrastructure. | 19 | 3 | 1 | 2195 |
+=======
+| Static out | Static Next.js export in out/. It has no bundled src/app/api handlers and must use a remote API base URL; it is the web payload copied into native shells. | 25 | 2 | 1 | 1659 |
+| Tooling | Repository scripts, generators, validation, deployment orchestration and release tooling executed by Node/npm. | 259 | 3 | 0 | 165 |
+| Web | Server-capable Next.js web application. Production builds produce .next and deployment may run on Vercel/serverless infrastructure. | 19 | 3 | 1 | 2196 |
+>>>>>>> theirs
 =======
 | Static out | Static Next.js export in out/. It has no bundled src/app/api handlers and must use a remote API base URL; it is the web payload copied into native shells. | 25 | 2 | 1 | 1659 |
 | Tooling | Repository scripts, generators, validation, deployment orchestration and release tooling executed by Node/npm. | 259 | 3 | 0 | 165 |
