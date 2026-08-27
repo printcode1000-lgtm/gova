@@ -348,6 +348,45 @@ async function testHydratedPendingRecordKeepsTheIconAndAsksForNavigation() {
   closePageSaveDialog();
 }
 
+async function testStalePendingRecordNeitherShowsTheIconNorOpensADialog() {
+  reset();
+  const storage = createMemoryStorage([
+    {
+      schemaVersion: 1,
+      id: "profile-edit",
+      pageLabel: "Profile",
+      returnPath: "/profile?mode=edit",
+      items: [
+        {
+          id: "registration",
+          label: "Registration",
+          operation: "save",
+          isDirty: false,
+          canSave: true,
+          selected: true,
+        },
+      ],
+      updatedAt: new Date().toISOString(),
+    },
+  ]);
+  configurePageSaveCore({ storage });
+  await hydratePageSavePendingFromStorage();
+
+  assert.equal(headerState(), "hidden", "a record with no dirty work is not pending");
+  assert.equal(storage.store.size, 0, "the stale record is deleted from storage");
+
+  // A page that only stages operations mounts with an empty scope; the header
+  // must stay hidden and the dialog must refuse to open with nothing listed.
+  formScope("super-admin-logs", [], async () => true);
+  assert.equal(headerState(), "hidden");
+  openPageSaveDialog();
+  assert.equal(
+    getPageSaveSnapshot().dialogOpen,
+    false,
+    "no dialog opens when there is nothing to execute",
+  );
+}
+
 async function main() {
   await testIconAppearsOnEditAndHidesAfterSave();
   await testSuccessIsAcknowledgedOnlyOnce();
@@ -360,6 +399,7 @@ async function main() {
   await testFormWorkCannotBeUnchecked();
   await testUnmountingAStagingSurfaceHidesTheIcon();
   await testHydratedPendingRecordKeepsTheIconAndAsksForNavigation();
+  await testStalePendingRecordNeitherShowsTheIconNorOpensADialog();
   console.log("page-save header visibility tests passed.");
 }
 

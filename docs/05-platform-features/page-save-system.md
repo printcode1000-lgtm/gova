@@ -149,6 +149,11 @@ Several scopes can be mounted at once (a product page shows both the editor and 
 
 After a successful save the registry marks the saved items clean immediately so the header icon hides without waiting for the next React sync. A short held-clean pass suppresses one stale dirty re-registration from React before new edits surface again.
 
+The icon and the dialog track **dirty work only**. A persisted pending record
+whose items are all clean is deleted on hydration and never counts as pending,
+and `openPageSaveDialog()` refuses to open when no dirty row would be listed and
+nothing is interrupted or saving. An empty "choose what to save" dialog is a bug.
+
 When the user confirms save while the target page is not mounted, the registry navigates to `returnPath`, reopens the dialog on that page, and completes save there.
 
 ## Image uploads

@@ -249,11 +249,18 @@ function resolveActiveRegistration(): StoredRegistration | null {
   return dirty ?? current;
 }
 
+// A record with nothing dirty left is not pending work: it must never light up
+// the header icon or open an empty dialog.
 function resolvePrimaryPersisted(): PageSavePendingRecord | null {
-  if (activeRegistrationId && persistedRecords.has(activeRegistrationId)) {
-    return persistedRecords.get(activeRegistrationId) ?? null;
-  }
-  return [...persistedRecords.values()].at(-1) ?? null;
+  const own = activeRegistrationId
+    ? persistedRecords.get(activeRegistrationId)
+    : undefined;
+  if (own && hasDirtyItems(own.items)) return own;
+  return (
+    [...persistedRecords.values()]
+      .reverse()
+      .find((record) => hasDirtyItems(record.items)) ?? null
+  );
 }
 
 function persistableItems(items: PageSaveItemState[]): PageSaveItemState[] {
@@ -331,12 +338,18 @@ export async function hydratePageSavePendingFromStorage(): Promise<void> {
   hydrated = true;
   const records = await loadPageSavePendingRecords();
   persistedRecords.clear();
-  records.forEach((record) => {
+  for (const record of records) {
+    if (!hasDirtyItems(record.items)) {
+      // Stale leftovers from a finished save would otherwise resurface as an
+      // empty save dialog on the next page that mounts a scope.
+      await deletePageSavePendingRecord(record.id);
+      continue;
+    }
     persistedRecords.set(record.id, {
       ...record,
       items: record.items.map((item) => ({ ...item, selected: true })),
     });
-  });
+  }
   emit();
 }
 
@@ -526,6 +539,14 @@ export function acknowledgePageSaveInterruption(operationId: string): void {
 export function openPageSaveDialog(): void {
   const snapshot = getPageSaveSnapshot();
   if (!snapshot.isDirty && !snapshot.isSaving && snapshot.interrupted.length === 0) {
+    return;
+  }
+  // The header can be driven by a scope other than the one that owns the work.
+  // Opening a dialog with no dirty row and nothing to acknowledge would ask the
+  // user to choose from an empty list.
+  const pending = buildDialogState();
+  const hasListedWork = pending?.items.some((item) => item.isDirty) ?? false;
+  if (!hasListedWork && !snapshot.isSaving && snapshot.interrupted.length === 0) {
     return;
   }
   dialogOpen = true;
