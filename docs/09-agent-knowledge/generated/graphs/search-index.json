@@ -9479,6 +9479,48 @@
       ]
     },
     {
+      "id": "document:docs/04-ui-components/notifications-filter-tabs.md",
+      "kind": "document",
+      "name": "Notifications Filter Tabs",
+      "path": "docs/04-ui-components/notifications-filter-tabs.md",
+      "summary": "This document defines the interaction contract for the notifications page filter strip. It applies the same tab treatment as the profile edit workspace, documented in [`profile-edit-navigation.md`](profile-edit-navigation.md).",
+      "tags": [
+        "applies",
+        "as",
+        "contract",
+        "defines",
+        "docs/04-ui-components/notifications-filter-tabs",
+        "docs/04-ui-components/notifications-filter-tabs.md",
+        "document",
+        "documented",
+        "edit",
+        "filter",
+        "for",
+        "in",
+        "interaction",
+        "it",
+        "md",
+        "notifications",
+        "notifications filter tabs",
+        "page",
+        "profile",
+        "profile-edit-navigation",
+        "same",
+        "src/features/notifications/tests/notifications-filter-tabs",
+        "src/features/notifications/tests/notifications-filter-tabs.test.ts",
+        "strip",
+        "tab",
+        "tabs",
+        "test",
+        "the",
+        "this",
+        "this document defines the interaction contract for the notifications page filter strip. it applies the same tab treatment as the profile edit workspace, documented in [`profile-edit-navigation.md`](profile-edit-navigation.md).",
+        "treatment",
+        "ts",
+        "workspace"
+      ]
+    },
+    {
       "id": "document:docs/04-ui-components/page-snapshot-system.md",
       "kind": "document",
       "name": "Page Snapshot System",
@@ -43886,6 +43928,17 @@
       ]
     },
     {
+      "id": "source:src/features/notifications/application/notifications-filter-storage.ts",
+      "kind": "source",
+      "name": "notifications-filter-storage.ts",
+      "path": "src/features/notifications/application/notifications-filter-storage.ts",
+      "tags": [
+        "src/features/notifications/application/notifications-filter-storage",
+        "src/features/notifications/application/notifications-filter-storage.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/notifications/application/permission-service.ts",
       "kind": "source",
       "name": "permission-service.ts",
@@ -44274,6 +44327,17 @@
       "tags": [
         "src/features/notifications/ports/notifications-core-ports",
         "src/features/notifications/ports/notifications-core-ports.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/notifications/presentation/hooks/use-notifications-filter.ts",
+      "kind": "source",
+      "name": "use-notifications-filter.ts",
+      "path": "src/features/notifications/presentation/hooks/use-notifications-filter.ts",
+      "tags": [
+        "src/features/notifications/presentation/hooks/use-notifications-filter",
+        "src/features/notifications/presentation/hooks/use-notifications-filter.ts",
         "ts"
       ]
     },
@@ -50667,6 +50731,17 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/snap-strip-scroll.ts",
+      "kind": "source",
+      "name": "snap-strip-scroll.ts",
+      "path": "src/shared/ui/snap-strip-scroll.ts",
+      "tags": [
+        "src/shared/ui/snap-strip-scroll",
+        "src/shared/ui/snap-strip-scroll.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/shared/ui/switch.tsx",
       "kind": "source",
       "name": "switch.tsx",
@@ -53150,6 +53225,18 @@
       "tags": [
         "src/features/notifications/tests/notification-test-service",
         "src/features/notifications/tests/notification-test-service.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/notifications/tests/notifications-filter-tabs.test.ts",
+      "kind": "test",
+      "name": "notifications-filter-tabs.test.ts",
+      "path": "src/features/notifications/tests/notifications-filter-tabs.test.ts",
+      "tags": [
+        "src/features/notifications/tests/notifications-filter-tabs",
+        "src/features/notifications/tests/notifications-filter-tabs.test.ts",
         "test",
         "ts"
       ]

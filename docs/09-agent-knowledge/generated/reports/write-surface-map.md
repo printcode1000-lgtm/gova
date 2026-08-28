@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **368**
+Detected write-like surfaces: **369**
 Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -255,6 +255,7 @@ Unproven gateway paths: **146**
 | `src/features/notifications/application/notification-receiver.ts` | `notifications` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/notifications/application/notification-sender.ts` | `notifications` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/notifications/application/notification-stored-extension.ts` | `notifications` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `src/features/notifications/application/notifications-filter-storage.ts` | `notifications` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/notifications/application/public/notification-center-extension.ts` | `notifications` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/notifications/application/public/notification-facade.ts` | `notifications` | create, patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/notifications/domain/notification-metadata-validation.ts` | `notifications` | create | `unproven` | NO | `` | android, development, ios, static-out, web | high |
@@ -263,7 +264,7 @@ Unproven gateway paths: **146**
 | `src/features/notifications/infrastructure/push-device-store.ts` | `notifications` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/notifications/infrastructure/web-push/web-push-browser.service.ts` | `notifications` | update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/notifications/ports/notifications-core-ports.ts` | `notifications` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/notifications/presentation/NotificationsPageContent.tsx` | `notifications` | delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `src/features/notifications/presentation/hooks/use-notifications-filter.ts` | `notifications` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/notifications/server/services/mobile-push-crypto.server.ts` | `notifications` | update | `unproven` | NO | `` | development, web | high |
 | `src/features/notifications/server/services/mobile-push-unlock.service.server.ts` | `notifications` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/notifications/server/services/notification-broadcast-service.server.ts` | `notifications` | update | `@asol/data-core` | yes | `` | development, web | medium |

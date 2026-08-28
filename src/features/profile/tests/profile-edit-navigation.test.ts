@@ -17,8 +17,12 @@ assert.match(types, /PROFILE_EDIT_SNAPSHOT_SCROLL_IDS/);
 assert.match(navigation, /resyncScrollToActiveTab/);
 assert.match(navigation, /tabsScrollRef/);
 assert.match(navigation, /activeTabRef/);
-assert.match(navigation, /parent\.style\.scrollSnapType = "none"/);
-assert.match(navigation, /parent\.style\.scrollBehavior = "auto"/);
+// Absolute programmatic selection lives in one shared helper, used by every
+// snapping tab strip.
+const snapStripScroll = source('src/shared/ui/snap-strip-scroll.ts');
+assert.match(snapStripScroll, /parent\.style\.scrollSnapType = "none"/);
+assert.match(snapStripScroll, /parent\.style\.scrollBehavior = "auto"/);
+assert.match(navigation, /centerElementInScrollParent/);
 assert.match(
   navigation,
   /activeTabRef\.current = section;\s*setActiveTab\(section\);\s*scrollToSection\(section\)/,

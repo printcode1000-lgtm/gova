@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { useSnapshotState } from "@/features/page-snapshot";
+import { centerElementInScrollParent } from "@/shared/ui/snap-strip-scroll";
 import { PROFILE_SECTIONS, type ProfileEditTab } from "./profile-page.types";
 import {
   readStoredProfileEditTab,
@@ -88,36 +89,6 @@ export function useProfileNavigation({
   const isSwipingRef = React.useRef(false);
   const swipeSettleTimerRef = React.useRef<number | null>(null);
 
-  const scrollElementHorizontally = React.useCallback(
-    (element: HTMLElement | null) => {
-      if (!element?.parentElement) return;
-      const parent = element.parentElement;
-      const parentRect = parent.getBoundingClientRect();
-      const elementRect = element.getBoundingClientRect();
-      const horizontalOffset =
-        elementRect.left +
-        elementRect.width / 2 -
-        (parentRect.left + parentRect.width / 2);
-
-      if (Math.abs(horizontalOffset) < 0.5) return;
-
-      // Programmatic section selection must be absolute, not constrained by
-      // `snap-always`. Temporarily disabling snapping also prevents CSS
-      // `scroll-smooth` from walking through intermediate profile sections.
-      const previousSnapType = parent.style.scrollSnapType;
-      const previousScrollBehavior = parent.style.scrollBehavior;
-      parent.style.scrollSnapType = "none";
-      parent.style.scrollBehavior = "auto";
-      parent.scrollBy({
-        left: horizontalOffset,
-        behavior: "auto",
-      });
-      parent.style.scrollBehavior = previousScrollBehavior;
-      parent.style.scrollSnapType = previousSnapType;
-    },
-    [],
-  );
-
   const scrollToSection = React.useCallback(
     (section: ProfileEditTab) => {
       programmaticScrollTargetRef.current = section;
@@ -129,8 +100,8 @@ export function useProfileNavigation({
         window.clearTimeout(programmaticScrollClearTimerRef.current);
       }
 
-      scrollElementHorizontally(panelRefs.current[section]);
-      scrollElementHorizontally(navButtonRefs.current[section]);
+      centerElementInScrollParent(panelRefs.current[section]);
+      centerElementInScrollParent(navButtonRefs.current[section]);
 
       // The scroll above is intentionally immediate. Keep the guard only long
       // enough for the resulting scroll event to drain; unlike the old
@@ -142,7 +113,7 @@ export function useProfileNavigation({
         programmaticScrollClearTimerRef.current = null;
       }, 50);
     },
-    [scrollElementHorizontally],
+    [],
   );
 
   const resyncScrollToActiveTab = React.useCallback(() => {
@@ -334,10 +305,10 @@ export function useProfileNavigation({
       if (closest !== currentActiveTab) {
         activeTabRef.current = closest;
         setActiveTab(closest);
-        scrollElementHorizontally(navButtonRefs.current[closest]);
+        centerElementInScrollParent(navButtonRefs.current[closest]);
       }
     });
-  }, [scrollElementHorizontally, setActiveTab, syncCarouselHeight]);
+  }, [setActiveTab, syncCarouselHeight]);
 
   React.useEffect(
     () => () => {

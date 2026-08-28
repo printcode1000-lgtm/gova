@@ -32,13 +32,13 @@ import {
   amountLabel,
   categoryIcon,
   categoryTone,
-  filterFromQuery,
   filterIcon,
   filters,
   filterSummary,
   formatDate,
   type NotificationFilter,
 } from "./notifications-page-model";
+import { useNotificationsFilter } from "./hooks/use-notifications-filter";
 import { NotificationsEmptyState } from "./NotificationsEmptyState";
 import { uiAttributes } from "@asol/ui-registry-core";
 
@@ -69,12 +69,12 @@ export function NotificationsPageContent() {
     markManyRead,
     dismiss,
   } = useNotifications();
-  const [filter, setFilter] = React.useState<NotificationFilter>("all");
+  const { filter, tabsScrollRef, filterButtonRefs, selectFilter } =
+    useNotificationsFilter(uid);
   const [focusId, setFocusId] = React.useState("");
 
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setFilter(filterFromQuery(params.get("filter")));
     setFocusId(params.get("focus") ?? "");
   }, []);
 
@@ -108,14 +108,6 @@ export function NotificationsPageContent() {
     element?.scrollIntoView({ behavior: "smooth", block: "center" });
     element?.focus({ preventScroll: true });
   }, [focusId, groups, isLoading]);
-
-  const selectFilter = (nextFilter: NotificationFilter) => {
-    setFilter(nextFilter);
-    const params = new URLSearchParams(window.location.search);
-    params.set("filter", nextFilter);
-    params.delete("focus");
-    router.replace(`/notifications?${params.toString()}`, { scroll: false });
-  };
 
   if (isLoading) {
     return (
@@ -162,10 +154,14 @@ export function NotificationsPageContent() {
         className="mb-5 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl"
         aria-label={copy.title}
       >
+        {/*
+          The strip position is derived from the selected tab, so it is
+          deliberately not captured for generic snapshot scroll restoration.
+        */}
         <div id="notifications.notifications-page-content.div.2"
-          data-snapshot-scroll
+          ref={tabsScrollRef}
           data-snapshot-id="notifications-filter-tabs-scroll"
-          className="flex snap-x snap-mandatory items-stretch gap-1.5 overflow-x-auto px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory items-stretch gap-1.5 overflow-x-auto overscroll-x-contain px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {availableFilters.map((item) => {
             const Icon = filterIcon(item.id);
@@ -174,10 +170,14 @@ export function NotificationsPageContent() {
             return (
               <button key={item.id}
                 {...uiAttributes({ uid: "notification-filter-bvMK2l", id: "notification-filter", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-filter" } })}
+                ref={(node) => {
+                  filterButtonRefs.current[item.id] = node;
+                }}
                 type="button"
                 onClick={() => selectFilter(item.id)}
                 aria-pressed={active}
-                className="group relative flex h-16 w-16 shrink-0 snap-center flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 active:scale-95"
+                aria-current={active ? "true" : undefined}
+                className="group relative flex h-16 w-16 shrink-0 snap-center snap-always flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 active:scale-95"
                 style={{
                   paddingInline: "0.0625rem",
                   paddingBlock: "0.0625rem",
