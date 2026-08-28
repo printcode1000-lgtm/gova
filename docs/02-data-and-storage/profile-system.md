@@ -156,6 +156,13 @@ eligibility live in
 `src/features/profile/presentation/specialties-selection.ts`, so the UI does not
 embed catalog-selection rules directly.
 
+The selected-specialties summary strip (`profile.specialties-card.div.4`) lays
+its dynamically generated chips out as a two-row grid that flows into new
+columns (`grid-flow-col` with `grid-rows-2`) and scrolls horizontally once the
+chips exceed those two rows, so the card height stays fixed no matter how many
+specialties are selected. Each chip keeps its subcategory chips on a single
+line so both rows stay the same height.
+
 ## Migration
 
 The structural migration is:

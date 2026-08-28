@@ -512,7 +512,7 @@ export const SpecialtiesCard = React.forwardRef<
           Object.values(selectedSubcategories).some(
             (arr) => arr.length > 0,
           )) && (
-          <div id="profile.specialties-card.div.4" className="flex flex-wrap gap-1.5 pt-2">
+          <div id="profile.specialties-card.div.4" className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1.5 overflow-x-auto overscroll-x-contain pt-2">
             {selectedSpecialties.map((categoryId) => {
               const categoryName = getCategoryName(categoryId);
               const subIds = selectedSubcategories[categoryId] || [];
@@ -534,7 +534,7 @@ export const SpecialtiesCard = React.forwardRef<
                     <X className="h-3 w-3" />
                   </button>
                   {subIds.length > 0 && (
-                    <div className="flex flex-wrap gap-0.5 pl-1 border-l border-outline-variant/50">
+                    <div className="flex flex-nowrap gap-0.5 pl-1 border-l border-outline-variant/50">
                       {subIds.map((subId) => (
                         <div
                           key={subId}
