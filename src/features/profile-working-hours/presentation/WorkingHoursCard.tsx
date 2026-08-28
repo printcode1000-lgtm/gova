@@ -72,15 +72,13 @@ export function WorkingHoursCard({ id,
   const currentStatus = getCurrentWorkingHoursStatus(value);
   const hasAnyHours = hasWorkingHours(value);
 
-  // Editing is one day at a time: the seven days are a tab strip, and today is
-  // the day already selected, because it is the one an owner opens the card to
-  // fix. Reading the card is not paged — a visitor wants the whole week at once.
+  // The week is one day at a time on both sides of the card: the seven days are
+  // a tab strip, and today is the day already selected — the day an owner comes
+  // to fix and the day a visitor is asking about.
   const [selectedDayId, setSelectedDayId] = React.useState<WorkingDayId>(() =>
     currentWorkingDayId(),
   );
-  const visibleDays = isEdit
-    ? value.days.filter((day) => day.day === selectedDayId)
-    : value.days;
+  const visibleDays = value.days.filter((day) => day.day === selectedDayId);
 
   const setValue = (next: ProfileWorkingHours) => onChange?.(next);
 
@@ -127,18 +125,16 @@ export function WorkingHoursCard({ id,
         <p className="text-sm text-on-surface-variant">{text.notSet}</p>
       ) : null}
 
-      {isEdit ? (
-        <CategoryTabsStrip
-          level="sub"
-          items={value.days.map((day) => ({
-            id: day.day,
-            label: getWorkingHoursDayLabel(day.day, locale),
-            count: day.open ? day.periods.length : undefined,
-          }))}
-          selectedId={selectedDayId}
-          onSelect={(dayId) => setSelectedDayId(dayId as WorkingDayId)}
-        />
-      ) : null}
+      <CategoryTabsStrip
+        level="sub"
+        items={value.days.map((day) => ({
+          id: day.day,
+          label: getWorkingHoursDayLabel(day.day, locale),
+          count: day.open ? day.periods.length : undefined,
+        }))}
+        selectedId={selectedDayId}
+        onSelect={(dayId) => setSelectedDayId(dayId as WorkingDayId)}
+      />
 
       <div className="space-y-3">
         {visibleDays.map((day) => (

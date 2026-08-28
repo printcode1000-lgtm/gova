@@ -126,13 +126,13 @@ its surrounding profile tab owns the section title. The former duplicate inner
 title, explanatory sentence, and copy-first-day shortcut are not part of the
 editor surface.
 
-The editor pages the week: the seven days are a main tab strip (the shared
-[Category Tabs Strip](../04-ui-components/category-tabs-strip.md)) and only the
-selected day's card is rendered, with its open/closed switch, its periods, and
-its add-period button. The strip opens on **today**, which is the day an owner
-opens the card to fix, and each tab badges how many periods that day holds.
-Reading a profile is not paged — the preview still lists the whole week at
-once, because a visitor is looking for the week, not editing a day.
+The card pages the week on both sides: the seven days are a main tab strip (the
+shared [Category Tabs Strip](../04-ui-components/category-tabs-strip.md)) and
+only the selected day is rendered — its open/closed state, its periods, and, in
+the editor, its add-period button. The strip opens on **today**, the day an
+owner comes to fix and the day a visitor is asking about, and each tab badges
+how many periods that day holds. The preview keeps its open-now badge above the
+strip, so the whole-week question is answered without leaving the selected day.
 
 ## Search
 
