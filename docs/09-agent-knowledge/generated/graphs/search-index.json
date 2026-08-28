@@ -47206,6 +47206,17 @@
       ]
     },
     {
+      "id": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "kind": "source",
+      "name": "WorkingHoursNoteCard.tsx",
+      "path": "src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "tags": [
+        "src/features/profile-working-hours/presentation/workinghoursnotecard",
+        "src/features/profile-working-hours/presentation/workinghoursnotecard.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/profile-working-hours/ui.ts",
       "kind": "source",
       "name": "ui.ts",

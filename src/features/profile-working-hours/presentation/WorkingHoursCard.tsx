@@ -61,11 +61,6 @@ export function WorkingHoursCard({ id,
     closedNow: locale === "ar" ? "مغلق الآن" : "Closed now",
     notSet: locale === "ar" ? "لم يتم تحديد مواعيد العمل." : "Working hours are not set.",
     addPeriod: locale === "ar" ? "إضافة فترة" : "Add period",
-    note: locale === "ar" ? "ملاحظة" : "Note",
-    notePlaceholder:
-      locale === "ar"
-        ? "مثال: المواعيد قد تختلف في العطلات."
-        : "Example: hours may vary on holidays.",
     from: locale === "ar" ? "من" : "From",
     to: locale === "ar" ? "إلى" : "To",
   };
@@ -264,23 +259,6 @@ export function WorkingHoursCard({ id,
         ))}
       </div>
 
-      {isEdit ? (
-        <label className="block space-y-2 text-xs text-on-surface-variant">
-          <span>{text.note}</span>
-          <textarea
-            value={value.note}
-            onChange={(event) => setValue({ ...value, note: event.target.value.slice(0, 500) })}
-            rows={3}
-            maxLength={500}
-            placeholder={text.notePlaceholder}
-            className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface outline-none transition focus:border-primary"
-          />
-        </label>
-      ) : value.note ? (
-        <p className="rounded-lg bg-surface-container-low p-3 text-xs text-on-surface-variant">
-          {value.note}
-        </p>
-      ) : null}
     </section>
   );
 }

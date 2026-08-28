@@ -77,7 +77,10 @@ export function FulfillmentCarrierSearch({
             {emptyDeliveryProvidersMessage}
           </p>
         ) : (
-          <div id="profile.fulfillment-settings.fulfillment-carrier-search.div.4" className="grid gap-3 sm:grid-cols-2">
+          <div
+            id="profile.fulfillment-settings.fulfillment-carrier-search.div.4"
+            className="grid h-[26rem] grid-cols-2 content-start gap-3 overflow-y-auto overscroll-y-contain pe-1"
+          >
             {displayedUsers.map((user) => {
               const isSelected = selected.has(user.uid);
               const card = createSellerCardViewModel(user);

@@ -2,7 +2,10 @@
 
 import * as React from "react";
 
-import { WorkingHoursCard } from "@/features/profile-working-hours/ui";
+import {
+  WorkingHoursCard,
+  WorkingHoursNoteCard,
+} from "@/features/profile-working-hours/ui";
 import { useStoreDetails } from "@/features/profile/presentation/hooks/use-store-details";
 import type { StoreDetailsData } from "@/features/profile/domain/store-details.entity";
 import { normalizeProfileWorkingHours } from "@/features/profile-working-hours";
@@ -74,6 +77,14 @@ export const WorkingHoursProfileCard = React.forwardRef<
         locale={locale === "ar" ? "ar" : "en"}
         value={details.workingHours}
         onChange={(workingHours) => updateField("workingHours", workingHours)}
+      />
+      <WorkingHoursNoteCard id="profile.working-hours-profile-card.working-hours-note-card"
+        mode="edit"
+        locale={locale === "ar" ? "ar" : "en"}
+        note={details.workingHours.note}
+        onChange={(note) =>
+          updateField("workingHours", { ...details.workingHours, note })
+        }
       />
     </div>
   );

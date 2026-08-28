@@ -87,7 +87,10 @@ Profile UI
 
 Basic registration credentials stay in the users/auth database. Profile display, search, contacts, locations, shipping, returns, working hours, follows, and seller category indexes stay in the profile database.
 
-The fulfillment editor searches delivery providers by store name and never
+The fulfillment editor lists the delivery providers it finds as seller cards in
+a **two-column grid of fixed height**, scrolled vertically for the rest, so the
+results never push the settings below them off the screen no matter how many
+providers match. It searches providers by store name and never
 renders a UID as a provider title. Its carrier badge and duplicate linked-list
 label are intentionally omitted. The return-policy enabled state uses the same
 accessible switch control as notification preferences, keeps the switch beside
@@ -125,6 +128,11 @@ The working-hours editor deliberately shows the day and period controls only;
 its surrounding profile tab owns the section title. The former duplicate inner
 title, explanatory sentence, and copy-first-day shortcut are not part of the
 editor surface.
+
+The note about the schedule — holidays, seasons, exceptions — is not part of
+that card at all: `WorkingHoursNoteCard` renders it in its own container
+directly after the hours card, in both the editor and the preview, because it
+describes the whole week rather than the day that happens to be open.
 
 The card pages the week on both sides: the seven days are a main tab strip (the
 shared [Category Tabs Strip](../04-ui-components/category-tabs-strip.md)) and

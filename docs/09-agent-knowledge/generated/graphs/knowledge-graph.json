@@ -47206,6 +47206,17 @@
       ]
     },
     {
+      "id": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "kind": "source",
+      "name": "WorkingHoursNoteCard.tsx",
+      "path": "src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "tags": [
+        "src/features/profile-working-hours/presentation/workinghoursnotecard",
+        "src/features/profile-working-hours/presentation/workinghoursnotecard.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/profile-working-hours/ui.ts",
       "kind": "source",
       "name": "ui.ts",
@@ -91677,6 +91688,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/profile-working-hours/ui.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -101740,6 +101757,12 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/profile-working-hours/presentation/WorkingHoursCard.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -216201,6 +216224,12 @@
       "detail": "./WorkingHoursCard"
     },
     {
+      "from": "source:src/features/profile-working-hours/presentation/index.ts",
+      "to": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "kind": "imports",
+      "detail": "./WorkingHoursNoteCard"
+    },
+    {
       "from": "source:src/features/profile-working-hours/presentation/WorkingHoursCard.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -216253,6 +216282,48 @@
       "to": "source:src/shared/ui/category-tabs-strip.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/category-tabs-strip"
+    },
+    {
+      "from": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "to": "feature:profile-working-hours",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/profile-working-hours/presentation/WorkingHoursNoteCard.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
     },
     {
       "from": "source:src/features/profile-working-hours/ui.ts",

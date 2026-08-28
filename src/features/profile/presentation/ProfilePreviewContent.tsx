@@ -28,7 +28,10 @@ import {
   TrendingRibbon,
   type TrendingRibbonConfig,
 } from "@/features/advertisements/ui";
-import { WorkingHoursCard } from "@/features/profile-working-hours/ui";
+import {
+  WorkingHoursCard,
+  WorkingHoursNoteCard,
+} from "@/features/profile-working-hours/ui";
 import { ProductReviews } from "@/features/product/ui";
 import { SellerDiscountsPreview } from "@/features/seller-discounts/ui";
 import type { SessionRuntimeUser } from "@/shared/session-runtime";
@@ -361,6 +364,11 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
               mode="preview"
               locale={locale}
               value={storeDetails.workingHours}
+            />
+            <WorkingHoursNoteCard id="profile.profile-preview-content.working-hours-note-card"
+              mode="preview"
+              locale={locale}
+              note={storeDetails.workingHours.note}
             />
           </div>
           <ProfileFulfillmentPreviewCard
