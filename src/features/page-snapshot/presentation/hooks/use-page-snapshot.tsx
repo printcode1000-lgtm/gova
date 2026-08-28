@@ -100,7 +100,8 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
 
   const registerState = React.useCallback(
     <T,>(key: string, entry: SnapshotRegistryEntry<T>) => {
-      registryRef.current.set(key, entry as SnapshotRegistryEntry);
+      const registeredEntry = entry as SnapshotRegistryEntry;
+      registryRef.current.set(key, registeredEntry);
       if (
         lastSnapshotRef.current &&
         lastSnapshotRef.current.key === createPageSnapshotKey(identityRef.current) &&
@@ -109,7 +110,9 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
         entry.set(lastSnapshotRef.current.componentState[key] as T);
       }
       return () => {
-        registryRef.current.delete(key);
+        if (registryRef.current.get(key) === registeredEntry) {
+          registryRef.current.delete(key);
+        }
       };
     },
     [],
@@ -298,23 +301,40 @@ export function useSnapshotState<T>(
   initialValue: T | (() => T),
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const context = React.useContext(SnapshotContext);
+  const registerState = context?.registerState;
   const [value, setValue] = React.useState<T>(initialValue);
   const valueRef = React.useRef(value);
+  const requestSaveRef = React.useRef(context?.requestSave);
+
+  requestSaveRef.current = context?.requestSave;
+
+  const setSnapshotValue = React.useCallback<React.Dispatch<React.SetStateAction<T>>>(
+    (update) => {
+      const previous = valueRef.current;
+      const next =
+        typeof update === 'function'
+          ? (update as (previousValue: T) => T)(previous)
+          : update;
+
+      valueRef.current = next;
+      setValue(next);
+      if (!Object.is(previous, next)) {
+        requestSaveRef.current?.();
+      }
+    },
+    [],
+  );
 
   React.useEffect(() => {
-    valueRef.current = value;
-    context?.requestSave();
-  }, [context, value]);
-
-  React.useEffect(() => {
-    if (!context) return undefined;
-    return context.registerState<T>(key, {
+    if (!registerState) return undefined;
+    return registerState<T>(key, {
       get: () => valueRef.current,
       set: (next) => {
+        valueRef.current = next;
         setValue(next);
       },
     });
-  }, [context, key]);
+  }, [key, registerState]);
 
-  return [value, setValue];
+  return [value, setSnapshotValue];
 }
