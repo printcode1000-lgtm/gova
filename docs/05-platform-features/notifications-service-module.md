@@ -72,10 +72,11 @@ The main app has no URL for this service, no client for it, and no code path to
 it. It signs a decision; the user's browser carries it. See
 [Notification Bridge Module](notification-bridge-module.md).
 
-**Native installed shells** bypass this service entirely. Capacitor devices verify
-grants on the main app (`POST /api/notifications/recipient-tokens`) and send FCM
-directly after a one-time credential unlock. The service remains the only web
-fan-out path.
+**Native installed shells** bypass this service entirely. Capacitor devices call
+the main app for grant verification (`POST /api/notifications/recipient-tokens`
+on every send) and, when Preferences are empty,
+`POST /api/notifications/mobile-push/unlock`, then send FCM HTTP v1 from the
+device to Google. The service remains the only **web** fan-out path.
 
 Three rules keep the boundary honest, all enforced by
 `notifications-service-module-contract.test.ts`:

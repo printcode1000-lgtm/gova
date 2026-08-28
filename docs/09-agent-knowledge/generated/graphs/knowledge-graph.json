@@ -10069,7 +10069,6 @@
         "@asol/account-bridge",
         "@asol/account-bridge/notifications",
         "@asol/notifications-core",
-        "@asol/notifications-core/builder",
         "@asol/notifications-core/server",
         "and",
         "backend",
@@ -10092,6 +10091,8 @@
         "notification",
         "notification bridge module",
         "nowhere",
+        "packages/account-bridge/src/mobile-push/deliver",
+        "packages/account-bridge/src/mobile-push/deliver.ts",
         "packages/account-bridge/src/mobile-push/fcm-message",
         "packages/account-bridge/src/mobile-push/fcm-message.ts",
         "packages/account-bridge/src/tests/mobile-push",
@@ -10125,6 +10126,7 @@
         "/asolnotificationtapprotocol",
         "/asolpushmessagingservice",
         "> specialty-based buyer/provider conversations are documented in [`specialty-notification-chat.md`](specialty-notification-chat.md). they use notifications as their sole transport and keep message content only in the local notification center.",
+        "@asol/account-bridge",
         "adapter",
         "and",
         "android/",
@@ -12021,6 +12023,7 @@
       "path": "docs/07-mobile-and-release/capacitor/android-push-notifications.md",
       "summary": "ASOL Android uses Firebase Cloud Messaging through the official Capacitor 8 Push Notifications plugin. The integration covers foreground, background, and terminated application states while keeping the in-app notification center local-first in AsolDB.",
       "tags": [
+        "@asol/account-bridge",
         "@asol/branding-core",
         "and",
         "android",
@@ -12049,6 +12052,9 @@
         "notification",
         "notifications",
         "official",
+        "packages/account-bridge/src/mobile-push/",
+        "packages/account-bridge/src/mobile-push/embedded-blob",
+        "packages/account-bridge/src/mobile-push/embedded-blob.ts",
         "plugin",
         "push",
         "scripts/sync-android-push-assets",
@@ -12436,6 +12442,8 @@
         "obtain",
         "of",
         "package",
+        "packages/account-bridge/src/mobile-push/fcm-message",
+        "packages/account-bridge/src/mobile-push/fcm-message.ts",
         "pbxproj",
         "pinned",
         "plist",
@@ -67502,6 +67510,12 @@
     },
     {
       "from": "document:docs/05-platform-features/notification-bridge-module.md",
+      "to": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
+      "kind": "references",
+      "detail": "../07-mobile-and-release/capacitor/android-push-notifications.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-bridge-module.md",
       "to": "document:docs/08-troubleshooting/problems/static-mobile-push-pem-audit-false-positive.md",
       "kind": "references",
       "detail": "../08-troubleshooting/problems/static-mobile-push-pem-audit-false-positive.md"
@@ -67528,12 +67542,6 @@
       "from": "document:docs/05-platform-features/notification-bridge-module.md",
       "to": "package:@asol/notifications-core",
       "kind": "references",
-      "detail": "@asol/notifications-core/builder"
-    },
-    {
-      "from": "document:docs/05-platform-features/notification-bridge-module.md",
-      "to": "package:@asol/notifications-core",
-      "kind": "references",
       "detail": "@asol/notifications-core/server"
     },
     {
@@ -67553,6 +67561,12 @@
       "to": "script:scripts/provision-mobile-push-credentials.ts",
       "kind": "references",
       "detail": "scripts/provision-mobile-push-credentials.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-bridge-module.md",
+      "to": "source:packages/account-bridge/src/mobile-push/deliver.ts",
+      "kind": "references",
+      "detail": "packages/account-bridge/src/mobile-push/deliver.ts"
     },
     {
       "from": "document:docs/05-platform-features/notification-bridge-module.md",
@@ -67654,6 +67668,12 @@
       "to": "feature:specialty-chat",
       "kind": "references",
       "detail": "src/features/specialty-chat"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-system.md",
+      "to": "package:@asol/account-bridge",
+      "kind": "references",
+      "detail": "@asol/account-bridge"
     },
     {
       "from": "document:docs/05-platform-features/notification-system.md",
@@ -69922,6 +69942,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
+      "to": "package:@asol/account-bridge",
+      "kind": "references",
+      "detail": "@asol/account-bridge"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
       "to": "package:@asol/branding-core",
       "kind": "references",
       "detail": "@asol/branding-core"
@@ -69931,6 +69957,18 @@
       "to": "source:android/app/build.gradle",
       "kind": "references",
       "detail": "android/app"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
+      "to": "source:packages/account-bridge/src/mobile-push/embedded-blob.ts",
+      "kind": "references",
+      "detail": "packages/account-bridge/src/mobile-push/embedded-blob.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
+      "to": "source:packages/account-bridge/src/mobile-push/types.ts",
+      "kind": "references",
+      "detail": "packages/account-bridge/src/mobile-push/"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/android-r8-optimization.md",
@@ -70189,9 +70227,21 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
+      "to": "document:docs/05-platform-features/notification-bridge-module.md",
+      "kind": "references",
+      "detail": "../../05-platform-features/notification-bridge-module.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
       "to": "document:docs/05-platform-features/notification-system.md",
       "kind": "references",
       "detail": "../../05-platform-features/notification-system.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
+      "to": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
+      "kind": "references",
+      "detail": "android-push-notifications.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
@@ -70216,6 +70266,12 @@
       "to": "source:ios/App/App/GoogleService-Info.plist",
       "kind": "references",
       "detail": "ios/App/App/GoogleService-Info.plist"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
+      "to": "source:packages/account-bridge/src/mobile-push/fcm-message.ts",
+      "kind": "references",
+      "detail": "packages/account-bridge/src/mobile-push/fcm-message.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
@@ -223290,6 +223346,12 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/settings/presentation/use-self-test-notification.ts",
+      "to": "source:src/features/auth/index.ts",
+      "kind": "imports",
+      "detail": "@/features/auth"
     },
     {
       "from": "source:src/features/settings/presentation/use-self-test-notification.ts",

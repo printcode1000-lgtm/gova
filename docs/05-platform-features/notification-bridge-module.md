@@ -27,8 +27,9 @@ open browser. The grant remains the only send authority.
 The main app knows *who* should be notified — it holds the users and orders
 databases. The notifications service knows *how* to deliver on **web** — it
 holds the Firebase and APNs credentials for the browser hop. On **native**
-installed shells the device delivers push directly; the main app still authorises
-recipients through signed grants and short-lived unlock of encrypted credentials.
+installed shells the device calls FCM HTTP v1 itself after a cached unlock of
+the encrypted Admin blob; the main app still authorises recipients through
+signed grants and `recipient-tokens` on every send.
 
 ## What it does
 
@@ -42,43 +43,57 @@ recipients through signed grants and short-lived unlock of encrypted credentials
 
 ### Native (Capacitor)
 
-On Android and iOS the bridge **does not** call the notifications service. The
-installed shell delivers push directly:
+On Android and iOS (`isNativePlatform()`) the bridge **does not** call the
+notifications service. `deliverNotificationGrantsFromNative` order matches
+`packages/account-bridge/src/mobile-push/deliver.ts`:
 
-1. `SessionProvider` registers the signed-in `uid`/`phone` in
-   `notification-grant-delivery-context.ts` so the bridge knows who is carrying
-   grants.
-2. On Android, `deliverNotificationGrantsFromNative` calls
-   `NativeCore.ensureNotificationChannels()` before any send so every payload
-   targets a channel that already exists natively.
-3. For each grant batch the bridge calls
-   `POST /api/notifications/recipient-tokens` on the **main app**. The server
-   verifies every grant signature, checks `actorUid` against the caller, and
-   returns FCM registration tokens for the recipients (push-enabled accounts
-   only).
-4. The device builds notification text from `@asol/notifications-core/builder`
-   templates — the same vocabulary the notifications service uses — resolves
-   the Android channel with `resolveAndroidChannelId` (identical to the server
-   FCM provider and to `AsolNotificationChannels.resolveChannelId` in Java),
-   and sends through FCM HTTP v1 with credentials unlocked once via
-   `POST /api/notifications/mobile-push/unlock`.
+1. Require `uid`/`phone` from `notification-grant-delivery-context.ts`. Missing
+   identity → every grant `unavailable`; no FCM.
+2. **Android only:** `NativeCore.ensureNotificationChannels()`. Failure → every
+   grant `unavailable`.
+3. `ensureMobilePushCredentials`: Capacitor Preferences cache, or
+   `POST /api/notifications/mobile-push/unlock` on the **main app** with
+   `{ uid, phone, credentialBlob }` (`credentials: "omit"`). Empty blob, failed
+   HTTP, or incomplete JSON → `null` credentials → every grant `unavailable`.
+4. `getFcmAccessToken`: device JWT to `https://oauth2.googleapis.com/token`
+   (in-memory cache until ~60s before expiry). Failure → every grant
+   `unavailable`.
+5. **Every send:** `POST /api/notifications/recipient-tokens` on the main app
+   with the grant strings (max 100). The server verifies HMAC, checks
+   `actorUid` against the caller when present, returns only `provider === "fcm"`
+   tokens, and applies mute / `no_tokens`. It does **not** call FCM.
+6. `NotificationBuilder` + `resolveAndroidChannelId`, then sequential
+   `POST https://fcm.googleapis.com/v1/projects/{projectId}/messages:send` from
+   the device to Google.
+
+Unlock is **not** on every send: Preferences `asol.mobilePush.credentials.v1`
+skip the unlock route until `clearMobilePushCredentials` (unregister / sign-out).
+`DeviceTokenService.persist` also calls `ensureMobilePushCredentials` after a
+native token register; unlock failure is logged and does not fail registration.
+
+`removeInvalidTokens` on the recipient-tokens service has **no caller**. Native
+send reports `invalidTokenIds` on the bridge result only.
+
+Android payload details:
+[Outbound send from the Android shell](../07-mobile-and-release/capacitor/android-push-notifications.md#outbound-send-from-the-android-shell).
 
 Credential handling:
 
 | Stage | What is stored | Where |
 |---|---|---|
-| App bundle | AES-256-GCM blob of the Firebase service account | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` (client-safe ciphertext only) |
-| Unlock | Server decrypts after `uid`/`phone` identity check | `ASOL_MOBILE_PUSH_UNLOCK_KEY` (server only, never in bundles) |
-| After unlock | Re-encrypted credential bundle | Capacitor Preferences under a device-local AES-GCM key |
+| App bundle | AES-256-GCM blob of `{ projectId, clientEmail, privateKey }` | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` |
+| Unlock | Server decrypts after `uid`/`phone` identity check | `ASOL_MOBILE_PUSH_UNLOCK_KEY` (never in bundles) |
+| After unlock | Same fields, re-encrypted AES-GCM | Preferences `asol.mobilePush.credentials.v1` + `asol.mobilePush.deviceKey.v1` |
 
 The web path is unchanged. Native delivery is an additional branch inside
-`deliverNotificationGrants`; it never removes or replaces the notifications
-service hop on web.
+`deliverNotificationGrants`.
 
 ```text
 Web:     main app ──grant──► browser ──grant──► notifications service ──► FCM/APNs/WebPush
-Native:  main app ──grant──► device ──tokens──► main app
-                              └── FCM HTTP v1 (credentials unlocked once)
+Native:  main app ──grant──► device
+           ├── unlock (if Preferences empty) ──► main app
+           ├── recipient-tokens (every send) ──► main app
+           └── FCM HTTP v1 ──► Google (not ASOL)
 Deploy:  terminal callback ──signed grant──► notifications service ──► super admin
 ```
 
@@ -89,8 +104,8 @@ remember to forward anything. Adding a grant to a response is enough.
 
 | Route | Purpose |
 |---|---|
-| `POST /api/notifications/recipient-tokens` | Verify grants; return recipient FCM tokens and the verified send payload |
-| `POST /api/notifications/mobile-push/unlock` | Verify identity; decrypt the embedded blob; return the Firebase service-account bundle once per device enrollment |
+| `POST /api/notifications/recipient-tokens` | Verify grants; return `fcm` tokens plus the verified send payload. Every native send. |
+| `POST /api/notifications/mobile-push/unlock` | Verify identity; decrypt the embedded blob; return `{ projectId, clientEmail, privateKey }` when Preferences are empty |
 
 The notifications service does **not** expose these routes.
 
@@ -127,8 +142,9 @@ never turn a successful order into a failed one, so that default path never
 rejects and never blocks. Features whose visible outcome is the notification
 itself may opt into manual delivery and inspect the recipient results.
 
-**No session on the web hop.** The web bridge sends `credentials: "omit"` and no
-bearer token. The grant is the only authority for the notifications service.
+**No session cookie on grant hops.** Web send, native unlock, and native
+`recipient-tokens` all use `credentials: "omit"`. Web authority is the grant.
+Native identity is the JSON `uid`/`phone` body plus grant HMAC.
 
 **Browser only for scheduling.** Every entry point returns early when `window`
 is undefined, so importing it during SSR or a static export is harmless.
@@ -260,6 +276,7 @@ packages/account-bridge/
     ├── deliver.ts                    # native grant fan-out
     ├── enrollment.ts                 # unlock + credential cache
     ├── embedded-blob.ts              # reads NEXT_PUBLIC blob
+    ├── credential-store.ts           # Preferences load/save/clear
     ├── credential-store-crypto.ts    # device-local AES-GCM
     ├── fcm-auth.ts                   # Web Crypto JWT → FCM access token
     ├── fcm-message.ts                # FCM HTTP v1 payload (channels + data map)

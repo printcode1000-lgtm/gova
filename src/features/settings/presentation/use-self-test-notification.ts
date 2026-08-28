@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { isSuperAdmin } from "@/features/auth";
 import { useSession } from "@/features/auth/ui";
 import { notifications } from "@/features/notifications";
 import { useTranslation } from "@/shared/i18n";
@@ -14,16 +15,25 @@ import type { ShowSettingsStatus } from "./use-settings-status-banner";
  * The outcome is reported by what actually happened, not by "the request
  * succeeded": a send with no registered token completes cleanly and delivers
  * nothing, which is exactly the case a user presses this button to discover.
+ *
+ * Three outcomes, because they need three different actions: no registered
+ * device (turn the switch on), the grant never left this client (the delivery
+ * channel itself is unreachable), and a real provider failure.
  */
 export function useSelfTestNotification(showStatus: ShowSettingsStatus) {
   const { t, locale } = useTranslation();
   const { session } = useSession();
   const [selfTestBusy, setSelfTestBusy] = React.useState(false);
 
-  const selfTestAvailable = Boolean(session?.sessionToken);
+  /**
+   * Super admin only. The route stays open to any signed-in account by design,
+   * but the control is a diagnostic tool rather than an account setting, so it
+   * is not painted for the people it would only confuse.
+   */
+  const selfTestAvailable = Boolean(session?.sessionToken) && isSuperAdmin(session);
 
   const sendSelfTest = React.useCallback(async () => {
-    if (!session?.sessionToken || selfTestBusy) return;
+    if (!session?.sessionToken || !isSuperAdmin(session) || selfTestBusy) return;
     setSelfTestBusy(true);
     try {
       const result = await notifications.sendSelfTest({
@@ -31,7 +41,14 @@ export function useSelfTestNotification(showStatus: ShowSettingsStatus) {
         locale: locale === "en" ? "en" : "ar",
       });
       const outcome = result.results[0];
-      if (!outcome || outcome.tokenCount === 0) {
+      // `granted` is the main app's own placeholder: it survives only when the
+      // bridge never carried the grant anywhere, which is a different failure
+      // from a device that refused the push and needs a different answer.
+      if (!outcome || outcome.status === "granted") {
+        showStatus(t("notifications.selfTest.notDelivered"), "error");
+        return;
+      }
+      if (outcome.tokenCount === 0) {
         showStatus(t("notifications.selfTest.noDevices"), "error");
         return;
       }

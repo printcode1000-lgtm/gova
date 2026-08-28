@@ -75,7 +75,12 @@ assert.match(card, /<AccountDevicesSection state=\{state\} \/>/);
 assert.match(selfTestHook, /notifications\.sendSelfTest/);
 assert.match(selfTestHook, /outcome\.tokenCount === 0/);
 assert.match(selfTestHook, /notifications\.selfTest\.noDevices/);
+// A grant the bridge never carried is not the same failure as a refused push.
+assert.match(selfTestHook, /outcome\.status === "granted"/);
+assert.match(selfTestHook, /notifications\.selfTest\.notDelivered/);
 assert.match(selfTestButton, /notifications\.selfTest\.button/);
+// It is a super-admin diagnostic, so it is never painted for anyone else.
+assert.match(selfTestHook, /isSuperAdmin\(session\)/);
 assert.match(card, /<SelfTestNotificationButton state=\{state\} \/>/);
 
 // Every new string exists in both locales.
@@ -109,6 +114,7 @@ for (const key of [
   'notifications.selfTest.sending',
   'notifications.selfTest.sent',
   'notifications.selfTest.noDevices',
+  'notifications.selfTest.notDelivered',
   'notifications.selfTest.failed',
 ]) {
   for (const locale of locales) {

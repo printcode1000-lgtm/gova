@@ -44,7 +44,7 @@ Run `npm run branding:generate` after changing the package SSOT. See
 
 `google-services.json` is no longer stored in the repository. Its complete lossless JSON is held in `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64` and is regenerated only inside `android/app` during a native build. The generated files are ignored by Git. `npm run cap:sync`, `npm run cap:copy`, `npm run cap:build`, and `npm run cap:build:local` validate the Firebase project identity and synchronize the generated config and sound automatically.
 
-The Firebase service-account JSON is server-only, ignored by Git, and must never enter Android, static output, R2, OTA, or client JavaScript.
+Plaintext Firebase **Admin** service-account JSON (`private_key`, client email) MUST NOT be committed, MUST NOT be baked into `out/`, R2, OTA, or client JavaScript, and MUST NOT appear as an Android resource. The **ciphertext** blob `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` is intended to ship in static/Capacitor bundles. After a successful unlock the WebView holds `{ projectId, clientEmail, privateKey }` re-encrypted in Capacitor Preferences — see [Outbound send from the Android shell](#outbound-send-from-the-android-shell).
 
 ## Vercel Secrets
 
@@ -74,21 +74,134 @@ and [Notification Bridge Module](../../05-platform-features/notification-bridge-
 
 The first two are lossless base64 encodings of the complete server and Android Firebase JSON documents. Explicit `FIREBASE_PROJECT_*`, `FIREBASE_FCM_SENDER_ID`, `FIREBASE_ANDROID_*`, and `FIREBASE_STORAGE_BUCKET` variables document and validate the Android Firebase identity without exposing the server private key.
 
-## Native outbound push (installed shells)
+## Outbound send from the Android shell
 
-On Capacitor, the device that triggered a business action may **send** push to
-other users' devices directly via FCM HTTP v1. The main app:
+This section is the Android-facing contract for **sending** FCM, not for
+receiving it. Shared TypeScript lives in `@asol/account-bridge` (`./notifications`
+and `packages/account-bridge/src/mobile-push/`). The same native branch runs on
+iOS (`isNativePlatform()`). Android-only extra: `isAndroid()` then
+`NativeCore.ensureNotificationChannels()` before any send.
 
-- verifies grants and returns recipient tokens (`/api/notifications/recipient-tokens`);
-- decrypts the embedded credential blob after identity check (`/api/notifications/mobile-push/unlock`).
+Web browsers do **not** use this path. They post grants to the notifications
+service. The notifications service is **not** on the Android send path.
 
-The device stores unlocked credentials re-encrypted under a device-local key.
-Sign-out clears them (`clearMobilePushCredentials`).
+### What the APK/bundle contains
 
-Every outbound Android payload includes `androidChannelId` from
-`resolveAndroidChannelId`, matching the server FCM provider and the native
-receive path. Channels are created in `AsolNotificationChannels` before send and
-at activity startup — see [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md#android-channel-compatibility).
+| Material | Location | Role |
+|---|---|---|
+| AES-256-GCM ciphertext of `{ projectId, clientEmail, privateKey }` | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` in `out/` / Capacitor `webDir` | Useless without the server unlock key |
+| Unlock key | `ASOL_MOBILE_PUSH_UNLOCK_KEY` on the **main app** server only | Decrypts the blob at unlock |
+| Optional server copy of the same ciphertext | `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | Rejects unlock if the device blob differs |
+| `google-services.json` | generated in `android/app` at native build | Client Firebase app identity, not Admin |
+
+`packages/account-bridge/src/mobile-push/embedded-blob.ts` reads the public blob
+only. The WebView never ships `ASOL_MOBILE_PUSH_UNLOCK_KEY`.
+
+### When unlock runs
+
+`ensureMobilePushCredentials` (`enrollment.ts`):
+
+1. Loads Capacitor Preferences `asol.mobilePush.credentials.v1`. If decrypt
+   succeeds, it returns that bundle and **does not** call the server.
+2. Otherwise POSTs `{ uid, phone, credentialBlob }` to the **main app**
+   `POST /api/notifications/mobile-push/unlock` (`credentials: 'omit'`).
+3. On HTTP success, keeps `{ projectId, clientEmail, privateKey }`, re-encrypts
+   with a device-local AES-GCM key (`asol.mobilePush.deviceKey.v1`), and stores
+   the ciphertext in Preferences.
+
+Callers in current code:
+
+- `DeviceTokenService.persist` after a native FCM token is registered (unlock
+  failure is logged; registration still succeeds).
+- `deliverNotificationGrantsFromNative` before every grant fan-out if the cache
+  is empty.
+
+Unregister / sign-out calls `clearMobilePushCredentials`, which removes both
+Preference keys. The next native send or register must unlock again.
+
+Server unlock (`MobilePushUnlockService`): requires the unlock key; rejects a
+blob shorter than 40 characters; if the optional server blob is set, requires
+byte-identical ciphertext; requires `uid`/`phone` to match
+`GetNotificationUserIdentityQuery`. Ciphertext layout:
+`base64(iv[12] + authTag[16] + ciphertext)`.
+
+The unlock HTTP handlers are App Router routes. They are **not** inside `out/`.
+Production Android uses the configured remote main-app API origin
+(`resolveMainApiBaseUrl`).
+
+### What still hits the main app on every send
+
+Knowing an FCM registration token is **not** enough for the product path.
+`deliverNotificationGrantsFromNative` always:
+
+1. Requires signed-in `uid`/`phone` from
+   `notification-grant-delivery-context.ts`. Missing identity → every grant
+   `unavailable`, no FCM call.
+2. On Android only, `NativeCore.ensureNotificationChannels()`. Failure → every
+   grant `unavailable`.
+3. `ensureMobilePushCredentials` (cache or unlock).
+4. `getFcmAccessToken`: RS256 JWT (`scope`
+   `https://www.googleapis.com/auth/firebase.messaging`) then
+   `POST https://oauth2.googleapis.com/token`. Access tokens are cached **in
+   the WebView process memory** until `expires_in` minus 60 seconds; they are
+   not stored in Preferences.
+5. `POST /api/notifications/recipient-tokens` with `{ uid, phone, grants }`
+   (`credentials: 'omit'`), at most 100 grants (`MAX_GRANTS_PER_REQUEST` /
+   `MAX_PARALLEL_GRANTS`).
+
+`NotificationRecipientTokensService.resolve` verifies each grant HMAC, requires
+`actorUid` (when present) to equal the caller `uid`, applies push-preference
+mute, and returns tokens whose `provider` is **`fcm` only**. Web Push
+(`web_push`) and raw APNs (`apns`) registrations are omitted. Muted recipients
+are `muted`; no FCM tokens → `no_tokens`.
+
+The device then builds text with `NotificationBuilder` (`provider-payload.ts`)
+and sends **from the device to Google**, not to ASOL:
+
+`POST https://fcm.googleapis.com/v1/projects/{projectId}/messages:send`
+
+One HTTP request per token, **sequential** (not the notifications-service
+concurrency of 25). Invalid FCM codes `UNREGISTERED` / `INVALID_ARGUMENT` are
+returned on the client result as `invalidTokenIds`.
+`removeInvalidTokens` exists on the recipient-tokens service but **has no
+caller**; the native path does not soft-delete those rows on the server.
+
+```text
+Android (installed shell)
+  business API ──► grant(s) in the JSON body
+  device ──► POST /api/notifications/recipient-tokens   (every send)
+  device ──► POST /api/notifications/mobile-push/unlock (only if Preferences empty)
+  device ──► oauth2.googleapis.com then fcm.googleapis.com  (FCM send; not ASOL)
+```
+
+Failure of unlock, OAuth, or recipient-tokens returns `unavailable` and does
+not throw into the business API (background grant delivery).
+
+### Android FCM payload (native sender)
+
+`buildFcmHttpV1Message` in `fcm-message.ts`:
+
+- `restricted_package_name`: `hgh.asol.app`.
+- Android tokens (`platform === 'android'`): **data-only** — no top-level
+  `notification`, no `android.notification`, so `AsolPushMessagingService`
+  runs. `androidChannelId` is in the data map from `resolveAndroidChannelId`.
+- Visible Android data messages use Android FCM priority `HIGH` unless
+  `metadata.dataOnly` is true.
+- Chat TTL `604800s`; otherwise `86400s`. Collapse key from `dedupeKey` (max 64).
+
+Channel IDs match the Java receive path. See
+[Notification Bridge Module](../../05-platform-features/notification-bridge-module.md#android-channel-compatibility).
+
+### What this path MUST NOT be read as
+
+- The device MUST NOT send to an arbitrary token in application code; tokens
+  come only from verified grants.
+- The device CAN talk to FCM without the notifications microservice after
+  credentials are unlocked.
+- The device CANNOT complete a product send without the main app for grant
+  verification and token lookup on that send.
+- `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` remains the notifications-account
+  secret for **web** fan-out. It is not loaded by the Android WebView.
 
 ## Client Lifecycle
 
@@ -297,17 +410,25 @@ so a notification sounds the same whichever displayed it. In order:
 5. Category `chat` → `asol_chat_v4`.
 6. Everything else → `asol_general_v4`.
 
-## Server Delivery
+## Server delivery (web / notifications service)
+
+This is **`FcmNotificationProvider` on the notifications service**, used when a
+**browser** carries a grant. It is not the Android-originated send in
+[Outbound send from the Android shell](#outbound-send-from-the-android-shell).
+Android **receipt** of those messages still uses the data-only contract below.
 
 `FcmNotificationProvider`:
 
 - Resolves Arabic or English templates before delivery.
-- Sends notification and data payloads together.
+- Android tokens: data-only (no top-level `notification`, no
+  `android.notification`). Non-Android tokens include a notification block
+  unless `metadata.dataOnly` is true.
 - Sends `sound` as the extensionless resource name (`custom_notification`). FCM resolves a raw resource by base name; sending the extension makes the lookup fail and Android falls back to the system sound with no error anywhere. The field is consulted only below Android 8 — from 8 upward the channel owns the sound — and is omitted for a `silent` notification so old devices stay silent too.
 - Restricts delivery to `hgh.asol.app`.
 - Includes notification ID, dedupe key, route, category, priority, sound, group, and timestamps.
 - Sends one HTTP v1 message per token; there is no multicast batch.
-- Uses high Android priority only for high or critical ASOL notifications.
+- Uses Android FCM priority `HIGH` for visible Android data messages, or when
+  the ASOL priority is high/critical; `NORMAL` otherwise.
 - Returns sent, partial, or failed results.
 - Soft-deletes tokens rejected as `UNREGISTERED` or `INVALID_ARGUMENT` by setting `enabled = false` and `deleted_at`.
 - Keeps every token when Firebase itself is unconfigured, and returns `firebaseAdminNotConfigured`.
@@ -317,9 +438,18 @@ so a notification sounds the same whichever displayed it. In order:
 
 ## Security Boundary
 
-The Firebase private key is loaded only by server code. Device-token registration verifies the supplied uid and phone against the users database and validates platform/provider combinations and input sizes. The general multi-user send route requires a server-only bearer secret. The super-admin broadcast route retains its super-admin identity check and calls the server delivery service directly.
+- **Receive / register:** device-token APIs verify `uid` and `phone` against the
+  users database and validate platform/provider pairs and input sizes.
+- **Web send:** the notifications service holds `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`.
+  The browser never receives that JSON. Grants are the send authority.
+- **Android outbound send:** the main app decrypts the embedded blob only after
+  the same `uid`/`phone` identity check. After unlock, the WebView stores the
+  Admin key material re-encrypted in Preferences. Unlock and recipient-tokens
+  use `credentials: 'omit'`; identity is the JSON body, not a session cookie.
+- Super-admin broadcast remains a server identity check and server delivery.
+- Specialty-chat APIs still require the signed session plus UID/phone checks.
 
-The project uses client-persisted sessions with a signed, expiring server token issued after password login. Specialty-chat APIs require that signature in addition to checking the current UID and phone. Device-token registration retains its existing UID/phone compatibility contract.
+The project uses client-persisted sessions with a signed, expiring server token issued after password login. Device-token registration retains its existing UID/phone compatibility contract.
 
 ## Verification
 

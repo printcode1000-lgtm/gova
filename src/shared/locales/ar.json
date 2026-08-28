@@ -219,6 +219,7 @@
     "notifications.selfTest.sending": "جاري الإرسال...",
     "notifications.selfTest.sent": "تم إرسال الإشعار التجريبي. إن لم يصلك خلال ثوانٍ، راجع إعدادات الإشعارات في النظام.",
     "notifications.selfTest.noDevices": "لا يوجد جهاز مسجّل لاستقبال الإشعارات. فعّل مفتاح إشعارات هذا الجهاز أولًا.",
+    "notifications.selfTest.notDelivered": "لم يخرج الإشعار من هذا الجهاز؛ قناة تسليم الإشعارات غير متاحة الآن.",
     "notifications.selfTest.failed": "تعذر إرسال الإشعار التجريبي.",
     "notifications.deviceCard.titleAndroid": "إشعارات Android",
     "notifications.deviceCard.titleIos": "إشعارات iOS",

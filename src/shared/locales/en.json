@@ -219,6 +219,7 @@
     "notifications.selfTest.sending": "Sending...",
     "notifications.selfTest.sent": "Test notification sent. If nothing arrives within seconds, check your system notification settings.",
     "notifications.selfTest.noDevices": "No device is registered to receive notifications. Turn this device's switch on first.",
+    "notifications.selfTest.notDelivered": "The notification never left this device: the delivery channel is unreachable right now.",
     "notifications.selfTest.failed": "Could not send the test notification.",
     "notifications.deviceCard.titleAndroid": "Android notifications",
     "notifications.deviceCard.titleIos": "iOS notifications",

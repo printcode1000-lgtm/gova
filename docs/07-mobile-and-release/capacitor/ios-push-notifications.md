@@ -13,9 +13,11 @@ Firebase Messaging iOS SDK (`firebase-ios-sdk` pinned to exact version `12.17.0`
 is configured via Swift Package Manager in the App target of `project.pbxproj`.
 Apple devices obtain an FCM registration token from Firebase Messaging, which is
 forwarded via `AppDelegate.swift` to Capacitor, stored with provider `fcm`, and
-delivered through the unified Firebase Admin transport.
+delivered through FCM HTTP v1 (`provider` `fcm`). Direct APNs remains an opt-in
+fallback for a raw 64-hex token.
 
-Firebase Admin is the single push transport for both Android and Apple platforms.
+FCM HTTP v1 is the send transport for Android and for Apple FCM tokens, whether
+the caller is the notifications service (web) or the unlocked native shell.
 
 The complete Firebase Apple configuration downloaded from Firebase Console is
 stored at `ios/App/App/GoogleService-Info.plist` and is included in the Xcode App
@@ -51,16 +53,22 @@ the script exits immediately because `GoogleService-Info.plist` is gitignored;
 
 ## Delivery path: Firebase Cloud Messaging
 
-**Firebase Admin is the unified server-side push provider for both Android and
-Apple.** The server holds one credential —
-`FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` — and Firebase Cloud Messaging forwards
-Apple messages to APNs on Google's infrastructure.
+**Web fan-out** uses the notifications service and
+`FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`. FCM then forwards Apple messages to
+APNs. `APNS_*` is **not** required for that normal web path.
 
-`APNS_*` environment variables are **not required** for the normal flow.
+**Native outbound send** (same TypeScript as Android) does **not** use that
+service. The installed shell unlocks the encrypted Admin blob on the main app,
+then POSTs FCM HTTP v1 from the device. `recipient-tokens` returns only
+`provider === "fcm"` tokens, so a raw APNs registration is not reachable from
+native send. Details:
+[Outbound send from the Android shell](android-push-notifications.md#outbound-send-from-the-android-shell)
+and [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md).
 
 ```
-Server ──► Firebase Admin (FCM HTTP v1) ──┬──► Android device
-                                          └──► APNs ──► Apple device
+Web:     notifications service ──► FCM HTTP v1 ──┬──► Android
+                                                 └──► APNs ──► Apple (FCM token)
+Native:  device ──► Google FCM HTTP v1 (after unlock + recipient-tokens)
 ```
 
 ### Provider selection is decided by the token, not the platform
@@ -102,7 +110,8 @@ on Apple. Shipping the iOS side of that plugin is what would flip it. See
 
 FCM ignores the `android` block for Apple tokens, so sound, priority, grouping,
 and silent delivery are expressed in the `apns` block built by
-`fcm-notification-provider.server.ts`:
+`fcm-notification-provider.server.ts` (web) and
+`packages/account-bridge/src/mobile-push/fcm-message.ts` (native send):
 
 | Concern | Alert push | Data-only push |
 |---|---|---|

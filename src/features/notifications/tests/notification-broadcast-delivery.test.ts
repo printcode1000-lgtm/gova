@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   mergeBroadcastDeliveryResult,
   mergeNotificationTestDeliveryResult,
+  mergeSelfTestDeliveryResult,
   prepareNotificationTestRequest,
 } from "../infrastructure/http/notification-api-service";
 
@@ -78,6 +79,44 @@ assert.equal(
   "sessionToken" in prepared.body.identity,
   false,
   "The session token must never be serialized in the request body.",
+);
+
+// The self test separates "the grant was never carried" from "the provider
+// refused it": both used to read as `failed`, which left the settings surface
+// unable to say which of the two the user had to act on.
+const selfTestGranted = {
+  requested: 1,
+  notificationGrants: ["signed"],
+  channelId: "asol_general_v4",
+  dedupeKey: "notification-self-test:one",
+  results: [{ uid: "u1", tokenCount: 0, status: "granted" as const }],
+};
+
+assert.deepEqual(
+  mergeSelfTestDeliveryResult(selfTestGranted, {
+    attempted: 1,
+    recipientResults: [{ uid: "u1", tokenCount: 2, status: "sent" }],
+  }).results,
+  [{ uid: "u1", tokenCount: 2, status: "sent" }],
+  "A real provider outcome must replace the placeholder.",
+);
+
+assert.deepEqual(
+  mergeSelfTestDeliveryResult(selfTestGranted, {
+    attempted: 0,
+    recipientResults: [],
+  }).results,
+  [{ uid: "u1", tokenCount: 0, status: "granted" }],
+  "A grant the bridge never carried must stay `granted`, not become `failed`.",
+);
+
+assert.deepEqual(
+  mergeSelfTestDeliveryResult(selfTestGranted, {
+    attempted: 1,
+    recipientResults: [],
+  }).results,
+  [{ uid: "u1", tokenCount: 0, status: "failed" }],
+  "An attempted delivery with no recipient outcome is a failure.",
 );
 
 console.log("Notification broadcast delivery tests passed.");

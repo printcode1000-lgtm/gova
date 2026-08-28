@@ -1008,7 +1008,7 @@ this one lives in its own service and differs where it matters:
 
 | | `POST /api/notifications/test/send` | `POST /api/notifications/test/self` |
 |---|---|---|
-| Who may call | super admin | any signed-in account |
+| Who may call | super admin | any signed-in account (button shown to super admin only) |
 | Audience | the caller's uid, chosen from an admin surface | the caller's uid, and no other |
 | Content | admin-authored title, body, route, scenario | fixed in `domain/notification-self-test.ts`; only the locale is read |
 | Purpose | exercising channels, sounds, and priorities | proving delivery works at all |
@@ -1016,10 +1016,31 @@ this one lives in its own service and differs where it matters:
 Fixing the content is what makes the route safe to expose: it is reachable by
 any signed-in user, so nothing about the push may be attacker-chosen.
 
+The button itself is painted only for a super admin
+(`use-self-test-notification.ts` gates `selfTestAvailable` on `isSuperAdmin`):
+the route stays open to any signed-in account, because nothing about the push
+is caller-chosen, but the control is a delivery diagnostic rather than an
+account preference and the settings page does not offer it to everyone.
+
 The button reports what happened rather than that the request succeeded — a send
 with no registered token completes cleanly and delivers nothing, which is
 exactly the case a user presses it to discover, so `tokenCount === 0` becomes
 "no device is registered" instead of a success line.
+
+Three outcomes, because each needs a different action from the reader:
+
+| Outcome | What it means | String |
+|---|---|---|
+| `status === "granted"` | the main app's placeholder survived: the browser bridge attempted nothing, so the grant never left this client and the delivery channel itself is unreachable | `notifications.selfTest.notDelivered` |
+| `tokenCount === 0` | the account has no registered token, or push is muted for it | `notifications.selfTest.noDevices` |
+| `status` `failed` / `muted` | delivery was attempted and the provider refused it | `notifications.selfTest.failed` |
+
+`mergeSelfTestDeliveryResult` is what keeps the first two apart: it takes the
+bridge's whole result rather than its recipient list, and returns the untouched
+`granted` placeholder when `attempted === 0`. Collapsing that case into `failed`
+is what made a broken test unreadable — an unreachable notifications service and
+a refused push said the same thing. `notification-broadcast-delivery.test.ts`
+pins all three branches.
 
 ## Device Token Flow
 
@@ -1037,15 +1058,18 @@ described under [The account's other devices](#the-accounts-other-devices); it
 authorises with the signed session instead, because it can reach a registration
 the calling device does not own.
 
-Native outbound push (Capacitor only) uses two additional main-app routes:
+Native outbound push (Capacitor only) uses two additional **main-app** routes
+(not bundled in `out/`; Android uses the remote API origin):
 
 ```text
-POST /api/notifications/recipient-tokens   # verify grants; return FCM tokens + send payload
-POST /api/notifications/mobile-push/unlock # verify identity; decrypt embedded Firebase credentials
+POST /api/notifications/recipient-tokens   # every native send: verify grants; return provider=fcm tokens + send payload
+POST /api/notifications/mobile-push/unlock # only when Preferences cache is empty; decrypt embedded blob
 ```
 
-See [Notification Bridge Module](notification-bridge-module.md) for provisioning
-(`npm run provision:mobile-push`) and the encrypted credential blob contract.
+After a native token persist, `DeviceTokenService` also calls
+`ensureMobilePushCredentials`. Sign-out / unregister clears the device cache.
+See [Notification Bridge Module](notification-bridge-module.md) and
+[Outbound send from the Android shell](../07-mobile-and-release/capacitor/android-push-notifications.md#outbound-send-from-the-android-shell).
 
 Real tokens are registered, not placeholders:
 
@@ -1064,7 +1088,9 @@ Registration validation on the server (`NotificationTokenService.register`):
 - The platform/provider pair must be `web`+`web_push`, `android`+`fcm`, `ios`+`apns`, or `ios`+`fcm`. Apple accepts both because the token kind depends on whether the Firebase Messaging iOS SDK is installed, and the registry routes each kind to its own transport.
 - `locale` is narrowed to `ar` or `en`, defaulting to `ar`.
 
-Server credentials remain outside the client.
+Plaintext Admin JSON and `ASOL_MOBILE_PUSH_UNLOCK_KEY` remain outside the
+client. Native shells ship only the ciphertext blob; after unlock they store
+the Admin key material re-encrypted in Capacitor Preferences.
 
 Unregistering removes locally known device tokens from the server and also asks
 the active Web Push subscription, when supported, to unsubscribe and delete its
@@ -1199,25 +1225,30 @@ only thing that touches both on web.
 ### Native installed shells (Capacitor)
 
 On Android and iOS the notifications service is **not** in the delivery path.
-The [notification bridge](notification-bridge-module.md) native branch:
+The [notification bridge](notification-bridge-module.md) native branch
+(`deliverNotificationGrantsFromNative`):
 
-1. Ensures Android notification channels exist (`NativeCore.ensureNotificationChannels`).
-2. Resolves recipient FCM tokens through `POST /api/notifications/recipient-tokens`
-   (grant verification on the main app).
-3. Builds template text with `NotificationBuilder` and resolves the Android channel
-   with the same `resolveAndroidChannelId` rule as the server FCM provider.
-4. Sends via FCM HTTP v1 using credentials unlocked once through
-   `POST /api/notifications/mobile-push/unlock`.
+1. Requires signed-in identity; on Android, `NativeCore.ensureNotificationChannels`.
+2. Loads cached Admin credentials or unlocks via
+   `POST /api/notifications/mobile-push/unlock` (main app; skipped when
+   Preferences already hold the re-encrypted bundle).
+3. Exchanges a Google OAuth token on the device.
+4. **Every send:** `POST /api/notifications/recipient-tokens` (main app verifies
+   grants, returns `fcm` tokens only).
+5. Sequential FCM HTTP v1 from the device to Google. Native send does not
+   soft-delete invalid tokens on the server.
 
-The main app never holds plaintext Firebase credentials in environment variables
-for this path — only the unlock key and an encrypted blob. The blob is also baked
-into the bundle as `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`. Provision with
-`npm run provision:mobile-push`.
+The main app never holds plaintext Firebase Admin JSON in environment variables
+for this path — only `ASOL_MOBILE_PUSH_UNLOCK_KEY` and the encrypted blob. The
+blob is baked in as `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`. Provision
+with `npm run provision:mobile-push`. Full Android contract:
+[Outbound send from the Android shell](../07-mobile-and-release/capacitor/android-push-notifications.md#outbound-send-from-the-android-shell).
 
 ```text
 1. device  ──► main app          business action + grant in response
-2. device  ──► main app          recipient-tokens (verify grant → tokens)
-3. device  ──► FCM HTTP v1       direct send (after one-time unlock)
+2. device  ──► main app          recipient-tokens (every send)
+3. device  ──► main app          unlock (only if Preferences empty)
+4. device  ──► Google FCM HTTP v1
 ```
 
 Web behaviour is unchanged.
@@ -1229,12 +1260,15 @@ makes the browser a courier instead of a participant: adding a uid, swapping the
 template, or rewriting the body invalidates the signature.
 
 Only the main app can decide *who* should be notified, because only it holds the
-users and orders databases. Only the service can *deliver*, because only it holds
-the Firebase and APNs credentials. The grant is that decision, in transit.
+users and orders databases. On **web**, only the notifications service delivers,
+because only it holds `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` and APNs env. On
+**native**, the device delivers FCM HTTP v1 after unlock; the grant plus
+recipient-tokens still decide the token list. The grant is that decision, in
+transit.
 
-Fan-out is one provider request per token, up to 25 in flight. On a serverless
-platform billed by wall clock that is the expensive part of a notification, and
-it is billed to the notifications account.
+On the **notifications service**, fan-out is one provider request per token, up
+to 25 in flight, billed to that account. Native send is one sequential HTTP v1
+call per token from the device.
 
 Routes issue grants through `NotificationGrantCollector` and return them in the
 response body under `notificationGrants`. `AsolApiClient.parseResponse` hands
@@ -1291,8 +1325,15 @@ Rules:
 - `NotificationSendService` resolves registered tokens by provider key.
 - `NotificationProviderRegistry` chooses the correct provider.
 - Unknown providers use `NoopNotificationProvider`.
-- FCM, APNs, and Web Push transports load credentials only from server-side environment configuration; unconfigured transports return an explicit failed result.
-- Real provider credentials must be loaded only from server configuration.
+- FCM, APNs, and Web Push **providers used by `NotificationSendService`**
+  (notifications service / web) load credentials only from server-side
+  environment configuration; unconfigured transports return an explicit failed
+  result. Native outbound send is a separate client path in
+  `@asol/account-bridge` (encrypted blob + main-app unlock); it is not this
+  registry.
+- Real **server** provider credentials must be loaded only from server
+  configuration. Native Admin key material after unlock lives in Capacitor
+  Preferences, not in those env vars.
 
 ## Push Flow
 
@@ -1798,7 +1839,9 @@ Known bounds:
 1. Add or extend a service under `infrastructure/capacitor`.
 2. Keep platform APIs out of domain and business modules.
 3. Store only safe local token data in AsolDB.
-4. Keep provider secrets on the server.
+4. Keep **web** provider secrets on the notifications service. Native outbound
+   Admin material uses the encrypted blob + unlock contract, not plaintext env
+   in the APK.
 
 ## How To Add A Push Provider
 
@@ -2048,7 +2091,12 @@ These are deliberate boundaries rather than defects.
 
 ## Provider Layer Update
 
-The notification module now has an explicit provider abstraction for external push delivery. The module must never call FCM, APNs, or Web Push directly from UI, hooks, client services, `NotificationBus`, or business modules.
+The notification module has an explicit **server** provider abstraction for
+web fan-out (`NotificationSendService` on the notifications service). UI,
+hooks, `NotificationBus`, and business modules must not import those provider
+implementations. Native grant delivery calls Google FCM HTTP v1 only through
+`@asol/account-bridge` (`deliverNotificationGrantsFromNative`), not through
+this registry.
 
 Provider files:
 

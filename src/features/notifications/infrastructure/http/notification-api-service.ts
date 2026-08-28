@@ -2,6 +2,7 @@ import { asolApi, ASOL_API_ROUTES } from "@/core/api";
 import {
   deliverNotificationGrants,
   type NotificationBridgeRecipientResult,
+  type NotificationBridgeResult,
 } from '@asol/account-bridge/notifications';
 import type {
   AccountDevicesResult,
@@ -138,7 +139,7 @@ export class NotificationApiService {
       },
     );
     const delivery = await deliverNotificationGrants(granted);
-    return mergeSelfTestDeliveryResult(granted, delivery.recipientResults);
+    return mergeSelfTestDeliveryResult(granted, delivery);
   }
 
   async sendTest(
@@ -170,22 +171,36 @@ function sessionHeaders(sessionToken: string): Record<string, string> {
   return { "x-asol-session-token": token };
 }
 
-/** Replace the grant placeholder with the notifications service's real outcome. */
+/**
+ * Replace the grant placeholder with the notifications service's real outcome.
+ *
+ * Two different silences used to collapse into `failed`, which is what made a
+ * broken test unreadable: a grant the bridge never carried at all reported the
+ * same thing as one the provider refused. They are kept apart here.
+ *
+ * `granted` — the main app's own placeholder — survives only when the bridge
+ * attempted nothing (no browser, no grant in the response, no notifications
+ * service URL). It means authorised but never delivered, and the settings
+ * surface says exactly that. Once delivery was attempted and still produced no
+ * recipient outcome, `failed` is the honest answer.
+ */
 export function mergeSelfTestDeliveryResult(
   granted: SelfTestNotificationResult,
-  delivered: NotificationBridgeRecipientResult[],
+  delivery: Pick<NotificationBridgeResult, "attempted" | "recipientResults">,
 ): SelfTestNotificationResult {
   const expectedUid = granted.results[0]?.uid;
-  const actual = delivered.find((result) => result.uid === expectedUid);
+  const actual = delivery.recipientResults.find(
+    (result) => result.uid === expectedUid,
+  );
+  if (actual) return { ...granted, results: [actual] };
+  if (delivery.attempted === 0) return granted;
   return {
     ...granted,
-    results: actual
-      ? [actual]
-      : granted.results.map((placeholder) => ({
-          uid: placeholder.uid,
-          tokenCount: 0,
-          status: "failed" as const,
-        })),
+    results: granted.results.map((placeholder) => ({
+      uid: placeholder.uid,
+      tokenCount: 0,
+      status: "failed" as const,
+    })),
   };
 }
 
