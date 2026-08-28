@@ -2,16 +2,22 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { useSnapshotState } from "@/features/page-snapshot";
 import { PROFILE_SECTIONS, type ProfileEditTab } from "./profile-page.types";
+import {
+  readStoredProfileEditTab,
+  writeStoredProfileEditTab,
+} from "../application/services/profile-edit-tab-storage";
 
 interface UseProfileNavigationProps {
   showEditCard: boolean;
   isLoading: boolean;
   isLoggedIn: boolean;
+  userId?: string;
 }
 
 interface UseProfileNavigationReturn {
   activeTab: ProfileEditTab;
   carouselHeight: number | undefined;
+  animateCarouselHeight: boolean;
   carouselRef: React.RefObject<HTMLDivElement | null>;
   tabsScrollRef: React.RefObject<HTMLDivElement | null>;
   panelRefs: React.RefObject<Record<ProfileEditTab, HTMLDivElement | null>>;
@@ -23,10 +29,27 @@ interface UseProfileNavigationReturn {
   goToAdjacentSection: (offset: -1 | 1) => void;
 }
 
+/** Idle window after the last scroll event before a swipe counts as settled. */
+const SWIPE_SETTLE_MS = 180;
+
+function emptySectionMap<T>(): Record<ProfileEditTab, T | null> {
+  return {
+    registration: null,
+    specialties: null,
+    products: null,
+    contact: null,
+    store: null,
+    workingHours: null,
+    fulfillment: null,
+    discounts: null,
+  };
+}
+
 export function useProfileNavigation({
   showEditCard,
   isLoading,
   isLoggedIn,
+  userId,
 }: UseProfileNavigationProps): UseProfileNavigationReturn {
   const searchParams = useSearchParams();
   const requestedTab = searchParams.get("tab");
@@ -45,36 +68,25 @@ export function useProfileNavigation({
   activeTabRef.current = resolvedActiveTab;
 
   const [carouselHeight, setCarouselHeight] = React.useState<number>();
+  // A swipe must resize instantly: animating growth would crop the incoming
+  // panel for the length of the transition. Only settled changes animate.
+  const [animateCarouselHeight, setAnimateCarouselHeight] =
+    React.useState(true);
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const tabsScrollRef = React.useRef<HTMLDivElement>(null);
   const panelRefs = React.useRef<Record<ProfileEditTab, HTMLDivElement | null>>(
-    {
-      registration: null,
-      specialties: null,
-      products: null,
-      contact: null,
-      store: null,
-      workingHours: null,
-      fulfillment: null,
-      discounts: null,
-    },
+    emptySectionMap<HTMLDivElement>(),
   );
   const navButtonRefs = React.useRef<
     Record<ProfileEditTab, HTMLButtonElement | null>
-  >({
-    registration: null,
-    specialties: null,
-    products: null,
-    contact: null,
-    store: null,
-    workingHours: null,
-    fulfillment: null,
-    discounts: null,
-  });
+  >(emptySectionMap<HTMLButtonElement>());
   const scrollFrameRef = React.useRef<number | null>(null);
   const programmaticScrollTargetRef = React.useRef<ProfileEditTab | null>(null);
   const programmaticScrollClearTimerRef = React.useRef<number | null>(null);
   const appliedRequestedTabRef = React.useRef<string | null>(null);
+  const tabRestoredRef = React.useRef(false);
+  const isSwipingRef = React.useRef(false);
+  const swipeSettleTimerRef = React.useRef<number | null>(null);
 
   const scrollElementHorizontally = React.useCallback(
     (element: HTMLElement | null) => {
@@ -146,6 +158,104 @@ export function useProfileNavigation({
     [scrollToSection, setActiveTab],
   );
 
+  // The carousel is height-clipped (`overflow-y-hidden`), so its height must
+  // equal the visible panel exactly: a larger height leaves dead space under a
+  // short section, a smaller one crops a tall section. While a swipe is in
+  // flight two panels are on screen at once, so the taller of them wins until
+  // the swipe settles — otherwise the incoming panel is cropped mid-gesture.
+  const syncCarouselHeight = React.useCallback(() => {
+    const carousel = carouselRef.current;
+    const activePanel = panelRefs.current[activeTabRef.current];
+    if (!carousel || !activePanel) return;
+
+    let nextHeight = Math.ceil(activePanel.getBoundingClientRect().height);
+    if (isSwipingRef.current) {
+      const carouselRect = carousel.getBoundingClientRect();
+      for (const section of PROFILE_SECTIONS) {
+        const panel = panelRefs.current[section];
+        if (!panel) continue;
+        const panelRect = panel.getBoundingClientRect();
+        const isVisible =
+          panelRect.right > carouselRect.left + 1 &&
+          panelRect.left < carouselRect.right - 1;
+        if (!isVisible) continue;
+        nextHeight = Math.max(nextHeight, Math.ceil(panelRect.height));
+      }
+    }
+    if (nextHeight <= 0) return;
+
+    setCarouselHeight((currentHeight) =>
+      currentHeight !== undefined && Math.abs(currentHeight - nextHeight) < 1
+        ? currentHeight
+        : nextHeight,
+    );
+  }, []);
+
+  React.useEffect(() => {
+    if (!showEditCard || isLoading || !isLoggedIn) {
+      setCarouselHeight(undefined);
+      return;
+    }
+    let frame: number | null = null;
+    const scheduleSync = () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        syncCarouselHeight();
+      });
+    };
+    const observer = new ResizeObserver(scheduleSync);
+    for (const section of PROFILE_SECTIONS) {
+      const panel = panelRefs.current[section];
+      if (panel) observer.observe(panel);
+    }
+    syncCarouselHeight();
+    window.addEventListener("resize", scheduleSync);
+    window.addEventListener("orientationchange", scheduleSync);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", scheduleSync);
+      window.removeEventListener("orientationchange", scheduleSync);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
+  }, [isLoading, isLoggedIn, showEditCard, syncCarouselHeight]);
+
+  React.useEffect(() => {
+    if (!showEditCard || isLoading || !isLoggedIn) return;
+    const frame = requestAnimationFrame(syncCarouselHeight);
+    return () => cancelAnimationFrame(frame);
+  }, [isLoading, isLoggedIn, resolvedActiveTab, showEditCard, syncCarouselHeight]);
+
+  // Restore the section the user left. An explicit `?tab=` always wins, and a
+  // user gesture that lands before the read resolves is never overridden.
+  React.useEffect(() => {
+    if (!showEditCard) {
+      tabRestoredRef.current = false;
+      return;
+    }
+    if (isLoading || !isLoggedIn || tabRestoredRef.current) return;
+    if (requestedTab && PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab)) {
+      tabRestoredRef.current = true;
+      return;
+    }
+    let cancelled = false;
+    void readStoredProfileEditTab(userId).then((storedTab) => {
+      if (cancelled) return;
+      tabRestoredRef.current = true;
+      if (!storedTab || storedTab === activeTabRef.current) return;
+      activeTabRef.current = storedTab;
+      setActiveTab(storedTab);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoading, isLoggedIn, requestedTab, setActiveTab, showEditCard, userId]);
+
+  React.useEffect(() => {
+    if (!showEditCard || !tabRestoredRef.current) return;
+    void writeStoredProfileEditTab(userId, resolvedActiveTab);
+  }, [resolvedActiveTab, showEditCard, userId]);
+
   React.useEffect(() => {
     if (
       !showEditCard ||
@@ -172,19 +282,32 @@ export function useProfileNavigation({
   ]);
 
   React.useEffect(() => {
-    if (!showEditCard) {
-      setCarouselHeight(undefined);
-      return;
-    }
-    if (isLoading || !isLoggedIn) return;
-    const frame = requestAnimationFrame(() => {
-      requestAnimationFrame(() => scrollToSection(activeTabRef.current));
+    if (!showEditCard || isLoading || !isLoggedIn) return;
+    let innerFrame: number | null = null;
+    const outerFrame = requestAnimationFrame(() => {
+      innerFrame = requestAnimationFrame(() => {
+        innerFrame = null;
+        scrollToSection(activeTabRef.current);
+      });
     });
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(outerFrame);
+      if (innerFrame !== null) cancelAnimationFrame(innerFrame);
+    };
   }, [isLoading, isLoggedIn, resolvedActiveTab, scrollToSection, showEditCard]);
 
-  const handleCarouselScroll = () => {
+  const handleCarouselScroll = React.useCallback(() => {
     if (programmaticScrollTargetRef.current) return;
+    isSwipingRef.current = true;
+    setAnimateCarouselHeight(false);
+    if (swipeSettleTimerRef.current !== null)
+      window.clearTimeout(swipeSettleTimerRef.current);
+    swipeSettleTimerRef.current = window.setTimeout(() => {
+      swipeSettleTimerRef.current = null;
+      isSwipingRef.current = false;
+      setAnimateCarouselHeight(true);
+      syncCarouselHeight();
+    }, SWIPE_SETTLE_MS);
     if (scrollFrameRef.current !== null)
       cancelAnimationFrame(scrollFrameRef.current);
     scrollFrameRef.current = requestAnimationFrame(() => {
@@ -192,6 +315,7 @@ export function useProfileNavigation({
       if (programmaticScrollTargetRef.current) return;
       const carousel = carouselRef.current;
       if (!carousel) return;
+      syncCarouselHeight();
       const center =
         carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
       const currentActiveTab = activeTabRef.current;
@@ -213,7 +337,7 @@ export function useProfileNavigation({
         scrollElementHorizontally(navButtonRefs.current[closest]);
       }
     });
-  };
+  }, [scrollElementHorizontally, setActiveTab, syncCarouselHeight]);
 
   React.useEffect(
     () => () => {
@@ -221,35 +345,11 @@ export function useProfileNavigation({
         cancelAnimationFrame(scrollFrameRef.current);
       if (programmaticScrollClearTimerRef.current !== null)
         window.clearTimeout(programmaticScrollClearTimerRef.current);
+      if (swipeSettleTimerRef.current !== null)
+        window.clearTimeout(swipeSettleTimerRef.current);
     },
     [],
   );
-
-  React.useEffect(() => {
-    const panel = panelRefs.current[resolvedActiveTab];
-    if (!panel) return;
-    let frame: number | null = null;
-    // Keep the workspace from shrinking when moving to a shorter panel. A
-    // shrinking document can clamp window.scrollY and jump the whole page.
-    const updateHeight = () =>
-      setCarouselHeight((currentHeight) =>
-        Math.max(currentHeight ?? 0, panel.offsetHeight),
-      );
-    const scheduleUpdateHeight = () => {
-      if (frame !== null) cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        frame = null;
-        updateHeight();
-      });
-    };
-    updateHeight();
-    const observer = new ResizeObserver(scheduleUpdateHeight);
-    observer.observe(panel);
-    return () => {
-      observer.disconnect();
-      if (frame !== null) cancelAnimationFrame(frame);
-    };
-  }, [resolvedActiveTab, isLoading, isLoggedIn]);
 
   const activeSectionIndex = PROFILE_SECTIONS.indexOf(resolvedActiveTab);
   const goToAdjacentSection = (offset: -1 | 1) => {
@@ -260,6 +360,7 @@ export function useProfileNavigation({
   return {
     activeTab: resolvedActiveTab,
     carouselHeight,
+    animateCarouselHeight,
     carouselRef,
     tabsScrollRef,
     panelRefs,

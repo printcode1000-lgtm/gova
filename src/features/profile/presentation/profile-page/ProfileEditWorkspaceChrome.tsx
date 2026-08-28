@@ -49,7 +49,7 @@ export function ProfileEditTabsBar({ id,
           const active = model.activeTab === section;
 
           return (
-            <button id={id}
+            <button id={id ? `${id}.${section}` : undefined}
               key={section}
               ref={(node) => {
                 model.navButtonRefs.current[section] = node;
@@ -57,6 +57,7 @@ export function ProfileEditTabsBar({ id,
               type="button"
               onClick={() => model.selectSection(section)}
               aria-pressed={active}
+              aria-current={active ? "true" : undefined}
               aria-controls={PROFILE_SECTION_IDS[section]}
               className="group relative flex h-16 w-16 shrink-0 snap-center snap-always flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 active:scale-95"
               style={{

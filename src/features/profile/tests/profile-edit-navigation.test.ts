@@ -28,6 +28,29 @@ assert.match(
   /scrollToSection\(activeTabRef\.current\)/,
 );
 assert.doesNotMatch(navigation, /suppressScrollSyncUntilRef/);
+
+// Carousel height must track the active panel exactly (no dead space, no
+// cropping) and must never grow monotonically.
+const tabStorage = source(
+  'src/features/profile/application/services/profile-edit-tab-storage.ts',
+);
+assert.match(navigation, /syncCarouselHeight/);
+assert.match(navigation, /new ResizeObserver\(scheduleSync\)/);
+assert.match(navigation, /animateCarouselHeight/);
+assert.doesNotMatch(navigation, /Math\.max\(currentHeight \?\? 0/);
+assert.match(navigation, /isSwipingRef/);
+
+// The active tab must survive leaving and re-entering the editor through a
+// different query string, which changes the page-snapshot key.
+assert.match(navigation, /readStoredProfileEditTab/);
+assert.match(navigation, /writeStoredProfileEditTab/);
+assert.match(tabStorage, /ASOL_DB_STORES\.APP_SETTINGS/);
+assert.doesNotMatch(tabStorage, /localStorage|sessionStorage/);
+
+const workspaceView = source(
+  'src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx',
+);
+assert.match(workspaceView, /animateCarouselHeight \? "300ms" : "0ms"/);
 assert.match(model, /PROFILE_EDIT_SNAPSHOT_SCROLL_IDS/);
 assert.match(model, /resyncScrollToActiveTab\(\)/);
 assert.match(runtime, /profile-edit-/);

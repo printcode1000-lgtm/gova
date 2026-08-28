@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **367**
+Detected write-like surfaces: **368**
 Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -330,6 +330,7 @@ Unproven gateway paths: **146**
 | `src/features/profile-products/presentation/hooks/use-profile-products-tabs.ts` | `profile-products` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/profile-working-hours/application/services/profile-working-hours.ts` | `profile-working-hours` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile-working-hours/domain/profile-working-hours.types.ts` | `profile-working-hours` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/profile/application/services/profile-edit-tab-storage.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/profile-contacts.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/profile-editor.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/profile-fulfillment-settings.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |

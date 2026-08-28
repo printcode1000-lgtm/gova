@@ -46968,6 +46968,17 @@
       ]
     },
     {
+      "id": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "kind": "source",
+      "name": "profile-edit-tab-storage.ts",
+      "path": "src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "tags": [
+        "src/features/profile/application/services/profile-edit-tab-storage",
+        "src/features/profile/application/services/profile-edit-tab-storage.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/profile/application/services/profile-service.interface.ts",
       "kind": "source",
       "name": "profile-service.interface.ts",
@@ -91044,6 +91055,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/profile/application/services/profile-service.interface.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -101065,6 +101082,12 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/profile/application/services/profile-api-service.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -215201,6 +215224,48 @@
       "detail": "../../domain/store-images.entity"
     },
     {
+      "from": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "to": "feature:profile",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
+    },
+    {
+      "from": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "to": "source:src/features/profile/presentation/profile-page.types.ts",
+      "kind": "imports",
+      "detail": "@/features/profile/presentation/profile-page.types"
+    },
+    {
       "from": "source:src/features/profile/application/services/profile-service.interface.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -220041,6 +220106,12 @@
       "to": "source:src/features/page-snapshot/index.ts",
       "kind": "imports",
       "detail": "@/features/page-snapshot"
+    },
+    {
+      "from": "source:src/features/profile/presentation/use-profile-navigation.ts",
+      "to": "source:src/features/profile/application/services/profile-edit-tab-storage.ts",
+      "kind": "imports",
+      "detail": "../application/services/profile-edit-tab-storage"
     },
     {
       "from": "source:src/features/profile/presentation/use-profile-navigation.ts",

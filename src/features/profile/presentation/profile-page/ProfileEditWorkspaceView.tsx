@@ -31,7 +31,7 @@ import {
 } from "./ProfileEditWorkspaceChrome";
 
 export function ProfileEditWorkspaceView({ model }: { model: ProfilePageContentModel }) {
-const { t, locale, session, superAdmin, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, carouselRef, panelRefs, handleCarouselScroll, sectionStatuses, saveError, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus } = model;
+const { t, locale, session, superAdmin, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, animateCarouselHeight, carouselRef, panelRefs, handleCarouselScroll, sectionStatuses, saveError, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus } = model;
 return (
         <div
           id="edit-profile-card"
@@ -48,10 +48,11 @@ return (
                   data-snapshot-id="profile-edit-carousel-scroll"
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
-                  style={
-                    carouselHeight ? { height: carouselHeight } : undefined
-                  }
-                  className="flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] duration-300 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  style={{
+                    ...(carouselHeight ? { height: carouselHeight } : null),
+                    transitionDuration: animateCarouselHeight ? "300ms" : "0ms",
+                  }}
+                  className="flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] ease-out [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 >
                   <div
                     ref={(node) => {
