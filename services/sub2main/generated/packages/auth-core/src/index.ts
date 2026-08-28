@@ -7,11 +7,29 @@ export {
 } from './domain/constants';
 
 export {
-  egyptianMobilePhoneValidationIssue,
-  normalizeEgyptianMobilePhone,
-  isEgyptianMobilePhone,
-  type EgyptianMobilePhoneValidationIssue,
+  phoneValidationIssue,
+  normalizePhone,
+  tryNormalizePhone,
+  isValidPhone,
+  cleanPhoneInput,
+  phoneCountry,
+  phoneNationalNumber,
+  formatPhoneInternational,
+  phoneSearchKey,
+  samePhone,
+  phoneDialDigits,
+  phoneCountryOptions,
+  phoneCountryCallingCode,
+  isPhoneCountry,
+  legacyEgyptianPhoneToE164,
+  DEFAULT_PHONE_COUNTRY,
+  type PhoneValidationIssue,
+  type PhoneCountryCode,
+  type PhoneCountryOption,
+  type PhoneParseOptions,
 } from './domain/phone';
+
+export { toAsciiDigits, asciiDigitsOnly } from './domain/digits';
 
 export {
   readPasswordInput,

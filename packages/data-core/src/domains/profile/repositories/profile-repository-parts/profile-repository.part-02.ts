@@ -41,7 +41,7 @@ import {
   deliveryServicesSpecialtyColumn,
 } from "../specialty-columns.server";
 import { ProfilePart1 } from "./profile-repository.part-01";
-import { phoneSearchKey } from "@asol/auth-core";
+import { phoneSearchKey } from "@asol/auth-core/phone";
 const DAY_TO_INDEX = new Map<WorkingDayId, number>(
   WORKING_DAY_LABELS.map((day, index) => [day.id, index]),
 );

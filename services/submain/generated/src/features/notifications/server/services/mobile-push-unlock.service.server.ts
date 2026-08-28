@@ -7,6 +7,7 @@ import {
   type MobilePushCredentialBundle,
 } from "./mobile-push-crypto.server";
 import { getOptionalMobilePushServerCredentialBlob } from "@/core/config/server-env";
+import { samePhone } from "@asol/auth-core/server";
 
 export interface MobilePushUnlockInput {
   uid: string;
@@ -35,7 +36,7 @@ export class MobilePushUnlockService {
     const uid = input.uid.trim();
     const phone = input.phone.trim();
     const user = await this.users.execute(uid);
-    if (!user || user.phone !== phone) throw new Error("forbidden");
+    if (!user || !samePhone(user.phone, phone)) throw new Error("forbidden");
 
     return decryptMobilePushCredentialBlob(blob);
   }

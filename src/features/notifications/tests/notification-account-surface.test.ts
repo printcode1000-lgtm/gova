@@ -58,7 +58,8 @@ assert.match(selfTestRoute, /locale/);
 // A listing proves ownership and never carries the delivery credential.
 assert.match(tokenService, /async listForAccount/);
 assert.match(tokenService, /identityPhoneMatches\(user\.phone, identity\?\.phone\)/);
-assert.match(tokenService, /normalizedIdentityPhone/);
+// Identity comparison goes through the phone domain, never a local rule.
+assert.match(tokenService, /samePhone\(trimmedText\(left\), trimmedText\(right\)\)/);
 const summaryMapper = tokenService.slice(
   tokenService.indexOf("function toAccountDeviceSummary"),
   tokenService.indexOf("export class NotificationTokenService"),
@@ -82,7 +83,10 @@ assert.match(preferencesProvider, /<LocaleRuntimeProvider/);
 
 // The self test authorises one uid — the verified caller's — and no other.
 assert.match(selfTestService, /uids: \[user\.uid\]/);
-assert.match(selfTestService, /if \(!user \|\| !phone \|\| user\.phone !== phone\)/);
+assert.match(
+  selfTestService,
+  /if \(!user \|\| !phone \|\| !samePhone\(user\.phone, phone\)\)/,
+);
 assert.match(selfTestService, /selfTestNotificationContent/);
 
 // The client sends the session as a header and nothing else identifying.

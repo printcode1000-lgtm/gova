@@ -22,7 +22,7 @@
 | runtime | 7 |
 | script | 156 |
 | service | 6 |
-| source | 2132 |
+| source | 2133 |
 | test | 234 |
 
 ## Domains
@@ -47,7 +47,7 @@
 | @asol/account-bridge | `packages/account-bridge` | Cross-account notification and identity bridging; Layer: bridge; Public exports: ., ./notifications |
 | @asol/account-declarations | `packages/account-declarations` | Deployment account declarations and routing metadata; Layer: declarations; Public exports: ., ./gova, ./notifications, ./orders, ./products, ./profiles, ./sub2main, ./submain |
 | @asol/architecture-core | `packages/architecture-core` | Repository architecture contracts and static enforcement; Layer: enforcement; Public exports: . |
-| @asol/auth-core | `packages/auth-core` | Authentication and session identity; Layer: capability; Public exports: ., ./server |
+| @asol/auth-core | `packages/auth-core` | Authentication and session identity; Layer: capability; Public exports: ., ./phone, ./server |
 | @asol/backup-core | `packages/backup-core` | Backup orchestration over storage ports; Layer: capability; Public exports: ., ./server |
 | @asol/branding-core | `packages/branding-core` | App icon identity and generated branding assets; Layer: capability; Public exports: ., ./tooling |
 | @asol/catalog-core | `packages/catalog-core` | Category catalog domain; Layer: capability; Public exports: ., ./server |

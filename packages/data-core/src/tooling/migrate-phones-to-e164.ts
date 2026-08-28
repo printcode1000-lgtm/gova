@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import dotenv from "dotenv";
 import { createClient, type Client } from "@libsql/client";
-import { legacyEgyptianPhoneToE164, phoneSearchKey } from "@asol/auth-core";
+import { legacyEgyptianPhoneToE164, phoneSearchKey } from "@asol/auth-core/phone";
 import {
   DATABASE_SHARD_NAMES,
   envPrefixForShard,

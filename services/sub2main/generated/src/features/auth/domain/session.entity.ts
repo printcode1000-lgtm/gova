@@ -2,6 +2,7 @@ import {
   EMPTY_PROFILE_SPECIALTIES,
   type ProfileSpecialtiesSelection,
 } from '@asol/data-core/profile/entities';
+import { formatPhoneInternational } from '@asol/auth-core';
 
 /** Logged-in user session — persisted in AsolDB (auth store, key: current). */
 export interface UserSession {
@@ -56,9 +57,7 @@ export function parseStoredSession(raw: unknown): UserSession | null {
 }
 
 export function formatSessionPhone(phone: string): string {
-  const digits = phone.replace(/\D/g, '');
-  if (!digits) return '';
-  return digits.startsWith('20') ? `+${digits}` : `+20 ${digits}`;
+  return formatPhoneInternational(phone);
 }
 
 export function sessionDisplayName(session: UserSession): string {

@@ -14,6 +14,7 @@ import {
 import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications";
 
 import { NotificationGrantCollector } from "./notification-grant-collector.server";
+import { samePhone } from "@asol/auth-core/server";
 
 /**
  * The account's own delivery test.
@@ -43,7 +44,7 @@ export class NotificationSelfTestService {
         ? input.identity.phone.trim()
         : "";
     const user = await this.users.execute(uid);
-    if (!user || !phone || user.phone !== phone) throw new Error("forbidden");
+    if (!user || !phone || !samePhone(user.phone, phone)) throw new Error("forbidden");
 
     const content = selfTestNotificationContent(input?.locale);
     const requestId =

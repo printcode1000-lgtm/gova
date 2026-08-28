@@ -6021,6 +6021,7 @@
         "@asol/account-declarations/submain",
         "@asol/architecture-core",
         "@asol/auth-core",
+        "@asol/auth-core/phone",
         "@asol/auth-core/server",
         "@asol/backup-core",
         "@asol/backup-core/server",
@@ -6224,6 +6225,7 @@
         "@asol/account-declarations/submain",
         "@asol/architecture-core",
         "@asol/auth-core",
+        "@asol/auth-core/phone",
         "@asol/auth-core/server",
         "@asol/backup-core",
         "@asol/branding-core",
@@ -9933,7 +9935,9 @@
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/auth-core",
+        "@asol/auth-core/phone",
         "@asol/auth-core/server",
+        "@asol/data-core",
         "`@asol/auth-core` architecture & consolidation",
         "architectural",
         "architecture",
@@ -21269,10 +21273,12 @@
       "kind": "package",
       "name": "@asol/auth-core",
       "path": "packages/auth-core",
-      "summary": "Authentication and session identity; Layer: capability; Public exports: ., ./server",
+      "summary": "Authentication and session identity; Layer: capability; Public exports: ., ./phone, ./server",
       "tags": [
         ".",
+        "./phone",
         "./server",
+        "/phone",
         "/server",
         "@asol/auth-core",
         "and",
@@ -28235,6 +28241,17 @@
       "tags": [
         "packages/auth-core/src/index",
         "packages/auth-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/auth-core/src/phone.ts",
+      "kind": "source",
+      "name": "phone.ts",
+      "path": "packages/auth-core/src/phone.ts",
+      "tags": [
+        "packages/auth-core/src/phone",
+        "packages/auth-core/src/phone.ts",
         "ts"
       ]
     },
@@ -62535,6 +62552,12 @@
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/auth-core",
       "kind": "references",
+      "detail": "@asol/auth-core/phone"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/auth-core",
+      "kind": "references",
       "detail": "@asol/auth-core/server"
     },
     {
@@ -63507,6 +63530,12 @@
       "to": "package:@asol/auth-core",
       "kind": "references",
       "detail": "@asol/auth-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/dependency-map.md",
+      "to": "package:@asol/auth-core",
+      "kind": "references",
+      "detail": "@asol/auth-core/phone"
     },
     {
       "from": "document:docs/01-architecture/08-reference/dependency-map.md",
@@ -67745,6 +67774,12 @@
       "from": "document:docs/05-platform-features/auth-core-module.md",
       "to": "package:@asol/auth-core",
       "kind": "references",
+      "detail": "@asol/auth-core/phone"
+    },
+    {
+      "from": "document:docs/05-platform-features/auth-core-module.md",
+      "to": "package:@asol/auth-core",
+      "kind": "references",
       "detail": "@asol/auth-core/server"
     },
     {
@@ -67758,6 +67793,12 @@
       "to": "package:@asol/auth-core",
       "kind": "references",
       "detail": "packages/auth-core/src/..."
+    },
+    {
+      "from": "document:docs/05-platform-features/auth-core-module.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "@asol/data-core"
     },
     {
       "from": "document:docs/05-platform-features/auth-core-module.md",
@@ -75086,6 +75127,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/auth-core/src/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/auth-core/src/phone.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -86642,6 +86689,12 @@
     {
       "from": "domain:platform-features",
       "to": "source:packages/auth-core/src/index.ts",
+      "kind": "documents",
+      "detail": "packages/auth-core/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:packages/auth-core/src/phone.ts",
       "kind": "documents",
       "detail": "packages/auth-core/"
     },
@@ -139374,6 +139427,48 @@
       "detail": "./validation/profile-schema"
     },
     {
+      "from": "source:packages/auth-core/src/phone.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/phone.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/phone.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/phone.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/phone.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/phone.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/auth-core/src/phone.ts",
+      "to": "source:packages/auth-core/src/domain/digits.ts",
+      "kind": "imports",
+      "detail": "./domain/digits"
+    },
+    {
+      "from": "source:packages/auth-core/src/phone.ts",
+      "to": "source:packages/auth-core/src/domain/phone.ts",
+      "kind": "imports",
+      "detail": "./domain/phone"
+    },
+    {
       "from": "source:packages/auth-core/src/ports/account-deletion.port.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -148614,7 +148709,7 @@
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-01.ts",
       "to": "package:@asol/auth-core",
       "kind": "imports",
-      "detail": "@asol/auth-core"
+      "detail": "@asol/auth-core/phone"
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-01.ts",
@@ -148677,7 +148772,7 @@
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-02.ts",
       "to": "package:@asol/auth-core",
       "kind": "imports",
-      "detail": "@asol/auth-core"
+      "detail": "@asol/auth-core/phone"
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-02.ts",
@@ -148746,7 +148841,7 @@
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-03.ts",
       "to": "package:@asol/auth-core",
       "kind": "imports",
-      "detail": "@asol/auth-core"
+      "detail": "@asol/auth-core/phone"
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-03.ts",
@@ -148821,7 +148916,7 @@
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-04.ts",
       "to": "package:@asol/auth-core",
       "kind": "imports",
-      "detail": "@asol/auth-core"
+      "detail": "@asol/auth-core/phone"
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-04.ts",
@@ -148890,7 +148985,7 @@
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-05.ts",
       "to": "package:@asol/auth-core",
       "kind": "imports",
-      "detail": "@asol/auth-core"
+      "detail": "@asol/auth-core/phone"
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-05.ts",
@@ -150798,7 +150893,7 @@
       "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
       "to": "package:@asol/auth-core",
       "kind": "imports",
-      "detail": "@asol/auth-core"
+      "detail": "@asol/auth-core/phone"
     },
     {
       "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
@@ -203960,6 +204055,12 @@
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
+    },
+    {
+      "from": "source:src/features/notifications/server/services/notification-token-service.server.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/phone"
     },
     {
       "from": "source:src/features/notifications/server/services/notification-token-service.server.ts",

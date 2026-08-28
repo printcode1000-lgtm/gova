@@ -61,6 +61,7 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 - `samePhone` is how two spellings of one number are compared. Server identity checks use it rather than `===` because a session token signed before the migration still carries the national spelling for its 30-day life.
 - `phoneSearchKey` is the lookup key: the E.164 digits without `+`. A value that cannot be parsed keys on its digits without leading zeros, so a national spelling stays a suffix of the international one and a `LIKE` search still finds a row the migration has not reached.
 - `authPhoneCandidates` returns the raw, canonical, and legacy national spellings, so a lookup matches rows written before the migration.
+- `@asol/auth-core/phone` is a door of its own for consumers that only read, compare, or key a number — `@asol/data-core` profile contact rows use it — so they pull in the phone value object without the validation schemas.
 - Invalid server-side inputs are rejected even if a caller bypasses the browser Zod schema.
 
 ### Phone migration to E.164

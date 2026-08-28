@@ -7,11 +7,29 @@ export {
 } from './domain/constants';
 
 export {
-  egyptianMobilePhoneValidationIssue,
-  normalizeEgyptianMobilePhone,
-  isEgyptianMobilePhone,
-  type EgyptianMobilePhoneValidationIssue,
+  phoneValidationIssue,
+  normalizePhone,
+  tryNormalizePhone,
+  isValidPhone,
+  cleanPhoneInput,
+  phoneCountry,
+  phoneNationalNumber,
+  formatPhoneInternational,
+  phoneSearchKey,
+  samePhone,
+  phoneDialDigits,
+  phoneCountryOptions,
+  phoneCountryCallingCode,
+  isPhoneCountry,
+  legacyEgyptianPhoneToE164,
+  DEFAULT_PHONE_COUNTRY,
+  type PhoneValidationIssue,
+  type PhoneCountryCode,
+  type PhoneCountryOption,
+  type PhoneParseOptions,
 } from './domain/phone';
+
+export { toAsciiDigits, asciiDigitsOnly } from './domain/digits';
 
 export type {
   UserProfile,
@@ -63,7 +81,12 @@ export { registerSessionSigningSecret, getSessionSigningSecret } from './ports/s
 export { hashPassword, verifyPassword } from './server/password';
 export { createSignedSessionToken, verifySignedSessionToken } from './server/session-token';
 export { extractSessionToken, assertSessionMatchesUid } from './server/session-auth';
-export { normalizeAuthPhone, normalizeAuthEmail, authPhoneCandidates } from './server/normalize';
+export {
+  normalizeAuthPhone,
+  normalizeAuthEmail,
+  authPhoneCandidates,
+  migrateLegacyAuthPhone,
+} from './server/normalize';
 export {
   registerSuperAdminIdentity,
   isSuperAdminIdentity,

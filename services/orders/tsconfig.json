@@ -50,6 +50,15 @@
       "@asol/account-declarations/sub2main": [
         "./generated/packages/account-declarations/src/accounts/sub2main.ts"
       ],
+      "@asol/auth-core": [
+        "./generated/packages/auth-core/src/index.ts"
+      ],
+      "@asol/auth-core/phone": [
+        "./generated/packages/auth-core/src/phone.ts"
+      ],
+      "@asol/auth-core/server": [
+        "./generated/packages/auth-core/src/server.ts"
+      ],
       "@asol/data-core": [
         "./generated/packages/data-core/src/index.ts"
       ],

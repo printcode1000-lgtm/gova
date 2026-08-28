@@ -243,6 +243,9 @@ const DECLARED_PACKAGE_DOORS = new Set([
   // validation belong to the registry, not to this package.
   '@asol/ui-registry-core',
   '@asol/auth-core',
+  // The phone value object: profile contact rows key and search on the same
+  // canonical spelling the account identity uses.
+  '@asol/auth-core/phone',
   '@asol/auth-core/server',
   '@asol/dev-core',
   '@asol/dev-core/server',

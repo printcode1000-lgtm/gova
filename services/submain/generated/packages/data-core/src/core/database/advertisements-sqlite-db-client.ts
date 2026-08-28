@@ -5,6 +5,7 @@ import "server-only";
 import { dataCoreRuntimeConfig } from '../../ports/runtime-config';
 import { createDrizzleDevLogger } from '../../ports/telemetry';
 import { ADVERTISEMENTS_SQLITE_DB_PATH } from "./environment";
+import { executeSqliteStatement } from "./sqlite-statement-execution";
 import { AbstractDatabaseClient } from "./abstract-database-client";
 import { CachedSqliteConnection } from "./cached-sqlite-connection";
 
@@ -31,11 +32,7 @@ export class AdvertisementsSQLiteDatabaseClient extends AbstractDatabaseClient {
     const Database = nodeRequire("better-sqlite3");
     const db = new Database(ADVERTISEMENTS_SQLITE_DB_PATH);
     try {
-      const statement = db.prepare(sql);
-      return sql.trim().toUpperCase().startsWith("SELECT") ||
-        /\bRETURNING\b/i.test(sql)
-        ? statement.all(...params)
-        : [statement.run(...params)];
+      return executeSqliteStatement(db.prepare(sql), params);
     } finally {
       db.close();
     }

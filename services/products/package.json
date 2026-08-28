@@ -17,6 +17,7 @@
     "@aws-sdk/s3-request-presigner": "3.1117.0",
     "@libsql/client": "0.17.4",
     "drizzle-orm": "0.45.2",
+    "libphonenumber-js": "1.13.12",
     "next": "16.3.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",

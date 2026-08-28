@@ -1,3 +1,5 @@
+import { samePhone } from './phone';
+
 type SuperAdminIdentity = { uid: string; phone: string };
 
 let resolveSuperAdminIdentity: () => SuperAdminIdentity = () => ({
@@ -12,7 +14,7 @@ export function registerSuperAdminIdentity(getter: () => SuperAdminIdentity): vo
 export function isSuperAdminIdentity(uid: string, phone: string): boolean {
   const admin = resolveSuperAdminIdentity();
   if (!admin.uid || !admin.phone) return false;
-  return uid === admin.uid || phone === admin.phone;
+  return uid === admin.uid || samePhone(phone, admin.phone);
 }
 
 export function isSuperAdminSession(session: { uid: string; phone: string } | null): boolean {

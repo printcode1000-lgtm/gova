@@ -81,7 +81,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Authentication and session identity |
 | **Owner Package** | `@asol/auth-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/auth-core` · `@asol/auth-core/server` |
+| **Public Gateway** | `@asol/auth-core` · `@asol/auth-core/phone` · `@asol/auth-core/server` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | none (pure logic or ports) |

@@ -6021,6 +6021,7 @@
         "@asol/account-declarations/submain",
         "@asol/architecture-core",
         "@asol/auth-core",
+        "@asol/auth-core/phone",
         "@asol/auth-core/server",
         "@asol/backup-core",
         "@asol/backup-core/server",
@@ -6224,6 +6225,7 @@
         "@asol/account-declarations/submain",
         "@asol/architecture-core",
         "@asol/auth-core",
+        "@asol/auth-core/phone",
         "@asol/auth-core/server",
         "@asol/backup-core",
         "@asol/branding-core",
@@ -9933,7 +9935,9 @@
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/auth-core",
+        "@asol/auth-core/phone",
         "@asol/auth-core/server",
+        "@asol/data-core",
         "`@asol/auth-core` architecture & consolidation",
         "architectural",
         "architecture",
@@ -21269,10 +21273,12 @@
       "kind": "package",
       "name": "@asol/auth-core",
       "path": "packages/auth-core",
-      "summary": "Authentication and session identity; Layer: capability; Public exports: ., ./server",
+      "summary": "Authentication and session identity; Layer: capability; Public exports: ., ./phone, ./server",
       "tags": [
         ".",
+        "./phone",
         "./server",
+        "/phone",
         "/server",
         "@asol/auth-core",
         "and",
@@ -28235,6 +28241,17 @@
       "tags": [
         "packages/auth-core/src/index",
         "packages/auth-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/auth-core/src/phone.ts",
+      "kind": "source",
+      "name": "phone.ts",
+      "path": "packages/auth-core/src/phone.ts",
+      "tags": [
+        "packages/auth-core/src/phone",
+        "packages/auth-core/src/phone.ts",
         "ts"
       ]
     },

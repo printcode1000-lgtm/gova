@@ -70,7 +70,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/auth-core/` |
 | **Purpose** | Authentication and session identity |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./server` |
+| **Public Exports** | `.` · `./phone` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:auth-core` |

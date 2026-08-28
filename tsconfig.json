@@ -65,6 +65,9 @@
       "@asol/auth-core": [
         "./packages/auth-core/src/index.ts"
       ],
+      "@asol/auth-core/phone": [
+        "./packages/auth-core/src/phone.ts"
+      ],
       "@asol/auth-core/server": [
         "./packages/auth-core/src/server.ts"
       ],

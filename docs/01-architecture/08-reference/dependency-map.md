@@ -88,6 +88,9 @@ ALLOWED_TO_IMPORT → `@asol/storage-core/server`
 ALLOWED_TO_IMPORT → `@asol/auth-core`
 
 `@asol/data-core`
+ALLOWED_TO_IMPORT → `@asol/auth-core/phone`
+
+`@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/auth-core/server`
 
 `@asol/data-core`
@@ -352,4 +355,4 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 | Metric | Value |
 |---|---|
 | Packages | 43 |
-| Import edges | 58 |
+| Import edges | 59 |
