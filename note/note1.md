@@ -52,4 +52,4 @@ C:/Users/hesham/Desktop/gova/.git/index.lock
 printcode1000-lgtm/gova
 
 
-echo "hesham0000" | sudo -S apt install -y openssh-server && sudo systemctl enable --now ssh
+
