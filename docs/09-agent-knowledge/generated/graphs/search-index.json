@@ -9529,6 +9529,35 @@
       ]
     },
     {
+      "id": "document:docs/04-ui-components/profile-edit-navigation.md",
+      "kind": "document",
+      "name": "Profile Edit Navigation",
+      "path": "docs/04-ui-components/profile-edit-navigation.md",
+      "summary": "This document defines the interaction contract for the profile edit workspace navigation.",
+      "tags": [
+        "contract",
+        "defines",
+        "docs/04-ui-components/profile-edit-navigation",
+        "docs/04-ui-components/profile-edit-navigation.md",
+        "document",
+        "edit",
+        "for",
+        "interaction",
+        "md",
+        "navigation",
+        "profile",
+        "profile edit navigation",
+        "src/features/profile/tests/profile-edit-navigation",
+        "src/features/profile/tests/profile-edit-navigation.test.ts",
+        "test",
+        "the",
+        "this",
+        "this document defines the interaction contract for the profile edit workspace navigation.",
+        "ts",
+        "workspace"
+      ]
+    },
+    {
       "id": "document:docs/04-ui-components/README.md",
       "kind": "document",
       "name": "UI Components Domain",

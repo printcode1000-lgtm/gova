@@ -9529,6 +9529,35 @@
       ]
     },
     {
+      "id": "document:docs/04-ui-components/profile-edit-navigation.md",
+      "kind": "document",
+      "name": "Profile Edit Navigation",
+      "path": "docs/04-ui-components/profile-edit-navigation.md",
+      "summary": "This document defines the interaction contract for the profile edit workspace navigation.",
+      "tags": [
+        "contract",
+        "defines",
+        "docs/04-ui-components/profile-edit-navigation",
+        "docs/04-ui-components/profile-edit-navigation.md",
+        "document",
+        "edit",
+        "for",
+        "interaction",
+        "md",
+        "navigation",
+        "profile",
+        "profile edit navigation",
+        "src/features/profile/tests/profile-edit-navigation",
+        "src/features/profile/tests/profile-edit-navigation.test.ts",
+        "test",
+        "the",
+        "this",
+        "this document defines the interaction contract for the profile edit workspace navigation.",
+        "ts",
+        "workspace"
+      ]
+    },
+    {
       "id": "document:docs/04-ui-components/README.md",
       "kind": "document",
       "name": "UI Components Domain",
@@ -66974,6 +67003,17 @@
       "detail": "src/app/layout.tsx"
     },
     {
+      "from": "document:docs/04-ui-components/profile-edit-navigation.md",
+      "to": "domain:ui-components",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/04-ui-components/profile-edit-navigation.md",
+      "to": "test:src/features/profile/tests/profile-edit-navigation.test.ts",
+      "kind": "references",
+      "detail": "src/features/profile/tests/profile-edit-navigation.test.ts"
+    },
+    {
       "from": "document:docs/04-ui-components/README.md",
       "to": "domain:ui-components",
       "kind": "belongs-to"
@@ -66989,6 +67029,12 @@
       "to": "document:docs/04-ui-components/page-snapshot-system.md",
       "kind": "references",
       "detail": "./page-snapshot-system.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/README.md",
+      "to": "document:docs/04-ui-components/profile-edit-navigation.md",
+      "kind": "references",
+      "detail": "./profile-edit-navigation.md"
     },
     {
       "from": "document:docs/04-ui-components/README.md",

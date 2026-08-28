@@ -297,7 +297,7 @@ Unproven gateway paths: **146**
 | `src/features/page-save/tests/page-save-write-surface.test.ts` | `page-save` | create, delete, save, update | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/page-snapshot/application/services/page-snapshot-service.ts` | `page-snapshot` | delete | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/page-snapshot/presentation/hooks/page-snapshot-browser.ts` | `page-snapshot` | patch | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `src/features/page-snapshot/presentation/hooks/use-page-snapshot.tsx` | `page-snapshot` | delete, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `src/features/page-snapshot/presentation/hooks/use-page-snapshot.tsx` | `page-snapshot` | delete, save, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/password-recovery/server/services/password-recovery-service.server.ts` | `password-recovery` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/pharmacy-profile-catalog/domain/pharmacy-profile-catalog.types.ts` | `pharmacy-profile-catalog` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/pharmacy-profile-catalog/presentation/PharmacyCatalogManagerPage.tsx` | `pharmacy-profile-catalog` | create, save | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
