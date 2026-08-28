@@ -20,9 +20,11 @@ import { shareLocationUrl } from "@/features/sharing/ui";
 import { SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid } from "./ContactInfoCard.contact-types";
 import type { ContactInfoCardModel } from "./ContactInfoCard.model";
 import { ContactSectionHeader } from "./ContactSectionHeader";
+import { ContactEntryCard } from "./ContactEntryCard";
+import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
 
 export function PrimaryContactView({ model }: { model: ContactInfoCardModel }) {
-const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, groupedSocialLinks } = model;
+const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, pendingRemoval, requestRemoveEntry, cancelRemoveEntry, confirmRemoveEntry, groupedSocialLinks } = model;
 const phoneLabels = phoneFieldLabels(t, locale);
 return (
         <Card id="profile.contact-info.primary-contact-view.card">
@@ -174,40 +176,27 @@ return (
                     )}
                   </div>
                   <div className="space-y-2">
-                    {typePhones.map((phone) => (
-                      <div
+                    {typePhones.map((phone, index) => (
+                      <ContactEntryCard
                         key={phone.id}
-                        className="flex items-center gap-2 rounded-lg border p-2 sm:gap-3 sm:p-3"
-                        style={{
-                          backgroundColor: `${quickAddColor(type)}10`,
-                          borderColor: `${quickAddColor(type)}44`,
-                        }}
+                        color={quickAddColor(type)}
+                        icon={quickAddIcon(type)}
+                        title={`${t(`onboarding.contactInfo.phoneTypes.${type}`)} #${index + 1}`}
+                        removeLabel={t('onboarding.contactInfo.remove')}
+                        onRemove={
+                          readOnly
+                            ? undefined
+                            : () => requestRemoveEntry('phone', phone.id)
+                        }
                       >
-                        <FontAwesomeIcon
-                          icon={quickAddIcon(type)}
-                          className="hidden h-4 w-4 shrink-0 sm:block"
-                          style={{ color: quickAddColor(type) }}
-                        />
                         <PhoneField
-                          className="flex-1"
                           labels={phoneLabels}
                           inputClassName="auth-input w-full text-sm"
                           value={phone.number}
                           onChange={(number) => updatePhone(phone.id, { number })}
                           disabled={readOnly}
                         />
-                        {!readOnly && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => removePhone(phone.id)}
-                            className="shrink-0 h-7 w-7 sm:h-8 sm:w-8"
-                            aria-label={t('onboarding.contactInfo.remove')}
-                          >
-                            <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                          </Button>
-                        )}
-                      </div>
+                      </ContactEntryCard>
                     ))}
                   </div>
                 </div>
@@ -234,37 +223,27 @@ return (
                   )}
                 </div>
                 <div id="profile.contact-info.primary-contact-view.div.13" className="space-y-2">
-                  {localData.emails.filter((e) => e.id !== 'primary').map((emailLink) => (
-                    <div
+                  {localData.emails.filter((e) => e.id !== 'primary').map((emailLink, index) => (
+                    <ContactEntryCard
                       key={emailLink.id}
-                      className="flex items-center gap-3 rounded-lg border p-3"
-                      style={{
-                        backgroundColor: `${quickAddColor('email')}10`,
-                        borderColor: `${quickAddColor('email')}44`,
-                      }}
+                      color={quickAddColor('email')}
+                      icon={quickAddIcon('email')}
+                      title={`${t('onboarding.contactInfo.email')} #${index + 1}`}
+                      removeLabel={t('onboarding.contactInfo.remove')}
+                      onRemove={
+                        readOnly
+                          ? undefined
+                          : () => requestRemoveEntry('email', emailLink.id)
+                      }
                     >
-                      <FontAwesomeIcon icon={quickAddIcon('email')} className="hidden h-4 w-4 shrink-0 sm:block" style={{ color: quickAddColor('email') }} />
-                      <div className="flex-1">
-                        <Input
-                          value={emailLink.email}
-                          onChange={(e) => updateEmail(emailLink.id, { email: e.target.value })}
-                          placeholder={t('onboarding.contactInfo.emailPlaceholder')}
-                          type="email"
-                          disabled={readOnly}
-                        />
-                      </div>
-                      {!readOnly && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeEmail(emailLink.id)}
-                          className="shrink-0 h-8 w-8"
-                          aria-label={t('onboarding.contactInfo.remove')}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
+                      <Input
+                        value={emailLink.email}
+                        onChange={(e) => updateEmail(emailLink.id, { email: e.target.value })}
+                        placeholder={t('onboarding.contactInfo.emailPlaceholder')}
+                        type="email"
+                        disabled={readOnly}
+                      />
+                    </ContactEntryCard>
                   ))}
                 </div>
               </div>
@@ -301,38 +280,28 @@ return (
                         )}
                       </div>
                       <div className="space-y-2">
-                        {platformLinks.map((link) => (
-                          <div
+                        {platformLinks.map((link, index) => (
+                          <ContactEntryCard
                             key={link.id}
-                            className="flex items-center gap-3 rounded-lg border p-3"
-                            style={{
-                              backgroundColor: `${quickAddColor(platform)}10`,
-                              borderColor: `${quickAddColor(platform)}44`,
-                            }}
+                            color={quickAddColor(platform)}
+                            icon={quickAddIcon(platform)}
+                            title={`${t(`onboarding.contactInfo.platforms.${platform}`)} #${index + 1}`}
+                            removeLabel={t('onboarding.contactInfo.remove')}
+                            onRemove={
+                              readOnly
+                                ? undefined
+                                : () => requestRemoveEntry('social', link.id)
+                            }
                           >
-                            <FontAwesomeIcon icon={quickAddIcon(platform)} className="hidden h-4 w-4 shrink-0 sm:block" style={{ color: quickAddColor(platform) }} />
-                            <div className="flex-1">
-                              <Input
-                                value={link.url}
-                                onChange={(e) => updateSocialLink(link.id, { url: e.target.value })}
-                                placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}
-                                className="w-full"
-                                inputMode="url"
-                                disabled={readOnly}
-                              />
-                            </div>
-                            {!readOnly && (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => removeSocialLink(link.id)}
-                                className="shrink-0 h-8 w-8"
-                                aria-label={t('onboarding.contactInfo.remove')}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            )}
-                          </div>
+                            <Input
+                              value={link.url}
+                              onChange={(e) => updateSocialLink(link.id, { url: e.target.value })}
+                              placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}
+                              className="w-full"
+                              inputMode="url"
+                              disabled={readOnly}
+                            />
+                          </ContactEntryCard>
                         ))}
                       </div>
                     </div>
@@ -361,37 +330,25 @@ return (
                   )}
                 </div>
                 <div id="profile.contact-info.primary-contact-view.div.17" className="space-y-2">
-                  {localData.websites.map((site) => (
-                    <div
+                  {localData.websites.map((site, index) => (
+                    <ContactEntryCard
                       key={site.id}
-                      className="flex items-center gap-3 rounded-lg border p-3"
-                      style={{
-                        backgroundColor: `${quickAddColor('website')}10`,
-                        borderColor: `${quickAddColor('website')}44`,
-                      }}
+                      color={quickAddColor('website')}
+                      icon={quickAddIcon('website')}
+                      title={`${t('onboarding.contactInfo.website')} #${index + 1}`}
+                      removeLabel={t('onboarding.contactInfo.remove')}
+                      onRemove={
+                        readOnly ? undefined : () => requestRemoveEntry('website', site.id)
+                      }
                     >
-                      <FontAwesomeIcon icon={quickAddIcon('website')} className="hidden h-4 w-4 shrink-0 sm:block" style={{ color: quickAddColor('website') }} />
-                      <div className="flex-1">
-                        <Input
-                          value={site.url}
-                          onChange={(e) => updateWebsite(site.id, { url: e.target.value })}
-                          placeholder={t('onboarding.contactInfo.websitePlaceholder')}
-                          type="url"
-                          disabled={readOnly}
-                        />
-                      </div>
-                      {!readOnly && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeWebsite(site.id)}
-                          className="shrink-0 h-8 w-8"
-                          aria-label={t('onboarding.contactInfo.remove')}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
+                      <Input
+                        value={site.url}
+                        onChange={(e) => updateWebsite(site.id, { url: e.target.value })}
+                        placeholder={t('onboarding.contactInfo.websitePlaceholder')}
+                        type="url"
+                        disabled={readOnly}
+                      />
+                    </ContactEntryCard>
                   ))}
                 </div>
               </div>
@@ -399,6 +356,19 @@ return (
           </CardContent>
         </Card>
           </CardContent>
+
+          <ConfirmDialog id="profile.contact-info.primary-contact-view.confirm-dialog"
+            open={pendingRemoval !== null}
+            title={t('onboarding.contactInfo.removeConfirm.title')}
+            message={t('onboarding.contactInfo.removeConfirm.message')}
+            confirmLabel={t('onboarding.contactInfo.removeConfirm.confirm')}
+            cancelLabel={t('common.cancel')}
+            tone="destructive"
+            onConfirm={confirmRemoveEntry}
+            onOpenChange={(open) => {
+              if (!open) cancelRemoveEntry();
+            }}
+          />
         </Card>
       );
 }

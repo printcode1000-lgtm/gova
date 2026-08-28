@@ -7953,6 +7953,8 @@
         "src/features/profile/presentation/specialties-selection.ts",
         "src/features/profile/presentation/specialtiescard",
         "src/features/profile/presentation/specialtiescard.tsx",
+        "src/shared/ui/confirm-dialog",
+        "src/shared/ui/confirm-dialog.tsx",
         "system",
         "the",
         "this",
@@ -47411,6 +47413,17 @@
       ]
     },
     {
+      "id": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "kind": "source",
+      "name": "ContactEntryCard.tsx",
+      "path": "src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "tags": [
+        "src/features/profile/presentation/contact-info/contactentrycard",
+        "src/features/profile/presentation/contact-info/contactentrycard.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
       "kind": "source",
       "name": "ContactInfoCard.contact-types.tsx",
@@ -50755,6 +50768,17 @@
       "tags": [
         "src/shared/ui/checkbox",
         "src/shared/ui/checkbox.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/shared/ui/confirm-dialog.tsx",
+      "kind": "source",
+      "name": "confirm-dialog.tsx",
+      "path": "src/shared/ui/confirm-dialog.tsx",
+      "tags": [
+        "src/shared/ui/confirm-dialog",
+        "src/shared/ui/confirm-dialog.tsx",
         "tsx"
       ]
     },

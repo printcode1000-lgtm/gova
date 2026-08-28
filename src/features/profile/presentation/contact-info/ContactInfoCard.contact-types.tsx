@@ -72,6 +72,14 @@ export interface ContactInfoCardProps {
   hidePrimarySection?: boolean;
 }
 
+/** The kinds of contact entry a card can hold, and a removal can name. */
+export type ContactEntryKind =
+  | 'phone'
+  | 'email'
+  | 'social'
+  | 'website'
+  | 'location';
+
 export interface ContactQuickAddItem {
   id: string;
   label: string;

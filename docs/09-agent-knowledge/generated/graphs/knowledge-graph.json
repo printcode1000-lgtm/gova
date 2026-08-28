@@ -7953,6 +7953,8 @@
         "src/features/profile/presentation/specialties-selection.ts",
         "src/features/profile/presentation/specialtiescard",
         "src/features/profile/presentation/specialtiescard.tsx",
+        "src/shared/ui/confirm-dialog",
+        "src/shared/ui/confirm-dialog.tsx",
         "system",
         "the",
         "this",
@@ -47411,6 +47413,17 @@
       ]
     },
     {
+      "id": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "kind": "source",
+      "name": "ContactEntryCard.tsx",
+      "path": "src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "tags": [
+        "src/features/profile/presentation/contact-info/contactentrycard",
+        "src/features/profile/presentation/contact-info/contactentrycard.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
       "kind": "source",
       "name": "ContactInfoCard.contact-types.tsx",
@@ -50755,6 +50768,17 @@
       "tags": [
         "src/shared/ui/checkbox",
         "src/shared/ui/checkbox.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/shared/ui/confirm-dialog.tsx",
+      "kind": "source",
+      "name": "confirm-dialog.tsx",
+      "path": "src/shared/ui/confirm-dialog.tsx",
+      "tags": [
+        "src/shared/ui/confirm-dialog",
+        "src/shared/ui/confirm-dialog.tsx",
         "tsx"
       ]
     },
@@ -66415,7 +66439,7 @@
     },
     {
       "from": "document:docs/02-data-and-storage/profile-system.md",
-      "to": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
+      "to": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
       "kind": "references",
       "detail": "src/features/profile/presentation/contact-info/"
     },
@@ -66430,6 +66454,12 @@
       "to": "source:src/features/profile/presentation/SpecialtiesCard.tsx",
       "kind": "references",
       "detail": "src/features/profile/presentation/SpecialtiesCard.tsx"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/profile-system.md",
+      "to": "source:src/shared/ui/confirm-dialog.tsx",
+      "kind": "references",
+      "detail": "src/shared/ui/confirm-dialog.tsx"
     },
     {
       "from": "document:docs/02-data-and-storage/README.md",
@@ -91755,6 +91785,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
       "kind": "documents",
       "detail": "src/features/"
@@ -101812,6 +101848,12 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/profile/presentation/contact-info/contact-location-links.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -217030,6 +217072,12 @@
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
+      "to": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "kind": "imports",
+      "detail": "./ContactEntryCard"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
       "to": "source:src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
       "kind": "imports",
       "detail": "./ContactInfoCard.contact-types"
@@ -217081,6 +217129,12 @@
       "to": "source:src/shared/ui/card.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/card"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
+      "to": "source:src/shared/ui/confirm-dialog.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/confirm-dialog"
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
@@ -217141,6 +217195,72 @@
       "to": "source:src/features/location/index.ts",
       "kind": "imports",
       "detail": "@/features/location"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "feature:profile",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "external-dependency:@fortawesome/fontawesome-svg-core",
+      "kind": "imports",
+      "detail": "@fortawesome/fontawesome-svg-core"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "external-dependency:@fortawesome/react-fontawesome",
+      "kind": "imports",
+      "detail": "@fortawesome/react-fontawesome"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "to": "source:src/shared/ui/button.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/button"
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
@@ -217690,6 +217810,12 @@
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
+      "to": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
+      "kind": "imports",
+      "detail": "./ContactEntryCard"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
       "to": "source:src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
       "kind": "imports",
       "detail": "./ContactInfoCard.contact-types"
@@ -217741,6 +217867,12 @@
       "to": "source:src/shared/ui/card.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/card"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
+      "to": "source:src/shared/ui/confirm-dialog.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/confirm-dialog"
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
@@ -233997,6 +234129,55 @@
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "source:src/shared/ui/button.tsx",
+      "kind": "imports",
+      "detail": "./button"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "source:src/shared/ui/dialog.tsx",
+      "kind": "imports",
+      "detail": "./dialog"
     },
     {
       "from": "source:src/shared/ui/contact-action-bar-model.ts",

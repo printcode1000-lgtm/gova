@@ -198,6 +198,14 @@ so a second WhatsApp number, a third location, or another Instagram link is one
 tap away without returning to the strip. Every phone inside those cards is the
 shared [Phone Field](../04-ui-components/phone-field.md).
 
+Inside a card, every entry is a `ContactEntryCard`: the entry's own name and
+number head it and the delete control sits at that head, not on the field's row,
+so a thumb reaching for the value it is typing cannot land on delete. Deleting
+asks first — the shared `ConfirmDialog` (`src/shared/ui/confirm-dialog.tsx`)
+names what is going and says the profile still has to be saved — and the model
+holds which entry is pending, so both contact views ask the same question the
+same way.
+
 ## Migration
 
 The structural migration is:

@@ -15,7 +15,7 @@ import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGps
 import type { LocationEntry } from '@/features/profile/domain/profile-contacts.entity';
 import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-style";
 import { shareLocationUrl } from "@/features/sharing/ui";
-import { SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid } from "./ContactInfoCard.contact-types";
+import { type ContactEntryKind, SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid } from "./ContactInfoCard.contact-types";
 import {
   createEmailLink,
   createLocationEntry,
@@ -350,6 +350,34 @@ const selectContactKind = (kindId: string) => {
 const activeKindId =
     selectedKindId && countForKind(selectedKindId) > 0 ? selectedKindId : null;
 
+/**
+ * Removal is confirmed, never immediate.
+ *
+ * A contact entry is a phone number or an address someone typed by hand, and
+ * the delete control sits at the top of its card where a thumb reaching for
+ * the field can meet it. The model holds which entry is pending so the view
+ * only has to ask the question.
+ */
+const [pendingRemoval, setPendingRemoval] = React.useState<
+    { kind: ContactEntryKind; id: string } | null
+  >(null);
+
+const requestRemoveEntry = (kind: ContactEntryKind, id: string) =>
+    setPendingRemoval({ kind, id });
+
+const cancelRemoveEntry = () => setPendingRemoval(null);
+
+const confirmRemoveEntry = () => {
+    if (!pendingRemoval) return;
+    const { kind, id } = pendingRemoval;
+    if (kind === 'phone') removePhone(id);
+    else if (kind === 'email') removeEmail(id);
+    else if (kind === 'social') removeSocialLink(id);
+    else if (kind === 'website') removeWebsite(id);
+    else removeLocation(id);
+    setPendingRemoval(null);
+  };
+
 const groupedSocialLinks = React.useMemo(() => {
     const grouped: Record<string, SocialLink[]> = {};
     localData.socialLinks.forEach((link) => {
@@ -361,7 +389,7 @@ const groupedSocialLinks = React.useMemo(() => {
     return grouped;
   }, [localData.socialLinks]);
 
-return { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, groupedSocialLinks };
+return { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, pendingRemoval, requestRemoveEntry, cancelRemoveEntry, confirmRemoveEntry, groupedSocialLinks };
 }
 
 
