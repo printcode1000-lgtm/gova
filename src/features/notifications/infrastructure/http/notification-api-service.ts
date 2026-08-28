@@ -30,15 +30,26 @@ import type {
  * needs no round trip, and there is nothing about it for an admin to edit.
  */
 export class NotificationApiService {
-  registerToken(input: RegisterNotificationTokenInput): Promise<DeviceToken> {
+  /**
+   * `silent` is for registrations the user never asked for — the background
+   * locale refresh — where the caller already handles a failed round trip. It
+   * only stops the API client from logging the failure at error level; the
+   * call still rejects and the caller still decides what to do.
+   */
+  registerToken(
+    input: RegisterNotificationTokenInput,
+    options: { silent?: boolean } = {},
+  ): Promise<DeviceToken> {
     return asolApi.post<DeviceToken>(
       ASOL_API_ROUTES.notifications.deviceToken,
       input,
+      { suppressErrorLog: options.silent === true },
     );
   }
 
   removeToken(
     input: DeleteNotificationTokenInput,
+    options: { silent?: boolean } = {},
   ): Promise<{ deleted: boolean }> {
     const query = new URLSearchParams({ uid: input.uid });
     if (input.phone) query.set("phone", input.phone);
@@ -46,6 +57,7 @@ export class NotificationApiService {
     if (input.tokenId) query.set("tokenId", input.tokenId);
     return asolApi.delete<{ deleted: boolean }>(
       `${ASOL_API_ROUTES.notifications.deviceToken}?${query}`,
+      { suppressErrorLog: options.silent === true },
     );
   }
 

@@ -1150,6 +1150,15 @@ Push text is built in the language of the receiving device.
 - Tokens registered before this column existed default to `ar`, and the caller's `locale` is used only when a token has none.
 - Changing the language in the app, signing in again, or receiving a spontaneous token rotation all re-register the token with the current locale. `WebPushController` listens for the document-locale event and calls `notifications.refreshDeviceLocale`, which never prompts for permission and does nothing when no subscription exists.
 
+  This refresh is silent on both ends. Because the user never asked for it and
+  the next one re-sends the same subscription anyway, an unreachable server is
+  logged as a warning by the controller and the `POST /api/notifications/device-token`
+  call itself is made with the API client's error log suppressed
+  (`notificationApiService.registerToken(input, { silent: true })`). The same
+  applies to the token removals during sign-out, which must never block the
+  sign-out. Registrations the user did ask for — the opt-in dialog and the
+  settings toggle — keep logging failures at error level.
+
 Values that must be formatted per language — money, category names — cannot live
 inside a template. Pass them through `variablesByLocale`, which is merged over
 `variables` for each group:

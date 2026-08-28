@@ -153,16 +153,21 @@ export class WebPushBrowserService {
     );
     const subscription = await registration?.pushManager.getSubscription();
     if (!subscription) return false;
-    await notificationApiService.registerToken({
-      uid,
-      phone,
-      platform: NotificationPlatforms.Web,
-      provider: "web_push",
-      deviceId: await getDeviceId(),
-      token: JSON.stringify(subscription.toJSON()),
-      locale: await readNotificationLocale(),
-      deviceLabel: "Browser",
-    });
+    await notificationApiService.registerToken(
+      {
+        uid,
+        phone,
+        platform: NotificationPlatforms.Web,
+        provider: "web_push",
+        deviceId: await getDeviceId(),
+        token: JSON.stringify(subscription.toJSON()),
+        locale: await readNotificationLocale(),
+        deviceLabel: "Browser",
+      },
+      // Nobody asked for this refresh, and the next one re-sends the same
+      // subscription, so an unreachable server is a warning, not an error.
+      { silent: true },
+    );
     return true;
   }
 

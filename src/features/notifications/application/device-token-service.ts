@@ -135,11 +135,14 @@ export class DeviceTokenService {
     await Promise.all(
       tokens.map(async (token) => {
         try {
-          await notificationApiService.removeToken({
-            uid: safeUid,
-            phone: safePhone,
-            deviceId: token.deviceId,
-          });
+          await notificationApiService.removeToken(
+            {
+              uid: safeUid,
+              phone: safePhone,
+              deviceId: token.deviceId,
+            },
+            { silent: true },
+          );
         } catch (error) {
           // Sign-out must never be blocked by a failed server call; the local
           // copy is removed either way so this device stops claiming the token.
