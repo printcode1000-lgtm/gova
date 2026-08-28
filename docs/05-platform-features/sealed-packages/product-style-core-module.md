@@ -26,6 +26,11 @@ configuration (component visibility, order, and search columns) used by
 ## App integration
 
 - `DeveloperCategorySelector` and style editors import the browser door.
+- The rating editor's on/off control is the shared `ToggleSwitch`, wired exactly
+  as the fulfillment return-policy switch is: the state label sits beside the
+  switch and the switch carries it as its `aria-label`. Every on/off control in
+  the application is that one touch-sized pill, per the
+  [Touch Interaction Policy](../../04-ui-components/touch-interaction-policy.md).
 - `api/dev/product-style/route.ts` is a thin dev-only wrapper around the server door.
 - `product-search-fields.server.ts` reads normalized components through the server door.
 - Static files stay in `public/product/style/`; the package owns read/write contracts only.

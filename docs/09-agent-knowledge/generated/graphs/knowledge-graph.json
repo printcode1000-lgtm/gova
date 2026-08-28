@@ -69381,6 +69381,12 @@
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/product-style-core-module.md",
+      "to": "document:docs/04-ui-components/touch-interaction-policy.md",
+      "kind": "references",
+      "detail": "../../04-ui-components/touch-interaction-policy.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/product-style-core-module.md",
       "to": "package:@asol/product-style-core",
       "kind": "references",
       "detail": "@asol/product-style-core"
@@ -214992,12 +214998,6 @@
     },
     {
       "from": "source:src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "to": "source:src/shared/ui/checkbox.tsx",
-      "kind": "imports",
-      "detail": "@/shared/ui/checkbox"
-    },
-    {
-      "from": "source:src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
       "to": "source:src/shared/ui/label.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/label"
@@ -215013,6 +215013,12 @@
       "to": "source:src/shared/ui/select.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/select"
+    },
+    {
+      "from": "source:src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
+      "to": "source:src/shared/ui/toggle-switch.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/toggle-switch"
     },
     {
       "from": "source:src/features/product/presentation/style-editors/search-columns/ProductSearchColumnsStyleEditor.tsx",

@@ -2,8 +2,8 @@
 
 import * as React from "react";
 
-import { Checkbox } from "@/shared/ui/checkbox";
 import { Label } from "@/shared/ui/label";
+import { ToggleSwitch } from "@/shared/ui/toggle-switch";
 import {
   Select,
   SelectContent,
@@ -41,18 +41,15 @@ export function RatingSettingsEditor({ id,
     <div id={id} className="space-y-4 rounded-xl border border-outline-variant p-4">
       <h3 id="product.style-editors.rating.rating-settings-editor.h3" className="text-sm font-bold">{labels.title}</h3>
 
-      <div id="product.style-editors.rating.rating-settings-editor.div.2" className="flex items-center gap-2">
-        <Checkbox ui={{ uid: "product.style.rating-enabled-xw1yNf", id: "product.style.rating-enabled", kind: "field", part: "rating" }}
+      <div id="product.style-editors.rating.rating-settings-editor.div.2" className="flex items-center gap-3">
+        <span className="text-sm font-medium leading-none">{labels.enabled}</span>
+        <ToggleSwitch ui={{ uid: "product.style.rating-enabled-xw1yNf", id: "product.style.rating-enabled", kind: "field", part: "rating" }}
           id="rating-settings-enabled"
           checked={enabled}
-          onCheckedChange={(checked) =>
-            onChange({ enabled: checked === true, mode })
-          }
+          onChange={(checked) => onChange({ enabled: checked, mode })}
           disabled={disabled}
+          label={labels.enabled}
         />
-        <Label htmlFor="rating-settings-enabled" className="">
-          {labels.enabled}
-        </Label>
       </div>
 
       <div id="product.style-editors.rating.rating-settings-editor.div.3" className="space-y-2">
