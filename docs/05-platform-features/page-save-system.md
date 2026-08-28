@@ -118,7 +118,7 @@ Several scopes can be mounted at once (a product page shows both the editor and 
 `PageSaveHeaderButton` in `src/features/page-save/presentation/PageSaveHeaderButton.tsx` is mounted in `AppHeader`. `PageSaveRuntimeInit` in `AppShell` registers storage ports and hydrates pending records on startup.
 
 - Appears when the active scope has dirty items, is saving, or a persisted pending record exists
-- Shows wave animation while dirty (not saving)
+- Shows wave animation while dirty (not saving). The waves are rendered in the error/red theme token (`--color-error`) via `.asol-page-save-wave` in `src/app/globals.css`, so unsaved work reads as an alert in both light and dark themes
 - While save runs, shows the project `LoadingSpinner` in place of the save icon
 - After a successful save with no remaining dirty items, briefly shows a check icon, then hides. The check fires on the observed saving phase **or** on `lastResult === "success"`, so a save that resolves before React paints the spinner still confirms; the header acknowledges the result so it cannot flash again on another page. The countdown lives in its own effect, keyed on the flash state alone.
 - Opens `PageSaveDialog` on tap (does not save immediately)

@@ -330,21 +330,19 @@ body {
   animation: asol-profile-tab-wave 2.9s ease-out infinite;
   border-style: solid;
   border-width: 2px;
-  color: color-mix(in srgb, var(--color-on-primary-container) 70%, transparent);
-  border-color: color-mix(in srgb, var(--color-on-primary-container) 50%, transparent);
-  background-color: color-mix(in srgb, var(--color-on-primary-container) 12%, transparent);
-  box-shadow: 0 0 0.5rem
-    color-mix(in srgb, var(--color-on-primary-container) 45%, transparent);
+  color: color-mix(in srgb, var(--color-error) 70%, transparent);
+  border-color: color-mix(in srgb, var(--color-error) 50%, transparent);
+  background-color: color-mix(in srgb, var(--color-error) 12%, transparent);
+  box-shadow: 0 0 0.5rem color-mix(in srgb, var(--color-error) 45%, transparent);
   will-change: opacity, transform;
 }
 
 .asol-page-save-wave--delayed {
   animation-delay: -1.45s;
-  color: color-mix(in srgb, var(--color-on-primary-container) 55%, transparent);
-  border-color: color-mix(in srgb, var(--color-on-primary-container) 38%, transparent);
-  background-color: color-mix(in srgb, var(--color-on-primary-container) 8%, transparent);
-  box-shadow: 0 0 0.5rem
-    color-mix(in srgb, var(--color-on-primary-container) 32%, transparent);
+  color: color-mix(in srgb, var(--color-error) 55%, transparent);
+  border-color: color-mix(in srgb, var(--color-error) 38%, transparent);
+  background-color: color-mix(in srgb, var(--color-error) 8%, transparent);
+  box-shadow: 0 0 0.5rem color-mix(in srgb, var(--color-error) 32%, transparent);
 }
 
 @keyframes asol-phone-verify-wave {
