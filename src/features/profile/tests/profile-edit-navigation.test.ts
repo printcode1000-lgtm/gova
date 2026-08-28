@@ -15,6 +15,18 @@ assert.match(types, /"registration",\s*\n\s*"specialties",\s*\n\s*"store",/);
 assert.match(types, /PROFILE_EDIT_SNAPSHOT_SCROLL_IDS/);
 assert.match(navigation, /resyncScrollToActiveTab/);
 assert.match(navigation, /tabsScrollRef/);
+assert.match(navigation, /activeTabRef/);
+assert.match(navigation, /parent\.style\.scrollSnapType = "none"/);
+assert.match(navigation, /parent\.style\.scrollBehavior = "auto"/);
+assert.match(
+  navigation,
+  /activeTabRef\.current = section;\s*setActiveTab\(section\);\s*scrollToSection\(section\)/,
+);
+assert.match(
+  navigation,
+  /scrollToSection\(activeTabRef\.current\)/,
+);
+assert.doesNotMatch(navigation, /suppressScrollSyncUntilRef/);
 assert.match(model, /PROFILE_EDIT_SNAPSHOT_SCROLL_IDS/);
 assert.match(model, /resyncScrollToActiveTab\(\)/);
 assert.match(runtime, /profile-edit-/);

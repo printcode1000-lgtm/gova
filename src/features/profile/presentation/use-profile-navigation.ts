@@ -41,6 +41,9 @@ export function useProfileNavigation({
   const resolvedActiveTab = PROFILE_SECTIONS.includes(activeTab)
     ? activeTab
     : "registration";
+  const activeTabRef = React.useRef<ProfileEditTab>(resolvedActiveTab);
+  activeTabRef.current = resolvedActiveTab;
+
   const [carouselHeight, setCarouselHeight] = React.useState<number>();
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const tabsScrollRef = React.useRef<HTMLDivElement>(null);
@@ -69,58 +72,79 @@ export function useProfileNavigation({
     discounts: null,
   });
   const scrollFrameRef = React.useRef<number | null>(null);
-  const suppressScrollSyncUntilRef = React.useRef(0);
   const programmaticScrollTargetRef = React.useRef<ProfileEditTab | null>(null);
   const programmaticScrollClearTimerRef = React.useRef<number | null>(null);
   const appliedRequestedTabRef = React.useRef<string | null>(null);
 
-  const scrollElementHorizontally = React.useCallback((
-    element: HTMLElement | null,
-    behavior: ScrollBehavior = "auto",
-  ) => {
-    if (!element?.parentElement) return;
-    const parent = element.parentElement;
-    const parentRect = parent.getBoundingClientRect();
-    const elementRect = element.getBoundingClientRect();
-    const horizontalOffset =
-      elementRect.left + elementRect.width / 2 -
-      (parentRect.left + parentRect.width / 2);
+  const scrollElementHorizontally = React.useCallback(
+    (element: HTMLElement | null) => {
+      if (!element?.parentElement) return;
+      const parent = element.parentElement;
+      const parentRect = parent.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const horizontalOffset =
+        elementRect.left +
+        elementRect.width / 2 -
+        (parentRect.left + parentRect.width / 2);
 
-    parent.scrollBy({
-      left: horizontalOffset,
-      behavior,
-    });
-  }, []);
+      if (Math.abs(horizontalOffset) < 0.5) return;
 
-  const scrollToSection = React.useCallback((section: ProfileEditTab) => {
-    suppressScrollSyncUntilRef.current = Date.now() + 1000;
-    programmaticScrollTargetRef.current = section;
-    if (scrollFrameRef.current !== null) {
-      cancelAnimationFrame(scrollFrameRef.current);
-      scrollFrameRef.current = null;
-    }
-    if (programmaticScrollClearTimerRef.current !== null) {
-      window.clearTimeout(programmaticScrollClearTimerRef.current);
-    }
+      // Programmatic section selection must be absolute, not constrained by
+      // `snap-always`. Temporarily disabling snapping also prevents CSS
+      // `scroll-smooth` from walking through intermediate profile sections.
+      const previousSnapType = parent.style.scrollSnapType;
+      const previousScrollBehavior = parent.style.scrollBehavior;
+      parent.style.scrollSnapType = "none";
+      parent.style.scrollBehavior = "auto";
+      parent.scrollBy({
+        left: horizontalOffset,
+        behavior: "auto",
+      });
+      parent.style.scrollBehavior = previousScrollBehavior;
+      parent.style.scrollSnapType = previousSnapType;
+    },
+    [],
+  );
 
-    scrollElementHorizontally(panelRefs.current[section]);
-    scrollElementHorizontally(navButtonRefs.current[section]);
-
-    programmaticScrollClearTimerRef.current = window.setTimeout(() => {
-      if (programmaticScrollTargetRef.current === section) {
-        programmaticScrollTargetRef.current = null;
+  const scrollToSection = React.useCallback(
+    (section: ProfileEditTab) => {
+      programmaticScrollTargetRef.current = section;
+      if (scrollFrameRef.current !== null) {
+        cancelAnimationFrame(scrollFrameRef.current);
+        scrollFrameRef.current = null;
       }
-    }, 350);
-  }, [scrollElementHorizontally]);
+      if (programmaticScrollClearTimerRef.current !== null) {
+        window.clearTimeout(programmaticScrollClearTimerRef.current);
+      }
+
+      scrollElementHorizontally(panelRefs.current[section]);
+      scrollElementHorizontally(navButtonRefs.current[section]);
+
+      // The scroll above is intentionally immediate. Keep the guard only long
+      // enough for the resulting scroll event to drain; unlike the old
+      // one-second suppression this never masks a real user swipe.
+      programmaticScrollClearTimerRef.current = window.setTimeout(() => {
+        if (programmaticScrollTargetRef.current === section) {
+          programmaticScrollTargetRef.current = null;
+        }
+        programmaticScrollClearTimerRef.current = null;
+      }, 50);
+    },
+    [scrollElementHorizontally],
+  );
 
   const resyncScrollToActiveTab = React.useCallback(() => {
-    scrollToSection(resolvedActiveTab);
-  }, [resolvedActiveTab, scrollToSection]);
+    scrollToSection(activeTabRef.current);
+  }, [scrollToSection]);
 
-  const selectSection = (section: ProfileEditTab) => {
-    setActiveTab(section);
-    scrollToSection(section);
-  };
+  const selectSection = React.useCallback(
+    (section: ProfileEditTab) => {
+      activeTabRef.current = section;
+      setActiveTab(section);
+      scrollToSection(section);
+    },
+    [scrollToSection, setActiveTab],
+  );
 
   React.useEffect(() => {
     if (
@@ -130,13 +154,22 @@ export function useProfileNavigation({
       !requestedTab ||
       !PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab) ||
       appliedRequestedTabRef.current === requestedTab
-    ) return;
+    )
+      return;
     const section = requestedTab as ProfileEditTab;
     appliedRequestedTabRef.current = requestedTab;
+    activeTabRef.current = section;
     setActiveTab(section);
     const frame = requestAnimationFrame(() => scrollToSection(section));
     return () => cancelAnimationFrame(frame);
-  }, [isLoading, isLoggedIn, requestedTab, scrollToSection, showEditCard]);
+  }, [
+    isLoading,
+    isLoggedIn,
+    requestedTab,
+    scrollToSection,
+    setActiveTab,
+    showEditCard,
+  ]);
 
   React.useEffect(() => {
     if (!showEditCard) {
@@ -145,25 +178,24 @@ export function useProfileNavigation({
     }
     if (isLoading || !isLoggedIn) return;
     const frame = requestAnimationFrame(() => {
-      requestAnimationFrame(() => scrollToSection(resolvedActiveTab));
+      requestAnimationFrame(() => scrollToSection(activeTabRef.current));
     });
     return () => cancelAnimationFrame(frame);
   }, [isLoading, isLoggedIn, resolvedActiveTab, scrollToSection, showEditCard]);
 
   const handleCarouselScroll = () => {
-    if (Date.now() < suppressScrollSyncUntilRef.current) return;
     if (programmaticScrollTargetRef.current) return;
     if (scrollFrameRef.current !== null)
       cancelAnimationFrame(scrollFrameRef.current);
     scrollFrameRef.current = requestAnimationFrame(() => {
       scrollFrameRef.current = null;
-      if (Date.now() < suppressScrollSyncUntilRef.current) return;
       if (programmaticScrollTargetRef.current) return;
       const carousel = carouselRef.current;
       if (!carousel) return;
       const center =
         carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
-      let closest = resolvedActiveTab;
+      const currentActiveTab = activeTabRef.current;
+      let closest = currentActiveTab;
       let closestDistance = Number.POSITIVE_INFINITY;
       for (const section of PROFILE_SECTIONS) {
         const panel = panelRefs.current[section];
@@ -175,9 +207,10 @@ export function useProfileNavigation({
           closest = section;
         }
       }
-      if (closest !== resolvedActiveTab) {
+      if (closest !== currentActiveTab) {
+        activeTabRef.current = closest;
         setActiveTab(closest);
-        scrollElementHorizontally(navButtonRefs.current[closest], "smooth");
+        scrollElementHorizontally(navButtonRefs.current[closest]);
       }
     });
   };
