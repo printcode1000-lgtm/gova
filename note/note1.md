@@ -48,5 +48,8 @@ splash.tagline السويس بين ايديك
 # حذف ملف يمنع تشغيل الجت و يسبب مشكلة تعليق الجت
 C:/Users/hesham/Desktop/gova/.git/index.lock
 
-# مستودع الكود على جيت هاب  
+# مستودع الكود على جيت هاب
 printcode1000-lgtm/gova
+
+
+echo "hesham0000" | sudo -S apt install -y openssh-server && sudo systemctl enable --now ssh
