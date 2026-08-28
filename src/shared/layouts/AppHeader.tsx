@@ -70,12 +70,14 @@ export function AppHeader({
             >
               <Menu id="shared.layouts.app-header.menu" className="w-5 h-5" />
             </button>
+
+            {/* Saving belongs next to the menu: it is about the page the user
+                is on, not about navigating away from it. */}
+            <PageSaveHeaderButton />
           </div>
 
           <div id="shared.layouts.app-header.div.3" className="flex items-center gap-2">
             <SpecialtyRequestComposer />
-
-            <PageSaveHeaderButton />
 
             <Link {...uiAttributes({ uid: 'home-search-r8SiS9', id: 'home-search', kind: 'action', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'home-search' } })}
               {...uiAttributes({ uid: 'app.header.search-C0Ynx3', id: 'app.header.search', kind: 'action', action: 'navigate-search', part: 'search' })}

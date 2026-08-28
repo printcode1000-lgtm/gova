@@ -118,7 +118,9 @@ function testDialogExecuteContract() {
 
   assert.match(
     dialog,
-    /DialogFooter className="[^"]*flex-row[^"]*flex-nowrap/,
+    // The static DOM id contract puts an `id` before `className`, so the
+    // assertion reads the class list wherever on the tag it sits.
+    /DialogFooter[^>]*className="[^"]*flex-row[^"]*flex-nowrap/,
     "Close and Execute must stay on one non-wrapping row",
   );
   assert.match(
@@ -138,7 +140,7 @@ function testDialogExecuteContract() {
   // dialog, not the action.
   assert.match(
     dialog,
-    /<Check className="me-2 h-4 w-4" \/>/,
+    /<Check[^>]*className="me-2 h-4 w-4" \/>/,
     "the Execute button must not be labelled with a save icon",
   );
   assert.match(arabic, /"pageSave\.confirmSave": "تنفيذ"/);

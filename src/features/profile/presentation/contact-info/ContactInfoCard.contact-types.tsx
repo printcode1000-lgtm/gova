@@ -171,7 +171,7 @@ export function ContactQuickAddGrid({ id,
             aria-pressed={item.id === selectedId}
             onClick={() => onSelect(item.id)}
             aria-label={item.label}
-            className={`group relative flex min-h-14 w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg px-0.5 py-1 text-center shadow-sm transition-all active:scale-95 sm:w-[4.25rem] ${
+            className={`group relative flex min-h-14 w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg px-0 py-0.5 text-center shadow-sm transition-all active:scale-95 sm:w-[4.25rem] ${
               item.id === selectedId
                 ? "border-2 border-primary bg-primary/20"
                 : `border border-primary/40 bg-primary/5 ${item.count > 0 ? "border-primary/70" : ""}`
@@ -184,7 +184,7 @@ export function ContactQuickAddGrid({ id,
             ) : null}
             <FontAwesomeIcon
               icon={item.icon}
-              className="h-6 w-6 text-primary transition-transform"
+              className="h-8 w-8 text-primary transition-transform"
             />
             <span
               className="line-clamp-2 w-[4.5rem] origin-top scale-[0.75] text-center text-[10px] font-semibold leading-[11px] tracking-tight text-muted-foreground"

@@ -115,7 +115,7 @@ Several scopes can be mounted at once (a product page shows both the editor and 
 
 ## Header indicator
 
-`PageSaveHeaderButton` in `src/features/page-save/presentation/PageSaveHeaderButton.tsx` is mounted in `AppHeader`. `PageSaveRuntimeInit` in `AppShell` registers storage ports and hydrates pending records on startup.
+`PageSaveHeaderButton` in `src/features/page-save/presentation/PageSaveHeaderButton.tsx` is mounted in `AppHeader`, beside the menu button rather than among the navigation actions on the other end: saving is about the page the user is on, not about leaving it. `PageSaveRuntimeInit` in `AppShell` registers storage ports and hydrates pending records on startup.
 
 - Appears when the active scope has dirty items, is saving, or a persisted pending record exists
 - Shows wave animation while dirty (not saving). The waves are rendered in the error/red theme token (`--color-error`) via `.asol-page-save-wave` in `src/app/globals.css`, so unsaved work reads as an alert in both light and dark themes
