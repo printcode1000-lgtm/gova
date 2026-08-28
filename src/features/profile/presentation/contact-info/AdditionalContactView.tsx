@@ -42,7 +42,6 @@ return (
                 items={quickAddItems}
                 onAdd={handleAddItem}
                 title={locale === 'ar' ? 'أضف وسيلة تواصل بسرعة' : 'Quick add contact method'}
-                emptyText={locale === 'ar' ? 'تمت إضافة كل الوسائل الأساسية المتاحة.' : 'All primary contact methods are already added.'}
               />
             )}
             {/* Additional Phones */}
@@ -303,6 +302,17 @@ return (
                     <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon.3" icon={quickAddIcon('location')} className="h-4 w-4" style={{ color: quickAddColor('location') }} />
                     <span id="profile.contact-info.additional-contact-view.span.6" style={{ color: quickAddColor('location') }}>{locale === 'ar' ? 'المواقع' : 'Locations'}</span>
                   </span>
+                  {!readOnly && (
+                    <Button id="profile.contact-info.additional-contact-view.button.3" ui={{ uid: 'profile.additional-contact.add-location-9GF5zT', id: 'profile.additional-contact.add-location', kind: 'action', action: 'add-location', part: 'locations' }}
+                      variant="outline"
+                      size="sm"
+                      onClick={addLocation}
+                      className="gap-1 h-6 px-2 text-xs"
+                      aria-label={locale === 'ar' ? 'إضافة موقع آخر' : 'Add another location'}
+                    >
+                      <Plus id="profile.contact-info.additional-contact-view.plus.3" className="h-3 w-3" />
+                    </Button>
+                  )}
                 </div>
                 
                 <div id="profile.contact-info.additional-contact-view.div.12" className="space-y-4">

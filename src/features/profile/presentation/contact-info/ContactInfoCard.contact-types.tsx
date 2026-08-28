@@ -76,8 +76,8 @@ export interface ContactQuickAddItem {
   id: string;
   label: string;
   icon: IconDefinition;
-  available: boolean;
-  badge?: string;
+  /** How many entries of this kind the profile already holds. */
+  count: number;
 }
 
 export const tileProvider = createOpenStreetMapProvider();
@@ -118,19 +118,25 @@ export function quickAddIcon(id: string): IconDefinition {
   return getContactVisualIcon(id);
 }
 
+/**
+ * The quick-add strip.
+ *
+ * Every contact kind stays on the strip for the life of the card, whether or
+ * not the profile already holds one: tapping a kind adds another entry of it,
+ * and its badge counts what has been added. A kind that disappeared once used
+ * is a kind the user cannot add a second of, which is exactly what the cards
+ * below the strip do allow.
+ */
 export function ContactQuickAddGrid({ id,
   items,
   onAdd,
   title,
-  emptyText,
 }: {
   items: ContactQuickAddItem[];
   onAdd: (id: string) => void;
   title: string;
-  emptyText: string;
 } & { id?: string }) {
-  const visibleItems = items.filter((item) => item.available);
-  const completedItems = items.filter((item) => !item.available);
+  const addedCount = items.reduce((total, item) => total + item.count, 0);
 
   return (
     <div id={id} className="rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3 sm:p-4">
@@ -141,63 +147,44 @@ export function ContactQuickAddGrid({ id,
           </span>
           {title}
         </p>
-        {completedItems.length > 0 ? (
+        {addedCount > 0 ? (
           <span className="rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">
-            {completedItems.length}
+            {addedCount}
           </span>
         ) : null}
       </div>
 
-      {visibleItems.length > 0 ? (
-        <div className="flex snap-x snap-mandatory gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {visibleItems.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onAdd(item.id)}
-              className="group relative flex min-h-14 w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg border px-0.5 py-1 text-center shadow-sm transition-all active:scale-95 sm:w-[4.25rem]"
-              style={{
-                background: `linear-gradient(135deg, ${getContactVisualColor(item.id)}1F, ${getContactVisualColor(item.id)}08)`,
-                borderColor: `${getContactVisualColor(item.id)}55`,
-              }}
-            >
-              {item.badge ? (
-                <span className="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
-                  {item.badge}
-                </span>
-              ) : null}
-              <FontAwesomeIcon
-                icon={item.icon}
-                className="h-6 w-6 transition-transform"
-                style={{ color: getContactVisualColor(item.id) }}
-              />
-              <span
-                className="line-clamp-2 w-[4.5rem] origin-top scale-[0.75] text-center text-[10px] font-semibold leading-[11px] tracking-tight text-muted-foreground"
-              >
-                {item.label}
+      <div className="flex snap-x snap-mandatory gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => onAdd(item.id)}
+            aria-label={item.label}
+            className="group relative flex min-h-14 w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg border px-0.5 py-1 text-center shadow-sm transition-all active:scale-95 sm:w-[4.25rem]"
+            style={{
+              background: `linear-gradient(135deg, ${getContactVisualColor(item.id)}1F, ${getContactVisualColor(item.id)}08)`,
+              borderColor: `${getContactVisualColor(item.id)}${item.count > 0 ? 'AA' : '55'}`,
+            }}
+          >
+            {item.count > 0 ? (
+              <span className="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
+                {item.count}
               </span>
-            </button>
-          ))}
-        </div>
-      ) : (
-        <p className="rounded-xl bg-surface px-3 py-2 text-xs text-on-surface-variant">
-          {emptyText}
-        </p>
-      )}
-
-      {completedItems.length > 0 ? (
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {completedItems.map((item) => (
+            ) : null}
+            <FontAwesomeIcon
+              icon={item.icon}
+              className="h-6 w-6 transition-transform"
+              style={{ color: getContactVisualColor(item.id) }}
+            />
             <span
-              key={item.id}
-              className="inline-flex items-center gap-1 rounded-full bg-surface px-2 py-1 text-[11px] font-semibold text-on-surface-variant"
+              className="line-clamp-2 w-[4.5rem] origin-top scale-[0.75] text-center text-[10px] font-semibold leading-[11px] tracking-tight text-muted-foreground"
             >
-              <FontAwesomeIcon icon={item.icon} className="h-3 w-3" />
               {item.label}
             </span>
-          ))}
-        </div>
-      ) : null}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

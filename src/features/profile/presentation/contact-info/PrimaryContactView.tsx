@@ -142,7 +142,6 @@ return (
                     items={quickAddItems}
                     onAdd={handleAddItem}
                     title={locale === 'ar' ? 'أضف وسيلة تواصل بسرعة' : 'Quick add contact method'}
-                    emptyText={locale === 'ar' ? 'تمت إضافة كل الوسائل الأساسية المتاحة.' : 'All primary contact methods are already added.'}
                   />
                 )}
             {/* Additional Phones */}

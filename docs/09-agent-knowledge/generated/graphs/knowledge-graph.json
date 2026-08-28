@@ -7948,6 +7948,7 @@
         "reconstruction",
         "relocated",
         "src/features/profile-working-hours",
+        "src/features/profile/presentation/contact-info/",
         "src/features/profile/presentation/specialties-selection",
         "src/features/profile/presentation/specialties-selection.ts",
         "src/features/profile/presentation/specialtiescard",
@@ -66394,9 +66395,21 @@
     },
     {
       "from": "document:docs/02-data-and-storage/profile-system.md",
+      "to": "document:docs/04-ui-components/phone-field.md",
+      "kind": "references",
+      "detail": "../04-ui-components/phone-field.md"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/profile-system.md",
       "to": "feature:profile-working-hours",
       "kind": "references",
       "detail": "src/features/profile-working-hours"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/profile-system.md",
+      "to": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
+      "kind": "references",
+      "detail": "src/features/profile/presentation/contact-info/"
     },
     {
       "from": "document:docs/02-data-and-storage/profile-system.md",

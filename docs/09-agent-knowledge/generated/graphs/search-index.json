@@ -7948,6 +7948,7 @@
         "reconstruction",
         "relocated",
         "src/features/profile-working-hours",
+        "src/features/profile/presentation/contact-info/",
         "src/features/profile/presentation/specialties-selection",
         "src/features/profile/presentation/specialties-selection.ts",
         "src/features/profile/presentation/specialtiescard",

@@ -163,6 +163,24 @@ chips exceed those two rows, so the card height stays fixed no matter how many
 specialties are selected. Each chip keeps its subcategory chips on a single
 line so both rows stay the same height.
 
+## Profile Contact UI
+
+`src/features/profile/presentation/contact-info/` owns the contact editor: a
+shared model (`ContactInfoCard.model.tsx`) and two views, primary and
+additional.
+
+The quick-add strip (`ContactQuickAddGrid`) lists **every** contact kind — a
+location, each phone type, an email, each social platform, a website — and keeps
+every one of them on the strip for the life of the card. Tapping a kind appends
+another entry of that kind, and the tile's badge counts what the profile already
+holds, so a kind is never removed for having been used once.
+
+Each kind that has entries renders its own card below the strip, headed by the
+kind's icon and name and carrying its own add button, so a second WhatsApp
+number, a third location, or another Instagram link is one tap away without
+returning to the strip. Every phone inside those cards is the shared
+[Phone Field](../04-ui-components/phone-field.md).
+
 ## Migration
 
 The structural migration is:

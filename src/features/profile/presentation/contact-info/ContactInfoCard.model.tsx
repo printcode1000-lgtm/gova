@@ -287,39 +287,41 @@ const quickAddItems = React.useMemo(
         id: 'location',
         label: locale === 'ar' ? 'تحديد الموقع الجغرافي' : 'Pick geolocation',
         icon: faLocationDot,
-        available: true,
+        count: localData.locations.length,
       },
-      ...availablePhoneTypes.map((type) => ({
+      ...PHONE_TYPES.map((type) => ({
         id: type,
         label: t(`onboarding.contactInfo.phoneTypes.${type}`),
         icon: getContactVisualIcon(type),
-        available: true,
+        count: groupedPhones[type]?.length ?? 0,
       })),
       {
         id: 'email',
         label: t('onboarding.contactInfo.addEmail'),
         icon: faEnvelope,
-        available: !hasAdditionalEmails,
+        count: localData.emails.filter((email) => email.id !== 'primary').length,
       },
-      ...availablePlatforms.map((platform) => ({
+      ...SOCIAL_PLATFORMS.map((platform) => ({
         id: platform,
         label: t(`onboarding.contactInfo.platforms.${platform}`),
         icon: getContactVisualIcon(platform),
-        available: true,
+        count: localData.socialLinks.filter((link) => link.platform === platform)
+          .length,
       })),
       {
         id: 'website',
         label: t('onboarding.contactInfo.addWebsite'),
         icon: faGlobe,
-        available: !hasWebsites,
+        count: localData.websites.length,
       },
     ],
     [
-      availablePhoneTypes,
-      availablePlatforms,
-      hasAdditionalEmails,
-      hasWebsites,
+      groupedPhones,
       locale,
+      localData.emails,
+      localData.locations.length,
+      localData.socialLinks,
+      localData.websites.length,
       t,
     ],
   );
