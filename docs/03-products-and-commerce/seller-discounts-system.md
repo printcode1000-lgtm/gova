@@ -130,3 +130,7 @@ src/features/seller-discounts/
 - Non-combinable discounts compete against combinable discounts; the engine picks
   the better effective result.
 - Usage limits are enforced through `seller_discount_usages`.
+- `use-seller-discounts.ts` loads its rules directly rather than through the
+  query cache, so it carries its own reconnect recovery: a load that failed on a
+  dropped connection retries when the browser reports a network again, while a
+  load that succeeded is left alone.

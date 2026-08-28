@@ -40,6 +40,17 @@ export function useSellerDiscounts(sellerUid: string, includeInactive = true) {
     void reload();
   }, [reload]);
 
+  // This loader is hand-rolled rather than a cached query, so nothing else
+  // brings it back after a dropped connection. A load that failed retries the
+  // moment the browser reports a network again; a load that succeeded is left
+  // alone, because reconnecting is not a reason to refetch what is already here.
+  React.useEffect(() => {
+    if (!error || typeof window === "undefined") return;
+    const handleOnline = () => void reload();
+    window.addEventListener("online", handleOnline);
+    return () => window.removeEventListener("online", handleOnline);
+  }, [error, reload]);
+
   const save = React.useCallback(
     async (next: SaveSellerDiscountInput[]) => {
       const saved = await sellerDiscountApiService.saveSellerDiscounts(
