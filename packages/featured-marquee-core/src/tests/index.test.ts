@@ -14,7 +14,7 @@ import { createFeaturedMarqueeService } from "../server";
 
 function runContractTest() {
   assert.equal(FEATURED_MARQUEE_ID, "home-featured-marquee");
-  assert.equal(FEATURED_MARQUEE_CACHE_KEY, "advertisements:featured-marquee:v1");
+  assert.equal(FEATURED_MARQUEE_CACHE_KEY, "advertisements:featured-marquee:v2");
   assert.equal(FEATURED_MARQUEE_SECTION_TITLE, "home.featured.title");
   assert.equal("createFeaturedMarqueeService" in runtimeApi, false);
   console.log("✅ featured-marquee-core contract test passed");

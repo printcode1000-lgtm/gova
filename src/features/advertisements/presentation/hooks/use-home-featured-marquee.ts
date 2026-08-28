@@ -120,21 +120,27 @@ export function useHomeFeaturedMarquee() {
         version.version !== cached.version ||
         version.updatedAt !== cached.updatedAt
       ) {
-        // Config changed â€” download full data and resolve products
+        // Config changed — download full data
         next = await featuredMarqueeApiService.getCurrent();
-        nextResolved = await buildMarqueeConfig(next.config);
-        setState({
-          sectionTitle: FALLBACK_SECTION_TITLE,
-          config: nextResolved,
-          isLoading: false,
-        });
       } else if (version.checkIntervalMinutes !== cached.checkIntervalMinutes) {
-        // Only interval changed â€” update local record
+        // Only interval changed — update local record
         next = {
           ...cached,
           checkIntervalMinutes: version.checkIntervalMinutes,
         };
       }
+
+      // Always re-resolve products once the interval elapses: product data
+      // (images, name, price) changes without bumping the marquee version.
+      const resolved = await buildMarqueeConfig(next.config);
+      if (resolved.items.length > 0 || nextResolved.items.length === 0) {
+        nextResolved = resolved;
+      }
+      setState({
+        sectionTitle: FALLBACK_SECTION_TITLE,
+        config: nextResolved,
+        isLoading: false,
+      });
 
       // Persist refreshed cache
       await asolDbSet<FeaturedMarqueeCache>(

@@ -1,5 +1,5 @@
 export const FEATURED_MARQUEE_ID = "home-featured-marquee";
-export const FEATURED_MARQUEE_CACHE_KEY = "advertisements:featured-marquee:v1";
+export const FEATURED_MARQUEE_CACHE_KEY = "advertisements:featured-marquee:v2";
 export const FEATURED_MARQUEE_SECTION_TITLE = "home.featured.title";
 
 export interface FeaturedMarqueeConfig {

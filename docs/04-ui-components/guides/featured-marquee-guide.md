@@ -109,6 +109,28 @@ export default function MyScreen() {
 
 ---
 
+## Home Caching and Refresh
+
+`use-home-featured-marquee.ts` keeps a cache entry under
+`FEATURED_MARQUEE_CACHE_KEY` (`advertisements:featured-marquee:v2`) holding both
+the published record and the resolved UI items.
+
+* The cached items render immediately to avoid flicker.
+* Server checks are skipped while inside the `checkIntervalMinutes` window.
+* Once the window elapses, the lightweight version endpoint decides whether the
+  full published config is downloaded, but the product items are **always**
+  re-resolved from the products API. Product data (image, name, price) changes
+  without bumping the marquee version, so caching resolved items on the version
+  alone would freeze stale product images on `/home`.
+* If re-resolution returns no items while the cache still has items, the cached
+  items are kept, so a transient product-API failure does not empty the marquee.
+
+Bump the cache key version in `@asol/featured-marquee-core` whenever the shape
+or resolution rules of `resolvedConfig` change, so existing browsers discard
+incompatible entries.
+
+---
+
 ## Action Handling
 
 The component **never navigates internally**. It only fires the `onAction` callback with the item's `action` string when a card is clicked. This keeps the component decoupled from any routing implementation.
