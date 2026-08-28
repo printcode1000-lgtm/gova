@@ -58,7 +58,6 @@ export function LoginPageContent() {
                       labels={phoneLabels}
                       value={field.value}
                       invalid={Boolean(fieldState.error)}
-                      placeholder={t('auth.login.phonePlaceholder')}
                       inputClassName="auth-input w-full"
                       onChange={field.onChange}
                     />

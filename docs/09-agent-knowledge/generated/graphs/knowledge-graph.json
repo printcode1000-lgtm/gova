@@ -139288,6 +139288,12 @@
       "from": "source:packages/auth-core/src/domain/phone.ts",
       "to": "external-dependency:libphonenumber-js",
       "kind": "imports",
+      "detail": "libphonenumber-js/examples.mobile.json"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/phone.ts",
+      "to": "external-dependency:libphonenumber-js",
+      "kind": "imports",
       "detail": "libphonenumber-js/max"
     },
     {

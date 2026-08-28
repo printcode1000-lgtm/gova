@@ -94,7 +94,6 @@ export function ContactInfoSection() {
                 labels={phoneLabels}
                 value={contactInfo.phoneNumber}
                 onChange={(phoneNumber) => updateContactInfo({ phoneNumber })}
-                placeholder={t('onboarding.contactInfo.phonePlaceholder')}
                 invalid={Boolean(errors.phoneNumber)}
               />
             </FormField>
@@ -105,7 +104,6 @@ export function ContactInfoSection() {
                 labels={phoneLabels}
                 value={contactInfo.whatsappNumber}
                 onChange={(whatsappNumber) => updateContactInfo({ whatsappNumber })}
-                placeholder={t('onboarding.contactInfo.phonePlaceholder')}
               />
             </FormField>
           </div>

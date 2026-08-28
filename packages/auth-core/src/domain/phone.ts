@@ -1,10 +1,12 @@
 import {
   getCountries,
   getCountryCallingCode,
+  getExampleNumber,
   isSupportedCountry,
   parsePhoneNumberFromString,
   type CountryCode,
 } from 'libphonenumber-js/max';
+import mobilePhoneExamples from 'libphonenumber-js/examples.mobile.json';
 import { asciiDigitsOnly, toAsciiDigits } from './digits';
 
 /**
@@ -221,4 +223,40 @@ export function legacyEgyptianPhoneToE164(phone: unknown): string {
   if (digits.length === 11 && digits.startsWith('0')) return `+20${digits.slice(1)}`;
   if (digits.length === 12 && digits.startsWith('20')) return `+${digits}`;
   return '';
+}
+
+const exampleCache = new Map<PhoneCountryCode, string>();
+
+/**
+ * A real mobile number of the country, spelled the way its own readers write it.
+ *
+ * The field holds the national number without a trunk prefix, so the example is
+ * trimmed to start where the national digits start: `010 01234567` in Egypt is
+ * shown as `10 01234567`, and Russia's `8 (912) …` as `(912) …`. It is a
+ * placeholder, so a country whose example cannot be trimmed that way falls back
+ * to the bare national digits rather than showing a number nobody could type.
+ */
+export function phoneExampleNationalNumber(country: string): string {
+  const resolved = resolveCountry(country);
+  const cached = exampleCache.get(resolved);
+  if (cached !== undefined) return cached;
+
+  const example = getExampleNumber(resolved, mobilePhoneExamples);
+  let placeholder = '';
+  if (example) {
+    const national = example.formatNational();
+    const digits = example.nationalNumber;
+    for (let index = 0; index < national.length; index += 1) {
+      if (!/\d/.test(national[index]!)) continue;
+      if (asciiDigitsOnly(national.slice(index)) !== digits) continue;
+      // Keep the bracket the national digits open with, so `(201) 555-0123`
+      // does not become `201) 555-0123`.
+      const start = index > 0 && '(['.includes(national[index - 1]!) ? index - 1 : index;
+      placeholder = national.slice(start);
+      break;
+    }
+    placeholder ||= digits;
+  }
+  exampleCache.set(resolved, placeholder);
+  return placeholder;
 }

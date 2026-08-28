@@ -33,6 +33,21 @@ leaf nothing depends back on and the shared-module cycle audit stays green.
 - A stored value that already carries a country code selects that country when
   the field is opened.
 
+## Placeholder
+
+The placeholder is a real mobile number of the **selected country**, taken from
+the phone metadata's own examples (`phoneExampleNationalNumber`), and it changes
+the moment the country changes: `10 01234567` for Egypt, `51 234 5678` for Saudi
+Arabia, `(201) 555-0123` for the United States.
+
+It is trimmed to start where the national digits start, because the field never
+holds a trunk prefix — Egypt's `010 01234567` is shown as `10 01234567`, and
+Russia's `8 (912) …` as `(912) …`. A country whose example cannot be trimmed
+that way shows its bare national digits, and one with no example at all falls
+back to the translated `auth.phone.placeholder`.
+
+Callers no longer pass a placeholder; the country decides it.
+
 ## Country picker
 
 `src/shared/ui/phone-country-dialog.tsx` lists **every country the phone

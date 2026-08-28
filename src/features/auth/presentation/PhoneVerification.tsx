@@ -136,7 +136,6 @@ export function PhoneVerification({ id,
                   labels={phoneLabels}
                   disabled={phoneVerified}
                   invalid={Boolean(fieldState.error)}
-                  placeholder={t('auth.phone.placeholder')}
                   inputClassName={cn(
                     'auth-input w-full',
                     phoneVerified && 'asol-field-surface',
@@ -262,7 +261,6 @@ export function PhoneVerification({ id,
             labels={phoneLabels}
             disabled={phoneVerified}
             invalid={Boolean(error)}
-            placeholder={t('auth.login.phonePlaceholder')}
             inputClassName={cn(
               'auth-input w-full text-sm',
               phoneVerified && 'asol-field-surface',

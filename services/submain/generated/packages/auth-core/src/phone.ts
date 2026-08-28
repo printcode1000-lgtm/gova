@@ -20,6 +20,7 @@ export {
   phoneDialDigits,
   phoneCountryOptions,
   phoneCountryCallingCode,
+  phoneExampleNationalNumber,
   isPhoneCountry,
   legacyEgyptianPhoneToE164,
   DEFAULT_PHONE_COUNTRY,

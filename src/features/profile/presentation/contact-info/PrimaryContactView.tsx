@@ -49,7 +49,6 @@ return (
                   </Label>
                   <PhoneField id="profile.contact-info.primary-contact-view.div.2"
                     labels={phoneLabels}
-                    placeholder={t('auth.login.phonePlaceholder')}
                     inputClassName="auth-input w-full"
                     value={localData.phones.find((p) => p.id === 'primary-whatsapp')?.number || ''}
                     onChange={(number) => updatePhone('primary-whatsapp', { number })}
@@ -191,7 +190,6 @@ return (
                         <PhoneField
                           className="flex-1"
                           labels={phoneLabels}
-                          placeholder={t('auth.login.phonePlaceholder')}
                           inputClassName="auth-input w-full text-sm"
                           value={phone.number}
                           onChange={(number) => updatePhone(phone.id, { number })}

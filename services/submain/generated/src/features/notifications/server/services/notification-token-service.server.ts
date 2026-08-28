@@ -14,6 +14,7 @@ import { SetNotificationPushPreferenceCommand } from "@asol/data-core/notificati
 import { ListNotificationTokensQuery } from "@asol/data-core/notifications";
 import { GetNotificationPushPreferenceQuery } from "@asol/data-core/notifications";
 import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications";
+import { samePhone } from "@asol/auth-core/phone";
 
 /**
  * A request body is untyped JSON, whatever the parameter type says. Reading `.trim()`
@@ -27,24 +28,14 @@ function trimmedText(value: unknown): string {
 }
 
 /**
- * Compare phone identities by digits rather than display formatting. Sessions may
- * carry `+20 10...` while the account row carries `010...`; those are the same
- * Egyptian number and must not be rejected as a different account.
+ * Compare phone identities through the phone domain rather than by string.
+ *
+ * A session may carry `+20 10…` or the national `010…` it was signed with
+ * before the E.164 migration, while the account row carries `+2010…`. Those are
+ * one number and must not be rejected as a different account.
  */
-function normalizedIdentityPhone(value: unknown): string {
-  const digits = trimmedText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  if (digits.startsWith("20") && digits.length === 12) {
-    return `0${digits.slice(2)}`;
-  }
-  return digits;
-}
-
 function identityPhoneMatches(left: unknown, right: unknown): boolean {
-  const normalizedLeft = normalizedIdentityPhone(left);
-  return Boolean(
-    normalizedLeft && normalizedLeft === normalizedIdentityPhone(right),
-  );
+  return samePhone(trimmedText(left), trimmedText(right));
 }
 
 function toAccountDeviceSummary(

@@ -13,6 +13,7 @@ import {
 import {
   DEFAULT_PHONE_COUNTRY,
   phoneCountryCallingCode,
+  phoneExampleNationalNumber,
   type PhoneCountryCode,
 } from "@asol/auth-core";
 import type { UiDescriptor } from "@asol/ui-registry-core";
@@ -33,7 +34,6 @@ export interface PhoneFieldProps {
   className?: string;
   inputClassName?: string;
   autoComplete?: string;
-  placeholder?: string;
   onChange: (value: string) => void;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
 }
@@ -57,7 +57,6 @@ export function PhoneField({
   className,
   inputClassName,
   autoComplete = "tel",
-  placeholder,
   onChange,
   onKeyDown,
 }: PhoneFieldProps & { id?: string }) {
@@ -73,6 +72,8 @@ export function PhoneField({
   const country = parsed.country;
   const callingCode = phoneCountryCallingCode(country);
   const selectedChoice = choices.find((choice) => choice.code === country);
+  // A real mobile number of the selected country, so the hint changes with it.
+  const placeholder = phoneExampleNationalNumber(country) || labels.placeholder;
 
   const handleCountrySelect = (next: PhoneCountryCode) => {
     setPreferredCountry(next);
@@ -107,7 +108,7 @@ export function PhoneField({
         dir="ltr"
         disabled={disabled}
         autoComplete={autoComplete}
-        placeholder={placeholder ?? labels.placeholder}
+        placeholder={placeholder}
         value={parsed.nationalDigits}
         onChange={(event) =>
           onChange(

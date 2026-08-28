@@ -90,7 +90,6 @@ return (
                         <PhoneField
                           className="flex-1"
                           labels={phoneLabels}
-                          placeholder={t('auth.login.phonePlaceholder')}
                           inputClassName="auth-input w-full"
                           value={phone.number}
                           onChange={(number) => updatePhone(phone.id, { number })}

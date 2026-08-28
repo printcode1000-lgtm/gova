@@ -12,6 +12,7 @@ import {
   phoneCountry,
   phoneCountryOptions,
   phoneDialDigits,
+  phoneExampleNationalNumber,
   phoneNationalNumber,
   phoneSearchKey,
   phoneValidationIssue,
@@ -61,6 +62,27 @@ export function runPhoneTest() {
   assert.equal(phoneCountry('+966501234567'), 'SA');
   assert.equal(phoneNationalNumber('+966501234567'), '501234567');
   assert.ok(phoneCountryOptions().length > 200, 'every country is offered');
+
+  // The placeholder is a real number of the country, spelled without the trunk
+  // prefix the field never holds.
+  assert.equal(phoneExampleNationalNumber('EG'), '10 01234567');
+  assert.equal(phoneExampleNationalNumber('SA'), '51 234 5678');
+  assert.equal(phoneExampleNationalNumber('US'), '(201) 555-0123');
+  assert.equal(phoneExampleNationalNumber('RU'), '(912) 345-67-89');
+  for (const country of ['EG', 'SA', 'US', 'DE', 'JP', 'GB', 'BR', 'IN']) {
+    const example = phoneExampleNationalNumber(country);
+    assert.ok(example.length > 0, `${country} has a placeholder`);
+    assert.equal(
+      phoneCountry(example, { defaultCountry: country }),
+      country,
+      `${country}'s placeholder reads as a number of that country`,
+    );
+    assert.equal(
+      isValidPhone(example, { defaultCountry: country }),
+      true,
+      `${country}'s placeholder is a number someone could actually type`,
+    );
+  }
 
   assert.equal(phoneValidationIssue(''), 'required');
   assert.equal(phoneValidationIssue('0102654'), 'length');
