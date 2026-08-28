@@ -163,12 +163,11 @@ export function ContactQuickAddGrid({ id,
             aria-pressed={item.id === selectedId}
             onClick={() => onSelect(item.id)}
             aria-label={item.label}
-            className="group relative flex min-h-14 w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg border px-0.5 py-1 text-center shadow-sm transition-all active:scale-95 sm:w-[4.25rem]"
-            style={{
-              background: `linear-gradient(135deg, ${getContactVisualColor(item.id)}${item.id === selectedId ? '3D' : '1F'}, ${getContactVisualColor(item.id)}08)`,
-              borderColor: `${getContactVisualColor(item.id)}${item.id === selectedId ? 'FF' : item.count > 0 ? 'AA' : '55'}`,
-              borderWidth: item.id === selectedId ? 2 : 1,
-            }}
+            className={`group relative flex min-h-14 w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg px-0.5 py-1 text-center shadow-sm transition-all active:scale-95 sm:w-[4.25rem] ${
+              item.id === selectedId
+                ? "border-2 border-primary bg-primary/20"
+                : `border border-primary/40 bg-primary/5 ${item.count > 0 ? "border-primary/70" : ""}`
+            }`}
           >
             {item.count > 0 ? (
               <span className="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
@@ -177,8 +176,7 @@ export function ContactQuickAddGrid({ id,
             ) : null}
             <FontAwesomeIcon
               icon={item.icon}
-              className="h-6 w-6 transition-transform"
-              style={{ color: getContactVisualColor(item.id) }}
+              className="h-6 w-6 text-primary transition-transform"
             />
             <span
               className="line-clamp-2 w-[4.5rem] origin-top scale-[0.75] text-center text-[10px] font-semibold leading-[11px] tracking-tight text-muted-foreground"

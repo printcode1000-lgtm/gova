@@ -180,7 +180,10 @@ additional.
 The quick-add strip (`ContactQuickAddGrid`) lists **every** contact kind — a
 location, each phone type, an email, each social platform, a website — and keeps
 every one of them on the strip for the life of the card, badged with how many
-entries the profile holds of it.
+entries the profile holds of it. The tiles all carry the theme's primary colour
+rather than a colour per kind, so the icon and the label are what tell them
+apart and the open one is the only tile the eye is pulled to. The cards below
+keep their per-kind colour.
 
 Tapping a kind **opens** it rather than adding to it: only that kind's card is
 rendered below the strip, every other kind's card is hidden, and the add button
