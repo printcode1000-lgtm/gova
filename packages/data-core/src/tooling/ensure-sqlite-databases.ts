@@ -74,6 +74,7 @@ try {
   for (const migration of [
     "packages/data-core/src/core/database/profile/migrations/0012_seller_discounts.sql",
     "packages/data-core/src/core/database/profile/migrations/0013_system_logs.sql",
+    "packages/data-core/src/core/database/profile/migrations/0014_phone_e164_search_keys.sql",
   ]) {
     profileDatabase.exec(readFileSync(path.join(process.cwd(), migration), "utf8"));
   }

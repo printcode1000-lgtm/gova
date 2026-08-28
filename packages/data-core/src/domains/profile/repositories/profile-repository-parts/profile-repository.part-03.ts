@@ -42,6 +42,7 @@ import {
   deliveryServicesSpecialtyColumn,
 } from "../specialty-columns.server";
 import { ProfilePart2 } from "./profile-repository.part-02";
+import { phoneSearchKey } from "@asol/auth-core";
 const DAY_TO_INDEX = new Map<WorkingDayId, number>(
   WORKING_DAY_LABELS.map((day, index) => [day.id, index]),
 );
@@ -67,10 +68,7 @@ function publicContactId(uid: string, type: string, id: string): string {
   return id.startsWith(legacyPrefix) ? id.slice(legacyPrefix.length) : id;
 }
 function normalizePhone(value: string): string {
-  const digits = value.replace(/\D/g, "");
-  return digits.startsWith("20") && digits.length === 12
-    ? digits.slice(2)
-    : digits;
+  return phoneSearchKey(value);
 }
 function normalizeSearchText(value: string): string {
   return value

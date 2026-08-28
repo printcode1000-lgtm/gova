@@ -22,11 +22,16 @@ import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
 
 import { useLogin } from './hooks/use-login';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { PhoneField } from '@/shared/ui/phone-field';
+import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+
+const LOGIN_PHONE_UI: UiDescriptor = { uid: "login-phone-ChBI52", id: "login-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "login-phone" } };
 
 export function LoginPageContent() {
   const router = useRouter();
-  const { t, isRTL } = useTranslation();
+  const { t, isRTL, locale } = useTranslation();
+  const phoneLabels = phoneFieldLabels(t, locale);
   const { startGuestSession } = useGuestSession();
   const [showPassword, setShowPassword] = React.useState(false);
   const { form, isSubmitting, error, onSubmit } = useLogin();
@@ -48,10 +53,15 @@ export function LoginPageContent() {
                 <Controller name="phone" control={form.control} render={({ field, fieldState }) => (
                   <div id="auth.login-page-content.div.7" className="space-y-2">
                     <span id="auth.login-page-content.span" className="text-sm font-semibold flex items-center gap-2 text-on-surface"><Smartphone id="auth.login-page-content.smartphone" className="h-4 w-4 text-primary" />{t('auth.login.phone')}</span>
-                    <div id="auth.login-page-content.div.8" className="relative">
-                      <span id="auth.login-page-content.span.2" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">+20</span>
-                      <input {...uiAttributes({ uid: "login-phone-ChBI52", id: "login-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "login-phone" } })} name="phone" type="tel" inputMode="tel" maxLength={11} placeholder={t('auth.login.phonePlaceholder')} className={cn('auth-input ps-12 w-full', fieldState.error && 'border-error')} value={field.value} onChange={(e) => field.onChange(e.target.value.replace(/\D/g, '').slice(0, 11))} />
-                    </div>
+                    <PhoneField id="auth.login-page-content.div.8"
+                      ui={LOGIN_PHONE_UI}
+                      labels={phoneLabels}
+                      value={field.value}
+                      invalid={Boolean(fieldState.error)}
+                      placeholder={t('auth.login.phonePlaceholder')}
+                      inputClassName="auth-input w-full"
+                      onChange={field.onChange}
+                    />
                     {fieldState.error && <p id="auth.login-page-content.p.2" className="text-xs text-error">{fieldState.error.message}</p>}
                   </div>
                 )} />

@@ -4,7 +4,7 @@
 
 ## 1. Summary & Core Mission
 
-`@asol/auth-core` is the sealed workspace package that owns authentication domain logic for ASOL: password hashing, signed session tokens, registration/login/profile validation schemas, canonical Egyptian mobile-phone validation and normalization, auth operations, and account deletion orchestration.
+`@asol/auth-core` is the sealed workspace package that owns authentication domain logic for ASOL: password hashing, signed session tokens, registration/login/profile validation schemas, canonical international phone validation and normalization, auth operations, and account deletion orchestration.
 
 Located at `packages/auth-core/`, it replaces scattered auth utilities that previously lived under `src/features/auth/` and `src/features/account-deletion/`. The app wires concrete repositories and storage ports through `src/features/auth/server/auth-core-bootstrap.server.ts`.
 
@@ -53,10 +53,21 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 
 ### Phone numbers
 
-- `packages/auth-core/src/domain/phone.ts` is the single source of truth for Egyptian mobile-phone validation and normalization.
-- Registration, login, profile validation, server auth operations, and password recovery all use this same owner; consumers must not copy its prefixes, regexes, length checks, or normalization rules.
-- Accepted canonical storage form is the 11-digit local Egyptian mobile number. A `+20`/`20` spelling is normalized to the same local form before storage or lookup.
+- `packages/auth-core/src/domain/phone.ts` is the single source of truth for phone validation and normalization, worldwide. It wraps `libphonenumber-js/max` — the `max` metadata set, because it is the only one that validates the national digits themselves rather than just their count.
+- Registration, login, profile validation, server auth operations, password recovery, and the profile contact search keys all use this same owner; consumers must not copy its prefixes, regexes, length checks, or normalization rules.
+- **The canonical storage form is E.164** (`+201026546550`). Every country is accepted. A number typed without a country code is read against Egypt (`DEFAULT_PHONE_COUNTRY`), so an existing account typing `01026546550` still resolves to `+201026546550`; `0020…` and `+20…` reach the same value.
+- `packages/auth-core/src/domain/digits.ts` folds Arabic-Indic (`٠١٢٣٤٥٦٧٨٩`) and Persian (`۰۱۲۳۴۵۶۷۸۹`) digits to ASCII before anything is parsed, stored, or compared. A number typed on an Arabic keyboard is the same number.
+- `phoneValidationIssue` reports `required`, `country` (a calling code nobody assigns), `length`, or `invalid` (right length, wrong digits for that country); the Zod schemas map each to its own message key.
+- `samePhone` is how two spellings of one number are compared. Server identity checks use it rather than `===` because a session token signed before the migration still carries the national spelling for its 30-day life.
+- `phoneSearchKey` is the lookup key: the E.164 digits without `+`. A value that cannot be parsed keys on its digits without leading zeros, so a national spelling stays a suffix of the international one and a `LIKE` search still finds a row the migration has not reached.
+- `authPhoneCandidates` returns the raw, canonical, and legacy national spellings, so a lookup matches rows written before the migration.
 - Invalid server-side inputs are rejected even if a caller bypasses the browser Zod schema.
+
+### Phone migration to E.164
+
+- `packages/data-core/src/core/database/migrations/0012_phone_e164.sql` rewrites `users.phone`, and `packages/data-core/src/core/database/profile/migrations/0014_phone_e164_search_keys.sql` rewrites the profile display values and search keys. Both are deterministic: every account created before the migration is an Egyptian number.
+- Deployed Turso databases take rows from `npm run db:migrate:phones-e164` (dry run by default, `--apply` to write). Schema sync applies DDL only and never rewrites rows.
+- Pending password-recovery challenges hash the normalized phone, so any challenge open at the moment of the migration expires unused; they live for ten minutes.
 
 ### Passwords
 
@@ -156,7 +167,7 @@ npm run test:auth-core
 
 Included in `npm run test`, `npm run build`, and `npm run build:static`.
 
-Package tests cover: constants, canonical phone validation/normalization, scrypt hash/verify, session token sign/verify, and export surface integrity (browser door must not expose server-only symbols).
+Package tests cover: constants, international phone validation/normalization (Arabic and Persian digits, Egypt without a country code, other countries with one, the legacy migration, and `samePhone`), scrypt hash/verify, session token sign/verify, and export surface integrity (browser door must not expose server-only symbols).
 
 ---
 

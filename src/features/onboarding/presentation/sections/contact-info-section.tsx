@@ -9,6 +9,8 @@ import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
 import { Label } from '@/shared/ui/label';
+import { PhoneField } from '@/shared/ui/phone-field';
+import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
 
 const SOCIAL_PLATFORMS = [
   'instagram',
@@ -20,7 +22,8 @@ const SOCIAL_PLATFORMS = [
 ] as const;
 
 export function ContactInfoSection() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const phoneLabels = phoneFieldLabels(t, locale);
   const { data, updateContactInfo, markStepComplete } = useOnboardingStore();
   const [errors, setErrors] = React.useState<Record<string, string>>({});
 
@@ -86,23 +89,23 @@ export function ContactInfoSection() {
         <CardContent id="onboarding.sections.contact-info-section.card-content" className="space-y-6">
           <div id="onboarding.sections.contact-info-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.contact-info-section.form-field" label={t('onboarding.contactInfo.phoneNumber')} htmlFor="phoneNumber" required error={errors.phoneNumber}>
-              <FormInput ui={{ uid: 'onboarding.contact-info.phone-number-41YRCS', id: 'onboarding.contact-info.phone-number', kind: 'field', part: 'form' }}
-                id="phoneNumber"
+              <PhoneField id="onboarding.sections.contact-info-section.phone-field"
+                ui={{ uid: 'onboarding.contact-info.phone-number-41YRCS', id: 'onboarding.contact-info.phone-number', kind: 'field', part: 'form' }}
+                labels={phoneLabels}
                 value={contactInfo.phoneNumber}
-                onChange={(e) => updateContactInfo({ phoneNumber: e.target.value })}
+                onChange={(phoneNumber) => updateContactInfo({ phoneNumber })}
                 placeholder={t('onboarding.contactInfo.phonePlaceholder')}
-                type="tel"
-                error={errors.phoneNumber}
+                invalid={Boolean(errors.phoneNumber)}
               />
             </FormField>
 
             <FormField id="onboarding.sections.contact-info-section.form-field.2" label={t('onboarding.contactInfo.whatsappNumber')} htmlFor="whatsappNumber" hint={t('onboarding.common.optional')}>
-              <FormInput ui={{ uid: 'onboarding.contact-info.whatsapp-number-E5i4Y5', id: 'onboarding.contact-info.whatsapp-number', kind: 'field', part: 'form' }}
-                id="whatsappNumber"
+              <PhoneField id="onboarding.sections.contact-info-section.phone-field.2"
+                ui={{ uid: 'onboarding.contact-info.whatsapp-number-E5i4Y5', id: 'onboarding.contact-info.whatsapp-number', kind: 'field', part: 'form' }}
+                labels={phoneLabels}
                 value={contactInfo.whatsappNumber}
-                onChange={(e) => updateContactInfo({ whatsappNumber: e.target.value })}
+                onChange={(whatsappNumber) => updateContactInfo({ whatsappNumber })}
                 placeholder={t('onboarding.contactInfo.phonePlaceholder')}
-                type="tel"
               />
             </FormField>
           </div>

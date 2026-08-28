@@ -14,6 +14,7 @@ import { verifySignedSessionToken } from "@asol/auth-core/server";
 import { isSuperAdminIdentity } from "@/features/auth";
 import { notificationsServer } from "@/features/notifications/server";
 import type { SendFollowerNotificationInput, SendFollowerNotificationResult } from "../../domain/follow.types";
+import { samePhone } from "@asol/auth-core/server";
 
 const MAX_NOTIFICATION_TITLE_LENGTH = 120;
 const MAX_NOTIFICATION_BODY_LENGTH = 1_000;
@@ -99,7 +100,7 @@ export class FollowService {
     const claims = verifySignedSessionToken(sessionToken.trim());
     const actorUid = normalizeUid(input.identity?.uid);
     const actorPhone = normalizeUid(input.identity?.phone);
-    if (claims.uid !== actorUid || claims.phone !== actorPhone) {
+    if (claims.uid !== actorUid || !samePhone(claims.phone, actorPhone)) {
       throw new Error("forbidden");
     }
 

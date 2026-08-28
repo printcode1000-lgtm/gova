@@ -13,6 +13,7 @@ import { DeleteNotificationTokenCommand } from "@asol/data-core/notifications";
 import { ListNotificationTokensQuery } from "@asol/data-core/notifications";
 import { GetNotificationPushPreferenceQuery } from "@asol/data-core/notifications";
 import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications";
+import { samePhone } from "@asol/auth-core/server";
 
 export interface RecipientTokenGrantResult {
   send: SendNotificationToUsersInput;
@@ -47,7 +48,7 @@ export class NotificationRecipientTokensService {
     const uid = input.uid.trim();
     const phone = input.phone.trim();
     const user = await this.users.execute(uid);
-    if (!user || user.phone !== phone) throw new Error("forbidden");
+    if (!user || !samePhone(user.phone, phone)) throw new Error("forbidden");
 
     const grants = input.grants
       .filter((grant) => typeof grant === "string" && grant.length > 0)

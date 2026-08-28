@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
+import { asciiDigitsOnly } from '@asol/auth-core';
 
 interface OtpInputProps {
   value: string;
@@ -27,7 +28,7 @@ export function OtpInput({ id,
   const digits = value.padEnd(length, ' ').slice(0, length).split('');
 
   const updateValue = (next: string) => {
-    const sanitized = next.replace(/\D/g, '').slice(0, length);
+    const sanitized = asciiDigitsOnly(next).slice(0, length);
     onChange(sanitized);
     if (sanitized.length === length) {
       onComplete?.(sanitized);
@@ -35,7 +36,7 @@ export function OtpInput({ id,
   };
 
   const handleChange = (index: number, char: string) => {
-    const digit = char.replace(/\D/g, '').slice(-1);
+    const digit = asciiDigitsOnly(char).slice(-1);
     const next = digits.map((d, i) => (i === index ? digit : d.trim())).join('').replace(/\s/g, '');
     updateValue(next);
     if (digit && index < length - 1) {

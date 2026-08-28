@@ -1,9 +1,10 @@
 import { apiSuccess, apiError } from '@/core/api/api-response';
 import { authService } from '@/features/auth/server';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
+import { isValidPhone } from '@asol/auth-core/server';
 
 /**
- * GET /api/auth/check-phone?phone=01xxxxxxxxx
+ * GET /api/auth/check-phone?phone=+201xxxxxxxxx
  * Returns { exists: true } if the phone is already registered, { exists: false } otherwise.
  * Used by the registration flow to validate uniqueness before sending an OTP.
  */
@@ -12,7 +13,9 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const phone = searchParams.get('phone')?.trim() ?? '';
 
-    if (!phone || phone.length < 10) {
+    // The phone domain owns what a number is; the route only refuses what it
+    // could never look up.
+    if (!isValidPhone(phone)) {
       return apiError('invalidPhone', 400);
     }
 

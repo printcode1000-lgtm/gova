@@ -10,6 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/sha
 import { Button } from '@/shared/ui/button';
 import { Label } from '@/shared/ui/label';
 import { Input } from '@/shared/ui/input';
+import { PhoneField } from '@/shared/ui/phone-field';
+import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
 import { cn } from '@/shared/utils';
 import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGpsProvider } from '@asol/map-core';
 import type { LocationEntry } from '@/features/profile/domain/profile-contacts.entity';
@@ -22,6 +24,7 @@ import { ContactSectionHeader } from "./ContactSectionHeader";
 
 export function AdditionalContactView({ model }: { model: ContactInfoCardModel }) {
 const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, groupedSocialLinks } = model;
+const phoneLabels = phoneFieldLabels(t, locale);
 return (
         /* Additional Contact Section without outer Card */
         <>
@@ -84,21 +87,15 @@ return (
                           className="hidden h-4 w-4 shrink-0 sm:block"
                           style={{ color: quickAddColor(type) }}
                         />
-                        <div className="flex-1 relative">
-                          <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">
-                            +20
-                          </span>
-                          <input
-                            type="tel"
-                            inputMode="tel"
-                            maxLength={11}
-                            placeholder={t('auth.login.phonePlaceholder')}
-                            className="auth-input ps-12 w-full"
-                            value={phone.number}
-                            onChange={(e) => updatePhone(phone.id, { number: e.target.value.replace(/\D/g, '').slice(0, 11) })}
-                            disabled={readOnly}
-                          />
-                        </div>
+                        <PhoneField
+                          className="flex-1"
+                          labels={phoneLabels}
+                          placeholder={t('auth.login.phonePlaceholder')}
+                          inputClassName="auth-input w-full"
+                          value={phone.number}
+                          onChange={(number) => updatePhone(phone.id, { number })}
+                          disabled={readOnly}
+                        />
                         {!readOnly && (
                           <Button
                             variant="ghost"

@@ -148,7 +148,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/contact-us"],
     repeated: true,
     sourceFile: "src/features/contact/presentation/ContactPageContent.tsx",
-    sourceLine: 157,
+    sourceLine: 160,
   },
   {
     uid: "contact-submit-no73V8",
@@ -160,7 +160,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/contact-us"],
     repeated: false,
     sourceFile: "src/features/contact/presentation/ContactPageContent.tsx",
-    sourceLine: 134,
+    sourceLine: 137,
   },
   {
     uid: "custom-request-image-uLJM8K",
@@ -328,7 +328,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: false,
     sourceFile: "src/features/auth/presentation/LoginPageContent.tsx",
-    sourceLine: 74,
+    sourceLine: 84,
   },
   {
     uid: "login-forgot-password-ryS56k",
@@ -340,7 +340,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: false,
     sourceFile: "src/features/auth/presentation/LoginPageContent.tsx",
-    sourceLine: 62,
+    sourceLine: 72,
   },
   {
     uid: "login-password-34nKhf",
@@ -352,7 +352,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: false,
     sourceFile: "src/features/auth/presentation/LoginPageContent.tsx",
-    sourceLine: 65,
+    sourceLine: 75,
   },
   {
     uid: "login-phone-ChBI52",
@@ -364,7 +364,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: false,
     sourceFile: "src/features/auth/presentation/LoginPageContent.tsx",
-    sourceLine: 53,
+    sourceLine: 29,
   },
   {
     uid: "login-registration-L8f73Y",
@@ -376,7 +376,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: false,
     sourceFile: "src/features/auth/presentation/LoginPageContent.tsx",
-    sourceLine: 79,
+    sourceLine: 89,
   },
   {
     uid: "login-submit-T5809e",
@@ -388,7 +388,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: false,
     sourceFile: "src/features/auth/presentation/LoginPageContent.tsx",
-    sourceLine: 47,
+    sourceLine: 52,
   },
   {
     uid: "nav-cart-a5OnHB",
@@ -580,7 +580,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/forgot-password"],
     repeated: false,
     sourceFile: "src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
-    sourceLine: 63,
+    sourceLine: 69,
   },
   {
     uid: "password-request-phone-O5wE84",
@@ -592,7 +592,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/forgot-password"],
     repeated: false,
     sourceFile: "src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
-    sourceLine: 68,
+    sourceLine: 15,
   },
   {
     uid: "password-reset-yR7C9J",
@@ -604,7 +604,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/forgot-password"],
     repeated: false,
     sourceFile: "src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
-    sourceLine: 89,
+    sourceLine: 98,
   },
   {
     uid: "password-verify-CIW9vy",
@@ -616,7 +616,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/forgot-password"],
     repeated: false,
     sourceFile: "src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
-    sourceLine: 77,
+    sourceLine: 86,
   },
   {
     uid: "pharmacy-catalog-empty-fYw1eB",

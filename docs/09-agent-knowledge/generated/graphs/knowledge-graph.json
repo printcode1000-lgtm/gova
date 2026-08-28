@@ -723,6 +723,21 @@
       ]
     },
     {
+      "id": "command:db:migrate:phones-e164",
+      "kind": "command",
+      "name": "npm run db:migrate:phones-e164",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "db",
+        "db:migrate:phones-e164",
+        "migrate",
+        "npm",
+        "npm run db:migrate:phones-e164",
+        "phones-e164",
+        "run"
+      ]
+    },
+    {
       "id": "command:db:migrate:product",
       "kind": "command",
       "name": "npm run db:migrate:product",
@@ -3129,6 +3144,20 @@
         "run",
         "test",
         "test:password-recovery"
+      ]
+    },
+    {
+      "id": "command:test:phone-field",
+      "kind": "command",
+      "name": "npm run test:phone-field",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:phone-field",
+        "phone-field",
+        "run",
+        "test",
+        "test:phone-field"
       ]
     },
     {
@@ -9622,6 +9651,65 @@
       ]
     },
     {
+      "id": "document:docs/04-ui-components/phone-field.md",
+      "kind": "document",
+      "name": "Phone Field",
+      "path": "docs/04-ui-components/phone-field.md",
+      "summary": "`src/shared/ui/phone-field.tsx` is the single phone input of the application. Every surface that takes a phone number — login, registration verification, password recovery, profile contacts, onboarding, and the contact form — renders it, so one component decides how a number is t",
+      "tags": [
+        "@asol/auth-core",
+        "`src/shared/ui/phone-field.tsx` is the single phone input of the application. every surface that takes a phone number — login, registration verification, password recovery, profile contacts, onboarding, and the contact form — renders it, so one component decides how a number is t",
+        "and",
+        "application",
+        "component",
+        "contact",
+        "contacts",
+        "decides",
+        "docs/04-ui-components/phone-field",
+        "docs/04-ui-components/phone-field.md",
+        "every",
+        "field",
+        "form",
+        "how",
+        "input",
+        "is",
+        "it",
+        "login",
+        "md",
+        "number",
+        "of",
+        "onboarding",
+        "one",
+        "packages/auth-core/src/domain/phone",
+        "packages/auth-core/src/domain/phone.ts",
+        "password",
+        "phone",
+        "phone field",
+        "profile",
+        "recovery",
+        "registration",
+        "renders",
+        "single",
+        "so",
+        "src/shared/phone/phone-field-labels",
+        "src/shared/phone/phone-field-labels.ts",
+        "src/shared/phone/phone-field-model",
+        "src/shared/phone/phone-field-model.ts",
+        "src/shared/ui/",
+        "src/shared/ui/phone-country-dialog",
+        "src/shared/ui/phone-country-dialog.tsx",
+        "src/shared/ui/phone-field",
+        "src/shared/ui/phone-field.tsx",
+        "surface",
+        "takes",
+        "that",
+        "the",
+        "ts",
+        "tsx",
+        "verification"
+      ]
+    },
+    {
       "id": "document:docs/04-ui-components/profile-edit-navigation.md",
       "kind": "document",
       "name": "Profile Edit Navigation",
@@ -9864,8 +9952,14 @@
         "packages/auth-core/src/...",
         "packages/auth-core/src/domain/account-deletion-registry",
         "packages/auth-core/src/domain/account-deletion-registry.ts",
+        "packages/auth-core/src/domain/digits",
+        "packages/auth-core/src/domain/digits.ts",
         "packages/auth-core/src/domain/phone",
         "packages/auth-core/src/domain/phone.ts",
+        "packages/data-core/src/core/database/migrations/0012_phone_e164",
+        "packages/data-core/src/core/database/migrations/0012_phone_e164.sql",
+        "packages/data-core/src/core/database/profile/migrations/0014_phone_e164_search_keys",
+        "packages/data-core/src/core/database/profile/migrations/0014_phone_e164_search_keys.sql",
         "packages/data-core/src/domains/account-deletion/",
         "packages/data-core/src/domains/account-deletion/repositories/account-deletion-repository",
         "packages/data-core/src/domains/account-deletion/repositories/account-deletion-repository.server.ts",
@@ -9873,6 +9967,7 @@
         "relationships",
         "relocated",
         "server",
+        "sql",
         "src/features/account-deletion/",
         "src/features/auth/",
         "src/features/auth/presentation/accountdeletionpagecontent",
@@ -20270,6 +20365,20 @@
       ]
     },
     {
+      "id": "external-dependency:libphonenumber-js",
+      "kind": "external-dependency",
+      "name": "libphonenumber-js",
+      "summary": "External package imported by repository source",
+      "tags": [
+        "dependency",
+        "external",
+        "external dependency npm package",
+        "libphonenumber-js",
+        "npm",
+        "package"
+      ]
+    },
+    {
       "id": "external-dependency:lucide-react",
       "kind": "external-dependency",
       "name": "lucide-react",
@@ -28064,6 +28173,17 @@
       ]
     },
     {
+      "id": "source:packages/auth-core/src/domain/digits.ts",
+      "kind": "source",
+      "name": "digits.ts",
+      "path": "packages/auth-core/src/domain/digits.ts",
+      "tags": [
+        "packages/auth-core/src/domain/digits",
+        "packages/auth-core/src/domain/digits.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/auth-core/src/domain/entities.ts",
       "kind": "source",
       "name": "entities.ts",
@@ -31094,6 +31214,17 @@
       "tags": [
         "packages/data-core/src/tooling/migrate-order-shards",
         "packages/data-core/src/tooling/migrate-order-shards.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "kind": "source",
+      "name": "migrate-phones-to-e164.ts",
+      "path": "packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "tags": [
+        "packages/data-core/src/tooling/migrate-phones-to-e164",
+        "packages/data-core/src/tooling/migrate-phones-to-e164.ts",
         "ts"
       ]
     },
@@ -50333,6 +50464,28 @@
       ]
     },
     {
+      "id": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "source",
+      "name": "phone-field-labels.ts",
+      "path": "src/shared/phone/phone-field-labels.ts",
+      "tags": [
+        "src/shared/phone/phone-field-labels",
+        "src/shared/phone/phone-field-labels.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/shared/phone/phone-field-model.ts",
+      "kind": "source",
+      "name": "phone-field-model.ts",
+      "path": "src/shared/phone/phone-field-model.ts",
+      "tags": [
+        "src/shared/phone/phone-field-model",
+        "src/shared/phone/phone-field-model.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/shared/preferences/app-preferences-storage.ts",
       "kind": "source",
       "name": "app-preferences-storage.ts",
@@ -50716,6 +50869,28 @@
         "src/shared/ui/overlay-chrome",
         "src/shared/ui/overlay-chrome.ts",
         "ts"
+      ]
+    },
+    {
+      "id": "source:src/shared/ui/phone-country-dialog.tsx",
+      "kind": "source",
+      "name": "phone-country-dialog.tsx",
+      "path": "src/shared/ui/phone-country-dialog.tsx",
+      "tags": [
+        "src/shared/ui/phone-country-dialog",
+        "src/shared/ui/phone-country-dialog.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/shared/ui/phone-field.tsx",
+      "kind": "source",
+      "name": "phone-field.tsx",
+      "path": "src/shared/ui/phone-field.tsx",
+      "tags": [
+        "src/shared/ui/phone-field",
+        "src/shared/ui/phone-field.tsx",
+        "tsx"
       ]
     },
     {
@@ -53644,6 +53819,18 @@
       ]
     },
     {
+      "id": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "kind": "test",
+      "name": "phone-field-model.test.ts",
+      "path": "src/shared/phone/tests/phone-field-model.test.ts",
+      "tags": [
+        "src/shared/phone/tests/phone-field-model",
+        "src/shared/phone/tests/phone-field-model.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/shared/theme/runtime/__tests__/theme-runtime.test.ts",
       "kind": "test",
       "name": "theme-runtime.test.ts",
@@ -54411,6 +54598,16 @@
     },
     {
       "from": "command:db:migrate:orders",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:db:migrate:phones-e164",
+      "to": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:db:migrate:phones-e164",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -56925,6 +57122,16 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:test:phone-field",
+      "to": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:phone-field",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:test:phone-verification-policy",
       "to": "test:src/features/auth/tests/phone-verification-policy.test.ts",
       "kind": "invokes"
@@ -58647,6 +58854,12 @@
       "to": "external-dependency:heic-to",
       "kind": "declares-dependency",
       "detail": "dependencies:^1.5.2"
+    },
+    {
+      "from": "config:package.json",
+      "to": "external-dependency:libphonenumber-js",
+      "kind": "declares-dependency",
+      "detail": "dependencies:^1.13.12"
     },
     {
       "from": "config:package.json",
@@ -67230,6 +67443,65 @@
       "detail": "src/app/layout.tsx"
     },
     {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "domain:ui-components",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "document:docs/04-ui-components/touch-interaction-policy.md",
+      "kind": "references",
+      "detail": "./touch-interaction-policy.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "document:docs/05-platform-features/auth-core-module.md",
+      "kind": "references",
+      "detail": "../05-platform-features/auth-core-module.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "package:@asol/auth-core",
+      "kind": "references",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "source:packages/auth-core/src/domain/phone.ts",
+      "kind": "references",
+      "detail": "packages/auth-core/src/domain/phone.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "references",
+      "detail": "src/shared/phone/phone-field-labels.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "source:src/shared/phone/phone-field-model.ts",
+      "kind": "references",
+      "detail": "src/shared/phone/phone-field-model.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "source:src/shared/ui/card.tsx",
+      "kind": "references",
+      "detail": "src/shared/ui/"
+    },
+    {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "source:src/shared/ui/phone-country-dialog.tsx",
+      "kind": "references",
+      "detail": "src/shared/ui/phone-country-dialog.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/phone-field.md",
+      "to": "source:src/shared/ui/phone-field.tsx",
+      "kind": "references",
+      "detail": "src/shared/ui/phone-field.tsx"
+    },
+    {
       "from": "document:docs/04-ui-components/profile-edit-navigation.md",
       "to": "domain:ui-components",
       "kind": "belongs-to"
@@ -67262,6 +67534,12 @@
       "to": "document:docs/04-ui-components/page-snapshot-system.md",
       "kind": "references",
       "detail": "./page-snapshot-system.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/README.md",
+      "to": "document:docs/04-ui-components/phone-field.md",
+      "kind": "references",
+      "detail": "./phone-field.md"
     },
     {
       "from": "document:docs/04-ui-components/README.md",
@@ -67483,9 +67761,27 @@
     },
     {
       "from": "document:docs/05-platform-features/auth-core-module.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "packages/data-core/src/core/database/migrations/0012_phone_e164.sql"
+    },
+    {
+      "from": "document:docs/05-platform-features/auth-core-module.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "packages/data-core/src/core/database/profile/migrations/0014_phone_e164_search_keys.sql"
+    },
+    {
+      "from": "document:docs/05-platform-features/auth-core-module.md",
       "to": "source:packages/auth-core/src/domain/account-deletion-registry.ts",
       "kind": "references",
       "detail": "packages/auth-core/src/domain/account-deletion-registry.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/auth-core-module.md",
+      "to": "source:packages/auth-core/src/domain/digits.ts",
+      "kind": "references",
+      "detail": "packages/auth-core/src/domain/digits.ts"
     },
     {
       "from": "document:docs/05-platform-features/auth-core-module.md",
@@ -74759,6 +75055,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/auth-core/src/domain/digits.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/auth-core/src/domain/entities.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -76326,6 +76628,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/data-core/src/tooling/migrate-order-shards.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -81845,6 +82153,12 @@
     },
     {
       "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/tooling/migrate-product-database.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
@@ -86292,6 +86606,12 @@
     {
       "from": "domain:platform-features",
       "to": "source:packages/auth-core/src/domain/constants.ts",
+      "kind": "documents",
+      "detail": "packages/auth-core/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:packages/auth-core/src/domain/digits.ts",
       "kind": "documents",
       "detail": "packages/auth-core/"
     },
@@ -104074,6 +104394,11 @@
     },
     {
       "from": "feature:notifications",
+      "to": "package:@asol/auth-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:notifications",
       "to": "package:@asol/data-core",
       "kind": "imports"
     },
@@ -105575,6 +105900,11 @@
     {
       "from": "package:@asol/architecture-core",
       "to": "package:@asol/ui-registry-core",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/auth-core",
+      "to": "external-dependency:libphonenumber-js",
       "kind": "imports"
     },
     {
@@ -126998,6 +127328,12 @@
     },
     {
       "from": "route:/contact-us:page",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/contact-us:page",
       "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -128499,6 +128835,18 @@
     {
       "from": "route:/forgot-password:page",
       "to": "feature:password-recovery",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/forgot-password:page",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/forgot-password:page",
+      "to": "package:@asol/signed-token-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -138758,6 +139106,36 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:packages/auth-core/src/domain/digits.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/digits.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/digits.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/digits.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/digits.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/digits.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:packages/auth-core/src/domain/entities.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -138854,6 +139232,18 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:packages/auth-core/src/domain/phone.ts",
+      "to": "external-dependency:libphonenumber-js",
+      "kind": "imports",
+      "detail": "libphonenumber-js/max"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/phone.ts",
+      "to": "source:packages/auth-core/src/domain/digits.ts",
+      "kind": "imports",
+      "detail": "./digits"
+    },
+    {
       "from": "source:packages/auth-core/src/domain/super-admin.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -138882,6 +139272,12 @@
       "from": "source:packages/auth-core/src/domain/super-admin.ts",
       "to": "package:@asol/auth-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/super-admin.ts",
+      "to": "source:packages/auth-core/src/domain/phone.ts",
+      "kind": "imports",
+      "detail": "./phone"
     },
     {
       "from": "source:packages/auth-core/src/domain/super-admin.ts",
@@ -138934,6 +139330,12 @@
       "to": "source:packages/auth-core/src/domain/constants.ts",
       "kind": "imports",
       "detail": "./domain/constants"
+    },
+    {
+      "from": "source:packages/auth-core/src/index.ts",
+      "to": "source:packages/auth-core/src/domain/digits.ts",
+      "kind": "imports",
+      "detail": "./domain/digits"
     },
     {
       "from": "source:packages/auth-core/src/index.ts",
@@ -139098,6 +139500,12 @@
       "to": "source:packages/auth-core/src/domain/constants.ts",
       "kind": "imports",
       "detail": "./domain/constants"
+    },
+    {
+      "from": "source:packages/auth-core/src/server.ts",
+      "to": "source:packages/auth-core/src/domain/digits.ts",
+      "kind": "imports",
+      "detail": "./domain/digits"
     },
     {
       "from": "source:packages/auth-core/src/server.ts",
@@ -148204,6 +148612,12 @@
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-01.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-01.ts",
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "imports",
       "detail": "../../../../core/database/database-client.interface"
@@ -148258,6 +148672,12 @@
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-02.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-02.ts",
@@ -148321,6 +148741,12 @@
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-03.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-03.ts",
@@ -148393,6 +148819,12 @@
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-04.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-04.ts",
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "imports",
       "detail": "../../../../core/database/database-client.interface"
@@ -148453,6 +148885,12 @@
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-05.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
     },
     {
       "from": "source:packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-05.ts",
@@ -150310,6 +150748,60 @@
     },
     {
       "from": "source:packages/data-core/src/tooling/migrate-order-shards.ts",
+      "to": "source:packages/data-core/src/core/database/database-shards.ts",
+      "kind": "imports",
+      "detail": "../core/database/database-shards"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "to": "external-dependency:@libsql/client",
+      "kind": "imports",
+      "detail": "@libsql/client"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "to": "external-dependency:dotenv",
+      "kind": "imports",
+      "detail": "dotenv"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
       "to": "source:packages/data-core/src/core/database/database-shards.ts",
       "kind": "imports",
       "detail": "../core/database/database-shards"
@@ -176260,6 +176752,12 @@
     },
     {
       "from": "source:src/app/api/auth/check-phone/route.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "source:src/app/api/auth/check-phone/route.ts",
       "to": "source:src/core/api/api-response.ts",
       "kind": "imports",
       "detail": "@/core/api/api-response"
@@ -186349,6 +186847,12 @@
     },
     {
       "from": "source:src/features/auth/application/hooks/use-phone-verification.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/auth/application/hooks/use-phone-verification.ts",
       "to": "source:src/core/config/public-env.ts",
       "kind": "imports",
       "detail": "@/core/config/public-env"
@@ -186739,6 +187243,12 @@
     },
     {
       "from": "source:src/features/auth/domain/session.entity.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/auth/domain/session.entity.ts",
       "to": "package:@asol/data-core",
       "kind": "imports",
       "detail": "@asol/data-core/profile/entities"
@@ -186772,6 +187282,12 @@
       "from": "source:src/features/auth/domain/super-admin.ts",
       "to": "feature:auth",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/auth/domain/super-admin.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
     },
     {
       "from": "source:src/features/auth/domain/super-admin.ts",
@@ -187861,6 +188377,18 @@
     },
     {
       "from": "source:src/features/auth/presentation/LoginPageContent.tsx",
+      "to": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-labels"
+    },
+    {
+      "from": "source:src/features/auth/presentation/LoginPageContent.tsx",
+      "to": "source:src/shared/ui/phone-field.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/phone-field"
+    },
+    {
+      "from": "source:src/features/auth/presentation/LoginPageContent.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -188059,6 +188587,12 @@
     },
     {
       "from": "source:src/features/auth/presentation/OtpInput.tsx",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OtpInput.tsx",
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
@@ -188214,6 +188748,12 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:src/features/auth/presentation/phone-verification-model.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
       "from": "source:src/features/auth/presentation/PhoneVerification.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -188296,6 +188836,18 @@
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
+    },
+    {
+      "from": "source:src/features/auth/presentation/PhoneVerification.tsx",
+      "to": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-labels"
+    },
+    {
+      "from": "source:src/features/auth/presentation/PhoneVerification.tsx",
+      "to": "source:src/shared/ui/phone-field.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/phone-field"
     },
     {
       "from": "source:src/features/auth/presentation/PhoneVerification.tsx",
@@ -191380,6 +191932,18 @@
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
+    },
+    {
+      "from": "source:src/features/contact/presentation/ContactPageContent.tsx",
+      "to": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-labels"
+    },
+    {
+      "from": "source:src/features/contact/presentation/ContactPageContent.tsx",
+      "to": "source:src/shared/ui/phone-field.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/phone-field"
     },
     {
       "from": "source:src/features/contact/server.ts",
@@ -203147,6 +203711,12 @@
     },
     {
       "from": "source:src/features/notifications/server/services/mobile-push-unlock.service.server.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "source:src/features/notifications/server/services/mobile-push-unlock.service.server.ts",
       "to": "package:@asol/data-core",
       "kind": "imports",
       "detail": "@asol/data-core/notifications"
@@ -203264,6 +203834,12 @@
     },
     {
       "from": "source:src/features/notifications/server/services/notification-recipient-tokens.service.server.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "source:src/features/notifications/server/services/notification-recipient-tokens.service.server.ts",
       "to": "package:@asol/data-core",
       "kind": "imports",
       "detail": "@asol/data-core/notifications"
@@ -203300,6 +203876,12 @@
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
+    },
+    {
+      "from": "source:src/features/notifications/server/services/notification-self-test.service.server.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/server"
     },
     {
       "from": "source:src/features/notifications/server/services/notification-self-test.service.server.ts",
@@ -204761,6 +205343,12 @@
     },
     {
       "from": "source:src/features/onboarding/presentation/sections/contact-info-section.tsx",
+      "to": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-labels"
+    },
+    {
+      "from": "source:src/features/onboarding/presentation/sections/contact-info-section.tsx",
       "to": "source:src/shared/ui/button.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/button"
@@ -204776,6 +205364,12 @@
       "to": "source:src/shared/ui/label.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/label"
+    },
+    {
+      "from": "source:src/features/onboarding/presentation/sections/contact-info-section.tsx",
+      "to": "source:src/shared/ui/phone-field.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/phone-field"
     },
     {
       "from": "source:src/features/onboarding/presentation/sections/index.ts",
@@ -209780,6 +210374,12 @@
     },
     {
       "from": "source:src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
       "to": "package:@asol/ui-registry-core",
       "kind": "imports",
       "detail": "@asol/ui-registry-core"
@@ -209801,6 +210401,18 @@
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
+    },
+    {
+      "from": "source:src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
+      "to": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-labels"
+    },
+    {
+      "from": "source:src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
+      "to": "source:src/shared/ui/phone-field.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/phone-field"
     },
     {
       "from": "source:src/features/password-recovery/server.ts",
@@ -216314,6 +216926,12 @@
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
+      "to": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-labels"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
       "to": "source:src/shared/ui/button.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/button"
@@ -216335,6 +216953,12 @@
       "to": "source:src/shared/ui/label.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/label"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
+      "to": "source:src/shared/ui/phone-field.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/phone-field"
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
@@ -216962,6 +217586,12 @@
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
+      "to": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-labels"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
       "to": "source:src/shared/ui/button.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/button"
@@ -216983,6 +217613,12 @@
       "to": "source:src/shared/ui/label.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/label"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
+      "to": "source:src/shared/ui/phone-field.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/phone-field"
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
@@ -232160,6 +232796,68 @@
       "detail": "@/shared/ui/UiPageBoundary"
     },
     {
+      "from": "source:src/shared/phone/phone-field-labels.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-labels.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-labels.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-labels.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-labels.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-labels.ts",
+      "to": "source:src/shared/phone/phone-field-model.ts",
+      "kind": "imports",
+      "detail": "./phone-field-model"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-model.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-model.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-model.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-model.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-model.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/phone/phone-field-model.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
       "from": "source:src/shared/preferences/app-preferences-storage.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -233717,6 +234415,128 @@
       "from": "source:src/shared/ui/overlay-chrome.ts",
       "to": "runtime:web",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "source:src/shared/phone/phone-field-model.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-model"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "source:src/shared/ui/dialog.tsx",
+      "kind": "imports",
+      "detail": "./dialog"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "source:src/shared/phone/phone-field-model.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-model"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "source:src/shared/ui/phone-country-dialog.tsx",
+      "kind": "imports",
+      "detail": "./phone-country-dialog"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
+    },
+    {
+      "from": "source:src/shared/ui/phone-field.tsx",
+      "to": "source:src/shared/utils.ts",
+      "kind": "imports",
+      "detail": "@/shared/utils"
     },
     {
       "from": "source:src/shared/ui/product-style-card.tsx",
@@ -245316,6 +246136,42 @@
     {
       "from": "test:src/shared/installation/tests/installation-policy.test.ts",
       "to": "source:src/shared/installation/installation-policy.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "to": "source:src/shared/phone/phone-field-model.ts",
+      "kind": "imports",
+      "detail": "@/shared/phone/phone-field-model"
+    },
+    {
+      "from": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "to": "source:src/shared/phone/phone-field-model.ts",
       "kind": "tests"
     },
     {

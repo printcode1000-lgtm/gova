@@ -65,6 +65,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run db:drop:factory-reset:cloud` | `npx tsx packages/data-core/src/tooling/drop-factory-reset-tables.ts --cloud` |
 | `npm run db:ensure` | `npx tsx packages/data-core/src/tooling/ensure-sqlite-databases.ts` |
 | `npm run db:migrate:orders` | `npx tsx packages/data-core/src/tooling/migrate-order-shards.ts` |
+| `npm run db:migrate:phones-e164` | `npx tsx packages/data-core/src/tooling/migrate-phones-to-e164.ts` |
 | `npm run db:migrate:product` | `npx tsx packages/data-core/src/tooling/migrate-product-database.ts` |
 | `npm run db:migrate:product-image-urls` | `npx tsx packages/data-core/src/tooling/strip-product-image-urls.ts` |
 | `npm run db:migrate:profiles` | `npx tsx packages/data-core/src/tooling/migrate-profile-shards.ts` |
@@ -233,6 +234,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:page-save-core` | `npx tsx packages/page-save-core/src/tests/index.test.ts && npx tsx packages/page-save-core/src/tests/header-visibility.test.ts && npx tsx packages/page-save-core/src/tests/journal-recovery.test.ts && npx tsx src/features/page-save/tests/page-save-ownership.test.ts && npx tsx src/features/page-save/tests/page-save-write-surface.test.ts` |
 | `npm run test:page-snapshot-core` | `npx tsx packages/page-snapshot-core/src/tests/index.test.ts` |
 | `npm run test:password-recovery` | `npx tsx src/features/password-recovery/tests/password-recovery-policy.test.ts` |
+| `npm run test:phone-field` | `npx tsx src/shared/phone/tests/phone-field-model.test.ts` |
 | `npm run test:phone-verification-policy` | `npx tsx src/features/auth/tests/phone-verification-policy.test.ts` |
 | `npm run test:product-core` | `npx tsx packages/product-core/src/tests/index.test.ts` |
 | `npm run test:product-style-core` | `npx tsx packages/product-style-core/src/tests/index.test.ts` |

@@ -13,6 +13,7 @@ Canonical UI behavior and interaction policies shared across pages and features.
 - [Theme System](./theme-system.md) — shared visual/theme rules.
 - [App Sidebar Navigation](./app-sidebar-navigation.md) — application navigation behavior.
 - [Category Tabs Strip](./category-tabs-strip.md) — the shared horizontal catalog tab strip and its consumers.
+- [Phone Field](./phone-field.md) — the single international phone input and its country picker.
 - `guides/` — focused implementation guidance.
 
 ## Invariants

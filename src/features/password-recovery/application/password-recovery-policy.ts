@@ -1,4 +1,4 @@
-import { normalizeEgyptianMobilePhone } from '@asol/auth-core';
+import { normalizePhone } from '@asol/auth-core';
 
 export const PASSWORD_RECOVERY_POLICY = {
   codeTtlMs: 10 * 60 * 1000,
@@ -10,7 +10,7 @@ export const PASSWORD_RECOVERY_POLICY = {
 
 export function normalizeRecoveryPhone(phone: unknown): string {
   try {
-    return normalizeEgyptianMobilePhone(phone);
+    return normalizePhone(phone);
   } catch {
     throw new Error('passwordRecoveryInvalidPhone');
   }

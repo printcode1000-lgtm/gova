@@ -65,7 +65,7 @@ export function CategoryTabsStrip({
   snapshotId,
   itemUi,
   onSelect,
-}: CategoryTabsStripProps) {
+}: CategoryTabsStripProps & { id?: string }) {
   const style = LEVEL_STYLE[level];
 
   return (

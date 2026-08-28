@@ -16,6 +16,7 @@ import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialt
 import { getSpecialtyChatSubOptions } from "../../domain/specialty-options";
 import { verifySignedSessionToken } from "@asol/auth-core/server";
 import { productService } from "@/features/product/server";
+import { samePhone } from "@asol/auth-core/server";
 
 const MAX_MESSAGE_LENGTH = 800;
 const MAX_RECIPIENTS = 500;
@@ -45,7 +46,7 @@ export class SpecialtyChatService {
       throw new Error("forbidden");
     }
     const user = await this.identities.execute(identity.uid.trim());
-    if (!user || user.phone !== identity.phone.trim()) throw new Error("forbidden");
+    if (!user || !samePhone(user.phone, identity.phone)) throw new Error("forbidden");
     return user;
   }
 

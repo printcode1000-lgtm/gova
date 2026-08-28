@@ -7,7 +7,12 @@ import { AuthHero } from '@/features/auth/ui';
 import { AuthMobileBrand } from '@/features/auth/ui';
 import { useTranslation } from '@/shared/i18n';
 import { usePasswordRecovery } from './hooks/use-password-recovery';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { asciiDigitsOnly } from '@asol/auth-core';
+import { PhoneField } from '@/shared/ui/phone-field';
+import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+
+const PASSWORD_REQUEST_PHONE_UI: UiDescriptor = { uid: "password-request-phone-O5wE84", id: "password-request-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "password-request-phone" } };
 
 const ERROR_KEYS: Record<string, string> = {
   passwordRecoveryInvalidPhone: 'auth.passwordRecovery.errors.invalidPhone',
@@ -20,8 +25,9 @@ const ERROR_KEYS: Record<string, string> = {
 };
 
 export function PasswordRecoveryPageContent() {
-  const { t, isRTL } = useTranslation();
+  const { t, isRTL, locale } = useTranslation();
   const recovery = usePasswordRecovery();
+  const phoneLabels = phoneFieldLabels(t, locale);
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
@@ -63,10 +69,13 @@ export function PasswordRecoveryPageContent() {
               <form {...uiAttributes({ uid: "password-request-7rA870", id: "password-request", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "password-request" } })} onSubmit={submitPhone} className="auth-card space-y-5">
                 <label id="password-recovery.password-recovery-page-content.label" className="space-y-2 block">
                   <span id="password-recovery.password-recovery-page-content.span" className="text-sm font-semibold flex items-center gap-2"><Smartphone id="password-recovery.password-recovery-page-content.smartphone" className="h-4 w-4 text-primary" />{t('auth.passwordRecovery.phone')}</span>
-                  <div id="password-recovery.password-recovery-page-content.div.7" className="relative">
-                    <span id="password-recovery.password-recovery-page-content.span.2" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">+20</span>
-                    <input {...uiAttributes({ uid: "password-request-phone-O5wE84", id: "password-request-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "password-request-phone" } })} className="auth-input ps-12 w-full" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 11))} inputMode="tel" autoComplete="tel" placeholder="01x xxxx xxxx" />
-                  </div>
+                  <PhoneField id="password-recovery.password-recovery-page-content.div.7"
+                    ui={PASSWORD_REQUEST_PHONE_UI}
+                    labels={phoneLabels}
+                    value={phone}
+                    inputClassName="auth-input w-full"
+                    onChange={setPhone}
+                  />
                 </label>
                 <SubmitButton id="password-recovery.password-recovery-page-content.submit-button" loading={recovery.isLoading} label={t('auth.passwordRecovery.sendCode')} />
                 <Link id="password-recovery.password-recovery-page-content.link" href="/login" className="block text-center text-sm text-primary">{t('auth.passwordRecovery.backToLogin')}</Link>
@@ -78,7 +87,7 @@ export function PasswordRecoveryPageContent() {
                 <div id="password-recovery.password-recovery-page-content.div.8" className="rounded bg-primary/10 p-3 text-sm text-on-surface-variant flex gap-2"><Mail id="password-recovery.password-recovery-page-content.mail" className="h-5 w-5 text-primary shrink-0" /><span id="password-recovery.password-recovery-page-content.span.3">{recovery.maskedEmail ? t('auth.passwordRecovery.sentTo', { email: recovery.maskedEmail }) : t('auth.passwordRecovery.genericSent')}</span></div>
                 <label id="password-recovery.password-recovery-page-content.label.2" className="space-y-2 block">
                   <span id="password-recovery.password-recovery-page-content.span.4" className="text-sm font-semibold">{t('auth.passwordRecovery.code')}</span>
-                  <input id="password-recovery.password-recovery-page-content.input" className="auth-input w-full text-center text-2xl tracking-[0.5em]" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" maxLength={6} />
+                  <input id="password-recovery.password-recovery-page-content.input" className="auth-input w-full text-center text-2xl tracking-[0.5em]" value={code} onChange={(e) => setCode(asciiDigitsOnly(e.target.value).slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" maxLength={6} />
                 </label>
                 <SubmitButton id="password-recovery.password-recovery-page-content.submit-button.2" loading={recovery.isLoading} label={t('auth.passwordRecovery.verifyCode')} />
                 <button id="password-recovery.password-recovery-page-content.button" type="button" onClick={recovery.startOver} className="w-full text-sm text-primary">{t('auth.passwordRecovery.changePhone')}</button>

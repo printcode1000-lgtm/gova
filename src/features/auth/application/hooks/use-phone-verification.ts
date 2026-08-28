@@ -5,6 +5,7 @@ import { useTranslation } from '@/shared/i18n';
 import { publicEnv } from '@/core/config/public-env';
 import { reportPreAuthFailure } from '@/features/system-logs';
 import { shouldBypassPhoneVerification } from '@/features/auth/domain/phone-verification-policy';
+import { isValidPhone, phoneDialDigits } from '@asol/auth-core';
 import { authService } from '../services/auth-service';
 
 const RESEND_COUNTDOWN = 60;
@@ -34,7 +35,9 @@ export function usePhoneVerification() {
 
   const sendWhatsappVerificationCode = async (phone: string, code: string) => {
     const textMsg = t('auth.wa_msg_template', { code });
-    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    // WhatsApp addresses a number by its full international digits, so the
+    // country calling code has to be part of the link, never assumed.
+    const cleanPhone = phoneDialDigits(phone);
     const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(textMsg)}`;
     const openedWindow = window.open(waUrl, '_blank');
     if (!openedWindow) reportPreAuthFailure('open-whatsapp-verification', new Error('popupBlocked'));
@@ -42,7 +45,7 @@ export function usePhoneVerification() {
   };
 
   const handleSendOtp = async (phone: string, onDevelopmentVerified?: () => void) => {
-    if (!phone || phone.length < 10) return;
+    if (!isValidPhone(phone)) return;
     setIsSending(true);
     setOtpError('');
 

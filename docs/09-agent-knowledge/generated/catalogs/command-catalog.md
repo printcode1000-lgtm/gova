@@ -51,6 +51,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run db:drop:factory-reset:cloud` | `Tooling` | 1 |  | 0 |
 | `npm run db:ensure` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:orders` | `Tooling` | 1 |  | 0 |
+| `npm run db:migrate:phones-e164` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:product` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:product-image-urls` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:profiles` | `Tooling` | 1 |  | 0 |
@@ -219,6 +220,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:page-save-core` | `Tooling` | 5 |  | 0 |
 | `npm run test:page-snapshot-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:password-recovery` | `Tooling` | 1 |  | 0 |
+| `npm run test:phone-field` | `Tooling` | 1 |  | 0 |
 | `npm run test:phone-verification-policy` | `Tooling` | 1 |  | 0 |
 | `npm run test:product-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:product-style-core` | `Tooling` | 1 |  | 0 |

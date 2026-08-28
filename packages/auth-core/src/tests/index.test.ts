@@ -5,10 +5,19 @@ import {
   MIN_PASSWORD_LENGTH,
   assertPasswordMeetsMinimum,
   createRegistrationSchema,
-  egyptianMobilePhoneValidationIssue,
   isAccountDeletionPhraseValid,
-  normalizeEgyptianMobilePhone,
+  isValidPhone,
+  legacyEgyptianPhoneToE164,
+  normalizePhone,
+  phoneCountry,
+  phoneCountryOptions,
+  phoneDialDigits,
+  phoneNationalNumber,
+  phoneSearchKey,
+  phoneValidationIssue,
   readPasswordInput,
+  samePhone,
+  toAsciiDigits,
 } from '../index';
 import * as runtimeApi from '../index';
 import * as serverApi from '../server';
@@ -32,25 +41,68 @@ export function runConstantsTest() {
 }
 
 export function runPhoneTest() {
-  assert.equal(normalizeEgyptianMobilePhone('010 1234 5678'), '01012345678');
-  assert.equal(normalizeEgyptianMobilePhone('+20 10 1234 5678'), '01012345678');
-  assert.equal(serverApi.normalizeAuthPhone('+20 10 1234 5678'), '01012345678');
-  assert.equal(egyptianMobilePhoneValidationIssue(''), 'required');
-  assert.equal(egyptianMobilePhoneValidationIssue('010000000001'), 'length');
-  assert.equal(egyptianMobilePhoneValidationIssue('01312345678'), 'prefix');
-  assert.throws(() => normalizeEgyptianMobilePhone('010000000001'), /invalidEgyptianMobilePhone:length/);
+  // Arabic and Persian keyboards produce the same numbers in other shapes.
+  assert.equal(toAsciiDigits('٠١٢٣٤٥٦٧٨٩'), '0123456789');
+  assert.equal(toAsciiDigits('۰۱۲۳۴۵۶۷۸۹'), '0123456789');
+  assert.equal(normalizePhone('٠١٠٢٦٥٤٦٥٥٠'), '+201026546550');
+  assert.equal(normalizePhone('۰۱۰۲۶۵۴۶۵۵۰'), '+201026546550');
+
+  // Egypt still reads without a country code, so every existing account and
+  // every habit around it keeps working.
+  assert.equal(normalizePhone('010 2654 6550'), '+201026546550');
+  assert.equal(normalizePhone('+20 10 2654 6550'), '+201026546550');
+  assert.equal(normalizePhone('0020 10 2654 6550'), '+201026546550');
+  assert.equal(serverApi.normalizeAuthPhone('+20 10 2654 6550'), '+201026546550');
+
+  // The rest of the world is reachable through its own country code.
+  assert.equal(normalizePhone('+966 50 123 4567'), '+966501234567');
+  assert.equal(normalizePhone('+1 415 555 0132'), '+14155550132');
+  assert.equal(normalizePhone('+49 151 23456789'), '+4915123456789');
+  assert.equal(phoneCountry('+966501234567'), 'SA');
+  assert.equal(phoneNationalNumber('+966501234567'), '501234567');
+  assert.ok(phoneCountryOptions().length > 200, 'every country is offered');
+
+  assert.equal(phoneValidationIssue(''), 'required');
+  assert.equal(phoneValidationIssue('0102654'), 'length');
+  assert.equal(phoneValidationIssue('+9991026546550'), 'country');
+  // Right length for Egypt, but no operator uses that prefix.
+  assert.equal(phoneValidationIssue('+20 199 999 9999'), 'invalid');
+  assert.equal(isValidPhone('+201026546550'), true);
+  assert.throws(() => normalizePhone('010000000001'), /invalidPhone:/);
+
+  // Lookups and links speak one spelling of a number.
+  assert.equal(phoneSearchKey('+201026546550'), '201026546550');
+  assert.equal(phoneDialDigits('+201026546550'), '201026546550');
+  assert.equal(samePhone('+201026546550', '01026546550'), true);
+  assert.equal(samePhone('+201026546550', '+201026546551'), false);
+  assert.deepEqual(
+    serverApi.authPhoneCandidates('01026546550'),
+    ['01026546550', '+201026546550'],
+  );
+
+  // Rows written before country codes existed migrate deterministically.
+  assert.equal(legacyEgyptianPhoneToE164('01026546550'), '+201026546550');
+  assert.equal(legacyEgyptianPhoneToE164('201026546550'), '+201026546550');
+  // Idempotent: a value already carrying its country code migrates to itself.
+  assert.equal(legacyEgyptianPhoneToE164('+201026546550'), '+201026546550');
+  assert.equal(legacyEgyptianPhoneToE164('+966501234567'), '');
+  assert.equal(serverApi.migrateLegacyAuthPhone('01026546550'), '+201026546550');
+  assert.equal(serverApi.migrateLegacyAuthPhone('+966501234567'), '+966501234567');
 
   const schema = createRegistrationSchema((key) => key);
-  assert.equal(
-    schema.safeParse({
-      phone: '01026546550',
-      password: '0258',
-      confirmPassword: '0258',
-      email: '',
-      phoneVerified: true,
-    }).success,
-    true,
-  );
+  for (const phone of ['01026546550', '+201026546550', '+966501234567']) {
+    assert.equal(
+      schema.safeParse({
+        phone,
+        password: '0258',
+        confirmPassword: '0258',
+        email: '',
+        phoneVerified: true,
+      }).success,
+      true,
+      `${phone} is a valid registration phone`,
+    );
+  }
   assert.equal(
     schema.safeParse({
       phone: '010000000001',
@@ -95,7 +147,9 @@ export function runSessionTokenTest() {
 
 export function runPublicSurfaceTest() {
   assert.equal(typeof runtimeApi.createLoginSchema, 'function');
-  assert.equal(typeof runtimeApi.normalizeEgyptianMobilePhone, 'function');
+  assert.equal(typeof runtimeApi.normalizePhone, 'function');
+  assert.equal(typeof runtimeApi.phoneCountryOptions, 'function');
+  assert.equal(typeof runtimeApi.toAsciiDigits, 'function');
   assert.equal(typeof runtimeApi.isAccountDeletionPhraseValid, 'function');
   assert.equal(typeof runtimeApi.ACCOUNT_DELETION_TABLE_REGISTRY, 'object');
   assert.equal(typeof serverApi.AuthOperationsService, 'function');

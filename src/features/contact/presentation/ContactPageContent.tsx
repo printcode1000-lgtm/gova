@@ -26,6 +26,8 @@ import {
 import { useTranslation } from "@/shared/i18n";
 import { contactApiService } from "../application/services/contact-api-service";
 import type { ContactMessageInput } from "../application/types";
+import { PhoneField } from "@/shared/ui/phone-field";
+import { phoneFieldLabels } from "@/shared/phone/phone-field-labels";
 import { uiAttributes } from "@asol/ui-registry-core";
 
 const SOCIALS = [
@@ -102,7 +104,8 @@ const serviceValues: ContactMessageInput["service"][] = ["consulting", "digital"
 const serviceIcons = [faChartLine, faBriefcase, faBullhorn];
 
 export function ContactPageContent() {
-  const { isRTL } = useTranslation();
+  const { t, isRTL, locale } = useTranslation();
+  const phoneLabels = phoneFieldLabels(t, locale);
   const c = isRTL ? COPY.ar : COPY.en;
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [form, setForm] = useState<ContactMessageInput>({ name: "", email: "", phone: "", service: "consulting", message: "" });
@@ -137,7 +140,7 @@ export function ContactPageContent() {
             <Field id="contact.contact-page-content.field.2" icon={faEnvelope} label={c.email}><input id="contact.contact-page-content.input.2" required type="email" value={form.email} onChange={(event) => set("email", event.target.value)} /></Field>
           </div>
           <div id="contact.contact-page-content.div.5" className="grid gap-4 md:grid-cols-2">
-            <Field id="contact.contact-page-content.field.3" icon={faPhone} label={c.phone}><input id="contact.contact-page-content.input.3" inputMode="tel" value={form.phone} onChange={(event) => set("phone", event.target.value)} /></Field>
+            <Field id="contact.contact-page-content.field.3" icon={faPhone} label={c.phone}><PhoneField id="contact.contact-page-content.phone-field" labels={phoneLabels} value={form.phone ?? ""} inputClassName="rounded-xl border border-outline/40 bg-surface-container p-3" onChange={(value) => set("phone", value)} /></Field>
             <Field id="contact.contact-page-content.field.4" icon={faBriefcase} label={c.service}><select id="contact.contact-page-content.select" value={form.service} onChange={(event) => set("service", event.target.value)}>{serviceValues.map((value, index) => <option key={value} value={value}>{c.options[index]}</option>)}</select></Field>
           </div>
           <Field id="contact.contact-page-content.field.5" icon={faMessage} label={c.message}><textarea id="contact.contact-page-content.textarea" required minLength={10} rows={6} value={form.message} onChange={(event) => set("message", event.target.value)} /></Field>

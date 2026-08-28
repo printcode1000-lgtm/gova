@@ -723,6 +723,21 @@
       ]
     },
     {
+      "id": "command:db:migrate:phones-e164",
+      "kind": "command",
+      "name": "npm run db:migrate:phones-e164",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "db",
+        "db:migrate:phones-e164",
+        "migrate",
+        "npm",
+        "npm run db:migrate:phones-e164",
+        "phones-e164",
+        "run"
+      ]
+    },
+    {
       "id": "command:db:migrate:product",
       "kind": "command",
       "name": "npm run db:migrate:product",
@@ -3129,6 +3144,20 @@
         "run",
         "test",
         "test:password-recovery"
+      ]
+    },
+    {
+      "id": "command:test:phone-field",
+      "kind": "command",
+      "name": "npm run test:phone-field",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:phone-field",
+        "phone-field",
+        "run",
+        "test",
+        "test:phone-field"
       ]
     },
     {
@@ -9622,6 +9651,65 @@
       ]
     },
     {
+      "id": "document:docs/04-ui-components/phone-field.md",
+      "kind": "document",
+      "name": "Phone Field",
+      "path": "docs/04-ui-components/phone-field.md",
+      "summary": "`src/shared/ui/phone-field.tsx` is the single phone input of the application. Every surface that takes a phone number — login, registration verification, password recovery, profile contacts, onboarding, and the contact form — renders it, so one component decides how a number is t",
+      "tags": [
+        "@asol/auth-core",
+        "`src/shared/ui/phone-field.tsx` is the single phone input of the application. every surface that takes a phone number — login, registration verification, password recovery, profile contacts, onboarding, and the contact form — renders it, so one component decides how a number is t",
+        "and",
+        "application",
+        "component",
+        "contact",
+        "contacts",
+        "decides",
+        "docs/04-ui-components/phone-field",
+        "docs/04-ui-components/phone-field.md",
+        "every",
+        "field",
+        "form",
+        "how",
+        "input",
+        "is",
+        "it",
+        "login",
+        "md",
+        "number",
+        "of",
+        "onboarding",
+        "one",
+        "packages/auth-core/src/domain/phone",
+        "packages/auth-core/src/domain/phone.ts",
+        "password",
+        "phone",
+        "phone field",
+        "profile",
+        "recovery",
+        "registration",
+        "renders",
+        "single",
+        "so",
+        "src/shared/phone/phone-field-labels",
+        "src/shared/phone/phone-field-labels.ts",
+        "src/shared/phone/phone-field-model",
+        "src/shared/phone/phone-field-model.ts",
+        "src/shared/ui/",
+        "src/shared/ui/phone-country-dialog",
+        "src/shared/ui/phone-country-dialog.tsx",
+        "src/shared/ui/phone-field",
+        "src/shared/ui/phone-field.tsx",
+        "surface",
+        "takes",
+        "that",
+        "the",
+        "ts",
+        "tsx",
+        "verification"
+      ]
+    },
+    {
       "id": "document:docs/04-ui-components/profile-edit-navigation.md",
       "kind": "document",
       "name": "Profile Edit Navigation",
@@ -9864,8 +9952,14 @@
         "packages/auth-core/src/...",
         "packages/auth-core/src/domain/account-deletion-registry",
         "packages/auth-core/src/domain/account-deletion-registry.ts",
+        "packages/auth-core/src/domain/digits",
+        "packages/auth-core/src/domain/digits.ts",
         "packages/auth-core/src/domain/phone",
         "packages/auth-core/src/domain/phone.ts",
+        "packages/data-core/src/core/database/migrations/0012_phone_e164",
+        "packages/data-core/src/core/database/migrations/0012_phone_e164.sql",
+        "packages/data-core/src/core/database/profile/migrations/0014_phone_e164_search_keys",
+        "packages/data-core/src/core/database/profile/migrations/0014_phone_e164_search_keys.sql",
         "packages/data-core/src/domains/account-deletion/",
         "packages/data-core/src/domains/account-deletion/repositories/account-deletion-repository",
         "packages/data-core/src/domains/account-deletion/repositories/account-deletion-repository.server.ts",
@@ -9873,6 +9967,7 @@
         "relationships",
         "relocated",
         "server",
+        "sql",
         "src/features/account-deletion/",
         "src/features/auth/",
         "src/features/auth/presentation/accountdeletionpagecontent",
@@ -20270,6 +20365,20 @@
       ]
     },
     {
+      "id": "external-dependency:libphonenumber-js",
+      "kind": "external-dependency",
+      "name": "libphonenumber-js",
+      "summary": "External package imported by repository source",
+      "tags": [
+        "dependency",
+        "external",
+        "external dependency npm package",
+        "libphonenumber-js",
+        "npm",
+        "package"
+      ]
+    },
+    {
       "id": "external-dependency:lucide-react",
       "kind": "external-dependency",
       "name": "lucide-react",
@@ -28064,6 +28173,17 @@
       ]
     },
     {
+      "id": "source:packages/auth-core/src/domain/digits.ts",
+      "kind": "source",
+      "name": "digits.ts",
+      "path": "packages/auth-core/src/domain/digits.ts",
+      "tags": [
+        "packages/auth-core/src/domain/digits",
+        "packages/auth-core/src/domain/digits.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/auth-core/src/domain/entities.ts",
       "kind": "source",
       "name": "entities.ts",
@@ -31094,6 +31214,17 @@
       "tags": [
         "packages/data-core/src/tooling/migrate-order-shards",
         "packages/data-core/src/tooling/migrate-order-shards.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "kind": "source",
+      "name": "migrate-phones-to-e164.ts",
+      "path": "packages/data-core/src/tooling/migrate-phones-to-e164.ts",
+      "tags": [
+        "packages/data-core/src/tooling/migrate-phones-to-e164",
+        "packages/data-core/src/tooling/migrate-phones-to-e164.ts",
         "ts"
       ]
     },
@@ -50333,6 +50464,28 @@
       ]
     },
     {
+      "id": "source:src/shared/phone/phone-field-labels.ts",
+      "kind": "source",
+      "name": "phone-field-labels.ts",
+      "path": "src/shared/phone/phone-field-labels.ts",
+      "tags": [
+        "src/shared/phone/phone-field-labels",
+        "src/shared/phone/phone-field-labels.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/shared/phone/phone-field-model.ts",
+      "kind": "source",
+      "name": "phone-field-model.ts",
+      "path": "src/shared/phone/phone-field-model.ts",
+      "tags": [
+        "src/shared/phone/phone-field-model",
+        "src/shared/phone/phone-field-model.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/shared/preferences/app-preferences-storage.ts",
       "kind": "source",
       "name": "app-preferences-storage.ts",
@@ -50716,6 +50869,28 @@
         "src/shared/ui/overlay-chrome",
         "src/shared/ui/overlay-chrome.ts",
         "ts"
+      ]
+    },
+    {
+      "id": "source:src/shared/ui/phone-country-dialog.tsx",
+      "kind": "source",
+      "name": "phone-country-dialog.tsx",
+      "path": "src/shared/ui/phone-country-dialog.tsx",
+      "tags": [
+        "src/shared/ui/phone-country-dialog",
+        "src/shared/ui/phone-country-dialog.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/shared/ui/phone-field.tsx",
+      "kind": "source",
+      "name": "phone-field.tsx",
+      "path": "src/shared/ui/phone-field.tsx",
+      "tags": [
+        "src/shared/ui/phone-field",
+        "src/shared/ui/phone-field.tsx",
+        "tsx"
       ]
     },
     {
@@ -53639,6 +53814,18 @@
       "tags": [
         "src/shared/installation/tests/installation-policy",
         "src/shared/installation/tests/installation-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/shared/phone/tests/phone-field-model.test.ts",
+      "kind": "test",
+      "name": "phone-field-model.test.ts",
+      "path": "src/shared/phone/tests/phone-field-model.test.ts",
+      "tags": [
+        "src/shared/phone/tests/phone-field-model",
+        "src/shared/phone/tests/phone-field-model.test.ts",
         "test",
         "ts"
       ]

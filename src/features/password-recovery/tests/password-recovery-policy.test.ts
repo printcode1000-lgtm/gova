@@ -5,7 +5,9 @@ import {
   PASSWORD_RECOVERY_POLICY,
 } from '../application/password-recovery-policy';
 
-assert.equal(normalizeRecoveryPhone('010 1234 5678'), '01012345678');
+assert.equal(normalizeRecoveryPhone('010 1234 5678'), '+201012345678');
+assert.equal(normalizeRecoveryPhone('٠١٠ ١٢٣٤ ٥٦٧٨'), '+201012345678');
+assert.equal(normalizeRecoveryPhone('+966 50 123 4567'), '+966501234567');
 assert.throws(() => normalizeRecoveryPhone('123'), /passwordRecoveryInvalidPhone/);
 assert.throws(() => normalizeRecoveryPhone(undefined), /passwordRecoveryInvalidPhone/);
 assert.equal(maskRecoveryEmail('hesham.gaber1@gmail.com'), 'h********@gmail.com');

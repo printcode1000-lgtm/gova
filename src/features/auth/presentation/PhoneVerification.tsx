@@ -9,6 +9,8 @@ import { cn } from '@/shared/utils';
 import { reportPreAuthFailure } from '@/features/system-logs';
 import type { RegistrationFormData } from '@asol/auth-core';
 
+import { PhoneField } from '@/shared/ui/phone-field';
+import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
 import { OtpInput } from './OtpInput';
 import { usePhoneVerification } from '@/features/auth/application/hooks/use-phone-verification';
 import { canSendPhoneOtp, formatPhoneDisplay } from './phone-verification-model';
@@ -32,7 +34,8 @@ export function PhoneVerification({ id,
   onVerifiedChange,
   useForm = false,
 }: PhoneVerificationProps & { id?: string } = {}) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const phoneLabels = phoneFieldLabels(t, locale);
 
   // Form mode (registration)
   const formContext = useForm ? useFormContext<RegistrationFormData>() : null;
@@ -128,35 +131,28 @@ export function PhoneVerification({ id,
             <div id="auth.phone-verification.div.2" className="space-y-2">
               <span id="auth.phone-verification.span" className="text-sm font-semibold text-on-surface">{t('auth.phone.label')}</span>
               <div id="auth.phone-verification.div.3" className="flex items-center gap-2">
-                <div id="auth.phone-verification.div.4" className="relative flex-1">
-                  <span id="auth.phone-verification.span.2" className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">
-                    +20
-                  </span>
-                  <input id="auth.phone-verification.input"
-                    type="tel"
-                    inputMode="tel"
-                    maxLength={11}
-                    disabled={phoneVerified}
-                    placeholder={t('auth.phone.placeholder')}
-                    className={cn(
-                      'auth-input ps-12 w-full',
-                      phoneVerified && 'asol-field-surface',
-                      fieldState.error && 'border-error',
-                    )}
-                    value={field.value}
-                    onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, '').slice(0, 11);
-                      field.onChange(raw);
-                      if (phoneVerified) formSetValue?.('phoneVerified', false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !phoneVerified && !otpSent) {
-                        e.preventDefault();
-                        void handleSendOtpWrapper();
-                      }
-                    }}
-                  />
-                </div>
+                <PhoneField id="auth.phone-verification.div.4"
+                  className="flex-1"
+                  labels={phoneLabels}
+                  disabled={phoneVerified}
+                  invalid={Boolean(fieldState.error)}
+                  placeholder={t('auth.phone.placeholder')}
+                  inputClassName={cn(
+                    'auth-input w-full',
+                    phoneVerified && 'asol-field-surface',
+                  )}
+                  value={field.value}
+                  onChange={(next) => {
+                    field.onChange(next);
+                    if (phoneVerified) formSetValue?.('phoneVerified', false);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' && !phoneVerified && !otpSent) {
+                      event.preventDefault();
+                      void handleSendOtpWrapper();
+                    }
+                  }}
+                />
                 {!phoneVerified && (
                   <button id="auth.phone-verification.button"
                     type="button"
@@ -261,35 +257,25 @@ export function PhoneVerification({ id,
           {t('auth.login.phone')}
         </span>
         <div id="auth.phone-verification.div.10" className="flex items-center gap-2">
-          <div id="auth.phone-verification.div.11" className="relative min-w-0 flex-1">
-            <span id="auth.phone-verification.span.8" className="absolute start-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-on-surface-variant">
-              +20
-            </span>
-            <input id="auth.phone-verification.input.2"
-              type="tel"
-              inputMode="tel"
-              maxLength={11}
-              disabled={phoneVerified}
-              placeholder={t('auth.login.phonePlaceholder')}
-              className={cn(
-                'auth-input w-full ps-12 text-sm',
-                phoneVerified && 'asol-field-surface',
-                error && 'border-error',
-              )}
-              value={phone}
-              onChange={(event) => {
-                handlePhoneChange(
-                  event.target.value.replace(/\D/g, '').slice(0, 11),
-                );
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' && !phoneVerified && !otpSent) {
-                  event.preventDefault();
-                  void handleSendOtpWrapper();
-                }
-              }}
-            />
-          </div>
+          <PhoneField id="auth.phone-verification.div.11"
+            className="min-w-0 flex-1"
+            labels={phoneLabels}
+            disabled={phoneVerified}
+            invalid={Boolean(error)}
+            placeholder={t('auth.login.phonePlaceholder')}
+            inputClassName={cn(
+              'auth-input w-full text-sm',
+              phoneVerified && 'asol-field-surface',
+            )}
+            value={phone}
+            onChange={handlePhoneChange}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && !phoneVerified && !otpSent) {
+                event.preventDefault();
+                void handleSendOtpWrapper();
+              }
+            }}
+          />
 
           {!phoneVerified ? (
             <button id="auth.phone-verification.button.5"
