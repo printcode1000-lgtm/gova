@@ -7,6 +7,7 @@ import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 export interface CategoryTabsStripItem {
   id: string;
   label: string;
+  /** Omitted by callers whose tabs are named rather than pictured. */
   imageUrl?: string;
   count?: number;
 }
@@ -86,16 +87,16 @@ export function CategoryTabsStrip({
             item.id === selectedId ? style.selected : style.idle
           }`}
         >
-          <span className={style.image}>
-            {item.imageUrl ? (
+          {item.imageUrl ? (
+            <span className={style.image}>
               <Image
                 src={item.imageUrl}
                 alt={item.label}
                 fill
                 className="object-cover"
               />
-            ) : null}
-          </span>
+            </span>
+          ) : null}
           <span className="whitespace-nowrap">{item.label}</span>
           {typeof item.count === "number" ? (
             <span className="rounded-full bg-black/10 px-1.5 text-[10px]">

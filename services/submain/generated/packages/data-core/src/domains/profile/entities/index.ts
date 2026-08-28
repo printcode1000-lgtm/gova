@@ -9,4 +9,4 @@ export { EMPTY_PROFILE_FULFILLMENT_SETTINGS, normalizeProfileFulfillmentSettings
 export type { ProfileReview, ProfileReviewsResult, SaveProfileReviewInput, UpdateProfileReviewInput, ProfileRatingSettings } from "./profile-review.entity";
 export type { ProfileRegistrationSnapshot } from "./profile-registration.entity";
 export type { WorkingHoursPeriod, WorkingHoursDay, ProfileWorkingHours, WorkingDayLabel, WorkingDayId } from "./profile-working-hours.types";
-export { WORKING_DAY_LABELS, EMPTY_PROFILE_WORKING_HOURS, createDefaultWorkingPeriod, normalizeProfileWorkingHours, hasWorkingHours, getWorkingHoursDayLabel, getCurrentWorkingHoursStatus } from "./profile-working-hours";
+export { WORKING_DAY_LABELS, EMPTY_PROFILE_WORKING_HOURS, createDefaultWorkingPeriod, normalizeProfileWorkingHours, hasWorkingHours, getWorkingHoursDayLabel, getCurrentWorkingHoursStatus, currentWorkingDayId } from "./profile-working-hours";

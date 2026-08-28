@@ -1,1 +1,1 @@
-export { WORKING_DAY_LABELS, EMPTY_PROFILE_WORKING_HOURS, createDefaultWorkingPeriod, normalizeProfileWorkingHours, hasWorkingHours, getWorkingHoursDayLabel, getCurrentWorkingHoursStatus } from "@asol/data-core/profile/entities";
+export { WORKING_DAY_LABELS, EMPTY_PROFILE_WORKING_HOURS, createDefaultWorkingPeriod, normalizeProfileWorkingHours, hasWorkingHours, getWorkingHoursDayLabel, getCurrentWorkingHoursStatus, currentWorkingDayId } from "@asol/data-core/profile/entities";

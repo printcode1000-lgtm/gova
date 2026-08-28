@@ -9257,6 +9257,8 @@
         "src/features/product-search/presentation/panel/productsearchpanel.tsx",
         "src/features/profile-products/presentation/profileproductstabs",
         "src/features/profile-products/presentation/profileproductstabs.tsx",
+        "src/features/profile-working-hours/presentation/workinghourscard",
+        "src/features/profile-working-hours/presentation/workinghourscard.tsx",
         "src/shared/ui/",
         "src/shared/ui/category-tabs-strip",
         "src/shared/ui/category-tabs-strip.tsx",
@@ -66395,6 +66397,12 @@
     },
     {
       "from": "document:docs/02-data-and-storage/profile-system.md",
+      "to": "document:docs/04-ui-components/category-tabs-strip.md",
+      "kind": "references",
+      "detail": "../04-ui-components/category-tabs-strip.md"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/profile-system.md",
       "to": "document:docs/04-ui-components/phone-field.md",
       "kind": "references",
       "detail": "../04-ui-components/phone-field.md"
@@ -67202,6 +67210,12 @@
       "to": "source:src/features/profile-products/presentation/ProfileProductsTabs.tsx",
       "kind": "references",
       "detail": "src/features/profile-products/presentation/ProfileProductsTabs.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/category-tabs-strip.md",
+      "to": "source:src/features/profile-working-hours/presentation/WorkingHoursCard.tsx",
+      "kind": "references",
+      "detail": "src/features/profile-working-hours/presentation/WorkingHoursCard.tsx"
     },
     {
       "from": "document:docs/04-ui-components/category-tabs-strip.md",
@@ -216191,6 +216205,12 @@
       "to": "source:src/features/profile-working-hours/index.ts",
       "kind": "imports",
       "detail": "@/features/profile-working-hours"
+    },
+    {
+      "from": "source:src/features/profile-working-hours/presentation/WorkingHoursCard.tsx",
+      "to": "source:src/shared/ui/category-tabs-strip.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/category-tabs-strip"
     },
     {
       "from": "source:src/features/profile-working-hours/ui.ts",

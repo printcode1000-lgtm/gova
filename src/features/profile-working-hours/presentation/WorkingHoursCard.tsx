@@ -11,10 +11,12 @@ import type {
 } from "@/features/profile-working-hours";
 import {
   createDefaultWorkingPeriod,
+  currentWorkingDayId,
   getCurrentWorkingHoursStatus,
   getWorkingHoursDayLabel,
   hasWorkingHours,
 } from "@/features/profile-working-hours";
+import { CategoryTabsStrip } from "@/shared/ui/category-tabs-strip";
 
 interface WorkingHoursCardProps {
   mode: "edit" | "preview";
@@ -70,6 +72,16 @@ export function WorkingHoursCard({ id,
   const currentStatus = getCurrentWorkingHoursStatus(value);
   const hasAnyHours = hasWorkingHours(value);
 
+  // Editing is one day at a time: the seven days are a tab strip, and today is
+  // the day already selected, because it is the one an owner opens the card to
+  // fix. Reading the card is not paged — a visitor wants the whole week at once.
+  const [selectedDayId, setSelectedDayId] = React.useState<WorkingDayId>(() =>
+    currentWorkingDayId(),
+  );
+  const visibleDays = isEdit
+    ? value.days.filter((day) => day.day === selectedDayId)
+    : value.days;
+
   const setValue = (next: ProfileWorkingHours) => onChange?.(next);
 
   const toggleDay = (dayId: WorkingDayId, open: boolean) => {
@@ -115,8 +127,21 @@ export function WorkingHoursCard({ id,
         <p className="text-sm text-on-surface-variant">{text.notSet}</p>
       ) : null}
 
+      {isEdit ? (
+        <CategoryTabsStrip
+          level="sub"
+          items={value.days.map((day) => ({
+            id: day.day,
+            label: getWorkingHoursDayLabel(day.day, locale),
+            count: day.open ? day.periods.length : undefined,
+          }))}
+          selectedId={selectedDayId}
+          onSelect={(dayId) => setSelectedDayId(dayId as WorkingDayId)}
+        />
+      ) : null}
+
       <div className="space-y-3">
-        {value.days.map((day) => (
+        {visibleDays.map((day) => (
           <div
             key={day.day}
             className="rounded-lg border border-outline-variant/70 bg-surface-container-low p-3"

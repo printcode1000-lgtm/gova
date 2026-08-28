@@ -9,6 +9,7 @@ export {
   EMPTY_PROFILE_WORKING_HOURS,
   WORKING_DAY_LABELS,
   createDefaultWorkingPeriod,
+  currentWorkingDayId,
   getCurrentWorkingHoursStatus,
   getWorkingHoursDayLabel,
   hasWorkingHours,

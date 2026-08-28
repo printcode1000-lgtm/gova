@@ -36,6 +36,9 @@ never does. A caller that needs its tabs addressable passes a repeated
 - `src/features/product-search/presentation/panel/ProductSearchPanel.tsx` — the
   `/search` category pickers, covering the whole catalog. See
   [Product Search System](../03-products-and-commerce/product-search-system.md).
+- `src/features/profile-working-hours/presentation/WorkingHoursCard.tsx` — the
+  weekday tabs of the working-hours editor. Its tabs carry no image, which the
+  strip renders as a label-only tab rather than an empty picture frame.
 
 ## Interaction rules
 

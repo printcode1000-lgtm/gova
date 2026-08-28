@@ -9257,6 +9257,8 @@
         "src/features/product-search/presentation/panel/productsearchpanel.tsx",
         "src/features/profile-products/presentation/profileproductstabs",
         "src/features/profile-products/presentation/profileproductstabs.tsx",
+        "src/features/profile-working-hours/presentation/workinghourscard",
+        "src/features/profile-working-hours/presentation/workinghourscard.tsx",
         "src/shared/ui/",
         "src/shared/ui/category-tabs-strip",
         "src/shared/ui/category-tabs-strip.tsx",

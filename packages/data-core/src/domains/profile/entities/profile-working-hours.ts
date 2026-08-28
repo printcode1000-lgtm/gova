@@ -122,22 +122,27 @@ export function getWorkingHoursDayLabel(day: WorkingDayId, locale: "ar" | "en") 
   return locale === "ar" ? label?.ar ?? day : label?.en ?? day;
 }
 
+const DAY_BY_JS_INDEX: WorkingDayId[] = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+];
+
+/** The weekday it is right now, named the way this module names its days. */
+export function currentWorkingDayId(now = new Date()): WorkingDayId {
+  return DAY_BY_JS_INDEX[now.getDay()]!;
+}
+
 export function getCurrentWorkingHoursStatus(
   value: ProfileWorkingHours,
   now = new Date(),
 ): "open" | "closed" | "unknown" {
   if (!hasWorkingHours(value)) return "unknown";
-  const dayIndex = now.getDay();
-  const dayByJsIndex: WorkingDayId[] = [
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-  ];
-  const day = value.days.find((item) => item.day === dayByJsIndex[dayIndex]);
+  const day = value.days.find((item) => item.day === currentWorkingDayId(now));
   if (!day?.open) return "closed";
   const minutes = now.getHours() * 60 + now.getMinutes();
   const isOpen = day.periods.some((period) => {
