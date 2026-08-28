@@ -70,6 +70,23 @@ The `/search` page supports:
 
 The user selects a main category and subcategory before selecting fields or running a meaningful search.
 
+Both pickers are horizontal tab strips, not dropdowns. They render through the
+shared `CategoryTabsStrip` (`src/shared/ui/category-tabs-strip.tsx`), the same
+presentational strip the profile products tabs use, so a tab carries the
+category image next to its name and the strip snap-scrolls horizontally.
+
+The strips are fed by `buildProductSearchCategoryTabs`
+(`src/features/product-search/presentation/panel/product-search-category-tabs.ts`),
+which returns the **whole catalog**: every searchable main category with its
+searchable subcategories, filtered by no profile selection. Collections are
+expanded into their member categories, because a product is stored under a
+member category and one of its real subcategories, never under the collection
+itself. Selecting a main tab clears the subcategory and the selected field keys.
+
+In the panel's `compact` variant (the profile products search box) the category
+pair is fixed by `fixedMainCategoryId`/`fixedSubcategoryId`, so no strip is
+rendered there.
+
 ## Product Search Fields
 
 Searchable field definitions are configured in:

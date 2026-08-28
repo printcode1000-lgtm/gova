@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
-import { categoryService } from "@/features/categories";
+import { CategoryTabsStrip } from "@/shared/ui/category-tabs-strip";
 import type { ProductRecord } from "@/features/product";
 import {
   productSearchApiService,
@@ -22,7 +22,11 @@ import { ProductSearchResults } from "./ProductSearchResults";
 import { defaultFieldKeys } from "./product-search-fields";
 import type { ProductSearchPanelProps } from "./product-search-panel.types";
 import { runProductSearchPanelRequest } from "./product-search-panel-request";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { buildProductSearchCategoryTabs } from "./product-search-category-tabs";
+import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+
+const SEARCH_MAIN_CATEGORY_UI: UiDescriptor = { uid: "search-main-category-76NCg1", id: "search-main-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "search-main-category" } };
+const SEARCH_SUBCATEGORY_UI: UiDescriptor = { uid: "search-subcategory-HX5YZy", id: "search-subcategory", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "search-subcategory" } };
 
 export function ProductSearchPanel({ id,
   variant,
@@ -61,23 +65,12 @@ export function ProductSearchPanel({ id,
   const [hasSearched, setHasSearched] = React.useState(false);
 
   const isCompact = variant === "compact";
-  const mainOptions = React.useMemo(
-    () => categoryService.getProfileMainOptions(),
-    [],
+  const categoryTabs = React.useMemo(
+    () => buildProductSearchCategoryTabs(locale === "ar" ? "ar" : "en"),
+    [locale],
   );
-  const mainCategory = mainOptions.find(
-    (item) => String(item.id) === mainCategoryId,
-  );
-  const subOptions = React.useMemo(
-    () =>
-      mainCategory
-        ? categoryService.getProfileSubOptions(
-            mainCategory.id,
-            mainCategory.isCollection,
-          )
-        : [],
-    [mainCategory],
-  );
+  const mainCategory = categoryTabs.find((tab) => tab.id === mainCategoryId);
+  const subOptions = mainCategory?.subTabs ?? [];
   const canSearch = Boolean(mainCategoryId && subcategoryId);
   const hasRatingFilter = availableFields.some(
     (field) => field.key === "ratingValue",
@@ -173,43 +166,33 @@ export function ProductSearchPanel({ id,
 
   const categoryControls =
     fixedMainCategoryId && fixedSubcategoryId ? null : (
-      <div id="product-search.panel.product-search-panel.div" className="grid gap-2 sm:grid-cols-2">
-        <select {...uiAttributes({ uid: "search-main-category-76NCg1", id: "search-main-category", kind: "field", interaction: { type: "select" }, simulation: { kind: "field", id: "search-main-category" } })}
-          value={mainCategoryId}
-          onChange={(event) => {
-            setMainCategoryId(event.target.value);
+      <div
+        id="product-search.panel.product-search-panel.div"
+        className="space-y-2"
+      >
+        <CategoryTabsStrip
+          items={categoryTabs}
+          level="main"
+          selectedId={mainCategoryId}
+          itemUi={SEARCH_MAIN_CATEGORY_UI}
+          onSelect={(id) => {
+            setMainCategoryId(id);
             setSubcategoryId("");
             setFieldKeys([]);
           }}
-          className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
-        >
-          <option value="">
-            {locale === "ar" ? "اختر الفئة الرئيسية" : "Select main category"}
-          </option>
-          {mainOptions.map((item) => (
-            <option key={item.id} value={item.id}>
-              {locale === "ar" ? item.nameAr : item.nameEn}
-            </option>
-          ))}
-        </select>
-        <select {...uiAttributes({ uid: "search-subcategory-HX5YZy", id: "search-subcategory", kind: "field", interaction: { type: "select" }, simulation: { kind: "field", id: "search-subcategory" } })}
-          value={subcategoryId}
-          disabled={!mainCategory}
-          onChange={(event) => {
-            setSubcategoryId(event.target.value);
-            setFieldKeys([]);
-          }}
-          className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface disabled:opacity-60"
-        >
-          <option value="">
-            {locale === "ar" ? "اختر الفئة الفرعية" : "Select subcategory"}
-          </option>
-          {subOptions.map((item) => (
-            <option key={item.id} value={item.originalId ?? item.id}>
-              {locale === "ar" ? item.nameAr : item.nameEn}
-            </option>
-          ))}
-        </select>
+        />
+        {subOptions.length > 0 ? (
+          <CategoryTabsStrip
+            items={subOptions}
+            level="sub"
+            selectedId={subcategoryId}
+            itemUi={SEARCH_SUBCATEGORY_UI}
+            onSelect={(id) => {
+              setSubcategoryId(id);
+              setFieldKeys([]);
+            }}
+          />
+        ) : null}
       </div>
     );
 

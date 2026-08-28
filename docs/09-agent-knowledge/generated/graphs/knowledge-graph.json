@@ -9009,18 +9009,23 @@
         "src/features/product-search/application/config/product-search-fields",
         "src/features/product-search/application/config/product-search-fields.ts",
         "src/features/product-search/presentation/panel",
+        "src/features/product-search/presentation/panel/product-search-category-tabs",
+        "src/features/product-search/presentation/panel/product-search-category-tabs.ts",
         "src/features/product-search/presentation/panel/product-search-fields",
         "src/features/product-search/presentation/panel/product-search-fields.ts",
         "src/features/product-search/presentation/panel/product-search-panel",
         "src/features/product-search/presentation/panel/product-search-panel.types.ts",
         "src/features/profile-products/presentation/hooks/profile-products-tabs-model",
         "src/features/profile-products/presentation/hooks/profile-products-tabs-model.ts",
+        "src/shared/ui/category-tabs-strip",
+        "src/shared/ui/category-tabs-strip.tsx",
         "system",
         "tables",
         "the",
         "the product search system centralizes product and seller search for asol. ui components do not query product tables directly. they use the search module, which owns searchable fields, filters, sorting, and api contracts.",
         "they",
         "ts",
+        "tsx",
         "types",
         "ui",
         "use",
@@ -9181,6 +9186,52 @@
         "src/shared/theme/tokens",
         "src/shared/theme/tokens.css",
         "super",
+        "tsx"
+      ]
+    },
+    {
+      "id": "document:docs/04-ui-components/category-tabs-strip.md",
+      "kind": "document",
+      "name": "Category Tabs Strip",
+      "path": "docs/04-ui-components/category-tabs-strip.md",
+      "summary": "`src/shared/ui/category-tabs-strip.tsx` is the single presentational strip for horizontal catalog tab rows: an image, a label, and an optional count per tab, laid out in a snap-scrolling horizontal row.",
+      "tags": [
+        "`src/shared/ui/category-tabs-strip.tsx` is the single presentational strip for horizontal catalog tab rows: an image, a label, and an optional count per tab, laid out in a snap-scrolling horizontal row.",
+        "an",
+        "and",
+        "catalog",
+        "category",
+        "category tabs strip",
+        "count",
+        "docs/04-ui-components/category-tabs-strip",
+        "docs/04-ui-components/category-tabs-strip.md",
+        "for",
+        "horizontal",
+        "image",
+        "in",
+        "is",
+        "label",
+        "laid",
+        "md",
+        "optional",
+        "out",
+        "per",
+        "presentational",
+        "row",
+        "rows",
+        "single",
+        "snap-scrolling",
+        "src/features/product-search/presentation/panel/productsearchpanel",
+        "src/features/product-search/presentation/panel/productsearchpanel.tsx",
+        "src/features/profile-products/presentation/profileproductstabs",
+        "src/features/profile-products/presentation/profileproductstabs.tsx",
+        "src/shared/ui/",
+        "src/shared/ui/category-tabs-strip",
+        "src/shared/ui/category-tabs-strip.tsx",
+        "strip",
+        "tab",
+        "tabs",
+        "the",
         "tsx"
       ]
     },
@@ -10388,6 +10439,7 @@
         "@asol/storage-image-manager-core",
         "`@asol/page-save-core` is the **only** place asol performs a user-triggered save, upload, or delete.",
         "asol",
+        "css",
         "delete",
         "docs/05-platform-features/page-save-system",
         "docs/05-platform-features/page-save-system.md",
@@ -10409,6 +10461,8 @@
         "performs",
         "place",
         "save",
+        "src/app/globals",
+        "src/app/globals.css",
         "src/core/composition/",
         "src/core/composition/browser-ports",
         "src/core/composition/browser-ports.ts",
@@ -27149,17 +27203,6 @@
       ]
     },
     {
-      "id": "source:android/local.properties",
-      "kind": "source",
-      "name": "local.properties",
-      "path": "android/local.properties",
-      "tags": [
-        "android/local",
-        "android/local.properties",
-        "properties"
-      ]
-    },
-    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",
@@ -27226,17 +27269,6 @@
         "ios/app/app/appdelegate",
         "ios/app/app/appdelegate.swift",
         "swift"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "source",
-      "name": "GoogleService-Info.plist",
-      "path": "ios/App/App/GoogleService-Info.plist",
-      "tags": [
-        "ios/app/app/googleservice-info",
-        "ios/app/app/googleservice-info.plist",
-        "plist"
       ]
     },
     {
@@ -46186,6 +46218,17 @@
       ]
     },
     {
+      "id": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "kind": "source",
+      "name": "product-search-category-tabs.ts",
+      "path": "src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "tags": [
+        "src/features/product-search/presentation/panel/product-search-category-tabs",
+        "src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/product-search/presentation/panel/product-search-fields.ts",
       "kind": "source",
       "name": "product-search-fields.ts",
@@ -50517,6 +50560,17 @@
       "tags": [
         "src/shared/ui/card",
         "src/shared/ui/card.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/shared/ui/category-tabs-strip.tsx",
+      "kind": "source",
+      "name": "category-tabs-strip.tsx",
+      "path": "src/shared/ui/category-tabs-strip.tsx",
+      "tags": [
+        "src/shared/ui/category-tabs-strip",
+        "src/shared/ui/category-tabs-strip.tsx",
         "tsx"
       ]
     },
@@ -66727,6 +66781,12 @@
     },
     {
       "from": "document:docs/03-products-and-commerce/product-search-system.md",
+      "to": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "kind": "references",
+      "detail": "src/features/product-search/presentation/panel/product-search-category-tabs.ts"
+    },
+    {
+      "from": "document:docs/03-products-and-commerce/product-search-system.md",
       "to": "source:src/features/product-search/presentation/panel/product-search-fields.ts",
       "kind": "references",
       "detail": "src/features/product-search/presentation/panel/product-search-fields.ts"
@@ -66742,6 +66802,12 @@
       "to": "source:src/features/profile-products/presentation/hooks/profile-products-tabs-model.ts",
       "kind": "references",
       "detail": "src/features/profile-products/presentation/hooks/profile-products-tabs-model.ts"
+    },
+    {
+      "from": "document:docs/03-products-and-commerce/product-search-system.md",
+      "to": "source:src/shared/ui/category-tabs-strip.tsx",
+      "kind": "references",
+      "detail": "src/shared/ui/category-tabs-strip.tsx"
     },
     {
       "from": "document:docs/03-products-and-commerce/README.md",
@@ -66852,6 +66918,47 @@
       "to": "source:src/shared/layouts/AppSidebar.tsx",
       "kind": "references",
       "detail": "src/shared/layouts/AppSidebar.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/category-tabs-strip.md",
+      "to": "domain:ui-components",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/04-ui-components/category-tabs-strip.md",
+      "to": "document:docs/03-products-and-commerce/product-search-system.md",
+      "kind": "references",
+      "detail": "../03-products-and-commerce/product-search-system.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/category-tabs-strip.md",
+      "to": "document:docs/04-ui-components/touch-interaction-policy.md",
+      "kind": "references",
+      "detail": "./touch-interaction-policy.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/category-tabs-strip.md",
+      "to": "source:src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "kind": "references",
+      "detail": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/category-tabs-strip.md",
+      "to": "source:src/features/profile-products/presentation/ProfileProductsTabs.tsx",
+      "kind": "references",
+      "detail": "src/features/profile-products/presentation/ProfileProductsTabs.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/category-tabs-strip.md",
+      "to": "source:src/shared/ui/card.tsx",
+      "kind": "references",
+      "detail": "src/shared/ui/"
+    },
+    {
+      "from": "document:docs/04-ui-components/category-tabs-strip.md",
+      "to": "source:src/shared/ui/category-tabs-strip.tsx",
+      "kind": "references",
+      "detail": "src/shared/ui/category-tabs-strip.tsx"
     },
     {
       "from": "document:docs/04-ui-components/guides/featured-marquee-guide.md",
@@ -67143,6 +67250,12 @@
       "to": "document:docs/04-ui-components/app-sidebar-navigation.md",
       "kind": "references",
       "detail": "./app-sidebar-navigation.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/README.md",
+      "to": "document:docs/04-ui-components/category-tabs-strip.md",
+      "kind": "references",
+      "detail": "./category-tabs-strip.md"
     },
     {
       "from": "document:docs/04-ui-components/README.md",
@@ -70331,12 +70444,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
       "to": "source:packages/native-core/scripts/android-build-preflight.ts",
       "kind": "references",
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
@@ -70426,12 +70533,6 @@
       "to": "source:ios/App/App.xcodeproj/project.pbxproj",
       "kind": "references",
       "detail": "ios/App/App.xcodeproj/project.pbxproj"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
-      "to": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "references",
-      "detail": "ios/App/App/GoogleService-Info.plist"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
@@ -70942,12 +71043,6 @@
       "to": "source:android/capacitor.settings.gradle",
       "kind": "references",
       "detail": "android/capacitor.settings.gradle"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
@@ -71708,12 +71803,6 @@
       "to": "script:scripts/android/gradle.ts",
       "kind": "references",
       "detail": "scripts/android/gradle.ts"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
@@ -83634,12 +83723,6 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "source:android/local.properties",
-      "kind": "documents",
-      "detail": "android/"
-    },
-    {
-      "from": "domain:mobile-and-release",
       "to": "source:android/settings.gradle",
       "kind": "documents",
       "detail": "android/"
@@ -83671,12 +83754,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:ios/App/App/AppDelegate.swift",
-      "kind": "documents",
-      "detail": "ios/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:ios/App/App/GoogleService-Info.plist",
       "kind": "documents",
       "detail": "ios/"
     },
@@ -90726,6 +90803,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/product-search/presentation/panel/product-search-fields.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -93805,6 +93888,12 @@
     {
       "from": "domain:products-and-commerce",
       "to": "source:src/features/product-search/presentation/panel/index.ts",
+      "kind": "documents",
+      "detail": "src/features/product-search/"
+    },
+    {
+      "from": "domain:products-and-commerce",
+      "to": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
       "kind": "documents",
       "detail": "src/features/product-search/"
     },
@@ -100776,6 +100865,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/product-search/presentation/panel/product-search-fields.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -104560,11 +104655,6 @@
     {
       "from": "feature:profile-products",
       "to": "external-dependency:lucide-react",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:profile-products",
-      "to": "external-dependency:next",
       "kind": "imports"
     },
     {
@@ -130310,12 +130400,6 @@
     },
     {
       "from": "route:/search:page",
-      "to": "feature:categories",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/search:page",
       "to": "feature:product-search",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -135693,11 +135777,6 @@
       "kind": "affects-runtime"
     },
     {
-      "from": "source:android/local.properties",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
       "from": "source:android/settings.gradle",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -135724,11 +135803,6 @@
     },
     {
       "from": "source:ios/App/App/AppDelegate.swift",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:ios/App/App/GoogleService-Info.plist",
       "to": "runtime:ios",
       "kind": "affects-runtime"
     },
@@ -211592,6 +211666,42 @@
       "detail": "./ProductSearchPanel"
     },
     {
+      "from": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "to": "feature:product-search",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "to": "source:src/features/categories/index.ts",
+      "kind": "imports",
+      "detail": "@/features/categories"
+    },
+    {
       "from": "source:src/features/product-search/presentation/panel/product-search-fields.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -211821,15 +211931,15 @@
     },
     {
       "from": "source:src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "to": "source:src/features/categories/index.ts",
-      "kind": "imports",
-      "detail": "@/features/categories"
-    },
-    {
-      "from": "source:src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
       "to": "source:src/features/product-search/index.ts",
       "kind": "imports",
       "detail": "@/features/product-search"
+    },
+    {
+      "from": "source:src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "to": "source:src/features/product-search/presentation/panel/product-search-category-tabs.ts",
+      "kind": "imports",
+      "detail": "./product-search-category-tabs"
     },
     {
       "from": "source:src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
@@ -211872,6 +211982,12 @@
       "to": "source:src/features/profile/index.ts",
       "kind": "imports",
       "detail": "@/features/profile"
+    },
+    {
+      "from": "source:src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "to": "source:src/shared/ui/category-tabs-strip.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/category-tabs-strip"
     },
     {
       "from": "source:src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
@@ -215022,12 +215138,6 @@
     },
     {
       "from": "source:src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/profile-products/presentation/ProfileProductsTabs.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -215067,6 +215177,12 @@
       "to": "source:src/features/profile-products/presentation/ProfileProductsTabsStates.tsx",
       "kind": "imports",
       "detail": "./ProfileProductsTabsStates"
+    },
+    {
+      "from": "source:src/features/profile-products/presentation/ProfileProductsTabs.tsx",
+      "to": "source:src/shared/ui/category-tabs-strip.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/category-tabs-strip"
     },
     {
       "from": "source:src/features/profile-products/presentation/ProfileProductsTabsStates.tsx",
@@ -232939,6 +233055,49 @@
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
+    },
+    {
+      "from": "source:src/shared/ui/category-tabs-strip.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/category-tabs-strip.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/category-tabs-strip.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/category-tabs-strip.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/category-tabs-strip.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/category-tabs-strip.tsx",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/image"
+    },
+    {
+      "from": "source:src/shared/ui/category-tabs-strip.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/category-tabs-strip.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/shared/ui/checkbox.tsx",

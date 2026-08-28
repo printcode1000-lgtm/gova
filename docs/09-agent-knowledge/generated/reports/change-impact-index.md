@@ -15,7 +15,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `auth` | feature | 3 | 4 | 124 | 0 | 22 | 17 |
 | `cart` | feature | 1 | 5 | 7 | 0 | 5 | 12 |
 | `catalog-studio` | feature | 2 | 1 | 3 | 0 | 0 | 7 |
-| `categories` | feature | 4 | 0 | 48 | 0 | 14 | 7 |
+| `categories` | feature | 4 | 0 | 47 | 0 | 14 | 7 |
 | `contact` | feature | 1 | 0 | 2 | 0 | 0 | 9 |
 | `data` | feature | 1 | 0 | 2 | 0 | 6 | 3 |
 | `data-health` | feature | 1 | 1 | 14 | 0 | 0 | 11 |
@@ -41,7 +41,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `product-card` | feature | 1 | 0 | 3 | 0 | 5 | 7 |
 | `product-search` | feature | 2 | 0 | 4 | 0 | 5 | 14 |
 | `profile` | feature | 1 | 4 | 36 | 0 | 12 | 33 |
-| `profile-products` | feature | 1 | 0 | 3 | 0 | 1 | 11 |
+| `profile-products` | feature | 1 | 0 | 3 | 0 | 1 | 10 |
 | `profile-working-hours` | feature | 2 | 0 | 3 | 0 | 1 | 3 |
 | `qr-code` | feature | 1 | 1 | 0 | 0 | 1 | 2 |
 | `release-commands` | feature | 3 | 2 | 13 | 0 | 1 | 15 |
@@ -98,7 +98,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/submain-composition` | package | 6 | 1 | 0 | 0 | 5 | 7 |
 | `@asol/system-logs-core` | package | 9 | 4 | 142 | 0 | 53 | 0 |
 | `@asol/trending-ribbon-core` | package | 6 | 1 | 139 | 0 | 11 | 1 |
-| `@asol/ui-registry-core` | package | 5 | 11 | 169 | 0 | 124 | 0 |
+| `@asol/ui-registry-core` | package | 5 | 11 | 169 | 0 | 125 | 0 |
 | `@asol/vercel-deploy-core` | package | 8 | 4 | 26 | 0 | 38 | 3 |
 | `notifications` | service | 6 | 0 | 0 | 0 | 0 | 3 |
 | `orders` | service | 4 | 0 | 0 | 0 | 0 | 4 |

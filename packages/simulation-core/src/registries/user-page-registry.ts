@@ -169,15 +169,17 @@ function page(
   };
 }
 
-const SEARCH_MAIN_TARGET = fieldTarget("search-main-category");
-const SEARCH_SUB_TARGET = fieldTarget("search-subcategory");
+const SEARCH_MAIN_TARGET = listItemTarget("search-main-category");
+const SEARCH_SUB_TARGET = listItemTarget("search-subcategory");
 const SEARCH_INPUT_TARGET = fieldTarget("search-query");
 const SEARCH_RESULT_TARGET = listItemTarget("search-result");
 
 function searchPreparationActions() {
   return [
-    { type: "select-first-option" as const, target: SEARCH_MAIN_TARGET },
-    { type: "select-first-option" as const, target: SEARCH_SUB_TARGET },
+    // The category pickers are tab strips: the first tab of each strip is the
+    // real control a user taps to reach a searchable category pair.
+    { type: "click" as const, target: SEARCH_MAIN_TARGET },
+    { type: "click" as const, target: SEARCH_SUB_TARGET },
     { type: "set-value" as const, target: SEARCH_INPUT_TARGET, value: "" },
     { type: "press-key" as const, target: SEARCH_INPUT_TARGET, key: "Enter" },
   ];

@@ -12,6 +12,7 @@ Canonical UI behavior and interaction policies shared across pages and features.
 - [Profile Edit Navigation](./profile-edit-navigation.md) — direct profile-section selection, active-tab synchronization, and snapshot restoration rules.
 - [Theme System](./theme-system.md) — shared visual/theme rules.
 - [App Sidebar Navigation](./app-sidebar-navigation.md) — application navigation behavior.
+- [Category Tabs Strip](./category-tabs-strip.md) — the shared horizontal catalog tab strip and its consumers.
 - `guides/` — focused implementation guidance.
 
 ## Invariants

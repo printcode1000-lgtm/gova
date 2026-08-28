@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import { ChevronDown, Plus, Search, Star } from "lucide-react";
+import { CategoryTabsStrip } from "@/shared/ui/category-tabs-strip";
 import { ProductSearchPanel } from "@/features/product-search/ui";
 import type { ProductRecord } from "@asol/product-core";
 import {
@@ -139,73 +139,27 @@ export function ProfileProductsTabs({ id,
 
   return (
     <section id={id} className="space-y-4">
-      <div
-        data-snapshot-scroll
-        data-snapshot-id={`profile-products-main-${mode}-${ownerUid}`}
-        className="flex snap-x snap-mandatory scroll-smooth gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => onSelectMain(tab.id)}
-            className={`flex h-12 min-w-fit shrink-0 snap-center snap-always items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition ${
-              tab.id === selectedMainId
-                ? "border-primary bg-primary text-on-primary"
-                : "border-outline-variant bg-surface text-on-surface"
-            }`}
-          >
-            <span className="relative h-7 w-7 overflow-hidden rounded-md bg-surface-bright">
-              {tab.imageUrl ? (
-                <Image
-                  src={tab.imageUrl}
-                  alt={tab.label}
-                  fill
-                  className="object-cover"
-                />
-              ) : null}
-            </span>
-            <span className="whitespace-nowrap">{tab.label}</span>
-          </button>
-        ))}
-      </div>
+      <CategoryTabsStrip
+        items={tabs}
+        level="main"
+        selectedId={selectedMainId}
+        snapshotId={`profile-products-main-${mode}-${ownerUid}`}
+        onSelect={onSelectMain}
+      />
 
       {activeMain?.subTabs.length ? (
-        <div
-          data-snapshot-scroll
-          data-snapshot-id={`profile-products-sub-${mode}-${ownerUid}`}
-          className="flex snap-x snap-mandatory scroll-smooth gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {activeMain.subTabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => onSelectSub(tab.id)}
-              className={`flex h-10 min-w-fit shrink-0 snap-center snap-always items-center gap-2 rounded-lg border px-3 text-[11px] font-semibold transition ${
-                tab.id === selectedSubId
-                  ? "border-tertiary bg-tertiary text-on-tertiary"
-                  : "border-outline-variant bg-surface-container-low text-on-surface"
-              }`}
-            >
-              <span className="relative h-6 w-6 overflow-hidden rounded bg-surface-bright">
-                {tab.imageUrl ? (
-                  <Image
-                    src={tab.imageUrl}
-                    alt={tab.label}
-                    fill
-                    className="object-cover"
-                  />
-                ) : null}
-              </span>
-              <span className="whitespace-nowrap">{tab.label}</span>
-              {typeof tab.productCount === "number" ? (
-                <span className="rounded-full bg-black/10 px-1.5 text-[10px]">
-                  {tab.productCount}
-                </span>
-              ) : null}
-            </button>
-          ))}
-        </div>
+        <CategoryTabsStrip
+          items={activeMain.subTabs.map((tab) => ({
+            id: tab.id,
+            label: tab.label,
+            imageUrl: tab.imageUrl,
+            count: tab.productCount,
+          }))}
+          level="sub"
+          selectedId={selectedSubId}
+          snapshotId={`profile-products-sub-${mode}-${ownerUid}`}
+          onSelect={onSelectSub}
+        />
       ) : null}
 
       {activeSubTab ? (
