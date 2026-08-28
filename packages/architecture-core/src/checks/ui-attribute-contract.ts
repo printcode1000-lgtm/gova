@@ -11,6 +11,18 @@ const REGISTRY_PATH = join(REGISTRY_OWNER, "registry", "ui-page-registry.ts");
 const APP_ROOT = join(ROOT, "src", "app");
 const MANUAL_ATTRIBUTE = /\bdata-ui-(?:uid|id|page|component|state|action|part|item-id)\s*=/;
 /**
+ * A `key` written after the `uiAttributes()` spread on the same element.
+ *
+ * This is a correctness bug, not a style rule. The JSX transform cannot use
+ * `jsx`/`jsxs` when a key follows a spread, so it falls back to
+ * `createElement`, which does not mark the element's static children as
+ * validated. React then re-validates them as an unkeyed list and warns about
+ * the first child — an error that names an innocent element and hides the real
+ * one. Writing `key` before the spread keeps the fast, correct path.
+ */
+const KEY_AFTER_UI_SPREAD =
+  /\{\.\.\.ui(?:Attributes|ComponentAttributes|PageAttributes)\((?:[^()]|\([^()]*\))*\)\}\s+key=/;
+/**
  * The one safe uid shape: a stable lowercase dot/dash-separated semantic
  * prefix, then an immutable six-character Base62 suffix minted once during
  * development. The suffix must carry both an uppercase letter and a digit,
@@ -114,6 +126,17 @@ function sourceFilesUnder(directory: string): string[] {
     if (/\.tsx?$/.test(entry)) files.push(fullPath);
   }
   return files;
+}
+
+function scanKeyAfterSpread(file: string, source: string): void {
+  const match = source.match(KEY_AFTER_UI_SPREAD);
+  if (!match || match.index === undefined) return;
+  const line = source.slice(0, match.index).split("\n").length;
+  addViolation(
+    "UI Attributes",
+    file,
+    `key follows the uiAttributes spread at line ${line}. Write key before the spread, or React drops to createElement and misreports child keys.`,
+  );
 }
 
 function scanManualAttributes(file: string, source: string): void {
@@ -289,6 +312,7 @@ export function checkUiAttributeContract(): void {
       if (file.startsWith(GUARD_OWNER)) continue;
       const fileSource = readFileSync(file, "utf8");
       scanManualAttributes(file, fileSource);
+      scanKeyAfterSpread(file, fileSource);
 
       // A generic helper may forward a caller's descriptor; it may never own a
       // uid, because that uid would repeat on every rendered instance.

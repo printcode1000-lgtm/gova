@@ -172,8 +172,8 @@ export function NotificationsPageContent() {
             const color = FILTER_COLORS[item.id];
             const active = filter === item.id;
             return (
-              <button {...uiAttributes({ uid: "notification-filter-bvMK2l", id: "notification-filter", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-filter" } })}
-                key={item.id}
+              <button key={item.id}
+                {...uiAttributes({ uid: "notification-filter-bvMK2l", id: "notification-filter", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-filter" } })}
                 type="button"
                 onClick={() => selectFilter(item.id)}
                 aria-pressed={active}

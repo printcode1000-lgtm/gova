@@ -252,8 +252,8 @@ export function VerificationSection() {
               const isSelected = verification.requestedBadges.includes(badge.id);
               return (
                 <button
-                  {...uiAttributes(BADGE_UI[badge.id])}
                   key={badge.id}
+                  {...uiAttributes(BADGE_UI[badge.id])}
                   type="button"
                   onClick={() => toggleBadge(badge.id)}
                   className={cn(

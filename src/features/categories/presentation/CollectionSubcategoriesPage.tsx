@@ -90,8 +90,8 @@ export function CollectionSubcategoriesPage({
             const altText = name || "Category image";
 
             return (
-              <Link {...uiAttributes({ uid: "collection-item-XJ5IGf", id: "collection-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "collection-item" } })}
-                key={item.id}
+              <Link key={item.id}
+                {...uiAttributes({ uid: "collection-item-XJ5IGf", id: "collection-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "collection-item" } })}
                 href={`/categories/${item.id}`}
                 className={categoryTileClassName}
                 aria-label={altText}

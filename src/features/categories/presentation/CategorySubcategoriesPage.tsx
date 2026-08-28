@@ -138,8 +138,8 @@ export function CategorySubcategoriesPage({
               const altText = name || "Subcategory image";
 
               return (
-                <button {...uiAttributes({ uid: "category-item-N5DI5e", id: "category-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "category-item" } })}
-                  key={item.id}
+                <button key={item.id}
+                  {...uiAttributes({ uid: "category-item-N5DI5e", id: "category-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "category-item" } })}
                   type="button"
                   className={categoryTileClassName}
                   onClick={() => {

@@ -218,8 +218,8 @@ export function ProductSearchPanel({ id,
       {!isCompact ? (
         <div id="product-search.panel.product-search-panel.div.2" className="flex gap-2">
           {(["products", "sellers"] as ProductSearchMode[]).map((item) => (
-            <button {...uiAttributes({ uid: "search-sellers-mode-GBOEa3", id: "search-sellers-mode", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "search-sellers-mode" } })}
-              key={item}
+            <button key={item}
+              {...uiAttributes({ uid: "search-sellers-mode-GBOEa3", id: "search-sellers-mode", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "search-sellers-mode" } })}
               type="button"
               onClick={() => setActiveMode(item)}
               className={`h-10 rounded-lg border px-4 text-sm font-semibold ${

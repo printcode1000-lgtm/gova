@@ -51,6 +51,11 @@ const probes: Record<string, string> = {
   "drift-b.tsx":
     'import { uiAttributes } from "@asol/ui-registry-core";\n' +
     'export const I = () => <i {...uiAttributes({ uid: "probe.drift-Z9yxw8", id: "probe.drift", kind: "region", action: "two" })} />;\n',
+  // A key after the spread drops the element to createElement, which makes
+  // React blame an innocent child for a missing key.
+  "key-after-spread.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    'export const K = (items: string[]) => items.map((item) => <i {...uiAttributes({ uid: "probe.keyspread-A1bcd3", id: "probe.keyspread", kind: "item" })} key={item}><b /><b /></i>);\n',
   // An unregistered generic fallback is legitimate and must not be reported.
   "fallback.tsx":
     'import { uiComponentAttributes } from "@asol/ui-registry-core";\n' +
@@ -94,6 +99,7 @@ for (const [label, pattern] of [
   ["computed uid", /computed-uid\.tsx[^\n]*computes its uid/],
   ["descriptor drift", /drift-b\.tsx[^\n]*drifts from its registration/],
   ["helper-level uid", /__guard_probe_primitive\.tsx[^\n]*helper-level uid/],
+  ["a key written after the spread", /key-after-spread\.tsx[^\n]*key follows the uiAttributes spread/],
 ] as const) {
   assert.match(reported, pattern, `The guard must fail for ${label}.`);
 }

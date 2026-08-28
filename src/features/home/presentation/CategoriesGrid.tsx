@@ -39,8 +39,8 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
           const imgSrc = cat.imageUrl;
           const categoryKey = cat.canonicalKey ?? `${cat.kind}-${cat.id}`;
           return (
-            <Link {...uiAttributes({ uid: "home-category-BxYuR3", id: "home-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "home-category" } })}
-              key={categoryKey}
+            <Link key={categoryKey}
+              {...uiAttributes({ uid: "home-category-BxYuR3", id: "home-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "home-category" } })}
               href={getCategoryHref(cat)}
               className={categoryTileClassName}
               aria-label={name}

@@ -75,8 +75,8 @@ export function BottomNavBar() {
 
         return (
           <Link
-            {...uiAttributes(ui)}
             key={href}
+            {...uiAttributes(ui)}
             id={`nav-item-${href.slice(1)}`}
             href={href}
             className={cn(

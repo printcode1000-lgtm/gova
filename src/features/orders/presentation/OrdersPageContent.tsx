@@ -126,8 +126,8 @@ export function OrdersPageContent() {
               const id = String(order.id);
               const detailRole = primaryViewerRole(viewerRoles, admin);
               return (
-                <Link {...uiAttributes({ uid: "orders-open-0xH8x3", id: "orders-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "orders-open" } })}
-                  key={id}
+                <Link key={id}
+                  {...uiAttributes({ uid: "orders-open-0xH8x3", id: "orders-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "orders-open" } })}
                   href={`/orders/details?orderId=${encodeURIComponent(id)}&role=${detailRole}`}
                   className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm transition"
                 >
