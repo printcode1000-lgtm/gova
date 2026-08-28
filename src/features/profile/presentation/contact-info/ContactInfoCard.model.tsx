@@ -326,6 +326,30 @@ const quickAddItems = React.useMemo(
     ],
   );
 
+/**
+ * The contact kind whose card is on screen.
+ *
+ * Tapping a kind on the quick-add strip selects it rather than adding to it:
+ * only that kind's card is rendered, and its own add button is the one way to
+ * add another entry of it. A kind chosen while it holds nothing gets one entry
+ * created with the selection, because a card with nothing but an add button in
+ * it says less than a card with an empty field ready to fill.
+ */
+const [selectedKindId, setSelectedKindId] = React.useState<string | null>(null);
+
+const countForKind = (kindId: string) =>
+    quickAddItems.find((item) => item.id === kindId)?.count ?? 0;
+
+const selectContactKind = (kindId: string) => {
+    if (countForKind(kindId) === 0) handleAddItem(kindId);
+    setSelectedKindId(kindId);
+  };
+
+// A kind whose last entry was just removed stops being shown rather than
+// reappearing empty; the strip keeps it selectable.
+const activeKindId =
+    selectedKindId && countForKind(selectedKindId) > 0 ? selectedKindId : null;
+
 const groupedSocialLinks = React.useMemo(() => {
     const grouped: Record<string, SocialLink[]> = {};
     localData.socialLinks.forEach((link) => {
@@ -337,7 +361,7 @@ const groupedSocialLinks = React.useMemo(() => {
     return grouped;
   }, [localData.socialLinks]);
 
-return { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, groupedSocialLinks };
+return { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, groupedSocialLinks };
 }
 
 

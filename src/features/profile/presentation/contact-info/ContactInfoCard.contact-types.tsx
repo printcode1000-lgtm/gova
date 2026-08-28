@@ -122,18 +122,19 @@ export function quickAddIcon(id: string): IconDefinition {
  * The quick-add strip.
  *
  * Every contact kind stays on the strip for the life of the card, whether or
- * not the profile already holds one: tapping a kind adds another entry of it,
- * and its badge counts what has been added. A kind that disappeared once used
- * is a kind the user cannot add a second of, which is exactly what the cards
- * below the strip do allow.
+ * not the profile already holds one. Tapping a kind opens it: its card is the
+ * only one shown below, and the add button inside that card is what adds
+ * another entry of it. The badge counts what the profile already holds.
  */
 export function ContactQuickAddGrid({ id,
   items,
-  onAdd,
+  selectedId,
+  onSelect,
   title,
 }: {
   items: ContactQuickAddItem[];
-  onAdd: (id: string) => void;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
   title: string;
 } & { id?: string }) {
   const addedCount = items.reduce((total, item) => total + item.count, 0);
@@ -159,12 +160,14 @@ export function ContactQuickAddGrid({ id,
           <button
             key={item.id}
             type="button"
-            onClick={() => onAdd(item.id)}
+            aria-pressed={item.id === selectedId}
+            onClick={() => onSelect(item.id)}
             aria-label={item.label}
             className="group relative flex min-h-14 w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg border px-0.5 py-1 text-center shadow-sm transition-all active:scale-95 sm:w-[4.25rem]"
             style={{
-              background: `linear-gradient(135deg, ${getContactVisualColor(item.id)}1F, ${getContactVisualColor(item.id)}08)`,
-              borderColor: `${getContactVisualColor(item.id)}${item.count > 0 ? 'AA' : '55'}`,
+              background: `linear-gradient(135deg, ${getContactVisualColor(item.id)}${item.id === selectedId ? '3D' : '1F'}, ${getContactVisualColor(item.id)}08)`,
+              borderColor: `${getContactVisualColor(item.id)}${item.id === selectedId ? 'FF' : item.count > 0 ? 'AA' : '55'}`,
+              borderWidth: item.id === selectedId ? 2 : 1,
             }}
           >
             {item.count > 0 ? (

@@ -179,15 +179,21 @@ additional.
 
 The quick-add strip (`ContactQuickAddGrid`) lists **every** contact kind — a
 location, each phone type, an email, each social platform, a website — and keeps
-every one of them on the strip for the life of the card. Tapping a kind appends
-another entry of that kind, and the tile's badge counts what the profile already
-holds, so a kind is never removed for having been used once.
+every one of them on the strip for the life of the card, badged with how many
+entries the profile holds of it.
 
-Each kind that has entries renders its own card below the strip, headed by the
-kind's icon and name and carrying its own add button, so a second WhatsApp
-number, a third location, or another Instagram link is one tap away without
-returning to the strip. Every phone inside those cards is the shared
-[Phone Field](../04-ui-components/phone-field.md).
+Tapping a kind **opens** it rather than adding to it: only that kind's card is
+rendered below the strip, every other kind's card is hidden, and the add button
+inside that card is the one way to add another entry of it. A kind opened while
+it holds nothing gets its first entry created with the selection, so the card
+never appears as an add button with nothing under it. Removing the last entry of
+the open kind closes the card again rather than leaving it empty; the strip keeps
+the kind selectable.
+
+Each card is headed by the kind's icon and name and carries its own add button,
+so a second WhatsApp number, a third location, or another Instagram link is one
+tap away without returning to the strip. Every phone inside those cards is the
+shared [Phone Field](../04-ui-components/phone-field.md).
 
 ## Migration
 

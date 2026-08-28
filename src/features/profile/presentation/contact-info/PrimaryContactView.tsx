@@ -22,7 +22,7 @@ import type { ContactInfoCardModel } from "./ContactInfoCard.model";
 import { ContactSectionHeader } from "./ContactSectionHeader";
 
 export function PrimaryContactView({ model }: { model: ContactInfoCardModel }) {
-const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, groupedSocialLinks } = model;
+const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, groupedSocialLinks } = model;
 const phoneLabels = phoneFieldLabels(t, locale);
 return (
         <Card id="profile.contact-info.primary-contact-view.card">
@@ -140,12 +140,14 @@ return (
                 {!readOnly && (
                   <ContactQuickAddGrid id="profile.contact-info.primary-contact-view.contact-quick-add-grid"
                     items={quickAddItems}
-                    onAdd={handleAddItem}
+                    selectedId={activeKindId}
+                    onSelect={selectContactKind}
                     title={locale === 'ar' ? 'أضف وسيلة تواصل بسرعة' : 'Quick add contact method'}
                   />
                 )}
             {/* Additional Phones */}
             {PHONE_TYPES.map((type) => {
+              if (type !== activeKindId) return null;
               const typePhones = groupedPhones[type];
               if (!typePhones || typePhones.length === 0) return null;
 
@@ -213,7 +215,7 @@ return (
             })}
 
             {/* Additional Emails */}
-            {localData.emails.filter((e) => e.id !== 'primary').length > 0 && (
+            {activeKindId === 'email' && localData.emails.filter((e) => e.id !== 'primary').length > 0 && (
               <div id="profile.contact-info.primary-contact-view.div.11" className="space-y-2">
                 <div id="profile.contact-info.primary-contact-view.div.12" className="flex items-center gap-2">
                   <span id="profile.contact-info.primary-contact-view.span.2" className="text-sm font-semibold flex items-center gap-2">
@@ -269,9 +271,10 @@ return (
             )}
 
             {/* Social Links */}
-            {localData.socialLinks.length > 0 && (
+            {SOCIAL_PLATFORMS.some((platform) => platform === activeKindId) && localData.socialLinks.length > 0 && (
               <div id="profile.contact-info.primary-contact-view.div.14" className="space-y-4">
                 {SOCIAL_PLATFORMS.map((platform) => {
+                  if (platform !== activeKindId) return null;
                   const platformLinks = groupedSocialLinks[platform];
                   if (!platformLinks || platformLinks.length === 0) return null;
 
@@ -339,7 +342,7 @@ return (
             )}
 
             {/* Websites */}
-            {localData.websites.length > 0 && (
+            {activeKindId === 'website' && localData.websites.length > 0 && (
               <div id="profile.contact-info.primary-contact-view.div.15" className="space-y-2">
                 <div id="profile.contact-info.primary-contact-view.div.16" className="flex items-center gap-2">
                   <span id="profile.contact-info.primary-contact-view.span.4" className="text-sm font-semibold flex items-center gap-2">
