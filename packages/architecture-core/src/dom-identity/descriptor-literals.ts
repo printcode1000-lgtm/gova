@@ -8,6 +8,16 @@ export interface DescriptorLiteralField {
   readonly node: ts.Expression;
 }
 
+export interface StaticInteractionMetadata {
+  readonly type: string;
+  readonly valueContract: string | null;
+}
+
+export interface StaticSimulationMetadata {
+  readonly kind: string;
+  readonly id: string;
+}
+
 export interface DescriptorLiteral {
   readonly file: string;
   readonly line: number;
@@ -15,21 +25,68 @@ export interface DescriptorLiteral {
   readonly fields: ReadonlyMap<string, DescriptorLiteralField>;
   readonly hasSpread: boolean;
   readonly declarationKind: 'inline' | 'typed-descriptor' | 'descriptor-map';
+  readonly interaction: StaticInteractionMetadata | null;
+  readonly interactionComputed: boolean;
+  readonly simulation: StaticSimulationMetadata | null;
+  readonly simulationComputed: boolean;
 }
 
-function readField(object: ts.ObjectLiteralExpression, name: string): DescriptorLiteralField | null {
+function namedProperty(object: ts.ObjectLiteralExpression, name: string): ts.PropertyAssignment | null {
   const property = object.properties.find((candidate) =>
     ts.isPropertyAssignment(candidate) &&
     ((ts.isIdentifier(candidate.name) && candidate.name.text === name) ||
       (ts.isStringLiteral(candidate.name) && candidate.name.text === name)),
   );
-  if (!property || !ts.isPropertyAssignment(property)) return null;
+  return property && ts.isPropertyAssignment(property) ? property : null;
+}
+
+function readField(object: ts.ObjectLiteralExpression, name: string): DescriptorLiteralField | null {
+  const property = namedProperty(object, name);
+  if (!property) return null;
   const value = property.initializer;
   return {
     literalValue: ts.isStringLiteral(value) ? value.text : null,
     isComputed: !ts.isStringLiteral(value),
     node: value,
   };
+}
+
+function stringProperty(object: ts.ObjectLiteralExpression, name: string): string | null {
+  const property = namedProperty(object, name);
+  return property && ts.isStringLiteral(property.initializer) ? property.initializer.text : null;
+}
+
+function readInteraction(object: ts.ObjectLiteralExpression): {
+  value: StaticInteractionMetadata | null;
+  computed: boolean;
+} {
+  const property = namedProperty(object, 'interaction');
+  if (!property) return { value: null, computed: false };
+  if (!ts.isObjectLiteralExpression(property.initializer)) return { value: null, computed: true };
+  const type = stringProperty(property.initializer, 'type');
+  if (!type) return { value: null, computed: true };
+  const valueContractProperty = namedProperty(property.initializer, 'valueContract');
+  const valueContract = valueContractProperty
+    ? ts.isStringLiteral(valueContractProperty.initializer)
+      ? valueContractProperty.initializer.text
+      : null
+    : null;
+  if (valueContractProperty && valueContract === null) return { value: null, computed: true };
+  return { value: { type, valueContract }, computed: false };
+}
+
+function readSimulation(object: ts.ObjectLiteralExpression): {
+  value: StaticSimulationMetadata | null;
+  computed: boolean;
+} {
+  const property = namedProperty(object, 'simulation');
+  if (!property) return { value: null, computed: false };
+  if (!ts.isObjectLiteralExpression(property.initializer)) return { value: null, computed: true };
+  const kind = stringProperty(property.initializer, 'kind');
+  const id = stringProperty(property.initializer, 'id');
+  return kind && id
+    ? { value: { kind, id }, computed: false }
+    : { value: null, computed: true };
 }
 
 const DESCRIPTOR_FIELD_NAMES = ['uid', 'id', 'kind', 'action', 'part', 'state', 'instance'] as const;
@@ -45,6 +102,8 @@ function readDescriptorLiteral(
     const field = readField(object, name);
     if (field) fields.set(name, field);
   }
+  const interaction = readInteraction(object);
+  const simulation = readSimulation(object);
   return {
     file,
     line: sourceFile.getLineAndCharacterOfPosition(object.getStart()).line + 1,
@@ -52,6 +111,10 @@ function readDescriptorLiteral(
     fields,
     hasSpread: object.properties.some((property) => ts.isSpreadAssignment(property)),
     declarationKind,
+    interaction: interaction.value,
+    interactionComputed: interaction.computed,
+    simulation: simulation.value,
+    simulationComputed: simulation.computed,
   };
 }
 
@@ -85,18 +148,10 @@ function satisfiesType(expression: ts.Expression): ts.TypeNode | null {
 }
 
 /**
- * Every source object that owns UiRegistry descriptor metadata.
- *
- * Supported ownership shapes are deliberately explicit:
- * - inline `uiAttributes({ ... })`
- * - inline `ui={{ ... }}`
- * - object property `ui: { ... }`
- * - `const X: UiDescriptor = { ... }`
- * - `const X = { ... } satisfies UiDescriptor`
- * - typed/satisfies `Record<..., UiDescriptor>` maps whose members are descriptors
- *
- * A no-substitution template literal is intentionally *not* a canonical UID
- * literal: only a normal quoted StringLiteral is accepted by `readField`.
+ * Every source object that owns UiRegistry descriptor metadata. Only ordinary
+ * quoted strings count as canonical literals; template literals, identifiers,
+ * concatenations and other expressions remain computed and fail closed in the
+ * architecture guard.
  */
 export function findDescriptorLiterals(
   file: string,
@@ -130,13 +185,10 @@ export function findDescriptorLiterals(
       const name = node.expression.text;
       if (name === 'uiAttributes' || name === 'uiPageAttributes') record(node.arguments[0], 'inline');
     }
-
     if (ts.isJsxAttribute(node) && node.name.getText() === 'ui' && node.initializer && ts.isJsxExpression(node.initializer)) {
       record(node.initializer.expression, 'inline');
     }
-
     if (ts.isPropertyAssignment(node) && node.name.getText() === 'ui') record(node.initializer, 'inline');
-
     if (ts.isVariableDeclaration(node) && node.initializer) {
       const satisfies = satisfiesType(node.initializer);
       const directDescriptor = typeTextIsUiDescriptor(node.type) || typeTextIsUiDescriptor(satisfies ?? undefined);
@@ -144,7 +196,6 @@ export function findDescriptorLiterals(
       if (directDescriptor) record(node.initializer, 'typed-descriptor');
       if (descriptorMap) recordDescriptorMap(node.initializer);
     }
-
     ts.forEachChild(node, visit);
   }
   visit(sourceFile);
