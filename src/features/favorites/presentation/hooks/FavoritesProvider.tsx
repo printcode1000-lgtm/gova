@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { useSession } from "@/features/auth/ui";
+import { followApiService } from "@/features/follow";
 
 import {
   favoriteKey,
@@ -30,6 +31,11 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const collectionRef = React.useRef(collection);
   const scopeRef = React.useRef(favoriteStorage.guestScope);
   const writeQueueRef = React.useRef(Promise.resolve());
+  const sessionUidRef = React.useRef(session?.uid);
+
+  React.useEffect(() => {
+    sessionUidRef.current = session?.uid;
+  }, [session?.uid]);
 
   const publish = React.useCallback((next: FavoriteCollection) => {
     collectionRef.current = next;
@@ -80,6 +86,27 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     await writeQueueRef.current;
   }, []);
 
+  const syncSellerFollow = React.useCallback(
+    (input: FavoriteItemInput, isRemoving: boolean) => {
+      if (input.type !== "seller") return;
+      const viewerUid = sessionUidRef.current;
+      if (!viewerUid || viewerUid === input.ownerUid) return;
+      const mutation = {
+        viewerUid,
+        targetType: "store" as const,
+        targetId: input.targetId,
+        targetOwnerUid: input.ownerUid,
+      };
+      const request = isRemoving
+        ? followApiService.unfollow(mutation)
+        : followApiService.follow(mutation);
+      void request.catch((error) => {
+        reportPreAuthFailure("sync-favorite-follow", error, {}, "warn");
+      });
+    },
+    [],
+  );
+
   const toggleFavorite = React.useCallback(
     async (input: FavoriteItemInput) => {
       const key = favoriteKey(input.type, input.targetId);
@@ -94,6 +121,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           ? { message: "تمت الإزالة من المفضلة", removed: existing }
           : { message: "تمت الإضافة إلى المفضلة" },
       );
+      syncSellerFollow(input, Boolean(existing));
       try {
         await persist(next);
       } catch (error) {
@@ -102,7 +130,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         setNotice({ message: "تعذر حفظ التغيير محليًا" });
       }
     },
-    [persist, publish],
+    [persist, publish, syncSellerFollow],
   );
 
   const removeByTarget = React.useCallback(
@@ -132,6 +160,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     const next = restoreFavorite(previous, removed);
     publish(next);
     setNotice({ message: "تمت استعادة العنصر" });
+    syncSellerFollow(removed, false);
     try {
       await persist(next);
     } catch (error) {
@@ -139,7 +168,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       publish(previous);
       setNotice({ message: "تعذر استعادة العنصر" });
     }
-  }, [notice?.removed, persist, publish]);
+  }, [notice?.removed, persist, publish, syncSellerFollow]);
 
   const value = React.useMemo<FavoritesContextValue>(() => {
     const productCount = collection.items.filter((item) => item.type === "product").length;

@@ -43,7 +43,7 @@ Guests write to the guest collection. Signed-in accounts write to a collection n
 - `product`
 - `seller`
 
-Favorites are deliberately separate from the Follow System. A seller favorite is private: it does not change follower counts and does not subscribe the user to future notifications.
+Adding a seller favorite for a signed-in user also creates a Follow System record for that store (increasing the seller's public follower count and enabling follower broadcasts to that user). Removing a seller favorite removes the follow record. This sync is best-effort, fire-and-forget, and never blocks or fails the local favorite toggle. It only fires going forward — it does not run for favorites saved before this behavior existed, and it never runs for guests (the Follow System requires a signed-in `viewerUid`) or when the viewer favorites their own store. Product favorites are unaffected; they have no relationship to the Follow System.
 
 ## UI Rules
 
