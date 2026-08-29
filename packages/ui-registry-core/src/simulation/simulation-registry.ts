@@ -1,4 +1,5 @@
 import type { UiInteractionType } from "../domain/ui-interaction";
+import type { UiInstanceId } from "../domain/ui-instance";
 import { UI_SIMULATION_REGISTRY } from "./generated/ui-simulation-registry";
 import type { UiSimulationTargetRecord } from "./simulation-registry.types";
 import { checkUiValue } from "./value-contracts";
@@ -58,23 +59,16 @@ export interface UiSimulationStepRequest {
   readonly value?: string;
   /** Registered route the step runs on, when the caller knows it. */
   readonly route?: string;
-  /**
-   * Which runtime-rendered copy of `targetUid` this step addresses, when the
-   * target is `repeated`. Optional: a non-repeated target never needs one,
-   * and a repeated target without one keeps the existing "resolves to the
-   * first match" collection semantics — this narrows to one instance, it
-   * never becomes a second identity.
-   */
-  readonly instance?: string;
+  /** One concrete runtime-rendered copy of a repeated source UID. */
+  readonly instance?: UiInstanceId;
+  /** Explicitly opt into the first rendered copy of a repeated source UID. */
+  readonly selection?: "first";
 }
 
 /**
  * Decides whether a scenario step may run, before anything touches the DOM.
- *
- * The uid must be registered, the page must be able to render it, the
- * requested interaction must be the registered one, and any value must satisfy
- * the declared contract. A step that fails here never reaches the adapter, so a
- * stale scenario is reported as a contract error instead of a missing element.
+ * Repeated targets must be addressed by a concrete instance or by an explicit
+ * `selection: "first"`; an omitted instance never silently means first match.
  */
 export function checkUiSimulationStep(request: UiSimulationStepRequest): UiSimulationStepCheck {
   const target = uiSimulationTarget(request.targetUid);
@@ -87,10 +81,28 @@ export function checkUiSimulationStep(request: UiSimulationStepRequest): UiSimul
       reason: `uid "${request.targetUid}" is not rendered by route ${request.route} (registered routes: ${target.routes.join(", ") || "none"})`,
     };
   }
+  if (request.instance !== undefined && request.selection !== undefined) {
+    return {
+      ok: false,
+      reason: `uid "${request.targetUid}" cannot request both a concrete instance and first-match selection`,
+    };
+  }
   if (request.instance !== undefined && !target.repeated) {
     return {
       ok: false,
       reason: `uid "${request.targetUid}" renders once; it never needs an instance to disambiguate it`,
+    };
+  }
+  if (request.selection !== undefined && !target.repeated) {
+    return {
+      ok: false,
+      reason: `uid "${request.targetUid}" renders once; first-match selection is only valid for repeated targets`,
+    };
+  }
+  if (target.repeated && request.instance === undefined && request.selection !== "first") {
+    return {
+      ok: false,
+      reason: `uid "${request.targetUid}" is repeated; provide a concrete instance or explicit selection "first"`,
     };
   }
   if (request.interaction !== target.interaction.type) {
@@ -112,11 +124,9 @@ function cssAttributeValue(value: string): string {
 }
 
 /**
- * The one selector a simulation adapter may build: `targetUid` and nothing
- * else, unless `instance` is given — which never changes what the uid means,
- * it only narrows the *same* source usage site down to one runtime-rendered
- * copy of it, exactly like `data-ui-instance` narrows `data-ui-uid` in the
- * DOM. Both values are escaped the same, safe way.
+ * Builds the only selector a simulation adapter may use. `instance` narrows a
+ * canonical source UID to one runtime copy; explicit first-match selection is
+ * intentionally not encoded in CSS and is enforced by the adapter contract.
  */
 export function uiSimulationSelector(uid: string, instance?: string): string {
   const base = `[data-ui-uid="${cssAttributeValue(uid)}"]`;
