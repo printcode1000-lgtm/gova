@@ -5,11 +5,8 @@ import { createProductCardViewModel } from "@/features/product-card";
 import { createSellerCardViewModel } from "@/features/seller-card";
 import type { ProductSearchMode } from "@/features/product-search";
 import type { UserProfileRow } from "@/features/profile";
-import type { UiDescriptor } from "@asol/ui-registry-core";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
-
-const SEARCH_RESULT_UI: UiDescriptor = { uid: "search-result-PE6WW4", id: "search-result", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "search-result" } };
 export function ProductSearchResults({
   activeMode,
   isCompact,
@@ -35,7 +32,14 @@ export function ProductSearchResults({
               key={product.id}
               card={card}
               variant="search"
-              ui={SEARCH_RESULT_UI}
+              ui={{
+                uid: "search-result-PE6WW4",
+                id: "search-result",
+                kind: "item",
+                interaction: { type: "tap" },
+                simulation: { kind: "list-item", id: "search-result" },
+                instance: createOpaqueUiInstanceId("product", product.id),
+              }}
               onOpen={() => onOpen(card.href)}
             />
           );
@@ -53,7 +57,14 @@ export function ProductSearchResults({
             key={seller.uid}
             card={card}
             variant="search"
-            ui={SEARCH_RESULT_UI}
+            ui={{
+              uid: "search-seller-result-S3lL9r",
+              id: "search-seller-result",
+              kind: "item",
+              interaction: { type: "tap" },
+              simulation: { kind: "list-item", id: "search-seller-result" },
+              instance: createOpaqueUiInstanceId("seller", seller.uid),
+            }}
             onOpen={() => onOpen(card.href)}
           />
         );
