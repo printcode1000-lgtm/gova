@@ -100,6 +100,26 @@ export function createUiPositionInstanceId(scope: string, zeroBasedPosition: num
   return createUiInstanceId(`${safeScope}-${zeroBasedPosition + 1}`);
 }
 
+/**
+ * Runtime scope for a fixed project-authored subpart inside a reusable
+ * component. The caller's source UID is always included, so two distinct
+ * caller usage sites cannot collide even when neither caller needs its own
+ * runtime instance. When the caller itself repeats, its branded instance is
+ * included too. The resulting token is opaque and never exposes those inputs.
+ */
+export function createUiSubpartInstanceId(
+  ownerUid: string,
+  ownerInstance: UiInstanceId | undefined,
+  subpart: string,
+): UiInstanceId {
+  const safeSubpart = createUiInstanceId(subpart);
+  if (ownerUid.length === 0) throw new Error("UI subpart instance requires an owner uid.");
+  return createOpaqueUiInstanceId(
+    "subpart",
+    `${ownerUid}|${ownerInstance ?? "single"}|${safeSubpart}`,
+  );
+}
+
 function uiInstanceIdRejectionMessage(reason: UiInstanceIdRejectionReason): string {
   switch (reason) {
     case "empty": return "UI instance id must not be empty.";
