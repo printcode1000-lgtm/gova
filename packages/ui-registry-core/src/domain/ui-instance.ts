@@ -1,46 +1,22 @@
-/**
- * The DOM attribute that distinguishes one runtime-rendered instance of a
- * source usage site from another.
- *
- * A `ui.uid` addresses *where in source* an element is registered. When one
- * usage site renders more than once at runtime — a `.map()` row, a repeated
- * card — every instance intentionally shares that same source uid. A
- * `data-ui-instance` value answers the other question, "which rendered copy
- * is this one", without ever becoming a second identity: it is optional,
- * carried alongside `data-ui-uid`, and never changes what the uid means.
- */
+/** The DOM attribute that distinguishes one runtime copy of a source UID. */
 export const UI_INSTANCE_ATTRIBUTE = "data-ui-instance";
 
-/**
- * A runtime instance identifier, scoped to one source `ui.uid`.
- *
- * Branded, not a plain `string`: a token shape alone (see the old regex this
- * type replaces) cannot prove a value is PII-free — `"5551234567"` is a
- * syntactically fine token *and* a phone number. The brand means the only
- * way to produce a `UiInstanceId` is {@link createUiInstanceId}, which runs
- * the actual content checks below; a caller can never smuggle a raw string
- * into `UiDescriptor.instance` by casting past the type checker in normal
- * code, and every reviewer sees the same one call site shape.
- */
-export type UiInstanceId = string & { readonly __uiInstanceId: unique symbol };
+declare const UI_INSTANCE_ID_BRAND: unique symbol;
+export type UiInstanceId = string & { readonly [UI_INSTANCE_ID_BRAND]: true };
 
 export interface CreateUiInstanceIdOptions {
   /**
-   * Explicit, reviewed acknowledgement that this value is a UUID or database
-   * id the product already treats as public UI-safe (shown in a URL, an
-   * order-confirmation screen, etc). Without it, a bare UUID/ULID shape is
-   * rejected — most database ids are not meant to be public tokens, and the
-   * caller must make that call visibly rather than by accident.
+   * A reviewed UUID/database identifier may be used as source material, but
+   * the raw value is never emitted. It is deterministically reduced to an
+   * opaque UI token before branding.
    */
   readonly allowUuid?: boolean;
 }
 
 const TOKEN_SHAPE = /^[A-Za-z0-9](?:[A-Za-z0-9._-]{0,62}[A-Za-z0-9])?$/;
 const UUID_SHAPE = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-/** E.164-ish: optional leading "+", 7–15 digits, nothing else — a phone number shape. */
 const PHONE_LIKE = /^\+?[0-9]{7,15}$/;
 const URL_LIKE = /^[a-z][a-z0-9+.-]*:\/\//i;
-/** Common secret/token prefixes and the three-segment JWT shape. */
 const SECRET_LIKE = /^(?:sk_|pk_|ghp_|gho_|Bearer\s|eyJ)/;
 const JWT_LIKE = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
 
@@ -54,12 +30,6 @@ export type UiInstanceIdRejectionReason =
   | "secret-or-token"
   | "uuid";
 
-/** Structural check only — proves a shape, not safety. Prefer {@link createUiInstanceId}. */
-export function isUiInstanceId(value: unknown): value is UiInstanceId {
-  return typeof value === "string" && TOKEN_SHAPE.test(value);
-}
-
-/** Returns why `value` would be rejected, or `null` if it is safe. */
 export function uiInstanceIdRejectionReason(
   value: string,
   options: CreateUiInstanceIdOptions = {},
@@ -69,57 +39,61 @@ export function uiInstanceIdRejectionReason(
   if (value.includes("@")) return "email";
   if (URL_LIKE.test(value)) return "url";
   if (SECRET_LIKE.test(value) || JWT_LIKE.test(value)) return "secret-or-token";
-  if (!options.allowUuid && UUID_SHAPE.test(value)) return "uuid";
+  if (UUID_SHAPE.test(value)) return options.allowUuid ? null : "uuid";
   if (PHONE_LIKE.test(value)) return "phone-number";
   if (!TOKEN_SHAPE.test(value)) return "invalid-shape";
   return null;
 }
 
-/**
- * The single creation API for a runtime instance identifier.
- *
- * Callers pass a stable, already-public domain value (an order-list row id,
- * a SKU, a return-policy key) or a value they have already derived into a
- * safe opaque form. This rejects the shapes that are never safe to carry
- * through an instance id outright — an email, a phone number, a resolved
- * URL, a token/secret shape, or (unless explicitly acknowledged) a bare
- * UUID — rather than merely checking that the value is short and
- * alphanumeric, which a real phone number also is.
- */
-export function createUiInstanceId(value: string, options: CreateUiInstanceIdOptions = {}): UiInstanceId {
-  const reason = uiInstanceIdRejectionReason(value, options);
-  if (reason !== null) {
-    throw new Error(uiInstanceIdRejectionMessage(reason));
+/** Small deterministic FNV-1a reducer; this is identity obfuscation, not security. */
+function opaqueUuidToken(value: string): string {
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
   }
-  return value as UiInstanceId;
+  return `uuid-${hash.toString(36)}`;
+}
+
+/**
+ * The only public constructor for a branded runtime instance id.
+ * Unsafe content is rejected. An explicitly reviewed UUID is converted to an
+ * opaque stable token so the raw database identifier never reaches the DOM.
+ */
+export function createUiInstanceId(
+  value: string,
+  options: CreateUiInstanceIdOptions = {},
+): UiInstanceId {
+  const reason = uiInstanceIdRejectionReason(value, options);
+  if (reason !== null) throw new Error(uiInstanceIdRejectionMessage(reason));
+  const safeValue = UUID_SHAPE.test(value) && options.allowUuid ? opaqueUuidToken(value) : value;
+  const safeReason = uiInstanceIdRejectionReason(safeValue);
+  if (safeReason !== null) throw new Error(uiInstanceIdRejectionMessage(safeReason));
+  return safeValue as UiInstanceId;
+}
+
+/**
+ * Full default-policy guard. This never brands a value that the public
+ * constructor would reject; it is intentionally not a mere token-shape test.
+ */
+export function isUiInstanceId(value: unknown): value is UiInstanceId {
+  return typeof value === "string" && uiInstanceIdRejectionReason(value) === null;
 }
 
 function uiInstanceIdRejectionMessage(reason: UiInstanceIdRejectionReason): string {
   switch (reason) {
-    case "empty":
-      return "UI instance id must not be empty.";
-    case "too-long":
-      return "UI instance id must be at most 64 characters — a whole free-text value does not belong here.";
-    case "invalid-shape":
-      return 'UI instance id must be a short token: letters, digits, ".", "-", "_" only.';
-    case "email":
-      return "UI instance id must not be an email address.";
-    case "phone-number":
-      return "UI instance id must not be a phone number.";
-    case "url":
-      return "UI instance id must not be a resolved URL.";
-    case "secret-or-token":
-      return "UI instance id must not be a token or secret.";
-    case "uuid":
-      return (
-        "UI instance id looks like a raw UUID/database id. If this value is genuinely " +
-        "public UI-safe, pass { allowUuid: true } to createUiInstanceId to acknowledge that " +
-        "explicitly; otherwise derive a safe representation instead of the raw id."
-      );
+    case "empty": return "UI instance id must not be empty.";
+    case "too-long": return "UI instance id must be at most 64 characters.";
+    case "invalid-shape": return 'UI instance id must be a short token: letters, digits, ".", "-", "_" only.';
+    case "email": return "UI instance id must not be an email address.";
+    case "phone-number": return "UI instance id must not be a phone number.";
+    case "url": return "UI instance id must not be a resolved URL.";
+    case "secret-or-token": return "UI instance id must not be a token or secret.";
+    case "uuid": return "UI instance id must not expose a raw UUID/database id; pass { allowUuid: true } to derive a safe opaque token.";
   }
 }
 
-/** @deprecated Use {@link createUiInstanceId}, which actually validates content, not just shape. */
+/** @deprecated Use createUiInstanceId. */
 export function assertUiInstanceId(value: string, label = "UI instance id"): UiInstanceId {
   try {
     return createUiInstanceId(value);
