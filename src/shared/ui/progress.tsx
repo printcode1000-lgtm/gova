@@ -22,7 +22,11 @@ const Progress = React.forwardRef<
     {...uiPrimitiveAttributes('progress', ui)}
   >
     <ProgressPrimitive.Indicator
-      {...uiAttributes({ uid: 'shared.ui.progress.indicator-H9wZ4b', id: 'shared.ui.progress.indicator' })}
+      {...uiAttributes({
+        uid: 'shared.ui.progress.indicator-H9wZ4b',
+        id: 'shared.ui.progress.indicator',
+        instance: ui?.instance,
+      })}
       className="h-full w-full flex-1 bg-primary transition-all"
       style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
     />
