@@ -2,8 +2,9 @@
 
 import * as React from "react";
 
-import type { DialogState, StorageImageAspectRatio } from "./storage-image-manager.types";
+import type { UiDescriptor } from "@asol/ui-registry-core";
 import { uiAttributes } from "@asol/ui-registry-core";
+import type { DialogState, StorageImageAspectRatio } from "./storage-image-manager.types";
 
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -37,16 +38,19 @@ export function InlineLoadingSpinner({
 }
 
 export function ManagerButton({
+  ui,
   variant = "primary",
   className,
   children,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  ui: UiDescriptor;
   variant?: "primary" | "secondary" | "icon";
 }) {
   return (
     <button
       {...props}
+      {...uiAttributes(ui)}
       className={cn(
         "inline-flex items-center justify-center rounded-lg text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50",
         variant === "primary" && "bg-primary px-4 py-2 text-primary-foreground",
