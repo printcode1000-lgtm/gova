@@ -194,6 +194,128 @@ function definingFileForExport(
   return null;
 }
 
+export interface LocalBindingTarget {
+  readonly file: string;
+  readonly symbol: string | null;
+  readonly thirdParty: boolean;
+}
+
+function directLocalExportName(
+  sourceFile: ts.SourceFile,
+  exportName: string,
+): string | null {
+  for (const statement of sourceFile.statements) {
+    if (ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement)) {
+      if (exportName === 'default' && isExported(statement) && hasDefaultModifier(statement)) {
+        return statement.name?.text ?? 'default';
+      }
+      if (statement.name?.text === exportName && isExported(statement)) return exportName;
+    }
+    if (ts.isVariableStatement(statement) && isExported(statement)) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (ts.isIdentifier(declaration.name) && declaration.name.text === exportName) return exportName;
+      }
+    }
+    if (ts.isExportAssignment(statement) && exportName === 'default') {
+      return ts.isIdentifier(statement.expression) ? statement.expression.text : 'default';
+    }
+    if (ts.isExportDeclaration(statement) && !statement.moduleSpecifier && statement.exportClause && ts.isNamedExports(statement.exportClause)) {
+      for (const element of statement.exportClause.elements) {
+        if (element.name.text === exportName) return (element.propertyName ?? element.name).text;
+      }
+    }
+  }
+  return null;
+}
+
+function definingTargetForExport(
+  modulePath: string,
+  exportName: string,
+  sources: ReadonlyMap<string, string>,
+  seen: Set<string> = new Set(),
+): { file: string; symbol: string } | null {
+  const key = `${modulePath}#${exportName}`;
+  if (seen.has(key)) return null;
+  seen.add(key);
+  const source = sources.get(modulePath);
+  if (!source) return null;
+  const sourceFile = parseTsx(modulePath, source);
+  const direct = directLocalExportName(sourceFile, exportName);
+  if (direct !== null) return { file: modulePath, symbol: direct };
+
+  const files = new Set(sources.keys());
+  for (const statement of sourceFile.statements) {
+    if (!ts.isExportDeclaration(statement) || !statement.moduleSpecifier || !ts.isStringLiteral(statement.moduleSpecifier)) continue;
+    const next = resolveProjectModule(modulePath, statement.moduleSpecifier.text, files);
+    if (!next) continue;
+    if (!statement.exportClause) {
+      const target = definingTargetForExport(next, exportName, sources, seen);
+      if (target) return target;
+      continue;
+    }
+    if (!ts.isNamedExports(statement.exportClause)) continue;
+    for (const element of statement.exportClause.elements) {
+      if (element.name.text !== exportName) continue;
+      const targetName = (element.propertyName ?? element.name).text;
+      const target = definingTargetForExport(next, targetName, sources, seen);
+      if (target) return target;
+    }
+  }
+  return null;
+}
+
+/**
+ * Like `localBindings`, but preserves the final defining symbol as well as its
+ * file. This is used by multiplicity analysis so one repeated export does not
+ * incorrectly mark every component in the same module as repeated.
+ */
+export function localBindingTargets(
+  sourceFile: ts.SourceFile,
+  fromFile: string,
+  sources: ReadonlyMap<string, string>,
+): Map<string, LocalBindingTarget> {
+  const files = new Set(sources.keys());
+  const bindings = new Map<string, LocalBindingTarget>();
+  for (const statement of sourceFile.statements) {
+    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier) || !statement.importClause) continue;
+    const specifier = statement.moduleSpecifier.text;
+    const modulePath = resolveProjectModule(fromFile, specifier, files);
+    if (!modulePath) {
+      const target = { file: `third-party:${specifier}`, symbol: null, thirdParty: true } as const;
+      if (statement.importClause.name) bindings.set(statement.importClause.name.text, target);
+      const named = statement.importClause.namedBindings;
+      if (named && ts.isNamedImports(named)) for (const element of named.elements) bindings.set(element.name.text, target);
+      if (named && ts.isNamespaceImport(named)) bindings.set(named.name.text, target);
+      continue;
+    }
+
+    if (statement.importClause.name) {
+      const target = definingTargetForExport(modulePath, 'default', sources);
+      bindings.set(statement.importClause.name.text, {
+        file: target?.file ?? definingFileForExport(modulePath, 'default', sources) ?? modulePath,
+        symbol: target?.symbol ?? null,
+        thirdParty: false,
+      });
+    }
+    const named = statement.importClause.namedBindings;
+    if (named && ts.isNamedImports(named)) {
+      for (const element of named.elements) {
+        const exportName = (element.propertyName ?? element.name).text;
+        const target = definingTargetForExport(modulePath, exportName, sources);
+        bindings.set(element.name.text, {
+          file: target?.file ?? definingFileForExport(modulePath, exportName, sources) ?? modulePath,
+          symbol: target?.symbol ?? exportName,
+          thirdParty: false,
+        });
+      }
+    }
+    if (named && ts.isNamespaceImport(named)) {
+      bindings.set(named.name.text, { file: modulePath, symbol: null, thirdParty: false });
+    }
+  }
+  return bindings;
+}
+
 /**
  * Maps every local JSX/value identifier bound by an import in `fromFile` to
  * the project-relative file that actually defines it — following barrels and
