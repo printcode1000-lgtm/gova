@@ -1,0 +1,46 @@
+name: ui-identity-one-shot
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/ui-identity-one-shot.yml
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Use repository npm version
+        run: npm install --global npm@11.19.0
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Regenerate canonical UiRegistry artifacts
+        run: |
+          npm run ui-registry:generated-catalog:generate
+          npm run ui-registry:component-bridge:generate
+          npm run ui-registry:simulation:generate
+      - name: Commit generated artifacts
+        run: |
+          git add packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts
+          git add packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts
+          git add packages/ui-registry-core/src/simulation/generated/ui-simulation-registry.ts
+          if git diff --cached --quiet; then
+            echo "Generated artifacts already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Regenerate canonical UiRegistry artifacts"
+          git push origin HEAD:main
