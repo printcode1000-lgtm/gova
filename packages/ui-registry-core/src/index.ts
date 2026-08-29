@@ -70,5 +70,4 @@ export type {
 export { isUiRegistryPendingOpen } from "./pending/pending-request";
 export type { UiRegistryPendingValidation } from "./pending/pending-request-validation";
 export { validateUiRegistryPendingRequest } from "./pending/pending-request-validation";
-export type { UiRegistrySourceMatch } from "./pending/source-locator-match";
-export { componentsForLocator, findUiRegistrySourceMatches, renderUiDescriptorProp } from "./pending/source-locator-match";
+export { componentsForLocator, renderUiDescriptorProp } from "./pending/source-locator-match";
