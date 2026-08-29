@@ -121,6 +121,13 @@ body {
 }
 
 .asol-shell-main {
+  /* `--asol-header-install-height` is set by the shell element, not by `:root`,
+     so the height must be recomputed here: resolving it at `:root` always reads
+     the 0px default and leaves the install row covering the page. */
+  --asol-app-header-height: calc(
+    var(--asol-header-bar-height) + var(--asol-header-install-height) +
+      var(--asol-app-header-inset)
+  );
   padding-top: calc(
     var(--asol-app-header-height) + var(--asol-shell-main-gap)
   );
