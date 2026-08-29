@@ -3,7 +3,8 @@ import { dirname, join } from 'node:path';
 import ts from 'typescript';
 
 export function parseTsx(fileName: string, source: string): ts.SourceFile {
-  return ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const scriptKind = fileName.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+  return ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, scriptKind);
 }
 
 /** True for a JSX intrinsic — any tag whose name starts lowercase. React/JSX
