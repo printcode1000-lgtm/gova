@@ -84,6 +84,11 @@
   color: var(--color-on-surface);
 }
 
+.asol-section-tonal-primary-soft {
+  background-color: color-mix(in srgb, var(--color-primary-container) 22%, var(--color-surface-container-low));
+  color: var(--color-on-surface);
+}
+
 .asol-section-tonal-secondary {
   background-color: color-mix(in srgb, var(--color-secondary-container) 50%, var(--color-surface-container-low));
   color: var(--color-on-surface);

@@ -97,7 +97,7 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
         </section>
       ) : null}
 
-      <div id="home.home-screen.div.3" className="asol-section-tonal asol-section-tonal-primary mx-2 sm:mx-4">
+      <div id="home.home-screen.div.3" className="asol-section-tonal asol-section-tonal-primary-soft mx-2 sm:mx-4">
         <CategoriesGrid displayCategories={displayCategories} />
       </div>
 
