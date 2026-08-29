@@ -1,10 +1,5 @@
 /**
  * `@asol/architecture-core` — the architecture contract and the scan that enforces it.
- *
- * The rules are data (`contracts/` + `registry/`), the enforcement is code (`checks/`), and both
- * now live in one sealed package instead of straddling `src/` and `scripts/`.
- * `scripts/architecture-check.ts` is the CLI: it supplies the two preflight validations that need
- * the application itself, and exits with whatever this returns.
  */
 export * from './contracts/contract';
 export * from './contracts/image-storage-contract';
@@ -68,7 +63,6 @@ export { checkRepositorySweepContract } from './checks/repository-sweep-contract
 export type { ArchitectureCheckOptions } from './runner';
 export { runArchitectureCheck } from './runner';
 
-// ── DOM identity: the canonical AST analyzer for `ui.uid` coverage ─────────
 export {
   buildDomIdentityInventory,
   loadProjectTsx,
@@ -78,6 +72,7 @@ export {
   type DomIdentityInventory,
   type DomUsageSite,
   type DomUsageOwnership,
+  type UiRegistrationKind,
   type DescriptorLiteral,
   type DescriptorLiteralField,
 } from './dom-identity/analyzer';
@@ -85,3 +80,4 @@ export { planUidMigration, applyUidMigration, type UidMigrationEdit, type UidMig
 export { fileSemanticPrefix, mintSemanticId, mintUid } from './dom-identity/mint';
 export { hostMultiplicity, type HostMultiplicity } from './dom-identity/repetition';
 export { collectUidCatalog, type UidCatalogEntry } from './dom-identity/uid-catalog';
+export { findPendingAstSourceMatches, type PendingAstSourceMatch } from './dom-identity/pending-source-match';
