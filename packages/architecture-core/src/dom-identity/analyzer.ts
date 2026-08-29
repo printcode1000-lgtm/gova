@@ -57,22 +57,29 @@ export interface DomIdentityInventory {
   readonly genericPrimitiveRootPositions: ReadonlyMap<string, ReadonlySet<number>>;
 }
 
-function listTsxFiles(directory: string): string[] {
+function listProjectSourceFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
     const full = join(directory, entry);
     if (statSync(full).isDirectory()) {
-      return entry === 'node_modules' || entry === 'tests' || entry === '__tests__' || entry === 'generated' ? [] : listTsxFiles(full);
+      return entry === 'node_modules' || entry === 'tests' || entry === '__tests__' || entry === 'generated'
+        ? []
+        : listProjectSourceFiles(full);
     }
-    if (entry.endsWith('.test.ts') || entry.endsWith('.test.tsx')) return [];
-    return entry.endsWith('.tsx') ? [full] : [];
+    if (entry.endsWith('.test.ts') || entry.endsWith('.test.tsx') || entry.endsWith('.d.ts')) return [];
+    return entry.endsWith('.tsx') || entry.endsWith('.ts') ? [full] : [];
   });
 }
 
+/**
+ * Loads both TSX owners and TS barrel/re-export files. The historical name is
+ * kept for API compatibility; consumers must treat the returned map as the
+ * complete project TypeScript source graph, not as a TSX-only collection.
+ */
 export function loadProjectTsx(root: string): Map<string, string> {
   const sources = new Map<string, string>();
   for (const rootDir of [join(root, 'src'), join(root, 'packages')]) {
     if (!statSync(rootDir, { throwIfNoEntry: false })?.isDirectory()) continue;
-    for (const full of listTsxFiles(rootDir)) {
+    for (const full of listProjectSourceFiles(rootDir)) {
       const relativePath = relative(root, full).replace(/\\/g, '/');
       sources.set(relativePath, readFileSync(full, 'utf8'));
     }
