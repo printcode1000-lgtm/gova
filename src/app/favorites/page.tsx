@@ -16,19 +16,12 @@ import {
 } from "@/features/favorites";
 import { useTranslation } from "@/shared/i18n";
 import { cn } from "@/shared/utils";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
-
-const FAVORITES_OPEN_UI: UiDescriptor = { uid: "favorites-open-g10UQZ", id: "favorites-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "favorites-open" } };
 export default function FavoritesPage() {
   const router = useRouter();
   const { isRTL } = useTranslation();
-  const {
-    items,
-    isLoading,
-    productCount,
-    sellerCount,
-  } = useFavorites();
+  const { items, isLoading, productCount, sellerCount } = useFavorites();
   const [activeTab, setActiveTab] = React.useState<FavoriteTargetType>("product");
   const visibleItems = items.filter((item) => item.type === activeTab);
 
@@ -72,38 +65,30 @@ export default function FavoritesPage() {
           onClick={() => setActiveTab("product")}
           className={cn(
             "flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition",
-            activeTab === "product"
-              ? "bg-surface text-primary shadow-sm"
-              : "text-on-surface-variant",
+            activeTab === "product" ? "bg-surface text-primary shadow-sm" : "text-on-surface-variant",
           )}
         >
           <Package id="favorites.page.package" className="h-4 w-4" />
           {labels.products}
-          <span {...uiAttributes({ uid: "favorites.page.span.3-BY65Kv", id: "favorites.page.span.3" })} id="favorites.page.span" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
-            {productCount}
-          </span>
+          <span {...uiAttributes({ uid: "favorites.page.span.3-BY65Kv", id: "favorites.page.span.3" })} id="favorites.page.span" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{productCount}</span>
         </button>
         <button {...uiAttributes({ uid: "favorites-sellers-VcECw3", id: "favorites-sellers", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "favorites-sellers" } })}
           type="button"
           onClick={() => setActiveTab("seller")}
           className={cn(
             "flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition",
-            activeTab === "seller"
-              ? "bg-surface text-primary shadow-sm"
-              : "text-on-surface-variant",
+            activeTab === "seller" ? "bg-surface text-primary shadow-sm" : "text-on-surface-variant",
           )}
         >
           <Store id="favorites.page.store" className="h-4 w-4" />
           {labels.sellers}
-          <span {...uiAttributes({ uid: "favorites.page.span.4-xMPtM3", id: "favorites.page.span.4" })} id="favorites.page.span.2" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
-            {sellerCount}
-          </span>
+          <span {...uiAttributes({ uid: "favorites.page.span.4-xMPtM3", id: "favorites.page.span.4" })} id="favorites.page.span.2" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{sellerCount}</span>
         </button>
       </div>
 
       {isLoading ? (
         <div {...uiAttributes({ uid: "favorites.page.div.14-mSi2QG", id: "favorites.page.div.14" })} id="favorites.page.div.6" className="flex min-h-48 items-center justify-center">
-          <LoadingSpinner id="favorites.page.loading-spinner" size="sm" />
+          <LoadingSpinner ui={{ uid: "favorites.loading-spinner-L5oP2r", id: "favorites.loading-spinner" }} id="favorites.page.loading-spinner" size="sm" />
         </div>
       ) : visibleItems.length === 0 ? (
         <section {...uiAttributes({ uid: "favorites.page.section.2-2Y4yr3", id: "favorites.page.section.2" })} id="favorites.page.section" className="flex min-h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-6 text-center">
@@ -115,10 +100,7 @@ export default function FavoritesPage() {
           <p {...uiAttributes({ uid: "favorites.page.p.4-TqHO2F", id: "favorites.page.p.4" })} id="favorites.page.p.2" className="text-sm font-medium text-on-surface">
             {activeTab === "product" ? labels.emptyProducts : labels.emptySellers}
           </p>
-          <Link id="favorites.page.link"
-            href="/search"
-            className="mt-4 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary no-underline transition active:scale-95"
-          >
+          <Link id="favorites.page.link" href="/search" className="mt-4 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary no-underline transition active:scale-95">
             {labels.browse}
           </Link>
         </section>
@@ -131,7 +113,14 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
-                ui={FAVORITES_OPEN_UI}
+                ui={{
+                  uid: "favorites-open-g10UQZ",
+                  id: "favorites-open",
+                  kind: "item",
+                  interaction: { type: "tap" },
+                  simulation: { kind: "list-item", id: "favorites-open" },
+                  instance: createOpaqueUiInstanceId("favorite-product", item.key),
+                }}
                 onOpen={() => router.push(card.href || "/search")}
               />
             );
@@ -146,7 +135,14 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
-                ui={FAVORITES_OPEN_UI}
+                ui={{
+                  uid: "favorites-seller-open-F4sO8p",
+                  id: "favorites-seller-open",
+                  kind: "item",
+                  interaction: { type: "tap" },
+                  simulation: { kind: "list-item", id: "favorites-seller-open" },
+                  instance: createOpaqueUiInstanceId("favorite-seller", item.key),
+                }}
                 onOpen={() => router.push(card.href || "/search")}
               />
             );
