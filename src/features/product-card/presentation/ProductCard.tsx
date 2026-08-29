@@ -101,7 +101,7 @@ export function ProductCard({ id,
     Boolean(card.id);
 
   return (
-    <article id={id} className={`relative overflow-hidden ${variantClass[variant]} ${className}`}>
+    <article id={id} className={`relative min-w-0 overflow-hidden ${variantClass[variant]} ${className}`}>
       {showFavorite ? (
         <FavoriteButton
           item={favoriteFromProductCard(card)}
@@ -112,7 +112,7 @@ export function ProductCard({ id,
         {...(ui ? uiAttributes(ui) : {})}
         type="button"
         onClick={(event) => onOpen?.(event, card)}
-        className="block w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+        className="block w-full min-w-0 text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
         aria-label={card.title}
       >
         <div
@@ -133,7 +133,7 @@ export function ProductCard({ id,
             <Package className="absolute inset-0 m-auto h-9 w-9 text-on-surface-variant" />
           )}
         </div>
-        <div className={isFeatured ? "space-y-1" : "space-y-1 p-2"}>
+        <div className={isFeatured ? "min-w-0 space-y-1" : "min-w-0 space-y-1 p-2"}>
           {card.categoryLabel && !isFeatured ? (
             <p className="truncate text-[10px] font-medium text-on-surface-variant">
               {card.categoryLabel}
@@ -143,7 +143,7 @@ export function ProductCard({ id,
             className={
               isFeatured
                 ? "truncate text-xs font-semibold text-on-surface"
-                : "line-clamp-2 min-h-[32px] text-xs font-semibold text-on-surface"
+                : "line-clamp-2 min-h-[32px] break-words text-xs font-semibold text-on-surface"
             }
           >
             {card.title}
@@ -153,28 +153,28 @@ export function ProductCard({ id,
               {card.subtitle}
             </p>
           ) : null}
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
             {card.priceText ? (
-              <p className="text-xs font-bold text-primary">{card.priceText}</p>
+              <p className="min-w-0 break-words text-xs font-bold text-primary">{card.priceText}</p>
             ) : null}
             {card.oldPriceText && !isFeatured ? (
-              <p className="text-[10px] text-on-surface-variant line-through">
+              <p className="min-w-0 break-words text-[10px] text-on-surface-variant line-through">
                 {card.oldPriceText}
               </p>
             ) : null}
             {card.ratingText && !isFeatured ? (
-              <span className="inline-flex items-center gap-1 text-[10px] text-tertiary">
+              <span className="inline-flex min-w-0 items-center gap-1 break-words text-[10px] text-tertiary">
                 <Star className="h-3 w-3 fill-current" />
                 {card.ratingText}
               </span>
             ) : null}
           </div>
           {card.badges.length > 0 && !isFeatured ? (
-            <div className="flex flex-wrap gap-1 pt-1">
+            <div className="flex min-w-0 flex-wrap gap-1 pt-1">
               {card.badges.map((badge) => (
                 <span
                   key={badge.label}
-                  className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(
+                  className={`min-w-0 break-words rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(
                     badge.tone,
                   )}`}
                 >

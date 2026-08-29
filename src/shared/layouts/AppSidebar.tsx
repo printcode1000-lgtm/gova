@@ -226,7 +226,7 @@ export const AppSidebar = React.memo(function AppSidebar({
   return (
     <>
       <div id="shared.layouts.app-sidebar.div"
-        className={`fixed inset-0 z-[60] ${isOpen ? "" : "pointer-events-none"}`}
+        className={`fixed inset-0 z-[60] overflow-hidden ${isOpen ? "" : "pointer-events-none"}`}
         aria-hidden={!isOpen}
       >
         <div id="shared.layouts.app-sidebar.div.2"

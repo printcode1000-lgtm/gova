@@ -226,6 +226,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:product-style-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:products-composition` | `Tooling` | 1 |  | 1 |
 | `npm run test:products-module` | `Tooling` | 1 |  | 0 |
+| `npm run test:profile-preview-responsive` | `Tooling` | 1 |  | 0 |
 | `npm run test:profiles-composition` | `Tooling` | 1 |  | 1 |
 | `npm run test:profiles-module` | `Tooling` | 1 |  | 0 |
 | `npm run test:r2-storage` | `Tooling` | 1 |  | 0 |

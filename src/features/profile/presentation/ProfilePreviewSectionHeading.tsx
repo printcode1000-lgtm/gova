@@ -13,7 +13,7 @@ export function ProfilePreviewSectionHeading({ id,
   hint: string;
 } & { id?: string }) {
   return (
-    <div id={id} className="mb-5 flex items-center gap-3">
+    <div id={id} className="mb-5 flex min-w-0 items-center gap-3">
       <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-lg text-primary sm:h-12 sm:w-12 sm:text-xl">
         <FontAwesomeIcon icon={icon} />
       </span>

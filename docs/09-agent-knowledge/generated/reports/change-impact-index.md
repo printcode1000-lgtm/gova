@@ -40,7 +40,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `product` | feature | 1 | 2 | 27 | 0 | 12 | 23 |
 | `product-card` | feature | 1 | 0 | 3 | 0 | 5 | 7 |
 | `product-search` | feature | 2 | 0 | 4 | 0 | 5 | 14 |
-| `profile` | feature | 1 | 4 | 36 | 0 | 12 | 33 |
+| `profile` | feature | 1 | 5 | 36 | 0 | 12 | 33 |
 | `profile-products` | feature | 1 | 0 | 3 | 0 | 1 | 10 |
 | `profile-working-hours` | feature | 2 | 0 | 3 | 0 | 1 | 3 |
 | `qr-code` | feature | 1 | 1 | 0 | 0 | 1 | 2 |

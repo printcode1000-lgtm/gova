@@ -3231,6 +3231,20 @@
       ]
     },
     {
+      "id": "command:test:profile-preview-responsive",
+      "kind": "command",
+      "name": "npm run test:profile-preview-responsive",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:profile-preview-responsive",
+        "profile-preview-responsive",
+        "run",
+        "test",
+        "test:profile-preview-responsive"
+      ]
+    },
+    {
       "id": "command:test:profiles-composition",
       "kind": "command",
       "name": "npm run test:profiles-composition",
@@ -9743,6 +9757,45 @@
         "this document defines the interaction contract for the profile edit workspace navigation.",
         "ts",
         "workspace"
+      ]
+    },
+    {
+      "id": "document:docs/04-ui-components/profile-preview-responsive-layout.md",
+      "kind": "document",
+      "name": "Profile Preview Responsive Layout",
+      "path": "docs/04-ui-components/profile-preview-responsive-layout.md",
+      "summary": "`/profile?mode=preview` must stay within the viewport on production web, static exports, and mobile shells even when seller-controlled text is long.",
+      "tags": [
+        "/profile",
+        "`/profile?mode=preview` must stay within the viewport on production web, static exports, and mobile shells even when seller-controlled text is long.",
+        "and",
+        "docs/04-ui-components/profile-preview-responsive-layout",
+        "docs/04-ui-components/profile-preview-responsive-layout.md",
+        "even",
+        "exports",
+        "is",
+        "layout",
+        "long",
+        "md",
+        "mobile",
+        "mode",
+        "must",
+        "on",
+        "preview",
+        "production",
+        "profile",
+        "profile preview responsive layout",
+        "responsive",
+        "seller-controlled",
+        "shells",
+        "static",
+        "stay",
+        "text",
+        "the",
+        "viewport",
+        "web",
+        "when",
+        "within"
       ]
     },
     {
@@ -53675,6 +53728,18 @@
       ]
     },
     {
+      "id": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "kind": "test",
+      "name": "profile-preview-responsive.test.ts",
+      "path": "src/features/profile/tests/profile-preview-responsive.test.ts",
+      "tags": [
+        "src/features/profile/tests/profile-preview-responsive",
+        "src/features/profile/tests/profile-preview-responsive.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/profile/tests/profiles-service-module-contract.test.ts",
       "kind": "test",
       "name": "profiles-service-module-contract.test.ts",
@@ -57267,6 +57332,16 @@
     },
     {
       "from": "command:test:products-module",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:profile-preview-responsive",
+      "to": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:profile-preview-responsive",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -67639,6 +67714,11 @@
       "detail": "src/features/profile/tests/profile-edit-navigation.test.ts"
     },
     {
+      "from": "document:docs/04-ui-components/profile-preview-responsive-layout.md",
+      "to": "domain:ui-components",
+      "kind": "belongs-to"
+    },
+    {
       "from": "document:docs/04-ui-components/README.md",
       "to": "domain:ui-components",
       "kind": "belongs-to"
@@ -67672,6 +67752,12 @@
       "to": "document:docs/04-ui-components/profile-edit-navigation.md",
       "kind": "references",
       "detail": "./profile-edit-navigation.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/README.md",
+      "to": "document:docs/04-ui-components/profile-preview-responsive-layout.md",
+      "kind": "references",
+      "detail": "./profile-preview-responsive-layout.md"
     },
     {
       "from": "document:docs/04-ui-components/README.md",
@@ -93757,6 +93843,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/profile/tests/profiles-service-module-contract.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -103730,6 +103822,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/profile/tests/profile-edit-navigation.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -245689,6 +245787,41 @@
     },
     {
       "from": "test:src/features/profile/tests/profile-edit-navigation.test.ts",
+      "to": "feature:profile",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "to": "feature:profile",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
       "to": "feature:profile",
       "kind": "tests"
     },

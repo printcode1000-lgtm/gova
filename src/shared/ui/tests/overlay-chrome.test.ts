@@ -148,5 +148,6 @@ const sidebarSource = readFileSync(
 );
 assert.match(sidebarSource, /isOutsideDismissExempt/);
 assert.match(sidebarSource, /allowOutsideClick/);
+assert.match(sidebarSource, /fixed inset-0 z-\[60\] overflow-hidden/);
 
 console.log("overlay chrome keeps project dialogs and the sidebar open.");

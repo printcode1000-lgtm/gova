@@ -77,6 +77,7 @@ interface ProfilePreviewContentProps {
 
 
 const PROFILE_FOLLOW_UI: UiDescriptor = { uid: "profile-follow-b9hOQF", id: "profile-follow", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "profile-follow" } };
+const PROFILE_ACTION_TILE_CLASS = `${ACTION_TILE_CLASS} w-full border-input sm:w-auto`;
 export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
   const router = useRouter();
   const {
@@ -158,9 +159,9 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
   return (
     <div id="profile.profile-preview-content.div"
       data-snapshot-id="profile-preview-root"
-      className="mx-auto w-full max-w-6xl space-y-5 px-0 sm:space-y-6 sm:px-4"
+      className="mx-auto w-full max-w-6xl min-w-0 space-y-5 overflow-x-clip px-0 sm:space-y-6 sm:px-4"
     >
-      <div id="profile.profile-preview-content.div.2">
+      <div id="profile.profile-preview-content.div.2" className="min-w-0">
         {loading.images ? (
           <div id="profile.profile-preview-content.div.3" className="py-8 text-center text-sm text-on-surface-variant">
             {t("profilePreview.loading")}
@@ -172,7 +173,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         )}
 
         {!loading.details ? (
-          <section id="profile.profile-preview-content.section" className="mx-2 mt-3 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 sm:mt-4">
+          <section id="profile.profile-preview-content.section" className="mx-2 mt-3 min-w-0 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 sm:mt-4">
             <div id="profile.profile-preview-content.div.5" className="flex min-w-0 items-start gap-3 sm:gap-4">
               {storeImages.avatarUrl ? (
                 <div id="profile.profile-preview-content.div.6" className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-4 border-surface shadow-lg sm:-mt-10 sm:h-28 sm:w-28">
@@ -188,8 +189,9 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
 
               <div id="profile.profile-preview-content.div.7" className="min-w-0 flex-1">
                 {previewUid ? (
-                  <div id="profile.profile-preview-content.div.8" className="flex flex-wrap items-center gap-2">
+                  <div id="profile.profile-preview-content.div.8" className="grid min-w-0 grid-cols-2 items-center gap-2 min-[360px]:grid-cols-3 sm:flex sm:flex-wrap">
                     <FollowButton
+                      className="w-full sm:w-auto"
                       ui={PROFILE_FOLLOW_UI}
                       targetType="store"
                       targetId={previewUid}
@@ -219,7 +221,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         <Button id="profile.profile-preview-content.button" ui={{ uid: "profile-preview.share-k2xSN8", id: "profile-preview.share", kind: "action", action: "share-profile", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "profile-share" } }}
                           type="button"
                           variant="outline"
-                          className={`${ACTION_TILE_CLASS} border-input  `}
+                          className={PROFILE_ACTION_TILE_CLASS}
                           style={ACTION_TILE_STYLE}
                           aria-label={t("profilePreview.shareAria")}
                         >
@@ -237,7 +239,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       <Button id="profile.profile-preview-content.button.2" ui={{ uid: "profile-preview.contact-owner-8nEnzn", id: "profile-preview.contact-owner", kind: "action", action: "contact-owner", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "profile-contact" } }}
                         type="button"
                         variant="outline"
-                        className={`${ACTION_TILE_CLASS} border-input  `}
+                        className={PROFILE_ACTION_TILE_CLASS}
                         style={ACTION_TILE_STYLE}
                         aria-label={
                           locale === "ar"
@@ -265,7 +267,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       <Button id="profile.profile-preview-content.button.3" ui={{ uid: "profile-preview.custom-request-RK4Jqi", id: "profile-preview.custom-request", kind: "action", action: "open-custom-request", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "profile-custom-request" } }}
                         type="button"
                         variant="outline"
-                        className={`${ACTION_TILE_CLASS} border-input  `}
+                        className={PROFILE_ACTION_TILE_CLASS}
                         style={ACTION_TILE_STYLE}
                         aria-label={t("profilePreview.customRequestAria")}
                         onClick={() =>
@@ -310,9 +312,9 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       </div>
 
       {!loading.contacts && contacts ? (
-        <section id="profile.profile-preview-content.section.2" className="mx-2 rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:mx-0 sm:p-5">
-          <div id="profile.profile-preview-content.div.10">
-            <h2 id="profile.profile-preview-content.h2" className="mb-3 flex items-center gap-2 text-sm font-bold">
+        <section id="profile.profile-preview-content.section.2" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:mx-0 sm:p-5">
+          <div id="profile.profile-preview-content.div.10" className="min-w-0">
+            <h2 id="profile.profile-preview-content.h2" className="mb-3 flex min-w-0 items-center gap-2 break-words text-sm font-bold">
               <FontAwesomeIcon id="profile.profile-preview-content.font-awesome-icon.4" icon={faShareNodes} className="text-primary" />
               {t("profilePreview.quickContact")}
             </h2>
@@ -330,19 +332,19 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.featured && props.hasFeaturedProducts ? (
-        <section id="profile.profile-preview-content.section.3" className="mx-2 sm:mx-0">
+        <section id="profile.profile-preview-content.section.3" className="mx-2 min-w-0 overflow-hidden sm:mx-0">
           <FeaturedMarquee id="profile.profile-preview-content.featured-marquee" config={props.featuredConfig} />
         </section>
       ) : null}
 
       {props.trendingConfig.items.length > 0 ? (
-        <section id="profile.profile-preview-content.section.4" className="mx-2 overflow-hidden rounded-2xl border border-error/20 shadow-sm sm:mx-0">
+        <section id="profile.profile-preview-content.section.4" className="mx-2 min-w-0 overflow-hidden rounded-2xl border border-error/20 shadow-sm sm:mx-0">
           <TrendingRibbon id="profile.profile-preview-content.trending-ribbon" config={props.trendingConfig} />
         </section>
       ) : null}
 
       {previewUid ? (
-        <section id="profile.profile-preview-content.section.5" className="mx-2 rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:mx-0 sm:p-6">
+        <section id="profile.profile-preview-content.section.5" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:mx-0 sm:p-6">
           <ProfilePreviewSectionHeading id="profile.profile-preview-content.profile-preview-section-heading"
             icon={faBoxOpen}
             title={t("profilePreview.products")}
@@ -353,8 +355,8 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.details && !loading.fulfillment ? (
-        <section id="profile.profile-preview-content.section.6" className="mx-2 grid items-stretch gap-5 sm:mx-0 lg:grid-cols-2">
-          <div id="profile.profile-preview-content.div.11" className="h-full rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6">
+        <section id="profile.profile-preview-content.section.6" className="mx-2 grid min-w-0 items-stretch gap-5 sm:mx-0 lg:grid-cols-2">
+          <div id="profile.profile-preview-content.div.11" className="min-w-0 overflow-hidden rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6 lg:h-full">
             <ProfilePreviewSectionHeading id="profile.profile-preview-content.profile-preview-section-heading.2"
               icon={faClock}
               title={t("profilePreview.workingHours")}
@@ -389,7 +391,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.details && storeDetails.ratingSettings?.enabled ? (
-        <section id="profile.profile-preview-content.section.7" className="mx-2 rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:mx-0 sm:p-7 sm:pb-10">
+        <section id="profile.profile-preview-content.section.7" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:mx-0 sm:p-7 sm:pb-10">
           <ProfilePreviewSectionHeading id="profile.profile-preview-content.profile-preview-section-heading.3"
             icon={faComments}
             title={t("profilePreview.reviews")}
@@ -411,4 +413,3 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
     </div>
   );
 }
-

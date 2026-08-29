@@ -20,7 +20,7 @@ export function ProfileStorySection({
     <section id="profile.profile-story-section.section"
       data-snapshot-expanded="profile-preview-story"
       aria-expanded={expanded}
-      className="mx-2 rounded-3xl border border-outline-variant/70 bg-gradient-to-br from-primary/5 to-secondary/5 p-4 shadow-sm sm:mx-0 sm:p-7"
+      className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-gradient-to-br from-primary/5 to-secondary/5 p-4 shadow-sm sm:mx-0 sm:p-7"
     >
       <button id="profile.profile-story-section.button"
         type="button"
@@ -40,7 +40,7 @@ export function ProfileStorySection({
         />
       </button>
       {expanded ? (
-        <p id="profile.profile-story-section.p" className="mt-5 whitespace-pre-wrap border-t border-outline-variant/60 pt-5 text-sm leading-8 text-on-surface-variant">
+        <p id="profile.profile-story-section.p" className="mt-5 whitespace-pre-wrap break-words border-t border-outline-variant/60 pt-5 text-sm leading-8 text-on-surface-variant">
           {story}
         </p>
       ) : null}

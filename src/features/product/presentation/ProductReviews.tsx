@@ -242,7 +242,7 @@ export function ProductReviews({ id,
   const average = result?.average ?? 0,
     total = result?.total ?? 0;
   return (
-    <div id={id} className="space-y-5">
+    <div id={id} className="min-w-0 space-y-5">
       <ProductReviewsSummary
         average={average}
         total={total}
@@ -252,9 +252,9 @@ export function ProductReviews({ id,
         }
         onRate={() => openReview(result?.currentUserReview ?? null)}
       />
-      <section ref={sectionRef} className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="flex items-center gap-2 text-xl font-bold">
+      <section ref={sectionRef} className="min-w-0 space-y-4">
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+          <h3 className="flex min-w-0 items-center gap-2 break-words text-xl font-bold">
             <MessageSquare className="h-5 w-5" />
             تقييمات العملاء
           </h3>
@@ -262,26 +262,26 @@ export function ProductReviews({ id,
             <button
               type="button"
               onClick={() => load(result.reviews.length, true)}
-              className="flex items-center gap-1 text-sm font-semibold text-primary"
+              className="flex max-w-full items-center gap-1 break-words text-sm font-semibold text-primary"
             >
               عرض الكل
               <ChevronLeft className="h-4 w-4" />
             </button>
           ) : null}
         </div>
-        <div className="grid gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
-          <div className="flex flex-col items-center justify-center border-b pb-5 md:border-b-0 md:border-l md:pb-0">
+        <div className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
+          <div className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0">
             <strong className="text-5xl">{average.toFixed(1)}</strong>
             <Stars value={average} size="text-2xl" />
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-2 break-words text-sm text-muted-foreground">
               بناءً على {total} تقييم
             </p>
           </div>
-          <div className="space-y-2">
+          <div className="min-w-0 space-y-2">
             {(result?.distribution ?? []).map((item) => (
               <div
                 key={item.rating}
-                className="grid grid-cols-[52px_1fr_32px] items-center gap-2 text-sm"
+                className="grid min-w-0 grid-cols-[52px_1fr_32px] items-center gap-2 text-sm"
               >
                 <span>{item.rating} نجوم</span>
                 <div className="h-2 overflow-hidden rounded-full bg-muted">
@@ -313,13 +313,13 @@ export function ProductReviews({ id,
             لا توجد مراجعات بعد.
           </p>
         ) : (
-          <div className="space-y-3">
+          <div className="min-w-0 space-y-3">
             {result?.reviews.map((review) => (
               <article
                 key={review.id}
-                className="rounded-2xl border bg-card p-4"
+                className="min-w-0 rounded-2xl border bg-card p-4"
               >
-                <div className="flex gap-3">
+                <div className="flex min-w-0 gap-3">
                   {review.reviewerAvatarUrl ? (
                     <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full">
                       <Image
@@ -337,29 +337,29 @@ export function ProductReviews({ id,
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <strong>{review.reviewerName}</strong>
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
+                      <strong className="min-w-0 break-words">{review.reviewerName}</strong>
                       {review.verifiedPurchase ? (
-                        <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
+                        <span className="max-w-full break-words rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
                           Verified Purchase
                         </span>
                       ) : null}
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
                       <Stars value={review.rating} />
                       <span className="text-xs text-muted-foreground">
                         {relativeDate(review.createdAt)}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="mt-1 break-words text-sm text-muted-foreground">
                       {productName}
                     </p>
                     {commentsEnabled && review.comment ? (
-                      <p className="mt-3 whitespace-pre-wrap">
+                      <p className="mt-3 whitespace-pre-wrap break-words">
                         {review.comment}
                       </p>
                     ) : null}
-                    <div className="mt-3 flex flex-wrap gap-2 text-sm">
+                    <div className="mt-3 flex min-w-0 flex-wrap gap-2 text-sm">
                       <button
                         type="button"
                         disabled={!isLoggedIn}
@@ -418,9 +418,9 @@ export function ProductReviews({ id,
                       ) : null}
                     </div>
                     {review.reply ? (
-                      <div className="mt-3 rounded-xl bg-muted/50 p-3">
-                        <strong className="text-sm">رد البائع</strong>
-                        <p className="mt-1">{review.reply.text}</p>
+                      <div className="mt-3 min-w-0 rounded-xl bg-muted/50 p-3">
+                        <strong className="break-words text-sm">رد البائع</strong>
+                        <p className="mt-1 whitespace-pre-wrap break-words">{review.reply.text}</p>
                         {isSeller ? (
                           <button
                             type="button"

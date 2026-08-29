@@ -16,6 +16,9 @@ Collapsible shells add `overflow-hidden` and their header button renders with
 The sidebar body is a flex column with `overflow-y-auto`; it applies
 `[&>*]:shrink-0` so a card that grows (super admin, settings) never squeezes the
 cards above it. Growth is absorbed by scrolling, not by shrinking siblings.
+The fixed overlay wrapper keeps `overflow-hidden` so the closed drawer's
+translated panel is clipped at the viewport edge and cannot add horizontal
+scroll in RTL Chrome layouts.
 
 ## Overlay chrome and other dialogs
 

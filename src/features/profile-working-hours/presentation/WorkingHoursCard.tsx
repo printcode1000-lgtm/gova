@@ -93,18 +93,18 @@ export function WorkingHoursCard({ id,
   if (!isEdit && !hasAnyHours) return null;
 
   return (
-    <section id={id} className="space-y-4 rounded-xl border border-outline-variant bg-surface p-4">
+    <section id={id} className="min-w-0 space-y-4 rounded-xl border border-outline-variant bg-surface p-4">
       {!isEdit ? (
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className="flex items-center gap-2 text-sm font-bold text-on-surface">
+        <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
               <CalendarClock className="h-5 w-5 text-primary" />
               {text.title}
             </h3>
           </div>
           {hasAnyHours ? (
             <span
-              className={`rounded-full px-3 py-1 text-xs font-semibold ${
+              className={`max-w-full break-words rounded-full px-3 py-1 text-xs font-semibold ${
                 currentStatus === "open"
                   ? "bg-success/15 text-success"
                   : "bg-surface-container-high text-on-surface-variant"
@@ -117,7 +117,7 @@ export function WorkingHoursCard({ id,
       ) : null}
 
       {!isEdit && !hasAnyHours ? (
-        <p className="text-sm text-on-surface-variant">{text.notSet}</p>
+        <p className="break-words text-sm text-on-surface-variant">{text.notSet}</p>
       ) : null}
 
       <CategoryTabsStrip
@@ -131,14 +131,14 @@ export function WorkingHoursCard({ id,
         onSelect={(dayId) => setSelectedDayId(dayId as WorkingDayId)}
       />
 
-      <div className="space-y-3">
+      <div className="min-w-0 space-y-3">
         {visibleDays.map((day) => (
           <div
             key={day.day}
-            className="rounded-lg border border-outline-variant/70 bg-surface-container-low p-3"
+            className="min-w-0 rounded-lg border border-outline-variant/70 bg-surface-container-low p-3"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-sm font-semibold text-on-surface">
+              <p className="min-w-0 break-words text-sm font-semibold text-on-surface">
                 {getWorkingHoursDayLabel(day.day, locale)}
               </p>
               {isEdit ? (
@@ -151,18 +151,18 @@ export function WorkingHoursCard({ id,
                   {day.open ? text.open : text.closed}
                 </label>
               ) : (
-                <span className="text-xs text-on-surface-variant">
+                <span className="min-w-0 break-words text-xs text-on-surface-variant">
                   {day.open ? text.open : text.closed}
                 </span>
               )}
             </div>
 
             {day.open ? (
-              <div className="mt-3 space-y-2">
+              <div className="mt-3 min-w-0 space-y-2">
                 {day.periods.map((period, index) => (
                   <div
                     key={period.id}
-                    className="grid items-center gap-2 sm:grid-cols-[1fr_1fr_auto]"
+                    className="grid min-w-0 items-center gap-2 sm:grid-cols-[1fr_1fr_auto]"
                   >
                     {isEdit ? (
                       <>
@@ -226,7 +226,7 @@ export function WorkingHoursCard({ id,
                         </button>
                       </>
                     ) : (
-                      <p className="text-xs text-on-surface-variant">
+                      <p className="min-w-0 break-words text-xs text-on-surface-variant">
                         {period.start} - {period.end}
                       </p>
                     )}

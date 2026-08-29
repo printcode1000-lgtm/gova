@@ -240,6 +240,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:product-style-core` | `npx tsx packages/product-style-core/src/tests/index.test.ts` |
 | `npm run test:products-composition` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/products-composition/src/tests/index.test.ts` |
 | `npm run test:products-module` | `npx tsx src/features/product/tests/products-service-module-contract.test.ts` |
+| `npm run test:profile-preview-responsive` | `npx tsx src/features/profile/tests/profile-preview-responsive.test.ts` |
 | `npm run test:profiles-composition` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/profiles-composition/src/tests/index.test.ts` |
 | `npm run test:profiles-module` | `npx tsx src/features/profile/tests/profiles-service-module-contract.test.ts` |
 | `npm run test:r2-storage` | `npx tsx packages/storage-core/scripts/validate-topology.ts` |

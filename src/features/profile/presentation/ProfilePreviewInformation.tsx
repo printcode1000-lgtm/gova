@@ -93,21 +93,21 @@ export function ProfilePreviewMetrics({
     },
   ];
   return (
-    <div id="profile.profile-preview-information.div" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div id="profile.profile-preview-information.div" className="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {metrics.map((metric) => (
         <article
           key={metric.title}
-          className="rounded-2xl border border-outline-variant/70 bg-surface p-4 shadow-sm"
+          className="min-w-0 rounded-2xl border border-outline-variant/70 bg-surface p-4 shadow-sm"
         >
           <div
             className={`mb-3 flex h-11 w-11 items-center justify-center rounded-xl ${metric.tone}`}
           >
             <FontAwesomeIcon icon={metric.icon} />
           </div>
-          <p className="text-xs font-semibold text-on-surface-variant">
+          <p className="break-words text-xs font-semibold text-on-surface-variant">
             {metric.title}
           </p>
-          <p className="mt-1 font-bold text-on-surface">{metric.value}</p>
+          <p className="mt-1 break-words font-bold text-on-surface">{metric.value}</p>
         </article>
       ))}
     </div>
@@ -192,8 +192,8 @@ export function ProfileFulfillmentPreviewCard({
   ];
 
   return (
-    <section id="profile.profile-preview-information.section" className="h-full rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6">
-      <div id="profile.profile-preview-information.div.2" className="mb-5 flex items-center gap-3">
+    <section id="profile.profile-preview-information.section" className="min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6 lg:h-full">
+      <div id="profile.profile-preview-information.div.2" className="mb-5 flex min-w-0 items-center gap-3">
         <span id="profile.profile-preview-information.span" className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-secondary/10 text-lg text-secondary sm:h-12 sm:w-12 sm:text-xl">
           <FontAwesomeIcon id="profile.profile-preview-information.font-awesome-icon" icon={faTruck} />
         </span>
@@ -208,13 +208,13 @@ export function ProfileFulfillmentPreviewCard({
           </p>
         </div>
       </div>
-      <div id="profile.profile-preview-information.div.4" className="grid gap-3 sm:grid-cols-2">
+      <div id="profile.profile-preview-information.div.4" className="grid min-w-0 gap-3 sm:grid-cols-2">
         {rows.map((row) => (
           <div
             key={row.label}
-            className="rounded-xl bg-surface-container-low p-3"
+            className="min-w-0 rounded-xl bg-surface-container-low p-3"
           >
-            <p className="flex items-start gap-2 text-xs text-on-surface-variant">
+            <p className="flex min-w-0 items-start gap-2 text-xs text-on-surface-variant">
               <FontAwesomeIcon icon={row.icon} className="mt-0.5 flex-shrink-0 text-secondary" />
               <span className="min-w-0 break-words">{row.label}</span>
             </p>
@@ -222,8 +222,8 @@ export function ProfileFulfillmentPreviewCard({
           </div>
         ))}
       </div>
-      <div id="profile.profile-preview-information.div.5" className="mt-4 rounded-2xl border border-outline-variant/60 p-4">
-        <div id="profile.profile-preview-information.div.6" className="flex items-start gap-2 break-words font-bold">
+      <div id="profile.profile-preview-information.div.5" className="mt-4 min-w-0 rounded-2xl border border-outline-variant/60 p-4">
+        <div id="profile.profile-preview-information.div.6" className="flex min-w-0 items-start gap-2 break-words font-bold">
           <FontAwesomeIcon id="profile.profile-preview-information.font-awesome-icon.2"
             icon={fulfillment.returns.enabled ? faCircleCheck : faCircleXmark}
             className={`mt-1 flex-shrink-0 ${
@@ -240,12 +240,12 @@ export function ProfileFulfillmentPreviewCard({
         </div>
         {fulfillment.returns.enabled ? (
           <>
-            <p id="profile.profile-preview-information.p.2" className="mt-2 text-sm text-on-surface-variant">
+            <p id="profile.profile-preview-information.p.2" className="mt-2 break-words text-sm text-on-surface-variant">
               {ar ? "تكلفة شحن الإرجاع:" : "Return shipping paid by:"}{" "}
               <strong className="text-on-surface">{payer}</strong>
             </p>
             {fulfillment.returns.policyText ? (
-              <p id="profile.profile-preview-information.p.3" className="mt-2 whitespace-pre-wrap text-sm leading-6 text-on-surface-variant">
+              <p id="profile.profile-preview-information.p.3" className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-on-surface-variant">
                 {fulfillment.returns.policyText}
               </p>
             ) : null}
@@ -253,15 +253,15 @@ export function ProfileFulfillmentPreviewCard({
         ) : null}
       </div>
       {carriers.length > 0 ? (
-        <div id="profile.profile-preview-information.div.7" className="mt-4">
-          <p id="profile.profile-preview-information.p.4" className="mb-2 text-xs font-bold text-on-surface-variant">
+        <div id="profile.profile-preview-information.div.7" className="mt-4 min-w-0">
+          <p id="profile.profile-preview-information.p.4" className="mb-2 break-words text-xs font-bold text-on-surface-variant">
             {ar ? "شركات التوصيل المتاحة" : "Available carriers"}
           </p>
-          <div id="profile.profile-preview-information.div.8" className="flex flex-wrap gap-2">
+          <div id="profile.profile-preview-information.div.8" className="flex min-w-0 flex-wrap gap-2">
             {carriers.map((carrier) => (
               <span
                 key={carrier.uid}
-                className="rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary"
+                className="min-w-0 max-w-full break-words rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary"
               >
                 {carrier.label}
               </span>
@@ -270,7 +270,7 @@ export function ProfileFulfillmentPreviewCard({
         </div>
       ) : null}
       {pricing.notes ? (
-        <p id="profile.profile-preview-information.p.5" className="mt-4 rounded-xl bg-tertiary/10 p-3 text-sm leading-6 text-on-surface-variant">
+        <p id="profile.profile-preview-information.p.5" className="mt-4 whitespace-pre-wrap break-words rounded-xl bg-tertiary/10 p-3 text-sm leading-6 text-on-surface-variant">
           {pricing.notes}
         </p>
       ) : null}

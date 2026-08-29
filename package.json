@@ -252,6 +252,7 @@
     "sub2main:deploy": "npx tsx scripts/deploy-sub2main.ts",
     "sub2main:recreate-vercel-project": "npx tsx scripts/recreate-sub2main-vercel-project.ts",
     "test:profiles-module": "npx tsx src/features/profile/tests/profiles-service-module-contract.test.ts",
+    "test:profile-preview-responsive": "npx tsx src/features/profile/tests/profile-preview-responsive.test.ts",
     "test:store-name-draft": "npx tsx src/features/profile/tests/store-name-draft.test.ts && npx tsx src/features/profile/tests/profile-edit-navigation.test.ts",
     "services:build": "npx tsx scripts/build-all-services.ts",
     "test:account-declarations": "npx tsx packages/account-declarations/src/tests/index.test.ts",

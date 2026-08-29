@@ -39,9 +39,9 @@ export function WorkingHoursNoteCard({ id,
   return (
     <section
       id={id}
-      className="space-y-3 rounded-xl border border-outline-variant bg-surface p-4"
+      className="min-w-0 space-y-3 rounded-xl border border-outline-variant bg-surface p-4"
     >
-      <h3 className="flex items-center gap-2 text-sm font-bold text-on-surface">
+      <h3 className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
         <StickyNote className="h-5 w-5 text-primary" />
         {text.title}
       </h3>
@@ -58,7 +58,7 @@ export function WorkingHoursNoteCard({ id,
           className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface outline-none transition focus:border-primary"
         />
       ) : (
-        <p className="rounded-lg bg-surface-container-low p-3 text-xs text-on-surface-variant">
+        <p className="whitespace-pre-wrap break-words rounded-lg bg-surface-container-low p-3 text-xs text-on-surface-variant">
           {note}
         </p>
       )}

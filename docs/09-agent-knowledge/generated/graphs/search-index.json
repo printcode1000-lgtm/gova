@@ -3231,6 +3231,20 @@
       ]
     },
     {
+      "id": "command:test:profile-preview-responsive",
+      "kind": "command",
+      "name": "npm run test:profile-preview-responsive",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:profile-preview-responsive",
+        "profile-preview-responsive",
+        "run",
+        "test",
+        "test:profile-preview-responsive"
+      ]
+    },
+    {
       "id": "command:test:profiles-composition",
       "kind": "command",
       "name": "npm run test:profiles-composition",
@@ -9743,6 +9757,45 @@
         "this document defines the interaction contract for the profile edit workspace navigation.",
         "ts",
         "workspace"
+      ]
+    },
+    {
+      "id": "document:docs/04-ui-components/profile-preview-responsive-layout.md",
+      "kind": "document",
+      "name": "Profile Preview Responsive Layout",
+      "path": "docs/04-ui-components/profile-preview-responsive-layout.md",
+      "summary": "`/profile?mode=preview` must stay within the viewport on production web, static exports, and mobile shells even when seller-controlled text is long.",
+      "tags": [
+        "/profile",
+        "`/profile?mode=preview` must stay within the viewport on production web, static exports, and mobile shells even when seller-controlled text is long.",
+        "and",
+        "docs/04-ui-components/profile-preview-responsive-layout",
+        "docs/04-ui-components/profile-preview-responsive-layout.md",
+        "even",
+        "exports",
+        "is",
+        "layout",
+        "long",
+        "md",
+        "mobile",
+        "mode",
+        "must",
+        "on",
+        "preview",
+        "production",
+        "profile",
+        "profile preview responsive layout",
+        "responsive",
+        "seller-controlled",
+        "shells",
+        "static",
+        "stay",
+        "text",
+        "the",
+        "viewport",
+        "web",
+        "when",
+        "within"
       ]
     },
     {
@@ -53670,6 +53723,18 @@
       "tags": [
         "src/features/profile/tests/profile-edit-navigation",
         "src/features/profile/tests/profile-edit-navigation.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/profile/tests/profile-preview-responsive.test.ts",
+      "kind": "test",
+      "name": "profile-preview-responsive.test.ts",
+      "path": "src/features/profile/tests/profile-preview-responsive.test.ts",
+      "tags": [
+        "src/features/profile/tests/profile-preview-responsive",
+        "src/features/profile/tests/profile-preview-responsive.test.ts",
         "test",
         "ts"
       ]
