@@ -256,10 +256,10 @@ export function PharmacyCatalogManagerPage() {
   }
 
   return (
-    <main id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.main" className="min-h-screen bg-background px-4 py-5">
-      <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div" className="mx-auto flex max-w-7xl flex-col gap-4">
-        <header id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.header" className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-          <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.2">
+    <main {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.main.2-o7WAm2", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.main.2" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.main" className="min-h-screen bg-background px-4 py-5">
+      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.4-R69k32", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.4" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div" className="mx-auto flex max-w-7xl flex-col gap-4">
+        <header {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.header.2-8uJJ3Y", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.header.2" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.header" className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+          <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.5-gQo1O7", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.5" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.2">
             <Link id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.link"
               href="/profile?mode=edit&tab=products"
               className="mb-2 inline-flex items-center gap-2 text-xs font-semibold text-primary"
@@ -267,8 +267,8 @@ export function PharmacyCatalogManagerPage() {
               <ArrowRight id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.arrow-right" className="h-4 w-4" />
               {text.back}
             </Link>
-            <h1 id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1" className="text-2xl font-bold text-on-surface">{text.title}</h1>
-            <p id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p" className="mt-1 text-sm text-on-surface-variant">{text.subtitle}</p>
+            <h1 {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1.2-nQM2jZ", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1.2" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1" className="text-2xl font-bold text-on-surface">{text.title}</h1>
+            <p {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.3-Ka9v0C", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.3" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p" className="mt-1 text-sm text-on-surface-variant">{text.subtitle}</p>
           </div>
           <Link id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.link.2"
             href={addProductHref}
@@ -280,7 +280,7 @@ export function PharmacyCatalogManagerPage() {
         </header>
 
         {error ? (
-          <p id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.2" className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+          <p {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.4-2kKKN2", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.4" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.2" className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
             {error}
           </p>
         ) : null}
@@ -299,7 +299,7 @@ export function PharmacyCatalogManagerPage() {
             >
               {categories.map((category) => (
                 <div
-                  key={category.id}
+                  key={category.id} {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.6-Z3R36Z", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.6" })}
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     category.id === activeCategoryId
                       ? "border-primary bg-primary/10"
@@ -312,7 +312,7 @@ export function PharmacyCatalogManagerPage() {
                     className="flex min-w-0 flex-1 items-center gap-2 text-start"
                   >
                     <PharmacyCategoryIcon icon={category.icon} className="h-4 w-4 text-center text-primary" />
-                    <span className="min-w-0 flex-1 truncate font-semibold">{category.nameAr}</span>
+                    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span-3QR4GH", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span" })} className="min-w-0 flex-1 truncate font-semibold">{category.nameAr}</span>
                   <StatusBadge hidden={category.status === "hidden"} />
                   </button>
                   <IconButton
@@ -339,20 +339,20 @@ export function PharmacyCatalogManagerPage() {
             >
               {subcategories.map((subcategory) => (
                 <div
-                  key={subcategory.id}
+                  key={subcategory.id} {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.7-aZ7v1P", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.7" })}
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     subcategory.id === activeSubcategoryId
                       ? "border-tertiary bg-tertiary/10"
                       : "border-outline-variant"
                   } ${subcategory.status === "hidden" ? "opacity-55" : ""}`}
                 >
-                  <button
+                  <button {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.button-4GHDSw", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.button" })}
                     type="button"
                     onClick={() => setActiveSubcategoryId(subcategory.id)}
                     className="flex min-w-0 flex-1 items-center gap-2 text-start"
                   >
                     <PharmacyCategoryIcon icon={activeCategory?.icon} className="h-4 w-4 text-center text-tertiary" />
-                    <span className="min-w-0 flex-1 truncate font-semibold">{subcategory.nameAr}</span>
+                    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2-ODA1rv", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2" })} className="min-w-0 flex-1 truncate font-semibold">{subcategory.nameAr}</span>
                   <StatusBadge hidden={subcategory.status === "hidden"} />
                   </button>
                   <IconButton
@@ -377,7 +377,7 @@ export function PharmacyCatalogManagerPage() {
                   {text.emptyProducts}
                 </p>
               ) : (
-                <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.3" className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.8-Wun1V8", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.8" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.3" className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
                   {products.map((product) => (
                     <ProductManagerCard
                       key={product.id}

@@ -26,6 +26,7 @@ import {
 } from "./SimulationProgressPanel";
 import { SimulationUsersStatus } from "./SimulationUsersStatus";
 import { simulationRuntimeLabel } from "./simulation-runtime-label";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const initialPage = USER_PAGE_REGISTRY[0];
 type PageInteraction = UserPageDefinition["interactions"][number];
@@ -200,65 +201,65 @@ export function SuperAdminSimulationPage() {
     }
   };
 
-  if (isLoading) return <div id="simulation.super-admin-simulation-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
+  if (isLoading) return <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.12-fSbq2h", id: "simulation.super-admin-simulation-page.div.12" })} id="simulation.super-admin-simulation-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
   if (!isSuperAdmin(session)) {
-    return <div id="simulation.super-admin-simulation-page.div.2" className="mx-auto max-w-2xl p-6 text-error">هذه الصفحة متاحة للسوبر أدمن فقط.</div>;
+    return <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.13-AJ1X74", id: "simulation.super-admin-simulation-page.div.13" })} id="simulation.super-admin-simulation-page.div.2" className="mx-auto max-w-2xl p-6 text-error">هذه الصفحة متاحة للسوبر أدمن فقط.</div>;
   }
 
   return (
-    <main id="simulation.super-admin-simulation-page.main" className="mx-auto w-full min-w-0 max-w-7xl space-y-5 p-3 pb-24 sm:p-4 sm:pb-24">
-      <header id="simulation.super-admin-simulation-page.header" className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div id="simulation.super-admin-simulation-page.div.3" className="min-w-0">
-          <h1 id="simulation.super-admin-simulation-page.h1" className="flex min-w-0 items-center gap-2 text-xl font-bold text-on-surface sm:text-2xl">
+    <main {...uiAttributes({ uid: "simulation.super-admin-simulation-page.main.2-Ub7q0W", id: "simulation.super-admin-simulation-page.main.2" })} id="simulation.super-admin-simulation-page.main" className="mx-auto w-full min-w-0 max-w-7xl space-y-5 p-3 pb-24 sm:p-4 sm:pb-24">
+      <header {...uiAttributes({ uid: "simulation.super-admin-simulation-page.header.2-7TiJy5", id: "simulation.super-admin-simulation-page.header.2" })} id="simulation.super-admin-simulation-page.header" className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.14-1BNYK0", id: "simulation.super-admin-simulation-page.div.14" })} id="simulation.super-admin-simulation-page.div.3" className="min-w-0">
+          <h1 {...uiAttributes({ uid: "simulation.super-admin-simulation-page.h1.2-x6F50p", id: "simulation.super-admin-simulation-page.h1.2" })} id="simulation.super-admin-simulation-page.h1" className="flex min-w-0 items-center gap-2 text-xl font-bold text-on-surface sm:text-2xl">
             <FlaskConical id="simulation.super-admin-simulation-page.flask-conical" className="h-6 w-6 shrink-0" aria-hidden />
-            <span id="simulation.super-admin-simulation-page.span" className="break-words">محاكاة المستخدم وE2E</span>
+            <span {...uiAttributes({ uid: "simulation.super-admin-simulation-page.span.9-dzLM9m", id: "simulation.super-admin-simulation-page.span.9" })} id="simulation.super-admin-simulation-page.span" className="break-words">محاكاة المستخدم وE2E</span>
           </h1>
-          <p id="simulation.super-admin-simulation-page.p" className="mt-1 break-words text-sm text-on-surface-variant">
+          <p {...uiAttributes({ uid: "simulation.super-admin-simulation-page.p.5-1MI5Lb", id: "simulation.super-admin-simulation-page.p.5" })} id="simulation.super-admin-simulation-page.p" className="mt-1 break-words text-sm text-on-surface-variant">
             اختر الصفحة والحدث وشغّل التفاعل الحقيقي مع متابعة التنفيذ من نفس الشاشة.
           </p>
         </div>
-        <div id="simulation.super-admin-simulation-page.div.4" className="flex w-full min-w-0 items-center justify-center gap-2 rounded-xl bg-primary-container px-3 py-2 text-sm text-on-primary-container sm:w-auto sm:justify-start">
+        <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.15-vQF19V", id: "simulation.super-admin-simulation-page.div.15" })} id="simulation.super-admin-simulation-page.div.4" className="flex w-full min-w-0 items-center justify-center gap-2 rounded-xl bg-primary-container px-3 py-2 text-sm text-on-primary-container sm:w-auto sm:justify-start">
           <MonitorSmartphone id="simulation.super-admin-simulation-page.monitor-smartphone" className="h-4 w-4 shrink-0" aria-hidden />
-          <span id="simulation.super-admin-simulation-page.span.2" className="break-words">{simulationRuntimeLabel(runtime)}</span>
+          <span {...uiAttributes({ uid: "simulation.super-admin-simulation-page.span.10-iHGpg1", id: "simulation.super-admin-simulation-page.span.10" })} id="simulation.super-admin-simulation-page.span.2" className="break-words">{simulationRuntimeLabel(runtime)}</span>
         </div>
       </header>
 
       <SimulationUsersStatus />
 
-      <section id="simulation.super-admin-simulation-page.section" className="min-w-0 rounded-2xl border border-outline-variant bg-surface p-3 sm:p-4">
-        <div id="simulation.super-admin-simulation-page.div.5" className="mb-4 min-w-0">
-          <h2 id="simulation.super-admin-simulation-page.h2" className="font-bold text-on-surface">تشغيل محاكاة صفحات المستخدم</h2>
-          <p id="simulation.super-admin-simulation-page.p.2" className="break-words text-xs text-on-surface-variant">
+      <section {...uiAttributes({ uid: "simulation.super-admin-simulation-page.section.3-uHo3QN", id: "simulation.super-admin-simulation-page.section.3" })} id="simulation.super-admin-simulation-page.section" className="min-w-0 rounded-2xl border border-outline-variant bg-surface p-3 sm:p-4">
+        <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.16-FB84HZ", id: "simulation.super-admin-simulation-page.div.16" })} id="simulation.super-admin-simulation-page.div.5" className="mb-4 min-w-0">
+          <h2 {...uiAttributes({ uid: "simulation.super-admin-simulation-page.h2.3-7ZpEza", id: "simulation.super-admin-simulation-page.h2.3" })} id="simulation.super-admin-simulation-page.h2" className="font-bold text-on-surface">تشغيل محاكاة صفحات المستخدم</h2>
+          <p {...uiAttributes({ uid: "simulation.super-admin-simulation-page.p.6-YMxvE5", id: "simulation.super-admin-simulation-page.p.6" })} id="simulation.super-admin-simulation-page.p.2" className="break-words text-xs text-on-surface-variant">
             {USER_PAGE_REGISTRY.length} صفحة مستخدم مغطاة. اختر الصفحة ثم حدث المستخدم الحقيقي المطلوب.
           </p>
         </div>
 
-        <div id="simulation.super-admin-simulation-page.div.6" className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] xl:items-start">
-          <div id="simulation.super-admin-simulation-page.div.7" className="grid min-w-0 grid-cols-1 items-start gap-4 md:grid-cols-2">
-            <div id="simulation.super-admin-simulation-page.div.8" className="min-w-0 space-y-3">
-              <label id="simulation.super-admin-simulation-page.label" className="block min-w-0 space-y-2">
-                <span id="simulation.super-admin-simulation-page.span.3" className="block text-sm font-semibold text-on-surface">الصفحة</span>
-                <select id="simulation.super-admin-simulation-page.select"
+        <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.17-pv0Dj5", id: "simulation.super-admin-simulation-page.div.17" })} id="simulation.super-admin-simulation-page.div.6" className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] xl:items-start">
+          <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.18-80tJJm", id: "simulation.super-admin-simulation-page.div.18" })} id="simulation.super-admin-simulation-page.div.7" className="grid min-w-0 grid-cols-1 items-start gap-4 md:grid-cols-2">
+            <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.19-U3KOVR", id: "simulation.super-admin-simulation-page.div.19" })} id="simulation.super-admin-simulation-page.div.8" className="min-w-0 space-y-3">
+              <label {...uiAttributes({ uid: "simulation.super-admin-simulation-page.label.3-TX5i5E", id: "simulation.super-admin-simulation-page.label.3" })} id="simulation.super-admin-simulation-page.label" className="block min-w-0 space-y-2">
+                <span {...uiAttributes({ uid: "simulation.super-admin-simulation-page.span.11-63j2G2", id: "simulation.super-admin-simulation-page.span.11" })} id="simulation.super-admin-simulation-page.span.3" className="block text-sm font-semibold text-on-surface">الصفحة</span>
+                <select {...uiAttributes({ uid: "simulation.super-admin-simulation-page.select.3-Ju75yi", id: "simulation.super-admin-simulation-page.select.3" })} id="simulation.super-admin-simulation-page.select"
                   value={selectedPage?.id ?? ""}
                   onChange={(event) => selectPage(event.target.value)}
                   disabled={busy}
                   className="h-11 w-full min-w-0 rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {USER_PAGE_REGISTRY.map((page) => (
-                    <option key={page.id} value={page.id}>
+                    <option key={page.id} {...uiAttributes({ uid: "simulation.super-admin-simulation-page.option-RNfT5K", id: "simulation.super-admin-simulation-page.option" })} value={page.id}>
                       {page.label} — {page.route}
                     </option>
                   ))}
                 </select>
                 {selectedPage ? (
-                  <div id="simulation.super-admin-simulation-page.div.9" className="min-w-0 rounded-xl bg-surface-container-low p-3">
-                    <div id="simulation.super-admin-simulation-page.div.10" className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-                      <span id="simulation.super-admin-simulation-page.span.4" className="break-words text-sm font-semibold text-on-surface">{selectedPage.label}</span>
+                  <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.20-G1Gh2K", id: "simulation.super-admin-simulation-page.div.20" })} id="simulation.super-admin-simulation-page.div.9" className="min-w-0 rounded-xl bg-surface-container-low p-3">
+                    <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.21-LxRxU0", id: "simulation.super-admin-simulation-page.div.21" })} id="simulation.super-admin-simulation-page.div.10" className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                      <span {...uiAttributes({ uid: "simulation.super-admin-simulation-page.span.12-3S7xu6", id: "simulation.super-admin-simulation-page.span.12" })} id="simulation.super-admin-simulation-page.span.4" className="break-words text-sm font-semibold text-on-surface">{selectedPage.label}</span>
                       <code className="max-w-full break-all rounded-md bg-surface px-2 py-1 text-[11px] font-semibold text-primary" dir="ltr">
                         {selectedPage.route}
                       </code>
                     </div>
-                    <p id="simulation.super-admin-simulation-page.p.3" className="mt-1 break-words text-xs text-on-surface-variant">{selectedPage.description}</p>
+                    <p {...uiAttributes({ uid: "simulation.super-admin-simulation-page.p.7-0YJb5C", id: "simulation.super-admin-simulation-page.p.7" })} id="simulation.super-admin-simulation-page.p.3" className="mt-1 break-words text-xs text-on-surface-variant">{selectedPage.description}</p>
                   </div>
                 ) : null}
               </label>
@@ -270,7 +271,7 @@ export function SuperAdminSimulationPage() {
                 className="w-full"
               >
                 {isRunningAll ? (
-                  <span id="simulation.super-admin-simulation-page.span.5" className="animate-pulse">جارٍ تشغيل كل الصفحات</span>
+                  <span {...uiAttributes({ uid: "simulation.super-admin-simulation-page.span.13-xvw6nS", id: "simulation.super-admin-simulation-page.span.13" })} id="simulation.super-admin-simulation-page.span.5" className="animate-pulse">جارٍ تشغيل كل الصفحات</span>
                 ) : (
                   <>
                     <PlayCircle id="simulation.super-admin-simulation-page.play-circle" className="h-4 w-4" />
@@ -280,24 +281,24 @@ export function SuperAdminSimulationPage() {
               </Button>
             </div>
 
-            <div id="simulation.super-admin-simulation-page.div.11" className="min-w-0 space-y-3">
-              <label id="simulation.super-admin-simulation-page.label.2" className="block min-w-0 space-y-2">
-                <span id="simulation.super-admin-simulation-page.span.6" className="block text-sm font-semibold text-on-surface">أحداث المستخدم الحقيقية</span>
+            <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.22-Z40crh", id: "simulation.super-admin-simulation-page.div.22" })} id="simulation.super-admin-simulation-page.div.11" className="min-w-0 space-y-3">
+              <label {...uiAttributes({ uid: "simulation.super-admin-simulation-page.label.4-YCbG7O", id: "simulation.super-admin-simulation-page.label.4" })} id="simulation.super-admin-simulation-page.label.2" className="block min-w-0 space-y-2">
+                <span {...uiAttributes({ uid: "simulation.super-admin-simulation-page.span.14-UlKr7J", id: "simulation.super-admin-simulation-page.span.14" })} id="simulation.super-admin-simulation-page.span.6" className="block text-sm font-semibold text-on-surface">أحداث المستخدم الحقيقية</span>
                 <select id="simulation.super-admin-simulation-page.select.2"
-                  key={selectedPage?.id ?? "no-page"}
+                  key={selectedPage?.id ?? "no-page"} {...uiAttributes({ uid: "simulation.super-admin-simulation-page.select.4-C1UaSP", id: "simulation.super-admin-simulation-page.select.4" })}
                   value={selectedInteraction?.id ?? ""}
                   onChange={(event) => setSelectedInteractionId(event.target.value)}
                   disabled={busy || !selectedPage}
                   className="h-11 w-full min-w-0 rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {selectedInteractions.map((interaction) => (
-                    <option key={interaction.id} value={interaction.id}>
+                    <option key={interaction.id} {...uiAttributes({ uid: "simulation.super-admin-simulation-page.option.2-B1gFwY", id: "simulation.super-admin-simulation-page.option.2" })} value={interaction.id}>
                       {interaction.label}
                     </option>
                   ))}
                 </select>
                 {selectedInteraction ? (
-                  <span id="simulation.super-admin-simulation-page.span.7" className="block break-words text-xs text-on-surface-variant">{selectedInteraction.description}</span>
+                  <span {...uiAttributes({ uid: "simulation.super-admin-simulation-page.span.15-3ZCATG", id: "simulation.super-admin-simulation-page.span.15" })} id="simulation.super-admin-simulation-page.span.7" className="block break-words text-xs text-on-surface-variant">{selectedInteraction.description}</span>
                 ) : null}
               </label>
 
@@ -308,7 +309,7 @@ export function SuperAdminSimulationPage() {
                 className="w-full"
               >
                 {runningId ? (
-                  <span id="simulation.super-admin-simulation-page.span.8" className="animate-pulse">جارٍ التنفيذ</span>
+                  <span {...uiAttributes({ uid: "simulation.super-admin-simulation-page.span.16-utl1VV", id: "simulation.super-admin-simulation-page.span.16" })} id="simulation.super-admin-simulation-page.span.8" className="animate-pulse">جارٍ التنفيذ</span>
                 ) : (
                   <>
                     <Play id="simulation.super-admin-simulation-page.play" className="h-4 w-4" />
@@ -332,10 +333,10 @@ export function SuperAdminSimulationPage() {
         </div>
       </section>
 
-      <section id="simulation.super-admin-simulation-page.section.2" className="min-w-0 rounded-2xl border border-dashed border-outline-variant bg-surface p-4 text-center sm:p-5">
+      <section {...uiAttributes({ uid: "simulation.super-admin-simulation-page.section.4-nKYOO3", id: "simulation.super-admin-simulation-page.section.4" })} id="simulation.super-admin-simulation-page.section.2" className="min-w-0 rounded-2xl border border-dashed border-outline-variant bg-surface p-4 text-center sm:p-5">
         <Layers3 id="simulation.super-admin-simulation-page.layers3" className="mx-auto h-7 w-7 text-on-surface-variant" aria-hidden />
-        <h2 id="simulation.super-admin-simulation-page.h2.2" className="mt-2 font-bold text-on-surface">حاوية السيناريوهات</h2>
-        <p id="simulation.super-admin-simulation-page.p.4" className="mt-1 break-words text-sm text-on-surface-variant">
+        <h2 {...uiAttributes({ uid: "simulation.super-admin-simulation-page.h2.4-dFX4G0", id: "simulation.super-admin-simulation-page.h2.4" })} id="simulation.super-admin-simulation-page.h2.2" className="mt-2 font-bold text-on-surface">حاوية السيناريوهات</h2>
+        <p {...uiAttributes({ uid: "simulation.super-admin-simulation-page.p.8-Lc4FGp", id: "simulation.super-admin-simulation-page.p.8" })} id="simulation.super-admin-simulation-page.p.4" className="mt-1 break-words text-sm text-on-surface-variant">
           {SIMULATION_SCENARIOS.length === 0 ? "فارغة في الإصدار الأول كما هو مخطط." : `${SIMULATION_SCENARIOS.length} سيناريو`}
         </p>
       </section>

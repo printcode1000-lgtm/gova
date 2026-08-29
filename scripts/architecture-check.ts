@@ -7,6 +7,7 @@ import { verifyGeneratedGateContract } from './generated-gate-contract';
 import { verifyGithubCiPolicy } from './github-ci-policy';
 import { validateRuntimeCompatibilityReference } from './runtime-compatibility-reference';
 import { checkStaticDomIds } from './ui-registry/static-dom-ids/check-static-dom-ids';
+import { checkUidCoverage } from './ui-registry/uid-migration/check-uid-coverage';
 
 /**
  * The CLI around `@asol/architecture-core`.
@@ -36,6 +37,10 @@ process.exit(
       {
         label: 'static DOM id contract failed',
         run: () => checkStaticDomIds(process.cwd()),
+      },
+      {
+        label: 'UI identity coverage contract failed',
+        run: () => checkUidCoverage(process.cwd()),
       },
       {
         label: 'storage-profiles.json validation failed',

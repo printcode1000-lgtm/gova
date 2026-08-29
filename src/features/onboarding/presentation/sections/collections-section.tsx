@@ -16,6 +16,7 @@ import { Label } from '@/shared/ui/label';
 import { cn } from '@/shared/utils';
 import type { Collection } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 function generateId() {
   return nextSellerId('col');
@@ -71,7 +72,7 @@ export function CollectionsSection() {
   };
 
   return (
-    <div id="onboarding.sections.collections-section.div" className="space-y-6 animate-in fade-in duration-300">
+    <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.12-hE1vqI", id: "onboarding.sections.collections-section.div.12" })} id="onboarding.sections.collections-section.div" className="space-y-6 animate-in fade-in duration-300">
       <Card id="onboarding.sections.collections-section.card">
         <CardHeader id="onboarding.sections.collections-section.card-header">
           <CardTitle id="onboarding.sections.collections-section.card-title" className="flex items-center gap-2">
@@ -82,9 +83,9 @@ export function CollectionsSection() {
         </CardHeader>
         <CardContent id="onboarding.sections.collections-section.card-content">
           {showForm ? (
-            <div id="onboarding.sections.collections-section.div.2" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
-              <div id="onboarding.sections.collections-section.div.3" className="grid gap-6 lg:grid-cols-2">
-                <div id="onboarding.sections.collections-section.div.4" className="space-y-4">
+            <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.13-AO7wj1", id: "onboarding.sections.collections-section.div.13" })} id="onboarding.sections.collections-section.div.2" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
+              <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.14-SGA299", id: "onboarding.sections.collections-section.div.14" })} id="onboarding.sections.collections-section.div.3" className="grid gap-6 lg:grid-cols-2">
+                <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.15-QGlOQ9", id: "onboarding.sections.collections-section.div.15" })} id="onboarding.sections.collections-section.div.4" className="space-y-4">
                   <FormField id="onboarding.sections.collections-section.form-field" label={t('onboarding.collections.name')} htmlFor="collectionName" required>
                     <FormInput ui={{ uid: 'onboarding.collections.name-OCJ9RN', id: 'onboarding.collections.name', kind: 'field', part: 'form' }}
                       id="collectionName"
@@ -123,12 +124,12 @@ export function CollectionsSection() {
               </div>
 
               {data.products.products.length > 0 && (
-                <div id="onboarding.sections.collections-section.div.5" className="space-y-3">
+                <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.16-BS75B5", id: "onboarding.sections.collections-section.div.16" })} id="onboarding.sections.collections-section.div.5" className="space-y-3">
                   <Label id="onboarding.sections.collections-section.label" className="text-base">{t('onboarding.collections.assignProducts')}</Label>
-                  <div id="onboarding.sections.collections-section.div.6" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.17-2ZqwKA", id: "onboarding.sections.collections-section.div.17" })} id="onboarding.sections.collections-section.div.6" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {data.products.products.map((product) => (
                       <label
-                        key={product.id}
+                        key={product.id} {...uiAttributes({ uid: "onboarding.sections.collections-section.label.2-Q79X3F", id: "onboarding.sections.collections-section.label.2" })}
                         className={cn(
                           'flex items-center gap-3 p-3 rounded-lg border transition-all',
                           newCollection.productIds?.includes(product.id)
@@ -136,18 +137,18 @@ export function CollectionsSection() {
                             : 'border-border',
                         )}
                       >
-                        <Checkbox
+                        <Checkbox ui={{ uid: "onboarding.sections.collections-section.checkbox-7ZRV1j", id: "onboarding.sections.collections-section.checkbox" }}
                           checked={newCollection.productIds?.includes(product.id)}
                           onCheckedChange={() => toggleProductInCollection(product.id)}
                         />
-                        <span className="text-sm truncate">{product.title}</span>
+                        <span {...uiAttributes({ uid: "onboarding.sections.collections-section.span-4MSxmG", id: "onboarding.sections.collections-section.span" })} className="text-sm truncate">{product.title}</span>
                       </label>
                     ))}
                   </div>
                 </div>
               )}
 
-              <div id="onboarding.sections.collections-section.div.7" className="flex justify-end gap-3 pt-4 border-t">
+              <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.18-C45YJd", id: "onboarding.sections.collections-section.div.18" })} id="onboarding.sections.collections-section.div.7" className="flex justify-end gap-3 pt-4 border-t">
                 <Button id="onboarding.sections.collections-section.button" ui={{ uid: 'onboarding.collections.cancel-8hbPYe', id: 'onboarding.collections.cancel', kind: 'action', action: 'cancel', part: 'form-footer' }} variant="outline" onClick={() => setShowForm(false)}>
                   {t('onboarding.common.cancel')}
                 </Button>
@@ -157,12 +158,12 @@ export function CollectionsSection() {
               </div>
             </div>
           ) : data.collections.collections.length === 0 ? (
-            <div id="onboarding.sections.collections-section.div.8" className="flex flex-col items-center justify-center py-12 text-center">
-              <div id="onboarding.sections.collections-section.div.9" className="rounded-full bg-muted p-4 mb-4">
+            <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.19-DDH7fI", id: "onboarding.sections.collections-section.div.19" })} id="onboarding.sections.collections-section.div.8" className="flex flex-col items-center justify-center py-12 text-center">
+              <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.20-AMX26n", id: "onboarding.sections.collections-section.div.20" })} id="onboarding.sections.collections-section.div.9" className="rounded-full bg-muted p-4 mb-4">
                 <FolderOpen id="onboarding.sections.collections-section.folder-open.2" className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 id="onboarding.sections.collections-section.h3" className="font-medium mb-2">{t('onboarding.collections.emptyTitle')}</h3>
-              <p id="onboarding.sections.collections-section.p" className="text-sm text-muted-foreground mb-4 max-w-sm">
+              <h3 {...uiAttributes({ uid: "onboarding.sections.collections-section.h3.2-K1ZaBA", id: "onboarding.sections.collections-section.h3.2" })} id="onboarding.sections.collections-section.h3" className="font-medium mb-2">{t('onboarding.collections.emptyTitle')}</h3>
+              <p {...uiAttributes({ uid: "onboarding.sections.collections-section.p.2-2MIA0K", id: "onboarding.sections.collections-section.p.2" })} id="onboarding.sections.collections-section.p" className="text-sm text-muted-foreground mb-4 max-w-sm">
                 {t('onboarding.collections.emptyDesc')}
               </p>
               <Button id="onboarding.sections.collections-section.button.3" ui={{ uid: 'onboarding.collections.create-first-MREA0I', id: 'onboarding.collections.create-first', kind: 'action', action: 'open-collection-form', part: 'empty-state' }} onClick={() => setShowForm(true)} className="gap-2">
@@ -171,15 +172,15 @@ export function CollectionsSection() {
               </Button>
             </div>
           ) : (
-            <div id="onboarding.sections.collections-section.div.10" className="space-y-4">
-              <div id="onboarding.sections.collections-section.div.11" className="grid gap-4 sm:grid-cols-2">
+            <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.21-P1sXQk", id: "onboarding.sections.collections-section.div.21" })} id="onboarding.sections.collections-section.div.10" className="space-y-4">
+              <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.22-0c9Ljz", id: "onboarding.sections.collections-section.div.22" })} id="onboarding.sections.collections-section.div.11" className="grid gap-4 sm:grid-cols-2">
                 {data.collections.collections.map((collection) => (
                   <div
-                    key={collection.id}
+                    key={collection.id} {...uiAttributes({ uid: "onboarding.sections.collections-section.div.23-UZZW6Z", id: "onboarding.sections.collections-section.div.23" })}
                     className="relative overflow-hidden rounded-lg border"
                   >
                     {collection.coverImage ? (
-                      <div className="aspect-video relative">
+                      <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.24-7Yzvyl", id: "onboarding.sections.collections-section.div.24" })} className="aspect-video relative">
                         <Image
                           src={collection.coverImage.url}
                           alt={collection.name}
@@ -188,21 +189,21 @@ export function CollectionsSection() {
                           className="object-cover"
                           unoptimized={shouldUseUnoptimizedImage(collection.coverImage.url)}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-4">
-                          <h4 className="font-medium">{collection.name}</h4>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.25-BGZO6a", id: "onboarding.sections.collections-section.div.25" })} className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
+                        <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.26-5zanYX", id: "onboarding.sections.collections-section.div.26" })} className="absolute bottom-0 left-0 right-0 p-4">
+                          <h4 {...uiAttributes({ uid: "onboarding.sections.collections-section.h4-E8KeLH", id: "onboarding.sections.collections-section.h4" })} className="font-medium">{collection.name}</h4>
+                          <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.27-PXZ6On", id: "onboarding.sections.collections-section.div.27" })} className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Package className="h-3 w-3" />
                             {t('onboarding.common.products', { count: collection.productIds.length })}
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <div className="aspect-video bg-muted flex items-center justify-center">
+                      <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.28-7qUIHW", id: "onboarding.sections.collections-section.div.28" })} className="aspect-video bg-muted flex items-center justify-center">
                         <FolderOpen className="h-12 w-12 text-muted-foreground" />
                       </div>
                     )}
-                    <Button
+                    <Button ui={{ uid: "onboarding.sections.collections-section.button.5-t6tjO3", id: "onboarding.sections.collections-section.button.5" }}
                       variant="ghost"
                       size="icon"
                       className="absolute top-2 right-2"

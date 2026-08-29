@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/shared/ui/dialog";
 import type { BuildJobRecord } from "@asol/release-core/console";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 /**
  * Confirmation shown before a running job is killed. Stopping mid-build can
@@ -35,10 +36,10 @@ export function ReleaseJobStopDialog({ id, job, t, onConfirm, onCancel }: {
           <DialogTitle>{t("releaseConsole.stopConfirm.title")}</DialogTitle>
           <DialogDescription>{t("releaseConsole.stopConfirm.body")}</DialogDescription>
         </DialogHeader>
-        <div className="space-y-2 text-sm">
+        <div {...uiAttributes({ uid: "google-play-console.release-job-stop-dialog.div-P6VklZ", id: "google-play-console.release-job-stop-dialog.div" })} className="space-y-2 text-sm">
           <code className="block text-xs" dir="ltr">npm run {job?.command.script}</code>
           <code className="block text-xs" dir="ltr">{job?.id}</code>
-          <p className="flex items-center gap-2 rounded-md bg-error-container p-2 text-on-error-container">
+          <p {...uiAttributes({ uid: "google-play-console.release-job-stop-dialog.p-06LhED", id: "google-play-console.release-job-stop-dialog.p" })} className="flex items-center gap-2 rounded-md bg-error-container p-2 text-on-error-container">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             {t("releaseConsole.stopConfirm.warning")}
           </p>

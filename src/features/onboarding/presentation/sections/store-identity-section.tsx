@@ -10,6 +10,7 @@ import { StorageImageManager, type StorageImageManagerHandle } from '@/features/
 import { registerPageSaveImageUploadHandle } from '@/features/page-save';
 import { useOnboardingSaveBridge } from '@/features/page-save/ui';
 import { StorageProfiles, type StoredImage } from '@asol/storage-core';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
   "Women's Fashion": 'womensFashion',
@@ -104,14 +105,14 @@ export function StoreIdentitySection() {
   };
 
   return (
-    <div id="onboarding.sections.store-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
+    <div {...uiAttributes({ uid: "onboarding.sections.store-identity-section.div.4-DKG1x3", id: "onboarding.sections.store-identity-section.div.4" })} id="onboarding.sections.store-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
       <Card id="onboarding.sections.store-identity-section.card">
         <CardHeader id="onboarding.sections.store-identity-section.card-header">
           <CardTitle id="onboarding.sections.store-identity-section.card-title">{t('onboarding.storeIdentity.title')}</CardTitle>
           <CardDescription id="onboarding.sections.store-identity-section.card-description">{t('onboarding.storeIdentity.description')}</CardDescription>
         </CardHeader>
         <CardContent id="onboarding.sections.store-identity-section.card-content" className="space-y-6">
-          <div id="onboarding.sections.store-identity-section.div.2" className="grid gap-6 lg:grid-cols-2">
+          <div {...uiAttributes({ uid: "onboarding.sections.store-identity-section.div.5-2UjMJI", id: "onboarding.sections.store-identity-section.div.5" })} id="onboarding.sections.store-identity-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.store-identity-section.form-field" label={t('onboarding.storeIdentity.storeName')} htmlFor="onboarding.store-identity.store-name" required error={errors.storeName}>
               <FormInput ui={{ uid: 'onboarding.store-identity.store-name-uoWh3D', id: 'onboarding.store-identity.store-name', kind: 'field', part: 'form' }}
                 id="onboarding.store-identity.store-name"
@@ -169,7 +170,7 @@ export function StoreIdentitySection() {
             />
           </FormField>
 
-          <div id="onboarding.sections.store-identity-section.div.3" className="grid gap-6 lg:grid-cols-2">
+          <div {...uiAttributes({ uid: "onboarding.sections.store-identity-section.div.6-tq5MY4", id: "onboarding.sections.store-identity-section.div.6" })} id="onboarding.sections.store-identity-section.div.3" className="grid gap-6 lg:grid-cols-2">
             <StorageImageManager
               ref={setLogoHandle}
               config={{

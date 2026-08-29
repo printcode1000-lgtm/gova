@@ -9,6 +9,7 @@ import {
 } from "@/features/storage/ui";
 import type { StoredImage } from "@asol/storage-core";
 import type * as React from "react";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function StoreIdentityImagesEditor({
   imageTab,
@@ -46,9 +47,9 @@ export function StoreIdentityImagesEditor({
   logoLabel: string;
 }) {
   return (
-    <div id="profile.store-identity.store-identity-images-editor.div" className="space-y-4">
-      <div id="profile.store-identity.store-identity-images-editor.div.2" className="flex gap-2 overflow-x-auto border-b border-outline-variant">
-        <button id="profile.store-identity.store-identity-images-editor.button"
+    <div {...uiAttributes({ uid: "profile.store-identity.store-identity-images-editor.div.5-J3ONTs", id: "profile.store-identity.store-identity-images-editor.div.5" })} id="profile.store-identity.store-identity-images-editor.div" className="space-y-4">
+      <div {...uiAttributes({ uid: "profile.store-identity.store-identity-images-editor.div.6-TALRM1", id: "profile.store-identity.store-identity-images-editor.div.6" })} id="profile.store-identity.store-identity-images-editor.div.2" className="flex gap-2 overflow-x-auto border-b border-outline-variant">
+        <button {...uiAttributes({ uid: "profile.store-identity.store-identity-images-editor.button.3-QOU1Q4", id: "profile.store-identity.store-identity-images-editor.button.3" })} id="profile.store-identity.store-identity-images-editor.button"
           type="button"
           onClick={() => setImageTab("logo")}
           className={`flex flex-shrink-0 items-center gap-2 border-b-2 px-3 pb-3 text-xs font-medium transition-colors sm:text-sm ${
@@ -60,7 +61,7 @@ export function StoreIdentityImagesEditor({
           <ImageIcon id="profile.store-identity.store-identity-images-editor.image-icon" className="h-4 w-4" />
           {logoLabel}
         </button>
-        <button id="profile.store-identity.store-identity-images-editor.button.2"
+        <button {...uiAttributes({ uid: "profile.store-identity.store-identity-images-editor.button.4-9skR8c", id: "profile.store-identity.store-identity-images-editor.button.4" })} id="profile.store-identity.store-identity-images-editor.button.2"
           type="button"
           onClick={() => setImageTab("hero")}
           className={`flex flex-shrink-0 items-center gap-2 border-b-2 px-3 pb-3 text-xs font-medium transition-colors sm:text-sm ${
@@ -74,7 +75,7 @@ export function StoreIdentityImagesEditor({
         </button>
       </div>
 
-      <div id="profile.store-identity.store-identity-images-editor.div.3" className={imageTab === "logo" ? "block w-fit max-w-full" : "hidden"}>
+      <div {...uiAttributes({ uid: "profile.store-identity.store-identity-images-editor.div.7-25Mczj", id: "profile.store-identity.store-identity-images-editor.div.7" })} id="profile.store-identity.store-identity-images-editor.div.3" className={imageTab === "logo" ? "block w-fit max-w-full" : "hidden"}>
         <StorageImageManager
           ref={logoManagerRef}
           config={storeLogoConfig}
@@ -84,7 +85,7 @@ export function StoreIdentityImagesEditor({
           onPendingChange={onLogoPendingChange}
         />
       </div>
-      <div id="profile.store-identity.store-identity-images-editor.div.4" className={imageTab === "hero" ? "block" : "hidden"}>
+      <div {...uiAttributes({ uid: "profile.store-identity.store-identity-images-editor.div.8-1U4Pqk", id: "profile.store-identity.store-identity-images-editor.div.8" })} id="profile.store-identity.store-identity-images-editor.div.4" className={imageTab === "hero" ? "block" : "hidden"}>
         <HeroSlider id="profile.store-identity.store-identity-images-editor.hero-slider"
           mode="images-edit"
           config={heroConfig ?? profileHeroConfig}
@@ -95,7 +96,7 @@ export function StoreIdentityImagesEditor({
       </div>
 
       {isImagesLoading || isSavingImages ? (
-        <p id="profile.store-identity.store-identity-images-editor.p" className="text-xs text-muted-foreground">
+        <p {...uiAttributes({ uid: "profile.store-identity.store-identity-images-editor.p.2-KNqt8E", id: "profile.store-identity.store-identity-images-editor.p.2" })} id="profile.store-identity.store-identity-images-editor.p" className="text-xs text-muted-foreground">
           {isSavingImages ? uploadingLabel : ""}
         </p>
       ) : null}

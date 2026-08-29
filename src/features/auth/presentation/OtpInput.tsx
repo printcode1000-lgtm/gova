@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
 import { asciiDigitsOnly } from '@asol/auth-core';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface OtpInputProps {
   value: string;
@@ -56,10 +57,10 @@ export function OtpInput({ id,
   };
 
   return (
-    <div id={id} className="flex gap-2 justify-center" onPaste={handlePaste} dir="ltr">
+    <div {...uiAttributes({ uid: "auth.otp-input.div-V6b49J", id: "auth.otp-input.div" })} id={id} className="flex gap-2 justify-center" onPaste={handlePaste} dir="ltr">
       {Array.from({ length }).map((_, index) => (
         <input
-          key={index}
+          key={index} {...uiAttributes({ uid: "auth.otp-input.input-TIqR1k", id: "auth.otp-input.input" })}
           ref={(el) => {
             inputsRef.current[index] = el;
           }}

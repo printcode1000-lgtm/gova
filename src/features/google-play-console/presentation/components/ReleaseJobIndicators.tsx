@@ -6,6 +6,7 @@ import {
 
 import { Button } from "@/shared/ui/button";
 import type { BuildJobRecord, BuildJobStatus } from "@asol/release-core/console";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export const RUNNING_STATUSES = new Set<BuildJobStatus>(["queued", "running"]);
 
@@ -52,7 +53,7 @@ export function SecondaryAction({ id, label, icon, job, disabled, start, cancel,
   const running = Boolean(job && RUNNING_STATUSES.has(job.status));
   const Icon = SECONDARY_ICONS[icon];
   return <>
-    <Button id={id} variant="outline" disabled={disabled} onClick={() => void start({ commandId: id })}>
+    <Button ui={{ uid: "google-play-console.release-job-indicators.button-6RjYFD", id: "google-play-console.release-job-indicators.button" }} id={id} variant="outline" disabled={disabled} onClick={() => void start({ commandId: id })}>
       {running ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Icon className="h-4 w-4" />}
       {running ? runningLabel(job, t) : t(label)}
     </Button>
@@ -70,14 +71,14 @@ export function StatusChip({ id, job, t }: {
       : "bg-error-container text-on-error-container";
   const Icon = running ? LoaderCircle : job.status === "succeeded" ? CheckCircle2 : XCircle;
   return (
-    <p id={id}
+    <p {...uiAttributes({ uid: "google-play-console.release-job-indicators.p-M6QKVY", id: "google-play-console.release-job-indicators.p" })} id={id}
       role="status"
       className={`mt-2 flex flex-nowrap items-center gap-2 overflow-x-auto rounded-md p-2 text-xs ${tone}`}
     >
       <Icon className={`h-4 w-4 shrink-0 ${running ? "animate-spin" : ""}`} />
-      <span className="shrink-0 font-semibold">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
+      <span {...uiAttributes({ uid: "google-play-console.release-job-indicators.span-2iyYYp", id: "google-play-console.release-job-indicators.span" })} className="shrink-0 font-semibold">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
       {job.stage ? (
-        <span className="shrink-0">
+        <span {...uiAttributes({ uid: "google-play-console.release-job-indicators.span.2-lY73Xl", id: "google-play-console.release-job-indicators.span.2" })} className="shrink-0">
           {t(
             job.status === "failed"
               ? "releaseConsole.jobProgress.failedAt"
@@ -89,11 +90,11 @@ export function StatusChip({ id, job, t }: {
       {/* The step names the individual check, test or package inside the
           stage — on a failed job it is what was running when it broke. */}
       {job.activity ? (
-        <span dir="ltr" className="shrink-0 font-mono opacity-80">{job.activity}</span>
+        <span {...uiAttributes({ uid: "google-play-console.release-job-indicators.span.3-bLP1FV", id: "google-play-console.release-job-indicators.span.3" })} dir="ltr" className="shrink-0 font-mono opacity-80">{job.activity}</span>
       ) : null}
       <code dir="ltr" className="shrink-0">{job.id}</code>
       {job.error ? (
-        <span dir="ltr" className="min-w-0 truncate">{job.error}</span>
+        <span {...uiAttributes({ uid: "google-play-console.release-job-indicators.span.4-kO59fN", id: "google-play-console.release-job-indicators.span.4" })} dir="ltr" className="min-w-0 truncate">{job.error}</span>
       ) : null}
     </p>
   );
@@ -106,7 +107,7 @@ export function StopButton({ id, job, cancel, t }: {
   t: (key: string) => string;
 } & { id?: string }) {
   return (
-    <Button id={id} variant="destructive" onClick={() => void cancel(job)}
+    <Button ui={{ uid: "google-play-console.release-job-indicators.button.2-5Qsw75", id: "google-play-console.release-job-indicators.button.2" }} id={id} variant="destructive" onClick={() => void cancel(job)}
       title={`${t("releaseConsole.androidPaths.stop")} ${job.id}`}>
       <Square className="h-4 w-4" />{t("releaseConsole.androidPaths.stop")}
     </Button>

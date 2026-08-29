@@ -7,6 +7,7 @@ import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 import { Button } from "@/shared/ui/button";
 import type { UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const REMOVE_ENTRY_UI: UiDescriptor = { uid: "profile.contact.remove-entry-lh8Dtu", id: "profile.contact.remove-entry", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "profile.contact.remove-entry" } };
 
@@ -36,13 +37,13 @@ export function ContactEntryCard({
   children: React.ReactNode;
 }) {
   return (
-    <div
+    <div {...uiAttributes({ uid: "profile.contact-info.contact-entry-card.div-MWY0r7", id: "profile.contact-info.contact-entry-card.div" })}
       id={id}
       className="space-y-2 rounded-lg border p-3"
       style={{ backgroundColor: `${color}10`, borderColor: `${color}44` }}
     >
-      <div className="flex items-center justify-between gap-2">
-        <span
+      <div {...uiAttributes({ uid: "profile.contact-info.contact-entry-card.div.2-1NV0DS", id: "profile.contact-info.contact-entry-card.div.2" })} className="flex items-center justify-between gap-2">
+        <span {...uiAttributes({ uid: "profile.contact-info.contact-entry-card.span-D1ArYX", id: "profile.contact-info.contact-entry-card.span" })}
           className="flex items-center gap-2 text-xs font-semibold"
           style={{ color }}
         >

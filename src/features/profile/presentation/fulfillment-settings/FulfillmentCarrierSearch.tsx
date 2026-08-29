@@ -9,6 +9,7 @@ import {
   type SellerCardAction,
 } from "@/features/seller-card";
 import type { fulfillmentSettingsCopy } from "./fulfillment-settings-copy";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function FulfillmentCarrierSearch({
   text,
@@ -40,8 +41,8 @@ export function FulfillmentCarrierSearch({
   onToggle: () => void;
 }) {
   return (
-    <section id="profile.fulfillment-settings.fulfillment-carrier-search.section" className="space-y-4 rounded-xl border border-outline-variant p-4">
-      <button
+    <section {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.section.2-aTO5nE", id: "profile.fulfillment-settings.fulfillment-carrier-search.section.2" })} id="profile.fulfillment-settings.fulfillment-carrier-search.section" className="space-y-4 rounded-xl border border-outline-variant p-4">
+      <button {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.button.2-80NLOZ", id: "profile.fulfillment-settings.fulfillment-carrier-search.button.2" })}
         id="profile.fulfillment-settings.fulfillment-carrier-search.div"
         type="button"
         onClick={onToggle}
@@ -49,9 +50,9 @@ export function FulfillmentCarrierSearch({
         aria-label={text.shippingMethods}
         className="flex w-full items-center justify-between gap-2"
       >
-        <span id="profile.fulfillment-settings.fulfillment-carrier-search.span" className="flex items-center gap-2">
+        <span {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.span.2-PBncV3", id: "profile.fulfillment-settings.fulfillment-carrier-search.span.2" })} id="profile.fulfillment-settings.fulfillment-carrier-search.span" className="flex items-center gap-2">
           <Truck id="profile.fulfillment-settings.fulfillment-carrier-search.truck" className="h-5 w-5 text-primary" />
-          <h3 id="profile.fulfillment-settings.fulfillment-carrier-search.h3" className="text-sm font-bold">{text.shippingMethods}</h3>
+          <h3 {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.h3.2-4G5kP7", id: "profile.fulfillment-settings.fulfillment-carrier-search.h3.2" })} id="profile.fulfillment-settings.fulfillment-carrier-search.h3" className="text-sm font-bold">{text.shippingMethods}</h3>
         </span>
         <ChevronDown id="profile.fulfillment-settings.fulfillment-carrier-search.chevron-down"
           className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
@@ -59,15 +60,15 @@ export function FulfillmentCarrierSearch({
       </button>
 
       {open ? (
-      <div id="profile.fulfillment-settings.fulfillment-carrier-search.div.2" className="space-y-3">
-        <form id="profile.fulfillment-settings.fulfillment-carrier-search.form"
+      <div {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.div.5-Kb23VL", id: "profile.fulfillment-settings.fulfillment-carrier-search.div.5" })} id="profile.fulfillment-settings.fulfillment-carrier-search.div.2" className="space-y-3">
+        <form {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.form.2-F5Jvx5", id: "profile.fulfillment-settings.fulfillment-carrier-search.form.2" })} id="profile.fulfillment-settings.fulfillment-carrier-search.form"
           className="flex gap-2"
           onSubmit={(event) => {
             event.preventDefault();
             submitSearch();
           }}
         >
-          <div id="profile.fulfillment-settings.fulfillment-carrier-search.div.3" className="relative min-w-0 flex-1">
+          <div {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.div.6-BLJ1IW", id: "profile.fulfillment-settings.fulfillment-carrier-search.div.6" })} id="profile.fulfillment-settings.fulfillment-carrier-search.div.3" className="relative min-w-0 flex-1">
             <Search id="profile.fulfillment-settings.fulfillment-carrier-search.search" className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input ui={{ uid: "profile.fulfillment.carrier-search-P0D9JA", id: "profile.fulfillment.carrier-search", kind: "field", part: "carriers" }}
               id="deliveryProviderSearch"
@@ -77,7 +78,7 @@ export function FulfillmentCarrierSearch({
               className="asol-input-decorated-start"
             />
           </div>
-          <button id="profile.fulfillment-settings.fulfillment-carrier-search.button"
+          <button {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.button.3-yCm4oX", id: "profile.fulfillment-settings.fulfillment-carrier-search.button.3" })} id="profile.fulfillment-settings.fulfillment-carrier-search.button"
             type="submit"
             className="h-10 shrink-0 rounded-md bg-primary px-4 text-sm font-semibold text-on-primary transition"
           >
@@ -86,15 +87,15 @@ export function FulfillmentCarrierSearch({
         </form>
 
         {isLoadingDeliveryUsers ? (
-          <p id="profile.fulfillment-settings.fulfillment-carrier-search.p" className="text-sm text-muted-foreground">
+          <p {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.p.4-02RjlP", id: "profile.fulfillment-settings.fulfillment-carrier-search.p.4" })} id="profile.fulfillment-settings.fulfillment-carrier-search.p" className="text-sm text-muted-foreground">
             {text.loadingProviders}
           </p>
         ) : displayedUsers.length === 0 ? (
-          <p id="profile.fulfillment-settings.fulfillment-carrier-search.p.2" className="rounded-lg border border-dashed border-outline-variant p-4 text-center text-sm text-muted-foreground">
+          <p {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.p.5-WwO36y", id: "profile.fulfillment-settings.fulfillment-carrier-search.p.5" })} id="profile.fulfillment-settings.fulfillment-carrier-search.p.2" className="rounded-lg border border-dashed border-outline-variant p-4 text-center text-sm text-muted-foreground">
             {emptyDeliveryProvidersMessage}
           </p>
         ) : (
-          <div
+          <div {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.div.7-TN9m25", id: "profile.fulfillment-settings.fulfillment-carrier-search.div.7" })}
             id="profile.fulfillment-settings.fulfillment-carrier-search.div.4"
             className="grid max-h-[21rem] grid-cols-2 content-start gap-3 overflow-y-auto overscroll-y-contain pe-1"
           >
@@ -130,7 +131,7 @@ export function FulfillmentCarrierSearch({
         )}
 
         {selectedCount > 0 ? (
-          <p id="profile.fulfillment-settings.fulfillment-carrier-search.p.3" className="text-xs text-muted-foreground">
+          <p {...uiAttributes({ uid: "profile.fulfillment-settings.fulfillment-carrier-search.p.6-ankDh8", id: "profile.fulfillment-settings.fulfillment-carrier-search.p.6" })} id="profile.fulfillment-settings.fulfillment-carrier-search.p.3" className="text-xs text-muted-foreground">
             {text.selectedCount(selectedCount)}
           </p>
         ) : null}

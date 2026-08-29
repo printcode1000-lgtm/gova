@@ -9,6 +9,7 @@ import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Checkbox } from '@/shared/ui/checkbox';
 import { cn } from '@/shared/utils';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const COUNTRY_KEYS: Record<string, string> = {
   'United States': 'unitedStates',
@@ -66,14 +67,14 @@ export function LocationSection() {
   };
 
   return (
-    <div id="onboarding.sections.location-section.div" className="space-y-6 animate-in fade-in duration-300">
+    <div {...uiAttributes({ uid: "onboarding.sections.location-section.div.4-IFW09f", id: "onboarding.sections.location-section.div.4" })} id="onboarding.sections.location-section.div" className="space-y-6 animate-in fade-in duration-300">
       <Card id="onboarding.sections.location-section.card">
         <CardHeader id="onboarding.sections.location-section.card-header">
           <CardTitle id="onboarding.sections.location-section.card-title">{t('onboarding.location.title')}</CardTitle>
           <CardDescription id="onboarding.sections.location-section.card-description">{t('onboarding.location.description')}</CardDescription>
         </CardHeader>
         <CardContent id="onboarding.sections.location-section.card-content" className="space-y-6">
-          <div id="onboarding.sections.location-section.div.2" className="grid gap-6 lg:grid-cols-2">
+          <div {...uiAttributes({ uid: "onboarding.sections.location-section.div.5-Rorm7L", id: "onboarding.sections.location-section.div.5" })} id="onboarding.sections.location-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.location-section.form-field" label={t('onboarding.location.country')} htmlFor="country" required error={errors.country}>
               <FormSelect id="onboarding.sections.location-section.form-select" ui={{ uid: 'onboarding.location.country-ZUTvz1', id: 'onboarding.location.country', kind: 'field', part: 'form' }}
                 value={location.country}
@@ -128,12 +129,12 @@ export function LocationSection() {
           <CardDescription id="onboarding.sections.location-section.card-description.2">{t('onboarding.location.shippingCountriesDesc')}</CardDescription>
         </CardHeader>
         <CardContent id="onboarding.sections.location-section.card-content.2">
-          <div id="onboarding.sections.location-section.div.3" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <div {...uiAttributes({ uid: "onboarding.sections.location-section.div.6-bH3rMV", id: "onboarding.sections.location-section.div.6" })} id="onboarding.sections.location-section.div.3" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {constants.countries.map((country) => {
               const isSelected = location.shippingRegions.some((r) => r.country === country);
               return (
                 <label
-                  key={country}
+                  key={country} {...uiAttributes({ uid: "onboarding.sections.location-section.label-x4aD6I", id: "onboarding.sections.location-section.label" })}
                   className={cn(
                     'flex items-center gap-2 p-3 rounded-lg border transition-all',
                     isSelected
@@ -141,11 +142,11 @@ export function LocationSection() {
                       : 'border-border',
                   )}
                 >
-                  <Checkbox
+                  <Checkbox ui={{ uid: "onboarding.sections.location-section.checkbox-Dnft4T", id: "onboarding.sections.location-section.checkbox" }}
                     checked={isSelected}
                     onCheckedChange={() => toggleShippingCountry(country)}
                   />
-                  <span className="text-sm">
+                  <span {...uiAttributes({ uid: "onboarding.sections.location-section.span-YUdM27", id: "onboarding.sections.location-section.span" })} className="text-sm">
                     {t(`onboarding.constants.countries.${COUNTRY_KEYS[country]}`)}
                   </span>
                 </label>

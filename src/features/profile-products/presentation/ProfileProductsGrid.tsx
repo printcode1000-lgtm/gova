@@ -6,6 +6,7 @@ import {
 } from "@/features/product-card";
 
 import type { ProfileProductsTabsLabels } from "./ProfileProductsTabs";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function ProfileProductsGrid({
   featuredProductIds,
@@ -27,7 +28,7 @@ export function ProfileProductsGrid({
   onViewProduct: (product: ProductRecord) => void;
 }) {
   return (
-    <div id="profile-products.profile-products-grid.div" className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+    <div {...uiAttributes({ uid: "profile-products.profile-products-grid.div.2-9LC6Sr", id: "profile-products.profile-products-grid.div.2" })} id="profile-products.profile-products-grid.div" className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
       {products.map((product) => {
         const featured = featuredProductIds.includes(product.id);
         const card = createProductCardViewModel(product);

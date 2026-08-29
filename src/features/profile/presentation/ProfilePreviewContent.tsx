@@ -51,6 +51,7 @@ import { ProfileFulfillmentPreviewCard } from "./ProfilePreviewInformation";
 import { ProfilePreviewSectionHeading } from "./ProfilePreviewSectionHeading";
 import { ProfileStorySection } from "./ProfileStorySection";
 import type { UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProfilePreviewContentProps {
   locale: "ar" | "en";
@@ -157,26 +158,26 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
   }, [previewUid, ready, restoreSnapshot]);
 
   return (
-    <div id="profile.profile-preview-content.div"
+    <div {...uiAttributes({ uid: "profile.profile-preview-content.div.12-A7TnS4", id: "profile.profile-preview-content.div.12" })} id="profile.profile-preview-content.div"
       data-snapshot-id="profile-preview-root"
       className="mx-auto w-full max-w-6xl min-w-0 space-y-5 overflow-x-clip px-0 sm:space-y-6 sm:px-4"
     >
-      <div id="profile.profile-preview-content.div.2" className="min-w-0">
+      <div {...uiAttributes({ uid: "profile.profile-preview-content.div.13-HRZl55", id: "profile.profile-preview-content.div.13" })} id="profile.profile-preview-content.div.2" className="min-w-0">
         {loading.images ? (
-          <div id="profile.profile-preview-content.div.3" className="py-8 text-center text-sm text-on-surface-variant">
+          <div {...uiAttributes({ uid: "profile.profile-preview-content.div.14-AU3TN6", id: "profile.profile-preview-content.div.14" })} id="profile.profile-preview-content.div.3" className="py-8 text-center text-sm text-on-surface-variant">
             {t("profilePreview.loading")}
           </div>
         ) : (
-          <div id="profile.profile-preview-content.div.4" className="mb-0 -mt-4">
+          <div {...uiAttributes({ uid: "profile.profile-preview-content.div.15-R8dWDg", id: "profile.profile-preview-content.div.15" })} id="profile.profile-preview-content.div.4" className="mb-0 -mt-4">
             <HeroSlider id="profile.profile-preview-content.hero-slider" mode="view" config={props.heroConfig} />
           </div>
         )}
 
         {!loading.details ? (
-          <section id="profile.profile-preview-content.section" className="mx-2 mt-3 min-w-0 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 sm:mt-4">
-            <div id="profile.profile-preview-content.div.5" className="flex min-w-0 items-start gap-3 sm:gap-4">
+          <section {...uiAttributes({ uid: "profile.profile-preview-content.section.8-L8qPFE", id: "profile.profile-preview-content.section.8" })} id="profile.profile-preview-content.section" className="mx-2 mt-3 min-w-0 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 sm:mt-4">
+            <div {...uiAttributes({ uid: "profile.profile-preview-content.div.16-P81D8w", id: "profile.profile-preview-content.div.16" })} id="profile.profile-preview-content.div.5" className="flex min-w-0 items-start gap-3 sm:gap-4">
               {storeImages.avatarUrl ? (
-                <div id="profile.profile-preview-content.div.6" className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full shadow-lg sm:-mt-10 sm:h-28 sm:w-28">
+                <div {...uiAttributes({ uid: "profile.profile-preview-content.div.17-J4v968", id: "profile.profile-preview-content.div.17" })} id="profile.profile-preview-content.div.6" className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full shadow-lg sm:-mt-10 sm:h-28 sm:w-28">
                   <Image id="profile.profile-preview-content.image"
                     src={storeImages.avatarUrl}
                     alt="Avatar"
@@ -187,9 +188,9 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                 </div>
               ) : null}
 
-              <div id="profile.profile-preview-content.div.7" className="min-w-0 flex-1">
+              <div {...uiAttributes({ uid: "profile.profile-preview-content.div.18-FnfR62", id: "profile.profile-preview-content.div.18" })} id="profile.profile-preview-content.div.7" className="min-w-0 flex-1">
                 {previewUid ? (
-                  <div id="profile.profile-preview-content.div.8" className="grid min-w-0 grid-cols-2 items-center gap-2 min-[360px]:grid-cols-3 sm:flex sm:flex-wrap">
+                  <div {...uiAttributes({ uid: "profile.profile-preview-content.div.19-8NXoJT", id: "profile.profile-preview-content.div.19" })} id="profile.profile-preview-content.div.8" className="grid min-w-0 grid-cols-2 items-center gap-2 min-[360px]:grid-cols-3 sm:flex sm:flex-wrap">
                     <FollowButton
                       className="w-full sm:w-auto"
                       ui={PROFILE_FOLLOW_UI}
@@ -229,7 +230,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                             icon={faShareNodes}
                             className="h-5 w-5"
                           />
-                          <span id="profile.profile-preview-content.span" className={ACTION_TILE_LABEL_CLASS}>
+                          <span {...uiAttributes({ uid: "profile.profile-preview-content.span.4-Y6UwiN", id: "profile.profile-preview-content.span.4" })} id="profile.profile-preview-content.span" className={ACTION_TILE_LABEL_CLASS}>
                             {t("profilePreview.share")}
                           </span>
                         </Button>
@@ -250,7 +251,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         onClick={() => void openProfileConversation()}
                       >
                         <FontAwesomeIcon id="profile.profile-preview-content.font-awesome-icon.2" icon={faComments} className="h-5 w-5" />
-                        <span id="profile.profile-preview-content.span.2" className={ACTION_TILE_LABEL_CLASS}>
+                        <span {...uiAttributes({ uid: "profile.profile-preview-content.span.5-D7rHjT", id: "profile.profile-preview-content.span.5" })} id="profile.profile-preview-content.span.2" className={ACTION_TILE_LABEL_CLASS}>
                           {openingConversation
                             ? locale === "ar"
                               ? "جارٍ الفتح"
@@ -280,7 +281,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                           icon={faPaperPlane}
                           className="h-5 w-5"
                         />
-                        <span id="profile.profile-preview-content.span.3" className={ACTION_TILE_LABEL_CLASS}>
+                        <span {...uiAttributes({ uid: "profile.profile-preview-content.span.6-K3JqZs", id: "profile.profile-preview-content.span.6" })} id="profile.profile-preview-content.span.3" className={ACTION_TILE_LABEL_CLASS}>
                           {t("profilePreview.customRequest")}
                         </span>
                       </Button>
@@ -288,21 +289,21 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                   </div>
                 ) : null}
                 {conversationError ? (
-                  <p id="profile.profile-preview-content.p" className="mt-2 text-xs font-medium text-error" role="alert">
+                  <p {...uiAttributes({ uid: "profile.profile-preview-content.p.3-KPB9xQ", id: "profile.profile-preview-content.p.3" })} id="profile.profile-preview-content.p" className="mt-2 text-xs font-medium text-error" role="alert">
                     {conversationError}
                   </p>
                 ) : null}
               </div>
             </div>
 
-            <div id="profile.profile-preview-content.div.9" className="mt-3 min-w-0">
+            <div {...uiAttributes({ uid: "profile.profile-preview-content.div.20-6jVIZ0", id: "profile.profile-preview-content.div.20" })} id="profile.profile-preview-content.div.9" className="mt-3 min-w-0">
               {storeDetails.storeName ? (
-                <h1 id="profile.profile-preview-content.h1" className="break-words text-lg font-bold leading-7 text-on-surface sm:text-2xl">
+                <h1 {...uiAttributes({ uid: "profile.profile-preview-content.h1.2-R9U7wg", id: "profile.profile-preview-content.h1.2" })} id="profile.profile-preview-content.h1" className="break-words text-lg font-bold leading-7 text-on-surface sm:text-2xl">
                   {storeDetails.storeName}
                 </h1>
               ) : null}
               {storeDetails.storeDescription ? (
-                <p id="profile.profile-preview-content.p.2" className="mt-1 line-clamp-2 break-words text-xs leading-5 text-on-surface-variant sm:text-sm sm:leading-6">
+                <p {...uiAttributes({ uid: "profile.profile-preview-content.p.4-4jGr9l", id: "profile.profile-preview-content.p.4" })} id="profile.profile-preview-content.p.2" className="mt-1 line-clamp-2 break-words text-xs leading-5 text-on-surface-variant sm:text-sm sm:leading-6">
                   {storeDetails.storeDescription}
                 </p>
               ) : null}
@@ -312,9 +313,9 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       </div>
 
       {!loading.contacts && contacts ? (
-        <section id="profile.profile-preview-content.section.2" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:mx-0 sm:p-5">
-          <div id="profile.profile-preview-content.div.10" className="min-w-0">
-            <h2 id="profile.profile-preview-content.h2" className="mb-3 flex min-w-0 items-center gap-2 break-words text-sm font-bold">
+        <section {...uiAttributes({ uid: "profile.profile-preview-content.section.9-id5UsW", id: "profile.profile-preview-content.section.9" })} id="profile.profile-preview-content.section.2" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:mx-0 sm:p-5">
+          <div {...uiAttributes({ uid: "profile.profile-preview-content.div.21-dZ49Bu", id: "profile.profile-preview-content.div.21" })} id="profile.profile-preview-content.div.10" className="min-w-0">
+            <h2 {...uiAttributes({ uid: "profile.profile-preview-content.h2.2-F9F5oR", id: "profile.profile-preview-content.h2.2" })} id="profile.profile-preview-content.h2" className="mb-3 flex min-w-0 items-center gap-2 break-words text-sm font-bold">
               <FontAwesomeIcon id="profile.profile-preview-content.font-awesome-icon.4" icon={faShareNodes} className="text-primary" />
               {t("profilePreview.quickContact")}
             </h2>
@@ -332,19 +333,19 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.featured && props.hasFeaturedProducts ? (
-        <section id="profile.profile-preview-content.section.3" className="mx-2 min-w-0 overflow-hidden sm:mx-0">
+        <section {...uiAttributes({ uid: "profile.profile-preview-content.section.10-2jyQXV", id: "profile.profile-preview-content.section.10" })} id="profile.profile-preview-content.section.3" className="mx-2 min-w-0 overflow-hidden sm:mx-0">
           <FeaturedMarquee id="profile.profile-preview-content.featured-marquee" config={props.featuredConfig} />
         </section>
       ) : null}
 
       {props.trendingConfig.items.length > 0 ? (
-        <section id="profile.profile-preview-content.section.4" className="mx-2 min-w-0 overflow-hidden rounded-2xl border border-error/20 shadow-sm sm:mx-0">
+        <section {...uiAttributes({ uid: "profile.profile-preview-content.section.11-XQXyX3", id: "profile.profile-preview-content.section.11" })} id="profile.profile-preview-content.section.4" className="mx-2 min-w-0 overflow-hidden rounded-2xl border border-error/20 shadow-sm sm:mx-0">
           <TrendingRibbon id="profile.profile-preview-content.trending-ribbon" config={props.trendingConfig} />
         </section>
       ) : null}
 
       {previewUid ? (
-        <section id="profile.profile-preview-content.section.5" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:mx-0 sm:p-6">
+        <section {...uiAttributes({ uid: "profile.profile-preview-content.section.12-Oz4BaV", id: "profile.profile-preview-content.section.12" })} id="profile.profile-preview-content.section.5" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:mx-0 sm:p-6">
           <ProfilePreviewSectionHeading id="profile.profile-preview-content.profile-preview-section-heading"
             icon={faBoxOpen}
             title={t("profilePreview.products")}
@@ -355,8 +356,8 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.details && !loading.fulfillment ? (
-        <section id="profile.profile-preview-content.section.6" className="mx-2 grid min-w-0 items-stretch gap-5 sm:mx-0 lg:grid-cols-2">
-          <div id="profile.profile-preview-content.div.11" className="min-w-0 overflow-hidden rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6 lg:h-full">
+        <section {...uiAttributes({ uid: "profile.profile-preview-content.section.13-r376AE", id: "profile.profile-preview-content.section.13" })} id="profile.profile-preview-content.section.6" className="mx-2 grid min-w-0 items-stretch gap-5 sm:mx-0 lg:grid-cols-2">
+          <div {...uiAttributes({ uid: "profile.profile-preview-content.div.22-Gm5l24", id: "profile.profile-preview-content.div.22" })} id="profile.profile-preview-content.div.11" className="min-w-0 overflow-hidden rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6 lg:h-full">
             <ProfilePreviewSectionHeading id="profile.profile-preview-content.profile-preview-section-heading.2"
               icon={faClock}
               title={t("profilePreview.workingHours")}
@@ -391,7 +392,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.details && storeDetails.ratingSettings?.enabled ? (
-        <section id="profile.profile-preview-content.section.7" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:mx-0 sm:p-7 sm:pb-10">
+        <section {...uiAttributes({ uid: "profile.profile-preview-content.section.14-tJr6K2", id: "profile.profile-preview-content.section.14" })} id="profile.profile-preview-content.section.7" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:mx-0 sm:p-7 sm:pb-10">
           <ProfilePreviewSectionHeading id="profile.profile-preview-content.profile-preview-section-heading.3"
             icon={faComments}
             title={t("profilePreview.reviews")}

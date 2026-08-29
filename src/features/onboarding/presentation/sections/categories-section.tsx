@@ -9,6 +9,7 @@ import { Badge } from '@/shared/ui/badge';
 import { Checkbox } from '@/shared/ui/checkbox';
 import { cn } from '@/shared/utils';
 import { ChevronDown, ChevronRight, Tag } from 'lucide-react';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const SUBCATEGORY_KEYS: Record<string, string> = {
   'T-Shirts': 't_shirts',
@@ -57,7 +58,7 @@ export function CategoriesSection() {
   };
 
   return (
-    <div id="onboarding.sections.categories-section.div" className="space-y-6 animate-in fade-in duration-300">
+    <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.3-I4h6iL", id: "onboarding.sections.categories-section.div.3" })} id="onboarding.sections.categories-section.div" className="space-y-6 animate-in fade-in duration-300">
       <Card id="onboarding.sections.categories-section.card">
         <CardHeader id="onboarding.sections.categories-section.card-header">
           <CardTitle id="onboarding.sections.categories-section.card-title" className="flex items-center gap-2">
@@ -68,10 +69,10 @@ export function CategoriesSection() {
         </CardHeader>
         <CardContent id="onboarding.sections.categories-section.card-content" className="space-y-4">
           {errors.categories && (
-            <p id="onboarding.sections.categories-section.p" className="text-sm text-destructive">{errors.categories}</p>
+            <p {...uiAttributes({ uid: "onboarding.sections.categories-section.p.2-713ZFM", id: "onboarding.sections.categories-section.p.2" })} id="onboarding.sections.categories-section.p" className="text-sm text-destructive">{errors.categories}</p>
           )}
 
-          <div id="onboarding.sections.categories-section.div.2" className="space-y-2">
+          <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.4-vkqO4H", id: "onboarding.sections.categories-section.div.4" })} id="onboarding.sections.categories-section.div.2" className="space-y-2">
             {categories.selectedCategories.map((category) => {
               const isExpanded = expandedCategories.includes(category.id);
               const categoryConfig = constants.fashionCategories.find(
@@ -81,7 +82,7 @@ export function CategoriesSection() {
 
               return (
                 <div
-                  key={category.id}
+                  key={category.id} {...uiAttributes({ uid: "onboarding.sections.categories-section.div.5-zYM2qK", id: "onboarding.sections.categories-section.div.5" })}
                   className={cn(
                     'rounded-lg border transition-all',
                     category.isSelected
@@ -89,16 +90,16 @@ export function CategoriesSection() {
                       : 'border-border',
                   )}
                 >
-                  <div className="flex items-center gap-3 p-4">
-                    <Checkbox
+                  <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.6-B2O2TC", id: "onboarding.sections.categories-section.div.6" })} className="flex items-center gap-3 p-4">
+                    <Checkbox ui={{ uid: "onboarding.sections.categories-section.checkbox-25XC95", id: "onboarding.sections.categories-section.checkbox" }}
                       checked={category.isSelected}
                       onCheckedChange={() => toggleCategory(category.id)}
                     />
-                    <span className="flex-1 font-medium">
+                    <span {...uiAttributes({ uid: "onboarding.sections.categories-section.span-X25IMP", id: "onboarding.sections.categories-section.span" })} className="flex-1 font-medium">
                       {t(`onboarding.constants.fashionCategories.${category.id}`)}
                     </span>
                     {category.isSelected && subcategories.length > 0 && (
-                      <button
+                      <button {...uiAttributes({ uid: "onboarding.sections.categories-section.button-53HTaC", id: "onboarding.sections.categories-section.button" })}
                         type="button"
                         onClick={() => toggleExpand(category.id)}
                         className="flex items-center gap-1 text-sm text-muted-foreground"
@@ -116,8 +117,8 @@ export function CategoriesSection() {
                   </div>
 
                   {category.isSelected && isExpanded && subcategories.length > 0 && (
-                    <div className="px-4 pb-4 pt-0 animate-in slide-in-from-top-2 duration-200">
-                      <div className="flex flex-wrap gap-2 pl-7">
+                    <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.7-Yo4Bat", id: "onboarding.sections.categories-section.div.7" })} className="px-4 pb-4 pt-0 animate-in slide-in-from-top-2 duration-200">
+                      <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.8-DtrG94", id: "onboarding.sections.categories-section.div.8" })} className="flex flex-wrap gap-2 pl-7">
                         {subcategories.map((sub) => (
                           <Badge key={sub} variant="outline">
                             {t(

@@ -11,6 +11,7 @@ import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const BRAND_VALUE_KEYS: Record<string, string> = {
   Sustainability: 'sustainability',
@@ -76,7 +77,7 @@ export function BrandIdentitySection() {
   };
 
   return (
-    <div id="onboarding.sections.brand-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
+    <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.7-16SWOd", id: "onboarding.sections.brand-identity-section.div.7" })} id="onboarding.sections.brand-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
       <Card id="onboarding.sections.brand-identity-section.card">
         <CardHeader id="onboarding.sections.brand-identity-section.card-header">
           <CardTitle id="onboarding.sections.brand-identity-section.card-title" className="flex items-center gap-2">
@@ -122,32 +123,32 @@ export function BrandIdentitySection() {
             />
           </FormField>
 
-          <div id="onboarding.sections.brand-identity-section.div.2" className="space-y-3">
-            <div id="onboarding.sections.brand-identity-section.div.3" className="flex items-center justify-between">
-              <div id="onboarding.sections.brand-identity-section.div.4">
+          <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.8-C4Q5Up", id: "onboarding.sections.brand-identity-section.div.8" })} id="onboarding.sections.brand-identity-section.div.2" className="space-y-3">
+            <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.9-HJ1AYY", id: "onboarding.sections.brand-identity-section.div.9" })} id="onboarding.sections.brand-identity-section.div.3" className="flex items-center justify-between">
+              <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.10-eE9miq", id: "onboarding.sections.brand-identity-section.div.10" })} id="onboarding.sections.brand-identity-section.div.4">
                 <Label id="onboarding.sections.brand-identity-section.label" className="text-sm font-medium">{t('onboarding.brandIdentity.usps')}</Label>
-                <p id="onboarding.sections.brand-identity-section.p" className="text-xs text-muted-foreground">
+                <p {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.p.2-72giHE", id: "onboarding.sections.brand-identity-section.p.2" })} id="onboarding.sections.brand-identity-section.p" className="text-xs text-muted-foreground">
                   {t('onboarding.brandIdentity.uspsHint')}
                 </p>
               </div>
               {errors.uniqueSellingPoints && (
-                <span id="onboarding.sections.brand-identity-section.span" className="text-xs text-destructive">{errors.uniqueSellingPoints}</span>
+                <span {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.span.2-FJGX3l", id: "onboarding.sections.brand-identity-section.span.2" })} id="onboarding.sections.brand-identity-section.span" className="text-xs text-destructive">{errors.uniqueSellingPoints}</span>
               )}
             </div>
 
-            <div id="onboarding.sections.brand-identity-section.div.5" className="flex flex-wrap gap-2">
+            <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.11-EemgB9", id: "onboarding.sections.brand-identity-section.div.11" })} id="onboarding.sections.brand-identity-section.div.5" className="flex flex-wrap gap-2">
               {brandIdentity.uniqueSellingPoints.map((usp) => (
                 <Badge key={usp} variant="secondary" className="gap-1 pl-3">
                   <Sparkles className="h-3 w-3" />
                   {usp}
-                  <button type="button" onClick={() => removeUSP(usp)} className="ml-1 rounded-full">
+                  <button {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.button.2-UuU4Rj", id: "onboarding.sections.brand-identity-section.button.2" })} type="button" onClick={() => removeUSP(usp)} className="ml-1 rounded-full">
                     <X className="h-3 w-3" />
                   </button>
                 </Badge>
               ))}
             </div>
 
-            <div id="onboarding.sections.brand-identity-section.div.6" className="flex gap-2">
+            <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.12-I2oXNa", id: "onboarding.sections.brand-identity-section.div.12" })} id="onboarding.sections.brand-identity-section.div.6" className="flex gap-2">
               <Input id="onboarding.sections.brand-identity-section.input" ui={{ uid: 'onboarding.brand-identity.new-usp-Uk0WbA', id: 'onboarding.brand-identity.new-usp', kind: 'field', part: 'usp' }}
                 value={newUSP}
                 onChange={(e) => setNewUSP(e.target.value)}

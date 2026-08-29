@@ -7,6 +7,7 @@ import { FormField, FormInput, FormSelect } from '../form-components';
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
 import type { BusinessType } from '@/features/onboarding/domain/types';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const BUSINESS_AGE_KEYS = ['justStarting', 'oneYear', 'twoYears', 'threeYears', 'fiveYears', 'tenYears'] as const;
 const BUSINESS_AGE_VALUES = ['0', '1', '2', '3', '5', '10'] as const;
@@ -46,14 +47,14 @@ export function MerchantInfoSection() {
   const showBusinessFields = merchantInfo.businessType && merchantInfo.businessType !== 'individual';
 
   return (
-    <div id="onboarding.sections.merchant-info-section.div" className="space-y-6 animate-in fade-in duration-300">
+    <div {...uiAttributes({ uid: "onboarding.sections.merchant-info-section.div.5-qI1MMu", id: "onboarding.sections.merchant-info-section.div.5" })} id="onboarding.sections.merchant-info-section.div" className="space-y-6 animate-in fade-in duration-300">
       <Card id="onboarding.sections.merchant-info-section.card">
         <CardHeader id="onboarding.sections.merchant-info-section.card-header">
           <CardTitle id="onboarding.sections.merchant-info-section.card-title">{t('onboarding.merchantInfo.title')}</CardTitle>
           <CardDescription id="onboarding.sections.merchant-info-section.card-description">{t('onboarding.merchantInfo.description')}</CardDescription>
         </CardHeader>
         <CardContent id="onboarding.sections.merchant-info-section.card-content" className="space-y-6">
-          <div id="onboarding.sections.merchant-info-section.div.2" className="grid gap-6 lg:grid-cols-2">
+          <div {...uiAttributes({ uid: "onboarding.sections.merchant-info-section.div.6-301ePI", id: "onboarding.sections.merchant-info-section.div.6" })} id="onboarding.sections.merchant-info-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.merchant-info-section.form-field" label={t('onboarding.merchantInfo.yourName')} htmlFor="merchantName" required error={errors.merchantName}>
               <FormInput ui={{ uid: 'onboarding.merchant-info.merchant-name-89HUhH', id: 'onboarding.merchant-info.merchant-name', kind: 'field', part: 'form' }}
                 id="merchantName"
@@ -79,7 +80,7 @@ export function MerchantInfoSection() {
           </div>
 
           {showBusinessFields && (
-            <div id="onboarding.sections.merchant-info-section.div.3" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
+            <div {...uiAttributes({ uid: "onboarding.sections.merchant-info-section.div.7-C55dgh", id: "onboarding.sections.merchant-info-section.div.7" })} id="onboarding.sections.merchant-info-section.div.3" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
               <FormField id="onboarding.sections.merchant-info-section.form-field.3" label={t('onboarding.merchantInfo.companyName')} htmlFor="companyName" required={showBusinessFields} error={errors.companyName}>
                 <FormInput ui={{ uid: 'onboarding.merchant-info.company-name-1PGUGk', id: 'onboarding.merchant-info.company-name', kind: 'field', part: 'form' }}
                   id="companyName"
@@ -90,7 +91,7 @@ export function MerchantInfoSection() {
                 />
               </FormField>
 
-              <div id="onboarding.sections.merchant-info-section.div.4" className="grid gap-6 lg:grid-cols-2">
+              <div {...uiAttributes({ uid: "onboarding.sections.merchant-info-section.div.8-t1OI6y", id: "onboarding.sections.merchant-info-section.div.8" })} id="onboarding.sections.merchant-info-section.div.4" className="grid gap-6 lg:grid-cols-2">
                 <FormField id="onboarding.sections.merchant-info-section.form-field.4" label={t('onboarding.merchantInfo.registrationNumber')} htmlFor="registrationNumber" hint={t('onboarding.common.optional')}>
                   <FormInput ui={{ uid: 'onboarding.merchant-info.registration-number-F2UO6Q', id: 'onboarding.merchant-info.registration-number', kind: 'field', part: 'form' }}
                     id="registrationNumber"

@@ -19,6 +19,7 @@ import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
 import { useTranslation } from "@/shared/i18n";
 import type { UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 function normalizeCustomRequestImages(
   images: Array<StoredImage | null | undefined>,
@@ -190,7 +191,7 @@ export function CustomRequestPageContent() {
 
   if (isLoading) {
     return (
-      <main id="profile.custom-request-page-content.main" className="flex min-h-[60vh] items-center justify-center">
+      <main {...uiAttributes({ uid: "profile.custom-request-page-content.main.5-If3OGA", id: "profile.custom-request-page-content.main.5" })} id="profile.custom-request-page-content.main" className="flex min-h-[60vh] items-center justify-center">
         <Loader2 id="profile.custom-request-page-content.loader2" className="h-7 w-7 animate-spin text-primary" />
       </main>
     );
@@ -198,18 +199,18 @@ export function CustomRequestPageContent() {
 
   if (!sellerUid) {
     return (
-      <main id="profile.custom-request-page-content.main.2" className="mx-auto max-w-xl px-4 py-14 text-center">
-        <p id="profile.custom-request-page-content.p" className="text-on-surface-variant">{copy.invalidSeller}</p>
+      <main {...uiAttributes({ uid: "profile.custom-request-page-content.main.6-ZoYx6W", id: "profile.custom-request-page-content.main.6" })} id="profile.custom-request-page-content.main.2" className="mx-auto max-w-xl px-4 py-14 text-center">
+        <p {...uiAttributes({ uid: "profile.custom-request-page-content.p.7-PBr6Is", id: "profile.custom-request-page-content.p.7" })} id="profile.custom-request-page-content.p" className="text-on-surface-variant">{copy.invalidSeller}</p>
       </main>
     );
   }
 
   if (!session?.uid) {
     return (
-      <main id="profile.custom-request-page-content.main.3" className="mx-auto max-w-xl px-4 py-14 text-center">
+      <main {...uiAttributes({ uid: "profile.custom-request-page-content.main.7-KwCy7H", id: "profile.custom-request-page-content.main.7" })} id="profile.custom-request-page-content.main.3" className="mx-auto max-w-xl px-4 py-14 text-center">
         <ImagePlus id="profile.custom-request-page-content.image-plus" className="mx-auto h-12 w-12 text-primary" />
-        <p id="profile.custom-request-page-content.p.2" className="mt-4 text-on-surface-variant">{copy.login}</p>
-        <a id="profile.custom-request-page-content.a"
+        <p {...uiAttributes({ uid: "profile.custom-request-page-content.p.8-6RvrH2", id: "profile.custom-request-page-content.p.8" })} id="profile.custom-request-page-content.p.2" className="mt-4 text-on-surface-variant">{copy.login}</p>
+        <a {...uiAttributes({ uid: "profile.custom-request-page-content.a.2-D9WWRY", id: "profile.custom-request-page-content.a.2" })} id="profile.custom-request-page-content.a"
           href="/login"
           className="mt-6 inline-flex rounded-xl bg-primary px-6 py-3 font-bold text-on-primary"
         >
@@ -220,12 +221,12 @@ export function CustomRequestPageContent() {
   }
 
   return (
-    <main id="profile.custom-request-page-content.main.4"
+    <main {...uiAttributes({ uid: "profile.custom-request-page-content.main.8-IdyE45", id: "profile.custom-request-page-content.main.8" })} id="profile.custom-request-page-content.main.4"
       className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5 sm:px-6 sm:pt-8"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      <div id="profile.custom-request-page-content.div" className="mb-5 flex items-start gap-3">
-        <button id="profile.custom-request-page-content.button"
+      <div {...uiAttributes({ uid: "profile.custom-request-page-content.div.8-UP2R7h", id: "profile.custom-request-page-content.div.8" })} id="profile.custom-request-page-content.div" className="mb-5 flex items-start gap-3">
+        <button {...uiAttributes({ uid: "profile.custom-request-page-content.button.2-JQmr52", id: "profile.custom-request-page-content.button.2" })} id="profile.custom-request-page-content.button"
           type="button"
           onClick={() => router.back()}
           className="asol-control-icon mt-1 shrink-0 rounded-full"
@@ -233,23 +234,23 @@ export function CustomRequestPageContent() {
         >
           <ArrowLeft id="profile.custom-request-page-content.arrow-left" className={isRTL ? "h-5 w-5 rotate-180" : "h-5 w-5"} />
         </button>
-        <span id="profile.custom-request-page-content.span" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-primary">
+        <span {...uiAttributes({ uid: "profile.custom-request-page-content.span.2-SJw1I0", id: "profile.custom-request-page-content.span.2" })} id="profile.custom-request-page-content.span" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-primary">
           <ImagePlus id="profile.custom-request-page-content.image-plus.2" className="h-6 w-6" />
         </span>
-        <div id="profile.custom-request-page-content.div.2" className="min-w-0">
-          <h1 id="profile.custom-request-page-content.h1" className="text-2xl font-bold">
+        <div {...uiAttributes({ uid: "profile.custom-request-page-content.div.9-6LymUa", id: "profile.custom-request-page-content.div.9" })} id="profile.custom-request-page-content.div.2" className="min-w-0">
+          <h1 {...uiAttributes({ uid: "profile.custom-request-page-content.h1.2-CK29Rp", id: "profile.custom-request-page-content.h1.2" })} id="profile.custom-request-page-content.h1" className="text-2xl font-bold">
             {t("profilePreview.customRequestTo")} {isLoadingSeller ? "…" : sellerName}
           </h1>
-          <p id="profile.custom-request-page-content.p.3" className="mt-1 max-w-2xl text-sm leading-6 text-on-surface-variant">
+          <p {...uiAttributes({ uid: "profile.custom-request-page-content.p.9-3PQZ1p", id: "profile.custom-request-page-content.p.9" })} id="profile.custom-request-page-content.p.3" className="mt-1 max-w-2xl text-sm leading-6 text-on-surface-variant">
             {copy.subtitle}
           </p>
         </div>
       </div>
 
-      <div id="profile.custom-request-page-content.div.3" className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
-        <fieldset id="profile.custom-request-page-content.fieldset" disabled={busy} className="min-w-0 space-y-6 disabled:opacity-70">
-          <div id="profile.custom-request-page-content.div.4" className="space-y-2">
-            <label id="profile.custom-request-page-content.label" className="text-sm font-bold" htmlFor="custom-request-title">
+      <div {...uiAttributes({ uid: "profile.custom-request-page-content.div.10-0ZFQEA", id: "profile.custom-request-page-content.div.10" })} id="profile.custom-request-page-content.div.3" className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
+        <fieldset {...uiAttributes({ uid: "profile.custom-request-page-content.fieldset.2-HBCv7o", id: "profile.custom-request-page-content.fieldset.2" })} id="profile.custom-request-page-content.fieldset" disabled={busy} className="min-w-0 space-y-6 disabled:opacity-70">
+          <div {...uiAttributes({ uid: "profile.custom-request-page-content.div.11-dL0zZw", id: "profile.custom-request-page-content.div.11" })} id="profile.custom-request-page-content.div.4" className="space-y-2">
+            <label {...uiAttributes({ uid: "profile.custom-request-page-content.label.3-KF1fBu", id: "profile.custom-request-page-content.label.3" })} id="profile.custom-request-page-content.label" className="text-sm font-bold" htmlFor="custom-request-title">
               {copy.titleLabel}
             </label>
             <Input ui={{ uid: "custom-request.title-Y0o924", id: "custom-request.title", kind: "field", part: "form" }}
@@ -261,8 +262,8 @@ export function CustomRequestPageContent() {
             />
           </div>
 
-          <div id="profile.custom-request-page-content.div.5" className="space-y-2">
-            <label id="profile.custom-request-page-content.label.2" className="text-sm font-bold" htmlFor="custom-request-description">
+          <div {...uiAttributes({ uid: "profile.custom-request-page-content.div.12-Mtl7fZ", id: "profile.custom-request-page-content.div.12" })} id="profile.custom-request-page-content.div.5" className="space-y-2">
+            <label {...uiAttributes({ uid: "profile.custom-request-page-content.label.4-567Lwr", id: "profile.custom-request-page-content.label.4" })} id="profile.custom-request-page-content.label.2" className="text-sm font-bold" htmlFor="custom-request-description">
               {copy.descriptionLabel}
             </label>
             <Textarea ui={{ uid: "custom-request.description-F29LC5", id: "custom-request.description", kind: "field", part: "form", interaction: { type: "type", valueContract: "long-text" }, simulation: { kind: "field", id: "custom-request-description" }}}
@@ -279,9 +280,9 @@ export function CustomRequestPageContent() {
             />
           </div>
 
-          <div id="profile.custom-request-page-content.div.6" className="space-y-2">
-            <p id="profile.custom-request-page-content.p.4" className="text-sm font-bold">{copy.images}</p>
-            <div id="profile.custom-request-page-content.div.7" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div {...uiAttributes({ uid: "profile.custom-request-page-content.div.13-eSDnm2", id: "profile.custom-request-page-content.div.13" })} id="profile.custom-request-page-content.div.6" className="space-y-2">
+            <p {...uiAttributes({ uid: "profile.custom-request-page-content.p.10-q0ZgTu", id: "profile.custom-request-page-content.p.10" })} id="profile.custom-request-page-content.p.4" className="text-sm font-bold">{copy.images}</p>
+            <div {...uiAttributes({ uid: "profile.custom-request-page-content.div.14-dDl0mR", id: "profile.custom-request-page-content.div.14" })} id="profile.custom-request-page-content.div.7" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {Array.from({ length: 4 }, (_, index) => (
                 <StorageImageManager
                   key={index}
@@ -321,14 +322,14 @@ export function CustomRequestPageContent() {
         </fieldset>
 
         {result ? (
-          <p id="profile.custom-request-page-content.p.5"
+          <p {...uiAttributes({ uid: "profile.custom-request-page-content.p.11-WlYRK8", id: "profile.custom-request-page-content.p.11" })} id="profile.custom-request-page-content.p.5"
             className="rounded-2xl bg-error/15 px-4 py-3 text-sm font-semibold leading-6 text-error"
             role="alert"
           >
             {result.message}
           </p>
         ) : !canSubmit ? (
-          <p id="profile.custom-request-page-content.p.6" className="text-xs text-on-surface-variant">{copy.validation}</p>
+          <p {...uiAttributes({ uid: "profile.custom-request-page-content.p.12-h73yDG", id: "profile.custom-request-page-content.p.12" })} id="profile.custom-request-page-content.p.6" className="text-xs text-on-surface-variant">{copy.validation}</p>
         ) : null}
       </div>
     </main>

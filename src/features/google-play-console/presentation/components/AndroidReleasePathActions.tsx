@@ -6,6 +6,7 @@ import { Button } from "@/shared/ui/button";
 import type { BuildJobRecord } from "@asol/release-core/console";
 import { latestJobFor, RUNNING_STATUSES, StopButton } from "./ReleaseJobIndicators";
 import type { StaticPreviewState } from "./use-android-static-preview";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function AndroidReleasePathActions({
   busy,
@@ -28,7 +29,7 @@ export function AndroidReleasePathActions({
   const openOutputsRunning = Boolean(openOutputsJob && RUNNING_STATUSES.has(openOutputsJob.status));
 
   return (
-    <div id="google-play-console.android-release-path-actions.div" className="mt-2 flex flex-wrap items-center gap-2">
+    <div {...uiAttributes({ uid: "google-play-console.android-release-path-actions.div.2-b5LZi0", id: "google-play-console.android-release-path-actions.div.2" })} id="google-play-console.android-release-path-actions.div" className="mt-2 flex flex-wrap items-center gap-2">
       <Button id="google-play-console.android-release-path-actions.button"
         ui={{
           uid: "release-console.android-paths.open-outputs-PXYR0B",
@@ -71,7 +72,7 @@ export function AndroidReleasePathActions({
         {t("releaseConsole.androidPaths.openPreview")}
       </Button>
       {previewState === "offline" ? (
-        <span id="google-play-console.android-release-path-actions.span"
+        <span {...uiAttributes({ uid: "google-play-console.android-release-path-actions.span.3-p9IFx0", id: "google-play-console.android-release-path-actions.span.3" })} id="google-play-console.android-release-path-actions.span"
           role="alert"
           className="rounded-md bg-error-container px-2 py-1 text-xs text-on-error-container"
         >
@@ -79,7 +80,7 @@ export function AndroidReleasePathActions({
         </span>
       ) : null}
       {openOutputsJob ? (
-        <span id="google-play-console.android-release-path-actions.span.2" className="text-xs text-on-surface-variant">
+        <span {...uiAttributes({ uid: "google-play-console.android-release-path-actions.span.4-35hNmQ", id: "google-play-console.android-release-path-actions.span.4" })} id="google-play-console.android-release-path-actions.span.2" className="text-xs text-on-surface-variant">
           {t(`releaseConsole.jobStatus.${openOutputsJob.status}`)}
         </span>
       ) : null}

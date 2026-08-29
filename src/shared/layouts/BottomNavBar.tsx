@@ -98,14 +98,14 @@ export function BottomNavBar() {
               style={{ transform: isActive ? 'scale(1.1)' : 'scale(1)' }}
             />
             {showBadge && (
-              <span key="badge" className={cn(
+              <span key="badge" {...uiAttributes({ uid: "shared.layouts.bottom-nav-bar.span-vFC7Nf", id: "shared.layouts.bottom-nav-bar.span" })} className={cn(
                 "absolute top-0 end-1/2 flex min-h-4 min-w-4 translate-x-4 items-center justify-center rounded-full border-2 bg-error px-1 text-[9px] font-bold leading-none text-on-error animate-pulse-subtle",
                 resolvedScheme === 'dark' ? 'border-surface-bright' : 'border-blue-200'
               )}>
                 {badgeCount && badgeCount > 9 ? '9+' : badgeCount}
               </span>
             )}
-            <span key="label" className="text-[10px] leading-3 font-semibold mt-0.5">{label}</span>
+            <span key="label" {...uiAttributes({ uid: "shared.layouts.bottom-nav-bar.span.2-PUBJ7K", id: "shared.layouts.bottom-nav-bar.span.2" })} className="text-[10px] leading-3 font-semibold mt-0.5">{label}</span>
           </Link>
         );
       })}

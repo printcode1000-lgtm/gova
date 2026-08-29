@@ -18,6 +18,7 @@ import {
   googleMapsSearchUrl,
   openDeviceMaps,
 } from "@/features/location";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const DEFAULT_LOCATION = {
   latitude: 29.9668,
@@ -111,7 +112,7 @@ export function ProductPropertySpecs({ id,
   );
 
   return (
-    <div id={id} className="grid gap-3 sm:grid-cols-2">
+    <div {...uiAttributes({ uid: "product.product-property-specs.div-f0DkQh", id: "product.product-property-specs.div" })} id={id} className="grid gap-3 sm:grid-cols-2">
       {PROPERTY_FIELDS.map(([fieldKey, label, type]) => {
         if (config[fieldKey] === false) return null;
         return (
@@ -127,11 +128,11 @@ export function ProductPropertySpecs({ id,
       })}
 
       {config.location !== false ? (
-        <div className="sm:col-span-2">
-          <p className="mb-2 text-sm font-medium">الموقع</p>
+        <div {...uiAttributes({ uid: "product.product-property-specs.div.2-Mltx57", id: "product.product-property-specs.div.2" })} className="sm:col-span-2">
+          <p {...uiAttributes({ uid: "product.product-property-specs.p-C6dKZE", id: "product.product-property-specs.p" })} className="mb-2 text-sm font-medium">الموقع</p>
           {mode === "view" ? (
             hasLocation ? (
-              <button
+              <button {...uiAttributes({ uid: "product.product-property-specs.button-CyKN7F", id: "product.product-property-specs.button" })}
                 type="button"
                 onClick={() => openDeviceMaps(latitude, longitude)}
                 className="asol-control inline-flex items-center justify-center bg-primary px-5 font-semibold text-on-primary"
@@ -139,12 +140,12 @@ export function ProductPropertySpecs({ id,
                 فتح الموقع في الخرائط
               </button>
             ) : (
-              <div className="rounded-xl bg-muted/40 px-3 py-2.5 text-muted-foreground">
+              <div {...uiAttributes({ uid: "product.product-property-specs.div.3-B2ehwN", id: "product.product-property-specs.div.3" })} className="rounded-xl bg-muted/40 px-3 py-2.5 text-muted-foreground">
                 لم يتم تحديد الموقع.
               </div>
             )
           ) : (
-            <div className="space-y-2">
+            <div {...uiAttributes({ uid: "product.product-property-specs.div.4-46LIrS", id: "product.product-property-specs.div.4" })} className="space-y-2">
               {mapOpen ? (
                 <AsolMap
                   modes={["picker"]}
@@ -217,7 +218,7 @@ export function ProductPropertySpecs({ id,
                   onClose={() => setMapOpen(false)}
                 />
               ) : (
-                <button
+                <button {...uiAttributes({ uid: "product.product-property-specs.button.2-I5HXna", id: "product.product-property-specs.button.2" })}
                   type="button"
                   onClick={() => setMapOpen(true)}
                   className="asol-control border border-input px-4 font-medium"
@@ -226,7 +227,7 @@ export function ProductPropertySpecs({ id,
                 </button>
               )}
               {mapMessage ? (
-                <p className="text-xs font-medium text-primary" role="status">
+                <p {...uiAttributes({ uid: "product.product-property-specs.p.2-fBd612", id: "product.product-property-specs.p.2" })} className="text-xs font-medium text-primary" role="status">
                   {mapMessage}
                 </p>
               ) : null}

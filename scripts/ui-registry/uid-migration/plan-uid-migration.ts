@@ -94,6 +94,20 @@ function hasSpread(attributes: ts.JsxAttributes): boolean {
   return attributes.properties.some((property) => ts.isJsxSpreadAttribute(property));
 }
 
+/** True when the element already carries our own registry spread — already covered, not a gap. */
+function hasUiRegistrySpread(attributes: ts.JsxAttributes): boolean {
+  return attributes.properties.some(
+    (property) =>
+      ts.isJsxSpreadAttribute(property) &&
+      /\b(?:uiAttributes|uiComponentAttributes|uiPageAttributes)\s*\(/.test(property.expression.getText()),
+  );
+}
+
+/** True when a spread attribute exists that is *not* our own registry call — a genuine gap. */
+function hasForeignSpread(attributes: ts.JsxAttributes): boolean {
+  return hasSpread(attributes) && !hasUiRegistrySpread(attributes);
+}
+
 /**
  * Where to splice the new attribute: right after the tag name, unless a
  * `key` attribute is already present, in which case after `key` — a
@@ -158,7 +172,9 @@ export function planUidMigration(root: string): {
         const line = sourceFile.getLineAndCharacterOfPosition(opening.getStart()).line + 1;
 
         if (htmlTag && VISIBLE_HOST_TAGS.has(htmlTag)) {
-          if (hasSpread(opening.attributes)) {
+          if (hasUiRegistrySpread(opening.attributes)) {
+            // Already covered by an earlier migration pass — not a gap.
+          } else if (hasForeignSpread(opening.attributes)) {
             skippedSpread.push({ file, line, tag: htmlTag });
           } else {
             const id = mintSemanticId(prefix, htmlTag, takenIds);

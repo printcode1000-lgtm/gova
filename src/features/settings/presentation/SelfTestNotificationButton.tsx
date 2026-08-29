@@ -14,12 +14,12 @@ export function SelfTestNotificationButton({
   if (!state.selfTestAvailable) return null;
 
   return (
-    <div id="settings.self-test-notification-button.div" className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
-      <div id="settings.self-test-notification-button.div.2" className="min-w-0">
-        <p id="settings.self-test-notification-button.p" className="text-sm font-semibold text-on-surface">
+    <div {...uiAttributes({ uid: "settings.self-test-notification-button.div.3-x9BF94", id: "settings.self-test-notification-button.div.3" })} id="settings.self-test-notification-button.div" className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
+      <div {...uiAttributes({ uid: "settings.self-test-notification-button.div.4-MNqH5b", id: "settings.self-test-notification-button.div.4" })} id="settings.self-test-notification-button.div.2" className="min-w-0">
+        <p {...uiAttributes({ uid: "settings.self-test-notification-button.p.3-Tq1mnG", id: "settings.self-test-notification-button.p.3" })} id="settings.self-test-notification-button.p" className="text-sm font-semibold text-on-surface">
           {state.t("notifications.selfTest.title")}
         </p>
-        <p id="settings.self-test-notification-button.p.2" className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+        <p {...uiAttributes({ uid: "settings.self-test-notification-button.p.4-6Csd1a", id: "settings.self-test-notification-button.p.4" })} id="settings.self-test-notification-button.p.2" className="mt-1 text-xs leading-relaxed text-on-surface-variant">
           {state.t("notifications.selfTest.description")}
         </p>
       </div>

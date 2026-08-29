@@ -138,7 +138,7 @@ export function VerificationSection() {
   };
 
   return (
-    <div id="onboarding.sections.verification-section.div" className="space-y-6 animate-in fade-in duration-300">
+    <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.7-mBR3DI", id: "onboarding.sections.verification-section.div.7" })} id="onboarding.sections.verification-section.div" className="space-y-6 animate-in fade-in duration-300">
       <Card id="onboarding.sections.verification-section.card">
         <CardHeader id="onboarding.sections.verification-section.card-header">
           <CardTitle id="onboarding.sections.verification-section.card-title" className="flex items-center gap-2">
@@ -148,25 +148,25 @@ export function VerificationSection() {
           <CardDescription id="onboarding.sections.verification-section.card-description">{t('onboarding.verification.description')}</CardDescription>
         </CardHeader>
         <CardContent id="onboarding.sections.verification-section.card-content" className="space-y-6">
-          <div id="onboarding.sections.verification-section.div.2" className="flex items-center justify-between p-4 rounded-lg bg-muted">
-            <div id="onboarding.sections.verification-section.div.3">
-              <p id="onboarding.sections.verification-section.p" className="font-medium">{t('onboarding.verification.progress')}</p>
-              <p id="onboarding.sections.verification-section.p.2" className="text-sm text-muted-foreground">
+          <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.8-P9YSSR", id: "onboarding.sections.verification-section.div.8" })} id="onboarding.sections.verification-section.div.2" className="flex items-center justify-between p-4 rounded-lg bg-muted">
+            <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.9-3J3i3L", id: "onboarding.sections.verification-section.div.9" })} id="onboarding.sections.verification-section.div.3">
+              <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.3-9lJ01O", id: "onboarding.sections.verification-section.p.3" })} id="onboarding.sections.verification-section.p" className="font-medium">{t('onboarding.verification.progress')}</p>
+              <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.4-l13pMz", id: "onboarding.sections.verification-section.p.4" })} id="onboarding.sections.verification-section.p.2" className="text-sm text-muted-foreground">
                 {t('onboarding.verification.documentsUploaded', {
                   uploaded: verification.documents.length,
                   total: DOCUMENT_TYPES.length,
                 })}
               </p>
             </div>
-            <div id="onboarding.sections.verification-section.div.4" className="text-right">
-              <span id="onboarding.sections.verification-section.span" className="text-2xl font-bold text-primary">
+            <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.10-E79VNd", id: "onboarding.sections.verification-section.div.10" })} id="onboarding.sections.verification-section.div.4" className="text-right">
+              <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.2-O7Qa0g", id: "onboarding.sections.verification-section.span.2" })} id="onboarding.sections.verification-section.span" className="text-2xl font-bold text-primary">
                 {Math.round((verification.documents.length / DOCUMENT_TYPES.length) * 100)}%
               </span>
             </div>
           </div>
 
-          <div id="onboarding.sections.verification-section.div.5" className="space-y-4">
-            <h4 id="onboarding.sections.verification-section.h4" className="font-medium">{t('onboarding.verification.uploadDocuments')}</h4>
+          <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.11-9t57ST", id: "onboarding.sections.verification-section.div.11" })} id="onboarding.sections.verification-section.div.5" className="space-y-4">
+            <h4 {...uiAttributes({ uid: "onboarding.sections.verification-section.h4.2-p8zFE8", id: "onboarding.sections.verification-section.h4.2" })} id="onboarding.sections.verification-section.h4" className="font-medium">{t('onboarding.verification.uploadDocuments')}</h4>
 
             {DOCUMENT_TYPES.map((docType) => {
               const uploadedDoc = verification.documents.find((d) => d.type === docType);
@@ -174,16 +174,16 @@ export function VerificationSection() {
 
               return (
                 <div
-                  key={docType}
+                  key={docType} {...uiAttributes({ uid: "onboarding.sections.verification-section.div.12-pxDN2K", id: "onboarding.sections.verification-section.div.12" })}
                   className={cn(
                     'flex items-center gap-4 p-4 rounded-lg border transition-all',
                     uploadedDoc && 'border-merchant-success bg-merchant-success/5',
                   )}
                 >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
+                  <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.13-pvW0FE", id: "onboarding.sections.verification-section.div.13" })} className="flex-1">
+                    <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.14-PP1jy9", id: "onboarding.sections.verification-section.div.14" })} className="flex items-center gap-2">
                       <FileText className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium text-sm">
+                      <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.3-e9Cm7w", id: "onboarding.sections.verification-section.span.3" })} className="font-medium text-sm">
                         {t(`onboarding.verification.documents.${docType}.label`)}
                       </span>
                       {uploadedDoc && (
@@ -193,7 +193,7 @@ export function VerificationSection() {
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.5-XDd8P7", id: "onboarding.sections.verification-section.p.5" })} className="text-xs text-muted-foreground mt-1">
                       {t(`onboarding.verification.documents.${docType}.description`)}
                     </p>
                   </div>
@@ -209,7 +209,7 @@ export function VerificationSection() {
                       <X className="h-4 w-4" />
                     </Button>
                   ) : (
-                    <div className="relative">
+                    <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.15-S1Vo3t", id: "onboarding.sections.verification-section.div.15" })} className="relative">
                       <Button
                         ui={DOCUMENT_UPLOAD_UI[docType]}
                         variant="outline"
@@ -219,7 +219,7 @@ export function VerificationSection() {
                       >
                         {isUploading ? (
                           <>
-                            <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
+                            <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.4-Pc52NF", id: "onboarding.sections.verification-section.span.4" })} className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
                             {t('onboarding.common.uploading')}
                           </>
                         ) : (
@@ -247,7 +247,7 @@ export function VerificationSection() {
           <CardDescription id="onboarding.sections.verification-section.card-description.2">{t('onboarding.verification.badgesDesc')}</CardDescription>
         </CardHeader>
         <CardContent id="onboarding.sections.verification-section.card-content.2">
-          <div id="onboarding.sections.verification-section.div.6" className="grid gap-3 sm:grid-cols-2">
+          <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.16-By0S1B", id: "onboarding.sections.verification-section.div.16" })} id="onboarding.sections.verification-section.div.6" className="grid gap-3 sm:grid-cols-2">
             {AVAILABLE_BADGES.map((badge) => {
               const isSelected = verification.requestedBadges.includes(badge.id);
               return (
@@ -263,12 +263,12 @@ export function VerificationSection() {
                       : 'border-border',
                   )}
                 >
-                  <span className="text-2xl">{badge.icon}</span>
-                  <div>
-                    <p className="font-medium text-sm">
+                  <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.5-nZDhC9", id: "onboarding.sections.verification-section.span.5" })} className="text-2xl">{badge.icon}</span>
+                  <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.17-jRe52Y", id: "onboarding.sections.verification-section.div.17" })}>
+                    <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.6-Y7ubx5", id: "onboarding.sections.verification-section.p.6" })} className="font-medium text-sm">
                       {t(`onboarding.verification.badges.${badge.id}.name`)}
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.7-s1USLn", id: "onboarding.sections.verification-section.p.7" })} className="text-xs text-muted-foreground">
                       {t(`onboarding.verification.badges.${badge.id}.description`)}
                     </p>
                   </div>

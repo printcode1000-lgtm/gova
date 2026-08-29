@@ -24,6 +24,7 @@ import {
   type RemoteDeployAllStage,
 } from "@asol/vercel-deploy-core/remote-deploy-contracts";
 import { deployAllBranchIds } from "@asol/release-core/console";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const TIMELINE: readonly RemoteDeployAllStage[] = REMOTE_DEPLOY_ALL_STAGES.filter(
   (stage) => stage !== "idle",
@@ -89,42 +90,42 @@ export function ProductionDeployPage() {
   const timings = snapshot ? stageTimings(snapshot, now) : new Map();
 
   return (
-    <main id="release-commands.production-deploy-page.main" dir="rtl" className="mx-auto w-full max-w-3xl min-w-0 space-y-4 p-4 pb-24">
-      <header id="release-commands.production-deploy-page.header" className="space-y-1">
-        <h1 id="release-commands.production-deploy-page.h1" className="flex items-center gap-2 text-xl font-bold">
+    <main {...uiAttributes({ uid: "release-commands.production-deploy-page.main.2-7blC76", id: "release-commands.production-deploy-page.main.2" })} id="release-commands.production-deploy-page.main" dir="rtl" className="mx-auto w-full max-w-3xl min-w-0 space-y-4 p-4 pb-24">
+      <header {...uiAttributes({ uid: "release-commands.production-deploy-page.header.2-YI87v3", id: "release-commands.production-deploy-page.header.2" })} id="release-commands.production-deploy-page.header" className="space-y-1">
+        <h1 {...uiAttributes({ uid: "release-commands.production-deploy-page.h1.2-68V4YP", id: "release-commands.production-deploy-page.h1.2" })} id="release-commands.production-deploy-page.h1" className="flex items-center gap-2 text-xl font-bold">
           <Rocket id="release-commands.production-deploy-page.rocket" className="h-5 w-5" aria-hidden />
           النشر إلى الإنتاج
         </h1>
-        <p id="release-commands.production-deploy-page.p" className="text-sm text-muted-foreground">
+        <p {...uiAttributes({ uid: "release-commands.production-deploy-page.p.5-q9f2J6", id: "release-commands.production-deploy-page.p.5" })} id="release-commands.production-deploy-page.p" className="text-sm text-muted-foreground">
           يشغّل هذا الإجراء <code>deploy:all</code> كاملًا داخل بيئة نشر معزولة، ولا تمر أي أسرار
           عبر المتصفح.
         </p>
       </header>
 
-      <div id="release-commands.production-deploy-page.div" className="grid grid-cols-2 gap-2" role="tablist" aria-label="نوع النشر">
+      <div {...uiAttributes({ uid: "release-commands.production-deploy-page.div.5-1SrPsP", id: "release-commands.production-deploy-page.div.5" })} id="release-commands.production-deploy-page.div" className="grid grid-cols-2 gap-2" role="tablist" aria-label="نوع النشر">
         <Button id="release-commands.production-deploy-page.button" ui={{ uid: "production-deploy.tab-deploy-all-S2g8ZZ", id: "production-deploy.tab-deploy-all", kind: "action", action: "select-deploy-all-tab", part: "tabs" }} type="button" role="tab" aria-selected={tab === "deploy:all"} variant={tab === "deploy:all" ? "default" : "outline"} onClick={() => setTab("deploy:all")}>Deploy All</Button>
         <Button id="release-commands.production-deploy-page.button.2" ui={{ uid: "production-deploy.tab-deploy-push-QZMUS1", id: "production-deploy.tab-deploy-push", kind: "action", action: "select-deploy-push-tab", part: "tabs" }} type="button" role="tab" aria-selected={tab === "deploy:push"} variant={tab === "deploy:push" ? "default" : "outline"} onClick={() => setTab("deploy:push")}>Deploy Push</Button>
       </div>
 
       {readiness && !readiness.ready ? (
-        <section id="release-commands.production-deploy-page.section" className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm">
-          <p id="release-commands.production-deploy-page.p.2" className="flex items-center gap-2 font-semibold">
+        <section {...uiAttributes({ uid: "release-commands.production-deploy-page.section.5-7NSE5p", id: "release-commands.production-deploy-page.section.5" })} id="release-commands.production-deploy-page.section" className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm">
+          <p {...uiAttributes({ uid: "release-commands.production-deploy-page.p.6-KLKz8N", id: "release-commands.production-deploy-page.p.6" })} id="release-commands.production-deploy-page.p.2" className="flex items-center gap-2 font-semibold">
             <ShieldAlert id="release-commands.production-deploy-page.shield-alert" className="h-4 w-4" aria-hidden />
             إعدادات ناقصة على الخادم
           </p>
-          <ul id="release-commands.production-deploy-page.ul" className="mt-2 list-inside list-disc" dir="ltr">
+          <ul {...uiAttributes({ uid: "release-commands.production-deploy-page.ul.2-G9OXOU", id: "release-commands.production-deploy-page.ul.2" })} id="release-commands.production-deploy-page.ul" className="mt-2 list-inside list-disc" dir="ltr">
             {readiness.missingConfiguration.map((key) => (
-              <li key={key}>{key}</li>
+              <li key={key} {...uiAttributes({ uid: "release-commands.production-deploy-page.li-TIqkv4", id: "release-commands.production-deploy-page.li" })}>{key}</li>
             ))}
           </ul>
         </section>
       ) : null}
 
-      <section id="release-commands.production-deploy-page.section.2" className="space-y-3 rounded-lg border p-3">
+      <section {...uiAttributes({ uid: "release-commands.production-deploy-page.section.6-8JKJ3T", id: "release-commands.production-deploy-page.section.6" })} id="release-commands.production-deploy-page.section.2" className="space-y-3 rounded-lg border p-3">
         {tab === "deploy:push" ? (
           <>
-            <label id="release-commands.production-deploy-page.label" className="block text-sm font-medium" htmlFor="production-deploy-target">هدف Deploy Push</label>
-            <select id="production-deploy-target" value={target} onChange={(event) => setTarget(event.target.value as PushTarget)} className="h-10 w-full rounded-md border bg-background px-3 text-sm" aria-label="هدف Deploy Push">{PUSH_TARGETS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+            <label {...uiAttributes({ uid: "release-commands.production-deploy-page.label.6-UtA0RB", id: "release-commands.production-deploy-page.label.6" })} id="release-commands.production-deploy-page.label" className="block text-sm font-medium" htmlFor="production-deploy-target">هدف Deploy Push</label>
+            <select {...uiAttributes({ uid: "release-commands.production-deploy-page.select-E9fknV", id: "release-commands.production-deploy-page.select" })} id="production-deploy-target" value={target} onChange={(event) => setTarget(event.target.value as PushTarget)} className="h-10 w-full rounded-md border bg-background px-3 text-sm" aria-label="هدف Deploy Push">{PUSH_TARGETS.map(([value, label]) => <option key={value} {...uiAttributes({ uid: "release-commands.production-deploy-page.option-cI47A0", id: "release-commands.production-deploy-page.option" })} value={value}>{label}</option>)}</select>
           </>
         ) : (
           <DeployAllOptions
@@ -136,7 +137,7 @@ export function ProductionDeployPage() {
             setServiceSmokeRebuild={setServiceSmokeRebuild}
           />
         )}
-        <label id="release-commands.production-deploy-page.label.2" className="block text-sm font-medium" htmlFor="production-deploy-confirmation">
+        <label {...uiAttributes({ uid: "release-commands.production-deploy-page.label.7-XZA0cq", id: "release-commands.production-deploy-page.label.7" })} id="release-commands.production-deploy-page.label.2" className="block text-sm font-medium" htmlFor="production-deploy-confirmation">
           اكتب عبارة التأكيد
         </label>
         <ConfirmationPhrase onApply={setConfirmation} />
@@ -165,11 +166,11 @@ export function ProductionDeployPage() {
           )}
           {running ? "جارٍ النشر…" : tab === "deploy:all" ? "Deploy All" : "Deploy Push"}
         </Button>
-        {error ? <p id="release-commands.production-deploy-page.p.3" className="text-sm text-destructive">{errorText(error)}</p> : null}
+        {error ? <p {...uiAttributes({ uid: "release-commands.production-deploy-page.p.7-91Gj37", id: "release-commands.production-deploy-page.p.7" })} id="release-commands.production-deploy-page.p.3" className="text-sm text-destructive">{errorText(error)}</p> : null}
       </section>
 
-      <section id="release-commands.production-deploy-page.section.3" className="space-y-2 rounded-lg border p-3">
-        <h2 id="release-commands.production-deploy-page.h2" className="flex items-center gap-2 text-sm font-semibold">
+      <section {...uiAttributes({ uid: "release-commands.production-deploy-page.section.7-pM198h", id: "release-commands.production-deploy-page.section.7" })} id="release-commands.production-deploy-page.section.3" className="space-y-2 rounded-lg border p-3">
+        <h2 {...uiAttributes({ uid: "release-commands.production-deploy-page.h2.3-TO2mZt", id: "release-commands.production-deploy-page.h2.3" })} id="release-commands.production-deploy-page.h2" className="flex items-center gap-2 text-sm font-semibold">
           <RefreshCw id="release-commands.production-deploy-page.refresh-cw" className="h-4 w-4" aria-hidden />
           الحالة
         </h2>
@@ -194,12 +195,12 @@ export function ProductionDeployPage() {
             {totalElapsed === null ? "—" : formatDeployDuration(totalElapsed)}
           </dd>
         </dl>
-        <ol id="release-commands.production-deploy-page.ol" className="space-y-1 text-sm">
+        <ol {...uiAttributes({ uid: "release-commands.production-deploy-page.ol.2-6ODVfF", id: "release-commands.production-deploy-page.ol.2" })} id="release-commands.production-deploy-page.ol" className="space-y-1 text-sm">
           {TIMELINE.map((stage, index) => {
             const timing = timings.get(stage);
             return (
               <li
-                key={stage}
+                key={stage} {...uiAttributes({ uid: "release-commands.production-deploy-page.li.2-FRBQ0r", id: "release-commands.production-deploy-page.li.2" })}
                 className={
                   "flex items-baseline justify-between gap-2 " +
                   (currentIndex > index
@@ -209,11 +210,11 @@ export function ProductionDeployPage() {
                       : "opacity-60")
                 }
               >
-                <span>
+                <span {...uiAttributes({ uid: "release-commands.production-deploy-page.span.2-9jwKX1", id: "release-commands.production-deploy-page.span.2" })}>
                   {currentIndex > index ? "✓ " : currentIndex === index ? "• " : "○ "}
                   {productionDeployStageLabel(stage)}
                 </span>
-                <span dir="ltr" className="font-mono text-xs tabular-nums">
+                <span {...uiAttributes({ uid: "release-commands.production-deploy-page.span.3-g8xQc1", id: "release-commands.production-deploy-page.span.3" })} dir="ltr" className="font-mono text-xs tabular-nums">
                   {timing ? formatDeployDuration(timing.elapsedMs) : ""}
                 </span>
               </li>
@@ -221,18 +222,18 @@ export function ProductionDeployPage() {
           })}
         </ol>
         {snapshot?.status === "failed" && snapshot.error ? (
-          <p id="release-commands.production-deploy-page.p.4" className="rounded border border-destructive/40 bg-destructive/5 p-2 text-sm text-destructive">
+          <p {...uiAttributes({ uid: "release-commands.production-deploy-page.p.8-tcz8zA", id: "release-commands.production-deploy-page.p.8" })} id="release-commands.production-deploy-page.p.4" className="rounded border border-destructive/40 bg-destructive/5 p-2 text-sm text-destructive">
             {snapshot.error}
           </p>
         ) : null}
       </section>
 
-      <section id="release-commands.production-deploy-page.section.4" className="min-w-0 space-y-2 rounded-lg border p-3">
-        <h2 id="release-commands.production-deploy-page.h2.2" className="text-sm font-semibold">السجل</h2>
+      <section {...uiAttributes({ uid: "release-commands.production-deploy-page.section.8-gAwIC9", id: "release-commands.production-deploy-page.section.8" })} id="release-commands.production-deploy-page.section.4" className="min-w-0 space-y-2 rounded-lg border p-3">
+        <h2 {...uiAttributes({ uid: "release-commands.production-deploy-page.h2.4-bH9LNl", id: "release-commands.production-deploy-page.h2.4" })} id="release-commands.production-deploy-page.h2.2" className="text-sm font-semibold">السجل</h2>
         {/* overflow-x-auto + overflow-y-auto: scroll in both directions. */}
         {/* whitespace-pre: preserves log formatting without forcing line-wrap. */}
         {/* min-w-0: prevents the pre from escaping its flex/grid container. */}
-        <div id="release-commands.production-deploy-page.div.2" className="min-w-0 overflow-x-auto">
+        <div {...uiAttributes({ uid: "release-commands.production-deploy-page.div.6-O270Da", id: "release-commands.production-deploy-page.div.6" })} id="release-commands.production-deploy-page.div.2" className="min-w-0 overflow-x-auto">
           <pre
             ref={logRef}
             dir="ltr"
@@ -273,21 +274,21 @@ function DeployAllOptions(props: {
 }) {
   const needsBranch = props.resumeMode === "from-branch" || props.resumeMode === "rerun-branch";
   return (
-    <div id="release-commands.production-deploy-page.div.3" className="space-y-3">
-      <label id="release-commands.production-deploy-page.label.3" className="block text-sm font-medium" htmlFor="production-deploy-resume-mode">وضع Deploy All</label>
-      <select
+    <div {...uiAttributes({ uid: "release-commands.production-deploy-page.div.7-gXA6Up", id: "release-commands.production-deploy-page.div.7" })} id="release-commands.production-deploy-page.div.3" className="space-y-3">
+      <label {...uiAttributes({ uid: "release-commands.production-deploy-page.label.8-Qr94KC", id: "release-commands.production-deploy-page.label.8" })} id="release-commands.production-deploy-page.label.3" className="block text-sm font-medium" htmlFor="production-deploy-resume-mode">وضع Deploy All</label>
+      <select {...uiAttributes({ uid: "release-commands.production-deploy-page.select.2-xtY20E", id: "release-commands.production-deploy-page.select.2" })}
         id="production-deploy-resume-mode"
         value={props.resumeMode}
         onChange={(event) => props.setResumeMode(event.target.value as RemoteDeployAllResumeMode)}
         className="h-10 w-full rounded-md border bg-background px-3 text-sm"
         aria-label="وضع Deploy All"
       >
-        {DEPLOY_ALL_RESUME_MODES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+        {DEPLOY_ALL_RESUME_MODES.map(([value, label]) => <option key={value} {...uiAttributes({ uid: "release-commands.production-deploy-page.option.2-hDqF18", id: "release-commands.production-deploy-page.option.2" })} value={value}>{label}</option>)}
       </select>
       {needsBranch ? (
         <>
-          <label id="release-commands.production-deploy-page.label.4" className="block text-sm font-medium" htmlFor="production-deploy-branch">فرع runbook</label>
-          <select
+          <label {...uiAttributes({ uid: "release-commands.production-deploy-page.label.9-XF3afY", id: "release-commands.production-deploy-page.label.9" })} id="release-commands.production-deploy-page.label.4" className="block text-sm font-medium" htmlFor="production-deploy-branch">فرع runbook</label>
+          <select {...uiAttributes({ uid: "release-commands.production-deploy-page.select.3-IJERa8", id: "release-commands.production-deploy-page.select.3" })}
             id="production-deploy-branch"
             value={props.branchId}
             onChange={(event) => props.setBranchId(event.target.value)}
@@ -295,19 +296,19 @@ function DeployAllOptions(props: {
             aria-label="فرع runbook"
             dir="ltr"
           >
-            {DEPLOY_ALL_BRANCH_IDS.map((id) => <option key={id} value={id}>{id}</option>)}
+            {DEPLOY_ALL_BRANCH_IDS.map((id) => <option key={id} {...uiAttributes({ uid: "release-commands.production-deploy-page.option.3-kR2XVR", id: "release-commands.production-deploy-page.option.3" })} value={id}>{id}</option>)}
           </select>
         </>
       ) : null}
-      <label id="release-commands.production-deploy-page.label.5" className="flex items-center gap-2 text-sm">
-        <input id="release-commands.production-deploy-page.input"
+      <label {...uiAttributes({ uid: "release-commands.production-deploy-page.label.10-n811WZ", id: "release-commands.production-deploy-page.label.10" })} id="release-commands.production-deploy-page.label.5" className="flex items-center gap-2 text-sm">
+        <input {...uiAttributes({ uid: "release-commands.production-deploy-page.input.2-92NDTR", id: "release-commands.production-deploy-page.input.2" })} id="release-commands.production-deploy-page.input"
           type="checkbox"
           checked={props.serviceSmokeRebuild}
           onChange={(event) => props.setServiceSmokeRebuild(event.target.checked)}
           className="h-5 w-5 rounded border active:scale-95 focus-visible:ring-2"
           aria-label="إجبار smoke services على إعادة البناء"
         />
-        <span id="release-commands.production-deploy-page.span">إجبار smoke:services على إعادة البناء</span>
+        <span {...uiAttributes({ uid: "release-commands.production-deploy-page.span.4-WK6mv8", id: "release-commands.production-deploy-page.span.4" })} id="release-commands.production-deploy-page.span">إجبار smoke:services على إعادة البناء</span>
       </label>
     </div>
   );
@@ -332,7 +333,7 @@ function ConfirmationPhrase(props: { onApply: (value: string) => void }) {
   };
 
   return (
-    <div id="release-commands.production-deploy-page.div.4" className="flex flex-wrap items-center justify-between gap-2">
+    <div {...uiAttributes({ uid: "release-commands.production-deploy-page.div.8-mHVk7K", id: "release-commands.production-deploy-page.div.8" })} id="release-commands.production-deploy-page.div.4" className="flex flex-wrap items-center justify-between gap-2">
       <code className="select-all rounded bg-muted px-2 py-1 font-mono text-sm" dir="ltr">
         {REMOTE_DEPLOY_ALL_CONFIRMATION}
       </code>

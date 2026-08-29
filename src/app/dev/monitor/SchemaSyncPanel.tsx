@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import type { SchemaSyncReport } from '@asol/data-core/provisioning';
 import { asolApi } from '@/core/api';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function SchemaSyncPanel() {
   const [report, setReport] = useState<SchemaSyncReport | null>(null);
@@ -26,15 +27,15 @@ export function SchemaSyncPanel() {
   }, []);
 
   if (loading) {
-    return <div id="dev.monitor.schema-sync-panel.div" style={{ padding: 16 }}>جارٍ تحميل تقرير مزامنة المخطط…</div>;
+    return <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.11-L0S9Uc", id: "dev.monitor.schema-sync-panel.div.11" })} id="dev.monitor.schema-sync-panel.div" style={{ padding: 16 }}>جارٍ تحميل تقرير مزامنة المخطط…</div>;
   }
 
   if (error) {
     return (
-      <div id="dev.monitor.schema-sync-panel.div.2" style={{ padding: 16 }}>
-        <div id="dev.monitor.schema-sync-panel.div.3" className="detail-section-title">مزامنة المخطط</div>
-        <p id="dev.monitor.schema-sync-panel.p" style={{ color: '#f97316' }}>{error}</p>
-        <p id="dev.monitor.schema-sync-panel.p.2" style={{ opacity: 0.7, fontSize: 13 }}>
+      <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.12-s3M8A9", id: "dev.monitor.schema-sync-panel.div.12" })} id="dev.monitor.schema-sync-panel.div.2" style={{ padding: 16 }}>
+        <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.13-iWo3X1", id: "dev.monitor.schema-sync-panel.div.13" })} id="dev.monitor.schema-sync-panel.div.3" className="detail-section-title">مزامنة المخطط</div>
+        <p {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.p.5-YmU3Dv", id: "dev.monitor.schema-sync-panel.p.5" })} id="dev.monitor.schema-sync-panel.p" style={{ color: '#f97316' }}>{error}</p>
+        <p {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.p.6-Xhie6W", id: "dev.monitor.schema-sync-panel.p.6" })} id="dev.monitor.schema-sync-panel.p.2" style={{ opacity: 0.7, fontSize: 13 }}>
           نفّذ <code>npm run db:schema:sync</code> أو انشر خادم ASOL لإنشاء التقرير.
         </p>
       </div>
@@ -44,14 +45,14 @@ export function SchemaSyncPanel() {
   if (!report) return null;
 
   return (
-    <div id="dev.monitor.schema-sync-panel.div.4" style={{ padding: 16 }}>
-      <div id="dev.monitor.schema-sync-panel.div.5" className="detail-section-title">مزامنة المخطط</div>
+    <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.14-FuHO92", id: "dev.monitor.schema-sync-panel.div.14" })} id="dev.monitor.schema-sync-panel.div.4" style={{ padding: 16 }}>
+      <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.15-8EvYVc", id: "dev.monitor.schema-sync-panel.div.15" })} id="dev.monitor.schema-sync-panel.div.5" className="detail-section-title">مزامنة المخطط</div>
 
       {report.skipped ? (
-        <p id="dev.monitor.schema-sync-panel.p.3" style={{ color: '#f97316' }}>تم التخطي: {report.skipReason}</p>
+        <p {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.p.7-qmoMx3", id: "dev.monitor.schema-sync-panel.p.7" })} id="dev.monitor.schema-sync-panel.p.3" style={{ color: '#f97316' }}>تم التخطي: {report.skipReason}</p>
       ) : (
         <>
-          <div id="dev.monitor.schema-sync-panel.div.6" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 16 }}>
+          <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.16-PrPK03", id: "dev.monitor.schema-sync-panel.div.16" })} id="dev.monitor.schema-sync-panel.div.6" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 16 }}>
             <Stat id="dev.monitor.schema-sync-panel.stat" label="إصدار SQLite" value={report.sqliteSchemaVersion} />
             <Stat id="dev.monitor.schema-sync-panel.stat.2" label="Turso قبل" value={report.tursoSchemaVersionBefore} />
             <Stat id="dev.monitor.schema-sync-panel.stat.3" label="Turso بعد" value={report.tursoSchemaVersionAfter} />
@@ -63,16 +64,16 @@ export function SchemaSyncPanel() {
             <Stat id="dev.monitor.schema-sync-panel.stat.9" label="محفّزات مضافة" value={String(report.triggersAdded)} />
           </div>
 
-          <p id="dev.monitor.schema-sync-panel.p.4" style={{ opacity: 0.7, fontSize: 13, marginBottom: 12 }}>
+          <p {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.p.8-6oQ7OQ", id: "dev.monitor.schema-sync-panel.p.8" })} id="dev.monitor.schema-sync-panel.p.4" style={{ opacity: 0.7, fontSize: 13, marginBottom: 12 }}>
             وقت التنفيذ: {report.executedAt}
           </p>
 
           {report.operations.length > 0 && (
             <>
-              <div id="dev.monitor.schema-sync-panel.div.7" className="detail-section-title">العمليات ({report.operations.length})</div>
-              <ul id="dev.monitor.schema-sync-panel.ul" style={{ fontSize: 13, marginBottom: 16 }}>
+              <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.17-PoWE96", id: "dev.monitor.schema-sync-panel.div.17" })} id="dev.monitor.schema-sync-panel.div.7" className="detail-section-title">العمليات ({report.operations.length})</div>
+              <ul {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.ul.4-p53yAk", id: "dev.monitor.schema-sync-panel.ul.4" })} id="dev.monitor.schema-sync-panel.ul" style={{ fontSize: 13, marginBottom: 16 }}>
                 {report.operations.map((op, index) => (
-                  <li key={`${op.type}-${index}`}>
+                  <li key={`${op.type}-${index}`} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li-T7EUzH", id: "dev.monitor.schema-sync-panel.li" })}>
                     <strong>{op.type}</strong>: {op.description}
                   </li>
                 ))}
@@ -82,7 +83,7 @@ export function SchemaSyncPanel() {
 
           {report.sqlExecuted.length > 0 && (
             <>
-              <div id="dev.monitor.schema-sync-panel.div.8" className="detail-section-title">SQL المنفّذ</div>
+              <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.18-2rE2S5", id: "dev.monitor.schema-sync-panel.div.18" })} id="dev.monitor.schema-sync-panel.div.8" className="detail-section-title">SQL المنفّذ</div>
               <pre style={{ fontSize: 12, overflow: 'auto', background: 'rgba(0,0,0,0.2)', padding: 12, borderRadius: 8 }}>
                 {report.sqlExecuted.join('\n\n')}
               </pre>
@@ -91,10 +92,10 @@ export function SchemaSyncPanel() {
 
           {report.warnings.length > 0 && (
             <>
-              <div id="dev.monitor.schema-sync-panel.div.9" className="detail-section-title">تحذيرات</div>
-              <ul id="dev.monitor.schema-sync-panel.ul.2" style={{ color: '#f97316', fontSize: 13 }}>
+              <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.19-7NLoMZ", id: "dev.monitor.schema-sync-panel.div.19" })} id="dev.monitor.schema-sync-panel.div.9" className="detail-section-title">تحذيرات</div>
+              <ul {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.ul.5-VzWuV4", id: "dev.monitor.schema-sync-panel.ul.5" })} id="dev.monitor.schema-sync-panel.ul.2" style={{ color: '#f97316', fontSize: 13 }}>
                 {report.warnings.map((warning, index) => (
-                  <li key={index}>{warning}</li>
+                  <li key={index} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li.2-7DFOzW", id: "dev.monitor.schema-sync-panel.li.2" })}>{warning}</li>
                 ))}
               </ul>
             </>
@@ -102,10 +103,10 @@ export function SchemaSyncPanel() {
 
           {report.errors.length > 0 && (
             <>
-              <div id="dev.monitor.schema-sync-panel.div.10" className="detail-section-title">أخطاء</div>
-              <ul id="dev.monitor.schema-sync-panel.ul.3" style={{ color: '#ef4444', fontSize: 13 }}>
+              <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.20-1QO18r", id: "dev.monitor.schema-sync-panel.div.20" })} id="dev.monitor.schema-sync-panel.div.10" className="detail-section-title">أخطاء</div>
+              <ul {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.ul.6-TUcM7r", id: "dev.monitor.schema-sync-panel.ul.6" })} id="dev.monitor.schema-sync-panel.ul.3" style={{ color: '#ef4444', fontSize: 13 }}>
                 {report.errors.map((err, index) => (
-                  <li key={index}>{err}</li>
+                  <li key={index} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li.3-OrLY1G", id: "dev.monitor.schema-sync-panel.li.3" })}>{err}</li>
                 ))}
               </ul>
             </>
@@ -118,9 +119,9 @@ export function SchemaSyncPanel() {
 
 function Stat({ id, label, value }: { label: string; value: string } & { id?: string }) {
   return (
-    <div id={id} style={{ background: 'rgba(255,255,255,0.04)', padding: 12, borderRadius: 8 }}>
-      <div style={{ fontSize: 11, opacity: 0.6, marginBottom: 4 }}>{label}</div>
-      <div style={{ fontFamily: 'monospace', fontSize: 13 }}>{value}</div>
+    <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.21-cp6iC8", id: "dev.monitor.schema-sync-panel.div.21" })} id={id} style={{ background: 'rgba(255,255,255,0.04)', padding: 12, borderRadius: 8 }}>
+      <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.22-3z2FKT", id: "dev.monitor.schema-sync-panel.div.22" })} style={{ fontSize: 11, opacity: 0.6, marginBottom: 4 }}>{label}</div>
+      <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.23-jQEZ64", id: "dev.monitor.schema-sync-panel.div.23" })} style={{ fontFamily: 'monospace', fontSize: 13 }}>{value}</div>
     </div>
   );
 }

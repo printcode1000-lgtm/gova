@@ -13,6 +13,7 @@ import { Label } from '@/shared/ui/label';
 import type { ShippingMethod, ShippingProvider } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
 import { SHIPPING_ICONS, SHIPPING_PROVIDERS } from './shipping-section-model';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function ShippingSection() {
   const { t } = useTranslation();
@@ -74,7 +75,7 @@ export function ShippingSection() {
   };
 
   return (
-    <div id="onboarding.sections.shipping-section.div" className="space-y-6 animate-in fade-in duration-300">
+    <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.7-SrP39H", id: "onboarding.sections.shipping-section.div.7" })} id="onboarding.sections.shipping-section.div" className="space-y-6 animate-in fade-in duration-300">
       <Card id="onboarding.sections.shipping-section.card">
         <CardHeader id="onboarding.sections.shipping-section.card-header">
           <CardTitle id="onboarding.sections.shipping-section.card-title" className="flex items-center gap-2">
@@ -85,16 +86,16 @@ export function ShippingSection() {
         </CardHeader>
         <CardContent id="onboarding.sections.shipping-section.card-content" className="space-y-6">
           {errors.methods && (
-            <p id="onboarding.sections.shipping-section.p" className="text-sm text-destructive">{errors.methods}</p>
+            <p {...uiAttributes({ uid: "onboarding.sections.shipping-section.p.4-QjgD2a", id: "onboarding.sections.shipping-section.p.4" })} id="onboarding.sections.shipping-section.p" className="text-sm text-destructive">{errors.methods}</p>
           )}
 
           {shipping.methods.length === 0 ? (
-            <div id="onboarding.sections.shipping-section.div.2" className="flex flex-col items-center justify-center py-8 text-center">
-              <div id="onboarding.sections.shipping-section.div.3" className="rounded-full bg-muted p-4 mb-4">
+            <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.8-ri8UDA", id: "onboarding.sections.shipping-section.div.8" })} id="onboarding.sections.shipping-section.div.2" className="flex flex-col items-center justify-center py-8 text-center">
+              <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.9-OZY3lS", id: "onboarding.sections.shipping-section.div.9" })} id="onboarding.sections.shipping-section.div.3" className="rounded-full bg-muted p-4 mb-4">
                 <Truck id="onboarding.sections.shipping-section.truck.2" className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 id="onboarding.sections.shipping-section.h3" className="font-medium mb-2">{t('onboarding.shipping.emptyTitle')}</h3>
-              <p id="onboarding.sections.shipping-section.p.2" className="text-sm text-muted-foreground mb-4">
+              <h3 {...uiAttributes({ uid: "onboarding.sections.shipping-section.h3.2-Yz9E2L", id: "onboarding.sections.shipping-section.h3.2" })} id="onboarding.sections.shipping-section.h3" className="font-medium mb-2">{t('onboarding.shipping.emptyTitle')}</h3>
+              <p {...uiAttributes({ uid: "onboarding.sections.shipping-section.p.5-yP55Jj", id: "onboarding.sections.shipping-section.p.5" })} id="onboarding.sections.shipping-section.p.2" className="text-sm text-muted-foreground mb-4">
                 {t('onboarding.shipping.emptyDesc')}
               </p>
               <Button id="onboarding.sections.shipping-section.button" ui={{ uid: 'onboarding.shipping.add-method-TV9Fq2', id: 'onboarding.shipping.add-method', kind: 'action', action: 'add-shipping-method', part: 'empty-state' }} onClick={addShippingMethod} className="gap-2">
@@ -103,18 +104,18 @@ export function ShippingSection() {
               </Button>
             </div>
           ) : (
-            <div id="onboarding.sections.shipping-section.div.4" className="space-y-4">
+            <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.10-nkQMY4", id: "onboarding.sections.shipping-section.div.10" })} id="onboarding.sections.shipping-section.div.4" className="space-y-4">
               {shipping.methods.map((method) => (
                 <div
-                  key={method.id}
+                  key={method.id} {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.11-YevUG5", id: "onboarding.sections.shipping-section.div.11" })}
                   className="p-4 rounded-lg border space-y-4 animate-in slide-in-from-top-2 duration-200"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="text-2xl">
+                  <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.12-2oKVjR", id: "onboarding.sections.shipping-section.div.12" })} className="flex items-start justify-between">
+                    <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.13-54WA5W", id: "onboarding.sections.shipping-section.div.13" })} className="flex items-center gap-3">
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.14-bbDL9y", id: "onboarding.sections.shipping-section.div.14" })} className="text-2xl">
                         {shippingProviderOptions.find((p) => p.value === method.provider)?.icon || '📦'}
                       </div>
-                      <div>
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.15-1mjlO3", id: "onboarding.sections.shipping-section.div.15" })}>
                         <FormSelect
                           value={method.provider}
                           onValueChange={(v) => {
@@ -131,7 +132,7 @@ export function ShippingSection() {
                         />
                       </div>
                     </div>
-                    <Button
+                    <Button ui={{ uid: "onboarding.sections.shipping-section.button.3-VVo9HX", id: "onboarding.sections.shipping-section.button.3" }}
                       variant="ghost"
                       size="icon"
                       onClick={() => removeMethod(method.id)}
@@ -140,9 +141,9 @@ export function ShippingSection() {
                     </Button>
                   </div>
 
-                  <div className="grid gap-4 sm:grid-cols-3">
+                  <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.16-Yt7dPb", id: "onboarding.sections.shipping-section.div.16" })} className="grid gap-4 sm:grid-cols-3">
                     <FormField label={t('onboarding.shipping.deliveryTime')} htmlFor={`delivery-${method.id}`}>
-                      <div className="flex items-center gap-2">
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.17-l8Y8N8", id: "onboarding.sections.shipping-section.div.17" })} className="flex items-center gap-2">
                         <FormInput
                           type="number"
                           value={method.deliveryDays.min}
@@ -154,7 +155,7 @@ export function ShippingSection() {
                           className="w-20"
                           min={0}
                         />
-                        <span className="text-muted-foreground">{t('onboarding.common.to')}</span>
+                        <span {...uiAttributes({ uid: "onboarding.sections.shipping-section.span-x0FEEV", id: "onboarding.sections.shipping-section.span" })} className="text-muted-foreground">{t('onboarding.common.to')}</span>
                         <FormInput
                           type="number"
                           value={method.deliveryDays.max}
@@ -166,12 +167,12 @@ export function ShippingSection() {
                           className="w-20"
                           min={0}
                         />
-                        <span className="text-muted-foreground">{t('onboarding.common.days')}</span>
+                        <span {...uiAttributes({ uid: "onboarding.sections.shipping-section.span.2-U6b5GU", id: "onboarding.sections.shipping-section.span.2" })} className="text-muted-foreground">{t('onboarding.common.days')}</span>
                       </div>
                     </FormField>
 
                     <FormField label={t('onboarding.shipping.shippingFee')} htmlFor={`fee-${method.id}`}>
-                      <div className="relative">
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.18-93K7ZA", id: "onboarding.sections.shipping-section.div.18" })} className="relative">
                         <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <FormInput
                           type="number"
@@ -185,7 +186,7 @@ export function ShippingSection() {
                     </FormField>
 
                     <FormField label={t('onboarding.shipping.freeOver')} htmlFor={`threshold-${method.id}`} hint={t('onboarding.common.optional')}>
-                      <div className="relative">
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.19-B0IdUB", id: "onboarding.sections.shipping-section.div.19" })} className="relative">
                         <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <FormInput
                           type="number"
@@ -224,10 +225,10 @@ export function ShippingSection() {
           <CardDescription id="onboarding.sections.shipping-section.card-description.2">{t('onboarding.shipping.pickupDesc')}</CardDescription>
         </CardHeader>
         <CardContent id="onboarding.sections.shipping-section.card-content.2" className="space-y-4">
-          <div id="onboarding.sections.shipping-section.div.5" className="flex items-center justify-between">
-            <div id="onboarding.sections.shipping-section.div.6">
+          <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.20-npF4IO", id: "onboarding.sections.shipping-section.div.20" })} id="onboarding.sections.shipping-section.div.5" className="flex items-center justify-between">
+            <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.21-elZQR8", id: "onboarding.sections.shipping-section.div.21" })} id="onboarding.sections.shipping-section.div.6">
               <Label id="onboarding.sections.shipping-section.label">{t('onboarding.shipping.enablePickup')}</Label>
-              <p id="onboarding.sections.shipping-section.p.3" className="text-sm text-muted-foreground">
+              <p {...uiAttributes({ uid: "onboarding.sections.shipping-section.p.6-piBJ00", id: "onboarding.sections.shipping-section.p.6" })} id="onboarding.sections.shipping-section.p.3" className="text-sm text-muted-foreground">
                 {t('onboarding.shipping.enablePickupDesc')}
               </p>
             </div>

@@ -423,22 +423,22 @@ export function ProductPageContent({ id,
 
   if (loading || sessionLoading)
     return (
-      <div id={id} className="flex min-h-[50vh] items-center justify-center">
+      <div {...uiAttributes({ uid: "product.product-page-content.div-1iKLQB", id: "product.product-page-content.div" })} id={id} className="flex min-h-[50vh] items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
 
   if (error && !style)
     return (
-      <p id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
+      <p {...uiAttributes({ uid: "product.product-page-content.p-vLKv56", id: "product.product-page-content.p" })} id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
         {error}
       </p>
     );
 
   if (editable && !isLoggedIn)
     return (
-      <div id={id} className="m-6 rounded-2xl border p-6 text-center">
-        <p>يجب تسجيل الدخول لإنشاء المنتج أو تعديله.</p>
+      <div {...uiAttributes({ uid: "product.product-page-content.div.2-OzTJ2H", id: "product.product-page-content.div.2" })} id={id} className="m-6 rounded-2xl border p-6 text-center">
+        <p {...uiAttributes({ uid: "product.product-page-content.p.2-EmYZ6h", id: "product.product-page-content.p.2" })}>يجب تسجيل الدخول لإنشاء المنتج أو تعديله.</p>
         <Link
           href="/login"
           className="mt-4 inline-block rounded-xl bg-primary px-4 py-2 text-on-primary"
@@ -450,13 +450,13 @@ export function ProductPageContent({ id,
 
   if (mode === "edit" && !ownerAllowed)
     return (
-      <p id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
+      <p {...uiAttributes({ uid: "product.product-page-content.p.3-7x3suY", id: "product.product-page-content.p.3" })} id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
         لا يمكنك تعديل منتج يخص مستخدمًا آخر.
       </p>
     );
 
   return (
-    <main id={id} className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6">
+    <main {...uiAttributes({ uid: "product.product-page-content.main-X6E5AG", id: "product.product-page-content.main" })} id={id} className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6">
       <ProductComponentsRenderer
         mode={mode}
         components={style?.components ?? createDefaultProductStyleComponents()}
@@ -473,16 +473,16 @@ export function ProductPageContent({ id,
         onImagesPendingChange={setImagesPending}
       />
       {error ? (
-        <p className="rounded-xl bg-destructive/10 p-3 text-destructive">
+        <p {...uiAttributes({ uid: "product.product-page-content.p.4-7XB2i2", id: "product.product-page-content.p.4" })} className="rounded-xl bg-destructive/10 p-3 text-destructive">
           {error}
         </p>
       ) : null}
       {mode === "view" && isSuperAdminSession(session) ? (
-        <div className="rounded-2xl border border-warning/30 bg-warning/5 p-4 sm:p-5">
-          <h3 className="text-sm font-semibold text-warning">
+        <div {...uiAttributes({ uid: "product.product-page-content.div.3-t4Nr7G", id: "product.product-page-content.div.3" })} className="rounded-2xl border border-warning/30 bg-warning/5 p-4 sm:p-5">
+          <h3 {...uiAttributes({ uid: "product.product-page-content.h3-HwDx8R", id: "product.product-page-content.h3" })} className="text-sm font-semibold text-warning">
             {locale === "ar" ? "لوحة الإدارة الخارقة" : "Super Admin Panel"}
           </h3>
-          <div className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
+          <div {...uiAttributes({ uid: "product.product-page-content.div.4-yxH8kY", id: "product.product-page-content.div.4" })} className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
             <AdminCopyValue
               label={locale === "ar" ? "معرف المنتج" : "Product ID"}
               value={productId || product?.id || ""}

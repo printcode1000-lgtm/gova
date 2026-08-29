@@ -88,63 +88,6 @@ export const UI_REGISTRY_COVERAGE_EXCEPTIONS: readonly UiRegistryCoverageExcepti
     reason:
       'FormTextarea is a generic field wrapper; it forwards the caller-supplied ui descriptor into Textarea.',
   },
-  {
-    file: 'src/features/google-play-console/presentation/components/Field.tsx',
-    component: 'Input',
-    reason:
-      'Field is a generic label+input wrapper rendered once per arbitrary caller-defined field.',
-  },
-  {
-    file: 'src/features/google-play-console/presentation/components/CommandParameterFields.tsx',
-    component: 'Input',
-    reason:
-      'Rendered once per release-command parameter schema, which is data supplied by the command registry at runtime.',
-  },
-  {
-    file: 'src/features/google-play-console/presentation/components/CommandParameterFields.tsx',
-    component: 'Textarea',
-    reason:
-      'Rendered once per release-command parameter schema, which is data supplied by the command registry at runtime.',
-  },
-  {
-    file: 'src/features/google-play-console/presentation/components/ReleaseJobIndicators.tsx',
-    component: 'Button',
-    reason:
-      'Generic job indicator/stop control rendered per running job id, which exists only at runtime.',
-  },
-  {
-    file: 'src/features/google-play-console/presentation/components/AndroidReleasePathCard.tsx',
-    component: 'Button',
-    reason: 'Generic card rendered once per release path supplied by the runbook data.',
-  },
-  {
-    file: 'src/features/google-play-console/presentation/components/AndroidReleaseRunbookBranchCard.tsx',
-    component: 'Button',
-    reason: 'Generic card rendered once per runbook branch supplied by the runbook data.',
-  },
-  {
-    file: 'src/features/product/presentation/ProductComponentPrimitives.tsx',
-    component: 'SelectTrigger',
-    reason:
-      'Generic product-component field editor rendered once per component field defined by product data.',
-  },
-  {
-    file: 'src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.section-03.tsx',
-    component: 'Input',
-    reason:
-      'Generic number/currency field wrappers reused by many discount fields; the caller names the field.',
-  },
-  {
-    file: 'src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.section-03.tsx',
-    component: 'Button',
-    reason: 'Generic action button wrapper reused by many discount rows; the caller names the action.',
-  },
-  {
-    file: 'src/features/dev-cloud-backup/presentation/DevCloudBackupSavedList.tsx',
-    component: 'Button',
-    reason:
-      'Row actions rendered once per stored backup file; the instance count and identity come from cloud data.',
-  },
 ];
 
 function sourceFiles(directory: string): string[] {

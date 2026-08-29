@@ -16,6 +16,7 @@ import type {
   ProductMode,
 } from "@/features/product/ui";
 import { PharmacySelect } from "./PharmacySelect";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductPharmacySpecsProps {
   mode: ProductMode;
@@ -247,7 +248,7 @@ export function ProductPharmacySpecs({
 
   if (mode === "view") {
     return (
-      <div id="pharmacy-profile-catalog.product-pharmacy-specs.div" className="grid gap-3 sm:grid-cols-2">
+      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.product-pharmacy-specs.div.3-Hxiku2", id: "pharmacy-profile-catalog.product-pharmacy-specs.div.3" })} id="pharmacy-profile-catalog.product-pharmacy-specs.div" className="grid gap-3 sm:grid-cols-2">
         {config.pharmacyCategory ? (
           <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field"
             label="التصنيف الرئيسي"
@@ -318,7 +319,7 @@ export function ProductPharmacySpecs({
   }
 
   return (
-    <div id="pharmacy-profile-catalog.product-pharmacy-specs.div.2" className="grid gap-3 sm:grid-cols-2">
+    <div {...uiAttributes({ uid: "pharmacy-profile-catalog.product-pharmacy-specs.div.4-xRaAY2", id: "pharmacy-profile-catalog.product-pharmacy-specs.div.4" })} id="pharmacy-profile-catalog.product-pharmacy-specs.div.2" className="grid gap-3 sm:grid-cols-2">
       {config.pharmacyCategory ? (
         <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select" ui={{ uid: "pharmacy-catalog.specs.category-K7ccOS", id: "pharmacy-catalog.specs.category", kind: "field", part: "specs" }}
           label="التصنيف الرئيسي"

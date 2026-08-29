@@ -24,6 +24,7 @@ import { MAX_STOREFRONT_COVER_IMAGES } from "./image-configs/storefront-images.c
 import { StoreIdentityImagesEditor } from "./store-identity/StoreIdentityImagesEditor";
 import { buildPageSaveOperationDescription } from "@/features/page-save";
 import type { PageSaveOperation } from "@/features/page-save";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const storeLogoConfig = parseStorageImageManagerConfig(storeLogoImageConfig);
 
@@ -243,16 +244,16 @@ export const StoreIdentityCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div id="profile.store-identity-card.div" className="py-10 text-center text-sm text-on-surface-variant">
+      <div {...uiAttributes({ uid: "profile.store-identity-card.div.7-aKRY6S", id: "profile.store-identity-card.div.7" })} id="profile.store-identity-card.div" className="py-10 text-center text-sm text-on-surface-variant">
         {t("profile.loading")}
       </div>
     );
   }
 
   return (
-    <div id="profile.store-identity-card.div.2" className="space-y-5">
+    <div {...uiAttributes({ uid: "profile.store-identity-card.div.8-ZigSG5", id: "profile.store-identity-card.div.8" })} id="profile.store-identity-card.div.2" className="space-y-5">
       {error || imagesError ? (
-        <div id="profile.store-identity-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <div {...uiAttributes({ uid: "profile.store-identity-card.div.9-299BsV", id: "profile.store-identity-card.div.9" })} id="profile.store-identity-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error ?? imagesError}
         </div>
       ) : null}
@@ -277,7 +278,7 @@ export const StoreIdentityCard = React.forwardRef<
         />
       ) : null}
 
-      <div id="profile.store-identity-card.div.4" className="space-y-2">
+      <div {...uiAttributes({ uid: "profile.store-identity-card.div.10-34aiFD", id: "profile.store-identity-card.div.10" })} id="profile.store-identity-card.div.4" className="space-y-2">
         <Label id="profile.store-identity-card.label" htmlFor="profile.store-identity.store-name">
           {t("onboarding.storeIdentity.storeName")}
         </Label>
@@ -291,7 +292,7 @@ export const StoreIdentityCard = React.forwardRef<
         />
       </div>
 
-      <div id="profile.store-identity-card.div.5" className="space-y-2">
+      <div {...uiAttributes({ uid: "profile.store-identity-card.div.11-h4eEqj", id: "profile.store-identity-card.div.11" })} id="profile.store-identity-card.div.5" className="space-y-2">
         <Label id="profile.store-identity-card.label.2" htmlFor="profile.store-identity.store-description">
           {t("onboarding.storeIdentity.storeDescription")}
         </Label>
@@ -306,12 +307,12 @@ export const StoreIdentityCard = React.forwardRef<
           maxLength={100}
           disabled={readOnly}
         />
-        <p id="profile.store-identity-card.p" className="text-end text-xs text-muted-foreground">
+        <p {...uiAttributes({ uid: "profile.store-identity-card.p.3-DrMS6Y", id: "profile.store-identity-card.p.3" })} id="profile.store-identity-card.p" className="text-end text-xs text-muted-foreground">
           {details.storeDescription.length}/100
         </p>
       </div>
 
-      <div id="profile.store-identity-card.div.6" className="space-y-2">
+      <div {...uiAttributes({ uid: "profile.store-identity-card.div.12-x5IH8H", id: "profile.store-identity-card.div.12" })} id="profile.store-identity-card.div.6" className="space-y-2">
         <Label id="profile.store-identity-card.label.3" htmlFor="profile.store-identity.store-story">
           {t("onboarding.storeIdentity.storeStory")}
         </Label>
@@ -324,7 +325,7 @@ export const StoreIdentityCard = React.forwardRef<
           maxLength={500}
           disabled={readOnly}
         />
-        <p id="profile.store-identity-card.p.2" className="text-end text-xs text-muted-foreground">
+        <p {...uiAttributes({ uid: "profile.store-identity-card.p.4-ef2JFp", id: "profile.store-identity-card.p.4" })} id="profile.store-identity-card.p.2" className="text-end text-xs text-muted-foreground">
           {details.storeStory.length}/500
         </p>
       </div>

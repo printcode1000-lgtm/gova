@@ -3,6 +3,7 @@
 import * as React from "react";
 import { SlidersHorizontal } from "lucide-react";
 import type { ProductSearchField } from "@/features/product-search";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductSearchFieldSelectorProps {
   fields: ProductSearchField[];
@@ -21,7 +22,7 @@ export function ProductSearchFieldSelector({
 
   if (fields.length === 0) {
     return (
-      <p id="product-search.panel.product-search-field-selector.p" className="rounded-lg border border-dashed border-outline-variant p-3 text-xs text-on-surface-variant">
+      <p {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.p.2-UXE2L8", id: "product-search.panel.product-search-field-selector.p.2" })} id="product-search.panel.product-search-field-selector.p" className="rounded-lg border border-dashed border-outline-variant p-3 text-xs text-on-surface-variant">
         {locale === "ar"
           ? "اختر الفئة الرئيسية والفرعية أولًا لعرض أعمدة البحث المناسبة."
           : "Select a main and sub category first to show matching search fields."}
@@ -37,13 +38,13 @@ export function ProductSearchFieldSelector({
   };
 
   return (
-    <div id="product-search.panel.product-search-field-selector.div" className="space-y-2">
-      <div id="product-search.panel.product-search-field-selector.div.2" className="flex items-center justify-between gap-3">
-        <span id="product-search.panel.product-search-field-selector.span" className="inline-flex items-center gap-2 text-xs font-semibold text-on-surface">
+    <div {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.div.4-9DHd0S", id: "product-search.panel.product-search-field-selector.div.4" })} id="product-search.panel.product-search-field-selector.div" className="space-y-2">
+      <div {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.div.5-oBS3ID", id: "product-search.panel.product-search-field-selector.div.5" })} id="product-search.panel.product-search-field-selector.div.2" className="flex items-center justify-between gap-3">
+        <span {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.span.2-wS5AIV", id: "product-search.panel.product-search-field-selector.span.2" })} id="product-search.panel.product-search-field-selector.span" className="inline-flex items-center gap-2 text-xs font-semibold text-on-surface">
           <SlidersHorizontal id="product-search.panel.product-search-field-selector.sliders-horizontal" className="h-4 w-4" />
           {locale === "ar" ? "أعمدة البحث" : "Search fields"}
         </span>
-        <button id="product-search.panel.product-search-field-selector.button"
+        <button {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.button.2-E4XFlg", id: "product-search.panel.product-search-field-selector.button.2" })} id="product-search.panel.product-search-field-selector.button"
           type="button"
           onClick={() =>
             onChange(selectedKeys.length === fields.length ? [] : fields.map((field) => field.key))
@@ -59,23 +60,23 @@ export function ProductSearchFieldSelector({
               : "Select all"}
         </button>
       </div>
-      <div id="product-search.panel.product-search-field-selector.div.3" className="flex flex-wrap gap-2">
+      <div {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.div.6-BY0SdT", id: "product-search.panel.product-search-field-selector.div.6" })} id="product-search.panel.product-search-field-selector.div.3" className="flex flex-wrap gap-2">
         {fields.map((field) => (
           <label
-            key={field.key}
+            key={field.key} {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.label-Fkd0Aa", id: "product-search.panel.product-search-field-selector.label" })}
             className={`inline-flex h-8  items-center gap-2 rounded-lg border px-2 text-xs transition ${
               selected.has(field.key)
                 ? "border-primary bg-primary text-on-primary"
                 : "border-outline-variant bg-surface text-on-surface"
             }`}
           >
-            <input
+            <input {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.input-To8ZEy", id: "product-search.panel.product-search-field-selector.input" })}
               type="checkbox"
               checked={selected.has(field.key)}
               onChange={() => toggle(field.key)}
               className="sr-only"
             />
-            <span>{locale === "ar" ? field.labelAr : field.labelEn}</span>
+            <span {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.span.3-dTF52O", id: "product-search.panel.product-search-field-selector.span.3" })}>{locale === "ar" ? field.labelAr : field.labelEn}</span>
           </label>
         ))}
       </div>

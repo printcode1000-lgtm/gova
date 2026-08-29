@@ -12,6 +12,7 @@ import {
 } from "./OrderDetailsPageContent.navigation-summary";
 import { useProfileFulfillmentSettings } from "@/features/profile/ui";
 import { useProfileCarrierLabels } from "@/features/profile/ui";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function SellerCarrierLinkPanel({ id,
   orderId,
@@ -44,34 +45,34 @@ export function SellerCarrierLinkPanel({ id,
 
   if (loadingFulfillment) {
     return (
-      <div id={id} className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
+      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div-FvZ7NV", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div" })} id={id} className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
         جاري تحميل إعدادات الشحن...
       </div>
     );
   }
 
   return (
-    <div id={id} className="mt-3 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
-      <p className="leading-6 text-on-surface">{text.noCarrierSellerHint}</p>
+    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div.2-zk45OL", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div.2" })} id={id} className="mt-3 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
+      <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.p-149Btc", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.p" })} className="leading-6 text-on-surface">{text.noCarrierSellerHint}</p>
       {carrierUids.length > 1 ? (
-        <label className="mt-3 block space-y-1.5">
-          <span className="text-xs font-semibold text-muted-foreground">
+        <label {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.label-T4YcEQ", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.label" })} className="mt-3 block space-y-1.5">
+          <span {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.span-ZD9CZd", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.span" })} className="text-xs font-semibold text-muted-foreground">
             مقدم التوصيل
           </span>
-          <select
+          <select {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.select-r8bZV6", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.select" })}
             value={selectedCarrierUid}
             onChange={(event) => setSelectedCarrierUid(event.target.value)}
             className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
           >
             {carrierUids.map((uid) => (
-              <option key={uid} value={uid}>
+              <option key={uid} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.option-EEKE1g", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.option" })} value={uid}>
                 {labelForUid(uid)}
               </option>
             ))}
           </select>
         </label>
       ) : null}
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div.3-9VXSPL", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div.3" })} className="mt-3 flex flex-wrap gap-2">
         <Link
           href={profileHref}
           className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition"
@@ -99,9 +100,9 @@ export function SellerCarrierLinkPanel({ id,
 
 export function SellerFulfillmentEditPanel({ id, orderId }: { orderId: string } & { id?: string }) {
   return (
-    <div id={id} className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm">
-      <p className="leading-6 text-on-surface">{text.sellerFulfillmentHint}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
+    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div.4-IU6D5e", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div.4" })} id={id} className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm">
+      <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.p.2-CyVr47", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.p.2" })} className="leading-6 text-on-surface">{text.sellerFulfillmentHint}</p>
+      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div.5-G3BwoG", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.div.5" })} className="mt-3 flex flex-wrap gap-2">
         <Link
           href={profileFulfillmentSectionHref(orderId, "shipping")}
           className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition"

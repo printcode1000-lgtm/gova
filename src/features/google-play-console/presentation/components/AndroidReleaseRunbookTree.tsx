@@ -13,6 +13,7 @@ import { DeployRunbookCollapsible } from "../DeployRunbookCollapsible";
 import { PhaseBlock } from "./AndroidReleaseRunbookPhaseBlocks";
 import type { AndroidRunbookTreeContext } from "./AndroidReleaseRunbookTreeShared";
 import type { AndroidRunbookStart } from "./AndroidReleaseRunbookTreeShared";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const SELECT_BTN =
   "h-auto w-full min-w-0 justify-start whitespace-normal py-2 text-left";
@@ -62,17 +63,17 @@ export function AndroidReleaseRunbookTree(props: {
   };
 
   return (
-    <div id={props.id} className="min-w-0 space-y-3">
+    <div {...uiAttributes({ uid: "google-play-console.android-release-runbook-tree.div-7BUUG3", id: "google-play-console.android-release-runbook-tree.div" })} id={props.id} className="min-w-0 space-y-3">
       <DeployRunbookCollapsible
         title={props.t("releaseConsole.androidPaths.bulkSelectTitle")}
         description={props.t("releaseConsole.androidPaths.bulkSelectHelp")}
         badge={
-          <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+          <span {...uiAttributes({ uid: "google-play-console.android-release-runbook-tree.span-NrQnV1", id: "google-play-console.android-release-runbook-tree.span" })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
             {selectedInRunbook} / {allIds.length}
           </span>
         }
       >
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div {...uiAttributes({ uid: "google-play-console.android-release-runbook-tree.div.2-l8BbIa", id: "google-play-console.android-release-runbook-tree.div.2" })} className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <Button
             ui={{
               uid: "release-console.runbook-tree.select-all-e1KCtu",
@@ -138,12 +139,12 @@ export function AndroidReleaseRunbookTree(props: {
         title={props.t("releaseConsole.androidPaths.treeTitle")}
         description={props.t("releaseConsole.androidPaths.treeHelp")}
         badge={
-          <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+          <span {...uiAttributes({ uid: "google-play-console.android-release-runbook-tree.span.2-Uh2Vd3", id: "google-play-console.android-release-runbook-tree.span.2" })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
             {props.runbook.length} {props.t("releaseConsole.androidPaths.phaseCountLabel")}
           </span>
         }
       >
-        <div className="space-y-3">
+        <div {...uiAttributes({ uid: "google-play-console.android-release-runbook-tree.div.3-KKX7ib", id: "google-play-console.android-release-runbook-tree.div.3" })} className="space-y-3">
           {props.runbook.map((phase) => (
             <PhaseBlock key={phase.id} phase={phase} {...context} />
           ))}

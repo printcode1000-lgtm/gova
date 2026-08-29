@@ -9,6 +9,7 @@ import { useOtaAdmin } from "../hooks/use-ota-admin";
 import { useOtaRolloutPageSave } from "../hooks/use-ota-rollout-page-save";
 import { Metric } from "../components/Metric";
 import { OtaReleaseChanges } from "../components/OtaReleaseChanges";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function OtaReleasesTab() {
   const { t } = useAdminArabic();
@@ -17,8 +18,8 @@ export function OtaReleasesTab() {
   const release = current?.release;
   useOtaRolloutPageSave(ota, true, release?.rolloutPercentage);
   return (
-    <section id="google-play-console.tabs.ota-releases-tab.section" className="space-y-4">
-      <div id="google-play-console.tabs.ota-releases-tab.div" className="flex flex-wrap justify-end gap-2">
+    <section {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.section.7-jJSZ0g", id: "google-play-console.tabs.ota-releases-tab.section.7" })} id="google-play-console.tabs.ota-releases-tab.section" className="space-y-4">
+      <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.15-x0KV3h", id: "google-play-console.tabs.ota-releases-tab.div.15" })} id="google-play-console.tabs.ota-releases-tab.div" className="flex flex-wrap justify-end gap-2">
         <Button id="google-play-console.tabs.ota-releases-tab.button"
           ui={{
             uid: "release-console.ota.refresh-WPqR9E",
@@ -40,20 +41,20 @@ export function OtaReleasesTab() {
           <CloudDownload id="google-play-console.tabs.ota-releases-tab.cloud-download" className="h-4 w-4" />{t("releaseConsole.ota.downloadTest")}
         </Button>
       </div>
-      {ota.message ? <div id="google-play-console.tabs.ota-releases-tab.div.2" className="rounded-md bg-muted p-3 text-sm">{t(ota.message)}</div> : null}
-      {ota.progress ? <div id="google-play-console.tabs.ota-releases-tab.div.3" className="rounded-md border bg-surface p-3">
-        <div id="google-play-console.tabs.ota-releases-tab.div.4" className="flex justify-between text-sm"><span id="google-play-console.tabs.ota-releases-tab.span">{ota.progress.detail || ota.progress.statusKey}</span>
+      {ota.message ? <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.16-hB1f4D", id: "google-play-console.tabs.ota-releases-tab.div.16" })} id="google-play-console.tabs.ota-releases-tab.div.2" className="rounded-md bg-muted p-3 text-sm">{t(ota.message)}</div> : null}
+      {ota.progress ? <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.17-6qyNM4", id: "google-play-console.tabs.ota-releases-tab.div.17" })} id="google-play-console.tabs.ota-releases-tab.div.3" className="rounded-md border bg-surface p-3">
+        <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.18-6duBiC", id: "google-play-console.tabs.ota-releases-tab.div.18" })} id="google-play-console.tabs.ota-releases-tab.div.4" className="flex justify-between text-sm"><span {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.span.3-0RBEJT", id: "google-play-console.tabs.ota-releases-tab.span.3" })} id="google-play-console.tabs.ota-releases-tab.span">{ota.progress.detail || ota.progress.statusKey}</span>
           <strong>{ota.progress.progress}%</strong></div>
-        <div id="google-play-console.tabs.ota-releases-tab.div.5" className="mt-2 h-2 overflow-hidden rounded-sm bg-muted"><div id="google-play-console.tabs.ota-releases-tab.div.6" className="h-full bg-primary"
+        <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.19-6DxP61", id: "google-play-console.tabs.ota-releases-tab.div.19" })} id="google-play-console.tabs.ota-releases-tab.div.5" className="mt-2 h-2 overflow-hidden rounded-sm bg-muted"><div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.20-Jmrg5X", id: "google-play-console.tabs.ota-releases-tab.div.20" })} id="google-play-console.tabs.ota-releases-tab.div.6" className="h-full bg-primary"
           style={{ width: `${ota.progress.progress}%` }} /></div>
       </div> : null}
       {ota.dashboard && !release ? (
-        <div id="google-play-console.tabs.ota-releases-tab.div.7" className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
+        <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.21-j3vLoP", id: "google-play-console.tabs.ota-releases-tab.div.21" })} id="google-play-console.tabs.ota-releases-tab.div.7" className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
           {t("releaseConsole.ota.loadFailed")}
         </div>
       ) : release && current?.manifest && ota.dashboard ? (
         <>
-          <div id="google-play-console.tabs.ota-releases-tab.div.8" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.22-Ys8xLC", id: "google-play-console.tabs.ota-releases-tab.div.22" })} id="google-play-console.tabs.ota-releases-tab.div.8" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <Metric id="google-play-console.tabs.ota-releases-tab.metric" label={t("releaseConsole.ota.currentVersion")} value={release.version}
               detail={release.releaseId} />
             <Metric id="google-play-console.tabs.ota-releases-tab.metric.2" label={t("releaseConsole.ota.approval")}
@@ -63,8 +64,8 @@ export function OtaReleasesTab() {
             <Metric id="google-play-console.tabs.ota-releases-tab.metric.4" label={t("releaseConsole.ota.mandatory")}
               value={t(release.mandatory ? "releaseConsole.common.yes" : "releaseConsole.common.no")} />
           </div>
-          <section id="google-play-console.tabs.ota-releases-tab.section.2" className="flex flex-wrap items-end gap-3 rounded-md border bg-surface p-4">
-            <label id="google-play-console.tabs.ota-releases-tab.label" className="grid gap-1 text-sm"><span id="google-play-console.tabs.ota-releases-tab.span.2">{t("releaseConsole.ota.rollout")}</span>
+          <section {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.section.8-JC5sCg", id: "google-play-console.tabs.ota-releases-tab.section.8" })} id="google-play-console.tabs.ota-releases-tab.section.2" className="flex flex-wrap items-end gap-3 rounded-md border bg-surface p-4">
+            <label {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.label.2-XnDWJ2", id: "google-play-console.tabs.ota-releases-tab.label.2" })} id="google-play-console.tabs.ota-releases-tab.label" className="grid gap-1 text-sm"><span {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.span.4-WM6RT1", id: "google-play-console.tabs.ota-releases-tab.span.4" })} id="google-play-console.tabs.ota-releases-tab.span.2">{t("releaseConsole.ota.rollout")}</span>
               <Input id="google-play-console.tabs.ota-releases-tab.input"
                 ui={{
                   uid: "release-console.ota.rollout-bIDnK9",
@@ -96,13 +97,13 @@ export function OtaReleasesTab() {
               <ClipboardCopy id="google-play-console.tabs.ota-releases-tab.clipboard-copy" className="h-4 w-4" />{t("releaseConsole.ota.copyManifest")}
             </Button>
           </section>
-          <section id="google-play-console.tabs.ota-releases-tab.section.3" className="rounded-md border bg-surface p-4">
-            <h2 id="google-play-console.tabs.ota-releases-tab.h2" className="mb-3 font-semibold">{t("releaseConsole.ota.releaseFiles")}</h2>
-            <div id="google-play-console.tabs.ota-releases-tab.div.9" className="max-h-96 overflow-auto rounded-md border">
-              <table id="google-play-console.tabs.ota-releases-tab.table" className="w-full min-w-[42rem] text-sm" dir="ltr"><tbody id="google-play-console.tabs.ota-releases-tab.tbody">
+          <section {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.section.9-i5TnTN", id: "google-play-console.tabs.ota-releases-tab.section.9" })} id="google-play-console.tabs.ota-releases-tab.section.3" className="rounded-md border bg-surface p-4">
+            <h2 {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.h2.5-ovW3Tn", id: "google-play-console.tabs.ota-releases-tab.h2.5" })} id="google-play-console.tabs.ota-releases-tab.h2" className="mb-3 font-semibold">{t("releaseConsole.ota.releaseFiles")}</h2>
+            <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.23-9HYw6O", id: "google-play-console.tabs.ota-releases-tab.div.23" })} id="google-play-console.tabs.ota-releases-tab.div.9" className="max-h-96 overflow-auto rounded-md border">
+              <table {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.table.3-9l3Rq0", id: "google-play-console.tabs.ota-releases-tab.table.3" })} id="google-play-console.tabs.ota-releases-tab.table" className="w-full min-w-[42rem] text-sm" dir="ltr"><tbody {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.tbody.3-TY0zQe", id: "google-play-console.tabs.ota-releases-tab.tbody.3" })} id="google-play-console.tabs.ota-releases-tab.tbody">
                 {Object.entries(current.manifest.files).map(([name, file]) => (
-                  <tr key={name} className="border-t"><td className="p-2 font-mono text-xs">{name}</td>
-                    <td className="p-2">{file.size}</td><td className="max-w-64 truncate p-2">{file.sha256}</td></tr>
+                  <tr key={name} {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.tr.2-zEGh6S", id: "google-play-console.tabs.ota-releases-tab.tr.2" })} className="border-t"><td {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.td.2-PZZB9T", id: "google-play-console.tabs.ota-releases-tab.td.2" })} className="p-2 font-mono text-xs">{name}</td>
+                    <td {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.td.3-f0E8ye", id: "google-play-console.tabs.ota-releases-tab.td.3" })} className="p-2">{file.size}</td><td {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.td.4-lMLIs3", id: "google-play-console.tabs.ota-releases-tab.td.4" })} className="max-w-64 truncate p-2">{file.sha256}</td></tr>
                 ))}
               </tbody></table>
             </div>
@@ -110,38 +111,38 @@ export function OtaReleasesTab() {
           <OtaReleaseChanges diff={ota.diff} history={ota.dashboard.history} currentId={release.releaseId}
             baseId={ota.baseReleaseId} onBaseChange={ota.setBaseReleaseId}
             emptyText={t("releaseConsole.empty")} />
-          <section id="google-play-console.tabs.ota-releases-tab.section.4" className="rounded-md border bg-surface p-4">
-            <h2 id="google-play-console.tabs.ota-releases-tab.h2.2" className="mb-3 font-semibold">{t("releaseConsole.ota.adoption")}</h2>
-            <div id="google-play-console.tabs.ota-releases-tab.div.10" className="overflow-auto rounded-md border">
-              <table id="google-play-console.tabs.ota-releases-tab.table.2" className="w-full min-w-[42rem] text-sm" dir="ltr"><tbody id="google-play-console.tabs.ota-releases-tab.tbody.2">
+          <section {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.section.10-XZN5z5", id: "google-play-console.tabs.ota-releases-tab.section.10" })} id="google-play-console.tabs.ota-releases-tab.section.4" className="rounded-md border bg-surface p-4">
+            <h2 {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.h2.6-xk9U1l", id: "google-play-console.tabs.ota-releases-tab.h2.6" })} id="google-play-console.tabs.ota-releases-tab.h2.2" className="mb-3 font-semibold">{t("releaseConsole.ota.adoption")}</h2>
+            <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.24-WeB2Um", id: "google-play-console.tabs.ota-releases-tab.div.24" })} id="google-play-console.tabs.ota-releases-tab.div.10" className="overflow-auto rounded-md border">
+              <table {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.table.4-S0478v", id: "google-play-console.tabs.ota-releases-tab.table.4" })} id="google-play-console.tabs.ota-releases-tab.table.2" className="w-full min-w-[42rem] text-sm" dir="ltr"><tbody {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.tbody.4-AW88xp", id: "google-play-console.tabs.ota-releases-tab.tbody.4" })} id="google-play-console.tabs.ota-releases-tab.tbody.2">
                 {ota.dashboard.adoption.map((item) => (
-                  <tr key={item.version} className="border-t">
-                    <td className="p-2 font-semibold">{item.version}</td>
-                    <td className="p-2"><pre>{JSON.stringify(item.outcomes, null, 2)}</pre></td>
+                  <tr key={item.version} {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.tr.3-6f7sHs", id: "google-play-console.tabs.ota-releases-tab.tr.3" })} className="border-t">
+                    <td {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.td.5-mE6iGK", id: "google-play-console.tabs.ota-releases-tab.td.5" })} className="p-2 font-semibold">{item.version}</td>
+                    <td {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.td.6-bSyU9r", id: "google-play-console.tabs.ota-releases-tab.td.6" })} className="p-2"><pre>{JSON.stringify(item.outcomes, null, 2)}</pre></td>
                   </tr>
                 ))}
-                {!ota.dashboard.adoption.length ? <tr id="google-play-console.tabs.ota-releases-tab.tr"><td id="google-play-console.tabs.ota-releases-tab.td" className="p-3" colSpan={2}>
+                {!ota.dashboard.adoption.length ? <tr {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.tr.4-fLK4f3", id: "google-play-console.tabs.ota-releases-tab.tr.4" })} id="google-play-console.tabs.ota-releases-tab.tr"><td {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.td.7-6myDfF", id: "google-play-console.tabs.ota-releases-tab.td.7" })} id="google-play-console.tabs.ota-releases-tab.td" className="p-3" colSpan={2}>
                   {t("releaseConsole.empty")}</td></tr> : null}
               </tbody></table>
             </div>
           </section>
-          <div id="google-play-console.tabs.ota-releases-tab.div.11" className="grid gap-4 lg:grid-cols-2">
-            <section id="google-play-console.tabs.ota-releases-tab.section.5" className="rounded-md border bg-surface p-4"><h2 id="google-play-console.tabs.ota-releases-tab.h2.3" className="mb-3 font-semibold">
-              {t("releaseConsole.ota.history")}</h2><div id="google-play-console.tabs.ota-releases-tab.div.12" className="space-y-2">
-              {ota.dashboard.history.map((item) => <div key={item.releaseId}
+          <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.25-MPkD60", id: "google-play-console.tabs.ota-releases-tab.div.25" })} id="google-play-console.tabs.ota-releases-tab.div.11" className="grid gap-4 lg:grid-cols-2">
+            <section {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.section.11-5eJC6F", id: "google-play-console.tabs.ota-releases-tab.section.11" })} id="google-play-console.tabs.ota-releases-tab.section.5" className="rounded-md border bg-surface p-4"><h2 {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.h2.7-U5cWTi", id: "google-play-console.tabs.ota-releases-tab.h2.7" })} id="google-play-console.tabs.ota-releases-tab.h2.3" className="mb-3 font-semibold">
+              {t("releaseConsole.ota.history")}</h2><div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.26-KC5sxa", id: "google-play-console.tabs.ota-releases-tab.div.26" })} id="google-play-console.tabs.ota-releases-tab.div.12" className="space-y-2">
+              {ota.dashboard.history.map((item) => <div key={item.releaseId} {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.27-CuZ0oZ", id: "google-play-console.tabs.ota-releases-tab.div.27" })}
                 className="rounded-md border p-2 text-sm"><strong dir="ltr">{item.version}</strong>
-                <span className="ms-2 text-on-surface-variant">{String(item.approved)}</span></div>)}
+                <span {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.span.5-k0YU8J", id: "google-play-console.tabs.ota-releases-tab.span.5" })} className="ms-2 text-on-surface-variant">{String(item.approved)}</span></div>)}
             </div></section>
-            <section id="google-play-console.tabs.ota-releases-tab.section.6" className="rounded-md border bg-surface p-4"><h2 id="google-play-console.tabs.ota-releases-tab.h2.4" className="mb-3 font-semibold">
-              {t("releaseConsole.ota.audit")}</h2><div id="google-play-console.tabs.ota-releases-tab.div.13" className="max-h-80 space-y-2 overflow-auto">
-              {ota.dashboard.audit.map((item) => <div key={item.id} className="rounded-md border p-2 text-sm">
+            <section {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.section.12-C6vAy5", id: "google-play-console.tabs.ota-releases-tab.section.12" })} id="google-play-console.tabs.ota-releases-tab.section.6" className="rounded-md border bg-surface p-4"><h2 {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.h2.8-TbnA2j", id: "google-play-console.tabs.ota-releases-tab.h2.8" })} id="google-play-console.tabs.ota-releases-tab.h2.4" className="mb-3 font-semibold">
+              {t("releaseConsole.ota.audit")}</h2><div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.28-G59aTo", id: "google-play-console.tabs.ota-releases-tab.div.28" })} id="google-play-console.tabs.ota-releases-tab.div.13" className="max-h-80 space-y-2 overflow-auto">
+              {ota.dashboard.audit.map((item) => <div key={item.id} {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.29-5Sd7ZL", id: "google-play-console.tabs.ota-releases-tab.div.29" })} className="rounded-md border p-2 text-sm">
                 <strong>{t(`releaseConsole.ota.auditAction.${item.action}`)}</strong>
-                <div className="text-xs text-on-surface-variant" dir="ltr">{item.version} / {item.actorUid}</div>
+                <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.30-KMj2G9", id: "google-play-console.tabs.ota-releases-tab.div.30" })} className="text-xs text-on-surface-variant" dir="ltr">{item.version} / {item.actorUid}</div>
               </div>)}
             </div></section>
           </div>
         </>
-      ) : ota.message ? null : <div id="google-play-console.tabs.ota-releases-tab.div.14" className="p-4 text-sm">{t("releaseConsole.loading")}</div>}
+      ) : ota.message ? null : <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.31-DEzIJ4", id: "google-play-console.tabs.ota-releases-tab.div.31" })} id="google-play-console.tabs.ota-releases-tab.div.14" className="p-4 text-sm">{t("releaseConsole.loading")}</div>}
     </section>
   );
 }

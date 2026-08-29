@@ -17,15 +17,15 @@ export function ProductReviewsSummary({
   onRate: () => void;
 }) {
   return (
-    <div id="product.product-reviews.product-reviews-summary.div" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4">
-      <button id="product.product-reviews.product-reviews-summary.button"
+    <div {...uiAttributes({ uid: "product.product-reviews.product-reviews-summary.div.2-cU7fQU", id: "product.product-reviews.product-reviews-summary.div.2" })} id="product.product-reviews.product-reviews-summary.div" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4">
+      <button {...uiAttributes({ uid: "product.product-reviews.product-reviews-summary.button.2-fYZK8U", id: "product.product-reviews.product-reviews-summary.button.2" })} id="product.product-reviews.product-reviews-summary.button"
         type="button"
         onClick={onScrollToReviews}
         className="flex items-center gap-2"
       >
         <Stars id="product.product-reviews.product-reviews-summary.stars" value={average} />
         <strong>{average.toFixed(1)}</strong>
-        <span id="product.product-reviews.product-reviews-summary.span" className="text-sm text-muted-foreground">({total})</span>
+        <span {...uiAttributes({ uid: "product.product-reviews.product-reviews-summary.span.2-PH5SAa", id: "product.product-reviews.product-reviews-summary.span.2" })} id="product.product-reviews.product-reviews-summary.span" className="text-sm text-muted-foreground">({total})</span>
       </button>
       {canRate ? (
         <button {...uiAttributes({ uid: "product-review-GBBl45", id: "product-review", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-review" } })}

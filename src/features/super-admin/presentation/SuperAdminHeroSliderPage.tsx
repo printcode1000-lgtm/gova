@@ -19,6 +19,7 @@ import type { StorageImageManagerHandle } from "@/features/storage/ui";
 import { useSuperAdminHeroSliderSave } from "./use-super-admin-hero-slider-save";
 import { usePageSaveRegistration } from "@/features/page-save/ui";
 import type { UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 
 
@@ -181,7 +182,7 @@ export function SuperAdminHeroSliderPage() {
 
   if (isLoading || !authorized) {
     return (
-      <main id="super-admin.super-admin-hero-slider-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.main.5-7d87E9", id: "super-admin.super-admin-hero-slider-page.main.5" })} id="super-admin.super-admin-hero-slider-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري التحقق من الصلاحيات…
       </main>
     );
@@ -189,9 +190,9 @@ export function SuperAdminHeroSliderPage() {
 
   if (loadFailed) {
     return (
-      <main id="super-admin.super-admin-hero-slider-page.main.2" className="container mx-auto max-w-6xl px-4 py-8">
-        <div id="super-admin.super-admin-hero-slider-page.div" className="rounded-lg border border-destructive/30 bg-card px-4 py-6">
-          <p id="super-admin.super-admin-hero-slider-page.p" className="text-sm text-destructive">{message}</p>
+      <main {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.main.6-isB299", id: "super-admin.super-admin-hero-slider-page.main.6" })} id="super-admin.super-admin-hero-slider-page.main.2" className="container mx-auto max-w-6xl px-4 py-8">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.11-z7YxLY", id: "super-admin.super-admin-hero-slider-page.div.11" })} id="super-admin.super-admin-hero-slider-page.div" className="rounded-lg border border-destructive/30 bg-card px-4 py-6">
+          <p {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.p.9-PVgr8y", id: "super-admin.super-admin-hero-slider-page.p.9" })} id="super-admin.super-admin-hero-slider-page.p" className="text-sm text-destructive">{message}</p>
           <Button id="super-admin.super-admin-hero-slider-page.button" ui={{ uid: "super-admin.hero-slider.reload-7xQtZK", id: "super-admin.hero-slider.reload", kind: "action", action: "reload", part: "toolbar" }}
             type="button"
             variant="outline"
@@ -209,31 +210,31 @@ export function SuperAdminHeroSliderPage() {
 
   if (!config || !record) {
     return (
-      <main id="super-admin.super-admin-hero-slider-page.main.3" className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.main.7-OO5v7F", id: "super-admin.super-admin-hero-slider-page.main.7" })} id="super-admin.super-admin-hero-slider-page.main.3" className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري تحميل الإعدادات…
       </main>
     );
   }
 
   return (
-    <main id="super-admin.super-admin-hero-slider-page.main.4" className="container mx-auto max-w-6xl px-4 py-8">
-      <header id="super-admin.super-admin-hero-slider-page.header" className="mb-6 flex items-start gap-3">
-        <div id="super-admin.super-admin-hero-slider-page.div.2" className="rounded-xl bg-primary/10 p-3 text-primary">
+    <main {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.main.8-fJ1Hgh", id: "super-admin.super-admin-hero-slider-page.main.8" })} id="super-admin.super-admin-hero-slider-page.main.4" className="container mx-auto max-w-6xl px-4 py-8">
+      <header {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.header.2-I4WPjg", id: "super-admin.super-admin-hero-slider-page.header.2" })} id="super-admin.super-admin-hero-slider-page.header" className="mb-6 flex items-start gap-3">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.12-MEDx5g", id: "super-admin.super-admin-hero-slider-page.div.12" })} id="super-admin.super-admin-hero-slider-page.div.2" className="rounded-xl bg-primary/10 p-3 text-primary">
           <ShieldCheck id="super-admin.super-admin-hero-slider-page.shield-check" className="h-6 w-6" />
         </div>
-        <div id="super-admin.super-admin-hero-slider-page.div.3">
-          <p id="super-admin.super-admin-hero-slider-page.p.2" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
-          <h1 id="super-admin.super-admin-hero-slider-page.h1" className="text-2xl font-bold">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.13-CWqOL3", id: "super-admin.super-admin-hero-slider-page.div.13" })} id="super-admin.super-admin-hero-slider-page.div.3">
+          <p {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.p.10-JN0Cfw", id: "super-admin.super-admin-hero-slider-page.p.10" })} id="super-admin.super-admin-hero-slider-page.p.2" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
+          <h1 {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.h1.2-LZQf4V", id: "super-admin.super-admin-hero-slider-page.h1.2" })} id="super-admin.super-admin-hero-slider-page.h1" className="text-2xl font-bold">
             إدارة Hero Slider للصفحة الرئيسية
           </h1>
-          <p id="super-admin.super-admin-hero-slider-page.p.3" className="mt-1 text-sm text-muted-foreground">
+          <p {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.p.11-L6e0DF", id: "super-admin.super-admin-hero-slider-page.p.11" })} id="super-admin.super-admin-hero-slider-page.p.3" className="mt-1 text-sm text-muted-foreground">
             سجل واحد يتحكم مباشرة في المكوّن داخل Home.
           </p>
         </div>
       </header>
 
       {message && (
-        <div id="super-admin.super-admin-hero-slider-page.div.4"
+        <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.14-Tfb4Ml", id: "super-admin.super-admin-hero-slider-page.div.14" })} id="super-admin.super-admin-hero-slider-page.div.4"
           className="mb-4 rounded-lg border bg-card px-4 py-3 text-sm"
           role="status"
         >
@@ -241,26 +242,26 @@ export function SuperAdminHeroSliderPage() {
         </div>
       )}
 
-      <section id="super-admin.super-admin-hero-slider-page.section" className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div id="super-admin.super-admin-hero-slider-page.div.5">
-          <p id="super-admin.super-admin-hero-slider-page.p.4" className="text-xs text-muted-foreground">الإصدار</p>
-          <p id="super-admin.super-admin-hero-slider-page.p.5" className="font-semibold">{record.version}</p>
+      <section {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.section.3-5VW14U", id: "super-admin.super-admin-hero-slider-page.section.3" })} id="super-admin.super-admin-hero-slider-page.section" className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.15-D4oXjB", id: "super-admin.super-admin-hero-slider-page.div.15" })} id="super-admin.super-admin-hero-slider-page.div.5">
+          <p {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.p.12-Fp0Eqr", id: "super-admin.super-admin-hero-slider-page.p.12" })} id="super-admin.super-admin-hero-slider-page.p.4" className="text-xs text-muted-foreground">الإصدار</p>
+          <p {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.p.13-LMq7mC", id: "super-admin.super-admin-hero-slider-page.p.13" })} id="super-admin.super-admin-hero-slider-page.p.5" className="font-semibold">{record.version}</p>
         </div>
-        <div id="super-admin.super-admin-hero-slider-page.div.6">
-          <p id="super-admin.super-admin-hero-slider-page.p.6" className="text-xs text-muted-foreground">آخر تحديث</p>
-          <p id="super-admin.super-admin-hero-slider-page.p.7" className="text-sm">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.16-I36MfS", id: "super-admin.super-admin-hero-slider-page.div.16" })} id="super-admin.super-admin-hero-slider-page.div.6">
+          <p {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.p.14-ZjG8k3", id: "super-admin.super-admin-hero-slider-page.p.14" })} id="super-admin.super-admin-hero-slider-page.p.6" className="text-xs text-muted-foreground">آخر تحديث</p>
+          <p {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.p.15-qbW2WL", id: "super-admin.super-admin-hero-slider-page.p.15" })} id="super-admin.super-admin-hero-slider-page.p.7" className="text-sm">
             {formatDateTimeDefault(record.updatedAt)}
           </p>
         </div>
       </section>
 
-      <section id="super-admin.super-admin-hero-slider-page.section.2" className="mb-6 rounded-xl border bg-card p-4">
-        <div id="super-admin.super-admin-hero-slider-page.div.7" className="mb-3 flex items-center gap-2">
+      <section {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.section.4-K51ESl", id: "super-admin.super-admin-hero-slider-page.section.4" })} id="super-admin.super-admin-hero-slider-page.section.2" className="mb-6 rounded-xl border bg-card p-4">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.17-MWbM18", id: "super-admin.super-admin-hero-slider-page.div.17" })} id="super-admin.super-admin-hero-slider-page.div.7" className="mb-3 flex items-center gap-2">
           <RefreshCw id="super-admin.super-admin-hero-slider-page.refresh-cw.2" className="h-5 w-5 text-primary" />
-          <h2 id="super-admin.super-admin-hero-slider-page.h2" className="font-semibold">فترة البحث عن تحديثات</h2>
+          <h2 {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.h2.3-7Jt9kA", id: "super-admin.super-admin-hero-slider-page.h2.3" })} id="super-admin.super-admin-hero-slider-page.h2" className="font-semibold">فترة البحث عن تحديثات</h2>
         </div>
-        <div id="super-admin.super-admin-hero-slider-page.div.8" className="flex flex-wrap items-end gap-3">
-          <div id="super-admin.super-admin-hero-slider-page.div.9" className="min-w-52 space-y-2">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.18-7GLEpH", id: "super-admin.super-admin-hero-slider-page.div.18" })} id="super-admin.super-admin-hero-slider-page.div.8" className="flex flex-wrap items-end gap-3">
+          <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.19-23LA0T", id: "super-admin.super-admin-hero-slider-page.div.19" })} id="super-admin.super-admin-hero-slider-page.div.9" className="min-w-52 space-y-2">
             <Label id="super-admin.super-admin-hero-slider-page.label" htmlFor="super-admin.hero-slider.check-interval">الفترة بالدقائق</Label>
             <Input ui={{ uid: "super-admin.hero-slider.check-interval-YL9yfX", id: "super-admin.hero-slider.check-interval", kind: "field", part: "settings" }}
               id="super-admin.hero-slider.check-interval"
@@ -291,15 +292,15 @@ export function SuperAdminHeroSliderPage() {
             </Button>
           ))}
         </div>
-        <p id="super-admin.super-admin-hero-slider-page.p.8" className="mt-3 text-xs text-muted-foreground">
+        <p {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.p.16-FW08HP", id: "super-admin.super-admin-hero-slider-page.p.16" })} id="super-admin.super-admin-hero-slider-page.p.8" className="mt-3 text-xs text-muted-foreground">
           المعاينة تعرض كل التعديلات والصور محلياً قبل تطبيقها على الصفحة
           الرئيسية.
         </p>
       </section>
 
-      <div id="super-admin.super-admin-hero-slider-page.div.10" className="mb-3 flex items-center gap-2">
+      <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.20-WuIJ0a", id: "super-admin.super-admin-hero-slider-page.div.20" })} id="super-admin.super-admin-hero-slider-page.div.10" className="mb-3 flex items-center gap-2">
         <Eye id="super-admin.super-admin-hero-slider-page.eye" className="h-5 w-5 text-primary" />
-        <h2 id="super-admin.super-admin-hero-slider-page.h2.2" className="font-semibold">المعاينة الحية والتحرير</h2>
+        <h2 {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.h2.4-Z5zNVS", id: "super-admin.super-admin-hero-slider-page.h2.4" })} id="super-admin.super-admin-hero-slider-page.h2.2" className="font-semibold">المعاينة الحية والتحرير</h2>
       </div>
       <HeroSlider id="super-admin.super-admin-hero-slider-page.hero-slider"
         mode="admin-edit"

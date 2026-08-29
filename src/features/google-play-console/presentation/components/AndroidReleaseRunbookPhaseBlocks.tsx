@@ -12,6 +12,7 @@ import {
   selectionState,
   type AndroidRunbookTreeContext,
 } from "./AndroidReleaseRunbookTreeShared";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function PhaseBlock(props: AndroidRunbookTreeContext & { phase: AndroidReleaseRunbookPhase } & { id?: string }) {
   const branchIds = props.phase.sections.flatMap((section) =>
@@ -25,12 +26,12 @@ export function PhaseBlock(props: AndroidRunbookTreeContext & { phase: AndroidRe
       title={`${props.phase.id} — ${props.phase.label}`}
       description={props.t("releaseConsole.androidPaths.phaseCheckboxHelp")}
       badge={
-        <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+        <span {...uiAttributes({ uid: "google-play-console.android-release-runbook-phase-blocks.span-9RCGED", id: "google-play-console.android-release-runbook-phase-blocks.span" })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
           {phaseState.active} / {branchIds.length}
         </span>
       }
     >
-      <div className="mb-3">
+      <div {...uiAttributes({ uid: "google-play-console.android-release-runbook-phase-blocks.div-N1M8yb", id: "google-play-console.android-release-runbook-phase-blocks.div" })} className="mb-3">
         <CascadeCheckbox
           checked={phaseState.all}
           indeterminate={phaseState.some}
@@ -39,7 +40,7 @@ export function PhaseBlock(props: AndroidRunbookTreeContext & { phase: AndroidRe
           help={props.t("releaseConsole.androidPaths.phaseCheckboxHelp")}
         />
       </div>
-      <div className="space-y-3">
+      <div {...uiAttributes({ uid: "google-play-console.android-release-runbook-phase-blocks.div.2-99AiOl", id: "google-play-console.android-release-runbook-phase-blocks.div.2" })} className="space-y-3">
         {props.phase.sections.map((section) => (
           <SectionBlock key={section.id} section={section} {...props} />
         ))}
@@ -62,12 +63,12 @@ export function SectionBlock(
       title={`${props.section.id} — ${props.section.label}`}
       description={props.t("releaseConsole.androidPaths.sectionCheckboxHelp")}
       badge={
-        <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+        <span {...uiAttributes({ uid: "google-play-console.android-release-runbook-phase-blocks.span.2-3i9mKG", id: "google-play-console.android-release-runbook-phase-blocks.span.2" })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
           {sectionState.active} / {branchIds.length}
         </span>
       }
     >
-      <div className="mb-3">
+      <div {...uiAttributes({ uid: "google-play-console.android-release-runbook-phase-blocks.div.3-SY0QJN", id: "google-play-console.android-release-runbook-phase-blocks.div.3" })} className="mb-3">
         <CascadeCheckbox
           checked={sectionState.all}
           indeterminate={sectionState.some}
@@ -78,7 +79,7 @@ export function SectionBlock(
           help={props.t("releaseConsole.androidPaths.sectionCheckboxHelp")}
         />
       </div>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 2xl:grid-cols-3">
+      <div {...uiAttributes({ uid: "google-play-console.android-release-runbook-phase-blocks.div.4-lVI6Jj", id: "google-play-console.android-release-runbook-phase-blocks.div.4" })} className="grid grid-cols-1 gap-2 sm:grid-cols-2 2xl:grid-cols-3">
         {props.section.branches.map((item) => (
           <CommandBranchCard
             key={item.id}

@@ -7,6 +7,7 @@ import type { Locale } from '@/shared/i18n';
 import type { CategoryDisplay } from '@/features/categories';
 
 import MarqueeCard from './MarqueeCard';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 function getRandomCategories(categories: readonly CategoryDisplay[], count: number): CategoryDisplay[] {
   const shuffled = [...categories];
@@ -73,14 +74,14 @@ export default function TopMarquee({ displayCategories }: TopMarqueeProps) {
   }, [handleIntersect, loopItems.length]);
 
   return (
-    <div id="splash.top-marquee.div"
+    <div {...uiAttributes({ uid: "splash.top-marquee.div.3-FyrS28", id: "splash.top-marquee.div.3" })} id="splash.top-marquee.div"
       className="absolute top-[var(--asol-safe-area-top)] inset-x-0 overflow-hidden pointer-events-none z-0"
       dir="ltr"
     >
-      <div id="splash.top-marquee.div.2" className="splash-marquee-track splash-marquee-track--right gap-4 py-4">
+      <div {...uiAttributes({ uid: "splash.top-marquee.div.4-4Zqvly", id: "splash.top-marquee.div.4" })} id="splash.top-marquee.div.2" className="splash-marquee-track splash-marquee-track--right gap-4 py-4">
         {loopItems.map((item, index) => (
           <div 
-            key={`top-${index}`} 
+            key={`top-${index}`} {...uiAttributes({ uid: "splash.top-marquee.div.5-TzZ5HQ", id: "splash.top-marquee.div.5" })} 
             data-index={index}
             ref={(el) => {
               if (el) cardRefs.current.set(index, el);

@@ -40,6 +40,7 @@ import { cn } from "@/shared/utils";
 
 import { sections, formatForCopy, formatEntryForCopy } from "./logs/SuperAdminLogsPage.log-formatters";
 import { CloudErrorsContainer } from "./logs/SuperAdminLogsPage.cloud-errors";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 // Clipboard access belongs to Native Core, which picks the native or web
 // implementation. It returns a Result rather than throwing, so a copy button on
@@ -246,7 +247,7 @@ export function SuperAdminLogsPage() {
 
   if (isLoading || !authorized) {
     return (
-      <main id="super-admin.super-admin-logs-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main {...uiAttributes({ uid: "super-admin.super-admin-logs-page.main.3-Y2W9Qo", id: "super-admin.super-admin-logs-page.main.3" })} id="super-admin.super-admin-logs-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري التحقق من الصلاحيات…
       </main>
     );
@@ -267,20 +268,20 @@ export function SuperAdminLogsPage() {
   };
 
   return (
-    <main id="super-admin.super-admin-logs-page.main.2" className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
-      <header id="super-admin.super-admin-logs-page.header" className="mb-6 flex flex-wrap items-start gap-3">
-        <div id="super-admin.super-admin-logs-page.div" className="rounded-xl bg-primary/10 p-3 text-primary">
+    <main {...uiAttributes({ uid: "super-admin.super-admin-logs-page.main.4-4V6pAh", id: "super-admin.super-admin-logs-page.main.4" })} id="super-admin.super-admin-logs-page.main.2" className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
+      <header {...uiAttributes({ uid: "super-admin.super-admin-logs-page.header.2-Kq2ZrU", id: "super-admin.super-admin-logs-page.header.2" })} id="super-admin.super-admin-logs-page.header" className="mb-6 flex flex-wrap items-start gap-3">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.10-bIjAK9", id: "super-admin.super-admin-logs-page.div.10" })} id="super-admin.super-admin-logs-page.div" className="rounded-xl bg-primary/10 p-3 text-primary">
           <ShieldCheck id="super-admin.super-admin-logs-page.shield-check" className="h-6 w-6" />
         </div>
-        <div id="super-admin.super-admin-logs-page.div.2" className="me-auto">
-          <p id="super-admin.super-admin-logs-page.p" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
-          <h1 id="super-admin.super-admin-logs-page.h1" className="text-2xl font-bold">سجل النظام المباشر</h1>
-          <p id="super-admin.super-admin-logs-page.p.2" className="mt-1 text-sm text-muted-foreground">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.11-1u6Y0C", id: "super-admin.super-admin-logs-page.div.11" })} id="super-admin.super-admin-logs-page.div.2" className="me-auto">
+          <p {...uiAttributes({ uid: "super-admin.super-admin-logs-page.p.10-6hNQgU", id: "super-admin.super-admin-logs-page.p.10" })} id="super-admin.super-admin-logs-page.p" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
+          <h1 {...uiAttributes({ uid: "super-admin.super-admin-logs-page.h1.2-N5HDIa", id: "super-admin.super-admin-logs-page.h1.2" })} id="super-admin.super-admin-logs-page.h1" className="text-2xl font-bold">سجل النظام المباشر</h1>
+          <p {...uiAttributes({ uid: "super-admin.super-admin-logs-page.p.11-kX4oPM", id: "super-admin.super-admin-logs-page.p.11" })} id="super-admin.super-admin-logs-page.p.2" className="mt-1 text-sm text-muted-foreground">
             يجمع السجل المحلي المباشر والسجلات المحفوظة، مع فصل أخطاء السحابة
             الموثقة أدناه.
           </p>
         </div>
-        <div id="super-admin.super-admin-logs-page.div.3" className="flex items-center gap-2 rounded-xl border bg-card p-2">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.12-068axT", id: "super-admin.super-admin-logs-page.div.12" })} id="super-admin.super-admin-logs-page.div.3" className="flex items-center gap-2 rounded-xl border bg-card p-2">
           <Button id="super-admin.super-admin-logs-page.button" ui={{ uid: "super-admin.logs.toggle-capture-us09GH", id: "super-admin.logs.toggle-capture", kind: "action", action: "toggle-capture", part: "toolbar" }}
             type="button"
             size="icon"
@@ -308,20 +309,20 @@ export function SuperAdminLogsPage() {
       </header>
 
       {summary && (
-        <section id="super-admin.super-admin-logs-page.section" className="mb-6 grid gap-3 sm:grid-cols-3">
-          <article id="super-admin.super-admin-logs-page.article" className="rounded-xl border bg-card p-4">
-            <p id="super-admin.super-admin-logs-page.p.3" className="text-xs text-muted-foreground">إجمالي الأخطاء المحفوظة</p>
-            <p id="super-admin.super-admin-logs-page.p.4" className="text-2xl font-bold">{summary.totalErrors}</p>
+        <section {...uiAttributes({ uid: "super-admin.super-admin-logs-page.section.3-Q4AWK7", id: "super-admin.super-admin-logs-page.section.3" })} id="super-admin.super-admin-logs-page.section" className="mb-6 grid gap-3 sm:grid-cols-3">
+          <article {...uiAttributes({ uid: "super-admin.super-admin-logs-page.article.4-p9J5GY", id: "super-admin.super-admin-logs-page.article.4" })} id="super-admin.super-admin-logs-page.article" className="rounded-xl border bg-card p-4">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-logs-page.p.12-PEnCC9", id: "super-admin.super-admin-logs-page.p.12" })} id="super-admin.super-admin-logs-page.p.3" className="text-xs text-muted-foreground">إجمالي الأخطاء المحفوظة</p>
+            <p {...uiAttributes({ uid: "super-admin.super-admin-logs-page.p.13-CZ8C6w", id: "super-admin.super-admin-logs-page.p.13" })} id="super-admin.super-admin-logs-page.p.4" className="text-2xl font-bold">{summary.totalErrors}</p>
           </article>
-          <article id="super-admin.super-admin-logs-page.article.2" className="rounded-xl border bg-card p-4">
-            <p id="super-admin.super-admin-logs-page.p.5" className="text-xs text-muted-foreground">أخطاء آخر ساعة</p>
-            <p id="super-admin.super-admin-logs-page.p.6" className="text-2xl font-bold text-destructive">
+          <article {...uiAttributes({ uid: "super-admin.super-admin-logs-page.article.5-uEXE9I", id: "super-admin.super-admin-logs-page.article.5" })} id="super-admin.super-admin-logs-page.article.2" className="rounded-xl border bg-card p-4">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-logs-page.p.14-pTVPr6", id: "super-admin.super-admin-logs-page.p.14" })} id="super-admin.super-admin-logs-page.p.5" className="text-xs text-muted-foreground">أخطاء آخر ساعة</p>
+            <p {...uiAttributes({ uid: "super-admin.super-admin-logs-page.p.15-Xr4pMj", id: "super-admin.super-admin-logs-page.p.15" })} id="super-admin.super-admin-logs-page.p.6" className="text-2xl font-bold text-destructive">
               {summary.lastHourErrors}
             </p>
           </article>
-          <article id="super-admin.super-admin-logs-page.article.3" className="rounded-xl border bg-card p-4">
-            <p id="super-admin.super-admin-logs-page.p.7" className="text-xs text-muted-foreground">أكثر الميزات تأثرًا</p>
-            <p id="super-admin.super-admin-logs-page.p.8" className="mt-1 text-sm font-mono" dir="ltr">
+          <article {...uiAttributes({ uid: "super-admin.super-admin-logs-page.article.6-AXLHw0", id: "super-admin.super-admin-logs-page.article.6" })} id="super-admin.super-admin-logs-page.article.3" className="rounded-xl border bg-card p-4">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-logs-page.p.16-Q0gkaL", id: "super-admin.super-admin-logs-page.p.16" })} id="super-admin.super-admin-logs-page.p.7" className="text-xs text-muted-foreground">أكثر الميزات تأثرًا</p>
+            <p {...uiAttributes({ uid: "super-admin.super-admin-logs-page.p.17-7A0QVx", id: "super-admin.super-admin-logs-page.p.17" })} id="super-admin.super-admin-logs-page.p.8" className="mt-1 text-sm font-mono" dir="ltr">
               {summary.topFeatures.length
                 ? summary.topFeatures
                     .map((item) => `${item.feature} (${item.count})`)
@@ -332,26 +333,26 @@ export function SuperAdminLogsPage() {
         </section>
       )}
 
-      <div id="super-admin.super-admin-logs-page.div.4" className="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_180px]">
-        <label id="super-admin.super-admin-logs-page.label" className="relative">
+      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.13-2lS0KE", id: "super-admin.super-admin-logs-page.div.13" })} id="super-admin.super-admin-logs-page.div.4" className="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_180px]">
+        <label {...uiAttributes({ uid: "super-admin.super-admin-logs-page.label.2-KFL9Dt", id: "super-admin.super-admin-logs-page.label.2" })} id="super-admin.super-admin-logs-page.label" className="relative">
           <Search id="super-admin.super-admin-logs-page.search" className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input id="super-admin.super-admin-logs-page.input"
+          <input {...uiAttributes({ uid: "super-admin.super-admin-logs-page.input.2-PW9FL5", id: "super-admin.super-admin-logs-page.input.2" })} id="super-admin.super-admin-logs-page.input"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="ابحث في الرسائل والمسارات والميزات..."
             className="asol-input-decorated-start h-10 w-full rounded-md border bg-background pe-3 text-sm"
           />
         </label>
-        <select id="super-admin.super-admin-logs-page.select"
+        <select {...uiAttributes({ uid: "super-admin.super-admin-logs-page.select.2-HaVPR5", id: "super-admin.super-admin-logs-page.select.2" })} id="super-admin.super-admin-logs-page.select"
           value={platform}
           onChange={(event) => setPlatform(event.target.value)}
           className="h-10 rounded-md border bg-background px-3 text-sm"
         >
-          <option value="all">كل المنصات</option>
-          <option value="web">Web</option>
-          <option value="android">Android</option>
-          <option value="ios">iOS</option>
-          <option value="server">Server</option>
+          <option {...uiAttributes({ uid: "super-admin.super-admin-logs-page.option-uWzLY1", id: "super-admin.super-admin-logs-page.option" })} value="all">كل المنصات</option>
+          <option {...uiAttributes({ uid: "super-admin.super-admin-logs-page.option.2-20QEYP", id: "super-admin.super-admin-logs-page.option.2" })} value="web">Web</option>
+          <option {...uiAttributes({ uid: "super-admin.super-admin-logs-page.option.3-y9YY7R", id: "super-admin.super-admin-logs-page.option.3" })} value="android">Android</option>
+          <option {...uiAttributes({ uid: "super-admin.super-admin-logs-page.option.4-jlMPM1", id: "super-admin.super-admin-logs-page.option.4" })} value="ios">iOS</option>
+          <option {...uiAttributes({ uid: "super-admin.super-admin-logs-page.option.5-4BByiM", id: "super-admin.super-admin-logs-page.option.5" })} value="server">Server</option>
         </select>
       </div>
 
@@ -362,12 +363,12 @@ export function SuperAdminLogsPage() {
         onRefresh={() => setRefreshKey((value) => value + 1)}
       />
 
-      <div id="super-admin.super-admin-logs-page.div.5" className="mb-5 grid grid-cols-3 gap-2 sm:gap-3">
+      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.14-P0YGS8", id: "super-admin.super-admin-logs-page.div.14" })} id="super-admin.super-admin-logs-page.div.5" className="mb-5 grid grid-cols-3 gap-2 sm:gap-3">
         {sections.map((item) => {
           const TabIcon = item.icon;
           return (
             <button
-              key={item.level}
+              key={item.level} {...uiAttributes({ uid: "super-admin.super-admin-logs-page.button.5-OKx5Vg", id: "super-admin.super-admin-logs-page.button.5" })}
               type="button"
               onClick={() => setActive(item.level)}
               className={cn(
@@ -376,19 +377,19 @@ export function SuperAdminLogsPage() {
                   "border-primary ring-2 ring-primary/20",
               )}
             >
-              <div className="flex min-w-0 items-center justify-between gap-1.5 sm:gap-3">
-                <span className="flex min-w-0 items-center gap-1.5 font-semibold sm:gap-2">
+              <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.15-9gAb9u", id: "super-admin.super-admin-logs-page.div.15" })} className="flex min-w-0 items-center justify-between gap-1.5 sm:gap-3">
+                <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span-rVmQ35", id: "super-admin.super-admin-logs-page.span" })} className="flex min-w-0 items-center gap-1.5 font-semibold sm:gap-2">
                   <TabIcon
                     className={cn(
                       "h-4 w-4 shrink-0 sm:h-5 sm:w-5",
                       item.color,
                     )}
                   />
-                  <span className="truncate text-sm sm:text-base">
+                  <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.2-jZ41WP", id: "super-admin.super-admin-logs-page.span.2" })} className="truncate text-sm sm:text-base">
                     {item.title}
                   </span>
                 </span>
-                <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-bold sm:px-2.5 sm:py-1">
+                <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.3-03XcTf", id: "super-admin.super-admin-logs-page.span.3" })} className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-bold sm:px-2.5 sm:py-1">
                   {grouped[item.level].length}
                 </span>
               </div>
@@ -397,13 +398,13 @@ export function SuperAdminLogsPage() {
         })}
       </div>
 
-      <section id="super-admin.super-admin-logs-page.section.2" className="rounded-xl border bg-card">
-        <div id="super-admin.super-admin-logs-page.div.6" className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
-          <h2 id="super-admin.super-admin-logs-page.h2" className="flex items-center gap-2 font-semibold">
+      <section {...uiAttributes({ uid: "super-admin.super-admin-logs-page.section.4-48ERma", id: "super-admin.super-admin-logs-page.section.4" })} id="super-admin.super-admin-logs-page.section.2" className="rounded-xl border bg-card">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.16-H8T19F", id: "super-admin.super-admin-logs-page.div.16" })} id="super-admin.super-admin-logs-page.div.6" className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
+          <h2 {...uiAttributes({ uid: "super-admin.super-admin-logs-page.h2.2-I6dP2P", id: "super-admin.super-admin-logs-page.h2.2" })} id="super-admin.super-admin-logs-page.h2" className="flex items-center gap-2 font-semibold">
             <Icon className={cn("h-5 w-5", section.color)} />
             {section.title}
           </h2>
-          <div id="super-admin.super-admin-logs-page.div.7" className="flex gap-2">
+          <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.17-Ig28KC", id: "super-admin.super-admin-logs-page.div.17" })} id="super-admin.super-admin-logs-page.div.7" className="flex gap-2">
             <Button id="super-admin.super-admin-logs-page.button.3" ui={{ uid: "super-admin.logs.copy-section-0J9YPC", id: "super-admin.logs.copy-section", kind: "action", action: "copy-section", part: "section-toolbar" }}
               type="button"
               size="icon"
@@ -427,32 +428,32 @@ export function SuperAdminLogsPage() {
           </div>
         </div>
 
-        <div id="super-admin.super-admin-logs-page.div.8" className="max-h-[65vh] overflow-auto p-3">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.18-FyQ1g2", id: "super-admin.super-admin-logs-page.div.18" })} id="super-admin.super-admin-logs-page.div.8" className="max-h-[65vh] overflow-auto p-3">
           {current.length ? (
-            <div id="super-admin.super-admin-logs-page.div.9" className="space-y-3">
+            <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.19-Icrc53", id: "super-admin.super-admin-logs-page.div.19" })} id="super-admin.super-admin-logs-page.div.9" className="space-y-3">
               {[...current].reverse().map((entry) => (
                 <article
-                  key={entry.id}
+                  key={entry.id} {...uiAttributes({ uid: "super-admin.super-admin-logs-page.article.7-x3h1gI", id: "super-admin.super-admin-logs-page.article.7" })}
                   className="rounded-lg border bg-background p-3 text-sm"
                 >
-                  <div className="mb-2 flex items-start justify-between gap-3">
-                    <div
+                  <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.20-Z0ZpV0", id: "super-admin.super-admin-logs-page.div.20" })} className="mb-2 flex items-start justify-between gap-3">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.21-XOf2FA", id: "super-admin.super-admin-logs-page.div.21" })}
                       className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground"
                       dir="ltr"
                     >
                       <time aria-label="آخر ظهور">
                         {formatDateTimeDefault(entry.lastOccurredAt)}
                       </time>
-                      <span>{entry.platform}</span>
+                      <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.4-b63V7N", id: "super-admin.super-admin-logs-page.span.4" })}>{entry.platform}</span>
                       <code>{entry.consoleMethod}</code>
                       <code>{entry.page}</code>
                       {typeof entry.id === "number" && entry.id < 0 && (
-                        <span className="rounded-full bg-primary/10 px-2 py-0.5 font-bold text-primary">
+                        <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.5-37LMf5", id: "super-admin.super-admin-logs-page.span.5" })} className="rounded-full bg-primary/10 px-2 py-0.5 font-bold text-primary">
                           محفوظ
                         </span>
                       )}
                       {entry.occurrences > 1 && (
-                        <span
+                        <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.6-3W5WFH", id: "super-admin.super-admin-logs-page.span.6" })}
                           className="rounded-full bg-muted px-2 py-0.5 font-bold"
                           aria-label="عدد مرات التكرار"
                         >
@@ -460,7 +461,7 @@ export function SuperAdminLogsPage() {
                         </span>
                       )}
                     </div>
-                    <Button
+                    <Button ui={{ uid: "super-admin.super-admin-logs-page.button.6-W4aPZ5", id: "super-admin.super-admin-logs-page.button.6" }}
                       type="button"
                       size="icon"
                       variant="ghost"
@@ -481,29 +482,29 @@ export function SuperAdminLogsPage() {
                       className="mt-3 grid gap-2 rounded-md bg-muted/40 p-3 text-xs sm:grid-cols-2"
                       dir="ltr"
                     >
-                      <div>
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.22-MZ0DN6", id: "super-admin.super-admin-logs-page.div.22" })}>
                         <dt className="text-muted-foreground">النوع</dt>
                         <dd className="font-mono">
                           {entry.errorName ?? "غير محدد"}
                         </dd>
                       </div>
-                      <div>
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.23-9NJhXD", id: "super-admin.super-admin-logs-page.div.23" })}>
                         <dt className="text-muted-foreground">عدد التكرار</dt>
                         <dd>{entry.occurrences}</dd>
                       </div>
-                      <div>
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.24-effNF4", id: "super-admin.super-admin-logs-page.div.24" })}>
                         <dt className="text-muted-foreground">الميزة</dt>
                         <dd className="font-mono">
                           {entry.feature ?? "غير محدد"}
                         </dd>
                       </div>
-                      <div>
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.25-9bFbRM", id: "super-admin.super-admin-logs-page.div.25" })}>
                         <dt className="text-muted-foreground">العملية</dt>
                         <dd className="font-mono">
                           {entry.operation ?? "غير محددة"}
                         </dd>
                       </div>
-                      <div>
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.26-A27WfQ", id: "super-admin.super-admin-logs-page.div.26" })}>
                         <dt className="text-muted-foreground">
                           أول ظهور
                         </dt>
@@ -511,7 +512,7 @@ export function SuperAdminLogsPage() {
                           {formatDateTimeDefault(entry.firstOccurredAt)}
                         </dd>
                       </div>
-                      <div>
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.27-5HCeI8", id: "super-admin.super-admin-logs-page.div.27" })}>
                         <dt className="text-muted-foreground">
                           آخر ظهور
                         </dt>
@@ -519,7 +520,7 @@ export function SuperAdminLogsPage() {
                           {formatDateTimeDefault(entry.lastOccurredAt)}
                         </dd>
                       </div>
-                      <div className="sm:col-span-2">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.28-eG8XMp", id: "super-admin.super-admin-logs-page.div.28" })} className="sm:col-span-2">
                         <dt className="text-muted-foreground">المصدر</dt>
                         <dd className="break-all font-mono">
                           {entry.sourceFile
@@ -527,7 +528,7 @@ export function SuperAdminLogsPage() {
                             : entry.page}
                         </dd>
                       </div>
-                      <div className="sm:col-span-2">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.29-0NAgEP", id: "super-admin.super-admin-logs-page.div.29" })} className="sm:col-span-2">
                         <dt className="text-muted-foreground">وكيل المستخدم</dt>
                         <dd className="break-all font-mono">
                           {entry.userAgent}
@@ -537,7 +538,7 @@ export function SuperAdminLogsPage() {
                   )}
                   {entry.stack && (
                     <details className="mt-2">
-                      <summary className="text-xs font-medium text-primary">
+                      <summary {...uiAttributes({ uid: "super-admin.super-admin-logs-page.summary-Cw2Rbu", id: "super-admin.super-admin-logs-page.summary" })} className="text-xs font-medium text-primary">
                         تتبع المكدس
                       </summary>
                       <pre
@@ -552,7 +553,7 @@ export function SuperAdminLogsPage() {
               ))}
             </div>
           ) : (
-            <p id="super-admin.super-admin-logs-page.p.9" className="py-12 text-center text-sm text-muted-foreground">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-logs-page.p.18-LPY718", id: "super-admin.super-admin-logs-page.p.18" })} id="super-admin.super-admin-logs-page.p.9" className="py-12 text-center text-sm text-muted-foreground">
               {section.empty}
             </p>
           )}

@@ -117,7 +117,7 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
 
   if (sessionLoading || loading) {
     return (
-      <main id={id} className="flex min-h-[55vh] items-center justify-center">
+      <main {...uiAttributes({ uid: "orders.order-details-page-content.main-dT3i74", id: "orders.order-details-page-content.main" })} id={id} className="flex min-h-[55vh] items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </main>
     );
@@ -125,9 +125,9 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
 
   if (!session?.uid) {
     return (
-      <main id={id} className="mx-auto max-w-4xl px-4 py-10 text-center">
-        <h1 className="text-2xl font-bold">{text.detailsTitle}</h1>
-        <p className="mt-3 text-muted-foreground">{text.loginRequired}</p>
+      <main {...uiAttributes({ uid: "orders.order-details-page-content.main.2-rDe1RI", id: "orders.order-details-page-content.main.2" })} id={id} className="mx-auto max-w-4xl px-4 py-10 text-center">
+        <h1 {...uiAttributes({ uid: "orders.order-details-page-content.h1-lmCM6N", id: "orders.order-details-page-content.h1" })} className="text-2xl font-bold">{text.detailsTitle}</h1>
+        <p {...uiAttributes({ uid: "orders.order-details-page-content.p-bLpB2q", id: "orders.order-details-page-content.p" })} className="mt-3 text-muted-foreground">{text.loginRequired}</p>
       </main>
     );
   }
@@ -136,7 +136,7 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
     return (
       <main {...uiAttributes({ uid: "order-details-missing-7HYrD3", id: "order-details-missing", kind: "region", simulation: { kind: "state", id: "order-details-missing" } })} className="mx-auto max-w-4xl px-4 py-10">
         <BackToOrders />
-        <p className="mt-6 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <p {...uiAttributes({ uid: "orders.order-details-page-content.p.2-KKL7tZ", id: "orders.order-details-page-content.p.2" })} className="mt-6 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error || text.notFound}
         </p>
       </main>
@@ -155,19 +155,19 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
   ].some((item) => canRejectDeliveryStatus(item.status));
 
   return (
-    <main id={id} className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-        <div>
+    <main {...uiAttributes({ uid: "orders.order-details-page-content.main.3-cVvW4D", id: "orders.order-details-page-content.main.3" })} id={id} className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+      <header {...uiAttributes({ uid: "orders.order-details-page-content.header-0P5raV", id: "orders.order-details-page-content.header" })} className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+        <div {...uiAttributes({ uid: "orders.order-details-page-content.div-tF9V9X", id: "orders.order-details-page-content.div" })}>
           <BackToOrders />
-          <h1 className="mt-3 text-2xl font-bold">
+          <h1 {...uiAttributes({ uid: "orders.order-details-page-content.h1.2-t9ORWS", id: "orders.order-details-page-content.h1.2" })} className="mt-3 text-2xl font-bold">
             {text.order} {String(order.order_number ?? order.id)}
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p {...uiAttributes({ uid: "orders.order-details-page-content.p.3-xf7P9B", id: "orders.order-details-page-content.p.3" })} className="mt-1 text-sm text-muted-foreground">
             {text.status}: {statusLabel(order.calculated_status)} - {text.cod}
           </p>
         </div>
         {admin ? (
-          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+          <span {...uiAttributes({ uid: "orders.order-details-page-content.span-F7uu46", id: "orders.order-details-page-content.span" })} className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
             <ShieldCheck className="h-4 w-4" />
             {text.adminAllRoles}
           </span>
@@ -175,7 +175,7 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
       </header>
 
       {error ? (
-        <p className="mb-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <p {...uiAttributes({ uid: "orders.order-details-page-content.p.4-60KoxA", id: "orders.order-details-page-content.p.4" })} className="mb-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error}
         </p>
       ) : null}
@@ -221,8 +221,8 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
         />
       ) : null}
 
-      <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
-        <section className="space-y-4">
+      <div {...uiAttributes({ uid: "orders.order-details-page-content.div.2-5TbKY9", id: "orders.order-details-page-content.div.2" })} className="grid gap-5 lg:grid-cols-[1fr_320px]">
+        <section {...uiAttributes({ uid: "orders.order-details-page-content.section-8BLL4S", id: "orders.order-details-page-content.section" })} className="space-y-4">
           {details.sellerOrders.map((sellerOrder) => (
             <SellerOrderCard
               key={String(sellerOrder.id)}
@@ -238,7 +238,7 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
           ))}
         </section>
 
-        <aside className="space-y-4">
+        <aside {...uiAttributes({ uid: "orders.order-details-page-content.aside-F7HZPd", id: "orders.order-details-page-content.aside" })} className="space-y-4">
           <OrderLevelActions
             order={order}
             isBuyer={isBuyer}

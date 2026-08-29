@@ -28,6 +28,7 @@ import {
   asolDbSetSuperAdminOriginalSession,
 } from "@asol/data-core/browser";
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface AdminUserResult {
   uid: string;
@@ -193,13 +194,13 @@ export function SuperAdminUsersPage() {
   };
 
   if (isLoading) {
-    return <div id="super-admin.super-admin-users-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
+    return <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.12-1iZsDh", id: "super-admin.super-admin-users-page.div.12" })} id="super-admin.super-admin-users-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
   }
 
   if (!allowed) {
     return (
-      <div id="super-admin.super-admin-users-page.div.2" className="mx-auto max-w-2xl p-6">
-        <div id="super-admin.super-admin-users-page.div.3" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+      <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.13-6nJ47e", id: "super-admin.super-admin-users-page.div.13" })} id="super-admin.super-admin-users-page.div.2" className="mx-auto max-w-2xl p-6">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.14-ux29Ka", id: "super-admin.super-admin-users-page.div.14" })} id="super-admin.super-admin-users-page.div.3" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
           هذه الصفحة متاحة للسوبر أدمن فقط.
         </div>
       </div>
@@ -207,32 +208,32 @@ export function SuperAdminUsersPage() {
   }
 
   return (
-    <main id="super-admin.super-admin-users-page.main" className="mx-auto w-full max-w-7xl space-y-5 p-4 pb-24">
-      <header id="super-admin.super-admin-users-page.header" className="flex flex-wrap items-center justify-between gap-3">
-        <div id="super-admin.super-admin-users-page.div.4">
-          <h1 id="super-admin.super-admin-users-page.h1" className="text-2xl font-semibold text-on-surface">
+    <main {...uiAttributes({ uid: "super-admin.super-admin-users-page.main.2-pv4U4N", id: "super-admin.super-admin-users-page.main.2" })} id="super-admin.super-admin-users-page.main" className="mx-auto w-full max-w-7xl space-y-5 p-4 pb-24">
+      <header {...uiAttributes({ uid: "super-admin.super-admin-users-page.header.2-Vfq2JA", id: "super-admin.super-admin-users-page.header.2" })} id="super-admin.super-admin-users-page.header" className="flex flex-wrap items-center justify-between gap-3">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.15-h6nFrL", id: "super-admin.super-admin-users-page.div.15" })} id="super-admin.super-admin-users-page.div.4">
+          <h1 {...uiAttributes({ uid: "super-admin.super-admin-users-page.h1.2-TjGf4R", id: "super-admin.super-admin-users-page.h1.2" })} id="super-admin.super-admin-users-page.h1" className="text-2xl font-semibold text-on-surface">
             بحث المستخدمين
           </h1>
-          <p id="super-admin.super-admin-users-page.p" className="text-sm text-on-surface-variant">
+          <p {...uiAttributes({ uid: "super-admin.super-admin-users-page.p.2-1OV2NY", id: "super-admin.super-admin-users-page.p.2" })} id="super-admin.super-admin-users-page.p" className="text-sm text-on-surface-variant">
             بحث بالاسم، الهاتف، عدد المنتجات، التخصصات، فتح الحساب بصلاحياته أو حذفه نهائياً.
           </p>
         </div>
-        <div id="super-admin.super-admin-users-page.div.5" className="rounded-lg border bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.16-P5g3Th", id: "super-admin.super-admin-users-page.div.16" })} id="super-admin.super-admin-users-page.div.5" className="rounded-lg border bg-amber-50 px-3 py-2 text-sm text-amber-800">
           الانتحال يعطي صلاحيات كاملة للحساب المختار.
         </div>
       </header>
 
-      <section id="super-admin.super-admin-users-page.section" className="grid gap-3 rounded-lg border bg-surface p-3 md:grid-cols-[1.5fr_1fr_0.7fr_0.7fr_auto]">
-        <label id="super-admin.super-admin-users-page.label" className="space-y-1">
-          <span id="super-admin.super-admin-users-page.span" className="text-xs text-on-surface-variant">بحث عام</span>
+      <section {...uiAttributes({ uid: "super-admin.super-admin-users-page.section.3-eec3kS", id: "super-admin.super-admin-users-page.section.3" })} id="super-admin.super-admin-users-page.section" className="grid gap-3 rounded-lg border bg-surface p-3 md:grid-cols-[1.5fr_1fr_0.7fr_0.7fr_auto]">
+        <label {...uiAttributes({ uid: "super-admin.super-admin-users-page.label.6-r4kyEN", id: "super-admin.super-admin-users-page.label.6" })} id="super-admin.super-admin-users-page.label" className="space-y-1">
+          <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.6-IMkig2", id: "super-admin.super-admin-users-page.span.6" })} id="super-admin.super-admin-users-page.span" className="text-xs text-on-surface-variant">بحث عام</span>
           <Input id="super-admin.super-admin-users-page.input.2" ui={{ uid: "super-admin.users.query-GwD1jm", id: "super-admin.users.query", kind: "field", part: "filters" }}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="اسم، هاتف، بريد، UID"
           />
         </label>
-        <label id="super-admin.super-admin-users-page.label.2" className="space-y-1">
-          <span id="super-admin.super-admin-users-page.span.2" className="text-xs text-on-surface-variant">التخصص</span>
+        <label {...uiAttributes({ uid: "super-admin.super-admin-users-page.label.7-LERv6H", id: "super-admin.super-admin-users-page.label.7" })} id="super-admin.super-admin-users-page.label.2" className="space-y-1">
+          <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.7-2mKjeZ", id: "super-admin.super-admin-users-page.span.7" })} id="super-admin.super-admin-users-page.span.2" className="text-xs text-on-surface-variant">التخصص</span>
           <Input id="super-admin.super-admin-users-page.input.3" ui={{ uid: "super-admin.users.specialty-bCZ9GW", id: "super-admin.users.specialty", kind: "field", part: "filters" }}
             value={specialty}
             onChange={(event) => setSpecialty(event.target.value)}
@@ -240,25 +241,25 @@ export function SuperAdminUsersPage() {
             dir="ltr"
           />
         </label>
-        <label id="super-admin.super-admin-users-page.label.3" className="space-y-1">
-          <span id="super-admin.super-admin-users-page.span.3" className="text-xs text-on-surface-variant">أقل منتجات</span>
+        <label {...uiAttributes({ uid: "super-admin.super-admin-users-page.label.8-UXY1xt", id: "super-admin.super-admin-users-page.label.8" })} id="super-admin.super-admin-users-page.label.3" className="space-y-1">
+          <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.8-22T5Ho", id: "super-admin.super-admin-users-page.span.8" })} id="super-admin.super-admin-users-page.span.3" className="text-xs text-on-surface-variant">أقل منتجات</span>
           <Input id="super-admin.super-admin-users-page.input.4" ui={{ uid: "super-admin.users.min-products-G3pF0t", id: "super-admin.users.min-products", kind: "field", part: "filters" }}
             value={minProducts}
             onChange={(event) => setMinProducts(event.target.value)}
             inputMode="numeric"
           />
         </label>
-        <label id="super-admin.super-admin-users-page.label.4" className="space-y-1">
-          <span id="super-admin.super-admin-users-page.span.4" className="text-xs text-on-surface-variant">أكثر منتجات</span>
+        <label {...uiAttributes({ uid: "super-admin.super-admin-users-page.label.9-FlIU4J", id: "super-admin.super-admin-users-page.label.9" })} id="super-admin.super-admin-users-page.label.4" className="space-y-1">
+          <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.9-N0Jz8K", id: "super-admin.super-admin-users-page.span.9" })} id="super-admin.super-admin-users-page.span.4" className="text-xs text-on-surface-variant">أكثر منتجات</span>
           <Input id="super-admin.super-admin-users-page.input.5" ui={{ uid: "super-admin.users.max-products-38XEgN", id: "super-admin.users.max-products", kind: "field", part: "filters" }}
             value={maxProducts}
             onChange={(event) => setMaxProducts(event.target.value)}
             inputMode="numeric"
           />
         </label>
-        <div id="super-admin.super-admin-users-page.div.6" className="flex items-end gap-2">
-          <label id="super-admin.super-admin-users-page.label.5" className="flex h-10 items-center gap-2 whitespace-nowrap rounded-md border px-3 text-sm">
-            <input id="super-admin.super-admin-users-page.input"
+        <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.17-w0FX3I", id: "super-admin.super-admin-users-page.div.17" })} id="super-admin.super-admin-users-page.div.6" className="flex items-end gap-2">
+          <label {...uiAttributes({ uid: "super-admin.super-admin-users-page.label.10-qAK2NN", id: "super-admin.super-admin-users-page.label.10" })} id="super-admin.super-admin-users-page.label.5" className="flex h-10 items-center gap-2 whitespace-nowrap rounded-md border px-3 text-sm">
+            <input {...uiAttributes({ uid: "super-admin.super-admin-users-page.input.6-yGj8n4", id: "super-admin.super-admin-users-page.input.6" })} id="super-admin.super-admin-users-page.input"
               type="checkbox"
               checked={withProductsOnly}
               onChange={(event) => setWithProductsOnly(event.target.checked)}
@@ -273,94 +274,94 @@ export function SuperAdminUsersPage() {
       </section>
 
       {error ? (
-        <div id="super-admin.super-admin-users-page.div.7" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.18-2q4FNm", id: "super-admin.super-admin-users-page.div.18" })} id="super-admin.super-admin-users-page.div.7" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {error}
         </div>
       ) : null}
 
-      <section id="super-admin.super-admin-users-page.section.2" className="overflow-hidden rounded-lg border bg-surface">
-        <div id="super-admin.super-admin-users-page.div.8" className="flex items-center justify-between border-b p-3">
-          <div id="super-admin.super-admin-users-page.div.9" className="flex items-center gap-2 text-sm font-semibold">
+      <section {...uiAttributes({ uid: "super-admin.super-admin-users-page.section.4-CNGbu7", id: "super-admin.super-admin-users-page.section.4" })} id="super-admin.super-admin-users-page.section.2" className="overflow-hidden rounded-lg border bg-surface">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.19-JcR1iN", id: "super-admin.super-admin-users-page.div.19" })} id="super-admin.super-admin-users-page.div.8" className="flex items-center justify-between border-b p-3">
+          <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.20-uMZ45t", id: "super-admin.super-admin-users-page.div.20" })} id="super-admin.super-admin-users-page.div.9" className="flex items-center gap-2 text-sm font-semibold">
             <UserRoundSearch id="super-admin.super-admin-users-page.user-round-search" className="h-4 w-4" />
             النتائج
           </div>
-          <span id="super-admin.super-admin-users-page.span.5" className="text-xs text-on-surface-variant">
+          <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.10-RWe641", id: "super-admin.super-admin-users-page.span.10" })} id="super-admin.super-admin-users-page.span.5" className="text-xs text-on-surface-variant">
             {results.length} مستخدم
           </span>
         </div>
-        <div id="super-admin.super-admin-users-page.div.10" className="overflow-x-auto">
-          <table id="super-admin.super-admin-users-page.table" className="w-full min-w-[980px] text-sm">
-            <thead id="super-admin.super-admin-users-page.thead" className="bg-muted/50 text-xs text-on-surface-variant">
-              <tr id="super-admin.super-admin-users-page.tr">
-                <th id="super-admin.super-admin-users-page.th" className="p-3 text-start">المستخدم</th>
-                <th id="super-admin.super-admin-users-page.th.2" className="p-3 text-start">الهاتف</th>
-                <th id="super-admin.super-admin-users-page.th.3" className="p-3 text-start">المنتجات</th>
-                <th id="super-admin.super-admin-users-page.th.4" className="p-3 text-start">التخصصات</th>
-                <th id="super-admin.super-admin-users-page.th.5" className="p-3 text-start">التواريخ</th>
-                <th id="super-admin.super-admin-users-page.th.6" className="p-3 text-start">إجراءات</th>
+        <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.21-7IXDih", id: "super-admin.super-admin-users-page.div.21" })} id="super-admin.super-admin-users-page.div.10" className="overflow-x-auto">
+          <table {...uiAttributes({ uid: "super-admin.super-admin-users-page.table.2-1vAAZE", id: "super-admin.super-admin-users-page.table.2" })} id="super-admin.super-admin-users-page.table" className="w-full min-w-[980px] text-sm">
+            <thead {...uiAttributes({ uid: "super-admin.super-admin-users-page.thead.2-fjKEH5", id: "super-admin.super-admin-users-page.thead.2" })} id="super-admin.super-admin-users-page.thead" className="bg-muted/50 text-xs text-on-surface-variant">
+              <tr {...uiAttributes({ uid: "super-admin.super-admin-users-page.tr.3-2JWL4i", id: "super-admin.super-admin-users-page.tr.3" })} id="super-admin.super-admin-users-page.tr">
+                <th {...uiAttributes({ uid: "super-admin.super-admin-users-page.th.7-3PZbx3", id: "super-admin.super-admin-users-page.th.7" })} id="super-admin.super-admin-users-page.th" className="p-3 text-start">المستخدم</th>
+                <th {...uiAttributes({ uid: "super-admin.super-admin-users-page.th.8-9iY0Qe", id: "super-admin.super-admin-users-page.th.8" })} id="super-admin.super-admin-users-page.th.2" className="p-3 text-start">الهاتف</th>
+                <th {...uiAttributes({ uid: "super-admin.super-admin-users-page.th.9-YqUaJ9", id: "super-admin.super-admin-users-page.th.9" })} id="super-admin.super-admin-users-page.th.3" className="p-3 text-start">المنتجات</th>
+                <th {...uiAttributes({ uid: "super-admin.super-admin-users-page.th.10-K4jcFC", id: "super-admin.super-admin-users-page.th.10" })} id="super-admin.super-admin-users-page.th.4" className="p-3 text-start">التخصصات</th>
+                <th {...uiAttributes({ uid: "super-admin.super-admin-users-page.th.11-brQZ87", id: "super-admin.super-admin-users-page.th.11" })} id="super-admin.super-admin-users-page.th.5" className="p-3 text-start">التواريخ</th>
+                <th {...uiAttributes({ uid: "super-admin.super-admin-users-page.th.12-FI3GDc", id: "super-admin.super-admin-users-page.th.12" })} id="super-admin.super-admin-users-page.th.6" className="p-3 text-start">إجراءات</th>
               </tr>
             </thead>
-            <tbody id="super-admin.super-admin-users-page.tbody">
+            <tbody {...uiAttributes({ uid: "super-admin.super-admin-users-page.tbody.2-SRdo1H", id: "super-admin.super-admin-users-page.tbody.2" })} id="super-admin.super-admin-users-page.tbody">
               {results.map((user) => (
-                <tr key={user.uid} className="border-t align-top">
-                  <td className="max-w-xs p-3">
-                    <div className="font-medium">
+                <tr key={user.uid} {...uiAttributes({ uid: "super-admin.super-admin-users-page.tr.4-2RCIDC", id: "super-admin.super-admin-users-page.tr.4" })} className="border-t align-top">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.2-k0IG3Q", id: "super-admin.super-admin-users-page.td.2" })} className="max-w-xs p-3">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.22-0RL7g1", id: "super-admin.super-admin-users-page.div.22" })} className="font-medium">
                       {user.storeName || user.email || user.uid}
                     </div>
-                    <div className="mt-1 break-all text-xs text-on-surface-variant">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.23-DIXQT6", id: "super-admin.super-admin-users-page.div.23" })} className="mt-1 break-all text-xs text-on-surface-variant">
                       {user.uid}
                     </div>
                     {user.storeDescription ? (
-                      <div className="mt-1 line-clamp-2 text-xs text-on-surface-variant">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.24-s7qiAC", id: "super-admin.super-admin-users-page.div.24" })} className="mt-1 line-clamp-2 text-xs text-on-surface-variant">
                         {user.storeDescription}
                       </div>
                     ) : null}
                   </td>
-                  <td className="p-3" dir="ltr">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.3-iSlnj1", id: "super-admin.super-admin-users-page.td.3" })} className="p-3" dir="ltr">
                     {user.phone || "-"}
                     {user.email ? (
-                      <div className="mt-1 text-xs text-on-surface-variant">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.25-UN7pxD", id: "super-admin.super-admin-users-page.div.25" })} className="mt-1 text-xs text-on-surface-variant">
                         {user.email}
                       </div>
                     ) : null}
                   </td>
-                  <td className="p-3">
-                    <span className="rounded-full bg-primary/10 px-2 py-1 text-primary">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.4-6LtjIX", id: "super-admin.super-admin-users-page.td.4" })} className="p-3">
+                    <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.11-pY4fKq", id: "super-admin.super-admin-users-page.span.11" })} className="rounded-full bg-primary/10 px-2 py-1 text-primary">
                       {user.productCount}
                     </span>
-                    <div className="mt-2 text-xs text-on-surface-variant">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.26-pPSH8p", id: "super-admin.super-admin-users-page.div.26" })} className="mt-2 text-xs text-on-surface-variant">
                       {user.hasProfile ? "له بروفايل" : "بدون بروفايل"}
                     </div>
                   </td>
-                  <td className="max-w-md p-3">
-                    <div className="flex flex-wrap gap-1">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.5-4aMSmR", id: "super-admin.super-admin-users-page.td.5" })} className="max-w-md p-3">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.27-iK9XLk", id: "super-admin.super-admin-users-page.div.27" })} className="flex flex-wrap gap-1">
                       {user.specialties.slice(0, 8).map((item) => (
                         <span
-                          key={item}
+                          key={item} {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.12-B3DayU", id: "super-admin.super-admin-users-page.span.12" })}
                           className="rounded-full border px-2 py-1 text-xs"
                         >
                           {specialtyLabel(item)}
                         </span>
                       ))}
                       {user.specialties.length > 8 ? (
-                        <span className="rounded-full border px-2 py-1 text-xs">
+                        <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.13-0AG0Ml", id: "super-admin.super-admin-users-page.span.13" })} className="rounded-full border px-2 py-1 text-xs">
                           +{user.specialties.length - 8}
                         </span>
                       ) : null}
                     </div>
                   </td>
-                  <td className="p-3 text-xs text-on-surface-variant">
-                    <div>تسجيل: {dateText(user.createdAt)}</div>
-                    <div>آخر دخول: {dateText(user.lastLoginAt)}</div>
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.6-mOlV6W", id: "super-admin.super-admin-users-page.td.6" })} className="p-3 text-xs text-on-surface-variant">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.28-OQx94z", id: "super-admin.super-admin-users-page.div.28" })}>تسجيل: {dateText(user.createdAt)}</div>
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.29-BljQ0S", id: "super-admin.super-admin-users-page.div.29" })}>آخر دخول: {dateText(user.lastLoginAt)}</div>
                   </td>
-                  <td className="p-3">
-                    <div className="flex flex-wrap gap-2">
-                      <Button asChild variant="outline" size="sm">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.7-48adPP", id: "super-admin.super-admin-users-page.td.7" })} className="p-3">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.30-SAXz5T", id: "super-admin.super-admin-users-page.div.30" })} className="flex flex-wrap gap-2">
+                      <Button ui={{ uid: "super-admin.super-admin-users-page.button.2-31Nz6b", id: "super-admin.super-admin-users-page.button.2" }} asChild variant="outline" size="sm">
                         <Link href={`/profile?mode=preview&uid=${user.uid}`}>
                           البروفايل
                         </Link>
                       </Button>
-                      <Button
+                      <Button ui={{ uid: "super-admin.super-admin-users-page.button.3-AzAM0e", id: "super-admin.super-admin-users-page.button.3" }}
                         type="button"
                         size="sm"
                         onClick={() => impersonate(user.uid)}
@@ -375,7 +376,7 @@ export function SuperAdminUsersPage() {
                           </>
                         )}
                       </Button>
-                      <Button
+                      <Button ui={{ uid: "super-admin.super-admin-users-page.button.4-VHi6rY", id: "super-admin.super-admin-users-page.button.4" }}
                         type="button"
                         variant="destructive"
                         size="sm"
@@ -401,8 +402,8 @@ export function SuperAdminUsersPage() {
                 </tr>
               ))}
               {results.length === 0 && !loading ? (
-                <tr id="super-admin.super-admin-users-page.tr.2">
-                  <td id="super-admin.super-admin-users-page.td" colSpan={6} className="p-8 text-center text-on-surface-variant">
+                <tr {...uiAttributes({ uid: "super-admin.super-admin-users-page.tr.5-Uvzdp8", id: "super-admin.super-admin-users-page.tr.5" })} id="super-admin.super-admin-users-page.tr.2">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.8-SG0GAa", id: "super-admin.super-admin-users-page.td.8" })} id="super-admin.super-admin-users-page.td" colSpan={6} className="p-8 text-center text-on-surface-variant">
                     لا توجد نتائج مطابقة.
                   </td>
                 </tr>
@@ -412,7 +413,7 @@ export function SuperAdminUsersPage() {
         </div>
       </section>
 
-      <div id="super-admin.super-admin-users-page.div.11" className="flex items-center gap-2 rounded-lg border bg-amber-50 p-3 text-sm text-amber-800">
+      <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.31-9VWCkt", id: "super-admin.super-admin-users-page.div.31" })} id="super-admin.super-admin-users-page.div.11" className="flex items-center gap-2 rounded-lg border bg-amber-50 p-3 text-sm text-amber-800">
         <ShieldAlert id="super-admin.super-admin-users-page.shield-alert" className="h-4 w-4" />
         يتم تسجيل كل عملية انتحال أو حذف حساب في سجل النظام.
       </div>

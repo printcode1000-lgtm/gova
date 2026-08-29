@@ -15,6 +15,7 @@ import { AndroidReleasePathActions } from "./AndroidReleasePathActions";
 import { AndroidReleasePathsTerminal } from "./AndroidReleasePathsTerminal";
 import { AndroidReleaseRunbookTree } from "./AndroidReleaseRunbookTree";
 import { useAndroidStaticPreview } from "./use-android-static-preview";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const DEFAULT_ENABLED_BRANCHES = new Set<string>(allAndroidReleaseBranchIds());
 const DEFAULT_ACTIVE_PATH = ANDROID_RELEASE_PATHS[0]?.id ?? "release-android";
@@ -57,28 +58,28 @@ export function AndroidReleasePaths({
   const selectedInTab = activeBranchIds.filter((id) => enabledBranches.has(id)).length;
 
   return (
-    <section id="google-play-console.android-release-paths.section" className="rounded-lg border bg-surface-container-low p-2">
-      <h2 id="google-play-console.android-release-paths.h2" className="font-semibold">{t("releaseConsole.androidPaths.groupTitle")}</h2>
-      <p id="google-play-console.android-release-paths.p" className="mt-1 text-xs leading-5 text-on-surface-variant">
+    <section {...uiAttributes({ uid: "google-play-console.android-release-paths.section.3-741CJL", id: "google-play-console.android-release-paths.section.3" })} id="google-play-console.android-release-paths.section" className="rounded-lg border bg-surface-container-low p-2">
+      <h2 {...uiAttributes({ uid: "google-play-console.android-release-paths.h2.2-1osGJI", id: "google-play-console.android-release-paths.h2.2" })} id="google-play-console.android-release-paths.h2" className="font-semibold">{t("releaseConsole.androidPaths.groupTitle")}</h2>
+      <p {...uiAttributes({ uid: "google-play-console.android-release-paths.p.4-7a5ClR", id: "google-play-console.android-release-paths.p.4" })} id="google-play-console.android-release-paths.p" className="mt-1 text-xs leading-5 text-on-surface-variant">
         {t("releaseConsole.androidPaths.groupHelp")}
       </p>
-      <div id="google-play-console.android-release-paths.div" className="mt-3 space-y-3">
-        <section id="google-play-console.android-release-paths.section.2" className="rounded-lg border bg-surface-container p-2">
-          <h3 id="google-play-console.android-release-paths.h3" className="text-sm font-semibold">{t("releaseConsole.androidPaths.phaseTitle")}</h3>
-          <p id="google-play-console.android-release-paths.p.2" className="mt-1 text-xs leading-5 text-on-surface-variant">
+      <div {...uiAttributes({ uid: "google-play-console.android-release-paths.div.2-j1JEM9", id: "google-play-console.android-release-paths.div.2" })} id="google-play-console.android-release-paths.div" className="mt-3 space-y-3">
+        <section {...uiAttributes({ uid: "google-play-console.android-release-paths.section.4-1XKAVp", id: "google-play-console.android-release-paths.section.4" })} id="google-play-console.android-release-paths.section.2" className="rounded-lg border bg-surface-container p-2">
+          <h3 {...uiAttributes({ uid: "google-play-console.android-release-paths.h3.2-7OMjZD", id: "google-play-console.android-release-paths.h3.2" })} id="google-play-console.android-release-paths.h3" className="text-sm font-semibold">{t("releaseConsole.androidPaths.phaseTitle")}</h3>
+          <p {...uiAttributes({ uid: "google-play-console.android-release-paths.p.5-4AdXUz", id: "google-play-console.android-release-paths.p.5" })} id="google-play-console.android-release-paths.p.2" className="mt-1 text-xs leading-5 text-on-surface-variant">
             {t("releaseConsole.androidPaths.phaseHelp")}
           </p>
           <Tabs className="mt-2" value={activePath} onValueChange={setActivePath}>
             <TabsList id="google-play-console.android-release-paths.tabs-list" className="flex h-auto w-full flex-wrap justify-start gap-1">
               {ANDROID_RELEASE_PATHS.map((path) => (
-                <TabsTrigger key={path.id} value={path.id}>
+                <TabsTrigger key={path.id} ui={{ uid: "google-play-console.android-release-paths.tabs-trigger-0IpQ8l", id: "google-play-console.android-release-paths.tabs-trigger" }} value={path.id}>
                   {t(path.title)}
                 </TabsTrigger>
               ))}
             </TabsList>
             {ANDROID_RELEASE_PATHS.map((path) => (
               <TabsContent key={path.id} value={path.id} className="mt-2 space-y-3">
-                <p className="text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
+                <p {...uiAttributes({ uid: "google-play-console.android-release-paths.p.6-5BqQgX", id: "google-play-console.android-release-paths.p.6" })} className="text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
                 <AndroidReleaseRunbookTree
                   runbook={androidReleaseRunbookFor(path.id)}
                   selected={enabledBranches}
@@ -93,7 +94,7 @@ export function AndroidReleasePaths({
               </TabsContent>
             ))}
           </Tabs>
-          <p id="google-play-console.android-release-paths.p.3" className="mt-2 text-xs text-on-surface-variant">
+          <p {...uiAttributes({ uid: "google-play-console.android-release-paths.p.7-YfXS9J", id: "google-play-console.android-release-paths.p.7" })} id="google-play-console.android-release-paths.p.3" className="mt-2 text-xs text-on-surface-variant">
             {t("releaseConsole.androidPaths.tabSelectionSummary", {
               selected: String(selectedInTab),
               total: String(activeBranchIds.length),

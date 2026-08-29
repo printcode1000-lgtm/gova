@@ -10,6 +10,7 @@ import { BottomNavBar } from './BottomNavBar';
 import { BOTTOM_NAV_CLEARANCE } from './bottom-nav-layout';
 import { PageSaveRuntimeInit } from '@/features/page-save/ui';
 import { resolveUiPage, uiPageAttributes } from '@asol/ui-registry-core';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface AppShellProps {
   children: ReactNode;
@@ -29,7 +30,7 @@ export function AppShell({ children, id }: AppShellProps) {
   // System insets are owned by `SafeAreaController` at the root layout, so the
   // shell only has to consume the resulting CSS variables.
   return (
-    <div id={id} style={shellStyle}>
+    <div {...uiAttributes({ uid: "shared.layouts.app-shell.div-C6uPGF", id: "shared.layouts.app-shell.div" })} id={id} style={shellStyle}>
       <PageSaveRuntimeInit />
       <AppHeader installPrompt={installPrompt} />
       <main

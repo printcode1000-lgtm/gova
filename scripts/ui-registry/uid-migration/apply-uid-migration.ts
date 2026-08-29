@@ -1,22 +1,35 @@
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import ts from "typescript";
+
+import { parseTsx } from "../static-dom-ids/tsx-hosts";
 import { loadAppTsx, planUidMigration, type UidMigrationEdit } from "./plan-uid-migration";
 
-function insertImport(source: string): string {
-  const lines = source.split("\n");
+/**
+ * Inserts the import after the last top-level import declaration (found by
+ * parsing, so a multi-line `import { … } from "…"` is never split), or
+ * right after a leading `"use client"` directive when the file has no
+ * imports at all.
+ */
+function insertImport(file: string, source: string): string {
+  const sourceFile = parseTsx(file, source);
   let insertAt = 0;
-  for (let index = 0; index < lines.length; index += 1) {
-    if (/^import\s/.test(lines[index]!) || /^["']use client["'];?$/.test(lines[index]!.trim())) {
-      insertAt = index + 1;
-    } else if (lines[index]!.trim() === "" && insertAt > 0) {
-      continue;
+  for (const statement of sourceFile.statements) {
+    if (ts.isImportDeclaration(statement) || ts.isImportEqualsDeclaration(statement)) {
+      insertAt = statement.getEnd();
+    } else if (
+      insertAt === 0 &&
+      ts.isExpressionStatement(statement) &&
+      ts.isStringLiteral(statement.expression) &&
+      statement.expression.text === "use client"
+    ) {
+      insertAt = statement.getEnd();
     } else if (insertAt > 0) {
       break;
     }
   }
-  lines.splice(insertAt, 0, 'import { uiAttributes } from "@asol/ui-registry-core";');
-  return lines.join("\n");
+  return `${source.slice(0, insertAt)}\nimport { uiAttributes } from "@asol/ui-registry-core";${source.slice(insertAt)}`;
 }
 
 function attributeText(edit: UidMigrationEdit): string {
@@ -51,7 +64,7 @@ export function applyUidMigrationToRepo(root: string): {
       if (edit.kind === "host") hostAssigned += 1;
       else primitiveAssigned += 1;
     }
-    if (importsNeeded.has(file)) source = insertImport(source);
+    if (importsNeeded.has(file)) source = insertImport(file, source);
     writeFileSync(join(root, file), source, "utf8");
   }
 

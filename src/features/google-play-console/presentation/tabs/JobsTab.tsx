@@ -7,28 +7,29 @@ import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import { useReleaseJobs } from "../hooks/use-release-jobs";
 import { LogViewer } from "../components/LogViewer";
 import { ReleaseJobStopDialog } from "../components/ReleaseJobStopDialog";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function JobsTab() {
   const { t } = useAdminArabic();
   const jobs = useReleaseJobs();
   const selected = jobs.jobs.find((job) => job.id === jobs.selectedJobId) ?? jobs.jobs[0];
   return (
-    <section id="google-play-console.tabs.jobs-tab.section" className="grid gap-4 xl:grid-cols-[22rem_1fr]">
+    <section {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.section.2-DWG0wo", id: "google-play-console.tabs.jobs-tab.section.2" })} id="google-play-console.tabs.jobs-tab.section" className="grid gap-4 xl:grid-cols-[22rem_1fr]">
       {/* Cancelling is gated by the same confirmation as the build tab. */}
       <ReleaseJobStopDialog id="google-play-console.tabs.jobs-tab.release-job-stop-dialog" job={jobs.pendingCancel} t={t}
         onConfirm={() => void jobs.confirmCancel()} onCancel={jobs.dismissCancel} />
-      <div id="google-play-console.tabs.jobs-tab.div" className="space-y-2 rounded-md border bg-surface p-3">
+      <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.7-TjnU5V", id: "google-play-console.tabs.jobs-tab.div.7" })} id="google-play-console.tabs.jobs-tab.div" className="space-y-2 rounded-md border bg-surface p-3">
         {jobs.jobs.map((job) => (
-          <button key={job.id} type="button" onClick={() => jobs.setSelectedJobId(job.id)}
+          <button key={job.id} {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.button.2-pGW3ra", id: "google-play-console.tabs.jobs-tab.button.2" })} type="button" onClick={() => jobs.setSelectedJobId(job.id)}
             className="block w-full rounded-md border bg-muted p-3 text-start text-sm">
             <strong className="block">{job.command.script}</strong>
-            <span className="text-xs text-on-surface-variant">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
+            <span {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.span-h7kCHP", id: "google-play-console.tabs.jobs-tab.span" })} className="text-xs text-on-surface-variant">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
           </button>
         ))}
-        {!jobs.jobs.length ? <div id="google-play-console.tabs.jobs-tab.div.2" className="text-sm">{t("releaseConsole.empty")}</div> : null}
+        {!jobs.jobs.length ? <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.8-WdS1S9", id: "google-play-console.tabs.jobs-tab.div.8" })} id="google-play-console.tabs.jobs-tab.div.2" className="text-sm">{t("releaseConsole.empty")}</div> : null}
       </div>
-      <div id="google-play-console.tabs.jobs-tab.div.3" className="space-y-3 rounded-md border bg-surface p-3">
-        {selected ? <div id="google-play-console.tabs.jobs-tab.div.4" className="flex justify-between gap-2"><strong>{selected.id}</strong>
+      <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.9-Ft5KwP", id: "google-play-console.tabs.jobs-tab.div.9" })} id="google-play-console.tabs.jobs-tab.div.3" className="space-y-3 rounded-md border bg-surface p-3">
+        {selected ? <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.10-rZPXf5", id: "google-play-console.tabs.jobs-tab.div.10" })} id="google-play-console.tabs.jobs-tab.div.4" className="flex justify-between gap-2"><strong>{selected.id}</strong>
           {selected.status === "running" || selected.status === "queued" ? (
             <Button id="google-play-console.tabs.jobs-tab.button"
               ui={{
@@ -41,14 +42,14 @@ export function JobsTab() {
               <Square id="google-play-console.tabs.jobs-tab.square" className="h-4 w-4" />{t("releaseConsole.actions.cancel")}
             </Button>
           ) : null}</div> : null}
-        {selected?.error ? <div id="google-play-console.tabs.jobs-tab.div.5" className="rounded-md bg-error-container p-3 text-on-error-container">
+        {selected?.error ? <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.11-dML44H", id: "google-play-console.tabs.jobs-tab.div.11" })} id="google-play-console.tabs.jobs-tab.div.5" className="rounded-md bg-error-container p-3 text-on-error-container">
           {selected.error}</div> : null}
         <LogViewer text={jobs.log} emptyText={t("releaseConsole.jobs.noLog")} />
-        <div id="google-play-console.tabs.jobs-tab.div.6" className="grid gap-2 md:grid-cols-2">
+        <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.12-chEl3S", id: "google-play-console.tabs.jobs-tab.div.12" })} id="google-play-console.tabs.jobs-tab.div.6" className="grid gap-2 md:grid-cols-2">
           {(selected?.artifacts ?? []).map((artifact) => (
-            <a key={artifact.name} className="flex gap-2 rounded-md border p-2 text-xs"
+            <a key={artifact.name} {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.a-2SzruY", id: "google-play-console.tabs.jobs-tab.a" })} className="flex gap-2 rounded-md border p-2 text-xs"
               href={`/api/super-admin/build-jobs/${selected.id}/artifacts/${encodeURIComponent(artifact.name)}`}>
-              <Download className="h-4 w-4" /><span className="truncate">{artifact.path}</span>
+              <Download className="h-4 w-4" /><span {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.span.2-lW2HHS", id: "google-play-console.tabs.jobs-tab.span.2" })} className="truncate">{artifact.path}</span>
             </a>
           ))}
         </div>

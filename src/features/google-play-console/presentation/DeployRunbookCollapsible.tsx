@@ -4,6 +4,7 @@ import * as React from "react";
 import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/shared/utils";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const SUMMARY_CLASS =
   "flex list-none flex-col gap-2 p-3 active:bg-muted/40 sm:flex-row " +
@@ -32,7 +33,7 @@ export function DeployRunbookCollapsible(props: {
         props.className,
       )}
     >
-      <summary
+      <summary {...uiAttributes({ uid: "google-play-console.deploy-runbook-collapsible.summary-ncUDM6", id: "google-play-console.deploy-runbook-collapsible.summary" })}
         className={SUMMARY_CLASS}
         onClick={(event) => {
           const target = event.target as HTMLElement;
@@ -41,9 +42,9 @@ export function DeployRunbookCollapsible(props: {
           }
         }}
       >
-        <div className="min-w-0 flex-1 space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-collapsible.div-0XT0qf", id: "google-play-console.deploy-runbook-collapsible.div" })} className="min-w-0 flex-1 space-y-1">
+          <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-collapsible.div.2-Kk8mC9", id: "google-play-console.deploy-runbook-collapsible.div.2" })} className="flex flex-wrap items-center gap-2">
+            <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-collapsible.span-zA4CXJ", id: "google-play-console.deploy-runbook-collapsible.span" })}
               className={cn(
                 "font-semibold break-words",
                 props.nested ? "text-sm" : "text-base",
@@ -54,21 +55,21 @@ export function DeployRunbookCollapsible(props: {
             {props.badge}
           </div>
           {props.description ? (
-            <p className="text-xs text-on-surface-variant break-words">
+            <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-collapsible.p-zxxiP7", id: "google-play-console.deploy-runbook-collapsible.p" })} className="text-xs text-on-surface-variant break-words">
               {props.description}
             </p>
           ) : null}
         </div>
-        <div className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:justify-end">
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-collapsible.div.3-PIs50J", id: "google-play-console.deploy-runbook-collapsible.div.3" })} className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:justify-end">
           {props.actions ? (
-            <div className="flex flex-wrap items-center gap-2">{props.actions}</div>
+            <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-collapsible.div.4-S49DF9", id: "google-play-console.deploy-runbook-collapsible.div.4" })} className="flex flex-wrap items-center gap-2">{props.actions}</div>
           ) : null}
           <ChevronDown
             className="h-4 w-4 shrink-0 text-on-surface-variant transition-transform group-open:rotate-180"
           />
         </div>
       </summary>
-      <div className={cn(CONTENT_CLASS, props.contentClassName)}>{props.children}</div>
+      <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-collapsible.div.5-0SM7sn", id: "google-play-console.deploy-runbook-collapsible.div.5" })} className={cn(CONTENT_CLASS, props.contentClassName)}>{props.children}</div>
     </details>
   );
 }

@@ -17,6 +17,7 @@ import { isDevelopment } from '@/core/config';
 import { OVERLAY_CHROME_ATTRIBUTE } from '@/shared/ui/overlay-chrome';
 import { OverlayChromeBranch } from '@/shared/ui/overlay-chrome-branch';
 import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@asol/data-core/browser';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const pages = [
   { path: '/', name: 'شاشة البداية' },
@@ -145,7 +146,7 @@ export function DeveloperBadge() {
           <DropdownMenuLabel id="dev-tools.developer-badge.dropdown-menu-label">صفحات المشروع</DropdownMenuLabel>
           <DropdownMenuSeparator id="dev-tools.developer-badge.dropdown-menu-separator" />
           {pages.map((page) => (
-            <div key={page.path} className="flex items-center justify-between px-2">
+            <div key={page.path} {...uiAttributes({ uid: "dev-tools.developer-badge.div-7Y0G0I", id: "dev-tools.developer-badge.div" })} className="flex items-center justify-between px-2">
               <DropdownMenuItem asChild className="flex-1">
                 <Link href={page.path} className={pathname === page.path ? 'bg-accent' : ''}>
                   {page.name}

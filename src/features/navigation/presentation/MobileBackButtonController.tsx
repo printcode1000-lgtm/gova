@@ -5,6 +5,7 @@ import { LogOut } from 'lucide-react';
 import { BOTTOM_NAV_CLEARANCE } from '@/shared/layouts/bottom-nav-layout';
 import { useMobileBackButton } from '@/features/navigation/presentation/hooks/use-mobile-back-button';
 import { useTranslation } from '@/shared/i18n';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function MobileBackButtonController() {
   const { showExitHint } = useMobileBackButton();
@@ -13,7 +14,7 @@ export function MobileBackButtonController() {
   if (!showExitHint) return null;
 
   return (
-    <div id="navigation.mobile-back-button-controller.div"
+    <div {...uiAttributes({ uid: "navigation.mobile-back-button-controller.div.2-sHlkH8", id: "navigation.mobile-back-button-controller.div.2" })} id="navigation.mobile-back-button-controller.div"
       role="status"
       aria-live="polite"
       className="fixed inset-x-4 z-[140] mx-auto flex max-w-sm items-center justify-center gap-2 rounded-2xl bg-inverse-surface px-4 py-3 text-sm font-semibold text-inverse-on-surface shadow-xl"

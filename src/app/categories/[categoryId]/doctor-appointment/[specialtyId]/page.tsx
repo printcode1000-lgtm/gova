@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { DoctorAppointmentSellersPageContent } from "@/features/categories/ui";
 import { categoryService } from "@/features/categories";
 import { notFound } from "next/navigation";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface DoctorAppointmentSellersPageProps {
   params: Promise<{ categoryId: string; specialtyId: string }>;
@@ -42,7 +43,7 @@ export default async function DoctorAppointmentSellersPage({
   }
 
   return (
-    <Suspense fallback={<div id="categories.category-id.doctor-appointment.specialty-id.page.div">Loading...</div>}>
+    <Suspense fallback={<div {...uiAttributes({ uid: "categories.category-id.doctor-appointment.specialty-id.page.div.2-XdKb8Q", id: "categories.category-id.doctor-appointment.specialty-id.page.div.2" })} id="categories.category-id.doctor-appointment.specialty-id.page.div">Loading...</div>}>
       <DoctorAppointmentSellersPageContent 
         categoryId={Number(categoryId)}
         specialtyId={Number(specialtyId)}

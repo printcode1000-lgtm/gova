@@ -50,8 +50,8 @@ export function AppHeader({
       )}>
         {/* Row height is driven by the shared variable so the content padding
             in `.asol-shell-main` can never drift out of sync with it. */}
-        <div id="shared.layouts.app-header.div" className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
-          <div id="shared.layouts.app-header.div.2" className="flex items-center gap-3">
+        <div {...uiAttributes({ uid: "shared.layouts.app-header.div.4-6hf0TD", id: "shared.layouts.app-header.div.4" })} id="shared.layouts.app-header.div" className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
+          <div {...uiAttributes({ uid: "shared.layouts.app-header.div.5-MR0az3", id: "shared.layouts.app-header.div.5" })} id="shared.layouts.app-header.div.2" className="flex items-center gap-3">
             <button
               {...uiAttributes({ uid: 'app.header.menu-xS4nIG', id: 'app.header.menu', kind: 'action', action: 'open-sidebar', part: 'menu' })}
               type="button"
@@ -76,7 +76,7 @@ export function AppHeader({
             <PageSaveHeaderButton />
           </div>
 
-          <div id="shared.layouts.app-header.div.3" className="flex items-center gap-2">
+          <div {...uiAttributes({ uid: "shared.layouts.app-header.div.6-6hPZRx", id: "shared.layouts.app-header.div.6" })} id="shared.layouts.app-header.div.3" className="flex items-center gap-2">
             <SpecialtyRequestComposer />
 
             <Link {...uiAttributes({ uid: 'home-search-r8SiS9', id: 'home-search', kind: 'action', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'home-search' } })}
@@ -115,7 +115,7 @@ export function AppHeader({
               <ShoppingCart id="shared.layouts.app-header.shopping-cart" className="w-5 h-5" />
               {totalQuantity > 0 ? (
                 <span id="shared.layouts.app-header.span"
-                  key={flashToken}
+                  key={flashToken} {...uiAttributes({ uid: "shared.layouts.app-header.span.2-m5jRMH", id: "shared.layouts.app-header.span.2" })}
                   className="absolute top-2 end-2 w-2 h-2 rounded-full bg-error border border-background animate-pulse-subtle data-[flash=true]:animate-[ping_0.65s_ease-out_1]"
                   data-flash={flashToken > 0}
                 />

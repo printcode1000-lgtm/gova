@@ -257,7 +257,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:system-logs-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:trending-ribbon-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:turso-read-retry` | `Tooling` | 1 |  | 0 |
-| `npm run test:ui-registry-core` | `Tooling` | 10 |  | 0 |
+| `npm run test:ui-registry-core` | `Tooling` | 12 |  | 0 |
 | `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run typecheck` | `Tooling` | 0 |  | 0 |
 | `npm run ui-registry:apply-pending` | `Tooling` | 1 |  | 2 |
@@ -266,6 +266,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run ui-registry:simulation:report` | `Tooling` | 1 |  | 0 |
 | `npm run ui-registry:static-dom-ids:apply` | `Static out`, `Tooling` | 1 |  | 0 |
 | `npm run ui-registry:static-dom-ids:check` | `Static out`, `Tooling` | 1 |  | 0 |
+| `npm run ui-registry:uid-coverage:check` | `Tooling` | 1 |  | 0 |
+| `npm run ui-registry:uid-migration:apply` | `Tooling` | 1 |  | 0 |
 | `npm run validate-storage-profiles` | `Tooling` | 1 |  | 0 |
 | `npm run validate:app-versions` | `Tooling` | 1 |  | 0 |
 | `npm run validate:error-logging` | `Tooling` | 1 |  | 0 |

@@ -1,4 +1,5 @@
 import { cn } from "@/shared/utils";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function SectionButton({ id,
   active,
@@ -10,7 +11,7 @@ export function SectionButton({ id,
   onClick: () => void;
 } & { id?: string }) {
   return (
-    <button id={id}
+    <button {...uiAttributes({ uid: "catalog-studio.section-button.button-KHZ2if", id: "catalog-studio.section-button.button" })} id={id}
       type="button"
       onClick={onClick}
       className={cn(

@@ -16,8 +16,8 @@ export function StoreNameInput() {
       name="storeName"
       control={control}
       render={({ field, fieldState }) => (
-        <div id="auth.store-name-input.div" className="space-y-2">
-          <label id="auth.store-name-input.label" htmlFor="registration-store-name" className="text-sm font-semibold text-on-surface">
+        <div {...uiAttributes({ uid: "auth.store-name-input.div.2-NTU4bD", id: "auth.store-name-input.div.2" })} id="auth.store-name-input.div" className="space-y-2">
+          <label {...uiAttributes({ uid: "auth.store-name-input.label.2-8EqxTe", id: "auth.store-name-input.label.2" })} id="auth.store-name-input.label" htmlFor="registration-store-name" className="text-sm font-semibold text-on-surface">
             {t('auth.storeName.label')}
           </label>
           <input
@@ -37,8 +37,8 @@ export function StoreNameInput() {
             onChange={field.onChange}
             maxLength={120}
           />
-          <p id="auth.store-name-input.p" className="text-xs text-on-surface-variant">{t('auth.storeName.hint')}</p>
-          {fieldState.error && <p id="auth.store-name-input.p.2" className="text-xs text-error">{fieldState.error.message}</p>}
+          <p {...uiAttributes({ uid: "auth.store-name-input.p.3-TM7B2H", id: "auth.store-name-input.p.3" })} id="auth.store-name-input.p" className="text-xs text-on-surface-variant">{t('auth.storeName.hint')}</p>
+          {fieldState.error && <p {...uiAttributes({ uid: "auth.store-name-input.p.4-59PRVA", id: "auth.store-name-input.p.4" })} id="auth.store-name-input.p.2" className="text-xs text-error">{fieldState.error.message}</p>}
         </div>
       )}
     />

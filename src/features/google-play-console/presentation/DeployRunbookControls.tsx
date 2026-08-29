@@ -12,6 +12,7 @@ import {
   dangerousBranchIds,
   PhaseBlock,
 } from "./DeployRunbookPhaseTree";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const SELECT_BTN =
   "h-auto w-full min-w-0 justify-start whitespace-normal py-2 text-left";
@@ -41,10 +42,10 @@ export function RunbookPanel(props: {
   const selectedInRunbook = allIds.filter((id) => props.selected.has(id)).length;
 
   return (
-    <section id={props.id} className="min-w-0 space-y-3">
-      <header className="min-w-0 rounded-md border bg-surface p-3 sm:p-4">
-        <h2 className="text-lg font-semibold break-words sm:text-xl">{props.title}</h2>
-        <p className="mt-1 text-sm text-on-surface-variant break-words">{props.description}</p>
+    <section {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.section-pTX47t", id: "google-play-console.deploy-runbook-controls.section" })} id={props.id} className="min-w-0 space-y-3">
+      <header {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.header-y9RljT", id: "google-play-console.deploy-runbook-controls.header" })} className="min-w-0 rounded-md border bg-surface p-3 sm:p-4">
+        <h2 {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.h2-UmTM66", id: "google-play-console.deploy-runbook-controls.h2" })} className="text-lg font-semibold break-words sm:text-xl">{props.title}</h2>
+        <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.p-1RFHqC", id: "google-play-console.deploy-runbook-controls.p" })} className="mt-1 text-sm text-on-surface-variant break-words">{props.description}</p>
       </header>
 
       <DeployRunbookCollapsible
@@ -63,12 +64,12 @@ export function RunbookPanel(props: {
         title="اختيار الفروع"
         description="تفعيل أو تجاوز الفروع دفعة واحدة قبل فتح شجرة المراحل."
         badge={
-          <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+          <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span-EbU1Lm", id: "google-play-console.deploy-runbook-controls.span" })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
             {selectedInRunbook} / {allIds.length}
           </span>
         }
       >
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div-Uv4XYH", id: "google-play-console.deploy-runbook-controls.div" })} className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <Button
             ui={SELECTION_UI["select-all"]}
             variant="outline"
@@ -111,7 +112,7 @@ export function RunbookPanel(props: {
           title="خيارات التشغيل"
           description="سلوك التسلسل عند الأخطاء وتجاوز preflight."
         >
-          <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">{props.extraOptions}</div>
+          <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div.2-VJt2GO", id: "google-play-console.deploy-runbook-controls.div.2" })} className="grid grid-cols-1 gap-2 lg:grid-cols-2">{props.extraOptions}</div>
         </DeployRunbookCollapsible>
       ) : null}
 
@@ -119,12 +120,12 @@ export function RunbookPanel(props: {
         title="شجرة المراحل والفروع"
         description="كل مرحلة قابلة للطي؛ داخلها أقسام ثم فروع تنفيذية بأوامر npm."
         badge={
-          <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+          <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.2-cXuA0r", id: "google-play-console.deploy-runbook-controls.span.2" })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
             {props.runbook.length} مراحل
           </span>
         }
       >
-        <div className="space-y-3">
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div.3-1zfGaU", id: "google-play-console.deploy-runbook-controls.div.3" })} className="space-y-3">
           {props.runbook.map((phase) => (
             <PhaseBlock
               key={phase.id}
@@ -147,17 +148,17 @@ export function Option(props: {
   help: string;
 } & { id?: string }) {
   return (
-    <label id={props.id} className="block min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
-      <span className="flex items-start gap-2">
-        <input
+    <label {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.label-Y2nOg9", id: "google-play-console.deploy-runbook-controls.label" })} id={props.id} className="block min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
+      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.3-6WG3Nt", id: "google-play-console.deploy-runbook-controls.span.3" })} className="flex items-start gap-2">
+        <input {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.input-44qAeO", id: "google-play-console.deploy-runbook-controls.input" })}
           type="checkbox"
           className="mt-0.5 shrink-0"
           checked={props.checked}
           onChange={(event) => props.onChange(event.target.checked)}
         />
-        <span className="min-w-0 font-medium break-words">{props.label}</span>
+        <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.4-rOjP1E", id: "google-play-console.deploy-runbook-controls.span.4" })} className="min-w-0 font-medium break-words">{props.label}</span>
       </span>
-      <span className="mt-1 block text-xs text-on-surface-variant break-words">
+      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.5-mHP92M", id: "google-play-console.deploy-runbook-controls.span.5" })} className="mt-1 block text-xs text-on-surface-variant break-words">
         {props.help}
       </span>
     </label>
@@ -171,18 +172,18 @@ function ScenarioSelect(props: {
   scenarios: readonly (readonly [string, string])[];
 }) {
   return (
-    <label className="block space-y-2 text-sm">
-      <span className="font-medium">{props.label}</span>
-      <select
+    <label {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.label.2-7w1ODE", id: "google-play-console.deploy-runbook-controls.label.2" })} className="block space-y-2 text-sm">
+      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.6-7ZZGar", id: "google-play-console.deploy-runbook-controls.span.6" })} className="font-medium">{props.label}</span>
+      <select {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.select-h3UdSs", id: "google-play-console.deploy-runbook-controls.select" })}
         className="block w-full min-w-0 max-w-full rounded-md border bg-background p-2 md:max-w-md"
         value={props.value}
         onChange={(event) => props.onChange(event.target.value)}
       >
         {props.scenarios.map(([value, label]) => (
-          <option key={value} value={value}>{label}</option>
+          <option key={value} {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.option-2ANG8J", id: "google-play-console.deploy-runbook-controls.option" })} value={value}>{label}</option>
         ))}
       </select>
-      <span className="block text-xs text-on-surface-variant">
+      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.7-163qEs", id: "google-play-console.deploy-runbook-controls.span.7" })} className="block text-xs text-on-surface-variant">
         يحدد السيناريو الأمر الأعلى، بينما تحدد checkboxes الفروع المفعّلة داخل الشجرة.
       </span>
     </label>

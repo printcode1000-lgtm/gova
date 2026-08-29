@@ -101,7 +101,7 @@ export function ProductCard({ id,
     Boolean(card.id);
 
   return (
-    <article id={id} className={`relative min-w-0 overflow-hidden ${variantClass[variant]} ${className}`}>
+    <article {...uiAttributes({ uid: "product-card.product-card.article-YO94HZ", id: "product-card.product-card.article" })} id={id} className={`relative min-w-0 overflow-hidden ${variantClass[variant]} ${className}`}>
       {showFavorite ? (
         <FavoriteButton
           item={favoriteFromProductCard(card)}
@@ -115,7 +115,7 @@ export function ProductCard({ id,
         className="block w-full min-w-0 text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
         aria-label={card.title}
       >
-        <div
+        <div {...uiAttributes({ uid: "product-card.product-card.div-37L7FD", id: "product-card.product-card.div" })}
           className={`relative bg-surface-bright ${imageClass[variant]} ${
             isFeatured ? "mb-2 overflow-hidden" : ""
           }`}
@@ -133,13 +133,13 @@ export function ProductCard({ id,
             <Package className="absolute inset-0 m-auto h-9 w-9 text-on-surface-variant" />
           )}
         </div>
-        <div className={isFeatured ? "min-w-0 space-y-1" : "min-w-0 space-y-1 p-2"}>
+        <div {...uiAttributes({ uid: "product-card.product-card.div.2-6sO2gL", id: "product-card.product-card.div.2" })} className={isFeatured ? "min-w-0 space-y-1" : "min-w-0 space-y-1 p-2"}>
           {card.categoryLabel && !isFeatured ? (
-            <p className="truncate text-[10px] font-medium text-on-surface-variant">
+            <p {...uiAttributes({ uid: "product-card.product-card.p-2LvYHC", id: "product-card.product-card.p" })} className="truncate text-[10px] font-medium text-on-surface-variant">
               {card.categoryLabel}
             </p>
           ) : null}
-          <p
+          <p {...uiAttributes({ uid: "product-card.product-card.p.2-8fPXz2", id: "product-card.product-card.p.2" })}
             className={
               isFeatured
                 ? "truncate text-xs font-semibold text-on-surface"
@@ -149,31 +149,31 @@ export function ProductCard({ id,
             {card.title}
           </p>
           {card.subtitle && !isFeatured ? (
-            <p className="truncate text-[11px] text-on-surface-variant">
+            <p {...uiAttributes({ uid: "product-card.product-card.p.3-BhL0lK", id: "product-card.product-card.p.3" })} className="truncate text-[11px] text-on-surface-variant">
               {card.subtitle}
             </p>
           ) : null}
-          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+          <div {...uiAttributes({ uid: "product-card.product-card.div.3-4JWO57", id: "product-card.product-card.div.3" })} className="flex min-w-0 flex-wrap items-center gap-1.5">
             {card.priceText ? (
-              <p className="min-w-0 break-words text-xs font-bold text-primary">{card.priceText}</p>
+              <p {...uiAttributes({ uid: "product-card.product-card.p.4-uVWZ4V", id: "product-card.product-card.p.4" })} className="min-w-0 break-words text-xs font-bold text-primary">{card.priceText}</p>
             ) : null}
             {card.oldPriceText && !isFeatured ? (
-              <p className="min-w-0 break-words text-[10px] text-on-surface-variant line-through">
+              <p {...uiAttributes({ uid: "product-card.product-card.p.5-yI5AlC", id: "product-card.product-card.p.5" })} className="min-w-0 break-words text-[10px] text-on-surface-variant line-through">
                 {card.oldPriceText}
               </p>
             ) : null}
             {card.ratingText && !isFeatured ? (
-              <span className="inline-flex min-w-0 items-center gap-1 break-words text-[10px] text-tertiary">
+              <span {...uiAttributes({ uid: "product-card.product-card.span-jQSE9E", id: "product-card.product-card.span" })} className="inline-flex min-w-0 items-center gap-1 break-words text-[10px] text-tertiary">
                 <Star className="h-3 w-3 fill-current" />
                 {card.ratingText}
               </span>
             ) : null}
           </div>
           {card.badges.length > 0 && !isFeatured ? (
-            <div className="flex min-w-0 flex-wrap gap-1 pt-1">
+            <div {...uiAttributes({ uid: "product-card.product-card.div.4-6QwWIe", id: "product-card.product-card.div.4" })} className="flex min-w-0 flex-wrap gap-1 pt-1">
               {card.badges.map((badge) => (
                 <span
-                  key={badge.label}
+                  key={badge.label} {...uiAttributes({ uid: "product-card.product-card.span.2-B5u0sa", id: "product-card.product-card.span.2" })}
                   className={`min-w-0 break-words rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(
                     badge.tone,
                   )}`}
@@ -186,7 +186,7 @@ export function ProductCard({ id,
         </div>
       </button>
       {hasActions ? (
-        <div
+        <div {...uiAttributes({ uid: "product-card.product-card.div.5-y7CZ4z", id: "product-card.product-card.div.5" })}
           className="grid gap-1 border-t border-outline-variant/50 p-1"
           style={{
             gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))`,
@@ -194,7 +194,7 @@ export function ProductCard({ id,
         >
           {actions.map((action) => (
             <button
-              key={`${action.kind}-${action.label}`}
+              key={`${action.kind}-${action.label}`} {...uiAttributes({ uid: "product-card.product-card.button-tI5CQJ", id: "product-card.product-card.button" })}
               type="button"
               disabled={action.disabled}
               aria-pressed={

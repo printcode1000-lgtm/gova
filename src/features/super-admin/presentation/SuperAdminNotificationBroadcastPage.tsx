@@ -25,6 +25,7 @@ import {
   type BroadcastRecipient,
   type BroadcastRecipientsResult,
 } from "@/features/notifications";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function SuperAdminNotificationBroadcastPage() {
   const router = useRouter();
@@ -143,22 +144,22 @@ export function SuperAdminNotificationBroadcastPage() {
 
   if (isLoading || !authorized) {
     return (
-      <main id="super-admin.super-admin-notification-broadcast-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.main.3-7HG7I0", id: "super-admin.super-admin-notification-broadcast-page.main.3" })} id="super-admin.super-admin-notification-broadcast-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري التحقق من الصلاحيات...
       </main>
     );
   }
 
   return (
-    <main id="super-admin.super-admin-notification-broadcast-page.main.2" className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
-      <header id="super-admin.super-admin-notification-broadcast-page.header" className="mb-6 flex items-start gap-3">
-        <div id="super-admin.super-admin-notification-broadcast-page.div" className="rounded-xl bg-primary/10 p-3 text-primary">
+    <main {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.main.4-7UQEZu", id: "super-admin.super-admin-notification-broadcast-page.main.4" })} id="super-admin.super-admin-notification-broadcast-page.main.2" className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
+      <header {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.header.2-zueH2R", id: "super-admin.super-admin-notification-broadcast-page.header.2" })} id="super-admin.super-admin-notification-broadcast-page.header" className="mb-6 flex items-start gap-3">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.13-W4ZRbV", id: "super-admin.super-admin-notification-broadcast-page.div.13" })} id="super-admin.super-admin-notification-broadcast-page.div" className="rounded-xl bg-primary/10 p-3 text-primary">
           <ShieldCheck id="super-admin.super-admin-notification-broadcast-page.shield-check" className="h-6 w-6" />
         </div>
-        <div id="super-admin.super-admin-notification-broadcast-page.div.2">
-          <p id="super-admin.super-admin-notification-broadcast-page.p" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
-          <h1 id="super-admin.super-admin-notification-broadcast-page.h1" className="text-2xl font-bold">إرسال إشعار جماعي</h1>
-          <p id="super-admin.super-admin-notification-broadcast-page.p.2" className="mt-1 text-sm text-muted-foreground">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.14-YjFeH5", id: "super-admin.super-admin-notification-broadcast-page.div.14" })} id="super-admin.super-admin-notification-broadcast-page.div.2">
+          <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.11-bT1GC6", id: "super-admin.super-admin-notification-broadcast-page.p.11" })} id="super-admin.super-admin-notification-broadcast-page.p" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
+          <h1 {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.h1.2-XBe14W", id: "super-admin.super-admin-notification-broadcast-page.h1.2" })} id="super-admin.super-admin-notification-broadcast-page.h1" className="text-2xl font-bold">إرسال إشعار جماعي</h1>
+          <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.12-y2Jq7w", id: "super-admin.super-admin-notification-broadcast-page.p.12" })} id="super-admin.super-admin-notification-broadcast-page.p.2" className="mt-1 text-sm text-muted-foreground">
             يتم عرض المستخدمين الذين لديهم رمز إشعارات مفعّل فقط، مع إخفاء قيمة
             الرمز الفعلية.
           </p>
@@ -166,7 +167,7 @@ export function SuperAdminNotificationBroadcastPage() {
       </header>
 
       {message ? (
-        <div id="super-admin.super-admin-notification-broadcast-page.div.3"
+        <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.15-1NvuX6", id: "super-admin.super-admin-notification-broadcast-page.div.15" })} id="super-admin.super-admin-notification-broadcast-page.div.3"
           className="mb-4 rounded-lg border bg-card px-4 py-3 text-sm"
           role="status"
         >
@@ -174,7 +175,7 @@ export function SuperAdminNotificationBroadcastPage() {
         </div>
       ) : null}
 
-      <section id="super-admin.super-admin-notification-broadcast-page.section" className="mb-5 grid gap-3 md:grid-cols-4">
+      <section {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.section.5-8bs7K5", id: "super-admin.super-admin-notification-broadcast-page.section.5" })} id="super-admin.super-admin-notification-broadcast-page.section" className="mb-5 grid gap-3 md:grid-cols-4">
         <StatCard id="super-admin.super-admin-notification-broadcast-page.stat-card" title="المستخدمون" value={data?.userCount ?? 0} />
         <StatCard id="super-admin.super-admin-notification-broadcast-page.stat-card.2" title="رموز الأجهزة" value={data?.tokenCount ?? 0} />
         <StatCard id="super-admin.super-admin-notification-broadcast-page.stat-card.3" title="المحددون" value={selected.size} />
@@ -184,13 +185,13 @@ export function SuperAdminNotificationBroadcastPage() {
         />
       </section>
 
-      <section id="super-admin.super-admin-notification-broadcast-page.section.2" className="mb-5 rounded-xl border bg-card p-4">
-        <div id="super-admin.super-admin-notification-broadcast-page.div.4" className="mb-4 flex items-center gap-2">
+      <section {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.section.6-o0W4Y2", id: "super-admin.super-admin-notification-broadcast-page.section.6" })} id="super-admin.super-admin-notification-broadcast-page.section.2" className="mb-5 rounded-xl border bg-card p-4">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.16-9J1Cva", id: "super-admin.super-admin-notification-broadcast-page.div.16" })} id="super-admin.super-admin-notification-broadcast-page.div.4" className="mb-4 flex items-center gap-2">
           <Megaphone id="super-admin.super-admin-notification-broadcast-page.megaphone" className="h-5 w-5 text-primary" />
-          <h2 id="super-admin.super-admin-notification-broadcast-page.h2" className="font-semibold">نص الرسالة</h2>
+          <h2 {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.h2.4-F5PGHX", id: "super-admin.super-admin-notification-broadcast-page.h2.4" })} id="super-admin.super-admin-notification-broadcast-page.h2" className="font-semibold">نص الرسالة</h2>
         </div>
-        <div id="super-admin.super-admin-notification-broadcast-page.div.5" className="grid gap-4">
-          <div id="super-admin.super-admin-notification-broadcast-page.div.6" className="space-y-2">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.17-hsJ3PP", id: "super-admin.super-admin-notification-broadcast-page.div.17" })} id="super-admin.super-admin-notification-broadcast-page.div.5" className="grid gap-4">
+          <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.18-PE4UL7", id: "super-admin.super-admin-notification-broadcast-page.div.18" })} id="super-admin.super-admin-notification-broadcast-page.div.6" className="space-y-2">
             <Label id="super-admin.super-admin-notification-broadcast-page.label" htmlFor="broadcast-title">العنوان</Label>
             <Input ui={{ uid: "super-admin.broadcast.title-4YC9TA", id: "super-admin.broadcast.title", kind: "field", part: "form" }}
               id="broadcast-title"
@@ -199,7 +200,7 @@ export function SuperAdminNotificationBroadcastPage() {
               placeholder="مثال: تحديث جديد من ASOL"
             />
           </div>
-          <div id="super-admin.super-admin-notification-broadcast-page.div.7" className="space-y-2">
+          <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.19-RI6gOa", id: "super-admin.super-admin-notification-broadcast-page.div.19" })} id="super-admin.super-admin-notification-broadcast-page.div.7" className="space-y-2">
             <Label id="super-admin.super-admin-notification-broadcast-page.label.2" htmlFor="broadcast-body">الرسالة</Label>
             <Textarea ui={{ uid: "super-admin.broadcast.body-4SVqRL", id: "super-admin.broadcast.body", kind: "field", part: "form" }}
               id="broadcast-body"
@@ -209,7 +210,7 @@ export function SuperAdminNotificationBroadcastPage() {
               rows={4}
             />
           </div>
-          <div id="super-admin.super-admin-notification-broadcast-page.div.8" className="flex flex-wrap gap-2">
+          <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.20-g6U1pO", id: "super-admin.super-admin-notification-broadcast-page.div.20" })} id="super-admin.super-admin-notification-broadcast-page.div.8" className="flex flex-wrap gap-2">
             <Button id="super-admin.super-admin-notification-broadcast-page.button" ui={{ uid: "super-admin.broadcast.reload-recipients-9K63L4", id: "super-admin.broadcast.reload-recipients", kind: "action", action: "load-recipients", part: "actions" }}
               type="button"
               variant="outline"
@@ -257,19 +258,19 @@ export function SuperAdminNotificationBroadcastPage() {
       </section>
 
       {result ? (
-        <section id="super-admin.super-admin-notification-broadcast-page.section.3" className="mb-5 rounded-xl border bg-card p-4">
-          <h2 id="super-admin.super-admin-notification-broadcast-page.h2.2" className="mb-3 font-semibold">نتيجة الإرسال</h2>
-          <div id="super-admin.super-admin-notification-broadcast-page.div.9" className="grid gap-2 text-sm md:grid-cols-3">
-            <p id="super-admin.super-admin-notification-broadcast-page.p.3">
+        <section {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.section.7-QRX5hu", id: "super-admin.super-admin-notification-broadcast-page.section.7" })} id="super-admin.super-admin-notification-broadcast-page.section.3" className="mb-5 rounded-xl border bg-card p-4">
+          <h2 {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.h2.5-4oSo90", id: "super-admin.super-admin-notification-broadcast-page.h2.5" })} id="super-admin.super-admin-notification-broadcast-page.h2.2" className="mb-3 font-semibold">نتيجة الإرسال</h2>
+          <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.21-4B4jgx", id: "super-admin.super-admin-notification-broadcast-page.div.21" })} id="super-admin.super-admin-notification-broadcast-page.div.9" className="grid gap-2 text-sm md:grid-cols-3">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.13-AKFi59", id: "super-admin.super-admin-notification-broadcast-page.p.13" })} id="super-admin.super-admin-notification-broadcast-page.p.3">
               المطلوب: <strong>{result.requested}</strong>
             </p>
-            <p id="super-admin.super-admin-notification-broadcast-page.p.4">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.14-K7W2tZ", id: "super-admin.super-admin-notification-broadcast-page.p.14" })} id="super-admin.super-admin-notification-broadcast-page.p.4">
               تم الإرسال:{""}
               <strong>
                 {result.results.filter((item) => item.status === "sent").length}
               </strong>
             </p>
-            <p id="super-admin.super-admin-notification-broadcast-page.p.5">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.15-5R7YZp", id: "super-admin.super-admin-notification-broadcast-page.p.15" })} id="super-admin.super-admin-notification-broadcast-page.p.5">
               إرسال جزئي:{""}
               <strong>
                 {
@@ -278,7 +279,7 @@ export function SuperAdminNotificationBroadcastPage() {
                 }
               </strong>
             </p>
-            <p id="super-admin.super-admin-notification-broadcast-page.p.6">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.16-3UOpYI", id: "super-admin.super-admin-notification-broadcast-page.p.16" })} id="super-admin.super-admin-notification-broadcast-page.p.6">
               في الانتظار:{""}
               <strong>
                 {
@@ -287,7 +288,7 @@ export function SuperAdminNotificationBroadcastPage() {
                 }
               </strong>
             </p>
-            <p id="super-admin.super-admin-notification-broadcast-page.p.7">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.17-pzVuj8", id: "super-admin.super-admin-notification-broadcast-page.p.17" })} id="super-admin.super-admin-notification-broadcast-page.p.7">
               فشل:{""}
               <strong>
                 {
@@ -296,7 +297,7 @@ export function SuperAdminNotificationBroadcastPage() {
                 }
               </strong>
             </p>
-            <p id="super-admin.super-admin-notification-broadcast-page.p.8">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.18-qUjs20", id: "super-admin.super-admin-notification-broadcast-page.p.18" })} id="super-admin.super-admin-notification-broadcast-page.p.8">
               بدون رمز جهاز:{""}
               <strong>
                 {
@@ -305,7 +306,7 @@ export function SuperAdminNotificationBroadcastPage() {
                 }
               </strong>
             </p>
-            <p id="super-admin.super-admin-notification-broadcast-page.p.9">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.19-f2ldUr", id: "super-admin.super-admin-notification-broadcast-page.p.19" })} id="super-admin.super-admin-notification-broadcast-page.p.9">
               أوقف كل الإشعارات:{""}
               <strong>
                 {
@@ -318,9 +319,9 @@ export function SuperAdminNotificationBroadcastPage() {
         </section>
       ) : null}
 
-      <section id="super-admin.super-admin-notification-broadcast-page.section.4" className="rounded-xl border bg-card">
-        <div id="super-admin.super-admin-notification-broadcast-page.div.10" className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
-          <h2 id="super-admin.super-admin-notification-broadcast-page.h2.3" className="font-semibold">المستلمون</h2>
+      <section {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.section.8-n2EEsW", id: "super-admin.super-admin-notification-broadcast-page.section.8" })} id="super-admin.super-admin-notification-broadcast-page.section.4" className="rounded-xl border bg-card">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.22-5qGtDL", id: "super-admin.super-admin-notification-broadcast-page.div.22" })} id="super-admin.super-admin-notification-broadcast-page.div.10" className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
+          <h2 {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.h2.6-6A8cIH", id: "super-admin.super-admin-notification-broadcast-page.h2.6" })} id="super-admin.super-admin-notification-broadcast-page.h2.3" className="font-semibold">المستلمون</h2>
           <Button id="super-admin.super-admin-notification-broadcast-page.button.4" ui={{ uid: "super-admin.broadcast.toggle-all-recipients-kz2RGW", id: "super-admin.broadcast.toggle-all-recipients", kind: "action", action: "toggle-all-recipients", part: "recipients" }}
             type="button"
             size="sm"
@@ -336,9 +337,9 @@ export function SuperAdminNotificationBroadcastPage() {
             {allSelected ? "إلغاء تحديد الكل" : "تحديد الكل"}
           </Button>
         </div>
-        <div id="super-admin.super-admin-notification-broadcast-page.div.11" className="max-h-[60vh] overflow-auto p-3">
+        <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.23-CN5rsc", id: "super-admin.super-admin-notification-broadcast-page.div.23" })} id="super-admin.super-admin-notification-broadcast-page.div.11" className="max-h-[60vh] overflow-auto p-3">
           {data?.recipients.length ? (
-            <div id="super-admin.super-admin-notification-broadcast-page.div.12" className="space-y-2">
+            <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.24-0AHuhY", id: "super-admin.super-admin-notification-broadcast-page.div.24" })} id="super-admin.super-admin-notification-broadcast-page.div.12" className="space-y-2">
               {data.recipients.map((recipient) => (
                 <RecipientRow
                   key={recipient.uid}
@@ -349,7 +350,7 @@ export function SuperAdminNotificationBroadcastPage() {
               ))}
             </div>
           ) : (
-            <p id="super-admin.super-admin-notification-broadcast-page.p.10" className="py-12 text-center text-sm text-muted-foreground">
+            <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.20-vI9nF9", id: "super-admin.super-admin-notification-broadcast-page.p.20" })} id="super-admin.super-admin-notification-broadcast-page.p.10" className="py-12 text-center text-sm text-muted-foreground">
               لا يوجد مستخدمون لديهم رمز إشعارات مفعّل.
             </p>
           )}
@@ -361,9 +362,9 @@ export function SuperAdminNotificationBroadcastPage() {
 
 function StatCard({ id, title, value }: { title: string; value: number } & { id?: string }) {
   return (
-    <div id={id} className="rounded-xl border bg-card p-4">
-      <p className="text-xs text-muted-foreground">{title}</p>
-      <p className="mt-1 text-2xl font-bold">{value}</p>
+    <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.25-3usRwZ", id: "super-admin.super-admin-notification-broadcast-page.div.25" })} id={id} className="rounded-xl border bg-card p-4">
+      <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.21-2uGmyz", id: "super-admin.super-admin-notification-broadcast-page.p.21" })} className="text-xs text-muted-foreground">{title}</p>
+      <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.22-Aqz94z", id: "super-admin.super-admin-notification-broadcast-page.p.22" })} className="mt-1 text-2xl font-bold">{value}</p>
     </div>
   );
 }
@@ -378,7 +379,7 @@ function RecipientRow({ id,
   onToggle: () => void;
 } & { id?: string }) {
   return (
-    <button id={id}
+    <button {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.button.5-N1eA2Q", id: "super-admin.super-admin-notification-broadcast-page.button.5" })} id={id}
       type="button"
       onClick={onToggle}
       className="flex w-full items-start gap-3 rounded-lg border bg-background p-3 text-start transition"
@@ -388,15 +389,15 @@ function RecipientRow({ id,
       ) : (
         <Square className="mt-1 h-5 w-5 shrink-0 text-muted-foreground" />
       )}
-      <div className="min-w-0 flex-1">
-        <p className="font-semibold" dir="ltr">
+      <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.26-52VWex", id: "super-admin.super-admin-notification-broadcast-page.div.26" })} className="min-w-0 flex-1">
+        <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.23-o6rGtg", id: "super-admin.super-admin-notification-broadcast-page.p.23" })} className="font-semibold" dir="ltr">
           {recipient.uid}
         </p>
-        <p className="mt-1 text-xs text-muted-foreground">
+        <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.24-Pfc7MV", id: "super-admin.super-admin-notification-broadcast-page.p.24" })} className="mt-1 text-xs text-muted-foreground">
           {recipient.phoneMasked}
           {recipient.emailMasked ? ` - ${recipient.emailMasked}` : ""}
         </p>
-        <p className="mt-1 text-xs text-muted-foreground">
+        <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.25-4ydE4U", id: "super-admin.super-admin-notification-broadcast-page.p.25" })} className="mt-1 text-xs text-muted-foreground">
           رموز الأجهزة: {recipient.tokenCount} | المنصات:{""}
           {recipient.platforms.join(",")} | المزودون:{""}
           {recipient.providers.join(",")}

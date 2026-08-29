@@ -18,6 +18,7 @@ import {
   formatMinorCurrency,
   type SellerDiscountRule,
 } from "../domain/seller-discount.entity";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function SellerDiscountsPreview({
   sellerUid,
@@ -31,30 +32,30 @@ export function SellerDiscountsPreview({
   const visible = discounts.filter((discount) => discount.status === "active");
   if (isLoading) {
     return (
-      <section id="seller-discounts.seller-discounts-preview.section" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 text-sm text-on-surface-variant shadow-sm sm:mx-0">
+      <section {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.section.3-In8kKN", id: "seller-discounts.seller-discounts-preview.section.3" })} id="seller-discounts.seller-discounts-preview.section" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 text-sm text-on-surface-variant shadow-sm sm:mx-0">
         {ar ? "جاري تحميل عروض المتجر..." : "Loading store offers..."}
       </section>
     );
   }
   if (visible.length === 0) return null;
   return (
-    <section id="seller-discounts.seller-discounts-preview.section.2" className="mx-2 min-w-0 rounded-3xl border border-primary/20 bg-surface p-4 shadow-sm sm:mx-0 sm:p-6">
-      <div id="seller-discounts.seller-discounts-preview.div" className="mb-4 flex min-w-0 items-center gap-3">
-        <span id="seller-discounts.seller-discounts-preview.span" className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+    <section {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.section.4-Ur1LvZ", id: "seller-discounts.seller-discounts-preview.section.4" })} id="seller-discounts.seller-discounts-preview.section.2" className="mx-2 min-w-0 rounded-3xl border border-primary/20 bg-surface p-4 shadow-sm sm:mx-0 sm:p-6">
+      <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.div.4-6BnFcq", id: "seller-discounts.seller-discounts-preview.div.4" })} id="seller-discounts.seller-discounts-preview.div" className="mb-4 flex min-w-0 items-center gap-3">
+        <span {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.span.2-YBY4zW", id: "seller-discounts.seller-discounts-preview.span.2" })} id="seller-discounts.seller-discounts-preview.span" className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
           <Percent id="seller-discounts.seller-discounts-preview.percent" className="h-5 w-5" />
         </span>
-        <div id="seller-discounts.seller-discounts-preview.div.2" className="min-w-0">
-          <h2 id="seller-discounts.seller-discounts-preview.h2" className="break-words text-lg font-bold">
+        <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.div.5-d935YP", id: "seller-discounts.seller-discounts-preview.div.5" })} id="seller-discounts.seller-discounts-preview.div.2" className="min-w-0">
+          <h2 {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.h2.2-Z8NfL9", id: "seller-discounts.seller-discounts-preview.h2.2" })} id="seller-discounts.seller-discounts-preview.h2" className="break-words text-lg font-bold">
             {ar ? "عروض وخصومات المتجر" : "Store offers"}
           </h2>
-          <p id="seller-discounts.seller-discounts-preview.p" className="break-words text-xs text-on-surface-variant">
+          <p {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.p.2-0VihR7", id: "seller-discounts.seller-discounts-preview.p.2" })} id="seller-discounts.seller-discounts-preview.p" className="break-words text-xs text-on-surface-variant">
             {ar
               ? "العروض المؤهلة تطبق في السلة حسب شروط كل بائع."
               : "Eligible offers apply in cart according to seller rules."}
           </p>
         </div>
       </div>
-      <div id="seller-discounts.seller-discounts-preview.div.3" className="grid min-w-0 gap-3 md:grid-cols-2">
+      <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.div.6-J0H0aX", id: "seller-discounts.seller-discounts-preview.div.6" })} id="seller-discounts.seller-discounts-preview.div.3" className="grid min-w-0 gap-3 md:grid-cols-2">
         {visible.map((discount) => (
           <OfferCard key={discount.id} discount={discount} locale={locale} />
         ))}
@@ -82,16 +83,16 @@ function OfferCard({ id,
             ? PackagePlus
             : Percent;
   return (
-    <article id={id} className="min-w-0 rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3 sm:p-4">
-      <div className="flex min-w-0 items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
+    <article {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.article-5XvCSm", id: "seller-discounts.seller-discounts-preview.article" })} id={id} className="min-w-0 rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3 sm:p-4">
+      <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.div.7-18FN62", id: "seller-discounts.seller-discounts-preview.div.7" })} className="flex min-w-0 items-start gap-3">
+        <span {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.span.3-6D0rB5", id: "seller-discounts.seller-discounts-preview.span.3" })} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
           <Icon className="h-5 w-5" />
         </span>
-        <div className="min-w-0 flex-1">
-          <h3 className="break-words text-sm font-bold text-on-surface">
+        <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.div.8-EsH0R2", id: "seller-discounts.seller-discounts-preview.div.8" })} className="min-w-0 flex-1">
+          <h3 {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.h3-0R8eJS", id: "seller-discounts.seller-discounts-preview.h3" })} className="break-words text-sm font-bold text-on-surface">
             {discount.title || (ar ? "عرض متاح" : "Available offer")}
           </h3>
-          <p className="mt-1 break-words text-xs leading-5 text-on-surface-variant">
+          <p {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.p.3-F8SbfL", id: "seller-discounts.seller-discounts-preview.p.3" })} className="mt-1 break-words text-xs leading-5 text-on-surface-variant">
             {describe(discount, locale)}
           </p>
           {discount.couponCode ? (
@@ -100,11 +101,11 @@ function OfferCard({ id,
             </code>
           ) : null}
           {discount.description ? (
-            <p className="mt-2 break-words text-xs leading-5 text-on-surface-variant">
+            <p {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.p.4-8k3GYO", id: "seller-discounts.seller-discounts-preview.p.4" })} className="mt-2 break-words text-xs leading-5 text-on-surface-variant">
               {discount.description}
             </p>
           ) : null}
-          <div className="mt-3 grid min-w-0 gap-2 border-t border-outline-variant/70 pt-3 text-[11px] leading-5 text-on-surface-variant sm:grid-cols-2">
+          <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.div.9-8a5THX", id: "seller-discounts.seller-discounts-preview.div.9" })} className="mt-3 grid min-w-0 gap-2 border-t border-outline-variant/70 pt-3 text-[11px] leading-5 text-on-surface-variant sm:grid-cols-2">
             <Detail icon={Users} text={describeAudience(discount, locale)} />
             <Detail icon={ShoppingBag} text={describeScope(discount, locale)} />
             <Detail icon={CalendarDays} text={describeValidity(discount, locale)} />
@@ -124,9 +125,9 @@ function Detail({ id,
   text: string;
 } & { id?: string }) {
   return (
-    <span id={id} className="flex min-w-0 items-start gap-1.5 rounded-lg bg-surface px-2 py-1.5">
+    <span {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.span.4-NN6orE", id: "seller-discounts.seller-discounts-preview.span.4" })} id={id} className="flex min-w-0 items-start gap-1.5 rounded-lg bg-surface px-2 py-1.5">
       <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-      <span className="min-w-0 break-words">{text}</span>
+      <span {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.span.5-BMRR41", id: "seller-discounts.seller-discounts-preview.span.5" })} className="min-w-0 break-words">{text}</span>
     </span>
   );
 }

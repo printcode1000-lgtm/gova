@@ -92,7 +92,7 @@ export function SellerCard({ id,
     Boolean(card.uid);
 
   return (
-    <article id={id} className={`relative ${variantClass[variant]} ${className}`}>
+    <article {...uiAttributes({ uid: "seller-card.seller-card.article-23D8I4", id: "seller-card.seller-card.article" })} id={id} className={`relative ${variantClass[variant]} ${className}`}>
       {showFavorite ? (
         <FavoriteButton
           item={favoriteFromSellerCard(card)}
@@ -109,7 +109,7 @@ export function SellerCard({ id,
         }`}
         aria-label={card.title || card.href}
       >
-        <div
+        <div {...uiAttributes({ uid: "seller-card.seller-card.div-fJoWj4", id: "seller-card.seller-card.div" })}
           className={`relative shrink-0 overflow-hidden bg-surface-bright ${avatarClass[variant]}`}
         >
           {card.avatarUrl ? (
@@ -122,37 +122,37 @@ export function SellerCard({ id,
               unoptimized={shouldUseUnoptimizedImage(card.avatarUrl)}
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-lg font-bold text-on-surface-variant">
+            <div {...uiAttributes({ uid: "seller-card.seller-card.div.2-YgWTs0", id: "seller-card.seller-card.div.2" })} className="flex h-full w-full items-center justify-center text-lg font-bold text-on-surface-variant">
               {card.initials !== "?" ? card.initials : <Store className="h-6 w-6" />}
             </div>
           )}
         </div>
-        <div className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
+        <div {...uiAttributes({ uid: "seller-card.seller-card.div.3-k73YXl", id: "seller-card.seller-card.div.3" })} className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
           {card.title ? (
-            <p className="line-clamp-2 text-sm font-semibold text-on-surface">
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p-ux907S", id: "seller-card.seller-card.p" })} className="line-clamp-2 text-sm font-semibold text-on-surface">
               {card.title}
             </p>
           ) : null}
           {card.subtitle ? (
-            <p className="mt-1 truncate text-[11px] text-on-surface-variant">
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p.2-OGZb4s", id: "seller-card.seller-card.p.2" })} className="mt-1 truncate text-[11px] text-on-surface-variant">
               {card.subtitle}
             </p>
           ) : null}
           {card.description && !horizontal ? (
-            <p className="mt-1 line-clamp-2 text-[11px] text-on-surface-variant">
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p.3-uDh5dG", id: "seller-card.seller-card.p.3" })} className="mt-1 line-clamp-2 text-[11px] text-on-surface-variant">
               {card.description}
             </p>
           ) : null}
           {card.ratingText ? (
-            <p className="mt-1 text-[11px] font-medium text-tertiary">
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p.4-xT90kW", id: "seller-card.seller-card.p.4" })} className="mt-1 text-[11px] font-medium text-tertiary">
               {card.ratingText}
             </p>
           ) : null}
           {card.badges.length > 0 ? (
-            <div className="mt-2 flex flex-wrap justify-center gap-1">
+            <div {...uiAttributes({ uid: "seller-card.seller-card.div.4-B71tCG", id: "seller-card.seller-card.div.4" })} className="mt-2 flex flex-wrap justify-center gap-1">
               {card.badges.map((badge) => (
                 <span
-                  key={badge.label}
+                  key={badge.label} {...uiAttributes({ uid: "seller-card.seller-card.span-J664v9", id: "seller-card.seller-card.span" })}
                   className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(
                     badge.tone,
                   )}`}
@@ -163,14 +163,14 @@ export function SellerCard({ id,
             </div>
           ) : null}
           {!horizontal ? (
-            <p className="mt-1 truncate text-[10px] text-on-surface-variant">
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p.5-LX1ofW", id: "seller-card.seller-card.p.5" })} className="mt-1 truncate text-[10px] text-on-surface-variant">
               {card.uid}
             </p>
           ) : null}
         </div>
       </button>
       {actions.length > 0 ? (
-        <div
+        <div {...uiAttributes({ uid: "seller-card.seller-card.div.5-S2AW4b", id: "seller-card.seller-card.div.5" })}
           className="mt-3 grid gap-1"
           style={{
             gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))`,
@@ -178,7 +178,7 @@ export function SellerCard({ id,
         >
           {actions.map((action) => (
             <button
-              key={`${action.kind}-${action.label}`}
+              key={`${action.kind}-${action.label}`} {...uiAttributes({ uid: "seller-card.seller-card.button-Qu9XU8", id: "seller-card.seller-card.button" })}
               type="button"
               disabled={action.disabled}
               onClick={action.onClick}

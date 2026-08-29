@@ -362,8 +362,8 @@ export function HeroSlider({ id,
   }
 
   return (
-    <div id={id}>
-      <section
+    <div {...uiAttributes({ uid: "advertisements.hero-slider.div-3qFJlH", id: "advertisements.hero-slider.div" })} id={id}>
+      <section {...uiAttributes({ uid: "advertisements.hero-slider.section-p6SZLn", id: "advertisements.hero-slider.section" })}
         ref={containerRef}
         onKeyDown={handleKeyDown}
         tabIndex={0}
@@ -374,7 +374,7 @@ export function HeroSlider({ id,
       >
         {/* Phase 10 - Skeleton loading state */}
         {showSkeleton && (
-          <div className="absolute inset-0 z-50 rounded-xl overflow-hidden">
+          <div {...uiAttributes({ uid: "advertisements.hero-slider.div.2-I1S1ka", id: "advertisements.hero-slider.div.2" })} className="absolute inset-0 z-50 rounded-xl overflow-hidden">
             <Skeleton className="w-full h-full" />
           </div>
         )}
@@ -388,7 +388,7 @@ export function HeroSlider({ id,
         )}
 
         {isViewMode && probingEntries.length > 0 && (
-          <div className="absolute h-px w-px overflow-hidden" aria-hidden>
+          <div {...uiAttributes({ uid: "advertisements.hero-slider.div.3-jDCU2X", id: "advertisements.hero-slider.div.3" })} className="absolute h-px w-px overflow-hidden" aria-hidden>
             {probingEntries.map(({ slide, originalIndex }) => (
               <HeroSliderImageProbe
                 key={`probe-${originalIndex}-${slide.priority}`}
@@ -403,7 +403,7 @@ export function HeroSlider({ id,
         {/* Render slider contents if config is loaded */}
         {isConfigLoaded && hasSlides && (
           <>
-            <div
+            <div {...uiAttributes({ uid: "advertisements.hero-slider.div.4-mY9vu3", id: "advertisements.hero-slider.div.4" })}
               className="relative w-full h-full overflow-hidden"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}

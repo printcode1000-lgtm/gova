@@ -20,6 +20,7 @@ import type {
 import { useTranslation } from '@/shared/i18n';
 import { cloneShowcase, isShowcaseDirty } from './products-card-model';
 import { usePageSaveOperations } from '@/features/page-save/ui';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductsCardProps {
   uid: string;
@@ -221,7 +222,7 @@ export const ProductsCard = React.forwardRef<
   };
 
   return (
-    <div id="profile.products-card.div" className="space-y-4">
+    <div {...uiAttributes({ uid: "profile.products-card.div.8-REO9RC", id: "profile.products-card.div.8" })} id="profile.products-card.div" className="space-y-4">
       <ProfileProductsTabs id="profile.products-card.profile-products-tabs"
         ownerUid={uid}
         mode={readOnly ? 'preview' : 'edit'}
@@ -272,13 +273,13 @@ export const ProductsCard = React.forwardRef<
       />
 
       {!readOnly ? (
-        <section id="profile.products-card.section" className="rounded-xl border border-outline-variant bg-surface-container-low/40 p-3">
-          <div id="profile.products-card.div.2" className="flex flex-wrap items-center justify-between gap-2">
-            <div id="profile.products-card.div.3">
-              <h4 id="profile.products-card.h4" className="text-sm font-semibold text-on-surface">
+        <section {...uiAttributes({ uid: "profile.products-card.section.3-4Q3H72", id: "profile.products-card.section.3" })} id="profile.products-card.section" className="rounded-xl border border-outline-variant bg-surface-container-low/40 p-3">
+          <div {...uiAttributes({ uid: "profile.products-card.div.9-f9hwiV", id: "profile.products-card.div.9" })} id="profile.products-card.div.2" className="flex flex-wrap items-center justify-between gap-2">
+            <div {...uiAttributes({ uid: "profile.products-card.div.10-xea4jU", id: "profile.products-card.div.10" })} id="profile.products-card.div.3">
+              <h4 {...uiAttributes({ uid: "profile.products-card.h4.2-L7YF9F", id: "profile.products-card.h4.2" })} id="profile.products-card.h4" className="text-sm font-semibold text-on-surface">
                 {locale === 'ar' ? 'عرض البروفايل' : 'Profile display'}
               </h4>
-              <p id="profile.products-card.p" className="text-xs text-on-surface-variant">
+              <p {...uiAttributes({ uid: "profile.products-card.p.3-f2HmMG", id: "profile.products-card.p.3" })} id="profile.products-card.p" className="text-xs text-on-surface-variant">
                 {locale === 'ar'
                   ? 'اختر المنتجات المميزة ونصوص الأكثر رواجًا التي تظهر للزوار.'
                   : 'Choose featured products and trending texts shown to visitors.'}
@@ -286,9 +287,9 @@ export const ProductsCard = React.forwardRef<
             </div>
           </div>
 
-          <div id="profile.products-card.div.4" className="mt-4 grid gap-3">
-            <div id="profile.products-card.div.5" className="space-y-2">
-              <label id="profile.products-card.label" className="text-xs font-semibold text-on-surface">
+          <div {...uiAttributes({ uid: "profile.products-card.div.11-VYa5WZ", id: "profile.products-card.div.11" })} id="profile.products-card.div.4" className="mt-4 grid gap-3">
+            <div {...uiAttributes({ uid: "profile.products-card.div.12-O3HxW6", id: "profile.products-card.div.12" })} id="profile.products-card.div.5" className="space-y-2">
+              <label {...uiAttributes({ uid: "profile.products-card.label.3-POVp0x", id: "profile.products-card.label.3" })} id="profile.products-card.label" className="text-xs font-semibold text-on-surface">
                 {locale === 'ar' ? 'عنوان شريط الأكثر رواجًا' : 'Trending title'}
               </label>
               <Input id="profile.products-card.input.2" ui={{ uid: "profile.products.trending-label-SPQER4", id: "profile.products.trending-label", kind: "field", part: "showcase" }}
@@ -297,7 +298,7 @@ export const ProductsCard = React.forwardRef<
                 onChange={(event) => updateTrendingLabel(event.target.value)}
               />
             </div>
-            <div id="profile.products-card.div.6" className="flex gap-2">
+            <div {...uiAttributes({ uid: "profile.products-card.div.13-61bfBq", id: "profile.products-card.div.13" })} id="profile.products-card.div.6" className="flex gap-2">
               <Input id="profile.products-card.input.3" ui={{ uid: "profile.products.new-trending-text-9Ds1MH", id: "profile.products.new-trending-text", kind: "field", part: "showcase" }}
                 value={newTrendingText}
                 onChange={(event) => setNewTrendingText(event.target.value)}
@@ -314,7 +315,7 @@ export const ProductsCard = React.forwardRef<
                 }
                 maxLength={80}
               />
-              <button id="profile.products-card.button"
+              <button {...uiAttributes({ uid: "profile.products-card.button.2-cm3rH3", id: "profile.products-card.button.2" })} id="profile.products-card.button"
                 type="button"
                 onClick={addTrendingItem}
                 disabled={!newTrendingText.trim()}
@@ -324,14 +325,14 @@ export const ProductsCard = React.forwardRef<
               </button>
             </div>
             {showcase.trending.items.length > 0 ? (
-              <div id="profile.products-card.div.7" className="flex flex-wrap gap-2">
+              <div {...uiAttributes({ uid: "profile.products-card.div.14-dA8Whr", id: "profile.products-card.div.14" })} id="profile.products-card.div.7" className="flex flex-wrap gap-2">
                 {showcase.trending.items.map((item) => (
                   <span
-                    key={item.id}
+                    key={item.id} {...uiAttributes({ uid: "profile.products-card.span.5-MxGo8y", id: "profile.products-card.span.5" })}
                     className="inline-flex items-center gap-2 rounded-full border border-outline-variant bg-surface px-3 py-1 text-xs"
                   >
                     {item.label}
-                    <button
+                    <button {...uiAttributes({ uid: "profile.products-card.button.3-EE2L5g", id: "profile.products-card.button.3" })}
                       type="button"
                       onClick={() => removeTrendingItem(item.id)}
                       className="text-destructive"
@@ -343,7 +344,7 @@ export const ProductsCard = React.forwardRef<
                 ))}
               </div>
             ) : null}
-            <p id="profile.products-card.p.2" className="text-xs text-on-surface-variant">
+            <p {...uiAttributes({ uid: "profile.products-card.p.4-QbI7ln", id: "profile.products-card.p.4" })} id="profile.products-card.p.2" className="text-xs text-on-surface-variant">
               {locale === 'ar'
                 ? `عدد المنتجات المميزة المختارة: ${showcase.featuredProductIds.length}`
                 : `Featured products selected: ${showcase.featuredProductIds.length}`}
@@ -353,25 +354,25 @@ export const ProductsCard = React.forwardRef<
       ) : null}
 
       {!readOnly ? (
-        <section id="profile.products-card.section.2" className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-          <label id="profile.products-card.label.2" className="flex items-center justify-between gap-4">
-            <span id="profile.products-card.span" className="min-w-0">
-              <span id="profile.products-card.span.2" className="block text-sm font-semibold text-on-surface">
+        <section {...uiAttributes({ uid: "profile.products-card.section.4-E0fhIT", id: "profile.products-card.section.4" })} id="profile.products-card.section.2" className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+          <label {...uiAttributes({ uid: "profile.products-card.label.4-NB3VN9", id: "profile.products-card.label.4" })} id="profile.products-card.label.2" className="flex items-center justify-between gap-4">
+            <span {...uiAttributes({ uid: "profile.products-card.span.6-n0Pzh3", id: "profile.products-card.span.6" })} id="profile.products-card.span" className="min-w-0">
+              <span {...uiAttributes({ uid: "profile.products-card.span.7-0WQMgG", id: "profile.products-card.span.7" })} id="profile.products-card.span.2" className="block text-sm font-semibold text-on-surface">
                 {locale === 'ar' ? 'الطلب الخاص' : 'Custom requests'}
               </span>
-              <span id="profile.products-card.span.3" className="mt-1 block text-xs leading-5 text-on-surface-variant">
+              <span {...uiAttributes({ uid: "profile.products-card.span.8-6EwGK5", id: "profile.products-card.span.8" })} id="profile.products-card.span.3" className="mt-1 block text-xs leading-5 text-on-surface-variant">
                 {locale === 'ar'
                   ? 'يسمح للعميل بإرسال وصف وصور لطلب غير موجود ضمن منتجاتك، لتراجعه وترد عليه من الطلبات.'
                   : 'Lets customers send a description and images for an item not listed in your products.'}
               </span>
             </span>
-            <input id="profile.products-card.input"
+            <input {...uiAttributes({ uid: "profile.products-card.input.4-yVs7vW", id: "profile.products-card.input.4" })} id="profile.products-card.input"
               type="checkbox"
               className="peer sr-only"
               checked={showcase.customRequestEnabled}
               onChange={toggleCustomRequest}
             />
-            <span id="profile.products-card.span.4" className="relative h-7 w-12 shrink-0 rounded-full bg-outline-variant transition peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 after:absolute after:start-1 after:top-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5" />
+            <span {...uiAttributes({ uid: "profile.products-card.span.9-TD2Rki", id: "profile.products-card.span.9" })} id="profile.products-card.span.4" className="relative h-7 w-12 shrink-0 rounded-full bg-outline-variant transition peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 after:absolute after:start-1 after:top-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5" />
           </label>
         </section>
       ) : null}

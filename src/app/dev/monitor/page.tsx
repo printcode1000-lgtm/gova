@@ -14,6 +14,7 @@ import { MONITOR_TABS } from './monitor-tabs';
 
 // Guard production environment
 import { isDevelopment } from '@/core/config';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 if (!isDevelopment) {
   notFound();
@@ -159,7 +160,7 @@ export default function MonitorPage() {
   }, [operations]);
 
   return (
-    <div id="dev.monitor.page.div" className="monitor-container" dir="rtl">
+    <div {...uiAttributes({ uid: "dev.monitor.page.div.122-HYBi71", id: "dev.monitor.page.div.122" })} id="dev.monitor.page.div" className="monitor-container" dir="rtl">
       {/* Dynamic Theme Styles */}
       <style dangerouslySetInnerHTML={{ __html: `
         :root[data-monitor-theme="dark"] {
@@ -677,38 +678,38 @@ export default function MonitorPage() {
       ` }} />
 
       {/* ─── HEADER ─── */}
-      <header id="dev.monitor.page.header" className="header no-print">
-        <div id="dev.monitor.page.div.2" className="header-title">
-          <h1 id="dev.monitor.page.h1">مراقب عمليات ASOL</h1>
-          {isLive && <span id="dev.monitor.page.span" className="badge-live">مراقبة مباشرة</span>}
+      <header {...uiAttributes({ uid: "dev.monitor.page.header.2-8C45g0", id: "dev.monitor.page.header.2" })} id="dev.monitor.page.header" className="header no-print">
+        <div {...uiAttributes({ uid: "dev.monitor.page.div.123-Sd9vTM", id: "dev.monitor.page.div.123" })} id="dev.monitor.page.div.2" className="header-title">
+          <h1 {...uiAttributes({ uid: "dev.monitor.page.h1.2-gCD3V0", id: "dev.monitor.page.h1.2" })} id="dev.monitor.page.h1">مراقب عمليات ASOL</h1>
+          {isLive && <span {...uiAttributes({ uid: "dev.monitor.page.span.58-L2O2x0", id: "dev.monitor.page.span.58" })} id="dev.monitor.page.span" className="badge-live">مراقبة مباشرة</span>}
         </div>
-        <div id="dev.monitor.page.div.3" className="header-actions">
-          <button id="dev.monitor.page.button" className="btn" onClick={toggleTheme}>
+        <div {...uiAttributes({ uid: "dev.monitor.page.div.124-m7IFBQ", id: "dev.monitor.page.div.124" })} id="dev.monitor.page.div.3" className="header-actions">
+          <button {...uiAttributes({ uid: "dev.monitor.page.button.11-LC042U", id: "dev.monitor.page.button.11" })} id="dev.monitor.page.button" className="btn" onClick={toggleTheme}>
             {theme === 'dark' ? '☀️ الوضع الفاتح' : '🌙 الوضع الداكن'}
           </button>
-          <button id="dev.monitor.page.button.2" className="btn" onClick={toggleLive}>
+          <button {...uiAttributes({ uid: "dev.monitor.page.button.12-X4B2OP", id: "dev.monitor.page.button.12" })} id="dev.monitor.page.button.2" className="btn" onClick={toggleLive}>
             {isLive ? '⏸️ إيقاف البث' : '▶️ استئناف البث'}
           </button>
-          <button id="dev.monitor.page.button.3" className="btn" onClick={clear}>
+          <button {...uiAttributes({ uid: "dev.monitor.page.button.13-87OPU5", id: "dev.monitor.page.button.13" })} id="dev.monitor.page.button.3" className="btn" onClick={clear}>
             🗑️ مسح السجلات
           </button>
-          <button id="dev.monitor.page.button.4" className="btn" onClick={exportJSON}>
+          <button {...uiAttributes({ uid: "dev.monitor.page.button.14-R7QhIv", id: "dev.monitor.page.button.14" })} id="dev.monitor.page.button.4" className="btn" onClick={exportJSON}>
             📥 تصدير JSON
           </button>
-          <button id="dev.monitor.page.button.5" className="btn" onClick={exportHTML}>
+          <button {...uiAttributes({ uid: "dev.monitor.page.button.15-b8AU2D", id: "dev.monitor.page.button.15" })} id="dev.monitor.page.button.5" className="btn" onClick={exportHTML}>
             📄 تصدير HTML
           </button>
-          <button id="dev.monitor.page.button.6" className="btn" onClick={exportPDF}>
+          <button {...uiAttributes({ uid: "dev.monitor.page.button.16-456JY1", id: "dev.monitor.page.button.16" })} id="dev.monitor.page.button.6" className="btn" onClick={exportPDF}>
             🖨️ طباعة PDF
           </button>
         </div>
       </header>
 
       {/* ─── TABS ─── */}
-      <nav id="dev.monitor.page.nav" className="tabs no-print">
+      <nav {...uiAttributes({ uid: "dev.monitor.page.nav.2-P8d569", id: "dev.monitor.page.nav.2" })} id="dev.monitor.page.nav" className="tabs no-print">
         {MONITOR_TABS.map((tab) => (
           <button
-            key={tab.id}
+            key={tab.id} {...uiAttributes({ uid: "dev.monitor.page.button.17-9U6iiE", id: "dev.monitor.page.button.17" })}
             className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
             onClick={() => setActiveTab(tab.id)}
           >
@@ -718,281 +719,281 @@ export default function MonitorPage() {
       </nav>
 
       {/* ─── FILTERS ─── */}
-      <div id="dev.monitor.page.div.4" className="filters-panel no-print">
-        <div id="dev.monitor.page.div.5" className="filters-grid">
-          <div id="dev.monitor.page.div.6" className="filter-group">
-            <label id="dev.monitor.page.label">الميزة</label>
-            <select id="dev.monitor.page.select"
+      <div {...uiAttributes({ uid: "dev.monitor.page.div.125-JcK060", id: "dev.monitor.page.div.125" })} id="dev.monitor.page.div.4" className="filters-panel no-print">
+        <div {...uiAttributes({ uid: "dev.monitor.page.div.126-nq43Tu", id: "dev.monitor.page.div.126" })} id="dev.monitor.page.div.5" className="filters-grid">
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.127-C4yyfN", id: "dev.monitor.page.div.127" })} id="dev.monitor.page.div.6" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.16-1m4ACx", id: "dev.monitor.page.label.16" })} id="dev.monitor.page.label">الميزة</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.15-Zk05P7", id: "dev.monitor.page.select.15" })} id="dev.monitor.page.select"
               className="filter-input"
               value={filter.feature}
               onChange={(e) => setFilter({ feature: e.target.value })}
             >
-              <option value="">كل الميزات</option>
-              {filterOptions.features.map((f) => <option key={f} value={f}>{f}</option>)}
+              <option {...uiAttributes({ uid: "dev.monitor.page.option-P1Etj0", id: "dev.monitor.page.option" })} value="">كل الميزات</option>
+              {filterOptions.features.map((f) => <option key={f} {...uiAttributes({ uid: "dev.monitor.page.option.2-YP0c1r", id: "dev.monitor.page.option.2" })} value={f}>{f}</option>)}
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.7" className="filter-group">
-            <label id="dev.monitor.page.label.2">الصفحة</label>
-            <select id="dev.monitor.page.select.2"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.128-4LMmI3", id: "dev.monitor.page.div.128" })} id="dev.monitor.page.div.7" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.17-4fGq5K", id: "dev.monitor.page.label.17" })} id="dev.monitor.page.label.2">الصفحة</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.16-Pi2siW", id: "dev.monitor.page.select.16" })} id="dev.monitor.page.select.2"
               className="filter-input"
               value={filter.page}
               onChange={(e) => setFilter({ page: e.target.value })}
             >
-              <option value="">كل الصفحات</option>
-              {filterOptions.pages.map((p) => <option key={p} value={p}>{p}</option>)}
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.3-r7lTOB", id: "dev.monitor.page.option.3" })} value="">كل الصفحات</option>
+              {filterOptions.pages.map((p) => <option key={p} {...uiAttributes({ uid: "dev.monitor.page.option.4-1CJMVs", id: "dev.monitor.page.option.4" })} value={p}>{p}</option>)}
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.8" className="filter-group">
-            <label id="dev.monitor.page.label.3">المكوّن</label>
-            <select id="dev.monitor.page.select.3"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.129-TTi4oJ", id: "dev.monitor.page.div.129" })} id="dev.monitor.page.div.8" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.18-NFGfB3", id: "dev.monitor.page.label.18" })} id="dev.monitor.page.label.3">المكوّن</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.17-Cmg37J", id: "dev.monitor.page.select.17" })} id="dev.monitor.page.select.3"
               className="filter-input"
               value={filter.component}
               onChange={(e) => setFilter({ component: e.target.value })}
             >
-              <option value="">كل المكوّنات</option>
-              {filterOptions.components.map((c) => <option key={c} value={c}>{c}</option>)}
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.5-b6QX8e", id: "dev.monitor.page.option.5" })} value="">كل المكوّنات</option>
+              {filterOptions.components.map((c) => <option key={c} {...uiAttributes({ uid: "dev.monitor.page.option.6-U0sf66", id: "dev.monitor.page.option.6" })} value={c}>{c}</option>)}
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.9" className="filter-group">
-            <label id="dev.monitor.page.label.4">الخطاف</label>
-            <select id="dev.monitor.page.select.4"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.130-0RpfVt", id: "dev.monitor.page.div.130" })} id="dev.monitor.page.div.9" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.19-XEAmZ3", id: "dev.monitor.page.label.19" })} id="dev.monitor.page.label.4">الخطاف</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.18-JGc41b", id: "dev.monitor.page.select.18" })} id="dev.monitor.page.select.4"
               className="filter-input"
               value={filter.hook}
               onChange={(e) => setFilter({ hook: e.target.value })}
             >
-              <option value="">كل الخطافات</option>
-              {filterOptions.hooks.map((h) => <option key={h} value={h}>{h}</option>)}
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.7-0MzwGo", id: "dev.monitor.page.option.7" })} value="">كل الخطافات</option>
+              {filterOptions.hooks.map((h) => <option key={h} {...uiAttributes({ uid: "dev.monitor.page.option.8-5k7dOw", id: "dev.monitor.page.option.8" })} value={h}>{h}</option>)}
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.10" className="filter-group">
-            <label id="dev.monitor.page.label.5">الخدمة</label>
-            <select id="dev.monitor.page.select.5"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.131-5WhTB2", id: "dev.monitor.page.div.131" })} id="dev.monitor.page.div.10" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.20-q3o35N", id: "dev.monitor.page.label.20" })} id="dev.monitor.page.label.5">الخدمة</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.19-PjFSJ1", id: "dev.monitor.page.select.19" })} id="dev.monitor.page.select.5"
               className="filter-input"
               value={filter.service}
               onChange={(e) => setFilter({ service: e.target.value })}
             >
-              <option value="">كل الخدمات</option>
-              {filterOptions.services.map((s) => <option key={s} value={s}>{s}</option>)}
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.9-kq6KN5", id: "dev.monitor.page.option.9" })} value="">كل الخدمات</option>
+              {filterOptions.services.map((s) => <option key={s} {...uiAttributes({ uid: "dev.monitor.page.option.10-1btU6H", id: "dev.monitor.page.option.10" })} value={s}>{s}</option>)}
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.11" className="filter-group">
-            <label id="dev.monitor.page.label.6">المستودع</label>
-            <select id="dev.monitor.page.select.6"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.132-O3biFO", id: "dev.monitor.page.div.132" })} id="dev.monitor.page.div.11" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.21-1LFwhA", id: "dev.monitor.page.label.21" })} id="dev.monitor.page.label.6">المستودع</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.20-sRL4Lt", id: "dev.monitor.page.select.20" })} id="dev.monitor.page.select.6"
               className="filter-input"
               value={filter.repository}
               onChange={(e) => setFilter({ repository: e.target.value })}
             >
-              <option value="">كل المستودعات</option>
-              {filterOptions.repositories.map((r) => <option key={r} value={r}>{r}</option>)}
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.11-HCOqc8", id: "dev.monitor.page.option.11" })} value="">كل المستودعات</option>
+              {filterOptions.repositories.map((r) => <option key={r} {...uiAttributes({ uid: "dev.monitor.page.option.12-5m0Xp4", id: "dev.monitor.page.option.12" })} value={r}>{r}</option>)}
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.12" className="filter-group">
-            <label id="dev.monitor.page.label.7">الجدول</label>
-            <select id="dev.monitor.page.select.7"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.133-6MlnM9", id: "dev.monitor.page.div.133" })} id="dev.monitor.page.div.12" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.22-rN3Ny2", id: "dev.monitor.page.label.22" })} id="dev.monitor.page.label.7">الجدول</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.21-D9xs3R", id: "dev.monitor.page.select.21" })} id="dev.monitor.page.select.7"
               className="filter-input"
               value={filter.table}
               onChange={(e) => setFilter({ table: e.target.value })}
             >
-              <option value="">كل الجداول</option>
-              {filterOptions.tables.map((t) => <option key={t} value={t}>{t}</option>)}
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.13-6EV0Zc", id: "dev.monitor.page.option.13" })} value="">كل الجداول</option>
+              {filterOptions.tables.map((t) => <option key={t} {...uiAttributes({ uid: "dev.monitor.page.option.14-ZzamS5", id: "dev.monitor.page.option.14" })} value={t}>{t}</option>)}
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.13" className="filter-group">
-            <label id="dev.monitor.page.label.8">الكيان</label>
-            <select id="dev.monitor.page.select.8"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.134-1LVACN", id: "dev.monitor.page.div.134" })} id="dev.monitor.page.div.13" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.23-72AVjt", id: "dev.monitor.page.label.23" })} id="dev.monitor.page.label.8">الكيان</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.22-hRbe5M", id: "dev.monitor.page.select.22" })} id="dev.monitor.page.select.8"
               className="filter-input"
               value={filter.entity}
               onChange={(e) => setFilter({ entity: e.target.value })}
             >
-              <option value="">كل الكيانات</option>
-              {filterOptions.entities.map((ent) => <option key={ent} value={ent}>{ent}</option>)}
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.15-soQAx1", id: "dev.monitor.page.option.15" })} value="">كل الكيانات</option>
+              {filterOptions.entities.map((ent) => <option key={ent} {...uiAttributes({ uid: "dev.monitor.page.option.16-IG3JL4", id: "dev.monitor.page.option.16" })} value={ent}>{ent}</option>)}
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.14" className="filter-group">
-            <label id="dev.monitor.page.label.9">مفتاح الاستعلام</label>
-            <select id="dev.monitor.page.select.9"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.135-9Gxx98", id: "dev.monitor.page.div.135" })} id="dev.monitor.page.div.14" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.24-qz1XUR", id: "dev.monitor.page.label.24" })} id="dev.monitor.page.label.9">مفتاح الاستعلام</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.23-R8sXC9", id: "dev.monitor.page.select.23" })} id="dev.monitor.page.select.9"
               className="filter-input"
               value={filter.queryKey}
               onChange={(e) => setFilter({ queryKey: e.target.value })}
             >
-              <option value="">كل مفاتيح الاستعلام</option>
-              {filterOptions.queryKeys.map((qk) => <option key={qk} value={qk}>{qk}</option>)}
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.17-yKBG3k", id: "dev.monitor.page.option.17" })} value="">كل مفاتيح الاستعلام</option>
+              {filterOptions.queryKeys.map((qk) => <option key={qk} {...uiAttributes({ uid: "dev.monitor.page.option.18-9yAG4E", id: "dev.monitor.page.option.18" })} value={qk}>{qk}</option>)}
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.15" className="filter-group">
-            <label id="dev.monitor.page.label.10">نوع العملية</label>
-            <select id="dev.monitor.page.select.10"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.136-8zNfu7", id: "dev.monitor.page.div.136" })} id="dev.monitor.page.div.15" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.25-taobU8", id: "dev.monitor.page.label.25" })} id="dev.monitor.page.label.10">نوع العملية</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.24-6J6xu8", id: "dev.monitor.page.select.24" })} id="dev.monitor.page.select.10"
               className="filter-input"
               value={filter.operationType}
               onChange={(e) => setFilter({ operationType: e.target.value })}
             >
-              <option value="">كل الأنواع</option>
-              <option value="SELECT">SELECT</option>
-              <option value="INSERT">INSERT</option>
-              <option value="UPDATE">UPDATE</option>
-              <option value="DELETE">DELETE</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.19-nY52fv", id: "dev.monitor.page.option.19" })} value="">كل الأنواع</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.20-OIKs6Y", id: "dev.monitor.page.option.20" })} value="SELECT">SELECT</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.21-KR695b", id: "dev.monitor.page.option.21" })} value="INSERT">INSERT</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.22-9mEFu7", id: "dev.monitor.page.option.22" })} value="UPDATE">UPDATE</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.23-uNvzP5", id: "dev.monitor.page.option.23" })} value="DELETE">DELETE</option>
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.16" className="filter-group">
-            <label id="dev.monitor.page.label.11">الحالة</label>
-            <select id="dev.monitor.page.select.11"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.137-q1pqU2", id: "dev.monitor.page.div.137" })} id="dev.monitor.page.div.16" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.26-5mfFfY", id: "dev.monitor.page.label.26" })} id="dev.monitor.page.label.11">الحالة</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.25-4TY1FS", id: "dev.monitor.page.select.25" })} id="dev.monitor.page.select.11"
               className="filter-input"
               value={filter.status}
               onChange={(e) => setFilter({ status: e.target.value })}
             >
-              <option value="">كل الحالات</option>
-              <option value="success">نجاح</option>
-              <option value="pending">قيد التنفيذ</option>
-              <option value="error">خطأ</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.24-k4xDW9", id: "dev.monitor.page.option.24" })} value="">كل الحالات</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.25-F6W37b", id: "dev.monitor.page.option.25" })} value="success">نجاح</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.26-TV4vL6", id: "dev.monitor.page.option.26" })} value="pending">قيد التنفيذ</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.27-3lCMfV", id: "dev.monitor.page.option.27" })} value="error">خطأ</option>
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.17" className="filter-group">
-            <label id="dev.monitor.page.label.12">محرك قاعدة البيانات</label>
-            <select id="dev.monitor.page.select.12"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.138-llWU3j", id: "dev.monitor.page.div.138" })} id="dev.monitor.page.div.17" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.27-75vGJX", id: "dev.monitor.page.label.27" })} id="dev.monitor.page.label.12">محرك قاعدة البيانات</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.26-LERx2p", id: "dev.monitor.page.select.26" })} id="dev.monitor.page.select.12"
               className="filter-input"
               value={filter.dbDriver}
               onChange={(e) => setFilter({ dbDriver: e.target.value })}
             >
-              <option value="">كل المحركات</option>
-              <option value="SQLite-Dev">SQLite للتطوير</option>
-              <option value="Turso-Production">Turso للإنتاج</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.28-AQ9yO8", id: "dev.monitor.page.option.28" })} value="">كل المحركات</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.29-AZ7Zwz", id: "dev.monitor.page.option.29" })} value="SQLite-Dev">SQLite للتطوير</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.30-g2HZHX", id: "dev.monitor.page.option.30" })} value="Turso-Production">Turso للإنتاج</option>
             </select>
           </div>
 
-          <div id="dev.monitor.page.div.18" className="filter-group">
-            <label id="dev.monitor.page.label.13">مصدر الذاكرة المؤقتة</label>
-            <select id="dev.monitor.page.select.13"
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.139-wjF8q8", id: "dev.monitor.page.div.139" })} id="dev.monitor.page.div.18" className="filter-group">
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.28-7UAWN5", id: "dev.monitor.page.label.28" })} id="dev.monitor.page.label.13">مصدر الذاكرة المؤقتة</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.27-rK5564", id: "dev.monitor.page.select.27" })} id="dev.monitor.page.select.13"
               className="filter-input"
               value={filter.cacheSource}
               onChange={(e) => setFilter({ cacheSource: e.target.value })}
             >
-              <option value="">كل مصادر الذاكرة المؤقتة</option>
-              <option value="Memory">ذاكرة مؤقتة RAM</option>
-              <option value="IndexedDB">IndexedDB</option>
-              <option value="HTTP">HTTP (AsolApiClient)</option>
-              <option value="Database">مصدر قاعدة البيانات</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.31-j0T0Nv", id: "dev.monitor.page.option.31" })} value="">كل مصادر الذاكرة المؤقتة</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.32-RrdMM0", id: "dev.monitor.page.option.32" })} value="Memory">ذاكرة مؤقتة RAM</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.33-2tSs0G", id: "dev.monitor.page.option.33" })} value="IndexedDB">IndexedDB</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.34-XIMKv4", id: "dev.monitor.page.option.34" })} value="HTTP">HTTP (AsolApiClient)</option>
+              <option {...uiAttributes({ uid: "dev.monitor.page.option.35-RD7gth", id: "dev.monitor.page.option.35" })} value="Database">مصدر قاعدة البيانات</option>
             </select>
           </div>
         </div>
 
-        <div id="dev.monitor.page.div.19" className="search-bar">
-          <input id="dev.monitor.page.input"
+        <div {...uiAttributes({ uid: "dev.monitor.page.div.140-X07yOp", id: "dev.monitor.page.div.140" })} id="dev.monitor.page.div.19" className="search-bar">
+          <input {...uiAttributes({ uid: "dev.monitor.page.input.4-1aKM9F", id: "dev.monitor.page.input.4" })} id="dev.monitor.page.input"
             className="filter-input search-input"
             placeholder="ابحث في الميزات أو SQL أو الخطافات أو مفاتيح الاستعلام أو رسائل الخطأ..."
             value={filter.search}
             onChange={(e) => setFilter({ search: e.target.value })}
           />
-          <button id="dev.monitor.page.button.7" className="btn" onClick={resetFilter}>إعادة ضبط الفلاتر</button>
+          <button {...uiAttributes({ uid: "dev.monitor.page.button.18-eYoFZ5", id: "dev.monitor.page.button.18" })} id="dev.monitor.page.button.7" className="btn" onClick={resetFilter}>إعادة ضبط الفلاتر</button>
         </div>
       </div>
 
       {/* ─── TAB CONTENT: DASHBOARD ─── */}
       {activeTab === 'dashboard' && (
-        <section id="dev.monitor.page.section">
-          <div id="dev.monitor.page.div.20" className="stats-grid">
-            <div id="dev.monitor.page.div.21" className="stat-card">
-              <span id="dev.monitor.page.span.2" className="stat-title">إجمالي العمليات</span>
-              <span id="dev.monitor.page.span.3" className="stat-value">{filteredOps.length}</span>
-              <div id="dev.monitor.page.div.22" className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
+        <section {...uiAttributes({ uid: "dev.monitor.page.section.9-gikPZ7", id: "dev.monitor.page.section.9" })} id="dev.monitor.page.section">
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.141-W62cxq", id: "dev.monitor.page.div.141" })} id="dev.monitor.page.div.20" className="stats-grid">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.142-K6O0Ql", id: "dev.monitor.page.div.142" })} id="dev.monitor.page.div.21" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.59-j7tUSN", id: "dev.monitor.page.span.59" })} id="dev.monitor.page.span.2" className="stat-title">إجمالي العمليات</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.60-4B73EY", id: "dev.monitor.page.span.60" })} id="dev.monitor.page.span.3" className="stat-value">{filteredOps.length}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.143-HG267F", id: "dev.monitor.page.div.143" })} id="dev.monitor.page.div.22" className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
             </div>
-            <div id="dev.monitor.page.div.23" className="stat-card">
-              <span id="dev.monitor.page.span.4" className="stat-title">قراءات (SELECT)</span>
-              <span id="dev.monitor.page.span.5" className="stat-value">{stats.totalReads}</span>
-              <div id="dev.monitor.page.div.24" className="card-accent" style={{ '--accent': '#22c55e' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.144-Xkx81V", id: "dev.monitor.page.div.144" })} id="dev.monitor.page.div.23" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.61-z05ESR", id: "dev.monitor.page.span.61" })} id="dev.monitor.page.span.4" className="stat-title">قراءات (SELECT)</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.62-AXGZ27", id: "dev.monitor.page.span.62" })} id="dev.monitor.page.span.5" className="stat-value">{stats.totalReads}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.145-C0J6Td", id: "dev.monitor.page.div.145" })} id="dev.monitor.page.div.24" className="card-accent" style={{ '--accent': '#22c55e' } as any} />
             </div>
-            <div id="dev.monitor.page.div.25" className="stat-card">
-              <span id="dev.monitor.page.span.6" className="stat-title">كتابات (MUTATIONS)</span>
-              <span id="dev.monitor.page.span.7" className="stat-value">{stats.totalWrites}</span>
-              <div id="dev.monitor.page.div.26" className="card-accent" style={{ '--accent': '#ef4444' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.146-86RAf2", id: "dev.monitor.page.div.146" })} id="dev.monitor.page.div.25" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.63-BfNPd6", id: "dev.monitor.page.span.63" })} id="dev.monitor.page.span.6" className="stat-title">كتابات (MUTATIONS)</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.64-xUR2y2", id: "dev.monitor.page.span.64" })} id="dev.monitor.page.span.7" className="stat-value">{stats.totalWrites}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.147-TyPon7", id: "dev.monitor.page.div.147" })} id="dev.monitor.page.div.26" className="card-accent" style={{ '--accent': '#ef4444' } as any} />
             </div>
-            <div id="dev.monitor.page.div.27" className="stat-card">
-              <span id="dev.monitor.page.span.8" className="stat-title">إجمالي استدعاءات قاعدة البيانات</span>
-              <span id="dev.monitor.page.span.9" className="stat-value">{stats.totalDbCalls}</span>
-              <div id="dev.monitor.page.div.28" className="card-accent" style={{ '--accent': '#a855f7' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.148-3PSIH9", id: "dev.monitor.page.div.148" })} id="dev.monitor.page.div.27" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.65-c8Cq12", id: "dev.monitor.page.span.65" })} id="dev.monitor.page.span.8" className="stat-title">إجمالي استدعاءات قاعدة البيانات</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.66-C093Me", id: "dev.monitor.page.span.66" })} id="dev.monitor.page.span.9" className="stat-value">{stats.totalDbCalls}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.149-c0FLNv", id: "dev.monitor.page.div.149" })} id="dev.monitor.page.div.28" className="card-accent" style={{ '--accent': '#a855f7' } as any} />
             </div>
-            <div id="dev.monitor.page.div.29" className="stat-card">
-              <span id="dev.monitor.page.span.10" className="stat-title">إصابات الذاكرة المؤقتة</span>
-              <span id="dev.monitor.page.span.11" className="stat-value">{stats.totalCacheHits}</span>
-              <div id="dev.monitor.page.div.30" className="card-accent" style={{ '--accent': '#eab308' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.150-42hP6u", id: "dev.monitor.page.div.150" })} id="dev.monitor.page.div.29" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.67-xqG9T7", id: "dev.monitor.page.span.67" })} id="dev.monitor.page.span.10" className="stat-title">إصابات الذاكرة المؤقتة</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.68-5B7WqA", id: "dev.monitor.page.span.68" })} id="dev.monitor.page.span.11" className="stat-value">{stats.totalCacheHits}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.151-Vq1RkI", id: "dev.monitor.page.div.151" })} id="dev.monitor.page.div.30" className="card-accent" style={{ '--accent': '#eab308' } as any} />
             </div>
-            <div id="dev.monitor.page.div.31" className="stat-card">
-              <span id="dev.monitor.page.span.12" className="stat-title">إخفاقات الذاكرة المؤقتة</span>
-              <span id="dev.monitor.page.span.13" className="stat-value">{stats.totalCacheMisses}</span>
-              <div id="dev.monitor.page.div.32" className="card-accent" style={{ '--accent': '#a855f7' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.152-2D6PVB", id: "dev.monitor.page.div.152" })} id="dev.monitor.page.div.31" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.69-4bBdPJ", id: "dev.monitor.page.span.69" })} id="dev.monitor.page.span.12" className="stat-title">إخفاقات الذاكرة المؤقتة</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.70-y6x0GN", id: "dev.monitor.page.span.70" })} id="dev.monitor.page.span.13" className="stat-value">{stats.totalCacheMisses}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.153-8AHhAE", id: "dev.monitor.page.div.153" })} id="dev.monitor.page.div.32" className="card-accent" style={{ '--accent': '#a855f7' } as any} />
             </div>
-            <div id="dev.monitor.page.div.33" className="stat-card">
-              <span id="dev.monitor.page.span.14" className="stat-title">نسبة إصابة الذاكرة المؤقتة</span>
-              <span id="dev.monitor.page.span.15" className="stat-value">{stats.cacheHitRate}%</span>
-              <div id="dev.monitor.page.div.34" className="card-accent" style={{ '--accent': '#eab308' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.154-oQXD2A", id: "dev.monitor.page.div.154" })} id="dev.monitor.page.div.33" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.71-OLVuJ0", id: "dev.monitor.page.span.71" })} id="dev.monitor.page.span.14" className="stat-title">نسبة إصابة الذاكرة المؤقتة</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.72-nG65OC", id: "dev.monitor.page.span.72" })} id="dev.monitor.page.span.15" className="stat-value">{stats.cacheHitRate}%</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.155-E2lEZ0", id: "dev.monitor.page.div.155" })} id="dev.monitor.page.div.34" className="card-accent" style={{ '--accent': '#eab308' } as any} />
             </div>
-            <div id="dev.monitor.page.div.35" className="stat-card">
-              <span id="dev.monitor.page.span.16" className="stat-title">استعلامات نشطة</span>
-              <span id="dev.monitor.page.span.17" className="stat-value">{stats.activeQueries}</span>
-              <div id="dev.monitor.page.div.36" className="card-accent" style={{ '--accent': '#06b6d4' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.156-aCF2s4", id: "dev.monitor.page.div.156" })} id="dev.monitor.page.div.35" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.73-rvrlB8", id: "dev.monitor.page.span.73" })} id="dev.monitor.page.span.16" className="stat-title">استعلامات نشطة</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.74-rtAK31", id: "dev.monitor.page.span.74" })} id="dev.monitor.page.span.17" className="stat-value">{stats.activeQueries}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.157-S5eKdM", id: "dev.monitor.page.div.157" })} id="dev.monitor.page.div.36" className="card-accent" style={{ '--accent': '#06b6d4' } as any} />
             </div>
-            <div id="dev.monitor.page.div.37" className="stat-card">
-              <span id="dev.monitor.page.span.18" className="stat-title">تعديلات نشطة</span>
-              <span id="dev.monitor.page.span.19" className="stat-value">{stats.activeMutations}</span>
-              <div id="dev.monitor.page.div.38" className="card-accent" style={{ '--accent': '#f97316' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.158-kRJ9x6", id: "dev.monitor.page.div.158" })} id="dev.monitor.page.div.37" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.75-KYIg2H", id: "dev.monitor.page.span.75" })} id="dev.monitor.page.span.18" className="stat-title">تعديلات نشطة</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.76-PJNm88", id: "dev.monitor.page.span.76" })} id="dev.monitor.page.span.19" className="stat-value">{stats.activeMutations}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.159-xSA4ZC", id: "dev.monitor.page.div.159" })} id="dev.monitor.page.div.38" className="card-accent" style={{ '--accent': '#f97316' } as any} />
             </div>
-            <div id="dev.monitor.page.div.39" className="stat-card">
-              <span id="dev.monitor.page.span.20" className="stat-title">قراءات دون اتصال</span>
-              <span id="dev.monitor.page.span.21" className="stat-value">{stats.offlineReads}</span>
-              <div id="dev.monitor.page.div.40" className="card-accent" style={{ '--accent': '#64748b' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.160-ZzG5I8", id: "dev.monitor.page.div.160" })} id="dev.monitor.page.div.39" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.77-9FhvNg", id: "dev.monitor.page.span.77" })} id="dev.monitor.page.span.20" className="stat-title">قراءات دون اتصال</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.78-pKxc6G", id: "dev.monitor.page.span.78" })} id="dev.monitor.page.span.21" className="stat-value">{stats.offlineReads}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.161-t91YMH", id: "dev.monitor.page.div.161" })} id="dev.monitor.page.div.40" className="card-accent" style={{ '--accent': '#64748b' } as any} />
             </div>
-            <div id="dev.monitor.page.div.41" className="stat-card">
-              <span id="dev.monitor.page.span.22" className="stat-title">قراءات متصلة</span>
-              <span id="dev.monitor.page.span.23" className="stat-value">{stats.onlineReads}</span>
-              <div id="dev.monitor.page.div.42" className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.162-4JOiUp", id: "dev.monitor.page.div.162" })} id="dev.monitor.page.div.41" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.79-F2Sh7v", id: "dev.monitor.page.span.79" })} id="dev.monitor.page.span.22" className="stat-title">قراءات متصلة</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.80-yFCT2h", id: "dev.monitor.page.span.80" })} id="dev.monitor.page.span.23" className="stat-value">{stats.onlineReads}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.163-BCJ9A3", id: "dev.monitor.page.div.163" })} id="dev.monitor.page.div.42" className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
             </div>
-            <div id="dev.monitor.page.div.43" className="stat-card">
-              <span id="dev.monitor.page.span.24" className="stat-title">متوسط زمن قاعدة البيانات</span>
-              <span id="dev.monitor.page.span.25" className="stat-value">{stats.avgExecutionTime} ms</span>
-              <div id="dev.monitor.page.div.44" className="card-accent" style={{ '--accent': '#ef4444' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.164-N3H1Ug", id: "dev.monitor.page.div.164" })} id="dev.monitor.page.div.43" className="stat-card">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.81-LGBkD7", id: "dev.monitor.page.span.81" })} id="dev.monitor.page.span.24" className="stat-title">متوسط زمن قاعدة البيانات</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.82-x8GSsM", id: "dev.monitor.page.span.82" })} id="dev.monitor.page.span.25" className="stat-value">{stats.avgExecutionTime} ms</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.165-g5SCVN", id: "dev.monitor.page.div.165" })} id="dev.monitor.page.div.44" className="card-accent" style={{ '--accent': '#ef4444' } as any} />
             </div>
-            <div id="dev.monitor.page.div.45" className="stat-card alert">
-              <span id="dev.monitor.page.span.26" className="stat-title">تنبيهات N+1</span>
-              <span id="dev.monitor.page.span.27" className="stat-value" style={{ color: '#f97316' }}>{stats.n1Alerts}</span>
-              <div id="dev.monitor.page.div.46" className="card-accent" style={{ '--accent': '#f97316' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.166-Ix4rsV", id: "dev.monitor.page.div.166" })} id="dev.monitor.page.div.45" className="stat-card alert">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.83-Q7I7Qp", id: "dev.monitor.page.span.83" })} id="dev.monitor.page.span.26" className="stat-title">تنبيهات N+1</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.84-CL2Qvt", id: "dev.monitor.page.span.84" })} id="dev.monitor.page.span.27" className="stat-value" style={{ color: '#f97316' }}>{stats.n1Alerts}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.167-I11Vyd", id: "dev.monitor.page.div.167" })} id="dev.monitor.page.div.46" className="card-accent" style={{ '--accent': '#f97316' } as any} />
             </div>
-            <div id="dev.monitor.page.div.47" className="stat-card error">
-              <span id="dev.monitor.page.span.28" className="stat-title">استعلامات مكررة</span>
-              <span id="dev.monitor.page.span.29" className="stat-value" style={{ color: '#ef4444' }}>{stats.duplicateAlerts}</span>
-              <div id="dev.monitor.page.div.48" className="card-accent" style={{ '--accent': '#ef4444' } as any} />
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.168-t7vqGE", id: "dev.monitor.page.div.168" })} id="dev.monitor.page.div.47" className="stat-card error">
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.85-HrtBC1", id: "dev.monitor.page.span.85" })} id="dev.monitor.page.span.28" className="stat-title">استعلامات مكررة</span>
+              <span {...uiAttributes({ uid: "dev.monitor.page.span.86-NtzBN6", id: "dev.monitor.page.span.86" })} id="dev.monitor.page.span.29" className="stat-value" style={{ color: '#ef4444' }}>{stats.duplicateAlerts}</span>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.169-V37EFU", id: "dev.monitor.page.div.169" })} id="dev.monitor.page.div.48" className="card-accent" style={{ '--accent': '#ef4444' } as any} />
             </div>
           </div>
 
-          <div id="dev.monitor.page.div.49" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-            <div id="dev.monitor.page.div.50" className="detail-section">
-              <div id="dev.monitor.page.div.51" className="detail-section-title">أبطأ عمليات قاعدة البيانات</div>
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.170-0R6hG8", id: "dev.monitor.page.div.170" })} id="dev.monitor.page.div.49" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.171-K5VOHo", id: "dev.monitor.page.div.171" })} id="dev.monitor.page.div.50" className="detail-section">
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.172-d9cTZN", id: "dev.monitor.page.div.172" })} id="dev.monitor.page.div.51" className="detail-section-title">أبطأ عمليات قاعدة البيانات</div>
               {stats.slowestOps.length === 0 ? (
-                <div id="dev.monitor.page.div.52" style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد استعلامات مسجّلة.</div>
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.173-I0O2QR", id: "dev.monitor.page.div.173" })} id="dev.monitor.page.div.52" style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد استعلامات مسجّلة.</div>
               ) : (
-                <table id="dev.monitor.page.table" style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
-                  <thead id="dev.monitor.page.thead">
-                    <tr id="dev.monitor.page.tr" style={{ borderBottom: '1px solid var(--border)', textAlign: 'left', color: 'var(--text-muted)' }}>
-                      <th id="dev.monitor.page.th" style={{ padding: '6px' }}>الجدول</th>
-                      <th id="dev.monitor.page.th.2" style={{ padding: '6px' }}>العملية</th>
-                      <th id="dev.monitor.page.th.3" style={{ padding: '6px', textAlign: 'right' }}>المدة (ms)</th>
+                <table {...uiAttributes({ uid: "dev.monitor.page.table.2-vy4Saf", id: "dev.monitor.page.table.2" })} id="dev.monitor.page.table" style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
+                  <thead {...uiAttributes({ uid: "dev.monitor.page.thead.2-87JY2i", id: "dev.monitor.page.thead.2" })} id="dev.monitor.page.thead">
+                    <tr {...uiAttributes({ uid: "dev.monitor.page.tr.2-gcS9qd", id: "dev.monitor.page.tr.2" })} id="dev.monitor.page.tr" style={{ borderBottom: '1px solid var(--border)', textAlign: 'left', color: 'var(--text-muted)' }}>
+                      <th {...uiAttributes({ uid: "dev.monitor.page.th.4-XUo37f", id: "dev.monitor.page.th.4" })} id="dev.monitor.page.th" style={{ padding: '6px' }}>الجدول</th>
+                      <th {...uiAttributes({ uid: "dev.monitor.page.th.5-e3yZEr", id: "dev.monitor.page.th.5" })} id="dev.monitor.page.th.2" style={{ padding: '6px' }}>العملية</th>
+                      <th {...uiAttributes({ uid: "dev.monitor.page.th.6-89uAUc", id: "dev.monitor.page.th.6" })} id="dev.monitor.page.th.3" style={{ padding: '6px', textAlign: 'right' }}>المدة (ms)</th>
                     </tr>
                   </thead>
-                  <tbody id="dev.monitor.page.tbody">
+                  <tbody {...uiAttributes({ uid: "dev.monitor.page.tbody.2-IW7YU4", id: "dev.monitor.page.tbody.2" })} id="dev.monitor.page.tbody">
                     {stats.slowestOps.map((op) => (
-                      <tr key={op.id} style={{ borderBottom: '1px solid var(--border)' }} onClick={() => selectOperation(op.id)}>
-                        <td style={{ padding: '6px', fontWeight: 600 }}>{op.table}</td>
-                        <td style={{ padding: '6px' }}><span style={{ color: OP_TYPE_COLORS[op.operationType] }}>{op.operationType}</span></td>
-                        <td style={{ padding: '6px', textAlign: 'right', fontWeight: 700, color: op.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : 'var(--text-main)' }}>{op.executionTime} ms</td>
+                      <tr key={op.id} {...uiAttributes({ uid: "dev.monitor.page.tr.3-3dZ19G", id: "dev.monitor.page.tr.3" })} style={{ borderBottom: '1px solid var(--border)' }} onClick={() => selectOperation(op.id)}>
+                        <td {...uiAttributes({ uid: "dev.monitor.page.td-dy3jtO", id: "dev.monitor.page.td" })} style={{ padding: '6px', fontWeight: 600 }}>{op.table}</td>
+                        <td {...uiAttributes({ uid: "dev.monitor.page.td.2-EgIqQ4", id: "dev.monitor.page.td.2" })} style={{ padding: '6px' }}><span {...uiAttributes({ uid: "dev.monitor.page.span.87-gUR4yn", id: "dev.monitor.page.span.87" })} style={{ color: OP_TYPE_COLORS[op.operationType] }}>{op.operationType}</span></td>
+                        <td {...uiAttributes({ uid: "dev.monitor.page.td.3-x1K333", id: "dev.monitor.page.td.3" })} style={{ padding: '6px', textAlign: 'right', fontWeight: 700, color: op.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : 'var(--text-main)' }}>{op.executionTime} ms</td>
                       </tr>
                     ))}
                   </tbody>
@@ -1000,21 +1001,21 @@ export default function MonitorPage() {
               )}
             </div>
 
-            <div id="dev.monitor.page.div.53" className="detail-section">
-              <div id="dev.monitor.page.div.54" className="detail-section-title">تحذيرات N+1 / التكرار</div>
-              <div id="dev.monitor.page.div.55" style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.174-76lOES", id: "dev.monitor.page.div.174" })} id="dev.monitor.page.div.53" className="detail-section">
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.175-BRPB2b", id: "dev.monitor.page.div.175" })} id="dev.monitor.page.div.54" className="detail-section-title">تحذيرات N+1 / التكرار</div>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.176-j56RMQ", id: "dev.monitor.page.div.176" })} id="dev.monitor.page.div.55" style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {filteredOps.filter(o => o.isDuplicate || o.isN1).length === 0 ? (
-                  <div id="dev.monitor.page.div.56" style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد مشاكل N+1 أو تكرار.</div>
+                  <div {...uiAttributes({ uid: "dev.monitor.page.div.177-pp7FNn", id: "dev.monitor.page.div.177" })} id="dev.monitor.page.div.56" style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد مشاكل N+1 أو تكرار.</div>
                 ) : (
                   filteredOps.filter(o => o.isDuplicate || o.isN1).map((op) => (
-                    <div key={op.id} className="tree-node-row" onClick={() => selectOperation(op.id)} style={{ borderLeft: op.isDuplicate ? '3px solid #ef4444' : '3px solid #f97316', paddingLeft: '8px' }}>
-                      <div>
-                        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>التدفق: {op.requestFlowId.slice(0, 8)}…</div>
-                        <div style={{ fontWeight: 600 }}>{op.operationType} {op.table}</div>
+                    <div key={op.id} {...uiAttributes({ uid: "dev.monitor.page.div.178-Hv0UPX", id: "dev.monitor.page.div.178" })} className="tree-node-row" onClick={() => selectOperation(op.id)} style={{ borderLeft: op.isDuplicate ? '3px solid #ef4444' : '3px solid #f97316', paddingLeft: '8px' }}>
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.179-HHjS1E", id: "dev.monitor.page.div.179" })}>
+                        <div {...uiAttributes({ uid: "dev.monitor.page.div.180-guCul2", id: "dev.monitor.page.div.180" })} style={{ fontSize: '11px', color: 'var(--text-muted)' }}>التدفق: {op.requestFlowId.slice(0, 8)}…</div>
+                        <div {...uiAttributes({ uid: "dev.monitor.page.div.181-GJfMy7", id: "dev.monitor.page.div.181" })} style={{ fontWeight: 600 }}>{op.operationType} {op.table}</div>
                       </div>
-                      <div style={{ display: 'flex', gap: '4px' }}>
-                        {op.isDuplicate && <span style={{ background: '#ef4444', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>مكرر</span>}
-                        {op.isN1 && <span style={{ background: '#f97316', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>تنبيه N+1</span>}
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.182-p1J1HF", id: "dev.monitor.page.div.182" })} style={{ display: 'flex', gap: '4px' }}>
+                        {op.isDuplicate && <span {...uiAttributes({ uid: "dev.monitor.page.span.88-rX6Af4", id: "dev.monitor.page.span.88" })} style={{ background: '#ef4444', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>مكرر</span>}
+                        {op.isN1 && <span {...uiAttributes({ uid: "dev.monitor.page.span.89-P9trFD", id: "dev.monitor.page.span.89" })} style={{ background: '#f97316', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>تنبيه N+1</span>}
                       </div>
                     </div>
                   ))
@@ -1027,13 +1028,13 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: OPERATIONS (TREE VIEW) ─── */}
       {activeTab === 'operations' && (
-        <section id="dev.monitor.page.section.2" className="ops-panel">
-          <div id="dev.monitor.page.div.57" className="operations-list-card">
-            <div id="dev.monitor.page.div.58" className="card-header">
-              <h2 id="dev.monitor.page.h2" style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>تتبع العمليات (شجرة التدفق)</h2>
-              <div id="dev.monitor.page.div.59" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <label id="dev.monitor.page.label.14" style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <input id="dev.monitor.page.input.2"
+        <section {...uiAttributes({ uid: "dev.monitor.page.section.10-O5LkMG", id: "dev.monitor.page.section.10" })} id="dev.monitor.page.section.2" className="ops-panel">
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.183-Ons3iE", id: "dev.monitor.page.div.183" })} id="dev.monitor.page.div.57" className="operations-list-card">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.184-CnYVC6", id: "dev.monitor.page.div.184" })} id="dev.monitor.page.div.58" className="card-header">
+              <h2 {...uiAttributes({ uid: "dev.monitor.page.h2.3-O49WXa", id: "dev.monitor.page.h2.3" })} id="dev.monitor.page.h2" style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>تتبع العمليات (شجرة التدفق)</h2>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.185-CCP0Al", id: "dev.monitor.page.div.185" })} id="dev.monitor.page.div.59" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <label {...uiAttributes({ uid: "dev.monitor.page.label.29-Fmdt8l", id: "dev.monitor.page.label.29" })} id="dev.monitor.page.label.14" style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <input {...uiAttributes({ uid: "dev.monitor.page.input.5-JRf9IP", id: "dev.monitor.page.input.5" })} id="dev.monitor.page.input.2"
                     type="checkbox"
                     checked={autoScroll}
                     onChange={(e) => setAutoScroll(e.target.checked)}
@@ -1041,16 +1042,16 @@ export default function MonitorPage() {
                   📌 تمرير تلقائي
                 </label>
                 {!autoScroll && (
-                  <button id="dev.monitor.page.button.8" className="btn" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => setAutoScroll(true)}>
+                  <button {...uiAttributes({ uid: "dev.monitor.page.button.19-a6zVbE", id: "dev.monitor.page.button.19" })} id="dev.monitor.page.button.8" className="btn" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => setAutoScroll(true)}>
                     إعادة تفعيل التمرير التلقائي
                   </button>
                 )}
               </div>
             </div>
 
-            <div id="dev.monitor.page.div.60" className="scrollable-area" ref={listContainerRef} onScroll={handleScroll}>
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.186-EDQ9vP", id: "dev.monitor.page.div.186" })} id="dev.monitor.page.div.60" className="scrollable-area" ref={listContainerRef} onScroll={handleScroll}>
               {treeData.length === 0 ? (
-                <div id="dev.monitor.page.div.61" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.187-N3WVwe", id: "dev.monitor.page.div.187" })} id="dev.monitor.page.div.61" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
                   لا توجد عمليات مسجّلة. نفّذ استعلامات أو تصفّح التطبيق لإظهارها.
                 </div>
               ) : (
@@ -1066,14 +1067,14 @@ export default function MonitorPage() {
             </div>
           </div>
 
-          <div id="dev.monitor.page.div.62" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div id="dev.monitor.page.div.63" className="detail-section">
-              <div id="dev.monitor.page.div.64" className="detail-section-title">كيفية تفعيل التتبع</div>
-              <div id="dev.monitor.page.div.65" style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
-                <ol id="dev.monitor.page.ol" style={{ paddingLeft: '16px', margin: '4px 0' }}>
-                  <li id="dev.monitor.page.li">انتقل إلى صفحات المصادقة (تسجيل الدخول أو التسجيل).</li>
-                  <li id="dev.monitor.page.li.2">اضغط الأزرار أو املأ النماذج لتفعيل استدعاءات قاعدة البيانات والذاكرة المؤقتة.</li>
-                  <li id="dev.monitor.page.li.3">ستظهر العمليات هنا مباشرة في الوقت الفعلي.</li>
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.188-YjF7Iu", id: "dev.monitor.page.div.188" })} id="dev.monitor.page.div.62" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.189-CGLC4Z", id: "dev.monitor.page.div.189" })} id="dev.monitor.page.div.63" className="detail-section">
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.190-mIB7Y8", id: "dev.monitor.page.div.190" })} id="dev.monitor.page.div.64" className="detail-section-title">كيفية تفعيل التتبع</div>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.191-2Rt69z", id: "dev.monitor.page.div.191" })} id="dev.monitor.page.div.65" style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+                <ol {...uiAttributes({ uid: "dev.monitor.page.ol.2-6M9Fm1", id: "dev.monitor.page.ol.2" })} id="dev.monitor.page.ol" style={{ paddingLeft: '16px', margin: '4px 0' }}>
+                  <li {...uiAttributes({ uid: "dev.monitor.page.li.4-KN0o0J", id: "dev.monitor.page.li.4" })} id="dev.monitor.page.li">انتقل إلى صفحات المصادقة (تسجيل الدخول أو التسجيل).</li>
+                  <li {...uiAttributes({ uid: "dev.monitor.page.li.5-uOGFy8", id: "dev.monitor.page.li.5" })} id="dev.monitor.page.li.2">اضغط الأزرار أو املأ النماذج لتفعيل استدعاءات قاعدة البيانات والذاكرة المؤقتة.</li>
+                  <li {...uiAttributes({ uid: "dev.monitor.page.li.6-1NuJgs", id: "dev.monitor.page.li.6" })} id="dev.monitor.page.li.3">ستظهر العمليات هنا مباشرة في الوقت الفعلي.</li>
                 </ol>
               </div>
             </div>
@@ -1083,17 +1084,17 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: TIMELINE / FLAME CHART ─── */}
       {activeTab === 'timeline' && (
-        <section id="dev.monitor.page.section.3">
-          <div id="dev.monitor.page.div.66" className="detail-section" style={{ marginBottom: '16px' }}>
-            <label id="dev.monitor.page.label.15" style={{ fontSize: '13px', fontWeight: 600, display: 'block', marginBottom: '6px' }}>اختر تدفق الطلب لعرض الخط الزمني:</label>
-            <select id="dev.monitor.page.select.14"
+        <section {...uiAttributes({ uid: "dev.monitor.page.section.11-8jCuGa", id: "dev.monitor.page.section.11" })} id="dev.monitor.page.section.3">
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.192-A1UAUE", id: "dev.monitor.page.div.192" })} id="dev.monitor.page.div.66" className="detail-section" style={{ marginBottom: '16px' }}>
+            <label {...uiAttributes({ uid: "dev.monitor.page.label.30-3DCRkB", id: "dev.monitor.page.label.30" })} id="dev.monitor.page.label.15" style={{ fontSize: '13px', fontWeight: 600, display: 'block', marginBottom: '6px' }}>اختر تدفق الطلب لعرض الخط الزمني:</label>
+            <select {...uiAttributes({ uid: "dev.monitor.page.select.28-2KLvwE", id: "dev.monitor.page.select.28" })} id="dev.monitor.page.select.14"
               className="filter-input"
               style={{ width: '100%', maxWidth: '400px' }}
               value={selectedFlowId}
               onChange={(e) => setSelectedFlowId(e.target.value)}
             >
               {flows.map((f) => (
-                <option key={f.id} value={f.id}>
+                <option key={f.id} {...uiAttributes({ uid: "dev.monitor.page.option.36-21Vbew", id: "dev.monitor.page.option.36" })} value={f.id}>
                   تدفق {f.id.slice(0, 8)}… ({f.feature}) — {formatAdminClock(f.timestamp, { seconds: true })}
                 </option>
               ))}
@@ -1101,12 +1102,12 @@ export default function MonitorPage() {
           </div>
 
           {selectedFlowId && flowOps.length > 0 ? (
-            <div id="dev.monitor.page.div.67">
-              <div id="dev.monitor.page.div.68" className="flame-chart-container">
-                <div id="dev.monitor.page.div.69" style={{ fontSize: '14px', fontWeight: 700, borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.193-IkM7eX", id: "dev.monitor.page.div.193" })} id="dev.monitor.page.div.67">
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.194-MOf1A1", id: "dev.monitor.page.div.194" })} id="dev.monitor.page.div.68" className="flame-chart-container">
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.195-M5HzUA", id: "dev.monitor.page.div.195" })} id="dev.monitor.page.div.69" style={{ fontSize: '14px', fontWeight: 700, borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
                   Flame Chart (مخطط جانت للطبقات)
                 </div>
-                <div id="dev.monitor.page.div.70" className="flame-chart">
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.196-maM3Nk", id: "dev.monitor.page.div.196" })} id="dev.monitor.page.div.70" className="flame-chart">
                   {/* We group flowOps by layers to construct rows */}
                   {(['ui', 'hook', 'service', 'asol-api', 'query', 'repository', 'database', 'cache'] as LayerName[]).map((layer) => {
                     const layerItems = flowOps.filter((o) => resolveMonitorLayer(o) === layer);
@@ -1119,15 +1120,15 @@ export default function MonitorPage() {
                     const totalDuration = flowEnd - flowStart || 1;
 
                     return (
-                      <div className="flame-row" key={layer}>
-                        <div className="flame-row-label">{layer}</div>
-                        <div className="flame-bars-container">
+                      <div className="flame-row" key={layer} {...uiAttributes({ uid: "dev.monitor.page.div.197-3jXSt9", id: "dev.monitor.page.div.197" })}>
+                        <div {...uiAttributes({ uid: "dev.monitor.page.div.198-WhP8y9", id: "dev.monitor.page.div.198" })} className="flame-row-label">{layer}</div>
+                        <div {...uiAttributes({ uid: "dev.monitor.page.div.199-9OfRmo", id: "dev.monitor.page.div.199" })} className="flame-bars-container">
                           {layerItems.map((item) => {
                             const left = ((item.startedAt - flowStart) / totalDuration) * 100;
                             const width = Math.max(((item.completedAt - item.startedAt) / totalDuration) * 100, 1.5);
                             return (
                               <div
-                                key={item.id}
+                                key={item.id} {...uiAttributes({ uid: "dev.monitor.page.div.200-FEPj5H", id: "dev.monitor.page.div.200" })}
                                 className="flame-bar"
                                 onClick={() => selectOperation(item.id)}
                                 style={{
@@ -1148,15 +1149,15 @@ export default function MonitorPage() {
               </div>
 
               {/* Step-by-Step Timeline Replay Scrub Bar */}
-              <div id="dev.monitor.page.div.71" className="detail-section">
-                <div id="dev.monitor.page.div.72" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <div id="dev.monitor.page.div.73" style={{ fontSize: '14px', fontWeight: 700 }}>إعادة تشغيل الخط الزمني</div>
-                  <div id="dev.monitor.page.div.74" style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.201-JK69Io", id: "dev.monitor.page.div.201" })} id="dev.monitor.page.div.71" className="detail-section">
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.202-7Jmj9M", id: "dev.monitor.page.div.202" })} id="dev.monitor.page.div.72" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <div {...uiAttributes({ uid: "dev.monitor.page.div.203-jBCFa6", id: "dev.monitor.page.div.203" })} id="dev.monitor.page.div.73" style={{ fontSize: '14px', fontWeight: 700 }}>إعادة تشغيل الخط الزمني</div>
+                  <div {...uiAttributes({ uid: "dev.monitor.page.div.204-Tx7UIi", id: "dev.monitor.page.div.204" })} id="dev.monitor.page.div.74" style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                     الخطوة {replayIndex} من {flowOps.length}
                   </div>
                 </div>
 
-                <input id="dev.monitor.page.input.3"
+                <input {...uiAttributes({ uid: "dev.monitor.page.input.6-CKMz48", id: "dev.monitor.page.input.6" })} id="dev.monitor.page.input.3"
                   type="range"
                   min="0"
                   max={flowOps.length}
@@ -1165,19 +1166,19 @@ export default function MonitorPage() {
                   style={{ width: '100%', marginBottom: '16px' }}
                 />
 
-                <div id="dev.monitor.page.div.75" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.205-YEod5p", id: "dev.monitor.page.div.205" })} id="dev.monitor.page.div.75" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {flowOps.slice(0, replayIndex).map((op, i) => (
                     <div
-                      key={op.id}
+                      key={op.id} {...uiAttributes({ uid: "dev.monitor.page.div.206-Dre47W", id: "dev.monitor.page.div.206" })}
                       className="tree-node-row"
                       style={{ borderLeft: `3px solid ${op.table ? LAYER_COLORS.database : LAYER_COLORS.hook}` }}
                       onClick={() => selectOperation(op.id)}
                     >
-                      <div>
-                        <span style={{ color: 'var(--text-muted)', marginRight: '8px' }}>#{i + 1}</span>
-                        <span style={{ fontWeight: 600 }}>{op.table ? `${op.operationType} ${op.table}` : op.queryKey || op.id.slice(0, 8)}</span>
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.207-cd55Ec", id: "dev.monitor.page.div.207" })}>
+                        <span {...uiAttributes({ uid: "dev.monitor.page.span.90-dH5Xq5", id: "dev.monitor.page.span.90" })} style={{ color: 'var(--text-muted)', marginRight: '8px' }}>#{i + 1}</span>
+                        <span {...uiAttributes({ uid: "dev.monitor.page.span.91-c1y6DZ", id: "dev.monitor.page.span.91" })} style={{ fontWeight: 600 }}>{op.table ? `${op.operationType} ${op.table}` : op.queryKey || op.id.slice(0, 8)}</span>
                       </div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.208-rSx405", id: "dev.monitor.page.div.208" })} style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                         +{Math.round(op.executionTime)}ms
                       </div>
                     </div>
@@ -1186,23 +1187,23 @@ export default function MonitorPage() {
               </div>
             </div>
           ) : (
-            <div id="dev.monitor.page.div.76" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>لا توجد تدفقات طلب.</div>
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.209-ACas8e", id: "dev.monitor.page.div.209" })} id="dev.monitor.page.div.76" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>لا توجد تدفقات طلب.</div>
           )}
         </section>
       )}
 
       {/* ─── TAB CONTENT: CALL GRAPH ─── */}
       {activeTab === 'call-graph' && (
-        <section id="dev.monitor.page.section.4">
-          <div id="dev.monitor.page.div.77" className="svg-card">
-            <div id="dev.monitor.page.div.78" style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>مخطط سلسلة الاستدعاءات (SVG)</div>
+        <section {...uiAttributes({ uid: "dev.monitor.page.section.12-Wge5fH", id: "dev.monitor.page.section.12" })} id="dev.monitor.page.section.4">
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.210-D6zQ3C", id: "dev.monitor.page.div.210" })} id="dev.monitor.page.div.77" className="svg-card">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.211-pYUwI1", id: "dev.monitor.page.div.211" })} id="dev.monitor.page.div.78" style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>مخطط سلسلة الاستدعاءات (SVG)</div>
             {callGraph.nodes.length === 0 ? (
-              <div id="dev.monitor.page.div.79" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.212-W90NRN", id: "dev.monitor.page.div.212" })} id="dev.monitor.page.div.79" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
                 لا توجد عقد في الفلتر الحالي لرسم مخطط الاستدعاء.
               </div>
             ) : (
-              <div id="dev.monitor.page.div.80" style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
-                <svg id="dev.monitor.page.svg" width="100%" height="400" style={{ minWidth: '800px' }}>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.213-TXmXL4", id: "dev.monitor.page.div.213" })} id="dev.monitor.page.div.80" style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
+                <svg {...uiAttributes({ uid: "dev.monitor.page.svg.3-0heNOJ", id: "dev.monitor.page.svg.3" })} id="dev.monitor.page.svg" width="100%" height="400" style={{ minWidth: '800px' }}>
                   <defs>
                     <marker id="arrow" viewBox="0 0 10 10" refX="15" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                       <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--border)" />
@@ -1283,16 +1284,16 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: DEPENDENCY GRAPH ─── */}
       {activeTab === 'dependency' && (
-        <section id="dev.monitor.page.section.5">
-          <div id="dev.monitor.page.div.81" className="svg-card">
-            <div id="dev.monitor.page.div.82" style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>خريطة البنية: خدمة ➔ مستودع ➔ استعلام</div>
+        <section {...uiAttributes({ uid: "dev.monitor.page.section.13-IRQmP2", id: "dev.monitor.page.section.13" })} id="dev.monitor.page.section.5">
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.214-1baFL7", id: "dev.monitor.page.div.214" })} id="dev.monitor.page.div.81" className="svg-card">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.215-0s345Q", id: "dev.monitor.page.div.215" })} id="dev.monitor.page.div.82" style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>خريطة البنية: خدمة ➔ مستودع ➔ استعلام</div>
             {dependencyGraph.nodes.length === 0 ? (
-              <div id="dev.monitor.page.div.83" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.216-Gdqce6", id: "dev.monitor.page.div.216" })} id="dev.monitor.page.div.83" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
                 لا توجد عمليات لرسم التبعيات. نفّذ بعض الطلبات أولاً.
               </div>
             ) : (
-              <div id="dev.monitor.page.div.84" style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
-                <svg id="dev.monitor.page.svg.2" width="100%" height="400" style={{ minWidth: '800px' }}>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.217-2vtauN", id: "dev.monitor.page.div.217" })} id="dev.monitor.page.div.84" style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
+                <svg {...uiAttributes({ uid: "dev.monitor.page.svg.4-HeirM4", id: "dev.monitor.page.svg.4" })} id="dev.monitor.page.svg.2" width="100%" height="400" style={{ minWidth: '800px' }}>
                   <defs>
                     <marker id="dep-arrow" viewBox="0 0 10 10" refX="25" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                       <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
@@ -1362,43 +1363,43 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: ANALYTICS ─── */}
       {activeTab === 'analytics' && (
-        <section id="dev.monitor.page.section.6" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-          <div id="dev.monitor.page.div.85" className="detail-section">
-            <div id="dev.monitor.page.div.86" className="detail-section-title">أكثر الميزات نشاطاً</div>
+        <section {...uiAttributes({ uid: "dev.monitor.page.section.14-36PHwL", id: "dev.monitor.page.section.14" })} id="dev.monitor.page.section.6" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.218-irar2L", id: "dev.monitor.page.div.218" })} id="dev.monitor.page.div.85" className="detail-section">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.219-W25T1f", id: "dev.monitor.page.div.219" })} id="dev.monitor.page.div.86" className="detail-section-title">أكثر الميزات نشاطاً</div>
             {stats.mostActiveFeatures.map((f, i) => (
-              <div key={f.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <span>{i+1}. {f.name}</span>
-                <span style={{ fontWeight: 'bold' }}>{f.count} عملية</span>
+              <div key={f.name} {...uiAttributes({ uid: "dev.monitor.page.div.220-z0npG2", id: "dev.monitor.page.div.220" })} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.92-aE8ZFI", id: "dev.monitor.page.span.92" })}>{i+1}. {f.name}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.93-6CrKuE", id: "dev.monitor.page.span.93" })} style={{ fontWeight: 'bold' }}>{f.count} عملية</span>
               </div>
             ))}
           </div>
 
-          <div id="dev.monitor.page.div.87" className="detail-section">
-            <div id="dev.monitor.page.div.88" className="detail-section-title">أكثر الصفحات نشاطاً</div>
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.221-4KTFLZ", id: "dev.monitor.page.div.221" })} id="dev.monitor.page.div.87" className="detail-section">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.222-1qLJJ5", id: "dev.monitor.page.div.222" })} id="dev.monitor.page.div.88" className="detail-section-title">أكثر الصفحات نشاطاً</div>
             {stats.mostActivePages.map((p, i) => (
-              <div key={p.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <span>{i+1}. {p.name}</span>
-                <span style={{ fontWeight: 'bold' }}>{p.count} عملية</span>
+              <div key={p.name} {...uiAttributes({ uid: "dev.monitor.page.div.223-4m1bO9", id: "dev.monitor.page.div.223" })} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.94-2QQhtq", id: "dev.monitor.page.span.94" })}>{i+1}. {p.name}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.95-0YWGkk", id: "dev.monitor.page.span.95" })} style={{ fontWeight: 'bold' }}>{p.count} عملية</span>
               </div>
             ))}
           </div>
 
-          <div id="dev.monitor.page.div.89" className="detail-section">
-            <div id="dev.monitor.page.div.90" className="detail-section-title">أكثر الجداول نشاطاً</div>
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.224-gHl7Qq", id: "dev.monitor.page.div.224" })} id="dev.monitor.page.div.89" className="detail-section">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.225-RDtE9a", id: "dev.monitor.page.div.225" })} id="dev.monitor.page.div.90" className="detail-section-title">أكثر الجداول نشاطاً</div>
             {stats.mostActiveTables.map((t, i) => (
-              <div key={t.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <span>{i+1}. {t.name}</span>
-                <span style={{ fontWeight: 'bold' }}>{t.count} عملية</span>
+              <div key={t.name} {...uiAttributes({ uid: "dev.monitor.page.div.226-p3tXB4", id: "dev.monitor.page.div.226" })} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.96-TdVb2E", id: "dev.monitor.page.span.96" })}>{i+1}. {t.name}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.97-f9PB24", id: "dev.monitor.page.span.97" })} style={{ fontWeight: 'bold' }}>{t.count} عملية</span>
               </div>
             ))}
           </div>
 
-          <div id="dev.monitor.page.div.91" className="detail-section">
-            <div id="dev.monitor.page.div.92" className="detail-section-title">أكثر المستودعات نشاطاً</div>
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.227-ZmEC48", id: "dev.monitor.page.div.227" })} id="dev.monitor.page.div.91" className="detail-section">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.228-34IWfS", id: "dev.monitor.page.div.228" })} id="dev.monitor.page.div.92" className="detail-section-title">أكثر المستودعات نشاطاً</div>
             {stats.mostActiveRepositories.map((r, i) => (
-              <div key={r.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <span>{i+1}. {r.name}</span>
-                <span style={{ fontWeight: 'bold' }}>{r.count} عملية</span>
+              <div key={r.name} {...uiAttributes({ uid: "dev.monitor.page.div.229-7moUgx", id: "dev.monitor.page.div.229" })} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.98-CEG0xv", id: "dev.monitor.page.span.98" })}>{i+1}. {r.name}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.99-HEM9jy", id: "dev.monitor.page.span.99" })} style={{ fontWeight: 'bold' }}>{r.count} عملية</span>
               </div>
             ))}
           </div>
@@ -1407,32 +1408,32 @@ export default function MonitorPage() {
 
       {/* ─── TAB CONTENT: SCHEMA SYNC ─── */}
       {activeTab === 'schema-sync' && (
-        <section id="dev.monitor.page.section.7">
+        <section {...uiAttributes({ uid: "dev.monitor.page.section.15-u9Leq2", id: "dev.monitor.page.section.15" })} id="dev.monitor.page.section.7">
           <SchemaSyncPanel />
         </section>
       )}
 
       {/* ─── TAB CONTENT: PINNED ─── */}
       {activeTab === 'pinned' && (
-        <section id="dev.monitor.page.section.8">
-          <div id="dev.monitor.page.div.93" className="operations-list-card" style={{ height: 'auto', minHeight: '300px' }}>
-            <div id="dev.monitor.page.div.94" className="card-header">
-              <h2 id="dev.monitor.page.h2.2" style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>📌 العمليات المثبتة</h2>
+        <section {...uiAttributes({ uid: "dev.monitor.page.section.16-F4c6I6", id: "dev.monitor.page.section.16" })} id="dev.monitor.page.section.8">
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.230-05Eefh", id: "dev.monitor.page.div.230" })} id="dev.monitor.page.div.93" className="operations-list-card" style={{ height: 'auto', minHeight: '300px' }}>
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.231-BVzu2b", id: "dev.monitor.page.div.231" })} id="dev.monitor.page.div.94" className="card-header">
+              <h2 {...uiAttributes({ uid: "dev.monitor.page.h2.4-hp0nHF", id: "dev.monitor.page.h2.4" })} id="dev.monitor.page.h2.2" style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>📌 العمليات المثبتة</h2>
             </div>
-            <div id="dev.monitor.page.div.95" className="scrollable-area">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.232-zpKE9w", id: "dev.monitor.page.div.232" })} id="dev.monitor.page.div.95" className="scrollable-area">
               {operations.filter((o) => o.pinned).length === 0 ? (
-                <div id="dev.monitor.page.div.96" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.233-MiRK8Q", id: "dev.monitor.page.div.233" })} id="dev.monitor.page.div.96" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
                   لا توجد عمليات مثبتة. مرّر فوق عنصر في التتبع واضغط ⭐ للتثبيت.
                 </div>
               ) : (
                 operations.filter((o) => o.pinned).map((op) => (
-                  <div key={op.id} className="tree-node-row" onClick={() => selectOperation(op.id)}>
-                    <div className="tree-node-info">
-                      <div className="layer-dot" style={{ background: op.table ? LAYER_COLORS.database : LAYER_COLORS.hook }} />
-                      <span style={{ fontWeight: 600 }}>{op.table ? `${op.operationType} ${op.table}` : op.queryKey || op.id}</span>
-                      <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>({op.feature})</span>
+                  <div key={op.id} {...uiAttributes({ uid: "dev.monitor.page.div.234-J0EUPX", id: "dev.monitor.page.div.234" })} className="tree-node-row" onClick={() => selectOperation(op.id)}>
+                    <div {...uiAttributes({ uid: "dev.monitor.page.div.235-KGQD82", id: "dev.monitor.page.div.235" })} className="tree-node-info">
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.236-M0KRKu", id: "dev.monitor.page.div.236" })} className="layer-dot" style={{ background: op.table ? LAYER_COLORS.database : LAYER_COLORS.hook }} />
+                      <span {...uiAttributes({ uid: "dev.monitor.page.span.100-EJ0PwH", id: "dev.monitor.page.span.100" })} style={{ fontWeight: 600 }}>{op.table ? `${op.operationType} ${op.table}` : op.queryKey || op.id}</span>
+                      <span {...uiAttributes({ uid: "dev.monitor.page.span.101-4zZanM", id: "dev.monitor.page.span.101" })} style={{ color: 'var(--text-muted)', fontSize: '11px' }}>({op.feature})</span>
                     </div>
-                    <button
+                    <button {...uiAttributes({ uid: "dev.monitor.page.button.20-440V0k", id: "dev.monitor.page.button.20" })}
                       className="btn"
                       style={{ padding: '2px 8px', fontSize: '10px' }}
                       onClick={(e) => {
@@ -1451,20 +1452,20 @@ export default function MonitorPage() {
       )}
 
       {/* ─── OPERATION DETAILS DRAWER ─── */}
-      <div id="dev.monitor.page.div.97" className={`drawer ${activeOp ? 'open' : ''}`}>
-        <div id="dev.monitor.page.div.98" className="drawer-header">
-          <span id="dev.monitor.page.span.30" className="drawer-title">تفاصيل العملية</span>
-          <button id="dev.monitor.page.button.9" className="btn" onClick={() => selectOperation(null)}>✕ إغلاق</button>
+      <div {...uiAttributes({ uid: "dev.monitor.page.div.237-nCWyT0", id: "dev.monitor.page.div.237" })} id="dev.monitor.page.div.97" className={`drawer ${activeOp ? 'open' : ''}`}>
+        <div {...uiAttributes({ uid: "dev.monitor.page.div.238-6a4jwN", id: "dev.monitor.page.div.238" })} id="dev.monitor.page.div.98" className="drawer-header">
+          <span {...uiAttributes({ uid: "dev.monitor.page.span.102-G9m4hI", id: "dev.monitor.page.span.102" })} id="dev.monitor.page.span.30" className="drawer-title">تفاصيل العملية</span>
+          <button {...uiAttributes({ uid: "dev.monitor.page.button.21-Kn6cnt", id: "dev.monitor.page.button.21" })} id="dev.monitor.page.button.9" className="btn" onClick={() => selectOperation(null)}>✕ إغلاق</button>
         </div>
 
         {activeOp && (
-          <div id="dev.monitor.page.div.99" className="drawer-body">
-            <div id="dev.monitor.page.div.100" className="detail-section">
-              <div id="dev.monitor.page.div.101" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span id="dev.monitor.page.span.31" style={{ fontSize: '14px', fontWeight: 'bold' }}>
+          <div {...uiAttributes({ uid: "dev.monitor.page.div.239-7BaOgW", id: "dev.monitor.page.div.239" })} id="dev.monitor.page.div.99" className="drawer-body">
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.240-4X3Dh7", id: "dev.monitor.page.div.240" })} id="dev.monitor.page.div.100" className="detail-section">
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.241-1At58P", id: "dev.monitor.page.div.241" })} id="dev.monitor.page.div.101" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.103-N94TPQ", id: "dev.monitor.page.span.103" })} id="dev.monitor.page.span.31" style={{ fontSize: '14px', fontWeight: 'bold' }}>
                   {activeOp.table ? `${activeOp.operationType} ${activeOp.table}` : activeOp.queryKey || 'استعلام'}
                 </span>
-                <button id="dev.monitor.page.button.10"
+                <button {...uiAttributes({ uid: "dev.monitor.page.button.22-YAuS36", id: "dev.monitor.page.button.22" })} id="dev.monitor.page.button.10"
                   className="btn"
                   style={{ padding: '4px 10px', fontSize: '12px' }}
                   onClick={() => togglePin(activeOp.id)}
@@ -1474,79 +1475,79 @@ export default function MonitorPage() {
               </div>
             </div>
 
-            <div id="dev.monitor.page.div.102" className="detail-section">
-              <div id="dev.monitor.page.div.103" className="detail-section-title">معلومات التتبع</div>
-              <div id="dev.monitor.page.div.104" className="info-grid">
-                <span id="dev.monitor.page.span.32" className="info-label">معرّف الارتباط:</span>
-                <span id="dev.monitor.page.span.33" className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.correlationId.slice(0, 16)}</span>
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.242-9chCZR", id: "dev.monitor.page.div.242" })} id="dev.monitor.page.div.102" className="detail-section">
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.243-K49EJe", id: "dev.monitor.page.div.243" })} id="dev.monitor.page.div.103" className="detail-section-title">معلومات التتبع</div>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.244-K0UaR3", id: "dev.monitor.page.div.244" })} id="dev.monitor.page.div.104" className="info-grid">
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.104-8hJAbZ", id: "dev.monitor.page.span.104" })} id="dev.monitor.page.span.32" className="info-label">معرّف الارتباط:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.105-DwLSD7", id: "dev.monitor.page.span.105" })} id="dev.monitor.page.span.33" className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.correlationId.slice(0, 16)}</span>
 
-                <span id="dev.monitor.page.span.34" className="info-label">معرّف التدفق:</span>
-                <span id="dev.monitor.page.span.35" className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.requestFlowId.slice(0, 16)}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.106-H3dBZK", id: "dev.monitor.page.span.106" })} id="dev.monitor.page.span.34" className="info-label">معرّف التدفق:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.107-xw0yX5", id: "dev.monitor.page.span.107" })} id="dev.monitor.page.span.35" className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.requestFlowId.slice(0, 16)}</span>
 
-                <span id="dev.monitor.page.span.36" className="info-label">الميزة:</span>
-                <span id="dev.monitor.page.span.37" className="info-value">{activeOp.feature}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.108-1sGCRK", id: "dev.monitor.page.span.108" })} id="dev.monitor.page.span.36" className="info-label">الميزة:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.109-roTfD8", id: "dev.monitor.page.span.109" })} id="dev.monitor.page.span.37" className="info-value">{activeOp.feature}</span>
 
-                <span id="dev.monitor.page.span.38" className="info-label">مسار الصفحة:</span>
-                <span id="dev.monitor.page.span.39" className="info-value">{activeOp.page}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.110-6PPPMo", id: "dev.monitor.page.span.110" })} id="dev.monitor.page.span.38" className="info-label">مسار الصفحة:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.111-3APKAq", id: "dev.monitor.page.span.111" })} id="dev.monitor.page.span.39" className="info-value">{activeOp.page}</span>
 
-                <span id="dev.monitor.page.span.40" className="info-label">الخطاف:</span>
-                <span id="dev.monitor.page.span.41" className="info-value">{activeOp.hook}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.112-wT6hW2", id: "dev.monitor.page.span.112" })} id="dev.monitor.page.span.40" className="info-label">الخطاف:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.113-cJuTf4", id: "dev.monitor.page.span.113" })} id="dev.monitor.page.span.41" className="info-value">{activeOp.hook}</span>
 
-                <span id="dev.monitor.page.span.42" className="info-label">الخدمة:</span>
-                <span id="dev.monitor.page.span.43" className="info-value">{activeOp.service}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.114-2FZSR2", id: "dev.monitor.page.span.114" })} id="dev.monitor.page.span.42" className="info-label">الخدمة:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.115-GCd5Nl", id: "dev.monitor.page.span.115" })} id="dev.monitor.page.span.43" className="info-value">{activeOp.service}</span>
 
-                <span id="dev.monitor.page.span.44" className="info-label">المستودع:</span>
-                <span id="dev.monitor.page.span.45" className="info-value">{activeOp.repository}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.116-B96IJo", id: "dev.monitor.page.span.116" })} id="dev.monitor.page.span.44" className="info-label">المستودع:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.117-iKrO6R", id: "dev.monitor.page.span.117" })} id="dev.monitor.page.span.45" className="info-value">{activeOp.repository}</span>
 
-                <span id="dev.monitor.page.span.46" className="info-label">محرك قاعدة البيانات:</span>
-                <span id="dev.monitor.page.span.47" className="info-value" style={{ color: activeOp.dbDriver === 'Turso-Production' ? '#ef4444' : '#22c55e' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.118-3vWrPB", id: "dev.monitor.page.span.118" })} id="dev.monitor.page.span.46" className="info-label">محرك قاعدة البيانات:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.119-qOIc0p", id: "dev.monitor.page.span.119" })} id="dev.monitor.page.span.47" className="info-value" style={{ color: activeOp.dbDriver === 'Turso-Production' ? '#ef4444' : '#22c55e' }}>
                   {activeOp.dbDriver}
                 </span>
 
-                <span id="dev.monitor.page.span.48" className="info-label">الحالة:</span>
-                <span id="dev.monitor.page.span.49" className="info-value" style={{ color: STATUS_COLORS[activeOp.status] }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.120-PDd1iO", id: "dev.monitor.page.span.120" })} id="dev.monitor.page.span.48" className="info-label">الحالة:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.121-EX3AA4", id: "dev.monitor.page.span.121" })} id="dev.monitor.page.span.49" className="info-value" style={{ color: STATUS_COLORS[activeOp.status] }}>
                   {activeOp.status.toUpperCase()}
                 </span>
               </div>
             </div>
 
-            <div id="dev.monitor.page.div.105" className="detail-section">
-              <div id="dev.monitor.page.div.106" className="detail-section-title">مقاييس الأداء</div>
-              <div id="dev.monitor.page.div.107" className="info-grid">
-                <span id="dev.monitor.page.span.50" className="info-label">مدة التنفيذ:</span>
-                <span id="dev.monitor.page.span.51" className="info-value" style={{ color: activeOp.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : '#22c55e', fontWeight: 800 }}>
+            <div {...uiAttributes({ uid: "dev.monitor.page.div.245-P2CC6V", id: "dev.monitor.page.div.245" })} id="dev.monitor.page.div.105" className="detail-section">
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.246-FbL7f1", id: "dev.monitor.page.div.246" })} id="dev.monitor.page.div.106" className="detail-section-title">مقاييس الأداء</div>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.247-zrL71C", id: "dev.monitor.page.div.247" })} id="dev.monitor.page.div.107" className="info-grid">
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.122-1PDlko", id: "dev.monitor.page.span.122" })} id="dev.monitor.page.span.50" className="info-label">مدة التنفيذ:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.123-2QtZRI", id: "dev.monitor.page.span.123" })} id="dev.monitor.page.span.51" className="info-value" style={{ color: activeOp.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : '#22c55e', fontWeight: 800 }}>
                   {activeOp.executionTime} ms
                 </span>
 
-                <span id="dev.monitor.page.span.52" className="info-label">فرق الذاكرة:</span>
-                <span id="dev.monitor.page.span.53" className="info-value">
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.124-OI6yJ0", id: "dev.monitor.page.span.124" })} id="dev.monitor.page.span.52" className="info-label">فرق الذاكرة:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.125-c0Ne2b", id: "dev.monitor.page.span.125" })} id="dev.monitor.page.span.53" className="info-value">
                   {activeOp.memoryDelta != null
                     ? `${(activeOp.memoryDelta / 1024).toFixed(2)} KB`
                     : 'غير متاح (Performance.memory معطّل)'}
                 </span>
 
-                <span id="dev.monitor.page.span.54" className="info-label">صفوف مقروءة:</span>
-                <span id="dev.monitor.page.span.55" className="info-value">{activeOp.rowsRead}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.126-TYhX8g", id: "dev.monitor.page.span.126" })} id="dev.monitor.page.span.54" className="info-label">صفوف مقروءة:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.127-LFrL1T", id: "dev.monitor.page.span.127" })} id="dev.monitor.page.span.55" className="info-value">{activeOp.rowsRead}</span>
 
-                <span id="dev.monitor.page.span.56" className="info-label">صفوف مكتوبة:</span>
-                <span id="dev.monitor.page.span.57" className="info-value">{activeOp.rowsWritten}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.128-y8otCO", id: "dev.monitor.page.span.128" })} id="dev.monitor.page.span.56" className="info-label">صفوف مكتوبة:</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.129-5SD2NT", id: "dev.monitor.page.span.129" })} id="dev.monitor.page.span.57" className="info-value">{activeOp.rowsWritten}</span>
               </div>
             </div>
 
             {activeOp.httpRoute && (
-              <div id="dev.monitor.page.div.108" className="detail-section">
-                <div id="dev.monitor.page.div.109" className="detail-section-title">طلب HTTP (AsolApiClient)</div>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.248-W5JaZa", id: "dev.monitor.page.div.248" })} id="dev.monitor.page.div.108" className="detail-section">
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.249-QEN5i4", id: "dev.monitor.page.div.249" })} id="dev.monitor.page.div.109" className="detail-section-title">طلب HTTP (AsolApiClient)</div>
                 <pre className="code-block">{`${activeOp.httpMethod ?? 'GET'} ${activeOp.httpRoute}`}</pre>
               </div>
             )}
 
             {activeOp.sql && (
-              <div id="dev.monitor.page.div.110" className="detail-section">
-                <div id="dev.monitor.page.div.111" className="detail-section-title">SQL المنفّذ</div>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.250-8Sm2r3", id: "dev.monitor.page.div.250" })} id="dev.monitor.page.div.110" className="detail-section">
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.251-55UmDq", id: "dev.monitor.page.div.251" })} id="dev.monitor.page.div.111" className="detail-section-title">SQL المنفّذ</div>
                 <pre className="code-block">{activeOp.sql}</pre>
                 {activeOp.params && activeOp.params.length > 0 && (
-                  <div id="dev.monitor.page.div.112" style={{ marginTop: '8px' }}>
-                    <div id="dev.monitor.page.div.113" className="detail-section-title">معاملات الاستعلام</div>
+                  <div {...uiAttributes({ uid: "dev.monitor.page.div.252-PmZ5EQ", id: "dev.monitor.page.div.252" })} id="dev.monitor.page.div.112" style={{ marginTop: '8px' }}>
+                    <div {...uiAttributes({ uid: "dev.monitor.page.div.253-7x94BE", id: "dev.monitor.page.div.253" })} id="dev.monitor.page.div.113" className="detail-section-title">معاملات الاستعلام</div>
                     <pre className="code-block">{JSON.stringify(activeOp.params, null, 2)}</pre>
                   </div>
                 )}
@@ -1554,12 +1555,12 @@ export default function MonitorPage() {
             )}
 
             {diffResult && (
-              <div id="dev.monitor.page.div.114" className="detail-section">
-                <div id="dev.monitor.page.div.115" className="detail-section-title">فرق نتيجة الاستعلام (قبل ➔ بعد)</div>
-                <div id="dev.monitor.page.div.116" style={{ background: '#0f172a', padding: '10px', borderRadius: '6px', overflowX: 'auto', maxHeight: '250px' }}>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.254-ZNYsM8", id: "dev.monitor.page.div.254" })} id="dev.monitor.page.div.114" className="detail-section">
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.255-0COBTv", id: "dev.monitor.page.div.255" })} id="dev.monitor.page.div.115" className="detail-section-title">فرق نتيجة الاستعلام (قبل ➔ بعد)</div>
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.256-Lj9nO3", id: "dev.monitor.page.div.256" })} id="dev.monitor.page.div.116" style={{ background: '#0f172a', padding: '10px', borderRadius: '6px', overflowX: 'auto', maxHeight: '250px' }}>
                   {diffResult.map((line, idx) => (
                     <span
-                      key={idx}
+                      key={idx} {...uiAttributes({ uid: "dev.monitor.page.span.130-8J7UxS", id: "dev.monitor.page.span.130" })}
                       className={`diff-line ${line.type === 'added' ? 'diff-added' : line.type === 'removed' ? 'diff-removed' : ''}`}
                     >
                       {line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ''} {line.text}
@@ -1570,12 +1571,12 @@ export default function MonitorPage() {
             )}
 
             {activeOp.errorMessage && (
-              <div id="dev.monitor.page.div.117" className="detail-section" style={{ borderColor: '#ef4444' }}>
-                <div id="dev.monitor.page.div.118" className="detail-section-title" style={{ color: '#ef4444' }}>رسالة الخطأ</div>
-                <div id="dev.monitor.page.div.119" style={{ color: '#f87171', fontSize: '13px', fontWeight: 600 }}>{activeOp.errorMessage}</div>
+              <div {...uiAttributes({ uid: "dev.monitor.page.div.257-Cm6OGy", id: "dev.monitor.page.div.257" })} id="dev.monitor.page.div.117" className="detail-section" style={{ borderColor: '#ef4444' }}>
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.258-zVknN5", id: "dev.monitor.page.div.258" })} id="dev.monitor.page.div.118" className="detail-section-title" style={{ color: '#ef4444' }}>رسالة الخطأ</div>
+                <div {...uiAttributes({ uid: "dev.monitor.page.div.259-0kJV3O", id: "dev.monitor.page.div.259" })} id="dev.monitor.page.div.119" style={{ color: '#f87171', fontSize: '13px', fontWeight: 600 }}>{activeOp.errorMessage}</div>
                 {activeOp.executionStack && (
-                  <div id="dev.monitor.page.div.120" style={{ marginTop: '8px' }}>
-                    <div id="dev.monitor.page.div.121" className="detail-section-title" style={{ color: '#ef4444' }}>تتبع تنفيذ الخطأ</div>
+                  <div {...uiAttributes({ uid: "dev.monitor.page.div.260-1K9IwR", id: "dev.monitor.page.div.260" })} id="dev.monitor.page.div.120" style={{ marginTop: '8px' }}>
+                    <div {...uiAttributes({ uid: "dev.monitor.page.div.261-hAP8Sb", id: "dev.monitor.page.div.261" })} id="dev.monitor.page.div.121" className="detail-section-title" style={{ color: '#ef4444' }}>تتبع تنفيذ الخطأ</div>
                     <pre className="code-block" style={{ color: '#f87171', background: '#181111' }}>{activeOp.executionStack}</pre>
                   </div>
                 )}

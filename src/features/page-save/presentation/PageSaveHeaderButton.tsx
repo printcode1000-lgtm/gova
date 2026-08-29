@@ -171,11 +171,11 @@ export function PageSaveHeaderButton() {
         !isSaving &&
         !successFlash ? (
           <>
-            <span id="page-save.page-save-header-button.span"
+            <span {...uiAttributes({ uid: "page-save.page-save-header-button.span.3-9qLHB1", id: "page-save.page-save-header-button.span.3" })} id="page-save.page-save-header-button.span"
               aria-hidden="true"
               className="asol-page-save-wave pointer-events-none absolute inset-0 rounded-full"
             />
-            <span id="page-save.page-save-header-button.span.2"
+            <span {...uiAttributes({ uid: "page-save.page-save-header-button.span.4-ilDY2h", id: "page-save.page-save-header-button.span.4" })} id="page-save.page-save-header-button.span.2"
               aria-hidden="true"
               className="asol-page-save-wave asol-page-save-wave--delayed pointer-events-none absolute inset-0 rounded-full"
             />

@@ -83,14 +83,14 @@ export const HeroSliderEditor = React.forwardRef<
   };
 
   return (
-    <section id="advertisements.hero-slider-editor.section"
+    <section {...uiAttributes({ uid: "advertisements.hero-slider-editor.section.2-5s5Gkm", id: "advertisements.hero-slider-editor.section.2" })} id="advertisements.hero-slider-editor.section"
       className="mt-4 rounded-xl border bg-card p-4 text-card-foreground shadow-sm"
       aria-label="تعديل العرض الرئيسي"
     >
-      <div id="advertisements.hero-slider-editor.div" className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div id="advertisements.hero-slider-editor.div.2">
-          <h2 id="advertisements.hero-slider-editor.h2" className="font-semibold">إعدادات العرض الرئيسي</h2>
-          <p id="advertisements.hero-slider-editor.p" className="text-sm text-muted-foreground">
+      <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.11-nXQA88", id: "advertisements.hero-slider-editor.div.11" })} id="advertisements.hero-slider-editor.div" className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.12-xFF8Q0", id: "advertisements.hero-slider-editor.div.12" })} id="advertisements.hero-slider-editor.div.2">
+          <h2 {...uiAttributes({ uid: "advertisements.hero-slider-editor.h2.2-nGS5Ex", id: "advertisements.hero-slider-editor.h2.2" })} id="advertisements.hero-slider-editor.h2" className="font-semibold">إعدادات العرض الرئيسي</h2>
+          <p {...uiAttributes({ uid: "advertisements.hero-slider-editor.p.2-0nyFe6", id: "advertisements.hero-slider-editor.p.2" })} id="advertisements.hero-slider-editor.p" className="text-sm text-muted-foreground">
             تظهر التغييرات والصور المختارة مباشرة في المعاينة أعلاه حتى قبل
             الرفع، بينما تبقى الصفحة الرئيسية كما هي. التشغيل التلقائي ومدة كل
             شريحة والتكرار تعمل كما في Home. لكل شريحة انتقال
@@ -98,7 +98,7 @@ export const HeroSliderEditor = React.forwardRef<
             النقر على الشريحة معطّل أثناء التحرير.
           </p>
         </div>
-        <div id="advertisements.hero-slider-editor.div.3" className="flex gap-2">
+        <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.13-4QanRZ", id: "advertisements.hero-slider-editor.div.13" })} id="advertisements.hero-slider-editor.div.3" className="flex gap-2">
           {onCancel && (
             <Button id="advertisements.hero-slider-editor.button" ui={{ uid: "hero-slider-editor.cancel-nE07Ui", id: "hero-slider-editor.cancel", kind: "action", action: "cancel", part: "toolbar" }}
               type="button"
@@ -112,8 +112,8 @@ export const HeroSliderEditor = React.forwardRef<
         </div>
       </div>
 
-      <div id="advertisements.hero-slider-editor.div.4" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div id="advertisements.hero-slider-editor.div.5" className="space-y-2">
+      <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.14-5Po6pm", id: "advertisements.hero-slider-editor.div.14" })} id="advertisements.hero-slider-editor.div.4" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.15-4xkLG1", id: "advertisements.hero-slider-editor.div.15" })} id="advertisements.hero-slider-editor.div.5" className="space-y-2">
           <Label id="advertisements.hero-slider-editor.label" htmlFor="hero-template-transition">انتقال الشرائح الجديدة</Label>
           <select
             {...uiAttributes({
@@ -131,13 +131,13 @@ export const HeroSliderEditor = React.forwardRef<
             }
           >
             {heroSliderTransitions.map((transition) => (
-              <option key={transition} value={transition}>
+              <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option-U9f7gb", id: "advertisements.hero-slider-editor.option" })} value={transition}>
                 {heroSliderTransitionLabels[transition]}
               </option>
             ))}
           </select>
         </div>
-        <div id="advertisements.hero-slider-editor.div.6" className="space-y-2">
+        <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.16-6NXXuo", id: "advertisements.hero-slider-editor.div.16" })} id="advertisements.hero-slider-editor.div.6" className="space-y-2">
           <Label id="advertisements.hero-slider-editor.label.2" htmlFor="hero-template-transition-duration">
             مدة الانتقال الافتراضية (مللي ثانية)
           </Label>
@@ -153,7 +153,7 @@ export const HeroSliderEditor = React.forwardRef<
             }
           />
         </div>
-        <div id="advertisements.hero-slider-editor.div.7" className="flex items-end sm:col-span-2">
+        <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.17-kY1a3u", id: "advertisements.hero-slider-editor.div.17" })} id="advertisements.hero-slider-editor.div.7" className="flex items-end sm:col-span-2">
           <Button id="advertisements.hero-slider-editor.button.2" ui={{ uid: "hero-slider-editor.apply-template-5UUeWM", id: "hero-slider-editor.apply-template", kind: "action", action: "apply-transition-template", part: "template" }}
             type="button"
             variant="secondary"
@@ -173,7 +173,7 @@ export const HeroSliderEditor = React.forwardRef<
             تطبيق الانتقال على كل الشرائح
           </Button>
         </div>
-        <div id="advertisements.hero-slider-editor.div.8" className="flex items-end gap-3 pb-2">
+        <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.18-NaQjT3", id: "advertisements.hero-slider-editor.div.18" })} id="advertisements.hero-slider-editor.div.8" className="flex items-end gap-3 pb-2">
           <Switch ui={{ uid: "hero-slider-editor.autoplay-NEsc6o", id: "hero-slider-editor.autoplay", kind: "field", action: "toggle-autoplay", part: "template" }}
             id="hero-autoplay"
             checked={value.autoPlay}
@@ -181,7 +181,7 @@ export const HeroSliderEditor = React.forwardRef<
           />
           <Label id="advertisements.hero-slider-editor.label.3" htmlFor="hero-autoplay">تشغيل تلقائي</Label>
         </div>
-        <div id="advertisements.hero-slider-editor.div.9" className="flex items-end gap-3 pb-2">
+        <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.19-V3lnkh", id: "advertisements.hero-slider-editor.div.19" })} id="advertisements.hero-slider-editor.div.9" className="flex items-end gap-3 pb-2">
           <Switch ui={{ uid: "hero-slider-editor.loop-c9EBLn", id: "hero-slider-editor.loop", kind: "field", action: "toggle-loop", part: "template" }}
             id="hero-loop"
             checked={value.loop}
@@ -191,17 +191,17 @@ export const HeroSliderEditor = React.forwardRef<
         </div>
       </div>
 
-      <div id="advertisements.hero-slider-editor.div.10" className="mt-6 space-y-4">
+      <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.20-9QYTMY", id: "advertisements.hero-slider-editor.div.20" })} id="advertisements.hero-slider-editor.div.10" className="mt-6 space-y-4">
         {value.slides.map((slide, index) => (
           <fieldset
-            key={`${slide.priority}-${index}`}
+            key={`${slide.priority}-${index}`} {...uiAttributes({ uid: "advertisements.hero-slider-editor.fieldset-1MK2Ze", id: "advertisements.hero-slider-editor.fieldset" })}
             className="rounded-lg border p-3"
           >
-            <legend className="px-2 text-sm font-medium">
+            <legend {...uiAttributes({ uid: "advertisements.hero-slider-editor.legend-KPvT3I", id: "advertisements.hero-slider-editor.legend" })} className="px-2 text-sm font-medium">
               الشريحة {index + 1}
             </legend>
-            <div className="mb-3 flex justify-end gap-1">
-              <Button
+            <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.21-N3KrIU", id: "advertisements.hero-slider-editor.div.21" })} className="mb-3 flex justify-end gap-1">
+              <Button ui={{ uid: "advertisements.hero-slider-editor.button.4-HAlL4V", id: "advertisements.hero-slider-editor.button.4" }}
                 type="button"
                 variant="ghost"
                 size="icon"
@@ -211,7 +211,7 @@ export const HeroSliderEditor = React.forwardRef<
               >
                 <ArrowUp className="h-4 w-4" />
               </Button>
-              <Button
+              <Button ui={{ uid: "advertisements.hero-slider-editor.button.5-6ZZq2M", id: "advertisements.hero-slider-editor.button.5" }}
                 type="button"
                 variant="ghost"
                 size="icon"
@@ -221,7 +221,7 @@ export const HeroSliderEditor = React.forwardRef<
               >
                 <ArrowDown className="h-4 w-4" />
               </Button>
-              <Button
+              <Button ui={{ uid: "advertisements.hero-slider-editor.button.6-212rPj", id: "advertisements.hero-slider-editor.button.6" }}
                 type="button"
                 variant="ghost"
                 size="icon"
@@ -238,8 +238,8 @@ export const HeroSliderEditor = React.forwardRef<
                 <Trash2 className="h-4 w-4 text-destructive" />
               </Button>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="space-y-2 sm:col-span-2">
+            <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.22-6N9C2H", id: "advertisements.hero-slider-editor.div.22" })} className="grid gap-3 sm:grid-cols-2">
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.23-3BaXfF", id: "advertisements.hero-slider-editor.div.23" })} className="space-y-2 sm:col-span-2">
                 <Label>صورة الشريحة</Label>
                 <StorageImageManager
                   ref={(handle) => {
@@ -280,9 +280,9 @@ export const HeroSliderEditor = React.forwardRef<
                   onPreviewChange={onPreviewChange}
                 />
               </div>
-              <div className="space-y-2">
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.24-Ka5Ld0", id: "advertisements.hero-slider-editor.div.24" })} className="space-y-2">
                 <Label htmlFor={`hero-title-${index}`}>العنوان</Label>
-                <Input
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input-Qt9eTO", id: "advertisements.hero-slider-editor.input" }}
                   id={`hero-title-${index}`}
                   value={slide.title}
                   onChange={(event) =>
@@ -290,9 +290,9 @@ export const HeroSliderEditor = React.forwardRef<
                   }
                 />
               </div>
-              <div className="space-y-2">
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.25-8ueE52", id: "advertisements.hero-slider-editor.div.25" })} className="space-y-2">
                 <Label htmlFor={`hero-subtitle-${index}`}>الشارة</Label>
-                <Input
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input.2-f40LW8", id: "advertisements.hero-slider-editor.input.2" }}
                   id={`hero-subtitle-${index}`}
                   value={slide.subtitle}
                   onChange={(event) =>
@@ -300,9 +300,9 @@ export const HeroSliderEditor = React.forwardRef<
                   }
                 />
               </div>
-              <div className="space-y-2">
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.26-LMPJ0F", id: "advertisements.hero-slider-editor.div.26" })} className="space-y-2">
                 <Label htmlFor={`hero-action-${index}`}>الإجراء</Label>
-                <Input
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input.3-V6L15P", id: "advertisements.hero-slider-editor.input.3" }}
                   id={`hero-action-${index}`}
                   value={slide.action}
                   onChange={(event) =>
@@ -310,11 +310,11 @@ export const HeroSliderEditor = React.forwardRef<
                   }
                 />
               </div>
-              <div className="space-y-2">
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.27-8BRUyL", id: "advertisements.hero-slider-editor.div.27" })} className="space-y-2">
                 <Label htmlFor={`hero-transition-${index}`}>
                   نوع الانتقال عند الدخول
                 </Label>
-                <select
+                <select {...uiAttributes({ uid: "advertisements.hero-slider-editor.select-JTJYg9", id: "advertisements.hero-slider-editor.select" })}
                   id={`hero-transition-${index}`}
                   className="asol-control asol-field-surface w-full border border-input px-3 text-sm"
                   value={slide.transition}
@@ -325,17 +325,17 @@ export const HeroSliderEditor = React.forwardRef<
                   }
                 >
                   {heroSliderTransitions.map((transition) => (
-                    <option key={transition} value={transition}>
+                    <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option.2-bE6uzW", id: "advertisements.hero-slider-editor.option.2" })} value={transition}>
                       {heroSliderTransitionLabels[transition]}
                     </option>
                   ))}
                 </select>
               </div>
-              <div className="space-y-2">
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.28-OGA2f0", id: "advertisements.hero-slider-editor.div.28" })} className="space-y-2">
                 <Label htmlFor={`hero-transition-duration-${index}`}>
                   مدة الانتقال (مللي ثانية)
                 </Label>
-                <Input
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input.4-mh0WNM", id: "advertisements.hero-slider-editor.input.4" }}
                   id={`hero-transition-duration-${index}`}
                   type="number"
                   min={0}
@@ -349,11 +349,11 @@ export const HeroSliderEditor = React.forwardRef<
                   }
                 />
               </div>
-              <div className="space-y-2">
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.29-gxEC92", id: "advertisements.hero-slider-editor.div.29" })} className="space-y-2">
                 <Label htmlFor={`hero-duration-${index}`}>
                   مدة العرض (مللي ثانية)
                 </Label>
-                <Input
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input.5-n9fWCi", id: "advertisements.hero-slider-editor.input.5" }}
                   id={`hero-duration-${index}`}
                   type="number"
                   min={1000}
@@ -365,7 +365,7 @@ export const HeroSliderEditor = React.forwardRef<
                     })
                   }
                 />
-                <p className="text-xs text-muted-foreground">
+                <p {...uiAttributes({ uid: "advertisements.hero-slider-editor.p.3-n5qSAi", id: "advertisements.hero-slider-editor.p.3" })} className="text-xs text-muted-foreground">
                   تُطبَّق عند تفعيل «تشغيل تلقائي» ومع وجود شريحتين على الأقل.
                 </p>
               </div>

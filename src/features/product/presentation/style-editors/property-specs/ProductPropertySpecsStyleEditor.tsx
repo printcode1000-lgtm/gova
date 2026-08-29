@@ -2,6 +2,7 @@
 
 import { OptionCheckbox, ProductStyleCard } from "@/shared/ui/product-style-card";
 import type { ProductPropertySpecsStyleSettings } from "@/shared/ui/product-style-settings";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductPropertySpecsStyleEditorProps {
   value: ProductPropertySpecsStyleSettings;
@@ -23,7 +24,7 @@ export function ProductPropertySpecsStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div id="product.style-editors.property-specs.product-property-specs-style-editor.div" className="grid gap-2">
+      <div {...uiAttributes({ uid: "product.style-editors.property-specs.product-property-specs-style-editor.div.2-2tqkGL", id: "product.style-editors.property-specs.product-property-specs-style-editor.div.2" })} id="product.style-editors.property-specs.product-property-specs-style-editor.div" className="grid gap-2">
         <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox" label="المساحة" checked={value.area} disabled={disabled} onChange={(area) => onChange({ ...value, area })} />
         <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox.2" label="عدد الغرف" checked={value.rooms} disabled={disabled} onChange={(rooms) => onChange({ ...value, rooms })} />
         <OptionCheckbox id="product.style-editors.property-specs.product-property-specs-style-editor.option-checkbox.3" label="عدد الحمامات" checked={value.bathrooms} disabled={disabled} onChange={(bathrooms) => onChange({ ...value, bathrooms })} />

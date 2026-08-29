@@ -16,6 +16,7 @@ import type {
 } from "./profile-save-controller";
 import { PhoneVerification } from "@/features/auth/ui";
 import { foldPasswordDigits } from "@asol/auth-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProfileRegistrationInfoCardProps {
   onStatusChange?: (status: ProfileSectionStatus) => void;
@@ -77,25 +78,25 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div id="profile.profile-registration-info-card.div" className="py-10 text-center text-sm text-on-surface-variant">
+      <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.12-YEz7YG", id: "profile.profile-registration-info-card.div.12" })} id="profile.profile-registration-info-card.div" className="py-10 text-center text-sm text-on-surface-variant">
         {t("profile.loading")}
       </div>
     );
   }
 
   return (
-    <div id="profile.profile-registration-info-card.div.2" className="space-y-5">
-      <header id="profile.profile-registration-info-card.header" className="space-y-1.5">
-        <h2 id="profile.profile-registration-info-card.h2" className="text-xl font-semibold text-on-surface sm:text-2xl">
+    <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.13-9x5FYZ", id: "profile.profile-registration-info-card.div.13" })} id="profile.profile-registration-info-card.div.2" className="space-y-5">
+      <header {...uiAttributes({ uid: "profile.profile-registration-info-card.header.2-zG1GKv", id: "profile.profile-registration-info-card.header.2" })} id="profile.profile-registration-info-card.header" className="space-y-1.5">
+        <h2 {...uiAttributes({ uid: "profile.profile-registration-info-card.h2.2-3msFBw", id: "profile.profile-registration-info-card.h2.2" })} id="profile.profile-registration-info-card.h2" className="text-xl font-semibold text-on-surface sm:text-2xl">
           {t("onboarding.contactInfo.primaryContact")}
         </h2>
-        <p id="profile.profile-registration-info-card.p" className="text-sm text-on-surface-variant">
+        <p {...uiAttributes({ uid: "profile.profile-registration-info-card.p.7-WMWFV9", id: "profile.profile-registration-info-card.p.7" })} id="profile.profile-registration-info-card.p" className="text-sm text-on-surface-variant">
           {t("onboarding.contactInfo.primaryContactHint")}
         </p>
       </header>
-      <div id="profile.profile-registration-info-card.div.3" className="space-y-4 sm:space-y-5">
+      <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.14-d8jwRO", id: "profile.profile-registration-info-card.div.14" })} id="profile.profile-registration-info-card.div.3" className="space-y-4 sm:space-y-5">
         {error ? (
-          <div id="profile.profile-registration-info-card.div.4" className="rounded-lg bg-error/15 px-3 py-2 text-xs sm:text-sm text-error">
+          <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.15-VPOP3J", id: "profile.profile-registration-info-card.div.15" })} id="profile.profile-registration-info-card.div.4" className="rounded-lg bg-error/15 px-3 py-2 text-xs sm:text-sm text-error">
             {error}
           </div>
         ) : null}
@@ -107,7 +108,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
           onVerifiedChange={setPhoneVerified}
         />
 
-        <div id="profile.profile-registration-info-card.div.5" className="space-y-2">
+        <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.16-5UoKBW", id: "profile.profile-registration-info-card.div.16" })} id="profile.profile-registration-info-card.div.5" className="space-y-2">
           <Label id="profile.profile-registration-info-card.label" className="text-xs sm:text-sm font-medium flex items-center gap-2">
             <Mail id="profile.profile-registration-info-card.mail" className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
             {t("onboarding.contactInfo.email")}
@@ -120,13 +121,13 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
             className={fieldErrors.email ? "border-error" : undefined}
           />
           {fieldErrors.email ? (
-            <p id="profile.profile-registration-info-card.p.2" className="text-[10px] sm:text-xs text-error">
+            <p {...uiAttributes({ uid: "profile.profile-registration-info-card.p.8-UvpGh0", id: "profile.profile-registration-info-card.p.8" })} id="profile.profile-registration-info-card.p.2" className="text-[10px] sm:text-xs text-error">
               {fieldErrors.email}
             </p>
           ) : null}
         </div>
 
-        <div id="profile.profile-registration-info-card.div.6" className="space-y-2">
+        <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.17-p0oTPt", id: "profile.profile-registration-info-card.div.17" })} id="profile.profile-registration-info-card.div.6" className="space-y-2">
           <Label id="profile.profile-registration-info-card.label.2" className="text-xs sm:text-sm font-medium">
             {t("auth.storeName.label")}
           </Label>
@@ -143,12 +144,12 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
             maxLength={120}
             autoComplete="organization"
           />
-          <p id="profile.profile-registration-info-card.p.3" className="text-[10px] sm:text-xs text-on-surface-variant">
+          <p {...uiAttributes({ uid: "profile.profile-registration-info-card.p.9-zT9ZCU", id: "profile.profile-registration-info-card.p.9" })} id="profile.profile-registration-info-card.p.3" className="text-[10px] sm:text-xs text-on-surface-variant">
             {t("auth.storeName.hint")}
           </p>
         </div>
 
-        <div id="profile.profile-registration-info-card.div.7" className="space-y-2">
+        <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.18-cwHlD8", id: "profile.profile-registration-info-card.div.18" })} id="profile.profile-registration-info-card.div.7" className="space-y-2">
           <Button id="profile.profile-registration-info-card.button" ui={{ uid: "profile.registration.toggle-password-QyiV32", id: "profile.registration.toggle-password", kind: "action", action: "toggle-password-form", part: "password" }}
             type="button"
             variant="ghost"
@@ -166,8 +167,8 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
             />
           </Button>
           {isPasswordOpen ? (
-            <div id="profile.profile-registration-info-card.div.8" className="space-y-3 sm:space-y-4 rounded-lg border border-outline-variant/40 p-3 sm:p-4">
-              <div id="profile.profile-registration-info-card.div.9" className="space-y-2">
+            <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.19-o38ZY1", id: "profile.profile-registration-info-card.div.19" })} id="profile.profile-registration-info-card.div.8" className="space-y-3 sm:space-y-4 rounded-lg border border-outline-variant/40 p-3 sm:p-4">
+              <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.20-R6c8kI", id: "profile.profile-registration-info-card.div.20" })} id="profile.profile-registration-info-card.div.9" className="space-y-2">
                 <Label id="profile.profile-registration-info-card.label.3" htmlFor="profile.registration.current-password" className="text-xs sm:text-sm">
                   {t("onboarding.contactInfo.currentPassword")}
                 </Label>
@@ -186,12 +187,12 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   }
                 />
                 {fieldErrors.currentPassword ? (
-                  <p id="profile.profile-registration-info-card.p.4" className="text-[10px] sm:text-xs text-error">
+                  <p {...uiAttributes({ uid: "profile.profile-registration-info-card.p.10-3J0eI4", id: "profile.profile-registration-info-card.p.10" })} id="profile.profile-registration-info-card.p.4" className="text-[10px] sm:text-xs text-error">
                     {fieldErrors.currentPassword}
                   </p>
                 ) : null}
               </div>
-              <div id="profile.profile-registration-info-card.div.10" className="space-y-2">
+              <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.21-UfnL0O", id: "profile.profile-registration-info-card.div.21" })} id="profile.profile-registration-info-card.div.10" className="space-y-2">
                 <Label id="profile.profile-registration-info-card.label.4" htmlFor="profile.registration.new-password" className="text-xs sm:text-sm">
                   {t("onboarding.contactInfo.newPassword")}
                 </Label>
@@ -208,12 +209,12 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   }
                 />
                 {fieldErrors.newPassword ? (
-                  <p id="profile.profile-registration-info-card.p.5" className="text-[10px] sm:text-xs text-error">
+                  <p {...uiAttributes({ uid: "profile.profile-registration-info-card.p.11-eSg7GT", id: "profile.profile-registration-info-card.p.11" })} id="profile.profile-registration-info-card.p.5" className="text-[10px] sm:text-xs text-error">
                     {fieldErrors.newPassword}
                   </p>
                 ) : null}
               </div>
-              <div id="profile.profile-registration-info-card.div.11" className="space-y-2">
+              <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.22-Cdrp2N", id: "profile.profile-registration-info-card.div.22" })} id="profile.profile-registration-info-card.div.11" className="space-y-2">
                 <Label id="profile.profile-registration-info-card.label.5" htmlFor="profile.registration.confirm-password" className="text-xs sm:text-sm">
                   {t("onboarding.contactInfo.confirmPassword")}
                 </Label>
@@ -232,7 +233,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   }
                 />
                 {fieldErrors.confirmPassword ? (
-                  <p id="profile.profile-registration-info-card.p.6" className="text-[10px] sm:text-xs text-error">
+                  <p {...uiAttributes({ uid: "profile.profile-registration-info-card.p.12-X0GkZm", id: "profile.profile-registration-info-card.p.12" })} id="profile.profile-registration-info-card.p.6" className="text-[10px] sm:text-xs text-error">
                     {fieldErrors.confirmPassword}
                   </p>
                 ) : null}

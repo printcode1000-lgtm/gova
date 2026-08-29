@@ -3,6 +3,7 @@
 import { SlidersHorizontal } from "lucide-react";
 
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 /**
  * Opens this application's notification settings in the operating system.
@@ -18,16 +19,16 @@ export function SystemNotificationSettingsButton({
   if (!state.systemSettingsAvailable) return null;
 
   return (
-    <div id="settings.system-notification-settings-button.div" className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
-      <div id="settings.system-notification-settings-button.div.2" className="min-w-0">
-        <p id="settings.system-notification-settings-button.p" className="text-sm font-semibold text-on-surface">
+    <div {...uiAttributes({ uid: "settings.system-notification-settings-button.div.3-9VZOKl", id: "settings.system-notification-settings-button.div.3" })} id="settings.system-notification-settings-button.div" className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
+      <div {...uiAttributes({ uid: "settings.system-notification-settings-button.div.4-6DUDlX", id: "settings.system-notification-settings-button.div.4" })} id="settings.system-notification-settings-button.div.2" className="min-w-0">
+        <p {...uiAttributes({ uid: "settings.system-notification-settings-button.p.3-dJqhL5", id: "settings.system-notification-settings-button.p.3" })} id="settings.system-notification-settings-button.p" className="text-sm font-semibold text-on-surface">
           {state.t("settings.notifications.systemSettings.title")}
         </p>
-        <p id="settings.system-notification-settings-button.p.2" className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+        <p {...uiAttributes({ uid: "settings.system-notification-settings-button.p.4-cT8lzs", id: "settings.system-notification-settings-button.p.4" })} id="settings.system-notification-settings-button.p.2" className="mt-1 text-xs leading-relaxed text-on-surface-variant">
           {state.t("settings.notifications.systemSettings.description")}
         </p>
       </div>
-      <button id="settings.system-notification-settings-button.button"
+      <button {...uiAttributes({ uid: "settings.system-notification-settings-button.button.2-qinOq7", id: "settings.system-notification-settings-button.button.2" })} id="settings.system-notification-settings-button.button"
         type="button"
         disabled={state.systemSettingsBusy}
         onClick={() => void state.openSystemNotificationSettings()}

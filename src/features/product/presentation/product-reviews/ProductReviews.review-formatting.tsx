@@ -3,6 +3,7 @@
 import type {
   ProductReviewsResult,
 } from "@/features/product";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export const PAGE_SIZE = 3;
 
@@ -25,10 +26,10 @@ export function emptyReviewsResult(): ProductReviewsResult {
 
 export function Stars({ id, value, size = "text-lg" }: { value: number; size?: string } & { id?: string }) {
   return (
-    <span id={id} className={`inline-flex ${size}`} dir="ltr">
+    <span {...uiAttributes({ uid: "product.product-reviews.product-reviews.review-formatting.span-X7xLrb", id: "product.product-reviews.product-reviews.review-formatting.span" })} id={id} className={`inline-flex ${size}`} dir="ltr">
       {[1, 2, 3, 4, 5].map((star) => (
         <span
-          key={star}
+          key={star} {...uiAttributes({ uid: "product.product-reviews.product-reviews.review-formatting.span.2-0ZlsQJ", id: "product.product-reviews.product-reviews.review-formatting.span.2" })}
           className={
             star <= Math.round(value) ? "text-amber-500" : "text-gray-300"
           }

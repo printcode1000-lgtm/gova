@@ -32,8 +32,8 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
   const { locale } = useTranslation();
 
   return (
-    <section id="home.categories-grid.section">
-      <div id="home.categories-grid.div" className={categoryGridClassName}>
+    <section {...uiAttributes({ uid: "home.categories-grid.section.2-mijN36", id: "home.categories-grid.section.2" })} id="home.categories-grid.section">
+      <div {...uiAttributes({ uid: "home.categories-grid.div.2-2ZizYH", id: "home.categories-grid.div.2" })} id="home.categories-grid.div" className={categoryGridClassName}>
         {displayCategories.map((cat, index) => {
           const name = locale === "ar" ? cat.nameAr : cat.nameEn;
           const imgSrc = cat.imageUrl;
@@ -45,7 +45,7 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
               className={categoryTileClassName}
               aria-label={name}
             >
-              <div key="media" className={categoryTileImageClassName}>
+              <div key="media" {...uiAttributes({ uid: "home.categories-grid.div.3-cXhT4y", id: "home.categories-grid.div.3" })} className={categoryTileImageClassName}>
                 <Image
                   src={imgSrc}
                   alt={name}
@@ -54,7 +54,7 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
                   className="object-cover"
                 />
               </div>
-              <span key="label" className={categoryTileTitleClassName}>
+              <span key="label" {...uiAttributes({ uid: "home.categories-grid.span-f57aFV", id: "home.categories-grid.span" })} className={categoryTileTitleClassName}>
                 {name}
               </span>
             </Link>

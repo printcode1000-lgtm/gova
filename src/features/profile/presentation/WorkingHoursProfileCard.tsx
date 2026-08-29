@@ -14,6 +14,7 @@ import type {
   ProfileSectionStatus,
   StoreDetailsController,
 } from "./profile-save-controller";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface WorkingHoursProfileCardProps {
   onStatusChange?: (status: ProfileSectionStatus) => void;
@@ -59,16 +60,16 @@ export const WorkingHoursProfileCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div id="profile.working-hours-profile-card.div" className="py-10 text-center text-sm text-on-surface-variant">
+      <div {...uiAttributes({ uid: "profile.working-hours-profile-card.div.4-ZH9M9C", id: "profile.working-hours-profile-card.div.4" })} id="profile.working-hours-profile-card.div" className="py-10 text-center text-sm text-on-surface-variant">
         {locale === "ar" ? "جاري التحميل..." : "Loading..."}
       </div>
     );
   }
 
   return (
-    <div id="profile.working-hours-profile-card.div.2" className="space-y-4">
+    <div {...uiAttributes({ uid: "profile.working-hours-profile-card.div.5-u4XmLD", id: "profile.working-hours-profile-card.div.5" })} id="profile.working-hours-profile-card.div.2" className="space-y-4">
       {error ? (
-        <div id="profile.working-hours-profile-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <div {...uiAttributes({ uid: "profile.working-hours-profile-card.div.6-Z17CD2", id: "profile.working-hours-profile-card.div.6" })} id="profile.working-hours-profile-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error}
         </div>
       ) : null}

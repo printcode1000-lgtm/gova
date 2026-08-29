@@ -12,19 +12,20 @@ import { DataHealthSchemaPanel } from "./DataHealthSchemaPanel";
 import { DataHealthTopologyPanel } from "./DataHealthTopologyPanel";
 import { SummaryCard } from "./SummaryCard";
 import { useDataHealthPage } from "./use-data-health-page";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function DataHealthPage() {
   const page = useDataHealthPage();
 
   if (page.isLoading) {
     return (
-      <div id="data-health.data-health-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
+      <div {...uiAttributes({ uid: "data-health.data-health-page.div.9-9HFvVx", id: "data-health.data-health-page.div.9" })} id="data-health.data-health-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
     );
   }
   if (!page.allowed) {
     return (
-      <div id="data-health.data-health-page.div.2" className="mx-auto max-w-2xl p-6">
-        <div id="data-health.data-health-page.div.3" className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
+      <div {...uiAttributes({ uid: "data-health.data-health-page.div.10-Dwp428", id: "data-health.data-health-page.div.10" })} id="data-health.data-health-page.div.2" className="mx-auto max-w-2xl p-6">
+        <div {...uiAttributes({ uid: "data-health.data-health-page.div.11-d5HFW3", id: "data-health.data-health-page.div.11" })} id="data-health.data-health-page.div.3" className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
           هذه الصفحة متاحة للسوبر أدمن فقط.
         </div>
       </div>
@@ -32,17 +33,17 @@ export function DataHealthPage() {
   }
 
   return (
-    <main id="data-health.data-health-page.main" className="mx-auto w-full max-w-7xl space-y-4 p-4 pb-24">
-      <header id="data-health.data-health-page.header" className="flex flex-wrap items-start justify-between gap-3">
-        <div id="data-health.data-health-page.div.4">
-          <h1 id="data-health.data-health-page.h1" className="flex items-center gap-2 text-2xl font-semibold text-on-surface">
+    <main {...uiAttributes({ uid: "data-health.data-health-page.main.2-G8VgCP", id: "data-health.data-health-page.main.2" })} id="data-health.data-health-page.main" className="mx-auto w-full max-w-7xl space-y-4 p-4 pb-24">
+      <header {...uiAttributes({ uid: "data-health.data-health-page.header.2-G131IO", id: "data-health.data-health-page.header.2" })} id="data-health.data-health-page.header" className="flex flex-wrap items-start justify-between gap-3">
+        <div {...uiAttributes({ uid: "data-health.data-health-page.div.12-ukLx9c", id: "data-health.data-health-page.div.12" })} id="data-health.data-health-page.div.4">
+          <h1 {...uiAttributes({ uid: "data-health.data-health-page.h1.2-GtA9vR", id: "data-health.data-health-page.h1.2" })} id="data-health.data-health-page.h1" className="flex items-center gap-2 text-2xl font-semibold text-on-surface">
             <DatabaseZap id="data-health.data-health-page.database-zap" className="h-6 w-6 text-primary" />
             سلامة البيانات
           </h1>
-          <div id="data-health.data-health-page.div.5" className="mt-1 flex flex-wrap items-center gap-2 text-sm text-on-surface-variant">
-            <span id="data-health.data-health-page.span">فحص العلاقات والصور وبنية القواعد مع تنظيف مؤكد وقابل للتدقيق.</span>
+          <div {...uiAttributes({ uid: "data-health.data-health-page.div.13-A5fbZI", id: "data-health.data-health-page.div.13" })} id="data-health.data-health-page.div.5" className="mt-1 flex flex-wrap items-center gap-2 text-sm text-on-surface-variant">
+            <span {...uiAttributes({ uid: "data-health.data-health-page.span.3-yzBMJ5", id: "data-health.data-health-page.span.3" })} id="data-health.data-health-page.span">فحص العلاقات والصور وبنية القواعد مع تنظيف مؤكد وقابل للتدقيق.</span>
             {page.report ? (
-              <span id="data-health.data-health-page.span.2"
+              <span {...uiAttributes({ uid: "data-health.data-health-page.span.4-lvC0Wc", id: "data-health.data-health-page.span.4" })} id="data-health.data-health-page.span.2"
                 className={`rounded border px-2 py-0.5 text-xs ${
                   page.report.environment === "production"
                     ? "border-red-200 bg-red-50 text-red-700"
@@ -56,7 +57,7 @@ export function DataHealthPage() {
             ) : null}
           </div>
         </div>
-        <div id="data-health.data-health-page.div.6" className="flex flex-wrap gap-2">
+        <div {...uiAttributes({ uid: "data-health.data-health-page.div.14-qQH9ID", id: "data-health.data-health-page.div.14" })} id="data-health.data-health-page.div.6" className="flex flex-wrap gap-2">
           <Button id="data-health.data-health-page.button" ui={{ uid: "data-health.export-json-Rxa0Sz", id: "data-health.export-json", kind: "action", action: "export-json", part: "toolbar" }}
             type="button"
             size="icon"
@@ -85,7 +86,7 @@ export function DataHealthPage() {
       </header>
 
       {page.report ? (
-        <section id="data-health.data-health-page.section" className="grid gap-2 sm:grid-cols-3 lg:grid-cols-7">
+        <section {...uiAttributes({ uid: "data-health.data-health-page.section.2-k62O7f", id: "data-health.data-health-page.section.2" })} id="data-health.data-health-page.section" className="grid gap-2 sm:grid-cols-3 lg:grid-cols-7">
           <SummaryCard id="data-health.data-health-page.summary-card" label="السجلات المفحوصة" value={page.report.scannedRecords} />
           <SummaryCard id="data-health.data-health-page.summary-card.2" label="المشكلات" value={page.report.summary.total} />
           <SummaryCard id="data-health.data-health-page.summary-card.3" label="حرج" value={page.report.summary.critical} tone="red" />
@@ -99,12 +100,12 @@ export function DataHealthPage() {
       {page.report ? <DataHealthTopologyPanel report={page.report} /> : null}
 
       {page.error ? (
-        <div id="data-health.data-health-page.div.7" className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div {...uiAttributes({ uid: "data-health.data-health-page.div.15-W4AMXc", id: "data-health.data-health-page.div.15" })} id="data-health.data-health-page.div.7" className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {page.error}
         </div>
       ) : null}
       {page.notice ? (
-        <div id="data-health.data-health-page.div.8" className="rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+        <div {...uiAttributes({ uid: "data-health.data-health-page.div.16-3VT8yx", id: "data-health.data-health-page.div.16" })} id="data-health.data-health-page.div.8" className="rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-700">
           {page.notice}
         </div>
       ) : null}

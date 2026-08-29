@@ -6,17 +6,18 @@ import { useSession } from "@/features/auth/ui";
 import { isSuperAdmin } from "@/features/auth";
 
 import { SuperAdminCloudAccountsContent } from "./SuperAdminCloudAccountsContent";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 function SuperAdminCloudAccountsLoading() {
   return (
-    <div id="super-admin.super-admin-cloud-accounts-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
+    <div {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-page.div.4-9fW0l5", id: "super-admin.super-admin-cloud-accounts-page.div.4" })} id="super-admin.super-admin-cloud-accounts-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
   );
 }
 
 function SuperAdminCloudAccountsForbidden() {
   return (
-    <div id="super-admin.super-admin-cloud-accounts-page.div.2" className="mx-auto max-w-2xl p-6">
-      <div id="super-admin.super-admin-cloud-accounts-page.div.3" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+    <div {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-page.div.5-HY2j7Q", id: "super-admin.super-admin-cloud-accounts-page.div.5" })} id="super-admin.super-admin-cloud-accounts-page.div.2" className="mx-auto max-w-2xl p-6">
+      <div {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-page.div.6-i9M0d1", id: "super-admin.super-admin-cloud-accounts-page.div.6" })} id="super-admin.super-admin-cloud-accounts-page.div.3" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
         هذه الصفحة متاحة للسوبر أدمن فقط.
       </div>
     </div>

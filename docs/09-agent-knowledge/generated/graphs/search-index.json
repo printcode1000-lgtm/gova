@@ -3794,6 +3794,36 @@
       ]
     },
     {
+      "id": "command:ui-registry:uid-coverage:check",
+      "kind": "command",
+      "name": "npm run ui-registry:uid-coverage:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "npm",
+        "npm run ui-registry:uid-coverage:check",
+        "run",
+        "ui-registry",
+        "ui-registry:uid-coverage:check",
+        "uid-coverage"
+      ]
+    },
+    {
+      "id": "command:ui-registry:uid-migration:apply",
+      "kind": "command",
+      "name": "npm run ui-registry:uid-migration:apply",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "apply",
+        "npm",
+        "npm run ui-registry:uid-migration:apply",
+        "run",
+        "ui-registry",
+        "ui-registry:uid-migration:apply",
+        "uid-migration"
+      ]
+    },
+    {
       "id": "command:validate-storage-profiles",
       "kind": "command",
       "name": "npm run validate-storage-profiles",
@@ -9965,16 +9995,24 @@
         "packages/architecture-core/src/checks/ui-registry-coverage.ts",
         "page",
         "references",
+        "scripts/ui-registry/static-dom-ids/visible-host-tags",
+        "scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
+        "scripts/ui-registry/uid-migration",
+        "scripts/ui-registry/uid-migration/check-uid-coverage",
+        "scripts/ui-registry/uid-migration/check-uid-coverage.ts",
         "search",
         "single",
         "sole",
         "source",
+        "src/features/onboarding/presentation/form-components",
+        "src/features/onboarding/presentation/form-components.tsx",
         "src/shared/ui",
         "src/shared/ui/",
         "system",
         "the",
         "truth",
         "ts",
+        "tsx",
         "typed",
         "ui",
         "ui attribute system",
@@ -19196,6 +19234,20 @@
       ]
     },
     {
+      "id": "external-dependency:…",
+      "kind": "external-dependency",
+      "name": "…",
+      "summary": "External package imported by repository source",
+      "tags": [
+        "dependency",
+        "external",
+        "external dependency npm package",
+        "npm",
+        "package",
+        "…"
+      ]
+    },
+    {
       "id": "external-dependency:)\n      ? line.slice(",
       "kind": "external-dependency",
       "name": ")\n      ? line.slice(",
@@ -26956,6 +27008,72 @@
       "tags": [
         "scripts/ui-registry/static-dom-ids/visible-host-tags",
         "scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
+      "kind": "script",
+      "name": "apply-uid-migration.ts",
+      "path": "scripts/ui-registry/uid-migration/apply-uid-migration.ts",
+      "tags": [
+        "scripts/ui-registry/uid-migration/apply-uid-migration",
+        "scripts/ui-registry/uid-migration/apply-uid-migration.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
+      "kind": "script",
+      "name": "check-uid-coverage.ts",
+      "path": "scripts/ui-registry/uid-migration/check-uid-coverage.ts",
+      "tags": [
+        "scripts/ui-registry/uid-migration/check-uid-coverage",
+        "scripts/ui-registry/uid-migration/check-uid-coverage.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/uid-migration/mint-uid.ts",
+      "kind": "script",
+      "name": "mint-uid.ts",
+      "path": "scripts/ui-registry/uid-migration/mint-uid.ts",
+      "tags": [
+        "scripts/ui-registry/uid-migration/mint-uid",
+        "scripts/ui-registry/uid-migration/mint-uid.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
+      "kind": "script",
+      "name": "plan-uid-migration.ts",
+      "path": "scripts/ui-registry/uid-migration/plan-uid-migration.ts",
+      "tags": [
+        "scripts/ui-registry/uid-migration/plan-uid-migration",
+        "scripts/ui-registry/uid-migration/plan-uid-migration.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/uid-migration/run-apply.ts",
+      "kind": "script",
+      "name": "run-apply.ts",
+      "path": "scripts/ui-registry/uid-migration/run-apply.ts",
+      "tags": [
+        "scripts/ui-registry/uid-migration/run-apply",
+        "scripts/ui-registry/uid-migration/run-apply.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/uid-migration/run-check.ts",
+      "kind": "script",
+      "name": "run-check.ts",
+      "path": "scripts/ui-registry/uid-migration/run-check.ts",
+      "tags": [
+        "scripts/ui-registry/uid-migration/run-check",
+        "scripts/ui-registry/uid-migration/run-check.ts",
         "ts"
       ]
     },
@@ -37111,6 +37229,17 @@
       "tags": [
         "packages/ui-registry-core/src/domain/ui-element-kind",
         "packages/ui-registry-core/src/domain/ui-element-kind.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
+      "kind": "source",
+      "name": "ui-instance.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-instance.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-instance",
+        "packages/ui-registry-core/src/domain/ui-instance.ts",
         "ts"
       ]
     },
@@ -53081,6 +53210,18 @@
       "tags": [
         "scripts/ui-registry/tests/static-dom-ids",
         "scripts/ui-registry/tests/static-dom-ids.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
+      "kind": "test",
+      "name": "uid-coverage-guard.test.ts",
+      "path": "scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
+      "tags": [
+        "scripts/ui-registry/uid-migration/tests/uid-coverage-guard",
+        "scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
         "test",
         "ts"
       ]

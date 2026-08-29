@@ -8,6 +8,7 @@ import { OrderActionButton } from "../OrderActionButton";
 import { hasOrderDeliveryAddress, profileAddress } from "../order-labels";
 import type { DbRow } from "../order-types";
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function BuyerDeliveryAddressPanel({
   order,
@@ -31,16 +32,16 @@ export function BuyerDeliveryAddressPanel({
 
   if (isLoading) {
     return (
-      <div id="orders.order-details.order-details-page-content.buyer-delivery.div" className="mb-4 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
+      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.buyer-delivery.div.4-xnxf8G", id: "orders.order-details.order-details-page-content.buyer-delivery.div.4" })} id="orders.order-details.order-details-page-content.buyer-delivery.div" className="mb-4 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
         جاري تحميل بيانات التواصل...
       </div>
     );
   }
 
   return (
-    <div id="orders.order-details.order-details-page-content.buyer-delivery.div.2" className="mb-4 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
-      <p id="orders.order-details.order-details-page-content.buyer-delivery.p" className="leading-6 text-on-surface">{text.buyerAddressHint}</p>
-      <div id="orders.order-details.order-details-page-content.buyer-delivery.div.3" className="mt-3 flex flex-wrap gap-2">
+    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.buyer-delivery.div.5-46S1yJ", id: "orders.order-details.order-details-page-content.buyer-delivery.div.5" })} id="orders.order-details.order-details-page-content.buyer-delivery.div.2" className="mb-4 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
+      <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.buyer-delivery.p.2-1U4QgX", id: "orders.order-details.order-details-page-content.buyer-delivery.p.2" })} id="orders.order-details.order-details-page-content.buyer-delivery.p" className="leading-6 text-on-surface">{text.buyerAddressHint}</p>
+      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.buyer-delivery.div.6-PM5IoT", id: "orders.order-details.order-details-page-content.buyer-delivery.div.6" })} id="orders.order-details.order-details-page-content.buyer-delivery.div.3" className="mt-3 flex flex-wrap gap-2">
         <Link id="orders.order-details.order-details-page-content.buyer-delivery.link"
           href={profileHref}
           className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition"

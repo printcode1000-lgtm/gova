@@ -40,6 +40,7 @@ import {
   statusLabel,
 } from "../order-labels";
 import type { DbRow, OrderDetails, OrderRole } from "../order-types";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export type RunAction = (
   action: string,
@@ -127,31 +128,31 @@ export function OrderSummary({ id,
   hasPendingShippingQuote: boolean;
 } & { id?: string }) {
   return (
-    <section id={id} className="mb-5 grid gap-4 md:grid-cols-3">
-      <div className="rounded-xl border border-outline-variant bg-surface p-4">
-        <p className="text-sm text-muted-foreground">{text.total}</p>
-        <p className="mt-1 text-xl font-bold">
+    <section {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.section-2WjKxj", id: "orders.order-details.order-details-page-content.navigation-summary.section" })} id={id} className="mb-5 grid gap-4 md:grid-cols-3">
+      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.div-TMEe89", id: "orders.order-details.order-details-page-content.navigation-summary.div" })} className="rounded-xl border border-outline-variant bg-surface p-4">
+        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.p-Dcgj6V", id: "orders.order-details.order-details-page-content.navigation-summary.p" })} className="text-sm text-muted-foreground">{text.total}</p>
+        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.p.2-s9MJeW", id: "orders.order-details.order-details-page-content.navigation-summary.p.2" })} className="mt-1 text-xl font-bold">
           {formatMoney(order.grand_total, currency)}
         </p>
         {hasPendingShippingQuote ? (
-          <p className="mt-2 text-xs leading-5 text-warning">
+          <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.p.3-aVpWP3", id: "orders.order-details.order-details-page-content.navigation-summary.p.3" })} className="mt-2 text-xs leading-5 text-warning">
             الإجمالي مبدئي حتى قبول عرض الشحن حسب المكان.
           </p>
         ) : null}
       </div>
-      <div className="rounded-xl border border-outline-variant bg-surface p-4">
-        <p className="text-sm text-muted-foreground">{text.remaining}</p>
-        <p className="mt-1 text-xl font-bold">
+      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.div.2-ZYH1IZ", id: "orders.order-details.order-details-page-content.navigation-summary.div.2" })} className="rounded-xl border border-outline-variant bg-surface p-4">
+        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.p.4-hTLA4I", id: "orders.order-details.order-details-page-content.navigation-summary.p.4" })} className="text-sm text-muted-foreground">{text.remaining}</p>
+        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.p.5-Jtns5t", id: "orders.order-details.order-details-page-content.navigation-summary.p.5" })} className="mt-1 text-xl font-bold">
           {formatMoney(order.remaining_total, currency)}
         </p>
       </div>
-      <div className="rounded-xl border border-outline-variant bg-surface p-4">
-        <p className="text-sm text-muted-foreground">{text.buyerAddress}</p>
-        <p className="mt-1 text-sm font-semibold">
+      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.div.3-C7HLDW", id: "orders.order-details.order-details-page-content.navigation-summary.div.3" })} className="rounded-xl border border-outline-variant bg-surface p-4">
+        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.p.6-spKW2o", id: "orders.order-details.order-details-page-content.navigation-summary.p.6" })} className="text-sm text-muted-foreground">{text.buyerAddress}</p>
+        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.p.7-I4EchE", id: "orders.order-details.order-details-page-content.navigation-summary.p.7" })} className="mt-1 text-sm font-semibold">
           {buyerAddress || text.noAddress}
         </p>
         {buyerPhone ? (
-          <p className="mt-1 text-xs text-muted-foreground">{buyerPhone}</p>
+          <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.navigation-summary.p.8-MlC0z9", id: "orders.order-details.order-details-page-content.navigation-summary.p.8" })} className="mt-1 text-xs text-muted-foreground">{buyerPhone}</p>
         ) : null}
       </div>
     </section>

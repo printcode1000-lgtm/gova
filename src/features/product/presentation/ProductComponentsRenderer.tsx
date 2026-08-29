@@ -25,6 +25,7 @@ import {
   PRODUCT_COMPONENT_TITLES,
   type BasicFieldKind,
 } from "./product-components-renderer.config";
+import { uiAttributes } from "@asol/ui-registry-core";
 export {
   PRODUCT_DEMO_DETAILS,
   PRODUCT_DEMO_IMAGES,
@@ -93,7 +94,7 @@ export function ProductComponentsRenderer({ id,
 
   if (visible.length === 0) {
     return (
-      <p id={id} className="py-8 text-center text-sm text-muted-foreground">
+      <p {...uiAttributes({ uid: "product.product-components-renderer.p-U592aD", id: "product.product-components-renderer.p" })} id={id} className="py-8 text-center text-sm text-muted-foreground">
         لا توجد مكونات مفعلة للعرض.
       </p>
     );
@@ -160,7 +161,7 @@ export function ProductComponentsRenderer({ id,
           const showProfile = config.profile !== false;
           return (
             <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
-              <div className="flex flex-wrap gap-2">
+              <div {...uiAttributes({ uid: "product.product-components-renderer.div-6bEE2s", id: "product.product-components-renderer.div" })} className="flex flex-wrap gap-2">
                 {config.cart ? (
                   <ProductAddToCartButton
                     productId={productId}
@@ -230,7 +231,7 @@ export function ProductComponentsRenderer({ id,
 
         return (
           <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key] ?? key}>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div {...uiAttributes({ uid: "product.product-components-renderer.div.2-vHb5aX", id: "product.product-components-renderer.div.2" })} className="grid gap-3 sm:grid-cols-2">
               {(PRODUCT_COMPONENT_FIELDS[key] ?? []).map(([fieldKey, label, kind]) => {
                 if (config[fieldKey] === false) return null;
                 return (

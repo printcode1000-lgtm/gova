@@ -2,6 +2,7 @@
 
 import { OptionCheckbox, ProductStyleCard } from "@/shared/ui/product-style-card";
 import type { ProductMainDataStyleSettings } from "@/shared/ui/product-style-settings";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductMainDataStyleEditorProps {
   value: ProductMainDataStyleSettings;
@@ -23,7 +24,7 @@ export function ProductMainDataStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div id="product.style-editors.main-data.product-main-data-style-editor.div" className="grid gap-2">
+      <div {...uiAttributes({ uid: "product.style-editors.main-data.product-main-data-style-editor.div.2-y76rGv", id: "product.style-editors.main-data.product-main-data-style-editor.div.2" })} id="product.style-editors.main-data.product-main-data-style-editor.div" className="grid gap-2">
         <OptionCheckbox id="product.style-editors.main-data.product-main-data-style-editor.option-checkbox" label="الاسم" checked={value.name} disabled={disabled} onChange={(name) => onChange({ ...value, name })} />
         <OptionCheckbox id="product.style-editors.main-data.product-main-data-style-editor.option-checkbox.2" label="العلامة التجارية" checked={value.brand} disabled={disabled} onChange={(brand) => onChange({ ...value, brand })} />
         <OptionCheckbox id="product.style-editors.main-data.product-main-data-style-editor.option-checkbox.3" label="الشركة المصنعة" checked={value.manufacturer} disabled={disabled} onChange={(manufacturer) => onChange({ ...value, manufacturer })} />

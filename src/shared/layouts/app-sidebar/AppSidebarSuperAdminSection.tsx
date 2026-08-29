@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/shared/utils";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export const COLLAPSED_SUPER_ADMIN_GROUPS = {
   content: false,
@@ -82,7 +83,7 @@ export function AppSidebarSuperAdminSection({
   );
 
   return (
-    <div id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.div"
+    <div {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.3-E3cxF2", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.3" })} id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.div"
       className={cn(
         "asol-control overflow-hidden rounded-2xl border",
         resolvedScheme === "dark"
@@ -91,14 +92,14 @@ export function AppSidebarSuperAdminSection({
         sidebarSurface,
       )}
     >
-      <button id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.button"
+      <button {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.button.2-vnP5AC", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.button.2" })} id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.button"
         type="button"
         onClick={onToggle}
         aria-expanded={superAdminOpen}
         className={cn(sidebarControlClass, "rounded-none")}
       >
         <ShieldCheck id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.shield-check" className={sidebarIconClass} aria-hidden />
-        <span id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.span" className="min-w-0 flex-1">لوحة تحكم السوبر أدمن</span>
+        <span {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.span.2-jJRQ31", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.span.2" })} id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.span" className="min-w-0 flex-1">لوحة تحكم السوبر أدمن</span>
         <ChevronDown id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.chevron-down"
           aria-hidden
           className={cn(
@@ -108,7 +109,7 @@ export function AppSidebarSuperAdminSection({
         />
       </button>
       {superAdminOpen && (
-        <div id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.2" className="space-y-2 px-2 pb-3 sm:px-3 sm:pe-3 sm:ps-11">
+        <div {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.4-6PFfYK", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.4" })} id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.2" className="space-y-2 px-2 pb-3 sm:px-3 sm:pe-3 sm:ps-11">
           <SuperAdminGroup id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.super-admin-group"
             icon={<Sliders id="shared.layouts.app-sidebar.app-sidebar-super-admin-section.sliders" className={sidebarSmallIconClass} />}
             label="واجهة المتجر والعروض"
@@ -175,13 +176,13 @@ function SuperAdminGroup({ id,
   children: React.ReactNode;
 } & { id?: string }) {
   return (
-    <div id={id} className={shellClass}>
-      <button type="button" onClick={onToggle} aria-expanded={open} className={buttonClass}>
+    <div {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.5-vhRUu9", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.5" })} id={id} className={shellClass}>
+      <button {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.button.3-7uP6B7", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.button.3" })} type="button" onClick={onToggle} aria-expanded={open} className={buttonClass}>
         {icon}
         {label}
         <ChevronDown className={cn("ms-auto h-4 w-4 transition-transform", open && "rotate-180")} />
       </button>
-      {open && <div className={panelClass}>{children}</div>}
+      {open && <div {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.6-2pG0Vp", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.6" })} className={panelClass}>{children}</div>}
     </div>
   );
 }

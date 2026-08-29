@@ -23,6 +23,7 @@ import { geoLocationUrl, googleMapsSearchUrl } from "./contact-location-links";
 import { ContactSectionHeader } from "./ContactSectionHeader";
 import { ContactEntryCard } from "./ContactEntryCard";
 import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function AdditionalContactView({ model }: { model: ContactInfoCardModel }) {
 const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, pendingRemoval, requestRemoveEntry, cancelRemoveEntry, confirmRemoveEntry, groupedSocialLinks } = model;
@@ -30,7 +31,7 @@ const phoneLabels = phoneFieldLabels(t, locale);
 return (
         /* Additional Contact Section without outer Card */
         <>
-          <div id="profile.contact-info.additional-contact-view.div" className="mb-6 flex items-center justify-between">
+          <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.13-C1IpzF", id: "profile.contact-info.additional-contact-view.div.13" })} id="profile.contact-info.additional-contact-view.div" className="mb-6 flex items-center justify-between">
             <ContactSectionHeader id="profile.contact-info.additional-contact-view.contact-section-header"
               icon={Share2}
               title={t('onboarding.contactInfo.additionalContact')}
@@ -38,7 +39,7 @@ return (
             />
           </div>
 
-          <div id="profile.contact-info.additional-contact-view.div.2" className="space-y-4">
+          <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.14-9KQpSH", id: "profile.contact-info.additional-contact-view.div.14" })} id="profile.contact-info.additional-contact-view.div.2" className="space-y-4">
             {!readOnly && (
               <ContactQuickAddGrid id="profile.contact-info.additional-contact-view.contact-quick-add-grid"
                 items={quickAddItems}
@@ -54,18 +55,18 @@ return (
               if (!typePhones || typePhones.length === 0) return null;
 
               return (
-                <div key={type} className="space-y-2">
-                  <div className="flex items-center gap-2">
+                <div key={type} {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.15-5uU765", id: "profile.contact-info.additional-contact-view.div.15" })} className="space-y-2">
+                  <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.16-0SJTgu", id: "profile.contact-info.additional-contact-view.div.16" })} className="flex items-center gap-2">
                     <FontAwesomeIcon
                       icon={quickAddIcon(type)}
                       className="h-4 w-4"
                       style={{ color: quickAddColor(type) }}
                     />
-                    <span className="text-sm font-semibold" style={{ color: quickAddColor(type) }}>
+                    <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.7-i8Aar6", id: "profile.contact-info.additional-contact-view.span.7" })} className="text-sm font-semibold" style={{ color: quickAddColor(type) }}>
                       {t(`onboarding.contactInfo.phoneTypes.${type}`)}
                     </span>
                     {!readOnly && (
-                      <Button
+                      <Button ui={{ uid: "profile.contact-info.additional-contact-view.button.4-dR4MfM", id: "profile.contact-info.additional-contact-view.button.4" }}
                         variant="outline"
                         size="sm"
                         onClick={() => addAnotherPhone(type)}
@@ -75,7 +76,7 @@ return (
                       </Button>
                     )}
                   </div>
-                  <div className="space-y-2">
+                  <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.17-zPOR6U", id: "profile.contact-info.additional-contact-view.div.17" })} className="space-y-2">
                     {typePhones.map((phone, index) => (
                       <ContactEntryCard
                         key={phone.id}
@@ -89,7 +90,7 @@ return (
                             : () => requestRemoveEntry('phone', phone.id)
                         }
                       >
-                        <PhoneField
+                        <PhoneField ui={{ uid: "profile.contact-info.additional-contact-view.phone-field-pP5K5X", id: "profile.contact-info.additional-contact-view.phone-field" }}
                           labels={phoneLabels}
                           inputClassName="auth-input w-full"
                           value={phone.number}
@@ -105,11 +106,11 @@ return (
 
             {/* Additional Emails */}
             {activeKindId === 'email' && localData.emails.filter((e) => e.id !== 'primary').length > 0 && (
-              <div id="profile.contact-info.additional-contact-view.div.3" className="space-y-2">
-                <div id="profile.contact-info.additional-contact-view.div.4" className="flex items-center gap-2">
-                  <span id="profile.contact-info.additional-contact-view.span" className="text-sm font-semibold flex items-center gap-2">
+              <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.18-B6oeg1", id: "profile.contact-info.additional-contact-view.div.18" })} id="profile.contact-info.additional-contact-view.div.3" className="space-y-2">
+                <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.19-4kJKcV", id: "profile.contact-info.additional-contact-view.div.19" })} id="profile.contact-info.additional-contact-view.div.4" className="flex items-center gap-2">
+                  <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.8-Ln6FON", id: "profile.contact-info.additional-contact-view.span.8" })} id="profile.contact-info.additional-contact-view.span" className="text-sm font-semibold flex items-center gap-2">
                     <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon" icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
-                    <span id="profile.contact-info.additional-contact-view.span.2" style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
+                    <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.9-26cOEC", id: "profile.contact-info.additional-contact-view.span.9" })} id="profile.contact-info.additional-contact-view.span.2" style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
                     <Button id="profile.contact-info.additional-contact-view.button" ui={{ uid: 'profile.additional-contact.add-email-aSN14x', id: 'profile.additional-contact.add-email', kind: 'action', action: 'add-email', part: 'emails' }}
@@ -122,7 +123,7 @@ return (
                     </Button>
                   )}
                 </div>
-                <div id="profile.contact-info.additional-contact-view.div.5" className="space-y-2">
+                <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.20-FTy9fE", id: "profile.contact-info.additional-contact-view.div.20" })} id="profile.contact-info.additional-contact-view.div.5" className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink, index) => (
                     <ContactEntryCard
                       key={emailLink.id}
@@ -136,7 +137,7 @@ return (
                           : () => requestRemoveEntry('email', emailLink.id)
                       }
                     >
-                      <Input
+                      <Input ui={{ uid: "profile.contact-info.additional-contact-view.input-YsQo6o", id: "profile.contact-info.additional-contact-view.input" }}
                         value={emailLink.email}
                         onChange={(e) => updateEmail(emailLink.id, { email: e.target.value })}
                         placeholder={t('onboarding.contactInfo.emailPlaceholder')}
@@ -151,25 +152,25 @@ return (
 
             {/* Social Links */}
             {SOCIAL_PLATFORMS.some((platform) => platform === activeKindId) && localData.socialLinks.length > 0 && (
-              <div id="profile.contact-info.additional-contact-view.div.6" className="space-y-4">
+              <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.21-v5Q8VY", id: "profile.contact-info.additional-contact-view.div.21" })} id="profile.contact-info.additional-contact-view.div.6" className="space-y-4">
                 {SOCIAL_PLATFORMS.map((platform) => {
                   if (platform !== activeKindId) return null;
                   const platformLinks = groupedSocialLinks[platform];
                   if (!platformLinks || platformLinks.length === 0) return null;
 
                   return (
-                    <div key={platform} className="space-y-2">
-                      <div className="flex items-center gap-2">
+                    <div key={platform} {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.22-6AhWCr", id: "profile.contact-info.additional-contact-view.div.22" })} className="space-y-2">
+                      <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.23-k8ufCF", id: "profile.contact-info.additional-contact-view.div.23" })} className="flex items-center gap-2">
                         <FontAwesomeIcon
                           icon={quickAddIcon(platform)}
                           className="h-4 w-4"
                           style={{ color: quickAddColor(platform) }}
                         />
-                        <span className="text-sm font-semibold" style={{ color: quickAddColor(platform) }}>
+                        <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.10-TIRfy2", id: "profile.contact-info.additional-contact-view.span.10" })} className="text-sm font-semibold" style={{ color: quickAddColor(platform) }}>
                           {t(`onboarding.contactInfo.platforms.${platform}`)}
                         </span>
                         {!readOnly && (
-                          <Button
+                          <Button ui={{ uid: "profile.contact-info.additional-contact-view.button.5-HYa46Q", id: "profile.contact-info.additional-contact-view.button.5" }}
                             variant="outline"
                             size="sm"
                             onClick={() => addAnotherLink(platform)}
@@ -179,7 +180,7 @@ return (
                           </Button>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.24-KQR0uO", id: "profile.contact-info.additional-contact-view.div.24" })} className="space-y-2">
                         {platformLinks.map((link, index) => (
                           <ContactEntryCard
                             key={link.id}
@@ -193,7 +194,7 @@ return (
                                 : () => requestRemoveEntry('social', link.id)
                             }
                           >
-                            <Input
+                            <Input ui={{ uid: "profile.contact-info.additional-contact-view.input.2-H34dKX", id: "profile.contact-info.additional-contact-view.input.2" }}
                               value={link.url}
                               onChange={(e) => updateSocialLink(link.id, { url: e.target.value })}
                               placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}
@@ -212,11 +213,11 @@ return (
 
             {/* Websites */}
             {activeKindId === 'website' && localData.websites.length > 0 && (
-              <div id="profile.contact-info.additional-contact-view.div.7" className="space-y-2">
-                <div id="profile.contact-info.additional-contact-view.div.8" className="flex items-center gap-2">
-                  <span id="profile.contact-info.additional-contact-view.span.3" className="text-sm font-semibold flex items-center gap-2">
+              <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.25-1xLBte", id: "profile.contact-info.additional-contact-view.div.25" })} id="profile.contact-info.additional-contact-view.div.7" className="space-y-2">
+                <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.26-U4zFcZ", id: "profile.contact-info.additional-contact-view.div.26" })} id="profile.contact-info.additional-contact-view.div.8" className="flex items-center gap-2">
+                  <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.11-711nBC", id: "profile.contact-info.additional-contact-view.span.11" })} id="profile.contact-info.additional-contact-view.span.3" className="text-sm font-semibold flex items-center gap-2">
                     <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon.2" icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
-                    <span id="profile.contact-info.additional-contact-view.span.4" style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
+                    <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.12-lD3iOY", id: "profile.contact-info.additional-contact-view.span.12" })} id="profile.contact-info.additional-contact-view.span.4" style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
                     <Button id="profile.contact-info.additional-contact-view.button.2" ui={{ uid: 'profile.additional-contact.add-website-B3XH9C', id: 'profile.additional-contact.add-website', kind: 'action', action: 'add-website', part: 'websites' }}
@@ -229,7 +230,7 @@ return (
                     </Button>
                   )}
                 </div>
-                <div id="profile.contact-info.additional-contact-view.div.9" className="space-y-2">
+                <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.27-ERDg5f", id: "profile.contact-info.additional-contact-view.div.27" })} id="profile.contact-info.additional-contact-view.div.9" className="space-y-2">
                   {localData.websites.map((site, index) => (
                     <ContactEntryCard
                       key={site.id}
@@ -241,7 +242,7 @@ return (
                         readOnly ? undefined : () => requestRemoveEntry('website', site.id)
                       }
                     >
-                      <Input
+                      <Input ui={{ uid: "profile.contact-info.additional-contact-view.input.3-h8RXDE", id: "profile.contact-info.additional-contact-view.input.3" }}
                         value={site.url}
                         onChange={(e) => updateWebsite(site.id, { url: e.target.value })}
                         placeholder={t('onboarding.contactInfo.websitePlaceholder')}
@@ -256,11 +257,11 @@ return (
 
             {/* Locations */}
             {activeKindId === 'location' && localData.locations.length > 0 && (
-              <div id="profile.contact-info.additional-contact-view.div.10" className="space-y-4">
-                <div id="profile.contact-info.additional-contact-view.div.11" className="flex items-center gap-2">
-                  <span id="profile.contact-info.additional-contact-view.span.5" className="text-sm font-semibold flex items-center gap-2">
+              <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.28-4VJIF4", id: "profile.contact-info.additional-contact-view.div.28" })} id="profile.contact-info.additional-contact-view.div.10" className="space-y-4">
+                <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.29-BtTU4d", id: "profile.contact-info.additional-contact-view.div.29" })} id="profile.contact-info.additional-contact-view.div.11" className="flex items-center gap-2">
+                  <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.13-6YJFI0", id: "profile.contact-info.additional-contact-view.span.13" })} id="profile.contact-info.additional-contact-view.span.5" className="text-sm font-semibold flex items-center gap-2">
                     <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon.3" icon={quickAddIcon('location')} className="h-4 w-4" style={{ color: quickAddColor('location') }} />
-                    <span id="profile.contact-info.additional-contact-view.span.6" style={{ color: quickAddColor('location') }}>{locale === 'ar' ? 'المواقع' : 'Locations'}</span>
+                    <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.14-B4Q540", id: "profile.contact-info.additional-contact-view.span.14" })} id="profile.contact-info.additional-contact-view.span.6" style={{ color: quickAddColor('location') }}>{locale === 'ar' ? 'المواقع' : 'Locations'}</span>
                   </span>
                   {!readOnly && (
                     <Button id="profile.contact-info.additional-contact-view.button.3" ui={{ uid: 'profile.additional-contact.add-location-9GF5zT', id: 'profile.additional-contact.add-location', kind: 'action', action: 'add-location', part: 'locations' }}
@@ -275,23 +276,23 @@ return (
                   )}
                 </div>
                 
-                <div id="profile.contact-info.additional-contact-view.div.12" className="space-y-4">
+                <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.30-3o5nW3", id: "profile.contact-info.additional-contact-view.div.30" })} id="profile.contact-info.additional-contact-view.div.12" className="space-y-4">
                   {localData.locations.map((loc, idx) => (
                     <div
-                      key={loc.id}
+                      key={loc.id} {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.31-hZ4jcz", id: "profile.contact-info.additional-contact-view.div.31" })}
                       className="space-y-3 rounded-xl border p-4"
                       style={{
                         backgroundColor: `${quickAddColor('location')}10`,
                         borderColor: `${quickAddColor('location')}44`,
                       }}
                     >
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="flex items-center gap-2 text-xs font-semibold" style={{ color: quickAddColor('location') }}>
+                      <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.32-Hjyy2n", id: "profile.contact-info.additional-contact-view.div.32" })} className="flex items-center justify-between gap-3">
+                        <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.15-sRW8Ey", id: "profile.contact-info.additional-contact-view.span.15" })} className="flex items-center gap-2 text-xs font-semibold" style={{ color: quickAddColor('location') }}>
                           <FontAwesomeIcon icon={quickAddIcon('location')} className="h-3.5 w-3.5" />
                           {locale === 'ar' ? `الموقع #${idx + 1}` : `Location #${idx + 1}`}
                         </span>
                         {!readOnly && (
-                          <Button
+                          <Button ui={{ uid: "profile.contact-info.additional-contact-view.button.6-zLOQ6S", id: "profile.contact-info.additional-contact-view.button.6" }}
                             variant="ghost"
                             size="icon"
                             onClick={() => requestRemoveEntry('location', loc.id)}
@@ -304,9 +305,9 @@ return (
                       </div>
 
                       {!readOnly ? (
-                        <div className="space-y-2">
+                        <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.33-7PANzd", id: "profile.contact-info.additional-contact-view.div.33" })} className="space-y-2">
                           {openMapId === loc.id ? (
-                            <div className="space-y-2">
+                            <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.34-0SJ1a3", id: "profile.contact-info.additional-contact-view.div.34" })} className="space-y-2">
                               <AsolMap
                                 id={`map-${loc.id}`}
                                 modes={['picker']}
@@ -392,13 +393,13 @@ return (
                                 onClose={() => setOpenMapId(null)}
                               />
                               {mapMessages[loc.id] && (
-                                <p className="text-xs font-medium text-primary mt-1" role="status">
+                                <p {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.p-2x9W6D", id: "profile.contact-info.additional-contact-view.p" })} className="text-xs font-medium text-primary mt-1" role="status">
                                   {mapMessages[loc.id]}
                                 </p>
                               )}
                             </div>
                           ) : (
-                            <button
+                            <button {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.button.7-i04oH8", id: "profile.contact-info.additional-contact-view.button.7" })}
                               type="button"
                               onClick={() => setOpenMapId(loc.id)}
                               className="asol-control border border-input px-4 font-medium"
@@ -408,10 +409,10 @@ return (
                           )}
                         </div>
                       ) : (
-                        <div className="space-y-1">
-                          <div className="text-sm font-medium">{loc.address || (locale === 'ar' ? 'بدون عنوان' : 'No address')}</div>
+                        <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.35-Xawx4W", id: "profile.contact-info.additional-contact-view.div.35" })} className="space-y-1">
+                          <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.36-FVb18O", id: "profile.contact-info.additional-contact-view.div.36" })} className="text-sm font-medium">{loc.address || (locale === 'ar' ? 'بدون عنوان' : 'No address')}</div>
                           {loc.latitude && loc.longitude ? (
-                            <a
+                            <a {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.a-OYr0yo", id: "profile.contact-info.additional-contact-view.a" })}
                               href={geoLocationUrl(loc.latitude, loc.longitude)}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -421,7 +422,7 @@ return (
                               {locale === 'ar' ? 'فتح في الخرائط' : 'Open in maps'}
                             </a>
                           ) : (
-                            <span className="text-xs text-muted-foreground">
+                            <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.16-0GmKt9", id: "profile.contact-info.additional-contact-view.span.16" })} className="text-xs text-muted-foreground">
                               {locale === 'ar' ? 'لم يتم تحديد موقع جغرافي' : 'No coordinates selected'}
                             </span>
                           )}

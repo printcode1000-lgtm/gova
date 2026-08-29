@@ -43,6 +43,7 @@ import type { DbRow, OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text, isPendingSellerResponse } from "./OrderDetailsPageContent.navigation-summary";
 import { CustomRequestActions } from "./OrderDetailsPageContent.custom-request-actions";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export { CustomRequestActions };
 
@@ -54,7 +55,7 @@ export function ProfileLinks({ id,
   carrierId: string;
 } & { id?: string }) {
   return (
-    <div id={id} className="flex flex-wrap gap-2">
+    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.div-5aqnBe", id: "orders.order-details.order-details-page-content.order-items.div" })} id={id} className="flex flex-wrap gap-2">
       <Link
         href={`/profile?mode=view&uid=${encodeURIComponent(sellerId)}`}
         className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold"
@@ -92,9 +93,9 @@ export function OrderItemRow({ id,
 } & { id?: string }) {
   const itemId = String(item.id);
   return (
-    <div id={id} className="rounded-xl border border-outline-variant bg-background p-3">
-      <div className="flex gap-3">
-        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
+    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.div.2-QuWQ1n", id: "orders.order-details.order-details-page-content.order-items.div.2" })} id={id} className="rounded-xl border border-outline-variant bg-background p-3">
+      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.div.3-81B0nU", id: "orders.order-details.order-details-page-content.order-items.div.3" })} className="flex gap-3">
+        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.div.4-Dbq55Z", id: "orders.order-details.order-details-page-content.order-items.div.4" })} className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
           {item.product_image_snapshot ? (
             <Image
               src={String(item.product_image_snapshot)}
@@ -107,18 +108,18 @@ export function OrderItemRow({ id,
             <PackageCheck className="m-5 h-6 w-6 text-muted-foreground" />
           )}
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <div>
-              <h3 className="font-semibold">
+        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.div.5-4Lh04Z", id: "orders.order-details.order-details-page-content.order-items.div.5" })} className="min-w-0 flex-1">
+          <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.div.6-9yjjkV", id: "orders.order-details.order-details-page-content.order-items.div.6" })} className="flex flex-wrap items-start justify-between gap-2">
+            <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.div.7-Q94rOS", id: "orders.order-details.order-details-page-content.order-items.div.7" })}>
+              <h3 {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.h3-vVF6gv", id: "orders.order-details.order-details-page-content.order-items.h3" })} className="font-semibold">
                 {String(item.product_name_snapshot ?? text.product)}
               </h3>
-              <p className="text-xs text-muted-foreground">
+              <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.p-BM4Y2a", id: "orders.order-details.order-details-page-content.order-items.p" })} className="text-xs text-muted-foreground">
                 {text.quantity}: {String(item.quantity ?? 1)} -{" "}
                 {text.itemStatus}: {statusLabel(item.status)}
               </p>
             </div>
-            <p className="font-bold">
+            <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.p.2-Y9F6iT", id: "orders.order-details.order-details-page-content.order-items.p.2" })} className="font-bold">
               {formatMoney(item.total_price, currency)}
             </p>
           </div>
@@ -152,7 +153,7 @@ export function ItemActions({
   runAction: RunAction;
 }) {
   return (
-    <div className="mt-3 flex flex-wrap gap-2">
+    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.order-items.div.8-ewFR7T", id: "orders.order-details.order-details-page-content.order-items.div.8" })} className="mt-3 flex flex-wrap gap-2">
       {isSeller && isPendingSellerResponse(item.status) ? (
         <>
           <OrderActionButton

@@ -84,18 +84,18 @@ export function CreateCategoryDialog({ id,
         : text.editSubTitle;
   const placeholder = dialog.kind === "category" ? text.mainNamePlaceholder : text.subNamePlaceholder;
   return (
-    <div id={id} className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
-      <form
+    <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div-13Y6FW", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div" })} id={id} className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
+      <form {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.form-9lePWQ", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.form" })}
         className="w-full max-w-md rounded-lg border border-outline-variant bg-surface p-4 shadow-xl"
         onSubmit={(event) => {
           event.preventDefault();
           onSubmit();
         }}
       >
-        <h2 className="text-base font-bold text-on-surface">{title}</h2>
-        <label className="mt-4 block space-y-1.5 text-sm font-semibold text-on-surface">
-          <span>{text.nameLabel}</span>
-          <input
+        <h2 {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.h2-8c5Tq7", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.h2" })} className="text-base font-bold text-on-surface">{title}</h2>
+        <label {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.label-3Rx8MI", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.label" })} className="mt-4 block space-y-1.5 text-sm font-semibold text-on-surface">
+          <span {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.span-5b9gFM", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.span" })}>{text.nameLabel}</span>
+          <input {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.input-7aQH7j", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.input" })}
             autoFocus
             value={value}
             maxLength={120}
@@ -105,8 +105,8 @@ export function CreateCategoryDialog({ id,
             className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </label>
-        <div className="mt-5 flex justify-end gap-2">
-          <button
+        <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.2-5mOvnp", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.2" })} className="mt-5 flex justify-end gap-2">
+          <button {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.button-wKZ9SN", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.button" })}
             type="button"
             disabled={disabled}
             onClick={onClose}
@@ -114,7 +114,7 @@ export function CreateCategoryDialog({ id,
           >
             {text.cancel}
           </button>
-          <button
+          <button {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.button.2-zuq8Hz", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.button.2" })}
             type="submit"
             disabled={disabled || !value.trim()}
             className="h-9 rounded-lg bg-primary px-4 text-xs font-semibold text-on-primary disabled:opacity-60"
@@ -139,7 +139,7 @@ export function IconButton({ id,
   children: React.ReactNode;
 } & { id?: string }) {
   return (
-    <button id={id}
+    <button {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.button.3-7TSxKV", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.button.3" })} id={id}
       type="button"
       disabled={disabled}
       onClick={onClick}
@@ -165,11 +165,11 @@ export function ManagerColumn({ id,
   children: React.ReactNode;
 } & { id?: string }) {
   return (
-    <div id={id} className="flex min-h-0 flex-col gap-3 border-b border-outline-variant p-3 lg:border-b-0 lg:border-e">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-bold text-on-surface">{title}</h2>
+    <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.3-DCa65D", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.3" })} id={id} className="flex min-h-0 flex-col gap-3 border-b border-outline-variant p-3 lg:border-b-0 lg:border-e">
+      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.4-PSE88o", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.4" })} className="flex items-center justify-between gap-2">
+        <h2 {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.h2.2-lB041q", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.h2.2" })} className="text-sm font-bold text-on-surface">{title}</h2>
         {actionLabel && onAdd ? (
-          <button
+          <button {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.button.4-8U8ZKu", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.button.4" })}
             type="button"
             disabled={disabled}
             onClick={onAdd}
@@ -180,7 +180,7 @@ export function ManagerColumn({ id,
           </button>
         ) : null}
       </div>
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pe-1">{children}</div>
+      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.5-605GgQ", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.5" })} className="min-h-0 flex-1 space-y-2 overflow-y-auto pe-1">{children}</div>
     </div>
   );
 }
@@ -198,17 +198,17 @@ export function ProductManagerCard({ id,
   toggleUi?: UiDescriptor;
 } & { id?: string }) {
   return (
-    <article id={id} className={`rounded-lg border border-outline-variant bg-surface-container-low p-2 ${product.status === "hidden" ? "opacity-55" : ""}`}>
-      <div className="flex gap-3">
-        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-surface-bright">
+    <article {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.article-PZ3ewD", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.article" })} id={id} className={`rounded-lg border border-outline-variant bg-surface-container-low p-2 ${product.status === "hidden" ? "opacity-55" : ""}`}>
+      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.6-ZQpA7s", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.6" })} className="flex gap-3">
+        <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.7-FV7hIH", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.7" })} className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-surface-bright">
           {product.imageUrl ? (
             <Image src={product.imageUrl} alt={product.nameAr} fill className="object-cover" />
           ) : null}
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="line-clamp-2 text-xs font-semibold text-on-surface">{product.nameAr}</p>
-          <p className="mt-1 truncate text-[10px] text-on-surface-variant">{product.nameEn}</p>
-          <div className="mt-2 flex items-center justify-between gap-2">
+        <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.8-XI8hd1", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.8" })} className="min-w-0 flex-1">
+          <p {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p-w22O8Q", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p" })} className="line-clamp-2 text-xs font-semibold text-on-surface">{product.nameAr}</p>
+          <p {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.2-rpc5PP", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.2" })} className="mt-1 truncate text-[10px] text-on-surface-variant">{product.nameEn}</p>
+          <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.9-ee8ehY", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.9" })} className="mt-2 flex items-center justify-between gap-2">
             <StatusBadge hidden={product.status === "hidden"} />
             <VisibilityButton
               hidden={product.status === "hidden"}
@@ -225,7 +225,7 @@ export function ProductManagerCard({ id,
 
 export function StatusBadge({ id, hidden }: { hidden: boolean } & { id?: string }) {
   return (
-    <span id={id} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${hidden ? "bg-error/10 text-error" : "bg-primary/10 text-primary"}`}>
+    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.span.2-AC8Xho", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.span.2" })} id={id} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${hidden ? "bg-error/10 text-error" : "bg-primary/10 text-primary"}`}>
       {hidden ? text.hidden : text.visible}
     </span>
   );
@@ -259,7 +259,7 @@ export function VisibilityButton({
 
 export function LoadingFrame({ id, compact = false }: { compact?: boolean } & { id?: string }) {
   return (
-    <div id={id} className={`flex items-center justify-center ${compact ? "min-h-[360px]" : "min-h-screen"}`}>
+    <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.10-SFYg3W", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.10" })} id={id} className={`flex items-center justify-center ${compact ? "min-h-[360px]" : "min-h-screen"}`}>
       <LoadingSpinner size="lg" />
     </div>
   );
@@ -267,8 +267,8 @@ export function LoadingFrame({ id, compact = false }: { compact?: boolean } & { 
 
 export function MessageFrame({ id, message }: { message: string } & { id?: string }) {
   return (
-    <main id={id} className="grid min-h-screen place-items-center bg-background p-4">
-      <p className="rounded-lg border border-outline-variant bg-surface p-5 text-center text-sm text-on-surface">
+    <main {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.main-3Z15JB", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.main" })} id={id} className="grid min-h-screen place-items-center bg-background p-4">
+      <p {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.3-2V5lkr", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.3" })} className="rounded-lg border border-outline-variant bg-surface p-5 text-center text-sm text-on-surface">
         {message}
       </p>
     </main>

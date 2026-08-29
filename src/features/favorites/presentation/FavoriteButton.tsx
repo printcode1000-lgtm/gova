@@ -74,7 +74,7 @@ export function FavoriteButton({ item, className, label, ui, variant = "favorite
       ) : (
         <Heart className={cn("h-5 w-5", active && "fill-current")} />
       )}
-      {label ? <span>{label}</span> : null}
+      {label ? <span {...uiAttributes({ uid: "favorites.favorite-button.span-10LCVa", id: "favorites.favorite-button.span" })}>{label}</span> : null}
     </button>
   );
 }

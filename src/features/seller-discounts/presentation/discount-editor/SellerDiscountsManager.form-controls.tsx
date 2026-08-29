@@ -30,6 +30,7 @@ import {
   NumberInput,
   Toggle,
 } from "./SellerDiscountsManager.section-03";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function DiscountEditor({ id,
   discount,
@@ -93,34 +94,34 @@ export function DiscountEditor({ id,
     }));
 
   return (
-    <article id={id} className="rounded-2xl border border-outline-variant bg-surface p-3 shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+    <article {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.article-7JdI4X", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.article" })} id={id} className="rounded-2xl border border-outline-variant bg-surface p-3 shadow-sm">
+      <div {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div-5k2YTv", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div" })} className="flex flex-wrap items-start justify-between gap-3">
+        <div {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.2-n93hLx", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.2" })} className="flex min-w-0 items-center gap-3">
+          <span {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.span-0DQqny", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.span" })} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <Icon className="h-5 w-5" />
           </span>
-          <div>
-            <h4 className="text-sm font-bold text-on-surface">{typeLabel}</h4>
-            <p className="text-xs text-on-surface-variant">
+          <div {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.3-SwGHR8", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.3" })}>
+            <h4 {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.h4-JS2YIC", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.h4" })} className="text-sm font-bold text-on-surface">{typeLabel}</h4>
+            <p {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.p-Xt3MfY", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.p" })} className="text-xs text-on-surface-variant">
               {discount.title ||
                 (ar ? "عرض جديد يحتاج عنوانًا وشروطًا" : "New offer needs a title and rules")}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <select
+        <div {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.4-6EyZMa", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.4" })} className="flex items-center gap-2">
+          <select {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.select-S5YRda", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.select" })}
             value={discount.status}
             onChange={(event) =>
               set("status", event.target.value as SellerDiscountRule["status"])
             }
             className="h-9 rounded-lg border border-outline-variant bg-surface px-2 text-xs"
           >
-            <option value="draft">{ar ? "مسودة" : "Draft"}</option>
-            <option value="active">{ar ? "نشط" : "Active"}</option>
-            <option value="paused">{ar ? "متوقف" : "Paused"}</option>
-            <option value="expired">{ar ? "منتهي" : "Expired"}</option>
+            <option {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option-9F0eJl", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option" })} value="draft">{ar ? "مسودة" : "Draft"}</option>
+            <option {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.2-sUR18X", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.2" })} value="active">{ar ? "نشط" : "Active"}</option>
+            <option {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.3-JDz7th", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.3" })} value="paused">{ar ? "متوقف" : "Paused"}</option>
+            <option {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.4-qc9xTg", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.4" })} value="expired">{ar ? "منتهي" : "Expired"}</option>
           </select>
-          <button
+          <button {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.button-27ZBPv", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.button" })}
             type="button"
             onClick={onRemove}
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-error/30 text-error"
@@ -131,7 +132,7 @@ export function DiscountEditor({ id,
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
+      <div {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.5-WIJEJ1", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.5" })} className="mt-4 grid gap-3 md:grid-cols-2">
         <Field label={ar ? "عنوان العرض" : "Title"} description={ar ? "اسم واضح وقصير يراه العميل." : "A clear, short name customers will see."}>
           <Input ui={{ uid: "seller-discounts.title-AC5Jyj", id: "seller-discounts.title", kind: "field", part: "form" }}
             value={discount.title}
@@ -148,18 +149,18 @@ export function DiscountEditor({ id,
           />
         </Field>
         <Field label={ar ? "نوع القيمة" : "Value type"} description={ar ? "حدد كيف تُحسب فائدة العرض." : "Choose how the offer benefit is calculated."}>
-          <select
+          <select {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.select.2-WxSgG5", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.select.2" })}
             value={discount.valueType}
             onChange={(event) =>
               set("valueType", event.target.value as SellerDiscountValueType)
             }
             className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
           >
-            <option value="percentage">{ar ? "نسبة مئوية" : "Percentage"}</option>
-            <option value="fixed_amount">{ar ? "مبلغ ثابت" : "Fixed amount"}</option>
-            <option value="fixed_bundle_price">{ar ? "سعر باقة ثابت" : "Bundle price"}</option>
-            <option value="free_shipping">{ar ? "شحن مجاني" : "Free shipping"}</option>
-            <option value="free_gift">{ar ? "هدية مجانية" : "Free gift"}</option>
+            <option {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.5-R5E6sA", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.5" })} value="percentage">{ar ? "نسبة مئوية" : "Percentage"}</option>
+            <option {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.6-2XA8Zo", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.6" })} value="fixed_amount">{ar ? "مبلغ ثابت" : "Fixed amount"}</option>
+            <option {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.7-3zXE7m", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.7" })} value="fixed_bundle_price">{ar ? "سعر باقة ثابت" : "Bundle price"}</option>
+            <option {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.8-Lm4vn1", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.8" })} value="free_shipping">{ar ? "شحن مجاني" : "Free shipping"}</option>
+            <option {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.9-eMW57v", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.option.9" })} value="free_gift">{ar ? "هدية مجانية" : "Free gift"}</option>
           </select>
         </Field>
         <Field
@@ -291,7 +292,7 @@ export function DiscountEditor({ id,
         </Field>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.6-XU2OrY", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.div.6" })} className="mt-4 flex flex-wrap gap-2">
         <Toggle
           active={discount.combinable}
           label={ar ? "قابل للدمج" : "Combinable"}
@@ -318,7 +319,7 @@ export function DiscountEditor({ id,
         />
       </div>
 
-      <p className="mt-3 text-xs text-on-surface-variant">
+      <p {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.p.2-f2WKR9", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.p.2" })} className="mt-3 text-xs text-on-surface-variant">
         {ar ? "معاينة مختصرة: " : "Preview: "}
         {discount.valueType === "percentage"
           ? `${discount.value}%`
@@ -348,9 +349,9 @@ export function Field({ id,
   children: React.ReactNode;
 } & { id?: string }) {
   return (
-    <label id={id} className="space-y-1.5 text-xs font-semibold text-on-surface">
-      <span className="block">{label}</span>
-      <span className="block font-normal leading-5 text-on-surface-variant">{description}</span>
+    <label {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.label-FdTN60", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.label" })} id={id} className="space-y-1.5 text-xs font-semibold text-on-surface">
+      <span {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.span.2-K2L0Kb", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.span.2" })} className="block">{label}</span>
+      <span {...uiAttributes({ uid: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.span.3-ZB82N7", id: "seller-discounts.discount-editor.seller-discounts-manager.form-controls.span.3" })} className="block font-normal leading-5 text-on-surface-variant">{description}</span>
       {children}
     </label>
   );

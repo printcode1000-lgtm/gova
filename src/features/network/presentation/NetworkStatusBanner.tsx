@@ -7,6 +7,7 @@ import { BOTTOM_NAV_CLEARANCE } from '@/shared/layouts/bottom-nav-layout';
 import { useNetworkStatus, type NetworkStatus } from '@/features/network/presentation/hooks/use-network-status';
 import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const DISCONNECTED_STATUSES: NetworkStatus[] = ['offline', 'server-unreachable'];
 
@@ -39,7 +40,7 @@ export function NetworkStatusBanner() {
       : t('network.serverUnavailable');
 
   return (
-    <div id="network.network-status-banner.div"
+    <div {...uiAttributes({ uid: "network.network-status-banner.div.2-ee1wM3", id: "network.network-status-banner.div.2" })} id="network.network-status-banner.div"
       role="status"
       aria-live="polite"
       className={cn(
@@ -51,9 +52,9 @@ export function NetworkStatusBanner() {
       style={{ bottom: BOTTOM_NAV_CLEARANCE }}
     >
       <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-      <p id="network.network-status-banner.p" className="min-w-0 flex-1 text-sm font-medium">{message}</p>
+      <p {...uiAttributes({ uid: "network.network-status-banner.p.2-Q0vbLm", id: "network.network-status-banner.p.2" })} id="network.network-status-banner.p" className="min-w-0 flex-1 text-sm font-medium">{message}</p>
       {!showRestored && (
-        <button id="network.network-status-banner.button"
+        <button {...uiAttributes({ uid: "network.network-status-banner.button.2-IJjN7S", id: "network.network-status-banner.button.2" })} id="network.network-status-banner.button"
           type="button"
           onClick={() => void checkConnection()}
           disabled={isChecking}

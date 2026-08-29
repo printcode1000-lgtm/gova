@@ -5,13 +5,14 @@ import { AndroidReleasePaths } from "../components/AndroidReleasePaths";
 import { ReleaseCommandConfirmDialog } from "../components/ReleaseCommandConfirmDialog";
 import { ReleaseJobStopDialog } from "../components/ReleaseJobStopDialog";
 import { useReleaseJobs } from "../hooks/use-release-jobs";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function BuildPublishTab() {
   const { t } = useAdminArabic();
   const jobs = useReleaseJobs();
   const locked = jobs.locked;
   return (
-    <section id="google-play-console.tabs.build-publish-tab.section" className="space-y-5">
+    <section {...uiAttributes({ uid: "google-play-console.tabs.build-publish-tab.section.2-qT7AfE", id: "google-play-console.tabs.build-publish-tab.section.2" })} id="google-play-console.tabs.build-publish-tab.section" className="space-y-5">
       <ReleaseCommandConfirmDialog
         pending={jobs.pending}
         catalog={jobs.catalog}

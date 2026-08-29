@@ -7,6 +7,7 @@ import type { BuildJobRecord } from "@asol/release-core/console";
 import { DeployRunbookCollapsible } from "../DeployRunbookCollapsible";
 import { parseAndroidReleaseLogSnapshot } from "../android-release-log-snapshot";
 import { TerminalActions, TerminalOutput } from "../DeployRunbookTerminal";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 function IndicatorCard(props: {
   label: string;
@@ -15,13 +16,13 @@ function IndicatorCard(props: {
   className?: string;
 } & { id?: string }) {
   return (
-    <div id={props.id} className={props.className ?? ""}>
-      <div className="min-w-0 rounded-md border bg-surface p-3">
-        <div className="text-xs text-on-surface-variant">{props.label}</div>
-        <div className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
+    <div {...uiAttributes({ uid: "google-play-console.android-release-paths-terminal.div.2-v3aOtF", id: "google-play-console.android-release-paths-terminal.div.2" })} id={props.id} className={props.className ?? ""}>
+      <div {...uiAttributes({ uid: "google-play-console.android-release-paths-terminal.div.3-OP0rLm", id: "google-play-console.android-release-paths-terminal.div.3" })} className="min-w-0 rounded-md border bg-surface p-3">
+        <div {...uiAttributes({ uid: "google-play-console.android-release-paths-terminal.div.4-6ATR9Y", id: "google-play-console.android-release-paths-terminal.div.4" })} className="text-xs text-on-surface-variant">{props.label}</div>
+        <div {...uiAttributes({ uid: "google-play-console.android-release-paths-terminal.div.5-v3D2MM", id: "google-play-console.android-release-paths-terminal.div.5" })} className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
           {props.value || "—"}
         </div>
-        <p className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
+        <p {...uiAttributes({ uid: "google-play-console.android-release-paths-terminal.p-3LX3eh", id: "google-play-console.android-release-paths-terminal.p" })} className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
       </div>
     </div>
   );
@@ -39,12 +40,12 @@ export function AndroidReleasePathsTerminal(props: {
   );
 
   return (
-    <section id="google-play-console.android-release-paths-terminal.section" className="mt-3 grid min-w-0 grid-cols-1 gap-3">
+    <section {...uiAttributes({ uid: "google-play-console.android-release-paths-terminal.section.2-U5X3Nc", id: "google-play-console.android-release-paths-terminal.section.2" })} id="google-play-console.android-release-paths-terminal.section" className="mt-3 grid min-w-0 grid-cols-1 gap-3">
       <DeployRunbookCollapsible id="google-play-console.android-release-paths-terminal.deploy-runbook-collapsible"
         title={props.t("releaseConsole.androidPaths.executionIndicatorsTitle")}
         description={props.t("releaseConsole.androidPaths.executionIndicatorsHelp")}
       >
-        <div id="google-play-console.android-release-paths-terminal.div" className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+        <div {...uiAttributes({ uid: "google-play-console.android-release-paths-terminal.div.6-Qb02JM", id: "google-play-console.android-release-paths-terminal.div.6" })} id="google-play-console.android-release-paths-terminal.div" className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
           <IndicatorCard id="google-play-console.android-release-paths-terminal.indicator-card"
             label={props.t("releaseConsole.androidPaths.indicatorStatus")}
             value={snapshot.status}

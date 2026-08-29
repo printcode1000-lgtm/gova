@@ -17,6 +17,7 @@ import {
   hasWorkingHours,
 } from "@/features/profile-working-hours";
 import { CategoryTabsStrip } from "@/shared/ui/category-tabs-strip";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface WorkingHoursCardProps {
   mode: "edit" | "preview";
@@ -93,17 +94,17 @@ export function WorkingHoursCard({ id,
   if (!isEdit && !hasAnyHours) return null;
 
   return (
-    <section id={id} className="min-w-0 space-y-4 rounded-xl border border-outline-variant bg-surface p-4">
+    <section {...uiAttributes({ uid: "profile-working-hours.working-hours-card.section-TauBS9", id: "profile-working-hours.working-hours-card.section" })} id={id} className="min-w-0 space-y-4 rounded-xl border border-outline-variant bg-surface p-4">
       {!isEdit ? (
-        <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
+        <div {...uiAttributes({ uid: "profile-working-hours.working-hours-card.div-7aRZUK", id: "profile-working-hours.working-hours-card.div" })} className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+          <div {...uiAttributes({ uid: "profile-working-hours.working-hours-card.div.2-r51kQk", id: "profile-working-hours.working-hours-card.div.2" })} className="min-w-0">
+            <h3 {...uiAttributes({ uid: "profile-working-hours.working-hours-card.h3-wtoRH5", id: "profile-working-hours.working-hours-card.h3" })} className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
               <CalendarClock className="h-5 w-5 text-primary" />
               {text.title}
             </h3>
           </div>
           {hasAnyHours ? (
-            <span
+            <span {...uiAttributes({ uid: "profile-working-hours.working-hours-card.span-GkB6dD", id: "profile-working-hours.working-hours-card.span" })}
               className={`max-w-full break-words rounded-full px-3 py-1 text-xs font-semibold ${
                 currentStatus === "open"
                   ? "bg-success/15 text-success"
@@ -117,7 +118,7 @@ export function WorkingHoursCard({ id,
       ) : null}
 
       {!isEdit && !hasAnyHours ? (
-        <p className="break-words text-sm text-on-surface-variant">{text.notSet}</p>
+        <p {...uiAttributes({ uid: "profile-working-hours.working-hours-card.p-ZZ274I", id: "profile-working-hours.working-hours-card.p" })} className="break-words text-sm text-on-surface-variant">{text.notSet}</p>
       ) : null}
 
       <CategoryTabsStrip
@@ -131,19 +132,19 @@ export function WorkingHoursCard({ id,
         onSelect={(dayId) => setSelectedDayId(dayId as WorkingDayId)}
       />
 
-      <div className="min-w-0 space-y-3">
+      <div {...uiAttributes({ uid: "profile-working-hours.working-hours-card.div.3-TqKZR6", id: "profile-working-hours.working-hours-card.div.3" })} className="min-w-0 space-y-3">
         {visibleDays.map((day) => (
           <div
-            key={day.day}
+            key={day.day} {...uiAttributes({ uid: "profile-working-hours.working-hours-card.div.4-CF7vDv", id: "profile-working-hours.working-hours-card.div.4" })}
             className="min-w-0 rounded-lg border border-outline-variant/70 bg-surface-container-low p-3"
           >
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="min-w-0 break-words text-sm font-semibold text-on-surface">
+            <div {...uiAttributes({ uid: "profile-working-hours.working-hours-card.div.5-B9f93l", id: "profile-working-hours.working-hours-card.div.5" })} className="flex flex-wrap items-center justify-between gap-2">
+              <p {...uiAttributes({ uid: "profile-working-hours.working-hours-card.p.2-A1pIRm", id: "profile-working-hours.working-hours-card.p.2" })} className="min-w-0 break-words text-sm font-semibold text-on-surface">
                 {getWorkingHoursDayLabel(day.day, locale)}
               </p>
               {isEdit ? (
-                <label className="inline-flex items-center gap-2 text-xs font-semibold text-on-surface">
-                  <input
+                <label {...uiAttributes({ uid: "profile-working-hours.working-hours-card.label-MmH3Wp", id: "profile-working-hours.working-hours-card.label" })} className="inline-flex items-center gap-2 text-xs font-semibold text-on-surface">
+                  <input {...uiAttributes({ uid: "profile-working-hours.working-hours-card.input-IS4zBK", id: "profile-working-hours.working-hours-card.input" })}
                     type="checkbox"
                     checked={day.open}
                     onChange={(event) => toggleDay(day.day, event.target.checked)}
@@ -151,24 +152,24 @@ export function WorkingHoursCard({ id,
                   {day.open ? text.open : text.closed}
                 </label>
               ) : (
-                <span className="min-w-0 break-words text-xs text-on-surface-variant">
+                <span {...uiAttributes({ uid: "profile-working-hours.working-hours-card.span.2-mE1JF1", id: "profile-working-hours.working-hours-card.span.2" })} className="min-w-0 break-words text-xs text-on-surface-variant">
                   {day.open ? text.open : text.closed}
                 </span>
               )}
             </div>
 
             {day.open ? (
-              <div className="mt-3 min-w-0 space-y-2">
+              <div {...uiAttributes({ uid: "profile-working-hours.working-hours-card.div.6-QA4w5S", id: "profile-working-hours.working-hours-card.div.6" })} className="mt-3 min-w-0 space-y-2">
                 {day.periods.map((period, index) => (
                   <div
-                    key={period.id}
+                    key={period.id} {...uiAttributes({ uid: "profile-working-hours.working-hours-card.div.7-Et5aQk", id: "profile-working-hours.working-hours-card.div.7" })}
                     className="grid min-w-0 items-center gap-2 sm:grid-cols-[1fr_1fr_auto]"
                   >
                     {isEdit ? (
                       <>
-                        <label className="space-y-1 text-xs text-on-surface-variant">
-                          <span>{text.from}</span>
-                          <input
+                        <label {...uiAttributes({ uid: "profile-working-hours.working-hours-card.label.2-SWC3aw", id: "profile-working-hours.working-hours-card.label.2" })} className="space-y-1 text-xs text-on-surface-variant">
+                          <span {...uiAttributes({ uid: "profile-working-hours.working-hours-card.span.3-C1q1Tk", id: "profile-working-hours.working-hours-card.span.3" })}>{text.from}</span>
+                          <input {...uiAttributes({ uid: "profile-working-hours.working-hours-card.input.2-CP71CY", id: "profile-working-hours.working-hours-card.input.2" })}
                             type="time"
                             value={period.start}
                             onChange={(event) =>
@@ -186,9 +187,9 @@ export function WorkingHoursCard({ id,
                             className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm text-on-surface"
                           />
                         </label>
-                        <label className="space-y-1 text-xs text-on-surface-variant">
-                          <span>{text.to}</span>
-                          <input
+                        <label {...uiAttributes({ uid: "profile-working-hours.working-hours-card.label.3-TFl62x", id: "profile-working-hours.working-hours-card.label.3" })} className="space-y-1 text-xs text-on-surface-variant">
+                          <span {...uiAttributes({ uid: "profile-working-hours.working-hours-card.span.4-heHN7B", id: "profile-working-hours.working-hours-card.span.4" })}>{text.to}</span>
+                          <input {...uiAttributes({ uid: "profile-working-hours.working-hours-card.input.3-YRiv2k", id: "profile-working-hours.working-hours-card.input.3" })}
                             type="time"
                             value={period.end}
                             onChange={(event) =>
@@ -206,7 +207,7 @@ export function WorkingHoursCard({ id,
                             className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm text-on-surface"
                           />
                         </label>
-                        <button
+                        <button {...uiAttributes({ uid: "profile-working-hours.working-hours-card.button-r23NiD", id: "profile-working-hours.working-hours-card.button" })}
                           type="button"
                           onClick={() =>
                             setValue(
@@ -226,14 +227,14 @@ export function WorkingHoursCard({ id,
                         </button>
                       </>
                     ) : (
-                      <p className="min-w-0 break-words text-xs text-on-surface-variant">
+                      <p {...uiAttributes({ uid: "profile-working-hours.working-hours-card.p.3-M2sVeU", id: "profile-working-hours.working-hours-card.p.3" })} className="min-w-0 break-words text-xs text-on-surface-variant">
                         {period.start} - {period.end}
                       </p>
                     )}
                   </div>
                 ))}
                 {isEdit && day.periods.length < 4 ? (
-                  <button
+                  <button {...uiAttributes({ uid: "profile-working-hours.working-hours-card.button.2-H4wEwx", id: "profile-working-hours.working-hours-card.button.2" })}
                     type="button"
                     onClick={() =>
                       setValue(

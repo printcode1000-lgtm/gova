@@ -28,6 +28,7 @@ import {
   shareToInstagram,
   shareToWhatsApp,
 } from "./share-actions.client";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ShareMenuProps {
   content: ShareContent;
@@ -134,7 +135,7 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
         dir={ar ? "rtl" : "ltr"}
         className="fixed inset-x-0 bottom-0 top-auto w-full max-w-none translate-x-0 translate-y-0 rounded-b-none rounded-t-[2rem] border-outline-variant/70 bg-surface/98 px-4 pb-[max(1.25rem,var(--asol-safe-area-bottom))] pt-5 shadow-2xl backdrop-blur-xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl sm:p-6"
       >
-        <div className="mx-auto mb-1 h-1.5 w-12 rounded-full bg-outline-variant sm:hidden" />
+        <div {...uiAttributes({ uid: "sharing.share-menu.div-fsCYT9", id: "sharing.share-menu.div" })} className="mx-auto mb-1 h-1.5 w-12 rounded-full bg-outline-variant sm:hidden" />
         <DialogHeader className="text-start sm:text-start">
           <DialogTitle>{ar ? "مشاركة عبر" : "Share via"}</DialogTitle>
           <DialogDescription>
@@ -144,9 +145,9 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-4 flex items-center gap-3 rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3">
+        <div {...uiAttributes({ uid: "sharing.share-menu.div.2-iBvPs0", id: "sharing.share-menu.div.2" })} className="mt-4 flex items-center gap-3 rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3">
           {content.imageUrl ? (
-            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-surface-container-high">
+            <div {...uiAttributes({ uid: "sharing.share-menu.div.3-ImbVP2", id: "sharing.share-menu.div.3" })} className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-surface-container-high">
               <Image
                 src={content.imageUrl}
                 alt=""
@@ -156,21 +157,21 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
               />
             </div>
           ) : (
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div {...uiAttributes({ uid: "sharing.share-menu.div.4-PsV8uf", id: "sharing.share-menu.div.4" })} className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Share2 className="h-6 w-6" />
             </div>
           )}
-          <div className="min-w-0">
-            <p className="line-clamp-1 text-sm font-bold text-on-surface">
+          <div {...uiAttributes({ uid: "sharing.share-menu.div.5-puiS7j", id: "sharing.share-menu.div.5" })} className="min-w-0">
+            <p {...uiAttributes({ uid: "sharing.share-menu.p-k8KJ5T", id: "sharing.share-menu.p" })} className="line-clamp-1 text-sm font-bold text-on-surface">
               {content.title}
             </p>
-            <p className="mt-1 line-clamp-1 text-xs text-on-surface-variant">
+            <p {...uiAttributes({ uid: "sharing.share-menu.p.2-MoBLs5", id: "sharing.share-menu.p.2" })} className="mt-1 line-clamp-1 text-xs text-on-surface-variant">
               {content.text}
             </p>
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
+        <div {...uiAttributes({ uid: "sharing.share-menu.div.6-CLPd9a", id: "sharing.share-menu.div.6" })} className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
           <DestinationButton
             label="WhatsApp"
             destination="whatsapp"
@@ -201,7 +202,7 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
           </DestinationButton>
         </div>
 
-        <button
+        <button {...uiAttributes({ uid: "sharing.share-menu.button-sA118d", id: "sharing.share-menu.button" })}
           type="button"
           onClick={() => void saveQrCode()}
           disabled={savingQrCode}
@@ -217,7 +218,7 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
               : "Create and save QR code"}
         </button>
 
-        <p
+        <p {...uiAttributes({ uid: "sharing.share-menu.p.3-F5R9iy", id: "sharing.share-menu.p.3" })}
           role="status"
           aria-live="polite"
           className={cn(
@@ -244,13 +245,13 @@ function DestinationButton({ id,
   onClick: () => void;
 } & { id?: string }) {
   return (
-    <button id={id}
+    <button {...uiAttributes({ uid: "sharing.share-menu.button.2-32w1CX", id: "sharing.share-menu.button.2" })} id={id}
       type="button"
       onClick={onClick}
       className="group flex min-w-0 flex-col items-center gap-2 rounded-2xl p-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       aria-label={label}
     >
-      <span
+      <span {...uiAttributes({ uid: "sharing.share-menu.span-61qJVX", id: "sharing.share-menu.span" })}
         className={cn(
           "flex h-14 w-14 items-center justify-center rounded-2xl text-2xl shadow-sm transition group-active:scale-95 [&>svg]:h-6 [&>svg]:w-6",
           destinationStyles[destination],
@@ -258,7 +259,7 @@ function DestinationButton({ id,
       >
         {children}
       </span>
-      <span className="w-full truncate text-[11px] font-semibold text-on-surface-variant sm:text-xs">
+      <span {...uiAttributes({ uid: "sharing.share-menu.span.2-45YIiV", id: "sharing.share-menu.span.2" })} className="w-full truncate text-[11px] font-semibold text-on-surface-variant sm:text-xs">
         {label}
       </span>
     </button>

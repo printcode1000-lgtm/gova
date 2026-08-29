@@ -5,6 +5,7 @@ import { DeployRunbookCollapsible } from "./DeployRunbookCollapsible";
 import { ExecutionBox } from "./DeployRunbookExecutionBox";
 import { ExecutionIndicator, TerminalActions, TerminalOutput } from "./DeployRunbookTerminal";
 import type { DeployTab } from "./DeployRunbookTypes";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function DeployRunbookMainGrid(props: {
   tab: DeployTab;
@@ -28,8 +29,8 @@ export function DeployRunbookMainGrid(props: {
   onCancel: () => void;
 }) {
   return (
-    <section id="google-play-console.deploy-runbook-main-grid.section" className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)] lg:gap-4">
-      <div id="google-play-console.deploy-runbook-main-grid.div" className="order-2 min-w-0 space-y-3 lg:order-1">
+    <section {...uiAttributes({ uid: "google-play-console.deploy-runbook-main-grid.section.2-f4PhmV", id: "google-play-console.deploy-runbook-main-grid.section.2" })} id="google-play-console.deploy-runbook-main-grid.section" className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)] lg:gap-4">
+      <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-main-grid.div.3-Ud55Pm", id: "google-play-console.deploy-runbook-main-grid.div.3" })} id="google-play-console.deploy-runbook-main-grid.div" className="order-2 min-w-0 space-y-3 lg:order-1">
         <DeployRunbookCollapsible id="google-play-console.deploy-runbook-main-grid.deploy-runbook-collapsible"
           title="مؤشرات التنفيذ"
           description="آخر مرحلة وقسم وفرع ظهر في سجل الطرفية."
@@ -51,7 +52,7 @@ export function DeployRunbookMainGrid(props: {
         </DeployRunbookCollapsible>
       </div>
 
-      <div id="google-play-console.deploy-runbook-main-grid.div.2" className="order-1 min-w-0 lg:order-2">
+      <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-main-grid.div.4-lUD60I", id: "google-play-console.deploy-runbook-main-grid.div.4" })} id="google-play-console.deploy-runbook-main-grid.div.2" className="order-1 min-w-0 lg:order-2">
         <ExecutionBox
           locked={props.locked}
           activeJob={props.activeJob}

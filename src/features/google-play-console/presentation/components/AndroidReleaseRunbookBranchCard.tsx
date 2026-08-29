@@ -15,6 +15,7 @@ import {
   StopButton,
 } from "./ReleaseJobIndicators";
 import type { AndroidRunbookStart } from "./AndroidReleaseRunbookTreeShared";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function CommandBranchCard(props: {
   item: AndroidReleaseRunbookPhase["sections"][number]["branches"][number];
@@ -36,17 +37,17 @@ export function CommandBranchCard(props: {
     : props.t("releaseConsole.androidPaths.runCommand");
 
   return (
-    <article id={props.id} className="min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
-      <label className="flex items-start gap-2">
-        <input
+    <article {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.article-0lXVSH", id: "google-play-console.android-release-runbook-branch-card.article" })} id={props.id} className="min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
+      <label {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.label-RHFrJ8", id: "google-play-console.android-release-runbook-branch-card.label" })} className="flex items-start gap-2">
+        <input {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.input-HqxTV0", id: "google-play-console.android-release-runbook-branch-card.input" })}
           type="checkbox"
           className="mt-0.5 shrink-0"
           checked={props.selected}
           onChange={props.onToggle}
         />
-        <span className="min-w-0">
-          <span className="block font-medium break-words">{props.item.label}</span>
-          <span className="mt-1 block text-xs text-on-surface-variant break-words">
+        <span {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.span-ydv8bH", id: "google-play-console.android-release-runbook-branch-card.span" })} className="min-w-0">
+          <span {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.span.2-nn7sN7", id: "google-play-console.android-release-runbook-branch-card.span.2" })} className="block font-medium break-words">{props.item.label}</span>
+          <span {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.span.3-9SiAlr", id: "google-play-console.android-release-runbook-branch-card.span.3" })} className="mt-1 block text-xs text-on-surface-variant break-words">
             {props.help ?? defaultHelp}
           </span>
         </span>
@@ -58,7 +59,7 @@ export function CommandBranchCard(props: {
         {props.item.command}
       </code>
       {props.item.dangerous ? (
-        <span
+        <span {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.span.4-1PDruO", id: "google-play-console.android-release-runbook-branch-card.span.4" })}
           className={
             "mt-2 inline-flex rounded-full bg-error-container px-2 py-0.5 " +
             "text-xs text-on-error-container"
@@ -67,14 +68,14 @@ export function CommandBranchCard(props: {
           {props.t("releaseConsole.androidPaths.dangerBadge")}
         </span>
       ) : null}
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.div-0BSYuE", id: "google-play-console.android-release-runbook-branch-card.div" })} className="mt-3 flex flex-wrap gap-2">
         {props.item.patternOnly ? (
-          <p className="text-xs text-on-surface-variant">
+          <p {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.p-d228jE", id: "google-play-console.android-release-runbook-branch-card.p" })} className="text-xs text-on-surface-variant">
             {props.t("releaseConsole.androidPaths.patternOnlyHelp")}
           </p>
         ) : (
           <>
-            <Button
+            <Button ui={{ uid: "google-play-console.android-release-runbook-branch-card.button-4eUj5G", id: "google-play-console.android-release-runbook-branch-card.button" }}
               disabled={disabled}
               size="sm"
               variant={props.item.dangerous ? "destructive" : "default"}
@@ -100,13 +101,13 @@ export function CommandBranchCard(props: {
           </>
         )}
       </div>
-      <p className="mt-2 text-xs text-on-surface-variant break-words">
+      <p {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.p.2-90Qbfu", id: "google-play-console.android-release-runbook-branch-card.p.2" })} className="mt-2 text-xs text-on-surface-variant break-words">
         {props.selected
           ? props.t("releaseConsole.androidPaths.enabledBranchHelp")
           : props.t("releaseConsole.androidPaths.skippedBranchHelp")}
       </p>
       {props.missingEnv.length > 0 ? (
-        <p className="mt-2 rounded-md bg-muted p-2 text-xs">
+        <p {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.p.3-5t9qIh", id: "google-play-console.android-release-runbook-branch-card.p.3" })} className="mt-2 rounded-md bg-muted p-2 text-xs">
           {props.t("releaseConsole.build.notReady", { names: props.missingEnv.join(", ") })}
         </p>
       ) : null}

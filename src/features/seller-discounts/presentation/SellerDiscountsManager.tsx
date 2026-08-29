@@ -26,6 +26,7 @@ import { useSellerDiscounts } from "./hooks/use-seller-discounts";
 
 import { SellerDiscountsController, TYPE_LABELS_AR, TYPE_LABELS_EN, DISCOUNT_TYPES, isDirty, normalizeForSave } from "./discount-editor/SellerDiscountsManager.discount-form";
 import { DiscountEditor } from "./discount-editor/SellerDiscountsManager.form-controls";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export type { SellerDiscountsController } from "./discount-editor/SellerDiscountsManager.discount-form";
 
@@ -102,23 +103,23 @@ export const SellerDiscountsManager = React.forwardRef<
   };
 
   return (
-    <div id="seller-discounts.seller-discounts-manager.div" className="space-y-4">
-      <section id="seller-discounts.seller-discounts-manager.section" className="rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3">
-        <div id="seller-discounts.seller-discounts-manager.div.2" className="flex flex-wrap items-center justify-between gap-3">
-          <div id="seller-discounts.seller-discounts-manager.div.3">
-            <h3 id="seller-discounts.seller-discounts-manager.h3" className="text-sm font-bold text-on-surface">
+    <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.div.9-R5Wt7F", id: "seller-discounts.seller-discounts-manager.div.9" })} id="seller-discounts.seller-discounts-manager.div" className="space-y-4">
+      <section {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.section.2-yyRc5C", id: "seller-discounts.seller-discounts-manager.section.2" })} id="seller-discounts.seller-discounts-manager.section" className="rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3">
+        <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.div.10-d7j50H", id: "seller-discounts.seller-discounts-manager.div.10" })} id="seller-discounts.seller-discounts-manager.div.2" className="flex flex-wrap items-center justify-between gap-3">
+          <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.div.11-HGKM1W", id: "seller-discounts.seller-discounts-manager.div.11" })} id="seller-discounts.seller-discounts-manager.div.3">
+            <h3 {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.h3.2-4a0DDi", id: "seller-discounts.seller-discounts-manager.h3.2" })} id="seller-discounts.seller-discounts-manager.h3" className="text-sm font-bold text-on-surface">
               {ar ? "إدارة خصومات المتجر" : "Manage store offers"}
             </h3>
-            <p id="seller-discounts.seller-discounts-manager.p" className="mt-1 text-xs text-on-surface-variant">
+            <p {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.p.2-WTz3Kr", id: "seller-discounts.seller-discounts-manager.p.2" })} id="seller-discounts.seller-discounts-manager.p" className="mt-1 text-xs text-on-surface-variant">
               {ar
                 ? "كل عرض هنا قابل للحساب في السلة: منتجات، باقات، كوبونات، شحن، هدايا، وإجمالي مشتريات."
                 : "Each offer is a calculable rule for products, bundles, coupons, shipping, gifts, and order totals."}
             </p>
           </div>
-          <div id="seller-discounts.seller-discounts-manager.div.4" className="grid grid-flow-col grid-rows-2 gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.div.12-5Sjw1U", id: "seller-discounts.seller-discounts-manager.div.12" })} id="seller-discounts.seller-discounts-manager.div.4" className="grid grid-flow-col grid-rows-2 gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {DISCOUNT_TYPES.map((type) => (
               <button
-                key={type}
+                key={type} {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.button-Z30KIg", id: "seller-discounts.seller-discounts-manager.button" })}
                 type="button"
                 onClick={() => addDiscount(type)}
                 className="inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border border-outline-variant bg-surface px-2.5 text-xs font-semibold text-on-surface shadow-sm"
@@ -132,24 +133,24 @@ export const SellerDiscountsManager = React.forwardRef<
       </section>
 
       {isLoading ? (
-        <div id="seller-discounts.seller-discounts-manager.div.5" className="rounded-xl border border-outline-variant p-4 text-sm text-on-surface-variant">
+        <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.div.13-14nI0M", id: "seller-discounts.seller-discounts-manager.div.13" })} id="seller-discounts.seller-discounts-manager.div.5" className="rounded-xl border border-outline-variant p-4 text-sm text-on-surface-variant">
           {ar ? "جاري تحميل الخصومات..." : "Loading discounts..."}
         </div>
       ) : null}
       {error ? (
-        <div id="seller-discounts.seller-discounts-manager.div.6" className="rounded-xl border border-error/30 bg-error/10 p-3 text-sm text-error">
+        <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.div.14-c3H5kA", id: "seller-discounts.seller-discounts-manager.div.14" })} id="seller-discounts.seller-discounts-manager.div.6" className="rounded-xl border border-error/30 bg-error/10 p-3 text-sm text-error">
           {error}
         </div>
       ) : null}
       {items.length === 0 && !isLoading ? (
-        <div id="seller-discounts.seller-discounts-manager.div.7" className="rounded-xl border border-dashed border-outline-variant p-5 text-center text-sm text-on-surface-variant">
+        <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.div.15-1AS1eQ", id: "seller-discounts.seller-discounts-manager.div.15" })} id="seller-discounts.seller-discounts-manager.div.7" className="rounded-xl border border-dashed border-outline-variant p-5 text-center text-sm text-on-surface-variant">
           {ar
             ? "لا توجد خصومات بعد. أضف أول عرض من الأزرار بالأعلى."
             : "No offers yet. Add the first one above."}
         </div>
       ) : null}
 
-      <div id="seller-discounts.seller-discounts-manager.div.8" className="grid gap-3">
+      <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.div.16-C8kHAS", id: "seller-discounts.seller-discounts-manager.div.16" })} id="seller-discounts.seller-discounts-manager.div.8" className="grid gap-3">
         {items.map((discount) => (
           <DiscountEditor
             key={discount.id}

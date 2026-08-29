@@ -13,6 +13,7 @@ import { Badge } from '@/shared/ui/badge';
 import type { Product } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
 import { ProductForm } from './ProductForm';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 function generateId() {
   return nextSellerId('prod');
@@ -81,7 +82,7 @@ export function ProductsSection() {
   });
 
   return (
-    <div id="onboarding.sections.products-section.div" className="space-y-6 animate-in fade-in duration-300">
+    <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.5-M9VKT7", id: "onboarding.sections.products-section.div.5" })} id="onboarding.sections.products-section.div" className="space-y-6 animate-in fade-in duration-300">
       <Card id="onboarding.sections.products-section.card">
         <CardHeader id="onboarding.sections.products-section.card-header">
           <CardTitle id="onboarding.sections.products-section.card-title" className="flex items-center gap-2">
@@ -101,12 +102,12 @@ export function ProductsSection() {
               }}
             />
           ) : data.products.products.length === 0 ? (
-            <div id="onboarding.sections.products-section.div.2" className="flex flex-col items-center justify-center py-12 text-center">
-              <div id="onboarding.sections.products-section.div.3" className="rounded-full bg-muted p-4 mb-4">
+            <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.6-24w3WX", id: "onboarding.sections.products-section.div.6" })} id="onboarding.sections.products-section.div.2" className="flex flex-col items-center justify-center py-12 text-center">
+              <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.7-53QK0f", id: "onboarding.sections.products-section.div.7" })} id="onboarding.sections.products-section.div.3" className="rounded-full bg-muted p-4 mb-4">
                 <Package id="onboarding.sections.products-section.package.2" className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 id="onboarding.sections.products-section.h3" className="font-medium mb-2">{t('onboarding.products.emptyTitle')}</h3>
-              <p id="onboarding.sections.products-section.p" className="text-sm text-muted-foreground mb-4 max-w-sm">
+              <h3 {...uiAttributes({ uid: "onboarding.sections.products-section.h3.2-Bmab6X", id: "onboarding.sections.products-section.h3.2" })} id="onboarding.sections.products-section.h3" className="font-medium mb-2">{t('onboarding.products.emptyTitle')}</h3>
+              <p {...uiAttributes({ uid: "onboarding.sections.products-section.p.2-kZM9JC", id: "onboarding.sections.products-section.p.2" })} id="onboarding.sections.products-section.p" className="text-sm text-muted-foreground mb-4 max-w-sm">
                 {t('onboarding.products.emptyDesc')}
               </p>
               <Button id="onboarding.sections.products-section.button" ui={{ uid: 'onboarding.products.add-first-q56BSN', id: 'onboarding.products.add-first', kind: 'action', action: 'create-product', part: 'empty-state' }} onClick={handleCreateProduct} className="gap-2">
@@ -115,26 +116,26 @@ export function ProductsSection() {
               </Button>
             </div>
           ) : (
-            <div id="onboarding.sections.products-section.div.4" className="space-y-4">
+            <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.8-Dmg0fS", id: "onboarding.sections.products-section.div.8" })} id="onboarding.sections.products-section.div.4" className="space-y-4">
               {data.products.products.map((product) => (
                 <div
-                  key={product.id}
+                  key={product.id} {...uiAttributes({ uid: "onboarding.sections.products-section.div.9-TC9lW2", id: "onboarding.sections.products-section.div.9" })}
                   className="flex items-center gap-4 p-4 rounded-lg border transition-colors"
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-medium truncate">{product.title}</h4>
+                  <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.10-oV3OnQ", id: "onboarding.sections.products-section.div.10" })} className="flex-1 min-w-0">
+                    <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.11-fZd9jT", id: "onboarding.sections.products-section.div.11" })} className="flex items-center gap-2">
+                      <h4 {...uiAttributes({ uid: "onboarding.sections.products-section.h4-1TR4gv", id: "onboarding.sections.products-section.h4" })} className="font-medium truncate">{product.title}</h4>
                       {product.isFeatured && (
                         <Badge variant="secondary">{t('onboarding.products.featuredBadge')}</Badge>
                       )}
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                      <span>{product.category}</span>
-                      <span>${product.basePrice.toFixed(2)}</span>
-                      <span>{t('onboarding.common.variants', { count: product.variants.length })}</span>
+                    <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.12-RJWZG2", id: "onboarding.sections.products-section.div.12" })} className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                      <span {...uiAttributes({ uid: "onboarding.sections.products-section.span-b32guY", id: "onboarding.sections.products-section.span" })}>{product.category}</span>
+                      <span {...uiAttributes({ uid: "onboarding.sections.products-section.span.2-8RMZd6", id: "onboarding.sections.products-section.span.2" })}>${product.basePrice.toFixed(2)}</span>
+                      <span {...uiAttributes({ uid: "onboarding.sections.products-section.span.3-5g86JR", id: "onboarding.sections.products-section.span.3" })}>{t('onboarding.common.variants', { count: product.variants.length })}</span>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={() => removeProduct(product.id)}>
+                  <Button ui={{ uid: "onboarding.sections.products-section.button.3-bPy26k", id: "onboarding.sections.products-section.button.3" }} variant="ghost" size="sm" onClick={() => removeProduct(product.id)}>
                     <X className="h-4 w-4" />
                   </Button>
                 </div>

@@ -25,16 +25,16 @@ export function SettingsToggleRow({ id,
   onChange,
 }: SettingsToggleRowProps & { id?: string }) {
   return (
-    <div id={id}
+    <div {...uiAttributes({ uid: "settings.settings-toggle-row.div-687FJH", id: "settings.settings-toggle-row.div" })} id={id}
       className={
         emphasised
           ? "flex flex-col gap-3 rounded-xl border-2 border-primary/30 bg-primary/5 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"
           : "flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"
       }
     >
-      <div className="min-w-0">
-        <p className="text-sm font-semibold text-on-surface">{title}</p>
-        <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+      <div {...uiAttributes({ uid: "settings.settings-toggle-row.div.2-HqrV8B", id: "settings.settings-toggle-row.div.2" })} className="min-w-0">
+        <p {...uiAttributes({ uid: "settings.settings-toggle-row.p-yEBmt5", id: "settings.settings-toggle-row.p" })} className="text-sm font-semibold text-on-surface">{title}</p>
+        <p {...uiAttributes({ uid: "settings.settings-toggle-row.p.2-4H7dJG", id: "settings.settings-toggle-row.p.2" })} className="mt-1 text-xs leading-relaxed text-on-surface-variant">
           {description}
         </p>
       </div>

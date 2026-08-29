@@ -20,9 +20,9 @@ export function NotificationDeviceToggleSection({
 }) {
   if (!state.notificationRuntimeReady) {
     return (
-      <div id="settings.notification-device-toggle-section.div" className="space-y-2" aria-busy="true">
+      <div {...uiAttributes({ uid: "settings.notification-device-toggle-section.div.5-5P26BC", id: "settings.notification-device-toggle-section.div.5" })} id="settings.notification-device-toggle-section.div" className="space-y-2" aria-busy="true">
         <Skeleton id="settings.notification-device-toggle-section.skeleton" className="h-20 w-full rounded-xl" />
-        <span id="settings.notification-device-toggle-section.span" className="sr-only">{state.t("common.loading")}</span>
+        <span {...uiAttributes({ uid: "settings.notification-device-toggle-section.span.2-Ra63g9", id: "settings.notification-device-toggle-section.span.2" })} id="settings.notification-device-toggle-section.span" className="sr-only">{state.t("common.loading")}</span>
       </div>
     );
   }
@@ -31,10 +31,10 @@ export function NotificationDeviceToggleSection({
     !state.pushSupported || !state.session?.uid || state.deviceBusy;
 
   return (
-    <div id="settings.notification-device-toggle-section.div.2" className="space-y-4">
+    <div {...uiAttributes({ uid: "settings.notification-device-toggle-section.div.6-LFdY3r", id: "settings.notification-device-toggle-section.div.6" })} id="settings.notification-device-toggle-section.div.2" className="space-y-4">
       {state.permissionBlocked ? (
-        <div id="settings.notification-device-toggle-section.div.3" className="space-y-3">
-          <div id="settings.notification-device-toggle-section.div.4"
+        <div {...uiAttributes({ uid: "settings.notification-device-toggle-section.div.7-5ngYAZ", id: "settings.notification-device-toggle-section.div.7" })} id="settings.notification-device-toggle-section.div.3" className="space-y-3">
+          <div {...uiAttributes({ uid: "settings.notification-device-toggle-section.div.8-9Zcjg6", id: "settings.notification-device-toggle-section.div.8" })} id="settings.notification-device-toggle-section.div.4"
             className={cn(
               "grid gap-2",
               state.canOpenSettings && "sm:grid-cols-2",
@@ -49,7 +49,7 @@ export function NotificationDeviceToggleSection({
               {state.t("notifications.permissionPrompt.recheck")}
             </button>
             {state.canOpenSettings ? (
-              <button id="settings.notification-device-toggle-section.button"
+              <button {...uiAttributes({ uid: "settings.notification-device-toggle-section.button.2-X946Bl", id: "settings.notification-device-toggle-section.button.2" })} id="settings.notification-device-toggle-section.button"
                 type="button"
                 disabled={state.deviceBusy}
                 onClick={() => void state.openNotificationSettings()}
@@ -59,7 +59,7 @@ export function NotificationDeviceToggleSection({
               </button>
             ) : null}
           </div>
-          <p id="settings.notification-device-toggle-section.p" className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">
+          <p {...uiAttributes({ uid: "settings.notification-device-toggle-section.p.4-zhYe4m", id: "settings.notification-device-toggle-section.p.4" })} id="settings.notification-device-toggle-section.p" className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">
             {state.blockedNotice(state.canOpenSettings)}
           </p>
         </div>
@@ -76,13 +76,13 @@ export function NotificationDeviceToggleSection({
       )}
 
       {!state.permissionBlocked && !state.pushSupported ? (
-        <p id="settings.notification-device-toggle-section.p.2" className="rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
+        <p {...uiAttributes({ uid: "settings.notification-device-toggle-section.p.5-Ts59El", id: "settings.notification-device-toggle-section.p.5" })} id="settings.notification-device-toggle-section.p.2" className="rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
           {state.t("notifications.deviceCard.pushUnsupported")}
         </p>
       ) : null}
 
       {state.permissionNotice ? (
-        <p id="settings.notification-device-toggle-section.p.3"
+        <p {...uiAttributes({ uid: "settings.notification-device-toggle-section.p.6-5PIEzi", id: "settings.notification-device-toggle-section.p.6" })} id="settings.notification-device-toggle-section.p.3"
           className={cn(
             "rounded-lg px-3 py-2 text-sm",
             state.permissionNoticeTone === "error"

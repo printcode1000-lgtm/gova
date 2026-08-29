@@ -16,6 +16,7 @@ import {
 import { Badge } from '@/shared/ui/badge';
 import { useTranslation } from '@/shared/i18n';
 import type { UiDescriptor } from '@asol/ui-registry-core';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 interface FormFieldProps {
   label: string;
@@ -37,17 +38,17 @@ export function FormField({ id,
   className,
 }: FormFieldProps & { id?: string }) {
   return (
-    <div id={id} className={cn('space-y-2', className)}>
-      <div className="flex items-center justify-between">
+    <div {...uiAttributes({ uid: "onboarding.form-components.div-c0qJJQ", id: "onboarding.form-components.div" })} id={id} className={cn('space-y-2', className)}>
+      <div {...uiAttributes({ uid: "onboarding.form-components.div.2-kVZ1Q7", id: "onboarding.form-components.div.2" })} className="flex items-center justify-between">
         <Label htmlFor={htmlFor} className="text-sm font-medium">
           {label}
-          {required && <span className="text-destructive ml-1">*</span>}
+          {required && <span {...uiAttributes({ uid: "onboarding.form-components.span-BEG75L", id: "onboarding.form-components.span" })} className="text-destructive ml-1">*</span>}
         </Label>
-        {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
+        {hint && <span {...uiAttributes({ uid: "onboarding.form-components.span.2-5LVOlZ", id: "onboarding.form-components.span.2" })} className="text-xs text-muted-foreground">{hint}</span>}
       </div>
       {children}
       {error && (
-        <p className="text-xs text-destructive flex items-center gap-1">
+        <p {...uiAttributes({ uid: "onboarding.form-components.p-0Ng8Hx", id: "onboarding.form-components.p" })} className="text-xs text-destructive flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {error}
         </p>
@@ -158,14 +159,14 @@ export function MultiSelect({ id,
   };
 
   return (
-    <div id={id} className="space-y-2">
-      <div className="flex flex-wrap gap-2">
+    <div {...uiAttributes({ uid: "onboarding.form-components.div.3-ii4jNP", id: "onboarding.form-components.div.3" })} id={id} className="space-y-2">
+      <div {...uiAttributes({ uid: "onboarding.form-components.div.4-Um97pP", id: "onboarding.form-components.div.4" })} className="flex flex-wrap gap-2">
         {value.map((v) => {
           const option = options.find((o) => o.value === v);
           return (
             <Badge id={id} key={v} variant="secondary" className="gap-1 pr-1">
               {option?.label || v}
-              <button
+              <button {...uiAttributes({ uid: "onboarding.form-components.button-S0gxOR", id: "onboarding.form-components.button" })}
                 type="button"
                 onClick={() => handleRemove(v)}
                 className="ml-1 rounded-full"
@@ -178,18 +179,18 @@ export function MultiSelect({ id,
       </div>
 
       {(!max || value.length < max) && (
-        <div className="relative">
-          <Input
+        <div {...uiAttributes({ uid: "onboarding.form-components.div.5-kfRI7U", id: "onboarding.form-components.div.5" })} className="relative">
+          <Input ui={{ uid: "onboarding.form-components.input-2Sfv2v", id: "onboarding.form-components.input" }}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={resolvedPlaceholder}
             className="w-full"
           />
           {search && filteredOptions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-10 max-h-40 overflow-auto">
+            <div {...uiAttributes({ uid: "onboarding.form-components.div.6-oWLYd5", id: "onboarding.form-components.div.6" })} className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-10 max-h-40 overflow-auto">
               {filteredOptions.map((opt) => (
                 <button
-                  key={opt.value}
+                  key={opt.value} {...uiAttributes({ uid: "onboarding.form-components.button.2-Xh7BUo", id: "onboarding.form-components.button.2" })}
                   type="button"
                   className="w-full px-3 py-2 text-left text-sm transition-colors"
                   onClick={() => handleSelect(opt.value)}
@@ -227,7 +228,7 @@ export function CheckboxGroup({ id,
   };
 
   return (
-    <div id={id}
+    <div {...uiAttributes({ uid: "onboarding.form-components.div.7-KE05Zm", id: "onboarding.form-components.div.7" })} id={id}
       className="grid gap-2"
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
     >
@@ -235,7 +236,7 @@ export function CheckboxGroup({ id,
         const isSelected = value.includes(opt.value);
         return (
           <button id={id}
-            key={opt.value}
+            key={opt.value} {...uiAttributes({ uid: "onboarding.form-components.button.3-Foxhp3", id: "onboarding.form-components.button.3" })}
             type="button"
             onClick={() => toggle(opt.value)}
             className={cn(
@@ -245,7 +246,7 @@ export function CheckboxGroup({ id,
                 : 'border-border'
             )}
           >
-            <div
+            <div {...uiAttributes({ uid: "onboarding.form-components.div.8-jHlWA3", id: "onboarding.form-components.div.8" })}
               className={cn(
                 'flex h-4 w-4 items-center justify-center rounded border transition-colors',
                 isSelected ? 'bg-primary border-primary' : 'border-muted-foreground'
