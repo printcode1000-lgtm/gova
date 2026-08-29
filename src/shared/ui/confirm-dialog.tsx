@@ -46,7 +46,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps & { id?: string }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent id={id} className="max-w-sm">
+      <DialogContent ui={{ uid: "shared.confirm-dialog.content-1p9SW8", id: "shared.confirm-dialog.content" }} id={id} className="max-w-sm">
         <DialogHeader ui={{ uid: "shared.confirm-dialog.dialog-header-5jp7QZ", id: "shared.confirm-dialog.dialog-header" }}>
           <DialogTitle ui={{ uid: "shared.confirm-dialog.dialog-title-nA4Pye", id: "shared.confirm-dialog.dialog-title" }} className="flex items-center gap-2 text-base">
             {tone === "destructive" ? (

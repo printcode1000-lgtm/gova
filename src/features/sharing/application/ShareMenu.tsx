@@ -130,7 +130,7 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
       }}
     >
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent
+      <DialogContent ui={{ uid: "sharing.share-menu.content-42OhDd", id: "sharing.share-menu.dialog-content" }}
         id={id}
         dir={ar ? "rtl" : "ltr"}
         className="fixed inset-x-0 bottom-0 top-auto w-full max-w-none translate-x-0 translate-y-0 rounded-b-none rounded-t-[2rem] border-outline-variant/70 bg-surface/98 px-4 pb-[max(1.25rem,var(--asol-safe-area-bottom))] pt-5 shadow-2xl backdrop-blur-xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl sm:p-6"

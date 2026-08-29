@@ -72,7 +72,7 @@ export function ReleaseCommandConfirmDialog({
 
   return (
     <Dialog open={Boolean(pending)} onOpenChange={(open) => { if (!open) onCancel(); }}>
-      <DialogContent id="google-play-console.release-command-confirm-dialog.dialog-content"
+      <DialogContent ui={{ uid: "release-console.command-confirm.content-w5qCoa", id: "release-console.command-confirm.dialog-content" }} id="google-play-console.release-command-confirm-dialog.dialog-content"
         className="max-h-[calc(100dvh-1rem)] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden sm:max-w-2xl"
         // A confirmation must be answered deliberately: clicking away or losing
         // focus never dismisses it, only the buttons below do.

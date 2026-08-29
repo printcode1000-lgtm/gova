@@ -26,7 +26,7 @@ export function ReleaseJobStopDialog({ id, job, t, onConfirm, onCancel }: {
 } & { id?: string }) {
   return (
     <Dialog open={Boolean(job)} onOpenChange={(open) => { if (!open) onCancel(); }}>
-      <DialogContent
+      <DialogContent ui={{ uid: "release-console.job-stop.content-1xSjbt", id: "release-console.job-stop.dialog-content" }}
         id={id}
         onPointerDownOutside={(event) => event.preventDefault()}
         onInteractOutside={(event) => event.preventDefault()}

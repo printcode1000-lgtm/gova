@@ -1281,6 +1281,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     sourceLine: 88,
   },
   {
+    uid: "auth.login-required-dialog.content-g5CmEp",
+    id: "auth.login-required-dialog.dialog-content",
+    kind: "element",
+    sourceFile: "src/features/auth/presentation/LoginRequiredDialog.tsx",
+    sourceLine: 47,
+  },
+  {
     uid: "auth.login-required-dialog.dialog-description.2-Zw80or",
     id: "auth.login-required-dialog.dialog-description.2",
     kind: "element",
@@ -4844,6 +4851,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     sourceLine: 256,
   },
   {
+    uid: "data-health.cleanup-plan.content-9Kj8Fg",
+    id: "data-health.cleanup-plan.dialog-content",
+    kind: "element",
+    sourceFile: "src/features/data-health/presentation/DataHealthDialogs.tsx",
+    sourceLine: 111,
+  },
+  {
     uid: "data-health.data-health-dialogs.dialog-description.4-5H3DZh",
     id: "data-health.data-health-dialogs.dialog-description.4",
     kind: "element",
@@ -6405,6 +6419,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     sourceLine: 32,
   },
   {
+    uid: "data-health.issue-detail.content-XlP3wc",
+    id: "data-health.issue-detail.dialog-content",
+    kind: "element",
+    sourceFile: "src/features/data-health/presentation/DataHealthDialogs.tsx",
+    sourceLine: 69,
+  },
+  {
     uid: "data-health.order-purge-dialog.cancel-1fBQND",
     id: "data-health.order-purge-dialog.cancel",
     kind: "element",
@@ -6424,6 +6445,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     kind: "element",
     sourceFile: "src/features/data-health/presentation/DataHealthDialogs.tsx",
     sourceLine: 207,
+  },
+  {
+    uid: "data-health.order-purge.content-15Lsyv",
+    id: "data-health.order-purge.dialog-content",
+    kind: "element",
+    sourceFile: "src/features/data-health/presentation/DataHealthDialogs.tsx",
+    sourceLine: 178,
   },
   {
     uid: "data-health.plan-dialog.cancel-1BXAzX",
@@ -14586,6 +14614,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     kind: "element",
     sourceFile: "src/features/notifications/presentation/NotificationsPageContent.tsx",
     sourceLine: 439,
+  },
+  {
+    uid: "notifications.permission-prompt.content-bjo4LF",
+    id: "notifications.permission-prompt.dialog-content",
+    kind: "element",
+    sourceFile: "src/features/notifications/presentation/NotificationPermissionPrompt.tsx",
+    sourceLine: 59,
   },
   {
     uid: "notifications.permission-prompt.enable-UNg4lD",
@@ -26061,6 +26096,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     sourceLine: 86,
   },
   {
+    uid: "release-console.command-confirm.content-w5qCoa",
+    id: "release-console.command-confirm.dialog-content",
+    kind: "element",
+    sourceFile: "src/features/google-play-console/presentation/components/ReleaseCommandConfirmDialog.tsx",
+    sourceLine: 75,
+  },
+  {
     uid: "release-console.confirm-dialog.cancel-l5VVLg",
     id: "release-console.confirm-dialog.cancel",
     kind: "element",
@@ -26080,6 +26122,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     kind: "element",
     sourceFile: "src/features/google-play-console/presentation/components/ReleaseCommandConfirmDialog.tsx",
     sourceLine: 135,
+  },
+  {
+    uid: "release-console.job-stop.content-1xSjbt",
+    id: "release-console.job-stop.dialog-content",
+    kind: "element",
+    sourceFile: "src/features/google-play-console/presentation/components/ReleaseJobStopDialog.tsx",
+    sourceLine: 29,
   },
   {
     uid: "release-console.jobs.cancel-27PWNB",
@@ -27622,6 +27671,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     sourceLine: 69,
   },
   {
+    uid: "shared.confirm-dialog.content-1p9SW8",
+    id: "shared.confirm-dialog.content",
+    kind: "element",
+    sourceFile: "src/shared/ui/confirm-dialog.tsx",
+    sourceLine: 49,
+  },
+  {
     uid: "shared.confirm-dialog.dialog-description-IiGu4p",
     id: "shared.confirm-dialog.dialog-description",
     kind: "element",
@@ -28140,6 +28196,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     sourceLine: 79,
   },
   {
+    uid: "shared.phone-country-dialog.content-lQy7vN",
+    id: "shared.phone-country-dialog.content",
+    kind: "element",
+    sourceFile: "src/shared/ui/phone-country-dialog.tsx",
+    sourceLine: 52,
+  },
+  {
     uid: "shared.phone-country-dialog.dialog-header-1M633G",
     id: "shared.phone-country-dialog.dialog-header",
     kind: "element",
@@ -28411,6 +28474,13 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     kind: "element",
     sourceFile: "src/features/sharing/application/ShareMenu.tsx",
     sourceLine: 248,
+  },
+  {
+    uid: "sharing.share-menu.content-42OhDd",
+    id: "sharing.share-menu.dialog-content",
+    kind: "element",
+    sourceFile: "src/features/sharing/application/ShareMenu.tsx",
+    sourceLine: 133,
   },
   {
     uid: "sharing.share-menu.dialog-description-S9CZvX",

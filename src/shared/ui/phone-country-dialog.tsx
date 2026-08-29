@@ -49,7 +49,7 @@ export function PhoneCountryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent id={id} className="max-h-[80vh] max-w-md overflow-hidden p-0">
+      <DialogContent ui={{ uid: "shared.phone-country-dialog.content-lQy7vN", id: "shared.phone-country-dialog.content" }} id={id} className="max-h-[80vh] max-w-md overflow-hidden p-0">
         <DialogHeader ui={{ uid: "shared.phone-country-dialog.dialog-header-1M633G", id: "shared.phone-country-dialog.dialog-header" }} className="border-b border-outline-variant p-4">
           <DialogTitle ui={{ uid: "shared.phone-country-dialog.dialog-title-VD4TMR", id: "shared.phone-country-dialog.dialog-title" }} className="text-base font-semibold">{title}</DialogTitle>
         </DialogHeader>
