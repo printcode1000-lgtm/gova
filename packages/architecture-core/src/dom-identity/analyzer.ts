@@ -1,12 +1,7 @@
 /**
- * The canonical DOM-identity analyzer: one AST walk over `src/**\/*.tsx` that
+ * The canonical DOM-identity analyzer: one AST walk over `src/**/*.tsx` that
  * answers, for every JSX usage site, "does this produce project-owned DOM,
  * and if so, does it already carry a canonical `uid`?"
- *
- * This is the single source of truth `uid-migration`, `checkUidCoverage`,
- * `checkUiAttributeContract`, registry generation, and the pending-request
- * pipeline all read instead of keeping their own tag whitelist or component
- * list. See `docs/04-ui-components/ui-attribute-system.md` for the model.
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -25,12 +20,6 @@ import {
   parseTsx,
 } from './tsx-ast';
 
-/**
- * Framework/library special forms that are provably never a DOM root by
- * construction — not derivable from local source (their render behavior
- * lives inside React or a third-party render-prop component), so this stays
- * a short, justified, hand-reviewed list instead of a heuristic.
- */
 const STRUCTURAL_COMPONENTS: ReadonlySet<string> = new Set([
   'Fragment',
   'Suspense',
@@ -71,15 +60,6 @@ export interface DomIdentityInventory {
   readonly sites: readonly DomUsageSite[];
   readonly multiplicity: HostMultiplicity;
   readonly sources: ReadonlyMap<string, string>;
-  /**
-   * Source position (character offset of the JSX opening tag) of every
-   * generic primitive's own DOM root, keyed by defining file. A literal uid
-   * baked into the descriptor spread at exactly one of these positions is a
-   * primitive owning a fixed identity — forbidden, because it would repeat
-   * across every caller. A fixed uid anywhere *else* in the same file (an
-   * internal, non-caller-configurable structural sub-part, such as a dialog's
-   * built-in close button) is a legitimate, different case.
-   */
   readonly genericPrimitiveRootPositions: ReadonlyMap<string, ReadonlySet<number>>;
 }
 
@@ -96,24 +76,32 @@ function listTsxFiles(directory: string): string[] {
   });
 }
 
-/** Every `.tsx` file under `src/`, relative-pathed and content-loaded once. */
 export function loadProjectTsx(root: string): Map<string, string> {
   const sources = new Map<string, string>();
   for (const full of listTsxFiles(join(root, 'src'))) {
     const relativePath = relative(root, full).replace(/\\/g, '/');
     sources.set(relativePath, readFileSync(full, 'utf8'));
   }
+  const packagesRoot = join(root, 'packages');
+  if (statSync(packagesRoot, { throwIfNoEntry: false })?.isDirectory()) {
+    for (const full of listTsxFiles(packagesRoot)) {
+      const relativePath = relative(root, full).replace(/\\/g, '/');
+      sources.set(relativePath, readFileSync(full, 'utf8'));
+    }
+  }
   return sources;
 }
 
+function registryCall(node: ts.JsxSpreadAttribute): ts.CallExpression | null {
+  const expression = node.expression;
+  if (!ts.isCallExpression(expression) || !ts.isIdentifier(expression.expression)) return null;
+  return /^(?:uiAttributes|uiComponentAttributes|uiPageAttributes|uiPrimitiveAttributes)$/.test(expression.expression.text)
+    ? expression
+    : null;
+}
+
 function hasUiRegistrySpread(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): boolean {
-  return node.attributes.properties.some(
-    (property) =>
-      ts.isJsxSpreadAttribute(property) &&
-      /\b(?:uiAttributes|uiComponentAttributes|uiPageAttributes|uiPrimitiveAttributes)\s*\(/.test(
-        property.expression.getText(),
-      ),
-  );
+  return node.attributes.properties.some((property) => ts.isJsxSpreadAttribute(property) && registryCall(property) !== null);
 }
 
 function hasUiProp(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): boolean {
@@ -127,26 +115,75 @@ function hasAnySpread(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): bo
 }
 
 function exportedComponentCandidates(sourceFile: ts.SourceFile): string[] {
-  const names: string[] = [];
+  const declared = new Set<string>();
+  const explicitlyExportedLocals = new Set<string>();
   for (const statement of sourceFile.statements) {
-    const exported =
-      (ts.getCombinedModifierFlags(statement as unknown as ts.Declaration) & ts.ModifierFlags.Export) !== 0;
-    if (!exported) continue;
     if (ts.isFunctionDeclaration(statement) && statement.name && /^[A-Z]/.test(statement.name.text)) {
-      names.push(statement.name.text);
+      declared.add(statement.name.text);
+      const exported = (ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) !== 0;
+      if (exported) explicitlyExportedLocals.add(statement.name.text);
     }
     if (ts.isVariableStatement(statement)) {
+      const exported = (ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) !== 0;
       for (const declaration of statement.declarationList.declarations) {
-        if (ts.isIdentifier(declaration.name) && /^[A-Z]/.test(declaration.name.text)) {
-          names.push(declaration.name.text);
-        }
+        if (!ts.isIdentifier(declaration.name) || !/^[A-Z]/.test(declaration.name.text)) continue;
+        declared.add(declaration.name.text);
+        if (exported) explicitlyExportedLocals.add(declaration.name.text);
+      }
+    }
+    if (ts.isExportDeclaration(statement) && !statement.moduleSpecifier && statement.exportClause && ts.isNamedExports(statement.exportClause)) {
+      for (const element of statement.exportClause.elements) {
+        const localName = (element.propertyName ?? element.name).text;
+        if (/^[A-Z]/.test(localName)) explicitlyExportedLocals.add(localName);
       }
     }
   }
-  return names;
+  return [...explicitlyExportedLocals].filter((name) => declared.has(name));
 }
 
-/** Runs the full analyzer and returns every JSX usage site, classified. */
+interface RootTarget {
+  readonly file: string;
+  readonly exportName: string;
+}
+
+function rootTarget(
+  definingFile: string,
+  localName: string,
+  sources: ReadonlyMap<string, string>,
+): RootTarget | null {
+  const source = sources.get(definingFile);
+  if (!source) return null;
+  const sourceFile = parseTsx(definingFile, source);
+  const bindings = localBindings(sourceFile, definingFile, sources);
+  const file = bindings.get(localName);
+  if (!file || isThirdPartyBinding(file)) {
+    const localDeclaration = sourceFile.statements.some((statement) =>
+      (ts.isFunctionDeclaration(statement) && statement.name?.text === localName) ||
+      (ts.isVariableStatement(statement) && statement.declarationList.declarations.some((declaration) => ts.isIdentifier(declaration.name) && declaration.name.text === localName)));
+    return localDeclaration ? { file: definingFile, exportName: localName } : null;
+  }
+
+  let exportName = localName;
+  for (const statement of sourceFile.statements) {
+    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) continue;
+    const clause = statement.importClause;
+    if (!clause) continue;
+    if (clause.name?.text === localName) {
+      exportName = 'default';
+      break;
+    }
+    const named = clause.namedBindings;
+    if (named && ts.isNamedImports(named)) {
+      const element = named.elements.find((candidate) => candidate.name.text === localName);
+      if (element) {
+        exportName = (element.propertyName ?? element.name).text;
+        break;
+      }
+    }
+  }
+  return { file, exportName };
+}
+
 export function buildDomIdentityInventory(root: string): DomIdentityInventory {
   const sources = loadProjectTsx(root);
   const multiplicity = hostMultiplicity(sources);
@@ -163,31 +200,46 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
   }
 
   const ownershipCache = new Map<string, DomUsageOwnership>();
-  function ownershipOf(definingFile: string, exportName: string, depth = 0): DomUsageOwnership {
+  function ownershipOf(
+    definingFile: string,
+    exportName: string,
+    seen: ReadonlySet<string> = new Set(),
+  ): DomUsageOwnership {
     const key = `${definingFile}#${exportName}`;
     if (ownershipCache.has(key)) return ownershipCache.get(key)!;
+    if (seen.has(key)) return { kind: 'opaque', component: exportName };
     if (isStructuralComponent(exportName)) {
       const result: DomUsageOwnership = { kind: 'structural' };
       ownershipCache.set(key, result);
       return result;
     }
+
+    const nextSeen = new Set(seen);
+    nextSeen.add(key);
     const shape = shapeOf(definingFile, exportName);
     let result: DomUsageOwnership;
     if (!shape) {
       result = { kind: 'opaque', component: exportName };
     } else {
-      let reachesDom = shape.rootIntrinsicTag !== null;
-      if (!reachesDom && shape.rootComponentName && depth < 4) {
-        const nestedShape = shapeOf(definingFile, shape.rootComponentName);
-        reachesDom = nestedShape !== null && (nestedShape.rootIntrinsicTag !== null || nestedShape.rootComponentName !== null);
+      let reachesDom = shape.rootIntrinsicTag !== null || shape.rootQualifiedName !== null;
+      let nestedOwnership: DomUsageOwnership | null = null;
+      if (!reachesDom && shape.rootComponentName) {
+        const target = rootTarget(definingFile, shape.rootComponentName, sources);
+        if (target) {
+          nestedOwnership = ownershipOf(target.file, target.exportName, nextSeen);
+          reachesDom = nestedOwnership.kind === 'generic-primitive-wired' ||
+            nestedOwnership.kind === 'generic-primitive-unconverted' ||
+            shapeOf(target.file, target.exportName) !== null;
+        }
       }
-      if (!reachesDom && shape.rootQualifiedName) reachesDom = true; // third-party member root: DOM by construction
 
       if (!reachesDom) {
         result = { kind: 'opaque', component: exportName };
       } else {
         const repeating = multiplicity.repeatingFiles.has(definingFile) || multiplicity.repeatingSymbols.has(key);
-        if (shape.forwardsUiThroughRegistryCall) {
+        const directlyWired = shape.forwardsUiThroughRegistryCall;
+        const transparentlyWired = shape.rootSpreadsRest && nestedOwnership?.kind === 'generic-primitive-wired';
+        if (directlyWired || transparentlyWired) {
           result = { kind: 'generic-primitive-wired', component: exportName, definingFile };
         } else if (shape.rootSpreadsRest && repeating) {
           result = { kind: 'generic-primitive-unconverted', component: exportName, definingFile };
@@ -200,10 +252,6 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
     return result;
   }
 
-  // Pass 1: classify every exported component candidate up front, and record
-  // the source position of every generic primitive's own DOM root — that
-  // root's identity comes from the *caller*, so the bare-intrinsic scan in
-  // pass 2 must not also require (or let a codemod bake) a fixed uid there.
   const excludedRootPositions = new Map<string, Set<number>>();
   for (const [file, source] of sources) {
     const sourceFile = parseTsx(file, source);
@@ -220,7 +268,6 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
     }
   }
 
-  // Pass 2: walk every JSX usage site in the repository.
   for (const [file, source] of sources) {
     const sourceFile = parseTsx(file, source);
     const bindings = localBindings(sourceFile, file, sources);
@@ -244,7 +291,8 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
                 ownership = { kind: 'structural' };
               } else {
                 const definingFile = binding ?? file;
-                ownership = ownershipOf(definingFile, component);
+                const target = rootTarget(file, component, sources);
+                ownership = ownershipOf(definingFile, target?.exportName ?? component);
               }
             } else {
               const member = jsxMemberTag(node.tagName);
@@ -276,7 +324,11 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
               tagOrComponent,
               ownership,
               node,
-              hasUiRegistration: !actionable ? false : ownership.kind === 'intrinsic' ? hasUiRegistrySpread(node) : hasUiProp(node),
+              hasUiRegistration: !actionable
+                ? false
+                : ownership.kind === 'intrinsic'
+                  ? hasUiRegistrySpread(node)
+                  : hasUiProp(node),
               hasForeignSpread: !actionable
                 ? false
                 : ownership.kind === 'intrinsic'
@@ -294,7 +346,6 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
   return { sites, multiplicity, sources, genericPrimitiveRootPositions: excludedRootPositions };
 }
 
-/** True for the ownership kinds that require (and can receive) a canonical uid. */
 export function isActionableDomUsage(site: DomUsageSite): boolean {
   return (
     site.ownership.kind === 'intrinsic' ||
