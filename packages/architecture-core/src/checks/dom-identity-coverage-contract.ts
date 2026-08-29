@@ -1,13 +1,3 @@
-/**
- * The mandatory-coverage half of the UiRegistry contract: every project-owned
- * DOM usage site under `src/` — every raw intrinsic host/SVG tag, and every
- * usage of a component the analyzer proves forwards to exactly one DOM root
- * (`generic-primitive-*`) — must carry a canonical `uid`. `ui-attribute-
- * contract.ts` is the other half: it proves whatever *is* registered is a
- * literal, unique, syntactically valid, non-computed uid. Both read the same
- * `dom-identity` analyzer, so there is exactly one definition of "a
- * registered DOM usage site" in the repository.
- */
 import { join } from 'node:path';
 
 import ts from 'typescript';
@@ -17,7 +7,6 @@ import { findDescriptorLiterals } from '../dom-identity/descriptor-literals';
 import { parseTsx } from '../dom-identity/tsx-ast';
 import { ROOT, addViolation } from './architecture-types';
 
-/** Walks up from a descriptor literal to the JSX opening tag that carries it. */
 function enclosingJsxOpening(node: ts.Node): ts.JsxOpeningElement | ts.JsxSelfClosingElement | null {
   let current: ts.Node | undefined = node;
   while (current) {
@@ -28,51 +17,33 @@ function enclosingJsxOpening(node: ts.Node): ts.JsxOpeningElement | ts.JsxSelfCl
 }
 
 export interface DomIdentityCoverageException {
-  /** Repository-relative file that renders the unregistrable instance. */
   readonly file: string;
-  /** 1-indexed source line of the JSX opening tag — an exact usage-site anchor: two usages of the same tag never share a line, so this can never silently cover a second, unrelated site. */
   readonly line: number;
   readonly tagOrComponent: string;
-  /** Why this exact site cannot carry a caller-owned identity, and why the architecture cannot be extended to let it. */
   readonly reason: string;
 }
 
 /**
- * Usage sites that cannot receive an automated registration because they
- * already spread an unrelated attribute object the codemod cannot safely
- * merge into, *and* the wrapping component genuinely has no way to carry a
- * caller-owned identity (it transparently forwards `...props`, including
- * any caller-supplied `ui`, into the primitive it wraps — the identity
- * belongs one layer down, at the call site of that primitive, not here).
+ * Exact transparent-wrapper seams. These are not identity omissions: the
+ * wrapper forwards the caller descriptor through `...props` one layer down.
+ * They stay exact and stale-checked; the caller usage is independently
+ * mandatory because the analyzer now follows the wrapper chain transitively.
  */
 export const DOM_IDENTITY_COVERAGE_EXCEPTIONS: readonly DomIdentityCoverageException[] = [
   {
     file: 'src/features/onboarding/presentation/form-components.tsx',
     line: 68,
     tagOrComponent: 'Input',
-    reason:
-      'FormInput is a transparent field wrapper: `{...props}` already forwards a caller-supplied ' +
-      '`ui` straight into Input, so the identity is owned by FormInput’s own caller, one layer ' +
-      'further out, not by this line. Giving FormInput itself a fixed `ui` would apply one identity ' +
-      'to every field FormInput renders across the app.',
+    reason: 'FormInput transparently forwards its caller props, including ui, into Input. Caller identity is enforced at every FormInput usage.',
   },
   {
     file: 'src/features/onboarding/presentation/form-components.tsx',
     line: 83,
     tagOrComponent: 'Textarea',
-    reason:
-      'FormTextarea is a transparent field wrapper: `{...props}` already forwards a caller-supplied ' +
-      '`ui` straight into Textarea, so the identity is owned by FormTextarea’s own caller, one ' +
-      'layer further out, not by this line.',
+    reason: 'FormTextarea transparently forwards its caller props, including ui, into Textarea. Caller identity is enforced at every FormTextarea usage.',
   },
 ];
 
-/**
- * Fails the build when a project-owned DOM usage site is left without a uid,
- * when a generic primitive's own definition bakes a fixed uid into its root
- * (repeating across every caller instead of being caller-owned), or when a
- * declared exception no longer matches a real, still-unregistrable gap.
- */
 export function checkDomIdentityCoverageContract(): void {
   const inventory = buildDomIdentityInventory(ROOT);
   const declared = new Map(
@@ -85,47 +56,52 @@ export function checkDomIdentityCoverageContract(): void {
 
   for (const site of inventory.sites) {
     if (!isActionableDomUsage(site)) continue;
-    if (site.hasUiRegistration) continue;
+    if (site.registrationKind === 'literal' || site.registrationKind === 'forwarded') continue;
+
     const key = `${site.file}|${site.line}|${site.tagOrComponent}`;
-    if (site.hasForeignSpread) {
-      if (declared.has(key)) {
-        matched.add(key);
-        continue;
-      }
+    if (site.registrationKind === 'computed') {
       addViolation(
         'UI Identity Coverage',
         join(ROOT, site.file),
-        `<${site.tagOrComponent}> at line ${site.line} has no uid and already spreads an unrelated ` +
-          `attribute object, so it cannot be auto-registered.`,
-        'Register it explicitly, or add a reasoned entry to DOM_IDENTITY_COVERAGE_EXCEPTIONS in dom-identity-coverage-contract.ts.',
+        `<${site.tagOrComponent}> at line ${site.line} uses a computed/non-literal UI descriptor. ` +
+          'Canonical source identity must be a quoted literal at the usage site; only the exact caller-forwarding `ui` binding is allowed as a forwarded seam.',
+        'Inline a literal ui descriptor at this usage site, or make the component a structurally proven caller-owned forwarding seam.',
       );
       continue;
     }
+
+    if (site.hasForeignSpread && declared.has(key)) {
+      matched.add(key);
+      continue;
+    }
+
+    if (site.hasForeignSpread) {
+      addViolation(
+        'UI Identity Coverage',
+        join(ROOT, site.file),
+        `<${site.tagOrComponent}> at line ${site.line} has no uid and already spreads another attribute object.`,
+        'Propagate caller-owned ui explicitly or register the exact usage site. Do not add a codemod-only exception.',
+      );
+      continue;
+    }
+
     addViolation(
       'UI Identity Coverage',
       join(ROOT, site.file),
       `<${site.tagOrComponent}> at line ${site.line} has no ui.uid. Every project-owned DOM usage site must be registered.`,
-      'Run npx tsx scripts/ui-registry/uid-migration/run-apply.ts, or add uiAttributes()/ui={{...}} by hand.',
+      'Run the UID migration or add an explicit literal uiAttributes()/ui={{...}} descriptor.',
     );
   }
 
-  for (const key of declared.keys()) {
-    if (!matched.has(key)) {
-      const exception = declared.get(key)!;
-      addViolation(
-        'UI Identity Coverage',
-        join(ROOT, exception.file),
-        `DOM_IDENTITY_COVERAGE_EXCEPTIONS entry for <${exception.tagOrComponent}> at line ${exception.line} ` +
-          `matches nothing and must be removed — the usage site is registered now, no longer exists, or moved.`,
-      );
-    }
+  for (const [key, exception] of declared) {
+    if (matched.has(key)) continue;
+    addViolation(
+      'UI Identity Coverage',
+      join(ROOT, exception.file),
+      `DOM_IDENTITY_COVERAGE_EXCEPTIONS entry for <${exception.tagOrComponent}> at line ${exception.line} is stale or no longer an exact transparent-wrapper seam.`,
+    );
   }
 
-  // A generic primitive's own DOM root must never carry a fixed literal uid:
-  // that uid would repeat across every caller instead of being caller-owned.
-  // A fixed uid *elsewhere* in the same file — a non-caller-configurable
-  // structural sub-part such as a dialog's built-in close button — is a
-  // different, legitimate case and is not reported here.
   for (const [file, positions] of inventory.genericPrimitiveRootPositions) {
     const source = inventory.sources.get(file);
     if (!source || positions.size === 0) continue;
@@ -139,8 +115,7 @@ export function checkDomIdentityCoverageContract(): void {
         addViolation(
           'UI Identity Coverage',
           join(ROOT, file),
-          `Generic primitive root at line ${literal.line} declares a fixed uid "${uidField.literalValue}". ` +
-            `A root-level uid repeats across every caller; forward the caller's own \`ui\` descriptor instead.`,
+          `Generic primitive root at line ${literal.line} declares a fixed uid "${uidField.literalValue}". A caller-owned root must forward the caller descriptor instead.`,
         );
       }
     }
