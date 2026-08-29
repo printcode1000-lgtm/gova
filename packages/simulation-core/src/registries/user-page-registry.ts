@@ -173,6 +173,7 @@ const SEARCH_MAIN_TARGET = listItemTarget("search-main-category");
 const SEARCH_SUB_TARGET = listItemTarget("search-subcategory");
 const SEARCH_INPUT_TARGET = fieldTarget("search-query");
 const SEARCH_RESULT_TARGET = listItemTarget("search-result");
+const SEARCH_SELLER_RESULT_TARGET = listItemTarget("search-seller-result");
 
 function searchPreparationActions() {
   return [
@@ -201,17 +202,22 @@ const NAV_CART_TARGET = eventTarget("nav-cart");
 const NAV_FAVORITES_TARGET = eventTarget("nav-favorites");
 const REACH_TIMEOUT_MS = 8_000;
 
+function searchResultTarget(mode: "products" | "sellers"): SimulationTarget {
+  return mode === "sellers" ? SEARCH_SELLER_RESULT_TARGET : SEARCH_RESULT_TARGET;
+}
+
 function openFirstResultActions(
   mode: "products" | "sellers",
   accessibleLabel: string,
 ): readonly SimulationDriverAction[] {
+  const resultTarget = searchResultTarget(mode);
   return [
     ...(mode === "sellers"
       ? [{ type: "click" as const, target: eventTarget("search-sellers-mode"), accessibleLabel: "البائعون" }]
       : []),
     ...searchPreparationActions(),
-    { type: "wait-for-target", target: SEARCH_RESULT_TARGET, timeoutMs: REACH_TIMEOUT_MS },
-    { type: "click", target: SEARCH_RESULT_TARGET, accessibleLabel },
+    { type: "wait-for-target", target: resultTarget, timeoutMs: REACH_TIMEOUT_MS },
+    { type: "click", target: resultTarget, accessibleLabel },
   ];
 }
 
@@ -361,8 +367,8 @@ export const USER_PAGE_REGISTRY: readonly UserPageDefinition[] = [
       actions: [
         { type: "click", target: eventTarget("search-sellers-mode"), accessibleLabel: "البائعون" },
         ...searchPreparationActions(),
-        { type: "wait-for-target", target: SEARCH_RESULT_TARGET, timeoutMs: 8_000 },
-        { type: "click", target: SEARCH_RESULT_TARGET, accessibleLabel: "فتح بائع" },
+        { type: "wait-for-target", target: SEARCH_SELLER_RESULT_TARGET, timeoutMs: 8_000 },
+        { type: "click", target: SEARCH_SELLER_RESULT_TARGET, accessibleLabel: "فتح بائع" },
       ],
     },
   ]),
