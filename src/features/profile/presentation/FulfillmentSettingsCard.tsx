@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { ToggleSwitch } from "@/shared/ui/toggle-switch";
@@ -53,6 +54,12 @@ export const FulfillmentSettingsCard = React.forwardRef<
   } = useProfileFulfillmentSettings();
   const [searchText, setSearchText] = React.useState("");
   const [submittedSearchText, setSubmittedSearchText] = React.useState("");
+  const [openSection, setOpenSection] = React.useState<
+    "carriers" | "shipping" | "returns" | null
+  >(null);
+  const toggleSection = (key: "carriers" | "shipping" | "returns") => {
+    setOpenSection((current) => (current === key ? null : key));
+  };
   const label = locale === "ar" ? "الشحن والإرجاع" : "Shipping and returns";
   const text = fulfillmentSettingsCopy(locale);
   const hasSubmittedSearch = submittedSearchText.trim().length > 0;
@@ -82,6 +89,12 @@ export const FulfillmentSettingsCard = React.forwardRef<
   React.useEffect(() => {
     onStatusChange?.({ isDirty, isSaving, canSave: true, label });
   }, [isDirty, isSaving, label, onStatusChange]);
+
+  React.useEffect(() => {
+    if (fulfillmentSection === "shipping" || fulfillmentSection === "returns") {
+      setOpenSection(fulfillmentSection);
+    }
+  }, [fulfillmentSection]);
 
   useFulfillmentSectionScroll({
     fulfillmentSection,
@@ -151,6 +164,8 @@ export const FulfillmentSettingsCard = React.forwardRef<
         toggleCarrier={toggleCarrier}
         openProviderProfile={openProviderProfile}
         selectedCount={safeSettings.carrierUids.length}
+        open={openSection === "carriers"}
+        onToggle={() => toggleSection("carriers")}
       />
 
       <section
@@ -158,8 +173,23 @@ export const FulfillmentSettingsCard = React.forwardRef<
         id={PROFILE_FULFILLMENT_SECTION_IDS.shipping}
         className="space-y-4 rounded-xl border border-outline-variant p-4"
       >
-        <h3 id="profile.fulfillment-settings-card.h3" className="text-sm font-bold">{text.shippingPricing}</h3>
+        <button
+          type="button"
+          onClick={() => toggleSection("shipping")}
+          aria-expanded={openSection === "shipping"}
+          aria-label={text.shippingPricing}
+          className="flex w-full items-center justify-between gap-2"
+        >
+          <h3 id="profile.fulfillment-settings-card.h3" className="text-sm font-bold">{text.shippingPricing}</h3>
+          <ChevronDown
+            className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${
+              openSection === "shipping" ? "rotate-180" : ""
+            }`}
+          />
+        </button>
 
+        {openSection === "shipping" ? (
+        <>
         <div id="profile.fulfillment-settings-card.div.5" className="space-y-2">
           <Label id="profile.fulfillment-settings-card.label">{text.shippingPricingMode}</Label>
           <Select
@@ -287,6 +317,8 @@ export const FulfillmentSettingsCard = React.forwardRef<
             {safeSettings.shippingPricing.notes.length}/1000
           </p>
         </div>
+        </>
+        ) : null}
       </section>
 
       <section
@@ -294,8 +326,23 @@ export const FulfillmentSettingsCard = React.forwardRef<
         id={PROFILE_FULFILLMENT_SECTION_IDS.returns}
         className="space-y-4 rounded-xl border border-outline-variant p-4"
       >
-        <h3 id="profile.fulfillment-settings-card.h3.2" className="text-sm font-bold">{text.returnPolicy}</h3>
+        <button
+          type="button"
+          onClick={() => toggleSection("returns")}
+          aria-expanded={openSection === "returns"}
+          aria-label={text.returnPolicy}
+          className="flex w-full items-center justify-between gap-2"
+        >
+          <h3 id="profile.fulfillment-settings-card.h3.2" className="text-sm font-bold">{text.returnPolicy}</h3>
+          <ChevronDown
+            className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${
+              openSection === "returns" ? "rotate-180" : ""
+            }`}
+          />
+        </button>
 
+        {openSection === "returns" ? (
+        <>
         <div id="profile.fulfillment-settings-card.div.11" className="flex items-center gap-3">
           <span id="profile.fulfillment-settings-card.span" className="text-sm font-medium leading-none">
             {settings.returns.enabled
@@ -385,6 +432,8 @@ export const FulfillmentSettingsCard = React.forwardRef<
             {settings.returns.policyText.length}/2000
           </p>
         </div>
+        </>
+        ) : null}
       </section>
     </div>
   );
