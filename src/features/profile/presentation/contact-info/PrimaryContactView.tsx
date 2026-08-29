@@ -23,7 +23,7 @@ import { ContactSectionHeader } from "./ContactSectionHeader";
 import { ContactEntryCard } from "./ContactEntryCard";
 import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
 import { foldPasswordDigits } from "@asol/auth-core";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function PrimaryContactView({ model }: { model: ContactInfoCardModel }) {
 const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, pendingRemoval, requestRemoveEntry, cancelRemoveEntry, confirmRemoveEntry, groupedSocialLinks } = model;
@@ -181,6 +181,7 @@ return (
                     {typePhones.map((phone, index) => (
                       <ContactEntryCard
                         key={phone.id}
+                        instance={createOpaqueUiInstanceId("profile-contact-phone", phone.id)}
                         color={quickAddColor(type)}
                         icon={quickAddIcon(type)}
                         title={`${t(`onboarding.contactInfo.phoneTypes.${type}`)} #${index + 1}`}
@@ -191,7 +192,7 @@ return (
                             : () => requestRemoveEntry('phone', phone.id)
                         }
                       >
-                        <PhoneField ui={{ uid: "profile.contact-info.primary-contact-view.phone-field.2-0UyUJd", id: "profile.contact-info.primary-contact-view.phone-field.2" }}
+                        <PhoneField ui={{ uid: "profile.contact-info.primary-contact-view.phone-field.2-0UyUJd", id: "profile.contact-info.primary-contact-view.phone-field.2", instance: createOpaqueUiInstanceId("profile-contact-phone", phone.id) }}
                           labels={phoneLabels}
                           inputClassName="auth-input w-full text-sm"
                           value={phone.number}
@@ -228,6 +229,7 @@ return (
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink, index) => (
                     <ContactEntryCard
                       key={emailLink.id}
+                      instance={createOpaqueUiInstanceId("profile-contact-email", emailLink.id)}
                       color={quickAddColor('email')}
                       icon={quickAddIcon('email')}
                       title={`${t('onboarding.contactInfo.email')} #${index + 1}`}
@@ -238,7 +240,7 @@ return (
                           : () => requestRemoveEntry('email', emailLink.id)
                       }
                     >
-                      <Input ui={{ uid: "profile.contact-info.primary-contact-view.input-SRkyk5", id: "profile.contact-info.primary-contact-view.input" }}
+                      <Input ui={{ uid: "profile.contact-info.primary-contact-view.input-SRkyk5", id: "profile.contact-info.primary-contact-view.input", instance: createOpaqueUiInstanceId("profile-contact-email", emailLink.id) }}
                         value={emailLink.email}
                         onChange={(e) => updateEmail(emailLink.id, { email: e.target.value })}
                         placeholder={t('onboarding.contactInfo.emailPlaceholder')}
@@ -285,6 +287,7 @@ return (
                         {platformLinks.map((link, index) => (
                           <ContactEntryCard
                             key={link.id}
+                            instance={createOpaqueUiInstanceId("profile-contact-social", link.id)}
                             color={quickAddColor(platform)}
                             icon={quickAddIcon(platform)}
                             title={`${t(`onboarding.contactInfo.platforms.${platform}`)} #${index + 1}`}
@@ -295,7 +298,7 @@ return (
                                 : () => requestRemoveEntry('social', link.id)
                             }
                           >
-                            <Input ui={{ uid: "profile.contact-info.primary-contact-view.input.3-3MRiGl", id: "profile.contact-info.primary-contact-view.input.3" }}
+                            <Input ui={{ uid: "profile.contact-info.primary-contact-view.input.3-3MRiGl", id: "profile.contact-info.primary-contact-view.input.3", instance: createOpaqueUiInstanceId("profile-contact-social", link.id) }}
                               value={link.url}
                               onChange={(e) => updateSocialLink(link.id, { url: e.target.value })}
                               placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}
@@ -335,6 +338,7 @@ return (
                   {localData.websites.map((site, index) => (
                     <ContactEntryCard
                       key={site.id}
+                      instance={createOpaqueUiInstanceId("profile-contact-website", site.id)}
                       color={quickAddColor('website')}
                       icon={quickAddIcon('website')}
                       title={`${t('onboarding.contactInfo.website')} #${index + 1}`}
@@ -343,7 +347,7 @@ return (
                         readOnly ? undefined : () => requestRemoveEntry('website', site.id)
                       }
                     >
-                      <Input ui={{ uid: "profile.contact-info.primary-contact-view.input.4-n4YYrj", id: "profile.contact-info.primary-contact-view.input.4" }}
+                      <Input ui={{ uid: "profile.contact-info.primary-contact-view.input.4-n4YYrj", id: "profile.contact-info.primary-contact-view.input.4", instance: createOpaqueUiInstanceId("profile-contact-website", site.id) }}
                         value={site.url}
                         onChange={(e) => updateWebsite(site.id, { url: e.target.value })}
                         placeholder={t('onboarding.contactInfo.websitePlaceholder')}
