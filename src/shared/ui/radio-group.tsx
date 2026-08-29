@@ -5,13 +5,17 @@ import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 import { Circle } from 'lucide-react';
 
 import { cn } from '@/shared/utils';
-import { type UiDescriptor, uiAttributes } from '@asol/ui-registry-core';
+import {
+  createUiSubpartInstanceId,
+  type UiDescriptor,
+  uiAttributes,
+} from '@asol/ui-registry-core';
 
 import { uiPrimitiveAttributes } from './ui-primitive-attributes';
 
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> & { ui?: UiDescriptor }
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> & { ui: UiDescriptor }
 >(({ className, ui, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Root
@@ -26,7 +30,7 @@ RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
 const RadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & { ui?: UiDescriptor }
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & { ui: UiDescriptor }
 >(({ className, disabled, ui, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Item
@@ -43,7 +47,7 @@ const RadioGroupItem = React.forwardRef<
         {...uiAttributes({
           uid: 'shared.ui.radio-group.indicator-D7xQ2m',
           id: 'shared.ui.radio-group.indicator',
-          instance: ui?.instance,
+          instance: createUiSubpartInstanceId(ui.uid, ui.instance, 'indicator'),
         })}
         className="flex items-center justify-center"
       >
