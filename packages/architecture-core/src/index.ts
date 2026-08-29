@@ -76,9 +76,11 @@ export {
   type DescriptorLiteral,
   type DescriptorLiteralField,
 } from './dom-identity/analyzer';
+export type { StaticInteractionMetadata, StaticSimulationMetadata } from './dom-identity/descriptor-literals';
 export { planUidMigration, applyUidMigration, type UidMigrationEdit, type UidMigrationSkip, type UidMigrationPlan } from './dom-identity/migration';
 export { fileSemanticPrefix, mintSemanticId, mintUid } from './dom-identity/mint';
 export { hostMultiplicity, type HostMultiplicity } from './dom-identity/repetition';
 export { collectUidCatalog, type UidCatalogEntry } from './dom-identity/uid-catalog';
 export { findPendingAstSourceMatches, type PendingAstSourceMatch } from './dom-identity/pending-source-match';
 export { readUiPageRegistryAst, type AstPageRegistryEntry } from './dom-identity/page-registry-reader';
+export { reachableProjectFiles } from './dom-identity/project-reachability';
