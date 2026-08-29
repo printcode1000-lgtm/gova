@@ -130,9 +130,11 @@ title, explanatory sentence, and copy-first-day shortcut are not part of the
 editor surface.
 
 The note about the schedule — holidays, seasons, exceptions — is not part of
-that card at all: `WorkingHoursNoteCard` renders it in its own container
-directly after the hours card, in both the editor and the preview, because it
-describes the whole week rather than the day that happens to be open.
+that card at all: `WorkingHoursNoteCard` renders it in its own container,
+because it describes the whole week rather than the day that happens to be
+open. It leads the editor, above the hours card, where an owner writes the
+exception before paging through days; in the preview it follows the hours,
+because a visitor came for the times first.
 
 The card pages the week on both sides: the seven days are a main tab strip (the
 shared [Category Tabs Strip](../04-ui-components/category-tabs-strip.md)) and

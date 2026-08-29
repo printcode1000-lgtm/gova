@@ -72,12 +72,6 @@ export const WorkingHoursProfileCard = React.forwardRef<
           {error}
         </div>
       ) : null}
-      <WorkingHoursCard id="profile.working-hours-profile-card.working-hours-card"
-        mode="edit"
-        locale={locale === "ar" ? "ar" : "en"}
-        value={details.workingHours}
-        onChange={(workingHours) => updateField("workingHours", workingHours)}
-      />
       <WorkingHoursNoteCard id="profile.working-hours-profile-card.working-hours-note-card"
         mode="edit"
         locale={locale === "ar" ? "ar" : "en"}
@@ -85,6 +79,12 @@ export const WorkingHoursProfileCard = React.forwardRef<
         onChange={(note) =>
           updateField("workingHours", { ...details.workingHours, note })
         }
+      />
+      <WorkingHoursCard id="profile.working-hours-profile-card.working-hours-card"
+        mode="edit"
+        locale={locale === "ar" ? "ar" : "en"}
+        value={details.workingHours}
+        onChange={(workingHours) => updateField("workingHours", workingHours)}
       />
     </div>
   );
