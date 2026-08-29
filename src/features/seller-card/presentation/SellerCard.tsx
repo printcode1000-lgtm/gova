@@ -96,6 +96,7 @@ export function SellerCard({ id,
       {showFavorite ? (
         <FavoriteButton
           item={favoriteFromSellerCard(card)}
+          variant="follow"
           className="absolute end-2 top-2 z-10"
         />
       ) : null}

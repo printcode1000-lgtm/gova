@@ -198,7 +198,7 @@ src/
 | **Public Doors** | `@/features/favorites` |
 | **Runtime Targets** | `web`, `android`, `ios` |
 | **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `auth`, `product-card`, `seller-card`, `system-logs` |
+| **Permitted Feature Dependencies** | `auth`, `follow`, `product-card`, `seller-card`, `system-logs` |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### feature-flags

@@ -87,7 +87,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
   feature('data-health', 'Development data-health inspection and cleanup UI', ['.', './server'], WEB_MOBILE_SERVER, ['@asol/data-health-core', '@asol/data-core'], ['auth', 'page-save', 'system-logs'], FULL),
   feature('dev-cloud-backup', 'Development Turso cloud backup console', ['.', './server'], WEB_MOBILE_SERVER, ['@asol/backup-core', '@asol/data-core'], ['auth', 'page-save'], FULL),
   feature('dev-tools', 'Developer-only tooling pages', ['.', './ui'], WEB_MOBILE, ['@asol/dev-core'], ['categories', 'page-save', 'pharmacy-profile-catalog', 'product'], CLIENT_UI),
-  feature('favorites', 'Favorites list and adapters', ['.'], WEB_MOBILE, [], ['auth', 'product-card', 'seller-card', 'system-logs'], CLIENT_UI),
+  feature('favorites', 'Favorites list and adapters', ['.'], WEB_MOBILE, [], ['auth', 'follow', 'product-card', 'seller-card', 'system-logs'], CLIENT_UI),
   feature('feature-flags', 'Feature flag evaluation wiring', ['.', './server'], WEB_SERVER, [], ['auth'], [false, true, false]),
   feature('follow', 'Follow/unfollow seller relationships', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], ['auth', 'notifications'], FULL),
   feature('google-play-console', 'Release console, deploy runbook, and Play Store assets UI', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/google-play-store-assets-core', '@asol/release-core', '@asol/ota-core'], ['auth', 'page-save', 'release-commands'], FULL),

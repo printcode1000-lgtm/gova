@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Heart, Loader2 } from "lucide-react";
+import { Heart, Loader2, UserCheck, UserPlus } from "lucide-react";
 
 import { cn } from "@/shared/utils";
 
@@ -15,12 +15,20 @@ interface FavoriteButtonProps {
   label?: React.ReactNode;
   /** Registered UiRegistry descriptor for this instance, from the caller. */
   ui?: UiDescriptor;
+  /**
+   * "favorite" (default) shows a heart for a private saved-item list.
+   * "follow" shows a follow-style icon for targets that also become a
+   * public Follow System record (sellers) so it isn't confused with a
+   * plain heart/like.
+   */
+  variant?: "favorite" | "follow";
 }
 
-export function FavoriteButton({ item, className, label, ui }: FavoriteButtonProps & { id?: string }) {
+export function FavoriteButton({ item, className, label, ui, variant = "favorite" }: FavoriteButtonProps & { id?: string }) {
   const { isFavorite, isLoading, toggleFavorite } = useFavorites();
   const [isMutating, setIsMutating] = React.useState(false);
   const active = isFavorite(item.type, item.targetId);
+  const isFollow = variant === "follow";
 
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -34,11 +42,19 @@ export function FavoriteButton({ item, className, label, ui }: FavoriteButtonPro
     }
   };
 
+  const ariaLabel = isFollow
+    ? active
+      ? "إلغاء متابعة البائع"
+      : "متابعة البائع"
+    : active
+      ? "إزالة من المفضلة"
+      : "إضافة إلى المفضلة";
+
   return (
     <button
       {...(ui ? uiAttributes(ui) : {})}
       type="button"
-      aria-label={active ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
+      aria-label={ariaLabel}
       onClick={(event) => void handleClick(event)}
       disabled={isLoading || isMutating}
       className={cn(
@@ -49,6 +65,12 @@ export function FavoriteButton({ item, className, label, ui }: FavoriteButtonPro
     >
       {isLoading || isMutating ? (
         <Loader2 className="h-5 w-5 animate-spin" />
+      ) : isFollow ? (
+        active ? (
+          <UserCheck className="h-5 w-5" />
+        ) : (
+          <UserPlus className="h-5 w-5" />
+        )
       ) : (
         <Heart className={cn("h-5 w-5", active && "fill-current")} />
       )}

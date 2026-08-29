@@ -10143,6 +10143,8 @@
         "categories",
         "database-backed",
         "designed",
+        "docs/05-platform-features/favorites-system",
+        "docs/05-platform-features/favorites-system.md",
         "docs/05-platform-features/follow-system",
         "docs/05-platform-features/follow-system.md",
         "entities",
@@ -68087,6 +68089,12 @@
     },
     {
       "from": "document:docs/05-platform-features/follow-system.md",
+      "to": "document:docs/05-platform-features/favorites-system.md",
+      "kind": "references",
+      "detail": "docs/05-platform-features/favorites-system.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/follow-system.md",
       "to": "feature:follow",
       "kind": "references",
       "detail": "src/features/follow"
@@ -104408,6 +104416,11 @@
     },
     {
       "from": "feature:favorites",
+      "to": "feature:follow",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:favorites",
       "to": "feature:product-card",
       "kind": "imports"
     },
@@ -129013,6 +129026,12 @@
     {
       "from": "route:/favorites:page",
       "to": "feature:favorites",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:follow",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -195026,6 +195045,12 @@
     },
     {
       "from": "source:src/features/favorites/presentation/hooks/FavoritesProvider.tsx",
+      "to": "source:src/features/follow/index.ts",
+      "kind": "imports",
+      "detail": "@/features/follow"
+    },
+    {
+      "from": "source:src/features/favorites/presentation/hooks/FavoritesProvider.tsx",
       "to": "source:src/features/system-logs/index.ts",
       "kind": "imports",
       "detail": "@/features/system-logs"
@@ -218703,6 +218728,12 @@
       "from": "source:src/features/profile/presentation/FulfillmentSettingsCard.tsx",
       "to": "feature:profile",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/profile/presentation/FulfillmentSettingsCard.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
     },
     {
       "from": "source:src/features/profile/presentation/FulfillmentSettingsCard.tsx",

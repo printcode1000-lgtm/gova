@@ -173,7 +173,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
         id={PROFILE_FULFILLMENT_SECTION_IDS.shipping}
         className="space-y-4 rounded-xl border border-outline-variant p-4"
       >
-        <button
+        <button id="profile.fulfillment-settings-card.button"
           type="button"
           onClick={() => toggleSection("shipping")}
           aria-expanded={openSection === "shipping"}
@@ -181,7 +181,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
           className="flex w-full items-center justify-between gap-2"
         >
           <h3 id="profile.fulfillment-settings-card.h3" className="text-sm font-bold">{text.shippingPricing}</h3>
-          <ChevronDown
+          <ChevronDown id="profile.fulfillment-settings-card.chevron-down"
             className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${
               openSection === "shipping" ? "rotate-180" : ""
             }`}
@@ -326,7 +326,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
         id={PROFILE_FULFILLMENT_SECTION_IDS.returns}
         className="space-y-4 rounded-xl border border-outline-variant p-4"
       >
-        <button
+        <button id="profile.fulfillment-settings-card.button.2"
           type="button"
           onClick={() => toggleSection("returns")}
           aria-expanded={openSection === "returns"}
@@ -334,7 +334,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
           className="flex w-full items-center justify-between gap-2"
         >
           <h3 id="profile.fulfillment-settings-card.h3.2" className="text-sm font-bold">{text.returnPolicy}</h3>
-          <ChevronDown
+          <ChevronDown id="profile.fulfillment-settings-card.chevron-down.2"
             className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${
               openSection === "returns" ? "rotate-180" : ""
             }`}

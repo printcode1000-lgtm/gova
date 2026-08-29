@@ -21,9 +21,9 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `data-health` | feature | 1 | 1 | 14 | 0 | 0 | 11 |
 | `dev-cloud-backup` | feature | 2 | 1 | 9 | 0 | 0 | 9 |
 | `dev-tools` | feature | 1 | 0 | 1 | 0 | 0 | 8 |
-| `favorites` | feature | 2 | 2 | 3 | 0 | 3 | 8 |
+| `favorites` | feature | 2 | 2 | 3 | 0 | 3 | 9 |
 | `feature-flags` | feature | 1 | 1 | 1 | 0 | 0 | 5 |
-| `follow` | feature | 2 | 1 | 6 | 0 | 1 | 10 |
+| `follow` | feature | 2 | 1 | 7 | 0 | 2 | 10 |
 | `google-play-console` | feature | 2 | 1 | 25 | 0 | 1 | 14 |
 | `home` | feature | 2 | 0 | 1 | 0 | 0 | 5 |
 | `location` | feature | 1 | 0 | 3 | 0 | 2 | 0 |

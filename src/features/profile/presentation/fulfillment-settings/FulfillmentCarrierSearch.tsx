@@ -49,11 +49,11 @@ export function FulfillmentCarrierSearch({
         aria-label={text.shippingMethods}
         className="flex w-full items-center justify-between gap-2"
       >
-        <span className="flex items-center gap-2">
+        <span id="profile.fulfillment-settings.fulfillment-carrier-search.span" className="flex items-center gap-2">
           <Truck id="profile.fulfillment-settings.fulfillment-carrier-search.truck" className="h-5 w-5 text-primary" />
           <h3 id="profile.fulfillment-settings.fulfillment-carrier-search.h3" className="text-sm font-bold">{text.shippingMethods}</h3>
         </span>
-        <ChevronDown
+        <ChevronDown id="profile.fulfillment-settings.fulfillment-carrier-search.chevron-down"
           className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
