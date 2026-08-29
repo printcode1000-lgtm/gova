@@ -129,7 +129,7 @@ export function CategorySubcategoriesPage({
             : "No matching results"}
         </p>
       ) : (
-        <div id="categories.category-subcategories-page.div.5" className="asol-section-tonal asol-section-tonal-primary">
+        <div id="categories.category-subcategories-page.div.5" className="asol-section-tonal asol-section-tonal-primary-soft">
           <div id="categories.category-subcategories-page.div.6" className={categoryGridClassName}>
             {filteredItems.map((item) => {
               const name = locale === "ar" ? item.nameAr : item.nameEn;
