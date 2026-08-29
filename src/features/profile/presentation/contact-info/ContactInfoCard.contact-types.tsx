@@ -184,7 +184,8 @@ export function ContactQuickAddGrid({ id,
             ) : null}
             <FontAwesomeIcon
               icon={item.icon}
-              className="h-10 w-10 text-primary transition-transform"
+              className="h-11 w-11 transition-transform"
+              style={{ color: getContactVisualColor(item.id) }}
             />
             <span
               className="line-clamp-2 w-[4.5rem] origin-top scale-[0.75] text-center text-[10px] font-semibold leading-[11px] tracking-tight text-muted-foreground"

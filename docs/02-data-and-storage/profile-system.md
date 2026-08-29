@@ -196,10 +196,10 @@ location, each phone type, an email, each social platform, a website — and kee
 every one of them on the strip for the life of the card, badged with how many
 entries the profile holds of it. A tile is mostly its icon — the padding around
 it is trimmed to almost nothing — so the row reads at a glance on a phone. The
-tiles all carry the theme's primary colour
-rather than a colour per kind, so the icon and the label are what tell them
-apart and the open one is the only tile the eye is pulled to. The cards below
-keep their per-kind colour.
+tile itself carries the theme's primary colour
+rather than a colour per kind, so the open one is the only tile the eye is
+pulled to; the **icon** keeps the kind's own colour, the same colour its card
+below uses, so a colour means one thing everywhere on this card.
 
 Tapping a kind **opens** it rather than adding to it: only that kind's card is
 rendered below the strip, every other kind's card is hidden, and the add button
