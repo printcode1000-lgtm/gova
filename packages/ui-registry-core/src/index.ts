@@ -1,16 +1,9 @@
 /**
  * `@asol/ui-registry-core` — the single public door of the UiRegistry.
- *
- * UI attributes are browser-safe diagnostic metadata only. They never contain
- * resource values, user input, tokens, phone numbers, or any other sensitive
- * data, and this package depends on no runtime, framework, or platform global.
  */
 export type { UiState } from "./domain/ui-state";
 export type { UiElementKind } from "./domain/ui-element-kind";
-export type {
-  UiSimulationTarget,
-  UiSimulationTargetKind,
-} from "./domain/ui-simulation-target";
+export type { UiSimulationTarget, UiSimulationTargetKind } from "./domain/ui-simulation-target";
 export type { UiDescriptor } from "./domain/ui-descriptor";
 export type { UiPageDefinition } from "./domain/ui-page-definition";
 export type { UiDataAttributes } from "./domain/ui-data-attributes";
@@ -31,6 +24,8 @@ export {
   UI_INSTANCE_ATTRIBUTE,
   assertUiInstanceId,
   createUiInstanceId,
+  createUiPositionInstanceId,
+  composeUiInstanceId,
   isUiInstanceId,
   uiInstanceIdRejectionReason,
 } from "./domain/ui-instance";
@@ -75,8 +70,4 @@ export { isUiRegistryPendingOpen } from "./pending/pending-request";
 export type { UiRegistryPendingValidation } from "./pending/pending-request-validation";
 export { validateUiRegistryPendingRequest } from "./pending/pending-request-validation";
 export type { UiRegistrySourceMatch } from "./pending/source-locator-match";
-export {
-  componentsForLocator,
-  findUiRegistrySourceMatches,
-  renderUiDescriptorProp,
-} from "./pending/source-locator-match";
+export { componentsForLocator, findUiRegistrySourceMatches, renderUiDescriptorProp } from "./pending/source-locator-match";
