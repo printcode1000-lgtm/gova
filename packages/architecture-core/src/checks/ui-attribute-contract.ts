@@ -56,6 +56,28 @@ function isRegistryCall(expression: ts.Expression): boolean {
     (expression.expression.text === "uiAttributes" || expression.expression.text === "uiComponentAttributes" || expression.expression.text === "uiPageAttributes");
 }
 
+function scanDuplicateJsxAttributes(file: string, sourceFile: ts.SourceFile): void {
+  function visit(node: ts.Node): void {
+    if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
+      const firstByName = new Map<string, ts.JsxAttribute>();
+      for (const property of node.attributes.properties) {
+        if (!ts.isJsxAttribute(property)) continue;
+        const name = property.name.getText(sourceFile);
+        const first = firstByName.get(name);
+        if (first) {
+          const line = sourceFile.getLineAndCharacterOfPosition(property.getStart()).line + 1;
+          const firstLine = sourceFile.getLineAndCharacterOfPosition(first.getStart()).line + 1;
+          addViolation("UI Attributes", file, `Duplicate JSX attribute "${name}" at line ${line}; first declared at line ${firstLine}.`);
+        } else {
+          firstByName.set(name, property);
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(sourceFile);
+}
+
 function scanKeyAfterSpread(file: string, sourceFile: ts.SourceFile): void {
   function visit(node: ts.Node): void {
     if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
@@ -219,6 +241,7 @@ export function checkUiAttributeContract(): void {
       const fileSource = readFileSync(file, "utf8");
       const sourceFile = parseTsx(file, fileSource);
       scanManualAttributes(file, sourceFile);
+      scanDuplicateJsxAttributes(file, sourceFile);
       scanKeyAfterSpread(file, sourceFile);
 
       for (const literal of findDescriptorLiterals(file, fileSource, sourceFile)) {
