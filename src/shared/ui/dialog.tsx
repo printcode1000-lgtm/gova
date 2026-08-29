@@ -6,12 +6,20 @@ import { X } from "lucide-react";
 
 import { cn } from "@/shared/utils";
 import { preventDismissForOverlayChrome } from "@/shared/ui/overlay-chrome";
-import { type UiDescriptor, uiAttributes } from "@asol/ui-registry-core";
+import {
+  createUiSubpartInstanceId,
+  type UiDescriptor,
+  uiAttributes,
+} from "@asol/ui-registry-core";
 
 import { uiPrimitiveAttributes } from "./ui-primitive-attributes";
 
 interface DialogUiProps {
   ui?: UiDescriptor;
+}
+
+interface RequiredDialogUiProps {
+  ui: UiDescriptor;
 }
 
 const Dialog = DialogPrimitive.Root;
@@ -21,7 +29,7 @@ const DialogClose = DialogPrimitive.Close;
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & DialogUiProps
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & RequiredDialogUiProps
 >(({ className, ui, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
@@ -37,14 +45,14 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & DialogUiProps
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & RequiredDialogUiProps
 >(({ className, children, onPointerDownOutside, onInteractOutside, onFocusOutside, ui, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay
       ui={{
         uid: "shared.dialog.dialog-overlay-7XstQq",
         id: "shared.dialog.dialog-overlay",
-        instance: ui?.instance,
+        instance: createUiSubpartInstanceId(ui.uid, ui.instance, "overlay"),
       }}
     />
     <DialogPrimitive.Content
@@ -73,7 +81,7 @@ const DialogContent = React.forwardRef<
         {...uiAttributes({
           uid: "shared.ui.dialog.close-button-Q3nK7c",
           id: "shared.ui.dialog.close-button",
-          instance: ui?.instance,
+          instance: createUiSubpartInstanceId(ui.uid, ui.instance, "close-button"),
         })}
         className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground rtl:left-4 rtl:right-auto"
       >
@@ -82,7 +90,7 @@ const DialogContent = React.forwardRef<
           {...uiAttributes({
             uid: "shared.dialog.span-7R7XF4",
             id: "shared.dialog.span",
-            instance: ui?.instance,
+            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "close-label"),
           })}
           className="sr-only"
         >
