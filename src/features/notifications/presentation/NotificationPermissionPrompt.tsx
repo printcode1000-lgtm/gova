@@ -62,11 +62,11 @@ export function NotificationPermissionPrompt({
           <div {...uiAttributes({ uid: "notifications.notification-permission-prompt.div.10-DUBb9h", id: "notifications.notification-permission-prompt.div.10" })} id="notifications.notification-permission-prompt.div.3" className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg shadow-primary/25">
             <BellRing id="notifications.notification-permission-prompt.bell-ring" className="h-8 w-8" aria-hidden="true" />
           </div>
-          <DialogHeader id="notifications.notification-permission-prompt.dialog-header" className="relative mt-5 text-center sm:text-center">
-            <DialogTitle id="notifications.notification-permission-prompt.dialog-title" className="text-2xl leading-tight">
+          <DialogHeader ui={{ uid: "notifications.notification-permission-prompt.dialog-header.2-4EqTCD", id: "notifications.notification-permission-prompt.dialog-header.2" }} id="notifications.notification-permission-prompt.dialog-header" className="relative mt-5 text-center sm:text-center">
+            <DialogTitle ui={{ uid: "notifications.notification-permission-prompt.dialog-title.2-520Ek2", id: "notifications.notification-permission-prompt.dialog-title.2" }} id="notifications.notification-permission-prompt.dialog-title" className="text-2xl leading-tight">
               {t("notifications.permissionPrompt.title")}
             </DialogTitle>
-            <DialogDescription id="notifications.notification-permission-prompt.dialog-description" className="pt-2 text-sm leading-6 text-on-surface-variant">
+            <DialogDescription ui={{ uid: "notifications.notification-permission-prompt.dialog-description.2-U1wfFB", id: "notifications.notification-permission-prompt.dialog-description.2" }} id="notifications.notification-permission-prompt.dialog-description" className="pt-2 text-sm leading-6 text-on-surface-variant">
               {t("notifications.permissionPrompt.description")}
             </DialogDescription>
           </DialogHeader>
@@ -108,7 +108,7 @@ export function NotificationPermissionPrompt({
           ) : null}
         </div>
 
-        <DialogFooter id="notifications.notification-permission-prompt.dialog-footer" className="gap-2 px-6 pb-6 pt-2 sm:flex-col sm:space-x-0">
+        <DialogFooter ui={{ uid: "notifications.notification-permission-prompt.dialog-footer.2-53VaGX", id: "notifications.notification-permission-prompt.dialog-footer.2" }} id="notifications.notification-permission-prompt.dialog-footer" className="gap-2 px-6 pb-6 pt-2 sm:flex-col sm:space-x-0">
           <Button id="notifications.notification-permission-prompt.button" ui={{ uid: "notifications.permission-prompt.enable-UNg4lD", id: "notifications.permission-prompt.enable", kind: "action", action: "enable-notifications", part: "prompt" }}
             type="button"
             size="lg"

@@ -68,12 +68,12 @@ export function LocationSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.location-section.div.4-IFW09f", id: "onboarding.sections.location-section.div.4" })} id="onboarding.sections.location-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.location-section.card">
-        <CardHeader id="onboarding.sections.location-section.card-header">
-          <CardTitle id="onboarding.sections.location-section.card-title">{t('onboarding.location.title')}</CardTitle>
-          <CardDescription id="onboarding.sections.location-section.card-description">{t('onboarding.location.description')}</CardDescription>
+      <Card ui={{ uid: "onboarding.sections.location-section.card.3-RX4dZO", id: "onboarding.sections.location-section.card.3" }} id="onboarding.sections.location-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.location-section.card-header.3-zB3HLC", id: "onboarding.sections.location-section.card-header.3" }} id="onboarding.sections.location-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.location-section.card-title.3-p7BNUO", id: "onboarding.sections.location-section.card-title.3" }} id="onboarding.sections.location-section.card-title">{t('onboarding.location.title')}</CardTitle>
+          <CardDescription ui={{ uid: "onboarding.sections.location-section.card-description.3-375KFb", id: "onboarding.sections.location-section.card-description.3" }} id="onboarding.sections.location-section.card-description">{t('onboarding.location.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.location-section.card-content" className="space-y-6">
+        <CardContent ui={{ uid: "onboarding.sections.location-section.card-content.3-7Lfjiu", id: "onboarding.sections.location-section.card-content.3" }} id="onboarding.sections.location-section.card-content" className="space-y-6">
           <div {...uiAttributes({ uid: "onboarding.sections.location-section.div.5-Rorm7L", id: "onboarding.sections.location-section.div.5" })} id="onboarding.sections.location-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.location-section.form-field" label={t('onboarding.location.country')} htmlFor="country" required error={errors.country}>
               <FormSelect id="onboarding.sections.location-section.form-select" ui={{ uid: 'onboarding.location.country-ZUTvz1', id: 'onboarding.location.country', kind: 'field', part: 'form' }}
@@ -120,15 +120,15 @@ export function LocationSection() {
         </CardContent>
       </Card>
 
-      <Card id="onboarding.sections.location-section.card.2">
-        <CardHeader id="onboarding.sections.location-section.card-header.2">
-          <CardTitle id="onboarding.sections.location-section.card-title.2" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.location-section.card.4-04e2A0", id: "onboarding.sections.location-section.card.4" }} id="onboarding.sections.location-section.card.2">
+        <CardHeader ui={{ uid: "onboarding.sections.location-section.card-header.4-Re41M6", id: "onboarding.sections.location-section.card-header.4" }} id="onboarding.sections.location-section.card-header.2">
+          <CardTitle ui={{ uid: "onboarding.sections.location-section.card-title.4-E2KoSJ", id: "onboarding.sections.location-section.card-title.4" }} id="onboarding.sections.location-section.card-title.2" className="flex items-center gap-2">
             <Globe id="onboarding.sections.location-section.globe" className="h-5 w-5" />
             {t('onboarding.location.shippingCountries')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.location-section.card-description.2">{t('onboarding.location.shippingCountriesDesc')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.location-section.card-description.4-qDjPv7", id: "onboarding.sections.location-section.card-description.4" }} id="onboarding.sections.location-section.card-description.2">{t('onboarding.location.shippingCountriesDesc')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.location-section.card-content.2">
+        <CardContent ui={{ uid: "onboarding.sections.location-section.card-content.4-Hj6gM7", id: "onboarding.sections.location-section.card-content.4" }} id="onboarding.sections.location-section.card-content.2">
           <div {...uiAttributes({ uid: "onboarding.sections.location-section.div.6-bH3rMV", id: "onboarding.sections.location-section.div.6" })} id="onboarding.sections.location-section.div.3" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {constants.countries.map((country) => {
               const isSelected = location.shippingRegions.some((r) => r.country === country);

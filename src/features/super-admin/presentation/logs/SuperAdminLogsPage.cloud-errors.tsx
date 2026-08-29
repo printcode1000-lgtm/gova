@@ -225,7 +225,7 @@ export function CloudErrorsContainer({
                       <span {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.span.5-h87KQr", id: "super-admin.logs.super-admin-logs-page.cloud-errors.span.5" })} className="rounded bg-destructive/10 px-2 py-0.5 font-bold text-destructive">
                         {entry.statusCode ?? "ERROR"}
                       </span>
-                      <code dir="ltr">
+                      <code {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.code-H0tM5W", id: "super-admin.logs.super-admin-logs-page.cloud-errors.code" })} dir="ltr">
                         {entry.requestMethod ?? "SERVER"} {cloudSource(entry)}
                       </code>
                       <span {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.span.6-BzD2p2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.span.6" })}
@@ -253,7 +253,7 @@ export function CloudErrorsContainer({
                       {entry.message}
                     </p>
                   </div>
-                  <time className="shrink-0 text-xs text-muted-foreground">
+                  <time {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.time-YU9QYe", id: "super-admin.logs.super-admin-logs-page.cloud-errors.time" })} className="shrink-0 text-xs text-muted-foreground">
                     {formatDateTimeDefault(entry.lastOccurredAt)}
                   </time>
                 </div>
@@ -263,53 +263,53 @@ export function CloudErrorsContainer({
                     البيانات المحفوظة مع توضيح الجزء المقصوص.
                   </p>
                 )}
-                <details className="mt-3 rounded-md bg-muted/30 p-3">
+                <details {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.details-X9LG3l", id: "super-admin.logs.super-admin-logs-page.cloud-errors.details" })} className="mt-3 rounded-md bg-muted/30 p-3">
                   <summary {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.summary-f9ZpdD", id: "super-admin.logs.super-admin-logs-page.cloud-errors.summary" })} className="text-xs font-semibold text-primary">
                     عرض كل التفاصيل
                   </summary>
-                  <dl
+                  <dl {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dl-IA6iFg", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dl" })}
                     className="mt-3 grid gap-2 text-xs sm:grid-cols-2"
                     dir="ltr"
                   >
                     <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.16-yWQQ5m", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.16" })}>
-                      <dt className="text-muted-foreground">الميزة</dt>
-                      <dd className="font-mono">
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt-zCp5lU", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt" })} className="text-muted-foreground">الميزة</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd-DJ2IG0", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd" })} className="font-mono">
                         {entry.feature ?? "غير محدد"}
                       </dd>
                     </div>
                     <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.17-6rLfE1", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.17" })}>
-                      <dt className="text-muted-foreground">العملية</dt>
-                      <dd className="font-mono">
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.2-gLDG70", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.2" })} className="text-muted-foreground">العملية</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.2-GH2OKn", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.2" })} className="font-mono">
                         {entry.operation ?? "غير محددة"}
                       </dd>
                     </div>
                     <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.18-YYc5gD", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.18" })}>
-                      <dt className="text-muted-foreground">
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.3-n6eDPQ", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.3" })} className="text-muted-foreground">
                         أول ظهور
                       </dt>
-                      <dd>{entry.firstOccurredAt}</dd>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.3-VJW4Oc", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.3" })}>{entry.firstOccurredAt}</dd>
                     </div>
                     <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.19-qsRB19", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.19" })}>
-                      <dt className="text-muted-foreground">آخر ظهور</dt>
-                      <dd>{entry.lastOccurredAt}</dd>
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.4-Z3K3LI", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.4" })} className="text-muted-foreground">آخر ظهور</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.4-sX1MOC", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.4" })}>{entry.lastOccurredAt}</dd>
                     </div>
                     <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.20-4qRptL", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.20" })}>
-                      <dt className="text-muted-foreground">إصدار التطبيق</dt>
-                      <dd>{entry.appVersion ?? "غير محدد"}</dd>
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.5-PrEY1d", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.5" })} className="text-muted-foreground">إصدار التطبيق</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.5-TFTlz2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.5" })}>{entry.appVersion ?? "غير محدد"}</dd>
                     </div>
                     <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.21-6fJK60", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.21" })}>
-                      <dt className="text-muted-foreground">الإصدار الأصلي</dt>
-                      <dd>{entry.nativeVersion ?? "غير محدد"}</dd>
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.6-2FqIJJ", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.6" })} className="text-muted-foreground">الإصدار الأصلي</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.6-eOaSo0", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.6" })}>{entry.nativeVersion ?? "غير محدد"}</dd>
                     </div>
                     <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.22-3W5Qdm", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.22" })} className="sm:col-span-2">
-                      <dt className="text-muted-foreground">البصمة</dt>
-                      <dd className="break-all font-mono">
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.7-16kAK2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.7" })} className="text-muted-foreground">البصمة</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.7-L5s7D6", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.7" })} className="break-all font-mono">
                         {entry.fingerprint}
                       </dd>
                     </div>
                   </dl>
                   {entry.stack && (
-                    <pre
+                    <pre {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.pre-GXOZ4P", id: "super-admin.logs.super-admin-logs-page.cloud-errors.pre" })}
                       className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap border-t pt-3 font-mono text-xs"
                       dir="ltr"
                     >

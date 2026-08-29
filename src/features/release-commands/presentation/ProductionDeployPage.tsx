@@ -97,7 +97,7 @@ export function ProductionDeployPage() {
           النشر إلى الإنتاج
         </h1>
         <p {...uiAttributes({ uid: "release-commands.production-deploy-page.p.5-q9f2J6", id: "release-commands.production-deploy-page.p.5" })} id="release-commands.production-deploy-page.p" className="text-sm text-muted-foreground">
-          يشغّل هذا الإجراء <code>deploy:all</code> كاملًا داخل بيئة نشر معزولة، ولا تمر أي أسرار
+          يشغّل هذا الإجراء <code {...uiAttributes({ uid: "release-commands.production-deploy-page.code-R0fWMS", id: "release-commands.production-deploy-page.code" })}>deploy:all</code> كاملًا داخل بيئة نشر معزولة، ولا تمر أي أسرار
           عبر المتصفح.
         </p>
       </header>
@@ -174,24 +174,24 @@ export function ProductionDeployPage() {
           <RefreshCw id="release-commands.production-deploy-page.refresh-cw" className="h-4 w-4" aria-hidden />
           الحالة
         </h2>
-        <dl className="grid grid-cols-1 gap-x-2 gap-y-1 text-sm sm:grid-cols-2">
-          <dt className="text-muted-foreground">الحالة</dt>
-          <dd>{snapshot?.status ?? "…"}</dd>
-          <dt className="text-muted-foreground">المرحلة</dt>
-          <dd>{snapshot ? productionDeployStageLabel(snapshot.stage) : "…"}</dd>
-          <dt className="text-muted-foreground">المعرّف</dt>
-          <dd dir="ltr" className="break-all">{snapshot?.requestId ?? "—"}</dd>
-          <dt className="text-muted-foreground">البريد</dt>
-          <dd>{snapshot?.emailStatus ?? "—"}</dd>
-          <dt className="text-muted-foreground">الأمر</dt>
-          <dd dir="ltr">{snapshot?.command ?? "—"}</dd>
-          <dt className="text-muted-foreground">وضع Deploy All</dt>
-          <dd>{snapshot?.deployAllOptions ? deployAllModeLabel(snapshot.deployAllOptions) : "—"}</dd>
-          <dt className="flex items-center gap-1 text-muted-foreground">
+        <dl {...uiAttributes({ uid: "release-commands.production-deploy-page.dl-fvR667", id: "release-commands.production-deploy-page.dl" })} className="grid grid-cols-1 gap-x-2 gap-y-1 text-sm sm:grid-cols-2">
+          <dt {...uiAttributes({ uid: "release-commands.production-deploy-page.dt-QL3oY4", id: "release-commands.production-deploy-page.dt" })} className="text-muted-foreground">الحالة</dt>
+          <dd {...uiAttributes({ uid: "release-commands.production-deploy-page.dd-5HXCq2", id: "release-commands.production-deploy-page.dd" })}>{snapshot?.status ?? "…"}</dd>
+          <dt {...uiAttributes({ uid: "release-commands.production-deploy-page.dt.2-My5uXd", id: "release-commands.production-deploy-page.dt.2" })} className="text-muted-foreground">المرحلة</dt>
+          <dd {...uiAttributes({ uid: "release-commands.production-deploy-page.dd.2-3TT0Lw", id: "release-commands.production-deploy-page.dd.2" })}>{snapshot ? productionDeployStageLabel(snapshot.stage) : "…"}</dd>
+          <dt {...uiAttributes({ uid: "release-commands.production-deploy-page.dt.3-KV9L64", id: "release-commands.production-deploy-page.dt.3" })} className="text-muted-foreground">المعرّف</dt>
+          <dd {...uiAttributes({ uid: "release-commands.production-deploy-page.dd.3-Dz3B3G", id: "release-commands.production-deploy-page.dd.3" })} dir="ltr" className="break-all">{snapshot?.requestId ?? "—"}</dd>
+          <dt {...uiAttributes({ uid: "release-commands.production-deploy-page.dt.4-Js3RbX", id: "release-commands.production-deploy-page.dt.4" })} className="text-muted-foreground">البريد</dt>
+          <dd {...uiAttributes({ uid: "release-commands.production-deploy-page.dd.4-PwJCR5", id: "release-commands.production-deploy-page.dd.4" })}>{snapshot?.emailStatus ?? "—"}</dd>
+          <dt {...uiAttributes({ uid: "release-commands.production-deploy-page.dt.5-v4TuXG", id: "release-commands.production-deploy-page.dt.5" })} className="text-muted-foreground">الأمر</dt>
+          <dd {...uiAttributes({ uid: "release-commands.production-deploy-page.dd.5-3IuzKu", id: "release-commands.production-deploy-page.dd.5" })} dir="ltr">{snapshot?.command ?? "—"}</dd>
+          <dt {...uiAttributes({ uid: "release-commands.production-deploy-page.dt.6-SDfw7u", id: "release-commands.production-deploy-page.dt.6" })} className="text-muted-foreground">وضع Deploy All</dt>
+          <dd {...uiAttributes({ uid: "release-commands.production-deploy-page.dd.6-PyR96M", id: "release-commands.production-deploy-page.dd.6" })}>{snapshot?.deployAllOptions ? deployAllModeLabel(snapshot.deployAllOptions) : "—"}</dd>
+          <dt {...uiAttributes({ uid: "release-commands.production-deploy-page.dt.7-9DipEc", id: "release-commands.production-deploy-page.dt.7" })} className="flex items-center gap-1 text-muted-foreground">
             <Timer id="release-commands.production-deploy-page.timer" className="h-3.5 w-3.5" aria-hidden />
             المدة
           </dt>
-          <dd dir="ltr" className="font-mono tabular-nums">
+          <dd {...uiAttributes({ uid: "release-commands.production-deploy-page.dd.7-mN1phY", id: "release-commands.production-deploy-page.dd.7" })} dir="ltr" className="font-mono tabular-nums">
             {totalElapsed === null ? "—" : formatDeployDuration(totalElapsed)}
           </dd>
         </dl>
@@ -234,7 +234,7 @@ export function ProductionDeployPage() {
         {/* whitespace-pre: preserves log formatting without forcing line-wrap. */}
         {/* min-w-0: prevents the pre from escaping its flex/grid container. */}
         <div {...uiAttributes({ uid: "release-commands.production-deploy-page.div.6-O270Da", id: "release-commands.production-deploy-page.div.6" })} id="release-commands.production-deploy-page.div.2" className="min-w-0 overflow-x-auto">
-          <pre
+          <pre {...uiAttributes({ uid: "release-commands.production-deploy-page.pre-LodkM4", id: "release-commands.production-deploy-page.pre" })}
             ref={logRef}
             dir="ltr"
             className="max-h-80 min-w-0 overflow-y-auto whitespace-pre rounded bg-muted p-2 text-xs leading-5"
@@ -334,7 +334,7 @@ function ConfirmationPhrase(props: { onApply: (value: string) => void }) {
 
   return (
     <div {...uiAttributes({ uid: "release-commands.production-deploy-page.div.8-mHVk7K", id: "release-commands.production-deploy-page.div.8" })} id="release-commands.production-deploy-page.div.4" className="flex flex-wrap items-center justify-between gap-2">
-      <code className="select-all rounded bg-muted px-2 py-1 font-mono text-sm" dir="ltr">
+      <code {...uiAttributes({ uid: "release-commands.production-deploy-page.code.2-yRR83u", id: "release-commands.production-deploy-page.code.2" })} className="select-all rounded bg-muted px-2 py-1 font-mono text-sm" dir="ltr">
         {REMOTE_DEPLOY_ALL_CONFIRMATION}
       </code>
       <Button id="release-commands.production-deploy-page.button.4" ui={{ uid: "production-deploy.copy-phrase-e0wHqS", id: "production-deploy.copy-phrase", kind: "action", action: "copy-confirmation-phrase", part: "execution" }}

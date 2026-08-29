@@ -76,10 +76,10 @@ export function ProductField({ id,
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="true">
+            <SelectItem ui={{ uid: "product.product-component-primitives.select-item-pVpP4i", id: "product.product-component-primitives.select-item" }} value="true">
               {t("product.boolean.yes")}
             </SelectItem>
-            <SelectItem value="false">
+            <SelectItem ui={{ uid: "product.product-component-primitives.select-item.2-31y8CQ", id: "product.product-component-primitives.select-item.2" }} value="false">
               {t("product.boolean.no")}
             </SelectItem>
           </SelectContent>

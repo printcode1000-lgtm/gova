@@ -20,6 +20,7 @@ import type { UiDescriptor } from "@asol/ui-registry-core";
 
 import { PhoneCountryDialog } from "./phone-country-dialog";
 import { uiPrimitiveAttributes } from "./ui-primitive-attributes";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export type { PhoneFieldLabels };
 
@@ -87,18 +88,18 @@ export function PhoneField({
   };
 
   return (
-    <div id={id} className={cn("flex items-stretch gap-2", className)}>
-      <button
+    <div {...uiAttributes({ uid: "shared.phone-field.div-D0c6E4", id: "shared.phone-field.div" })} id={id} className={cn("flex items-stretch gap-2", className)}>
+      <button {...uiAttributes({ uid: "shared.phone-field.button-X9ZI11", id: "shared.phone-field.button" })}
         type="button"
         disabled={disabled}
         aria-label={labels.country}
         onClick={() => setIsPickerOpen(true)}
         className="asol-control inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-outline-variant bg-surface px-2.5 text-sm text-on-surface transition disabled:opacity-60"
       >
-        <span aria-hidden="true" className="text-base leading-none">
+        <span {...uiAttributes({ uid: "shared.phone-field.span-vp5Hwi", id: "shared.phone-field.span" })} aria-hidden="true" className="text-base leading-none">
           {selectedChoice?.flag ?? ""}
         </span>
-        <span dir="ltr" className="text-xs font-semibold">
+        <span {...uiAttributes({ uid: "shared.phone-field.span.2-kY7XG6", id: "shared.phone-field.span.2" })} dir="ltr" className="text-xs font-semibold">
           +{callingCode}
         </span>
       </button>

@@ -55,8 +55,8 @@ export function AccountDevicesSection({
 
       {state.accountDevicesLoading && devices.length === 0 ? (
         <div {...uiAttributes({ uid: "settings.account-devices-section.div.8-78K0XF", id: "settings.account-devices-section.div.8" })} id="settings.account-devices-section.div.4" className="space-y-2" aria-busy="true">
-          <Skeleton id="settings.account-devices-section.skeleton" className="h-14 w-full rounded-xl" />
-          <Skeleton id="settings.account-devices-section.skeleton.2" className="h-14 w-full rounded-xl" />
+          <Skeleton ui={{ uid: "settings.account-devices-section.skeleton.3-UG1UCx", id: "settings.account-devices-section.skeleton.3" }} id="settings.account-devices-section.skeleton" className="h-14 w-full rounded-xl" />
+          <Skeleton ui={{ uid: "settings.account-devices-section.skeleton.4-9E1TH0", id: "settings.account-devices-section.skeleton.4" }} id="settings.account-devices-section.skeleton.2" className="h-14 w-full rounded-xl" />
         </div>
       ) : state.accountDevicesFailed ? (
         <p {...uiAttributes({ uid: "settings.account-devices-section.p.6-ugEo1y", id: "settings.account-devices-section.p.6" })} id="settings.account-devices-section.p.3" className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">

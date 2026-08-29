@@ -106,12 +106,12 @@ export function StoreIdentitySection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.store-identity-section.div.4-DKG1x3", id: "onboarding.sections.store-identity-section.div.4" })} id="onboarding.sections.store-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.store-identity-section.card">
-        <CardHeader id="onboarding.sections.store-identity-section.card-header">
-          <CardTitle id="onboarding.sections.store-identity-section.card-title">{t('onboarding.storeIdentity.title')}</CardTitle>
-          <CardDescription id="onboarding.sections.store-identity-section.card-description">{t('onboarding.storeIdentity.description')}</CardDescription>
+      <Card ui={{ uid: "onboarding.sections.store-identity-section.card.2-R64otv", id: "onboarding.sections.store-identity-section.card.2" }} id="onboarding.sections.store-identity-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.store-identity-section.card-header.2-DWl618", id: "onboarding.sections.store-identity-section.card-header.2" }} id="onboarding.sections.store-identity-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.store-identity-section.card-title.2-bOPgT1", id: "onboarding.sections.store-identity-section.card-title.2" }} id="onboarding.sections.store-identity-section.card-title">{t('onboarding.storeIdentity.title')}</CardTitle>
+          <CardDescription ui={{ uid: "onboarding.sections.store-identity-section.card-description.2-XfOhO0", id: "onboarding.sections.store-identity-section.card-description.2" }} id="onboarding.sections.store-identity-section.card-description">{t('onboarding.storeIdentity.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.store-identity-section.card-content" className="space-y-6">
+        <CardContent ui={{ uid: "onboarding.sections.store-identity-section.card-content.2-Vvbx41", id: "onboarding.sections.store-identity-section.card-content.2" }} id="onboarding.sections.store-identity-section.card-content" className="space-y-6">
           <div {...uiAttributes({ uid: "onboarding.sections.store-identity-section.div.5-2UjMJI", id: "onboarding.sections.store-identity-section.div.5" })} id="onboarding.sections.store-identity-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.store-identity-section.form-field" label={t('onboarding.storeIdentity.storeName')} htmlFor="onboarding.store-identity.store-name" required error={errors.storeName}>
               <FormInput ui={{ uid: 'onboarding.store-identity.store-name-uoWh3D', id: 'onboarding.store-identity.store-name', kind: 'field', part: 'form' }}

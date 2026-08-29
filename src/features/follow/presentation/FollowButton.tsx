@@ -261,7 +261,7 @@ export function FollowButton({
                     <span {...uiAttributes({ uid: "follow.follow-button.span.16-w6VPYh", id: "follow.follow-button.span.16" })} id="follow.follow-button.span.6" className="block text-on-surface-variant">
                       {t("follow.dialog.followerCount")}
                     </span>
-                    <strong className="mt-1 block text-base text-on-surface">
+                    <strong {...uiAttributes({ uid: "follow.follow-button.strong-9OS1hT", id: "follow.follow-button.strong" })} className="mt-1 block text-base text-on-surface">
                       {formatCount(count, locale)}
                     </strong>
                   </div>
@@ -269,13 +269,13 @@ export function FollowButton({
                     <span {...uiAttributes({ uid: "follow.follow-button.span.17-P2o8Qb", id: "follow.follow-button.span.17" })} id="follow.follow-button.span.7" className="block text-on-surface-variant">
                       {t("follow.dialog.notification.channel")}
                     </span>
-                    <strong className="mt-1 block text-sm text-on-surface">
+                    <strong {...uiAttributes({ uid: "follow.follow-button.strong.2-lEQjl4", id: "follow.follow-button.strong.2" })} className="mt-1 block text-sm text-on-surface">
                       {t("follow.dialog.notification.pushAndCenter")}
                     </strong>
                   </div>
                 </div>
                 <div {...uiAttributes({ uid: "follow.follow-button.div.28-v3jRnF", id: "follow.follow-button.div.28" })} id="follow.follow-button.div.12" className="space-y-1.5">
-                  <Label id="follow.follow-button.label" htmlFor={`follower-notification-title-${targetId}`}>
+                  <Label ui={{ uid: "follow.follow-button.label.3-z89e7U", id: "follow.follow-button.label.3" }} id="follow.follow-button.label" htmlFor={`follower-notification-title-${targetId}`}>
                     {t("follow.dialog.notification.titleLabel")}
                   </Label>
                   <Input ui={{ uid: "follow.dialog.notification-title-V3MF1S", id: "follow.dialog.notification-title", kind: "field", part: "dialog" }}
@@ -290,7 +290,7 @@ export function FollowButton({
                   </p>
                 </div>
                 <div {...uiAttributes({ uid: "follow.follow-button.div.29-ovzK4r", id: "follow.follow-button.div.29" })} id="follow.follow-button.div.13" className="space-y-1.5">
-                  <Label id="follow.follow-button.label.2" htmlFor={`follower-notification-body-${targetId}`}>
+                  <Label ui={{ uid: "follow.follow-button.label.4-i3f5EO", id: "follow.follow-button.label.4" }} id="follow.follow-button.label.2" htmlFor={`follower-notification-body-${targetId}`}>
                     {t("follow.dialog.notification.messageLabel")}
                   </Label>
                   <Textarea ui={{ uid: "follow.dialog.notification-body-T7WPo6", id: "follow.dialog.notification-body", kind: "field", part: "dialog" }}
@@ -311,9 +311,9 @@ export function FollowButton({
                       {t("follow.dialog.notification.resultTitle")}
                     </p>
                     <div {...uiAttributes({ uid: "follow.follow-button.div.31-DrqI6r", id: "follow.follow-button.div.31" })} id="follow.follow-button.div.15" className="grid grid-cols-3 gap-2 text-center">
-                      <span {...uiAttributes({ uid: "follow.follow-button.span.18-tOo845", id: "follow.follow-button.span.18" })} id="follow.follow-button.span.8">{t("follow.dialog.notification.requested")}<strong className="block text-sm">{notificationResult.requested}</strong></span>
-                      <span {...uiAttributes({ uid: "follow.follow-button.span.19-ChDLV5", id: "follow.follow-button.span.19" })} id="follow.follow-button.span.9" className="text-success"><CheckCircle2 id="follow.follow-button.check-circle2" className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.delivered")}<strong className="block text-sm">{notificationResult.delivered}</strong></span>
-                      <span {...uiAttributes({ uid: "follow.follow-button.span.20-3QHSeZ", id: "follow.follow-button.span.20" })} id="follow.follow-button.span.10" className="text-error"><XCircle id="follow.follow-button.xcircle" className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.unavailable")}<strong className="block text-sm">{notificationResult.unavailable}</strong></span>
+                      <span {...uiAttributes({ uid: "follow.follow-button.span.18-tOo845", id: "follow.follow-button.span.18" })} id="follow.follow-button.span.8">{t("follow.dialog.notification.requested")}<strong {...uiAttributes({ uid: "follow.follow-button.strong.3-r12Lpp", id: "follow.follow-button.strong.3" })} className="block text-sm">{notificationResult.requested}</strong></span>
+                      <span {...uiAttributes({ uid: "follow.follow-button.span.19-ChDLV5", id: "follow.follow-button.span.19" })} id="follow.follow-button.span.9" className="text-success"><CheckCircle2 id="follow.follow-button.check-circle2" className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.delivered")}<strong {...uiAttributes({ uid: "follow.follow-button.strong.4-13hOdX", id: "follow.follow-button.strong.4" })} className="block text-sm">{notificationResult.delivered}</strong></span>
+                      <span {...uiAttributes({ uid: "follow.follow-button.span.20-3QHSeZ", id: "follow.follow-button.span.20" })} id="follow.follow-button.span.10" className="text-error"><XCircle id="follow.follow-button.xcircle" className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.unavailable")}<strong {...uiAttributes({ uid: "follow.follow-button.strong.5-uYb037", id: "follow.follow-button.strong.5" })} className="block text-sm">{notificationResult.unavailable}</strong></span>
                     </div>
                   </div>
                 ) : null}

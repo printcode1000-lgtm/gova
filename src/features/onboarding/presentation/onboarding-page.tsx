@@ -72,8 +72,8 @@ function CompletionScreen({ id,
         </Button>
       </div>
 
-      <Card className="w-full max-w-lg mt-8">
-        <CardContent className="p-6">
+      <Card ui={{ uid: "onboarding.onboarding-page.card-ruqUG8", id: "onboarding.onboarding-page.card" }} className="w-full max-w-lg mt-8">
+        <CardContent ui={{ uid: "onboarding.onboarding-page.card-content-5ECeeR", id: "onboarding.onboarding-page.card-content" }} className="p-6">
           <h3 {...uiAttributes({ uid: "onboarding.onboarding-page.h3-K0pBa7", id: "onboarding.onboarding-page.h3" })} className="font-semibold mb-4">{t('onboarding.completion.summaryTitle')}</h3>
           <div {...uiAttributes({ uid: "onboarding.onboarding-page.div.16-CNop40", id: "onboarding.onboarding-page.div.16" })} className="space-y-3 text-sm">
             <div {...uiAttributes({ uid: "onboarding.onboarding-page.div.17-4J5YvP", id: "onboarding.onboarding-page.div.17" })} className="flex justify-between">

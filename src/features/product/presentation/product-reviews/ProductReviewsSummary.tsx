@@ -24,7 +24,7 @@ export function ProductReviewsSummary({
         className="flex items-center gap-2"
       >
         <Stars id="product.product-reviews.product-reviews-summary.stars" value={average} />
-        <strong>{average.toFixed(1)}</strong>
+        <strong {...uiAttributes({ uid: "product.product-reviews.product-reviews-summary.strong-G7Yxlj", id: "product.product-reviews.product-reviews-summary.strong" })}>{average.toFixed(1)}</strong>
         <span {...uiAttributes({ uid: "product.product-reviews.product-reviews-summary.span.2-PH5SAa", id: "product.product-reviews.product-reviews-summary.span.2" })} id="product.product-reviews.product-reviews-summary.span" className="text-sm text-muted-foreground">({total})</span>
       </button>
       {canRate ? (

@@ -422,7 +422,7 @@ export function SuperAdminNotificationTestsPage() {
                 {item.label}
               </span>
               <span {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.span.2-jB5TwL", id: "super-admin.super-admin-notification-tests-page.span.2" })} className="mt-2 block text-xs text-muted-foreground">{item.description}</span>
-              <code className="mt-2 block text-xs" dir="ltr">{item.channelId}</code>
+              <code {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.code-OUiJ5j", id: "super-admin.super-admin-notification-tests-page.code" })} className="mt-2 block text-xs" dir="ltr">{item.channelId}</code>
             </button>
           ))}
         </div>
@@ -441,25 +441,25 @@ export function SuperAdminNotificationTestsPage() {
               </Button>
             </div>
             <div {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.div.32-7itw0E", id: "super-admin.super-admin-notification-tests-page.div.32" })} id="super-admin.super-admin-notification-tests-page.div.12" className="space-y-2">
-              <Label id="super-admin.super-admin-notification-tests-page.label" htmlFor="notification-test-title">العنوان</Label>
+              <Label ui={{ uid: "super-admin.super-admin-notification-tests-page.label.6-P4nUXE", id: "super-admin.super-admin-notification-tests-page.label.6" }} id="super-admin.super-admin-notification-tests-page.label" htmlFor="notification-test-title">العنوان</Label>
               <Input ui={{ uid: "super-admin.notification-tests.title-6ucZ8Z", id: "super-admin.notification-tests.title", kind: "field", part: "form" }} id="notification-test-title" value={title} maxLength={120} onChange={(event) => setTitle(event.target.value)} />
             </div>
             <div {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.div.33-Uh2UQk", id: "super-admin.super-admin-notification-tests-page.div.33" })} id="super-admin.super-admin-notification-tests-page.div.13" className="space-y-2">
-              <Label id="super-admin.super-admin-notification-tests-page.label.2" htmlFor="notification-test-body">النص</Label>
+              <Label ui={{ uid: "super-admin.super-admin-notification-tests-page.label.7-SP3nND", id: "super-admin.super-admin-notification-tests-page.label.7" }} id="super-admin.super-admin-notification-tests-page.label.2" htmlFor="notification-test-body">النص</Label>
               <Textarea ui={{ uid: "super-admin.notification-tests.body-ALXBj2", id: "super-admin.notification-tests.body", kind: "field", part: "form" }} id="notification-test-body" value={body} maxLength={1000} rows={4} onChange={(event) => setBody(event.target.value)} />
             </div>
             <div {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.div.34-D0p8Gp", id: "super-admin.super-admin-notification-tests-page.div.34" })} id="super-admin.super-admin-notification-tests-page.div.14" className="space-y-2">
-              <Label id="super-admin.super-admin-notification-tests-page.label.3" htmlFor="notification-test-route">الرابط الداخلي</Label>
+              <Label ui={{ uid: "super-admin.super-admin-notification-tests-page.label.8-6cPcsp", id: "super-admin.super-admin-notification-tests-page.label.8" }} id="super-admin.super-admin-notification-tests-page.label.3" htmlFor="notification-test-route">الرابط الداخلي</Label>
               <Input ui={{ uid: "super-admin.notification-tests.route-02cmBT", id: "super-admin.notification-tests.route", kind: "field", part: "form" }} id="notification-test-route" value={routeHref} dir="ltr" onChange={(event) => setRouteHref(event.target.value)} />
             </div>
             <div {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.div.35-lQhU02", id: "super-admin.super-admin-notification-tests-page.div.35" })} id="super-admin.super-admin-notification-tests-page.div.15" className="space-y-2">
-              <Label id="super-admin.super-admin-notification-tests-page.label.4" htmlFor="notification-test-batch-size">عدد الإشعارات المتتالية</Label>
+              <Label ui={{ uid: "super-admin.super-admin-notification-tests-page.label.9-ML0M5T", id: "super-admin.super-admin-notification-tests-page.label.9" }} id="super-admin.super-admin-notification-tests-page.label.4" htmlFor="notification-test-batch-size">عدد الإشعارات المتتالية</Label>
               <select {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.select-102SSw", id: "super-admin.super-admin-notification-tests-page.select" })} id="notification-test-batch-size" className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={batchSize} onChange={(event) => setBatchSize(Number(event.target.value))}>
                 {notificationTestBatchSizeOptions.map((count) => <option key={count} {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.option-8Kk3yj", id: "super-admin.super-admin-notification-tests-page.option" })} value={count}>{count === 1 ? "إشعار واحد" : `${count} إشعارات متتالية`}</option>)}
               </select>
             </div>
             <div {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.div.36-KQ7IWI", id: "super-admin.super-admin-notification-tests-page.div.36" })} id="super-admin.super-admin-notification-tests-page.div.16" className="space-y-2">
-              <Label id="super-admin.super-admin-notification-tests-page.label.5" htmlFor="notification-test-delay">التأخير</Label>
+              <Label ui={{ uid: "super-admin.super-admin-notification-tests-page.label.10-zjv3AD", id: "super-admin.super-admin-notification-tests-page.label.10" }} id="super-admin.super-admin-notification-tests-page.label.5" htmlFor="notification-test-delay">التأخير</Label>
               <select {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.select.2-YD2pXj", id: "super-admin.super-admin-notification-tests-page.select.2" })} id="notification-test-delay" className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={delaySeconds} onChange={(event) => setDelaySeconds(Number(event.target.value))}>
                 {notificationTestDelayOptions.map((seconds) => <option key={seconds} {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.option.2-rArPd5", id: "super-admin.super-admin-notification-tests-page.option.2" })} value={seconds}>{seconds === 0 ? "فوري" : `بعد ${seconds} ثوانٍ`}</option>)}
               </select>
@@ -474,7 +474,7 @@ export function SuperAdminNotificationTestsPage() {
 
         <div {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.div.37-2e4Dmj", id: "super-admin.super-admin-notification-tests-page.div.37" })} id="super-admin.super-admin-notification-tests-page.div.17" className="rounded-xl border bg-card p-4">
           <h2 {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.h2.9-rlzwN2", id: "super-admin.super-admin-notification-tests-page.h2.9" })} id="super-admin.super-admin-notification-tests-page.h2.4" className="mb-4 font-semibold">المتوقع</h2>
-          <dl className="space-y-3 text-sm">
+          <dl {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.dl-J2tU3T", id: "super-admin.super-admin-notification-tests-page.dl" })} className="space-y-3 text-sm">
             <Detail id="super-admin.super-admin-notification-tests-page.detail" label="القناة" value={scenario.channelId} mono />
             <Detail id="super-admin.super-admin-notification-tests-page.detail.2" label="الأهمية" value={String(channel?.importance ?? "—")} />
             <Detail id="super-admin.super-admin-notification-tests-page.detail.3" label="الصوت" value={scenario.audible ? "custom_notification.mp3" : "بدون صوت"} />
@@ -485,8 +485,8 @@ export function SuperAdminNotificationTestsPage() {
           {remoteResult ? (
             <div {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.div.38-8LMB6K", id: "super-admin.super-admin-notification-tests-page.div.38" })} id="super-admin.super-admin-notification-tests-page.div.18" className="mt-5 rounded-lg border bg-muted/40 p-3 text-sm">
               <p {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.p.14-U0LfGP", id: "super-admin.super-admin-notification-tests-page.p.14" })} id="super-admin.super-admin-notification-tests-page.p.5" className="flex items-center gap-2 font-semibold"><CheckCircle2 id="super-admin.super-admin-notification-tests-page.check-circle2" className="h-4 w-4 text-primary" />نتيجة Push</p>
-              <p {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.p.15-MbN3Zt", id: "super-admin.super-admin-notification-tests-page.p.15" })} id="super-admin.super-admin-notification-tests-page.p.6" className="mt-2">الحالة: <strong>{formatTestResultStatus(remoteResult.results[0]?.status ?? "failed")}</strong></p>
-              <p {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.p.16-N1RBfV", id: "super-admin.super-admin-notification-tests-page.p.16" })} id="super-admin.super-admin-notification-tests-page.p.7">الرموز: <strong>{remoteResult.results[0]?.tokenCount ?? 0}</strong></p>
+              <p {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.p.15-MbN3Zt", id: "super-admin.super-admin-notification-tests-page.p.15" })} id="super-admin.super-admin-notification-tests-page.p.6" className="mt-2">الحالة: <strong {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.strong-is2dRv", id: "super-admin.super-admin-notification-tests-page.strong" })}>{formatTestResultStatus(remoteResult.results[0]?.status ?? "failed")}</strong></p>
+              <p {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.p.16-N1RBfV", id: "super-admin.super-admin-notification-tests-page.p.16" })} id="super-admin.super-admin-notification-tests-page.p.7">الرموز: <strong {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.strong.2-sy6rKt", id: "super-admin.super-admin-notification-tests-page.strong.2" })}>{remoteResult.results[0]?.tokenCount ?? 0}</strong></p>
               <p {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.p.17-C2BNTG", id: "super-admin.super-admin-notification-tests-page.p.17" })} id="super-admin.super-admin-notification-tests-page.p.8" className="break-all" dir="ltr">{remoteResult.dedupeKey}</p>
             </div>
           ) : null}
@@ -513,5 +513,5 @@ function StatusCard({ id, label, value, ok }: { label: string; value: string; ok
 }
 
 function Detail({ id, label, value, mono = false }: { label: string; value: string; mono?: boolean } & { id?: string }) {
-  return <div {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.div.42-JuB8D8", id: "super-admin.super-admin-notification-tests-page.div.42" })} id={id} className="flex items-start justify-between gap-3 border-b pb-2"><dt className="text-muted-foreground">{label}</dt><dd className={mono ? "font-mono text-xs" : "font-medium"} dir={mono ? "ltr" : undefined}>{value}</dd></div>;
+  return <div {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.div.42-JuB8D8", id: "super-admin.super-admin-notification-tests-page.div.42" })} id={id} className="flex items-start justify-between gap-3 border-b pb-2"><dt {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.dt-D7z2Ji", id: "super-admin.super-admin-notification-tests-page.dt" })} className="text-muted-foreground">{label}</dt><dd {...uiAttributes({ uid: "super-admin.super-admin-notification-tests-page.dd-Y64TjC", id: "super-admin.super-admin-notification-tests-page.dd" })} className={mono ? "font-mono text-xs" : "font-medium"} dir={mono ? "ltr" : undefined}>{value}</dd></div>;
 }

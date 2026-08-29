@@ -59,15 +59,15 @@ export function CategoriesSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.3-I4h6iL", id: "onboarding.sections.categories-section.div.3" })} id="onboarding.sections.categories-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.categories-section.card">
-        <CardHeader id="onboarding.sections.categories-section.card-header">
-          <CardTitle id="onboarding.sections.categories-section.card-title" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.categories-section.card.2-rEAh9H", id: "onboarding.sections.categories-section.card.2" }} id="onboarding.sections.categories-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.categories-section.card-header.2-J3y8Ay", id: "onboarding.sections.categories-section.card-header.2" }} id="onboarding.sections.categories-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.categories-section.card-title.2-qNs4n7", id: "onboarding.sections.categories-section.card-title.2" }} id="onboarding.sections.categories-section.card-title" className="flex items-center gap-2">
             <Tag id="onboarding.sections.categories-section.tag" className="h-5 w-5" />
             {t('onboarding.categories.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.categories-section.card-description">{t('onboarding.categories.description')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.categories-section.card-description.2-DgPI4w", id: "onboarding.sections.categories-section.card-description.2" }} id="onboarding.sections.categories-section.card-description">{t('onboarding.categories.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.categories-section.card-content" className="space-y-4">
+        <CardContent ui={{ uid: "onboarding.sections.categories-section.card-content.2-1F2AVe", id: "onboarding.sections.categories-section.card-content.2" }} id="onboarding.sections.categories-section.card-content" className="space-y-4">
           {errors.categories && (
             <p {...uiAttributes({ uid: "onboarding.sections.categories-section.p.2-713ZFM", id: "onboarding.sections.categories-section.p.2" })} id="onboarding.sections.categories-section.p" className="text-sm text-destructive">{errors.categories}</p>
           )}
@@ -104,7 +104,7 @@ export function CategoriesSection() {
                         onClick={() => toggleExpand(category.id)}
                         className="flex items-center gap-1 text-sm text-muted-foreground"
                       >
-                        <Badge variant="secondary" className="mr-2">
+                        <Badge ui={{ uid: "onboarding.sections.categories-section.badge-4pXOWF", id: "onboarding.sections.categories-section.badge" }} variant="secondary" className="mr-2">
                           {t('onboarding.categories.subcategories', { count: subcategories.length })}
                         </Badge>
                         {isExpanded ? (
@@ -120,7 +120,7 @@ export function CategoriesSection() {
                     <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.7-Yo4Bat", id: "onboarding.sections.categories-section.div.7" })} className="px-4 pb-4 pt-0 animate-in slide-in-from-top-2 duration-200">
                       <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.8-DtrG94", id: "onboarding.sections.categories-section.div.8" })} className="flex flex-wrap gap-2 pl-7">
                         {subcategories.map((sub) => (
-                          <Badge key={sub} variant="outline">
+                          <Badge key={sub} ui={{ uid: "onboarding.sections.categories-section.badge.2-J2Q5Bc", id: "onboarding.sections.categories-section.badge.2" }} variant="outline">
                             {t(
                               `onboarding.constants.fashionCategories.${category.id}.subcategories.${subcategoryKey(sub)}`,
                             )}

@@ -61,7 +61,7 @@ export function PlayTracksTab() {
         {(tracks.snapshot.tracks ?? []).map((item) => (
           <div key={item.track} {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.div.7-KKTDL1", id: "google-play-console.tabs.play-tracks-tab.div.7" })} className="rounded-md border bg-surface p-3">
             <h2 {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.h2.3-Q9DI4n", id: "google-play-console.tabs.play-tracks-tab.h2.3" })} className="font-semibold" dir="ltr">{item.track}</h2>
-            <pre className="mt-2 max-h-48 overflow-auto rounded-md bg-muted p-2 text-xs" dir="ltr">
+            <pre {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.pre-dI7ZJq", id: "google-play-console.tabs.play-tracks-tab.pre" })} className="mt-2 max-h-48 overflow-auto rounded-md bg-muted p-2 text-xs" dir="ltr">
               {JSON.stringify(item.releases, null, 2)}
             </pre>
           </div>

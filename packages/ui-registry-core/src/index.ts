@@ -26,13 +26,21 @@ export {
 } from "./domain/ui-uid";
 export type { UiUidRandom } from "./domain/ui-uid-generator";
 export { createUiUid, generateUiUid, uiUidSuffix } from "./domain/ui-uid-generator";
-export type { UiInstanceId } from "./domain/ui-instance";
-export { UI_INSTANCE_ATTRIBUTE, assertUiInstanceId, isUiInstanceId } from "./domain/ui-instance";
+export type { UiInstanceId, CreateUiInstanceIdOptions, UiInstanceIdRejectionReason } from "./domain/ui-instance";
+export {
+  UI_INSTANCE_ATTRIBUTE,
+  assertUiInstanceId,
+  createUiInstanceId,
+  isUiInstanceId,
+  uiInstanceIdRejectionReason,
+} from "./domain/ui-instance";
 export { uiAttributes } from "./domain/ui-attributes";
 export { uiComponentAttributes } from "./domain/ui-component-attributes";
 export { uiPageAttributes } from "./domain/ui-page-attributes";
 export { UI_PAGE_REGISTRY } from "./registry/ui-page-registry";
 export { resolveUiPage } from "./registry/resolve-ui-page";
+export type { UiUidCatalogEntry } from "./registry/ui-uid-catalog-entry";
+export { UI_UID_INVENTORY } from "./registry/generated/ui-uid-inventory";
 export { UI_INTERACTION_TYPES } from "./domain/ui-interaction";
 export type { UiInteraction, UiInteractionType } from "./domain/ui-interaction";
 export type { UiSimulationTargetRecord } from "./simulation/simulation-registry.types";

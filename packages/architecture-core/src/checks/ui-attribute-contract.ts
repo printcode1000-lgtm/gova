@@ -1,6 +1,10 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
+import ts from "typescript";
+
+import { findDescriptorLiterals } from "../dom-identity/descriptor-literals";
+import { parseTsx } from "../dom-identity/tsx-ast";
 import { ROOT, addViolation } from "./architecture-types";
 
 /** `@asol/ui-registry-core` owns every UiRegistry contract; the guard reads it there. */
@@ -9,27 +13,8 @@ const REGISTRY_OWNER = join(ROOT, "packages", "ui-registry-core", "src");
 const GUARD_OWNER = join(ROOT, "packages", "architecture-core", "src", "checks");
 const REGISTRY_PATH = join(REGISTRY_OWNER, "registry", "ui-page-registry.ts");
 const APP_ROOT = join(ROOT, "src", "app");
-const MANUAL_ATTRIBUTE =
-  /\bdata-ui-(?:uid|id|page|component|state|action|part|item-id|instance)\s*=/;
-/**
- * An `instance` value built from an array index or loop counter instead of a
- * stable domain identifier. Runtime instances must stay distinguishable by
- * something that survives reordering; an index does not.
- */
-const INDEX_DERIVED_INSTANCE =
-  /\binstance:\s*(?:String\(\s*)?(?:index|idx|i)\s*\)?\s*(?:[,}]|$)/m;
-/**
- * A `key` written after the `uiAttributes()` spread on the same element.
- *
- * This is a correctness bug, not a style rule. The JSX transform cannot use
- * `jsx`/`jsxs` when a key follows a spread, so it falls back to
- * `createElement`, which does not mark the element's static children as
- * validated. React then re-validates them as an unkeyed list and warns about
- * the first child — an error that names an innocent element and hides the real
- * one. Writing `key` before the spread keeps the fast, correct path.
- */
-const KEY_AFTER_UI_SPREAD =
-  /\{\.\.\.ui(?:Attributes|ComponentAttributes|PageAttributes)\((?:[^()]|\([^()]*\))*\)\}\s+key=/;
+const MANUAL_DATA_UI_ATTRIBUTE = /^data-ui-(?:uid|id|page|component|state|action|part|item-id|instance)$/;
+
 /**
  * The one safe uid shape: a stable lowercase dot/dash-separated semantic
  * prefix, then an immutable six-character Base62 suffix minted once during
@@ -54,37 +39,11 @@ function isDeterministicCopy(uid: string, identity: string): boolean {
     uid === identity.split(".").join("-")
   );
 }
-/** Descriptor literals the application writes by hand. */
-const DESCRIPTOR_OPENINGS = ["uiAttributes({", "ui={{", "ui: {"] as const;
-
-/**
- * Generic helpers render the same component in dozens of places, so a uid
- * written inside one would repeat across every instance and stop being an
- * identity. These files may forward a caller's descriptor; they may never
- * contain a uid of their own.
- */
-const GENERIC_HELPERS = [
-  join(ROOT, "src", "shared", "ui"),
-  join(REGISTRY_OWNER, "domain", "ui-component-attributes.ts"),
-];
-
-/** The exact shape of a descriptor's `simulation` field, which is not a descriptor. */
-const SIMULATION_FIELD_SHAPE =
-  /^\s*kind:\s*["'](?:event|field|list-item|file|state)["']\s*,\s*id:\s*["'][^"']+["']\s*$/;
-
-/** A uid must be a source literal; anything computed cannot be stable. */
-const COMPUTED_UID = /\buid:\s*(?!["'])/;
 
 interface RegistryEntry {
   route: string;
   id: string;
   uid: string | null;
-}
-
-interface DescriptorLiteral {
-  file: string;
-  line: number;
-  body: string;
 }
 
 function collectPageRoutes(directory: string): string[] {
@@ -136,113 +95,86 @@ function sourceFilesUnder(directory: string): string[] {
   return files;
 }
 
-function scanKeyAfterSpread(file: string, source: string): void {
-  const match = source.match(KEY_AFTER_UI_SPREAD);
-  if (!match || match.index === undefined) return;
-  const line = source.slice(0, match.index).split("\n").length;
-  addViolation(
-    "UI Attributes",
-    file,
-    `key follows the uiAttributes spread at line ${line}. Write key before the spread, or React drops to createElement and misreports child keys.`,
-  );
-}
-
-function scanManualAttributes(file: string, source: string): void {
-  const match = source.match(MANUAL_ATTRIBUTE);
-  if (!match || match.index === undefined) return;
-  const line = source.slice(0, match.index).split("\n").length;
-  addViolation(
-    "UI Attributes",
-    file,
-    `Manual ${match[0].trim()} is forbidden at line ${line}. Use uiAttributes() or a shared UI primitive.`,
-  );
-}
-
-/** Reads one balanced `{ … }` literal starting at the given brace index. */
-function balancedObject(source: string, openIndex: number): string | null {
-  let depth = 0;
-  for (let index = openIndex; index < source.length; index += 1) {
-    const character = source[index];
-    if (character === "{") depth += 1;
-    else if (character === "}") {
-      depth -= 1;
-      if (depth === 0) return source.slice(openIndex + 1, index);
-    }
-  }
-  return null;
-}
-
-function descriptorLiterals(file: string, source: string): DescriptorLiteral[] {
-  const literals: DescriptorLiteral[] = [];
-  for (const opening of DESCRIPTOR_OPENINGS) {
-    let cursor = source.indexOf(opening);
-    while (cursor !== -1) {
-      const braceIndex = source.indexOf("{", cursor + opening.length - 1);
-      const body = braceIndex === -1 ? null : balancedObject(source, braceIndex);
-      if (body !== null) {
-        literals.push({
-          file,
-          line: source.slice(0, cursor).split("\n").length,
-          body,
-        });
-      }
-      cursor = source.indexOf(opening, cursor + opening.length);
-    }
-  }
-  return literals;
-}
-
 /**
- * Reads descriptor objects held in a typed `Record<string, UiDescriptor>`.
- * These records are common for fixed navigation controls, where a later
- * `uiAttributes(recordItem)` spread would otherwise hide every uid from the
- * direct-call scanner.
+ * `key` written after a `uiAttributes()`/`ui={{}}` spread on the same
+ * element. This is a correctness bug, not a style rule: the JSX transform
+ * cannot use `jsx`/`jsxs` when `key` follows a spread, so it falls back to
+ * `createElement`, which does not mark the element's static children as
+ * validated — React then re-validates them as an unkeyed list and warns
+ * about the first child, an element that is not in any list and has
+ * nothing to fix. Read from the real attribute order, not text adjacency.
  */
-function descriptorRegistryLiterals(file: string, source: string): DescriptorLiteral[] {
-  const literals: DescriptorLiteral[] = [];
-  const opening = /const\s+\w+\s*=\s*\{/g;
-  for (const match of source.matchAll(opening)) {
-    if (match.index === undefined) continue;
-    const braceIndex = source.indexOf("{", match.index);
-    const body = balancedObject(source, braceIndex);
-    if (body === null) continue;
-    const endIndex = braceIndex + body.length + 2;
-    const declarationTail = source.slice(endIndex, endIndex + 96);
-    if (!/^\s*as const satisfies Record<string, UiDescriptor>/.test(declarationTail)) continue;
-
-    let cursor = 0;
-    while (cursor < body.length) {
-      const member = /\b\w+\s*:\s*\{/.exec(body.slice(cursor));
-      if (!member || member.index === undefined) break;
-      const memberBrace = cursor + member.index + member[0].lastIndexOf("{");
-      const memberBody = balancedObject(body, memberBrace);
-      if (memberBody === null) break;
-      // `simulation: { kind, id }` and `interaction: { type }` are fields of a
-      // descriptor, not descriptors. Their `id` is a scenario name, and asking
-      // them for a uid would report every registered element as unregistered.
-      if (/(?:simulation|interaction)\s*:\s*$/.test(body.slice(0, memberBrace))) {
-        cursor = memberBrace + memberBody.length + 2;
-        continue;
+function scanKeyAfterSpread(file: string, sourceFile: ts.SourceFile): void {
+  function visit(node: ts.Node): void {
+    if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
+      let sawRegistrySpread = false;
+      for (const property of node.attributes.properties) {
+        if (
+          ts.isJsxSpreadAttribute(property) &&
+          /\b(?:uiAttributes|uiComponentAttributes|uiPageAttributes)\s*\(/.test(property.expression.getText())
+        ) {
+          sawRegistrySpread = true;
+          continue;
+        }
+        if (sawRegistrySpread && ts.isJsxAttribute(property) && property.name.getText() === "key") {
+          const line = sourceFile.getLineAndCharacterOfPosition(property.getStart()).line + 1;
+          addViolation(
+            "UI Attributes",
+            file,
+            `key follows the uiAttributes spread at line ${line}. Write key before the spread, or React drops to createElement and misreports child keys.`,
+          );
+        }
       }
-      literals.push({
-        file,
-        line: source.slice(0, braceIndex + 1 + memberBrace).split("\n").length,
-        body: memberBody,
-      });
-      cursor = memberBrace + memberBody.length + 2;
     }
+    ts.forEachChild(node, visit);
   }
-  return literals;
+  visit(sourceFile);
+}
+
+const INDEX_NAMES = new Set(["index", "idx", "i"]);
+
+/** True for a bare `index`/`idx`/`i` identifier, or `String(index)`. */
+function isIndexDerivedExpression(node: ts.Expression): boolean {
+  if (ts.isIdentifier(node)) return INDEX_NAMES.has(node.text);
+  if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === "String") {
+    const argument = node.arguments[0];
+    return argument !== undefined && ts.isIdentifier(argument) && INDEX_NAMES.has(argument.text);
+  }
+  if (ts.isTemplateExpression(node)) {
+    return node.templateSpans.some((span) => ts.isIdentifier(span.expression) && INDEX_NAMES.has(span.expression.text));
+  }
+  return false;
+}
+
+/** A hand-authored `data-ui-*` JSX attribute — the registry API was bypassed. */
+function scanManualAttributes(file: string, sourceFile: ts.SourceFile): void {
+  function visit(node: ts.Node): void {
+    if (ts.isJsxAttribute(node) && MANUAL_DATA_UI_ATTRIBUTE.test(node.name.getText())) {
+      const line = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1;
+      addViolation(
+        "UI Attributes",
+        file,
+        `Manual ${node.name.getText()} is forbidden at line ${line}. Use uiAttributes() or a shared UI primitive.`,
+      );
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(sourceFile);
 }
 
 /**
  * Keeps UI identity declarative and complete: every App Router page must have
  * exactly one safe, value-free registry route carrying a unique uid, every
- * explicitly registered element must declare its own uid, and JSX must not
- * create an alternate attribute dialect outside the typed builder.
+ * explicitly registered element must declare its own uid as a source literal,
+ * and JSX must not create an alternate attribute dialect outside the typed
+ * builder. Descriptor reading is AST-exact (`findDescriptorLiterals`): no
+ * formatting, multiline object, alias, or comment can hide a violation from
+ * a regex the way the old balanced-brace scan could be confused by one.
  *
  * Generic shared primitives that emit only a component marker are intentionally
- * uid-free and are never reported here.
+ * uid-free and are never reported here; `checkUidCoverage` (dom-identity)
+ * separately proves every DOM usage site — including every generic primitive
+ * usage — actually carries a registration in the first place.
  */
 export function checkUiAttributeContract(): void {
   if (!existsSync(REGISTRY_PATH)) {
@@ -312,6 +244,25 @@ export function checkUiAttributeContract(): void {
     uidOwners.set(entry.uid, `UI_PAGE_REGISTRY route ${entry.route}`);
   }
 
+  // `ui-component-attributes.ts` is the one hand-authored no-uid fallback
+  // builder; it must never gain a uid parameter that could be misused as a
+  // fixed helper-level identity. Checked before the blanket REGISTRY_OWNER
+  // skip below, which otherwise excludes all of `@asol/ui-registry-core`'s
+  // own source (it is the door the rest of this scan validates *through*,
+  // not a UI usage site itself). `dom-identity`'s coverage check proves the
+  // broader "no generic primitive owns a fixed root uid" invariant
+  // structurally, across every shared UI file, not just this one.
+  const componentAttributesHelper = join(REGISTRY_OWNER, "domain", "ui-component-attributes.ts");
+  const helperSource = readFileSync(componentAttributesHelper, "utf8");
+  const helperUid = helperSource.match(/\buid:\s*["']([^"']*)["']/);
+  if (helperUid) {
+    addViolation(
+      "UI Attributes",
+      componentAttributesHelper,
+      `Generic UI helper declares uid "${helperUid[1]}". A helper-level uid repeats across every instance; register each usage site instead.`,
+    );
+  }
+
   for (const directory of [join(ROOT, "src"), join(ROOT, "packages")]) {
     for (const file of sourceFilesUnder(directory)) {
       if (file.startsWith(REGISTRY_OWNER)) continue;
@@ -319,62 +270,47 @@ export function checkUiAttributeContract(): void {
       // report the rule text itself as a violation.
       if (file.startsWith(GUARD_OWNER)) continue;
       const fileSource = readFileSync(file, "utf8");
-      scanManualAttributes(file, fileSource);
-      scanKeyAfterSpread(file, fileSource);
+      const sourceFile = parseTsx(file, fileSource);
+      scanManualAttributes(file, sourceFile);
+      scanKeyAfterSpread(file, sourceFile);
 
-      // A generic helper may forward a caller's descriptor; it may never own a
-      // uid, because that uid would repeat on every rendered instance.
-      if (GENERIC_HELPERS.some((helper) => file.startsWith(helper))) {
-        const helperUid = fileSource.match(/\buid:\s*["']([^"']*)["']/);
-        if (helperUid) {
-          addViolation(
-            "UI Attributes",
-            file,
-            `Generic UI helper declares uid "${helperUid[1]}". A helper-level uid repeats across every instance; register each usage site instead.`,
-          );
-        }
-        continue;
-      }
-
-      const descriptorRecords = [
-        ...descriptorLiterals(file, fileSource),
-        ...descriptorRegistryLiterals(file, fileSource),
-      ];
-      const checkedDescriptorLines = new Set<number>();
-      for (const literal of descriptorRecords) {
-        if (checkedDescriptorLines.has(literal.line)) continue;
-        checkedDescriptorLines.add(literal.line);
+      const literals = findDescriptorLiterals(file, fileSource, sourceFile);
+      for (const literal of literals) {
         // Only records that declare a UI identity are registrations. A literal
         // that merely forwards another descriptor (`{ ...ui, state }`) declares
-        // no id of its own and carries the forwarded uid; a literal that
-        // declares an id needs its own uid, spread or not.
-        if (!/\bid:\s*["'`]/.test(literal.body)) continue;
-        // `simulation: { kind, id }` is a *field* of a descriptor. Its `id` is
-        // a scenario name and it never carries a uid, so reading it as a
-        // descriptor would report every simulated element as unregistered.
-        if (SIMULATION_FIELD_SHAPE.test(literal.body) && !/\buid:/.test(literal.body)) continue;
-        if (INDEX_DERIVED_INSTANCE.test(literal.body)) {
+        // no id of its own and carries the forwarded uid.
+        if (!literal.fields.has("id")) continue;
+        const idField = literal.fields.get("id")!;
+        const uidField = literal.fields.get("uid");
+        const instanceField = literal.fields.get("instance");
+
+        if (instanceField?.isComputed && isIndexDerivedExpression(instanceField.node)) {
           addViolation(
             "UI Attributes",
             file,
-            `UiRegistry descriptor at line ${literal.line} derives instance from an array index. ` +
+            `UiRegistry descriptor at line ${literal.line} derives "instance" from an array index. ` +
               `Prefer a stable domain identifier; an index does not survive reordering.`,
           );
         }
-        const uid = literal.body.match(/\buid:\s*["']([^"']*)["']/)?.[1];
-        if (uid === undefined) {
-          // A uid built at render time — from an index, a key, a template, or
-          // any other expression — is not a stable identity.
+
+        if (!uidField) {
           addViolation(
             "UI Attributes",
             file,
-            COMPUTED_UID.test(literal.body)
-              ? `UiRegistry descriptor at line ${literal.line} computes its uid. A uid must be a source literal, never derived from an index, key, or expression.`
-              : `UiRegistry descriptor at line ${literal.line} has no uid. Every explicitly registered element needs one.`,
+            `UiRegistry descriptor at line ${literal.line} has no uid. Every explicitly registered element needs one.`,
           );
           continue;
         }
-        const descriptorId = literal.body.match(/\bid:\s*["']([^"']*)["']/)?.[1] ?? "";
+        if (uidField.isComputed) {
+          addViolation(
+            "UI Attributes",
+            file,
+            `UiRegistry descriptor at line ${literal.line} computes its uid. A uid must be a source literal, never derived from an index, key, or expression.`,
+          );
+          continue;
+        }
+        const uid = uidField.literalValue!;
+        const descriptorId = idField.literalValue ?? "";
         if (isDeterministicCopy(uid, descriptorId)) {
           addViolation(
             "UI Attributes",
@@ -408,9 +344,9 @@ export function checkUiAttributeContract(): void {
         // action, or part make the registry ambiguous.
         const signature = [
           uid,
-          literal.body.match(/\bkind:\s*["']([^"']*)["']/)?.[1] ?? "",
-          literal.body.match(/\baction:\s*["']([^"']*)["']/)?.[1] ?? "",
-          literal.body.match(/\bpart:\s*["']([^"']*)["']/)?.[1] ?? "",
+          literal.fields.get("kind")?.literalValue ?? "",
+          literal.fields.get("action")?.literalValue ?? "",
+          literal.fields.get("part")?.literalValue ?? "",
         ].join("|");
         const known = descriptorSignatures.get(descriptorId);
         if (known && known.signature !== signature) {

@@ -349,7 +349,7 @@ export function CartPageContent() {
                   ))}
                 </div>
 
-                <details className="mt-4 rounded-lg border border-outline-variant bg-muted/20 p-3">
+                <details {...uiAttributes({ uid: "cart.cart-page-content.details-2lY116", id: "cart.cart-page-content.details" })} className="mt-4 rounded-lg border border-outline-variant bg-muted/20 p-3">
                   <summary {...uiAttributes({ uid: "cart.cart-page-content.summary-x3AEdS", id: "cart.cart-page-content.summary" })} className="flex list-none items-center justify-between gap-3 text-sm font-bold">
                     سياسة الشحن والإرجاع الخاصة بالبائع
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />

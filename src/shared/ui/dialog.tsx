@@ -6,6 +6,13 @@ import { X } from "lucide-react";
 
 import { cn } from "@/shared/utils";
 import { preventDismissForOverlayChrome } from "@/shared/ui/overlay-chrome";
+import { type UiDescriptor, uiAttributes } from "@asol/ui-registry-core";
+
+import { uiPrimitiveAttributes } from "./ui-primitive-attributes";
+
+interface DialogUiProps {
+  ui?: UiDescriptor;
+}
 
 const Dialog = DialogPrimitive.Root;
 
@@ -17,8 +24,8 @@ const DialogClose = DialogPrimitive.Close;
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & DialogUiProps
+>(({ className, ui, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
@@ -26,16 +33,17 @@ const DialogOverlay = React.forwardRef<
       className,
     )}
     {...props}
+    {...uiPrimitiveAttributes("dialog-overlay", ui)}
   />
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, onPointerDownOutside, onInteractOutside, onFocusOutside, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & DialogUiProps
+>(({ className, children, onPointerDownOutside, onInteractOutside, onFocusOutside, ui, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay />
+    <DialogOverlay ui={{ uid: "shared.dialog.dialog-overlay-7XstQq", id: "shared.dialog.dialog-overlay" }} />
     <DialogPrimitive.Content
       ref={ref}
       onPointerDownOutside={(event) => {
@@ -55,11 +63,15 @@ const DialogContent = React.forwardRef<
         className,
       )}
       {...props}
+      {...uiPrimitiveAttributes("dialog-content", ui)}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground rtl:left-4 rtl:right-auto">
+      <DialogPrimitive.Close
+        {...uiAttributes({ uid: "shared.ui.dialog.close-button-Q3nK7c", id: "shared.ui.dialog.close-button" })}
+        className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground rtl:left-4 rtl:right-auto"
+      >
         <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
+        <span {...uiAttributes({ uid: "shared.dialog.span-7R7XF4", id: "shared.dialog.span" })} className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
@@ -68,36 +80,40 @@ DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
   className,
+  ui,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+}: React.HTMLAttributes<HTMLDivElement> & DialogUiProps) => (
   <div
     className={cn(
       "flex flex-col space-y-1.5 text-center sm:text-left",
       className,
     )}
     {...props}
+    {...uiPrimitiveAttributes("dialog-header", ui)}
   />
 );
 DialogHeader.displayName = "DialogHeader";
 
 const DialogFooter = ({
   className,
+  ui,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+}: React.HTMLAttributes<HTMLDivElement> & DialogUiProps) => (
   <div
     className={cn(
       "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
       className,
     )}
     {...props}
+    {...uiPrimitiveAttributes("dialog-footer", ui)}
   />
 );
 DialogFooter.displayName = "DialogFooter";
 
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title> & DialogUiProps
+>(({ className, ui, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
@@ -105,18 +121,20 @@ const DialogTitle = React.forwardRef<
       className,
     )}
     {...props}
+    {...uiPrimitiveAttributes("dialog-title", ui)}
   />
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description> & DialogUiProps
+>(({ className, ui, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
     className={cn("text-sm text-muted-foreground", className)}
     {...props}
+    {...uiPrimitiveAttributes("dialog-description", ui)}
   />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;

@@ -82,7 +82,7 @@ export function SuperAdminPageSimulation({ page }: { page: UserPageDefinition })
         <header {...uiAttributes({ uid: "simulation.super-admin-page-simulation.header.2-1WL2RP", id: "simulation.super-admin-page-simulation.header.2" })} id="simulation.super-admin-page-simulation.header" className="min-w-0">
           <h1 {...uiAttributes({ uid: "simulation.super-admin-page-simulation.h1.2-w47Rgq", id: "simulation.super-admin-page-simulation.h1.2" })} id="simulation.super-admin-page-simulation.h1" className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xl font-bold text-on-surface sm:text-2xl">
             <span {...uiAttributes({ uid: "simulation.super-admin-page-simulation.span.2-E7NePC", id: "simulation.super-admin-page-simulation.span.2" })} id="simulation.super-admin-page-simulation.span" className="break-words">محاكاة: {page.label}</span>
-            <code className="max-w-full break-all rounded-md bg-surface-container-low px-2 py-1 text-xs font-semibold text-primary" dir="ltr">
+            <code {...uiAttributes({ uid: "simulation.super-admin-page-simulation.code-Pj0gRZ", id: "simulation.super-admin-page-simulation.code" })} className="max-w-full break-all rounded-md bg-surface-container-low px-2 py-1 text-xs font-semibold text-primary" dir="ltr">
               {page.route}
             </code>
           </h1>

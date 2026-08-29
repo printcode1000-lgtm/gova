@@ -8,6 +8,7 @@ import { cn } from '@/shared/utils';
 import { type UiDescriptor } from '@asol/ui-registry-core';
 
 import { uiPrimitiveAttributes } from './ui-primitive-attributes';
+import { uiAttributes } from "@asol/ui-registry-core";
 
 const Select = SelectPrimitive.Root;
 
@@ -39,8 +40,8 @@ SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton> & { ui?: UiDescriptor }
+>(({ className, ui, ...props }, ref) => (
   <SelectPrimitive.ScrollUpButton
     ref={ref}
     className={cn(
@@ -48,6 +49,7 @@ const SelectScrollUpButton = React.forwardRef<
       className
     )}
     {...props}
+    {...uiPrimitiveAttributes('select-scroll-up-button', ui)}
   >
     <ChevronUp className="h-4 w-4" />
   </SelectPrimitive.ScrollUpButton>
@@ -56,8 +58,8 @@ SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
 
 const SelectScrollDownButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton> & { ui?: UiDescriptor }
+>(({ className, ui, ...props }, ref) => (
   <SelectPrimitive.ScrollDownButton
     ref={ref}
     className={cn(
@@ -65,6 +67,7 @@ const SelectScrollDownButton = React.forwardRef<
       className
     )}
     {...props}
+    {...uiPrimitiveAttributes('select-scroll-down-button', ui)}
   >
     <ChevronDown className="h-4 w-4" />
   </SelectPrimitive.ScrollDownButton>
@@ -88,7 +91,9 @@ const SelectContent = React.forwardRef<
       position={position}
       {...props}
     >
-      <SelectScrollUpButton />
+      <SelectScrollUpButton
+        ui={{ uid: 'shared.ui.select.scroll-up-button-Xr4Ks9', id: 'shared.ui.select.scroll-up-button' }}
+      />
       <SelectPrimitive.Viewport
         className={cn(
           'p-1',
@@ -98,7 +103,9 @@ const SelectContent = React.forwardRef<
       >
         {children}
       </SelectPrimitive.Viewport>
-      <SelectScrollDownButton />
+      <SelectScrollDownButton
+        ui={{ uid: 'shared.ui.select.scroll-down-button-Tn6Vp1', id: 'shared.ui.select.scroll-down-button' }}
+      />
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
 ));
@@ -118,8 +125,8 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & { ui?: UiDescriptor }
+>(({ className, children, ui, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
@@ -127,8 +134,9 @@ const SelectItem = React.forwardRef<
       className
     )}
     {...props}
+    {...uiPrimitiveAttributes('select-item', ui)}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span {...uiAttributes({ uid: "shared.select.span-P2XGV0", id: "shared.select.span" })} className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
         <Check className="h-4 w-4" />
       </SelectPrimitive.ItemIndicator>

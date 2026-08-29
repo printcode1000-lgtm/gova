@@ -109,7 +109,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
         />
 
         <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.16-5UoKBW", id: "profile.profile-registration-info-card.div.16" })} id="profile.profile-registration-info-card.div.5" className="space-y-2">
-          <Label id="profile.profile-registration-info-card.label" className="text-xs sm:text-sm font-medium flex items-center gap-2">
+          <Label ui={{ uid: "profile.profile-registration-info-card.label.6-4OxrIJ", id: "profile.profile-registration-info-card.label.6" }} id="profile.profile-registration-info-card.label" className="text-xs sm:text-sm font-medium flex items-center gap-2">
             <Mail id="profile.profile-registration-info-card.mail" className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
             {t("onboarding.contactInfo.email")}
           </Label>
@@ -128,7 +128,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
         </div>
 
         <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.17-p0oTPt", id: "profile.profile-registration-info-card.div.17" })} id="profile.profile-registration-info-card.div.6" className="space-y-2">
-          <Label id="profile.profile-registration-info-card.label.2" className="text-xs sm:text-sm font-medium">
+          <Label ui={{ uid: "profile.profile-registration-info-card.label.7-6zfNLw", id: "profile.profile-registration-info-card.label.7" }} id="profile.profile-registration-info-card.label.2" className="text-xs sm:text-sm font-medium">
             {t("auth.storeName.label")}
           </Label>
           <Input id="profile.profile-registration-info-card.input.2"
@@ -169,7 +169,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
           {isPasswordOpen ? (
             <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.19-o38ZY1", id: "profile.profile-registration-info-card.div.19" })} id="profile.profile-registration-info-card.div.8" className="space-y-3 sm:space-y-4 rounded-lg border border-outline-variant/40 p-3 sm:p-4">
               <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.20-R6c8kI", id: "profile.profile-registration-info-card.div.20" })} id="profile.profile-registration-info-card.div.9" className="space-y-2">
-                <Label id="profile.profile-registration-info-card.label.3" htmlFor="profile.registration.current-password" className="text-xs sm:text-sm">
+                <Label ui={{ uid: "profile.profile-registration-info-card.label.8-ba5gRk", id: "profile.profile-registration-info-card.label.8" }} id="profile.profile-registration-info-card.label.3" htmlFor="profile.registration.current-password" className="text-xs sm:text-sm">
                   {t("onboarding.contactInfo.currentPassword")}
                 </Label>
                 <Input ui={{ uid: "profile.registration.current-password-4AZhBQ", id: "profile.registration.current-password", kind: "field", part: "password" }}
@@ -193,7 +193,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                 ) : null}
               </div>
               <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.21-UfnL0O", id: "profile.profile-registration-info-card.div.21" })} id="profile.profile-registration-info-card.div.10" className="space-y-2">
-                <Label id="profile.profile-registration-info-card.label.4" htmlFor="profile.registration.new-password" className="text-xs sm:text-sm">
+                <Label ui={{ uid: "profile.profile-registration-info-card.label.9-YPgAL9", id: "profile.profile-registration-info-card.label.9" }} id="profile.profile-registration-info-card.label.4" htmlFor="profile.registration.new-password" className="text-xs sm:text-sm">
                   {t("onboarding.contactInfo.newPassword")}
                 </Label>
                 <Input ui={{ uid: "profile.registration.new-password-M0iC2C", id: "profile.registration.new-password", kind: "field", part: "password" }}
@@ -215,7 +215,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                 ) : null}
               </div>
               <div {...uiAttributes({ uid: "profile.profile-registration-info-card.div.22-Cdrp2N", id: "profile.profile-registration-info-card.div.22" })} id="profile.profile-registration-info-card.div.11" className="space-y-2">
-                <Label id="profile.profile-registration-info-card.label.5" htmlFor="profile.registration.confirm-password" className="text-xs sm:text-sm">
+                <Label ui={{ uid: "profile.profile-registration-info-card.label.10-SX9YLZ", id: "profile.profile-registration-info-card.label.10" }} id="profile.profile-registration-info-card.label.5" htmlFor="profile.registration.confirm-password" className="text-xs sm:text-sm">
                   {t("onboarding.contactInfo.confirmPassword")}
                 </Label>
                 <Input ui={{ uid: "profile.registration.confirm-password-QW9mB3", id: "profile.registration.confirm-password", kind: "field", part: "password" }}

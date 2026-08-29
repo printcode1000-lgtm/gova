@@ -2,7 +2,7 @@ import { registerDataCorePorts } from "@/features/data/server";
 import { uiRegistryPendingRepository } from "@asol/data-core/ui-registry";
 import {
   checkUiAttributeContract,
-  checkUiRegistryCoverageContract,
+  checkDomIdentityCoverageContract,
   violations,
 } from "@asol/architecture-core";
 
@@ -50,7 +50,7 @@ async function main(): Promise<void> {
   // Whatever was written has to satisfy the same contract as a hand-written
   // registration before this command can claim success.
   checkUiAttributeContract();
-  checkUiRegistryCoverageContract();
+  checkDomIdentityCoverageContract();
   if (violations.length > 0) {
     console.error("\nUiRegistry contract failed after applying pending requests:");
     for (const violation of violations) {

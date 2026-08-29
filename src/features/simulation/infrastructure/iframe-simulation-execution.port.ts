@@ -32,7 +32,7 @@ function editableValue(element: Element, value: string): void {
  * restyle while claiming the feature broke.
  */
 function targetSelector(target: SimulationTarget): string {
-  return uiSimulationSelector(target.targetUid);
+  return uiSimulationSelector(target.targetUid, target.instance);
 }
 
 function targetLabel(target: SimulationTarget): string {
@@ -73,13 +73,27 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
   private target(target: SimulationTarget): Element {
     const selector = targetSelector(target);
     const matches = this.documentNode().querySelectorAll(selector);
-    if (matches.length === 0) throw new Error(`simulationInteractionTargetMissing:${targetLabel(target)}`);
+    if (matches.length === 0) {
+      throw new Error(
+        target.instance !== undefined
+          ? `simulationInteractionTargetInstanceMissing:${targetLabel(target)} instance="${target.instance}"`
+          : `simulationInteractionTargetMissing:${targetLabel(target)}`,
+      );
+    }
+    // An `instance` selector already narrows to `[data-ui-uid][data-ui-instance]`,
+    // so more than one match there is a real DOM bug (two rows sharing an
+    // instance id), never an intentional collection to fall back on.
+    if (target.instance !== undefined && matches.length > 1) {
+      throw new Error(
+        `simulationInteractionTargetInstanceAmbiguous:${targetLabel(target)} instance="${target.instance}" matched ${matches.length} elements`,
+      );
+    }
     // Multiplicity is a registry fact, not a guess: a descriptor rendered once
     // per row of a real list resolves to the first row by contract, and
     // anything else that matches twice is an ambiguity the run must not paper
-    // over by picking one.
+    // over by picking one — unless the caller supplied an instance, handled above.
     const registered = uiSimulationTarget(target.targetUid);
-    if (matches.length > 1 && !registered?.repeated) {
+    if (target.instance === undefined && matches.length > 1 && !registered?.repeated) {
       throw new Error(
         `simulationInteractionTargetAmbiguous:${targetLabel(target)} matched ${matches.length} elements`,
       );

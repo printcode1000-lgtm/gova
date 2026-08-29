@@ -124,6 +124,6 @@ function VersionCard({ id, label, value, emphasized = false }: {
     ? "border-primary bg-primary/10"
     : "bg-muted/40"}`}>
     <p {...uiAttributes({ uid: "google-play-console.release-version-summary.p.5-sXIMJ1", id: "google-play-console.release-version-summary.p.5" })} className="text-xs leading-5 text-on-surface-variant">{label}</p>
-    <code className="mt-1 block text-lg font-bold" dir="ltr">{value}</code>
+    <code {...uiAttributes({ uid: "google-play-console.release-version-summary.code-5hALKu", id: "google-play-console.release-version-summary.code" })} className="mt-1 block text-lg font-bold" dir="ltr">{value}</code>
   </div>;
 }

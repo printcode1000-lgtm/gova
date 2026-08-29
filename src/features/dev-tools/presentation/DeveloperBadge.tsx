@@ -134,7 +134,7 @@ export function DeveloperBadge() {
     >
       <DropdownMenu>
         <DropdownMenuTrigger id="dev-tools.developer-badge.dropdown-menu-trigger" asChild>
-          <Badge id="dev-tools.developer-badge.badge" variant="destructive" className="pointer-events-auto">
+          <Badge ui={{ uid: "dev-tools.developer-badge.badge.2-Fi89Y6", id: "dev-tools.developer-badge.badge.2" }} id="dev-tools.developer-badge.badge" variant="destructive" className="pointer-events-auto">
             ASOL DEV
           </Badge>
         </DropdownMenuTrigger>
@@ -143,11 +143,11 @@ export function DeveloperBadge() {
           className="w-64 max-h-[80vh] overflow-y-auto"
           {...{ [OVERLAY_CHROME_ATTRIBUTE]: 'true' }}
         >
-          <DropdownMenuLabel id="dev-tools.developer-badge.dropdown-menu-label">صفحات المشروع</DropdownMenuLabel>
-          <DropdownMenuSeparator id="dev-tools.developer-badge.dropdown-menu-separator" />
+          <DropdownMenuLabel ui={{ uid: "dev-tools.developer-badge.dropdown-menu-label.2-LCe1zh", id: "dev-tools.developer-badge.dropdown-menu-label.2" }} id="dev-tools.developer-badge.dropdown-menu-label">صفحات المشروع</DropdownMenuLabel>
+          <DropdownMenuSeparator ui={{ uid: "dev-tools.developer-badge.dropdown-menu-separator.2-2JaIMA", id: "dev-tools.developer-badge.dropdown-menu-separator.2" }} id="dev-tools.developer-badge.dropdown-menu-separator" />
           {pages.map((page) => (
             <div key={page.path} {...uiAttributes({ uid: "dev-tools.developer-badge.div-7Y0G0I", id: "dev-tools.developer-badge.div" })} className="flex items-center justify-between px-2">
-              <DropdownMenuItem asChild className="flex-1">
+              <DropdownMenuItem ui={{ uid: "dev-tools.developer-badge.dropdown-menu-item-Mt3nxG", id: "dev-tools.developer-badge.dropdown-menu-item" }} asChild className="flex-1">
                 <Link href={page.path} className={pathname === page.path ? 'bg-accent' : ''}>
                   {page.name}
                 </Link>

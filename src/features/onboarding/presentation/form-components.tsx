@@ -40,7 +40,7 @@ export function FormField({ id,
   return (
     <div {...uiAttributes({ uid: "onboarding.form-components.div-c0qJJQ", id: "onboarding.form-components.div" })} id={id} className={cn('space-y-2', className)}>
       <div {...uiAttributes({ uid: "onboarding.form-components.div.2-kVZ1Q7", id: "onboarding.form-components.div.2" })} className="flex items-center justify-between">
-        <Label htmlFor={htmlFor} className="text-sm font-medium">
+        <Label ui={{ uid: "onboarding.form-components.label-7dVI0c", id: "onboarding.form-components.label" }} htmlFor={htmlFor} className="text-sm font-medium">
           {label}
           {required && <span {...uiAttributes({ uid: "onboarding.form-components.span-BEG75L", id: "onboarding.form-components.span" })} className="text-destructive ml-1">*</span>}
         </Label>
@@ -114,7 +114,7 @@ export function FormSelect({ id,
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
+          <SelectItem key={option.value} ui={{ uid: "onboarding.form-components.select-item-GBKxb8", id: "onboarding.form-components.select-item" }} value={option.value}>
             {option.label}
           </SelectItem>
         ))}
@@ -164,7 +164,7 @@ export function MultiSelect({ id,
         {value.map((v) => {
           const option = options.find((o) => o.value === v);
           return (
-            <Badge id={id} key={v} variant="secondary" className="gap-1 pr-1">
+            <Badge id={id} key={v} ui={{ uid: "onboarding.form-components.badge-Na9dZt", id: "onboarding.form-components.badge" }} variant="secondary" className="gap-1 pr-1">
               {option?.label || v}
               <button {...uiAttributes({ uid: "onboarding.form-components.button-S0gxOR", id: "onboarding.form-components.button" })}
                 type="button"

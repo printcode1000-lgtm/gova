@@ -119,6 +119,43 @@ for (const contract of UI_VALUE_CONTRACTS) {
 // ── The only locator ───────────────────────────────────────────────────────
 assert.equal(uiSimulationSelector("cart-checkout-A1b2c3"), '[data-ui-uid="cart-checkout-A1b2c3"]');
 assert.equal(uiSimulationSelector('a"b'), '[data-ui-uid="a\\"b"]');
+// targetUid + optional instance: instance narrows the same uid to one runtime
+// copy, through one safe selector builder — it never becomes a second uid.
+assert.equal(
+  uiSimulationSelector("cart-decrease-AyGe00", "order-8f21"),
+  '[data-ui-uid="cart-decrease-AyGe00"][data-ui-instance="order-8f21"]',
+);
+assert.equal(
+  uiSimulationSelector('a"b', 'c"d'),
+  '[data-ui-uid="a\\"b"][data-ui-instance="c\\"d"]',
+);
+assert.equal(uiSimulationSelector("cart-decrease-AyGe00", undefined), '[data-ui-uid="cart-decrease-AyGe00"]');
+
+// ── Simulation step validation: instance only where it can mean something ──
+const repeatedTarget = targets.find((target) => target.repeated)!;
+assert.ok(repeatedTarget, "expected at least one repeated simulation target");
+assert.equal(
+  checkUiSimulationStep({
+    targetUid: repeatedTarget.uid,
+    interaction: repeatedTarget.interaction!.type,
+    instance: "row-1",
+  }).ok,
+  true,
+  "a repeated target may carry an instance",
+);
+const nonRepeatedTarget = targets.find((target) => !target.repeated && target.interaction)!;
+assert.ok(nonRepeatedTarget, "expected at least one non-repeated simulation target");
+const instanceOnNonRepeated = checkUiSimulationStep({
+  targetUid: nonRepeatedTarget.uid,
+  interaction: nonRepeatedTarget.interaction!.type,
+  instance: "row-1",
+});
+assert.equal(instanceOnNonRepeated.ok, false);
+assert.match(
+  !instanceOnNonRepeated.ok ? instanceOnNonRepeated.reason : "",
+  /renders once/,
+  "an instance on a non-repeated target must be rejected, not silently accepted",
+);
 
 // ── The package stays browser-safe and dependency-free ─────────────────────
 function packageFiles(directory: string): string[] {
@@ -137,11 +174,15 @@ for (const file of packageFiles(join(root, "packages", "ui-registry-core", "src"
       `${label} may only import inside the package; found "${specifier[1]}" — the simulation registry must not depend on @asol/simulation-core.`,
     );
   }
-  assert.doesNotMatch(
-    source,
-    /\b(?:window|document|navigator|localStorage|process)\b/,
-    `${label} must stay browser-safe for Static out, Android and iOS`,
-  );
+  // Generated data catalogs are arrays of string literals; a semantic id
+  // like "document-upload" would otherwise false-positive here.
+  if (!label.includes("/generated/")) {
+    assert.doesNotMatch(
+      source,
+      /\b(?:window|document|navigator|localStorage|process)\b/,
+      `${label} must stay browser-safe for Static out, Android and iOS`,
+    );
+  }
 }
 
 // The generated file is generated, and says so.

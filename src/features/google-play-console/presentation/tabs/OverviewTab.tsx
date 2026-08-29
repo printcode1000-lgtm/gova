@@ -30,7 +30,7 @@ export function OverviewTab() {
           <h2 {...uiAttributes({ uid: "google-play-console.tabs.overview-tab.h2.3-su2Ave", id: "google-play-console.tabs.overview-tab.h2.3" })} id="google-play-console.tabs.overview-tab.h2" className="flex items-center gap-2 font-semibold">
             <ShieldCheck id="google-play-console.tabs.overview-tab.shield-check" className="h-4 w-4 text-primary" />{t("releaseConsole.overview.guard")}
           </h2>
-          <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+          <dl {...uiAttributes({ uid: "google-play-console.tabs.overview-tab.dl-SR1yxB", id: "google-play-console.tabs.overview-tab.dl" })} className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
             <div {...uiAttributes({ uid: "google-play-console.tabs.overview-tab.div.12-0WdMcK", id: "google-play-console.tabs.overview-tab.div.12" })} id="google-play-console.tabs.overview-tab.div.4">{t("releaseConsole.overview.allowed")}: {String(snapshot.environment.allowed)}</div>
             <div {...uiAttributes({ uid: "google-play-console.tabs.overview-tab.div.13-a55Kut", id: "google-play-console.tabs.overview-tab.div.13" })} id="google-play-console.tabs.overview-tab.div.5">{t("releaseConsole.overview.mode")}: {snapshot.environment.nodeEnv}</div>
             <div {...uiAttributes({ uid: "google-play-console.tabs.overview-tab.div.14-jBQQU7", id: "google-play-console.tabs.overview-tab.div.14" })} id="google-play-console.tabs.overview-tab.div.6">{t("releaseConsole.overview.publicMode")}: {snapshot.environment.publicMode}</div>

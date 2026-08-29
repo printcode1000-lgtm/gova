@@ -17,7 +17,7 @@ export function EndpointCard({ id, endpoint, availableText, unavailableText }: {
         </span>
       </div>
       {endpoint.ok ? (
-        <pre className="mt-3 max-h-72 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
+        <pre {...uiAttributes({ uid: "google-play-console.endpoint-card.pre-1wQ24I", id: "google-play-console.endpoint-card.pre" })} className="mt-3 max-h-72 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
           {JSON.stringify(endpoint.data, null, 2)}
         </pre>
       ) : (

@@ -375,7 +375,7 @@ export function HeroSlider({ id,
         {/* Phase 10 - Skeleton loading state */}
         {showSkeleton && (
           <div {...uiAttributes({ uid: "advertisements.hero-slider.div.2-I1S1ka", id: "advertisements.hero-slider.div.2" })} className="absolute inset-0 z-50 rounded-xl overflow-hidden">
-            <Skeleton className="w-full h-full" />
+            <Skeleton ui={{ uid: "advertisements.hero-slider.skeleton-V12GkB", id: "advertisements.hero-slider.skeleton" }} className="w-full h-full" />
           </div>
         )}
 

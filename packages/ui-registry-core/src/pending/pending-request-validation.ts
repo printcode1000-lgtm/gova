@@ -1,7 +1,10 @@
 import type { UiDescriptor } from "../domain/ui-descriptor";
 import { ELEMENT_KINDS } from "../domain/ui-element-kind";
+import { uiInstanceIdRejectionReason } from "../domain/ui-instance";
+import { UI_INTERACTION_TYPES, type UiInteraction, type UiInteractionType } from "../domain/ui-interaction";
 import { SIMULATION_TARGET_KINDS } from "../domain/ui-simulation-target";
 import { UI_STATES } from "../domain/ui-state";
+import { isUiValueContractName } from "../simulation/value-contracts";
 import { isUiToken } from "../domain/ui-token";
 import { isUiUid } from "../domain/ui-uid";
 import { UI_PAGE_REGISTRY } from "../registry/ui-page-registry";
@@ -59,6 +62,31 @@ function validateStates(value: unknown): UiDescriptor["state"] | null | undefine
   return (Array.isArray(value) ? values : values[0]) as UiDescriptor["state"];
 }
 
+function validateInteraction(value: unknown): UiInteraction | null | undefined {
+  if (value === undefined) return undefined;
+  const source = record(value);
+  if (!source) return null;
+  if (!UI_INTERACTION_TYPES.includes(source.type as never)) return null;
+  if (source.valueContract !== undefined && !isUiValueContractName(source.valueContract)) return null;
+  return {
+    type: source.type as UiInteractionType,
+    ...(source.valueContract === undefined ? {} : { valueContract: source.valueContract as string }),
+  };
+}
+
+/**
+ * A pending registration mints a *static* literal for source; `instance` is
+ * inherently a per-render runtime value, so it is safe to accept here only
+ * when it already passes the same content checks `createUiInstanceId` runs
+ * for any other caller — never trusted merely for shape.
+ */
+function validateInstance(value: unknown): UiDescriptor["instance"] | null | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== "string") return null;
+  if (uiInstanceIdRejectionReason(value) !== null) return null;
+  return value as UiDescriptor["instance"];
+}
+
 function validateSimulation(value: unknown): UiDescriptor["simulation"] | null | undefined {
   if (value === undefined) return undefined;
   const source = record(value);
@@ -104,6 +132,10 @@ export function validateUiRegistryPendingRequest(value: unknown): UiRegistryPend
   if (state === null) return { ok: false, reason: "descriptor state is not a UiRegistry state" };
   const simulation = validateSimulation(descriptorSource.simulation);
   if (simulation === null) return { ok: false, reason: "descriptor simulation is not a typed target" };
+  const interaction = validateInteraction(descriptorSource.interaction);
+  if (interaction === null) return { ok: false, reason: "descriptor interaction is not a typed UiRegistry interaction" };
+  const instance = validateInstance(descriptorSource.instance);
+  if (instance === null) return { ok: false, reason: "descriptor instance failed content validation" };
 
   const locator = validateLocator(body.locator);
   if (!locator) return { ok: false, reason: "locator must carry a safe component, route, and anchor" };
@@ -116,6 +148,8 @@ export function validateUiRegistryPendingRequest(value: unknown): UiRegistryPend
     ...(descriptorSource.part === undefined ? {} : { part: descriptorSource.part as string }),
     ...(state === undefined ? {} : { state }),
     ...(simulation === undefined ? {} : { simulation }),
+    ...(interaction === undefined ? {} : { interaction }),
+    ...(instance === undefined ? {} : { instance }),
   };
 
   return { ok: true, request: { uid, descriptor, locator } };

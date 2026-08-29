@@ -10,7 +10,7 @@ import { uiAttributes } from "@asol/ui-registry-core";
 
 /** Documentation row inside an expanded command card. */
 export function Doc({ label, value }: { label: string; value: string }) {
-  return <div {...uiAttributes({ uid: "google-play-console.command-parameter-fields.div-l1vmU9", id: "google-play-console.command-parameter-fields.div" })}><strong>{label}</strong><p {...uiAttributes({ uid: "google-play-console.command-parameter-fields.p-B8Pw7k", id: "google-play-console.command-parameter-fields.p" })} className="text-on-surface-variant">{value}</p></div>;
+  return <div {...uiAttributes({ uid: "google-play-console.command-parameter-fields.div-l1vmU9", id: "google-play-console.command-parameter-fields.div" })}><strong {...uiAttributes({ uid: "google-play-console.command-parameter-fields.strong-Q3pJFM", id: "google-play-console.command-parameter-fields.strong" })}>{label}</strong><p {...uiAttributes({ uid: "google-play-console.command-parameter-fields.p-B8Pw7k", id: "google-play-console.command-parameter-fields.p" })} className="text-on-surface-variant">{value}</p></div>;
 }
 
 /** Extra guidance shown only for the `cap-build` command. */

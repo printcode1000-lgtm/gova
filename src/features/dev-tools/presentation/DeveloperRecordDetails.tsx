@@ -19,19 +19,19 @@ export function SelectedRecordDetails({ id,
     <div {...uiAttributes({ uid: "dev-tools.developer-record-details.div-7MYuRd", id: "dev-tools.developer-record-details.div" })} id={id} className="overflow-hidden rounded-xl border bg-background/70">
       <h3 {...uiAttributes({ uid: "dev-tools.developer-record-details.h3-hHMT8S", id: "dev-tools.developer-record-details.h3" })} className="border-b px-4 py-3 text-sm font-bold">{title}</h3>
       {record ? (
-        <dl className="divide-y text-sm">
+        <dl {...uiAttributes({ uid: "dev-tools.developer-record-details.dl-8IaQSm", id: "dev-tools.developer-record-details.dl" })} className="divide-y text-sm">
           {Object.entries(record).map(([key, value]) => (
             <div
               key={key} {...uiAttributes({ uid: "dev-tools.developer-record-details.div.2-E3saZY", id: "dev-tools.developer-record-details.div.2" })}
               className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(130px,0.4fr)_1fr] sm:gap-4"
             >
-              <dt
+              <dt {...uiAttributes({ uid: "dev-tools.developer-record-details.dt-Un7wm3", id: "dev-tools.developer-record-details.dt" })}
                 className="font-mono text-xs font-semibold text-primary"
                 dir="ltr"
               >
                 {key}
               </dt>
-              <dd
+              <dd {...uiAttributes({ uid: "dev-tools.developer-record-details.dd-GIC0H9", id: "dev-tools.developer-record-details.dd" })}
                 className="break-all whitespace-pre-wrap text-muted-foreground"
                 dir="auto"
               >

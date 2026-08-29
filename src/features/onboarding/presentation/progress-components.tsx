@@ -85,7 +85,7 @@ export function OnboardingProgress({ id }: { id?: string }) {
           <span {...uiAttributes({ uid: "onboarding.progress-components.span-melC96", id: "onboarding.progress-components.span" })} className="text-2xl font-bold text-primary">{progress}%</span>
         </div>
       </div>
-      <Progress value={progress} className="h-2" />
+      <Progress ui={{ uid: "onboarding.progress-components.progress-j5abFh", id: "onboarding.progress-components.progress" }} value={progress} className="h-2" />
     </div>
   );
 }
@@ -221,7 +221,7 @@ export function MobileOnboardingNav({ id,
           </Button>
         )}
 
-        <Progress value={progress} className="h-1.5" />
+        <Progress ui={{ uid: "onboarding.progress-components.progress.2-09AE5L", id: "onboarding.progress-components.progress.2" }} value={progress} className="h-1.5" />
       </div>
     </div>
   );

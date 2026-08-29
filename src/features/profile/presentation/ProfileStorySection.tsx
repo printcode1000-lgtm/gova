@@ -32,7 +32,7 @@ export function ProfileStorySection({
           <FontAwesomeIcon id="profile.profile-story-section.font-awesome-icon" icon={faBookOpen} />
         </span>
         <span {...uiAttributes({ uid: "profile.profile-story-section.span.5-wEQ7UY", id: "profile.profile-story-section.span.5" })} id="profile.profile-story-section.span.2" className="min-w-0 flex-1">
-          <strong className="block break-words text-base sm:text-lg">{title}</strong>
+          <strong {...uiAttributes({ uid: "profile.profile-story-section.strong-OM0y4E", id: "profile.profile-story-section.strong" })} className="block break-words text-base sm:text-lg">{title}</strong>
           <span {...uiAttributes({ uid: "profile.profile-story-section.span.6-84H1EL", id: "profile.profile-story-section.span.6" })} id="profile.profile-story-section.span.3" className="block break-words text-xs text-on-surface-variant">{hint}</span>
         </span>
         <FontAwesomeIcon id="profile.profile-story-section.font-awesome-icon.2"

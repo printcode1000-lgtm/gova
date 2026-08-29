@@ -50,7 +50,7 @@ export function TerminalOutput(props: { text: string } & { id?: string }) {
         "sm:min-h-64 sm:max-h-[42rem] rounded-md bg-muted"
       }
     >
-      <pre className="min-w-0 p-3 text-xs whitespace-pre-wrap break-words" dir="ltr">
+      <pre {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.pre-kAy0PE", id: "google-play-console.deploy-runbook-terminal.pre" })} className="min-w-0 p-3 text-xs whitespace-pre-wrap break-words" dir="ltr">
         {props.text || empty}
       </pre>
     </div>

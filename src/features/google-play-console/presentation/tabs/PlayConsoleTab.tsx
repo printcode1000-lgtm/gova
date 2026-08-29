@@ -40,7 +40,7 @@ export function PlayConsoleTab() {
           </div>
           <section {...uiAttributes({ uid: "google-play-console.tabs.play-console-tab.section.4-D6K6In", id: "google-play-console.tabs.play-console-tab.section.4" })} id="google-play-console.tabs.play-console-tab.section.2" className="rounded-md border bg-surface p-4">
             <h2 {...uiAttributes({ uid: "google-play-console.tabs.play-console-tab.h2.2-5WLv19", id: "google-play-console.tabs.play-console-tab.h2.2" })} id="google-play-console.tabs.play-console-tab.h2" className="mb-3 font-semibold">{t("releaseConsole.play.connection")}</h2>
-            <dl className="grid gap-2">
+            <dl {...uiAttributes({ uid: "google-play-console.tabs.play-console-tab.dl-I1yYYa", id: "google-play-console.tabs.play-console-tab.dl" })} className="grid gap-2">
               <InfoRow id="google-play-console.tabs.play-console-tab.info-row" label={t("releaseConsole.overview.package")} value={snapshot.config.packageName} ltr />
               <InfoRow id="google-play-console.tabs.play-console-tab.info-row.2" label={t("releaseConsole.play.serviceAccount")}
                 value={snapshot.config.serviceAccountEmail || "-"} ltr />

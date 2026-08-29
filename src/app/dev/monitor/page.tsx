@@ -162,7 +162,7 @@ export default function MonitorPage() {
   return (
     <div {...uiAttributes({ uid: "dev.monitor.page.div.122-HYBi71", id: "dev.monitor.page.div.122" })} id="dev.monitor.page.div" className="monitor-container" dir="rtl">
       {/* Dynamic Theme Styles */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style {...uiAttributes({ uid: "dev.monitor.page.style-J9AeQx", id: "dev.monitor.page.style" })} dangerouslySetInnerHTML={{ __html: `
         :root[data-monitor-theme="dark"] {
           --bg-main: #0b0f19;
           --bg-card: #151b2d;
@@ -1204,9 +1204,9 @@ export default function MonitorPage() {
             ) : (
               <div {...uiAttributes({ uid: "dev.monitor.page.div.213-TXmXL4", id: "dev.monitor.page.div.213" })} id="dev.monitor.page.div.80" style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
                 <svg {...uiAttributes({ uid: "dev.monitor.page.svg.3-0heNOJ", id: "dev.monitor.page.svg.3" })} id="dev.monitor.page.svg" width="100%" height="400" style={{ minWidth: '800px' }}>
-                  <defs>
-                    <marker id="arrow" viewBox="0 0 10 10" refX="15" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--border)" />
+                  <defs {...uiAttributes({ uid: "dev.monitor.page.defs-K8TC4A", id: "dev.monitor.page.defs" })}>
+                    <marker {...uiAttributes({ uid: "dev.monitor.page.marker-U5UEno", id: "dev.monitor.page.marker" })} id="arrow" viewBox="0 0 10 10" refX="15" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path {...uiAttributes({ uid: "dev.monitor.page.path-WtzdN8", id: "dev.monitor.page.path" })} d="M 0 0 L 10 5 L 0 10 z" fill="var(--border)" />
                     </marker>
                   </defs>
                   {(() => {
@@ -1234,7 +1234,7 @@ export default function MonitorPage() {
                     });
 
                     return (
-                      <g>
+                      <g {...uiAttributes({ uid: "dev.monitor.page.g-7TeI0M", id: "dev.monitor.page.g" })}>
                         {/* Draw connection edges */}
                         {callGraph.edges.map((edge, idx) => {
                           const start = positions[edge.from];
@@ -1242,7 +1242,7 @@ export default function MonitorPage() {
                           if (!start || !end) return null;
                           return (
                             <line
-                              key={idx}
+                              key={idx} {...uiAttributes({ uid: "dev.monitor.page.line-G3M32B", id: "dev.monitor.page.line" })}
                               x1={start.x}
                               y1={start.y}
                               x2={end.x}
@@ -1261,12 +1261,12 @@ export default function MonitorPage() {
                           const color = LAYER_COLORS[node.layer] || '#64748b';
                           return (
                             <g
-                              key={node.id}
+                              key={node.id} {...uiAttributes({ uid: "dev.monitor.page.g.2-0fwmtS", id: "dev.monitor.page.g.2" })}
                               transform={`translate(${pos.x - 30}, ${pos.y - 20})`}
                               onClick={() => selectOperation(node.recordId)}
                             >
-                              <rect width="60" height="40" rx="6" fill={color} stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-                              <text x="30" y="24" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold">
+                              <rect {...uiAttributes({ uid: "dev.monitor.page.rect-Xm0M5L", id: "dev.monitor.page.rect" })} width="60" height="40" rx="6" fill={color} stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+                              <text {...uiAttributes({ uid: "dev.monitor.page.text-mT96RO", id: "dev.monitor.page.text" })} x="30" y="24" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold">
                                 {node.label.slice(0, 10)}
                               </text>
                             </g>
@@ -1294,9 +1294,9 @@ export default function MonitorPage() {
             ) : (
               <div {...uiAttributes({ uid: "dev.monitor.page.div.217-2vtauN", id: "dev.monitor.page.div.217" })} id="dev.monitor.page.div.84" style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
                 <svg {...uiAttributes({ uid: "dev.monitor.page.svg.4-HeirM4", id: "dev.monitor.page.svg.4" })} id="dev.monitor.page.svg.2" width="100%" height="400" style={{ minWidth: '800px' }}>
-                  <defs>
-                    <marker id="dep-arrow" viewBox="0 0 10 10" refX="25" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+                  <defs {...uiAttributes({ uid: "dev.monitor.page.defs.2-VY5y3o", id: "dev.monitor.page.defs.2" })}>
+                    <marker {...uiAttributes({ uid: "dev.monitor.page.marker.2-WQ9EXD", id: "dev.monitor.page.marker.2" })} id="dep-arrow" viewBox="0 0 10 10" refX="25" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path {...uiAttributes({ uid: "dev.monitor.page.path.2-hQ9Cii", id: "dev.monitor.page.path.2" })} d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
                     </marker>
                   </defs>
                   {(() => {
@@ -1318,14 +1318,14 @@ export default function MonitorPage() {
                     });
 
                     return (
-                      <g>
+                      <g {...uiAttributes({ uid: "dev.monitor.page.g.3-kM1oHn", id: "dev.monitor.page.g.3" })}>
                         {dependencyGraph.edges.map((edge, idx) => {
                           const start = positions[edge.from];
                           const end = positions[edge.to];
                           if (!start || !end) return null;
                           return (
                             <path
-                              key={idx}
+                              key={idx} {...uiAttributes({ uid: "dev.monitor.page.path.3-ytW2tW", id: "dev.monitor.page.path.3" })}
                               d={`M ${start.x} ${start.y} C ${(start.x + end.x) / 2} ${start.y}, ${(start.x + end.x) / 2} ${end.y}, ${end.x} ${end.y}`}
                               stroke="#3b82f6"
                               strokeWidth="1.5"
@@ -1340,12 +1340,12 @@ export default function MonitorPage() {
                           if (!pos) return null;
                           const color = node.type === 'service' ? '#22c55e' : node.type === 'repository' ? '#a855f7' : '#f97316';
                           return (
-                            <g key={node.id} transform={`translate(${pos.x - 75}, ${pos.y - 25})`}>
-                              <rect width="150" height="50" rx="8" fill="var(--bg-card)" stroke={color} strokeWidth="2" />
-                              <text x="75" y="24" textAnchor="middle" fill="var(--text-main)" fontSize="10" fontWeight="bold">
+                            <g key={node.id} {...uiAttributes({ uid: "dev.monitor.page.g.4-5SH3LD", id: "dev.monitor.page.g.4" })} transform={`translate(${pos.x - 75}, ${pos.y - 25})`}>
+                              <rect {...uiAttributes({ uid: "dev.monitor.page.rect.2-zCJ99N", id: "dev.monitor.page.rect.2" })} width="150" height="50" rx="8" fill="var(--bg-card)" stroke={color} strokeWidth="2" />
+                              <text {...uiAttributes({ uid: "dev.monitor.page.text.2-o8UsXK", id: "dev.monitor.page.text.2" })} x="75" y="24" textAnchor="middle" fill="var(--text-main)" fontSize="10" fontWeight="bold">
                                 {node.label.slice(0, 22)}
                               </text>
-                              <text x="75" y="40" textAnchor="middle" fill="var(--text-muted)" fontSize="8">
+                              <text {...uiAttributes({ uid: "dev.monitor.page.text.3-KDKs4V", id: "dev.monitor.page.text.3" })} x="75" y="40" textAnchor="middle" fill="var(--text-muted)" fontSize="8">
                                 العدد: {node.count}
                               </text>
                             </g>
@@ -1537,18 +1537,18 @@ export default function MonitorPage() {
             {activeOp.httpRoute && (
               <div {...uiAttributes({ uid: "dev.monitor.page.div.248-W5JaZa", id: "dev.monitor.page.div.248" })} id="dev.monitor.page.div.108" className="detail-section">
                 <div {...uiAttributes({ uid: "dev.monitor.page.div.249-QEN5i4", id: "dev.monitor.page.div.249" })} id="dev.monitor.page.div.109" className="detail-section-title">طلب HTTP (AsolApiClient)</div>
-                <pre className="code-block">{`${activeOp.httpMethod ?? 'GET'} ${activeOp.httpRoute}`}</pre>
+                <pre {...uiAttributes({ uid: "dev.monitor.page.pre-7Cm49Z", id: "dev.monitor.page.pre" })} className="code-block">{`${activeOp.httpMethod ?? 'GET'} ${activeOp.httpRoute}`}</pre>
               </div>
             )}
 
             {activeOp.sql && (
               <div {...uiAttributes({ uid: "dev.monitor.page.div.250-8Sm2r3", id: "dev.monitor.page.div.250" })} id="dev.monitor.page.div.110" className="detail-section">
                 <div {...uiAttributes({ uid: "dev.monitor.page.div.251-55UmDq", id: "dev.monitor.page.div.251" })} id="dev.monitor.page.div.111" className="detail-section-title">SQL المنفّذ</div>
-                <pre className="code-block">{activeOp.sql}</pre>
+                <pre {...uiAttributes({ uid: "dev.monitor.page.pre.2-OFN03I", id: "dev.monitor.page.pre.2" })} className="code-block">{activeOp.sql}</pre>
                 {activeOp.params && activeOp.params.length > 0 && (
                   <div {...uiAttributes({ uid: "dev.monitor.page.div.252-PmZ5EQ", id: "dev.monitor.page.div.252" })} id="dev.monitor.page.div.112" style={{ marginTop: '8px' }}>
                     <div {...uiAttributes({ uid: "dev.monitor.page.div.253-7x94BE", id: "dev.monitor.page.div.253" })} id="dev.monitor.page.div.113" className="detail-section-title">معاملات الاستعلام</div>
-                    <pre className="code-block">{JSON.stringify(activeOp.params, null, 2)}</pre>
+                    <pre {...uiAttributes({ uid: "dev.monitor.page.pre.3-8aZePJ", id: "dev.monitor.page.pre.3" })} className="code-block">{JSON.stringify(activeOp.params, null, 2)}</pre>
                   </div>
                 )}
               </div>
@@ -1577,7 +1577,7 @@ export default function MonitorPage() {
                 {activeOp.executionStack && (
                   <div {...uiAttributes({ uid: "dev.monitor.page.div.260-1K9IwR", id: "dev.monitor.page.div.260" })} id="dev.monitor.page.div.120" style={{ marginTop: '8px' }}>
                     <div {...uiAttributes({ uid: "dev.monitor.page.div.261-hAP8Sb", id: "dev.monitor.page.div.261" })} id="dev.monitor.page.div.121" className="detail-section-title" style={{ color: '#ef4444' }}>تتبع تنفيذ الخطأ</div>
-                    <pre className="code-block" style={{ color: '#f87171', background: '#181111' }}>{activeOp.executionStack}</pre>
+                    <pre {...uiAttributes({ uid: "dev.monitor.page.pre.4-fvZ5OR", id: "dev.monitor.page.pre.4" })} className="code-block" style={{ color: '#f87171', background: '#181111' }}>{activeOp.executionStack}</pre>
                   </div>
                 )}
               </div>

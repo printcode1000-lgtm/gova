@@ -139,15 +139,15 @@ export function VerificationSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.7-mBR3DI", id: "onboarding.sections.verification-section.div.7" })} id="onboarding.sections.verification-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.verification-section.card">
-        <CardHeader id="onboarding.sections.verification-section.card-header">
-          <CardTitle id="onboarding.sections.verification-section.card-title" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.verification-section.card.3-8FT2lg", id: "onboarding.sections.verification-section.card.3" }} id="onboarding.sections.verification-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.verification-section.card-header.3-a9IuhZ", id: "onboarding.sections.verification-section.card-header.3" }} id="onboarding.sections.verification-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.verification-section.card-title.3-ox49N4", id: "onboarding.sections.verification-section.card-title.3" }} id="onboarding.sections.verification-section.card-title" className="flex items-center gap-2">
             <ShieldCheck id="onboarding.sections.verification-section.shield-check" className="h-5 w-5" />
             {t('onboarding.verification.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.verification-section.card-description">{t('onboarding.verification.description')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.verification-section.card-description.3-gWacg1", id: "onboarding.sections.verification-section.card-description.3" }} id="onboarding.sections.verification-section.card-description">{t('onboarding.verification.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.verification-section.card-content" className="space-y-6">
+        <CardContent ui={{ uid: "onboarding.sections.verification-section.card-content.3-ON6nDh", id: "onboarding.sections.verification-section.card-content.3" }} id="onboarding.sections.verification-section.card-content" className="space-y-6">
           <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.8-P9YSSR", id: "onboarding.sections.verification-section.div.8" })} id="onboarding.sections.verification-section.div.2" className="flex items-center justify-between p-4 rounded-lg bg-muted">
             <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.9-3J3i3L", id: "onboarding.sections.verification-section.div.9" })} id="onboarding.sections.verification-section.div.3">
               <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.3-9lJ01O", id: "onboarding.sections.verification-section.p.3" })} id="onboarding.sections.verification-section.p" className="font-medium">{t('onboarding.verification.progress')}</p>
@@ -187,7 +187,7 @@ export function VerificationSection() {
                         {t(`onboarding.verification.documents.${docType}.label`)}
                       </span>
                       {uploadedDoc && (
-                        <Badge variant="secondary" className="text-merchant-success bg-merchant-success/10">
+                        <Badge ui={{ uid: "onboarding.sections.verification-section.badge-CK4gJi", id: "onboarding.sections.verification-section.badge" }} variant="secondary" className="text-merchant-success bg-merchant-success/10">
                           <Check className="h-3 w-3 mr-1" />
                           {t('onboarding.common.uploaded')}
                         </Badge>
@@ -238,15 +238,15 @@ export function VerificationSection() {
         </CardContent>
       </Card>
 
-      <Card id="onboarding.sections.verification-section.card.2">
-        <CardHeader id="onboarding.sections.verification-section.card-header.2">
-          <CardTitle id="onboarding.sections.verification-section.card-title.2" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.verification-section.card.4-9E3VJm", id: "onboarding.sections.verification-section.card.4" }} id="onboarding.sections.verification-section.card.2">
+        <CardHeader ui={{ uid: "onboarding.sections.verification-section.card-header.4-AzH0pq", id: "onboarding.sections.verification-section.card-header.4" }} id="onboarding.sections.verification-section.card-header.2">
+          <CardTitle ui={{ uid: "onboarding.sections.verification-section.card-title.4-S4W6V1", id: "onboarding.sections.verification-section.card-title.4" }} id="onboarding.sections.verification-section.card-title.2" className="flex items-center gap-2">
             <BadgeHelp id="onboarding.sections.verification-section.badge-help" className="h-5 w-5" />
             {t('onboarding.verification.badgesTitle')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.verification-section.card-description.2">{t('onboarding.verification.badgesDesc')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.verification-section.card-description.4-m4F5it", id: "onboarding.sections.verification-section.card-description.4" }} id="onboarding.sections.verification-section.card-description.2">{t('onboarding.verification.badgesDesc')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.verification-section.card-content.2">
+        <CardContent ui={{ uid: "onboarding.sections.verification-section.card-content.4-i56X87", id: "onboarding.sections.verification-section.card-content.4" }} id="onboarding.sections.verification-section.card-content.2">
           <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.16-By0S1B", id: "onboarding.sections.verification-section.div.16" })} id="onboarding.sections.verification-section.div.6" className="grid gap-3 sm:grid-cols-2">
             {AVAILABLE_BADGES.map((badge) => {
               const isSelected = verification.requestedBadges.includes(badge.id);

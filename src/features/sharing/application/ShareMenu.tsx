@@ -136,9 +136,9 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
         className="fixed inset-x-0 bottom-0 top-auto w-full max-w-none translate-x-0 translate-y-0 rounded-b-none rounded-t-[2rem] border-outline-variant/70 bg-surface/98 px-4 pb-[max(1.25rem,var(--asol-safe-area-bottom))] pt-5 shadow-2xl backdrop-blur-xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl sm:p-6"
       >
         <div {...uiAttributes({ uid: "sharing.share-menu.div-fsCYT9", id: "sharing.share-menu.div" })} className="mx-auto mb-1 h-1.5 w-12 rounded-full bg-outline-variant sm:hidden" />
-        <DialogHeader className="text-start sm:text-start">
-          <DialogTitle>{ar ? "مشاركة عبر" : "Share via"}</DialogTitle>
-          <DialogDescription>
+        <DialogHeader ui={{ uid: "sharing.share-menu.dialog-header-h0nELO", id: "sharing.share-menu.dialog-header" }} className="text-start sm:text-start">
+          <DialogTitle ui={{ uid: "sharing.share-menu.dialog-title-SRY2r2", id: "sharing.share-menu.dialog-title" }}>{ar ? "مشاركة عبر" : "Share via"}</DialogTitle>
+          <DialogDescription ui={{ uid: "sharing.share-menu.dialog-description-S9CZvX", id: "sharing.share-menu.dialog-description" }}>
             {ar
               ? "اختر التطبيق الذي تريد مشاركة الرابط من خلاله"
               : "Choose where you want to share this link"}

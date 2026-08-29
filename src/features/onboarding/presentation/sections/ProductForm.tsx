@@ -239,7 +239,7 @@ export function ProductForm({
 
       <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.18-46m1HI", id: "onboarding.sections.product-form.div.18" })} id="onboarding.sections.product-form.div.6" className="flex items-center justify-between rounded-lg border p-4">
         <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.19-5iZRim", id: "onboarding.sections.product-form.div.19" })} id="onboarding.sections.product-form.div.7">
-          <Label id="onboarding.sections.product-form.label">{t("onboarding.products.featured")}</Label>
+          <Label ui={{ uid: "onboarding.sections.product-form.label.3-07BSDT", id: "onboarding.sections.product-form.label.3" }} id="onboarding.sections.product-form.label">{t("onboarding.products.featured")}</Label>
           <p {...uiAttributes({ uid: "onboarding.sections.product-form.p.3-a6InX1", id: "onboarding.sections.product-form.p.3" })} id="onboarding.sections.product-form.p" className="text-sm text-muted-foreground">
             {t("onboarding.products.featuredDesc")}
           </p>
@@ -253,7 +253,7 @@ export function ProductForm({
       <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.20-c8EWrE", id: "onboarding.sections.product-form.div.20" })} id="onboarding.sections.product-form.div.8" className="space-y-4">
         <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.21-9uDFe9", id: "onboarding.sections.product-form.div.21" })} id="onboarding.sections.product-form.div.9" className="flex items-center justify-between">
           <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.22-838IP1", id: "onboarding.sections.product-form.div.22" })} id="onboarding.sections.product-form.div.10">
-            <Label id="onboarding.sections.product-form.label.2" className="text-base">
+            <Label ui={{ uid: "onboarding.sections.product-form.label.4-05Flan", id: "onboarding.sections.product-form.label.4" }} id="onboarding.sections.product-form.label.2" className="text-base">
               {t("onboarding.products.variants")}
             </Label>
             <p {...uiAttributes({ uid: "onboarding.sections.product-form.p.4-5bB1E6", id: "onboarding.sections.product-form.p.4" })} id="onboarding.sections.product-form.p.2" className="text-sm text-muted-foreground">

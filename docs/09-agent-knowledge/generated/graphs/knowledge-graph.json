@@ -3719,6 +3719,66 @@
       ]
     },
     {
+      "id": "command:ui-registry:component-bridge:check",
+      "kind": "command",
+      "name": "npm run ui-registry:component-bridge:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "component-bridge",
+        "npm",
+        "npm run ui-registry:component-bridge:check",
+        "run",
+        "ui-registry",
+        "ui-registry:component-bridge:check"
+      ]
+    },
+    {
+      "id": "command:ui-registry:component-bridge:generate",
+      "kind": "command",
+      "name": "npm run ui-registry:component-bridge:generate",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "component-bridge",
+        "generate",
+        "npm",
+        "npm run ui-registry:component-bridge:generate",
+        "run",
+        "ui-registry",
+        "ui-registry:component-bridge:generate"
+      ]
+    },
+    {
+      "id": "command:ui-registry:generated-catalog:check",
+      "kind": "command",
+      "name": "npm run ui-registry:generated-catalog:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "generated-catalog",
+        "npm",
+        "npm run ui-registry:generated-catalog:check",
+        "run",
+        "ui-registry",
+        "ui-registry:generated-catalog:check"
+      ]
+    },
+    {
+      "id": "command:ui-registry:generated-catalog:generate",
+      "kind": "command",
+      "name": "npm run ui-registry:generated-catalog:generate",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "generate",
+        "generated-catalog",
+        "npm",
+        "npm run ui-registry:generated-catalog:generate",
+        "run",
+        "ui-registry",
+        "ui-registry:generated-catalog:generate"
+      ]
+    },
+    {
       "id": "command:ui-registry:pending:check",
       "kind": "command",
       "name": "npm run ui-registry:pending:check",
@@ -9968,7 +10028,9 @@
       "path": "docs/04-ui-components/ui-attribute-system.md",
       "summary": "`@asol/ui-registry-core` is the single owner of `UiRegistry`, the typed identity system for page and UI diagnostics. `data-ui-uid` is its **sole source of truth**: the canonical address used for search, inspection, diagnostics, future references, and developer conversation. `data",
       "tags": [
+        "@asol/architecture-core",
         "@asol/data-core/ui-registry",
+        "@asol/simulation-core",
         "@asol/ui-registry-core",
         "`@asol/ui-registry-core` is the single owner of `uiregistry`, the typed identity system for page and ui diagnostics. `data-ui-uid` is its **sole source of truth**: the canonical address used for search, inspection, diagnostics, future references, and developer conversation. `data",
         "address",
@@ -9991,21 +10053,34 @@
         "md",
         "of",
         "owner",
-        "packages/architecture-core/src/checks/ui-registry-coverage",
-        "packages/architecture-core/src/checks/ui-registry-coverage.ts",
+        "packages/architecture-core/src/checks/dom-identity-coverage-contract",
+        "packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+        "packages/architecture-core/src/dom-identity/analyzer",
+        "packages/architecture-core/src/dom-identity/analyzer.ts",
+        "packages/architecture-core/src/dom-identity/descriptor-literals",
+        "packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+        "packages/ui-registry-core/src/pending/generated/component-marker-bridge",
+        "packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+        "packages/ui-registry-core/src/registry/generated/ui-uid-inventory",
+        "packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+        "packages/ui-registry-core/src/simulation/simulation-registry",
+        "packages/ui-registry-core/src/simulation/simulation-registry.ts",
         "page",
+        "port",
         "references",
+        "scripts/ui-registry/generate-component-marker-bridge",
+        "scripts/ui-registry/generate-component-marker-bridge.ts",
         "scripts/ui-registry/static-dom-ids/visible-host-tags",
         "scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
         "scripts/ui-registry/uid-migration",
-        "scripts/ui-registry/uid-migration/check-uid-coverage",
-        "scripts/ui-registry/uid-migration/check-uid-coverage.ts",
         "search",
         "single",
         "sole",
         "source",
         "src/features/onboarding/presentation/form-components",
         "src/features/onboarding/presentation/form-components.tsx",
+        "src/features/simulation/infrastructure/iframe-simulation-execution",
+        "src/features/simulation/infrastructure/iframe-simulation-execution.port.ts",
         "src/shared/ui",
         "src/shared/ui/",
         "system",
@@ -19234,20 +19309,6 @@
       ]
     },
     {
-      "id": "external-dependency:…",
-      "kind": "external-dependency",
-      "name": "…",
-      "summary": "External package imported by repository source",
-      "tags": [
-        "dependency",
-        "external",
-        "external dependency npm package",
-        "npm",
-        "package",
-        "…"
-      ]
-    },
-    {
       "id": "external-dependency:)\n      ? line.slice(",
       "kind": "external-dependency",
       "name": ")\n      ? line.slice(",
@@ -26814,6 +26875,17 @@
       ]
     },
     {
+      "id": "script:scripts/ui-registry/check-component-bridge-drift.ts",
+      "kind": "script",
+      "name": "check-component-bridge-drift.ts",
+      "path": "scripts/ui-registry/check-component-bridge-drift.ts",
+      "tags": [
+        "scripts/ui-registry/check-component-bridge-drift",
+        "scripts/ui-registry/check-component-bridge-drift.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/ui-registry/check-pending.ts",
       "kind": "script",
       "name": "check-pending.ts",
@@ -26825,6 +26897,28 @@
       ]
     },
     {
+      "id": "script:scripts/ui-registry/check-uid-inventory-drift.ts",
+      "kind": "script",
+      "name": "check-uid-inventory-drift.ts",
+      "path": "scripts/ui-registry/check-uid-inventory-drift.ts",
+      "tags": [
+        "scripts/ui-registry/check-uid-inventory-drift",
+        "scripts/ui-registry/check-uid-inventory-drift.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
+      "kind": "script",
+      "name": "generate-component-marker-bridge.ts",
+      "path": "scripts/ui-registry/generate-component-marker-bridge.ts",
+      "tags": [
+        "scripts/ui-registry/generate-component-marker-bridge",
+        "scripts/ui-registry/generate-component-marker-bridge.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/ui-registry/generate-simulation-registry.ts",
       "kind": "script",
       "name": "generate-simulation-registry.ts",
@@ -26832,6 +26926,17 @@
       "tags": [
         "scripts/ui-registry/generate-simulation-registry",
         "scripts/ui-registry/generate-simulation-registry.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/generate-uid-inventory.ts",
+      "kind": "script",
+      "name": "generate-uid-inventory.ts",
+      "path": "scripts/ui-registry/generate-uid-inventory.ts",
+      "tags": [
+        "scripts/ui-registry/generate-uid-inventory",
+        "scripts/ui-registry/generate-uid-inventory.ts",
         "ts"
       ]
     },
@@ -27008,50 +27113,6 @@
       "tags": [
         "scripts/ui-registry/static-dom-ids/visible-host-tags",
         "scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-      "kind": "script",
-      "name": "apply-uid-migration.ts",
-      "path": "scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-      "tags": [
-        "scripts/ui-registry/uid-migration/apply-uid-migration",
-        "scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
-      "kind": "script",
-      "name": "check-uid-coverage.ts",
-      "path": "scripts/ui-registry/uid-migration/check-uid-coverage.ts",
-      "tags": [
-        "scripts/ui-registry/uid-migration/check-uid-coverage",
-        "scripts/ui-registry/uid-migration/check-uid-coverage.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/ui-registry/uid-migration/mint-uid.ts",
-      "kind": "script",
-      "name": "mint-uid.ts",
-      "path": "scripts/ui-registry/uid-migration/mint-uid.ts",
-      "tags": [
-        "scripts/ui-registry/uid-migration/mint-uid",
-        "scripts/ui-registry/uid-migration/mint-uid.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "kind": "script",
-      "name": "plan-uid-migration.ts",
-      "path": "scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "tags": [
-        "scripts/ui-registry/uid-migration/plan-uid-migration",
-        "scripts/ui-registry/uid-migration/plan-uid-migration.ts",
         "ts"
       ]
     },
@@ -27979,6 +28040,17 @@
       ]
     },
     {
+      "id": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "kind": "source",
+      "name": "dom-identity-coverage-contract.ts",
+      "path": "packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/dom-identity-coverage-contract",
+        "packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/architecture-core/src/checks/feature-application-door-purity-contract.ts",
       "kind": "source",
       "name": "feature-application-door-purity-contract.ts",
@@ -28199,17 +28271,6 @@
       ]
     },
     {
-      "id": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "kind": "source",
-      "name": "ui-registry-coverage.ts",
-      "path": "packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "tags": [
-        "packages/architecture-core/src/checks/ui-registry-coverage",
-        "packages/architecture-core/src/checks/ui-registry-coverage.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/architecture-core/src/checks/ui-simulation-contract.ts",
       "kind": "source",
       "name": "ui-simulation-contract.ts",
@@ -28283,6 +28344,94 @@
       "tags": [
         "packages/architecture-core/src/docs/generate-feature-seams-doc",
         "packages/architecture-core/src/docs/generate-feature-seams-doc.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "kind": "source",
+      "name": "analyzer.ts",
+      "path": "packages/architecture-core/src/dom-identity/analyzer.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/analyzer",
+        "packages/architecture-core/src/dom-identity/analyzer.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "kind": "source",
+      "name": "component-definition.ts",
+      "path": "packages/architecture-core/src/dom-identity/component-definition.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/component-definition",
+        "packages/architecture-core/src/dom-identity/component-definition.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "kind": "source",
+      "name": "descriptor-literals.ts",
+      "path": "packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/descriptor-literals",
+        "packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "kind": "source",
+      "name": "migration.ts",
+      "path": "packages/architecture-core/src/dom-identity/migration.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/migration",
+        "packages/architecture-core/src/dom-identity/migration.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "kind": "source",
+      "name": "mint.ts",
+      "path": "packages/architecture-core/src/dom-identity/mint.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/mint",
+        "packages/architecture-core/src/dom-identity/mint.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "kind": "source",
+      "name": "repetition.ts",
+      "path": "packages/architecture-core/src/dom-identity/repetition.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/repetition",
+        "packages/architecture-core/src/dom-identity/repetition.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "source",
+      "name": "tsx-ast.ts",
+      "path": "packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/tsx-ast",
+        "packages/architecture-core/src/dom-identity/tsx-ast.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "kind": "source",
+      "name": "uid-catalog.ts",
+      "path": "packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/uid-catalog",
+        "packages/architecture-core/src/dom-identity/uid-catalog.ts",
         "ts"
       ]
     },
@@ -37365,6 +37514,17 @@
       ]
     },
     {
+      "id": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "kind": "source",
+      "name": "component-marker-bridge.ts",
+      "path": "packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "tags": [
+        "packages/ui-registry-core/src/pending/generated/component-marker-bridge",
+        "packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
       "kind": "source",
       "name": "pending-request-validation.ts",
@@ -37398,6 +37558,17 @@
       ]
     },
     {
+      "id": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "kind": "source",
+      "name": "ui-uid-inventory.ts",
+      "path": "packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "tags": [
+        "packages/ui-registry-core/src/registry/generated/ui-uid-inventory",
+        "packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
       "kind": "source",
       "name": "resolve-ui-page.ts",
@@ -37416,6 +37587,17 @@
       "tags": [
         "packages/ui-registry-core/src/registry/ui-page-registry",
         "packages/ui-registry-core/src/registry/ui-page-registry.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "kind": "source",
+      "name": "ui-uid-catalog-entry.ts",
+      "path": "packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "tags": [
+        "packages/ui-registry-core/src/registry/ui-uid-catalog-entry",
+        "packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
         "ts"
       ]
     },
@@ -51390,6 +51572,30 @@
       ]
     },
     {
+      "id": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "kind": "test",
+      "name": "dom-identity-analyzer.test.ts",
+      "path": "packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/dom-identity-analyzer",
+        "packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "kind": "test",
+      "name": "dom-identity-coverage-contract.test.ts",
+      "path": "packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/dom-identity-coverage-contract",
+        "packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/architecture-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -51409,18 +51615,6 @@
       "tags": [
         "packages/architecture-core/src/tests/ui-attribute-guard",
         "packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "kind": "test",
-      "name": "ui-registry-coverage.test.ts",
-      "path": "packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "tags": [
-        "packages/architecture-core/src/tests/ui-registry-coverage",
-        "packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
         "test",
         "ts"
       ]
@@ -53210,18 +53404,6 @@
       "tags": [
         "scripts/ui-registry/tests/static-dom-ids",
         "scripts/ui-registry/tests/static-dom-ids.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
-      "kind": "test",
-      "name": "uid-coverage-guard.test.ts",
-      "path": "scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
-      "tags": [
-        "scripts/ui-registry/uid-migration/tests/uid-coverage-guard",
-        "scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
         "test",
         "ts"
       ]
@@ -57848,6 +58030,16 @@
     },
     {
       "from": "command:test:ui-registry-core",
+      "to": "command:ui-registry:component-bridge:check",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:ui-registry-core",
+      "to": "command:ui-registry:generated-catalog:check",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:ui-registry-core",
       "to": "command:ui-registry:static-dom-ids:check",
       "kind": "invokes"
     },
@@ -57858,12 +58050,17 @@
     },
     {
       "from": "command:test:ui-registry-core",
-      "to": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
+      "to": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
       "kind": "invokes"
     },
     {
       "from": "command:test:ui-registry-core",
-      "to": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
+      "to": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:ui-registry-core",
+      "to": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
       "kind": "invokes"
     },
     {
@@ -57899,11 +58096,6 @@
     {
       "from": "command:test:ui-registry-core",
       "to": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:test:ui-registry-core",
-      "to": "test:scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
       "kind": "invokes"
     },
     {
@@ -57960,6 +58152,46 @@
       "from": "command:ui-registry:apply-pending",
       "to": "environment-key:NODE_OPTIONS",
       "kind": "uses-environment"
+    },
+    {
+      "from": "command:ui-registry:component-bridge:check",
+      "to": "script:scripts/ui-registry/check-component-bridge-drift.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:ui-registry:component-bridge:check",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:ui-registry:component-bridge:generate",
+      "to": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:ui-registry:component-bridge:generate",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:ui-registry:generated-catalog:check",
+      "to": "script:scripts/ui-registry/check-uid-inventory-drift.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:ui-registry:generated-catalog:check",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:ui-registry:generated-catalog:generate",
+      "to": "script:scripts/ui-registry/generate-uid-inventory.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:ui-registry:generated-catalog:generate",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
     },
     {
       "from": "command:ui-registry:pending:check",
@@ -68005,9 +68237,21 @@
     },
     {
       "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "package:@asol/architecture-core",
+      "kind": "references",
+      "detail": "@asol/architecture-core"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core/ui-registry"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "package:@asol/simulation-core",
+      "kind": "references",
+      "detail": "@asol/simulation-core"
     },
     {
       "from": "document:docs/04-ui-components/ui-attribute-system.md",
@@ -68017,33 +68261,69 @@
     },
     {
       "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
+      "kind": "references",
+      "detail": "scripts/ui-registry/generate-component-marker-bridge.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
       "to": "script:scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
       "kind": "references",
       "detail": "scripts/ui-registry/static-dom-ids/visible-host-tags.ts"
     },
     {
       "from": "document:docs/04-ui-components/ui-attribute-system.md",
-      "to": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
-      "kind": "references",
-      "detail": "scripts/ui-registry/uid-migration/check-uid-coverage.ts"
-    },
-    {
-      "from": "document:docs/04-ui-components/ui-attribute-system.md",
-      "to": "script:scripts/ui-registry/uid-migration/mint-uid.ts",
+      "to": "script:scripts/ui-registry/uid-migration/run-apply.ts",
       "kind": "references",
       "detail": "scripts/ui-registry/uid-migration"
     },
     {
       "from": "document:docs/04-ui-components/ui-attribute-system.md",
-      "to": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
+      "to": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
       "kind": "references",
-      "detail": "packages/architecture-core/src/checks/ui-registry-coverage.ts"
+      "detail": "packages/architecture-core/src/checks/dom-identity-coverage-contract.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "kind": "references",
+      "detail": "packages/architecture-core/src/dom-identity/analyzer.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "kind": "references",
+      "detail": "packages/architecture-core/src/dom-identity/descriptor-literals.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "kind": "references",
+      "detail": "packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "kind": "references",
+      "detail": "packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "source:packages/ui-registry-core/src/simulation/simulation-registry.ts",
+      "kind": "references",
+      "detail": "packages/ui-registry-core/src/simulation/simulation-registry.ts"
     },
     {
       "from": "document:docs/04-ui-components/ui-attribute-system.md",
       "to": "source:src/features/onboarding/presentation/form-components.tsx",
       "kind": "references",
       "detail": "src/features/onboarding/presentation/form-components.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/ui-attribute-system.md",
+      "to": "source:src/features/simulation/infrastructure/iframe-simulation-execution.port.ts",
+      "kind": "references",
+      "detail": "src/features/simulation/infrastructure/iframe-simulation-execution.port.ts"
     },
     {
       "from": "document:docs/04-ui-components/ui-attribute-system.md",
@@ -75076,6 +75356,18 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/architecture-core/src/checks/feature-application-door-purity-contract.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -75316,18 +75608,6 @@
     },
     {
       "from": "domain:architecture",
-      "to": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "kind": "documents",
-      "detail": "packages/architecture-core/"
-    },
-    {
-      "from": "domain:architecture",
       "to": "source:packages/architecture-core/src/checks/ui-simulation-contract.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -75407,6 +75687,102 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/architecture-core/src/docs/generate-feature-seams-doc.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
       "kind": "documents",
       "detail": "packages/architecture-core/"
     },
@@ -80248,6 +80624,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -80266,6 +80648,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -80273,6 +80661,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -80410,6 +80804,30 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/architecture-core/src/tests/index.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -80429,18 +80847,6 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
-      "kind": "documents",
-      "detail": "packages/architecture-core/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
       "kind": "documents",
       "detail": "packages/architecture-core/"
     },
@@ -84136,13 +84542,37 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/check-component-bridge-drift.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/ui-registry/check-pending.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/check-uid-inventory-drift.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/ui-registry/generate-simulation-registry.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/generate-uid-inventory.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -84239,30 +84669,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/ui-registry/uid-migration/mint-uid.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -86729,12 +87135,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "test:scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -106459,6 +106859,11 @@
     },
     {
       "from": "package:@asol/architecture-core",
+      "to": "external-dependency:@fortawesome/react-fontawesome",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/architecture-core",
       "to": "external-dependency:${importPath}",
       "kind": "imports"
     },
@@ -107393,6 +107798,16 @@
       "kind": "imports"
     },
     {
+      "from": "package:@asol/ui-registry-core",
+      "to": "external-dependency:typescript",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/ui-registry-core",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports"
+    },
+    {
       "from": "package:@asol/vercel-deploy-core",
       "to": "external-dependency:@vercel/sandbox",
       "kind": "declares-dependency",
@@ -107464,6 +107879,12 @@
     {
       "from": "route:/:page",
       "to": "feature:splash",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -109878,6 +110299,12 @@
     },
     {
       "from": "route:/api/dev/catalog-studio:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/catalog-studio:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -110044,6 +110471,12 @@
     {
       "from": "route:/api/dev/catalog-studio/images:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/catalog-studio/images:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -112551,6 +112984,12 @@
     },
     {
       "from": "route:/api/notifications/test/send:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/test/send:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -112698,13 +113137,31 @@
     },
     {
       "from": "route:/api/orders:handler",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders:handler",
       "to": "feature:orders",
       "kind": "related-to",
       "detail": "route source dependency"
     },
     {
       "from": "route:/api/orders:handler",
+      "to": "feature:profile",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -112783,6 +113240,12 @@
     {
       "from": "route:/api/orders:handler",
       "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders:handler",
+      "to": "package:@asol/ota-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -112851,6 +113314,12 @@
     },
     {
       "from": "route:/api/orders/[orderId]:handler",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/[orderId]:handler",
       "to": "feature:categories",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -112870,6 +113339,12 @@
     {
       "from": "route:/api/orders/[orderId]:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/[orderId]:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -112948,6 +113423,12 @@
     {
       "from": "route:/api/orders/[orderId]:handler",
       "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/[orderId]:handler",
+      "to": "package:@asol/ota-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -113217,6 +113698,12 @@
     },
     {
       "from": "route:/api/orders/custom-request-from-profile:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/custom-request-from-profile:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -113296,6 +113783,12 @@
     {
       "from": "route:/api/orders/custom-request-from-profile:handler",
       "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/custom-request-from-profile:handler",
+      "to": "package:@asol/ota-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -113412,6 +113905,12 @@
     },
     {
       "from": "route:/api/orders/from-cart:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/from-cart:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -113491,6 +113990,12 @@
     {
       "from": "route:/api/orders/from-cart:handler",
       "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/from-cart:handler",
+      "to": "package:@asol/ota-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -113578,6 +114083,12 @@
     {
       "from": "route:/api/ota/access:handler",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/ota/access:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -113766,6 +114277,12 @@
     },
     {
       "from": "route:/api/ota/admin/releases:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/ota/admin/releases:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -113944,6 +114461,12 @@
     {
       "from": "route:/api/ota/admin/releases/diff:handler",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/ota/admin/releases/diff:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -115461,6 +115984,12 @@
     },
     {
       "from": "route:/api/profile/fulfillment-settings:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/fulfillment-settings:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -115540,6 +116069,12 @@
     {
       "from": "route:/api/profile/fulfillment-settings:handler",
       "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/fulfillment-settings:handler",
+      "to": "package:@asol/ota-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -117168,6 +117703,12 @@
     },
     {
       "from": "route:/api/specialty-chat/messages:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/specialty-chat/messages:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -117364,6 +117905,12 @@
     {
       "from": "route:/api/specialty-chat/preferences:handler",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/specialty-chat/preferences:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -117570,6 +118117,12 @@
     },
     {
       "from": "route:/api/specialty-chat/product-conversations:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/specialty-chat/product-conversations:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -117766,6 +118319,12 @@
     {
       "from": "route:/api/specialty-chat/profile-conversations:handler",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/specialty-chat/profile-conversations:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -117972,6 +118531,12 @@
     },
     {
       "from": "route:/api/specialty-chat/receipts:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/specialty-chat/receipts:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118168,6 +118733,12 @@
     {
       "from": "route:/api/specialty-chat/requests:handler",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/specialty-chat/requests:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -118773,6 +119344,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118962,6 +119539,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -119146,6 +119729,12 @@
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]:handler",
       "to": "package:@asol/account-declarations",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -119358,6 +119947,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -119565,6 +120160,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/cancel:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/cancel:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -119754,6 +120355,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/log:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/log:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -119926,6 +120533,12 @@
     {
       "from": "route:/api/super-admin/build-jobs/analysis:handler",
       "to": "package:@asol/account-declarations",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/analysis:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -120121,6 +120734,12 @@
     {
       "from": "route:/api/super-admin/build-jobs/analysis/compare:handler",
       "to": "package:@asol/account-declarations",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/analysis/compare:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -120333,6 +120952,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/catalog:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/catalog:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -120504,6 +121129,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -120652,6 +121283,12 @@
     {
       "from": "route:/api/super-admin/data-health/cleanup:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/cleanup:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -120810,6 +121447,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/history:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/history:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -120958,6 +121601,12 @@
     {
       "from": "route:/api/super-admin/data-health/history/audit/clear:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/history/audit/clear:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -121116,6 +121765,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/history/runs/clear:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/history/runs/clear:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121264,6 +121919,12 @@
     {
       "from": "route:/api/super-admin/data-health/orders/plan:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/orders/plan:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -121422,6 +122083,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/orders/purge:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/orders/purge:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121570,6 +122237,12 @@
     {
       "from": "route:/api/super-admin/data-health/orders/retry-images:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/orders/retry-images:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -121728,6 +122401,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/plan:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/plan:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121876,6 +122555,12 @@
     {
       "from": "route:/api/super-admin/data-health/quarantine/clear:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/quarantine/clear:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122034,6 +122719,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/quarantine/delete:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/quarantine/delete:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122182,6 +122873,12 @@
     {
       "from": "route:/api/super-admin/data-health/quarantine/release:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/quarantine/release:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122340,6 +123037,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/schema:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/schema:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122488,6 +123191,12 @@
     {
       "from": "route:/api/super-admin/dev-cloud-backup:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/dev-cloud-backup:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122646,6 +123355,12 @@
     },
     {
       "from": "route:/api/super-admin/dev-cloud-backup/backups/compare-saved:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/dev-cloud-backup/backups/compare-saved:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122794,6 +123509,12 @@
     {
       "from": "route:/api/super-admin/dev-cloud-backup/backups/create:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/dev-cloud-backup/backups/create:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122952,6 +123673,12 @@
     },
     {
       "from": "route:/api/super-admin/dev-cloud-backup/backups/delete:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/dev-cloud-backup/backups/delete:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123105,6 +123832,12 @@
     },
     {
       "from": "route:/api/super-admin/dev-cloud-backup/backups/download:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/dev-cloud-backup/backups/download:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123253,6 +123986,12 @@
     {
       "from": "route:/api/super-admin/dev-cloud-backup/backups/inspect-saved:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/dev-cloud-backup/backups/inspect-saved:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -123417,6 +124156,12 @@
     },
     {
       "from": "route:/api/super-admin/dev-cloud-backup/backups/restore-saved:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/dev-cloud-backup/backups/restore-saved:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123570,6 +124315,12 @@
     },
     {
       "from": "route:/api/super-admin/dev-cloud-backup/backups/update-saved:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/dev-cloud-backup/backups/update-saved:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123718,6 +124469,12 @@
     {
       "from": "route:/api/super-admin/google-play-console:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-console:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -123900,6 +124657,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -124072,6 +124835,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/backups:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/backups:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -124254,6 +125023,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/backups/restore:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/backups/restore:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -124426,6 +125201,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/fastlane:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/fastlane:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -124608,6 +125389,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/images/delete:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/images/delete:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -124780,6 +125567,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/images/upload:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/images/upload:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -124962,6 +125755,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/listings/delete:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/listings/delete:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125134,6 +125933,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/mapping/upload:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/mapping/upload:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -125316,6 +126121,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/tracks:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/tracks:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125493,6 +126304,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/tracks/promote:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/tracks/promote:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125664,6 +126481,12 @@
     },
     {
       "from": "route:/api/super-admin/impersonate:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/impersonate:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125830,6 +126653,12 @@
     {
       "from": "route:/api/super-admin/production-deploy:handler",
       "to": "package:@asol/account-declarations",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/production-deploy:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126372,6 +127201,12 @@
     },
     {
       "from": "route:/api/super-admin/simulation/users:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/simulation/users:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -126507,7 +127342,115 @@
     },
     {
       "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:advertisements",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:app-reset",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:categories",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:location",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:notifications",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:page-snapshot",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:profile-products",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:profile-working-hours",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:profile",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:seller-card",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:sharing",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:specialty-chat",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "feature:storage",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126520,6 +127463,12 @@
     {
       "from": "route:/api/super-admin/ui-registry/pending:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126573,7 +127522,25 @@
     },
     {
       "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126592,6 +127559,12 @@
     {
       "from": "route:/api/super-admin/ui-registry/pending:handler",
       "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/ui-registry/pending:handler",
+      "to": "package:@asol/ota-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126667,6 +127640,12 @@
     {
       "from": "route:/api/super-admin/users/delete:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/users/delete:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126819,6 +127798,12 @@
     },
     {
       "from": "route:/api/super-admin/users/search:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/users/search:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -126961,6 +127946,12 @@
     {
       "from": "route:/api/system-logs:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/system-logs:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -127236,6 +128227,12 @@
     },
     {
       "from": "route:/api/system-logs/stream:handler",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/system-logs/stream:handler",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -127378,6 +128375,12 @@
     {
       "from": "route:/api/system-logs/summary:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/system-logs/summary:handler",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -127545,6 +128548,12 @@
     },
     {
       "from": "route:/cart:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/cart:page",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -127701,6 +128710,12 @@
     },
     {
       "from": "route:/categories/[categoryId]:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]:page",
       "to": "package:@asol/catalog-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -127743,7 +128758,79 @@
     },
     {
       "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:advertisements",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:app-reset",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
       "to": "feature:categories",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:location",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:notifications",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:page-snapshot",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:profile-products",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:profile-working-hours",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -127761,7 +128848,127 @@
     },
     {
       "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:sharing",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:specialty-chat",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
       "to": "package:@asol/catalog-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/ota-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -127803,7 +129010,79 @@
     },
     {
       "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:advertisements",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:app-reset",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
       "to": "feature:categories",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:location",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:notifications",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:page-snapshot",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:profile-products",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:profile-working-hours",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -127821,7 +129100,127 @@
     },
     {
       "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:sharing",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:specialty-chat",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
       "to": "package:@asol/catalog-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/ota-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -127881,6 +129280,12 @@
     },
     {
       "from": "route:/collections/[collectionId]:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/collections/[collectionId]:page",
       "to": "package:@asol/catalog-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -127924,6 +129329,12 @@
     {
       "from": "route:/contact-us:page",
       "to": "feature:contact",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/contact-us:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -127977,7 +129388,19 @@
     },
     {
       "from": "route:/custom-request:page",
+      "to": "feature:app-reset",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "feature:cart",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -127990,6 +129413,18 @@
     {
       "from": "route:/custom-request:page",
       "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "feature:location",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "feature:notifications",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128031,6 +129466,12 @@
     },
     {
       "from": "route:/custom-request:page",
+      "to": "feature:seller-card",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
       "to": "feature:seller-discounts",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -128050,6 +129491,18 @@
     {
       "from": "route:/custom-request:page",
       "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128079,7 +129532,49 @@
     },
     {
       "from": "route:/custom-request:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/ota-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/product-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128170,6 +129665,12 @@
     {
       "from": "route:/delete-account:page",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/delete-account:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128343,6 +129844,12 @@
     },
     {
       "from": "route:/dev/catalog-studio:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/catalog-studio:page",
       "to": "package:@asol/format-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -128416,6 +129923,12 @@
     {
       "from": "route:/dev/category-selector:page",
       "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/category-selector:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128571,6 +130084,12 @@
     },
     {
       "from": "route:/dev/cloud-accounts:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/cloud-accounts:page",
       "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -128620,6 +130139,12 @@
     {
       "from": "route:/dev/data-health:page",
       "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/data-health:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128680,6 +130205,12 @@
     {
       "from": "route:/dev/deploy-all:page",
       "to": "feature:release-commands",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/deploy-all:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128764,6 +130295,12 @@
     {
       "from": "route:/dev/dev-cloud-backup:page",
       "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/dev-cloud-backup:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128859,7 +130396,133 @@
     },
     {
       "from": "route:/dev/monitor:page",
+      "to": "feature:advertisements",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:app-reset",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:categories",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:location",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:notifications",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:page-snapshot",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:profile-products",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:profile-working-hours",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:profile",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:seller-card",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:sharing",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:specialty-chat",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128931,6 +130594,18 @@
     },
     {
       "from": "route:/dev/monitor:page",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
       "to": "package:@asol/notifications-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -128944,6 +130619,12 @@
     {
       "from": "route:/dev/monitor:page",
       "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "package:@asol/ota-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129070,6 +130751,12 @@
     {
       "from": "route:/dev/notification-tests:page",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/notification-tests:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129273,6 +130960,12 @@
     },
     {
       "from": "route:/dev/release-console:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/release-console:page",
       "to": "package:@asol/env-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -129339,7 +131032,31 @@
     },
     {
       "from": "route:/favorites:page",
+      "to": "feature:advertisements",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:app-reset",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:categories",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129363,7 +131080,49 @@
     },
     {
       "from": "route:/favorites:page",
+      "to": "feature:notifications",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:page-snapshot",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
       "to": "feature:product-card",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:profile-products",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:profile-working-hours",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:profile",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129375,12 +131134,48 @@
     },
     {
       "from": "route:/favorites:page",
+      "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:sharing",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:specialty-chat",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
       "to": "feature:system-logs",
       "kind": "related-to",
       "detail": "route source dependency"
     },
     {
       "from": "route:/favorites:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -129393,6 +131188,54 @@
     },
     {
       "from": "route:/favorites:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/ota-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -129402,6 +131245,12 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/favorites:page",
@@ -129448,6 +131297,12 @@
     {
       "from": "route:/forgot-password:page",
       "to": "feature:password-recovery",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/forgot-password:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129514,6 +131369,12 @@
     {
       "from": "route:/home:page",
       "to": "feature:home",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/home:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129592,6 +131453,12 @@
     {
       "from": "route:/login:page",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/login:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129759,6 +131626,12 @@
     },
     {
       "from": "route:/notifications:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/notifications:page",
       "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -129850,6 +131723,12 @@
     {
       "from": "route:/notifications/chat:page",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/notifications/chat:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129957,6 +131836,12 @@
     },
     {
       "from": "route:/orders:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders:page",
       "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -130059,6 +131944,12 @@
     },
     {
       "from": "route:/orders/[orderId]:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/[orderId]:page",
       "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -130131,7 +132022,43 @@
     },
     {
       "from": "route:/orders/details:page",
+      "to": "feature:advertisements",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:app-reset",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:categories",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:location",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130149,7 +132076,73 @@
     },
     {
       "from": "route:/orders/details:page",
+      "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:page-snapshot",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:profile-products",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:profile-working-hours",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
       "to": "feature:profile",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:seller-card",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:sharing",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:specialty-chat",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:system-logs",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130161,13 +132154,61 @@
     },
     {
       "from": "route:/orders/details:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
       "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
     {
       "from": "route:/orders/details:page",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
       "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130191,7 +132232,37 @@
     },
     {
       "from": "route:/orders/details:page",
+      "to": "package:@asol/ota-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
       "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130230,6 +132301,216 @@
       "from": "route:/privacy-policy:page",
       "to": "source:src/app/privacy-policy/page.tsx",
       "kind": "contains"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:advertisements",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:app-reset",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:categories",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:location",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:notifications",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:page-snapshot",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:profile-products",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:profile-working-hours",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:profile",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:seller-card",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:sharing",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:specialty-chat",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/ota-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/privacy-policy:page",
+      "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/privacy-policy:page",
@@ -130330,6 +132611,12 @@
     {
       "from": "route:/product:page",
       "to": "feature:vehicle-catalog",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/product:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130497,7 +132784,19 @@
     },
     {
       "from": "route:/profile:page",
+      "to": "feature:app-reset",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "feature:cart",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130510,6 +132809,18 @@
     {
       "from": "route:/profile:page",
       "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "feature:location",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "feature:notifications",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130551,6 +132862,12 @@
     },
     {
       "from": "route:/profile:page",
+      "to": "feature:seller-card",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
       "to": "feature:seller-discounts",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -130570,6 +132887,18 @@
     {
       "from": "route:/profile:page",
       "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130599,7 +132928,49 @@
     },
     {
       "from": "route:/profile:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/ota-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/product-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130672,6 +133043,12 @@
     {
       "from": "route:/profile/pharmacy-catalog:page",
       "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile/pharmacy-catalog:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130755,6 +133132,12 @@
     },
     {
       "from": "route:/registration:page",
+      "to": "feature:advertisements",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
       "to": "feature:app-reset",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -130762,6 +133145,30 @@
     {
       "from": "route:/registration:page",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:categories",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:location",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130779,6 +133186,60 @@
     },
     {
       "from": "route:/registration:page",
+      "to": "feature:page-snapshot",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:profile-products",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:profile-working-hours",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:profile",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:seller-card",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:sharing",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "feature:specialty-chat",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
       "to": "feature:storage",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -130786,6 +133247,12 @@
     {
       "from": "route:/registration:page",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130845,7 +133312,25 @@
     },
     {
       "from": "route:/registration:page",
+      "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "package:@asol/map-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -130864,6 +133349,12 @@
     {
       "from": "route:/registration:page",
       "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/registration:page",
+      "to": "package:@asol/ota-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -131014,6 +133505,12 @@
     {
       "from": "route:/s/product:page",
       "to": "feature:vehicle-catalog",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/product:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -131271,6 +133768,12 @@
     },
     {
       "from": "route:/s/profile:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -131379,6 +133882,12 @@
     },
     {
       "from": "route:/search:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/search:page",
       "to": "package:@asol/ui-registry-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -131470,6 +133979,12 @@
     {
       "from": "route:/settings:page",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -131619,6 +134134,12 @@
     },
     {
       "from": "route:/settings/notifications:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -131728,6 +134249,12 @@
     {
       "from": "route:/specialty-request:page",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/specialty-request:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -131944,6 +134471,12 @@
     {
       "from": "route:/super-admin/featured-marquee:page",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/featured-marquee:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -132213,6 +134746,12 @@
     },
     {
       "from": "route:/super-admin/hero-slider:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/hero-slider:page",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -132412,6 +134951,12 @@
     {
       "from": "route:/super-admin/logs:page",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/logs:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -132621,6 +135166,12 @@
     },
     {
       "from": "route:/super-admin/notifications-broadcast:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/notifications-broadcast:page",
       "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -132819,6 +135370,12 @@
     },
     {
       "from": "route:/super-admin/production-deploy:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/production-deploy:page",
       "to": "package:@asol/env-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -132909,6 +135466,12 @@
     },
     {
       "from": "route:/super-admin/simulation:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/simulation:page",
       "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -132963,7 +135526,19 @@
     },
     {
       "from": "route:/super-admin/simulation/[pageId]:page",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/simulation/[pageId]:page",
       "to": "feature:categories",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/simulation/[pageId]:page",
+      "to": "feature:profile",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -132975,7 +135550,19 @@
     },
     {
       "from": "route:/super-admin/simulation/[pageId]:page",
+      "to": "package:@asol/architecture-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/simulation/[pageId]:page",
       "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/simulation/[pageId]:page",
+      "to": "package:@asol/ota-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -133072,6 +135659,12 @@
     {
       "from": "route:/super-admin/trending-ribbon:page",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/trending-ribbon:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -133276,6 +135869,12 @@
     {
       "from": "route:/super-admin/users:page",
       "to": "package:@asol/account-bridge",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/users:page",
+      "to": "package:@asol/architecture-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -133599,15 +136198,21 @@
     },
     {
       "from": "script:scripts/architecture-check.ts",
-      "to": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "to": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
       "kind": "imports",
-      "detail": "./ui-registry/static-dom-ids/check-static-dom-ids"
+      "detail": "./ui-registry/generate-component-marker-bridge"
     },
     {
       "from": "script:scripts/architecture-check.ts",
-      "to": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
+      "to": "script:scripts/ui-registry/generate-uid-inventory.ts",
       "kind": "imports",
-      "detail": "./ui-registry/uid-migration/check-uid-coverage"
+      "detail": "./ui-registry/generate-uid-inventory"
+    },
+    {
+      "from": "script:scripts/architecture-check.ts",
+      "to": "script:scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts",
+      "kind": "imports",
+      "detail": "./ui-registry/static-dom-ids/check-static-dom-ids"
     },
     {
       "from": "script:scripts/architecture-check.ts",
@@ -136096,6 +138701,17 @@
       "detail": "@/features/data/server"
     },
     {
+      "from": "script:scripts/ui-registry/check-component-bridge-drift.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/check-component-bridge-drift.ts",
+      "to": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
+      "kind": "imports",
+      "detail": "./generate-component-marker-bridge"
+    },
+    {
       "from": "script:scripts/ui-registry/check-pending.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -136113,6 +138729,34 @@
       "detail": "@/features/data/server"
     },
     {
+      "from": "script:scripts/ui-registry/check-uid-inventory-drift.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/check-uid-inventory-drift.ts",
+      "to": "script:scripts/ui-registry/generate-uid-inventory.ts",
+      "kind": "imports",
+      "detail": "./generate-uid-inventory"
+    },
+    {
+      "from": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
+    },
+    {
       "from": "script:scripts/ui-registry/generate-simulation-registry.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -136122,6 +138766,17 @@
       "to": "script:scripts/ui-registry/simulation-registry-model.ts",
       "kind": "imports",
       "detail": "./simulation-registry-model"
+    },
+    {
+      "from": "script:scripts/ui-registry/generate-uid-inventory.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/generate-uid-inventory.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
     },
     {
       "from": "script:scripts/ui-registry/pending-source-resolver.ts",
@@ -136402,125 +139057,15 @@
       "kind": "affects-runtime"
     },
     {
-      "from": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-      "to": "external-dependency:…",
-      "kind": "imports",
-      "detail": "…"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-      "to": "external-dependency:typescript",
-      "kind": "imports",
-      "detail": "typescript"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-      "to": "package:@asol/ui-registry-core",
-      "kind": "imports",
-      "detail": "@asol/ui-registry-core"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-      "to": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
-      "kind": "imports",
-      "detail": "../static-dom-ids/tsx-hosts"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
-      "to": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "kind": "imports",
-      "detail": "./plan-uid-migration"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
-      "to": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "kind": "imports",
-      "detail": "./plan-uid-migration"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/mint-uid.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/mint-uid.ts",
-      "to": "package:@asol/ui-registry-core",
-      "kind": "imports",
-      "detail": "@asol/ui-registry-core"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/mint-uid.ts",
-      "to": "script:scripts/ui-registry/static-dom-ids/component-host-policy.ts",
-      "kind": "imports",
-      "detail": "../static-dom-ids/component-host-policy"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "to": "external-dependency:typescript",
-      "kind": "imports",
-      "detail": "typescript"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "to": "script:scripts/ui-registry/static-dom-ids/component-host-policy.ts",
-      "kind": "imports",
-      "detail": "../static-dom-ids/component-host-policy"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "to": "script:scripts/ui-registry/static-dom-ids/file-semantic.ts",
-      "kind": "imports",
-      "detail": "../static-dom-ids/file-semantic"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "to": "script:scripts/ui-registry/static-dom-ids/repeating-definitions.ts",
-      "kind": "imports",
-      "detail": "../static-dom-ids/repeating-definitions"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "to": "script:scripts/ui-registry/static-dom-ids/tsx-hosts.ts",
-      "kind": "imports",
-      "detail": "../static-dom-ids/tsx-hosts"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "to": "script:scripts/ui-registry/static-dom-ids/visible-host-tags.ts",
-      "kind": "imports",
-      "detail": "../static-dom-ids/visible-host-tags"
-    },
-    {
-      "from": "script:scripts/ui-registry/uid-migration/plan-uid-migration.ts",
-      "to": "script:scripts/ui-registry/uid-migration/mint-uid.ts",
-      "kind": "imports",
-      "detail": "./mint-uid"
-    },
-    {
       "from": "script:scripts/ui-registry/uid-migration/run-apply.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
     },
     {
       "from": "script:scripts/ui-registry/uid-migration/run-apply.ts",
-      "to": "script:scripts/ui-registry/uid-migration/apply-uid-migration.ts",
+      "to": "package:@asol/architecture-core",
       "kind": "imports",
-      "detail": "./apply-uid-migration"
+      "detail": "@asol/architecture-core"
     },
     {
       "from": "script:scripts/ui-registry/uid-migration/run-check.ts",
@@ -136529,9 +139074,9 @@
     },
     {
       "from": "script:scripts/ui-registry/uid-migration/run-check.ts",
-      "to": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
+      "to": "package:@asol/architecture-core",
       "kind": "imports",
-      "detail": "./check-uid-coverage"
+      "detail": "@asol/architecture-core"
     },
     {
       "from": "script:scripts/update-simulation-discovery.ts",
@@ -138183,6 +140728,66 @@
       "detail": "../registry/capability-registry"
     },
     {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "imports",
+      "detail": "./architecture-types"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "kind": "imports",
+      "detail": "../dom-identity/analyzer"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "kind": "imports",
+      "detail": "../dom-identity/descriptor-literals"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "../dom-identity/tsx-ast"
+    },
+    {
       "from": "source:packages/architecture-core/src/checks/feature-application-door-purity-contract.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -139036,45 +141641,27 @@
     },
     {
       "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
       "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
       "kind": "imports",
       "detail": "./architecture-types"
     },
     {
-      "from": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "to": "package:@asol/architecture-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
       "kind": "imports",
-      "detail": "./architecture-types"
+      "detail": "../dom-identity/descriptor-literals"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "../dom-identity/tsx-ast"
     },
     {
       "from": "source:packages/architecture-core/src/checks/ui-simulation-contract.ts",
@@ -139335,6 +141922,360 @@
       "detail": "../registry/composition-feature-seams-registry"
     },
     {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "kind": "imports",
+      "detail": "./component-definition"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "kind": "imports",
+      "detail": "./descriptor-literals"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "kind": "imports",
+      "detail": "./repetition"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "./tsx-ast"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/component-definition.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "./tsx-ast"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "kind": "imports",
+      "detail": "./analyzer"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "kind": "imports",
+      "detail": "./mint"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "./tsx-ast"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "./tsx-ast"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "kind": "imports",
+      "detail": "./descriptor-literals"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "./tsx-ast"
+    },
+    {
       "from": "source:packages/architecture-core/src/index.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -139390,6 +142331,12 @@
     },
     {
       "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/dom-identity-coverage-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
       "to": "source:packages/architecture-core/src/checks/feature-application-door-purity-contract.ts",
       "kind": "imports",
       "detail": "./checks/feature-application-door-purity-contract"
@@ -139426,12 +142373,6 @@
     },
     {
       "from": "source:packages/architecture-core/src/index.ts",
-      "to": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "kind": "imports",
-      "detail": "./checks/ui-registry-coverage"
-    },
-    {
-      "from": "source:packages/architecture-core/src/index.ts",
       "to": "source:packages/architecture-core/src/checks/ui-simulation-contract.ts",
       "kind": "imports",
       "detail": "./checks/ui-simulation-contract"
@@ -139465,6 +142406,36 @@
       "to": "source:packages/architecture-core/src/docs/generate-feature-seams-doc.ts",
       "kind": "imports",
       "detail": "./docs/generate-feature-seams-doc"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/analyzer"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/migration.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/migration"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/mint"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/repetition"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/uid-catalog"
     },
     {
       "from": "source:packages/architecture-core/src/index.ts",
@@ -139648,6 +142619,12 @@
     },
     {
       "from": "source:packages/architecture-core/src/runner.ts",
+      "to": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/dom-identity-coverage-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/runner.ts",
       "to": "source:packages/architecture-core/src/checks/feature-application-door-purity-contract.ts",
       "kind": "imports",
       "detail": "./checks/feature-application-door-purity-contract"
@@ -139765,12 +142742,6 @@
       "to": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
       "kind": "imports",
       "detail": "./checks/ui-attribute-contract"
-    },
-    {
-      "from": "source:packages/architecture-core/src/runner.ts",
-      "to": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "kind": "imports",
-      "detail": "./checks/ui-registry-coverage"
     },
     {
       "from": "source:packages/architecture-core/src/runner.ts",
@@ -175548,6 +178519,12 @@
     },
     {
       "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "kind": "imports",
+      "detail": "./registry/generated/ui-uid-inventory"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
       "to": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
       "kind": "imports",
       "detail": "./registry/resolve-ui-page"
@@ -175557,6 +178534,12 @@
       "to": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
       "kind": "imports",
       "detail": "./registry/ui-page-registry"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "kind": "imports",
+      "detail": "./registry/ui-uid-catalog-entry"
     },
     {
       "from": "source:packages/ui-registry-core/src/index.ts",
@@ -175575,6 +178558,36 @@
       "to": "source:packages/ui-registry-core/src/simulation/value-contracts.ts",
       "kind": "imports",
       "detail": "./simulation/value-contracts"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
     },
     {
       "from": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
@@ -175620,6 +178633,18 @@
     },
     {
       "from": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
+      "kind": "imports",
+      "detail": "../domain/ui-instance"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-interaction.ts",
+      "kind": "imports",
+      "detail": "../domain/ui-interaction"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
       "to": "source:packages/ui-registry-core/src/domain/ui-simulation-target.ts",
       "kind": "imports",
       "detail": "../domain/ui-simulation-target"
@@ -175659,6 +178684,12 @@
       "to": "source:packages/ui-registry-core/src/registry/ui-page-registry.ts",
       "kind": "imports",
       "detail": "../registry/ui-page-registry"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
+      "to": "source:packages/ui-registry-core/src/simulation/value-contracts.ts",
+      "kind": "imports",
+      "detail": "../simulation/value-contracts"
     },
     {
       "from": "source:packages/ui-registry-core/src/pending/pending-request.ts",
@@ -175734,9 +178765,51 @@
     },
     {
       "from": "source:packages/ui-registry-core/src/pending/source-locator-match.ts",
+      "to": "source:packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts",
+      "kind": "imports",
+      "detail": "./generated/component-marker-bridge"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/pending/source-locator-match.ts",
       "to": "source:packages/ui-registry-core/src/pending/pending-request.ts",
       "kind": "imports",
       "detail": "./pending-request"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "to": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "kind": "imports",
+      "detail": "../ui-uid-catalog-entry"
     },
     {
       "from": "source:packages/ui-registry-core/src/registry/resolve-ui-page.ts",
@@ -175821,6 +178894,36 @@
       "to": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
       "kind": "imports",
       "detail": "../domain/ui-page-definition"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
     },
     {
       "from": "source:packages/ui-registry-core/src/simulation/generated/ui-simulation-registry.ts",
@@ -182783,6 +185886,12 @@
       "to": "package:@asol/ota-core",
       "kind": "imports",
       "detail": "@asol/ota-core"
+    },
+    {
+      "from": "source:src/app/layout.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/app/layout.tsx",
@@ -198087,6 +201196,12 @@
       "from": "source:src/features/google-play-console/presentation/components/LogViewer.tsx",
       "to": "feature:google-play-console",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/google-play-console/presentation/components/LogViewer.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/features/google-play-console/presentation/components/Metric.tsx",
@@ -233459,6 +236574,12 @@
     },
     {
       "from": "source:src/shared/app-init/AppInitScript.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/app-init/AppInitScript.tsx",
       "to": "source:src/core/config/public-env.ts",
       "kind": "imports",
       "detail": "@/core/config/public-env"
@@ -235738,6 +238859,12 @@
     },
     {
       "from": "source:src/shared/theme/runtime/ThemeInitScript.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/theme/runtime/ThemeInitScript.tsx",
       "to": "source:src/core/config/public-env.ts",
       "kind": "imports",
       "detail": "@/core/config/public-env"
@@ -235885,6 +239012,18 @@
     },
     {
       "from": "source:src/shared/ui/badge.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/badge.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
+    },
+    {
+      "from": "source:src/shared/ui/badge.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -235980,6 +239119,18 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/card.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/card.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
     },
     {
       "from": "source:src/shared/ui/card.tsx",
@@ -236228,6 +239379,12 @@
     },
     {
       "from": "source:src/shared/ui/contact-action-bar.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/contact-action-bar.tsx",
       "to": "source:src/shared/ui/button.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/button"
@@ -236387,9 +239544,21 @@
     },
     {
       "from": "source:src/shared/ui/dialog.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/dialog.tsx",
       "to": "source:src/shared/ui/overlay-chrome.ts",
       "kind": "imports",
       "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
+      "from": "source:src/shared/ui/dialog.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
     },
     {
       "from": "source:src/shared/ui/dialog.tsx",
@@ -236442,9 +239611,21 @@
     },
     {
       "from": "source:src/shared/ui/dropdown-menu.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/dropdown-menu.tsx",
       "to": "source:src/shared/ui/overlay-chrome.ts",
       "kind": "imports",
       "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
+      "from": "source:src/shared/ui/dropdown-menu.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
     },
     {
       "from": "source:src/shared/ui/dropdown-menu.tsx",
@@ -236589,6 +239770,18 @@
     },
     {
       "from": "source:src/shared/ui/label.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/label.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
+    },
+    {
+      "from": "source:src/shared/ui/label.tsx",
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
@@ -236623,6 +239816,18 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/LoadingSpinner.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/LoadingSpinner.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
     },
     {
       "from": "source:src/shared/ui/LoadingSpinner.tsx",
@@ -236743,6 +239948,12 @@
     },
     {
       "from": "source:src/shared/ui/phone-country-dialog.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/phone-country-dialog.tsx",
       "to": "source:src/shared/phone/phone-field-model.ts",
       "kind": "imports",
       "detail": "@/shared/phone/phone-field-model"
@@ -236852,6 +240063,12 @@
       "detail": "react"
     },
     {
+      "from": "source:src/shared/ui/product-style-card.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
       "from": "source:src/shared/ui/product-style-settings.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -236918,6 +240135,18 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/progress.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/progress.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
     },
     {
       "from": "source:src/shared/ui/progress.tsx",
@@ -237071,6 +240300,18 @@
       "from": "source:src/shared/ui/skeleton.tsx",
       "to": "runtime:web",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/skeleton.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/skeleton.tsx",
+      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-primitive-attributes"
     },
     {
       "from": "source:src/shared/ui/skeleton.tsx",
@@ -237793,6 +241034,127 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "external-dependency:@fortawesome/react-fontawesome",
+      "kind": "imports",
+      "detail": "@fortawesome/react-fontawesome"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/analyzer.ts",
+      "kind": "imports",
+      "detail": "../dom-identity/analyzer"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "external-dependency:@fortawesome/react-fontawesome",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-analyzer.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "imports",
+      "detail": "../checks/architecture-types"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "source:packages/architecture-core/src/checks/dom-identity-coverage-contract.ts",
+      "kind": "imports",
+      "detail": "../checks/dom-identity-coverage-contract"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/architecture-core/src/tests/index.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -237895,47 +241257,6 @@
     {
       "from": "test:packages/architecture-core/src/tests/ui-attribute-guard.test.ts",
       "to": "package:@asol/ui-registry-core",
-      "kind": "tests"
-    },
-    {
-      "from": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "to": "package:@asol/architecture-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "to": "source:packages/architecture-core/src/checks/ui-registry-coverage.ts",
-      "kind": "imports",
-      "detail": "../checks/ui-registry-coverage"
-    },
-    {
-      "from": "test:packages/architecture-core/src/tests/ui-registry-coverage.test.ts",
-      "to": "package:@asol/architecture-core",
       "kind": "tests"
     },
     {
@@ -244339,9 +247660,31 @@
     },
     {
       "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
       "to": "source:packages/ui-registry-core/src/index.ts",
       "kind": "imports",
       "detail": "../index"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "external-dependency:typescript",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "tests"
     },
     {
       "from": "test:packages/ui-registry-core/src/tests/per-instance-registration.test.ts",
@@ -244995,33 +248338,6 @@
     {
       "from": "test:scripts/ui-registry/tests/static-dom-ids.test.ts",
       "to": "source:src/shared/ui/select.tsx",
-      "kind": "tests"
-    },
-    {
-      "from": "test:scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
-      "to": "package:@asol/ui-registry-core",
-      "kind": "imports",
-      "detail": "@asol/ui-registry-core"
-    },
-    {
-      "from": "test:scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
-      "to": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
-      "kind": "imports",
-      "detail": "../check-uid-coverage"
-    },
-    {
-      "from": "test:scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
-      "to": "package:@asol/ui-registry-core",
-      "kind": "tests"
-    },
-    {
-      "from": "test:scripts/ui-registry/uid-migration/tests/uid-coverage-guard.test.ts",
-      "to": "script:scripts/ui-registry/uid-migration/check-uid-coverage.ts",
       "kind": "tests"
     },
     {

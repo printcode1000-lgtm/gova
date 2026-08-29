@@ -52,7 +52,7 @@ export function CommandBranchCard(props: {
           </span>
         </span>
       </label>
-      <code
+      <code {...uiAttributes({ uid: "google-play-console.android-release-runbook-branch-card.code-hYhv6U", id: "google-play-console.android-release-runbook-branch-card.code" })}
         className="mt-2 block w-full min-w-0 overflow-x-auto whitespace-pre-wrap break-all text-xs"
         dir="ltr"
       >

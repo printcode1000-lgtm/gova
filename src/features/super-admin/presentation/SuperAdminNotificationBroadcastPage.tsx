@@ -192,7 +192,7 @@ export function SuperAdminNotificationBroadcastPage() {
         </div>
         <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.17-hsJ3PP", id: "super-admin.super-admin-notification-broadcast-page.div.17" })} id="super-admin.super-admin-notification-broadcast-page.div.5" className="grid gap-4">
           <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.18-PE4UL7", id: "super-admin.super-admin-notification-broadcast-page.div.18" })} id="super-admin.super-admin-notification-broadcast-page.div.6" className="space-y-2">
-            <Label id="super-admin.super-admin-notification-broadcast-page.label" htmlFor="broadcast-title">العنوان</Label>
+            <Label ui={{ uid: "super-admin.super-admin-notification-broadcast-page.label.3-5dLVOb", id: "super-admin.super-admin-notification-broadcast-page.label.3" }} id="super-admin.super-admin-notification-broadcast-page.label" htmlFor="broadcast-title">العنوان</Label>
             <Input ui={{ uid: "super-admin.broadcast.title-4YC9TA", id: "super-admin.broadcast.title", kind: "field", part: "form" }}
               id="broadcast-title"
               value={title}
@@ -201,7 +201,7 @@ export function SuperAdminNotificationBroadcastPage() {
             />
           </div>
           <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.19-RI6gOa", id: "super-admin.super-admin-notification-broadcast-page.div.19" })} id="super-admin.super-admin-notification-broadcast-page.div.7" className="space-y-2">
-            <Label id="super-admin.super-admin-notification-broadcast-page.label.2" htmlFor="broadcast-body">الرسالة</Label>
+            <Label ui={{ uid: "super-admin.super-admin-notification-broadcast-page.label.4-VEGT0c", id: "super-admin.super-admin-notification-broadcast-page.label.4" }} id="super-admin.super-admin-notification-broadcast-page.label.2" htmlFor="broadcast-body">الرسالة</Label>
             <Textarea ui={{ uid: "super-admin.broadcast.body-4SVqRL", id: "super-admin.broadcast.body", kind: "field", part: "form" }}
               id="broadcast-body"
               value={body}
@@ -262,17 +262,17 @@ export function SuperAdminNotificationBroadcastPage() {
           <h2 {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.h2.5-4oSo90", id: "super-admin.super-admin-notification-broadcast-page.h2.5" })} id="super-admin.super-admin-notification-broadcast-page.h2.2" className="mb-3 font-semibold">نتيجة الإرسال</h2>
           <div {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.div.21-4B4jgx", id: "super-admin.super-admin-notification-broadcast-page.div.21" })} id="super-admin.super-admin-notification-broadcast-page.div.9" className="grid gap-2 text-sm md:grid-cols-3">
             <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.13-AKFi59", id: "super-admin.super-admin-notification-broadcast-page.p.13" })} id="super-admin.super-admin-notification-broadcast-page.p.3">
-              المطلوب: <strong>{result.requested}</strong>
+              المطلوب: <strong {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.strong-CZWr9s", id: "super-admin.super-admin-notification-broadcast-page.strong" })}>{result.requested}</strong>
             </p>
             <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.14-K7W2tZ", id: "super-admin.super-admin-notification-broadcast-page.p.14" })} id="super-admin.super-admin-notification-broadcast-page.p.4">
               تم الإرسال:{""}
-              <strong>
+              <strong {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.strong.2-9O5sLB", id: "super-admin.super-admin-notification-broadcast-page.strong.2" })}>
                 {result.results.filter((item) => item.status === "sent").length}
               </strong>
             </p>
             <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.15-5R7YZp", id: "super-admin.super-admin-notification-broadcast-page.p.15" })} id="super-admin.super-admin-notification-broadcast-page.p.5">
               إرسال جزئي:{""}
-              <strong>
+              <strong {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.strong.3-G6ugDy", id: "super-admin.super-admin-notification-broadcast-page.strong.3" })}>
                 {
                   result.results.filter((item) => item.status === "partial")
                     .length
@@ -281,7 +281,7 @@ export function SuperAdminNotificationBroadcastPage() {
             </p>
             <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.16-3UOpYI", id: "super-admin.super-admin-notification-broadcast-page.p.16" })} id="super-admin.super-admin-notification-broadcast-page.p.6">
               في الانتظار:{""}
-              <strong>
+              <strong {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.strong.4-zqR151", id: "super-admin.super-admin-notification-broadcast-page.strong.4" })}>
                 {
                   result.results.filter((item) => item.status === "queued")
                     .length
@@ -290,7 +290,7 @@ export function SuperAdminNotificationBroadcastPage() {
             </p>
             <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.17-pzVuj8", id: "super-admin.super-admin-notification-broadcast-page.p.17" })} id="super-admin.super-admin-notification-broadcast-page.p.7">
               فشل:{""}
-              <strong>
+              <strong {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.strong.5-fOEp6s", id: "super-admin.super-admin-notification-broadcast-page.strong.5" })}>
                 {
                   result.results.filter((item) => item.status === "failed")
                     .length
@@ -299,7 +299,7 @@ export function SuperAdminNotificationBroadcastPage() {
             </p>
             <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.18-qUjs20", id: "super-admin.super-admin-notification-broadcast-page.p.18" })} id="super-admin.super-admin-notification-broadcast-page.p.8">
               بدون رمز جهاز:{""}
-              <strong>
+              <strong {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.strong.6-OtA4NY", id: "super-admin.super-admin-notification-broadcast-page.strong.6" })}>
                 {
                   result.results.filter((item) => item.status === "no_tokens")
                     .length
@@ -308,7 +308,7 @@ export function SuperAdminNotificationBroadcastPage() {
             </p>
             <p {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.p.19-f2ldUr", id: "super-admin.super-admin-notification-broadcast-page.p.19" })} id="super-admin.super-admin-notification-broadcast-page.p.9">
               أوقف كل الإشعارات:{""}
-              <strong>
+              <strong {...uiAttributes({ uid: "super-admin.super-admin-notification-broadcast-page.strong.7-9GDWQD", id: "super-admin.super-admin-notification-broadcast-page.strong.7" })}>
                 {
                   result.results.filter((item) => item.status === "muted")
                     .length

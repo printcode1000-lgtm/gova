@@ -117,13 +117,13 @@ export function DataHealthPage() {
           if (value === "schema") void page.loadSchemaComparison();
         }}
       >
-        <TabsList id="data-health.data-health-page.tabs-list" className="w-full justify-start overflow-x-auto">
+        <TabsList ui={{ uid: "data-health.data-health-page.tabs-list.2-XiAdT1", id: "data-health.data-health-page.tabs-list.2" }} id="data-health.data-health-page.tabs-list" className="w-full justify-start overflow-x-auto">
           <TabsTrigger id="data-health.data-health-page.tabs-trigger" ui={{ uid: "data-health.tab-findings-I7s8xO", id: "data-health.tab-findings", kind: "action", action: "select-findings-tab", part: "tabs" }} value="findings">النتائج</TabsTrigger>
           <TabsTrigger id="data-health.data-health-page.tabs-trigger.2" ui={{ uid: "data-health.tab-schema-M6eymK", id: "data-health.tab-schema", kind: "action", action: "select-schema-tab", part: "tabs" }} value="schema">مقارنة البنية</TabsTrigger>
           <TabsTrigger id="data-health.data-health-page.tabs-trigger.3" ui={{ uid: "data-health.tab-history-xdlp2W", id: "data-health.tab-history", kind: "action", action: "select-history-tab", part: "tabs" }} value="history">السجل والتدقيق</TabsTrigger>
         </TabsList>
 
-        <TabsContent id="data-health.data-health-page.tabs-content" value="findings">
+        <TabsContent ui={{ uid: "data-health.data-health-page.tabs-content.4-0ZOYne", id: "data-health.data-health-page.tabs-content.4" }} id="data-health.data-health-page.tabs-content" value="findings">
           {page.report ? (
             <DataHealthFindingsPanel
               report={page.report}
@@ -159,11 +159,11 @@ export function DataHealthPage() {
           ) : null}
         </TabsContent>
 
-        <TabsContent id="data-health.data-health-page.tabs-content.2" value="schema">
+        <TabsContent ui={{ uid: "data-health.data-health-page.tabs-content.5-RU34vA", id: "data-health.data-health-page.tabs-content.5" }} id="data-health.data-health-page.tabs-content.2" value="schema">
           <DataHealthSchemaPanel report={page.report} loading={page.schemaLoading} />
         </TabsContent>
 
-        <TabsContent id="data-health.data-health-page.tabs-content.3" value="history">
+        <TabsContent ui={{ uid: "data-health.data-health-page.tabs-content.6-3OAjW9", id: "data-health.data-health-page.tabs-content.6" }} id="data-health.data-health-page.tabs-content.3" value="history">
           <DataHealthHistoryPanel
             history={page.history}
             onRelease={page.releaseQuarantine}

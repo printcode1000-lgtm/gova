@@ -27,8 +27,8 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="ar" dir="rtl">
-      <body>
+    <html {...uiAttributes({ uid: "global-error.html-2VSe9Q", id: "global-error.html" })} lang="ar" dir="rtl">
+      <body {...uiAttributes({ uid: "global-error.body-LRK8qc", id: "global-error.body" })}>
         <main {...uiAttributes({ uid: "global-error.main.2-C33mPx", id: "global-error.main.2" })} id="global-error.main" className="container mx-auto max-w-lg px-4 py-12 text-center">
           <h1 {...uiAttributes({ uid: "global-error.h1.2-lE5AZO", id: "global-error.h1.2" })} id="global-error.h1" className="text-xl font-bold text-error">حدث خطأ غير متوقع</h1>
           <p {...uiAttributes({ uid: "global-error.p.2-5LxozQ", id: "global-error.p.2" })} id="global-error.p" className="mt-2 text-sm text-on-surface-variant">

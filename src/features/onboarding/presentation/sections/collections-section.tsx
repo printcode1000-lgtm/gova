@@ -73,15 +73,15 @@ export function CollectionsSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.12-hE1vqI", id: "onboarding.sections.collections-section.div.12" })} id="onboarding.sections.collections-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.collections-section.card">
-        <CardHeader id="onboarding.sections.collections-section.card-header">
-          <CardTitle id="onboarding.sections.collections-section.card-title" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.collections-section.card.2-VQ0378", id: "onboarding.sections.collections-section.card.2" }} id="onboarding.sections.collections-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.collections-section.card-header.2-MAzPi0", id: "onboarding.sections.collections-section.card-header.2" }} id="onboarding.sections.collections-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.collections-section.card-title.2-HSPVR5", id: "onboarding.sections.collections-section.card-title.2" }} id="onboarding.sections.collections-section.card-title" className="flex items-center gap-2">
             <FolderOpen id="onboarding.sections.collections-section.folder-open" className="h-5 w-5" />
             {t('onboarding.collections.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.collections-section.card-description">{t('onboarding.collections.description')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.collections-section.card-description.2-3rHo7R", id: "onboarding.sections.collections-section.card-description.2" }} id="onboarding.sections.collections-section.card-description">{t('onboarding.collections.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.collections-section.card-content">
+        <CardContent ui={{ uid: "onboarding.sections.collections-section.card-content.2-aOWpt5", id: "onboarding.sections.collections-section.card-content.2" }} id="onboarding.sections.collections-section.card-content">
           {showForm ? (
             <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.13-AO7wj1", id: "onboarding.sections.collections-section.div.13" })} id="onboarding.sections.collections-section.div.2" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
               <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.14-SGA299", id: "onboarding.sections.collections-section.div.14" })} id="onboarding.sections.collections-section.div.3" className="grid gap-6 lg:grid-cols-2">
@@ -125,7 +125,7 @@ export function CollectionsSection() {
 
               {data.products.products.length > 0 && (
                 <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.16-BS75B5", id: "onboarding.sections.collections-section.div.16" })} id="onboarding.sections.collections-section.div.5" className="space-y-3">
-                  <Label id="onboarding.sections.collections-section.label" className="text-base">{t('onboarding.collections.assignProducts')}</Label>
+                  <Label ui={{ uid: "onboarding.sections.collections-section.label.3-MmR3v4", id: "onboarding.sections.collections-section.label.3" }} id="onboarding.sections.collections-section.label" className="text-base">{t('onboarding.collections.assignProducts')}</Label>
                   <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.17-2ZqwKA", id: "onboarding.sections.collections-section.div.17" })} id="onboarding.sections.collections-section.div.6" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {data.products.products.map((product) => (
                       <label

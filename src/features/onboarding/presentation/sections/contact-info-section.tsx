@@ -82,12 +82,12 @@ export function ContactInfoSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.9-qVnr6A", id: "onboarding.sections.contact-info-section.div.9" })} id="onboarding.sections.contact-info-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.contact-info-section.card">
-        <CardHeader id="onboarding.sections.contact-info-section.card-header">
-          <CardTitle id="onboarding.sections.contact-info-section.card-title">{t('onboarding.contactInfo.title')}</CardTitle>
-          <CardDescription id="onboarding.sections.contact-info-section.card-description">{t('onboarding.contactInfo.description')}</CardDescription>
+      <Card ui={{ uid: "onboarding.sections.contact-info-section.card.2-zWM47F", id: "onboarding.sections.contact-info-section.card.2" }} id="onboarding.sections.contact-info-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.contact-info-section.card-header.2-j6D4BV", id: "onboarding.sections.contact-info-section.card-header.2" }} id="onboarding.sections.contact-info-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.contact-info-section.card-title.2-dS4A6N", id: "onboarding.sections.contact-info-section.card-title.2" }} id="onboarding.sections.contact-info-section.card-title">{t('onboarding.contactInfo.title')}</CardTitle>
+          <CardDescription ui={{ uid: "onboarding.sections.contact-info-section.card-description.2-P7VumB", id: "onboarding.sections.contact-info-section.card-description.2" }} id="onboarding.sections.contact-info-section.card-description">{t('onboarding.contactInfo.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.contact-info-section.card-content" className="space-y-6">
+        <CardContent ui={{ uid: "onboarding.sections.contact-info-section.card-content.2-dZY1KM", id: "onboarding.sections.contact-info-section.card-content.2" }} id="onboarding.sections.contact-info-section.card-content" className="space-y-6">
           <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.10-vJXWB3", id: "onboarding.sections.contact-info-section.div.10" })} id="onboarding.sections.contact-info-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.contact-info-section.form-field" label={t('onboarding.contactInfo.phoneNumber')} htmlFor="phoneNumber" required error={errors.phoneNumber}>
               <PhoneField id="onboarding.sections.contact-info-section.phone-field"
@@ -136,7 +136,7 @@ export function ContactInfoSection() {
           <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.12-IjX5sf", id: "onboarding.sections.contact-info-section.div.12" })} id="onboarding.sections.contact-info-section.div.4" className="space-y-4">
             <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.13-9XkEQs", id: "onboarding.sections.contact-info-section.div.13" })} id="onboarding.sections.contact-info-section.div.5" className="flex items-center justify-between">
               <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.14-2LLZB2", id: "onboarding.sections.contact-info-section.div.14" })} id="onboarding.sections.contact-info-section.div.6">
-                <Label id="onboarding.sections.contact-info-section.label" className="text-sm font-medium">{t('onboarding.contactInfo.socialLinks')}</Label>
+                <Label ui={{ uid: "onboarding.sections.contact-info-section.label.2-h85L9w", id: "onboarding.sections.contact-info-section.label.2" }} id="onboarding.sections.contact-info-section.label" className="text-sm font-medium">{t('onboarding.contactInfo.socialLinks')}</Label>
                 <p {...uiAttributes({ uid: "onboarding.sections.contact-info-section.p.2-WQd15w", id: "onboarding.sections.contact-info-section.p.2" })} id="onboarding.sections.contact-info-section.p" className="text-xs text-muted-foreground">{t('onboarding.contactInfo.socialHint')}</p>
               </div>
               {availablePlatforms.length > 0 && (

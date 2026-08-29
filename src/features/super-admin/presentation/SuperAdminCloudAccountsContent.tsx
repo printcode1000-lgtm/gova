@@ -126,7 +126,7 @@ export function SuperAdminCloudAccountsContent() {
       </TableWrap>
       <Note id="super-admin.super-admin-cloud-accounts-content.note.2">
         الرقم {glance.vercelWord} لحسابات Vercel:{" "}
-        <strong>حساب واحد لكل نشرة.</strong>{" "}
+        <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong-9G7OQU", id: "super-admin.super-admin-cloud-accounts-content.strong" })}>حساب واحد لكل نشرة.</strong>{" "}
         <span {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.span.47-Ps6IDA", id: "super-admin.super-admin-cloud-accounts-content.span.47" })} id="super-admin.super-admin-cloud-accounts-content.span.4" dir="ltr">gova</span> هو التطبيق الكامل عبر GitHub؛ الباقي
         خدمات معزولة تُنشر من{" "}
         <span {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.span.48-Ukb4JK", id: "super-admin.super-admin-cloud-accounts-content.span.48" })} id="super-admin.super-admin-cloud-accounts-content.span.5" dir="ltr">services/&lt;name&gt;/</span> عبر أوامر طرفية — بما فيها{" "}
@@ -163,7 +163,7 @@ export function SuperAdminCloudAccountsContent() {
               <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.59-G956Nj", id: "super-admin.super-admin-cloud-accounts-content.td.59" })} className="p-2 sm:p-3">
                 {account.githubConnected ? (
                   <>
-                    <strong>متصل</strong> — كل push يعيد النشر
+                    <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.2-Ni9z2W", id: "super-admin.super-admin-cloud-accounts-content.strong.2" })}>متصل</strong> — كل push يعيد النشر
                   </>
                 ) : (
                   "غير متصل"
@@ -179,12 +179,12 @@ export function SuperAdminCloudAccountsContent() {
 
       <SubTitle id="super-admin.super-admin-cloud-accounts-content.sub-title">القاعدة التي تجعل هذا يعمل</SubTitle>
       <Note id="super-admin.super-admin-cloud-accounts-content.note.3">
-        <strong>لا يجوز لأي نشرة استدعاء نشرة أخرى.</strong> لا تملك أي نشرة
+        <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.3-UmXX0y", id: "super-admin.super-admin-cloud-accounts-content.strong.3" })}>لا يجوز لأي نشرة استدعاء نشرة أخرى.</strong> لا تملك أي نشرة
         رابط نشرة أخرى، ولا يوجد لديها مسار برمجي يصل إليها. كل عبور يمر عبر
         وحدة جسر (bridge) لا تُنشر على أي حساب إطلاقًا — بل تعمل داخل متصفح
         المستخدم:
       </Note>
-      <pre className="mt-3 overflow-x-auto rounded-lg border bg-surface p-3 text-[10px] leading-5 sm:p-4 sm:text-xs sm:leading-6" dir="ltr">
+      <pre {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.pre-Gf5mV8", id: "super-admin.super-admin-cloud-accounts-content.pre" })} className="mt-3 overflow-x-auto rounded-lg border bg-surface p-3 text-[10px] leading-5 sm:p-4 sm:text-xs sm:leading-6" dir="ltr">
 {`                          browser
         ╱───────────────────┼───────────────────╲
        ╱                    │                    ╲
@@ -237,7 +237,7 @@ export function SuperAdminCloudAccountsContent() {
         <span {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.span.55-5f2Iwb", id: "super-admin.super-admin-cloud-accounts-content.span.55" })} id="super-admin.super-admin-cloud-accounts-content.span.12" dir="ltr">gova</span> و<span {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.span.56-skt73W", id: "super-admin.super-admin-cloud-accounts-content.span.56" })} id="super-admin.super-admin-cloud-accounts-content.span.13" dir="ltr">submain</span> يحملان
         اعتمادات التشغيل الكاملة. <span {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.span.57-I5WJOZ", id: "super-admin.super-admin-cloud-accounts-content.span.57" })} id="super-admin.super-admin-cloud-accounts-content.span.14" dir="ltr">sub2main</span> يحمل
         اعتمادات المنتجات وشظايا البروفايل والمستخدمين لكتابات البائع. كل
-        نشرة للقراءة فقط تحمل <strong>فقط</strong> الشظايا التي تخدمها.
+        نشرة للقراءة فقط تحمل <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.4-FZEK07", id: "super-admin.super-admin-cloud-accounts-content.strong.4" })}>فقط</strong> الشظايا التي تخدمها.
       </Note>
 
       <SubTitle id="super-admin.super-admin-cloud-accounts-content.sub-title.2">hesham101 — {tursoDatabaseCount("hesham101")} قواعد بيانات</SubTitle>
@@ -278,7 +278,7 @@ export function SuperAdminCloudAccountsContent() {
       <Note id="super-admin.super-admin-cloud-accounts-content.note.6">
         <span {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.span.61-eM2m0W", id: "super-admin.super-admin-cloud-accounts-content.span.61" })} id="super-admin.super-admin-cloud-accounts-content.span.18" dir="ltr">system-ops</span> انفصلت عن نفس مصدر{" "}
         <span {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.span.62-yeHE23", id: "super-admin.super-admin-cloud-accounts-content.span.62" })} id="super-admin.super-admin-cloud-accounts-content.span.19" dir="ltr">profile.db</span> الذي جاءت منه شظايا البروفايل، لكنها{" "}
-        <strong>لم تنتقل إلى hesham105</strong>: فهي تحمل سجلات تشغيلية، لا
+        <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.5-A67p23", id: "super-admin.super-admin-cloud-accounts-content.strong.5" })}>لم تنتقل إلى hesham105</strong>: فهي تحمل سجلات تشغيلية، لا
         بيانات بروفايل.
       </Note>
 
@@ -422,21 +422,21 @@ export function SuperAdminCloudAccountsContent() {
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.51-Z0gU6H", id: "super-admin.super-admin-cloud-accounts-content.tr.51" })} id="super-admin.super-admin-cloud-accounts-content.tr.23" className="border-t align-top">
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.99-OHjb2L", id: "super-admin.super-admin-cloud-accounts-content.td.99" })} id="super-admin.super-admin-cloud-accounts-content.td.37" className="p-2 sm:p-3" dir="ltr">product-default</td>
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.100-Ep8BBA", id: "super-admin.super-admin-cloud-accounts-content.td.100" })} id="super-admin.super-admin-cloud-accounts-content.td.38" className="p-2 sm:p-3">
-              <strong>المنتجات</strong>
+              <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.6-4peAk5", id: "super-admin.super-admin-cloud-accounts-content.strong.6" })}>المنتجات</strong>
             </td>
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.101-IY2tG0", id: "super-admin.super-admin-cloud-accounts-content.td.101" })} id="super-admin.super-admin-cloud-accounts-content.td.39" className="p-2 sm:p-3" dir="ltr">images/products</td>
           </tr>
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.52-9oIGIJ", id: "super-admin.super-admin-cloud-accounts-content.tr.52" })} id="super-admin.super-admin-cloud-accounts-content.tr.24" className="border-t align-top">
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.102-5y67oI", id: "super-admin.super-admin-cloud-accounts-content.td.102" })} id="super-admin.super-admin-cloud-accounts-content.td.40" className="p-2 sm:p-3" dir="ltr">product-apparel-pets</td>
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.103-Mbas4K", id: "super-admin.super-admin-cloud-accounts-content.td.103" })} id="super-admin.super-admin-cloud-accounts-content.td.41" className="p-2 sm:p-3">
-              <strong>ملابس وحيوانات</strong>
+              <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.7-pBP3WR", id: "super-admin.super-admin-cloud-accounts-content.strong.7" })}>ملابس وحيوانات</strong>
             </td>
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.104-63JwBS", id: "super-admin.super-admin-cloud-accounts-content.td.104" })} id="super-admin.super-admin-cloud-accounts-content.td.42" className="p-2 sm:p-3" dir="ltr">images/products-apparel-pets</td>
           </tr>
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.53-Tl4jnP", id: "super-admin.super-admin-cloud-accounts-content.tr.53" })} id="super-admin.super-admin-cloud-accounts-content.tr.25" className="border-t align-top">
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.105-Ov7BSZ", id: "super-admin.super-admin-cloud-accounts-content.td.105" })} id="super-admin.super-admin-cloud-accounts-content.td.43" className="p-2 sm:p-3" dir="ltr">@asol/ota-core</td>
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.106-UWZf0W", id: "super-admin.super-admin-cloud-accounts-content.td.106" })} id="super-admin.super-admin-cloud-accounts-content.td.44" className="p-2 sm:p-3">
-              <strong>تحديثات OTA</strong>
+              <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.8-6cq7XX", id: "super-admin.super-admin-cloud-accounts-content.strong.8" })}>تحديثات OTA</strong>
             </td>
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.107-X4NyqN", id: "super-admin.super-admin-cloud-accounts-content.td.107" })} id="super-admin.super-admin-cloud-accounts-content.td.45" className="p-2 sm:p-3" dir="ltr">app-updates/</td>
           </tr>
@@ -473,7 +473,7 @@ export function SuperAdminCloudAccountsContent() {
         تزامن فقط ما يحتاجه كل حساب — بدون رموز نشر الحسابات الأخرى.
       </Note>
       <Note id="super-admin.super-admin-cloud-accounts-content.note.14">
-        <strong>القيمة الاحتياطية (fallback) التي تعبر حدود حساب ليست
+        <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.9-Yo6Pq6", id: "super-admin.super-admin-cloud-accounts-content.strong.9" })}>القيمة الاحتياطية (fallback) التي تعبر حدود حساب ليست
         قيمة افتراضية — إنها إعادة توجيه صامتة.</strong> كل سلسلة كهذه أُزيلت؛
         القيمة المفقودة الآن تفشل بصوت واضح.
       </Note>

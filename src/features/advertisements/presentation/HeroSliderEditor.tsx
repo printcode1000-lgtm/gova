@@ -114,7 +114,7 @@ export const HeroSliderEditor = React.forwardRef<
 
       <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.14-5Po6pm", id: "advertisements.hero-slider-editor.div.14" })} id="advertisements.hero-slider-editor.div.4" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.15-4xkLG1", id: "advertisements.hero-slider-editor.div.15" })} id="advertisements.hero-slider-editor.div.5" className="space-y-2">
-          <Label id="advertisements.hero-slider-editor.label" htmlFor="hero-template-transition">انتقال الشرائح الجديدة</Label>
+          <Label ui={{ uid: "advertisements.hero-slider-editor.label.5-4NNLOu", id: "advertisements.hero-slider-editor.label.5" }} id="advertisements.hero-slider-editor.label" htmlFor="hero-template-transition">انتقال الشرائح الجديدة</Label>
           <select
             {...uiAttributes({
               uid: "hero-slider-editor.template-transition-7PUD5Q",
@@ -138,7 +138,7 @@ export const HeroSliderEditor = React.forwardRef<
           </select>
         </div>
         <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.16-6NXXuo", id: "advertisements.hero-slider-editor.div.16" })} id="advertisements.hero-slider-editor.div.6" className="space-y-2">
-          <Label id="advertisements.hero-slider-editor.label.2" htmlFor="hero-template-transition-duration">
+          <Label ui={{ uid: "advertisements.hero-slider-editor.label.6-8qKnC9", id: "advertisements.hero-slider-editor.label.6" }} id="advertisements.hero-slider-editor.label.2" htmlFor="hero-template-transition-duration">
             مدة الانتقال الافتراضية (مللي ثانية)
           </Label>
           <Input ui={{ uid: "hero-slider-editor.template-transition-duration-Ts8XHR", id: "hero-slider-editor.template-transition-duration", kind: "field", part: "template" }}
@@ -179,7 +179,7 @@ export const HeroSliderEditor = React.forwardRef<
             checked={value.autoPlay}
             onCheckedChange={(autoPlay) => onChange({ ...value, autoPlay })}
           />
-          <Label id="advertisements.hero-slider-editor.label.3" htmlFor="hero-autoplay">تشغيل تلقائي</Label>
+          <Label ui={{ uid: "advertisements.hero-slider-editor.label.7-927RSI", id: "advertisements.hero-slider-editor.label.7" }} id="advertisements.hero-slider-editor.label.3" htmlFor="hero-autoplay">تشغيل تلقائي</Label>
         </div>
         <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.19-V3lnkh", id: "advertisements.hero-slider-editor.div.19" })} id="advertisements.hero-slider-editor.div.9" className="flex items-end gap-3 pb-2">
           <Switch ui={{ uid: "hero-slider-editor.loop-c9EBLn", id: "hero-slider-editor.loop", kind: "field", action: "toggle-loop", part: "template" }}
@@ -187,7 +187,7 @@ export const HeroSliderEditor = React.forwardRef<
             checked={value.loop}
             onCheckedChange={(loop) => onChange({ ...value, loop })}
           />
-          <Label id="advertisements.hero-slider-editor.label.4" htmlFor="hero-loop">تكرار الشرائح</Label>
+          <Label ui={{ uid: "advertisements.hero-slider-editor.label.8-Gmm4kj", id: "advertisements.hero-slider-editor.label.8" }} id="advertisements.hero-slider-editor.label.4" htmlFor="hero-loop">تكرار الشرائح</Label>
         </div>
       </div>
 
@@ -240,7 +240,7 @@ export const HeroSliderEditor = React.forwardRef<
             </div>
             <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.22-6N9C2H", id: "advertisements.hero-slider-editor.div.22" })} className="grid gap-3 sm:grid-cols-2">
               <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.23-3BaXfF", id: "advertisements.hero-slider-editor.div.23" })} className="space-y-2 sm:col-span-2">
-                <Label>صورة الشريحة</Label>
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.9-3XLojK", id: "advertisements.hero-slider-editor.label.9" }}>صورة الشريحة</Label>
                 <StorageImageManager
                   ref={(handle) => {
                     managerRefs.current[index] = handle;
@@ -281,7 +281,7 @@ export const HeroSliderEditor = React.forwardRef<
                 />
               </div>
               <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.24-Ka5Ld0", id: "advertisements.hero-slider-editor.div.24" })} className="space-y-2">
-                <Label htmlFor={`hero-title-${index}`}>العنوان</Label>
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.10-P9FtaP", id: "advertisements.hero-slider-editor.label.10" }} htmlFor={`hero-title-${index}`}>العنوان</Label>
                 <Input ui={{ uid: "advertisements.hero-slider-editor.input-Qt9eTO", id: "advertisements.hero-slider-editor.input" }}
                   id={`hero-title-${index}`}
                   value={slide.title}
@@ -291,7 +291,7 @@ export const HeroSliderEditor = React.forwardRef<
                 />
               </div>
               <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.25-8ueE52", id: "advertisements.hero-slider-editor.div.25" })} className="space-y-2">
-                <Label htmlFor={`hero-subtitle-${index}`}>الشارة</Label>
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.11-D3aeWp", id: "advertisements.hero-slider-editor.label.11" }} htmlFor={`hero-subtitle-${index}`}>الشارة</Label>
                 <Input ui={{ uid: "advertisements.hero-slider-editor.input.2-f40LW8", id: "advertisements.hero-slider-editor.input.2" }}
                   id={`hero-subtitle-${index}`}
                   value={slide.subtitle}
@@ -301,7 +301,7 @@ export const HeroSliderEditor = React.forwardRef<
                 />
               </div>
               <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.26-LMPJ0F", id: "advertisements.hero-slider-editor.div.26" })} className="space-y-2">
-                <Label htmlFor={`hero-action-${index}`}>الإجراء</Label>
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.12-xo3a8K", id: "advertisements.hero-slider-editor.label.12" }} htmlFor={`hero-action-${index}`}>الإجراء</Label>
                 <Input ui={{ uid: "advertisements.hero-slider-editor.input.3-V6L15P", id: "advertisements.hero-slider-editor.input.3" }}
                   id={`hero-action-${index}`}
                   value={slide.action}
@@ -311,7 +311,7 @@ export const HeroSliderEditor = React.forwardRef<
                 />
               </div>
               <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.27-8BRUyL", id: "advertisements.hero-slider-editor.div.27" })} className="space-y-2">
-                <Label htmlFor={`hero-transition-${index}`}>
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.13-Hc4NZ7", id: "advertisements.hero-slider-editor.label.13" }} htmlFor={`hero-transition-${index}`}>
                   نوع الانتقال عند الدخول
                 </Label>
                 <select {...uiAttributes({ uid: "advertisements.hero-slider-editor.select-JTJYg9", id: "advertisements.hero-slider-editor.select" })}
@@ -332,7 +332,7 @@ export const HeroSliderEditor = React.forwardRef<
                 </select>
               </div>
               <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.28-OGA2f0", id: "advertisements.hero-slider-editor.div.28" })} className="space-y-2">
-                <Label htmlFor={`hero-transition-duration-${index}`}>
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.14-Su1c7t", id: "advertisements.hero-slider-editor.label.14" }} htmlFor={`hero-transition-duration-${index}`}>
                   مدة الانتقال (مللي ثانية)
                 </Label>
                 <Input ui={{ uid: "advertisements.hero-slider-editor.input.4-mh0WNM", id: "advertisements.hero-slider-editor.input.4" }}
@@ -350,7 +350,7 @@ export const HeroSliderEditor = React.forwardRef<
                 />
               </div>
               <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.29-gxEC92", id: "advertisements.hero-slider-editor.div.29" })} className="space-y-2">
-                <Label htmlFor={`hero-duration-${index}`}>
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.15-I7OwJt", id: "advertisements.hero-slider-editor.label.15" }} htmlFor={`hero-duration-${index}`}>
                   مدة العرض (مللي ثانية)
                 </Label>
                 <Input ui={{ uid: "advertisements.hero-slider-editor.input.5-n9fWCi", id: "advertisements.hero-slider-editor.input.5" }}

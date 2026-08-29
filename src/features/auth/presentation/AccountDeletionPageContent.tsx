@@ -233,10 +233,10 @@ export function AccountDeletionPageContent() {
         <label {...uiAttributes({ uid: "auth.account-deletion-page-content.label.5-6EZ823", id: "auth.account-deletion-page-content.label.5" })} id="auth.account-deletion-page-content.label.2" className="block space-y-2 font-semibold">
           {c.phrase}
           <div {...uiAttributes({ uid: "auth.account-deletion-page-content.div.9-LJ1l3X", id: "auth.account-deletion-page-content.div.9" })} id="auth.account-deletion-page-content.div.4" className="space-y-2">
-            <code dir="ltr" className="block rounded-xl bg-surface-container p-3 text-center text-base">
+            <code {...uiAttributes({ uid: "auth.account-deletion-page-content.code-5jnlEl", id: "auth.account-deletion-page-content.code" })} dir="ltr" className="block rounded-xl bg-surface-container p-3 text-center text-base">
               {ACCOUNT_DELETION_PHRASE_AR}
             </code>
-            <code dir="ltr" className="block rounded-xl bg-surface-container p-3 text-center text-base">
+            <code {...uiAttributes({ uid: "auth.account-deletion-page-content.code.2-htNv7D", id: "auth.account-deletion-page-content.code.2" })} dir="ltr" className="block rounded-xl bg-surface-container p-3 text-center text-base">
               {ACCOUNT_DELETION_PHRASE_EN}
             </code>
           </div>

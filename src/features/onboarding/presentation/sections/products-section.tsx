@@ -83,15 +83,15 @@ export function ProductsSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.5-M9VKT7", id: "onboarding.sections.products-section.div.5" })} id="onboarding.sections.products-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.products-section.card">
-        <CardHeader id="onboarding.sections.products-section.card-header">
-          <CardTitle id="onboarding.sections.products-section.card-title" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.products-section.card.2-ck08dV", id: "onboarding.sections.products-section.card.2" }} id="onboarding.sections.products-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.products-section.card-header.2-St1kBO", id: "onboarding.sections.products-section.card-header.2" }} id="onboarding.sections.products-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.products-section.card-title.2-5v2Lmh", id: "onboarding.sections.products-section.card-title.2" }} id="onboarding.sections.products-section.card-title" className="flex items-center gap-2">
             <Package id="onboarding.sections.products-section.package" className="h-5 w-5" />
             {t('onboarding.products.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.products-section.card-description">{t('onboarding.products.description')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.products-section.card-description.2-9DC3bL", id: "onboarding.sections.products-section.card-description.2" }} id="onboarding.sections.products-section.card-description">{t('onboarding.products.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.products-section.card-content">
+        <CardContent ui={{ uid: "onboarding.sections.products-section.card-content.2-zCRZ9J", id: "onboarding.sections.products-section.card-content.2" }} id="onboarding.sections.products-section.card-content">
           {showForm && editingProduct ? (
             <ProductForm
               product={editingProduct}
@@ -126,7 +126,7 @@ export function ProductsSection() {
                     <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.11-fZd9jT", id: "onboarding.sections.products-section.div.11" })} className="flex items-center gap-2">
                       <h4 {...uiAttributes({ uid: "onboarding.sections.products-section.h4-1TR4gv", id: "onboarding.sections.products-section.h4" })} className="font-medium truncate">{product.title}</h4>
                       {product.isFeatured && (
-                        <Badge variant="secondary">{t('onboarding.products.featuredBadge')}</Badge>
+                        <Badge ui={{ uid: "onboarding.sections.products-section.badge-z7MtjP", id: "onboarding.sections.products-section.badge" }} variant="secondary">{t('onboarding.products.featuredBadge')}</Badge>
                       )}
                     </div>
                     <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.12-RJWZG2", id: "onboarding.sections.products-section.div.12" })} className="flex items-center gap-4 text-sm text-muted-foreground mt-1">

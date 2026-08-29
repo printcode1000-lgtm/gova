@@ -5,6 +5,7 @@ import { AppInitScript } from "@/shared/app-init";
 import { THEME_COLOR_LIGHT } from "@/shared/theme/runtime";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 config.autoAddCss = false;
 
@@ -71,7 +72,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
+    <html {...uiAttributes({ uid: "layout.html-U8WxJi", id: "layout.html" })}
       lang="ar"
       dir="rtl"
       data-theme="light"
@@ -79,11 +80,11 @@ export default function RootLayout({
       data-app-hydrated="false"
       suppressHydrationWarning
     >
-      <head>
-        <meta name="theme-color" content={THEME_COLOR_LIGHT} />
+      <head {...uiAttributes({ uid: "layout.head-SUGA0E", id: "layout.head" })}>
+        <meta {...uiAttributes({ uid: "layout.meta-9Z4EYk", id: "layout.meta" })} name="theme-color" content={THEME_COLOR_LIGHT} />
         <AppInitScript />
       </head>
-      <body className="antialiased">
+      <body {...uiAttributes({ uid: "layout.body-OK126N", id: "layout.body" })} className="antialiased">
         <PreAuthFailureMonitor />
         <InstallationBootstrap>
           <AppQueryProvider>

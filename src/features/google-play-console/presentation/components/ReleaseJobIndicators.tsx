@@ -92,7 +92,7 @@ export function StatusChip({ id, job, t }: {
       {job.activity ? (
         <span {...uiAttributes({ uid: "google-play-console.release-job-indicators.span.3-bLP1FV", id: "google-play-console.release-job-indicators.span.3" })} dir="ltr" className="shrink-0 font-mono opacity-80">{job.activity}</span>
       ) : null}
-      <code dir="ltr" className="shrink-0">{job.id}</code>
+      <code {...uiAttributes({ uid: "google-play-console.release-job-indicators.code-JV5QvO", id: "google-play-console.release-job-indicators.code" })} dir="ltr" className="shrink-0">{job.id}</code>
       {job.error ? (
         <span {...uiAttributes({ uid: "google-play-console.release-job-indicators.span.4-kO59fN", id: "google-play-console.release-job-indicators.span.4" })} dir="ltr" className="min-w-0 truncate">{job.error}</span>
       ) : null}

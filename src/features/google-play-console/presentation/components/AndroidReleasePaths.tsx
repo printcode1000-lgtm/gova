@@ -70,7 +70,7 @@ export function AndroidReleasePaths({
             {t("releaseConsole.androidPaths.phaseHelp")}
           </p>
           <Tabs className="mt-2" value={activePath} onValueChange={setActivePath}>
-            <TabsList id="google-play-console.android-release-paths.tabs-list" className="flex h-auto w-full flex-wrap justify-start gap-1">
+            <TabsList ui={{ uid: "google-play-console.android-release-paths.tabs-list.2-tNKz37", id: "google-play-console.android-release-paths.tabs-list.2" }} id="google-play-console.android-release-paths.tabs-list" className="flex h-auto w-full flex-wrap justify-start gap-1">
               {ANDROID_RELEASE_PATHS.map((path) => (
                 <TabsTrigger key={path.id} ui={{ uid: "google-play-console.android-release-paths.tabs-trigger-0IpQ8l", id: "google-play-console.android-release-paths.tabs-trigger" }} value={path.id}>
                   {t(path.title)}
@@ -78,7 +78,7 @@ export function AndroidReleasePaths({
               ))}
             </TabsList>
             {ANDROID_RELEASE_PATHS.map((path) => (
-              <TabsContent key={path.id} value={path.id} className="mt-2 space-y-3">
+              <TabsContent key={path.id} ui={{ uid: "google-play-console.android-release-paths.tabs-content-WRo24V", id: "google-play-console.android-release-paths.tabs-content" }} value={path.id} className="mt-2 space-y-3">
                 <p {...uiAttributes({ uid: "google-play-console.android-release-paths.p.6-5BqQgX", id: "google-play-console.android-release-paths.p.6" })} className="text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
                 <AndroidReleaseRunbookTree
                   runbook={androidReleaseRunbookFor(path.id)}

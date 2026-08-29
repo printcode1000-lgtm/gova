@@ -236,7 +236,7 @@ export function SimulationProgressPanel({ id,
               <h3 {...uiAttributes({ uid: "simulation.simulation-progress-panel.h3-Fb5mzx", id: "simulation.simulation-progress-panel.h3" })} className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-bold text-on-surface">
                 <span {...uiAttributes({ uid: "simulation.simulation-progress-panel.span-6enXzQ", id: "simulation.simulation-progress-panel.span" })} className="break-words">الصفحة: {group.pageLabel}</span>
                 {group.pageRoute ? (
-                  <code className="max-w-full break-all rounded-md bg-surface-container-low px-2 py-1 text-[11px] font-semibold text-primary" dir="ltr">
+                  <code {...uiAttributes({ uid: "simulation.simulation-progress-panel.code-RBOR7l", id: "simulation.simulation-progress-panel.code" })} className="max-w-full break-all rounded-md bg-surface-container-low px-2 py-1 text-[11px] font-semibold text-primary" dir="ltr">
                     {group.pageRoute}
                   </code>
                 ) : null}
@@ -270,7 +270,7 @@ export function SimulationProgressPanel({ id,
           {pageLabel ? (
             <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.14-GEKI3H", id: "simulation.simulation-progress-panel.div.14" })} className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold text-on-surface">
               <span {...uiAttributes({ uid: "simulation.simulation-progress-panel.span.4-ZpEb8u", id: "simulation.simulation-progress-panel.span.4" })} className="break-words">الصفحة: {pageLabel}</span>
-              {pageRoute ? <code className="max-w-full break-all text-xs text-primary" dir="ltr">{pageRoute}</code> : null}
+              {pageRoute ? <code {...uiAttributes({ uid: "simulation.simulation-progress-panel.code.2-3GZgbr", id: "simulation.simulation-progress-panel.code.2" })} className="max-w-full break-all text-xs text-primary" dir="ltr">{pageRoute}</code> : null}
             </div>
           ) : null}
           <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.15-I78As0", id: "simulation.simulation-progress-panel.div.15" })} className="text-sm font-semibold text-on-surface">

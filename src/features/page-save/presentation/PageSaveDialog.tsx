@@ -92,11 +92,11 @@ export function PageSaveDialog() {
           <div {...uiAttributes({ uid: "page-save.page-save-dialog.div.7-lhaIh6", id: "page-save.page-save-dialog.div.7" })} id="page-save.page-save-dialog.div.3" className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg shadow-primary/25">
             <Save id="page-save.page-save-dialog.save" className="h-8 w-8" aria-hidden="true" />
           </div>
-          <DialogHeader id="page-save.page-save-dialog.dialog-header" className="relative mt-5 text-center sm:text-center">
-            <DialogTitle id="page-save.page-save-dialog.dialog-title" className="text-2xl leading-tight">
+          <DialogHeader ui={{ uid: "page-save.page-save-dialog.dialog-header.2-SD2KxS", id: "page-save.page-save-dialog.dialog-header.2" }} id="page-save.page-save-dialog.dialog-header" className="relative mt-5 text-center sm:text-center">
+            <DialogTitle ui={{ uid: "page-save.page-save-dialog.dialog-title.2-5j2G9C", id: "page-save.page-save-dialog.dialog-title.2" }} id="page-save.page-save-dialog.dialog-title" className="text-2xl leading-tight">
               {t("pageSave.dialogTitle")}
             </DialogTitle>
-            <DialogDescription id="page-save.page-save-dialog.dialog-description" className="pt-2 text-sm leading-6 text-on-surface-variant">
+            <DialogDescription ui={{ uid: "page-save.page-save-dialog.dialog-description.2-Y8XyDK", id: "page-save.page-save-dialog.dialog-description.2" }} id="page-save.page-save-dialog.dialog-description" className="pt-2 text-sm leading-6 text-on-surface-variant">
               {dialog?.pageLabel ?? t("pageSave.interrupted.heading")}
             </DialogDescription>
           </DialogHeader>
@@ -200,7 +200,7 @@ export function PageSaveDialog() {
           </p>
         ) : null}
 
-        <DialogFooter id="page-save.page-save-dialog.dialog-footer" className="flex-row flex-nowrap gap-2 px-6 pb-6 pt-2 sm:flex-row sm:space-x-0">
+        <DialogFooter ui={{ uid: "page-save.page-save-dialog.dialog-footer.2-EwmJm9", id: "page-save.page-save-dialog.dialog-footer.2" }} id="page-save.page-save-dialog.dialog-footer" className="flex-row flex-nowrap gap-2 px-6 pb-6 pt-2 sm:flex-row sm:space-x-0">
           <Button id="page-save.page-save-dialog.button"
             type="button"
             size="lg"

@@ -48,18 +48,18 @@ export function ReturnsSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.6-4MQ3PX", id: "onboarding.sections.returns-section.div.6" })} id="onboarding.sections.returns-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.returns-section.card">
-        <CardHeader id="onboarding.sections.returns-section.card-header">
-          <CardTitle id="onboarding.sections.returns-section.card-title" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.returns-section.card.2-hK7Z9b", id: "onboarding.sections.returns-section.card.2" }} id="onboarding.sections.returns-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.returns-section.card-header.2-KP5ATe", id: "onboarding.sections.returns-section.card-header.2" }} id="onboarding.sections.returns-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.returns-section.card-title.2-5aS0Z5", id: "onboarding.sections.returns-section.card-title.2" }} id="onboarding.sections.returns-section.card-title" className="flex items-center gap-2">
             <RotateCcw id="onboarding.sections.returns-section.rotate-ccw" className="h-5 w-5" />
             {t('onboarding.returns.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.returns-section.card-description">{t('onboarding.returns.description')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.returns-section.card-description.2-M4X0LY", id: "onboarding.sections.returns-section.card-description.2" }} id="onboarding.sections.returns-section.card-description">{t('onboarding.returns.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.returns-section.card-content" className="space-y-6">
+        <CardContent ui={{ uid: "onboarding.sections.returns-section.card-content.2-3OOXzH", id: "onboarding.sections.returns-section.card-content.2" }} id="onboarding.sections.returns-section.card-content" className="space-y-6">
           <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.7-Ur0GpK", id: "onboarding.sections.returns-section.div.7" })} id="onboarding.sections.returns-section.div.2" className="space-y-4">
-            <Label id="onboarding.sections.returns-section.label" className="text-base">{t('onboarding.returns.policyType')}</Label>
-            <RadioGroup id="onboarding.sections.returns-section.radio-group"
+            <Label ui={{ uid: "onboarding.sections.returns-section.label.2-8a3lBB", id: "onboarding.sections.returns-section.label.2" }} id="onboarding.sections.returns-section.label" className="text-base">{t('onboarding.returns.policyType')}</Label>
+            <RadioGroup ui={{ uid: "onboarding.sections.returns-section.radio-group.2-J2UP3G", id: "onboarding.sections.returns-section.radio-group.2" }} id="onboarding.sections.returns-section.radio-group"
               value={returns.policyType}
               onValueChange={(v) => updateReturns({ policyType: v as ReturnPolicyType })}
               className="grid gap-3 sm:grid-cols-2"
@@ -76,7 +76,7 @@ export function ReturnsSection() {
                 >
                   <RadioGroupItem ui={POLICY_TYPE_UI[policy]} value={policy} id={policy} className="mt-0.5" />
                   <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.9-Y3QGzW", id: "onboarding.sections.returns-section.div.9" })} className="flex-1">
-                    <Label htmlFor={policy} className="font-medium">
+                    <Label ui={{ uid: "onboarding.sections.returns-section.label.3-gYY3L0", id: "onboarding.sections.returns-section.label.3" }} htmlFor={policy} className="font-medium">
                       {t(`onboarding.returns.policyTypes.${policy}.label`)}
                     </Label>
                     <p {...uiAttributes({ uid: "onboarding.sections.returns-section.p-55UNY5", id: "onboarding.sections.returns-section.p" })} className="text-sm text-muted-foreground mt-1">

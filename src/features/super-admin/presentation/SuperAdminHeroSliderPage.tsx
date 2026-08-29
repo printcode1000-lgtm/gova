@@ -262,7 +262,7 @@ export function SuperAdminHeroSliderPage() {
         </div>
         <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.18-7GLEpH", id: "super-admin.super-admin-hero-slider-page.div.18" })} id="super-admin.super-admin-hero-slider-page.div.8" className="flex flex-wrap items-end gap-3">
           <div {...uiAttributes({ uid: "super-admin.super-admin-hero-slider-page.div.19-23LA0T", id: "super-admin.super-admin-hero-slider-page.div.19" })} id="super-admin.super-admin-hero-slider-page.div.9" className="min-w-52 space-y-2">
-            <Label id="super-admin.super-admin-hero-slider-page.label" htmlFor="super-admin.hero-slider.check-interval">الفترة بالدقائق</Label>
+            <Label ui={{ uid: "super-admin.super-admin-hero-slider-page.label.2-n3TZx5", id: "super-admin.super-admin-hero-slider-page.label.2" }} id="super-admin.super-admin-hero-slider-page.label" htmlFor="super-admin.hero-slider.check-interval">الفترة بالدقائق</Label>
             <Input ui={{ uid: "super-admin.hero-slider.check-interval-YL9yfX", id: "super-admin.hero-slider.check-interval", kind: "field", part: "settings" }}
               id="super-admin.hero-slider.check-interval"
               type="number"

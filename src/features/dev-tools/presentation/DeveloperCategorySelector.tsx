@@ -304,7 +304,7 @@ export function DeveloperCategorySelector() {
 
         {isLoading ? (
           <div {...uiAttributes({ uid: "dev-tools.developer-category-selector.div.14-A82BXI", id: "dev-tools.developer-category-selector.div.14" })} id="dev-tools.developer-category-selector.div" className="flex min-h-48 items-center justify-center">
-            <LoadingSpinner id="dev-tools.developer-category-selector.loading-spinner" />
+            <LoadingSpinner ui={{ uid: "dev-tools.developer-category-selector.loading-spinner.2-16M64i", id: "dev-tools.developer-category-selector.loading-spinner.2" }} id="dev-tools.developer-category-selector.loading-spinner" />
           </div>
         ) : loadError ? (
           <p {...uiAttributes({ uid: "dev-tools.developer-category-selector.p.6-MEl3k9", id: "dev-tools.developer-category-selector.p.6" })} id="dev-tools.developer-category-selector.p.3" className="mt-8 rounded-2xl bg-destructive/10 p-4 text-sm text-destructive">
@@ -324,7 +324,7 @@ export function DeveloperCategorySelector() {
                 <SelectContent id="dev-tools.developer-category-selector.select-content">
                   {mainCategoryOptions.map((category) => (
                     <SelectItem
-                      key={category.id}
+                      key={category.id} ui={{ uid: "dev-tools.developer-category-selector.select-item-oDQ2K4", id: "dev-tools.developer-category-selector.select-item" }}
                       value={category.id.toString()}
                     >
                       {bilingualLabel(category.titleAr, category.titleEn)}
@@ -353,7 +353,7 @@ export function DeveloperCategorySelector() {
                 <SelectContent id="dev-tools.developer-category-selector.select-content.2">
                   {subcategoryOptions.map((subcategory) => (
                     <SelectItem
-                      key={subcategory.value}
+                      key={subcategory.value} ui={{ uid: "dev-tools.developer-category-selector.select-item.2-g2H2l7", id: "dev-tools.developer-category-selector.select-item.2" }}
                       value={subcategory.value}
                     >
                       {bilingualLabel(subcategory.titleAr, subcategory.titleEn)}
@@ -363,7 +363,7 @@ export function DeveloperCategorySelector() {
               </Select>
             </div>
 
-            <details className="group sm:col-span-2">
+            <details {...uiAttributes({ uid: "dev-tools.developer-category-selector.details-q3VKI6", id: "dev-tools.developer-category-selector.details" })} className="group sm:col-span-2">
               <summary {...uiAttributes({ uid: "dev-tools.developer-category-selector.summary.2-6gA5wU", id: "dev-tools.developer-category-selector.summary.2" })} id="dev-tools.developer-category-selector.summary" className="flex list-none items-center justify-between rounded-xl border bg-muted/40 px-4 py-3 font-semibold transition-colors">
                 <span {...uiAttributes({ uid: "dev-tools.developer-category-selector.span.4-hsvQH3", id: "dev-tools.developer-category-selector.span.4" })} id="dev-tools.developer-category-selector.span">معلومات العناصر المختارة</span>
                 <span {...uiAttributes({ uid: "dev-tools.developer-category-selector.span.5-D6yDfg", id: "dev-tools.developer-category-selector.span.5" })} id="dev-tools.developer-category-selector.span.2" className="text-lg text-muted-foreground transition-transform group-open:rotate-180">

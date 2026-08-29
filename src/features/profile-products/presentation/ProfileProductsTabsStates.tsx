@@ -6,7 +6,7 @@ import { uiAttributes } from "@asol/ui-registry-core";
 export function ProfileProductsTabsLoading({ id, size = "lg" }: { size?: "sm" | "lg" } & { id?: string }) {
   return (
     <div {...uiAttributes({ uid: "profile-products.profile-products-tabs-states.div-31MnZZ", id: "profile-products.profile-products-tabs-states.div" })} id={id} className="flex justify-center py-8">
-      <LoadingSpinner size={size} />
+      <LoadingSpinner ui={{ uid: "profile-products.profile-products-tabs-states.loading-spinner-5U5Fr8", id: "profile-products.profile-products-tabs-states.loading-spinner" }} size={size} />
     </div>
   );
 }

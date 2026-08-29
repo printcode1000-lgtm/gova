@@ -36,7 +36,7 @@ export function StoreTextTab() {
         {store.listings.map((listing, index) => (
           <section key={`${listing.language}:${index}`} {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.section.3-N2sN6n", id: "google-play-console.tabs.store-text-tab.section.3" })} className="rounded-md border bg-surface p-4">
             <div {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.div.8-TBG7H3", id: "google-play-console.tabs.store-text-tab.div.8" })} className="mb-3 flex justify-between gap-2">
-              <strong>{listing.language || t("releaseConsole.text.newLanguage")}</strong>
+              <strong {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.strong-C7S3At", id: "google-play-console.tabs.store-text-tab.strong" })}>{listing.language || t("releaseConsole.text.newLanguage")}</strong>
               <Button ui={{ uid: "google-play-console.tabs.store-text-tab.button.2-F6YCSK", id: "google-play-console.tabs.store-text-tab.button.2" }} size="icon" variant="outline"
                 aria-label={t("releaseConsole.actions.stageDelete")}
                 onClick={() => store.stageListingDelete(listing.language)}>
@@ -76,7 +76,7 @@ export function StoreTextTab() {
       </div>
       <aside {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.aside.2-Xd8LJ0", id: "google-play-console.tabs.store-text-tab.aside.2" })} id="google-play-console.tabs.store-text-tab.aside" className="rounded-md border bg-surface p-4">
         <h2 {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.h2.2-sU03s6", id: "google-play-console.tabs.store-text-tab.h2.2" })} id="google-play-console.tabs.store-text-tab.h2" className="text-sm font-semibold">{t("releaseConsole.text.pendingDiff")}</h2>
-        <pre className="mt-2 max-h-96 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
+        <pre {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.pre-o7ztmX", id: "google-play-console.tabs.store-text-tab.pre" })} className="mt-2 max-h-96 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
           {JSON.stringify({ before: store.snapshot.listings, after: store.listings }, null, 2)}
         </pre>
         <label {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.label.3-YUX0JT", id: "google-play-console.tabs.store-text-tab.label.3" })} id="google-play-console.tabs.store-text-tab.label" className="mt-3 flex items-center gap-2 text-sm">

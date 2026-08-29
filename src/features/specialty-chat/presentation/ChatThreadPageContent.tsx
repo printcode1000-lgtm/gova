@@ -172,7 +172,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
           <MessageCircle id="specialty-chat.chat-thread-page-content.message-circle.2" className="h-5 w-5" />
         </span>
         <span {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.span.5-1JjKWE", id: "specialty-chat.chat-thread-page-content.span.5" })} id="specialty-chat.chat-thread-page-content.span.2" className="min-w-0">
-          <strong className="block truncate text-on-surface">{title}</strong>
+          <strong {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.strong-JQr9jR", id: "specialty-chat.chat-thread-page-content.strong" })} className="block truncate text-on-surface">{title}</strong>
           {specialty ? <span {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.span.6-BF1Vao", id: "specialty-chat.chat-thread-page-content.span.6" })} id="specialty-chat.chat-thread-page-content.span.3" className="block truncate text-xs text-muted-foreground">{specialty}</span> : null}
         </span>
       </header>
@@ -187,7 +187,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
             <React.Fragment key={message.id}>
               {showDay ? (
                 <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.5-kcX9AN", id: "specialty-chat.chat-thread-page-content.div.5" })} className="flex justify-center py-2">
-                  <time className="rounded-full bg-surface-container px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
+                  <time {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.time-9aJNHo", id: "specialty-chat.chat-thread-page-content.time" })} className="rounded-full bg-surface-container px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
                     {formatChatMessageDay(message.createdAt, locale)}
                   </time>
                 </div>

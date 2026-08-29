@@ -7,6 +7,7 @@ import {
   UI_PAGE_REGISTRY,
   UI_UID_ATTRIBUTE,
   UI_UID_SUFFIX_LENGTH,
+  createUiInstanceId,
   createUiUid,
   generateUiUid,
   isUiInstanceId,
@@ -243,11 +244,30 @@ assert.equal(isUiInstanceId("a".repeat(65)), false);
 assert.equal(isUiInstanceId("has space"), false);
 assert.equal(isUiInstanceId("user@example.com"), false);
 
+// createUiInstanceId is the only door: content, not just shape, is checked.
+assert.equal(createUiInstanceId("order-8f21"), "order-8f21");
+assert.throws(() => createUiInstanceId("user@example.com"), /email/);
+assert.throws(() => createUiInstanceId("+15551234567"), /phone number/);
+assert.throws(() => createUiInstanceId("5551234567"), /phone number/);
+assert.throws(() => createUiInstanceId("https://example.com/x"), /resolved URL/);
+assert.throws(() => createUiInstanceId("sk_live_abc123"), /token or secret/);
+assert.throws(
+  () => createUiInstanceId("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.dQw4w9WgXcQ"),
+  /token or secret/,
+);
+assert.throws(() => createUiInstanceId("550e8400-e29b-41d4-a716-446655440000"), /UUID/);
+assert.equal(
+  createUiInstanceId("550e8400-e29b-41d4-a716-446655440000", { allowUuid: true }),
+  "550e8400-e29b-41d4-a716-446655440000",
+);
+assert.throws(() => createUiInstanceId(""), /must not be empty/);
+assert.throws(() => createUiInstanceId("a".repeat(65)), /at most 64 characters/);
+
 const rowDescriptor: UiDescriptor = {
   uid: "orders.item-row-A8K3xP",
   id: "orders.item-row",
   kind: "item",
-  instance: "order-8f21",
+  instance: createUiInstanceId("order-8f21"),
 };
 assert.deepEqual(uiAttributes(rowDescriptor), {
   "data-ui-uid": "orders.item-row-A8K3xP",
@@ -258,12 +278,11 @@ assert.deepEqual(uiAttributes(rowDescriptor), {
 // Two runtime rows from the same usage site share the source uid and differ
 // only by instance — that sharing is intentional, not a duplicate.
 assert.deepEqual(
-  uiAttributes({ ...rowDescriptor, instance: "order-51z0" })["data-ui-uid"],
+  uiAttributes({ ...rowDescriptor, instance: createUiInstanceId("order-51z0") })["data-ui-uid"],
   rowDescriptor.uid,
 );
 // A usage site that renders once has no instance field, and none is emitted.
 assert.equal(UI_INSTANCE_ATTRIBUTE in uiAttributes({ uid: "orders.title-Zt4Km9", id: "orders.title" }), false);
-assert.throws(() => uiAttributes({ ...rowDescriptor, instance: "user@example.com" }));
 
 // Generic shared primitives are an intentional unregistered fallback: no uid.
 assert.deepEqual(uiComponentAttributes("button", "disabled"), {
@@ -302,11 +321,17 @@ for (const file of sourceFiles(packageSrc)) {
       `${label} may only import inside the package; found "${specifier[1]}".`,
     );
   }
-  assert.doesNotMatch(
-    source,
-    /\b(?:window|document|navigator|localStorage|process|require|Math\.random|crypto)\b/,
-    `${label} must not touch platform globals or runtime randomness.`,
-  );
+  // Generated data catalogs are arrays of string literals (uids, ids, file
+  // paths) with no executable logic; a semantic id like "document-upload" or
+  // a source path containing "process" would otherwise false-positive here.
+  // The import-specifier check above still runs unconditionally.
+  if (!label.includes("/generated/")) {
+    assert.doesNotMatch(
+      source,
+      /\b(?:window|document|navigator|localStorage|process|require|Math\.random|crypto)\b/,
+      `${label} must not touch platform globals or runtime randomness.`,
+    );
+  }
 }
 
 console.log("UI registry core contract tests passed.");

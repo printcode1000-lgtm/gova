@@ -304,8 +304,8 @@ function ChatConversationList({
             </span>
             <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.6-0TJ8XA", id: "notifications.notifications-page-content.span.6" })} className="min-w-0 flex-1">
               <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.7-PX2cRu", id: "notifications.notifications-page-content.span.7" })} className="flex items-center justify-between gap-3">
-                <strong className="truncate text-sm text-on-surface">{title}</strong>
-                <time className="shrink-0 text-[11px] text-on-surface-variant">
+                <strong {...uiAttributes({ uid: "notifications.notifications-page-content.strong-2xTYQ9", id: "notifications.notifications-page-content.strong" })} className="truncate text-sm text-on-surface">{title}</strong>
+                <time {...uiAttributes({ uid: "notifications.notifications-page-content.time-rL7o8X", id: "notifications.notifications-page-content.time" })} className="shrink-0 text-[11px] text-on-surface-variant">
                   {formatDate(conversation.latest.createdAt, locale)}
                 </time>
               </span>
@@ -421,7 +421,7 @@ function NotificationGroupCard({
       </div>
 
       {group.items.length > 1 ? (
-        <details className="border-t border-outline-variant/70 bg-surface-container/50">
+        <details {...uiAttributes({ uid: "notifications.notifications-page-content.details-1b9vRI", id: "notifications.notifications-page-content.details" })} className="border-t border-outline-variant/70 bg-surface-container/50">
           <summary {...uiAttributes({ uid: "notifications.notifications-page-content.summary-WbqN7M", id: "notifications.notifications-page-content.summary" })} className="flex list-none items-center justify-between gap-2 px-4 py-3 text-sm font-semibold text-primary">
             <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.13-GZu6AP", id: "notifications.notifications-page-content.span.13" })}>
               {locale === "ar"
@@ -436,7 +436,7 @@ function NotificationGroupCard({
                 <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.14-LzaE4k", id: "notifications.notifications-page-content.span.14" })} className={cn("absolute -start-1.5 top-1 h-3 w-3 rounded-full", index === 0 ? "bg-primary" : "bg-outline-variant")} />
                 <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.8-2U9gId", id: "notifications.notifications-page-content.p.8" })} className="text-sm font-semibold text-on-surface">{item.title}</p>
                 <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.9-R4ha5C", id: "notifications.notifications-page-content.p.9" })} className="mt-0.5 text-sm text-on-surface-variant">{item.body}</p>
-                <time className="mt-1 block text-[11px] text-on-surface-variant">{formatDate(item.createdAt, locale)}</time>
+                <time {...uiAttributes({ uid: "notifications.notifications-page-content.time.2-3lYQBu", id: "notifications.notifications-page-content.time.2" })} className="mt-1 block text-[11px] text-on-surface-variant">{formatDate(item.createdAt, locale)}</time>
               </li>
             ))}
           </ol>

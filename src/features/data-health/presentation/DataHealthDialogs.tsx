@@ -67,9 +67,9 @@ function IssueDetailDialog({
   return (
     <Dialog open={Boolean(detail)} onOpenChange={(open) => !open && setDetail(null)}>
       <DialogContent id="data-health.data-health-dialogs.dialog-content" className="max-h-[85vh] max-w-2xl overflow-y-auto" dir="rtl">
-        <DialogHeader id="data-health.data-health-dialogs.dialog-header">
-          <DialogTitle id="data-health.data-health-dialogs.dialog-title">{detail?.title}</DialogTitle>
-          <DialogDescription id="data-health.data-health-dialogs.dialog-description">{detail?.details}</DialogDescription>
+        <DialogHeader ui={{ uid: "data-health.data-health-dialogs.dialog-header.4-tGG4WV", id: "data-health.data-health-dialogs.dialog-header.4" }} id="data-health.data-health-dialogs.dialog-header">
+          <DialogTitle ui={{ uid: "data-health.data-health-dialogs.dialog-title.4-39cJO0", id: "data-health.data-health-dialogs.dialog-title.4" }} id="data-health.data-health-dialogs.dialog-title">{detail?.title}</DialogTitle>
+          <DialogDescription ui={{ uid: "data-health.data-health-dialogs.dialog-description.4-5H3DZh", id: "data-health.data-health-dialogs.dialog-description.4" }} id="data-health.data-health-dialogs.dialog-description">{detail?.details}</DialogDescription>
         </DialogHeader>
         {detail ? (
           <div {...uiAttributes({ uid: "data-health.data-health-dialogs.div.11-W0TCiv", id: "data-health.data-health-dialogs.div.11" })} id="data-health.data-health-dialogs.div" className="space-y-3 text-sm">
@@ -80,7 +80,7 @@ function IssueDetailDialog({
             <DetailRow id="data-health.data-health-dialogs.detail-row.5" label="الإجراء" value={cleanupLabels[detail.cleanupAction]} />
             <div {...uiAttributes({ uid: "data-health.data-health-dialogs.div.12-KXK6gK", id: "data-health.data-health-dialogs.div.12" })} id="data-health.data-health-dialogs.div.2">
               <div {...uiAttributes({ uid: "data-health.data-health-dialogs.div.13-hTQh1n", id: "data-health.data-health-dialogs.div.13" })} id="data-health.data-health-dialogs.div.3" className="mb-1 text-xs text-on-surface-variant">الدليل</div>
-              <pre className="max-h-72 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
+              <pre {...uiAttributes({ uid: "data-health.data-health-dialogs.pre-JeXW1a", id: "data-health.data-health-dialogs.pre" })} className="max-h-72 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
                 {JSON.stringify(detail.evidence, null, 2)}
               </pre>
             </div>
@@ -109,9 +109,9 @@ function CleanupPlanDialog({
   return (
     <Dialog open={Boolean(plan)} onOpenChange={(open) => !open && setPlan(null)}>
       <DialogContent id="data-health.data-health-dialogs.dialog-content.2" className="max-h-[85vh] max-w-2xl overflow-y-auto" dir="rtl">
-        <DialogHeader id="data-health.data-health-dialogs.dialog-header.2">
-          <DialogTitle id="data-health.data-health-dialogs.dialog-title.2">معاينة خطة التنظيف</DialogTitle>
-          <DialogDescription id="data-health.data-health-dialogs.dialog-description.2">
+        <DialogHeader ui={{ uid: "data-health.data-health-dialogs.dialog-header.5-HYJ9uf", id: "data-health.data-health-dialogs.dialog-header.5" }} id="data-health.data-health-dialogs.dialog-header.2">
+          <DialogTitle ui={{ uid: "data-health.data-health-dialogs.dialog-title.5-Gg7THy", id: "data-health.data-health-dialogs.dialog-title.5" }} id="data-health.data-health-dialogs.dialog-title.2">معاينة خطة التنظيف</DialogTitle>
+          <DialogDescription ui={{ uid: "data-health.data-health-dialogs.dialog-description.5-K1ZTq7", id: "data-health.data-health-dialogs.dialog-description.5" }} id="data-health.data-health-dialogs.dialog-description.2">
             الخطة صالحة حتى {dateText(plan?.expiresAt)} ولا يمكن استخدامها أكثر من مرة.
           </DialogDescription>
         </DialogHeader>
@@ -137,7 +137,7 @@ function CleanupPlanDialog({
             autoComplete="off"
           />
         </div>
-        <DialogFooter id="data-health.data-health-dialogs.dialog-footer" className="gap-2">
+        <DialogFooter ui={{ uid: "data-health.data-health-dialogs.dialog-footer.3-Kf1k6m", id: "data-health.data-health-dialogs.dialog-footer.3" }} id="data-health.data-health-dialogs.dialog-footer" className="gap-2">
           <Button id="data-health.data-health-dialogs.button" ui={{ uid: "data-health.plan-dialog.cancel-1BXAzX", id: "data-health.plan-dialog.cancel", kind: "action", action: "cancel", part: "dialog-footer" }} variant="outline" onClick={() => setPlan(null)}>
             إلغاء
           </Button>
@@ -176,9 +176,9 @@ function OrderPurgeDialog({
       }}
     >
       <DialogContent id="data-health.data-health-dialogs.dialog-content.3" className="max-h-[85vh] max-w-2xl overflow-y-auto" dir="rtl">
-        <DialogHeader id="data-health.data-health-dialogs.dialog-header.3">
-          <DialogTitle id="data-health.data-health-dialogs.dialog-title.3">معاينة حذف جميع الطلبات</DialogTitle>
-          <DialogDescription id="data-health.data-health-dialogs.dialog-description.3">
+        <DialogHeader ui={{ uid: "data-health.data-health-dialogs.dialog-header.6-b4wFNr", id: "data-health.data-health-dialogs.dialog-header.6" }} id="data-health.data-health-dialogs.dialog-header.3">
+          <DialogTitle ui={{ uid: "data-health.data-health-dialogs.dialog-title.6-HU6B3o", id: "data-health.data-health-dialogs.dialog-title.6" }} id="data-health.data-health-dialogs.dialog-title.3">معاينة حذف جميع الطلبات</DialogTitle>
+          <DialogDescription ui={{ uid: "data-health.data-health-dialogs.dialog-description.6-UgV71D", id: "data-health.data-health-dialogs.dialog-description.6" }} id="data-health.data-health-dialogs.dialog-description.3">
             هذه عملية نهائية تشمل كل أنواع الطلبات والسجلات التابعة لها. الخطة صالحة حتى {dateText(orderPurgePlan?.expiresAt)}.
           </DialogDescription>
         </DialogHeader>
@@ -210,7 +210,7 @@ function OrderPurgeDialog({
             autoComplete="off"
           />
         </div>
-        <DialogFooter id="data-health.data-health-dialogs.dialog-footer.2" className="gap-2">
+        <DialogFooter ui={{ uid: "data-health.data-health-dialogs.dialog-footer.4-0OCyeg", id: "data-health.data-health-dialogs.dialog-footer.4" }} id="data-health.data-health-dialogs.dialog-footer.2" className="gap-2">
           <Button id="data-health.data-health-dialogs.button.3" ui={{ uid: "data-health.order-purge-dialog.cancel-1fBQND", id: "data-health.order-purge-dialog.cancel", kind: "action", action: "cancel", part: "dialog-footer" }}
             variant="outline"
             disabled={orderPurgeBusy}

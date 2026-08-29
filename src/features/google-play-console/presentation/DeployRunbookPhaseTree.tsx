@@ -104,7 +104,7 @@ function BranchCheckbox(props: {
           </span>
         ) : null}
       </span>
-      <code
+      <code {...uiAttributes({ uid: "google-play-console.deploy-runbook-phase-tree.code-sM5PVJ", id: "google-play-console.deploy-runbook-phase-tree.code" })}
         className="mt-2 block w-full min-w-0 overflow-x-auto whitespace-pre-wrap break-all text-xs"
         dir="ltr"
       >

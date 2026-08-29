@@ -41,8 +41,8 @@ return (
 
           <ProfileEditSaveFeedback id="profile.profile-page.profile-edit-workspace-view.profile-edit-save-feedback" model={model} />
 
-          <Card id="profile.profile-page.profile-edit-workspace-view.card" className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
-            <CardContent id="profile.profile-page.profile-edit-workspace-view.card-content" className="p-0">
+          <Card ui={{ uid: "profile.profile-page.profile-edit-workspace-view.card.2-7izQJ3", id: "profile.profile-page.profile-edit-workspace-view.card.2" }} id="profile.profile-page.profile-edit-workspace-view.card" className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
+            <CardContent ui={{ uid: "profile.profile-page.profile-edit-workspace-view.card-content.2-0netG4", id: "profile.profile-page.profile-edit-workspace-view.card-content.2" }} id="profile.profile-page.profile-edit-workspace-view.card-content" className="p-0">
               <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.5-TC33k0", id: "profile.profile-page.profile-edit-workspace-view.div.5" })} id="profile.profile-page.profile-edit-workspace-view.div" className="relative">
                 <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.6-3Pi6KY", id: "profile.profile-page.profile-edit-workspace-view.div.6" })} id="profile.profile-page.profile-edit-workspace-view.div.2"
                   data-snapshot-id="profile-edit-carousel-scroll"

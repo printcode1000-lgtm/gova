@@ -14,8 +14,13 @@ import { violations } from "../checks/architecture-types";
 const root = process.cwd();
 const probeDirectory = join(root, "src", "features", "__ui_registry_guard_probe");
 const registryPath = join(root, "packages", "ui-registry-core", "src", "registry", "ui-page-registry.ts");
-const genericHelper = join(root, "src", "shared", "ui", "__guard_probe_primitive.tsx");
+// `ui-attribute-contract.ts` still special-cases this one hand-authored
+// no-uid fallback builder directly; the broader "no generic primitive root
+// owns a fixed uid" invariant is proven structurally, repo-wide, by
+// `dom-identity-coverage-contract.test.ts` instead of a directory allowlist.
+const genericHelper = join(root, "packages", "ui-registry-core", "src", "domain", "ui-component-attributes.ts");
 const originalRegistry = readFileSync(registryPath, "utf8");
+const originalGenericHelper = readFileSync(genericHelper, "utf8");
 
 const probes: Record<string, string> = {
   // Metadata without a uid.
@@ -85,15 +90,15 @@ try {
   }
   writeFileSync(
     genericHelper,
-    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
-      'export const Probe = () => uiAttributes({ uid: "probe.helper-K3mQ7x", id: "probe.helper", kind: "component" });\n',
+    originalGenericHelper +
+      '\nexport const __probeUid = { uid: "probe.helper-K3mQ7x" };\n',
     "utf8",
   );
   writeFileSync(registryPath, originalRegistry.replace(/, uid: "[^"]+"/, ""), "utf8");
   checkUiAttributeContract();
 } finally {
   rmSync(probeDirectory, { recursive: true, force: true });
-  rmSync(genericHelper, { force: true });
+  writeFileSync(genericHelper, originalGenericHelper, "utf8");
   writeFileSync(registryPath, originalRegistry, "utf8");
 }
 
@@ -108,10 +113,10 @@ for (const [label, pattern] of [
   ["manual data-ui-uid", /manual\.tsx[^\n]*Manual data-ui-uid/],
   ["computed uid", /computed-uid\.tsx[^\n]*computes its uid/],
   ["descriptor drift", /drift-b\.tsx[^\n]*drifts from its registration/],
-  ["helper-level uid", /__guard_probe_primitive\.tsx[^\n]*helper-level uid/],
+  ["helper-level uid", /ui-component-attributes\.ts[^\n]*helper-level uid/],
   ["a key written after the spread", /key-after-spread\.tsx[^\n]*key follows the uiAttributes spread/],
   ["manual data-ui-instance", /manual-instance\.tsx[^\n]*Manual data-ui-instance/],
-  ["index-derived instance", /index-instance\.tsx[^\n]*derives instance from an array index/],
+  ["index-derived instance", /index-instance\.tsx[^\n]*derives \\"instance\\" from an array index/],
 ] as const) {
   assert.match(reported, pattern, `The guard must fail for ${label}.`);
 }

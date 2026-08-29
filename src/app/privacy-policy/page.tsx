@@ -9,7 +9,7 @@ export default function PrivacyPolicyPage() {
           سياسة الخصوصية - ASOL
         </h1>
         <p {...uiAttributes({ uid: "privacy-policy.page.p.11-QB4S8d", id: "privacy-policy.page.p.11" })} id="privacy-policy.page.p" className="mb-8 text-on-surface-variant">
-          في <strong>ASOL</strong> نحترم خصوصية المستخدمين ونسعى لحماية بياناتهم الشخصية وفقًا
+          في <strong {...uiAttributes({ uid: "privacy-policy.page.strong-3IHQ5D", id: "privacy-policy.page.strong" })}>ASOL</strong> نحترم خصوصية المستخدمين ونسعى لحماية بياناتهم الشخصية وفقًا
           لأفضل الممارسات.
         </p>
 

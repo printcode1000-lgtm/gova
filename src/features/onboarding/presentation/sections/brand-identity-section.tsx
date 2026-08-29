@@ -78,15 +78,15 @@ export function BrandIdentitySection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.7-16SWOd", id: "onboarding.sections.brand-identity-section.div.7" })} id="onboarding.sections.brand-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.brand-identity-section.card">
-        <CardHeader id="onboarding.sections.brand-identity-section.card-header">
-          <CardTitle id="onboarding.sections.brand-identity-section.card-title" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.brand-identity-section.card.2-iW7I1x", id: "onboarding.sections.brand-identity-section.card.2" }} id="onboarding.sections.brand-identity-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.brand-identity-section.card-header.2-iW1Pa3", id: "onboarding.sections.brand-identity-section.card-header.2" }} id="onboarding.sections.brand-identity-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.brand-identity-section.card-title.2-8ZACY1", id: "onboarding.sections.brand-identity-section.card-title.2" }} id="onboarding.sections.brand-identity-section.card-title" className="flex items-center gap-2">
             <Heart id="onboarding.sections.brand-identity-section.heart" className="h-5 w-5" />
             {t('onboarding.brandIdentity.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.brand-identity-section.card-description">{t('onboarding.brandIdentity.description')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.brand-identity-section.card-description.2-qQ2ML7", id: "onboarding.sections.brand-identity-section.card-description.2" }} id="onboarding.sections.brand-identity-section.card-description">{t('onboarding.brandIdentity.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.brand-identity-section.card-content" className="space-y-6">
+        <CardContent ui={{ uid: "onboarding.sections.brand-identity-section.card-content.2-i98Z2G", id: "onboarding.sections.brand-identity-section.card-content.2" }} id="onboarding.sections.brand-identity-section.card-content" className="space-y-6">
           <FormField id="onboarding.sections.brand-identity-section.form-field"
             label={t('onboarding.brandIdentity.mission')}
             htmlFor="mission"
@@ -126,7 +126,7 @@ export function BrandIdentitySection() {
           <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.8-C4Q5Up", id: "onboarding.sections.brand-identity-section.div.8" })} id="onboarding.sections.brand-identity-section.div.2" className="space-y-3">
             <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.9-HJ1AYY", id: "onboarding.sections.brand-identity-section.div.9" })} id="onboarding.sections.brand-identity-section.div.3" className="flex items-center justify-between">
               <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.10-eE9miq", id: "onboarding.sections.brand-identity-section.div.10" })} id="onboarding.sections.brand-identity-section.div.4">
-                <Label id="onboarding.sections.brand-identity-section.label" className="text-sm font-medium">{t('onboarding.brandIdentity.usps')}</Label>
+                <Label ui={{ uid: "onboarding.sections.brand-identity-section.label.2-INvZT8", id: "onboarding.sections.brand-identity-section.label.2" }} id="onboarding.sections.brand-identity-section.label" className="text-sm font-medium">{t('onboarding.brandIdentity.usps')}</Label>
                 <p {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.p.2-72giHE", id: "onboarding.sections.brand-identity-section.p.2" })} id="onboarding.sections.brand-identity-section.p" className="text-xs text-muted-foreground">
                   {t('onboarding.brandIdentity.uspsHint')}
                 </p>
@@ -138,7 +138,7 @@ export function BrandIdentitySection() {
 
             <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.11-EemgB9", id: "onboarding.sections.brand-identity-section.div.11" })} id="onboarding.sections.brand-identity-section.div.5" className="flex flex-wrap gap-2">
               {brandIdentity.uniqueSellingPoints.map((usp) => (
-                <Badge key={usp} variant="secondary" className="gap-1 pl-3">
+                <Badge key={usp} ui={{ uid: "onboarding.sections.brand-identity-section.badge-og89wP", id: "onboarding.sections.brand-identity-section.badge" }} variant="secondary" className="gap-1 pl-3">
                   <Sparkles className="h-3 w-3" />
                   {usp}
                   <button {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.button.2-UuU4Rj", id: "onboarding.sections.brand-identity-section.button.2" })} type="button" onClick={() => removeUSP(usp)} className="ml-1 rounded-full">

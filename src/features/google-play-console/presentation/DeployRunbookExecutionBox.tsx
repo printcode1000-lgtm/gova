@@ -40,7 +40,7 @@ export function ExecutionBox(props: {
         description="الأمر الذي سيُنفَّذ فعلياً عبر job النظام."
       >
         <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.div.7-8M6iaA", id: "google-play-console.deploy-runbook-execution-box.div.7" })} id="google-play-console.deploy-runbook-execution-box.div" className="min-w-0 overflow-x-auto rounded-md bg-muted p-3 text-xs">
-          <code className="block min-w-0 whitespace-pre-wrap break-all text-left" dir="ltr">
+          <code {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.code-dfBy9k", id: "google-play-console.deploy-runbook-execution-box.code" })} className="block min-w-0 whitespace-pre-wrap break-all text-left" dir="ltr">
             {props.commandPreview}
           </code>
           <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.p.6-62UavF", id: "google-play-console.deploy-runbook-execution-box.p.6" })} id="google-play-console.deploy-runbook-execution-box.p.2" className="mt-2 break-words text-on-surface-variant">

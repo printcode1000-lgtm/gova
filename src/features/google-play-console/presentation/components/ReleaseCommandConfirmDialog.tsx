@@ -80,9 +80,9 @@ export function ReleaseCommandConfirmDialog({
         onInteractOutside={(event) => event.preventDefault()}
         onFocusOutside={(event) => event.preventDefault()}
       >
-        <DialogHeader id="google-play-console.release-command-confirm-dialog.dialog-header">
-          <DialogTitle id="google-play-console.release-command-confirm-dialog.dialog-title">{t("releaseConsole.confirmRun.title")}</DialogTitle>
-          <DialogDescription id="google-play-console.release-command-confirm-dialog.dialog-description">{t("releaseConsole.confirmRun.body")}</DialogDescription>
+        <DialogHeader ui={{ uid: "google-play-console.release-command-confirm-dialog.dialog-header.2-1jjy7W", id: "google-play-console.release-command-confirm-dialog.dialog-header.2" }} id="google-play-console.release-command-confirm-dialog.dialog-header">
+          <DialogTitle ui={{ uid: "google-play-console.release-command-confirm-dialog.dialog-title.2-T28Qx0", id: "google-play-console.release-command-confirm-dialog.dialog-title.2" }} id="google-play-console.release-command-confirm-dialog.dialog-title">{t("releaseConsole.confirmRun.title")}</DialogTitle>
+          <DialogDescription ui={{ uid: "google-play-console.release-command-confirm-dialog.dialog-description.2-8iNrZW", id: "google-play-console.release-command-confirm-dialog.dialog-description.2" }} id="google-play-console.release-command-confirm-dialog.dialog-description">{t("releaseConsole.confirmRun.body")}</DialogDescription>
         </DialogHeader>
         <div {...uiAttributes({ uid: "google-play-console.release-command-confirm-dialog.div.5-HRW3by", id: "google-play-console.release-command-confirm-dialog.div.5" })} id="google-play-console.release-command-confirm-dialog.div" className="min-h-0 space-y-4 overflow-y-auto overscroll-contain pe-1 text-sm">
           <section {...uiAttributes({ uid: "google-play-console.release-command-confirm-dialog.section.2-3o4bMk", id: "google-play-console.release-command-confirm-dialog.section.2" })} id="google-play-console.release-command-confirm-dialog.section" className="space-y-2 rounded-lg border bg-surface-container-low p-3">
@@ -92,7 +92,7 @@ export function ReleaseCommandConfirmDialog({
                 {t(command.documentation.descriptionKey)}
               </p>
               <div {...uiAttributes({ uid: "google-play-console.release-command-confirm-dialog.div.6-VDlmq1", id: "google-play-console.release-command-confirm-dialog.div.6" })} id="google-play-console.release-command-confirm-dialog.div.2" className="flex flex-wrap items-center gap-2 text-xs">
-                <code className="rounded-md bg-muted px-2 py-1" dir="ltr">
+                <code {...uiAttributes({ uid: "google-play-console.release-command-confirm-dialog.code-2IUlHu", id: "google-play-console.release-command-confirm-dialog.code" })} className="rounded-md bg-muted px-2 py-1" dir="ltr">
                   npm run {command.script}
                 </code>
                 <span {...uiAttributes({ uid: "google-play-console.release-command-confirm-dialog.span.2-1ub90F", id: "google-play-console.release-command-confirm-dialog.span.2" })} id="google-play-console.release-command-confirm-dialog.span" className="rounded-md bg-muted px-2 py-1">
@@ -145,7 +145,7 @@ export function ReleaseCommandConfirmDialog({
             <p {...uiAttributes({ uid: "google-play-console.release-command-confirm-dialog.p.14-W67PrN", id: "google-play-console.release-command-confirm-dialog.p.14" })} id="google-play-console.release-command-confirm-dialog.p.7" className="rounded-md bg-muted p-2">{t("releaseConsole.confirmRun.locked")}</p>
           ) : null}
         </div>
-        <DialogFooter id="google-play-console.release-command-confirm-dialog.dialog-footer" className="border-t pt-3">
+        <DialogFooter ui={{ uid: "google-play-console.release-command-confirm-dialog.dialog-footer.2-1GbJYC", id: "google-play-console.release-command-confirm-dialog.dialog-footer.2" }} id="google-play-console.release-command-confirm-dialog.dialog-footer" className="border-t pt-3">
           <Button id="google-play-console.release-command-confirm-dialog.button"
             ui={{
               uid: "release-console.confirm-dialog.cancel-l5VVLg",

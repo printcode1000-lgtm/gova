@@ -322,7 +322,7 @@ export function PharmacyCatalogManagerPage() {
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </IconButton>
-                  <VisibilityButton
+                  <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button-DU20BK", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button" }}
                     hidden={category.status === "hidden"}
                     disabled={busy}
                     onClick={() => toggleCategory(category)}
@@ -362,7 +362,7 @@ export function PharmacyCatalogManagerPage() {
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </IconButton>
-                  <VisibilityButton
+                  <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button.2-Gl4X0V", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button.2" }}
                     hidden={subcategory.status === "hidden"}
                     disabled={busy}
                     onClick={() => toggleSubcategory(subcategory)}

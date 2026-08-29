@@ -96,7 +96,7 @@ function OfferCard({ id,
             {describe(discount, locale)}
           </p>
           {discount.couponCode ? (
-            <code className="mt-2 inline-flex max-w-full break-all rounded-lg border border-primary/30 bg-primary/10 px-2 py-1 text-xs font-bold text-primary">
+            <code {...uiAttributes({ uid: "seller-discounts.seller-discounts-preview.code-Wr304l", id: "seller-discounts.seller-discounts-preview.code" })} className="mt-2 inline-flex max-w-full break-all rounded-lg border border-primary/30 bg-primary/10 px-2 py-1 text-xs font-bold text-primary">
               {discount.couponCode}
             </code>
           ) : null}

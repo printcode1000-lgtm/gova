@@ -180,7 +180,7 @@ export function SuperAdminUiAttributeInspector() {
       {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true" }}
     >
       {enabled ? (
-        <pre className="max-h-32 max-w-64 overflow-auto whitespace-pre-wrap break-words rounded-2xl bg-surface px-3 py-2 text-xs font-semibold text-on-surface shadow-lg" dir="auto">
+        <pre {...uiAttributes({ uid: "super-admin.super-admin-ui-attribute-inspector.pre-iziSX3", id: "super-admin.super-admin-ui-attribute-inspector.pre" })} className="max-h-32 max-w-64 overflow-auto whitespace-pre-wrap break-words rounded-2xl bg-surface px-3 py-2 text-xs font-semibold text-on-surface shadow-lg" dir="auto">
           {status}
         </pre>
       ) : null}

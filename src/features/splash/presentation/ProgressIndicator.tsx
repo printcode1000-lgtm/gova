@@ -52,7 +52,7 @@ export default function ProgressIndicator({
             ))}
           </div>
         ) : (
-          <LoadingSpinner id="splash.progress-indicator.loading-spinner" size="md" className="mt-2" role="status" aria-label={t('splash.progress.loading')} />
+          <LoadingSpinner ui={{ uid: "splash.progress-indicator.loading-spinner.2-MFMwz9", id: "splash.progress-indicator.loading-spinner.2" }} id="splash.progress-indicator.loading-spinner" size="md" className="mt-2" role="status" aria-label={t('splash.progress.loading')} />
         ))}
 
       <div {...uiAttributes({ uid: "splash.progress-indicator.div.10-q80Rif", id: "splash.progress-indicator.div.10" })} id="splash.progress-indicator.div.4" className="w-full mt-4 asol-splash-progress-track h-1 rounded-full overflow-hidden relative shadow-inner">

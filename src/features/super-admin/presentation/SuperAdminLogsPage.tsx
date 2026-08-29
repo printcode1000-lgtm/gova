@@ -441,12 +441,12 @@ export function SuperAdminLogsPage() {
                       className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground"
                       dir="ltr"
                     >
-                      <time aria-label="آخر ظهور">
+                      <time {...uiAttributes({ uid: "super-admin.super-admin-logs-page.time-b9dXii", id: "super-admin.super-admin-logs-page.time" })} aria-label="آخر ظهور">
                         {formatDateTimeDefault(entry.lastOccurredAt)}
                       </time>
                       <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.4-b63V7N", id: "super-admin.super-admin-logs-page.span.4" })}>{entry.platform}</span>
-                      <code>{entry.consoleMethod}</code>
-                      <code>{entry.page}</code>
+                      <code {...uiAttributes({ uid: "super-admin.super-admin-logs-page.code-Gpi6KW", id: "super-admin.super-admin-logs-page.code" })}>{entry.consoleMethod}</code>
+                      <code {...uiAttributes({ uid: "super-admin.super-admin-logs-page.code.2-1J47rm", id: "super-admin.super-admin-logs-page.code.2" })}>{entry.page}</code>
                       {typeof entry.id === "number" && entry.id < 0 && (
                         <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.5-37LMf5", id: "super-admin.super-admin-logs-page.span.5" })} className="rounded-full bg-primary/10 px-2 py-0.5 font-bold text-primary">
                           محفوظ
@@ -471,77 +471,77 @@ export function SuperAdminLogsPage() {
                       <ClipboardCopy className="h-4 w-4" />
                     </Button>
                   </div>
-                  <pre
+                  <pre {...uiAttributes({ uid: "super-admin.super-admin-logs-page.pre-GAX4sq", id: "super-admin.super-admin-logs-page.pre" })}
                     className="whitespace-pre-wrap break-words font-mono text-xs leading-6"
                     dir="ltr"
                   >
                     {entry.message}
                   </pre>
                   {(entry.level === "warning" || entry.level === "error") && (
-                    <dl
+                    <dl {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dl-7gRRmo", id: "super-admin.super-admin-logs-page.dl" })}
                       className="mt-3 grid gap-2 rounded-md bg-muted/40 p-3 text-xs sm:grid-cols-2"
                       dir="ltr"
                     >
                       <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.22-MZ0DN6", id: "super-admin.super-admin-logs-page.div.22" })}>
-                        <dt className="text-muted-foreground">النوع</dt>
-                        <dd className="font-mono">
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt-9HelXa", id: "super-admin.super-admin-logs-page.dt" })} className="text-muted-foreground">النوع</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd-6T55Dl", id: "super-admin.super-admin-logs-page.dd" })} className="font-mono">
                           {entry.errorName ?? "غير محدد"}
                         </dd>
                       </div>
                       <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.23-9NJhXD", id: "super-admin.super-admin-logs-page.div.23" })}>
-                        <dt className="text-muted-foreground">عدد التكرار</dt>
-                        <dd>{entry.occurrences}</dd>
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.2-7U7zqW", id: "super-admin.super-admin-logs-page.dt.2" })} className="text-muted-foreground">عدد التكرار</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.2-IMQAt7", id: "super-admin.super-admin-logs-page.dd.2" })}>{entry.occurrences}</dd>
                       </div>
                       <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.24-effNF4", id: "super-admin.super-admin-logs-page.div.24" })}>
-                        <dt className="text-muted-foreground">الميزة</dt>
-                        <dd className="font-mono">
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.3-gjMGw9", id: "super-admin.super-admin-logs-page.dt.3" })} className="text-muted-foreground">الميزة</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.3-R43S9G", id: "super-admin.super-admin-logs-page.dd.3" })} className="font-mono">
                           {entry.feature ?? "غير محدد"}
                         </dd>
                       </div>
                       <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.25-9bFbRM", id: "super-admin.super-admin-logs-page.div.25" })}>
-                        <dt className="text-muted-foreground">العملية</dt>
-                        <dd className="font-mono">
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.4-u9GdTD", id: "super-admin.super-admin-logs-page.dt.4" })} className="text-muted-foreground">العملية</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.4-1Eby9e", id: "super-admin.super-admin-logs-page.dd.4" })} className="font-mono">
                           {entry.operation ?? "غير محددة"}
                         </dd>
                       </div>
                       <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.26-A27WfQ", id: "super-admin.super-admin-logs-page.div.26" })}>
-                        <dt className="text-muted-foreground">
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.5-M8SgNC", id: "super-admin.super-admin-logs-page.dt.5" })} className="text-muted-foreground">
                           أول ظهور
                         </dt>
-                        <dd>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.5-VV176K", id: "super-admin.super-admin-logs-page.dd.5" })}>
                           {formatDateTimeDefault(entry.firstOccurredAt)}
                         </dd>
                       </div>
                       <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.27-5HCeI8", id: "super-admin.super-admin-logs-page.div.27" })}>
-                        <dt className="text-muted-foreground">
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.6-1s6wDT", id: "super-admin.super-admin-logs-page.dt.6" })} className="text-muted-foreground">
                           آخر ظهور
                         </dt>
-                        <dd>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.6-T1OCQ4", id: "super-admin.super-admin-logs-page.dd.6" })}>
                           {formatDateTimeDefault(entry.lastOccurredAt)}
                         </dd>
                       </div>
                       <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.28-eG8XMp", id: "super-admin.super-admin-logs-page.div.28" })} className="sm:col-span-2">
-                        <dt className="text-muted-foreground">المصدر</dt>
-                        <dd className="break-all font-mono">
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.7-2fWEaE", id: "super-admin.super-admin-logs-page.dt.7" })} className="text-muted-foreground">المصدر</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.7-KTYrX3", id: "super-admin.super-admin-logs-page.dd.7" })} className="break-all font-mono">
                           {entry.sourceFile
                             ? `${entry.sourceFile}:${entry.sourceLine ?? "?"}:${entry.sourceColumn ?? "?"}`
                             : entry.page}
                         </dd>
                       </div>
                       <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.29-0NAgEP", id: "super-admin.super-admin-logs-page.div.29" })} className="sm:col-span-2">
-                        <dt className="text-muted-foreground">وكيل المستخدم</dt>
-                        <dd className="break-all font-mono">
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.8-a61Nhk", id: "super-admin.super-admin-logs-page.dt.8" })} className="text-muted-foreground">وكيل المستخدم</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.8-LX4v4q", id: "super-admin.super-admin-logs-page.dd.8" })} className="break-all font-mono">
                           {entry.userAgent}
                         </dd>
                       </div>
                     </dl>
                   )}
                   {entry.stack && (
-                    <details className="mt-2">
+                    <details {...uiAttributes({ uid: "super-admin.super-admin-logs-page.details-DD9k2F", id: "super-admin.super-admin-logs-page.details" })} className="mt-2">
                       <summary {...uiAttributes({ uid: "super-admin.super-admin-logs-page.summary-Cw2Rbu", id: "super-admin.super-admin-logs-page.summary" })} className="text-xs font-medium text-primary">
                         تتبع المكدس
                       </summary>
-                      <pre
+                      <pre {...uiAttributes({ uid: "super-admin.super-admin-logs-page.pre.2-WFMj1l", id: "super-admin.super-admin-logs-page.pre.2" })}
                         className="mt-2 whitespace-pre-wrap break-words border-t pt-2 font-mono text-xs"
                         dir="ltr"
                       >

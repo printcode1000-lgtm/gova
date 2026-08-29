@@ -1,8 +1,8 @@
-import { applyUidMigrationToRepo } from "./apply-uid-migration";
+import { applyUidMigration } from "@asol/architecture-core";
 
-const result = applyUidMigrationToRepo(process.cwd());
+const result = applyUidMigration(process.cwd());
 console.log(
   `UiRegistry uid migration: ${result.editedFiles} file(s) edited, ` +
-    `${result.hostAssigned} host uid(s), ${result.primitiveAssigned} primitive uid(s) assigned, ` +
+    `${result.intrinsicAssigned} intrinsic uid(s), ${result.primitiveAssigned} primitive uid(s) assigned, ` +
     `${result.skipped} usage site(s) skipped (pre-existing JSX spread — needs manual registration).`,
 );

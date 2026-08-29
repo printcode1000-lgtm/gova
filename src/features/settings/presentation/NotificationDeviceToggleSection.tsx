@@ -21,7 +21,7 @@ export function NotificationDeviceToggleSection({
   if (!state.notificationRuntimeReady) {
     return (
       <div {...uiAttributes({ uid: "settings.notification-device-toggle-section.div.5-5P26BC", id: "settings.notification-device-toggle-section.div.5" })} id="settings.notification-device-toggle-section.div" className="space-y-2" aria-busy="true">
-        <Skeleton id="settings.notification-device-toggle-section.skeleton" className="h-20 w-full rounded-xl" />
+        <Skeleton ui={{ uid: "settings.notification-device-toggle-section.skeleton.2-19h7Qg", id: "settings.notification-device-toggle-section.skeleton.2" }} id="settings.notification-device-toggle-section.skeleton" className="h-20 w-full rounded-xl" />
         <span {...uiAttributes({ uid: "settings.notification-device-toggle-section.span.2-Ra63g9", id: "settings.notification-device-toggle-section.span.2" })} id="settings.notification-device-toggle-section.span" className="sr-only">{state.t("common.loading")}</span>
       </div>
     );

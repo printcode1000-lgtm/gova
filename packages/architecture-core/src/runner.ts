@@ -7,7 +7,7 @@ import { checkNotificationModuleContract } from './checks/notification-contract'
 import { checkDeadContractRules } from './checks/storage-core-contract';
 import { checkTouchInteractionContract } from './checks/touch-interaction-contract';
 import { checkUiAttributeContract } from './checks/ui-attribute-contract';
-import { checkUiRegistryCoverageContract } from './checks/ui-registry-coverage';
+import { checkDomIdentityCoverageContract } from './checks/dom-identity-coverage-contract';
 import { checkUiSimulationContract } from './checks/ui-simulation-contract';
 import { checkMapLibreWorkerContract } from './checks/maplibre-worker-contract';
 import {
@@ -81,7 +81,7 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   checkFeatureDependencyContract();
   checkFeatureApplicationDoorPurityContract();
   checkArchitectureDocsDriftContract();
-  checkUiRegistryCoverageContract();
+  checkDomIdentityCoverageContract();
   checkUiSimulationContract();
 
   // Root files owned by a capability for vendor purposes (e.g. capacitor.config.ts).

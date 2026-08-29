@@ -272,7 +272,7 @@ export function ProductReviews({ id,
         </div>
         <div {...uiAttributes({ uid: "product.product-reviews.div.3-RG1zFD", id: "product.product-reviews.div.3" })} className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
           <div {...uiAttributes({ uid: "product.product-reviews.div.4-C7m2Qp", id: "product.product-reviews.div.4" })} className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0">
-            <strong className="text-5xl">{average.toFixed(1)}</strong>
+            <strong {...uiAttributes({ uid: "product.product-reviews.strong-g6UoU9", id: "product.product-reviews.strong" })} className="text-5xl">{average.toFixed(1)}</strong>
             <Stars value={average} size="text-2xl" />
             <p {...uiAttributes({ uid: "product.product-reviews.p-iLGm36", id: "product.product-reviews.p" })} className="mt-2 break-words text-sm text-muted-foreground">
               بناءً على {total} تقييم
@@ -339,7 +339,7 @@ export function ProductReviews({ id,
                   )}
                   <div {...uiAttributes({ uid: "product.product-reviews.div.13-Tm1r7j", id: "product.product-reviews.div.13" })} className="min-w-0 flex-1">
                     <div {...uiAttributes({ uid: "product.product-reviews.div.14-KPDva5", id: "product.product-reviews.div.14" })} className="flex min-w-0 flex-wrap items-center gap-2">
-                      <strong className="min-w-0 break-words">{review.reviewerName}</strong>
+                      <strong {...uiAttributes({ uid: "product.product-reviews.strong.2-eAEA6b", id: "product.product-reviews.strong.2" })} className="min-w-0 break-words">{review.reviewerName}</strong>
                       {review.verifiedPurchase ? (
                         <span {...uiAttributes({ uid: "product.product-reviews.span.4-RvML4D", id: "product.product-reviews.span.4" })} className="max-w-full break-words rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
                           Verified Purchase
@@ -420,7 +420,7 @@ export function ProductReviews({ id,
                     </div>
                     {review.reply ? (
                       <div {...uiAttributes({ uid: "product.product-reviews.div.17-0wWToo", id: "product.product-reviews.div.17" })} className="mt-3 min-w-0 rounded-xl bg-muted/50 p-3">
-                        <strong className="break-words text-sm">رد البائع</strong>
+                        <strong {...uiAttributes({ uid: "product.product-reviews.strong.3-1Lhfb7", id: "product.product-reviews.strong.3" })} className="break-words text-sm">رد البائع</strong>
                         <p {...uiAttributes({ uid: "product.product-reviews.p.6-s6UdGN", id: "product.product-reviews.p.6" })} className="mt-1 whitespace-pre-wrap break-words">{review.reply.text}</p>
                         {isSeller ? (
                           <button {...uiAttributes({ uid: "product.product-reviews.button.6-P2G64U", id: "product.product-reviews.button.6" })}

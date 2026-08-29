@@ -64,6 +64,9 @@ ALLOWED_TO_IMPORT → `@asol/notifications-core/builder`
 `@asol/architecture-core`
 ALLOWED_TO_IMPORT → `@asol/ota-core/publishing`
 
+`@asol/architecture-core`
+ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
+
 ### @asol/auth-core
 
 `@asol/auth-core`
@@ -355,4 +358,4 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 | Metric | Value |
 |---|---|
 | Packages | 43 |
-| Import edges | 59 |
+| Import edges | 60 |

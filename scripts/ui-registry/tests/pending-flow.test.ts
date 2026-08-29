@@ -84,6 +84,66 @@ const accepted = validateUiRegistryPendingRequest({
   locator: { component: "button", route: "/orders/[orderId]", anchor: "home-thing-button" },
 });
 assert.ok(accepted.ok, "a safe request must be accepted");
+if (accepted.ok) {
+  assert.equal(accepted.request.descriptor.action, "open-thing", "action must survive round-trip");
+  assert.equal(accepted.request.descriptor.part, "toolbar", "part must survive round-trip");
+  assert.deepEqual(
+    accepted.request.descriptor.simulation,
+    { kind: "event", id: "home-thing" },
+    "simulation must survive round-trip",
+  );
+}
+
+// interaction and instance must round-trip too — not silently dropped.
+const withInteractionAndInstance = validateUiRegistryPendingRequest({
+  uid: VALID_UID,
+  descriptor: {
+    uid: VALID_UID,
+    id: "pending.home.button",
+    kind: "item",
+    interaction: { type: "tap" },
+    instance: "order-8f21",
+  },
+  locator: { component: "button", route: "/orders/[orderId]", anchor: "home-thing-button" },
+});
+assert.ok(withInteractionAndInstance.ok, "a request with interaction and instance must be accepted");
+if (withInteractionAndInstance.ok) {
+  assert.deepEqual(
+    withInteractionAndInstance.request.descriptor.interaction,
+    { type: "tap" },
+    "interaction must survive round-trip",
+  );
+  assert.equal(
+    withInteractionAndInstance.request.descriptor.instance,
+    "order-8f21",
+    "instance must survive round-trip",
+  );
+  const rendered = renderUiDescriptorProp(withInteractionAndInstance.request.descriptor as Record<string, unknown>);
+  assert.match(rendered, /interaction: \{ type: "tap" \}/, "rendered source must carry interaction");
+  assert.match(rendered, /instance: "order-8f21"/, "rendered source must carry instance");
+}
+
+// An instance value that fails content validation (a phone number) is
+// rejected outright, not silently accepted because it merely fits the shape.
+assert.equal(
+  validateUiRegistryPendingRequest({
+    uid: VALID_UID,
+    descriptor: { uid: VALID_UID, id: "pending.home.button", instance: "5551234567" },
+    locator: { component: "button", route: "/home", anchor: "home-thing-button" },
+  }).ok,
+  false,
+  "a phone-number-shaped instance must be rejected",
+);
+// An unknown interaction type is rejected, not silently coerced.
+assert.equal(
+  validateUiRegistryPendingRequest({
+    uid: VALID_UID,
+    descriptor: { uid: VALID_UID, id: "pending.home.button", interaction: { type: "hover" } },
+    locator: { component: "button", route: "/home", anchor: "home-thing-button" },
+  }).ok,
+  false,
+  "an unregistered interaction type must be rejected",
+);
 
 // Everything outside the known safe fields is dropped by reconstruction.
 const redacted = validateUiRegistryPendingRequest({

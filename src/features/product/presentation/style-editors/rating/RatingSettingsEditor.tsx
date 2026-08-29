@@ -54,7 +54,7 @@ export function RatingSettingsEditor({ id,
       </div>
 
       <div {...uiAttributes({ uid: "product.style-editors.rating.rating-settings-editor.div.5-2TP48K", id: "product.style-editors.rating.rating-settings-editor.div.5" })} id="product.style-editors.rating.rating-settings-editor.div.3" className="space-y-2">
-        <Label>{labels.mode}</Label>
+        <Label ui={{ uid: "product.style-editors.rating.rating-settings-editor.label-dW66cX", id: "product.style-editors.rating.rating-settings-editor.label" }}>{labels.mode}</Label>
         <Select
           value={mode}
           onValueChange={(value: RatingMode) => onChange({ enabled, mode: value })}
@@ -64,8 +64,8 @@ export function RatingSettingsEditor({ id,
             <SelectValue placeholder={labels.placeholder} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="stars">{labels.stars}</SelectItem>
-            <SelectItem value="stars-comments">
+            <SelectItem ui={{ uid: "product.style-editors.rating.rating-settings-editor.select-item-4AfMvC", id: "product.style-editors.rating.rating-settings-editor.select-item" }} value="stars">{labels.stars}</SelectItem>
+            <SelectItem ui={{ uid: "product.style-editors.rating.rating-settings-editor.select-item.2-YSO9E9", id: "product.style-editors.rating.rating-settings-editor.select-item.2" }} value="stars-comments">
               {labels.starsComments}
             </SelectItem>
           </SelectContent>

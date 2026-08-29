@@ -114,7 +114,7 @@ export function ProductVehicleSpecs({ id,
         const selectedOption = options[group.key]?.find((item) => item.id === selectedId);
         return (
           <details id={id}
-            key={group.key}
+            key={group.key} {...uiAttributes({ uid: "product.product-vehicle-specs.details-Rfv3Lh", id: "product.product-vehicle-specs.details" })}
             className="rounded-xl border bg-card"
             open={false}
           >

@@ -51,6 +51,15 @@ export interface SimulationTarget {
   kind: SimulationTargetKind;
   /** Scenario/event id this target was declared with, for reports. */
   simulationId: string;
+  /**
+   * Which runtime-rendered copy of `targetUid` this action addresses.
+   * Optional, and only meaningful when the registered target is `repeated`
+   * (rendered once per row of a runtime collection): it narrows the query to
+   * one row's `data-ui-instance`, it never changes what `targetUid` means and
+   * it is never a second identity. A `repeated` target with no instance keeps
+   * the existing "resolves to the first match" collection semantics.
+   */
+  instance?: string;
 }
 
 export type SimulationDriverAction =

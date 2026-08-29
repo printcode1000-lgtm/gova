@@ -184,7 +184,7 @@ export function PageSaveHeaderButton() {
         {successFlash ? (
           <Check id="page-save.page-save-header-button.check" className="relative z-10 h-5 w-5" aria-hidden="true" />
         ) : isSaving ? (
-          <LoadingSpinner id="page-save.page-save-header-button.loading-spinner" size="sm" className="relative z-10" />
+          <LoadingSpinner ui={{ uid: "page-save.page-save-header-button.loading-spinner.2-OgGq92", id: "page-save.page-save-header-button.loading-spinner.2" }} id="page-save.page-save-header-button.loading-spinner" size="sm" className="relative z-10" />
         ) : (
           <Save id="page-save.page-save-header-button.save" className="relative z-10 h-5 w-5" aria-hidden="true" />
         )}

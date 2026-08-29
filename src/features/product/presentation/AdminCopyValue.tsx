@@ -13,7 +13,7 @@ export function AdminCopyValue({ id,
   return (
     <div {...uiAttributes({ uid: "product.admin-copy-value.div-8IwfSy", id: "product.admin-copy-value.div" })} id={id} className="rounded-lg border border-outline-variant/30 bg-surface-container-high p-3">
       <span {...uiAttributes({ uid: "product.admin-copy-value.span-EV1QyQ", id: "product.admin-copy-value.span" })} className="block text-on-surface-variant">{label}</span>
-      <code className="mt-1 block break-all font-mono text-primary">
+      <code {...uiAttributes({ uid: "product.admin-copy-value.code-U2hPF4", id: "product.admin-copy-value.code" })} className="mt-1 block break-all font-mono text-primary">
         {value || "-"}
       </code>
       {value ? (

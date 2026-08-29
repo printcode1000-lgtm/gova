@@ -260,7 +260,7 @@ export function VisibilityButton({
 export function LoadingFrame({ id, compact = false }: { compact?: boolean } & { id?: string }) {
   return (
     <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.10-SFYg3W", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.10" })} id={id} className={`flex items-center justify-center ${compact ? "min-h-[360px]" : "min-h-screen"}`}>
-      <LoadingSpinner size="lg" />
+      <LoadingSpinner ui={{ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.loading-spinner-aj6oX7", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.loading-spinner" }} size="lg" />
     </div>
   );
 }

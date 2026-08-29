@@ -279,7 +279,7 @@ export const StoreIdentityCard = React.forwardRef<
       ) : null}
 
       <div {...uiAttributes({ uid: "profile.store-identity-card.div.10-34aiFD", id: "profile.store-identity-card.div.10" })} id="profile.store-identity-card.div.4" className="space-y-2">
-        <Label id="profile.store-identity-card.label" htmlFor="profile.store-identity.store-name">
+        <Label ui={{ uid: "profile.store-identity-card.label.4-mdZT0F", id: "profile.store-identity-card.label.4" }} id="profile.store-identity-card.label" htmlFor="profile.store-identity.store-name">
           {t("onboarding.storeIdentity.storeName")}
         </Label>
         <Input ui={{ uid: "profile.store-identity.store-name-RsAC2H", id: "profile.store-identity.store-name", kind: "field", part: "form" }}
@@ -293,7 +293,7 @@ export const StoreIdentityCard = React.forwardRef<
       </div>
 
       <div {...uiAttributes({ uid: "profile.store-identity-card.div.11-h4eEqj", id: "profile.store-identity-card.div.11" })} id="profile.store-identity-card.div.5" className="space-y-2">
-        <Label id="profile.store-identity-card.label.2" htmlFor="profile.store-identity.store-description">
+        <Label ui={{ uid: "profile.store-identity-card.label.5-BTz56u", id: "profile.store-identity-card.label.5" }} id="profile.store-identity-card.label.2" htmlFor="profile.store-identity.store-description">
           {t("onboarding.storeIdentity.storeDescription")}
         </Label>
         <Textarea ui={{ uid: "profile.store-identity.store-description-lOL6Hr", id: "profile.store-identity.store-description", kind: "field", part: "form", interaction: { type: "type", valueContract: "long-text" }, simulation: { kind: "field", id: "profile-store-description" }}}
@@ -313,7 +313,7 @@ export const StoreIdentityCard = React.forwardRef<
       </div>
 
       <div {...uiAttributes({ uid: "profile.store-identity-card.div.12-x5IH8H", id: "profile.store-identity-card.div.12" })} id="profile.store-identity-card.div.6" className="space-y-2">
-        <Label id="profile.store-identity-card.label.3" htmlFor="profile.store-identity.store-story">
+        <Label ui={{ uid: "profile.store-identity-card.label.6-4NYiB6", id: "profile.store-identity-card.label.6" }} id="profile.store-identity-card.label.3" htmlFor="profile.store-identity.store-story">
           {t("onboarding.storeIdentity.storeStory")}
         </Label>
         <Textarea ui={{ uid: "profile.store-identity.store-story-whJZ1n", id: "profile.store-identity.store-story", kind: "field", part: "form" }}

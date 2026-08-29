@@ -76,15 +76,15 @@ export function ShippingSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.7-SrP39H", id: "onboarding.sections.shipping-section.div.7" })} id="onboarding.sections.shipping-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.shipping-section.card">
-        <CardHeader id="onboarding.sections.shipping-section.card-header">
-          <CardTitle id="onboarding.sections.shipping-section.card-title" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.shipping-section.card.3-1qKwY3", id: "onboarding.sections.shipping-section.card.3" }} id="onboarding.sections.shipping-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.shipping-section.card-header.3-vpFGM3", id: "onboarding.sections.shipping-section.card-header.3" }} id="onboarding.sections.shipping-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.shipping-section.card-title.3-BsaT7F", id: "onboarding.sections.shipping-section.card-title.3" }} id="onboarding.sections.shipping-section.card-title" className="flex items-center gap-2">
             <Truck id="onboarding.sections.shipping-section.truck" className="h-5 w-5" />
             {t('onboarding.shipping.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.shipping-section.card-description">{t('onboarding.shipping.description')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.shipping-section.card-description.3-6ezkOU", id: "onboarding.sections.shipping-section.card-description.3" }} id="onboarding.sections.shipping-section.card-description">{t('onboarding.shipping.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.shipping-section.card-content" className="space-y-6">
+        <CardContent ui={{ uid: "onboarding.sections.shipping-section.card-content.3-5wI2zk", id: "onboarding.sections.shipping-section.card-content.3" }} id="onboarding.sections.shipping-section.card-content" className="space-y-6">
           {errors.methods && (
             <p {...uiAttributes({ uid: "onboarding.sections.shipping-section.p.4-QjgD2a", id: "onboarding.sections.shipping-section.p.4" })} id="onboarding.sections.shipping-section.p" className="text-sm text-destructive">{errors.methods}</p>
           )}
@@ -216,18 +216,18 @@ export function ShippingSection() {
         </CardContent>
       </Card>
 
-      <Card id="onboarding.sections.shipping-section.card.2">
-        <CardHeader id="onboarding.sections.shipping-section.card-header.2">
-          <CardTitle id="onboarding.sections.shipping-section.card-title.2" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.shipping-section.card.4-07QGav", id: "onboarding.sections.shipping-section.card.4" }} id="onboarding.sections.shipping-section.card.2">
+        <CardHeader ui={{ uid: "onboarding.sections.shipping-section.card-header.4-QENgI6", id: "onboarding.sections.shipping-section.card-header.4" }} id="onboarding.sections.shipping-section.card-header.2">
+          <CardTitle ui={{ uid: "onboarding.sections.shipping-section.card-title.4-IhCQ7f", id: "onboarding.sections.shipping-section.card-title.4" }} id="onboarding.sections.shipping-section.card-title.2" className="flex items-center gap-2">
             <MapPin id="onboarding.sections.shipping-section.map-pin" className="h-5 w-5" />
             {t('onboarding.shipping.pickupTitle')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.shipping-section.card-description.2">{t('onboarding.shipping.pickupDesc')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.shipping-section.card-description.4-XvV7Cw", id: "onboarding.sections.shipping-section.card-description.4" }} id="onboarding.sections.shipping-section.card-description.2">{t('onboarding.shipping.pickupDesc')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.shipping-section.card-content.2" className="space-y-4">
+        <CardContent ui={{ uid: "onboarding.sections.shipping-section.card-content.4-G6xEBN", id: "onboarding.sections.shipping-section.card-content.4" }} id="onboarding.sections.shipping-section.card-content.2" className="space-y-4">
           <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.20-npF4IO", id: "onboarding.sections.shipping-section.div.20" })} id="onboarding.sections.shipping-section.div.5" className="flex items-center justify-between">
             <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.21-elZQR8", id: "onboarding.sections.shipping-section.div.21" })} id="onboarding.sections.shipping-section.div.6">
-              <Label id="onboarding.sections.shipping-section.label">{t('onboarding.shipping.enablePickup')}</Label>
+              <Label ui={{ uid: "onboarding.sections.shipping-section.label.2-MEbjq4", id: "onboarding.sections.shipping-section.label.2" }} id="onboarding.sections.shipping-section.label">{t('onboarding.shipping.enablePickup')}</Label>
               <p {...uiAttributes({ uid: "onboarding.sections.shipping-section.p.6-piBJ00", id: "onboarding.sections.shipping-section.p.6" })} id="onboarding.sections.shipping-section.p.3" className="text-sm text-muted-foreground">
                 {t('onboarding.shipping.enablePickupDesc')}
               </p>

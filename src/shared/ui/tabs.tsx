@@ -12,8 +12,8 @@ const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & { ui?: UiDescriptor }
+>(({ className, ui, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
     className={cn(
@@ -21,6 +21,7 @@ const TabsList = React.forwardRef<
       className
     )}
     {...props}
+    {...uiPrimitiveAttributes('tabs-list', ui)}
   />
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
@@ -44,8 +45,8 @@ TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content> & { ui?: UiDescriptor }
+>(({ className, ui, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
@@ -53,6 +54,7 @@ const TabsContent = React.forwardRef<
       className
     )}
     {...props}
+    {...uiPrimitiveAttributes('tabs-content', ui)}
   />
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;

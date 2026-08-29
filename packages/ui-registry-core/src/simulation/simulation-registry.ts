@@ -58,6 +58,14 @@ export interface UiSimulationStepRequest {
   readonly value?: string;
   /** Registered route the step runs on, when the caller knows it. */
   readonly route?: string;
+  /**
+   * Which runtime-rendered copy of `targetUid` this step addresses, when the
+   * target is `repeated`. Optional: a non-repeated target never needs one,
+   * and a repeated target without one keeps the existing "resolves to the
+   * first match" collection semantics — this narrows to one instance, it
+   * never becomes a second identity.
+   */
+  readonly instance?: string;
 }
 
 /**
@@ -79,6 +87,12 @@ export function checkUiSimulationStep(request: UiSimulationStepRequest): UiSimul
       reason: `uid "${request.targetUid}" is not rendered by route ${request.route} (registered routes: ${target.routes.join(", ") || "none"})`,
     };
   }
+  if (request.instance !== undefined && !target.repeated) {
+    return {
+      ok: false,
+      reason: `uid "${request.targetUid}" renders once; it never needs an instance to disambiguate it`,
+    };
+  }
   if (request.interaction !== target.interaction.type) {
     return {
       ok: false,
@@ -92,7 +106,19 @@ export function checkUiSimulationStep(request: UiSimulationStepRequest): UiSimul
   return { ok: true, target };
 }
 
-/** The one attribute a simulation adapter may query. */
-export function uiSimulationSelector(uid: string): string {
-  return `[data-ui-uid="${uid.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"]`;
+/** Escapes a value for use inside a `"..."`-quoted CSS attribute selector. */
+function cssAttributeValue(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
+/**
+ * The one selector a simulation adapter may build: `targetUid` and nothing
+ * else, unless `instance` is given — which never changes what the uid means,
+ * it only narrows the *same* source usage site down to one runtime-rendered
+ * copy of it, exactly like `data-ui-instance` narrows `data-ui-uid` in the
+ * DOM. Both values are escaped the same, safe way.
+ */
+export function uiSimulationSelector(uid: string, instance?: string): string {
+  const base = `[data-ui-uid="${cssAttributeValue(uid)}"]`;
+  return instance === undefined ? base : `${base}[data-ui-instance="${cssAttributeValue(instance)}"]`;
 }

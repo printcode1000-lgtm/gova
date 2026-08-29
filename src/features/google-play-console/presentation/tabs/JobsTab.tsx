@@ -22,14 +22,14 @@ export function JobsTab() {
         {jobs.jobs.map((job) => (
           <button key={job.id} {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.button.2-pGW3ra", id: "google-play-console.tabs.jobs-tab.button.2" })} type="button" onClick={() => jobs.setSelectedJobId(job.id)}
             className="block w-full rounded-md border bg-muted p-3 text-start text-sm">
-            <strong className="block">{job.command.script}</strong>
+            <strong {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.strong-B4xFhR", id: "google-play-console.tabs.jobs-tab.strong" })} className="block">{job.command.script}</strong>
             <span {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.span-h7kCHP", id: "google-play-console.tabs.jobs-tab.span" })} className="text-xs text-on-surface-variant">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
           </button>
         ))}
         {!jobs.jobs.length ? <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.8-WdS1S9", id: "google-play-console.tabs.jobs-tab.div.8" })} id="google-play-console.tabs.jobs-tab.div.2" className="text-sm">{t("releaseConsole.empty")}</div> : null}
       </div>
       <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.9-Ft5KwP", id: "google-play-console.tabs.jobs-tab.div.9" })} id="google-play-console.tabs.jobs-tab.div.3" className="space-y-3 rounded-md border bg-surface p-3">
-        {selected ? <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.10-rZPXf5", id: "google-play-console.tabs.jobs-tab.div.10" })} id="google-play-console.tabs.jobs-tab.div.4" className="flex justify-between gap-2"><strong>{selected.id}</strong>
+        {selected ? <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.10-rZPXf5", id: "google-play-console.tabs.jobs-tab.div.10" })} id="google-play-console.tabs.jobs-tab.div.4" className="flex justify-between gap-2"><strong {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.strong.2-5iQDra", id: "google-play-console.tabs.jobs-tab.strong.2" })}>{selected.id}</strong>
           {selected.status === "running" || selected.status === "queued" ? (
             <Button id="google-play-console.tabs.jobs-tab.button"
               ui={{

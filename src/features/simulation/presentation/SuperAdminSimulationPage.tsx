@@ -255,7 +255,7 @@ export function SuperAdminSimulationPage() {
                   <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.20-G1Gh2K", id: "simulation.super-admin-simulation-page.div.20" })} id="simulation.super-admin-simulation-page.div.9" className="min-w-0 rounded-xl bg-surface-container-low p-3">
                     <div {...uiAttributes({ uid: "simulation.super-admin-simulation-page.div.21-LxRxU0", id: "simulation.super-admin-simulation-page.div.21" })} id="simulation.super-admin-simulation-page.div.10" className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                       <span {...uiAttributes({ uid: "simulation.super-admin-simulation-page.span.12-3S7xu6", id: "simulation.super-admin-simulation-page.span.12" })} id="simulation.super-admin-simulation-page.span.4" className="break-words text-sm font-semibold text-on-surface">{selectedPage.label}</span>
-                      <code className="max-w-full break-all rounded-md bg-surface px-2 py-1 text-[11px] font-semibold text-primary" dir="ltr">
+                      <code {...uiAttributes({ uid: "simulation.super-admin-simulation-page.code-Aih2L9", id: "simulation.super-admin-simulation-page.code" })} className="max-w-full break-all rounded-md bg-surface px-2 py-1 text-[11px] font-semibold text-primary" dir="ltr">
                         {selectedPage.route}
                       </code>
                     </div>

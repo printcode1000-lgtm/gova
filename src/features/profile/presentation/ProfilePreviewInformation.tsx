@@ -243,7 +243,7 @@ export function ProfileFulfillmentPreviewCard({
           <>
             <p {...uiAttributes({ uid: "profile.profile-preview-information.p.11-F25r1U", id: "profile.profile-preview-information.p.11" })} id="profile.profile-preview-information.p.2" className="mt-2 break-words text-sm text-on-surface-variant">
               {ar ? "تكلفة شحن الإرجاع:" : "Return shipping paid by:"}{" "}
-              <strong className="text-on-surface">{payer}</strong>
+              <strong {...uiAttributes({ uid: "profile.profile-preview-information.strong-Z2ur5i", id: "profile.profile-preview-information.strong" })} className="text-on-surface">{payer}</strong>
             </p>
             {fulfillment.returns.policyText ? (
               <p {...uiAttributes({ uid: "profile.profile-preview-information.p.12-cq8F4Q", id: "profile.profile-preview-information.p.12" })} id="profile.profile-preview-information.p.3" className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-on-surface-variant">

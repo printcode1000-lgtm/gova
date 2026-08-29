@@ -469,7 +469,7 @@ export const SpecialtiesCard = React.forwardRef<
   if (isLoading) {
     return (
       <div {...uiAttributes({ uid: "profile.specialties-card.div.16-Wgr6EY", id: "profile.specialties-card.div.16" })} id="profile.specialties-card.div" className="flex justify-center py-8">
-        <LoadingSpinner id="profile.specialties-card.loading-spinner" size="lg" />
+        <LoadingSpinner ui={{ uid: "profile.specialties-card.loading-spinner.3-IT5r5A", id: "profile.specialties-card.loading-spinner.3" }} id="profile.specialties-card.loading-spinner" size="lg" />
       </div>
     );
   }
@@ -542,7 +542,7 @@ export const SpecialtiesCard = React.forwardRef<
                       className="h-4 w-4"
                     />
                   </div>
-                  <Label
+                  <Label ui={{ uid: "profile.specialties-card.label-3N5lT9", id: "profile.specialties-card.label" }}
                     htmlFor={categoryId}
                     className="text-[10px] font-normal leading-3 truncate peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
@@ -647,7 +647,7 @@ export const SpecialtiesCard = React.forwardRef<
             <div {...uiAttributes({ uid: "profile.specialties-card.div.34-K97HeF", id: "profile.specialties-card.div.34" })} id="profile.specialties-card.div.9" className="flex-1 overflow-y-auto p-4">
               {isLoadingSubcategories ? (
                 <div {...uiAttributes({ uid: "profile.specialties-card.div.35-T64uPm", id: "profile.specialties-card.div.35" })} id="profile.specialties-card.div.10" className="flex justify-center py-8">
-                  <LoadingSpinner id="profile.specialties-card.loading-spinner.2" size="lg" />
+                  <LoadingSpinner ui={{ uid: "profile.specialties-card.loading-spinner.4-EM6RGn", id: "profile.specialties-card.loading-spinner.4" }} id="profile.specialties-card.loading-spinner.2" size="lg" />
                 </div>
               ) : visibleSubcategories.length === 0 &&
                 doctorAppointmentSubcategories.length === 0 ? (
@@ -717,7 +717,7 @@ export const SpecialtiesCard = React.forwardRef<
                               className="h-4 w-4"
                             />
                           )}
-                          <Label
+                          <Label ui={{ uid: "profile.specialties-card.label.2-eU3SAU", id: "profile.specialties-card.label.2" }}
                             htmlFor={`sub-${subcategoryId}`}
                             className="text-[10px] font-normal leading-3 truncate peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                           >

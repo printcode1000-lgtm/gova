@@ -70,7 +70,7 @@ export function CategoryTabsStrip({
   const style = LEVEL_STYLE[level];
 
   return (
-    <div
+    <div {...uiAttributes({ uid: "shared.category-tabs-strip.div-VEz49x", id: "shared.category-tabs-strip.div" })}
       id={id}
       data-snapshot-scroll={snapshotId ? "" : undefined}
       data-snapshot-id={snapshotId}
@@ -88,7 +88,7 @@ export function CategoryTabsStrip({
           }`}
         >
           {item.imageUrl ? (
-            <span className={style.image}>
+            <span {...uiAttributes({ uid: "shared.category-tabs-strip.span-XuoZe0", id: "shared.category-tabs-strip.span" })} className={style.image}>
               <Image
                 src={item.imageUrl}
                 alt={item.label}
@@ -97,9 +97,9 @@ export function CategoryTabsStrip({
               />
             </span>
           ) : null}
-          <span className="whitespace-nowrap">{item.label}</span>
+          <span {...uiAttributes({ uid: "shared.category-tabs-strip.span.2-KXDQ6N", id: "shared.category-tabs-strip.span.2" })} className="whitespace-nowrap">{item.label}</span>
           {typeof item.count === "number" ? (
-            <span className="rounded-full bg-black/10 px-1.5 text-[10px]">
+            <span {...uiAttributes({ uid: "shared.category-tabs-strip.span.3-61oJVU", id: "shared.category-tabs-strip.span.3" })} className="rounded-full bg-black/10 px-1.5 text-[10px]">
               {item.count}
             </span>
           ) : null}

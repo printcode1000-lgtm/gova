@@ -57,15 +57,31 @@ export { checkFeatureApplicationDoorPurityContract } from './checks/feature-appl
 export { checkArchitectureDocsDriftContract } from './checks/architecture-docs-drift-contract';
 export { checkUiAttributeContract } from './checks/ui-attribute-contract';
 export {
-  UI_REGISTRY_COVERAGE_EXCEPTIONS,
-  checkUiRegistryCoverageContract,
-  collectUiRegistryUsages,
-  type UiRegistryCoverageException,
-  type UiRegistryUsage,
-} from './checks/ui-registry-coverage';
+  DOM_IDENTITY_COVERAGE_EXCEPTIONS,
+  checkDomIdentityCoverageContract,
+  type DomIdentityCoverageException,
+} from './checks/dom-identity-coverage-contract';
 export { checkUiSimulationContract } from './checks/ui-simulation-contract';
 export { checkPackageSealContract } from './checks/package-seal-contract';
 export { checkCapabilityOwnershipContract } from './checks/capability-ownership-contract';
 export { checkRepositorySweepContract } from './checks/repository-sweep-contract';
 export type { ArchitectureCheckOptions } from './runner';
 export { runArchitectureCheck } from './runner';
+
+// ── DOM identity: the canonical AST analyzer for `ui.uid` coverage ─────────
+export {
+  buildDomIdentityInventory,
+  loadProjectTsx,
+  findDescriptorLiterals,
+  isInsideIteratorCallback,
+  isActionableDomUsage,
+  type DomIdentityInventory,
+  type DomUsageSite,
+  type DomUsageOwnership,
+  type DescriptorLiteral,
+  type DescriptorLiteralField,
+} from './dom-identity/analyzer';
+export { planUidMigration, applyUidMigration, type UidMigrationEdit, type UidMigrationSkip, type UidMigrationPlan } from './dom-identity/migration';
+export { fileSemanticPrefix, mintSemanticId, mintUid } from './dom-identity/mint';
+export { hostMultiplicity, type HostMultiplicity } from './dom-identity/repetition';
+export { collectUidCatalog, type UidCatalogEntry } from './dom-identity/uid-catalog';

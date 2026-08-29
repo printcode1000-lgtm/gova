@@ -36,11 +36,11 @@ export function ReleaseConsolePage() {
       <header {...uiAttributes({ uid: "google-play-console.release-console-page.header.2-PlpCI7", id: "google-play-console.release-console-page.header.2" })} id="google-play-console.release-console-page.header"><h1 {...uiAttributes({ uid: "google-play-console.release-console-page.h1.2-o1Sl9J", id: "google-play-console.release-console-page.h1.2" })} id="google-play-console.release-console-page.h1" className="text-2xl font-semibold">{t("releaseConsole.title")}</h1>
         <p {...uiAttributes({ uid: "google-play-console.release-console-page.p.2-g0UQK5", id: "google-play-console.release-console-page.p.2" })} id="google-play-console.release-console-page.p" className="mt-1 text-sm text-on-surface-variant">{t("releaseConsole.subtitle")}</p></header>
       <Tabs value={active} onValueChange={select}>
-        <TabsList id="google-play-console.release-console-page.tabs-list" className="flex h-auto w-full flex-wrap justify-start gap-1">
+        <TabsList ui={{ uid: "google-play-console.release-console-page.tabs-list.2-93Hs5l", id: "google-play-console.release-console-page.tabs-list.2" }} id="google-play-console.release-console-page.tabs-list" className="flex h-auto w-full flex-wrap justify-start gap-1">
           {tabs.map((tab) => <TabsTrigger key={tab.id} ui={tab.ui} value={tab.id} className="gap-2">
             <tab.icon className="h-4 w-4" />{t(tab.labelKey)}</TabsTrigger>)}
         </TabsList>
-        {tabs.map((tab) => <TabsContent key={tab.id} value={tab.id} className="mt-4">
+        {tabs.map((tab) => <TabsContent key={tab.id} ui={{ uid: "google-play-console.release-console-page.tabs-content-EwQ1z1", id: "google-play-console.release-console-page.tabs-content" }} value={tab.id} className="mt-4">
           <tab.component />
         </TabsContent>)}
       </Tabs>

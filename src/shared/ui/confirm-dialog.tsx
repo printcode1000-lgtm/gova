@@ -47,26 +47,26 @@ export function ConfirmDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent id={id} className="max-w-sm">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-base">
+        <DialogHeader ui={{ uid: "shared.confirm-dialog.dialog-header-5jp7QZ", id: "shared.confirm-dialog.dialog-header" }}>
+          <DialogTitle ui={{ uid: "shared.confirm-dialog.dialog-title-nA4Pye", id: "shared.confirm-dialog.dialog-title" }} className="flex items-center gap-2 text-base">
             {tone === "destructive" ? (
               <AlertTriangle className="h-5 w-5 text-error" aria-hidden="true" />
             ) : null}
             {title}
           </DialogTitle>
-          <DialogDescription className="text-sm text-on-surface-variant">
+          <DialogDescription ui={{ uid: "shared.confirm-dialog.dialog-description-IiGu4p", id: "shared.confirm-dialog.dialog-description" }} className="text-sm text-on-surface-variant">
             {message}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-2">
-          <Button
+        <DialogFooter ui={{ uid: "shared.confirm-dialog.dialog-footer-TSOQS2", id: "shared.confirm-dialog.dialog-footer" }} className="gap-2">
+          <Button ui={{ uid: "shared.confirm-dialog.button-D4WPM3", id: "shared.confirm-dialog.button" }}
             type="button"
             variant="outline"
             onClick={() => onOpenChange(false)}
           >
             {cancelLabel}
           </Button>
-          <Button
+          <Button ui={{ uid: "shared.confirm-dialog.button.2-Uo8Nog", id: "shared.confirm-dialog.button.2" }}
             type="button"
             variant={tone === "destructive" ? "destructive" : "default"}
             onClick={() => {

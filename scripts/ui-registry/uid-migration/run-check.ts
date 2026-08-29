@@ -1,8 +1,10 @@
-import { checkUidCoverage } from "./check-uid-coverage";
+import { checkDomIdentityCoverageContract, violations } from "@asol/architecture-core";
 
-const errors = checkUidCoverage(process.cwd());
-if (errors.length > 0) {
-  console.error(errors.join("\n"));
+checkDomIdentityCoverageContract();
+if (violations.length > 0) {
+  for (const violation of violations) {
+    console.error(`${violation.file}: ${violation.violation}`);
+  }
   process.exit(1);
 }
 console.log("UI identity coverage contract holds.");

@@ -50,15 +50,15 @@ export function LoginRequiredDialog({
           <div {...uiAttributes({ uid: "auth.login-required-dialog.div.6-07Awma", id: "auth.login-required-dialog.div.6" })} id="auth.login-required-dialog.div.3" className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg shadow-primary/25">
             <LogIn id="auth.login-required-dialog.log-in" className="h-8 w-8" aria-hidden="true" />
           </div>
-          <DialogHeader id="auth.login-required-dialog.dialog-header" className="relative mt-5 text-center sm:text-center">
-            <DialogTitle id="auth.login-required-dialog.dialog-title" className="text-2xl leading-tight">{title}</DialogTitle>
-            <DialogDescription id="auth.login-required-dialog.dialog-description" className="pt-2 text-sm leading-6 text-on-surface-variant">
+          <DialogHeader ui={{ uid: "auth.login-required-dialog.dialog-header.2-E4EkDa", id: "auth.login-required-dialog.dialog-header.2" }} id="auth.login-required-dialog.dialog-header" className="relative mt-5 text-center sm:text-center">
+            <DialogTitle ui={{ uid: "auth.login-required-dialog.dialog-title.2-GHHoR1", id: "auth.login-required-dialog.dialog-title.2" }} id="auth.login-required-dialog.dialog-title" className="text-2xl leading-tight">{title}</DialogTitle>
+            <DialogDescription ui={{ uid: "auth.login-required-dialog.dialog-description.2-Zw80or", id: "auth.login-required-dialog.dialog-description.2" }} id="auth.login-required-dialog.dialog-description" className="pt-2 text-sm leading-6 text-on-surface-variant">
               {description}
             </DialogDescription>
           </DialogHeader>
         </div>
 
-        <DialogFooter id="auth.login-required-dialog.dialog-footer" className="gap-2 px-6 pb-6 pt-2 sm:flex-col sm:space-x-0">
+        <DialogFooter ui={{ uid: "auth.login-required-dialog.dialog-footer.2-8p2NEb", id: "auth.login-required-dialog.dialog-footer.2" }} id="auth.login-required-dialog.dialog-footer" className="gap-2 px-6 pb-6 pt-2 sm:flex-col sm:space-x-0">
           <Button id="auth.login-required-dialog.button" ui={{ uid: "auth.login-required.sign-in-U4FYdd", id: "auth.login-required.sign-in", kind: "action", action: "navigate-sign-in", part: "dialog-footer" }} asChild size="lg" className="w-full rounded-xl">
             <Link id="auth.login-required-dialog.link" href={signInHref}>{signInLabel}</Link>
           </Button>

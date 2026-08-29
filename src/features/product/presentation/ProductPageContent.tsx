@@ -424,7 +424,7 @@ export function ProductPageContent({ id,
   if (loading || sessionLoading)
     return (
       <div {...uiAttributes({ uid: "product.product-page-content.div-1iKLQB", id: "product.product-page-content.div" })} id={id} className="flex min-h-[50vh] items-center justify-center">
-        <LoadingSpinner size="lg" />
+        <LoadingSpinner ui={{ uid: "product.product-page-content.loading-spinner-JQD3t5", id: "product.product-page-content.loading-spinner" }} size="lg" />
       </div>
     );
 

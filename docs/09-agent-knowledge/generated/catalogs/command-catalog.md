@@ -257,10 +257,14 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:system-logs-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:trending-ribbon-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:turso-read-retry` | `Tooling` | 1 |  | 0 |
-| `npm run test:ui-registry-core` | `Tooling` | 12 |  | 0 |
+| `npm run test:ui-registry-core` | `Tooling` | 14 |  | 0 |
 | `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run typecheck` | `Tooling` | 0 |  | 0 |
 | `npm run ui-registry:apply-pending` | `Tooling` | 1 |  | 2 |
+| `npm run ui-registry:component-bridge:check` | `Tooling` | 1 |  | 0 |
+| `npm run ui-registry:component-bridge:generate` | `Tooling` | 1 |  | 0 |
+| `npm run ui-registry:generated-catalog:check` | `Tooling` | 1 |  | 0 |
+| `npm run ui-registry:generated-catalog:generate` | `Tooling` | 1 |  | 0 |
 | `npm run ui-registry:pending:check` | `Tooling` | 1 |  | 1 |
 | `npm run ui-registry:simulation:generate` | `Tooling` | 1 |  | 0 |
 | `npm run ui-registry:simulation:report` | `Tooling` | 1 |  | 0 |

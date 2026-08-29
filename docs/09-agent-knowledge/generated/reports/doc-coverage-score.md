@@ -39,7 +39,6 @@ Weak owners (<70%): **13**
 | `packages/service-runtime-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/signed-token-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/system-logs-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
-| `packages/ui-registry-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `services/notifications` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/products` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/sub2main` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
@@ -82,6 +81,7 @@ Weak owners (<70%): **13**
 | `packages/sub2main-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/submain-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/trending-ribbon-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/ui-registry-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/vercel-deploy-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/advertisements` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/auth` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

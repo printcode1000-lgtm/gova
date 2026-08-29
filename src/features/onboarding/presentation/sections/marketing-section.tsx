@@ -75,31 +75,31 @@ export function MarketingSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.13-H7o1I0", id: "onboarding.sections.marketing-section.div.13" })} id="onboarding.sections.marketing-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.marketing-section.card">
-        <CardHeader id="onboarding.sections.marketing-section.card-header">
-          <CardTitle id="onboarding.sections.marketing-section.card-title" className="flex items-center gap-2">
+      <Card ui={{ uid: "onboarding.sections.marketing-section.card.2-3C7WQH", id: "onboarding.sections.marketing-section.card.2" }} id="onboarding.sections.marketing-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.marketing-section.card-header.2-ZOp4BI", id: "onboarding.sections.marketing-section.card-header.2" }} id="onboarding.sections.marketing-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.marketing-section.card-title.2-EI7UJt", id: "onboarding.sections.marketing-section.card-title.2" }} id="onboarding.sections.marketing-section.card-title" className="flex items-center gap-2">
             <Megaphone id="onboarding.sections.marketing-section.megaphone" className="h-5 w-5" />
             {t('onboarding.marketing.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.marketing-section.card-description">{t('onboarding.marketing.description')}</CardDescription>
+          <CardDescription ui={{ uid: "onboarding.sections.marketing-section.card-description.2-5N5y20", id: "onboarding.sections.marketing-section.card-description.2" }} id="onboarding.sections.marketing-section.card-description">{t('onboarding.marketing.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.marketing-section.card-content">
+        <CardContent ui={{ uid: "onboarding.sections.marketing-section.card-content.2-Udh8E7", id: "onboarding.sections.marketing-section.card-content.2" }} id="onboarding.sections.marketing-section.card-content">
           <Tabs defaultValue="featured" className="space-y-6">
-            <TabsList id="onboarding.sections.marketing-section.tabs-list" className="grid w-full grid-cols-3">
+            <TabsList ui={{ uid: "onboarding.sections.marketing-section.tabs-list.2-Q9Df5N", id: "onboarding.sections.marketing-section.tabs-list.2" }} id="onboarding.sections.marketing-section.tabs-list" className="grid w-full grid-cols-3">
               <TabsTrigger id="onboarding.sections.marketing-section.tabs-trigger" ui={{ uid: 'onboarding.marketing.tab-featured-i7Mrb4', id: 'onboarding.marketing.tab-featured', kind: 'action', action: 'select-featured-tab', part: 'tabs' }} value="featured">{t('onboarding.marketing.tabs.featured')}</TabsTrigger>
               <TabsTrigger id="onboarding.sections.marketing-section.tabs-trigger.2" ui={{ uid: 'onboarding.marketing.tab-coupons-R5QMnN', id: 'onboarding.marketing.tab-coupons', kind: 'action', action: 'select-coupons-tab', part: 'tabs' }} value="coupons">{t('onboarding.marketing.tabs.coupons')}</TabsTrigger>
               <TabsTrigger id="onboarding.sections.marketing-section.tabs-trigger.3" ui={{ uid: 'onboarding.marketing.tab-campaigns-bEX5BE', id: 'onboarding.marketing.tab-campaigns', kind: 'action', action: 'select-campaigns-tab', part: 'tabs' }} value="campaigns">{t('onboarding.marketing.tabs.campaigns')}</TabsTrigger>
             </TabsList>
 
-            <TabsContent id="onboarding.sections.marketing-section.tabs-content" value="featured" className="space-y-4">
+            <TabsContent ui={{ uid: "onboarding.sections.marketing-section.tabs-content.4-VRRL9L", id: "onboarding.sections.marketing-section.tabs-content.4" }} id="onboarding.sections.marketing-section.tabs-content" value="featured" className="space-y-4">
               <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.14-y92MH6", id: "onboarding.sections.marketing-section.div.14" })} id="onboarding.sections.marketing-section.div.2" className="flex items-center justify-between">
                 <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.15-JTdeF4", id: "onboarding.sections.marketing-section.div.15" })} id="onboarding.sections.marketing-section.div.3">
-                  <Label id="onboarding.sections.marketing-section.label" className="font-medium">{t('onboarding.marketing.featuredTitle')}</Label>
+                  <Label ui={{ uid: "onboarding.sections.marketing-section.label.3-2W2CIz", id: "onboarding.sections.marketing-section.label.3" }} id="onboarding.sections.marketing-section.label" className="font-medium">{t('onboarding.marketing.featuredTitle')}</Label>
                   <p {...uiAttributes({ uid: "onboarding.sections.marketing-section.p.5-MeZg4Q", id: "onboarding.sections.marketing-section.p.5" })} id="onboarding.sections.marketing-section.p" className="text-sm text-muted-foreground">
                     {t('onboarding.marketing.featuredDesc')}
                   </p>
                 </div>
-                <Badge id="onboarding.sections.marketing-section.badge" variant="secondary">
+                <Badge ui={{ uid: "onboarding.sections.marketing-section.badge.2-yAN1JP", id: "onboarding.sections.marketing-section.badge.2" }} id="onboarding.sections.marketing-section.badge" variant="secondary">
                   {t('onboarding.common.selected', { count: marketing.featuredProductIds.length })}
                 </Badge>
               </div>
@@ -141,7 +141,7 @@ export function MarketingSection() {
               )}
             </TabsContent>
 
-            <TabsContent id="onboarding.sections.marketing-section.tabs-content.2" value="coupons" className="space-y-6">
+            <TabsContent ui={{ uid: "onboarding.sections.marketing-section.tabs-content.5-9wReWr", id: "onboarding.sections.marketing-section.tabs-content.5" }} id="onboarding.sections.marketing-section.tabs-content.2" value="coupons" className="space-y-6">
               <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.19-Eu7q2P", id: "onboarding.sections.marketing-section.div.19" })} id="onboarding.sections.marketing-section.div.6" className="p-4 rounded-lg border space-y-4">
                 <h4 {...uiAttributes({ uid: "onboarding.sections.marketing-section.h4.3-691sBQ", id: "onboarding.sections.marketing-section.h4.3" })} id="onboarding.sections.marketing-section.h4" className="font-medium">{t('onboarding.marketing.createCoupon')}</h4>
 
@@ -224,10 +224,10 @@ export function MarketingSection() {
                       className="flex items-center justify-between p-3 rounded-lg border"
                     >
                       <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.26-gR2PYH", id: "onboarding.sections.marketing-section.div.26" })} className="flex items-center gap-3">
-                        <code className="px-2 py-1 rounded bg-muted font-mono text-sm">
+                        <code {...uiAttributes({ uid: "onboarding.sections.marketing-section.code-rcu53H", id: "onboarding.sections.marketing-section.code" })} className="px-2 py-1 rounded bg-muted font-mono text-sm">
                           {coupon.code}
                         </code>
-                        <Badge variant="secondary">
+                        <Badge ui={{ uid: "onboarding.sections.marketing-section.badge.3-QFL2P0", id: "onboarding.sections.marketing-section.badge.3" }} variant="secondary">
                           {coupon.discountType === 'percentage'
                             ? t('onboarding.marketing.percentOff', { value: coupon.discountValue })
                             : t('onboarding.marketing.amountOff', { value: coupon.discountValue })}
@@ -242,7 +242,7 @@ export function MarketingSection() {
               )}
             </TabsContent>
 
-            <TabsContent id="onboarding.sections.marketing-section.tabs-content.3" value="campaigns" className="space-y-4">
+            <TabsContent ui={{ uid: "onboarding.sections.marketing-section.tabs-content.6-qZ7CQe", id: "onboarding.sections.marketing-section.tabs-content.6" }} id="onboarding.sections.marketing-section.tabs-content.3" value="campaigns" className="space-y-4">
               <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.27-aT6OBt", id: "onboarding.sections.marketing-section.div.27" })} id="onboarding.sections.marketing-section.div.12" className="text-center py-8 text-muted-foreground">
                 <Calendar id="onboarding.sections.marketing-section.calendar" className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p {...uiAttributes({ uid: "onboarding.sections.marketing-section.p.9-8CdPsY", id: "onboarding.sections.marketing-section.p.9" })} id="onboarding.sections.marketing-section.p.3">{t('onboarding.marketing.campaignsDesc')}</p>

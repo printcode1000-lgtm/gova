@@ -294,7 +294,7 @@ export function SuperAdminTrendingRibbonPage() {
         </div>
         <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.25-3cJU5d", id: "super-admin.super-admin-trending-ribbon-page.div.25" })} id="super-admin.super-admin-trending-ribbon-page.div.6" className="flex flex-wrap items-end gap-3">
           <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.26-G3SCQj", id: "super-admin.super-admin-trending-ribbon-page.div.26" })} id="super-admin.super-admin-trending-ribbon-page.div.7" className="min-w-52 space-y-2">
-            <Label id="super-admin.super-admin-trending-ribbon-page.label" htmlFor="super-admin.trending-ribbon.check-interval">الفترة بالدقائق</Label>
+            <Label ui={{ uid: "super-admin.super-admin-trending-ribbon-page.label.5-3rVE4p", id: "super-admin.super-admin-trending-ribbon-page.label.5" }} id="super-admin.super-admin-trending-ribbon-page.label" htmlFor="super-admin.trending-ribbon.check-interval">الفترة بالدقائق</Label>
             <Input ui={{ uid: "super-admin.trending-ribbon.check-interval-P84Ols", id: "super-admin.trending-ribbon.check-interval", kind: "field", part: "settings" }}
               id="super-admin.trending-ribbon.check-interval"
               type="number"
@@ -343,7 +343,7 @@ export function SuperAdminTrendingRibbonPage() {
       {/* ── Badge Settings ── */}
       <section {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.section.9-1wDAZL", id: "super-admin.super-admin-trending-ribbon-page.section.9" })} id="super-admin.super-admin-trending-ribbon-page.section.3" className="mb-6 rounded-xl border bg-card p-4">
         <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.28-7JLhuM", id: "super-admin.super-admin-trending-ribbon-page.div.28" })} id="super-admin.super-admin-trending-ribbon-page.div.9" className="mb-3 space-y-2">
-          <Label id="super-admin.super-admin-trending-ribbon-page.label.2" htmlFor="badge-label-input" className="font-semibold text-base block">
+          <Label ui={{ uid: "super-admin.super-admin-trending-ribbon-page.label.6-p4E1ay", id: "super-admin.super-admin-trending-ribbon-page.label.6" }} id="super-admin.super-admin-trending-ribbon-page.label.2" htmlFor="badge-label-input" className="font-semibold text-base block">
             شارة العنوان (Badge Label)
           </Label>
           <Input ui={{ uid: "super-admin.trending-ribbon.badge-label-BTA6QI", id: "super-admin.trending-ribbon.badge-label", kind: "field", part: "badge" }}
@@ -366,7 +366,7 @@ export function SuperAdminTrendingRibbonPage() {
         </div>
         <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.30-myHg4j", id: "super-admin.super-admin-trending-ribbon-page.div.30" })} id="super-admin.super-admin-trending-ribbon-page.div.11" className="grid gap-4 sm:grid-cols-2">
           <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.31-3H9NPA", id: "super-admin.super-admin-trending-ribbon-page.div.31" })} id="super-admin.super-admin-trending-ribbon-page.div.12" className="space-y-1">
-            <Label id="super-admin.super-admin-trending-ribbon-page.label.3" htmlFor="new-item-label">النص المعروض</Label>
+            <Label ui={{ uid: "super-admin.super-admin-trending-ribbon-page.label.7-D6BYRh", id: "super-admin.super-admin-trending-ribbon-page.label.7" }} id="super-admin.super-admin-trending-ribbon-page.label.3" htmlFor="new-item-label">النص المعروض</Label>
             <Input ui={{ uid: "super-admin.trending-ribbon.new-item-label-J00CtF", id: "super-admin.trending-ribbon.new-item-label", kind: "field", part: "new-item" }}
               id="new-item-label"
               placeholder="مثال: خصم 20% على العطور"
@@ -375,7 +375,7 @@ export function SuperAdminTrendingRibbonPage() {
             />
           </div>
           <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.32-qb9Tiz", id: "super-admin.super-admin-trending-ribbon-page.div.32" })} id="super-admin.super-admin-trending-ribbon-page.div.13" className="space-y-1">
-            <Label id="super-admin.super-admin-trending-ribbon-page.label.4" htmlFor="new-item-action">الإجراء / الرابط</Label>
+            <Label ui={{ uid: "super-admin.super-admin-trending-ribbon-page.label.8-U61Jj3", id: "super-admin.super-admin-trending-ribbon-page.label.8" }} id="super-admin.super-admin-trending-ribbon-page.label.4" htmlFor="new-item-action">الإجراء / الرابط</Label>
             <Input ui={{ uid: "super-admin.trending-ribbon.new-item-action-7aGP0n", id: "super-admin.trending-ribbon.new-item-action", kind: "field", part: "new-item" }}
               id="new-item-action"
               placeholder="مثال: /profile أو معرف المنتج"
@@ -443,7 +443,7 @@ export function SuperAdminTrendingRibbonPage() {
                 <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.38-pgN0AP", id: "super-admin.super-admin-trending-ribbon-page.div.38" })} className="min-w-0 flex-1">
                   <p {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.p.18-PQpXl3", id: "super-admin.super-admin-trending-ribbon-page.p.18" })} className="truncate text-sm font-medium">{item.label}</p>
                   <p {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.p.19-Tlj4I3", id: "super-admin.super-admin-trending-ribbon-page.p.19" })} className="truncate text-xs text-muted-foreground">
-                    الإجراء: <code>{item.action}</code>
+                    الإجراء: <code {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.code-c14SE7", id: "super-admin.super-admin-trending-ribbon-page.code" })}>{item.action}</code>
                   </p>
                 </div>
                 <span {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.span.2-Si21Ov", id: "super-admin.super-admin-trending-ribbon-page.span.2" })} className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">

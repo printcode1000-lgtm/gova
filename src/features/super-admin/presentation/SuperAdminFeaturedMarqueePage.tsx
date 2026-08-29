@@ -311,7 +311,7 @@ export function SuperAdminFeaturedMarqueePage() {
         </div>
         <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.24-M9sxLA", id: "super-admin.super-admin-featured-marquee-page.div.24" })} id="super-admin.super-admin-featured-marquee-page.div.6" className="flex flex-wrap items-end gap-3">
           <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.25-NM89JT", id: "super-admin.super-admin-featured-marquee-page.div.25" })} id="super-admin.super-admin-featured-marquee-page.div.7" className="min-w-52 space-y-2">
-            <Label id="super-admin.super-admin-featured-marquee-page.label" htmlFor="super-admin.featured-marquee.check-interval">الفترة بالدقائق</Label>
+            <Label ui={{ uid: "super-admin.super-admin-featured-marquee-page.label.3-DUE6nT", id: "super-admin.super-admin-featured-marquee-page.label.3" }} id="super-admin.super-admin-featured-marquee-page.label" htmlFor="super-admin.featured-marquee.check-interval">الفترة بالدقائق</Label>
             <Input ui={{ uid: "super-admin.featured-marquee.check-interval-K57juN", id: "super-admin.featured-marquee.check-interval", kind: "field", part: "settings" }}
               id="super-admin.featured-marquee.check-interval"
               type="number"
@@ -363,7 +363,7 @@ export function SuperAdminFeaturedMarqueePage() {
         </div>
         <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.28-7Q4bsM", id: "super-admin.super-admin-featured-marquee-page.div.28" })} id="super-admin.super-admin-featured-marquee-page.div.10" className="flex gap-2">
           <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.29-Pcex7w", id: "super-admin.super-admin-featured-marquee-page.div.29" })} id="super-admin.super-admin-featured-marquee-page.div.11" className="flex-1 space-y-1">
-            <Label id="super-admin.super-admin-featured-marquee-page.label.2" htmlFor="new-product-id">معرف المنتج Product ID</Label>
+            <Label ui={{ uid: "super-admin.super-admin-featured-marquee-page.label.4-fFns6k", id: "super-admin.super-admin-featured-marquee-page.label.4" }} id="super-admin.super-admin-featured-marquee-page.label.2" htmlFor="new-product-id">معرف المنتج Product ID</Label>
             <Input ui={{ uid: "super-admin.featured-marquee.new-product-id-bGl51Q", id: "super-admin.featured-marquee.new-product-id", kind: "field", part: "new-item" }}
               id="new-product-id"
               placeholder="مثال: 3a1b2c-..."
@@ -386,7 +386,7 @@ export function SuperAdminFeaturedMarqueePage() {
           </div>
         </div>
         <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.16-gv0LMe", id: "super-admin.super-admin-featured-marquee-page.p.16" })} id="super-admin.super-admin-featured-marquee-page.p.7" className="mt-2 text-xs text-muted-foreground">
-          يمكنك نسخ معرف المنتج من صفحة المنتج، من قيمة <code>productId</code> في
+          يمكنك نسخ معرف المنتج من صفحة المنتج، من قيمة <code {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.code-qXd1vD", id: "super-admin.super-admin-featured-marquee-page.code" })}>productId</code> في
           الرابط.
         </p>
       </section>

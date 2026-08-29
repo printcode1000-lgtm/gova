@@ -36,7 +36,7 @@ export function SchemaSyncPanel() {
         <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.13-iWo3X1", id: "dev.monitor.schema-sync-panel.div.13" })} id="dev.monitor.schema-sync-panel.div.3" className="detail-section-title">مزامنة المخطط</div>
         <p {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.p.5-YmU3Dv", id: "dev.monitor.schema-sync-panel.p.5" })} id="dev.monitor.schema-sync-panel.p" style={{ color: '#f97316' }}>{error}</p>
         <p {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.p.6-Xhie6W", id: "dev.monitor.schema-sync-panel.p.6" })} id="dev.monitor.schema-sync-panel.p.2" style={{ opacity: 0.7, fontSize: 13 }}>
-          نفّذ <code>npm run db:schema:sync</code> أو انشر خادم ASOL لإنشاء التقرير.
+          نفّذ <code {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.code-JPZS4P", id: "dev.monitor.schema-sync-panel.code" })}>npm run db:schema:sync</code> أو انشر خادم ASOL لإنشاء التقرير.
         </p>
       </div>
     );
@@ -74,7 +74,7 @@ export function SchemaSyncPanel() {
               <ul {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.ul.4-p53yAk", id: "dev.monitor.schema-sync-panel.ul.4" })} id="dev.monitor.schema-sync-panel.ul" style={{ fontSize: 13, marginBottom: 16 }}>
                 {report.operations.map((op, index) => (
                   <li key={`${op.type}-${index}`} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li-T7EUzH", id: "dev.monitor.schema-sync-panel.li" })}>
-                    <strong>{op.type}</strong>: {op.description}
+                    <strong {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.strong-IrpS1Y", id: "dev.monitor.schema-sync-panel.strong" })}>{op.type}</strong>: {op.description}
                   </li>
                 ))}
               </ul>
@@ -84,7 +84,7 @@ export function SchemaSyncPanel() {
           {report.sqlExecuted.length > 0 && (
             <>
               <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.18-2rE2S5", id: "dev.monitor.schema-sync-panel.div.18" })} id="dev.monitor.schema-sync-panel.div.8" className="detail-section-title">SQL المنفّذ</div>
-              <pre style={{ fontSize: 12, overflow: 'auto', background: 'rgba(0,0,0,0.2)', padding: 12, borderRadius: 8 }}>
+              <pre {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.pre-dIZ2jq", id: "dev.monitor.schema-sync-panel.pre" })} style={{ fontSize: 12, overflow: 'auto', background: 'rgba(0,0,0,0.2)', padding: 12, borderRadius: 8 }}>
                 {report.sqlExecuted.join('\n\n')}
               </pre>
             </>

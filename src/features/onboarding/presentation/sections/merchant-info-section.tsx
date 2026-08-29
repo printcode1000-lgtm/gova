@@ -48,12 +48,12 @@ export function MerchantInfoSection() {
 
   return (
     <div {...uiAttributes({ uid: "onboarding.sections.merchant-info-section.div.5-qI1MMu", id: "onboarding.sections.merchant-info-section.div.5" })} id="onboarding.sections.merchant-info-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.merchant-info-section.card">
-        <CardHeader id="onboarding.sections.merchant-info-section.card-header">
-          <CardTitle id="onboarding.sections.merchant-info-section.card-title">{t('onboarding.merchantInfo.title')}</CardTitle>
-          <CardDescription id="onboarding.sections.merchant-info-section.card-description">{t('onboarding.merchantInfo.description')}</CardDescription>
+      <Card ui={{ uid: "onboarding.sections.merchant-info-section.card.2-cVe5GI", id: "onboarding.sections.merchant-info-section.card.2" }} id="onboarding.sections.merchant-info-section.card">
+        <CardHeader ui={{ uid: "onboarding.sections.merchant-info-section.card-header.2-6beSVH", id: "onboarding.sections.merchant-info-section.card-header.2" }} id="onboarding.sections.merchant-info-section.card-header">
+          <CardTitle ui={{ uid: "onboarding.sections.merchant-info-section.card-title.2-r163VO", id: "onboarding.sections.merchant-info-section.card-title.2" }} id="onboarding.sections.merchant-info-section.card-title">{t('onboarding.merchantInfo.title')}</CardTitle>
+          <CardDescription ui={{ uid: "onboarding.sections.merchant-info-section.card-description.2-Jz45EX", id: "onboarding.sections.merchant-info-section.card-description.2" }} id="onboarding.sections.merchant-info-section.card-description">{t('onboarding.merchantInfo.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.merchant-info-section.card-content" className="space-y-6">
+        <CardContent ui={{ uid: "onboarding.sections.merchant-info-section.card-content.2-4kvjDD", id: "onboarding.sections.merchant-info-section.card-content.2" }} id="onboarding.sections.merchant-info-section.card-content" className="space-y-6">
           <div {...uiAttributes({ uid: "onboarding.sections.merchant-info-section.div.6-301ePI", id: "onboarding.sections.merchant-info-section.div.6" })} id="onboarding.sections.merchant-info-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.merchant-info-section.form-field" label={t('onboarding.merchantInfo.yourName')} htmlFor="merchantName" required error={errors.merchantName}>
               <FormInput ui={{ uid: 'onboarding.merchant-info.merchant-name-89HUhH', id: 'onboarding.merchant-info.merchant-name', kind: 'field', part: 'form' }}

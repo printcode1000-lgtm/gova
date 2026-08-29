@@ -2,13 +2,17 @@
 
 import * as React from 'react';
 import { cn } from '@/shared/utils';
+import { type UiDescriptor, uiAttributes } from '@asol/ui-registry-core';
+
+import { uiPrimitiveAttributes } from './ui-primitive-attributes';
 
 interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg';
   className?: string;
+  ui?: UiDescriptor;
 }
 
-export function LoadingSpinner({ size = 'md', className, ...props }: LoadingSpinnerProps & { id?: string }) {
+export function LoadingSpinner({ size = 'md', className, ui, ...props }: LoadingSpinnerProps & { id?: string }) {
   const sizeClasses = {
     sm: 'w-4 h-4',
     md: 'w-8 h-8',
@@ -16,8 +20,13 @@ export function LoadingSpinner({ size = 'md', className, ...props }: LoadingSpin
   };
 
   return (
-    <div className={cn('flex items-center justify-center', className)} {...props}>
+    <div
+      className={cn('flex items-center justify-center', className)}
+      {...props}
+      {...uiPrimitiveAttributes('loading-spinner', ui)}
+    >
       <div
+        {...uiAttributes({ uid: 'shared.ui.loading-spinner.arc-M8p2Rt', id: 'shared.ui.loading-spinner.arc' })}
         className={cn(
           'rounded-full animate-spin',
           sizeClasses[size]

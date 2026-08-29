@@ -26,7 +26,7 @@ export function DeployRunbookCollapsible(props: {
   nested?: boolean;
 } & { id?: string }) {
   return (
-    <details id={props.id}
+    <details {...uiAttributes({ uid: "google-play-console.deploy-runbook-collapsible.details-Od3AKX", id: "google-play-console.deploy-runbook-collapsible.details" })} id={props.id}
       className={cn(
         "group w-full min-w-0 max-w-full rounded-md border bg-surface",
         props.nested && "border-dashed bg-muted/20",
