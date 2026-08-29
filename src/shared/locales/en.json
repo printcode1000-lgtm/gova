@@ -161,6 +161,7 @@
     "common.loading": "Loading...",
     "common.loadingShort": "Loading",
     "common.optional": "Optional",
+    "common.retry": "Try again",
     "common.to": "to",
     "common.upload": "Upload",
     "density.comfortable": "Comfortable",
@@ -1559,5 +1560,6 @@
     "ota.current": "App is up to date",
     "ota.ready": "Update ready and will install on next launch",
     "ota.revoked": "Update was revoked",
-    "ota.superseded": "The ready update was replaced by a newer release"
+    "ota.superseded": "The ready update was replaced by a newer release",
+    "profile.specialties.loadFailed": "Your saved specialties could not be loaded, so they are not shown here. Try again before editing them."
 }

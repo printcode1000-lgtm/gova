@@ -221103,6 +221103,12 @@
     },
     {
       "from": "source:src/features/profile/presentation/SpecialtiesCard.tsx",
+      "to": "package:@asol/system-logs-core",
+      "kind": "imports",
+      "detail": "@asol/system-logs-core"
+    },
+    {
+      "from": "source:src/features/profile/presentation/SpecialtiesCard.tsx",
       "to": "source:src/core/api/index.ts",
       "kind": "imports",
       "detail": "@/core/api"

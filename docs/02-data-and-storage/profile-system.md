@@ -172,6 +172,12 @@ eligibility live in
 `src/features/profile/presentation/specialties-selection.ts`, so the UI does not
 embed catalog-selection rules directly.
 
+A failed read of the saved specialties is a visible state, not an empty editor:
+the card shows what happened with a retry, keeps `canSave` false, and reloads
+itself when the browser reports a network again. An empty editor over unread
+data is the one state this card must never be saved from, because saving it
+would write "no specialties" over the ones the profile has.
+
 The selected-specialties summary strip (`profile.specialties-card.div.4`) lays
 its dynamically generated chips out as a two-row grid that flows into new
 columns (`grid-flow-col` with `grid-rows-2`) and scrolls horizontally once the

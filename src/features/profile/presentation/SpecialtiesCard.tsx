@@ -10,6 +10,7 @@ import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
 import { Button } from "@/shared/ui/button";
 import { asolApi } from "@/core/api";
 import { profileService } from "@/features/profile/application/services/profile-service";
+import { reportSystemIssue } from "@asol/system-logs-core";
 import { productApiService } from "@/features/product/ui";
 import {
   categoryService,
@@ -94,6 +95,8 @@ export const SpecialtiesCard = React.forwardRef<
   const [impactedProductCount, setImpactedProductCount] = React.useState(0);
   const label = t("onboarding.storeIdentity.specialties");
 
+  const [loadFailed, setLoadFailed] = React.useState(false);
+
   const applySelection = React.useCallback(
     (selection: ProfileSpecialtiesSelection) => {
       const normalized = normalizeLoadedSpecialties(selection);
@@ -112,19 +115,40 @@ export const SpecialtiesCard = React.forwardRef<
     [],
   );
 
-  React.useEffect(() => {
+  /**
+   * The saved selection, and what happens when it cannot be read.
+   *
+   * A failed load used to leave the editor showing an empty selection with no
+   * sign anything was wrong, which is the one state this card must never be
+   * saved from: the user would be writing "no specialties" over the ones they
+   * have. The failure is now visible, the editor stays closed behind it, and
+   * the load retries itself when the browser reports a network again.
+   */
+  const loadSpecialties = React.useCallback(async () => {
     if (!uid) return;
-    let cancelled = false;
-    profileService
-      .getSpecialties(uid)
-      .then((selection) => {
-        if (!cancelled) applySelection(selection);
-      })
-      .catch((error) => console.error("Failed to load specialties:", error));
-    return () => {
-      cancelled = true;
-    };
+    try {
+      applySelection(await profileService.getSpecialties(uid));
+      setLoadFailed(false);
+    } catch (error) {
+      setLoadFailed(true);
+      reportSystemIssue({
+        feature: "Profile",
+        operation: "load-specialties",
+        error,
+      });
+    }
   }, [applySelection, uid]);
+
+  React.useEffect(() => {
+    void loadSpecialties();
+  }, [loadSpecialties]);
+
+  React.useEffect(() => {
+    if (!loadFailed || typeof window === "undefined") return;
+    const handleOnline = () => void loadSpecialties();
+    window.addEventListener("online", handleOnline);
+    return () => window.removeEventListener("online", handleOnline);
+  }, [loadFailed, loadSpecialties]);
 
   React.useEffect(() => {
     const fetchCategories = async () => {
@@ -146,7 +170,7 @@ export const SpecialtiesCard = React.forwardRef<
     () => ({
       isDirty,
       isSaving: false,
-      canSave: true,
+      canSave: !loadFailed,
       label,
       save: async () => true,
       getSnapshot: () =>
@@ -164,6 +188,7 @@ export const SpecialtiesCard = React.forwardRef<
       applySelection,
       isDirty,
       label,
+      loadFailed,
       selectedSpecialties,
       selectedSubcategories,
     ],
@@ -444,6 +469,26 @@ export const SpecialtiesCard = React.forwardRef<
     return (
       <div id="profile.specialties-card.div" className="flex justify-center py-8">
         <LoadingSpinner id="profile.specialties-card.loading-spinner" size="lg" />
+      </div>
+    );
+  }
+
+  if (loadFailed) {
+    return (
+      <div
+        id="profile.specialties-card.div.15"
+        className="space-y-3 rounded-xl border border-error/40 bg-error/10 p-4 text-center"
+      >
+        <p id="profile.specialties-card.p.2" className="text-sm text-on-surface">
+          {t("profile.specialties.loadFailed")}
+        </p>
+        <Button id="profile.specialties-card.button.4" ui={{ uid: "profile.specialties.retry-load-fN6qOS", id: "profile.specialties.retry-load", kind: "action", action: "retry-load", part: "specialties" }}
+          type="button"
+          variant="outline"
+          onClick={() => void loadSpecialties()}
+        >
+          {t("common.retry")}
+        </Button>
       </div>
     );
   }

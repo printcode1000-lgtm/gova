@@ -161,6 +161,7 @@
     "common.loading": "جاري التحميل...",
     "common.loadingShort": "تحميل",
     "common.optional": "اختياري",
+    "common.retry": "إعادة المحاولة",
     "common.to": "إلى",
     "common.upload": "رفع",
     "density.comfortable": "متوسطة",
@@ -1559,5 +1560,6 @@
     "ota.current": "التطبيق محدّث",
     "ota.ready": "التحديث جاهز وسيُثبّت عند التشغيل التالي",
     "ota.revoked": "تم سحب التحديث",
-    "ota.superseded": "استُبدل التحديث الجاهز بإصدار أحدث"
+    "ota.superseded": "استُبدل التحديث الجاهز بإصدار أحدث",
+    "profile.specialties.loadFailed": "تعذّر تحميل تخصصاتك المحفوظة، لذلك لا تظهر هنا. أعد المحاولة قبل تعديلها."
 }
