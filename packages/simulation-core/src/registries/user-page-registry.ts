@@ -54,7 +54,7 @@ function fieldTarget(id: string): SimulationTarget {
 }
 
 function listItemTarget(id: string): SimulationTarget {
-  return target("list-item", id);
+  return { ...target("list-item", id), selection: "first" };
 }
 
 function fileTarget(id: string): SimulationTarget {

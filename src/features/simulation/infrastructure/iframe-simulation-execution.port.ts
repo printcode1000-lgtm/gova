@@ -39,6 +39,24 @@ function targetLabel(target: SimulationTarget): string {
   return `${target.simulationId}(${target.targetUid})`;
 }
 
+function assertTargetAddressing(target: SimulationTarget): ReturnType<typeof uiSimulationTarget> {
+  const registered = uiSimulationTarget(target.targetUid);
+  if (!registered) throw new Error(`simulationTargetNotRegistered:${targetLabel(target)}`);
+  if (target.instance !== undefined && target.selection !== undefined) {
+    throw new Error(`simulationTargetAddressingConflict:${targetLabel(target)}`);
+  }
+  if (target.instance !== undefined && !registered.repeated) {
+    throw new Error(`simulationTargetInstanceOnSingle:${targetLabel(target)}`);
+  }
+  if (target.selection !== undefined && !registered.repeated) {
+    throw new Error(`simulationTargetSelectionOnSingle:${targetLabel(target)}`);
+  }
+  if (registered.repeated && target.instance === undefined && target.selection !== "first") {
+    throw new Error(`simulationRepeatedTargetRequiresInstanceOrExplicitFirst:${targetLabel(target)}`);
+  }
+  return registered;
+}
+
 export class IframeSimulationExecutionPort implements SimulationExecutionPort {
   private iframe: HTMLIFrameElement | null = null;
 
@@ -71,6 +89,7 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
   }
 
   private target(target: SimulationTarget): Element {
+    const registered = assertTargetAddressing(target);
     const selector = targetSelector(target);
     const matches = this.documentNode().querySelectorAll(selector);
     if (matches.length === 0) {
@@ -80,23 +99,18 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
           : `simulationInteractionTargetMissing:${targetLabel(target)}`,
       );
     }
-    // An `instance` selector already narrows to `[data-ui-uid][data-ui-instance]`,
-    // so more than one match there is a real DOM bug (two rows sharing an
-    // instance id), never an intentional collection to fall back on.
     if (target.instance !== undefined && matches.length > 1) {
       throw new Error(
         `simulationInteractionTargetInstanceAmbiguous:${targetLabel(target)} instance="${target.instance}" matched ${matches.length} elements`,
       );
     }
-    // Multiplicity is a registry fact, not a guess: a descriptor rendered once
-    // per row of a real list resolves to the first row by contract, and
-    // anything else that matches twice is an ambiguity the run must not paper
-    // over by picking one — unless the caller supplied an instance, handled above.
-    const registered = uiSimulationTarget(target.targetUid);
-    if (target.instance === undefined && matches.length > 1 && !registered?.repeated) {
+    if (target.instance === undefined && matches.length > 1 && target.selection !== "first") {
       throw new Error(
         `simulationInteractionTargetAmbiguous:${targetLabel(target)} matched ${matches.length} elements`,
       );
+    }
+    if (target.selection === "first" && !registered.repeated) {
+      throw new Error(`simulationFirstSelectionRequiresRepeatedTarget:${targetLabel(target)}`);
     }
     return matches[0]!;
   }
@@ -179,6 +193,7 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
   }
 
   async waitForTarget(target: SimulationTarget, timeoutMs = TARGET_TIMEOUT_MS): Promise<void> {
+    assertTargetAddressing(target);
     const startedAt = Date.now();
     const selector = targetSelector(target);
     while (Date.now() - startedAt <= timeoutMs) {
@@ -189,6 +204,7 @@ export class IframeSimulationExecutionPort implements SimulationExecutionPort {
   }
 
   async hasTarget(target: SimulationTarget): Promise<boolean> {
+    assertTargetAddressing(target);
     try {
       return Boolean(this.documentNode().querySelector(targetSelector(target)));
     } catch {
