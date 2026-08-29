@@ -6,7 +6,7 @@ import {
 } from "@/features/product-card";
 
 import type { ProfileProductsTabsLabels } from "./ProfileProductsTabs";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function ProfileProductsGrid({
   featuredProductIds,
@@ -64,6 +64,13 @@ export function ProfileProductsGrid({
             variant={showManagement ? "profile-edit" : "profile-preview"}
             className="min-w-0"
             actions={actions}
+            ui={{
+              uid: "profile-products.card-P7rD4m",
+              id: "profile-products.card",
+              kind: "item",
+              interaction: { type: "tap" },
+              instance: createOpaqueUiInstanceId("profile-product", product.id),
+            }}
             onOpen={() => onViewProduct(product)}
           />
         );
