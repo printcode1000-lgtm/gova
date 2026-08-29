@@ -138,7 +138,11 @@ function exportedComponentCandidates(sourceFile: ts.SourceFile): string[] {
       if ((ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) !== 0) exported.add(statement.name.text);
     }
     if (ts.isVariableStatement(statement)) {
-      const inlineExport = (ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) !== 0;
+      const inlineExport =
+        ts.canHaveModifiers(statement) &&
+        ts.getModifiers(statement)?.some(
+          (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword,
+        ) === true;
       for (const declaration of statement.declarationList.declarations) {
         if (!ts.isIdentifier(declaration.name) || !/^[A-Z]/.test(declaration.name.text)) continue;
         declared.add(declaration.name.text);
