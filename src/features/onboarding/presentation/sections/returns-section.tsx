@@ -10,9 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/sha
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
 import { Label } from '@/shared/ui/label';
 import { cn } from '@/shared/utils';
-import type { UiDescriptor } from '@asol/ui-registry-core';
 import type { ReturnPolicyType } from '@/features/onboarding/domain/types';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 const POLICY_TYPES: ReturnPolicyType[] = [
   'full_returns',
@@ -20,17 +19,6 @@ const POLICY_TYPES: ReturnPolicyType[] = [
   'store_credit',
   'no_returns',
 ];
-
-/**
- * Each policy option is registered from its own stable domain id, so the uid
- * never depends on the rendered order of POLICY_TYPES.
- */
-const POLICY_TYPE_UI = {
-  full_returns: { uid: 'onboarding.returns.policy-full-returns-Y8J2DR', id: 'onboarding.returns.policy-full-returns', kind: 'field', action: 'select-policy', part: 'policy' },
-  exchange_only: { uid: 'onboarding.returns.policy-exchange-only-T2WHzq', id: 'onboarding.returns.policy-exchange-only', kind: 'field', action: 'select-policy', part: 'policy' },
-  store_credit: { uid: 'onboarding.returns.policy-store-credit-75R1vi', id: 'onboarding.returns.policy-store-credit', kind: 'field', action: 'select-policy', part: 'policy' },
-  no_returns: { uid: 'onboarding.returns.policy-no-returns-2Pfo4H', id: 'onboarding.returns.policy-no-returns', kind: 'field', action: 'select-policy', part: 'policy' },
-} as const satisfies Record<ReturnPolicyType, UiDescriptor>;
 
 const REFUND_METHODS = ['original', 'store_credit', 'choice'] as const;
 const RETURN_PERIODS = ['7', '14', '30', '60', '90'] as const;
@@ -66,7 +54,7 @@ export function ReturnsSection() {
             >
               {POLICY_TYPES.map((policy) => (
                 <div
-                  key={policy} {...uiAttributes({ uid: "onboarding.sections.returns-section.div.8-PeZ3VH", id: "onboarding.sections.returns-section.div.8" })}
+                  key={policy} {...uiAttributes({ uid: "onboarding.sections.returns-section.div.8-PeZ3VH", id: "onboarding.sections.returns-section.div.8", instance: createUiInstanceId(policy) })}
                   className={cn(
                     'relative flex items-start gap-3 rounded-lg border p-4 transition-all',
                     returns.policyType === policy
@@ -74,12 +62,12 @@ export function ReturnsSection() {
                       : 'border-border',
                   )}
                 >
-                  <RadioGroupItem ui={{ uid: "onboarding.sections.returns-section.radio-group-item-t90iyB", id: "onboarding.sections.returns-section.radio-group-item" }} ui={POLICY_TYPE_UI[policy]} value={policy} id={policy} className="mt-0.5" />
-                  <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.9-Y3QGzW", id: "onboarding.sections.returns-section.div.9" })} className="flex-1">
-                    <Label ui={{ uid: "onboarding.sections.returns-section.label.3-gYY3L0", id: "onboarding.sections.returns-section.label.3" }} htmlFor={policy} className="font-medium">
+                  <RadioGroupItem ui={{ uid: "onboarding.sections.returns-section.radio-group-item-t90iyB", id: "onboarding.sections.returns-section.radio-group-item", kind: "field", action: "select-policy", part: "policy", instance: createUiInstanceId(policy) }} value={policy} id={policy} className="mt-0.5" />
+                  <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.9-Y3QGzW", id: "onboarding.sections.returns-section.div.9", instance: createUiInstanceId(policy) })} className="flex-1">
+                    <Label ui={{ uid: "onboarding.sections.returns-section.label.3-gYY3L0", id: "onboarding.sections.returns-section.label.3", instance: createUiInstanceId(policy) }} htmlFor={policy} className="font-medium">
                       {t(`onboarding.returns.policyTypes.${policy}.label`)}
                     </Label>
-                    <p {...uiAttributes({ uid: "onboarding.sections.returns-section.p-55UNY5", id: "onboarding.sections.returns-section.p" })} className="text-sm text-muted-foreground mt-1">
+                    <p {...uiAttributes({ uid: "onboarding.sections.returns-section.p-55UNY5", id: "onboarding.sections.returns-section.p", instance: createUiInstanceId(policy) })} className="text-sm text-muted-foreground mt-1">
                       {t(`onboarding.returns.policyTypes.${policy}.description`)}
                     </p>
                   </div>

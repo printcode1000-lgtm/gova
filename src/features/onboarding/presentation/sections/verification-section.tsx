@@ -12,8 +12,7 @@ import { cn } from '@/shared/utils';
 import type { DocumentType, VerificationDocument } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
 import { NativeCore, isCancelledError } from '@asol/native-core';
-import type { UiDescriptor } from '@asol/ui-registry-core';
-import { uiAttributes } from '@asol/ui-registry-core';
+import { createUiInstanceId, uiAttributes } from '@asol/ui-registry-core';
 
 const DOCUMENT_TYPES: DocumentType[] = [
   'business_license',
@@ -28,32 +27,6 @@ const AVAILABLE_BADGES = [
   { id: 'top_rated', icon: '⭐' },
   { id: 'eco_friendly', icon: '🌱' },
 ] as const;
-
-/**
- * One descriptor per document type and per badge, keyed by the same domain
- * constants that drive the lists. The identity never depends on the rendered
- * order, the translation, or the upload state.
- */
-const DOCUMENT_REMOVE_UI = {
-  business_license: { uid: 'onboarding.verification.document-remove.business-license-GGx8Vg', id: 'onboarding.verification.document-remove.business-license', kind: 'action', action: 'remove-document', part: 'documents' },
-  tax_certificate: { uid: 'onboarding.verification.document-remove.tax-certificate-02HcXE', id: 'onboarding.verification.document-remove.tax-certificate', kind: 'action', action: 'remove-document', part: 'documents' },
-  id_card: { uid: 'onboarding.verification.document-remove.id-card-Vk9RRD', id: 'onboarding.verification.document-remove.id-card', kind: 'action', action: 'remove-document', part: 'documents' },
-  bank_statement: { uid: 'onboarding.verification.document-remove.bank-statement-ETT15U', id: 'onboarding.verification.document-remove.bank-statement', kind: 'action', action: 'remove-document', part: 'documents' },
-} as const satisfies Record<DocumentType, UiDescriptor>;
-
-const DOCUMENT_UPLOAD_UI = {
-  business_license: { uid: 'onboarding.verification.document-upload.business-license-KPQp5j', id: 'onboarding.verification.document-upload.business-license', kind: 'action', action: 'upload-document', part: 'documents' },
-  tax_certificate: { uid: 'onboarding.verification.document-upload.tax-certificate-jIDx9l', id: 'onboarding.verification.document-upload.tax-certificate', kind: 'action', action: 'upload-document', part: 'documents' },
-  id_card: { uid: 'onboarding.verification.document-upload.id-card-0gBa4B', id: 'onboarding.verification.document-upload.id-card', kind: 'action', action: 'upload-document', part: 'documents' },
-  bank_statement: { uid: 'onboarding.verification.document-upload.bank-statement-HUs2Gv', id: 'onboarding.verification.document-upload.bank-statement', kind: 'action', action: 'upload-document', part: 'documents' },
-} as const satisfies Record<DocumentType, UiDescriptor>;
-
-const BADGE_UI = {
-  verified: { uid: 'onboarding.verification.badge.verified-UL3ogs', id: 'onboarding.verification.badge.verified', kind: 'action', action: 'toggle-badge', part: 'badges' },
-  fast_shipper: { uid: 'onboarding.verification.badge.fast-shipper-8sK7rK', id: 'onboarding.verification.badge.fast-shipper', kind: 'action', action: 'toggle-badge', part: 'badges' },
-  top_rated: { uid: 'onboarding.verification.badge.top-rated-9AErqN', id: 'onboarding.verification.badge.top-rated', kind: 'action', action: 'toggle-badge', part: 'badges' },
-  eco_friendly: { uid: 'onboarding.verification.badge.eco-friendly-O6X3o6', id: 'onboarding.verification.badge.eco-friendly', kind: 'action', action: 'toggle-badge', part: 'badges' },
-} as const satisfies Record<(typeof AVAILABLE_BADGES)[number]['id'], UiDescriptor>;
 
 export function VerificationSection() {
   const { t } = useTranslation();
@@ -174,33 +147,32 @@ export function VerificationSection() {
 
               return (
                 <div
-                  key={docType} {...uiAttributes({ uid: "onboarding.sections.verification-section.div.12-pxDN2K", id: "onboarding.sections.verification-section.div.12" })}
+                  key={docType} {...uiAttributes({ uid: "onboarding.sections.verification-section.div.12-pxDN2K", id: "onboarding.sections.verification-section.div.12", instance: createUiInstanceId(docType) })}
                   className={cn(
                     'flex items-center gap-4 p-4 rounded-lg border transition-all',
                     uploadedDoc && 'border-merchant-success bg-merchant-success/5',
                   )}
                 >
-                  <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.13-pvW0FE", id: "onboarding.sections.verification-section.div.13" })} className="flex-1">
-                    <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.14-PP1jy9", id: "onboarding.sections.verification-section.div.14" })} className="flex items-center gap-2">
+                  <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.13-pvW0FE", id: "onboarding.sections.verification-section.div.13", instance: createUiInstanceId(docType) })} className="flex-1">
+                    <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.14-PP1jy9", id: "onboarding.sections.verification-section.div.14", instance: createUiInstanceId(docType) })} className="flex items-center gap-2">
                       <FileText className="h-4 w-4 text-muted-foreground" />
                       <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.3-e9Cm7w", id: "onboarding.sections.verification-section.span.3" })} className="font-medium text-sm">
                         {t(`onboarding.verification.documents.${docType}.label`)}
                       </span>
                       {uploadedDoc && (
-                        <Badge ui={{ uid: "onboarding.sections.verification-section.badge-CK4gJi", id: "onboarding.sections.verification-section.badge" }} variant="secondary" className="text-merchant-success bg-merchant-success/10">
+                        <Badge ui={{ uid: "onboarding.sections.verification-section.badge-CK4gJi", id: "onboarding.sections.verification-section.badge", instance: createUiInstanceId(docType) }} variant="secondary" className="text-merchant-success bg-merchant-success/10">
                           <Check className="h-3 w-3 mr-1" />
                           {t('onboarding.common.uploaded')}
                         </Badge>
                       )}
                     </div>
-                    <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.5-XDd8P7", id: "onboarding.sections.verification-section.p.5" })} className="text-xs text-muted-foreground mt-1">
+                    <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.5-XDd8P7", id: "onboarding.sections.verification-section.p.5", instance: createUiInstanceId(docType) })} className="text-xs text-muted-foreground mt-1">
                       {t(`onboarding.verification.documents.${docType}.description`)}
                     </p>
                   </div>
 
                   {uploadedDoc ? (
-                    <Button ui={{ uid: "onboarding.sections.verification-section.button-aRRh9u", id: "onboarding.sections.verification-section.button" }}
-                      ui={DOCUMENT_REMOVE_UI[docType]}
+                    <Button ui={{ uid: "onboarding.sections.verification-section.button-aRRh9u", id: "onboarding.sections.verification-section.button", kind: "action", action: "remove-document", part: "documents", instance: createUiInstanceId(docType) }}
                       variant="ghost"
                       size="sm"
                       onClick={() => removeDocument(uploadedDoc.id)}
@@ -209,9 +181,8 @@ export function VerificationSection() {
                       <X className="h-4 w-4" />
                     </Button>
                   ) : (
-                    <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.15-S1Vo3t", id: "onboarding.sections.verification-section.div.15" })} className="relative">
-                      <Button ui={{ uid: "onboarding.sections.verification-section.button.2-1Ku4EF", id: "onboarding.sections.verification-section.button.2" }}
-                        ui={DOCUMENT_UPLOAD_UI[docType]}
+                    <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.15-S1Vo3t", id: "onboarding.sections.verification-section.div.15", instance: createUiInstanceId(docType) })} className="relative">
+                      <Button ui={{ uid: "onboarding.sections.verification-section.button.2-1Ku4EF", id: "onboarding.sections.verification-section.button.2", kind: "action", action: "upload-document", part: "documents", instance: createUiInstanceId(docType) }}
                         variant="outline"
                         size="sm"
                         disabled={isUploading}
@@ -219,7 +190,7 @@ export function VerificationSection() {
                       >
                         {isUploading ? (
                           <>
-                            <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.4-Pc52NF", id: "onboarding.sections.verification-section.span.4" })} className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
+                            <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.4-Pc52NF", id: "onboarding.sections.verification-section.span.4", instance: createUiInstanceId(docType) })} className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
                             {t('onboarding.common.uploading')}
                           </>
                         ) : (
@@ -252,8 +223,7 @@ export function VerificationSection() {
               const isSelected = verification.requestedBadges.includes(badge.id);
               return (
                 <button
-                  key={badge.id} {...uiAttributes({ uid: "onboarding.sections.verification-section.button.3-nWRX6w", id: "onboarding.sections.verification-section.button.3" })}
-                  {...uiAttributes(BADGE_UI[badge.id])}
+                  key={badge.id} {...uiAttributes({ uid: "onboarding.sections.verification-section.button.3-nWRX6w", id: "onboarding.sections.verification-section.button.3", kind: "action", action: "toggle-badge", part: "badges", instance: createUiInstanceId(badge.id) })}
                   type="button"
                   onClick={() => toggleBadge(badge.id)}
                   className={cn(
@@ -263,12 +233,12 @@ export function VerificationSection() {
                       : 'border-border',
                   )}
                 >
-                  <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.5-nZDhC9", id: "onboarding.sections.verification-section.span.5" })} className="text-2xl">{badge.icon}</span>
-                  <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.17-jRe52Y", id: "onboarding.sections.verification-section.div.17" })}>
-                    <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.6-Y7ubx5", id: "onboarding.sections.verification-section.p.6" })} className="font-medium text-sm">
+                  <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.5-nZDhC9", id: "onboarding.sections.verification-section.span.5", instance: createUiInstanceId(badge.id) })} className="text-2xl">{badge.icon}</span>
+                  <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.17-jRe52Y", id: "onboarding.sections.verification-section.div.17", instance: createUiInstanceId(badge.id) })}>
+                    <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.6-Y7ubx5", id: "onboarding.sections.verification-section.p.6", instance: createUiInstanceId(badge.id) })} className="font-medium text-sm">
                       {t(`onboarding.verification.badges.${badge.id}.name`)}
                     </p>
-                    <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.7-s1USLn", id: "onboarding.sections.verification-section.p.7" })} className="text-xs text-muted-foreground">
+                    <p {...uiAttributes({ uid: "onboarding.sections.verification-section.p.7-s1USLn", id: "onboarding.sections.verification-section.p.7", instance: createUiInstanceId(badge.id) })} className="text-xs text-muted-foreground">
                       {t(`onboarding.verification.badges.${badge.id}.description`)}
                     </p>
                   </div>
