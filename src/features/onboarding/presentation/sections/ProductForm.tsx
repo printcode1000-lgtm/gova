@@ -17,7 +17,7 @@ import {
   FormSelect,
   FormTextarea,
 } from "../form-components";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductFormProps {
   product: Product;
@@ -268,81 +268,76 @@ export function ProductForm({
 
         {product.variants.length > 0 ? (
           <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.23-0xKLWP", id: "onboarding.sections.product-form.div.23" })} id="onboarding.sections.product-form.div.11" className="space-y-3">
-            {product.variants.map((variant, index) => (
-              <div key={variant.id} {...uiAttributes({ uid: "onboarding.sections.product-form.div.24-X0XHa1", id: "onboarding.sections.product-form.div.24" })} className="space-y-4 rounded-lg border p-4">
-                <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.25-jK3r1X", id: "onboarding.sections.product-form.div.25" })} className="flex items-center justify-between">
-                  <span {...uiAttributes({ uid: "onboarding.sections.product-form.span-ywydT2", id: "onboarding.sections.product-form.span" })} className="text-sm font-medium">
-                    {t("onboarding.products.variant", { index: index + 1 })}
-                  </span>
-                  <Button ui={{ uid: "onboarding.sections.product-form.button.3-WBh20D", id: "onboarding.sections.product-form.button.3" }}
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeVariant(variant.id)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+            {product.variants.map((variant, index) => {
+              const variantInstance = createUiInstanceId(variant.id);
+              return (
+                <div key={variant.id} {...uiAttributes({ uid: "onboarding.sections.product-form.div.24-X0XHa1", id: "onboarding.sections.product-form.div.24", instance: variantInstance })} className="space-y-4 rounded-lg border p-4">
+                  <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.25-jK3r1X", id: "onboarding.sections.product-form.div.25", instance: variantInstance })} className="flex items-center justify-between">
+                    <span {...uiAttributes({ uid: "onboarding.sections.product-form.span-ywydT2", id: "onboarding.sections.product-form.span", instance: variantInstance })} className="text-sm font-medium">
+                      {t("onboarding.products.variant", { index: index + 1 })}
+                    </span>
+                    <Button ui={{ uid: "onboarding.sections.product-form.button.3-WBh20D", id: "onboarding.sections.product-form.button.3", instance: variantInstance }}
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeVariant(variant.id)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.26-3D32mR", id: "onboarding.sections.product-form.div.26", instance: variantInstance })} className="grid gap-4 sm:grid-cols-4">
+                    <FormField
+                      label={t("onboarding.products.size")}
+                      htmlFor={`size-${variant.id}`}
+                    >
+                      <FormInput
+                        ui={{ uid: "onboarding.product-form.variant-size-A1vS2z", id: "onboarding.product-form.variant-size", kind: "field", part: "variant", instance: variantInstance }}
+                        value={variant.size}
+                        onChange={(event) => updateVariant(variant.id, { size: event.target.value })}
+                        placeholder={t("onboarding.products.sizePlaceholder")}
+                      />
+                    </FormField>
+
+                    <FormField
+                      label={t("onboarding.products.color")}
+                      htmlFor={`color-${variant.id}`}
+                    >
+                      <FormInput
+                        ui={{ uid: "onboarding.product-form.variant-color-B2cL3q", id: "onboarding.product-form.variant-color", kind: "field", part: "variant", instance: variantInstance }}
+                        value={variant.color}
+                        onChange={(event) => updateVariant(variant.id, { color: event.target.value })}
+                        placeholder={t("onboarding.products.colorPlaceholder")}
+                      />
+                    </FormField>
+
+                    <FormField
+                      label={t("onboarding.products.material")}
+                      htmlFor={`material-${variant.id}`}
+                    >
+                      <FormInput
+                        ui={{ uid: "onboarding.product-form.variant-material-C3mT4r", id: "onboarding.product-form.variant-material", kind: "field", part: "variant", instance: variantInstance }}
+                        value={variant.material}
+                        onChange={(event) => updateVariant(variant.id, { material: event.target.value })}
+                        placeholder={t("onboarding.products.materialPlaceholder")}
+                      />
+                    </FormField>
+
+                    <FormField
+                      label={t("onboarding.products.inventory")}
+                      htmlFor={`inv-${variant.id}`}
+                    >
+                      <FormInput
+                        ui={{ uid: "onboarding.product-form.variant-inventory-D4iN5s", id: "onboarding.product-form.variant-inventory", kind: "field", part: "variant", instance: variantInstance }}
+                        type="number"
+                        value={variant.inventory}
+                        onChange={(event) => updateVariant(variant.id, { inventory: parseInt(event.target.value, 10) || 0 })}
+                        min={0}
+                      />
+                    </FormField>
+                  </div>
                 </div>
-
-                <div {...uiAttributes({ uid: "onboarding.sections.product-form.div.26-3D32mR", id: "onboarding.sections.product-form.div.26" })} className="grid gap-4 sm:grid-cols-4">
-                  <FormField
-                    label={t("onboarding.products.size")}
-                    htmlFor={`size-${variant.id}`}
-                  >
-                    <FormInput
-                      value={variant.size}
-                      onChange={(event) =>
-                        updateVariant(variant.id, { size: event.target.value })
-                      }
-                      placeholder={t("onboarding.products.sizePlaceholder")}
-                    />
-                  </FormField>
-
-                  <FormField
-                    label={t("onboarding.products.color")}
-                    htmlFor={`color-${variant.id}`}
-                  >
-                    <FormInput
-                      value={variant.color}
-                      onChange={(event) =>
-                        updateVariant(variant.id, { color: event.target.value })
-                      }
-                      placeholder={t("onboarding.products.colorPlaceholder")}
-                    />
-                  </FormField>
-
-                  <FormField
-                    label={t("onboarding.products.material")}
-                    htmlFor={`material-${variant.id}`}
-                  >
-                    <FormInput
-                      value={variant.material}
-                      onChange={(event) =>
-                        updateVariant(variant.id, {
-                          material: event.target.value,
-                        })
-                      }
-                      placeholder={t("onboarding.products.materialPlaceholder")}
-                    />
-                  </FormField>
-
-                  <FormField
-                    label={t("onboarding.products.inventory")}
-                    htmlFor={`inv-${variant.id}`}
-                  >
-                    <FormInput
-                      type="number"
-                      value={variant.inventory}
-                      onChange={(event) =>
-                        updateVariant(variant.id, {
-                          inventory: parseInt(event.target.value, 10) || 0,
-                        })
-                      }
-                      min={0}
-                    />
-                  </FormField>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : null}
       </div>
