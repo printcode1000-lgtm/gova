@@ -143,7 +143,7 @@ export function PageSaveHeaderButton() {
 
   return (
     <>
-      <button
+      <button {...uiAttributes({ uid: "page-save.page-save-header-button.button-7dyU83", id: "page-save.page-save-header-button.button" })}
         {...uiAttributes(pageSaveDescriptor(snapshot.registrationId ?? null))}
         type="button"
         id="header-page-save-button"

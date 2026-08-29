@@ -199,7 +199,7 @@ export function VerificationSection() {
                   </div>
 
                   {uploadedDoc ? (
-                    <Button
+                    <Button ui={{ uid: "onboarding.sections.verification-section.button-aRRh9u", id: "onboarding.sections.verification-section.button" }}
                       ui={DOCUMENT_REMOVE_UI[docType]}
                       variant="ghost"
                       size="sm"
@@ -210,7 +210,7 @@ export function VerificationSection() {
                     </Button>
                   ) : (
                     <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.15-S1Vo3t", id: "onboarding.sections.verification-section.div.15" })} className="relative">
-                      <Button
+                      <Button ui={{ uid: "onboarding.sections.verification-section.button.2-1Ku4EF", id: "onboarding.sections.verification-section.button.2" }}
                         ui={DOCUMENT_UPLOAD_UI[docType]}
                         variant="outline"
                         size="sm"
@@ -252,7 +252,7 @@ export function VerificationSection() {
               const isSelected = verification.requestedBadges.includes(badge.id);
               return (
                 <button
-                  key={badge.id}
+                  key={badge.id} {...uiAttributes({ uid: "onboarding.sections.verification-section.button.3-nWRX6w", id: "onboarding.sections.verification-section.button.3" })}
                   {...uiAttributes(BADGE_UI[badge.id])}
                   type="button"
                   onClick={() => toggleBadge(badge.id)}

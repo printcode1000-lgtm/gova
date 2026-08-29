@@ -51,7 +51,7 @@ export function ContactEntryCard({
           {title}
         </span>
         {onRemove ? (
-          <Button
+          <Button ui={{ uid: "profile.contact-info.contact-entry-card.button-OQEfV4", id: "profile.contact-info.contact-entry-card.button" }}
             ui={REMOVE_ENTRY_UI}
             variant="ghost"
             size="icon"

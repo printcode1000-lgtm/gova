@@ -74,7 +74,7 @@ export function ReturnsSection() {
                       : 'border-border',
                   )}
                 >
-                  <RadioGroupItem ui={POLICY_TYPE_UI[policy]} value={policy} id={policy} className="mt-0.5" />
+                  <RadioGroupItem ui={{ uid: "onboarding.sections.returns-section.radio-group-item-t90iyB", id: "onboarding.sections.returns-section.radio-group-item" }} ui={POLICY_TYPE_UI[policy]} value={policy} id={policy} className="mt-0.5" />
                   <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.9-Y3QGzW", id: "onboarding.sections.returns-section.div.9" })} className="flex-1">
                     <Label ui={{ uid: "onboarding.sections.returns-section.label.3-gYY3L0", id: "onboarding.sections.returns-section.label.3" }} htmlFor={policy} className="font-medium">
                       {t(`onboarding.returns.policyTypes.${policy}.label`)}

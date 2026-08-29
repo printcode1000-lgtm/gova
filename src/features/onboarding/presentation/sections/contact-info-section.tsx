@@ -165,7 +165,7 @@ export function ContactInfoSection() {
                       {t(`onboarding.contactInfo.platforms.${link.platform}`)}
                     </span>
                     <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.18-KQ7yHG", id: "onboarding.sections.contact-info-section.div.18" })} className="flex-1 flex gap-2">
-                      <FormInput
+                      <FormInput ui={{ uid: "onboarding.sections.contact-info-section.form-input-kiYw9z", id: "onboarding.sections.contact-info-section.form-input" }}
                         value={link.url}
                         onChange={(e) => updateSocialLink(link.platform, { url: e.target.value })}
                         placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}

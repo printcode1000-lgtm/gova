@@ -37,7 +37,7 @@ export function ReleaseConsolePage() {
         <p {...uiAttributes({ uid: "google-play-console.release-console-page.p.2-g0UQK5", id: "google-play-console.release-console-page.p.2" })} id="google-play-console.release-console-page.p" className="mt-1 text-sm text-on-surface-variant">{t("releaseConsole.subtitle")}</p></header>
       <Tabs value={active} onValueChange={select}>
         <TabsList ui={{ uid: "google-play-console.release-console-page.tabs-list.2-93Hs5l", id: "google-play-console.release-console-page.tabs-list.2" }} id="google-play-console.release-console-page.tabs-list" className="flex h-auto w-full flex-wrap justify-start gap-1">
-          {tabs.map((tab) => <TabsTrigger key={tab.id} ui={tab.ui} value={tab.id} className="gap-2">
+          {tabs.map((tab) => <TabsTrigger key={tab.id} ui={{ uid: "google-play-console.release-console-page.tabs-trigger-ti6F5i", id: "google-play-console.release-console-page.tabs-trigger" }} ui={tab.ui} value={tab.id} className="gap-2">
             <tab.icon className="h-4 w-4" />{t(tab.labelKey)}</TabsTrigger>)}
         </TabsList>
         {tabs.map((tab) => <TabsContent key={tab.id} ui={{ uid: "google-play-console.release-console-page.tabs-content-EwQ1z1", id: "google-play-console.release-console-page.tabs-content" }} value={tab.id} className="mt-4">

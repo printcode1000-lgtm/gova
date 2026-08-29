@@ -40,7 +40,7 @@ export function NotificationDeviceToggleSection({
               state.canOpenSettings && "sm:grid-cols-2",
             )}
           >
-            <button {...uiAttributes(NOTIFICATIONS_PERMISSION_UI)}
+            <button {...uiAttributes({ uid: "settings.notification-device-toggle-section.button.3-SX5hGt", id: "settings.notification-device-toggle-section.button.3" })} {...uiAttributes(NOTIFICATIONS_PERMISSION_UI)}
               type="button"
               disabled={state.deviceBusy}
               onClick={() => void state.recheckPermission()}
@@ -64,7 +64,7 @@ export function NotificationDeviceToggleSection({
           </p>
         </div>
       ) : (
-        <SettingsToggleRow id="settings.notification-device-toggle-section.settings-toggle-row"
+        <SettingsToggleRow ui={{ uid: "settings.notification-device-toggle-section.settings-toggle-row.2-kPpF7v", id: "settings.notification-device-toggle-section.settings-toggle-row.2" }} id="settings.notification-device-toggle-section.settings-toggle-row"
           ui={NOTIFICATIONS_PERMISSION_UI}
           emphasised
           title={state.t("notifications.deviceCard.toggleTitle")}

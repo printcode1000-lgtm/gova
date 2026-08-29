@@ -210,7 +210,7 @@ export function ProductManagerCard({ id,
           <p {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.2-rpc5PP", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.2" })} className="mt-1 truncate text-[10px] text-on-surface-variant">{product.nameEn}</p>
           <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.9-ee8ehY", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.9" })} className="mt-2 flex items-center justify-between gap-2">
             <StatusBadge hidden={product.status === "hidden"} />
-            <VisibilityButton
+            <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.visibility-button-Xsep4k", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.visibility-button" }}
               hidden={product.status === "hidden"}
               disabled={disabled}
               onClick={onToggle}

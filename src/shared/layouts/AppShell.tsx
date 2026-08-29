@@ -33,7 +33,7 @@ export function AppShell({ children, id }: AppShellProps) {
     <div {...uiAttributes({ uid: "shared.layouts.app-shell.div-C6uPGF", id: "shared.layouts.app-shell.div" })} id={id} style={shellStyle}>
       <PageSaveRuntimeInit />
       <AppHeader installPrompt={installPrompt} />
-      <main
+      <main {...uiAttributes({ uid: "shared.layouts.app-shell.main-HR3f5i", id: "shared.layouts.app-shell.main" })}
         {...uiPageAttributes(page)}
         className="asol-canvas asol-shell-main min-h-screen"
         style={{ paddingBottom: BOTTOM_NAV_CLEARANCE }}

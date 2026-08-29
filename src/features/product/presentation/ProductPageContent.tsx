@@ -161,7 +161,7 @@ export function ProductPageContent({ id,
     ) : null;
   const favoriteAction =
     mode === "view" && product ? (
-      <FavoriteButton
+      <FavoriteButton ui={{ uid: "product.product-page-content.favorite-button-9EFxY9", id: "product.product-page-content.favorite-button" }}
         item={favoriteFromProductCard(createProductCardViewModel(product))}
         label={locale === "ar" ? "المفضلة" : "Favorite"}
         className="h-10 w-auto gap-2 rounded-xl px-4"

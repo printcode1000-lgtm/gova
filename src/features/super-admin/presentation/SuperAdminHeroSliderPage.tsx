@@ -279,7 +279,7 @@ export function SuperAdminHeroSliderPage() {
           {INTERVAL_PRESETS.map((interval) => (
             <Button
               ui={INTERVAL_PRESET_UI[interval]}
-              key={interval}
+              key={interval} ui={{ uid: "super-admin.super-admin-hero-slider-page.button.2-C5IFNH", id: "super-admin.super-admin-hero-slider-page.button.2" }}
               type="button"
               size="sm"
               variant={intervalMinutes === interval ? "default" : "outline"}

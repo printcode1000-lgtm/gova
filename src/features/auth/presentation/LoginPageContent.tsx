@@ -54,7 +54,7 @@ export function LoginPageContent() {
                 <Controller name="phone" control={form.control} render={({ field, fieldState }) => (
                   <div {...uiAttributes({ uid: "auth.login-page-content.div.22-dgE2Qh", id: "auth.login-page-content.div.22" })} id="auth.login-page-content.div.7" className="space-y-2">
                     <span {...uiAttributes({ uid: "auth.login-page-content.span.2-SpdiM8", id: "auth.login-page-content.span.2" })} id="auth.login-page-content.span" className="text-sm font-semibold flex items-center gap-2 text-on-surface"><Smartphone id="auth.login-page-content.smartphone" className="h-4 w-4 text-primary" />{t('auth.login.phone')}</span>
-                    <PhoneField id="auth.login-page-content.div.8"
+                    <PhoneField ui={{ uid: "auth.login-page-content.phone-field-1vTrWC", id: "auth.login-page-content.phone-field" }} id="auth.login-page-content.div.8"
                       ui={LOGIN_PHONE_UI}
                       labels={phoneLabels}
                       value={field.value}

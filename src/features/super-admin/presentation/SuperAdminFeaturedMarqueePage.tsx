@@ -326,7 +326,7 @@ export function SuperAdminFeaturedMarqueePage() {
           {INTERVAL_PRESETS.map((interval) => (
             <Button
               ui={INTERVAL_PRESET_UI[interval]}
-              key={interval}
+              key={interval} ui={{ uid: "super-admin.super-admin-featured-marquee-page.button.5-bYj3oC", id: "super-admin.super-admin-featured-marquee-page.button.5" }}
               type="button"
               size="sm"
               variant={intervalMinutes === interval ? "default" : "outline"}

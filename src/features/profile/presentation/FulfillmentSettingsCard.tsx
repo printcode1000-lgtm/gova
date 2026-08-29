@@ -350,7 +350,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
               ? text.returnsAvailable
               : text.returnsUnavailable}
           </span>
-          <ToggleSwitch id="profile.fulfillment-settings-card.toggle-switch"
+          <ToggleSwitch ui={{ uid: "profile.fulfillment-settings-card.toggle-switch.2-AuG93p", id: "profile.fulfillment-settings-card.toggle-switch.2" }} id="profile.fulfillment-settings-card.toggle-switch"
             checked={settings.returns.enabled}
             onChange={(checked) =>
               updateSettings((current) => ({

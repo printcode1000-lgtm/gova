@@ -70,7 +70,7 @@ export function RunbookPanel(props: {
         }
       >
         <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div-Uv4XYH", id: "google-play-console.deploy-runbook-controls.div" })} className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <Button
+          <Button ui={{ uid: "google-play-console.deploy-runbook-controls.button-hLJvK8", id: "google-play-console.deploy-runbook-controls.button" }}
             ui={SELECTION_UI["select-all"]}
             variant="outline"
             className={SELECT_BTN}
@@ -79,7 +79,7 @@ export function RunbookPanel(props: {
             <CheckSquare className="h-4 w-4 shrink-0" />
             تفعيل الكل
           </Button>
-          <Button
+          <Button ui={{ uid: "google-play-console.deploy-runbook-controls.button.2-7NIXwJ", id: "google-play-console.deploy-runbook-controls.button.2" }}
             ui={SELECTION_UI["select-none"]}
             variant="outline"
             className={SELECT_BTN}
@@ -88,7 +88,7 @@ export function RunbookPanel(props: {
             <Square className="h-4 w-4 shrink-0" />
             تجاوز الكل
           </Button>
-          <Button
+          <Button ui={{ uid: "google-play-console.deploy-runbook-controls.button.3-AI1Zt8", id: "google-play-console.deploy-runbook-controls.button.3" }}
             ui={SELECTION_UI["select-safe"]}
             variant="outline"
             className={SELECT_BTN}
@@ -96,7 +96,7 @@ export function RunbookPanel(props: {
           >
             الفروع الآمنة فقط
           </Button>
-          <Button
+          <Button ui={{ uid: "google-play-console.deploy-runbook-controls.button.4-V38N1W", id: "google-play-console.deploy-runbook-controls.button.4" }}
             ui={SELECTION_UI["select-dangerous"]}
             variant="outline"
             className={SELECT_BTN}

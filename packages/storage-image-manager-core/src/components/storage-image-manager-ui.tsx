@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import type { DialogState, StorageImageAspectRatio } from "./storage-image-manager.types";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -25,7 +26,7 @@ export function InlineLoadingSpinner({
   size?: "sm" | "md";
 }) {
   return (
-    <span
+    <span {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.span-YiH50X", id: "packages.storage-image-manager-core.storage-image-manager-ui.span" })}
       aria-hidden="true"
       className={cn(
         "inline-block animate-spin rounded-full border-2 border-current border-e-transparent",
@@ -76,8 +77,8 @@ export function StorageImageSlotFrame({
   aspectRatio: StorageImageAspectRatio;
 }) {
   return (
-    <div className="w-full min-w-0 overflow-hidden rounded-lg border-2 border-primary/20 bg-primary/5 p-0.5">
-      <div
+    <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.div-1BFgja", id: "packages.storage-image-manager-core.storage-image-manager-ui.div" })} className="w-full min-w-0 overflow-hidden rounded-lg border-2 border-primary/20 bg-primary/5 p-0.5">
+      <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.div.2-YFd63f", id: "packages.storage-image-manager-core.storage-image-manager-ui.div.2" })}
         className={cn(
           "relative w-full min-w-0 overflow-hidden",
           aspectClasses[aspectRatio],
@@ -120,27 +121,27 @@ export function StorageManagerDialog({
   if (!state) return null;
 
   return (
-    <div
+    <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.div.3-5RPue7", id: "packages.storage-image-manager-core.storage-image-manager-ui.div.3" })}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
       role="presentation"
     >
-      <div
+      <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.div.4-ZA88qS", id: "packages.storage-image-manager-core.storage-image-manager-ui.div.4" })}
         className="w-full max-w-sm rounded-xl border bg-background p-5 shadow-xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby="storage-dialog-title"
       >
-        <h2 id="storage-dialog-title" className="text-lg font-semibold">
+        <h2 {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.h2-6FMV3W", id: "packages.storage-image-manager-core.storage-image-manager-ui.h2" })} id="storage-dialog-title" className="text-lg font-semibold">
           {state.title}
         </h2>
-        <p className="mt-2 text-sm text-muted-foreground">{state.message}</p>
-        <div className="mt-5 flex justify-end gap-2">
+        <p {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.p-g3HrLz", id: "packages.storage-image-manager-core.storage-image-manager-ui.p" })} className="mt-2 text-sm text-muted-foreground">{state.message}</p>
+        <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.div.5-3O7O4w", id: "packages.storage-image-manager-core.storage-image-manager-ui.div.5" })} className="mt-5 flex justify-end gap-2">
           {state.kind !== "error" ? (
             <>
-              <ManagerButton type="button" variant="secondary" onClick={onClose}>
+              <ManagerButton ui={{ uid: "packages.storage-image-manager-core.storage-image-manager-ui.manager-button-gUmgY1", id: "packages.storage-image-manager-core.storage-image-manager-ui.manager-button" }} type="button" variant="secondary" onClick={onClose}>
                 {cancelLabel}
               </ManagerButton>
-              <ManagerButton
+              <ManagerButton ui={{ uid: "packages.storage-image-manager-core.storage-image-manager-ui.manager-button.2-JHz5x4", id: "packages.storage-image-manager-core.storage-image-manager-ui.manager-button.2" }}
                 type="button"
                 onClick={() => {
                   const action = state.onConfirm;
@@ -152,7 +153,7 @@ export function StorageManagerDialog({
               </ManagerButton>
             </>
           ) : (
-            <ManagerButton type="button" onClick={onClose}>
+            <ManagerButton ui={{ uid: "packages.storage-image-manager-core.storage-image-manager-ui.manager-button.3-6EdkzY", id: "packages.storage-image-manager-core.storage-image-manager-ui.manager-button.3" }} type="button" onClick={onClose}>
               {closeLabel}
             </ManagerButton>
           )}

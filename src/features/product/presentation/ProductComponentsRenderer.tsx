@@ -163,7 +163,7 @@ export function ProductComponentsRenderer({ id,
             <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               <div {...uiAttributes({ uid: "product.product-components-renderer.div-6bEE2s", id: "product.product-components-renderer.div" })} className="flex flex-wrap gap-2">
                 {config.cart ? (
-                  <ProductAddToCartButton
+                  <ProductAddToCartButton ui={{ uid: "product.product-components-renderer.product-add-to-cart-button-tZF3xB", id: "product.product-components-renderer.product-add-to-cart-button" }}
                     productId={productId}
                     sellerId={ownerUid}
                     product={product}

@@ -116,7 +116,7 @@ export function ShippingSection() {
                         {shippingProviderOptions.find((p) => p.value === method.provider)?.icon || '📦'}
                       </div>
                       <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.15-1mjlO3", id: "onboarding.sections.shipping-section.div.15" })}>
-                        <FormSelect
+                        <FormSelect ui={{ uid: "onboarding.sections.shipping-section.form-select-1PyYjH", id: "onboarding.sections.shipping-section.form-select" }}
                           value={method.provider}
                           onValueChange={(v) => {
                             const provider = shippingProviderOptions.find((p) => p.value === v);
@@ -144,7 +144,7 @@ export function ShippingSection() {
                   <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.16-Yt7dPb", id: "onboarding.sections.shipping-section.div.16" })} className="grid gap-4 sm:grid-cols-3">
                     <FormField label={t('onboarding.shipping.deliveryTime')} htmlFor={`delivery-${method.id}`}>
                       <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.17-l8Y8N8", id: "onboarding.sections.shipping-section.div.17" })} className="flex items-center gap-2">
-                        <FormInput
+                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input-QzfVI2", id: "onboarding.sections.shipping-section.form-input" }}
                           type="number"
                           value={method.deliveryDays.min}
                           onChange={(e) =>
@@ -156,7 +156,7 @@ export function ShippingSection() {
                           min={0}
                         />
                         <span {...uiAttributes({ uid: "onboarding.sections.shipping-section.span-x0FEEV", id: "onboarding.sections.shipping-section.span" })} className="text-muted-foreground">{t('onboarding.common.to')}</span>
-                        <FormInput
+                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input.2-2LJ736", id: "onboarding.sections.shipping-section.form-input.2" }}
                           type="number"
                           value={method.deliveryDays.max}
                           onChange={(e) =>
@@ -174,7 +174,7 @@ export function ShippingSection() {
                     <FormField label={t('onboarding.shipping.shippingFee')} htmlFor={`fee-${method.id}`}>
                       <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.18-93K7ZA", id: "onboarding.sections.shipping-section.div.18" })} className="relative">
                         <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <FormInput
+                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input.3-x95ZIS", id: "onboarding.sections.shipping-section.form-input.3" }}
                           type="number"
                           value={method.fee}
                           onChange={(e) => updateMethod(method.id, { fee: parseFloat(e.target.value) || 0 })}
@@ -188,7 +188,7 @@ export function ShippingSection() {
                     <FormField label={t('onboarding.shipping.freeOver')} htmlFor={`threshold-${method.id}`} hint={t('onboarding.common.optional')}>
                       <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.19-B0IdUB", id: "onboarding.sections.shipping-section.div.19" })} className="relative">
                         <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <FormInput
+                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input.4-2MB8rA", id: "onboarding.sections.shipping-section.form-input.4" }}
                           type="number"
                           value={method.freeThreshold || ''}
                           onChange={(e) =>
