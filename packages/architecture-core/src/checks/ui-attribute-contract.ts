@@ -90,8 +90,13 @@ function expressionReferencesIndex(node: ts.Node): boolean {
   return found;
 }
 
-function isCreateUiInstanceIdCall(node: ts.Expression): node is ts.CallExpression {
-  return ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === "createUiInstanceId";
+type InstanceConstructorKind = "direct" | "position" | "compose";
+function instanceConstructor(node: ts.Expression): { kind: InstanceConstructorKind; call: ts.CallExpression } | null {
+  if (!ts.isCallExpression(node) || !ts.isIdentifier(node.expression)) return null;
+  if (node.expression.text === "createUiInstanceId") return { kind: "direct", call: node };
+  if (node.expression.text === "createUiPositionInstanceId") return { kind: "position", call: node };
+  if (node.expression.text === "composeUiInstanceId") return { kind: "compose", call: node };
+  return null;
 }
 
 function scanManualAttributes(file: string, sourceFile: ts.SourceFile): void {
@@ -177,10 +182,14 @@ export function checkUiAttributeContract(): void {
         }
 
         if (instanceField) {
-          if (!instanceField.isComputed || !isCreateUiInstanceIdCall(instanceField.node)) {
-            addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} must create runtime instance through createUiInstanceId(...), never a raw literal/expression.`);
-          } else if (expressionReferencesIndex(instanceField.node.arguments[0] ?? instanceField.node)) {
-            addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} derives instance from an array index without an explicit positional-domain helper.`);
+          const constructor = instanceField.isComputed ? instanceConstructor(instanceField.node) : null;
+          if (!constructor) {
+            addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} must create runtime instance through an approved UiInstanceId constructor.`);
+          } else if (constructor.kind === "direct" && expressionReferencesIndex(constructor.call.arguments[0] ?? constructor.call)) {
+            addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} derives instance from a reorderable array index; use a stable domain key or the explicit positional helper when position is the domain.`);
+          } else if (constructor.kind === "position") {
+            const scope = constructor.call.arguments[0];
+            if (!scope || !ts.isStringLiteral(scope)) addViolation("UI Attributes", file, `Positional UI instance at line ${literal.line} requires a quoted static scope name.`);
           }
         }
 
