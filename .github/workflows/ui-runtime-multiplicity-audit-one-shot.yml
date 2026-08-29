@@ -26,3 +26,4 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Runtime multiplicity audit
         run: npx tsx scripts/ui-registry/runtime-multiplicity-audit.ts
+      # Stage 104 symbol-aware rerun marker.
