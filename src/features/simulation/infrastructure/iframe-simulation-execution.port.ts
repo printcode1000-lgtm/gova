@@ -39,7 +39,9 @@ function targetLabel(target: SimulationTarget): string {
   return `${target.simulationId}(${target.targetUid})`;
 }
 
-function assertTargetAddressing(target: SimulationTarget): ReturnType<typeof uiSimulationTarget> {
+function assertTargetAddressing(
+  target: SimulationTarget,
+): NonNullable<ReturnType<typeof uiSimulationTarget>> {
   const registered = uiSimulationTarget(target.targetUid);
   if (!registered) throw new Error(`simulationTargetNotRegistered:${targetLabel(target)}`);
   if (target.instance !== undefined && target.selection !== undefined) {
