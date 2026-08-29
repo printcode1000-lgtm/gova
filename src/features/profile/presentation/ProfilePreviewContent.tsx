@@ -176,7 +176,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           <section id="profile.profile-preview-content.section" className="mx-2 mt-3 min-w-0 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 sm:mt-4">
             <div id="profile.profile-preview-content.div.5" className="flex min-w-0 items-start gap-3 sm:gap-4">
               {storeImages.avatarUrl ? (
-                <div id="profile.profile-preview-content.div.6" className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-4 border-surface shadow-lg sm:-mt-10 sm:h-28 sm:w-28">
+                <div id="profile.profile-preview-content.div.6" className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full shadow-lg sm:-mt-10 sm:h-28 sm:w-28">
                   <Image id="profile.profile-preview-content.image"
                     src={storeImages.avatarUrl}
                     alt="Avatar"

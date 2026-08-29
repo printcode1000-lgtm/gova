@@ -94,9 +94,6 @@ export function buildContactGroups(
   const locationOptions = locations.map((item, index) => ({
     id: item.id,
     label: item.address?.trim() || `الموقع ${index + 1}`,
-    detail: hasCoordinates(item)
-      ? `${item.latitude}, ${item.longitude}`
-      : undefined,
     href: getMapsHref(item),
   }));
 

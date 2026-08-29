@@ -115,13 +115,13 @@ export const SellerDiscountsManager = React.forwardRef<
                 : "Each offer is a calculable rule for products, bundles, coupons, shipping, gifts, and order totals."}
             </p>
           </div>
-          <div id="seller-discounts.seller-discounts-manager.div.4" className="flex flex-wrap gap-2">
+          <div id="seller-discounts.seller-discounts-manager.div.4" className="grid grid-flow-col grid-rows-2 gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {DISCOUNT_TYPES.map((type) => (
               <button
                 key={type}
                 type="button"
                 onClick={() => addDiscount(type)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-outline-variant bg-surface px-2.5 text-xs font-semibold text-on-surface shadow-sm"
+                className="inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border border-outline-variant bg-surface px-2.5 text-xs font-semibold text-on-surface shadow-sm"
               >
                 <Plus className="h-3.5 w-3.5" />
                 {labels[type]}
