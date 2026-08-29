@@ -2,7 +2,9 @@
  * Turns the analyzer's inventory into source edits: one literal uid per
  * still-unregistered project-owned DOM usage site, written as
  * `{...uiAttributes({...})}` on a raw intrinsic host or `ui={{...}}` on a
- * generic-primitive usage. Never touches a site that already has one.
+ * generic-primitive usage. Never touches a site that already has an identity
+ * expression — computed registrations must be resolved deliberately so their
+ * metadata is not lost and duplicate JSX props can never be introduced.
  */
 import { readFileSync } from 'node:fs';
 import { writeFileSync } from 'node:fs';
@@ -27,6 +29,7 @@ export interface UidMigrationSkip {
   readonly file: string;
   readonly line: number;
   readonly tag: string;
+  readonly reason: 'computed-registration' | 'foreign-spread';
 }
 
 function insertionPoint(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): number {
@@ -90,8 +93,22 @@ export function planUidMigration(root: string): UidMigrationPlan {
     let needsImport = false;
     for (const site of sites) {
       if (site.hasUiRegistration) continue;
+      if (site.registrationKind === 'computed') {
+        skipped.push({
+          file,
+          line: site.line,
+          tag: site.tagOrComponent,
+          reason: 'computed-registration',
+        });
+        continue;
+      }
       if (site.hasForeignSpread) {
-        skipped.push({ file, line: site.line, tag: site.tagOrComponent });
+        skipped.push({
+          file,
+          line: site.line,
+          tag: site.tagOrComponent,
+          reason: 'foreign-spread',
+        });
         continue;
       }
       const id = mintSemanticId(prefix, site.tagOrComponent, takenIds);
