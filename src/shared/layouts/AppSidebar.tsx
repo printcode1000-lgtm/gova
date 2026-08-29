@@ -254,7 +254,9 @@ export const AppSidebar = React.memo(function AppSidebar({
               resolvedScheme === "dark" ? "asol-drawer-panel" : "bg-[#F8FBFF]",
               isOpen
                 ? "translate-x-0"
-                : "rtl:translate-x-full ltr:-translate-x-full",
+                : isRTL
+                  ? "translate-x-full"
+                  : "-translate-x-full",
             )}
             dir={isRTL ? "rtl" : "ltr"}
           >

@@ -149,5 +149,8 @@ const sidebarSource = readFileSync(
 assert.match(sidebarSource, /isOutsideDismissExempt/);
 assert.match(sidebarSource, /allowOutsideClick/);
 assert.match(sidebarSource, /fixed inset-0 z-\[60\] overflow-hidden/);
+assert.match(sidebarSource, /\? "translate-x-full"/);
+assert.match(sidebarSource, /: "-translate-x-full"/);
+assert.doesNotMatch(sidebarSource, /rtl:translate-x-full ltr:-translate-x-full/);
 
 console.log("overlay chrome keeps project dialogs and the sidebar open.");

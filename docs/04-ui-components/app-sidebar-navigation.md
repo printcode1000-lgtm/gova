@@ -20,6 +20,23 @@ The fixed overlay wrapper keeps `overflow-hidden` so the closed drawer's
 translated panel is clipped at the viewport edge and cannot add horizontal
 scroll in RTL Chrome layouts.
 
+## RTL drawer transform contract
+
+The closed mobile drawer must choose its transform from the resolved application
+direction (`isRTL`) rather than relying only on Tailwind direction variants. In
+Chrome responsive testing, the old closed state could leave the drawer partially
+inside the viewport at mobile widths, producing a catastrophic-looking profile
+preview with blank space and sliced content. The current contract is:
+
+- Open drawer: `translate-x-0`.
+- Closed RTL drawer: `translate-x-full`.
+- Closed LTR drawer: `-translate-x-full`.
+- Overlay wrapper: `fixed inset-0 z-[60] overflow-hidden` so the translated
+  drawer cannot affect or visually cover the page while closed.
+
+`npm run test:overlay-chrome` pins both the clipped overlay wrapper and the
+direction-derived closed transform.
+
 ## Overlay chrome and other dialogs
 
 A pointer on overlay chrome (the attribute inspector, the floating error
