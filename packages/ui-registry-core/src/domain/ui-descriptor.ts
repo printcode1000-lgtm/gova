@@ -1,4 +1,5 @@
 import type { UiElementKind } from "./ui-element-kind";
+import type { UiInstanceId } from "./ui-instance";
 import type { UiInteraction } from "./ui-interaction";
 import type { UiSimulationTarget } from "./ui-simulation-target";
 import type { UiState } from "./ui-state";
@@ -18,6 +19,17 @@ export interface UiDescriptor {
   readonly state?: UiState | readonly UiState[];
   readonly action?: string;
   readonly part?: string;
+  /**
+   * Which runtime-rendered copy of this usage site this element is.
+   *
+   * Only meaningful when the usage site itself can render more than once
+   * (a `.map()` row, a repeated card): every such copy shares the same
+   * `uid` by design, and `instance` is what tells them apart. It never
+   * replaces `uid`, never changes its meaning, and must stay a short,
+   * PII-free token — prefer a stable domain identifier over an array index.
+   * Leave it unset for a usage site that renders at most once.
+   */
+  readonly instance?: UiInstanceId;
   /**
    * How real-user simulation exercises this element.
    *

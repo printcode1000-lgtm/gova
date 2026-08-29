@@ -1,5 +1,6 @@
 import type { UiDataAttributes } from "./ui-data-attributes";
 import type { UiDescriptor } from "./ui-descriptor";
+import { UI_INSTANCE_ATTRIBUTE, assertUiInstanceId } from "./ui-instance";
 import { simulationAttributes } from "./ui-simulation-attributes";
 import { statesToValue } from "./ui-state-value";
 import { assertUiToken } from "./ui-token";
@@ -15,6 +16,9 @@ export function uiAttributes(descriptor: UiDescriptor): UiDataAttributes {
     ? assertUiToken(descriptor.action, "UI action")
     : undefined;
   const part = descriptor.part ? assertUiToken(descriptor.part, "UI part") : undefined;
+  const instance = descriptor.instance
+    ? assertUiInstanceId(descriptor.instance)
+    : undefined;
 
   return {
     [UI_UID_ATTRIBUTE]: uid,
@@ -23,6 +27,7 @@ export function uiAttributes(descriptor: UiDescriptor): UiDataAttributes {
     ...(state ? { "data-ui-state": state } : {}),
     ...(action ? { "data-ui-action": action } : {}),
     ...(part ? { "data-ui-part": part } : {}),
+    ...(instance ? { [UI_INSTANCE_ATTRIBUTE]: instance } : {}),
     ...simulationAttributes(descriptor.simulation),
   };
 }

@@ -9,7 +9,15 @@ const REGISTRY_OWNER = join(ROOT, "packages", "ui-registry-core", "src");
 const GUARD_OWNER = join(ROOT, "packages", "architecture-core", "src", "checks");
 const REGISTRY_PATH = join(REGISTRY_OWNER, "registry", "ui-page-registry.ts");
 const APP_ROOT = join(ROOT, "src", "app");
-const MANUAL_ATTRIBUTE = /\bdata-ui-(?:uid|id|page|component|state|action|part|item-id)\s*=/;
+const MANUAL_ATTRIBUTE =
+  /\bdata-ui-(?:uid|id|page|component|state|action|part|item-id|instance)\s*=/;
+/**
+ * An `instance` value built from an array index or loop counter instead of a
+ * stable domain identifier. Runtime instances must stay distinguishable by
+ * something that survives reordering; an index does not.
+ */
+const INDEX_DERIVED_INSTANCE =
+  /\binstance:\s*(?:String\(\s*)?(?:index|idx|i)\s*\)?\s*(?:[,}]|$)/m;
 /**
  * A `key` written after the `uiAttributes()` spread on the same element.
  *
@@ -345,6 +353,14 @@ export function checkUiAttributeContract(): void {
         // a scenario name and it never carries a uid, so reading it as a
         // descriptor would report every simulated element as unregistered.
         if (SIMULATION_FIELD_SHAPE.test(literal.body) && !/\buid:/.test(literal.body)) continue;
+        if (INDEX_DERIVED_INSTANCE.test(literal.body)) {
+          addViolation(
+            "UI Attributes",
+            file,
+            `UiRegistry descriptor at line ${literal.line} derives instance from an array index. ` +
+              `Prefer a stable domain identifier; an index does not survive reordering.`,
+          );
+        }
         const uid = literal.body.match(/\buid:\s*["']([^"']*)["']/)?.[1];
         if (uid === undefined) {
           // A uid built at render time — from an index, a key, a template, or

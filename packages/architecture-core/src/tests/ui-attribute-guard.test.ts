@@ -60,6 +60,16 @@ const probes: Record<string, string> = {
   "fallback.tsx":
     'import { uiComponentAttributes } from "@asol/ui-registry-core";\n' +
     'export const J = () => <i {...uiComponentAttributes("button")} />;\n',
+  // Hand-written instance metadata bypasses the registry API.
+  "manual-instance.tsx": 'export const L = () => <i data-ui-instance="probe" />;\n',
+  // An instance id built from a loop index is not stable across reordering.
+  "index-instance.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    "export const M = (rows: string[]) => rows.map((row, index) => <i {...uiAttributes({ uid: \"probe.row-A1bcd4\", id: \"probe.row\", kind: \"item\", instance: index })} />);\n",
+  // A stable domain identifier is the legitimate shape and must not be reported.
+  "domain-instance.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    "export const N = (rows: { id: string }[]) => rows.map((row) => <i {...uiAttributes({ uid: \"probe.row2-B2cde5\", id: \"probe.row2\", kind: \"item\", instance: row.id })} />);\n",
 };
 
 // A uid from a page other than the one this test strips, so the duplicate
@@ -100,11 +110,19 @@ for (const [label, pattern] of [
   ["descriptor drift", /drift-b\.tsx[^\n]*drifts from its registration/],
   ["helper-level uid", /__guard_probe_primitive\.tsx[^\n]*helper-level uid/],
   ["a key written after the spread", /key-after-spread\.tsx[^\n]*key follows the uiAttributes spread/],
+  ["manual data-ui-instance", /manual-instance\.tsx[^\n]*Manual data-ui-instance/],
+  ["index-derived instance", /index-instance\.tsx[^\n]*derives instance from an array index/],
 ] as const) {
   assert.match(reported, pattern, `The guard must fail for ${label}.`);
 }
 
 // The intentional unregistered fallback is never reported.
 assert.doesNotMatch(reported, /fallback\.tsx/, "Generic component fallbacks stay legal.");
+// A stable domain-id instance is the legitimate shape and must not be reported.
+assert.doesNotMatch(
+  reported,
+  /domain-instance\.tsx/,
+  "An instance id derived from a stable domain identifier stays legal.",
+);
 
 console.log("UI attribute guard adversarial tests passed.");

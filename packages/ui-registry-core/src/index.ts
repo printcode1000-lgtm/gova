@@ -26,6 +26,8 @@ export {
 } from "./domain/ui-uid";
 export type { UiUidRandom } from "./domain/ui-uid-generator";
 export { createUiUid, generateUiUid, uiUidSuffix } from "./domain/ui-uid-generator";
+export type { UiInstanceId } from "./domain/ui-instance";
+export { UI_INSTANCE_ATTRIBUTE, assertUiInstanceId, isUiInstanceId } from "./domain/ui-instance";
 export { uiAttributes } from "./domain/ui-attributes";
 export { uiComponentAttributes } from "./domain/ui-component-attributes";
 export { uiPageAttributes } from "./domain/ui-page-attributes";

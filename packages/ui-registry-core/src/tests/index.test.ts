@@ -3,11 +3,13 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
 import {
+  UI_INSTANCE_ATTRIBUTE,
   UI_PAGE_REGISTRY,
   UI_UID_ATTRIBUTE,
   UI_UID_SUFFIX_LENGTH,
   createUiUid,
   generateUiUid,
+  isUiInstanceId,
   isUiUid,
   isUiUidPrefix,
   isUiUidSuffix,
@@ -232,6 +234,36 @@ for (const [kind, attribute] of [
     `Simulation kind ${kind} must emit ${attribute}.`,
   );
 }
+
+// ── data-ui-instance: one source uid, many runtime instances ───────────────
+assert.equal(UI_INSTANCE_ATTRIBUTE, "data-ui-instance");
+assert.equal(isUiInstanceId("order-8f21"), true);
+assert.equal(isUiInstanceId(""), false);
+assert.equal(isUiInstanceId("a".repeat(65)), false);
+assert.equal(isUiInstanceId("has space"), false);
+assert.equal(isUiInstanceId("user@example.com"), false);
+
+const rowDescriptor: UiDescriptor = {
+  uid: "orders.item-row-A8K3xP",
+  id: "orders.item-row",
+  kind: "item",
+  instance: "order-8f21",
+};
+assert.deepEqual(uiAttributes(rowDescriptor), {
+  "data-ui-uid": "orders.item-row-A8K3xP",
+  "data-ui": "item",
+  "data-ui-id": "orders.item-row",
+  "data-ui-instance": "order-8f21",
+});
+// Two runtime rows from the same usage site share the source uid and differ
+// only by instance — that sharing is intentional, not a duplicate.
+assert.deepEqual(
+  uiAttributes({ ...rowDescriptor, instance: "order-51z0" })["data-ui-uid"],
+  rowDescriptor.uid,
+);
+// A usage site that renders once has no instance field, and none is emitted.
+assert.equal(UI_INSTANCE_ATTRIBUTE in uiAttributes({ uid: "orders.title-Zt4Km9", id: "orders.title" }), false);
+assert.throws(() => uiAttributes({ ...rowDescriptor, instance: "user@example.com" }));
 
 // Generic shared primitives are an intentional unregistered fallback: no uid.
 assert.deepEqual(uiComponentAttributes("button", "disabled"), {
