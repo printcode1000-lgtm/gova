@@ -5,11 +5,6 @@ declare const UI_INSTANCE_ID_BRAND: unique symbol;
 export type UiInstanceId = string & { readonly [UI_INSTANCE_ID_BRAND]: true };
 
 export interface CreateUiInstanceIdOptions {
-  /**
-   * A reviewed UUID/database identifier may be used as source material, but
-   * the raw value is never emitted. It is deterministically reduced to an
-   * opaque UI token before branding.
-   */
   readonly allowUuid?: boolean;
 }
 
@@ -45,21 +40,19 @@ export function uiInstanceIdRejectionReason(
   return null;
 }
 
-/** Small deterministic FNV-1a reducer; this is identity obfuscation, not security. */
-function opaqueUuidToken(value: string): string {
+function stableHash(value: string): string {
   let hash = 0x811c9dc5;
   for (let index = 0; index < value.length; index += 1) {
     hash ^= value.charCodeAt(index);
     hash = Math.imul(hash, 0x01000193) >>> 0;
   }
-  return `uuid-${hash.toString(36)}`;
+  return hash.toString(36);
 }
 
-/**
- * The only public constructor for a branded runtime instance id.
- * Unsafe content is rejected. An explicitly reviewed UUID is converted to an
- * opaque stable token so the raw database identifier never reaches the DOM.
- */
+function opaqueUuidToken(value: string): string {
+  return `uuid-${stableHash(value)}`;
+}
+
 export function createUiInstanceId(
   value: string,
   options: CreateUiInstanceIdOptions = {},
@@ -72,12 +65,36 @@ export function createUiInstanceId(
   return safeValue as UiInstanceId;
 }
 
-/**
- * Full default-policy guard. This never brands a value that the public
- * constructor would reject; it is intentionally not a mere token-shape test.
- */
+/** Full default-policy guard; never a shape-only branding escape hatch. */
 export function isUiInstanceId(value: unknown): value is UiInstanceId {
   return typeof value === "string" && uiInstanceIdRejectionReason(value) === null;
+}
+
+/**
+ * Compose a parent runtime copy and a safe local copy. Different source UIDs
+ * can share the same instance token; this helper is for nested repeated DOM
+ * where the child source UID itself repeats within a repeated parent.
+ */
+export function composeUiInstanceId(
+  parent: UiInstanceId | undefined,
+  local: UiInstanceId,
+): UiInstanceId {
+  if (!parent) return local;
+  const combined = `${parent}.${local}`;
+  return createUiInstanceId(combined.length <= 64 ? combined : `scope-${stableHash(combined)}`);
+}
+
+/**
+ * Explicit positional identity for domains where the slot number itself is
+ * stable semantics (OTP digit 1..N, pagination slot, fixed visual lane). This
+ * is intentionally different from using a reorderable collection index.
+ */
+export function createUiPositionInstanceId(scope: string, zeroBasedPosition: number): UiInstanceId {
+  if (!Number.isInteger(zeroBasedPosition) || zeroBasedPosition < 0) {
+    throw new Error("UI positional instance requires a non-negative integer position.");
+  }
+  const safeScope = createUiInstanceId(scope);
+  return createUiInstanceId(`${safeScope}-${zeroBasedPosition + 1}`);
 }
 
 function uiInstanceIdRejectionMessage(reason: UiInstanceIdRejectionReason): string {
