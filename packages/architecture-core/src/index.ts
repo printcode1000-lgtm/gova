@@ -81,3 +81,4 @@ export { fileSemanticPrefix, mintSemanticId, mintUid } from './dom-identity/mint
 export { hostMultiplicity, type HostMultiplicity } from './dom-identity/repetition';
 export { collectUidCatalog, type UidCatalogEntry } from './dom-identity/uid-catalog';
 export { findPendingAstSourceMatches, type PendingAstSourceMatch } from './dom-identity/pending-source-match';
+export { readUiPageRegistryAst, type AstPageRegistryEntry } from './dom-identity/page-registry-reader';
