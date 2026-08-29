@@ -9,8 +9,11 @@ import { AppHeader } from './AppHeader';
 import { BottomNavBar } from './BottomNavBar';
 import { BOTTOM_NAV_CLEARANCE } from './bottom-nav-layout';
 import { PageSaveRuntimeInit } from '@/features/page-save/ui';
-import { resolveUiPage, uiPageAttributes } from '@asol/ui-registry-core';
-import { uiAttributes } from "@asol/ui-registry-core";
+import {
+  resolveUiPage,
+  uiAttributes,
+  uiPageContextAttributes,
+} from '@asol/ui-registry-core';
 
 interface AppShellProps {
   children: ReactNode;
@@ -33,8 +36,9 @@ export function AppShell({ children, id }: AppShellProps) {
     <div {...uiAttributes({ uid: "shared.layouts.app-shell.div-C6uPGF", id: "shared.layouts.app-shell.div" })} id={id} style={shellStyle}>
       <PageSaveRuntimeInit />
       <AppHeader installPrompt={installPrompt} />
-      <main {...uiAttributes({ uid: "shared.layouts.app-shell.main-HR3f5i", id: "shared.layouts.app-shell.main" })}
-        {...uiPageAttributes(page)}
+      <main
+        {...uiAttributes({ uid: "shared.layouts.app-shell.main-HR3f5i", id: "shared.layouts.app-shell.main" })}
+        {...uiPageContextAttributes(page)}
         className="asol-canvas asol-shell-main min-h-screen"
         style={{ paddingBottom: BOTTOM_NAV_CLEARANCE }}
       >
