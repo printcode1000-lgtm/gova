@@ -19,7 +19,6 @@ import type {
 } from "./product-component.types";
 import { ProductVehicleSpecs } from "./ProductVehicleSpecs";
 import type { StorageImageManagerHandle } from "@/features/storage/ui";
-import type { UiDescriptor } from "@asol/ui-registry-core";
 import {
   PRODUCT_COMPONENT_FIELDS,
   PRODUCT_COMPONENT_TITLES,
@@ -58,7 +57,6 @@ function writeValue(
 }
 
 
-const PRODUCT_ADD_CART_UI: UiDescriptor = { uid: "product-add-cart-IC6TTn", id: "product-add-cart", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-add-cart" } };
 export function ProductComponentsRenderer({ id,
   mode,
   components,
@@ -163,12 +161,11 @@ export function ProductComponentsRenderer({ id,
             <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               <div {...uiAttributes({ uid: "product.product-components-renderer.div-6bEE2s", id: "product.product-components-renderer.div" })} className="flex flex-wrap gap-2">
                 {config.cart ? (
-                  <ProductAddToCartButton ui={{ uid: "product.product-components-renderer.product-add-to-cart-button-tZF3xB", id: "product.product-components-renderer.product-add-to-cart-button" }}
+                  <ProductAddToCartButton ui={{ uid: "product-add-cart-IC6TTn", id: "product-add-cart", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-add-cart" } }}
                     productId={productId}
                     sellerId={ownerUid}
                     product={product}
                     mainCategoryId={mainCategoryId}
-                    ui={PRODUCT_ADD_CART_UI}
                   />
                 ) : null}
                 {config.favorite ? (

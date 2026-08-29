@@ -5,14 +5,13 @@ import { cn } from "@/shared/utils";
 
 import { SettingsToggleRow } from "./SettingsToggleRow";
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 /**
  * This device's push controls: the blocked-permission recovery actions, or the
  * per-device switch, plus whatever notice explains the current state.
  */
 
-const NOTIFICATIONS_PERMISSION_UI: UiDescriptor = { uid: "notifications-permission-2Bg0Jo", id: "notifications-permission", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "notifications-permission" } };
 export function NotificationDeviceToggleSection({
   state,
 }: {
@@ -40,7 +39,7 @@ export function NotificationDeviceToggleSection({
               state.canOpenSettings && "sm:grid-cols-2",
             )}
           >
-            <button {...uiAttributes({ uid: "settings.notification-device-toggle-section.button.3-SX5hGt", id: "settings.notification-device-toggle-section.button.3" })} {...uiAttributes(NOTIFICATIONS_PERMISSION_UI)}
+            <button {...uiAttributes({ uid: "notifications-permission-2Bg0Jo", id: "notifications-permission", kind: "action", action: "recheck-permission", part: "permission", interaction: { type: "tap" }, simulation: { kind: "event", id: "notifications-permission" } })}
               type="button"
               disabled={state.deviceBusy}
               onClick={() => void state.recheckPermission()}
@@ -64,8 +63,7 @@ export function NotificationDeviceToggleSection({
           </p>
         </div>
       ) : (
-        <SettingsToggleRow ui={{ uid: "settings.notification-device-toggle-section.settings-toggle-row.2-kPpF7v", id: "settings.notification-device-toggle-section.settings-toggle-row.2" }} id="settings.notification-device-toggle-section.settings-toggle-row"
-          ui={NOTIFICATIONS_PERMISSION_UI}
+        <SettingsToggleRow ui={{ uid: "settings.notification-device-toggle-section.settings-toggle-row.2-kPpF7v", id: "settings.notification-device-toggle-section.settings-toggle-row.2", kind: "action", action: "toggle-device-notifications", part: "device" }} id="settings.notification-device-toggle-section.settings-toggle-row"
           emphasised
           title={state.t("notifications.deviceCard.toggleTitle")}
           description={state.t("notifications.deviceCard.toggleDescription")}

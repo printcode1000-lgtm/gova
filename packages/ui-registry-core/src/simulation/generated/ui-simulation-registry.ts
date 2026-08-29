@@ -496,7 +496,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/settings", "/settings/notifications"],
     repeated: false,
     sourceFile: "src/features/settings/presentation/NotificationDeviceToggleSection.tsx",
-    sourceLine: 15,
+    sourceLine: 42,
   },
   {
     uid: "notifications-revoke-device-H2bryb",
@@ -724,7 +724,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: true,
     sourceFile: "src/features/product/presentation/ProductComponentsRenderer.tsx",
-    sourceLine: 61,
+    sourceLine: 164,
   },
   {
     uid: "product-favorite-6pOZr6",
@@ -736,7 +736,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: true,
     sourceFile: "src/features/product/presentation/ProductPageContent.tsx",
-    sourceLine: 48,
+    sourceLine: 163,
   },
   {
     uid: "product-owner-profile-G7Eesj",
@@ -748,7 +748,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: true,
     sourceFile: "src/features/product/presentation/ProductPageContent.tsx",
-    sourceLine: 154,
+    sourceLine: 153,
   },
   {
     uid: "product-review-GBBl45",
@@ -784,7 +784,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: true,
     sourceFile: "src/features/product/presentation/ProductPageContent.tsx",
-    sourceLine: 223,
+    sourceLine: 221,
   },
   {
     uid: "product.share-m9IepD",
@@ -796,7 +796,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: true,
     sourceFile: "src/features/product/presentation/ProductPageContent.tsx",
-    sourceLine: 144,
+    sourceLine: 143,
   },
   {
     uid: "profile-follow-b9hOQF",

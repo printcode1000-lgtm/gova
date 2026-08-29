@@ -34,7 +34,7 @@ import { AdminCopyValue } from "./AdminCopyValue";
 import { productPageClipboard } from "./product-page-clipboard";
 import { productPageRouteModel } from "./product-page-route-model";
 import { useProductPageLoader } from "./use-product-page-loader";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
 function getProductImageKeysFingerprint(
   images: ProductDetails["images"],
@@ -45,7 +45,6 @@ function getProductImageKeysFingerprint(
 }
 
 
-const PRODUCT_FAVORITE_UI: UiDescriptor = { uid: "product-favorite-6pOZr6", id: "product-favorite", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-favorite" } };
 export function ProductPageContent({ id,
   initialProduct = null,
 }: {
@@ -161,11 +160,10 @@ export function ProductPageContent({ id,
     ) : null;
   const favoriteAction =
     mode === "view" && product ? (
-      <FavoriteButton ui={{ uid: "product.product-page-content.favorite-button-9EFxY9", id: "product.product-page-content.favorite-button" }}
+      <FavoriteButton ui={{ uid: "product-favorite-6pOZr6", id: "product-favorite", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-favorite" } }}
         item={favoriteFromProductCard(createProductCardViewModel(product))}
         label={locale === "ar" ? "المفضلة" : "Favorite"}
         className="h-10 w-auto gap-2 rounded-xl px-4"
-        ui={PRODUCT_FAVORITE_UI}
       />
     ) : null;
 

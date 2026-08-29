@@ -18,8 +18,7 @@ import { reportSystemIssue } from '@asol/system-logs-core';
 import type { StorageImageManagerHandle } from "@/features/storage/ui";
 import { useSuperAdminHeroSliderSave } from "./use-super-admin-hero-slider-save";
 import { usePageSaveRegistration } from "@/features/page-save/ui";
-import type { UiDescriptor } from "@asol/ui-registry-core";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 
 
@@ -32,15 +31,9 @@ function formatLoadError(error: unknown): string {
   return loadErrorMessages[rawMessage] ?? rawMessage ?? "تعذر تحميل الإعدادات.";
 }
 
-/** One descriptor per preset value; the identity is the interval itself. */
+/** Stable authored preset values; one source UID is distinguished by runtime instance. */
 const INTERVAL_PRESETS = [5, 15, 30, 60] as const;
 
-const INTERVAL_PRESET_UI: Record<(typeof INTERVAL_PRESETS)[number], UiDescriptor> = {
-  5: { uid: "super-admin.hero-slider.interval-preset.5-KADI7m", id: "super-admin.hero-slider.interval-preset.5", kind: "action", action: "set-check-interval", part: "settings" },
-  15: { uid: "super-admin.hero-slider.interval-preset.15-L8AcHW", id: "super-admin.hero-slider.interval-preset.15", kind: "action", action: "set-check-interval", part: "settings" },
-  30: { uid: "super-admin.hero-slider.interval-preset.30-LsTN4z", id: "super-admin.hero-slider.interval-preset.30", kind: "action", action: "set-check-interval", part: "settings" },
-  60: { uid: "super-admin.hero-slider.interval-preset.60-7HY6Zs", id: "super-admin.hero-slider.interval-preset.60", kind: "action", action: "set-check-interval", part: "settings" },
-};
 
 export function SuperAdminHeroSliderPage() {
   const router = useRouter();
@@ -278,8 +271,7 @@ export function SuperAdminHeroSliderPage() {
           </div>
           {INTERVAL_PRESETS.map((interval) => (
             <Button
-              ui={INTERVAL_PRESET_UI[interval]}
-              key={interval} ui={{ uid: "super-admin.super-admin-hero-slider-page.button.2-C5IFNH", id: "super-admin.super-admin-hero-slider-page.button.2" }}
+              key={interval} ui={{ uid: "super-admin.super-admin-hero-slider-page.button.2-C5IFNH", id: "super-admin.super-admin-hero-slider-page.button.2", kind: "action", action: "set-check-interval", part: "settings", instance: createUiInstanceId(String(interval)) }}
               type="button"
               size="sm"
               variant={intervalMinutes === interval ? "default" : "outline"}
