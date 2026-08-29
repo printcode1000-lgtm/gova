@@ -1,4 +1,4 @@
-import type { UiInteractionType } from "@asol/ui-registry-core";
+import type { UiInstanceId, UiInteractionType } from "@asol/ui-registry-core";
 
 export type SimulationRuntime =
   | "static-out"
@@ -21,12 +21,10 @@ export interface SimulationUser {
 /**
  * Instrumentation family a simulation action addresses.
  *
- * - `event`, `field` and `file` must resolve to exactly one element; a missing
- *   or duplicated marker is an explicit failure.
- * - `list-item` marks a repeated row of a real list, so it resolves to the
- *   first marked element in document order by contract.
- * - `state` marks a real rendered state rather than a control — the page's own
- *   empty state, for example. It is only ever probed for presence.
+ * - `event`, `field` and `file` normally resolve to one element.
+ * - `list-item` marks a repeated row; selecting its first rendered copy must be
+ *   requested explicitly by the target rather than being an adapter fallback.
+ * - `state` marks a real rendered state rather than a control.
  */
 export type SimulationTargetKind =
   | "event"
@@ -35,31 +33,19 @@ export type SimulationTargetKind =
   | "file"
   | "state";
 
-/**
- * What a scenario step points at.
- *
- * The identity is the registered `data-ui-uid` and nothing else. `kind` is
- * carried alongside only so the runner can keep each family's existing
- * behaviour — notably that a list row resolves to the first match — and it is
- * derived from the registry, never written by hand.
- */
+/** What a scenario step points at. */
 export interface SimulationTarget {
-  /** Registered UiRegistry uid. The only locator simulation may use. */
+  /** Canonical registered source-site uid. */
   targetUid: string;
   /** Registered interaction the step performs. */
   interaction: UiInteractionType;
   kind: SimulationTargetKind;
   /** Scenario/event id this target was declared with, for reports. */
   simulationId: string;
-  /**
-   * Which runtime-rendered copy of `targetUid` this action addresses.
-   * Optional, and only meaningful when the registered target is `repeated`
-   * (rendered once per row of a runtime collection): it narrows the query to
-   * one row's `data-ui-instance`, it never changes what `targetUid` means and
-   * it is never a second identity. A `repeated` target with no instance keeps
-   * the existing "resolves to the first match" collection semantics.
-   */
-  instance?: string;
+  /** One concrete runtime-rendered copy of a repeated source UID. */
+  instance?: UiInstanceId;
+  /** Explicit collection choice; never inferred merely because a uid repeats. */
+  selection?: "first";
 }
 
 export type SimulationDriverAction =
@@ -79,19 +65,12 @@ export interface PageInteractionDefinition {
   actor: "guest" | SimulationUserRole | "any";
   /**
    * Real path this interaction starts from, when its target only exists after
-   * the user has walked a real prerequisite path — searching for a product
-   * before a cart has anything in it, for example. The declared actions then
-   * navigate the same frame through real controls until the target renders.
-   * Omitted for an interaction whose target is present on the page itself.
+   * the user has walked a real prerequisite path.
    */
   entryPath?: string;
   /**
    * Real state the page renders when the data this interaction needs does not
-   * exist — an empty orders list, a catalog with no sections. When an action
-   * cannot find its target and this marker is present, the run is reported
-   * unavailable rather than failed: the application is behaving correctly and
-   * the environment simply has nothing to act on. A missing target with no such
-   * marker stays an explicit failure.
+   * exist. Missing data is then reported unavailable rather than as a defect.
    */
   unavailableWhen?: { target: SimulationTarget; reason: string };
   actions: readonly SimulationDriverAction[];
