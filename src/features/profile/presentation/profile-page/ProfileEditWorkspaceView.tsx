@@ -25,7 +25,6 @@ import { PROFILE_SECTION_IDS } from "../profile-page.types";
 import type { ProfilePageContentModel } from "./ProfilePageContent.model";
 import { PROFILE_EDIT_TAB_COLORS,ProfileEditSectionFrame } from "./ProfilePageContent.profile-tabs";
 import {
-  ProfileEditCarouselControls,
   ProfileEditSaveFeedback,
   ProfileEditTabsBar,
 } from "./ProfileEditWorkspaceChrome";
@@ -246,8 +245,6 @@ return (
                   </div>
                 </div>
               </div>
-
-              <ProfileEditCarouselControls id="profile.profile-page.profile-edit-workspace-view.profile-edit-carousel-controls" model={model} />
 
               {saveError ? (
                 <div id="profile.profile-page.profile-edit-workspace-view.div.3" className="mx-3 mb-3 rounded-lg bg-error/15 px-3 py-2 text-sm text-error sm:mx-5">

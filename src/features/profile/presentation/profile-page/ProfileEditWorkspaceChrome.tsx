@@ -4,7 +4,6 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ProfileEditTab } from "../profile-page.types";
 import { PROFILE_SECTION_IDS, PROFILE_SECTIONS } from "../profile-page.types";
 import type { ProfilePageContentModel } from "./ProfilePageContent.model";
@@ -137,54 +136,6 @@ export function ProfileEditSaveFeedback({ id,
         <FontAwesomeIcon icon={faTriangleExclamation} className="h-4 w-4" />
         {model.saveError}
       </p>
-    </div>
-  );
-}
-
-export function ProfileEditCarouselControls({ id,
-  model,
-}: {
-  model: ProfilePageContentModel;
-} & { id?: string }) {
-  return (
-    <div id={id}
-      className="flex items-center justify-center gap-4 border-t border-outline-variant/50 py-3"
-      aria-hidden="true"
-    >
-      <button
-        type="button"
-        onClick={() => model.goToAdjacentSection(-1)}
-        disabled={model.activeSectionIndex === 0}
-        aria-label={model.locale === "ar" ? "القسم السابق" : "Previous section"}
-        className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition disabled:pointer-events-none disabled:opacity-25"
-      >
-        {model.locale === "ar" ? (
-          <ChevronRight className="h-4 w-4" />
-        ) : (
-          <ChevronLeft className="h-4 w-4" />
-        )}
-      </button>
-      <div className="flex justify-center gap-2">
-        {PROFILE_SECTIONS.map((section) => (
-          <span
-            key={section}
-            className={`h-2 rounded-full transition-all ${model.activeTab === section ? "w-6 bg-primary" : "w-2 bg-outline-variant"}`}
-          />
-        ))}
-      </div>
-      <button
-        type="button"
-        onClick={() => model.goToAdjacentSection(1)}
-        disabled={model.activeSectionIndex === PROFILE_SECTIONS.length - 1}
-        aria-label={model.locale === "ar" ? "القسم التالي" : "Next section"}
-        className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition disabled:pointer-events-none disabled:opacity-25"
-      >
-        {model.locale === "ar" ? (
-          <ChevronLeft className="h-4 w-4" />
-        ) : (
-          <ChevronRight className="h-4 w-4" />
-        )}
-      </button>
     </div>
   );
 }
