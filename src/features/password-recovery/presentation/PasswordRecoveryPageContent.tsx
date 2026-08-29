@@ -7,7 +7,7 @@ import { AuthHero } from '@/features/auth/ui';
 import { AuthMobileBrand } from '@/features/auth/ui';
 import { useTranslation } from '@/shared/i18n';
 import { usePasswordRecovery } from './hooks/use-password-recovery';
-import { asciiDigitsOnly } from '@asol/auth-core';
+import { asciiDigitsOnly, foldPasswordDigits } from '@asol/auth-core';
 import { PhoneField } from '@/shared/ui/phone-field';
 import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
 import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
@@ -131,5 +131,5 @@ function SubmitButton({ id, loading, label }: { loading: boolean; label: string 
 }
 
 function PasswordField({ id, label, value, onChange, visible, toggle }: { label: string; value: string; onChange: (value: string) => void; visible: boolean; toggle?: () => void } & { id?: string }) {
-  return <label id={id} className="space-y-2 block"><span className="text-sm font-semibold flex items-center gap-2"><KeyRound className="h-4 w-4 text-primary" />{label}</span><div className="relative"><input type={visible ? 'text' : 'password'} value={value} onChange={(e) => onChange(e.target.value)} autoComplete="new-password" className="auth-input w-full pe-10" />{toggle && <button type="button" onClick={toggle} className="absolute end-0 top-0 h-full px-3 text-on-surface-variant">{visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>}</div></label>;
+  return <label id={id} className="space-y-2 block"><span className="text-sm font-semibold flex items-center gap-2"><KeyRound className="h-4 w-4 text-primary" />{label}</span><div className="relative"><input type={visible ? 'text' : 'password'} value={value} onChange={(e) => onChange(foldPasswordDigits(e.target.value))} autoComplete="new-password" className="auth-input w-full pe-10" />{toggle && <button type="button" onClick={toggle} className="absolute end-0 top-0 h-full px-3 text-on-surface-variant">{visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>}</div></label>;
 }

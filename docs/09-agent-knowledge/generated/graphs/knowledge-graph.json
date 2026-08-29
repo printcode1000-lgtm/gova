@@ -139353,6 +139353,12 @@
       "detail": "./constants"
     },
     {
+      "from": "source:packages/auth-core/src/domain/password-input.ts",
+      "to": "source:packages/auth-core/src/domain/digits.ts",
+      "kind": "imports",
+      "detail": "./digits"
+    },
+    {
       "from": "source:packages/auth-core/src/domain/phone.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -188540,6 +188546,12 @@
     },
     {
       "from": "source:src/features/auth/presentation/LoginPageContent.tsx",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/auth/presentation/LoginPageContent.tsx",
       "to": "package:@asol/ui-registry-core",
       "kind": "imports",
       "detail": "@asol/ui-registry-core"
@@ -217875,6 +217887,12 @@
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
       "to": "package:@asol/map-core",
       "kind": "imports",
       "detail": "@asol/map-core"
@@ -220866,6 +220884,12 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
     },
     {
       "from": "source:src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",

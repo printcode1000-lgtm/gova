@@ -6,7 +6,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
-import type { RegistrationFormData } from '@asol/auth-core';
+import { foldPasswordDigits, type RegistrationFormData } from '@asol/auth-core';
 
 interface PasswordInputProps {
   name: 'password' | 'confirmPassword';
@@ -37,7 +37,9 @@ export function PasswordInput({ id, name }: PasswordInputProps & { id?: string }
               placeholder={placeholder}
               className={cn('auth-input pe-10 w-full', fieldState.error && 'border-error')}
               value={field.value}
-              onChange={field.onChange}
+              onChange={(event) =>
+                field.onChange(foldPasswordDigits(event.target.value))
+              }
             />
             <button
               type="button"

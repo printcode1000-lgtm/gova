@@ -15,6 +15,7 @@ import type {
   ProfileSectionStatus,
 } from "./profile-save-controller";
 import { PhoneVerification } from "@/features/auth/ui";
+import { foldPasswordDigits } from "@asol/auth-core";
 
 interface ProfileRegistrationInfoCardProps {
   onStatusChange?: (status: ProfileSectionStatus) => void;
@@ -175,7 +176,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   type="password"
                   value={form.currentPassword}
                   onChange={(e) =>
-                    updateRegistrationField("currentPassword", e.target.value)
+                    updateRegistrationField("currentPassword", foldPasswordDigits(e.target.value))
                   }
                   placeholder={t(
                     "onboarding.contactInfo.currentPasswordPlaceholder",
@@ -198,7 +199,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   id="profile.registration.new-password"
                   type="password"
                   value={form.newPassword}
-                  onChange={(e) => updateRegistrationField("newPassword", e.target.value)}
+                  onChange={(e) => updateRegistrationField("newPassword", foldPasswordDigits(e.target.value))}
                   placeholder={t(
                     "onboarding.contactInfo.newPasswordPlaceholder",
                   )}
@@ -221,7 +222,7 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   type="password"
                   value={form.confirmPassword}
                   onChange={(e) =>
-                    updateRegistrationField("confirmPassword", e.target.value)
+                    updateRegistrationField("confirmPassword", foldPasswordDigits(e.target.value))
                   }
                   placeholder={t(
                     "onboarding.contactInfo.confirmPasswordPlaceholder",

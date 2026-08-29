@@ -22,6 +22,7 @@ import type { ContactInfoCardModel } from "./ContactInfoCard.model";
 import { ContactSectionHeader } from "./ContactSectionHeader";
 import { ContactEntryCard } from "./ContactEntryCard";
 import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
+import { foldPasswordDigits } from "@asol/auth-core";
 
 export function PrimaryContactView({ model }: { model: ContactInfoCardModel }) {
 const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, pendingRemoval, requestRemoveEntry, cancelRemoveEntry, confirmRemoveEntry, groupedSocialLinks } = model;
@@ -94,7 +95,7 @@ return (
                             id="profile.primary-contact.current-password"
                             type="password"
                             value={passwordData.currentPassword}
-                            onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                            onChange={(e) => setPasswordData({ ...passwordData, currentPassword: foldPasswordDigits(e.target.value) })}
                             placeholder={t('onboarding.contactInfo.currentPasswordPlaceholder')}
                           />
                         </div>
@@ -104,7 +105,7 @@ return (
                             id="profile.primary-contact.new-password"
                             type="password"
                             value={passwordData.newPassword}
-                            onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                            onChange={(e) => setPasswordData({ ...passwordData, newPassword: foldPasswordDigits(e.target.value) })}
                             placeholder={t('onboarding.contactInfo.newPasswordPlaceholder')}
                           />
                         </div>
@@ -114,7 +115,7 @@ return (
                             id="profile.primary-contact.confirm-password"
                             type="password"
                             value={passwordData.confirmPassword}
-                            onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                            onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: foldPasswordDigits(e.target.value) })}
                             placeholder={t('onboarding.contactInfo.confirmPasswordPlaceholder')}
                           />
                         </div>

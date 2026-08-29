@@ -35,6 +35,7 @@ export { toAsciiDigits, asciiDigitsOnly } from './domain/digits';
 export {
   readPasswordInput,
   assertPasswordMeetsMinimum,
+  foldPasswordDigits,
 } from './domain/password-input';
 
 export type {

@@ -25,6 +25,7 @@ import { useLogin } from './hooks/use-login';
 import { PhoneField } from '@/shared/ui/phone-field';
 import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
 import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { foldPasswordDigits } from '@asol/auth-core';
 
 const LOGIN_PHONE_UI: UiDescriptor = { uid: "login-phone-ChBI52", id: "login-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "login-phone" } };
 
@@ -71,7 +72,7 @@ export function LoginPageContent() {
                       <Link {...uiAttributes({ uid: "login-forgot-password-ryS56k", id: "login-forgot-password", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "login-forgot-password" } })} href="/forgot-password" className="text-xs text-primary">{t('auth.login.forgotPassword')}</Link>
                     </div>
                     <div id="auth.login-page-content.div.11" className="relative">
-                      <input {...uiAttributes({ uid: 'login-password-34nKhf', id: 'login-password', kind: 'field', interaction: { type: 'type', valueContract: 'password' }, simulation: { kind: 'field', id: 'login-password' } })} name="password" autoComplete="current-password" type={showPassword ? 'text' : 'password'} placeholder={t('auth.login.passwordPlaceholder')} className={cn('auth-input pe-10 w-full', fieldState.error && 'border-error')} value={field.value} onChange={field.onChange} />
+                      <input {...uiAttributes({ uid: 'login-password-34nKhf', id: 'login-password', kind: 'field', interaction: { type: 'type', valueContract: 'password' }, simulation: { kind: 'field', id: 'login-password' } })} name="password" autoComplete="current-password" type={showPassword ? 'text' : 'password'} placeholder={t('auth.login.passwordPlaceholder')} className={cn('auth-input pe-10 w-full', fieldState.error && 'border-error')} value={field.value} onChange={(event) => field.onChange(foldPasswordDigits(event.target.value))} />
                       <button id="auth.login-page-content.button" type="button" className="absolute end-0 top-0 h-full px-3 text-on-surface-variant" onClick={() => setShowPassword((s) => !s)} tabIndex={-1} aria-label={t('auth.login.showPassword')}>{showPassword ? <EyeOff id="auth.login-page-content.eye-off" className="h-4 w-4" /> : <Eye id="auth.login-page-content.eye" className="h-4 w-4" />}</button>
                     </div>
                     {fieldState.error && <p id="auth.login-page-content.p.3" className="text-xs text-error">{fieldState.error.message}</p>}

@@ -77,6 +77,7 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 - No migration path from older SHA-256 hashes. Existing accounts must reset password (recovery flow or manual DB update).
 - `MIN_PASSWORD_LENGTH` = **4** (enforced in schemas and server services).
 - `readPasswordInput` / `assertPasswordMeetsMinimum` reject non-string API payloads so leading zeros in values such as `0258` are preserved.
+- `foldPasswordDigits` folds Arabic-Indic and Persian digits to ASCII, and every password field in the application types through it — login, registration, password recovery, the two profile password forms, and account deletion. `٠٢٥٨` and `0258` look like one password to the person typing them, so they must not hash to two different values. Only digits change; letters and symbols are stored exactly as typed.
 
 ### Session tokens
 

@@ -16,6 +16,7 @@ import {
   phoneNationalNumber,
   phoneSearchKey,
   phoneValidationIssue,
+  foldPasswordDigits,
   readPasswordInput,
   samePhone,
   toAsciiDigits,
@@ -140,6 +141,12 @@ export function runPhoneTest() {
 }
 
 export function runPasswordInputTest() {
+  // A password typed on an Arabic or Persian keyboard is the same password.
+  assert.equal(foldPasswordDigits('٠٢٥٨'), '0258');
+  assert.equal(foldPasswordDigits('۰۲۵۸'), '0258');
+  assert.equal(foldPasswordDigits('pass٠١٢٣word'), 'pass0123word');
+  assert.equal(foldPasswordDigits('Aa!0258'), 'Aa!0258');
+
   assert.equal(readPasswordInput('0258'), '0258');
   assert.equal(readPasswordInput('0258')?.length, 4);
   assert.equal(assertPasswordMeetsMinimum('0258'), '0258');

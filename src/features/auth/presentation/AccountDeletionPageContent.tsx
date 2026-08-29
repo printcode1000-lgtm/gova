@@ -23,6 +23,7 @@ import { useTranslation } from "@/shared/i18n";
 import { accountDeletionApiService } from "../application/services/account-deletion-api-service";
 import { notifications } from "@/features/notifications";
 import { uiAttributes } from "@asol/ui-registry-core";
+import { foldPasswordDigits } from "@asol/auth-core";
 
 const COPY = {
   ar: {
@@ -225,7 +226,7 @@ export function AccountDeletionPageContent() {
             autoComplete="current-password"
             required
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(foldPasswordDigits(e.target.value))}
             className="block w-full rounded-xl border border-outline/40 bg-surface-container p-3"
           />
         </label>
