@@ -35,6 +35,7 @@ export type DomUsageOwnership =
   | { readonly kind: 'third-party'; readonly name: string }
   | { readonly kind: 'generic-primitive-wired'; readonly component: string; readonly definingFile: string }
   | { readonly kind: 'generic-primitive-unconverted'; readonly component: string; readonly definingFile: string }
+  | { readonly kind: 'composite-caller-wired'; readonly component: string; readonly definingFile: string }
   | { readonly kind: 'opaque'; readonly component: string };
 
 export type UiRegistrationKind = 'literal' | 'forwarded' | 'computed' | 'missing';
@@ -219,10 +220,6 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
     let result: DomUsageOwnership;
     if (!shape) {
       result = { kind: 'opaque', component: exportName };
-    } else if (shape.forwardsUiAnywhere) {
-      // The caller owns an addressable DOM descendant even when the wrapper's
-      // structural root is not itself the identity sink (FormSelect pattern).
-      result = { kind: 'generic-primitive-wired', component: exportName, definingFile };
     } else {
       let reachesDom = shape.rootIntrinsicTag !== null || shape.rootQualifiedName !== null;
       let nestedOwnership: DomUsageOwnership | null = null;
@@ -230,10 +227,21 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
         const target = rootTarget(definingFile, shape.rootComponentName, sources);
         if (target) {
           nestedOwnership = ownershipOf(target.file, target.exportName, nextSeen);
-          reachesDom = nestedOwnership.kind === 'generic-primitive-wired' || nestedOwnership.kind === 'generic-primitive-unconverted' || shapeOf(target.file, target.exportName) !== null;
+          reachesDom =
+            nestedOwnership.kind === 'generic-primitive-wired' ||
+            nestedOwnership.kind === 'generic-primitive-unconverted' ||
+            nestedOwnership.kind === 'composite-caller-wired' ||
+            shapeOf(target.file, target.exportName) !== null;
         }
       }
-      if (!reachesDom) {
+
+      if (shape.forwardsUiAnywhere && !shape.forwardsUiThroughRegistryCall) {
+        // Composite/wrapper case: the caller descriptor intentionally belongs
+        // to an inner addressable control rather than to the component root.
+        // The caller usage remains mandatory, while the component's own root
+        // stays in the intrinsic inventory and may own a fixed source UID.
+        result = { kind: 'composite-caller-wired', component: exportName, definingFile };
+      } else if (!reachesDom) {
         result = { kind: 'opaque', component: exportName };
       } else {
         const repeating = multiplicity.repeatingFiles.has(definingFile) || multiplicity.repeatingSymbols.has(key);
@@ -296,7 +304,11 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
           }
 
           if (ownership) {
-            const actionable = ownership.kind === 'intrinsic' || ownership.kind === 'generic-primitive-wired' || ownership.kind === 'generic-primitive-unconverted';
+            const actionable =
+              ownership.kind === 'intrinsic' ||
+              ownership.kind === 'generic-primitive-wired' ||
+              ownership.kind === 'generic-primitive-unconverted' ||
+              ownership.kind === 'composite-caller-wired';
             const tagOrComponent = ownership.kind === 'intrinsic' ? ownership.tag : ownership.kind === 'third-party' ? ownership.name : ownership.kind === 'structural' ? node.tagName.getText() : ownership.component;
             const registrationKind: UiRegistrationKind = !actionable ? 'missing' : ownership.kind === 'intrinsic' ? intrinsicRegistrationKind(node) : primitiveRegistrationKind(node);
             sites.push({
@@ -321,7 +333,11 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
 }
 
 export function isActionableDomUsage(site: DomUsageSite): boolean {
-  return site.ownership.kind === 'intrinsic' || site.ownership.kind === 'generic-primitive-wired' || site.ownership.kind === 'generic-primitive-unconverted';
+  return
+    site.ownership.kind === 'intrinsic' ||
+    site.ownership.kind === 'generic-primitive-wired' ||
+    site.ownership.kind === 'generic-primitive-unconverted' ||
+    site.ownership.kind === 'composite-caller-wired';
 }
 
 export { findDescriptorLiterals, isInsideIteratorCallback };
