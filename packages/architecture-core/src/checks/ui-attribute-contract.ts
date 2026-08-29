@@ -84,7 +84,7 @@ function expressionReferencesIndex(node: ts.Node): boolean {
   return found;
 }
 
-type InstanceConstructorKind = "direct" | "opaque" | "position" | "compose";
+type InstanceConstructorKind = "direct" | "opaque" | "position" | "compose" | "subpart";
 interface ApprovedInstanceExpression { readonly kind: InstanceConstructorKind | "forwarded"; readonly call?: ts.CallExpression; }
 
 function directInstanceConstructor(node: ts.Expression): ApprovedInstanceExpression | null {
@@ -93,6 +93,7 @@ function directInstanceConstructor(node: ts.Expression): ApprovedInstanceExpress
   if (node.expression.text === "createOpaqueUiInstanceId") return { kind: "opaque", call: node };
   if (node.expression.text === "createUiPositionInstanceId") return { kind: "position", call: node };
   if (node.expression.text === "composeUiInstanceId") return { kind: "compose", call: node };
+  if (node.expression.text === "createUiSubpartInstanceId") return { kind: "subpart", call: node };
   return null;
 }
 
@@ -121,6 +122,20 @@ function approvedInstanceExpression(node: ts.Expression, sourceFile: ts.SourceFi
   return null;
 }
 
+function isUiProperty(expression: ts.Expression | undefined, property: "uid" | "instance"): boolean {
+  return Boolean(
+    expression &&
+    ts.isPropertyAccessExpression(expression) &&
+    ts.isIdentifier(expression.expression) &&
+    expression.expression.text === "ui" &&
+    expression.name.text === property,
+  );
+}
+
+function isUndefinedExpression(expression: ts.Expression | undefined): boolean {
+  return Boolean(expression && ts.isIdentifier(expression) && expression.text === "undefined");
+}
+
 function validateInstanceExpression(file: string, line: number, node: ts.Expression, sourceFile: ts.SourceFile): void {
   const approved = approvedInstanceExpression(node, sourceFile);
   if (!approved) {
@@ -133,6 +148,18 @@ function validateInstanceExpression(file: string, line: number, node: ts.Express
   if ((approved.kind === "position" || approved.kind === "opaque") && approved.call) {
     const scope = approved.call.arguments[0];
     if (!scope || !ts.isStringLiteral(scope)) addViolation("UI Attributes", file, `${approved.kind === "position" ? "Positional" : "Opaque"} UI instance at line ${line} requires a quoted static scope/namespace.`);
+  }
+  if (approved.kind === "subpart" && approved.call) {
+    const [ownerUid, ownerInstance, subpart] = approved.call.arguments;
+    if (!isUiProperty(ownerUid, "uid")) {
+      addViolation("UI Attributes", file, `Reusable UI subpart at line ${line} must scope itself from caller ui.uid.`);
+    }
+    if (!isUiProperty(ownerInstance, "instance") && !isUndefinedExpression(ownerInstance)) {
+      addViolation("UI Attributes", file, `Reusable UI subpart at line ${line} must use caller ui.instance or explicit undefined as its parent runtime scope.`);
+    }
+    if (!subpart || !ts.isStringLiteral(subpart)) {
+      addViolation("UI Attributes", file, `Reusable UI subpart at line ${line} requires a quoted static subpart name.`);
+    }
   }
 }
 
