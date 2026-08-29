@@ -65,16 +65,24 @@ export function createUiInstanceId(
   return safeValue as UiInstanceId;
 }
 
+/**
+ * Derive a stable browser-safe instance from arbitrary domain identity without
+ * exposing the raw value. Use this for database/user/resource identifiers whose
+ * public-safety cannot be proven from their shape alone. The namespace is a
+ * source-authored safe token and prevents cross-domain hash collisions from
+ * becoming the same UI instance within an address space.
+ */
+export function createOpaqueUiInstanceId(namespace: string, value: string): UiInstanceId {
+  const safeNamespace = createUiInstanceId(namespace);
+  if (value.length === 0) throw new Error("Opaque UI instance source must not be empty.");
+  return createUiInstanceId(`${safeNamespace}-${stableHash(value)}`);
+}
+
 /** Full default-policy guard; never a shape-only branding escape hatch. */
 export function isUiInstanceId(value: unknown): value is UiInstanceId {
   return typeof value === "string" && uiInstanceIdRejectionReason(value) === null;
 }
 
-/**
- * Compose a parent runtime copy and a safe local copy. Different source UIDs
- * can share the same instance token; this helper is for nested repeated DOM
- * where the child source UID itself repeats within a repeated parent.
- */
 export function composeUiInstanceId(
   parent: UiInstanceId | undefined,
   local: UiInstanceId,
@@ -84,11 +92,6 @@ export function composeUiInstanceId(
   return createUiInstanceId(combined.length <= 64 ? combined : `scope-${stableHash(combined)}`);
 }
 
-/**
- * Explicit positional identity for domains where the slot number itself is
- * stable semantics (OTP digit 1..N, pagination slot, fixed visual lane). This
- * is intentionally different from using a reorderable collection index.
- */
 export function createUiPositionInstanceId(scope: string, zeroBasedPosition: number): UiInstanceId {
   if (!Number.isInteger(zeroBasedPosition) || zeroBasedPosition < 0) {
     throw new Error("UI positional instance requires a non-negative integer position.");
