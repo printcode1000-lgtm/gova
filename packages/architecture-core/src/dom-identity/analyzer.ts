@@ -1,7 +1,7 @@
 /**
- * The canonical DOM-identity analyzer: one AST walk over `src/**/*.tsx` that
- * answers, for every JSX usage site, "does this produce project-owned DOM,
- * and if so, does it already carry a canonical `uid`?"
+ * Canonical DOM-identity analyzer. Every coverage, migration and generated
+ * registry consumer reads the same semantic inventory instead of recognizing
+ * JSX by text or by a maintained component list.
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -21,17 +21,8 @@ import {
 } from './tsx-ast';
 
 const STRUCTURAL_COMPONENTS: ReadonlySet<string> = new Set([
-  'Fragment',
-  'Suspense',
-  'StrictMode',
-  'Profiler',
-  'Activity',
-  'ViewTransition',
-  'Slot',
-  'Controller',
-  'FormProvider',
-  'StorageImageManager',
-  'FocusTrap',
+  'Fragment', 'Suspense', 'StrictMode', 'Profiler', 'Activity', 'ViewTransition',
+  'Slot', 'Controller', 'FormProvider', 'StorageImageManager', 'FocusTrap',
 ]);
 
 function isStructuralComponent(name: string): boolean {
@@ -46,12 +37,15 @@ export type DomUsageOwnership =
   | { readonly kind: 'generic-primitive-unconverted'; readonly component: string; readonly definingFile: string }
   | { readonly kind: 'opaque'; readonly component: string };
 
+export type UiRegistrationKind = 'literal' | 'forwarded' | 'computed' | 'missing';
+
 export interface DomUsageSite {
   readonly file: string;
   readonly line: number;
   readonly tagOrComponent: string;
   readonly ownership: DomUsageOwnership;
   readonly node: ts.JsxOpeningElement | ts.JsxSelfClosingElement;
+  readonly registrationKind: UiRegistrationKind;
   readonly hasUiRegistration: boolean;
   readonly hasForeignSpread: boolean;
 }
@@ -67,9 +61,7 @@ function listTsxFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
     const full = join(directory, entry);
     if (statSync(full).isDirectory()) {
-      return entry === 'node_modules' || entry === 'tests' || entry === '__tests__' || entry === 'generated'
-        ? []
-        : listTsxFiles(full);
+      return entry === 'node_modules' || entry === 'tests' || entry === '__tests__' || entry === 'generated' ? [] : listTsxFiles(full);
     }
     if (entry.endsWith('.test.ts') || entry.endsWith('.test.tsx')) return [];
     return entry.endsWith('.tsx') ? [full] : [];
@@ -78,13 +70,9 @@ function listTsxFiles(directory: string): string[] {
 
 export function loadProjectTsx(root: string): Map<string, string> {
   const sources = new Map<string, string>();
-  for (const full of listTsxFiles(join(root, 'src'))) {
-    const relativePath = relative(root, full).replace(/\\/g, '/');
-    sources.set(relativePath, readFileSync(full, 'utf8'));
-  }
-  const packagesRoot = join(root, 'packages');
-  if (statSync(packagesRoot, { throwIfNoEntry: false })?.isDirectory()) {
-    for (const full of listTsxFiles(packagesRoot)) {
+  for (const rootDir of [join(root, 'src'), join(root, 'packages')]) {
+    if (!statSync(rootDir, { throwIfNoEntry: false })?.isDirectory()) continue;
+    for (const full of listTsxFiles(rootDir)) {
       const relativePath = relative(root, full).replace(/\\/g, '/');
       sources.set(relativePath, readFileSync(full, 'utf8'));
     }
@@ -92,22 +80,49 @@ export function loadProjectTsx(root: string): Map<string, string> {
   return sources;
 }
 
-function registryCall(node: ts.JsxSpreadAttribute): ts.CallExpression | null {
-  const expression = node.expression;
+function isCanonicalLiteralDescriptor(expression: ts.Expression | undefined): boolean {
+  if (!expression || !ts.isObjectLiteralExpression(expression)) return false;
+  let uid = false;
+  let id = false;
+  for (const property of expression.properties) {
+    if (!ts.isPropertyAssignment(property) || !ts.isIdentifier(property.name)) continue;
+    if (property.name.text === 'uid') uid = ts.isStringLiteral(property.initializer);
+    if (property.name.text === 'id') id = ts.isStringLiteral(property.initializer);
+  }
+  return uid && id;
+}
+
+function spreadRegistrationKind(property: ts.JsxSpreadAttribute): UiRegistrationKind | null {
+  const expression = property.expression;
   if (!ts.isCallExpression(expression) || !ts.isIdentifier(expression.expression)) return null;
-  return /^(?:uiAttributes|uiComponentAttributes|uiPageAttributes|uiPrimitiveAttributes)$/.test(expression.expression.text)
-    ? expression
-    : null;
+  if (expression.expression.text !== 'uiAttributes' && expression.expression.text !== 'uiPageAttributes') return null;
+  const descriptor = expression.arguments[0];
+  if (isCanonicalLiteralDescriptor(descriptor)) return 'literal';
+  if (descriptor && ts.isIdentifier(descriptor) && descriptor.text === 'ui') return 'forwarded';
+  return 'computed';
 }
 
-function hasUiRegistrySpread(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): boolean {
-  return node.attributes.properties.some((property) => ts.isJsxSpreadAttribute(property) && registryCall(property) !== null);
+function intrinsicRegistrationKind(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): UiRegistrationKind {
+  let computed = false;
+  for (const property of node.attributes.properties) {
+    if (!ts.isJsxSpreadAttribute(property)) continue;
+    const kind = spreadRegistrationKind(property);
+    if (kind === 'literal' || kind === 'forwarded') return kind;
+    if (kind === 'computed') computed = true;
+  }
+  return computed ? 'computed' : 'missing';
 }
 
-function hasUiProp(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): boolean {
-  return node.attributes.properties.some(
+function primitiveRegistrationKind(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): UiRegistrationKind {
+  const attribute = node.attributes.properties.find(
     (property) => ts.isJsxAttribute(property) && property.name.getText() === 'ui',
   );
+  if (!attribute || !ts.isJsxAttribute(attribute) || !attribute.initializer) return 'missing';
+  if (!ts.isJsxExpression(attribute.initializer) || !attribute.initializer.expression) return 'computed';
+  const expression = attribute.initializer.expression;
+  if (isCanonicalLiteralDescriptor(expression)) return 'literal';
+  if (ts.isIdentifier(expression) && expression.text === 'ui') return 'forwarded';
+  return 'computed';
 }
 
 function hasAnySpread(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): boolean {
@@ -116,41 +131,30 @@ function hasAnySpread(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): bo
 
 function exportedComponentCandidates(sourceFile: ts.SourceFile): string[] {
   const declared = new Set<string>();
-  const explicitlyExportedLocals = new Set<string>();
+  const exported = new Set<string>();
   for (const statement of sourceFile.statements) {
     if (ts.isFunctionDeclaration(statement) && statement.name && /^[A-Z]/.test(statement.name.text)) {
       declared.add(statement.name.text);
-      const exported = (ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) !== 0;
-      if (exported) explicitlyExportedLocals.add(statement.name.text);
+      if ((ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) !== 0) exported.add(statement.name.text);
     }
     if (ts.isVariableStatement(statement)) {
-      const exported = (ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) !== 0;
+      const inlineExport = (ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) !== 0;
       for (const declaration of statement.declarationList.declarations) {
         if (!ts.isIdentifier(declaration.name) || !/^[A-Z]/.test(declaration.name.text)) continue;
         declared.add(declaration.name.text);
-        if (exported) explicitlyExportedLocals.add(declaration.name.text);
+        if (inlineExport) exported.add(declaration.name.text);
       }
     }
     if (ts.isExportDeclaration(statement) && !statement.moduleSpecifier && statement.exportClause && ts.isNamedExports(statement.exportClause)) {
-      for (const element of statement.exportClause.elements) {
-        const localName = (element.propertyName ?? element.name).text;
-        if (/^[A-Z]/.test(localName)) explicitlyExportedLocals.add(localName);
-      }
+      for (const element of statement.exportClause.elements) exported.add((element.propertyName ?? element.name).text);
     }
   }
-  return [...explicitlyExportedLocals].filter((name) => declared.has(name));
+  return [...exported].filter((name) => declared.has(name));
 }
 
-interface RootTarget {
-  readonly file: string;
-  readonly exportName: string;
-}
+interface RootTarget { readonly file: string; readonly exportName: string }
 
-function rootTarget(
-  definingFile: string,
-  localName: string,
-  sources: ReadonlyMap<string, string>,
-): RootTarget | null {
+function rootTarget(definingFile: string, localName: string, sources: ReadonlyMap<string, string>): RootTarget | null {
   const source = sources.get(definingFile);
   if (!source) return null;
   const sourceFile = parseTsx(definingFile, source);
@@ -162,23 +166,16 @@ function rootTarget(
       (ts.isVariableStatement(statement) && statement.declarationList.declarations.some((declaration) => ts.isIdentifier(declaration.name) && declaration.name.text === localName)));
     return localDeclaration ? { file: definingFile, exportName: localName } : null;
   }
-
   let exportName = localName;
   for (const statement of sourceFile.statements) {
-    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) continue;
+    if (!ts.isImportDeclaration(statement)) continue;
     const clause = statement.importClause;
     if (!clause) continue;
-    if (clause.name?.text === localName) {
-      exportName = 'default';
-      break;
-    }
+    if (clause.name?.text === localName) { exportName = 'default'; break; }
     const named = clause.namedBindings;
     if (named && ts.isNamedImports(named)) {
       const element = named.elements.find((candidate) => candidate.name.text === localName);
-      if (element) {
-        exportName = (element.propertyName ?? element.name).text;
-        break;
-      }
+      if (element) { exportName = (element.propertyName ?? element.name).text; break; }
     }
   }
   return { file, exportName };
@@ -188,8 +185,8 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
   const sources = loadProjectTsx(root);
   const multiplicity = hostMultiplicity(sources);
   const sites: DomUsageSite[] = [];
-
   const shapeCache = new Map<string, ComponentRootShape | null>();
+
   function shapeOf(file: string, exportName: string): ComponentRootShape | null {
     const key = `${file}#${exportName}`;
     if (shapeCache.has(key)) return shapeCache.get(key)!;
@@ -200,26 +197,21 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
   }
 
   const ownershipCache = new Map<string, DomUsageOwnership>();
-  function ownershipOf(
-    definingFile: string,
-    exportName: string,
-    seen: ReadonlySet<string> = new Set(),
-  ): DomUsageOwnership {
+  function ownershipOf(definingFile: string, exportName: string, seen: ReadonlySet<string> = new Set()): DomUsageOwnership {
     const key = `${definingFile}#${exportName}`;
     if (ownershipCache.has(key)) return ownershipCache.get(key)!;
     if (seen.has(key)) return { kind: 'opaque', component: exportName };
-    if (isStructuralComponent(exportName)) {
-      const result: DomUsageOwnership = { kind: 'structural' };
-      ownershipCache.set(key, result);
-      return result;
-    }
+    if (isStructuralComponent(exportName)) return { kind: 'structural' };
 
-    const nextSeen = new Set(seen);
-    nextSeen.add(key);
+    const nextSeen = new Set(seen); nextSeen.add(key);
     const shape = shapeOf(definingFile, exportName);
     let result: DomUsageOwnership;
     if (!shape) {
       result = { kind: 'opaque', component: exportName };
+    } else if (shape.forwardsUiAnywhere) {
+      // The caller owns an addressable DOM descendant even when the wrapper's
+      // structural root is not itself the identity sink (FormSelect pattern).
+      result = { kind: 'generic-primitive-wired', component: exportName, definingFile };
     } else {
       let reachesDom = shape.rootIntrinsicTag !== null || shape.rootQualifiedName !== null;
       let nestedOwnership: DomUsageOwnership | null = null;
@@ -227,19 +219,15 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
         const target = rootTarget(definingFile, shape.rootComponentName, sources);
         if (target) {
           nestedOwnership = ownershipOf(target.file, target.exportName, nextSeen);
-          reachesDom = nestedOwnership.kind === 'generic-primitive-wired' ||
-            nestedOwnership.kind === 'generic-primitive-unconverted' ||
-            shapeOf(target.file, target.exportName) !== null;
+          reachesDom = nestedOwnership.kind === 'generic-primitive-wired' || nestedOwnership.kind === 'generic-primitive-unconverted' || shapeOf(target.file, target.exportName) !== null;
         }
       }
-
       if (!reachesDom) {
         result = { kind: 'opaque', component: exportName };
       } else {
         const repeating = multiplicity.repeatingFiles.has(definingFile) || multiplicity.repeatingSymbols.has(key);
-        const directlyWired = shape.forwardsUiThroughRegistryCall;
         const transparentlyWired = shape.rootSpreadsRest && nestedOwnership?.kind === 'generic-primitive-wired';
-        if (directlyWired || transparentlyWired) {
+        if (shape.forwardsUiThroughRegistryCall || transparentlyWired) {
           result = { kind: 'generic-primitive-wired', component: exportName, definingFile };
         } else if (shape.rootSpreadsRest && repeating) {
           result = { kind: 'generic-primitive-unconverted', component: exportName, definingFile };
@@ -257,14 +245,12 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
     const sourceFile = parseTsx(file, source);
     for (const name of exportedComponentCandidates(sourceFile)) {
       const ownership = ownershipOf(file, name);
-      if (ownership.kind === 'generic-primitive-wired' || ownership.kind === 'generic-primitive-unconverted') {
-        const shape = shapeOf(file, name);
-        if (shape?.rootNode) {
-          const positions = excludedRootPositions.get(file) ?? new Set<number>();
-          positions.add(shape.rootNode.getStart());
-          excludedRootPositions.set(file, positions);
-        }
-      }
+      if (ownership.kind !== 'generic-primitive-wired' && ownership.kind !== 'generic-primitive-unconverted') continue;
+      const shape = shapeOf(file, name);
+      if (!shape?.rootNode) continue;
+      const positions = excludedRootPositions.get(file) ?? new Set<number>();
+      positions.add(shape.rootNode.getStart());
+      excludedRootPositions.set(file, positions);
     }
   }
 
@@ -272,68 +258,45 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
     const sourceFile = parseTsx(file, source);
     const bindings = localBindings(sourceFile, file, sources);
     const excluded = excludedRootPositions.get(file);
-
     function visit(node: ts.Node): void {
       if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
         if (!excluded || !excluded.has(node.getStart())) {
           const line = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1;
           let ownership: DomUsageOwnership | null = null;
-
           if (isIntrinsicJsxTag(node.tagName)) {
             ownership = { kind: 'intrinsic', tag: node.tagName.text };
           } else {
             const component = jsxComponentName(node.tagName);
             if (component) {
               const binding = bindings.get(component);
-              if (isThirdPartyBinding(binding)) {
-                ownership = { kind: 'third-party', name: component };
-              } else if (isStructuralComponent(component)) {
-                ownership = { kind: 'structural' };
-              } else {
-                const definingFile = binding ?? file;
+              if (isThirdPartyBinding(binding)) ownership = { kind: 'third-party', name: component };
+              else if (isStructuralComponent(component)) ownership = { kind: 'structural' };
+              else {
                 const target = rootTarget(file, component, sources);
-                ownership = ownershipOf(definingFile, target?.exportName ?? component);
+                ownership = ownershipOf(binding ?? file, target?.exportName ?? component);
               }
             } else {
               const member = jsxMemberTag(node.tagName);
               if (member) {
                 const rootBinding = bindings.get(member.rootIdentifier);
-                ownership = isThirdPartyBinding(rootBinding)
-                  ? { kind: 'third-party', name: member.qualifiedName }
-                  : { kind: 'opaque', component: member.qualifiedName };
+                ownership = isThirdPartyBinding(rootBinding) ? { kind: 'third-party', name: member.qualifiedName } : { kind: 'opaque', component: member.qualifiedName };
               }
             }
           }
 
           if (ownership) {
-            const actionable =
-              ownership.kind === 'intrinsic' ||
-              ownership.kind === 'generic-primitive-wired' ||
-              ownership.kind === 'generic-primitive-unconverted';
-            const tagOrComponent =
-              ownership.kind === 'intrinsic'
-                ? ownership.tag
-                : ownership.kind === 'third-party'
-                  ? ownership.name
-                  : ownership.kind === 'structural'
-                    ? node.tagName.getText()
-                    : ownership.component;
+            const actionable = ownership.kind === 'intrinsic' || ownership.kind === 'generic-primitive-wired' || ownership.kind === 'generic-primitive-unconverted';
+            const tagOrComponent = ownership.kind === 'intrinsic' ? ownership.tag : ownership.kind === 'third-party' ? ownership.name : ownership.kind === 'structural' ? node.tagName.getText() : ownership.component;
+            const registrationKind: UiRegistrationKind = !actionable ? 'missing' : ownership.kind === 'intrinsic' ? intrinsicRegistrationKind(node) : primitiveRegistrationKind(node);
             sites.push({
               file,
               line,
               tagOrComponent,
               ownership,
               node,
-              hasUiRegistration: !actionable
-                ? false
-                : ownership.kind === 'intrinsic'
-                  ? hasUiRegistrySpread(node)
-                  : hasUiProp(node),
-              hasForeignSpread: !actionable
-                ? false
-                : ownership.kind === 'intrinsic'
-                  ? hasAnySpread(node) && !hasUiRegistrySpread(node)
-                  : hasAnySpread(node) && !hasUiProp(node),
+              registrationKind,
+              hasUiRegistration: registrationKind === 'literal' || registrationKind === 'forwarded',
+              hasForeignSpread: actionable && hasAnySpread(node) && registrationKind === 'missing',
             });
           }
         }
@@ -347,11 +310,7 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
 }
 
 export function isActionableDomUsage(site: DomUsageSite): boolean {
-  return (
-    site.ownership.kind === 'intrinsic' ||
-    site.ownership.kind === 'generic-primitive-wired' ||
-    site.ownership.kind === 'generic-primitive-unconverted'
-  );
+  return site.ownership.kind === 'intrinsic' || site.ownership.kind === 'generic-primitive-wired' || site.ownership.kind === 'generic-primitive-unconverted';
 }
 
 export { findDescriptorLiterals, isInsideIteratorCallback };
