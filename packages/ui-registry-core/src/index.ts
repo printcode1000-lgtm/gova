@@ -36,7 +36,6 @@ export { uiPageAttributes } from "./domain/ui-page-attributes";
 export { UI_PAGE_REGISTRY } from "./registry/ui-page-registry";
 export { resolveUiPage } from "./registry/resolve-ui-page";
 export type { UiUidCatalogEntry } from "./registry/ui-uid-catalog-entry";
-export { UI_UID_INVENTORY } from "./registry/generated/ui-uid-inventory";
 export { UI_INTERACTION_TYPES } from "./domain/ui-interaction";
 export type { UiInteraction, UiInteractionType } from "./domain/ui-interaction";
 export type { UiSimulationTargetRecord } from "./simulation/simulation-registry.types";
