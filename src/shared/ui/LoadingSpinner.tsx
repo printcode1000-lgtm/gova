@@ -26,7 +26,11 @@ export function LoadingSpinner({ size = 'md', className, ui, ...props }: Loading
       {...uiPrimitiveAttributes('loading-spinner', ui)}
     >
       <div
-        {...uiAttributes({ uid: 'shared.ui.loading-spinner.arc-M8p2Rt', id: 'shared.ui.loading-spinner.arc' })}
+        {...uiAttributes({
+          uid: 'shared.ui.loading-spinner.arc-M8p2Rt',
+          id: 'shared.ui.loading-spinner.arc',
+          instance: ui?.instance,
+        })}
         className={cn(
           'rounded-full animate-spin',
           sizeClasses[size]
