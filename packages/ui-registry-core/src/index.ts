@@ -24,6 +24,7 @@ export {
   UI_INSTANCE_ATTRIBUTE,
   assertUiInstanceId,
   createUiInstanceId,
+  createOpaqueUiInstanceId,
   createUiPositionInstanceId,
   composeUiInstanceId,
   isUiInstanceId,
