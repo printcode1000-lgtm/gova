@@ -11,7 +11,12 @@ import type {
 } from "@/features/seller-card";
 import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { FavoriteButton, favoriteFromSellerCard } from "@/features/favorites";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import {
+  composeUiInstanceId,
+  createUiPositionInstanceId,
+  uiAttributes,
+  type UiDescriptor,
+} from "@asol/ui-registry-core";
 
 interface SellerCardProps {
   card: SellerCardViewModel;
@@ -19,8 +24,8 @@ interface SellerCardProps {
   actions?: SellerCardAction[];
   className?: string;
   favoriteEnabled?: boolean;
-  /** Registered UiRegistry descriptor for this instance, from the caller. */
-  ui?: UiDescriptor;
+  /** Caller-owned identity for the card's primary action. Mandatory. */
+  ui: UiDescriptor;
   onOpen?: (
     event: React.MouseEvent<HTMLButtonElement>,
     card: SellerCardViewModel,
@@ -29,12 +34,9 @@ interface SellerCardProps {
 
 const variantClass: Record<SellerCardVariant, string> = {
   search: "rounded-lg border border-outline-variant bg-surface p-4 text-center",
-  "category-sellers":
-    "rounded-xl border border-outline-variant bg-surface p-4 text-center shadow-sm transition",
-  "doctor-sellers":
-    "rounded-xl border border-outline-variant bg-surface p-4 text-center shadow-sm transition",
-  "linked-provider":
-    "rounded-lg border border-outline-variant bg-surface p-3",
+  "category-sellers": "rounded-xl border border-outline-variant bg-surface p-4 text-center shadow-sm transition",
+  "doctor-sellers": "rounded-xl border border-outline-variant bg-surface p-4 text-center shadow-sm transition",
+  "linked-provider": "rounded-lg border border-outline-variant bg-surface p-3",
   compact: "rounded-lg border border-outline-variant bg-surface p-3",
 };
 
@@ -55,15 +57,9 @@ function actionIcon(kind: SellerCardAction["kind"]) {
 }
 
 function actionClass(action: SellerCardAction) {
-  if (action.tone === "danger") {
-    return "bg-surface-container-low text-destructive";
-  }
-  if (action.tone === "tertiary" || action.active) {
-    return "bg-tertiary text-on-tertiary";
-  }
-  if (action.tone === "primary") {
-    return "bg-primary text-on-primary";
-  }
+  if (action.tone === "danger") return "bg-surface-container-low text-destructive";
+  if (action.tone === "tertiary" || action.active) return "bg-tertiary text-on-tertiary";
+  if (action.tone === "primary") return "bg-primary text-on-primary";
   return "bg-surface-container-low text-on-surface";
 }
 
@@ -86,30 +82,33 @@ export function SellerCard({ id,
   const horizontal = variant === "linked-provider" || variant === "compact";
   const showFavorite =
     (favoriteEnabled ??
-      (variant === "search" ||
-        variant === "category-sellers" ||
-        variant === "doctor-sellers")) &&
+      (variant === "search" || variant === "category-sellers" || variant === "doctor-sellers")) &&
     Boolean(card.uid);
 
   return (
-    <article {...uiAttributes({ uid: "seller-card.seller-card.article-23D8I4", id: "seller-card.seller-card.article" })} id={id} className={`relative ${variantClass[variant]} ${className}`}>
+    <article {...uiAttributes({ uid: "seller-card.seller-card.article-23D8I4", id: "seller-card.seller-card.article", instance: ui.instance })} id={id} className={`relative ${variantClass[variant]} ${className}`}>
       {showFavorite ? (
         <FavoriteButton
           item={favoriteFromSellerCard(card)}
           variant="follow"
+          ui={{
+            uid: "seller-card.favorite-button-J8fV4n",
+            id: "seller-card.favorite-button",
+            kind: "action",
+            action: "follow",
+            instance: ui.instance,
+          }}
           className="absolute end-2 top-2 z-10"
         />
       ) : null}
       <button
-        {...(ui ? uiAttributes(ui) : {})}
+        {...uiAttributes(ui)}
         type="button"
         onClick={(event) => onOpen?.(event, card)}
-        className={`w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
-          horizontal ? "flex items-center gap-3" : "block"
-        }`}
+        className={`w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${horizontal ? "flex items-center gap-3" : "block"}`}
         aria-label={card.title || card.href}
       >
-        <div {...uiAttributes({ uid: "seller-card.seller-card.div-fJoWj4", id: "seller-card.seller-card.div" })}
+        <div {...uiAttributes({ uid: "seller-card.seller-card.div-fJoWj4", id: "seller-card.seller-card.div", instance: ui.instance })}
           className={`relative shrink-0 overflow-hidden bg-surface-bright ${avatarClass[variant]}`}
         >
           {card.avatarUrl ? (
@@ -122,40 +121,35 @@ export function SellerCard({ id,
               unoptimized={shouldUseUnoptimizedImage(card.avatarUrl)}
             />
           ) : (
-            <div {...uiAttributes({ uid: "seller-card.seller-card.div.2-YgWTs0", id: "seller-card.seller-card.div.2" })} className="flex h-full w-full items-center justify-center text-lg font-bold text-on-surface-variant">
+            <div {...uiAttributes({ uid: "seller-card.seller-card.div.2-YgWTs0", id: "seller-card.seller-card.div.2", instance: ui.instance })} className="flex h-full w-full items-center justify-center text-lg font-bold text-on-surface-variant">
               {card.initials !== "?" ? card.initials : <Store className="h-6 w-6" />}
             </div>
           )}
         </div>
-        <div {...uiAttributes({ uid: "seller-card.seller-card.div.3-k73YXl", id: "seller-card.seller-card.div.3" })} className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
+        <div {...uiAttributes({ uid: "seller-card.seller-card.div.3-k73YXl", id: "seller-card.seller-card.div.3", instance: ui.instance })} className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
           {card.title ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p-ux907S", id: "seller-card.seller-card.p" })} className="line-clamp-2 text-sm font-semibold text-on-surface">
-              {card.title}
-            </p>
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p-ux907S", id: "seller-card.seller-card.p", instance: ui.instance })} className="line-clamp-2 text-sm font-semibold text-on-surface">{card.title}</p>
           ) : null}
           {card.subtitle ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p.2-OGZb4s", id: "seller-card.seller-card.p.2" })} className="mt-1 truncate text-[11px] text-on-surface-variant">
-              {card.subtitle}
-            </p>
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p.2-OGZb4s", id: "seller-card.seller-card.p.2", instance: ui.instance })} className="mt-1 truncate text-[11px] text-on-surface-variant">{card.subtitle}</p>
           ) : null}
           {card.description && !horizontal ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p.3-uDh5dG", id: "seller-card.seller-card.p.3" })} className="mt-1 line-clamp-2 text-[11px] text-on-surface-variant">
-              {card.description}
-            </p>
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p.3-uDh5dG", id: "seller-card.seller-card.p.3", instance: ui.instance })} className="mt-1 line-clamp-2 text-[11px] text-on-surface-variant">{card.description}</p>
           ) : null}
           {card.ratingText ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p.4-xT90kW", id: "seller-card.seller-card.p.4" })} className="mt-1 text-[11px] font-medium text-tertiary">
-              {card.ratingText}
-            </p>
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p.4-xT90kW", id: "seller-card.seller-card.p.4", instance: ui.instance })} className="mt-1 text-[11px] font-medium text-tertiary">{card.ratingText}</p>
           ) : null}
           {card.badges.length > 0 ? (
-            <div {...uiAttributes({ uid: "seller-card.seller-card.div.4-B71tCG", id: "seller-card.seller-card.div.4" })} className="mt-2 flex flex-wrap justify-center gap-1">
-              {card.badges.map((badge) => (
+            <div {...uiAttributes({ uid: "seller-card.seller-card.div.4-B71tCG", id: "seller-card.seller-card.div.4", instance: ui.instance })} className="mt-2 flex flex-wrap justify-center gap-1">
+              {card.badges.map((badge, badgeIndex) => (
                 <span
-                  key={badge.label} {...uiAttributes({ uid: "seller-card.seller-card.span-J664v9", id: "seller-card.seller-card.span" })}
-                  className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(
-                    badge.tone,
-                  )}`}
+                  key={badge.label}
+                  {...uiAttributes({
+                    uid: "seller-card.seller-card.span-J664v9",
+                    id: "seller-card.seller-card.span",
+                    instance: composeUiInstanceId(ui.instance, createUiPositionInstanceId("badge-slot", badgeIndex)),
+                  })}
+                  className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(badge.tone)}`}
                 >
                   {badge.label}
                 </span>
@@ -163,28 +157,27 @@ export function SellerCard({ id,
             </div>
           ) : null}
           {!horizontal ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p.5-LX1ofW", id: "seller-card.seller-card.p.5" })} className="mt-1 truncate text-[10px] text-on-surface-variant">
-              {card.uid}
-            </p>
+            <p {...uiAttributes({ uid: "seller-card.seller-card.p.5-LX1ofW", id: "seller-card.seller-card.p.5", instance: ui.instance })} className="mt-1 truncate text-[10px] text-on-surface-variant">{card.uid}</p>
           ) : null}
         </div>
       </button>
       {actions.length > 0 ? (
-        <div {...uiAttributes({ uid: "seller-card.seller-card.div.5-S2AW4b", id: "seller-card.seller-card.div.5" })}
+        <div {...uiAttributes({ uid: "seller-card.seller-card.div.5-S2AW4b", id: "seller-card.seller-card.div.5", instance: ui.instance })}
           className="mt-3 grid gap-1"
-          style={{
-            gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))`,
-          }}
+          style={{ gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))` }}
         >
-          {actions.map((action) => (
+          {actions.map((action, actionIndex) => (
             <button
-              key={`${action.kind}-${action.label}`} {...uiAttributes({ uid: "seller-card.seller-card.button-Qu9XU8", id: "seller-card.seller-card.button" })}
+              key={`${action.kind}-${action.label}`}
+              {...uiAttributes({
+                uid: "seller-card.seller-card.button-Qu9XU8",
+                id: "seller-card.seller-card.button",
+                instance: composeUiInstanceId(ui.instance, createUiPositionInstanceId("action-slot", actionIndex)),
+              })}
               type="button"
               disabled={action.disabled}
               onClick={action.onClick}
-              className={`flex h-8 items-center justify-center rounded-md transition disabled:opacity-50 ${actionClass(
-                action,
-              )}`}
+              className={`flex h-8 items-center justify-center rounded-md transition disabled:opacity-50 ${actionClass(action)}`}
               aria-label={action.label}
             >
               {actionIcon(action.kind)}
