@@ -1,11 +1,9 @@
 /**
- * Structural analysis of one exported component's own function body: does it
- * render exactly one DOM/JSX root, does that root forward the rest of its
- * props (`{...props}`) onto that root, and does it already forward a `ui`
- * descriptor through the `uiAttributes` family? This is what tells a real
- * "generic reusable primitive" (Button, DialogTitle, a future composite)
- * apart from an opaque application component — by reading the function, not
- * by naming it in a list.
+ * Structural analysis of one exported component's own function body.
+ * Besides the root shape, this records whether a caller-owned `ui` descriptor
+ * is forwarded to any project UI sink inside the component. That distinction
+ * is required for wrappers such as FormSelect whose caller identity belongs to
+ * an inner SelectTrigger rather than to the wrapper's outer structural root.
  */
 import ts from 'typescript';
 
@@ -20,6 +18,8 @@ export interface ComponentRootShape {
   readonly rootSpreadsRest: boolean;
   readonly destructuresUi: boolean;
   readonly forwardsUiThroughRegistryCall: boolean;
+  /** Caller `ui` reaches any JSX `ui={ui}` or registry call in this component. */
+  readonly forwardsUiAnywhere: boolean;
 }
 
 function unwrapParens(expression: ts.Expression): ts.Expression {
@@ -39,17 +39,13 @@ function jsxRootOf(expression: ts.Expression): ts.JsxElement | ts.JsxSelfClosing
     }
     return null;
   }
-  // Conditional (`cond ? <A/> : <B/>`) or logical (`cond && <A/>`) returns
-  // are not a single provable root — left unclassified, not misclassified.
   return null;
 }
 
 function functionReturnJsxRoot(body: ts.ConciseBody | ts.Block): ts.JsxElement | ts.JsxSelfClosingElement | null {
   if (!ts.isBlock(body)) return jsxRootOf(body);
   const returns: ts.Expression[] = [];
-  let ambiguous = false;
   function visit(node: ts.Node): void {
-    // Don't cross into a nested function's own returns.
     if (
       ts.isFunctionDeclaration(node) ||
       ts.isFunctionExpression(node) ||
@@ -58,8 +54,7 @@ function functionReturnJsxRoot(body: ts.ConciseBody | ts.Block): ts.JsxElement |
     ) {
       return;
     }
-    if (ts.isReturnStatement(node)) {
-      if (!node.expression) return; // bare `return;` guard
+    if (ts.isReturnStatement(node) && node.expression) {
       const isTrivial =
         node.expression.kind === ts.SyntaxKind.NullKeyword ||
         node.expression.kind === ts.SyntaxKind.FalseKeyword ||
@@ -70,12 +65,9 @@ function functionReturnJsxRoot(body: ts.ConciseBody | ts.Block): ts.JsxElement |
     ts.forEachChild(node, visit);
   }
   visit(body);
-  if (returns.length !== 1) ambiguous = true;
-  if (ambiguous) return null;
-  return jsxRootOf(returns[0]!);
+  return returns.length === 1 ? jsxRootOf(returns[0]!) : null;
 }
 
-/** Finds `{ ...expr }` on the root's opening tag where `expr` is `paramName`. */
 function rootSpreadsIdentifier(
   attributes: ts.JsxAttributes,
   paramName: string | null,
@@ -105,15 +97,6 @@ function callReferencesBinding(call: ts.CallExpression, uiBindingName: string): 
   return false;
 }
 
-/**
- * True when the *root element's own attribute list* — not merely somewhere
- * in the function body — spreads a `uiAttributes`/`uiComponentAttributes`/
- * `uiPrimitiveAttributes` call that forwards `uiBindingName`. Scoped to the
- * root deliberately: a component can legitimately use the caller's `ui` on
- * an *inner* element (a product card's outer wrapper carries fixed
- * structural chrome while an inner button carries the caller's identity),
- * and that inner usage must not make the outer root look "wired" too.
- */
 function rootForwardsUiIntoRegistryCall(opening: ts.JsxOpeningElement | ts.JsxSelfClosingElement, uiBindingName: string): boolean {
   for (const property of opening.attributes.properties) {
     if (!ts.isJsxSpreadAttribute(property)) continue;
@@ -121,7 +104,6 @@ function rootForwardsUiIntoRegistryCall(opening: ts.JsxOpeningElement | ts.JsxSe
     if (ts.isCallExpression(expression) && ts.isIdentifier(expression.expression) && UI_REGISTRY_CALL_NAMES.has(expression.expression.text)) {
       if (callReferencesBinding(expression, uiBindingName)) return true;
     }
-    // `{...(ui ? uiAttributes(ui) : {})}` — a conditional spread guarding the call.
     if (ts.isParenthesizedExpression(expression) && ts.isConditionalExpression(expression.expression)) {
       for (const branch of [expression.expression.whenTrue, expression.expression.whenFalse]) {
         if (ts.isCallExpression(branch) && ts.isIdentifier(branch.expression) && UI_REGISTRY_CALL_NAMES.has(branch.expression.text)) {
@@ -131,6 +113,28 @@ function rootForwardsUiIntoRegistryCall(opening: ts.JsxOpeningElement | ts.JsxSe
     }
   }
   return false;
+}
+
+function functionForwardsUiAnywhere(body: ts.Node, uiBindingName: string): boolean {
+  let found = false;
+  function visit(node: ts.Node): void {
+    if (found) return;
+    if (ts.isJsxAttribute(node) && node.name.getText() === 'ui' && node.initializer && ts.isJsxExpression(node.initializer)) {
+      if (node.initializer.expression && ts.isIdentifier(node.initializer.expression) && node.initializer.expression.text === uiBindingName) {
+        found = true;
+        return;
+      }
+    }
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && UI_REGISTRY_CALL_NAMES.has(node.expression.text)) {
+      if (callReferencesBinding(node, uiBindingName)) {
+        found = true;
+        return;
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(body);
+  return found;
 }
 
 function paramNames(pattern: ts.BindingName): { rest: string | null; hasUi: boolean } {
@@ -149,14 +153,6 @@ function paramNames(pattern: ts.BindingName): { rest: string | null; hasUi: bool
   return { rest, hasUi };
 }
 
-/**
- * Resolves the common `asChild` pattern — `const Comp = asChild ? Slot :
- * "button"; return <Comp ... />` — to the literal DOM tag one of its
- * branches names. Both branches render DOM either way (a Radix `Slot` merges
- * onto its single child, which is DOM by construction here), so finding one
- * literal branch is enough to prove the root DOM-producing without having to
- * resolve `Comp` as an import.
- */
 function localTernaryTagLiteral(body: ts.Node, localName: string): string | null {
   let found: string | null = null;
   function visit(node: ts.Node): void {
@@ -204,22 +200,16 @@ function analyzeFunctionLike(fn: ts.FunctionDeclaration | ts.ArrowFunction | ts.
     rootSpreadsRest: rootSpreadsIdentifier(opening.attributes, rest),
     destructuresUi: hasUi,
     forwardsUiThroughRegistryCall: hasUi && rootForwardsUiIntoRegistryCall(opening, 'ui'),
+    forwardsUiAnywhere: hasUi && functionForwardsUiAnywhere(fn.body, 'ui'),
   };
 }
 
-/**
- * Finds the exported component named `exportName` in `file` and reports the
- * shape of its single JSX return, if the function has exactly one provable
- * root. Handles a bare function/arrow, `React.forwardRef(...)`, and
- * `React.memo(...)` — the three shapes every primitive in this repo uses.
- */
 export function analyzeComponentDefinition(
   file: string,
   source: string,
   exportName: string,
 ): ComponentRootShape | null {
   const sourceFile = parseTsx(file, source);
-  let result: ComponentRootShape | null = null;
 
   function tryFunctionLike(node: ts.Node): ComponentRootShape | null {
     if (ts.isFunctionDeclaration(node) || ts.isArrowFunction(node) || ts.isFunctionExpression(node)) {
@@ -227,33 +217,31 @@ export function analyzeComponentDefinition(
     }
     if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) {
       const callee = node.expression.name.text;
-      if ((callee === 'forwardRef' || callee === 'memo') && node.arguments[0]) {
-        return tryFunctionLike(node.arguments[0]!);
-      }
+      if ((callee === 'forwardRef' || callee === 'memo') && node.arguments[0]) return tryFunctionLike(node.arguments[0]!);
     }
     if (ts.isCallExpression(node) && ts.isIdentifier(node.expression)) {
       const callee = node.expression.text;
-      if ((callee === 'forwardRef' || callee === 'memo') && node.arguments[0]) {
-        return tryFunctionLike(node.arguments[0]!);
-      }
+      if ((callee === 'forwardRef' || callee === 'memo') && node.arguments[0]) return tryFunctionLike(node.arguments[0]!);
     }
     return null;
   }
 
   for (const statement of sourceFile.statements) {
     if (ts.isFunctionDeclaration(statement) && statement.name?.text === exportName) {
-      result = analyzeFunctionLike(statement);
+      const result = analyzeFunctionLike(statement);
       if (result) return result;
     }
     if (ts.isVariableStatement(statement)) {
       for (const declaration of statement.declarationList.declarations) {
-        if (!ts.isIdentifier(declaration.name) || declaration.name.text !== exportName || !declaration.initializer) {
-          continue;
-        }
-        result = tryFunctionLike(declaration.initializer);
+        if (!ts.isIdentifier(declaration.name) || declaration.name.text !== exportName || !declaration.initializer) continue;
+        const result = tryFunctionLike(declaration.initializer);
         if (result) return result;
       }
     }
+    if (exportName === 'default' && ts.isExportAssignment(statement)) {
+      const result = tryFunctionLike(statement.expression);
+      if (result) return result;
+    }
   }
-  return result;
+  return null;
 }
