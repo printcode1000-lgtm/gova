@@ -24,25 +24,11 @@ export interface DomIdentityCoverageException {
 }
 
 /**
- * Exact transparent-wrapper seams. These are not identity omissions: the
- * wrapper forwards the caller descriptor through `...props` one layer down.
- * They stay exact and stale-checked; the caller usage is independently
- * mandatory because the analyzer now follows the wrapper chain transitively.
+ * Exact transparent-wrapper seams only. The corrected transitive analyzer now
+ * proves the historical FormInput/FormTextarea forwarding paths directly, so
+ * the repository currently needs no coverage exceptions.
  */
-export const DOM_IDENTITY_COVERAGE_EXCEPTIONS: readonly DomIdentityCoverageException[] = [
-  {
-    file: 'src/features/onboarding/presentation/form-components.tsx',
-    line: 68,
-    tagOrComponent: 'Input',
-    reason: 'FormInput transparently forwards its caller props, including ui, into Input. Caller identity is enforced at every FormInput usage.',
-  },
-  {
-    file: 'src/features/onboarding/presentation/form-components.tsx',
-    line: 83,
-    tagOrComponent: 'Textarea',
-    reason: 'FormTextarea transparently forwards its caller props, including ui, into Textarea. Caller identity is enforced at every FormTextarea usage.',
-  },
-];
+export const DOM_IDENTITY_COVERAGE_EXCEPTIONS: readonly DomIdentityCoverageException[] = [];
 
 export function checkDomIdentityCoverageContract(): void {
   const inventory = buildDomIdentityInventory(ROOT);
