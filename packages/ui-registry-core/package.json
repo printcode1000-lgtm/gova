@@ -9,6 +9,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./tooling": {
+      "types": "./src/tooling.ts",
+      "default": "./src/tooling.ts"
     }
   },
   "scripts": {
