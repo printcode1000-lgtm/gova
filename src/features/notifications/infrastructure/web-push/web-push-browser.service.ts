@@ -41,6 +41,29 @@ async function getDeviceId(): Promise<string> {
   return next;
 }
 
+function isIOSDevice(): boolean {
+  const ua = navigator.userAgent;
+  if (/iPad|iPhone|iPod/.test(ua)) return true;
+  // iPadOS 13+ reports as "Macintosh" but, unlike a real Mac, exposes touch points.
+  return navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+}
+
+/**
+ * iOS restricts Web Push to a site added to the Home Screen: `serviceWorker`,
+ * `PushManager`, and `Notification` all exist in a plain Safari tab, but
+ * `Notification.requestPermission()` is silently denied there regardless of
+ * the user's choice. Only a standalone (installed) launch can actually
+ * subscribe, so a plain tab must be treated as unsupported rather than
+ * showing an opt-in that can never succeed.
+ */
+function isIOSSafariNotInstalled(): boolean {
+  if (!isIOSDevice()) return false;
+  const standalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (navigator as { standalone?: boolean }).standalone === true;
+  return !standalone;
+}
+
 async function waitForActiveServiceWorker(
   registration: ServiceWorkerRegistration,
 ): Promise<ServiceWorkerRegistration> {
@@ -73,7 +96,8 @@ export class WebPushBrowserService {
       "serviceWorker" in navigator &&
       "PushManager" in window &&
       "Notification" in window &&
-      window.isSecureContext
+      window.isSecureContext &&
+      !isIOSSafariNotInstalled()
     );
   }
 

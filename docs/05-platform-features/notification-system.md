@@ -797,6 +797,15 @@ A browser with no Web Push support at all — an insecure origin, or no service
 worker — resolves to `hidden`, because a dialog that cannot enable anything is a
 dead end. Those users still have the manual toggle in `/settings/notifications`.
 
+iOS Safari is a special case of this: `serviceWorker`, `PushManager`, and
+`Notification` all exist in a plain tab, but Apple only allows a site to
+actually receive Web Push once it has been added to the Home Screen.
+Requesting permission from a plain tab is silently denied regardless of the
+user's choice. `WebPushBrowserService.isSupported()` therefore also checks
+for a standalone (installed) launch on iOS — `display-mode: standalone` or
+`navigator.standalone` — and reports unsupported otherwise, so the prompt
+never shows for a launch that could never succeed.
+
 ### The settings page follows the same contract
 
 `/settings/notifications` is the second surface for this state, so it obeys the
