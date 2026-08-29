@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
 import { asciiDigitsOnly } from '@asol/auth-core';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createUiPositionInstanceId, uiAttributes } from '@asol/ui-registry-core';
 
 interface OtpInputProps {
   value: string;
@@ -31,24 +31,18 @@ export function OtpInput({ id,
   const updateValue = (next: string) => {
     const sanitized = asciiDigitsOnly(next).slice(0, length);
     onChange(sanitized);
-    if (sanitized.length === length) {
-      onComplete?.(sanitized);
-    }
+    if (sanitized.length === length) onComplete?.(sanitized);
   };
 
   const handleChange = (index: number, char: string) => {
     const digit = asciiDigitsOnly(char).slice(-1);
     const next = digits.map((d, i) => (i === index ? digit : d.trim())).join('').replace(/\s/g, '');
     updateValue(next);
-    if (digit && index < length - 1) {
-      inputsRef.current[index + 1]?.focus();
-    }
+    if (digit && index < length - 1) inputsRef.current[index + 1]?.focus();
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !digits[index]?.trim() && index > 0) {
-      inputsRef.current[index - 1]?.focus();
-    }
+    if (e.key === 'Backspace' && !digits[index]?.trim() && index > 0) inputsRef.current[index - 1]?.focus();
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
@@ -60,7 +54,12 @@ export function OtpInput({ id,
     <div {...uiAttributes({ uid: "auth.otp-input.div-V6b49J", id: "auth.otp-input.div" })} id={id} className="flex gap-2 justify-center" onPaste={handlePaste} dir="ltr">
       {Array.from({ length }).map((_, index) => (
         <input
-          key={index} {...uiAttributes({ uid: "auth.otp-input.input-TIqR1k", id: "auth.otp-input.input" })}
+          key={index}
+          {...uiAttributes({
+            uid: "auth.otp-input.input-TIqR1k",
+            id: "auth.otp-input.input",
+            instance: createUiPositionInstanceId("otp-digit", index),
+          })}
           ref={(el) => {
             inputsRef.current[index] = el;
           }}
