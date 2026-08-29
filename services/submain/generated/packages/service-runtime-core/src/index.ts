@@ -11,7 +11,7 @@
  * a deployment might be built for.
  */
 export type { CorsPolicy } from './domain/cors';
-export { corsHeadersFor, preflightFor, withCorsFor } from './domain/cors';
+export { BROWSER_REQUEST_HEADERS, corsHeadersFor, preflightFor, withCorsFor } from './domain/cors';
 
 export type { ErrorStatusRule } from './domain/error-status';
 export { INTERNAL_SERVER_ERROR, errorMessageOf, mapErrorStatus } from './domain/error-status';

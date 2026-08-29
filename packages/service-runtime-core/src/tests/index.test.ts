@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
+  BROWSER_REQUEST_HEADERS,
   createServiceHttp,
   credentialHealthReport,
   errorMessageOf,
@@ -150,6 +151,36 @@ for (const name of deployments) {
   assert.ok(
     !httpSource.includes('Access-Control-Allow-Origin'),
     `services/${name} writes CORS headers by hand. That is what drifted across five copies.`,
+  );
+}
+
+// ── One request-header list, three places that answer with it ───────────────
+//
+// A mirror that advertises fewer request headers than the main application does not answer less:
+// the browser's preflight rejects the call before it is sent, and the client reports an
+// unreachable server. `asol-profiles` answered `Content-Type, Accept` while the app answered five
+// headers, and the failure arrived as "Unable to reach the server" with no CORS wording anywhere.
+// So the constant is the only permitted spelling in these three files.
+for (const header of ['Content-Type', 'Authorization', 'Accept', 'X-Asol-Session-Token', 'X-Asol-Trace-Id']) {
+  assert.ok(
+    BROWSER_REQUEST_HEADERS.includes(header),
+    `BROWSER_REQUEST_HEADERS dropped ${header}; a client that sends it would be preflight-rejected.`,
+  );
+}
+
+for (const file of [
+  'services/profiles/src/app/lib/http.ts',
+  'src/proxy.ts',
+  'next.config.ts',
+]) {
+  const text = readFileSync(path.join(ROOT, file), 'utf8');
+  assert.ok(
+    text.includes('BROWSER_REQUEST_HEADERS'),
+    `${file} spells its Access-Control-Allow-Headers list by hand again.`,
+  );
+  assert.ok(
+    !/'Content-Type,[^']*'/.test(text),
+    `${file} carries a literal header list beside the shared constant.`,
   );
 }
 

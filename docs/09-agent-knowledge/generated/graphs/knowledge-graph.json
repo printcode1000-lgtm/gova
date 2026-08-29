@@ -10736,9 +10736,12 @@
         "services/profiles/",
         "seven",
         "shards",
+        "src/app/lib/http",
+        "src/app/lib/http.ts",
         "that",
         "the",
         "their",
+        "ts",
         "turso",
         "vercel"
       ]
@@ -11379,8 +11382,12 @@
         "mapping",
         "md",
         "service",
+        "services/profiles/src/app/lib/http",
+        "services/profiles/src/app/lib/http.ts",
         "src/app/lib/http",
         "src/app/lib/http.ts",
+        "src/proxy",
+        "src/proxy.ts",
         "status",
         "ts",
         "what",
@@ -27323,6 +27330,17 @@
       ]
     },
     {
+      "id": "source:android/local.properties",
+      "kind": "source",
+      "name": "local.properties",
+      "path": "android/local.properties",
+      "tags": [
+        "android/local",
+        "android/local.properties",
+        "properties"
+      ]
+    },
+    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",
@@ -27389,6 +27407,17 @@
         "ios/app/app/appdelegate",
         "ios/app/app/appdelegate.swift",
         "swift"
+      ]
+    },
+    {
+      "id": "source:ios/App/App/GoogleService-Info.plist",
+      "kind": "source",
+      "name": "GoogleService-Info.plist",
+      "path": "ios/App/App/GoogleService-Info.plist",
+      "tags": [
+        "ios/app/app/googleservice-info",
+        "ios/app/app/googleservice-info.plist",
+        "plist"
       ]
     },
     {
@@ -68763,6 +68792,12 @@
     },
     {
       "from": "document:docs/05-platform-features/profiles-service-module.md",
+      "to": "document:docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
+      "kind": "references",
+      "detail": "sealed-packages/service-runtime-core-module.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/profiles-service-module.md",
       "to": "document:docs/05-platform-features/service-bridge-module.md",
       "kind": "references",
       "detail": "service-bridge-module.md"
@@ -69658,6 +69693,18 @@
       "to": "package:@asol/service-runtime-core",
       "kind": "references",
       "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
+      "to": "source:services/profiles/src/app/lib/http.ts",
+      "kind": "references",
+      "detail": "services/profiles/src/app/lib/http.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
+      "to": "source:src/proxy.ts",
+      "kind": "references",
+      "detail": "src/proxy.ts"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/signed-token-core-module.md",
@@ -70855,6 +70902,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
+      "to": "source:android/local.properties",
+      "kind": "references",
+      "detail": "android/local.properties"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
       "to": "source:packages/native-core/scripts/android-build-preflight.ts",
       "kind": "references",
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
@@ -70944,6 +70997,12 @@
       "to": "source:ios/App/App.xcodeproj/project.pbxproj",
       "kind": "references",
       "detail": "ios/App/App.xcodeproj/project.pbxproj"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
+      "to": "source:ios/App/App/GoogleService-Info.plist",
+      "kind": "references",
+      "detail": "ios/App/App/GoogleService-Info.plist"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
@@ -71454,6 +71513,12 @@
       "to": "source:android/capacitor.settings.gradle",
       "kind": "references",
       "detail": "android/capacitor.settings.gradle"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
+      "to": "source:android/local.properties",
+      "kind": "references",
+      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
@@ -72214,6 +72279,12 @@
       "to": "script:scripts/android/gradle.ts",
       "kind": "references",
       "detail": "scripts/android/gradle.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
+      "to": "source:android/local.properties",
+      "kind": "references",
+      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
@@ -84158,6 +84229,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:android/local.properties",
+      "kind": "documents",
+      "detail": "android/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:android/settings.gradle",
       "kind": "documents",
       "detail": "android/"
@@ -84189,6 +84266,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:ios/App/App/AppDelegate.swift",
+      "kind": "documents",
+      "detail": "ios/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:ios/App/App/GoogleService-Info.plist",
       "kind": "documents",
       "detail": "ios/"
     },
@@ -136276,6 +136359,11 @@
       "kind": "affects-runtime"
     },
     {
+      "from": "source:android/local.properties",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
       "from": "source:android/settings.gradle",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -136302,6 +136390,11 @@
     },
     {
       "from": "source:ios/App/App/AppDelegate.swift",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:ios/App/App/GoogleService-Info.plist",
       "to": "runtime:ios",
       "kind": "affects-runtime"
     },
@@ -219573,12 +219666,6 @@
     },
     {
       "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "to": "external-dependency:lucide-react",
-      "kind": "imports",
-      "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
       "to": "source:src/features/profile/presentation/profile-page.types.ts",
       "kind": "imports",
       "detail": "../profile-page.types"
@@ -231583,6 +231670,12 @@
       "to": "external-dependency:next",
       "kind": "imports",
       "detail": "next/server"
+    },
+    {
+      "from": "source:src/proxy.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
     },
     {
       "from": "source:src/proxy.ts",

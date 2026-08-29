@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **91**
+Findings: **92**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -64,6 +64,7 @@ Findings: **91**
 | `missing-file` | `docs/05-platform-features/notification-system.md` | `src/features/notifications/domain/notification-sound.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/notification-system.md` | `src/features/notifications/domain/web-push-config.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/notifications-service-module.md` | `src/features/notifications/service-runtime.ts` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/profiles-service-module.md` | `src/app/lib/http.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `src/core/database` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `src/core/database/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `src/features/advertisements/config/` | documentation mentions a missing repository path |

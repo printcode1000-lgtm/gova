@@ -172,7 +172,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         )}
 
         {!loading.details ? (
-          <section id="profile.profile-preview-content.section" className="mx-2 mt-3 border-b border-outline-variant/60 pb-4 sm:mx-4 sm:pb-5 sm:mt-4">
+          <section id="profile.profile-preview-content.section" className="mx-2 mt-3 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 sm:mt-4">
             <div id="profile.profile-preview-content.div.5" className="flex min-w-0 items-start gap-3 sm:gap-4">
               {storeImages.avatarUrl ? (
                 <div id="profile.profile-preview-content.div.6" className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-4 border-surface shadow-lg sm:-mt-10 sm:h-28 sm:w-28">
@@ -310,7 +310,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       </div>
 
       {!loading.contacts && contacts ? (
-        <section id="profile.profile-preview-content.section.2" className="grid gap-3 rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm md:grid-cols-[1fr_auto] md:items-center sm:p-5">
+        <section id="profile.profile-preview-content.section.2" className="mx-2 rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:mx-0 sm:p-5">
           <div id="profile.profile-preview-content.div.10">
             <h2 id="profile.profile-preview-content.h2" className="mb-3 flex items-center gap-2 text-sm font-bold">
               <FontAwesomeIcon id="profile.profile-preview-content.font-awesome-icon.4" icon={faShareNodes} className="text-primary" />
@@ -330,19 +330,19 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.featured && props.hasFeaturedProducts ? (
-        <section id="profile.profile-preview-content.section.3" className="mx-2 sm:mx-4">
+        <section id="profile.profile-preview-content.section.3" className="mx-2 sm:mx-0">
           <FeaturedMarquee id="profile.profile-preview-content.featured-marquee" config={props.featuredConfig} />
         </section>
       ) : null}
 
       {props.trendingConfig.items.length > 0 ? (
-        <section id="profile.profile-preview-content.section.4" className="overflow-hidden rounded-2xl border border-error/20 shadow-sm">
+        <section id="profile.profile-preview-content.section.4" className="mx-2 overflow-hidden rounded-2xl border border-error/20 shadow-sm sm:mx-0">
           <TrendingRibbon id="profile.profile-preview-content.trending-ribbon" config={props.trendingConfig} />
         </section>
       ) : null}
 
       {previewUid ? (
-        <section id="profile.profile-preview-content.section.5" className="rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:p-6">
+        <section id="profile.profile-preview-content.section.5" className="mx-2 rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:mx-0 sm:p-6">
           <ProfilePreviewSectionHeading id="profile.profile-preview-content.profile-preview-section-heading"
             icon={faBoxOpen}
             title={t("profilePreview.products")}
@@ -353,7 +353,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.details && !loading.fulfillment ? (
-        <section id="profile.profile-preview-content.section.6" className="grid items-stretch gap-5 lg:grid-cols-2">
+        <section id="profile.profile-preview-content.section.6" className="mx-2 grid items-stretch gap-5 sm:mx-0 lg:grid-cols-2">
           <div id="profile.profile-preview-content.div.11" className="h-full rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6">
             <ProfilePreviewSectionHeading id="profile.profile-preview-content.profile-preview-section-heading.2"
               icon={faClock}
@@ -389,7 +389,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.details && storeDetails.ratingSettings?.enabled ? (
-        <section id="profile.profile-preview-content.section.7" className="rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:p-7">
+        <section id="profile.profile-preview-content.section.7" className="mx-2 rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:mx-0 sm:p-7 sm:pb-10">
           <ProfilePreviewSectionHeading id="profile.profile-preview-content.profile-preview-section-heading.3"
             icon={faComments}
             title={t("profilePreview.reviews")}

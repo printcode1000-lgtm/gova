@@ -1,8 +1,16 @@
-import { createServiceHttp, type ErrorStatusRule } from '@asol/service-runtime-core';
+import {
+  BROWSER_REQUEST_HEADERS,
+  createServiceHttp,
+  type ErrorStatusRule,
+} from '@asol/service-runtime-core';
 
 /**
  * The profiles deployment's HTTP policy. Mirrors `mapServiceError` for the branches a read path
  * can reach; the mechanism lives in `@asol/service-runtime-core`.
+ *
+ * The methods are this deployment's own — it reads. The accepted request headers are not: they
+ * are `BROWSER_REQUEST_HEADERS`, the one list the main application also answers with, so a header
+ * the client may legally send here can never be rejected at preflight as an unreachable server.
  */
 const PROFILE_ERROR_RULES: readonly ErrorStatusRule[] = [
   { status: 403, matches: /forbidden/i },
@@ -12,7 +20,7 @@ const PROFILE_ERROR_RULES: readonly ErrorStatusRule[] = [
 
 const http = createServiceHttp({
   methods: 'GET, OPTIONS',
-  headers: 'Content-Type, Accept',
+  headers: BROWSER_REQUEST_HEADERS,
   defaultRules: PROFILE_ERROR_RULES,
 });
 

@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 import { API_BASE_URL } from '@asol/native-core';
+import { BROWSER_REQUEST_HEADERS } from '@asol/service-runtime-core';
 import {
   CURRENT_NATIVE_APP_VERSION,
   CURRENT_WEB_CONTENT_VERSION,
@@ -117,11 +118,10 @@ const nextConfig: NextConfig = {
           { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' },
           {
-            // Keep in sync with ALLOWED_REQUEST_HEADERS in src/proxy.ts,
-            // which overrides this for /api/*.
+            // The one list every ASOL surface answers with; src/proxy.ts overrides
+            // this entry for /api/* with the same constant.
             key: 'Access-Control-Allow-Headers',
-            value:
-              'Content-Type, Authorization, Accept, X-Asol-Session-Token, X-Asol-Trace-Id',
+            value: BROWSER_REQUEST_HEADERS,
           },
         ],
       },

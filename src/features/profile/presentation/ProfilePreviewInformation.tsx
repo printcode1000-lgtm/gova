@@ -192,16 +192,16 @@ export function ProfileFulfillmentPreviewCard({
   ];
 
   return (
-    <section id="profile.profile-preview-information.section" className="h-full rounded-3xl border border-outline-variant/70 bg-surface p-5 shadow-sm sm:p-6">
+    <section id="profile.profile-preview-information.section" className="h-full rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6">
       <div id="profile.profile-preview-information.div.2" className="mb-5 flex items-center gap-3">
-        <span id="profile.profile-preview-information.span" className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-xl text-secondary">
+        <span id="profile.profile-preview-information.span" className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-secondary/10 text-lg text-secondary sm:h-12 sm:w-12 sm:text-xl">
           <FontAwesomeIcon id="profile.profile-preview-information.font-awesome-icon" icon={faTruck} />
         </span>
-        <div id="profile.profile-preview-information.div.3">
-          <h2 id="profile.profile-preview-information.h2" className="text-lg font-bold">
+        <div id="profile.profile-preview-information.div.3" className="min-w-0 flex-1">
+          <h2 id="profile.profile-preview-information.h2" className="break-words text-base font-bold sm:text-lg">
             {ar ? "الشحن والإرجاع" : "Shipping & returns"}
           </h2>
-          <p id="profile.profile-preview-information.p" className="text-xs text-on-surface-variant">
+          <p id="profile.profile-preview-information.p" className="break-words text-xs text-on-surface-variant">
             {ar
               ? "تفاصيل واضحة قبل إتمام الطلب"
               : "Clear details before ordering"}
@@ -214,21 +214,21 @@ export function ProfileFulfillmentPreviewCard({
             key={row.label}
             className="rounded-xl bg-surface-container-low p-3"
           >
-            <p className="flex items-center gap-2 text-xs text-on-surface-variant">
-              <FontAwesomeIcon icon={row.icon} className="text-secondary" />
-              {row.label}
+            <p className="flex items-start gap-2 text-xs text-on-surface-variant">
+              <FontAwesomeIcon icon={row.icon} className="mt-0.5 flex-shrink-0 text-secondary" />
+              <span className="min-w-0 break-words">{row.label}</span>
             </p>
-            <p className="mt-1 font-semibold">{row.value}</p>
+            <p className="mt-1 break-words font-semibold">{row.value}</p>
           </div>
         ))}
       </div>
       <div id="profile.profile-preview-information.div.5" className="mt-4 rounded-2xl border border-outline-variant/60 p-4">
-        <div id="profile.profile-preview-information.div.6" className="flex items-center gap-2 font-bold">
+        <div id="profile.profile-preview-information.div.6" className="flex items-start gap-2 break-words font-bold">
           <FontAwesomeIcon id="profile.profile-preview-information.font-awesome-icon.2"
             icon={fulfillment.returns.enabled ? faCircleCheck : faCircleXmark}
-            className={
+            className={`mt-1 flex-shrink-0 ${
               fulfillment.returns.enabled ? "text-success" : "text-error"
-            }
+            }`}
           />
           {fulfillment.returns.enabled
             ? ar

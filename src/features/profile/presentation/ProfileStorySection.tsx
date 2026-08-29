@@ -20,23 +20,23 @@ export function ProfileStorySection({
     <section id="profile.profile-story-section.section"
       data-snapshot-expanded="profile-preview-story"
       aria-expanded={expanded}
-      className="rounded-3xl border border-outline-variant/70 bg-gradient-to-br from-primary/5 to-secondary/5 p-5 shadow-sm sm:p-7"
+      className="mx-2 rounded-3xl border border-outline-variant/70 bg-gradient-to-br from-primary/5 to-secondary/5 p-4 shadow-sm sm:mx-0 sm:p-7"
     >
       <button id="profile.profile-story-section.button"
         type="button"
         onClick={() => setExpanded((current) => !current)}
-        className="flex w-full items-center gap-3 text-start"
+        className="flex w-full min-w-0 items-center gap-3 text-start"
       >
-        <span id="profile.profile-story-section.span" className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-xl text-primary">
+        <span id="profile.profile-story-section.span" className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-lg text-primary sm:h-12 sm:w-12 sm:text-xl">
           <FontAwesomeIcon id="profile.profile-story-section.font-awesome-icon" icon={faBookOpen} />
         </span>
-        <span id="profile.profile-story-section.span.2" className="flex-1">
-          <strong className="block text-lg">{title}</strong>
-          <span id="profile.profile-story-section.span.3" className="text-xs text-on-surface-variant">{hint}</span>
+        <span id="profile.profile-story-section.span.2" className="min-w-0 flex-1">
+          <strong className="block break-words text-base sm:text-lg">{title}</strong>
+          <span id="profile.profile-story-section.span.3" className="block break-words text-xs text-on-surface-variant">{hint}</span>
         </span>
         <FontAwesomeIcon id="profile.profile-story-section.font-awesome-icon.2"
           icon={faBookOpen}
-          className={`text-primary transition-transform ${expanded ? "scale-110" : "opacity-60"}`}
+          className={`flex-shrink-0 text-primary transition-transform ${expanded ? "scale-110" : "opacity-60"}`}
         />
       </button>
       {expanded ? (

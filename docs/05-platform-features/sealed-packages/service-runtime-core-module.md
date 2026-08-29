@@ -37,8 +37,9 @@ const http = createServiceHttp({
 ```
 
 Rules are evaluated in order and the first match wins, which is what lets a specific code beat a
-broad `includes` rule placed after it. The method and header lists stay per-deployment because they
-are not the same fact: a read-only deployment advertising `POST` describes a route it does not have.
+broad `includes` rule placed after it. The **method** list stays per-deployment because it is a real
+per-deployment fact: a read-only deployment advertising `POST` describes a route it does not have.
+The **header** list does not — see [CORS](#cors).
 
 ## Why the main app's helpers still are not reused
 
@@ -53,6 +54,23 @@ Every deployment echoes the request origin and accepts no credentials — the br
 `credentials: "omit"` — which is what makes echoing safe. `Vary: Origin` is always set: echoing an
 origin without it poisons shared caches. An **error** response carries the CORS headers too, or the
 browser reports a CORS failure instead of the error the deployment actually returned.
+
+### `BROWSER_REQUEST_HEADERS`
+
+The accepted **request** headers are one list for the whole system, exported from this door:
+
+```text
+Content-Type, Authorization, Accept, X-Asol-Session-Token, X-Asol-Trace-Id
+```
+
+One client speaks to every deployment, so a mirror advertising fewer headers does not answer less —
+the browser's preflight rejects the call before it is sent and the client reports an unreachable
+server, with no CORS wording anywhere to point at the cause. Widening the list is safe: no
+deployment accepts credentials, and a header a service ignores stays ignored.
+
+`services/profiles/src/app/lib/http.ts`, `src/proxy.ts`, and the `headers()` entry in
+`next.config.ts` all read this constant; the package test fails if any of the three spells the list
+by hand again. The remaining mirrors still declare their own literal lists.
 
 ## Health
 
