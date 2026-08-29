@@ -26,6 +26,7 @@ export {
   createUiInstanceId,
   createOpaqueUiInstanceId,
   createUiPositionInstanceId,
+  createUiSubpartInstanceId,
   composeUiInstanceId,
   isUiInstanceId,
   uiInstanceIdRejectionReason,
