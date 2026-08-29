@@ -91,12 +91,65 @@ function expressionReferencesIndex(node: ts.Node): boolean {
 }
 
 type InstanceConstructorKind = "direct" | "position" | "compose";
-function instanceConstructor(node: ts.Expression): { kind: InstanceConstructorKind; call: ts.CallExpression } | null {
+interface ApprovedInstanceExpression {
+  readonly kind: InstanceConstructorKind | "forwarded";
+  readonly call?: ts.CallExpression;
+}
+
+function directInstanceConstructor(node: ts.Expression): ApprovedInstanceExpression | null {
   if (!ts.isCallExpression(node) || !ts.isIdentifier(node.expression)) return null;
   if (node.expression.text === "createUiInstanceId") return { kind: "direct", call: node };
   if (node.expression.text === "createUiPositionInstanceId") return { kind: "position", call: node };
   if (node.expression.text === "composeUiInstanceId") return { kind: "compose", call: node };
   return null;
+}
+
+function variableInitializer(sourceFile: ts.SourceFile, name: string): ts.Expression | null {
+  let found: ts.Expression | null = null;
+  function visit(node: ts.Node): void {
+    if (found) return;
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === name && node.initializer) {
+      found = node.initializer;
+      return;
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(sourceFile);
+  return found;
+}
+
+function approvedInstanceExpression(
+  node: ts.Expression,
+  sourceFile: ts.SourceFile,
+  seen: ReadonlySet<string> = new Set(),
+): ApprovedInstanceExpression | null {
+  const direct = directInstanceConstructor(node);
+  if (direct) return direct;
+  if (ts.isPropertyAccessExpression(node) && node.name.text === "instance") return { kind: "forwarded" };
+  if (ts.isIdentifier(node)) {
+    if (seen.has(node.text)) return null;
+    const initializer = variableInitializer(sourceFile, node.text);
+    if (!initializer) return null;
+    const nextSeen = new Set(seen);
+    nextSeen.add(node.text);
+    return approvedInstanceExpression(initializer, sourceFile, nextSeen);
+  }
+  return null;
+}
+
+function validateInstanceExpression(file: string, line: number, node: ts.Expression, sourceFile: ts.SourceFile): void {
+  const approved = approvedInstanceExpression(node, sourceFile);
+  if (!approved) {
+    addViolation("UI Attributes", file, `UiRegistry descriptor at line ${line} must use a branded UiInstanceId from an approved constructor or forward caller ui.instance.`);
+    return;
+  }
+  if (approved.kind === "direct" && approved.call && expressionReferencesIndex(approved.call.arguments[0] ?? approved.call)) {
+    addViolation("UI Attributes", file, `UiRegistry descriptor at line ${line} derives instance from a reorderable array index; use a stable domain key or createUiPositionInstanceId when position is the domain.`);
+  }
+  if (approved.kind === "position" && approved.call) {
+    const scope = approved.call.arguments[0];
+    if (!scope || !ts.isStringLiteral(scope)) addViolation("UI Attributes", file, `Positional UI instance at line ${line} requires a quoted static scope name.`);
+  }
 }
 
 function scanManualAttributes(file: string, sourceFile: ts.SourceFile): void {
@@ -182,14 +235,10 @@ export function checkUiAttributeContract(): void {
         }
 
         if (instanceField) {
-          const constructor = instanceField.isComputed ? instanceConstructor(instanceField.node) : null;
-          if (!constructor) {
-            addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} must create runtime instance through an approved UiInstanceId constructor.`);
-          } else if (constructor.kind === "direct" && expressionReferencesIndex(constructor.call.arguments[0] ?? constructor.call)) {
-            addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} derives instance from a reorderable array index; use a stable domain key or the explicit positional helper when position is the domain.`);
-          } else if (constructor.kind === "position") {
-            const scope = constructor.call.arguments[0];
-            if (!scope || !ts.isStringLiteral(scope)) addViolation("UI Attributes", file, `Positional UI instance at line ${literal.line} requires a quoted static scope name.`);
+          if (!instanceField.isComputed) {
+            addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} stores a literal runtime instance; instances must be created at render time.`);
+          } else {
+            validateInstanceExpression(file, literal.line, instanceField.node, sourceFile);
           }
         }
 
