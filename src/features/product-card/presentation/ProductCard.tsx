@@ -19,7 +19,12 @@ import type {
 } from "@/features/product-card";
 import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { FavoriteButton, favoriteFromProductCard } from "@/features/favorites";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import {
+  composeUiInstanceId,
+  createUiPositionInstanceId,
+  uiAttributes,
+  type UiDescriptor,
+} from "@asol/ui-registry-core";
 
 interface ProductCardProps {
   card: ProductCardViewModel;
@@ -27,8 +32,8 @@ interface ProductCardProps {
   actions?: ProductCardAction[];
   className?: string;
   favoriteEnabled?: boolean;
-  /** Registered UiRegistry descriptor for this instance, from the caller. */
-  ui?: UiDescriptor;
+  /** Caller-owned identity for the card's primary action. Mandatory. */
+  ui: UiDescriptor;
   onOpen?: (
     event: React.MouseEvent<HTMLButtonElement>,
     card: ProductCardViewModel,
@@ -37,12 +42,9 @@ interface ProductCardProps {
 
 const variantClass: Record<ProductCardVariant, string> = {
   search: "rounded-lg border border-outline-variant bg-surface",
-  "profile-preview":
-    "rounded-lg border border-outline-variant bg-surface transition",
-  "profile-edit":
-    "rounded-lg border border-outline-variant bg-surface transition",
-  "featured-marquee":
-    "w-40 rounded-xl p-2 asol-card-tonal asol-card-tonal-tertiary active:scale-95 transition-transform",
+  "profile-preview": "rounded-lg border border-outline-variant bg-surface transition",
+  "profile-edit": "rounded-lg border border-outline-variant bg-surface transition",
+  "featured-marquee": "w-40 rounded-xl p-2 asol-card-tonal asol-card-tonal-tertiary active:scale-95 transition-transform",
   compact: "rounded-lg border border-outline-variant bg-surface",
 };
 
@@ -64,15 +66,9 @@ function actionIcon(kind: ProductCardAction["kind"]) {
 }
 
 function actionClass(action: ProductCardAction) {
-  if (action.tone === "danger") {
-    return "bg-surface-container-low text-destructive";
-  }
-  if (action.tone === "tertiary" || action.active) {
-    return "bg-tertiary text-on-tertiary";
-  }
-  if (action.tone === "primary") {
-    return "bg-primary text-on-primary";
-  }
+  if (action.tone === "danger") return "bg-surface-container-low text-destructive";
+  if (action.tone === "tertiary" || action.active) return "bg-tertiary text-on-tertiary";
+  if (action.tone === "primary") return "bg-primary text-on-primary";
   return "bg-surface-container-low text-on-surface";
 }
 
@@ -95,30 +91,33 @@ export function ProductCard({ id,
   const isFeatured = variant === "featured-marquee";
   const hasActions = actions.length > 0;
   const showFavorite =
-    (favoriteEnabled ??
-      (variant === "search" ||
-        variant === "profile-preview")) &&
+    (favoriteEnabled ?? (variant === "search" || variant === "profile-preview")) &&
     Boolean(card.id);
 
   return (
-    <article {...uiAttributes({ uid: "product-card.product-card.article-YO94HZ", id: "product-card.product-card.article" })} id={id} className={`relative min-w-0 overflow-hidden ${variantClass[variant]} ${className}`}>
+    <article {...uiAttributes({ uid: "product-card.product-card.article-YO94HZ", id: "product-card.product-card.article", instance: ui.instance })} id={id} className={`relative min-w-0 overflow-hidden ${variantClass[variant]} ${className}`}>
       {showFavorite ? (
         <FavoriteButton
           item={favoriteFromProductCard(card)}
+          ui={{
+            uid: "product-card.favorite-button-H7fV3n",
+            id: "product-card.favorite-button",
+            kind: "action",
+            action: "favorite",
+            instance: ui.instance,
+          }}
           className="absolute end-2 top-2 z-10"
         />
       ) : null}
       <button
-        {...(ui ? uiAttributes(ui) : {})}
+        {...uiAttributes(ui)}
         type="button"
         onClick={(event) => onOpen?.(event, card)}
         className="block w-full min-w-0 text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
         aria-label={card.title}
       >
-        <div {...uiAttributes({ uid: "product-card.product-card.div-37L7FD", id: "product-card.product-card.div" })}
-          className={`relative bg-surface-bright ${imageClass[variant]} ${
-            isFeatured ? "mb-2 overflow-hidden" : ""
-          }`}
+        <div {...uiAttributes({ uid: "product-card.product-card.div-37L7FD", id: "product-card.product-card.div", instance: ui.instance })}
+          className={`relative bg-surface-bright ${imageClass[variant]} ${isFeatured ? "mb-2 overflow-hidden" : ""}`}
         >
           {card.imageUrl ? (
             <Image
@@ -133,50 +132,47 @@ export function ProductCard({ id,
             <Package className="absolute inset-0 m-auto h-9 w-9 text-on-surface-variant" />
           )}
         </div>
-        <div {...uiAttributes({ uid: "product-card.product-card.div.2-6sO2gL", id: "product-card.product-card.div.2" })} className={isFeatured ? "min-w-0 space-y-1" : "min-w-0 space-y-1 p-2"}>
+        <div {...uiAttributes({ uid: "product-card.product-card.div.2-6sO2gL", id: "product-card.product-card.div.2", instance: ui.instance })} className={isFeatured ? "min-w-0 space-y-1" : "min-w-0 space-y-1 p-2"}>
           {card.categoryLabel && !isFeatured ? (
-            <p {...uiAttributes({ uid: "product-card.product-card.p-2LvYHC", id: "product-card.product-card.p" })} className="truncate text-[10px] font-medium text-on-surface-variant">
+            <p {...uiAttributes({ uid: "product-card.product-card.p-2LvYHC", id: "product-card.product-card.p", instance: ui.instance })} className="truncate text-[10px] font-medium text-on-surface-variant">
               {card.categoryLabel}
             </p>
           ) : null}
-          <p {...uiAttributes({ uid: "product-card.product-card.p.2-8fPXz2", id: "product-card.product-card.p.2" })}
-            className={
-              isFeatured
-                ? "truncate text-xs font-semibold text-on-surface"
-                : "line-clamp-2 min-h-[32px] break-words text-xs font-semibold text-on-surface"
-            }
+          <p {...uiAttributes({ uid: "product-card.product-card.p.2-8fPXz2", id: "product-card.product-card.p.2", instance: ui.instance })}
+            className={isFeatured ? "truncate text-xs font-semibold text-on-surface" : "line-clamp-2 min-h-[32px] break-words text-xs font-semibold text-on-surface"}
           >
             {card.title}
           </p>
           {card.subtitle && !isFeatured ? (
-            <p {...uiAttributes({ uid: "product-card.product-card.p.3-BhL0lK", id: "product-card.product-card.p.3" })} className="truncate text-[11px] text-on-surface-variant">
+            <p {...uiAttributes({ uid: "product-card.product-card.p.3-BhL0lK", id: "product-card.product-card.p.3", instance: ui.instance })} className="truncate text-[11px] text-on-surface-variant">
               {card.subtitle}
             </p>
           ) : null}
-          <div {...uiAttributes({ uid: "product-card.product-card.div.3-4JWO57", id: "product-card.product-card.div.3" })} className="flex min-w-0 flex-wrap items-center gap-1.5">
+          <div {...uiAttributes({ uid: "product-card.product-card.div.3-4JWO57", id: "product-card.product-card.div.3", instance: ui.instance })} className="flex min-w-0 flex-wrap items-center gap-1.5">
             {card.priceText ? (
-              <p {...uiAttributes({ uid: "product-card.product-card.p.4-uVWZ4V", id: "product-card.product-card.p.4" })} className="min-w-0 break-words text-xs font-bold text-primary">{card.priceText}</p>
+              <p {...uiAttributes({ uid: "product-card.product-card.p.4-uVWZ4V", id: "product-card.product-card.p.4", instance: ui.instance })} className="min-w-0 break-words text-xs font-bold text-primary">{card.priceText}</p>
             ) : null}
             {card.oldPriceText && !isFeatured ? (
-              <p {...uiAttributes({ uid: "product-card.product-card.p.5-yI5AlC", id: "product-card.product-card.p.5" })} className="min-w-0 break-words text-[10px] text-on-surface-variant line-through">
-                {card.oldPriceText}
-              </p>
+              <p {...uiAttributes({ uid: "product-card.product-card.p.5-yI5AlC", id: "product-card.product-card.p.5", instance: ui.instance })} className="min-w-0 break-words text-[10px] text-on-surface-variant line-through">{card.oldPriceText}</p>
             ) : null}
             {card.ratingText && !isFeatured ? (
-              <span {...uiAttributes({ uid: "product-card.product-card.span-jQSE9E", id: "product-card.product-card.span" })} className="inline-flex min-w-0 items-center gap-1 break-words text-[10px] text-tertiary">
+              <span {...uiAttributes({ uid: "product-card.product-card.span-jQSE9E", id: "product-card.product-card.span", instance: ui.instance })} className="inline-flex min-w-0 items-center gap-1 break-words text-[10px] text-tertiary">
                 <Star className="h-3 w-3 fill-current" />
                 {card.ratingText}
               </span>
             ) : null}
           </div>
           {card.badges.length > 0 && !isFeatured ? (
-            <div {...uiAttributes({ uid: "product-card.product-card.div.4-6QwWIe", id: "product-card.product-card.div.4" })} className="flex min-w-0 flex-wrap gap-1 pt-1">
-              {card.badges.map((badge) => (
+            <div {...uiAttributes({ uid: "product-card.product-card.div.4-6QwWIe", id: "product-card.product-card.div.4", instance: ui.instance })} className="flex min-w-0 flex-wrap gap-1 pt-1">
+              {card.badges.map((badge, badgeIndex) => (
                 <span
-                  key={badge.label} {...uiAttributes({ uid: "product-card.product-card.span.2-B5u0sa", id: "product-card.product-card.span.2" })}
-                  className={`min-w-0 break-words rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(
-                    badge.tone,
-                  )}`}
+                  key={badge.label}
+                  {...uiAttributes({
+                    uid: "product-card.product-card.span.2-B5u0sa",
+                    id: "product-card.product-card.span.2",
+                    instance: composeUiInstanceId(ui.instance, createUiPositionInstanceId("badge-slot", badgeIndex)),
+                  })}
+                  className={`min-w-0 break-words rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(badge.tone)}`}
                 >
                   {badge.label}
                 </span>
@@ -186,28 +182,27 @@ export function ProductCard({ id,
         </div>
       </button>
       {hasActions ? (
-        <div {...uiAttributes({ uid: "product-card.product-card.div.5-y7CZ4z", id: "product-card.product-card.div.5" })}
+        <div {...uiAttributes({ uid: "product-card.product-card.div.5-y7CZ4z", id: "product-card.product-card.div.5", instance: ui.instance })}
           className="grid gap-1 border-t border-outline-variant/50 p-1"
-          style={{
-            gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))`,
-          }}
+          style={{ gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))` }}
         >
-          {actions.map((action) => (
+          {actions.map((action, actionIndex) => (
             <button
-              key={`${action.kind}-${action.label}`} {...uiAttributes({ uid: "product-card.product-card.button-tI5CQJ", id: "product-card.product-card.button" })}
+              key={`${action.kind}-${action.label}`}
+              {...uiAttributes({
+                uid: "product-card.product-card.button-tI5CQJ",
+                id: "product-card.product-card.button",
+                instance: composeUiInstanceId(ui.instance, createUiPositionInstanceId("action-slot", actionIndex)),
+              })}
               type="button"
               disabled={action.disabled}
-              aria-pressed={
-                action.kind === "toggleFeatured" ? Boolean(action.active) : undefined
-              }
+              aria-pressed={action.kind === "toggleFeatured" ? Boolean(action.active) : undefined}
               onClick={action.onClick}
               className={`flex h-8 items-center justify-center transition disabled:opacity-50 ${
                 action.kind === "toggleFeatured" && action.active
                   ? "rounded-full ring-2 ring-tertiary/30"
                   : "rounded-md"
-              } ${actionClass(
-                action,
-              )}`}
+              } ${actionClass(action)}`}
               aria-label={action.label}
             >
               {action.kind === "toggleFeatured" ? (
