@@ -10,9 +10,8 @@ import { usePasswordRecovery } from './hooks/use-password-recovery';
 import { asciiDigitsOnly, foldPasswordDigits } from '@asol/auth-core';
 import { PhoneField } from '@/shared/ui/phone-field';
 import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 
-const PASSWORD_REQUEST_PHONE_UI: UiDescriptor = { uid: "password-request-phone-O5wE84", id: "password-request-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "password-request-phone" } };
 
 const ERROR_KEYS: Record<string, string> = {
   passwordRecoveryInvalidPhone: 'auth.passwordRecovery.errors.invalidPhone',
@@ -69,8 +68,8 @@ export function PasswordRecoveryPageContent() {
               <form {...uiAttributes({ uid: "password-request-7rA870", id: "password-request", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "password-request" } })} onSubmit={submitPhone} className="auth-card space-y-5">
                 <label {...uiAttributes({ uid: "password-recovery.password-recovery-page-content.label.3-Uc19Fg", id: "password-recovery.password-recovery-page-content.label.3" })} id="password-recovery.password-recovery-page-content.label" className="space-y-2 block">
                   <span {...uiAttributes({ uid: "password-recovery.password-recovery-page-content.span.2-Z9W1Gj", id: "password-recovery.password-recovery-page-content.span.2" })} id="password-recovery.password-recovery-page-content.span" className="text-sm font-semibold flex items-center gap-2"><Smartphone id="password-recovery.password-recovery-page-content.smartphone" className="h-4 w-4 text-primary" />{t('auth.passwordRecovery.phone')}</span>
-                  <PhoneField ui={{ uid: "password-recovery.password-recovery-page-content.phone-field-3HdPCg", id: "password-recovery.password-recovery-page-content.phone-field" }} id="password-recovery.password-recovery-page-content.div.7"
-                    ui={PASSWORD_REQUEST_PHONE_UI}
+                  <PhoneField id="password-recovery.password-recovery-page-content.div.7"
+                    ui={{ uid: "password-request-phone-O5wE84", id: "password-request-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "password-request-phone" } }}
                     labels={phoneLabels}
                     value={phone}
                     inputClassName="auth-input w-full"

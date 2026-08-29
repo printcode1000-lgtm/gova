@@ -24,10 +24,9 @@ import { cn } from '@/shared/utils';
 import { useLogin } from './hooks/use-login';
 import { PhoneField } from '@/shared/ui/phone-field';
 import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes } from "@asol/ui-registry-core";
 import { foldPasswordDigits } from '@asol/auth-core';
 
-const LOGIN_PHONE_UI: UiDescriptor = { uid: "login-phone-ChBI52", id: "login-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "login-phone" } };
 
 export function LoginPageContent() {
   const router = useRouter();
@@ -54,8 +53,8 @@ export function LoginPageContent() {
                 <Controller name="phone" control={form.control} render={({ field, fieldState }) => (
                   <div {...uiAttributes({ uid: "auth.login-page-content.div.22-dgE2Qh", id: "auth.login-page-content.div.22" })} id="auth.login-page-content.div.7" className="space-y-2">
                     <span {...uiAttributes({ uid: "auth.login-page-content.span.2-SpdiM8", id: "auth.login-page-content.span.2" })} id="auth.login-page-content.span" className="text-sm font-semibold flex items-center gap-2 text-on-surface"><Smartphone id="auth.login-page-content.smartphone" className="h-4 w-4 text-primary" />{t('auth.login.phone')}</span>
-                    <PhoneField ui={{ uid: "auth.login-page-content.phone-field-1vTrWC", id: "auth.login-page-content.phone-field" }} id="auth.login-page-content.div.8"
-                      ui={LOGIN_PHONE_UI}
+                    <PhoneField id="auth.login-page-content.div.8"
+                      ui={{ uid: "login-phone-ChBI52", id: "login-phone", kind: "field", interaction: { type: "type", valueContract: "phone-number" }, simulation: { kind: "field", id: "login-phone" } }}
                       labels={phoneLabels}
                       value={field.value}
                       invalid={Boolean(fieldState.error)}
