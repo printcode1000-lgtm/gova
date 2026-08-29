@@ -107,10 +107,11 @@ export class WebPushBrowserService {
 
   async subscribe(uid: string, phone: string) {
     if (!this.isSupported()) throw new Error("webPushUnsupported");
-    // Routed through the notifications feature's native permission service so
-    // every notification permission in the application follows one policy, and
-    // the Native Core module is reached only through its owning adapter.
-    const permission = await nativePermissionService.requestResult();
+    // Every caller already resolves permission (checkResult/requestResult)
+    // before invoking enable(), same as the native register() path. Re-requesting
+    // here re-prompts WebKit after several intervening awaits, past the user
+    // gesture it needs, which spuriously denies a permission already granted.
+    const permission = await nativePermissionService.checkResult();
     if (!permission.granted) throw new Error("notificationPermissionDenied");
 
     const registration = await waitForActiveServiceWorker(

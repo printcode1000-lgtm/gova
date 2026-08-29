@@ -2254,6 +2254,15 @@ that opted in from the dialog and one that used the toggle are indistinguishable
 afterwards. See
 [Post-Login Opt-In Dialog](#post-login-opt-in-dialog).
 
+`subscribe()` only checks the permission (`checkResult()`), it does not
+request it again — the caller (the dialog's `requestResult()`, or the
+toggle's `notifications.requestPermission()`) has already done that. A
+second `requestPermission()` call here, after the awaits already spent
+reaching `subscribe()`, falls outside the user gesture WebKit requires and
+iOS Safari silently denies it, throwing `notificationPermissionDenied` for
+a permission that was in fact granted. This mirrors the native `register()`
+path, which likewise only checks.
+
 In the root layout, `PreferencesProvider` wraps `NotificationsFeatureBridge`.
 Notification prompts use `useTranslation()`, so the locale runtime must exist
 before notification controllers render.

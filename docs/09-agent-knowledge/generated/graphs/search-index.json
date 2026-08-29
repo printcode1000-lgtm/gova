@@ -27383,17 +27383,6 @@
       ]
     },
     {
-      "id": "source:android/local.properties",
-      "kind": "source",
-      "name": "local.properties",
-      "path": "android/local.properties",
-      "tags": [
-        "android/local",
-        "android/local.properties",
-        "properties"
-      ]
-    },
-    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",
@@ -27460,17 +27449,6 @@
         "ios/app/app/appdelegate",
         "ios/app/app/appdelegate.swift",
         "swift"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "source",
-      "name": "GoogleService-Info.plist",
-      "path": "ios/App/App/GoogleService-Info.plist",
-      "tags": [
-        "ios/app/app/googleservice-info",
-        "ios/app/app/googleservice-info.plist",
-        "plist"
       ]
     },
     {
