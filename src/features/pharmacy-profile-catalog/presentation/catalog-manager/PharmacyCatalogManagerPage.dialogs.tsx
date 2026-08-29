@@ -16,7 +16,7 @@ import {
   type PharmacyProfileCatalogView,
 } from "../../domain/pharmacy-profile-catalog.types";
 import { PharmacyCategoryIcon } from "../PharmacyCategoryIcon";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes, type UiDescriptor, type UiInstanceId } from "@asol/ui-registry-core";
 
 export const text = {
   title: "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0635\u064a\u062f\u0644\u064a\u0629",
@@ -189,32 +189,32 @@ export function ProductManagerCard({ id,
   product,
   disabled,
   onToggle,
-  toggleUi,
+  instance,
 }: {
   product: PharmacyProfileCatalogProductView;
   disabled?: boolean;
   onToggle: () => void;
-  /** Registered descriptor for this row's visibility toggle, from the caller. */
-  toggleUi?: UiDescriptor;
+  /** Opaque runtime identity for this repeated product row. */
+  instance: UiInstanceId;
 } & { id?: string }) {
   return (
-    <article {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.article-PZ3ewD", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.article" })} id={id} className={`rounded-lg border border-outline-variant bg-surface-container-low p-2 ${product.status === "hidden" ? "opacity-55" : ""}`}>
-      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.6-ZQpA7s", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.6" })} className="flex gap-3">
-        <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.7-FV7hIH", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.7" })} className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-surface-bright">
+    <article {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.article-PZ3ewD", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.article" , instance })} id={id} className={`rounded-lg border border-outline-variant bg-surface-container-low p-2 ${product.status === "hidden" ? "opacity-55" : ""}`}>
+      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.6-ZQpA7s", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.6" , instance })} className="flex gap-3">
+        <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.7-FV7hIH", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.7" , instance })} className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-surface-bright">
           {product.imageUrl ? (
             <Image src={product.imageUrl} alt={product.nameAr} fill className="object-cover" />
           ) : null}
         </div>
-        <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.8-XI8hd1", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.8" })} className="min-w-0 flex-1">
-          <p {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p-w22O8Q", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p" })} className="line-clamp-2 text-xs font-semibold text-on-surface">{product.nameAr}</p>
-          <p {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.2-rpc5PP", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.2" })} className="mt-1 truncate text-[10px] text-on-surface-variant">{product.nameEn}</p>
-          <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.9-ee8ehY", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.9" })} className="mt-2 flex items-center justify-between gap-2">
-            <StatusBadge hidden={product.status === "hidden"} />
-            <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.visibility-button-Xsep4k", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.visibility-button" }}
+        <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.8-XI8hd1", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.8" , instance })} className="min-w-0 flex-1">
+          <p {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p-w22O8Q", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p" , instance })} className="line-clamp-2 text-xs font-semibold text-on-surface">{product.nameAr}</p>
+          <p {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.2-rpc5PP", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.p.2" , instance })} className="mt-1 truncate text-[10px] text-on-surface-variant">{product.nameEn}</p>
+          <div {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.9-ee8ehY", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.div.9" , instance })} className="mt-2 flex items-center justify-between gap-2">
+            <StatusBadge hidden={product.status === "hidden"} instance={instance} />
+            <VisibilityButton
+              ui={{ uid: "pharmacy-toggle-l9ZwPk", id: "pharmacy-toggle", kind: "item", interaction: { type: "toggle" }, simulation: { kind: "list-item", id: "pharmacy-toggle" }, instance }}
               hidden={product.status === "hidden"}
               disabled={disabled}
               onClick={onToggle}
-              ui={toggleUi}
             />
           </div>
         </div>
@@ -223,9 +223,9 @@ export function ProductManagerCard({ id,
   );
 }
 
-export function StatusBadge({ id, hidden }: { hidden: boolean } & { id?: string }) {
+export function StatusBadge({ id, hidden, instance }: { hidden: boolean; instance?: UiInstanceId } & { id?: string }) {
   return (
-    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.span.2-AC8Xho", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.span.2" })} id={id} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${hidden ? "bg-error/10 text-error" : "bg-primary/10 text-primary"}`}>
+    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.span.2-AC8Xho", id: "pharmacy-profile-catalog.catalog-manager.pharmacy-catalog-manager-page.dialogs.span.2", instance })} id={id} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${hidden ? "bg-error/10 text-error" : "bg-primary/10 text-primary"}`}>
       {hidden ? text.hidden : text.visible}
     </span>
   );

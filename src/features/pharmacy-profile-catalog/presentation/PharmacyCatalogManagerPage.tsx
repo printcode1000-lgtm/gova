@@ -20,7 +20,7 @@ import {
 import { PharmacyCategoryIcon } from "./PharmacyCategoryIcon";
 
 import { text, CreateCategoryDialog, IconButton, ManagerColumn, ProductManagerCard, StatusBadge, VisibilityButton, LoadingFrame, MessageFrame } from "./catalog-manager/PharmacyCatalogManagerPage.dialogs";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 import {
   buildAddPharmacyProductHref,
   sortedPharmacyCategories,
@@ -29,8 +29,6 @@ import {
   type PharmacyCatalogEditDialog,
 } from "./catalog-manager/PharmacyCatalogManagerPage.model";
 
-
-const PHARMACY_TOGGLE_UI: UiDescriptor = { uid: "pharmacy-toggle-l9ZwPk", id: "pharmacy-toggle", kind: "item", interaction: { type: "toggle" }, simulation: { kind: "list-item", id: "pharmacy-toggle" } };
 export function PharmacyCatalogManagerPage() {
   const { formatApiError } = useTranslation();
   const searchParams = useSearchParams();
@@ -384,7 +382,7 @@ export function PharmacyCatalogManagerPage() {
                       product={product}
                       disabled={busy}
                       onToggle={() => toggleProduct(product)}
-                      toggleUi={PHARMACY_TOGGLE_UI}
+                      instance={createOpaqueUiInstanceId("pharmacy-product", product.id)}
                     />
                   ))}
                 </div>
