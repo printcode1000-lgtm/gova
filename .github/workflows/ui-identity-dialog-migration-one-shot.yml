@@ -1,0 +1,51 @@
+name: ui-identity-dialog-migration-one-shot
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/ui-identity-dialog-migration-one-shot.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Use repository npm version
+        run: npm install --global npm@11.19.0
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Migrate DialogContent callers
+        run: npx tsx scripts/ui-registry/migrate-dialog-content-identities.ts
+      - name: Regenerate canonical UiRegistry artifacts
+        run: |
+          npm run ui-registry:generated-catalog:generate
+          npm run ui-registry:component-bridge:generate
+          npm run ui-registry:simulation:generate
+      - name: Commit migration
+        run: |
+          git add src/features/auth/presentation/LoginRequiredDialog.tsx
+          git add src/features/data-health/presentation/DataHealthDialogs.tsx
+          git add src/features/google-play-console/presentation/components/ReleaseCommandConfirmDialog.tsx
+          git add src/features/google-play-console/presentation/components/ReleaseJobStopDialog.tsx
+          git add src/features/notifications/presentation/NotificationPermissionPrompt.tsx
+          git add src/features/page-save/presentation/PageSaveDialog.tsx
+          git add src/features/sharing/application/ShareMenu.tsx
+          git add src/shared/ui/confirm-dialog.tsx
+          git add src/shared/ui/phone-country-dialog.tsx
+          git add packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts
+          git add packages/ui-registry-core/src/pending/generated/component-marker-bridge.ts
+          git add packages/ui-registry-core/src/simulation/generated/ui-simulation-registry.ts
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Migrate required DialogContent identities"
+          git push origin HEAD:main
