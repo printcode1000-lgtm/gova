@@ -29,10 +29,7 @@ function collectPageRoutes(directory: string): string[] {
   const routes: string[] = [];
   for (const entry of readdirSync(directory)) {
     const fullPath = join(directory, entry);
-    if (statSync(fullPath).isDirectory()) {
-      routes.push(...collectPageRoutes(fullPath));
-      continue;
-    }
+    if (statSync(fullPath).isDirectory()) { routes.push(...collectPageRoutes(fullPath)); continue; }
     if (entry !== "page.tsx") continue;
     const pageDirectory = relative(APP_ROOT, directory).replace(/\\/g, "/");
     routes.push(pageDirectory ? `/${pageDirectory}` : "/");
@@ -64,10 +61,7 @@ function scanKeyAfterSpread(file: string, sourceFile: ts.SourceFile): void {
     if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
       let sawRegistrySpread = false;
       for (const property of node.attributes.properties) {
-        if (ts.isJsxSpreadAttribute(property) && isRegistryCall(property.expression)) {
-          sawRegistrySpread = true;
-          continue;
-        }
+        if (ts.isJsxSpreadAttribute(property) && isRegistryCall(property.expression)) { sawRegistrySpread = true; continue; }
         if (sawRegistrySpread && ts.isJsxAttribute(property) && property.name.getText() === "key") {
           const line = sourceFile.getLineAndCharacterOfPosition(property.getStart()).line + 1;
           addViolation("UI Attributes", file, `key follows the UiRegistry spread at line ${line}; write key before the spread.`);
@@ -90,15 +84,13 @@ function expressionReferencesIndex(node: ts.Node): boolean {
   return found;
 }
 
-type InstanceConstructorKind = "direct" | "position" | "compose";
-interface ApprovedInstanceExpression {
-  readonly kind: InstanceConstructorKind | "forwarded";
-  readonly call?: ts.CallExpression;
-}
+type InstanceConstructorKind = "direct" | "opaque" | "position" | "compose";
+interface ApprovedInstanceExpression { readonly kind: InstanceConstructorKind | "forwarded"; readonly call?: ts.CallExpression; }
 
 function directInstanceConstructor(node: ts.Expression): ApprovedInstanceExpression | null {
   if (!ts.isCallExpression(node) || !ts.isIdentifier(node.expression)) return null;
   if (node.expression.text === "createUiInstanceId") return { kind: "direct", call: node };
+  if (node.expression.text === "createOpaqueUiInstanceId") return { kind: "opaque", call: node };
   if (node.expression.text === "createUiPositionInstanceId") return { kind: "position", call: node };
   if (node.expression.text === "composeUiInstanceId") return { kind: "compose", call: node };
   return null;
@@ -108,21 +100,14 @@ function variableInitializer(sourceFile: ts.SourceFile, name: string): ts.Expres
   let found: ts.Expression | null = null;
   function visit(node: ts.Node): void {
     if (found) return;
-    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === name && node.initializer) {
-      found = node.initializer;
-      return;
-    }
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === name && node.initializer) { found = node.initializer; return; }
     ts.forEachChild(node, visit);
   }
   visit(sourceFile);
   return found;
 }
 
-function approvedInstanceExpression(
-  node: ts.Expression,
-  sourceFile: ts.SourceFile,
-  seen: ReadonlySet<string> = new Set(),
-): ApprovedInstanceExpression | null {
+function approvedInstanceExpression(node: ts.Expression, sourceFile: ts.SourceFile, seen: ReadonlySet<string> = new Set()): ApprovedInstanceExpression | null {
   const direct = directInstanceConstructor(node);
   if (direct) return direct;
   if (ts.isPropertyAccessExpression(node) && node.name.text === "instance") return { kind: "forwarded" };
@@ -130,8 +115,7 @@ function approvedInstanceExpression(
     if (seen.has(node.text)) return null;
     const initializer = variableInitializer(sourceFile, node.text);
     if (!initializer) return null;
-    const nextSeen = new Set(seen);
-    nextSeen.add(node.text);
+    const nextSeen = new Set(seen); nextSeen.add(node.text);
     return approvedInstanceExpression(initializer, sourceFile, nextSeen);
   }
   return null;
@@ -146,9 +130,9 @@ function validateInstanceExpression(file: string, line: number, node: ts.Express
   if (approved.kind === "direct" && approved.call && expressionReferencesIndex(approved.call.arguments[0] ?? approved.call)) {
     addViolation("UI Attributes", file, `UiRegistry descriptor at line ${line} derives instance from a reorderable array index; use a stable domain key or createUiPositionInstanceId when position is the domain.`);
   }
-  if (approved.kind === "position" && approved.call) {
+  if ((approved.kind === "position" || approved.kind === "opaque") && approved.call) {
     const scope = approved.call.arguments[0];
-    if (!scope || !ts.isStringLiteral(scope)) addViolation("UI Attributes", file, `Positional UI instance at line ${line} requires a quoted static scope name.`);
+    if (!scope || !ts.isStringLiteral(scope)) addViolation("UI Attributes", file, `${approved.kind === "position" ? "Positional" : "Opaque"} UI instance at line ${line} requires a quoted static scope/namespace.`);
   }
 }
 
@@ -175,11 +159,7 @@ function scanGenericHelperForFixedUid(file: string, source: string): void {
 }
 
 export function checkUiAttributeContract(): void {
-  if (!existsSync(REGISTRY_PATH)) {
-    addViolation("UI Attributes", REGISTRY_PATH, "Missing package-owned UI page registry.");
-    return;
-  }
-
+  if (!existsSync(REGISTRY_PATH)) { addViolation("UI Attributes", REGISTRY_PATH, "Missing package-owned UI page registry."); return; }
   const registrySource = readFileSync(REGISTRY_PATH, "utf8");
   const registryLabel = relative(ROOT, REGISTRY_PATH).replace(/\\/g, "/");
   const entries = readUiPageRegistryAst(registryLabel, registrySource);
@@ -196,19 +176,10 @@ export function checkUiAttributeContract(): void {
   if (new Set(ids).size !== ids.length) addViolation("UI Attributes", REGISTRY_PATH, "UI_PAGE_REGISTRY has duplicate page identities.");
 
   for (const entry of entries) {
-    if (isDeterministicCopy(entry.uid, entry.id)) {
-      addViolation("UI Attributes", REGISTRY_PATH, `UI_PAGE_REGISTRY uid "${entry.uid}" is a deterministic copy of page id ${entry.id}.`);
-      continue;
-    }
-    if (!hasGeneratedSuffix(entry.uid)) {
-      addViolation("UI Attributes", REGISTRY_PATH, `UI_PAGE_REGISTRY uid "${entry.uid}" is not a valid generated UiUid.`);
-      continue;
-    }
+    if (isDeterministicCopy(entry.uid, entry.id)) { addViolation("UI Attributes", REGISTRY_PATH, `UI_PAGE_REGISTRY uid "${entry.uid}" is a deterministic copy of page id ${entry.id}.`); continue; }
+    if (!hasGeneratedSuffix(entry.uid)) { addViolation("UI Attributes", REGISTRY_PATH, `UI_PAGE_REGISTRY uid "${entry.uid}" is not a valid generated UiUid.`); continue; }
     const owner = uidOwners.get(entry.uid);
-    if (owner) {
-      addViolation("UI Attributes", REGISTRY_PATH, `UID "${entry.uid}" is already used by ${owner}.`);
-      continue;
-    }
+    if (owner) { addViolation("UI Attributes", REGISTRY_PATH, `UID "${entry.uid}" is already used by ${owner}.`); continue; }
     uidOwners.set(entry.uid, `UI_PAGE_REGISTRY route ${entry.route}`);
   }
 
@@ -228,58 +199,24 @@ export function checkUiAttributeContract(): void {
         const idField = literal.fields.get("id")!;
         const uidField = literal.fields.get("uid");
         const instanceField = literal.fields.get("instance");
-
-        if (idField.isComputed || idField.literalValue === null) {
-          addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} computes its semantic id; id must be a quoted source literal.`);
-          continue;
-        }
-
+        if (idField.isComputed || idField.literalValue === null) { addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} computes its semantic id; id must be a quoted source literal.`); continue; }
         if (instanceField) {
-          if (!instanceField.isComputed) {
-            addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} stores a literal runtime instance; instances must be created at render time.`);
-          } else {
-            validateInstanceExpression(file, literal.line, instanceField.node, sourceFile);
-          }
+          if (!instanceField.isComputed) addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} stores a literal runtime instance; instances must be created at render time.`);
+          else validateInstanceExpression(file, literal.line, instanceField.node, sourceFile);
         }
-
-        if (!uidField) {
-          addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} has no uid.`);
-          continue;
-        }
-        if (uidField.isComputed || uidField.literalValue === null) {
-          addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} computes its uid. Only a normal quoted StringLiteral is canonical.`);
-          continue;
-        }
-
+        if (!uidField) { addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} has no uid.`); continue; }
+        if (uidField.isComputed || uidField.literalValue === null) { addViolation("UI Attributes", file, `UiRegistry descriptor at line ${literal.line} computes its uid. Only a normal quoted StringLiteral is canonical.`); continue; }
         const uid = uidField.literalValue;
         const descriptorId = idField.literalValue;
-        if (isDeterministicCopy(uid, descriptorId)) {
-          addViolation("UI Attributes", file, `UiRegistry uid "${uid}" at line ${literal.line} deterministically copies its id.`);
-          continue;
-        }
-        if (!hasGeneratedSuffix(uid)) {
-          addViolation("UI Attributes", file, `UiRegistry uid "${uid}" at line ${literal.line} is not a valid generated UiUid.`);
-          continue;
-        }
+        if (isDeterministicCopy(uid, descriptorId)) { addViolation("UI Attributes", file, `UiRegistry uid "${uid}" at line ${literal.line} deterministically copies its id.`); continue; }
+        if (!hasGeneratedSuffix(uid)) { addViolation("UI Attributes", file, `UiRegistry uid "${uid}" at line ${literal.line} is not a valid generated UiUid.`); continue; }
         const owner = uidOwners.get(uid);
-        if (owner) {
-          addViolation("UI Attributes", file, `UID "${uid}" at line ${literal.line} is already used by ${owner}.`);
-          continue;
-        }
+        if (owner) { addViolation("UI Attributes", file, `UID "${uid}" at line ${literal.line} is already used by ${owner}.`); continue; }
         const location = `${relative(ROOT, file).replace(/\\/g, "/")}:${literal.line}`;
         uidOwners.set(uid, location);
-
-        const signature = [
-          uid,
-          literal.fields.get("kind")?.literalValue ?? "",
-          literal.fields.get("action")?.literalValue ?? "",
-          literal.fields.get("part")?.literalValue ?? "",
-        ].join("|");
+        const signature = [uid, literal.fields.get("kind")?.literalValue ?? "", literal.fields.get("action")?.literalValue ?? "", literal.fields.get("part")?.literalValue ?? ""].join("|");
         const known = descriptorSignatures.get(descriptorId);
-        if (known && known.signature !== signature) {
-          addViolation("UI Attributes", file, `UiRegistry descriptor "${descriptorId}" at line ${literal.line} drifts from ${known.location}.`);
-          continue;
-        }
+        if (known && known.signature !== signature) { addViolation("UI Attributes", file, `UiRegistry descriptor "${descriptorId}" at line ${literal.line} drifts from ${known.location}.`); continue; }
         if (!known) descriptorSignatures.set(descriptorId, { signature, location });
       }
     }
