@@ -1,6 +1,6 @@
 name: ui-identity-validation-one-shot
 
-# Stage 64 rerun after composite-vs-primitive analyzer correction.
+# Stage 67 rerun after migration hardening and zero-exception coverage cleanup.
 on:
   push:
     branches:
