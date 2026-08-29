@@ -40,7 +40,11 @@ const RadioGroupItem = React.forwardRef<
       {...uiPrimitiveAttributes('radio-group-item', ui, disabled ? 'disabled' : undefined)}
     >
       <RadioGroupPrimitive.Indicator
-        {...uiAttributes({ uid: 'shared.ui.radio-group.indicator-D7xQ2m', id: 'shared.ui.radio-group.indicator' })}
+        {...uiAttributes({
+          uid: 'shared.ui.radio-group.indicator-D7xQ2m',
+          id: 'shared.ui.radio-group.indicator',
+          instance: ui?.instance,
+        })}
         className="flex items-center justify-center"
       >
         <Circle className="h-2.5 w-2.5 fill-current text-current" />
