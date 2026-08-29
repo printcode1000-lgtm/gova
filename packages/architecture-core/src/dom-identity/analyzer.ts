@@ -333,11 +333,12 @@ export function buildDomIdentityInventory(root: string): DomIdentityInventory {
 }
 
 export function isActionableDomUsage(site: DomUsageSite): boolean {
-  return
+  return (
     site.ownership.kind === 'intrinsic' ||
     site.ownership.kind === 'generic-primitive-wired' ||
     site.ownership.kind === 'generic-primitive-unconverted' ||
-    site.ownership.kind === 'composite-caller-wired';
+    site.ownership.kind === 'composite-caller-wired'
+  );
 }
 
 export { findDescriptorLiterals, isInsideIteratorCallback };
