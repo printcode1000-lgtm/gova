@@ -34,6 +34,7 @@ export {
 export { uiAttributes } from "./domain/ui-attributes";
 export { uiComponentAttributes } from "./domain/ui-component-attributes";
 export { uiPageAttributes } from "./domain/ui-page-attributes";
+export { uiPageContextAttributes } from "./domain/ui-page-context-attributes";
 export { UI_PAGE_REGISTRY } from "./registry/ui-page-registry";
 export { resolveUiPage } from "./registry/resolve-ui-page";
 export type { UiUidCatalogEntry } from "./registry/ui-uid-catalog-entry";
