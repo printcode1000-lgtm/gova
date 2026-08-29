@@ -1,11 +1,3 @@
-/**
- * Small AST primitives shared by every DOM-identity check: parsing, JSX tag
- * classification, and the import-resolution walk that finds which file
- * actually defines a JSX component name. This is the one place that answers
- * "what does this JSX identifier refer to" — every other check in this
- * package, and every uid-migration/coverage tool under `scripts/`, calls
- * through here instead of re-parsing or re-resolving imports itself.
- */
 import { dirname, join } from 'node:path';
 
 import ts from 'typescript';
@@ -53,16 +45,54 @@ export function jsxOpening(
   return ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node) ? node : null;
 }
 
-function resolveModule(fromFile: string, specifier: string, files: ReadonlySet<string>): string | null {
-  let target = specifier;
-  if (target.startsWith('@/')) target = `src/${target.slice(2)}`;
-  else if (target.startsWith('.')) target = join(dirname(fromFile), target).replace(/\\/g, '/');
-  else return null; // bare specifier: a package, not a project file
-  for (const candidate of [target, `${target}.tsx`, `${target}.ts`, `${target}/index.tsx`, `${target}/index.ts`]) {
+function existingCandidate(target: string, files: ReadonlySet<string>): string | null {
+  for (const candidate of [
+    target,
+    `${target}.tsx`,
+    `${target}.ts`,
+    `${target}/index.tsx`,
+    `${target}/index.ts`,
+    `${target}/ui.tsx`,
+    `${target}/ui.ts`,
+    `${target}/server.tsx`,
+    `${target}/server.ts`,
+  ]) {
     const normalized = candidate.replace(/\\/g, '/');
     if (files.has(normalized)) return normalized;
   }
   return null;
+}
+
+/**
+ * Resolves a project module specifier against the loaded repository source.
+ * `@asol/*` is an internal workspace scope, never a third-party package.
+ */
+export function resolveProjectModule(
+  fromFile: string,
+  specifier: string,
+  files: ReadonlySet<string>,
+): string | null {
+  let target: string;
+  if (specifier.startsWith('@/')) {
+    target = `src/${specifier.slice(2)}`;
+  } else if (specifier.startsWith('.')) {
+    target = join(dirname(fromFile), specifier).replace(/\\/g, '/');
+  } else if (specifier.startsWith('@asol/')) {
+    const parts = specifier.split('/');
+    const packageFolder = parts[1];
+    if (!packageFolder) return null;
+    const subpath = parts.slice(2).join('/');
+    target = subpath
+      ? `packages/${packageFolder}/src/${subpath}`
+      : `packages/${packageFolder}/src/index`;
+  } else {
+    return null;
+  }
+  return existingCandidate(target, files);
+}
+
+function hasDefaultModifier(node: ts.Node): boolean {
+  return (ts.getCombinedModifierFlags(node as ts.Declaration) & ts.ModifierFlags.Default) !== 0;
 }
 
 function isExported(node: ts.Node): boolean {
@@ -75,18 +105,18 @@ function fileExportsName(
   sources: ReadonlyMap<string, string>,
   seen: Set<string> = new Set(),
 ): boolean {
-  if (seen.has(modulePath)) return false;
-  seen.add(modulePath);
+  const key = `${modulePath}#${exportName}`;
+  if (seen.has(key)) return false;
+  seen.add(key);
   const source = sources.get(modulePath);
   if (!source) return false;
   const sourceFile = parseTsx(modulePath, source);
   const files = new Set(sources.keys());
+
   for (const statement of sourceFile.statements) {
-    if (ts.isFunctionDeclaration(statement) && statement.name?.text === exportName && isExported(statement)) {
-      return true;
-    }
-    if (ts.isClassDeclaration(statement) && statement.name?.text === exportName && isExported(statement)) {
-      return true;
+    if (ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement)) {
+      if (exportName === 'default' && isExported(statement) && hasDefaultModifier(statement)) return true;
+      if (statement.name?.text === exportName && isExported(statement)) return true;
     }
     if (ts.isVariableStatement(statement) && isExported(statement)) {
       for (const declaration of statement.declarationList.declarations) {
@@ -95,13 +125,20 @@ function fileExportsName(
     }
     if (ts.isExportAssignment(statement) && exportName === 'default') return true;
     if (!ts.isExportDeclaration(statement)) continue;
+
     if (statement.exportClause && ts.isNamedExports(statement.exportClause)) {
       for (const element of statement.exportClause.elements) {
-        if (element.name.text === exportName) return true;
+        if (element.name.text !== exportName) continue;
+        if (!statement.moduleSpecifier) return true;
+        if (!ts.isStringLiteral(statement.moduleSpecifier)) continue;
+        const next = resolveProjectModule(modulePath, statement.moduleSpecifier.text, files);
+        const targetName = (element.propertyName ?? element.name).text;
+        if (next && fileExportsName(next, targetName, sources, seen)) return true;
       }
     }
+
     if (!statement.exportClause && statement.moduleSpecifier && ts.isStringLiteral(statement.moduleSpecifier)) {
-      const next = resolveModule(modulePath, statement.moduleSpecifier.text, files);
+      const next = resolveProjectModule(modulePath, statement.moduleSpecifier.text, files);
       if (next && fileExportsName(next, exportName, sources, seen)) return true;
     }
   }
@@ -114,42 +151,53 @@ function definingFileForExport(
   sources: ReadonlyMap<string, string>,
   seen: Set<string> = new Set(),
 ): string | null {
-  if (seen.has(modulePath)) return null;
-  seen.add(modulePath);
+  const key = `${modulePath}#${exportName ?? '*'}`;
+  if (seen.has(key)) return null;
+  seen.add(key);
+  const source = sources.get(modulePath);
+  if (!source) return null;
+
   if (modulePath.endsWith('.tsx')) {
     if (!exportName || exportName === 'default' || fileExportsName(modulePath, exportName, sources)) {
       return modulePath;
     }
-    return null;
   }
-  const source = sources.get(modulePath);
-  if (!source) return null;
+
   const sourceFile = parseTsx(modulePath, source);
   const files = new Set(sources.keys());
   for (const statement of sourceFile.statements) {
     if (!ts.isExportDeclaration(statement) || !statement.moduleSpecifier) continue;
     if (!ts.isStringLiteral(statement.moduleSpecifier)) continue;
-    const next = resolveModule(modulePath, statement.moduleSpecifier.text, files);
+    const next = resolveProjectModule(modulePath, statement.moduleSpecifier.text, files);
     if (!next) continue;
+
     if (!statement.exportClause) {
       const defined = definingFileForExport(next, exportName, sources, seen);
       if (defined) return defined;
       continue;
     }
+
     if (exportName && ts.isNamedExports(statement.exportClause)) {
       for (const element of statement.exportClause.elements) {
-        if (element.name.text === exportName) return definingFileForExport(next, exportName, sources, seen);
+        if (element.name.text !== exportName) continue;
+        const targetName = (element.propertyName ?? element.name).text;
+        const defined = definingFileForExport(next, targetName, sources, seen);
+        if (defined) return defined;
       }
     }
+  }
+
+  if (modulePath.endsWith('.tsx') && exportName && fileExportsName(modulePath, exportName, sources)) {
+    return modulePath;
   }
   return null;
 }
 
 /**
  * Maps every local JSX/value identifier bound by an import in `fromFile` to
- * the project-relative file that actually defines it — following barrel
- * re-exports — or leaves it unmapped when the specifier is a bare package
- * name (third-party) or cannot be resolved inside `sources`.
+ * the project-relative file that actually defines it — following barrels and
+ * workspace exports — or to `third-party:<specifier>` for a true external
+ * dependency.
  */
 export function localBindings(
   sourceFile: ts.SourceFile,
@@ -160,29 +208,29 @@ export function localBindings(
   const bindings = new Map<string, string>();
   for (const statement of sourceFile.statements) {
     if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) continue;
-    const modulePath = resolveModule(fromFile, statement.moduleSpecifier.text, files);
+    const specifier = statement.moduleSpecifier.text;
+    const modulePath = resolveProjectModule(fromFile, specifier, files);
     if (!statement.importClause) continue;
+
     if (!modulePath) {
-      // A bare specifier: record the binding as third-party by mapping it to
-      // the specifier itself, which never matches a project file path.
-      if (statement.importClause.name) {
-        bindings.set(statement.importClause.name.text, `third-party:${statement.moduleSpecifier.text}`);
-      }
+      const external = `third-party:${specifier}`;
+      if (statement.importClause.name) bindings.set(statement.importClause.name.text, external);
       const named = statement.importClause.namedBindings;
       if (named && ts.isNamedImports(named)) {
-        for (const element of named.elements) {
-          bindings.set(element.name.text, `third-party:${statement.moduleSpecifier.text}`);
-        }
+        for (const element of named.elements) bindings.set(element.name.text, external);
       }
+      if (named && ts.isNamespaceImport(named)) bindings.set(named.name.text, external);
       continue;
     }
+
     if (statement.importClause.name) {
       const defined =
-        definingFileForExport(modulePath, statement.importClause.name.text, sources) ??
         definingFileForExport(modulePath, 'default', sources) ??
+        definingFileForExport(modulePath, statement.importClause.name.text, sources) ??
         modulePath;
       bindings.set(statement.importClause.name.text, defined);
     }
+
     const named = statement.importClause.namedBindings;
     if (named && ts.isNamedImports(named)) {
       for (const element of named.elements) {
@@ -191,6 +239,7 @@ export function localBindings(
         bindings.set(element.name.text, defined);
       }
     }
+    if (named && ts.isNamespaceImport(named)) bindings.set(named.name.text, modulePath);
   }
   return bindings;
 }
