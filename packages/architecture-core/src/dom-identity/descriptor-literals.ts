@@ -41,8 +41,20 @@ function namedProperty(object: ts.ObjectLiteralExpression, name: string): ts.Pro
 }
 
 function readField(object: ts.ObjectLiteralExpression, name: string): DescriptorLiteralField | null {
-  const property = namedProperty(object, name);
+  const property = object.properties.find((candidate) =>
+    (ts.isPropertyAssignment(candidate) || ts.isShorthandPropertyAssignment(candidate)) &&
+    ((ts.isIdentifier(candidate.name) && candidate.name.text === name) ||
+      (ts.isStringLiteral(candidate.name) && candidate.name.text === name)),
+  );
   if (!property) return null;
+  if (ts.isShorthandPropertyAssignment(property)) {
+    return {
+      literalValue: null,
+      isComputed: true,
+      node: property.name,
+    };
+  }
+  if (!ts.isPropertyAssignment(property)) return null;
   const value = property.initializer;
   return {
     literalValue: ts.isStringLiteral(value) ? value.text : null,
