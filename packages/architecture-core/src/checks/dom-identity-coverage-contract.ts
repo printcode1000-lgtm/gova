@@ -4,6 +4,7 @@ import ts from 'typescript';
 
 import { buildDomIdentityInventory, isActionableDomUsage } from '../dom-identity/analyzer';
 import { findDescriptorLiterals } from '../dom-identity/descriptor-literals';
+import { runtimeMultiplicityReportFromSources } from '../dom-identity/runtime-multiplicity';
 import { parseTsx } from '../dom-identity/tsx-ast';
 import { ROOT, addViolation } from './architecture-types';
 
@@ -105,5 +106,15 @@ export function checkDomIdentityCoverageContract(): void {
         );
       }
     }
+  }
+
+  const multiplicity = runtimeMultiplicityReportFromSources(inventory.sources, inventory.multiplicity);
+  for (const finding of multiplicity.unresolved) {
+    addViolation(
+      'UI Runtime Multiplicity',
+      join(ROOT, finding.file),
+      `UiRegistry descriptor "${finding.id}" at line ${finding.line} can render more than once (${finding.reason}) but has no runtime instance.`,
+      'Provide a stable branded UiInstanceId derived from the caller/runtime domain. Reusable structural subparts must scope from caller ui.uid/ui.instance.',
+    );
   }
 }
