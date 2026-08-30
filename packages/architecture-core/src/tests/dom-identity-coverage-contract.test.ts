@@ -7,12 +7,10 @@ import { violations } from "../checks/architecture-types";
 
 /**
  * Adversarial proof that `checkDomIdentityCoverageContract` fails closed:
- * an unregistered raw host, an unregistered uncommon tag, an unregistered
- * shared-primitive usage, a primitive whose own root bakes in a fixed uid,
- * and a stale exception all fail the build. A registered site, a
- * legitimately un-registrable site covered by an exact exception, and a
- * non-caller-configurable structural sub-part with its own fixed uid all
- * stay silent.
+ * unregistered DOM, fixed generic-primitive identity, repeated descriptors
+ * without runtime instance scope, and iterator descriptors without runtime
+ * instance scope all fail. Registered sites and repeated sites with explicit
+ * branded runtime scope stay silent.
  */
 const root = process.cwd();
 const probeDirectory = join(root, "src", "features", "__dom_identity_coverage_probe");
@@ -27,6 +25,21 @@ const probes: Record<string, string> = {
   "already-registered.tsx":
     'import { uiAttributes } from "@asol/ui-registry-core";\n' +
     'export const C = () => <div {...uiAttributes({ uid: "probe.coverage-A1bcd9", id: "probe.coverage" })} />;\n',
+  // A component template rendered twice needs runtime instance scope inside it.
+  "repeated-missing-instance.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    'export const RepeatedMissing = () => <div {...uiAttributes({ uid: "probe.repeated-E5fGh8", id: "probe.repeated" })} />;\n' +
+    'export const RepeatedMissingHost = () => <><RepeatedMissing /><RepeatedMissing /></>;\n',
+  // An iterator emits multiple copies directly, so a fixed descriptor alone is insufficient.
+  "iterator-missing-instance.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    'export const IteratorMissing = (rows: string[]) => rows.map((row) => <span key={row} {...uiAttributes({ uid: "probe.iterator-F6gHi9", id: "probe.iterator" })}>{row}</span>);\n',
+  // Equivalent repeated sites are valid once every runtime copy has explicit branded scope.
+  "multiplicity-resolved.tsx":
+    'import { createOpaqueUiInstanceId, uiAttributes, type UiInstanceId } from "@asol/ui-registry-core";\n' +
+    'export const RepeatedResolved = ({ instance }: { instance: UiInstanceId }) => <div {...uiAttributes({ uid: "probe.repeated-ok-G7hIj0", id: "probe.repeated-ok", instance })} />;\n' +
+    'export const RepeatedResolvedHost = () => <><RepeatedResolved instance={createOpaqueUiInstanceId("probe-repeat", "one")} /><RepeatedResolved instance={createOpaqueUiInstanceId("probe-repeat", "two")} /></>;\n' +
+    'export const IteratorResolved = (rows: string[]) => rows.map((row) => <span key={row} {...uiAttributes({ uid: "probe.iterator-ok-H8iJk1", id: "probe.iterator-ok", instance: createOpaqueUiInstanceId("probe-row", row) })}>{row}</span>);\n',
 };
 
 mkdirSync(probeDirectory, { recursive: true });
@@ -64,9 +77,16 @@ for (const [label, pattern] of [
   ["unregistered raw host", /unregistered-host\.tsx[^\n]*has no ui\.uid/],
   ["unregistered uncommon tag", /unregistered-uncommon-tag\.tsx[^\n]*<mark>[^\n]*has no ui\.uid/],
   ["primitive root with a fixed uid", /__dom_identity_coverage_probe_primitive\.tsx[^\n]*declares a fixed uid/],
+  ["repeated reusable descriptor without instance", /repeated-missing-instance\.tsx[^\n]*can render more than once \(reusable-template\)[^\n]*no runtime instance/],
+  ["iterator descriptor without instance", /iterator-missing-instance\.tsx[^\n]*can render more than once \(iterator\)[^\n]*no runtime instance/],
 ] as const) {
   assert.match(reported, pattern, `The guard must fail for ${label}.`);
 }
 assert.doesNotMatch(reported, /already-registered\.tsx/, "An already-registered host must not be reported.");
+assert.doesNotMatch(
+  reported,
+  /multiplicity-resolved\.tsx[^\n]*UI Runtime Multiplicity/,
+  "Repeated descriptors with explicit runtime instances must stay legal.",
+);
 
 console.log("DOM identity coverage contract adversarial tests passed.");
