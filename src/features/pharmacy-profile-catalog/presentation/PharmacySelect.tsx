@@ -14,7 +14,6 @@ export function PharmacySelect({ id,
   options,
   onChange,
 }: {
-  /** Per-instance UiRegistry identity, supplied by the calling screen. */
   label: string;
   value: string;
   disabled?: boolean;

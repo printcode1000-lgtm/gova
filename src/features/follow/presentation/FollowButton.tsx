@@ -33,7 +33,6 @@ interface FollowButtonProps {
   isSuperAdmin?: boolean;
   targetLabel?: string;
   className?: string;
-  /** Registered UiRegistry descriptor for this instance, from the caller. */
 }
 
 export function FollowButton({

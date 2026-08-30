@@ -93,7 +93,17 @@ function main(): void {
         process.exit(1);
       }
       try {
-        const acquired = acquireLock({ agentId, kind: scopeKind, scope, runId: process.env.GITHUB_RUN_ID ?? null });
+        const acquired = acquireLock({
+          agentId,
+          kind: scopeKind,
+          scope,
+          runId: process.env.GITHUB_RUN_ID ?? null,
+          // This process exits as soon as it has printed. A lock tied to its pid
+          // would be stale before the next caller could ever see it, which is
+          // how a conversational agent ended up with a lock that protected
+          // nothing. Detached locks are judged by their TTL.
+          processBound: false,
+        });
         result = { action, acquired: true, ...acquired };
       } catch (error) {
         if (error instanceof LockConflictError) {
@@ -146,4 +156,19 @@ function main(): void {
   emit(result);
 }
 
-main();
+/**
+ * Report a refusal as one line, not a stack trace.
+ *
+ * Every rejection here is a contract the caller broke — a body over the limit, an
+ * unsupported kind, a scope that is already held — and the caller is usually
+ * another agent parsing this output. A raw stack trace buries the one sentence
+ * that says what to do differently, which is exactly what happened when a
+ * 520-character message came back as an uncaught exception.
+ */
+try {
+  main();
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`coordination refused: ${message}`);
+  process.exit(1);
+}

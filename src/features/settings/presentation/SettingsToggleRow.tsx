@@ -8,7 +8,6 @@ interface SettingsToggleRowProps {
   checked: boolean;
   disabled?: boolean;
   emphasised?: boolean;
-  /** Registered UiRegistry descriptor for this row's switch and runtime scope. */
   onChange: (next: boolean) => void;
 }
 

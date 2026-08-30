@@ -28,15 +28,15 @@
 
 ---
 
-## 3. UI Attribute System & UID-First UiRegistry
+## 3. Element Identity
 
-- **Sole Source of Truth (`data-ui-uid`)**: Every registered page, region, action, field, item, and shared component instance must declare an immutable `data-ui-uid` (`<prefix>-<Base62-suffix>`).
-- **One-Time Minting**: The Base62 suffix (6 characters, at least 1 uppercase and 1 digit) is minted once during development and hardcoded into source. Never generate UIDs on a render path.
-- **Per-Instance Registration**: Shared primitives (`Button`, `Input`, `Select`, `Textarea`, `Switch`, etc.) never declare internal fallback UIDs. The usage site passes an explicit `ui?: UiDescriptor` prop.
-- **Unregistered Fallback**: Elements without stable identities emit only `data-ui-component` and remain deliberately unregistered until addressed via the pending queue.
-- **Enforcement**: Guarded by `packages/architecture-core/src/tests/ui-attribute-guard.test.ts` and `npm run test:ui-registry-core`.
-
----
+- **Rule**: Elements are identified by the plain HTML `id` already written in the
+  source. Nothing generates, mints, validates, synchronises or catalogues it.
+- **Inspector**: a standalone super-admin DOM inspector selects the exact element
+  touched, reads that `id` off the node, highlights it, and copies it.
+- **Enforcement**: `src/features/super-admin/tests/ui-attribute-inspector.test.ts`,
+  which also asserts the inspector imports no removed package and reads no removed
+  attribute family.
 
 ## 4. Overlay Chrome Isolation (`DismissableLayerBranch`)
 
@@ -61,7 +61,6 @@
   - `npm run architecture:check`: AST boundary and vendor ownership verification.
   - `npm run docs:ci`: Documentation coverage, mutability check, and dead link scanner.
   - `npm run runtime:check`: 5-surface runtime compatibility checks.
-  - `npm run ui-registry:pending:check`: Preflight verification that no open UiRegistry pending requests remain.
   - `npm test` / `test:*-core`: Package unit and contract tests.
 - **Git workflow**: `main` is the only active development and release branch.
 

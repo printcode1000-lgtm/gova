@@ -177,6 +177,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:account-declarations` | `Tooling` | 1 |  | 0 |
 | `npm run test:account-deletion-registry` | `Tooling` | 1 |  | 0 |
 | `npm run test:account-deletion-schema` | `Tooling` | 1 |  | 1 |
+| `npm run test:api-core` | `Tooling` | 2 |  | 0 |
 | `npm run test:architecture-core` | `Tooling` | 2 |  | 0 |
 | `npm run test:auth-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:auth-email-uniqueness` | `Tooling` | 1 |  | 1 |

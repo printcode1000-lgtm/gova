@@ -16,7 +16,7 @@ import path from "node:path";
 const sandbox = mkdtempSync(path.join(tmpdir(), "gova-control-plane-test-"));
 process.env.GOVA_AGENT_COORDINATION_DIR = sandbox;
 process.env.GOVA_AGENT_STALE_LOCK_MS = String(60 * 60 * 1000);
-import { acquireLock, assessSwap, prepareWorktree, removeWorktree, RESCUE_REF_NAMESPACE, worktreePath, buildCoordinationSnapshot, declareAgent, DEFAULT_HEARTBEAT_TTL_MS, DISPATCHABLE_WORKFLOWS, isOpen, isSecretPath, knownRequestIds, listAgents, listLocks, listMessages, listOperations, livenessOf, LockConflictError, lockId, looksLikeSecretValue, MAIN_WORKTREE_SLUG, MAX_REQUEST_AGE_MS, maxConcurrentMutations, memoryFloorFor, memoryFloorMb, ownerIsAlive, patchSecretViolations, pendingReservationMb, postMessage, readMemory, reconcileOrphanedOperations, recordRequest, recoverStaleLocks, releaseAgentLocks, releaseLock, scopesConflict, FLUSH_SAFETY_MARGIN_MB, SWAP_FLUSH_COMMAND, swapIsHealthy, validateDispatchRequest, waitForAdmission, worktreeSlug } from "@asol/local-agent-core";
+import { acquireLock, assessSwap, isStale, prepareWorktree, removeWorktree, RESCUE_REF_NAMESPACE, worktreePath, buildCoordinationSnapshot, declareAgent, DEFAULT_HEARTBEAT_TTL_MS, DISPATCHABLE_WORKFLOWS, isOpen, isSecretPath, knownRequestIds, listAgents, listLocks, listMessages, listOperations, livenessOf, LockConflictError, lockId, looksLikeSecretValue, MAIN_WORKTREE_SLUG, MAX_REQUEST_AGE_MS, maxConcurrentMutations, memoryFloorFor, memoryFloorMb, ownerIsAlive, patchSecretViolations, pendingReservationMb, postMessage, readMemory, reconcileOrphanedOperations, recordRequest, recoverStaleLocks, releaseAgentLocks, releaseLock, scopesConflict, FLUSH_SAFETY_MARGIN_MB, SWAP_FLUSH_COMMAND, swapIsHealthy, validateDispatchRequest, waitForAdmission, worktreeSlug } from "@asol/local-agent-core";
 import { envWithHostToolShims, hostToolAllowed, setHostToolAllowed, wrapLoginShellCommand } from "@asol/local-agent-core/host";
 import { buildWatchModel, EMPTY_GITHUB_SAMPLE, humanDuration, renderFrame, sshAliases, visibleLength } from "@asol/local-agent-core/monitor";
 
@@ -598,6 +598,50 @@ assert.equal(humanDuration(-1), "\u2014");
 releaseAgentLocks("watched-agent");
 
 
+
+
+// --- detached locks ---------------------------------------------------------------
+
+// A lock taken through the CLI is owned by a process that exits within
+// milliseconds. Judging it by pid-liveness made it stale the instant it was
+// written, so a second agent took the same scope with no conflict at all and the
+// lock protected nothing. Verified experimentally before this was fixed.
+{
+  const detached = acquireLock({
+    agentId: "detached-holder",
+    kind: "path",
+    scope: "src/detached-probe",
+    processBound: false,
+  });
+  assert.equal(detached.lock.processBound, false, "the caller can declare itself detached");
+
+  // Its pid is this test's, which IS alive, so force the real condition: a pid
+  // that is provably gone.
+  const record = { ...detached.lock, pid: 0x7ffffffe };
+  assert.equal(ownerIsAlive(record), false, "the recorded process is gone");
+  assert.equal(isStale(record), false, "a detached lock survives a dead pid");
+
+  // The TTL is still the backstop, so a detached lock cannot be held forever.
+  assert.equal(isStale({ ...record, acquiredAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString() }), true,
+    "a detached lock still expires by TTL");
+
+  // And a second agent must now actually collide with it.
+  assert.throws(
+    () => acquireLock({ agentId: "other-holder", kind: "path", scope: "src/detached-probe" }),
+    LockConflictError,
+    "a live detached lock refuses a second holder",
+  );
+  releaseAgentLocks("detached-holder");
+}
+
+// A process-bound lock keeps the old behaviour: a dead owner frees it at once,
+// which is what turns a killed job's abandoned scope into an immediate reclaim.
+{
+  const bound = acquireLock({ agentId: "bound-holder", kind: "path", scope: "src/bound-probe" });
+  assert.notEqual(bound.lock.processBound, false, "process-bound is the default");
+  assert.equal(isStale({ ...bound.lock, pid: 0x7ffffffe }), true, "a dead owner frees a process-bound lock");
+  releaseAgentLocks("bound-holder");
+}
 
 // --- worktree rescue -------------------------------------------------------------
 

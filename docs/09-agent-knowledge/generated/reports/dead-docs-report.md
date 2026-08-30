@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **93**
+Findings: **94**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -97,6 +97,7 @@ Findings: **93**
 | `missing-file` | `docs/07-mobile-and-release/capacitor/ota-update-system.md` | `src/features/release-commands/domain/content-version.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/capacitor/ota-update-system.md` | `src/features/super-admin/presentation/SuperAdminOtaReleasesPage.tsx` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/deployment-targets.md` | `packages/native-core/android/build/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/07-mobile-and-release/local-agent-runner-pool.md` | `packages/simulation-core` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/local-agent-runner-pool.md` | `scripts/p2p-link-gui.sh` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/release-and-secrets.md` | `scripts/lib/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/08-troubleshooting/problems/ota-publish-static-export-failures.md` | `scripts/ota-publish.ts` | documentation mentions a missing repository path |

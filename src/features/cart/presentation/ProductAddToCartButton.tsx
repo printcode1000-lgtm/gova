@@ -12,7 +12,6 @@ interface ProductAddToCartButtonProps {
   sellerId: string;
   product: ProductDetails;
   mainCategoryId: string;
-  /** Registered UiRegistry descriptor for this instance, from the caller. */
 }
 
 function numberValue(value: string) {

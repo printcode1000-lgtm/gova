@@ -57,7 +57,6 @@ export function FormField({ id,
 
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
-  /** Per-instance UiRegistry identity, supplied by the calling section. */
 }
 
 export function FormInput({ error, className, ...props }: FormInputProps & { id?: string }) {
@@ -71,7 +70,6 @@ export function FormInput({ error, className, ...props }: FormInputProps & { id?
 
 interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string;
-  /** Per-instance UiRegistry identity, supplied by the calling section. */
 }
 
 export function FormTextarea({ error, className, ...props }: FormTextareaProps & { id?: string }) {
@@ -84,7 +82,6 @@ export function FormTextarea({ error, className, ...props }: FormTextareaProps &
 }
 
 interface FormSelectProps {
-  /** Per-instance UiRegistry identity, supplied by the calling section. */
   value: string;
   onValueChange: (value: string) => void;
   options: { value: string; label: string }[];

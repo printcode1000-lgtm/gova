@@ -235,7 +235,6 @@ export function VisibilityButton({
   hidden: boolean;
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
-  /** Registered UiRegistry descriptor for this instance, from the caller. */
 } & { id?: string }) {
   return (
     <button

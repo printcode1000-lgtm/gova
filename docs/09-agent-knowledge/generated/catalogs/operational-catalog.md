@@ -191,6 +191,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:account-declarations` | `npx tsx packages/account-declarations/src/tests/index.test.ts` |
 | `npm run test:account-deletion-registry` | `npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-registry.contract.test.ts` |
 | `npm run test:account-deletion-schema` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-query-schema.contract.test.ts` |
+| `npm run test:api-core` | `npx tsx src/core/api/tests/user-facing-api-error.test.ts && npx tsx src/core/api/tests/production-deploy-concurrency-logging.test.ts` |
 | `npm run test:architecture-core` | `npx tsx packages/architecture-core/src/tests/index.test.ts && npx tsx scripts/architecture/application-features-attack.test.ts` |
 | `npm run test:auth-core` | `npx tsx packages/auth-core/src/tests/index.test.ts` |
 | `npm run test:auth-email-uniqueness` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/auth/tests/email-uniqueness.test.ts` |

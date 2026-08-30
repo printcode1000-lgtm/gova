@@ -56,6 +56,7 @@
     "services:sync": "npx tsx scripts/sync-all-service-sources.ts",
     "test": "npx tsx scripts/run-generated-gate.ts test",
     "test:auth-core": "npx tsx packages/auth-core/src/tests/index.test.ts",
+    "test:api-core": "npx tsx src/core/api/tests/user-facing-api-error.test.ts && npx tsx src/core/api/tests/production-deploy-concurrency-logging.test.ts",
     "test:phone-field": "npx tsx src/shared/phone/tests/phone-field-model.test.ts",
     "test:account-deletion-registry": "npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-registry.contract.test.ts",
     "test:catalog-core": "npx tsx packages/catalog-core/src/tests/index.test.ts",

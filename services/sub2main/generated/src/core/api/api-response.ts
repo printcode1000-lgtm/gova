@@ -139,8 +139,14 @@ export function mapServiceError(error: unknown): NextResponse {
 
   // A release is one process at a time, and the console must be able to tell
   // "someone else is deploying" from "the deploy failed".
+  //
+  // This branch deliberately does NOT log. A second deploy arriving while one is
+  // running is the concurrency lock doing its job, so it is a business state and
+  // not a server fault; logging it made every poll of a running deployment emit
+  // a server.error event. `skipPersistence` already keeps it out of the store —
+  // the log call was the remaining noise. Every other 409 below still logs,
+  // because an unexpected conflict is exactly what must stay visible.
   if (message === 'productionDeployAlreadyRunning') {
-    void logMappedServiceError(error, message, 409);
     return apiError(message, 409, { skipPersistence: true });
   }
   if (message === 'productionDeployCallbackRejected') {

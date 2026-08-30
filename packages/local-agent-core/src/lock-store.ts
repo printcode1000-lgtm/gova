@@ -31,6 +31,16 @@ export interface LockRecord {
   acquiredAt: string;
   ttlMs: number;
   note: string | null;
+  /**
+   * Whether `pid` is a process that is expected to outlive the acquisition.
+   *
+   * A mutation job holds its lock for the life of a running process, so a dead
+   * pid proves the lock is abandoned. A conversational agent acquires through
+   * the CLI, whose process exits within milliseconds — its pid is dead by
+   * design, and treating that as abandonment made the lock evaporate instantly
+   * and protect nothing.
+   */
+  processBound?: boolean;
 }
 
 export interface LockSnapshot extends LockRecord {
@@ -108,9 +118,19 @@ export function ownerIsAlive(record: LockRecord): boolean | null {
  * the owning process turns that ninety-minute wait into an immediate reclaim,
  * while the TTL still covers the cases a pid cannot — a lock from another host,
  * or a pid that has been recycled.
+ *
+ * That reasoning only holds when a live process is what owns the lock. A lock
+ * taken through the CLI is owned by a process that exits immediately, so
+ * pid-liveness would call it abandoned the moment it was written and the next
+ * caller would take the same scope with no conflict at all. Such a lock declares
+ * itself detached and is judged by its TTL alone.
  */
 export function isStale(record: LockRecord, now = Date.now()): boolean {
   if (ageOf(record, now) > (record.ttlMs || staleLockMs())) return true;
+  // A detached holder has no live process to check, so the TTL is the only
+  // honest signal. Records written before this field existed were all taken by
+  // job processes, so the absence of the flag means process-bound.
+  if (record.processBound === false) return false;
   return ownerIsAlive(record) === false;
 }
 
@@ -193,6 +213,11 @@ export interface AcquireInput {
   runId?: string | null;
   ttlMs?: number;
   note?: string | null;
+  /**
+   * Set false when the caller will exit before the lock should be released —
+   * a CLI invocation, or an agent that holds a scope across several commands.
+   */
+  processBound?: boolean;
 }
 
 export interface AcquireResult {
@@ -230,6 +255,7 @@ export function acquireLock(input: AcquireInput, now = Date.now()): AcquireResul
       host: hostname(),
       acquiredAt: new Date(now).toISOString(),
       ttlMs: input.ttlMs ?? staleLockMs(),
+      processBound: input.processBound ?? true,
       note: input.note ?? null,
     };
     writeJsonFile(lockPath(id), record);

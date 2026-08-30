@@ -94,10 +94,30 @@ jobs:
                 started = await response.json();
                 break;
               }
-              if ([404, 409, 502, 503, 504].includes(response.status)) {
+              if ([404, 502, 503, 504].includes(response.status)) {
                 core.info(`Deploy endpoint returned ${response.status}; retrying.`);
                 await sleep(20_000);
                 continue;
+              }
+              // A 409 is only worth waiting on when it is the concurrency lock
+              // saying a release is already in flight. Retrying every 409 blindly
+              // meant a genuinely conflicting state was indistinguishable from
+              // "wait your turn", and the job spent the full 55-minute deadline
+              // re-asking a question that had already been answered.
+              if (response.status === 409) {
+                const body = await response.text();
+                let code;
+                try {
+                  code = JSON.parse(body)?.error;
+                } catch {
+                  code = undefined;
+                }
+                if (code === 'productionDeployAlreadyRunning') {
+                  core.info('A production deployment is already running; waiting for it.');
+                  await sleep(20_000);
+                  continue;
+                }
+                throw new Error(`Deploy start rejected (409): ${body}`);
               }
               throw new Error(`Deploy start rejected (${response.status}): ${await response.text()}`);
             }
@@ -148,10 +168,27 @@ jobs:
                 started = await response.json();
                 break;
               }
-              if ([404, 409, 502, 503, 504].includes(response.status)) {
+              if ([404, 502, 503, 504].includes(response.status)) {
                 core.info(`Deploy endpoint returned ${response.status}; retrying.`);
                 await sleep(20_000);
                 continue;
+              }
+              // Same rule as the primary path: wait only for the known
+              // already-running state, and fail loudly on any other conflict.
+              if (response.status === 409) {
+                const body = await response.text();
+                let code;
+                try {
+                  code = JSON.parse(body)?.error;
+                } catch {
+                  code = undefined;
+                }
+                if (code === 'productionDeployAlreadyRunning') {
+                  core.info('A production deployment is already running; waiting for it.');
+                  await sleep(20_000);
+                  continue;
+                }
+                throw new Error(`Deploy start rejected (409): ${body}`);
               }
               throw new Error(`Deploy start rejected (${response.status}): ${await response.text()}`);
             }

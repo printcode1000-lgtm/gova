@@ -112,7 +112,8 @@
 
 - يبدأ بعد cherry-pick محلي لأساس الوكيل 1 الذي يضيف declaration/export `control`، ولا يعدل أي ملف من ذلك الأساس.
 - يكتب hash أساسه وhash تسليم مصفوفة route+method في worktree فرع التنسيق قبل أن يبدأ الوكيل 3.
-- يسجل خط أساس قابلًا للتشغيل للـ124 `route.ts` ولـroute exports غير المكتوبة بصيغة `function`، بما في ذلك `POST /api/super-admin/simulation/users` و`GET/POST /api/super-admin/ui-registry/pending` و`POST /api/super-admin/users/delete`. عدّ الملفات ليس معيار اكتمال؛ الأزواج الفعلية هي المعيار.
+- يسجل خط أساس قابلًا للتشغيل لملفات `route.ts` ولـroute exports غير المكتوبة بصيغة `function`، بما في ذلك `POST /api/super-admin/users/delete`. عدّ الملفات ليس معيار اكتمال؛ الأزواج الفعلية هي المعيار.
+- ملاحظة لاحقة: كان هذا الأساس يعدّ 124 ملفًا ويذكر `POST /api/super-admin/simulation/users` و`GET/POST /api/super-admin/ui-registry/pending`. حُذف نظاما Simulation وUI Registry ومعهما هذان المساران، والعدد الحالي 122. لا تعامل الأسطر أعلاه كمرجع لمسارات مطلوبة.
 
 ## اختبارات
 

@@ -17,13 +17,6 @@ This log tracks architectural areas requiring deeper investigation, verification
 
 ---
 
-## 2. Super-Admin Real-User Simulation Route Coverage
-
-- **Context**: `@asol/simulation-core` and `scripts/check-simulation-coverage.ts` discover interactive page flows across all application routes.
-- **Action Item**: Periodically re-run `npm run simulation:coverage` when new application routes or modal dialogs are added under `src/app/` to ensure 100% test coverage for UI attributes.
-
----
-
 ## 3. High-Frequency System Log Buffer Flushing in Static Mode
 
 - **Context**: In static `out/` and Capacitor mobile environments, network disconnects can buffer system audit logs in LocalStorage / Preferences.

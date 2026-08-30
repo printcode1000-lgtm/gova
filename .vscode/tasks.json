@@ -2,22 +2,6 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "UiRegistry: apply pending",
-      "type": "npm",
-      "script": "ui-registry:apply-pending",
-      "problemMatcher": [],
-      "detail": "Apply queued UiRegistry registration requests into source. Terminal output lists the task, each write, and anything still open.",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": true,
-        "panel": "dedicated",
-        "showReuseMessage": false,
-        "clear": true,
-        "group": "ui-registry-pending"
-      }
-    },
-    {
       "label": "Dev Server - تشغيل التطوير",
       "type": "npm",
       "script": "dev",

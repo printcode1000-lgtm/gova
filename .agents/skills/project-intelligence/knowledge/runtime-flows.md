@@ -6,7 +6,7 @@
 [User Touch Event]
        │
        ▼
-[DOM Element with data-ui-uid and data-ui-* attributes] (UiRegistry diagnostic identity)
+[DOM Element with its plain HTML id]
        │
        ▼
 [React UI Component] (Uses active: / focus-visible: styles; NO hover)
@@ -19,7 +19,7 @@
 ```
 
 - **Touch Interaction Contract**: All interactions are touch-first. Hover states, hover-triggered menus, and cursor-pointer styles are forbidden across all surfaces.
-- **UID-First Contract**: Interactive and structural elements carry immutable `data-ui-uid` addresses. Shared primitives (`Button`, `Input`, `Select`) receive descriptors via `ui` props at usage sites.
+- **Plain Source Ids**: elements carry the plain HTML `id` written in the source. A standalone DOM inspector reads it off the node; there is no registry, catalog or generated uid behind it.
 - **Overlay Chrome Isolation**: Floating tools (DevBadge, SuperAdminUiAttributeInspector, Error button) set `data-asol-overlay-chrome` and do not close parent dialogs on touch.
 
 ---
@@ -230,7 +230,6 @@
 [Phase 1: Preflight Wave]
        ├── Documentation Gate (docs:ci)
        ├── Architecture Gate (architecture:check)
-       ├── UiRegistry Pending Gate (ui-registry:pending:check)
        ├── Contract & Unit Tests Gate (npm run test)
        ├── Runtime Compatibility Gate (runtime:check)
        └── Storage Profiles Gate (validate-storage-profiles)
@@ -260,30 +259,3 @@
 
 ---
 
-## 10. UiRegistry Pending Request Lifecycle Flow
-
-```text
-[Super-Admin clicks "Add to UiRegistry" on Unregistered Element]
-       │
-       ├── 1. Inspector mintage: Generates immutable <prefix>-<Base62-suffix> UID
-       ├── 2. Sanitization: Captures safe DOM id, component marker, and UI_PAGE_REGISTRY route template (PII stripped)
-       └── 3. Dispatches POST /api/super-admin/ui-registry/pending
-       │
-       ▼
-[Server: Validates super-admin session & route template membership]
-       │
-       ▼
-[@asol/data-core: Stores request in ui_registry_pending_requests on system-ops shard]
-       │
-       ▼
-[Developer runs: npm run ui-registry:apply-pending]
-       │
-       ├── Reads open pending requests from system-ops database
-       ├── Locates single matching AST site in source code (fails if 0 or >1 matches)
-       ├── Rewrites JSX/TSX with typed uiAttributes descriptor + minted UID
-       └── Marks request status as resolved in system-ops database
-       │
-       ▼
-[Release Gate: npm run ui-registry:pending:check]
-       └── Verifies zero unresolved pending requests before deploy:all can proceed
-```

@@ -2548,6 +2548,20 @@
       ]
     },
     {
+      "id": "command:test:api-core",
+      "kind": "command",
+      "name": "npm run test:api-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "api-core",
+        "npm",
+        "npm run test:api-core",
+        "run",
+        "test",
+        "test:api-core"
+      ]
+    },
+    {
       "id": "command:test:architecture-core",
       "kind": "command",
       "name": "npm run test:architecture-core",
@@ -13372,6 +13386,7 @@
         "packages/local-agent-core/src/paths.ts",
         "packages/local-agent-core/src/remote-hosts",
         "packages/local-agent-core/src/remote-hosts.ts",
+        "packages/simulation-core",
         "plane",
         "pool",
         "runner",
@@ -52587,6 +52602,18 @@
       "tags": [
         "src/app/api/notifications/test/send/route",
         "src/app/api/notifications/test/send/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "kind": "test",
+      "name": "production-deploy-concurrency-logging.test.ts",
+      "path": "src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "tags": [
+        "src/core/api/tests/production-deploy-concurrency-logging",
+        "src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+        "test",
         "ts"
       ]
     },

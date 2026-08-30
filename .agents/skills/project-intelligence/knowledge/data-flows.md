@@ -63,12 +63,6 @@ In local development with `better-sqlite3`, connections are wrapped with `Cached
 - **Storage**: Stored in `gova-notifications` Turso shard.
 - **Read/Delivery Path**: `asol-notifications` service reads tokens during dispatch and writes delivery status logs.
 
-### 5. UiRegistry Pending Requests
-- **Origin**: Super-admin element inspector ("Add to UiRegistry").
-- **Transformation**: Validated against `UI_PAGE_REGISTRY` membership and Base62 UID format. PII and raw values stripped.
-- **Storage**: Stored in `ui_registry_pending_requests` table in `system-ops` shard.
-- **Resolution**: Applied to source code via `npm run ui-registry:apply-pending` and checked before release via `npm run ui-registry:pending:check`.
-
 ---
 
 ## Object Storage Hierarchy (Cloudflare R2)
@@ -106,4 +100,3 @@ r2://gova-storage-bucket/
 | **Zustand Stores** | Global UI state (theme, sidebar open, modal states, network status) | Component unmount / explicit reset action |
 | **Capacitor Preferences / LocalStorage** | User session tokens, notification inbox cache, favorites list | Explicit user logout / app factory reset |
 | **Page Save Journal** | In-flight unsaved form drafts | Cleared upon confirmed server 200 OK |
-| **UiRegistry Pending Queue** | Unresolved diagnostic element registration requests | Resolved upon `ui-registry:apply-pending` source write |

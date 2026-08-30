@@ -378,12 +378,97 @@ conflict" scan cannot race. A lock older than `GOVA_AGENT_STALE_LOCK_MS`
 automatically on the next acquisition attempt. Only the owner may release a live
 lock.
 
+**A lock is stale when its TTL expires, or when the process that took it is
+gone — but only if that process was ever meant to outlive the acquisition.**
+That distinction is the whole of `processBound`:
+
+| Holder | `processBound` | Stale when |
+|---|---|---|
+| A mutation job, holding for the life of its run | `true` (default) | TTL expires **or** its pid dies |
+| A CLI call, or an agent holding across several commands | `false` | TTL expires |
+
+Without it the lock is worse than useless. The CLI process exits within
+milliseconds of printing, so a pid-checked lock is abandoned the moment it is
+written — a second agent asking for the same scope is handed it with no conflict
+at all. That was verified experimentally: two agents acquired
+`packages/simulation-core` simultaneously and neither was told. Any agent that
+holds a scope across more than one command must pass `processBound: false`; the
+coordination CLI does this for you.
+
 ### Messaging
 
 Message kinds are `editing`, `do-not-modify`, `dependency-changed`,
 `ready-for-merge`, `conflict-detected`, `lock-released`, and `note`. Bodies are
 at most 500 characters and are refused if they look like they carry a
 credential, because the channel is republished to GitHub.
+
+Both limits are enforced by refusal, not truncation, and the CLI reports a
+refusal as a single line — `coordination refused: <reason>` — rather than an
+uncaught stack trace, because the caller is usually another agent parsing the
+output.
+
+### Reaching the channel from outside this machine
+
+Three tiers, and which one an agent can use depends entirely on what its
+credentials allow. Establish this *before* promising an agent that coordination
+will work:
+
+| The agent has | It uses | Can it declare, heartbeat, message? |
+|---|---|---|
+| A shell on this machine | `npm run local-agent:coordination` | yes |
+| A GitHub token with Actions write | `workflow_dispatch` on `local-agent-coordination.yml` | yes |
+| A GitHub connector with contents write only | the gateway: push a request file to `agent-request/**` | yes |
+| Read-only GitHub access | nothing | **no** — someone must relay for it |
+
+The third tier is the one that is easy to miss, and it is what
+`local-agent-gateway.yml` exists for; its own header says "Dispatch gateway for
+agents that cannot call the workflow_dispatch API." Write ONE file at
+`.agent-control/requests/<requestId>.json` on a branch named `agent-request/**`:
+
+```json
+{
+  "version": 1,
+  "requestId": "cloud-deploy-msg-20260830-2116",
+  "agentId": "cloud-deploy",
+  "workflow": "local-agent-coordination",
+  "mode": "coordination",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "cloud-deploy",
+    "action": "message",
+    "message_kind": "ready-for-merge",
+    "message_to": "local-lockfile",
+    "message_body": "at most 500 characters, no secrets"
+  },
+  "createdAt": "2026-08-30T21:16:30Z"
+}
+```
+
+The contract is closed and refuses anything malformed: `requestId` is 8–64 of
+`[A-Za-z0-9._-]`, starts alphanumeric, and is **single use**; `createdAt` must be
+within 30 minutes and not in the future; `ref` must be `main`; only the inputs
+that workflow declares are accepted. The gateway validates, dispatches with a
+credential that never leaves this machine, and deletes the request branch.
+Nothing pushed there reaches `main`, so coordination traffic can never trigger a
+production deploy.
+
+### What a remote agent can and cannot change
+
+A gateway agent reaches the coordination channel, but changing files is a
+separate question. Its jobs run in a worktree detached at `origin/main`, **not**
+in this machine's working tree, so it cannot see uncommitted local work and
+cannot write into it. Its only delivery path is `local-agent-workspace`, which
+commits and pushes a `codex/*` branch for the local agent to merge.
+
+Telling such an agent "do not commit or push" therefore paralyses it — that
+instruction must always be scoped to `main`. A `codex/*` branch never reaches
+`main` and is excluded from the deployment workflow's path filter, which is
+exactly why the namespace exists.
+
+An agent that cannot push at all — an isolated sandbox with no network — can only
+deliver by returning file contents. Ask for **whole files**, not a unified diff:
+it cannot compile or test what it produces, and a hand-computed `@@` header is
+the usual way such a patch fails to apply.
 
 ### Reading state from the cloud
 

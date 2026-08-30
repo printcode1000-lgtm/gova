@@ -2548,6 +2548,20 @@
       ]
     },
     {
+      "id": "command:test:api-core",
+      "kind": "command",
+      "name": "npm run test:api-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "api-core",
+        "npm",
+        "npm run test:api-core",
+        "run",
+        "test",
+        "test:api-core"
+      ]
+    },
+    {
       "id": "command:test:architecture-core",
       "kind": "command",
       "name": "npm run test:architecture-core",
@@ -13372,6 +13386,7 @@
         "packages/local-agent-core/src/paths.ts",
         "packages/local-agent-core/src/remote-hosts",
         "packages/local-agent-core/src/remote-hosts.ts",
+        "packages/simulation-core",
         "plane",
         "pool",
         "runner",
@@ -52591,6 +52606,18 @@
       ]
     },
     {
+      "id": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "kind": "test",
+      "name": "production-deploy-concurrency-logging.test.ts",
+      "path": "src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "tags": [
+        "src/core/api/tests/production-deploy-concurrency-logging",
+        "src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/core/api/tests/user-facing-api-error.test.ts",
       "kind": "test",
       "name": "user-facing-api-error.test.ts",
@@ -55835,6 +55862,21 @@
       "from": "command:test:account-deletion-schema",
       "to": "environment-key:NODE_OPTIONS",
       "kind": "uses-environment"
+    },
+    {
+      "from": "command:test:api-core",
+      "to": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:api-core",
+      "to": "test:src/core/api/tests/user-facing-api-error.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:api-core",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
     },
     {
       "from": "command:test:architecture-core",
@@ -237425,6 +237467,31 @@
       "from": "test:src/app/api/notifications/test/send/route.ts",
       "to": "source:src/core/api/traced-route.ts",
       "kind": "tests"
+    },
+    {
+      "from": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
     },
     {
       "from": "test:src/core/api/tests/user-facing-api-error.test.ts",

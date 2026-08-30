@@ -106,9 +106,9 @@ Application code (`src/`) strictly follows an unidirectional layer flow enforced
 
 ## Sealed Package Taxonomy
 
-The monorepo contains **43 sealed packages** organized into 5 layers:
+The monorepo contains **42 sealed packages** organized into 5 layers:
 
-1. **Capability Packages (`*-core`, 34 packages)**:
+1. **Capability Packages (`*-core`, 33 packages)**:
    - Encapsulate domain logic, UI widgets, or infrastructure drivers.
    - Must NOT import `@/` application code (`mayImportApp: false`).
 2. **Composition Packages (`*-composition`, 6 packages)**:
@@ -131,9 +131,8 @@ The monorepo contains **43 sealed packages** organized into 5 layers:
    - Page Form Writes: `@asol/page-save-core`
    - Push Notifications: `@asol/notifications-core`
    - OTA Updates: `@asol/ota-core`
-   - UI Diagnostic Identity: `@asol/ui-registry-core`
 3. **Single Responsibility Principle (SRP)**: Every source file has exactly one clear reason to change. UI, domain logic, and API calls must not be mixed.
 4. **Touch-First Interaction**: Hover styles (`:hover`, `hover:`, `group-hover:`) and pointer cursors (`cursor-pointer`) are forbidden in application source.
-5. **UID-First UI Registration**: Every interactive or structural element registered in UiRegistry must declare an immutable `uid` (`<prefix>-<Base62-suffix>`). Shared primitives take per-instance `ui` props.
+5. **Plain Source Ids**: Elements are identified by the plain HTML `id` written in the source. Nothing generates, mints, validates, or catalogues it; a standalone DOM inspector reads it straight off the node.
 6. **Overlay Chrome Dismiss Isolation**: Floating tools (DevBadge, SuperAdminUiAttributeInspector, SuperAdminErrorFloatingButton) must carry `data-asol-overlay-chrome` and wrap in `DismissableLayerBranch`.
 7. **Default Deny**: Unregistered packages, undeclared vendor SDK imports, or unmapped feature directories fail `npm run architecture:check`.

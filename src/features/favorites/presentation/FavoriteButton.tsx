@@ -12,7 +12,6 @@ interface FavoriteButtonProps {
   item: FavoriteItemInput;
   className?: string;
   label?: React.ReactNode;
-  /** Registered UiRegistry descriptor for this instance, from the caller. */
   /**
    * "favorite" (default) shows a heart for a private saved-item list.
    * "follow" shows a follow-style icon for targets that also become a

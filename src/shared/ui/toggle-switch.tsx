@@ -7,7 +7,6 @@ interface ToggleSwitchProps {
   onChange: (next: boolean) => void;
   label: string;
   disabled?: boolean;
-  /** Registered UiRegistry descriptor for this instance, from the caller. */
   id?: string;
 }
 

@@ -2,11 +2,11 @@
 
 ## Package Inventory Overview
 
-The repository manages **43 sealed packages** under `packages/`, categorized across 5 architectural layers. Every package is registered in `packages/architecture-core/src/registry/capability-registry.ts`.
+The repository manages **42 sealed packages** under `packages/`, categorized across 5 architectural layers. Every package is registered in `packages/architecture-core/src/registry/capability-registry.ts`.
 
 ---
 
-## 1. Capability Packages (`*-core`, 34 Packages)
+## 1. Capability Packages (`*-core`, 33 Packages)
 
 | Package | Ownership Statement | Owned Vendor SDKs | Key Public Doors |
 |---|---|---|---|
@@ -22,6 +22,7 @@ The repository manages **43 sealed packages** under `packages/`, categorized acr
 | `@asol/format-core` | Currency, dates, phone numbers, and localized text formatting | `none` | `.`, `./currency`, `./phone`, `./date` |
 | `@asol/google-play-store-assets-core` | Google Play listing assets, store graphics, and metadata | `none` | `.`, `./assets` |
 | `@asol/hero-slider-core` | Hero slider UI components, slide animations, and auto-play logic | `none` | `.`, `./ui` |
+| `@asol/local-agent-core` | Local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking | `none` | `.`, `./monitor`, `./host` |
 | `@asol/map-core` | MapLibre GL map rendering, marker clustering, and location pinning | `maplibre-gl` | `.`, `./ui`, `./clustering` |
 | `@asol/native-core` | Capacitor bridge, native device capabilities, plugins, and OS policies | `@capacitor/*`, `@capawesome/*`, `@capgo/*` | `.`, `./adapters/*`, `./capabilities` |
 | `@asol/notifications-core` | Push notification delivery (Web Push, FCM HTTP v1, APNs) | `web-push`, `google-auth-library` | `.`, `./delivery`, `./providers/*` |
@@ -37,12 +38,10 @@ The repository manages **43 sealed packages** under `packages/`, categorized acr
 | `@asol/service-mirror-core` | Source code mirroring and synchronization into `services/*` | `none` | `.`, `./sync` |
 | `@asol/service-runtime-core` | Shared microservice runtime bootstrap and request context helpers | `none` | `.`, `./bootstrap`, `./context` |
 | `@asol/signed-token-core` | HMAC-SHA256 token creation, verification, and grant validation | `none` | `.`, `./crypto` |
-| `@asol/simulation-core` | Real-user page interaction simulation and automated coverage discovery | `none` | `.`, `./engine`, `./discovery` |
 | `@asol/storage-core` | Cloudflare R2 / AWS S3 client and storage profile abstractions | `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner` | `.`, `./r2`, `./profiles` |
 | `@asol/storage-image-manager-core` | Image compression, client upload queues, and image manager UI | `none` | `.`, `./queue`, `./ui` |
 | `@asol/system-logs-core` | System audit log collection, schema, and persistence contracts | `none` | `.`, `./collector`, `./types` |
 | `@asol/trending-ribbon-core` | Trending ribbon UI component and badge rendering | `none` | `.`, `./ui` |
-| `@asol/ui-registry-core` | UiRegistry identity contract, page registry, DOM attribute builders, UID minting, and pending queue validation | `none` | `.` (Single Door Only) |
 | `@asol/vercel-deploy-core` | Vercel deployment orchestration, API tokens, and project management | `@vercel/sandbox` | `.`, `./deployer` |
 
 ---
