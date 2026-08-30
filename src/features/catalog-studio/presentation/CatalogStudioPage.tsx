@@ -765,14 +765,17 @@ export function CatalogStudioPage() {
               <div {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.82-42WL31", id: "catalog-studio.catalog-studio-page.div.82" })} id="catalog-studio.catalog-studio-page.div.26" className="min-h-[50vh] rounded-2xl border bg-card p-5">
                 <h3 {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.h3.3-YAHBB4", id: "catalog-studio.catalog-studio-page.h3.3" })} id="catalog-studio.catalog-studio-page.h3" className="flex items-center gap-2 font-bold"><Link2 id="catalog-studio.catalog-studio-page.link2" className="h-5 w-5" /> علاقات العنصر المحدد</h3>
                 <div {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.83-t81ujL", id: "catalog-studio.catalog-studio-page.div.83" })} id="catalog-studio.catalog-studio-page.div.27" className="mt-4 space-y-2">
-                  {itemRelations.length === 0 ? <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.21-kc2EeO", id: "catalog-studio.catalog-studio-page.p.21" })} id="catalog-studio.catalog-studio-page.p.5" className="text-sm text-muted-foreground">لا توجد علاقات مسجلة لهذا العنصر.</p> : itemRelations.map((relation, index) => (
-                    <div key={`${relation.from}:${relation.to}:${index}`} {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.84-Od7k0X", id: "catalog-studio.catalog-studio-page.div.84" })} className="rounded-xl border p-3 text-sm">
-                      <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.22-1DAGLM", id: "catalog-studio.catalog-studio-page.p.22" })} className="font-semibold">{relation.label}</p>
-                      <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.23-hOX963", id: "catalog-studio.catalog-studio-page.p.23" })} className="mt-1 break-all font-mono text-xs" dir="ltr">{relation.from}</p>
-                      <ChevronLeft className="my-1 h-4 w-4" />
-                      <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.24-XCA5Eb", id: "catalog-studio.catalog-studio-page.p.24" })} className="break-all font-mono text-xs" dir="ltr">{relation.to}</p>
-                    </div>
-                  ))}
+                  {itemRelations.length === 0 ? <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.21-kc2EeO", id: "catalog-studio.catalog-studio-page.p.21" })} id="catalog-studio.catalog-studio-page.p.5" className="text-sm text-muted-foreground">لا توجد علاقات مسجلة لهذا العنصر.</p> : itemRelations.map((relation, index) => {
+                    const relationInstance = createOpaqueUiInstanceId("catalog-relation", `${relation.from}:${relation.to}:${relation.label}:${index}`);
+                    return (
+                      <div key={`${relation.from}:${relation.to}:${index}`} {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.84-Od7k0X", id: "catalog-studio.catalog-studio-page.div.84", instance: relationInstance })} className="rounded-xl border p-3 text-sm">
+                        <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.22-1DAGLM", id: "catalog-studio.catalog-studio-page.p.22", instance: relationInstance })} className="font-semibold">{relation.label}</p>
+                        <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.23-hOX963", id: "catalog-studio.catalog-studio-page.p.23", instance: relationInstance })} className="mt-1 break-all font-mono text-xs" dir="ltr">{relation.from}</p>
+                        <ChevronLeft className="my-1 h-4 w-4" />
+                        <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.24-XCA5Eb", id: "catalog-studio.catalog-studio-page.p.24", instance: relationInstance })} className="break-all font-mono text-xs" dir="ltr">{relation.to}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ) : null}
@@ -870,14 +873,17 @@ export function CatalogStudioPage() {
           <div {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.108-8pV0EJ", id: "catalog-studio.catalog-studio-page.div.108" })} id="catalog-studio.catalog-studio-page.div.46" className="rounded-2xl border bg-card p-5">
             <div {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.109-7cU5TH", id: "catalog-studio.catalog-studio-page.div.109" })} id="catalog-studio.catalog-studio-page.div.47" className="flex items-center gap-2"><History id="catalog-studio.catalog-studio-page.history" className="h-5 w-5" /><h2 {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.h2.11-X2S441", id: "catalog-studio.catalog-studio-page.h2.11" })} id="catalog-studio.catalog-studio-page.h2.5" className="font-bold">سجل عمليات الملفات والصور</h2></div>
             <div {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.110-aG5qNT", id: "catalog-studio.catalog-studio-page.div.110" })} id="catalog-studio.catalog-studio-page.div.48" className="mt-4 space-y-3">
-              {snapshot.audit.length === 0 ? <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.36-1SeKH5", id: "catalog-studio.catalog-studio-page.p.36" })} id="catalog-studio.catalog-studio-page.p.14" className="text-sm text-muted-foreground">لا توجد عمليات محفوظة بعد.</p> : snapshot.audit.map((entry, index) => (
-                <div key={`${entry.at}:${index}`} {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.111-4GF4R5", id: "catalog-studio.catalog-studio-page.div.111" })} className="rounded-xl border p-3">
-                  <div {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.112-6CAyjH", id: "catalog-studio.catalog-studio-page.div.112" })} className="flex flex-wrap items-center justify-between gap-2"><span {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.span.36-1dJNrm", id: "catalog-studio.catalog-studio-page.span.36" })} className="font-mono text-xs">{entry.action}</span><time {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.time-nEn4O7", id: "catalog-studio.catalog-studio-page.time" })} className="text-xs text-muted-foreground">{formatDateTimeDefault(entry.at)}</time></div>
-                  <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.37-5BeCO9", id: "catalog-studio.catalog-studio-page.p.37" })} className="mt-2 text-sm">{entry.details}</p>
-                  <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.38-3CGSH6", id: "catalog-studio.catalog-studio-page.p.38" })} className="mt-2 break-all font-mono text-xs" dir="ltr">{entry.files.join(",")}</p>
-                  {entry.recoveryPath ? <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.39-QKUj92", id: "catalog-studio.catalog-studio-page.p.39" })} className="mt-1 break-all text-xs text-amber-700" dir="ltr">مسار الاسترجاع: {entry.recoveryPath}</p> : null}
-                </div>
-              ))}
+              {snapshot.audit.length === 0 ? <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.36-1SeKH5", id: "catalog-studio.catalog-studio-page.p.36" })} id="catalog-studio.catalog-studio-page.p.14" className="text-sm text-muted-foreground">لا توجد عمليات محفوظة بعد.</p> : snapshot.audit.map((entry, index) => {
+                const auditInstance = createOpaqueUiInstanceId("catalog-audit", `${entry.action}:${entry.at}:${index}`);
+                return (
+                  <div key={`${entry.at}:${index}`} {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.111-4GF4R5", id: "catalog-studio.catalog-studio-page.div.111", instance: auditInstance })} className="rounded-xl border p-3">
+                    <div {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.div.112-6CAyjH", id: "catalog-studio.catalog-studio-page.div.112", instance: auditInstance })} className="flex flex-wrap items-center justify-between gap-2"><span {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.span.36-1dJNrm", id: "catalog-studio.catalog-studio-page.span.36", instance: auditInstance })} className="font-mono text-xs">{entry.action}</span><time {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.time-nEn4O7", id: "catalog-studio.catalog-studio-page.time", instance: auditInstance })} className="text-xs text-muted-foreground">{formatDateTimeDefault(entry.at)}</time></div>
+                    <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.37-5BeCO9", id: "catalog-studio.catalog-studio-page.p.37", instance: auditInstance })} className="mt-2 text-sm">{entry.details}</p>
+                    <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.38-3CGSH6", id: "catalog-studio.catalog-studio-page.p.38", instance: auditInstance })} className="mt-2 break-all font-mono text-xs" dir="ltr">{entry.files.join(",")}</p>
+                    {entry.recoveryPath ? <p {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.p.39-QKUj92", id: "catalog-studio.catalog-studio-page.p.39", instance: auditInstance })} className="mt-1 break-all text-xs text-amber-700" dir="ltr">مسار الاسترجاع: {entry.recoveryPath}</p> : null}
+                  </div>
+                );
+              })}
             </div>
           </div>
           <aside {...uiAttributes({ uid: "catalog-studio.catalog-studio-page.aside.10-DCsV8w", id: "catalog-studio.catalog-studio-page.aside.10" })} id="catalog-studio.catalog-studio-page.aside.5" className="space-y-4">

@@ -20,7 +20,7 @@ import { useOtaUpdate } from "@asol/ota-core";
 import { registerBrowserPorts } from "@/core/composition/browser-ports";
 import { publicEnv } from "@/core/config/public-env";
 import { notifications } from "@/features/notifications";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 // Sealed packages name ports; the application supplies them. Registered at module load so the
 // hook below has telemetry and the super-admin predicate before its first render. Unregistered
@@ -99,35 +99,43 @@ export function SettingsPageContent() {
       {/* Updates */}
       <section {...uiAttributes({ uid: "settings.settings-page-content.section.2-gQ8ftI", id: "settings.settings-page-content.section.2" })} id="settings.settings-page-content.section" className="mb-12 space-y-6">
         <div {...uiAttributes({ uid: "settings.settings-page-content.div.14-lAF2G7", id: "settings.settings-page-content.div.14" })} id="settings.settings-page-content.div.2" className="asol-settings-section-secondary space-y-4">
-          {(
-            [
-              [t("ota.settings.nativeVersion"), <span dir="ltr" key="native" {...uiAttributes({ uid: "settings.settings-page-content.span.3-FKLZ7V", id: "settings.settings-page-content.span.3" })}>{publicEnv.nativeVersion}</span>],
-              [t("ota.settings.webVersion"), <span dir="ltr" key="web" {...uiAttributes({ uid: "settings.settings-page-content.span.4-KS307L", id: "settings.settings-page-content.span.4" })}>{publicEnv.webBundleVersion}</span>],
-              [
-                t("ota.settings.lastCheck"),
-                ota.state.lastSuccessfulCheckAt
-                  ? formatDateTime(ota.state.lastSuccessfulCheckAt, appPrefs.locale)
-                  : t("ota.settings.never"),
-              ],
-              [
-                t("ota.settings.status"),
-                t(otaStatusKey, {
-                  size: formatOtaBytes(
-                    ota.progress?.requiredFreeBytes ?? ota.state.requiredFreeBytes ?? 0,
-                  ),
-                }),
-              ],
-            ] as const
-          ).map(([label, value], index) => (
+          {[
+            {
+              id: "native-version",
+              label: t("ota.settings.nativeVersion"),
+              value: <span dir="ltr" key="native" {...uiAttributes({ uid: "settings.settings-page-content.span.3-FKLZ7V", id: "settings.settings-page-content.span.3", instance: createUiInstanceId("native-version") })}>{publicEnv.nativeVersion}</span>,
+            },
+            {
+              id: "web-version",
+              label: t("ota.settings.webVersion"),
+              value: <span dir="ltr" key="web" {...uiAttributes({ uid: "settings.settings-page-content.span.4-KS307L", id: "settings.settings-page-content.span.4", instance: createUiInstanceId("web-version") })}>{publicEnv.webBundleVersion}</span>,
+            },
+            {
+              id: "last-check",
+              label: t("ota.settings.lastCheck"),
+              value: ota.state.lastSuccessfulCheckAt
+                ? formatDateTime(ota.state.lastSuccessfulCheckAt, appPrefs.locale)
+                : t("ota.settings.never"),
+            },
+            {
+              id: "status",
+              label: t("ota.settings.status"),
+              value: t(otaStatusKey, {
+                size: formatOtaBytes(
+                  ota.progress?.requiredFreeBytes ?? ota.state.requiredFreeBytes ?? 0,
+                ),
+              }),
+            },
+          ].map((item, index) => (
             <div
-              key={index} {...uiAttributes({ uid: "settings.settings-page-content.div.15-O31PhM", id: "settings.settings-page-content.div.15" })}
+              key={item.id} {...uiAttributes({ uid: "settings.settings-page-content.div.15-O31PhM", id: "settings.settings-page-content.div.15", instance: createUiInstanceId(item.id) })}
               className={cn(
                 "grid grid-cols-2 items-center px-4 py-3 text-sm",
                 index > 0 && "border-t border-outline-variant/60",
               )}
             >
-              <span {...uiAttributes({ uid: "settings.settings-page-content.span.5-bR3DEC", id: "settings.settings-page-content.span.5" })} className="text-on-surface-variant">{label}</span>
-              <span {...uiAttributes({ uid: "settings.settings-page-content.span.6-07cJSC", id: "settings.settings-page-content.span.6" })} className="justify-self-end font-semibold text-on-surface">{value}</span>
+              <span {...uiAttributes({ uid: "settings.settings-page-content.span.5-bR3DEC", id: "settings.settings-page-content.span.5", instance: createUiInstanceId(item.id) })} className="text-on-surface-variant">{item.label}</span>
+              <span {...uiAttributes({ uid: "settings.settings-page-content.span.6-07cJSC", id: "settings.settings-page-content.span.6", instance: createUiInstanceId(item.id) })} className="justify-self-end font-semibold text-on-surface">{item.value}</span>
             </div>
           ))}
           {otaTotal > 0 && ota.state.download ? (

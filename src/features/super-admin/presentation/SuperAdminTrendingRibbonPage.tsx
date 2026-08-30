@@ -29,7 +29,7 @@ import { isSuperAdmin } from "@/features/auth";
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { usePageSaveRegistration } from "@/features/page-save/ui";
-import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -415,43 +415,46 @@ export function SuperAdminTrendingRibbonPage() {
           </p>
         ) : (
           <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.36-A6Wkxk", id: "super-admin.super-admin-trending-ribbon-page.div.36" })} id="super-admin.super-admin-trending-ribbon-page.div.17" className="space-y-2">
-            {items.map((item, index) => (
-              <div
-                key={`${item.label}-${index}`} {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.37-F98TFc", id: "super-admin.super-admin-trending-ribbon-page.div.37" })}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDragEnd={handleDragEnd}
-                className="flex items-center gap-3 rounded-lg border bg-surface p-3 transition-colors"
-              >
-                <span {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.span-F3NV5n", id: "super-admin.super-admin-trending-ribbon-page.span" })}
-                  data-drag-handle
-                  draggable
-                  onDragStart={() => handleDragStart(index)}
-                  role="button"
-                  aria-label="اسحب لإعادة الترتيب"
-                  className="shrink-0 touch-none"
+            {items.map((item, index) => {
+              const itemInstance = createOpaqueUiInstanceId("ribbon-item", `${item.action}:${item.label}`);
+              return (
+                <div
+                  key={`${item.action}-${item.label}`} {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.37-F98TFc", id: "super-admin.super-admin-trending-ribbon-page.div.37", instance: itemInstance })}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDragEnd={handleDragEnd}
+                  className="flex items-center gap-3 rounded-lg border bg-surface p-3 transition-colors"
                 >
-                  <GripVertical className="h-4 w-4 text-muted-foreground" />
-                </span>
-                <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.38-pgN0AP", id: "super-admin.super-admin-trending-ribbon-page.div.38" })} className="min-w-0 flex-1">
-                  <p {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.p.18-PQpXl3", id: "super-admin.super-admin-trending-ribbon-page.p.18" })} className="truncate text-sm font-medium">{item.label}</p>
-                  <p {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.p.19-Tlj4I3", id: "super-admin.super-admin-trending-ribbon-page.p.19" })} className="truncate text-xs text-muted-foreground">
-                    الإجراء: <code {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.code-c14SE7", id: "super-admin.super-admin-trending-ribbon-page.code" })}>{item.action}</code>
-                  </p>
+                  <span {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.span-F3NV5n", id: "super-admin.super-admin-trending-ribbon-page.span", instance: itemInstance })}
+                    data-drag-handle
+                    draggable
+                    onDragStart={() => handleDragStart(index)}
+                    role="button"
+                    aria-label="اسحب لإعادة الترتيب"
+                    className="shrink-0 touch-none"
+                  >
+                    <GripVertical className="h-4 w-4 text-muted-foreground" />
+                  </span>
+                  <div {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.div.38-pgN0AP", id: "super-admin.super-admin-trending-ribbon-page.div.38", instance: itemInstance })} className="min-w-0 flex-1">
+                    <p {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.p.18-PQpXl3", id: "super-admin.super-admin-trending-ribbon-page.p.18", instance: itemInstance })} className="truncate text-sm font-medium">{item.label}</p>
+                    <p {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.p.19-Tlj4I3", id: "super-admin.super-admin-trending-ribbon-page.p.19", instance: itemInstance })} className="truncate text-xs text-muted-foreground">
+                      الإجراء: <code {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.code-c14SE7", id: "super-admin.super-admin-trending-ribbon-page.code", instance: itemInstance })}>{item.action}</code>
+                    </p>
+                  </div>
+                  <span {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.span.2-Si21Ov", id: "super-admin.super-admin-trending-ribbon-page.span.2", instance: itemInstance })} className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                    #{index + 1}
+                  </span>
+                  <Button ui={{ uid: "super-admin.super-admin-trending-ribbon-page.button.4-GAOP3U", id: "super-admin.super-admin-trending-ribbon-page.button.4", instance: itemInstance }}
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="shrink-0 text-destructive"
+                    onClick={() => removeItem(index)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
-                <span {...uiAttributes({ uid: "super-admin.super-admin-trending-ribbon-page.span.2-Si21Ov", id: "super-admin.super-admin-trending-ribbon-page.span.2" })} className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                  #{index + 1}
-                </span>
-                <Button ui={{ uid: "super-admin.super-admin-trending-ribbon-page.button.4-GAOP3U", id: "super-admin.super-admin-trending-ribbon-page.button.4" }}
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="shrink-0 text-destructive"
-                  onClick={() => removeItem(index)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

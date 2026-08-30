@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import type { SchemaSyncReport } from '@asol/data-core/provisioning';
 import { asolApi } from '@/core/api';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function SchemaSyncPanel() {
   const [report, setReport] = useState<SchemaSyncReport | null>(null);
@@ -72,11 +72,14 @@ export function SchemaSyncPanel() {
             <>
               <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.17-PoWE96", id: "dev.monitor.schema-sync-panel.div.17" })} id="dev.monitor.schema-sync-panel.div.7" className="detail-section-title">العمليات ({report.operations.length})</div>
               <ul {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.ul.4-p53yAk", id: "dev.monitor.schema-sync-panel.ul.4" })} id="dev.monitor.schema-sync-panel.ul" style={{ fontSize: 13, marginBottom: 16 }}>
-                {report.operations.map((op, index) => (
-                  <li key={`${op.type}-${index}`} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li-T7EUzH", id: "dev.monitor.schema-sync-panel.li" })}>
-                    <strong {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.strong-IrpS1Y", id: "dev.monitor.schema-sync-panel.strong" })}>{op.type}</strong>: {op.description}
-                  </li>
-                ))}
+                {report.operations.map((op, index) => {
+                  const opInstance = createOpaqueUiInstanceId("schema-op", `${op.type}:${op.tableName ?? ""}:${op.sql || op.description || index}`);
+                  return (
+                    <li key={`${op.type}-${index}`} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li-T7EUzH", id: "dev.monitor.schema-sync-panel.li", instance: opInstance })}>
+                      <strong {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.strong-IrpS1Y", id: "dev.monitor.schema-sync-panel.strong", instance: opInstance })}>{op.type}</strong>: {op.description}
+                    </li>
+                  );
+                })}
               </ul>
             </>
           )}
@@ -95,7 +98,7 @@ export function SchemaSyncPanel() {
               <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.19-7NLoMZ", id: "dev.monitor.schema-sync-panel.div.19" })} id="dev.monitor.schema-sync-panel.div.9" className="detail-section-title">تحذيرات</div>
               <ul {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.ul.5-VzWuV4", id: "dev.monitor.schema-sync-panel.ul.5" })} id="dev.monitor.schema-sync-panel.ul.2" style={{ color: '#f97316', fontSize: 13 }}>
                 {report.warnings.map((warning, index) => (
-                  <li key={index} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li.2-7DFOzW", id: "dev.monitor.schema-sync-panel.li.2" })}>{warning}</li>
+                  <li key={`${warning}-${index}`} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li.2-7DFOzW", id: "dev.monitor.schema-sync-panel.li.2", instance: createOpaqueUiInstanceId("schema-warning", `${warning}:${index}`) })}>{warning}</li>
                 ))}
               </ul>
             </>
@@ -106,7 +109,7 @@ export function SchemaSyncPanel() {
               <div {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.div.20-1QO18r", id: "dev.monitor.schema-sync-panel.div.20" })} id="dev.monitor.schema-sync-panel.div.10" className="detail-section-title">أخطاء</div>
               <ul {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.ul.6-TUcM7r", id: "dev.monitor.schema-sync-panel.ul.6" })} id="dev.monitor.schema-sync-panel.ul.3" style={{ color: '#ef4444', fontSize: 13 }}>
                 {report.errors.map((err, index) => (
-                  <li key={index} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li.3-OrLY1G", id: "dev.monitor.schema-sync-panel.li.3" })}>{err}</li>
+                  <li key={`${err}-${index}`} {...uiAttributes({ uid: "dev.monitor.schema-sync-panel.li.3-OrLY1G", id: "dev.monitor.schema-sync-panel.li.3", instance: createOpaqueUiInstanceId("schema-error", `${err}:${index}`) })}>{err}</li>
                 ))}
               </ul>
             </>
