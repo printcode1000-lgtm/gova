@@ -77,8 +77,27 @@ jobs:
             const pushedRevision = '${{ github.sha }}';
             core.info(`Dispatching authenticated main revision ${pushedRevision}.`);
             const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+            // The OIDC token is minted per request, and a release polls for the
+            // best part of an hour. A single timeout from the token service was
+            // therefore enough to kill a deployment that was running perfectly
+            // well — twice in a row, both times with "Failed to get ID Token".
+            // A transient token failure is not a deployment failure, so it is
+            // retried; only a persistent one is fatal.
+            const idToken = async () => {
+              let lastError;
+              for (let attempt = 1; attempt <= 4; attempt += 1) {
+                try {
+                  return await core.getIDToken(audience);
+                } catch (error) {
+                  lastError = error;
+                  core.info(`OIDC token attempt ${attempt} failed: ${error.message}`);
+                  if (attempt < 4) await sleep(attempt * 5_000);
+                }
+              }
+              throw lastError;
+            };
             const request = async (method, requestId = '') => {
-              const token = await core.getIDToken(audience);
+              const token = await idToken();
               const url = requestId ? `${endpoint}?requestId=${encodeURIComponent(requestId)}` : endpoint;
               return fetch(url, {
                 method,
@@ -151,8 +170,27 @@ jobs:
             const pushedRevision = '${{ github.sha }}';
             core.info(`Dispatching authenticated main revision ${pushedRevision}.`);
             const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+            // The OIDC token is minted per request, and a release polls for the
+            // best part of an hour. A single timeout from the token service was
+            // therefore enough to kill a deployment that was running perfectly
+            // well — twice in a row, both times with "Failed to get ID Token".
+            // A transient token failure is not a deployment failure, so it is
+            // retried; only a persistent one is fatal.
+            const idToken = async () => {
+              let lastError;
+              for (let attempt = 1; attempt <= 4; attempt += 1) {
+                try {
+                  return await core.getIDToken(audience);
+                } catch (error) {
+                  lastError = error;
+                  core.info(`OIDC token attempt ${attempt} failed: ${error.message}`);
+                  if (attempt < 4) await sleep(attempt * 5_000);
+                }
+              }
+              throw lastError;
+            };
             const request = async (method, requestId = '') => {
-              const token = await core.getIDToken(audience);
+              const token = await idToken();
               const url = requestId ? `${endpoint}?requestId=${encodeURIComponent(requestId)}` : endpoint;
               return fetch(url, {
                 method,
