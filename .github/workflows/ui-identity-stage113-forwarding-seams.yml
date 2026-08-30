@@ -26,7 +26,7 @@ jobs:
         run: npm install --global npm@11.19.0
       - name: Install dependencies
         run: npm ci --ignore-scripts
-      - name: Apply Stage 112 forwarding seam migration
+      - name: Apply hardened Stage 112 forwarding seam migration
         run: node scripts/ui-registry/fix-stage112-forwarding-seams.mjs
       - name: Regenerate canonical UiRegistry artifacts
         run: |
