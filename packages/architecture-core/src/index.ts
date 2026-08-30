@@ -80,6 +80,12 @@ export type { StaticInteractionMetadata, StaticSimulationMetadata } from './dom-
 export { planUidMigration, applyUidMigration, type UidMigrationEdit, type UidMigrationSkip, type UidMigrationPlan } from './dom-identity/migration';
 export { fileSemanticPrefix, mintSemanticId, mintUid } from './dom-identity/mint';
 export { hostMultiplicity, type HostMultiplicity } from './dom-identity/repetition';
+export {
+  runtimeMultiplicityReport,
+  runtimeMultiplicityReportFromSources,
+  type RuntimeMultiplicityFinding,
+  type RuntimeMultiplicityReport,
+} from './dom-identity/runtime-multiplicity';
 export { collectUidCatalog, type UidCatalogEntry } from './dom-identity/uid-catalog';
 export { findPendingAstSourceMatches, type PendingAstSourceMatch } from './dom-identity/pending-source-match';
 export { readUiPageRegistryAst, type AstPageRegistryEntry } from './dom-identity/page-registry-reader';
