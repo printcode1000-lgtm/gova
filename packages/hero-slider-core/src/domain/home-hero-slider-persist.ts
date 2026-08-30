@@ -28,8 +28,9 @@ export function normalizeHomeHeroConfigForPersist(
 ): HomeHeroConfig {
   return {
     ...config,
-    slides: config.slides.map((slide) => ({
+    slides: config.slides.map((slide, index) => ({
       ...slide,
+      id: slide.id?.trim() || `home-hero-slide-legacy-${index + 1}`,
       image: slide.imageKey?.trim() ? "" : slide.image,
     })),
   };

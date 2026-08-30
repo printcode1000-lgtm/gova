@@ -15,10 +15,20 @@ function isHomeHeroTransition(value: unknown): value is HomeHeroTransition {
   );
 }
 
+function legacySlideId(index: number): string {
+  return `home-hero-slide-legacy-${index + 1}`;
+}
+
+function ensureSlideIdentity(slide: HomeHeroSlide, index: number): HomeHeroSlide {
+  const id = slide.id?.trim();
+  return id ? { ...slide, id } : { ...slide, id: legacySlideId(index) };
+}
+
 function coerceSlide(
   raw: unknown,
   legacyTransition: HomeHeroTransition,
   legacyTransitionDuration: number,
+  index: number,
 ): HomeHeroSlide | null {
   if (!raw || typeof raw !== "object") return null;
   const slide = raw as Record<string, unknown>;
@@ -29,8 +39,13 @@ function coerceSlide(
     typeof slide.transitionDuration === "number"
       ? slide.transitionDuration
       : legacyTransitionDuration;
+  const id =
+    typeof slide.id === "string" && slide.id.trim()
+      ? slide.id.trim()
+      : legacySlideId(index);
 
   return {
+    id,
     priority: Number(slide.priority ?? 0),
     image: String(slide.image ?? ""),
     imageKey:
@@ -44,10 +59,15 @@ function coerceSlide(
   };
 }
 
-/** Upgrades legacy global transition fields to per-slide transition config. */
+/** Upgrades legacy global transition fields and missing slide identities. */
 export function normalizeHomeHeroConfig(raw: unknown): HomeHeroConfig {
   const parsed = homeHeroConfigSchema.safeParse(raw);
-  if (parsed.success) return parsed.data;
+  if (parsed.success) {
+    return {
+      ...parsed.data,
+      slides: parsed.data.slides.map(ensureSlideIdentity),
+    };
+  }
 
   const input =
     raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
@@ -64,8 +84,13 @@ export function normalizeHomeHeroConfig(raw: unknown): HomeHeroConfig {
     autoPlay: Boolean(input.autoPlay),
     loop: Boolean(input.loop),
     slides: rawSlides
-      .map((slide) =>
-        coerceSlide(slide, legacyTransition, legacyTransitionDuration),
+      .map((slide, index) =>
+        coerceSlide(
+          slide,
+          legacyTransition,
+          legacyTransitionDuration,
+          index,
+        ),
       )
       .filter((slide): slide is HomeHeroSlide => slide !== null),
   };

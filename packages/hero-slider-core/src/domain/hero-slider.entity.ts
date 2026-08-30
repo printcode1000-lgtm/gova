@@ -21,6 +21,8 @@ export const DEFAULT_HOME_HERO_TRANSITION: HomeHeroTransition = "SlideLeft";
 export const DEFAULT_HOME_HERO_TRANSITION_DURATION = 500;
 
 export interface HomeHeroSlide {
+  /** Stable domain identity. Legacy records are upgraded during normalization. */
+  id?: string;
   priority: number;
   image: string;
   imageKey?: string;
@@ -83,6 +85,14 @@ export function homeHeroImageKeys(config: HomeHeroConfig): string[] {
     .filter((key): key is string => Boolean(key));
 }
 
+export function createHomeHeroSlideId(): string {
+  const randomUuid = globalThis.crypto?.randomUUID?.();
+  if (!randomUuid) {
+    throw new Error("homeHeroSlideIdentityUnavailable");
+  }
+  return `home-hero-slide-${randomUuid}`;
+}
+
 export function createDefaultHomeHeroSlide(
   priority: number,
   overrides?: Partial<
@@ -90,6 +100,7 @@ export function createDefaultHomeHeroSlide(
   >,
 ): HomeHeroSlide {
   return {
+    id: createHomeHeroSlideId(),
     priority,
     image: "",
     title: "",

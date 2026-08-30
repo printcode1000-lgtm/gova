@@ -12,7 +12,11 @@ import {
 
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
+import {
+  composeUiInstanceId,
+  createOpaqueUiInstanceId,
+  uiAttributes,
+} from "@asol/ui-registry-core";
 import { Label } from "@/shared/ui/label";
 import { Switch } from "@/shared/ui/switch";
 import { StorageProfiles, type StoredImage } from "@asol/storage-core";
@@ -131,7 +135,7 @@ export const HeroSliderEditor = React.forwardRef<
             }
           >
             {heroSliderTransitions.map((transition) => (
-              <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option-U9f7gb", id: "advertisements.hero-slider-editor.option" , instance: createOpaqueUiInstanceId("iter-f3f7d864ac", String(transition))})} value={transition}>
+              <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option-U9f7gb", id: "advertisements.hero-slider-editor.option", instance: createOpaqueUiInstanceId("iter-f3f7d864ac", String(transition)) })} value={transition}>
                 {heroSliderTransitionLabels[transition]}
               </option>
             ))}
@@ -148,9 +152,7 @@ export const HeroSliderEditor = React.forwardRef<
             max={3000}
             step={100}
             value={templateDuration}
-            onChange={(event) =>
-              setTemplateDuration(Number(event.target.value))
-            }
+            onChange={(event) => setTemplateDuration(Number(event.target.value))}
           />
         </div>
         <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.17-kY1a3u", id: "advertisements.hero-slider-editor.div.17" })} id="advertisements.hero-slider-editor.div.7" className="flex items-end sm:col-span-2">
@@ -160,15 +162,7 @@ export const HeroSliderEditor = React.forwardRef<
             size="sm"
             className="w-full"
             disabled={!value.slides.length}
-            onClick={() =>
-              onChange(
-                applyHeroSliderTransitionToSlides(
-                  value,
-                  templateTransition,
-                  templateDuration,
-                ),
-              )
-            }
+            onClick={() => onChange(applyHeroSliderTransitionToSlides(value, templateTransition, templateDuration))}
           >
             تطبيق الانتقال على كل الشرائح
           </Button>
@@ -192,83 +186,31 @@ export const HeroSliderEditor = React.forwardRef<
       </div>
 
       <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.20-9QYTMY", id: "advertisements.hero-slider-editor.div.20" })} id="advertisements.hero-slider-editor.div.10" className="mt-6 space-y-4">
-        {value.slides.map((slide, index) => (
+        {value.slides.map((slide, index) => {
+          const slideId = slide.id?.trim();
+          if (!slideId) throw new Error("homeHeroSlideIdentityMissing");
+          const slideInstance = createOpaqueUiInstanceId("home-hero-slide", slideId);
+          return (
           <fieldset
-            key={`${slide.priority}-${index}`} {...uiAttributes({ uid: "advertisements.hero-slider-editor.fieldset-1MK2Ze", id: "advertisements.hero-slider-editor.fieldset" })}
+            key={slideId} {...uiAttributes({ uid: "advertisements.hero-slider-editor.fieldset-1MK2Ze", id: "advertisements.hero-slider-editor.fieldset", instance: slideInstance })}
             className="rounded-lg border p-3"
           >
-            <legend {...uiAttributes({ uid: "advertisements.hero-slider-editor.legend-KPvT3I", id: "advertisements.hero-slider-editor.legend" })} className="px-2 text-sm font-medium">
+            <legend {...uiAttributes({ uid: "advertisements.hero-slider-editor.legend-KPvT3I", id: "advertisements.hero-slider-editor.legend", instance: slideInstance })} className="px-2 text-sm font-medium">
               الشريحة {index + 1}
             </legend>
-            <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.21-N3KrIU", id: "advertisements.hero-slider-editor.div.21" })} className="mb-3 flex justify-end gap-1">
-              <Button ui={{ uid: "advertisements.hero-slider-editor.button.4-HAlL4V", id: "advertisements.hero-slider-editor.button.4" }}
-                type="button"
-                variant="ghost"
-                size="icon"
-                aria-label="تحريك الشريحة لأعلى"
-                disabled={index === 0}
-                onClick={() => moveSlide(index, -1)}
-              >
-                <ArrowUp className="h-4 w-4" />
-              </Button>
-              <Button ui={{ uid: "advertisements.hero-slider-editor.button.5-6ZZq2M", id: "advertisements.hero-slider-editor.button.5" }}
-                type="button"
-                variant="ghost"
-                size="icon"
-                aria-label="تحريك الشريحة لأسفل"
-                disabled={index === value.slides.length - 1}
-                onClick={() => moveSlide(index, 1)}
-              >
-                <ArrowDown className="h-4 w-4" />
-              </Button>
-              <Button ui={{ uid: "advertisements.hero-slider-editor.button.6-212rPj", id: "advertisements.hero-slider-editor.button.6" }}
-                type="button"
-                variant="ghost"
-                size="icon"
-                aria-label="إزالة الشريحة"
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    slides: value.slides.filter(
-                      (_, slideIndex) => slideIndex !== index,
-                    ),
-                  })
-                }
-              >
-                <Trash2 className="h-4 w-4 text-destructive" />
-              </Button>
+            <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.21-N3KrIU", id: "advertisements.hero-slider-editor.div.21", instance: slideInstance })} className="mb-3 flex justify-end gap-1">
+              <Button ui={{ uid: "advertisements.hero-slider-editor.button.4-HAlL4V", id: "advertisements.hero-slider-editor.button.4", instance: slideInstance }} type="button" variant="ghost" size="icon" aria-label="تحريك الشريحة لأعلى" disabled={index === 0} onClick={() => moveSlide(index, -1)}><ArrowUp className="h-4 w-4" /></Button>
+              <Button ui={{ uid: "advertisements.hero-slider-editor.button.5-6ZZq2M", id: "advertisements.hero-slider-editor.button.5", instance: slideInstance }} type="button" variant="ghost" size="icon" aria-label="تحريك الشريحة لأسفل" disabled={index === value.slides.length - 1} onClick={() => moveSlide(index, 1)}><ArrowDown className="h-4 w-4" /></Button>
+              <Button ui={{ uid: "advertisements.hero-slider-editor.button.6-212rPj", id: "advertisements.hero-slider-editor.button.6", instance: slideInstance }} type="button" variant="ghost" size="icon" aria-label="إزالة الشريحة" onClick={() => onChange({ ...value, slides: value.slides.filter((_, slideIndex) => slideIndex !== index) })}><Trash2 className="h-4 w-4 text-destructive" /></Button>
             </div>
-            <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.22-6N9C2H", id: "advertisements.hero-slider-editor.div.22" })} className="grid gap-3 sm:grid-cols-2">
-              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.23-3BaXfF", id: "advertisements.hero-slider-editor.div.23" })} className="space-y-2 sm:col-span-2">
-                <Label ui={{ uid: "advertisements.hero-slider-editor.label.9-3XLojK", id: "advertisements.hero-slider-editor.label.9" }}>صورة الشريحة</Label>
+            <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.22-6N9C2H", id: "advertisements.hero-slider-editor.div.22", instance: slideInstance })} className="grid gap-3 sm:grid-cols-2">
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.23-3BaXfF", id: "advertisements.hero-slider-editor.div.23", instance: slideInstance })} className="space-y-2 sm:col-span-2">
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.9-3XLojK", id: "advertisements.hero-slider-editor.label.9", instance: slideInstance }}>صورة الشريحة</Label>
                 <StorageImageManager
-                  ref={(handle) => {
-                    managerRefs.current[index] = handle;
-                  }}
-                  config={{
-                    id: `home-hero-slide-${index}`,
-                    storageProfileId: StorageProfiles.HomeHeroSlider,
-                    maxItems: 1,
-                    aspectRatio: "wide",
-                    allowReplace: true,
-                    deleteFromStorageOnRemove: false,
-                  }}
-                  value={
-                    slide.image
-                      ? ([
-                          {
-                            imageKey: slide.imageKey ?? "",
-                            url: slide.image,
-                          },
-                        ] satisfies StoredImage[])
-                      : []
-                  }
-                  onChange={(images) =>
-                    updateSlide(index, {
-                      image: images[0]?.url ?? "",
-                      imageKey: images[0]?.imageKey ?? "",
-                    })
-                  }
+                  ref={(handle) => { managerRefs.current[index] = handle; }}
+                  config={{ id: `home-hero-slide-${index}`, storageProfileId: StorageProfiles.HomeHeroSlider, maxItems: 1, aspectRatio: "wide", allowReplace: true, deleteFromStorageOnRemove: false }}
+                  value={slide.image ? ([{ imageKey: slide.imageKey ?? "", url: slide.image }] satisfies StoredImage[]) : []}
+                  onChange={(images) => updateSlide(index, { image: images[0]?.url ?? "", imageKey: images[0]?.imageKey ?? "" })}
                   onPendingChange={(pending) => {
                     setPendingSlots((current) => {
                       const next = new Set(current);
@@ -280,114 +222,44 @@ export const HeroSliderEditor = React.forwardRef<
                   onPreviewChange={onPreviewChange}
                 />
               </div>
-              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.24-Ka5Ld0", id: "advertisements.hero-slider-editor.div.24" })} className="space-y-2">
-                <Label ui={{ uid: "advertisements.hero-slider-editor.label.10-P9FtaP", id: "advertisements.hero-slider-editor.label.10" }} htmlFor={`hero-title-${index}`}>العنوان</Label>
-                <Input ui={{ uid: "advertisements.hero-slider-editor.input-Qt9eTO", id: "advertisements.hero-slider-editor.input" }}
-                  id={`hero-title-${index}`}
-                  value={slide.title}
-                  onChange={(event) =>
-                    updateSlide(index, { title: event.target.value })
-                  }
-                />
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.24-Ka5Ld0", id: "advertisements.hero-slider-editor.div.24", instance: slideInstance })} className="space-y-2">
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.10-P9FtaP", id: "advertisements.hero-slider-editor.label.10", instance: slideInstance }} htmlFor={`hero-title-${slideId}`}>العنوان</Label>
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input-Qt9eTO", id: "advertisements.hero-slider-editor.input", instance: slideInstance }} id={`hero-title-${slideId}`} value={slide.title} onChange={(event) => updateSlide(index, { title: event.target.value })} />
               </div>
-              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.25-8ueE52", id: "advertisements.hero-slider-editor.div.25" })} className="space-y-2">
-                <Label ui={{ uid: "advertisements.hero-slider-editor.label.11-D3aeWp", id: "advertisements.hero-slider-editor.label.11" }} htmlFor={`hero-subtitle-${index}`}>الشارة</Label>
-                <Input ui={{ uid: "advertisements.hero-slider-editor.input.2-f40LW8", id: "advertisements.hero-slider-editor.input.2" }}
-                  id={`hero-subtitle-${index}`}
-                  value={slide.subtitle}
-                  onChange={(event) =>
-                    updateSlide(index, { subtitle: event.target.value })
-                  }
-                />
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.25-8ueE52", id: "advertisements.hero-slider-editor.div.25", instance: slideInstance })} className="space-y-2">
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.11-D3aeWp", id: "advertisements.hero-slider-editor.label.11", instance: slideInstance }} htmlFor={`hero-subtitle-${slideId}`}>الشارة</Label>
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input.2-f40LW8", id: "advertisements.hero-slider-editor.input.2", instance: slideInstance }} id={`hero-subtitle-${slideId}`} value={slide.subtitle} onChange={(event) => updateSlide(index, { subtitle: event.target.value })} />
               </div>
-              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.26-LMPJ0F", id: "advertisements.hero-slider-editor.div.26" })} className="space-y-2">
-                <Label ui={{ uid: "advertisements.hero-slider-editor.label.12-xo3a8K", id: "advertisements.hero-slider-editor.label.12" }} htmlFor={`hero-action-${index}`}>الإجراء</Label>
-                <Input ui={{ uid: "advertisements.hero-slider-editor.input.3-V6L15P", id: "advertisements.hero-slider-editor.input.3" }}
-                  id={`hero-action-${index}`}
-                  value={slide.action}
-                  onChange={(event) =>
-                    updateSlide(index, { action: event.target.value })
-                  }
-                />
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.26-LMPJ0F", id: "advertisements.hero-slider-editor.div.26", instance: slideInstance })} className="space-y-2">
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.12-xo3a8K", id: "advertisements.hero-slider-editor.label.12", instance: slideInstance }} htmlFor={`hero-action-${slideId}`}>الإجراء</Label>
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input.3-V6L15P", id: "advertisements.hero-slider-editor.input.3", instance: slideInstance }} id={`hero-action-${slideId}`} value={slide.action} onChange={(event) => updateSlide(index, { action: event.target.value })} />
               </div>
-              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.27-8BRUyL", id: "advertisements.hero-slider-editor.div.27" })} className="space-y-2">
-                <Label ui={{ uid: "advertisements.hero-slider-editor.label.13-Hc4NZ7", id: "advertisements.hero-slider-editor.label.13" }} htmlFor={`hero-transition-${index}`}>
-                  نوع الانتقال عند الدخول
-                </Label>
-                <select {...uiAttributes({ uid: "advertisements.hero-slider-editor.select-JTJYg9", id: "advertisements.hero-slider-editor.select" })}
-                  id={`hero-transition-${index}`}
-                  className="asol-control asol-field-surface w-full border border-input px-3 text-sm"
-                  value={slide.transition}
-                  onChange={(event) =>
-                    updateSlide(index, {
-                      transition: event.target.value as HeroSliderTransition,
-                    })
-                  }
-                >
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.27-8BRUyL", id: "advertisements.hero-slider-editor.div.27", instance: slideInstance })} className="space-y-2">
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.13-Hc4NZ7", id: "advertisements.hero-slider-editor.label.13", instance: slideInstance }} htmlFor={`hero-transition-${slideId}`}>نوع الانتقال عند الدخول</Label>
+                <select {...uiAttributes({ uid: "advertisements.hero-slider-editor.select-JTJYg9", id: "advertisements.hero-slider-editor.select", instance: slideInstance })} id={`hero-transition-${slideId}`} className="asol-control asol-field-surface w-full border border-input px-3 text-sm" value={slide.transition} onChange={(event) => updateSlide(index, { transition: event.target.value as HeroSliderTransition })}>
                   {heroSliderTransitions.map((transition) => (
-                    <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option.2-bE6uzW", id: "advertisements.hero-slider-editor.option.2" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-5566b9f83b", String(transition)), createOpaqueUiInstanceId("iter-bfd0a98806", String(transition)))})} value={transition}>
-                      {heroSliderTransitionLabels[transition]}
-                    </option>
+                    <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option.2-bE6uzW", id: "advertisements.hero-slider-editor.option.2", instance: composeUiInstanceId(slideInstance, createOpaqueUiInstanceId("hero-slider-transition", String(transition))) })} value={transition}>{heroSliderTransitionLabels[transition]}</option>
                   ))}
                 </select>
               </div>
-              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.28-OGA2f0", id: "advertisements.hero-slider-editor.div.28" })} className="space-y-2">
-                <Label ui={{ uid: "advertisements.hero-slider-editor.label.14-Su1c7t", id: "advertisements.hero-slider-editor.label.14" }} htmlFor={`hero-transition-duration-${index}`}>
-                  مدة الانتقال (مللي ثانية)
-                </Label>
-                <Input ui={{ uid: "advertisements.hero-slider-editor.input.4-mh0WNM", id: "advertisements.hero-slider-editor.input.4" }}
-                  id={`hero-transition-duration-${index}`}
-                  type="number"
-                  min={0}
-                  max={3000}
-                  step={100}
-                  value={slide.transitionDuration}
-                  onChange={(event) =>
-                    updateSlide(index, {
-                      transitionDuration: Number(event.target.value),
-                    })
-                  }
-                />
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.28-OGA2f0", id: "advertisements.hero-slider-editor.div.28", instance: slideInstance })} className="space-y-2">
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.14-Su1c7t", id: "advertisements.hero-slider-editor.label.14", instance: slideInstance }} htmlFor={`hero-transition-duration-${slideId}`}>مدة الانتقال (مللي ثانية)</Label>
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input.4-mh0WNM", id: "advertisements.hero-slider-editor.input.4", instance: slideInstance }} id={`hero-transition-duration-${slideId}`} type="number" min={0} max={3000} step={100} value={slide.transitionDuration} onChange={(event) => updateSlide(index, { transitionDuration: Number(event.target.value) })} />
               </div>
-              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.29-gxEC92", id: "advertisements.hero-slider-editor.div.29" })} className="space-y-2">
-                <Label ui={{ uid: "advertisements.hero-slider-editor.label.15-I7OwJt", id: "advertisements.hero-slider-editor.label.15" }} htmlFor={`hero-duration-${index}`}>
-                  مدة العرض (مللي ثانية)
-                </Label>
-                <Input ui={{ uid: "advertisements.hero-slider-editor.input.5-n9fWCi", id: "advertisements.hero-slider-editor.input.5" }}
-                  id={`hero-duration-${index}`}
-                  type="number"
-                  min={1000}
-                  step={500}
-                  value={slide.duration}
-                  onChange={(event) =>
-                    updateSlide(index, {
-                      duration: Math.max(1000, Number(event.target.value) || 1000),
-                    })
-                  }
-                />
-                <p {...uiAttributes({ uid: "advertisements.hero-slider-editor.p.3-n5qSAi", id: "advertisements.hero-slider-editor.p.3" })} className="text-xs text-muted-foreground">
-                  تُطبَّق عند تفعيل «تشغيل تلقائي» ومع وجود شريحتين على الأقل.
-                </p>
+              <div {...uiAttributes({ uid: "advertisements.hero-slider-editor.div.29-gxEC92", id: "advertisements.hero-slider-editor.div.29", instance: slideInstance })} className="space-y-2">
+                <Label ui={{ uid: "advertisements.hero-slider-editor.label.15-I7OwJt", id: "advertisements.hero-slider-editor.label.15", instance: slideInstance }} htmlFor={`hero-duration-${slideId}`}>مدة العرض (مللي ثانية)</Label>
+                <Input ui={{ uid: "advertisements.hero-slider-editor.input.5-n9fWCi", id: "advertisements.hero-slider-editor.input.5", instance: slideInstance }} id={`hero-duration-${slideId}`} type="number" min={1000} step={500} value={slide.duration} onChange={(event) => updateSlide(index, { duration: Math.max(1000, Number(event.target.value) || 1000) })} />
+                <p {...uiAttributes({ uid: "advertisements.hero-slider-editor.p.3-n5qSAi", id: "advertisements.hero-slider-editor.p.3", instance: slideInstance })} className="text-xs text-muted-foreground">تُطبَّق عند تفعيل «تشغيل تلقائي» ومع وجود شريحتين على الأقل.</p>
               </div>
             </div>
           </fieldset>
-        ))}
+          );
+        })}
         <Button id="advertisements.hero-slider-editor.button.3" ui={{ uid: "hero-slider-editor.add-slide-Gt7bcE", id: "hero-slider-editor.add-slide", kind: "action", action: "add-slide", part: "slides" }}
           type="button"
           variant="outline"
           className="w-full"
-          onClick={() =>
-            onChange({
-              ...value,
-              slides: [
-                ...value.slides,
-                createHeroSliderSlide((value.slides.length + 1) * 100, {
-                  transition: templateTransition,
-                  transitionDuration: templateDuration,
-                }),
-              ],
-            })
-          }
+          onClick={() => onChange({ ...value, slides: [...value.slides, createHeroSliderSlide((value.slides.length + 1) * 100, { transition: templateTransition, transitionDuration: templateDuration })] })}
         >
           <Plus id="advertisements.hero-slider-editor.plus" className="me-2 h-4 w-4" /> إضافة شريحة
         </Button>

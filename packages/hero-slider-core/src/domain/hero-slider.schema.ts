@@ -5,6 +5,7 @@ import { HOME_HERO_TRANSITIONS } from "./hero-slider.entity";
 export const homeHeroTransitionSchema = z.enum(HOME_HERO_TRANSITIONS);
 
 export const homeHeroSlideSchema = z.object({
+  id: z.string().trim().min(1).optional(),
   priority: z.number().int(),
   image: z.string().trim(),
   imageKey: z.string().trim().optional(),
