@@ -1,7 +1,6 @@
-# Direct main update by a local agent. Serialized by a workflow concurrency
-# group and a coordination lock, so several agents may request a main landing at
-# once and they queue instead of racing. Work happens in an isolated worktree
-# rebased on the freshest origin/main; the developer's own checkout is untouched.
+# Direct main update by a local agent. All mutation workflows share one GitHub
+# concurrency group, so queued work waits before consuming a self-hosted runner.
+# Work happens in an isolated worktree rebased on the freshest origin/main.
 name: local-agent-main
 
 on:
@@ -50,7 +49,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: asol-local-agent-main
+  group: asol-local-agent-mutation
   cancel-in-progress: false
 
 defaults:
