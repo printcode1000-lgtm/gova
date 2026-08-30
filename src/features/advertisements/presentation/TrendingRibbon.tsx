@@ -4,7 +4,7 @@ import { TrendingUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "@/shared/i18n";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { composeUiInstanceId, createOpaqueUiInstanceId, createUiPositionInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export interface TrendingRibbonItem {
   label: string;
@@ -244,20 +244,26 @@ export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: stri
           ref={trackRef}
           className="flex w-max will-change-transform gap-8 items-center pr-4"
         >
-          {loopItems.map((item, i) => (
-            <span key={i} {...uiAttributes({ uid: "advertisements.trending-ribbon.span.2-jDNz1Y", id: "advertisements.trending-ribbon.span.2" })} className="flex items-center gap-8 shrink-0">
-              <button {...uiAttributes({ uid: "advertisements.trending-ribbon.button-w1f28N", id: "advertisements.trending-ribbon.button" })}
-                dir={isRTL ? "rtl" : "ltr"}
-                type="button"
-                onClick={(e) => handleItemClick(e, item.action)}
-                className="text-sm text-on-surface-variant transition-colors focus:outline-hidden focus-visible:underline"
-                aria-label={item.label}
-              >
-                {item.label}
-              </button>
-              <span {...uiAttributes({ uid: "advertisements.trending-ribbon.span.3-RpNc5M", id: "advertisements.trending-ribbon.span.3" })} className="text-error font-bold">•</span>
-            </span>
-          ))}
+          {loopItems.map((item, i) => {
+            const ribbonInstance = composeUiInstanceId(
+              createOpaqueUiInstanceId("trending-item", item.action || item.label || String(i)),
+              createUiPositionInstanceId("ribbon-copy", i),
+            );
+            return (
+              <span key={`${item.action}-${i}`} {...uiAttributes({ uid: "advertisements.trending-ribbon.span.2-jDNz1Y", id: "advertisements.trending-ribbon.span.2", instance: ribbonInstance })} className="flex items-center gap-8 shrink-0">
+                <button {...uiAttributes({ uid: "advertisements.trending-ribbon.button-w1f28N", id: "advertisements.trending-ribbon.button", instance: ribbonInstance })}
+                  dir={isRTL ? "rtl" : "ltr"}
+                  type="button"
+                  onClick={(e) => handleItemClick(e, item.action)}
+                  className="text-sm text-on-surface-variant transition-colors focus:outline-hidden focus-visible:underline"
+                  aria-label={item.label}
+                >
+                  {item.label}
+                </button>
+                <span {...uiAttributes({ uid: "advertisements.trending-ribbon.span.3-RpNc5M", id: "advertisements.trending-ribbon.span.3", instance: ribbonInstance })} className="text-error font-bold">•</span>
+              </span>
+            );
+          })}
         </div>
       </div>
     </div>

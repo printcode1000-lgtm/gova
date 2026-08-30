@@ -9,7 +9,7 @@ import { useStoreAssets } from "../hooks/use-store-assets";
 import type { GooglePlayStoreListing } from "../../domain/store-assets-types";
 import { Field } from "../components/Field";
 import { useStoreTextPageSave } from "../hooks/use-store-text-page-save";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function StoreTextTab() {
   const { t } = useAdminArabic();
@@ -33,34 +33,37 @@ export function StoreTextTab() {
           <Field id="google-play-console.tabs.store-text-tab.field.4" label={t("releaseConsole.text.defaultLanguage")} value={store.details.defaultLanguage ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, defaultLanguage: value })} />
         </div>
-        {store.listings.map((listing, index) => (
-          <section key={`${listing.language}:${index}`} {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.section.3-N2sN6n", id: "google-play-console.tabs.store-text-tab.section.3" })} className="rounded-md border bg-surface p-4">
-            <div {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.div.8-TBG7H3", id: "google-play-console.tabs.store-text-tab.div.8" })} className="mb-3 flex justify-between gap-2">
-              <strong {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.strong-C7S3At", id: "google-play-console.tabs.store-text-tab.strong" })}>{listing.language || t("releaseConsole.text.newLanguage")}</strong>
-              <Button ui={{ uid: "google-play-console.tabs.store-text-tab.button.2-F6YCSK", id: "google-play-console.tabs.store-text-tab.button.2" }} size="icon" variant="outline"
-                aria-label={t("releaseConsole.actions.stageDelete")}
-                onClick={() => store.stageListingDelete(listing.language)}>
-                <ListPlus className="h-4 w-4" />
-              </Button>
-            </div>
-            <div {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.div.9-JKCt25", id: "google-play-console.tabs.store-text-tab.div.9" })} className="grid gap-3 md:grid-cols-2">
-              <Field label={t("releaseConsole.text.language")} value={listing.language}
-                onChange={(value) => patch(index, { language: value })} />
-              <Field label={t("releaseConsole.text.title")} value={listing.title ?? ""}
-                onChange={(value) => patch(index, { title: value })} />
-              <Field label={t("releaseConsole.text.shortDescription")} value={listing.shortDescription ?? ""}
-                onChange={(value) => patch(index, { shortDescription: value })} />
-              <Field label={t("releaseConsole.text.video")} value={listing.video ?? ""}
-                onChange={(value) => patch(index, { video: value })} />
-            </div>
-            <label {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.label.2-y2tnQ5", id: "google-play-console.tabs.store-text-tab.label.2" })} className="mt-3 block text-xs text-on-surface-variant">
-              {t("releaseConsole.text.fullDescription")}
-            </label>
-            <textarea {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.textarea-9Tbjwh", id: "google-play-console.tabs.store-text-tab.textarea" })} className="mt-1 min-h-32 w-full rounded-md border bg-background p-3 text-sm"
-              value={listing.fullDescription ?? ""}
-              onChange={(event) => patch(index, { fullDescription: event.target.value })} />
-          </section>
-        ))}
+        {store.listings.map((listing, index) => {
+          const listingInstance = createOpaqueUiInstanceId("store-listing", `${listing.language}:${index}`);
+          return (
+            <section key={`${listing.language}:${index}`} {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.section.3-N2sN6n", id: "google-play-console.tabs.store-text-tab.section.3", instance: listingInstance })} className="rounded-md border bg-surface p-4">
+              <div {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.div.8-TBG7H3", id: "google-play-console.tabs.store-text-tab.div.8", instance: listingInstance })} className="mb-3 flex justify-between gap-2">
+                <strong {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.strong-C7S3At", id: "google-play-console.tabs.store-text-tab.strong", instance: listingInstance })}>{listing.language || t("releaseConsole.text.newLanguage")}</strong>
+                <Button ui={{ uid: "google-play-console.tabs.store-text-tab.button.2-F6YCSK", id: "google-play-console.tabs.store-text-tab.button.2", instance: listingInstance }} size="icon" variant="outline"
+                  aria-label={t("releaseConsole.actions.stageDelete")}
+                  onClick={() => store.stageListingDelete(listing.language)}>
+                  <ListPlus className="h-4 w-4" />
+                </Button>
+              </div>
+              <div {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.div.9-JKCt25", id: "google-play-console.tabs.store-text-tab.div.9", instance: listingInstance })} className="grid gap-3 md:grid-cols-2">
+                <Field label={t("releaseConsole.text.language")} value={listing.language}
+                  onChange={(value) => patch(index, { language: value })} />
+                <Field label={t("releaseConsole.text.title")} value={listing.title ?? ""}
+                  onChange={(value) => patch(index, { title: value })} />
+                <Field label={t("releaseConsole.text.shortDescription")} value={listing.shortDescription ?? ""}
+                  onChange={(value) => patch(index, { shortDescription: value })} />
+                <Field label={t("releaseConsole.text.video")} value={listing.video ?? ""}
+                  onChange={(value) => patch(index, { video: value })} />
+              </div>
+              <label {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.label.2-y2tnQ5", id: "google-play-console.tabs.store-text-tab.label.2", instance: listingInstance })} className="mt-3 block text-xs text-on-surface-variant">
+                {t("releaseConsole.text.fullDescription")}
+              </label>
+              <textarea {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.textarea-9Tbjwh", id: "google-play-console.tabs.store-text-tab.textarea", instance: listingInstance })} className="mt-1 min-h-32 w-full rounded-md border bg-background p-3 text-sm"
+                value={listing.fullDescription ?? ""}
+                onChange={(event) => patch(index, { fullDescription: event.target.value })} />
+            </section>
+          );
+        })}
         <div {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.div.10-FPsN6J", id: "google-play-console.tabs.store-text-tab.div.10" })} id="google-play-console.tabs.store-text-tab.div.4" className="flex gap-2">
           <Button id="google-play-console.tabs.store-text-tab.button"
             ui={{

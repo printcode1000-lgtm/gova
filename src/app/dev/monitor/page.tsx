@@ -14,7 +14,7 @@ import { MONITOR_TABS } from './monitor-tabs';
 
 // Guard production environment
 import { isDevelopment } from '@/core/config';
-import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId, createUiPositionInstanceId} from "@asol/ui-registry-core";
 
 if (!isDevelopment) {
   notFound();
@@ -1236,13 +1236,14 @@ export default function MonitorPage() {
                     return (
                       <g {...uiAttributes({ uid: "dev.monitor.page.g-7TeI0M", id: "dev.monitor.page.g" })}>
                         {/* Draw connection edges */}
-                        {callGraph.edges.map((edge, idx) => {
+                        {callGraph.edges.map((edge) => {
                           const start = positions[edge.from];
                           const end = positions[edge.to];
                           if (!start || !end) return null;
+                          const edgeKey = `${edge.from}->${edge.to}`;
                           return (
                             <line
-                              key={idx} {...uiAttributes({ uid: "dev.monitor.page.line-G3M32B", id: "dev.monitor.page.line" })}
+                              key={edgeKey} {...uiAttributes({ uid: "dev.monitor.page.line-G3M32B", id: "dev.monitor.page.line", instance: createOpaqueUiInstanceId("callgraph-edge", edgeKey) })}
                               x1={start.x}
                               y1={start.y}
                               x2={end.x}
@@ -1319,13 +1320,14 @@ export default function MonitorPage() {
 
                     return (
                       <g {...uiAttributes({ uid: "dev.monitor.page.g.3-kM1oHn", id: "dev.monitor.page.g.3" })}>
-                        {dependencyGraph.edges.map((edge, idx) => {
+                        {dependencyGraph.edges.map((edge) => {
                           const start = positions[edge.from];
                           const end = positions[edge.to];
                           if (!start || !end) return null;
+                          const edgeKey = `${edge.from}->${edge.to}`;
                           return (
                             <path
-                              key={idx} {...uiAttributes({ uid: "dev.monitor.page.path.3-ytW2tW", id: "dev.monitor.page.path.3" })}
+                              key={edgeKey} {...uiAttributes({ uid: "dev.monitor.page.path.3-ytW2tW", id: "dev.monitor.page.path.3", instance: createOpaqueUiInstanceId("depgraph-edge", edgeKey) })}
                               d={`M ${start.x} ${start.y} C ${(start.x + end.x) / 2} ${start.y}, ${(start.x + end.x) / 2} ${end.y}, ${end.x} ${end.y}`}
                               stroke="#3b82f6"
                               strokeWidth="1.5"
@@ -1560,7 +1562,7 @@ export default function MonitorPage() {
                 <div {...uiAttributes({ uid: "dev.monitor.page.div.256-Lj9nO3", id: "dev.monitor.page.div.256" })} id="dev.monitor.page.div.116" style={{ background: '#0f172a', padding: '10px', borderRadius: '6px', overflowX: 'auto', maxHeight: '250px' }}>
                   {diffResult.map((line, idx) => (
                     <span
-                      key={idx} {...uiAttributes({ uid: "dev.monitor.page.span.130-8J7UxS", id: "dev.monitor.page.span.130" })}
+                      key={idx} {...uiAttributes({ uid: "dev.monitor.page.span.130-8J7UxS", id: "dev.monitor.page.span.130", instance: createUiPositionInstanceId("diff-line", idx) })}
                       className={`diff-line ${line.type === 'added' ? 'diff-added' : line.type === 'removed' ? 'diff-removed' : ''}`}
                     >
                       {line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ''} {line.text}

@@ -1,7 +1,7 @@
 import { DatabaseZap } from "lucide-react";
 
 import type { DataHealthReport } from "@asol/data-health-core";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
+import { composeUiInstanceId, createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function DataHealthSchemaPanel({
   report,
@@ -75,7 +75,18 @@ export function DataHealthSchemaPanel({
           {[...database.operations.map((item) => item.description), ...database.warnings]
             .slice(0, 100)
             .map((message, index) => (
-              <div key={`${message}-${index}`} {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.17-OFSf7t", id: "data-health.data-health-schema-panel.div.17" })} className="mt-2 border-t pt-2 text-xs">
+              <div
+                key={`${message}-${index}`}
+                {...uiAttributes({
+                  uid: "data-health.data-health-schema-panel.div.17-OFSf7t",
+                  id: "data-health.data-health-schema-panel.div.17",
+                  instance: composeUiInstanceId(
+                    createOpaqueUiInstanceId("db-schema", String(database.database)),
+                    createOpaqueUiInstanceId("op-msg", `${message}:${index}`),
+                  ),
+                })}
+                className="mt-2 border-t pt-2 text-xs"
+              >
                 {message}
               </div>
             ))}

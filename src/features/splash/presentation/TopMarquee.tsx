@@ -7,7 +7,7 @@ import type { Locale } from '@/shared/i18n';
 import type { CategoryDisplay } from '@/features/categories';
 
 import MarqueeCard from './MarqueeCard';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { composeUiInstanceId, createOpaqueUiInstanceId, createUiPositionInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 function getRandomCategories(categories: readonly CategoryDisplay[], count: number): CategoryDisplay[] {
   const shuffled = [...categories];
@@ -79,21 +79,28 @@ export default function TopMarquee({ displayCategories }: TopMarqueeProps) {
       dir="ltr"
     >
       <div {...uiAttributes({ uid: "splash.top-marquee.div.4-4Zqvly", id: "splash.top-marquee.div.4" })} id="splash.top-marquee.div.2" className="splash-marquee-track splash-marquee-track--right gap-4 py-4">
-        {loopItems.map((item, index) => (
-          <div 
-            key={`top-${index}`} {...uiAttributes({ uid: "splash.top-marquee.div.5-TzZ5HQ", id: "splash.top-marquee.div.5" })} 
-            data-index={index}
-            ref={(el) => {
-              if (el) cardRefs.current.set(index, el);
-            }}
-          >
-            <MarqueeCard 
-              label={getTitle(item, locale)} 
-              image={item.imageUrl} 
-              isCenter={centerCards.has(index)}
-            />
-          </div>
-        ))}
+        {loopItems.map((item, index) => {
+          const marqueeInstance = composeUiInstanceId(
+            createOpaqueUiInstanceId("splash-category", item.canonicalKey || String(item.id)),
+            createUiPositionInstanceId("marquee-copy", index),
+          );
+          return (
+            <div 
+              key={`top-${item.canonicalKey ?? item.id}-${index}`}
+              {...uiAttributes({ uid: "splash.top-marquee.div.5-TzZ5HQ", id: "splash.top-marquee.div.5", instance: marqueeInstance })} 
+              data-index={index}
+              ref={(el) => {
+                if (el) cardRefs.current.set(index, el);
+              }}
+            >
+              <MarqueeCard 
+                label={getTitle(item, locale)} 
+                image={item.imageUrl} 
+                isCenter={centerCards.has(index)}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
