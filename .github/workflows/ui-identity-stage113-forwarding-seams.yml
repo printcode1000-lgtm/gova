@@ -1,4 +1,4 @@
-name: ui-identity-stage122-render-graph-multiplicity
+name: ui-identity-stage123-multiplicity-edge-diagnostics
 
 on:
   push:
@@ -11,13 +11,11 @@ permissions:
   contents: read
 
 jobs:
-  verify:
+  diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -26,14 +24,5 @@ jobs:
         run: npm install --global npm@11.19.0
       - name: Install dependencies
         run: npm ci --ignore-scripts
-      - name: Verify architecture-core render graph model
-        run: npm run test:architecture-core
-      - name: Verify identity contracts
-        run: |
-          npm run ui-registry:uid-coverage:check
-          npm run ui-registry:generated-catalog:check
-          npm run ui-registry:component-bridge:check
-          npm run ui-registry:static-dom-ids:check
-          npm run typecheck
-      - name: Measure runtime multiplicity
-        run: npx tsx scripts/ui-registry/runtime-multiplicity-summary.ts
+      - name: Print multiplicity edge witnesses
+        run: npx tsx scripts/ui-registry/debug-runtime-multiplicity-edges.ts
