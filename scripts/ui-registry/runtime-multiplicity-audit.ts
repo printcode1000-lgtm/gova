@@ -79,8 +79,10 @@ function symbolKey(file: string, component: string): string {
 /**
  * Audits actual inline DOM descriptor sites. A site is repeated when it sits
  * directly in an iterator callback, or its containing component symbol is
- * itself rendered more than once. File-level repetition is used only as a
- * fallback when import analysis cannot resolve a precise exported symbol.
+ * itself rendered more than once. File-level repetition is used only when the
+ * containing component symbol cannot be identified at all; it must never
+ * override a precise symbol result merely because another export from the same
+ * file repeats elsewhere.
  */
 export function runtimeMultiplicityReport(root = cwd()): RuntimeMultiplicityReport {
   const sources = loadProjectTsx(root);
@@ -108,9 +110,9 @@ export function runtimeMultiplicityReport(root = cwd()): RuntimeMultiplicityRepo
       const component = containingComponent(literal.node);
       const repeatedComponent =
         !directIterator &&
-        component !== null &&
-        (multiplicity.repeatingSymbols.has(symbolKey(file, component)) ||
-          multiplicity.repeatingFiles.has(file));
+        (component !== null
+          ? multiplicity.repeatingSymbols.has(symbolKey(file, component))
+          : multiplicity.repeatingFiles.has(file));
       if (!directIterator && !repeatedComponent) continue;
 
       const reason = directIterator ? "iterator" : "reusable-template";
