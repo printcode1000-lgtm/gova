@@ -17,7 +17,11 @@ import { listOperations, reconcileOrphanedOperations } from "./operation-log";
  * runner; not waiting costs four killed jobs.
  */
 
-export const DEFAULT_MAX_CONCURRENT_MUTATIONS = 3;
+// Heavy nested coding-agent processes can exhaust the host even with three
+// concurrent mutations. Default to one mutating workload at a time; callers may
+// explicitly raise the budget with GOVA_AGENT_MAX_CONCURRENT_MUTATIONS after
+// measuring sufficient headroom for their workload.
+export const DEFAULT_MAX_CONCURRENT_MUTATIONS = 1;
 export const DEFAULT_MEMORY_FLOOR_MB = 2_048;
 export const DEFAULT_ADMISSION_TIMEOUT_MS = 15 * 60 * 1000;
 const POLL_MS = 5_000;
