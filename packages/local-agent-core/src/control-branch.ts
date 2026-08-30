@@ -62,6 +62,17 @@ export function publishControlBranch(files: Record<string, string>, message: str
     const tree = git(["write-tree"]);
     if (tree.status !== 0) return { published: false, commit: null, error: tree.stderr };
 
+    // Nothing to say is worth saying nothing. Every coordination action used to
+    // force-push a commit here, so a working session produced dozens of them,
+    // each one a "recent pushes" banner on the repository and, until vercel.json
+    // was fixed, a build that could only fail. A snapshot whose tree matches what
+    // the branch already holds is skipped: the content is what matters, and a
+    // timestamp alone is not a change worth publishing.
+    const existing = runCapture("git", ["rev-parse", `refs/remotes/origin/${CONTROL_BRANCH}^{tree}`], root);
+    if (existing.status === 0 && existing.stdout.trim() === tree.stdout) {
+      return { published: false, commit: null, error: null };
+    }
+
     const commit = git([
       "-c",
       "user.name=gova-local-agent",

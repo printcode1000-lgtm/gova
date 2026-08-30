@@ -470,6 +470,24 @@ deliver by returning file contents. Ask for **whole files**, not a unified diff:
 it cannot compile or test what it produces, and a hand-computed `@@` header is
 the usual way such a patch fails to apply.
 
+### Publishing only what is new
+
+Every coordination action offers to republish the snapshot, but a republish that
+says nothing is not free: it force-pushes a commit to `agent-control`, which puts
+a "recent pushes" banner on the repository and, until `vercel.json` was
+corrected, started a Vercel build that could only fail — that branch holds one
+JSON file and no `package.json`.
+
+So the snapshot is compared against what the branch already holds and skipped
+when the state is unchanged. The comparison ignores the clock: `generatedAt`
+moves on every call, and so do the derived elapsed times the snapshot computes
+for display — `heartbeatAgeMs`, `ageMs`, `durationMs`, `sampledAt`. A new
+timestamp over identical agents, locks, operations and messages is not news.
+
+The tracking ref is fetched first. `publishControlBranch` pushes a raw commit sha
+rather than a local branch, so it never updates `refs/remotes/origin/agent-control`
+— comparing against a stale ref skipped nothing at all on the first attempt.
+
 ### Reading state from the cloud
 
 Every coordination action republishes a sanitized snapshot to the
@@ -813,10 +831,24 @@ archive, an exit code, or a redacted failure message.
 paths-ignore:
   - ".agent-control/**"
   - ".github/workflows/local-agent-*.yml"
-  - "packages/local-agent-core/src/**"
+  - "packages/local-agent-core/**"
   - "scripts/local-agent-*.ts"
-  - "docs/07-mobile-and-release/local-agent-runner-pool.md"
+  - "docs/**"
+  - "note/**"
+  - ".agents/**"
+  - ".vscode/**"
+  - "AGENTS.md"
+  - "CLAUDE.md"
+  - "GEMINI.md"
+  - "README.md"
 ```
+
+A push deploys only when it can change what production serves. Control-plane
+changes are operational, and documentation and agent instructions are never
+shipped at all — during an active session those are most of the pushes, and each
+one used to start a release that then fought the previous one for the
+single-deploy lock. The push trigger itself stays, because
+`npm run github:ci-policy` requires it.
 
 A coordination change alters how agents work on this machine; it does not change
 what production serves. `npm run github:ci-policy` fails if any of those entries

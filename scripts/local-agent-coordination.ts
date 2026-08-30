@@ -1,4 +1,4 @@
-import { acquireLock, buildCoordinationSnapshot, CONTROL_BRANCH, declareAgent, heartbeat, listAgents, listLocks, listMessages, LockConflictError, normalizeAgentId, postMessage, publishControlBranch, recoverStaleLocks, releaseAgentLocks, releaseLock, SNAPSHOT_FILE } from "@asol/local-agent-core";
+import { runCapture, acquireLock, buildCoordinationSnapshot, CONTROL_BRANCH, declareAgent, heartbeat, listAgents, listLocks, listMessages, LockConflictError, normalizeAgentId, postMessage, publishControlBranch, recoverStaleLocks, releaseAgentLocks, releaseLock, SNAPSHOT_FILE } from "@asol/local-agent-core";
 /**
  * The coordination command surface shared by cloud and local agents.
  *
@@ -40,10 +40,75 @@ function emit(payload: unknown): void {
   console.log(JSON.stringify(payload, null, 2));
 }
 
+/**
+ * Publish the snapshot, but only when it actually says something new.
+ *
+ * Every coordination action republishes, so a working session used to produce
+ * dozens of commits on `agent-control` — each one a "recent pushes" banner on the
+ * repository, and, until vercel.json was corrected, a build that could only fail
+ * because that branch holds one JSON file and no package.json.
+ *
+ * `generatedAt` changes on every call by definition, so it is excluded from the
+ * comparison: a new timestamp over identical state is not news. Everything else
+ * — agents, locks, operations, messages — is compared verbatim.
+ */
 function publishSnapshot(): { published: boolean; branch: string; commit: string | null; error: string | null } {
   const snapshot = buildCoordinationSnapshot();
+  const body = `${JSON.stringify(snapshot, null, 2)}\n`;
+
+  // The tracking ref is not updated by publishControlBranch, which pushes a raw
+  // commit sha rather than a local branch, so comparing against it without a
+  // fetch reads whatever was last pulled — which is how the first attempt at
+  // this skipped nothing at all.
+  runCapture("git", ["fetch", "--quiet", "origin", `${CONTROL_BRANCH}:refs/remotes/origin/${CONTROL_BRANCH}`], process.cwd());
+  const previous = runCapture("git", ["show", `refs/remotes/origin/${CONTROL_BRANCH}:${SNAPSHOT_FILE}`], process.cwd());
+  if (previous.status === 0) {
+    // Compare the state, not the clock. `generatedAt` moves on every call, and so
+    // do the derived elapsed times the snapshot computes for display —
+    // `heartbeatAgeMs`, `ageMs`, `durationMs`. None of them is news; publishing
+    // for them alone is what filled the branch with commits.
+    const VOLATILE = /^(generatedAt|.*[Aa]geMs|durationMs|sampledAt)$/;
+    const strip = (value: unknown): unknown => {
+      if (Array.isArray(value)) return value.map(strip);
+      if (value && typeof value === "object") {
+        return Object.fromEntries(
+          Object.entries(value as Record<string, unknown>)
+            .filter(([key]) => !VOLATILE.test(key))
+            .map(([key, inner]) => [key, strip(inner)]),
+        );
+      }
+      return value;
+    };
+    const material = (text: string): string => {
+      try {
+        return JSON.stringify(strip(JSON.parse(text)));
+      } catch {
+        return text;
+      }
+    };
+    if (material(previous.stdout) === material(body)) {
+      return { published: false, branch: CONTROL_BRANCH, commit: null, error: null };
+    }
+  }
+
+  // Vercel reads vercel.json from the branch it is building, not from main, so
+  // main's ignoreCommand cannot protect this branch. Without a vercel.json of its
+  // own, `agent-control` — one JSON file, no package.json — was cloned and built
+  // on every publish, and could only fail with "No Next.js version detected".
+  // Shipping the refusal inside the branch is the only repository-side fix; the
+  // Git integration itself lives in the Vercel dashboard.
   const result = publishControlBranch(
-    { [SNAPSHOT_FILE]: `${JSON.stringify(snapshot, null, 2)}\n` },
+    {
+      [SNAPSHOT_FILE]: body,
+      "vercel.json": `${JSON.stringify(
+        {
+          $schema: "https://openapi.vercel.sh/vercel.json",
+          ignoreCommand: "exit 0",
+        },
+        null,
+        2,
+      )}\n`,
+    },
     `chore(agent-control): coordination snapshot ${snapshot.generatedAt}`,
   );
   return { published: result.published, branch: CONTROL_BRANCH, commit: result.commit, error: result.error };

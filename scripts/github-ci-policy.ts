@@ -34,7 +34,14 @@ export const DEPLOY_CONTROL_PLANE_IGNORES = [
   ".github/workflows/local-agent-*.yml",
   "packages/local-agent-core/**",
   "scripts/local-agent-*.ts",
-  "docs/07-mobile-and-release/local-agent-runner-pool.md",
+  "docs/**",
+  "note/**",
+  ".agents/**",
+  ".vscode/**",
+  "AGENTS.md",
+  "CLAUDE.md",
+  "GEMINI.md",
+  "README.md",
 ] as const;
 const SELF_HOSTED_RUNNER = "runs-on: [self-hosted, Linux, X64, gova]";
 const GITHUB_HOSTED_RUNNER = "runs-on: ubuntu-latest";

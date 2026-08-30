@@ -9,15 +9,27 @@ on:
   push:
     branches:
       - main
-    # Agent control-plane changes are operational, not shippable: they alter how
-    # agents coordinate on this machine, never what production serves. Excluding
-    # them keeps a coordination commit from consuming a deployment slot.
+    # A push only deploys when it can change what production serves.
+    #
+    # Control-plane changes are operational: they alter how agents coordinate on
+    # this machine. Documentation and agent instructions are not shipped at all.
+    # Neither can affect the running application, so neither should consume a
+    # deployment slot — and during an active session they are most of the pushes,
+    # each one previously starting a release that then fought the previous one
+    # for the single-deploy lock.
     paths-ignore:
       - ".agent-control/**"
       - ".github/workflows/local-agent-*.yml"
       - "packages/local-agent-core/**"
       - "scripts/local-agent-*.ts"
-      - "docs/07-mobile-and-release/local-agent-runner-pool.md"
+      - "docs/**"
+      - "note/**"
+      - ".agents/**"
+      - ".vscode/**"
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - "GEMINI.md"
+      - "README.md"
 
 permissions:
   actions: read
