@@ -888,7 +888,7 @@ const StorageImageSlot = React.forwardRef<
   };
 
   return (
-    <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.div-ZoWO0X", id: "packages.storage-image-manager-core.storage-image-manager.div" })}
+    <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.div-ZoWO0X", id: "packages.storage-image-manager-core.storage-image-manager.div", instance: slotUiInstance })}
       className={cn(
         storageImageSlotSurfaceClasses,
         isDragging && "border-primary bg-primary/5",
@@ -912,7 +912,7 @@ const StorageImageSlot = React.forwardRef<
           {/* Slot preview is a blob: or stored object URL. This sealed package
               cannot import next/image, and the optimizer cannot process blob URLs. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.img-XF8uIf", id: "packages.storage-image-manager-core.storage-image-manager.img" })}
+          <img {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.img-XF8uIf", id: "packages.storage-image-manager-core.storage-image-manager.img", instance: slotUiInstance })}
             ref={imageRef}
             src={previewUrl}
             alt=""
@@ -942,14 +942,14 @@ const StorageImageSlot = React.forwardRef<
             }}
           />
           {showProgress && (
-            <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.div.2-T7PTRJ", id: "packages.storage-image-manager-core.storage-image-manager.div.2" })} className="absolute inset-0 flex min-h-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-lg bg-background/80 px-1.5 py-1 text-center">
+            <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.div.2-T7PTRJ", id: "packages.storage-image-manager-core.storage-image-manager.div.2", instance: slotUiInstance })} className="absolute inset-0 flex min-h-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-lg bg-background/80 px-1.5 py-1 text-center">
               <InlineLoadingSpinner size="md" />
-              <p {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.p-N3F9AJ", id: "packages.storage-image-manager-core.storage-image-manager.p" })} className={storageImageEmptyStateProgressClasses}>
+              <p {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.p-N3F9AJ", id: "packages.storage-image-manager-core.storage-image-manager.p", instance: slotUiInstance })} className={storageImageEmptyStateProgressClasses}>
                 {stageLabels[stage]}
               </p>
             </div>
           )}
-          <button {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.button-Xn9Pwm", id: "packages.storage-image-manager-core.storage-image-manager.button" })}
+          <button {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.button-Xn9Pwm", id: "packages.storage-image-manager-core.storage-image-manager.button", instance: slotUiInstance })}
             type="button"
             onClick={removeCurrent}
             disabled={busy && !isQueued}
@@ -961,8 +961,8 @@ const StorageImageSlot = React.forwardRef<
         </>
       ) : (
         <DropdownMenu.Root>
-          <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.div.3-LUq5Iv", id: "packages.storage-image-manager-core.storage-image-manager.div.3" })} className={storageImageEmptyStateClasses}>
-            <span {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.span-kLC3n7", id: "packages.storage-image-manager-core.storage-image-manager.span" })} className={storageImageEmptyStateIconClasses}>
+          <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.div.3-LUq5Iv", id: "packages.storage-image-manager-core.storage-image-manager.div.3", instance: slotUiInstance })} className={storageImageEmptyStateClasses}>
+            <span {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.span-kLC3n7", id: "packages.storage-image-manager-core.storage-image-manager.span", instance: slotUiInstance })} className={storageImageEmptyStateIconClasses}>
               {showProgress ? (
                 <InlineLoadingSpinner size="sm" />
               ) : (
@@ -970,12 +970,12 @@ const StorageImageSlot = React.forwardRef<
               )}
             </span>
             {showProgress ? (
-              <span {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.span.2-D4hFcL", id: "packages.storage-image-manager-core.storage-image-manager.span.2" })} className={storageImageEmptyStateProgressClasses}>
+              <span {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.span.2-D4hFcL", id: "packages.storage-image-manager-core.storage-image-manager.span.2", instance: slotUiInstance })} className={storageImageEmptyStateProgressClasses}>
                 {stageLabels[stage]}
               </span>
             ) : (
               <DropdownMenu.Trigger asChild>
-                <button {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.button.2-V5uZ9I", id: "packages.storage-image-manager-core.storage-image-manager.button.2" })}
+                <button {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.button.2-V5uZ9I", id: "packages.storage-image-manager-core.storage-image-manager.button.2", instance: slotUiInstance })}
                   type="button"
                   disabled={busy}
                   aria-label={t("storage.imageSource.open")}
@@ -1035,7 +1035,7 @@ const StorageImageSlot = React.forwardRef<
         />
       )}
 
-      <input {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.input-MPqO1Y", id: "packages.storage-image-manager-core.storage-image-manager.input" })}
+      <input {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.input-MPqO1Y", id: "packages.storage-image-manager-core.storage-image-manager.input", instance: slotUiInstance })}
         ref={cameraInputRef}
         type="file"
         accept="image/*"
