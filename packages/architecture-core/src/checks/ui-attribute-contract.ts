@@ -78,6 +78,40 @@ function scanDuplicateJsxAttributes(file: string, sourceFile: ts.SourceFile): vo
   visit(sourceFile);
 }
 
+function scanMultipleUiDescriptorSources(file: string, sourceFile: ts.SourceFile): void {
+  function visit(node: ts.Node): void {
+    if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
+      const sources: Array<{ line: number; label: string }> = [];
+      for (const property of node.attributes.properties) {
+        if (ts.isJsxSpreadAttribute(property) && isRegistryCall(property.expression)) {
+          sources.push({
+            line: sourceFile.getLineAndCharacterOfPosition(property.getStart()).line + 1,
+            label: property.expression.getText(sourceFile),
+          });
+          continue;
+        }
+        if (ts.isJsxAttribute(property) && property.name.getText(sourceFile) === "ui") {
+          sources.push({
+            line: sourceFile.getLineAndCharacterOfPosition(property.getStart()).line + 1,
+            label: "ui prop",
+          });
+        }
+      }
+      if (sources.length > 1) {
+        const first = sources[0]!;
+        const rest = sources.slice(1).map((source) => `${source.label} at line ${source.line}`).join(", " );
+        addViolation(
+          "UI Attributes",
+          file,
+          `JSX element has multiple UiRegistry descriptor sources: ${first.label} at line ${first.line}, ${rest}. Merge them into one canonical descriptor source.`,
+        );
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(sourceFile);
+}
+
 function scanKeyAfterSpread(file: string, sourceFile: ts.SourceFile): void {
   function visit(node: ts.Node): void {
     if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
@@ -242,6 +276,7 @@ export function checkUiAttributeContract(): void {
       const sourceFile = parseTsx(file, fileSource);
       scanManualAttributes(file, sourceFile);
       scanDuplicateJsxAttributes(file, sourceFile);
+      scanMultipleUiDescriptorSources(file, sourceFile);
       scanKeyAfterSpread(file, sourceFile);
 
       for (const literal of findDescriptorLiterals(file, fileSource, sourceFile)) {

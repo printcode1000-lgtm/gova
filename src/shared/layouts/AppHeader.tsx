@@ -79,8 +79,7 @@ export function AppHeader({
           <div {...uiAttributes({ uid: "shared.layouts.app-header.div.6-6hPZRx", id: "shared.layouts.app-header.div.6" })} id="shared.layouts.app-header.div.3" className="flex items-center gap-2">
             <SpecialtyRequestComposer />
 
-            <Link {...uiAttributes({ uid: 'home-search-r8SiS9', id: 'home-search', kind: 'action', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'home-search' } })}
-              {...uiAttributes({ uid: 'app.header.search-C0Ynx3', id: 'app.header.search', kind: 'action', action: 'navigate-search', part: 'search' })}
+            <Link {...uiAttributes({ uid: 'home-search-r8SiS9', id: 'home-search', kind: 'action', action: 'navigate-search', part: 'search', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'home-search' } })}
               href="/search"
               id="header-search-button"
               className={cn(
@@ -97,8 +96,7 @@ export function AppHeader({
               <Search id="shared.layouts.app-header.search" className="w-5 h-5" />
             </Link>
 
-            <Link {...uiAttributes({ uid: 'nav-cart-a5OnHB', id: 'nav-cart', kind: 'action', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'nav-cart' } })}
-              {...uiAttributes({ uid: 'app.header.cart-Y4wePh', id: 'app.header.cart', kind: 'action', action: 'navigate-cart', part: 'cart' })}
+            <Link {...uiAttributes({ uid: 'nav-cart-a5OnHB', id: 'nav-cart', kind: 'action', action: 'navigate-cart', part: 'cart', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'nav-cart' } })}
               href="/cart"
               id="header-cart-button"
               className={cn(

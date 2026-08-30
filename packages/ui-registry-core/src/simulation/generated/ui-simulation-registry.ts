@@ -424,7 +424,7 @@ export const UI_SIMULATION_REGISTRY: readonly UiSimulationTargetRecord[] = [
     routes: ["/", "/cart", "/categories/[categoryId]", "/categories/[categoryId]/doctor-appointment/[specialtyId]", "/categories/[categoryId]/sellers/[subcategoryId]", "/collections/[collectionId]", "/contact-us", "/custom-request", "/delete-account", "/dev/catalog-studio", "/dev/category-selector", "/dev/cloud-accounts", "/dev/data-health", "/dev/deploy-all", "/dev/dev-cloud-backup", "/dev/google-play-console", "/dev/monitor", "/dev/notification-tests", "/dev/ota-releases", "/dev/release-console", "/favorites", "/forgot-password", "/home", "/login", "/notifications", "/notifications/chat", "/orders", "/orders/[orderId]", "/orders/details", "/privacy-policy", "/product", "/profile", "/profile/pharmacy-catalog", "/registration", "/s/product", "/s/profile", "/search", "/settings", "/settings/notifications", "/specialty-request", "/super-admin/catalog", "/super-admin/data-health", "/super-admin/dev-cloud-backup", "/super-admin/featured-marquee", "/super-admin/google-play-console", "/super-admin/google-play-store-assets", "/super-admin/hero-slider", "/super-admin/logs", "/super-admin/notifications-broadcast", "/super-admin/ota-releases", "/super-admin/production-deploy", "/super-admin/simulation", "/super-admin/simulation/[pageId]", "/super-admin/trending-ribbon", "/super-admin/users"],
     repeated: false,
     sourceFile: "src/shared/layouts/AppHeader.tsx",
-    sourceLine: 100,
+    sourceLine: 99,
   },
   {
     uid: "notification-dismiss-46S7bK",

@@ -672,13 +672,6 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     sourceLine: 47,
   },
   {
-    uid: "app.header.cart-Y4wePh",
-    id: "app.header.cart",
-    kind: "element",
-    sourceFile: "src/shared/layouts/AppHeader.tsx",
-    sourceLine: 101,
-  },
-  {
     uid: "app.header.menu-xS4nIG",
     id: "app.header.menu",
     kind: "element",
@@ -691,13 +684,6 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     kind: "element",
     sourceFile: "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
     sourceLine: 246,
-  },
-  {
-    uid: "app.header.search-C0Ynx3",
-    id: "app.header.search",
-    kind: "element",
-    sourceFile: "src/shared/layouts/AppHeader.tsx",
-    sourceLine: 83,
   },
   {
     uid: "app.sidebar-0sFX57",
@@ -14060,7 +14046,7 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     id: "nav-cart",
     kind: "element",
     sourceFile: "src/shared/layouts/AppHeader.tsx",
-    sourceLine: 100,
+    sourceLine: 99,
   },
   {
     uid: "navigation.mobile-back-button-controller.div.2-sHlkH8",
@@ -28151,7 +28137,7 @@ export const UI_UID_INVENTORY: readonly UiUidCatalogEntry[] = [
     id: "shared.layouts.app-header.span.2",
     kind: "element",
     sourceFile: "src/shared/layouts/AppHeader.tsx",
-    sourceLine: 118,
+    sourceLine: 116,
   },
   {
     uid: "shared.layouts.app-shell.div-C6uPGF",

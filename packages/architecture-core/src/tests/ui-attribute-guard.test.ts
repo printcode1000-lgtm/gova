@@ -61,6 +61,15 @@ const probes: Record<string, string> = {
   "key-after-spread.tsx":
     'import { uiAttributes } from "@asol/ui-registry-core";\n' +
     'export const K = (items: string[]) => items.map((item) => <i {...uiAttributes({ uid: "probe.keyspread-A1bcd3", id: "probe.keyspread", kind: "item" })} key={item}><b /><b /></i>);\n',
+  // Two registry sources on one JSX element race; the last spread silently wins.
+  "multiple-ui-sources.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    'export const Multi = () => <i {...uiAttributes({ uid: "probe.multi-one-A1b2C3", id: "probe.multi-one" })} {...uiAttributes({ uid: "probe.multi-two-D4e5F6", id: "probe.multi-two" })} />;\n',
+  // A caller-owned ui prop and emitted registry attributes are also competing identity sources.
+  "ui-plus-spread.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    'const Box = (props: any) => <div {...props} />;\n' +
+    'export const MultiProp = () => <Box ui={{ uid: "probe.multi-prop-G7h8I9", id: "probe.multi-prop" }} {...uiAttributes({ uid: "probe.multi-spread-J1k2L3", id: "probe.multi-spread" })} />;\n',
   // An unregistered generic fallback is legitimate and must not be reported.
   "fallback.tsx":
     'import { uiComponentAttributes } from "@asol/ui-registry-core";\n' +
@@ -115,6 +124,8 @@ for (const [label, pattern] of [
   ["descriptor drift", /drift-b\.tsx[^\n]*drifts from its registration/],
   ["helper-level uid", /ui-component-attributes\.ts[^\n]*helper-level uid/],
   ["a key written after the spread", /key-after-spread\.tsx[^\n]*key follows the uiAttributes spread/],
+  ["multiple registry descriptor sources", /multiple-ui-sources\.tsx[^\n]*multiple UiRegistry descriptor sources/],
+  ["ui prop plus registry spread", /ui-plus-spread\.tsx[^\n]*multiple UiRegistry descriptor sources/],
   ["manual data-ui-instance", /manual-instance\.tsx[^\n]*Manual data-ui-instance/],
   ["index-derived instance", /index-instance\.tsx[^\n]*derives \\"instance\\" from an array index/],
 ] as const) {
