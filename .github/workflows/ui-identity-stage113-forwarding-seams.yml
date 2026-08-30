@@ -1,4 +1,4 @@
-name: ui-identity-stage121-storage-slot-instances
+name: ui-identity-stage122-render-graph-multiplicity
 
 on:
   push:
@@ -8,10 +8,10 @@ on:
       - .github/workflows/ui-identity-stage113-forwarding-seams.yml
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  migrate:
+  verify:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -26,13 +26,8 @@ jobs:
         run: npm install --global npm@11.19.0
       - name: Install dependencies
         run: npm ci --ignore-scripts
-      - name: Scope StorageImageSlot DOM with slot runtime instance
-        run: node scripts/ui-registry/fix-stage121-storage-slot-instances.mjs
-      - name: Regenerate canonical UiRegistry artifacts
-        run: |
-          npm run ui-registry:generated-catalog:generate
-          npm run ui-registry:component-bridge:generate
-          npm run ui-registry:simulation:generate
+      - name: Verify architecture-core render graph model
+        run: npm run test:architecture-core
       - name: Verify identity contracts
         run: |
           npm run ui-registry:uid-coverage:check
@@ -40,16 +35,5 @@ jobs:
           npm run ui-registry:component-bridge:check
           npm run ui-registry:static-dom-ids:check
           npm run typecheck
-      - name: Measure corrected runtime multiplicity
+      - name: Measure runtime multiplicity
         run: npx tsx scripts/ui-registry/runtime-multiplicity-summary.ts
-      - name: Commit Stage 121 migration
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src packages
-          if git diff --cached --quiet; then
-            echo "No Stage 121 changes"
-            exit 0
-          fi
-          git commit -m "Stage 121: scope StorageImageSlot runtime identity"
-          git push origin HEAD:main
