@@ -13,7 +13,7 @@ permissions:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,12 +21,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Add duplicate JSX attribute guard
-        run: node scripts/ui-registry/add-duplicate-jsx-guard.mjs
-      - name: Commit guard
+          cache: npm
+      - name: Use repository npm version
+        run: npm install --global npm@11.19.0
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Migrate direct iterator instances
+        run: npx tsx scripts/ui-registry/migrate-direct-iterator-instances.ts
+      - name: Regenerate canonical UiRegistry artifacts
+        run: |
+          npm run ui-registry:generated-catalog:generate
+          npm run ui-registry:component-bridge:generate
+          npm run ui-registry:simulation:generate
+      - name: Verify immediate identity contracts
+        run: |
+          npm run ui-registry:uid-coverage:check
+          npm run ui-registry:static-dom-ids:check
+          npm run typecheck
+      - name: Commit migration
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Guard duplicate JSX attributes in architecture checks"
+          git commit -m "Scope direct iterator DOM copies by runtime instance"
           git push origin HEAD:main
