@@ -12,28 +12,24 @@ permissions:
 jobs:
   probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
-      - name: Probe local coding tools
+      - name: Audit UI multiplicity locally
         shell: bash
         run: |
           set -euo pipefail
-          echo "runner=$RUNNER_NAME"
-          echo "workspace_env=${GOVA_LOCAL_WORKSPACE:-unset}"
-          echo "node=$(node --version 2>/dev/null || echo missing)"
-          echo "npm=$(npm --version 2>/dev/null || echo missing)"
-          for tool in codex claude cursor-agent gemini; do
-            if command -v "$tool" >/dev/null 2>&1; then
-              echo "$tool=$(command -v "$tool")"
-              "$tool" --version 2>/dev/null | head -n 1 || true
-            else
-              echo "$tool=missing"
-            fi
-          done
-          if [ -d /home/hesham/gova/.git ]; then
-            echo "local_head=$(git -C /home/hesham/gova rev-parse HEAD)"
-            echo "local_branch=$(git -C /home/hesham/gova branch --show-current)"
-            echo "local_dirty=$(git -C /home/hesham/gova status --porcelain | wc -l)"
-          else
-            echo "local_workspace_missing"
-          fi
+          cd /home/hesham/gova
+          git fetch --prune origin main >/dev/null 2>&1
+          git checkout main >/dev/null 2>&1
+          git reset --hard origin/main >/dev/null 2>&1
+          echo "HEAD=$(git rev-parse HEAD)"
+          npx tsx scripts/ui-registry/runtime-multiplicity-audit.ts > /tmp/ui-multiplicity.txt
+          head -n 8 /tmp/ui-multiplicity.txt
+          echo '--- grouped by reason ---'
+          awk '/^UNRESOLVED / {c[$2]++} END {for (k in c) print k, c[k]}' /tmp/ui-multiplicity.txt | sort
+          echo '--- top files ---'
+          awk '/^UNRESOLVED / {split($3,a,":"); c[a[1]]++} END {for (k in c) print c[k], k}' /tmp/ui-multiplicity.txt | sort -nr | head -n 40
+          echo '--- top reusable components ---'
+          awk '/^UNRESOLVED reusable-template / {sub(/^.*component=/,""); c[$0]++} END {for (k in c) print c[k], k}' /tmp/ui-multiplicity.txt | sort -nr | head -n 40
+          echo '--- migration scripts ---'
+          find scripts/ui-registry -maxdepth 2 -type f \( -name '*fix*' -o -name '*migrat*' -o -name '*multiplicity*' \) -print | sort
