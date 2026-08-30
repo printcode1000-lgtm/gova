@@ -12,7 +12,7 @@ import type {
 } from "../domain/pharmacy-profile-catalog.types";
 import type { ProductRecord } from "@asol/product-core";
 import { PharmacyCategoryIcon } from "./PharmacyCategoryIcon";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, createUiSubpartInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 const text = {
   sections: "\u0623\u0642\u0633\u0627\u0645 \u0627\u0644\u0635\u064a\u062f\u0644\u064a\u0629",
@@ -174,8 +174,9 @@ function PharmacyTabButton({ id,
   compact?: boolean;
   onClick: () => void;
 } & { id?: string }) {
+  const instance = createOpaqueUiInstanceId("pharmacy-tab", item.id);
   return (
-    <button {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.button-0NOsxC", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.button" })} id={id}
+    <button {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.button-0NOsxC", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.button", instance: instance })} id={id}
       type="button"
       onClick={onClick}
       className={`inline-flex min-w-fit items-center gap-2 rounded-md border px-3 font-semibold transition ${
@@ -189,7 +190,7 @@ function PharmacyTabButton({ id,
       }`}
     >
       <PharmacyCategoryIcon icon={icon} className="h-4 w-4 text-center" />
-      <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.span-XYgd3E", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.span" })} className="whitespace-nowrap">{item.nameAr}</span>
+      <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.span-XYgd3E", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.span", instance: createUiSubpartInstanceId("pharmacy-profile-catalog.pharmacy-nested-tabs.button-0NOsxC", instance, "label") })} className="whitespace-nowrap">{item.nameAr}</span>
     </button>
   );
 }

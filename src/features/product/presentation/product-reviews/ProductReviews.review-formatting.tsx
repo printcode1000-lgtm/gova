@@ -3,7 +3,7 @@
 import type {
   ProductReviewsResult,
 } from "@/features/product";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes, type UiInstanceId } from "@asol/ui-registry-core";
 
 export const PAGE_SIZE = 3;
 
@@ -24,9 +24,10 @@ export function emptyReviewsResult(): ProductReviewsResult {
   };
 }
 
-export function Stars({ id, value, size = "text-lg" }: { value: number; size?: string } & { id?: string }) {
+export function Stars({ id, value, size = "text-lg", instance }: { value: number; size?: string; instance?: UiInstanceId } & { id?: string }) {
+  const resolvedInstance = id ? createOpaqueUiInstanceId("stars", id) : (instance ?? createOpaqueUiInstanceId("stars", String(value)));
   return (
-    <span {...uiAttributes({ uid: "product.product-reviews.product-reviews.review-formatting.span-X7xLrb", id: "product.product-reviews.product-reviews.review-formatting.span" })} id={id} className={`inline-flex ${size}`} dir="ltr">
+    <span {...uiAttributes({ uid: "product.product-reviews.product-reviews.review-formatting.span-X7xLrb", id: "product.product-reviews.product-reviews.review-formatting.span", instance: resolvedInstance })} id={id} className={`inline-flex ${size}`} dir="ltr">
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star} {...uiAttributes({ uid: "product.product-reviews.product-reviews.review-formatting.span.2-0ZlsQJ", id: "product.product-reviews.product-reviews.review-formatting.span.2" , instance: createOpaqueUiInstanceId("iter-a3738eddfd", String(star))})}

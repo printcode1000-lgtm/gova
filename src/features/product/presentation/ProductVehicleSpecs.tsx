@@ -56,10 +56,11 @@ export function ProductVehicleSpecs({ id,
 
   const enabledGroups = (catalog?.groups ?? []).filter((group) => config[group.key] !== false);
   const options = catalog?.optionsByGroup ?? {};
+  const resolvedInstance = id ? createOpaqueUiInstanceId("vehicle-specs", id) : undefined;
 
   if (loading)
     return (
-      <p {...uiAttributes({ uid: "product.product-vehicle-specs.p-0IIxLM", id: "product.product-vehicle-specs.p" })} id={id} className="text-sm text-muted-foreground">جارٍ تحميل الاختيارات…</p>
+      <p {...uiAttributes({ uid: "product.product-vehicle-specs.p-0IIxLM", id: "product.product-vehicle-specs.p", instance: resolvedInstance })} id={id} className="text-sm text-muted-foreground">جارٍ تحميل الاختيارات…</p>
     );
 
   if (mode === "view") {
@@ -72,10 +73,10 @@ export function ProductVehicleSpecs({ id,
     });
     if (selected.length === 0)
       return (
-        <p {...uiAttributes({ uid: "product.product-vehicle-specs.p.2-q4PJVn", id: "product.product-vehicle-specs.p.2" })} id={id} className="text-sm text-muted-foreground">لا توجد مواصفات مختارة.</p>
+        <p {...uiAttributes({ uid: "product.product-vehicle-specs.p.2-q4PJVn", id: "product.product-vehicle-specs.p.2", instance: resolvedInstance })} id={id} className="text-sm text-muted-foreground">لا توجد مواصفات مختارة.</p>
       );
     return (
-      <div {...uiAttributes({ uid: "product.product-vehicle-specs.div-FJ6CHB", id: "product.product-vehicle-specs.div" })} id={id} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div {...uiAttributes({ uid: "product.product-vehicle-specs.div-FJ6CHB", id: "product.product-vehicle-specs.div", instance: resolvedInstance })} id={id} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {selected.map(({ group, value, option }) => (
           <div
             key={group.key} {...uiAttributes({ uid: "product.product-vehicle-specs.div.2-T0vZaC", id: "product.product-vehicle-specs.div.2" , instance: createOpaqueUiInstanceId("iter-d0108fad70", String(group.key))})}
@@ -107,7 +108,7 @@ export function ProductVehicleSpecs({ id,
   }
 
   return (
-    <div {...uiAttributes({ uid: "product.product-vehicle-specs.div.4-IyT8Db", id: "product.product-vehicle-specs.div.4" })} id={id} className="space-y-3">
+    <div {...uiAttributes({ uid: "product.product-vehicle-specs.div.4-IyT8Db", id: "product.product-vehicle-specs.div.4", instance: resolvedInstance })} id={id} className="space-y-3">
       {enabledGroups.map((group) => {
         const selectedId =
           specs[group.key as keyof ProductVehicleSpecsData] ?? "";

@@ -31,28 +31,29 @@ export function Parameter({ id, command, schema, value, t, onChange }: {
   t: (key: string) => string;
   onChange: (id: string, name: BuildParameterName, value: unknown) => void;
 } & { id?: string }) {
+  const instance = createOpaqueUiInstanceId("param", `${command.id}-${schema.name}`);
   const help = command.id === "cap-build" || command.id === "release-android" ? (
-    <p {...uiAttributes({ uid: "google-play-console.command-parameter-fields.p.3-JnM7i5", id: "google-play-console.command-parameter-fields.p.3" })} className="text-xs leading-5 text-on-surface-variant">
+    <p {...uiAttributes({ uid: "google-play-console.command-parameter-fields.p.3-JnM7i5", id: "google-play-console.command-parameter-fields.p.3", instance: instance })} className="text-xs leading-5 text-on-surface-variant">
       {t(`releaseConsole.capBuild.${schema.name}`)}
     </p>
   ) : null;
   if (schema.type === "boolean") return (
-    <div {...uiAttributes({ uid: "google-play-console.command-parameter-fields.div.3-1wiW7y", id: "google-play-console.command-parameter-fields.div.3" })} id={id} className="space-y-1">
-      <label {...uiAttributes({ uid: "google-play-console.command-parameter-fields.label-05WwoK", id: "google-play-console.command-parameter-fields.label" })} className="flex gap-2">
-        <input {...uiAttributes({ uid: "google-play-console.command-parameter-fields.input-YBy1ty", id: "google-play-console.command-parameter-fields.input" })} type="checkbox" checked={value === true}
+    <div {...uiAttributes({ uid: "google-play-console.command-parameter-fields.div.3-1wiW7y", id: "google-play-console.command-parameter-fields.div.3", instance: instance })} id={id} className="space-y-1">
+      <label {...uiAttributes({ uid: "google-play-console.command-parameter-fields.label-05WwoK", id: "google-play-console.command-parameter-fields.label", instance: instance })} className="flex gap-2">
+        <input {...uiAttributes({ uid: "google-play-console.command-parameter-fields.input-YBy1ty", id: "google-play-console.command-parameter-fields.input", instance: instance })} type="checkbox" checked={value === true}
           onChange={(event) => onChange(command.id, schema.name, event.target.checked)} />
         {t(`releaseConsole.parameters.${schema.name}`)}
       </label>
       {help}
     </div>
   );
-  if (schema.type === "string") return <Textarea ui={{ uid: "google-play-console.command-parameter-fields.textarea-jQ18t5", id: "google-play-console.command-parameter-fields.textarea" }} id={id} value={String(value ?? "")}
+  if (schema.type === "string") return <Textarea ui={{ uid: "google-play-console.command-parameter-fields.textarea-jQ18t5", id: "google-play-console.command-parameter-fields.textarea", instance: instance }} id={id} value={String(value ?? "")}
     placeholder={t(`releaseConsole.parameters.${schema.name}`)}
     onChange={(event) => onChange(command.id, schema.name, event.target.value)} />;
   if (schema.type === "enum" && schema.name === "nativeVersionAction") return (
-    <fieldset {...uiAttributes({ uid: "google-play-console.command-parameter-fields.fieldset-pJdhw5", id: "google-play-console.command-parameter-fields.fieldset" })} id={id} className="space-y-2">
-      <legend {...uiAttributes({ uid: "google-play-console.command-parameter-fields.legend-L9sgqY", id: "google-play-console.command-parameter-fields.legend" })} className="font-medium">{t("releaseConsole.parameters.nativeVersionAction")}</legend>
-      <div {...uiAttributes({ uid: "google-play-console.command-parameter-fields.div.4-Oi2HST", id: "google-play-console.command-parameter-fields.div.4" })} className="grid gap-2 sm:grid-cols-2">
+    <fieldset {...uiAttributes({ uid: "google-play-console.command-parameter-fields.fieldset-pJdhw5", id: "google-play-console.command-parameter-fields.fieldset", instance: instance })} id={id} className="space-y-2">
+      <legend {...uiAttributes({ uid: "google-play-console.command-parameter-fields.legend-L9sgqY", id: "google-play-console.command-parameter-fields.legend", instance: instance })} className="font-medium">{t("releaseConsole.parameters.nativeVersionAction")}</legend>
+      <div {...uiAttributes({ uid: "google-play-console.command-parameter-fields.div.4-Oi2HST", id: "google-play-console.command-parameter-fields.div.4", instance: instance })} className="grid gap-2 sm:grid-cols-2">
         {schema.values.map((item) => {
           const selected = value === item;
           return <label id={id} key={item} {...uiAttributes({ uid: "google-play-console.command-parameter-fields.label.2-H5IZQ9", id: "google-play-console.command-parameter-fields.label.2" , instance: createOpaqueUiInstanceId("iter-6287ad0ce6", String(item))})}
@@ -72,15 +73,15 @@ export function Parameter({ id, command, schema, value, t, onChange }: {
     </fieldset>
   );
   if (schema.type === "enum") return (
-    <div {...uiAttributes({ uid: "google-play-console.command-parameter-fields.div.5-s1OL62", id: "google-play-console.command-parameter-fields.div.5" })} id={id} className="space-y-1">
-      <label {...uiAttributes({ uid: "google-play-console.command-parameter-fields.label.3-DGTa6u", id: "google-play-console.command-parameter-fields.label.3" })} className="block font-medium" htmlFor={`${command.id}-${schema.name}`}>
+    <div {...uiAttributes({ uid: "google-play-console.command-parameter-fields.div.5-s1OL62", id: "google-play-console.command-parameter-fields.div.5", instance: instance })} id={id} className="space-y-1">
+      <label {...uiAttributes({ uid: "google-play-console.command-parameter-fields.label.3-DGTa6u", id: "google-play-console.command-parameter-fields.label.3", instance: instance })} className="block font-medium" htmlFor={`${command.id}-${schema.name}`}>
         {t(`releaseConsole.parameters.${schema.name}`)}
       </label>
-      <select {...uiAttributes({ uid: "google-play-console.command-parameter-fields.select-KcB7So", id: "google-play-console.command-parameter-fields.select" })} id={`${command.id}-${schema.name}`}
+      <select {...uiAttributes({ uid: "google-play-console.command-parameter-fields.select-KcB7So", id: "google-play-console.command-parameter-fields.select", instance: instance })} id={`${command.id}-${schema.name}`}
         className="h-10 w-full rounded-md border bg-background px-3"
         value={String(value ?? "")}
         onChange={(event) => onChange(command.id, schema.name, event.target.value)}>
-        <option {...uiAttributes({ uid: "google-play-console.command-parameter-fields.option-fdBnM3", id: "google-play-console.command-parameter-fields.option" })} value="">{t(`releaseConsole.parameters.${schema.name}`)}</option>
+        <option {...uiAttributes({ uid: "google-play-console.command-parameter-fields.option-fdBnM3", id: "google-play-console.command-parameter-fields.option", instance: instance })} value="">{t(`releaseConsole.parameters.${schema.name}`)}</option>
         {schema.values.map((item) => (
           <option key={item} {...uiAttributes({ uid: "google-play-console.command-parameter-fields.option.2-FO07v9", id: "google-play-console.command-parameter-fields.option.2" , instance: createOpaqueUiInstanceId("iter-fd249e5394", String(item))})} value={item}>
             {t(`releaseConsole.parameterValues.${item}`)}
@@ -90,9 +91,9 @@ export function Parameter({ id, command, schema, value, t, onChange }: {
       {help}
     </div>
   );
-  if (schema.type === "number") return <Input ui={{ uid: "google-play-console.command-parameter-fields.input.3-I5yUKY", id: "google-play-console.command-parameter-fields.input.3" }} id={id} type="number" min={schema.min} max={schema.max}
+  if (schema.type === "number") return <Input ui={{ uid: "google-play-console.command-parameter-fields.input.3-I5yUKY", id: "google-play-console.command-parameter-fields.input.3", instance: instance }} id={id} type="number" min={schema.min} max={schema.max}
     value={typeof value === "number" ? value : ""}
     onChange={(event) => onChange(command.id, schema.name, Number(event.target.value))} />;
-  return <Textarea ui={{ uid: "google-play-console.command-parameter-fields.textarea.2-pEJKM4", id: "google-play-console.command-parameter-fields.textarea.2" }} id={id} placeholder={t("releaseConsole.parameters.releaseNotes")}
+  return <Textarea ui={{ uid: "google-play-console.command-parameter-fields.textarea.2-pEJKM4", id: "google-play-console.command-parameter-fields.textarea.2", instance: instance }} id={id} placeholder={t("releaseConsole.parameters.releaseNotes")}
     onChange={(event) => onChange(command.id, schema.name, { en: event.target.value })} />;
 }

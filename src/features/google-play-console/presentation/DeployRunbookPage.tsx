@@ -24,7 +24,7 @@ import {
   Summary,
   TabButtons,
 } from "./DeployRunbookPageSections";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function DeployRunbookPage() {
   const { session, isLoading } = useSession();
@@ -113,6 +113,7 @@ export function DeployRunbookPage() {
       <TabButtons id="google-play-console.deploy-runbook-page.tab-buttons" tab={tab} setTab={setTab} />
 
       <DeployRunbookCollapsible id="google-play-console.deploy-runbook-page.deploy-runbook-collapsible"
+        instance={createUiInstanceId("status-summary")}
         title="ملخص الحالة"
         description="نظرة سريعة على الفروع المفعّلة وحالة التنفيذ وسلوك الخطأ."
         badge={<StatusBadge id="google-play-console.deploy-runbook-page.status-badge" status={activeJob?.status ?? "جاهز"} />}
@@ -138,6 +139,7 @@ export function DeployRunbookPage() {
         />
       ) : (
         <RunbookPanel id="google-play-console.deploy-runbook-page.runbook-panel"
+          instance={createUiInstanceId("deploy-push")}
           title="Deploy Push"
           description="المسار السريع: أسرار، commit، push، ثم تحقق Vercel للأهداف المختارة دون فحوصات build/test."
           runbook={DEPLOY_PUSH_RUNBOOK}

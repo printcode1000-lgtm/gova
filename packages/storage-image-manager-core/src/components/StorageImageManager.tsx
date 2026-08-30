@@ -1150,6 +1150,7 @@ export const StorageImageManager = React.forwardRef<
         {slots.map((image, index) => (
           <StorageImageSlotFrame
             key={`${parsedConfig.id}-${index}-frame`}
+            id={`${parsedConfig.id}-${index}-frame`}
             aspectRatio={parsedConfig.aspectRatio}
           >
             <StorageImageSlot

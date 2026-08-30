@@ -6,7 +6,11 @@ import {
   SelectValue,
 } from "@/shared/ui/select";
 import type { UiDescriptor } from "@asol/ui-registry-core";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
+import {
+  createOpaqueUiInstanceId,
+  createUiSubpartInstanceId,
+  uiAttributes,
+} from "@asol/ui-registry-core";
 
 export function PharmacySelect({ id,
   ui,
@@ -26,9 +30,20 @@ export function PharmacySelect({ id,
   options: Array<{ value: string; label: string }>;
   onChange: (value: string) => void;
 } & { id?: string }) {
+  const labelInstance = ui
+    ? createUiSubpartInstanceId(ui.uid, ui.instance, "label")
+    : id
+      ? createOpaqueUiInstanceId("pharmacy-select-label", id)
+      : undefined;
+  const spanInstance = ui
+    ? createUiSubpartInstanceId(ui.uid, ui.instance, "label-text")
+    : id
+      ? createOpaqueUiInstanceId("pharmacy-select-label-text", id)
+      : undefined;
+
   return (
-    <label {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-select.label-a61IIk", id: "pharmacy-profile-catalog.pharmacy-select.label" })} id={id} className="space-y-1.5 text-sm font-medium">
-      <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-select.span-z4JwQr", id: "pharmacy-profile-catalog.pharmacy-select.span" })}>{label}</span>
+    <label {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-select.label-a61IIk", id: "pharmacy-profile-catalog.pharmacy-select.label", instance: labelInstance })} id={id} className="space-y-1.5 text-sm font-medium">
+      <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-select.span-z4JwQr", id: "pharmacy-profile-catalog.pharmacy-select.span", instance: spanInstance })}>{label}</span>
       <Select value={value} disabled={disabled} onValueChange={onChange}>
         <SelectTrigger ui={ui} className="asol-control asol-field-surface w-full border border-input text-sm focus:outline-none focus:ring-2 focus:ring-ring">
           <SelectValue placeholder={placeholder} />

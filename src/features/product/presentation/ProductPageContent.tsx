@@ -482,21 +482,25 @@ export function ProductPageContent({ id,
           </h3>
           <div {...uiAttributes({ uid: "product.product-page-content.div.4-yxH8kY", id: "product.product-page-content.div.4" })} className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
             <AdminCopyValue
+              id="product.product-page-content.admin-copy.product-id"
               label={locale === "ar" ? "معرف المنتج" : "Product ID"}
               value={productId || product?.id || ""}
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
+              id="product.product-page-content.admin-copy.owner-id"
               label={locale === "ar" ? "معرف المالك" : "Owner ID"}
               value={product?.uid || ""}
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
+              id="product.product-page-content.admin-copy.main-category"
               label={locale === "ar" ? "التصنيف الرئيسي" : "Main Category"}
               value={adminCategoryInfo.mainName}
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
+              id="product.product-page-content.admin-copy.main-category-id"
               label={
                 locale === "ar" ? "معرف التصنيف الرئيسي" : "Main Category ID"
               }
@@ -504,11 +508,13 @@ export function ProductPageContent({ id,
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
+              id="product.product-page-content.admin-copy.subcategory"
               label={locale === "ar" ? "التصنيف الفرعي" : "Subcategory"}
               value={adminCategoryInfo.subName}
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
+              id="product.product-page-content.admin-copy.subcategory-id"
               label={locale === "ar" ? "معرف التصنيف الفرعي" : "Subcategory ID"}
               value={subcategoryId}
               onCopy={copyToClipboard}

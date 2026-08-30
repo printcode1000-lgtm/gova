@@ -311,12 +311,13 @@ export function PharmacyCatalogManagerPage() {
                   >
                     <PharmacyCategoryIcon icon={category.icon} className="h-4 w-4 text-center text-primary" />
                     <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span-3QR4GH", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span" , instance: createOpaqueUiInstanceId("iter-88f6283786", String(category.id))})} className="min-w-0 flex-1 truncate font-semibold">{category.nameAr}</span>
-                  <StatusBadge hidden={category.status === "hidden"} />
+                  <StatusBadge hidden={category.status === "hidden"} instance={createOpaqueUiInstanceId("iter-314", String(category.id))} />
                   </button>
                   <IconButton
                     title={text.edit}
                     disabled={busy}
                     onClick={() => openEditCategory(category)}
+                    instance={createOpaqueUiInstanceId("iter-316", String(category.id))}
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </IconButton>
@@ -351,12 +352,13 @@ export function PharmacyCatalogManagerPage() {
                   >
                     <PharmacyCategoryIcon icon={activeCategory?.icon} className="h-4 w-4 text-center text-tertiary" />
                     <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2-ODA1rv", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2" , instance: createOpaqueUiInstanceId("iter-77fa045fbf", String(subcategory.id))})} className="min-w-0 flex-1 truncate font-semibold">{subcategory.nameAr}</span>
-                  <StatusBadge hidden={subcategory.status === "hidden"} />
+                  <StatusBadge hidden={subcategory.status === "hidden"} instance={createOpaqueUiInstanceId("iter-354", String(subcategory.id))} />
                   </button>
                   <IconButton
                     title={text.edit}
                     disabled={busy}
                     onClick={() => openEditSubcategory(subcategory)}
+                    instance={createOpaqueUiInstanceId("iter-356", String(subcategory.id))}
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </IconButton>

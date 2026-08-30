@@ -11,7 +11,7 @@ import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import { GOOGLE_PLAY_IMAGE_TYPES, type GooglePlayImageType } from "../../domain/store-assets-types";
 import { useStoreAssets } from "../hooks/use-store-assets";
 import { useStoreImagesPageSave } from "../hooks/use-store-images-page-save";
-import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId, type UiInstanceId} from "@asol/ui-registry-core";
 
 export function StoreImagesTab() {
   const { t } = useAdminArabic();
@@ -66,6 +66,7 @@ export function StoreImagesTab() {
                 <figure key={item.id} {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.figure-FABN6g", id: "google-play-console.tabs.store-images-tab.figure" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-ff2f13afea", String(item.id)), createOpaqueUiInstanceId("iter-02ad044942", String(item.id)))})} className="overflow-hidden rounded-md border bg-background">
                   <StoreImagePreview
                     id={item.id}
+                    instance={createOpaqueUiInstanceId("image", item.id)}
                     url={item.url}
                     unavailableLabel={t("releaseConsole.images.unavailable")}
                   />
@@ -90,7 +91,7 @@ export function StoreImagesTab() {
           </section>
         ))}
       </div>
-      <section {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.section.5-H9GFeM", id: "google-play-console.tabs.store-images-tab.section.5" })} id="google-play-console.tabs.store-images-tab.section.2" className="rounded-md border bg-surface p-4">
+      <section {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.section.5-H9GFeM", id: "google-play-console.tabs.store-images-tab.section.2" })} id="google-play-console.tabs.store-images-tab.section.2" className="rounded-md border bg-surface p-4">
         <h2 {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.h2.3-94YvOL", id: "google-play-console.tabs.store-images-tab.h2.3" })} id="google-play-console.tabs.store-images-tab.h2" className="mb-3 font-semibold">{t("releaseConsole.images.backups")}</h2>
         <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.10-VGtSD5", id: "google-play-console.tabs.store-images-tab.div.10" })} id="google-play-console.tabs.store-images-tab.div.4" className="grid gap-2 md:grid-cols-2">
           {(store.snapshot.backups ?? []).map((backup) => (
@@ -112,11 +113,11 @@ export function StoreImagesTab() {
   );
 }
 
-function StoreImagePreview(props: { id: string; url: string; unavailableLabel: string } & { id?: string }) {
+function StoreImagePreview(props: { id: string; url: string; unavailableLabel: string; instance?: UiInstanceId } & { id?: string }) {
   const [failed, setFailed] = React.useState(false);
   if (failed) {
     return (
-      <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.12-G59955", id: "google-play-console.tabs.store-images-tab.div.12" })} id={props.id}
+      <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.12-G59955", id: "google-play-console.tabs.store-images-tab.div.12", instance: props.instance })} id={props.id}
         className="flex h-28 items-center justify-center bg-muted px-2 text-center text-xs text-on-surface-variant"
       >
         {props.unavailableLabel}
@@ -124,7 +125,7 @@ function StoreImagePreview(props: { id: string; url: string; unavailableLabel: s
     );
   }
   return (
-    <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.13-SpYIA6", id: "google-play-console.tabs.store-images-tab.div.13" })} id={props.id} className="relative h-28 w-full">
+    <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.13-SpYIA6", id: "google-play-console.tabs.store-images-tab.div.13", instance: props.instance })} id={props.id} className="relative h-28 w-full">
       <Image
         src={props.url}
         alt={props.id}

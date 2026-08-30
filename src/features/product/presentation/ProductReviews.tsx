@@ -242,9 +242,12 @@ export function ProductReviews({ id,
     targetEnabled;
   const average = result?.average ?? 0,
     total = result?.total ?? 0;
+  const instance = id ? createOpaqueUiInstanceId("reviews", id) : undefined;
   return (
-    <div {...uiAttributes({ uid: "product.product-reviews.div-kO8Dq0", id: "product.product-reviews.div" })} id={id} className="min-w-0 space-y-5">
+    <div {...uiAttributes({ uid: "product.product-reviews.div-kO8Dq0", id: "product.product-reviews.div", instance: instance })} id={id} className="min-w-0 space-y-5">
       <ProductReviewsSummary
+        id={id ? `${id}.summary` : "summary"}
+        instance={instance}
         average={average}
         total={total}
         canRate={canRate}
@@ -253,14 +256,14 @@ export function ProductReviews({ id,
         }
         onRate={() => openReview(result?.currentUserReview ?? null)}
       />
-      <section {...uiAttributes({ uid: "product.product-reviews.section-rT3DcR", id: "product.product-reviews.section" })} ref={sectionRef} className="min-w-0 space-y-4">
-        <div {...uiAttributes({ uid: "product.product-reviews.div.2-9PHM59", id: "product.product-reviews.div.2" })} className="flex min-w-0 flex-wrap items-center justify-between gap-2">
-          <h3 {...uiAttributes({ uid: "product.product-reviews.h3-QBpW8a", id: "product.product-reviews.h3" })} className="flex min-w-0 items-center gap-2 break-words text-xl font-bold">
+      <section {...uiAttributes({ uid: "product.product-reviews.section-rT3DcR", id: "product.product-reviews.section", instance: instance })} ref={sectionRef} className="min-w-0 space-y-4">
+        <div {...uiAttributes({ uid: "product.product-reviews.div.2-9PHM59", id: "product.product-reviews.div.2", instance: instance })} className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+          <h3 {...uiAttributes({ uid: "product.product-reviews.h3-QBpW8a", id: "product.product-reviews.h3", instance: instance })} className="flex min-w-0 items-center gap-2 break-words text-xl font-bold">
             <MessageSquare className="h-5 w-5" />
             تقييمات العملاء
           </h3>
           {result?.hasMore ? (
-            <button {...uiAttributes({ uid: "product.product-reviews.button-umTuG0", id: "product.product-reviews.button" })}
+            <button {...uiAttributes({ uid: "product.product-reviews.button-umTuG0", id: "product.product-reviews.button", instance: instance })}
               type="button"
               onClick={() => load(result.reviews.length, true)}
               className="flex max-w-full items-center gap-1 break-words text-sm font-semibold text-primary"
@@ -270,15 +273,15 @@ export function ProductReviews({ id,
             </button>
           ) : null}
         </div>
-        <div {...uiAttributes({ uid: "product.product-reviews.div.3-RG1zFD", id: "product.product-reviews.div.3" })} className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
-          <div {...uiAttributes({ uid: "product.product-reviews.div.4-C7m2Qp", id: "product.product-reviews.div.4" })} className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0">
-            <strong {...uiAttributes({ uid: "product.product-reviews.strong-g6UoU9", id: "product.product-reviews.strong" })} className="text-5xl">{average.toFixed(1)}</strong>
-            <Stars value={average} size="text-2xl" />
-            <p {...uiAttributes({ uid: "product.product-reviews.p-iLGm36", id: "product.product-reviews.p" })} className="mt-2 break-words text-sm text-muted-foreground">
+        <div {...uiAttributes({ uid: "product.product-reviews.div.3-RG1zFD", id: "product.product-reviews.div.3", instance: instance })} className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
+          <div {...uiAttributes({ uid: "product.product-reviews.div.4-C7m2Qp", id: "product.product-reviews.div.4", instance: instance })} className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0">
+            <strong {...uiAttributes({ uid: "product.product-reviews.strong-g6UoU9", id: "product.product-reviews.strong", instance: instance })} className="text-5xl">{average.toFixed(1)}</strong>
+            <Stars instance={instance} value={average} size="text-2xl" />
+            <p {...uiAttributes({ uid: "product.product-reviews.p-iLGm36", id: "product.product-reviews.p", instance: instance })} className="mt-2 break-words text-sm text-muted-foreground">
               بناءً على {total} تقييم
             </p>
           </div>
-          <div {...uiAttributes({ uid: "product.product-reviews.div.5-fAm8iS", id: "product.product-reviews.div.5" })} className="min-w-0 space-y-2">
+          <div {...uiAttributes({ uid: "product.product-reviews.div.5-fAm8iS", id: "product.product-reviews.div.5", instance: instance })} className="min-w-0 space-y-2">
             {(result?.distribution ?? []).map((item) => (
               <div
                 key={item.rating} {...uiAttributes({ uid: "product.product-reviews.div.6-syXK9B", id: "product.product-reviews.div.6" , instance: createOpaqueUiInstanceId("iter-2912da4086", String(item.rating))})}
@@ -296,25 +299,25 @@ export function ProductReviews({ id,
             ))}
           </div>
         </div>
-        <div {...uiAttributes({ uid: "product.product-reviews.div.9-5TaEB7", id: "product.product-reviews.div.9" })} className="flex justify-end">
-          <select {...uiAttributes({ uid: "product.product-reviews.select-4RFBRH", id: "product.product-reviews.select" })}
+        <div {...uiAttributes({ uid: "product.product-reviews.div.9-5TaEB7", id: "product.product-reviews.div.9", instance: instance })} className="flex justify-end">
+          <select {...uiAttributes({ uid: "product.product-reviews.select-4RFBRH", id: "product.product-reviews.select", instance: instance })}
             value={sort}
             onChange={(event) => setSort(event.target.value as ReviewSort)}
             className="asol-control asol-field-surface border border-input px-3"
           >
-            <option {...uiAttributes({ uid: "product.product-reviews.option-0eH4Cw", id: "product.product-reviews.option" })} value="newest">الأحدث أولًا</option>
-            <option {...uiAttributes({ uid: "product.product-reviews.option.2-SVxj5E", id: "product.product-reviews.option.2" })} value="highest">الأعلى تقييمًا</option>
-            <option {...uiAttributes({ uid: "product.product-reviews.option.3-Bke05N", id: "product.product-reviews.option.3" })} value="lowest">الأدنى تقييمًا</option>
+            <option {...uiAttributes({ uid: "product.product-reviews.option-0eH4Cw", id: "product.product-reviews.option", instance: instance })} value="newest">الأحدث أولًا</option>
+            <option {...uiAttributes({ uid: "product.product-reviews.option.2-SVxj5E", id: "product.product-reviews.option.2", instance: instance })} value="highest">الأعلى تقييمًا</option>
+            <option {...uiAttributes({ uid: "product.product-reviews.option.3-Bke05N", id: "product.product-reviews.option.3", instance: instance })} value="lowest">الأدنى تقييمًا</option>
           </select>
         </div>
         {loading && !result ? (
-          <p {...uiAttributes({ uid: "product.product-reviews.p.2-sssxG5", id: "product.product-reviews.p.2" })} className="py-8 text-center">جارٍ التحميل…</p>
+          <p {...uiAttributes({ uid: "product.product-reviews.p.2-sssxG5", id: "product.product-reviews.p.2", instance: instance })} className="py-8 text-center">جارٍ التحميل…</p>
         ) : result?.reviews.length === 0 ? (
-          <p {...uiAttributes({ uid: "product.product-reviews.p.3-GXI6VN", id: "product.product-reviews.p.3" })} className="rounded-2xl border bg-card p-8 text-center text-muted-foreground">
+          <p {...uiAttributes({ uid: "product.product-reviews.p.3-GXI6VN", id: "product.product-reviews.p.3", instance: instance })} className="rounded-2xl border bg-card p-8 text-center text-muted-foreground">
             لا توجد مراجعات بعد.
           </p>
         ) : (
-          <div {...uiAttributes({ uid: "product.product-reviews.div.10-2DxS5b", id: "product.product-reviews.div.10" })} className="min-w-0 space-y-3">
+          <div {...uiAttributes({ uid: "product.product-reviews.div.10-2DxS5b", id: "product.product-reviews.div.10", instance: instance })} className="min-w-0 space-y-3">
             {result?.reviews.map((review) => (
               <article
                 key={review.id} {...uiAttributes({ uid: "product.product-reviews.article-Y6zctA", id: "product.product-reviews.article" , instance: createOpaqueUiInstanceId("iter-f555271633", String(review.id))})}
@@ -440,7 +443,7 @@ export function ProductReviews({ id,
           </div>
         )}
         {result?.hasMore ? (
-          <button {...uiAttributes({ uid: "product.product-reviews.button.7-tA8BeO", id: "product.product-reviews.button.7" })}
+          <button {...uiAttributes({ uid: "product.product-reviews.button.7-tA8BeO", id: "product.product-reviews.button.7", instance: instance })}
             type="button"
             disabled={loading}
             onClick={() => load(result.reviews.length, true)}
@@ -452,6 +455,8 @@ export function ProductReviews({ id,
       </section>
       {modal ? (
         <ProductReviewDialog
+          id={id ? `${id}.review-dialog` : "review-dialog"}
+          instance={instance}
           comment={comment}
           commentsEnabled={commentsEnabled}
           editing={editing}
@@ -463,6 +468,8 @@ export function ProductReviews({ id,
       ) : null}
       {replyReview ? (
         <ProductReviewReplyDialog
+          id={id ? `${id}.reply-dialog` : "reply-dialog"}
+          instance={instance}
           replyText={replyText}
           onClose={() => setReplyReview(null)}
           onReplyTextChange={changeReplyText}

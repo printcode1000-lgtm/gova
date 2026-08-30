@@ -81,12 +81,13 @@ export function ContactActionBar({
 }
 
 function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: string }) {
+  const instance = createOpaqueUiInstanceId("contact-group", String(group.id));
   const color = getContactVisualColor(group.id);
   const icon = getContactVisualIcon(group.id);
   if (group.options.length === 1 && isDirectGroup(group.id)) {
     const option = group.options[0]!;
     return (
-      <Button ui={{ uid: "shared.contact-action-bar.button-o3LhfO", id: "shared.contact-action-bar.button" }} id={id}
+      <Button ui={{ uid: "shared.contact-action-bar.button-o3LhfO", id: "shared.contact-action-bar.button", instance: instance }} id={id}
         asChild
         type="button"
         size="icon"
@@ -99,7 +100,7 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
         }}
         aria-label={group.label}
       >
-        <a {...uiAttributes({ uid: "shared.contact-action-bar.a-e81Sqh", id: "shared.contact-action-bar.a" })}
+        <a {...uiAttributes({ uid: "shared.contact-action-bar.a-e81Sqh", id: "shared.contact-action-bar.a", instance: instance })}
           href={option.href}
           target={isExternalHref(option.href) ? "_blank" : undefined}
           rel={isExternalHref(option.href) ? "noreferrer" : undefined}
@@ -113,7 +114,7 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button ui={{ uid: "shared.contact-action-bar.button.2-CH0TPR", id: "shared.contact-action-bar.button.2" }}
+        <Button ui={{ uid: "shared.contact-action-bar.button.2-CH0TPR", id: "shared.contact-action-bar.button.2", instance: instance }}
           id={id}
           type="button"
           size="icon"
@@ -130,8 +131,8 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="min-w-64">
-        <div {...uiAttributes({ uid: "shared.contact-action-bar.div.3-490vsH", id: "shared.contact-action-bar.div.3" })} dir="rtl">
-          <DropdownMenuLabel ui={{ uid: "shared.contact-action-bar.dropdown-menu-label-7sAWZ8", id: "shared.contact-action-bar.dropdown-menu-label" }} className="flex items-center gap-2" style={{ color }}>
+        <div {...uiAttributes({ uid: "shared.contact-action-bar.div.3-490vsH", id: "shared.contact-action-bar.div.3", instance: instance })} dir="rtl">
+          <DropdownMenuLabel ui={{ uid: "shared.contact-action-bar.dropdown-menu-label-7sAWZ8", id: "shared.contact-action-bar.dropdown-menu-label", instance: instance }} className="flex items-center gap-2" style={{ color }}>
             <FontAwesomeIcon icon={icon} className="h-4 w-4" />
             {group.label}
           </DropdownMenuLabel>
@@ -165,9 +166,10 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
 }
 
 function CustomActionButton({ id, action }: { action: CustomActionButtonModel } & { id?: string }) {
+  const instance = createOpaqueUiInstanceId("custom-action", String(action.id));
   const color = action.color || "rgb(79, 70, 229)";
   return (
-    <Button ui={{ uid: "shared.contact-action-bar.button.3-WMLKz3", id: "shared.contact-action-bar.button.3" }} id={id}
+    <Button ui={{ uid: "shared.contact-action-bar.button.3-WMLKz3", id: "shared.contact-action-bar.button.3", instance: instance }} id={id}
       type="button"
       size="icon"
       variant="outline"
