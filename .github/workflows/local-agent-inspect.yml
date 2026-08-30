@@ -1,7 +1,6 @@
 # Read-only inspection of the local workspace on behalf of a remote agent.
-# Full results are written to the local coordination channel; the GitHub log
-# receives only a summary, because job logs truncate and travel further than
-# this machine.
+# Full file/search results stay local. Git mode additionally prints only safe
+# repository metadata and tracked-change paths so remote recovery can be audited.
 name: local-agent-inspect
 
 on:
@@ -57,3 +56,17 @@ jobs:
     steps:
       - name: Inspect the local workspace
         run: npx tsx scripts/local-agent-inspect.ts
+      - name: Print safe git state
+        if: ${{ inputs.mode == 'git' }}
+        shell: bash
+        run: |
+          echo '===== branch ====='
+          git branch --show-current
+          echo '===== head ====='
+          git rev-parse HEAD
+          echo '===== origin/main ====='
+          git rev-parse origin/main || true
+          echo '===== tracked changes ====='
+          git status --short --untracked-files=no
+          echo '===== untracked count ====='
+          git ls-files --others --exclude-standard | wc -l
