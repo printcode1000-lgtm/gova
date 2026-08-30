@@ -19,14 +19,17 @@ up to twelve 30-second checks. Only when the local `gova` runner is still not
 online and idle does the workflow fall back to GitHub-hosted execution. The
 runner lives outside the live developer checkout so GitHub Actions can create
 and clean its own `_work` checkout without mutating `/home/hesham/gova`.
+The selector is the only step allowed to read `GOVA_RUNNER_STATUS_TOKEN`; it is
+used only to call the GitHub runner-status API.
 
 The deploy workflow has one job and one action (`actions/github-script@v7`). It
-checks out no source, runs no shell command, and receives no GitHub secret. Its
-OIDC token is accepted only for this repository, the `push` event, `main`, the
-fixed workflow path, and the pushed commit SHA. The API runs `deploy:revision`
-inside the existing isolated Vercel Sandbox, deploys all six isolated accounts,
-and verifies the GitHub-linked main project at the same SHA. It never commits or
-pushes. The job polls to a terminal result and reports deployment failure.
+checks out no source and runs no shell command. Its deploy step receives no
+GitHub deployment secret: the OIDC token is accepted only for this repository,
+the `push` event, `main`, the fixed workflow path, and the pushed commit SHA.
+The API runs `deploy:revision` inside the existing isolated Vercel Sandbox,
+deploys all six isolated accounts, and verifies the GitHub-linked main project
+at the same SHA. It never commits or pushes. The job polls to a terminal result
+and reports deployment failure.
 
 The docs workflow triggers on `push` and `pull_request` to `main` with an
 explicit positive path filter covering:
@@ -51,7 +54,9 @@ and knowledge validation suite.
 ## What must not exist
 
 - Any workflow other than `docs.yml` and `deploy-main.yml`
-- Any workflow job that does not target the `gova` self-hosted runner label
+- Any execution job that does not prefer the `gova` self-hosted runner before
+  GitHub-hosted fallback
+- Any GitHub secret except `GOVA_RUNNER_STATUS_TOKEN` in the runner selector
 - `pull_request_target` / `workflow_dispatch` / `schedule` triggers
 - Pull-request templates or required PR merge
 - Branch protection or any active rule that can reject or delay an update to `main`

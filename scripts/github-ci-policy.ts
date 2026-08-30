@@ -17,6 +17,7 @@ const DEPLOY_WORKFLOW = "deploy-main.yml";
 const SELF_HOSTED_RUNNER = "runs-on: [self-hosted, Linux, X64, gova]";
 const GITHUB_HOSTED_RUNNER = "runs-on: ubuntu-latest";
 const RUNNER_SELECTOR_API = "listSelfHostedRunnersForRepo";
+const RUNNER_STATUS_SECRET = "secrets.GOVA_RUNNER_STATUS_TOKEN";
 
 export const ALLOWED_WORKFLOW_FILES = [DEPLOY_WORKFLOW, DOCS_WORKFLOW] as const;
 
@@ -184,6 +185,9 @@ export function docsWorkflowViolations(source: string): string[] {
   if (!body.includes(SELF_HOSTED_RUNNER)) errors.push("Docs workflow must prefer the gova self-hosted runner.");
   if (!body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Docs workflow must keep GitHub-hosted fallback.");
   if (!body.includes(RUNNER_SELECTOR_API)) errors.push("Docs workflow must verify local runner availability before fallback.");
+  if (!body.includes(RUNNER_STATUS_SECRET)) {
+    errors.push("Docs workflow must use the runner status token only for fallback selection.");
+  }
   errors.push(...hasDocsAwareTriggers(body));
   if (/\bpaths-ignore\s*:/.test(body)) errors.push("Docs workflow must not use paths-ignore; use an explicit positive path filter.");
   const jobIds = docsWorkflowJobIds(body);
@@ -239,6 +243,9 @@ export function deploymentWorkflowViolations(source: string): string[] {
   if (!body.includes(RUNNER_SELECTOR_API)) {
     errors.push("Deployment workflow must verify local runner availability before fallback.");
   }
+  if (!body.includes(RUNNER_STATUS_SECRET)) {
+    errors.push("Deployment workflow must use the runner status token only for fallback selection.");
+  }
   if (!/^ {2}push:\s*$/m.test(body) || !/^ {4}branches:\s*$/m.test(body) || !/^ {6}- main\s*$/m.test(body)) {
     errors.push("Deployment workflow must trigger only on push to main.");
   }
@@ -263,7 +270,12 @@ export function deploymentWorkflowViolations(source: string): string[] {
   }
   if (/^\s*(?:-\s*)?run:/m.test(body)) errors.push("Deployment workflow must not execute shell commands.");
   if (/actions\/checkout@/i.test(body)) errors.push("Deployment workflow must not check out repository source.");
-  if (/\$\{\{\s*secrets\./.test(body)) errors.push("Deployment workflow must not consume GitHub secrets.");
+  const secretMatches = [...body.matchAll(/\$\{\{\s*secrets\.([A-Z0-9_]+)\s*\}\}/g)].map((match) => match[1]);
+  for (const secret of secretMatches) {
+    if (secret !== "GOVA_RUNNER_STATUS_TOKEN") {
+      errors.push(`Deployment workflow must not consume GitHub secret: ${secret}.`);
+    }
+  }
   const actions = [...body.matchAll(/^\s*(?:-\s*)?uses:\s*(\S+)\s*$/gm)].map((match) => match[1]!.replace(/['"]/g, ""));
   if (actions.length !== 3 || actions.some((action) => action !== "actions/github-script@v7")) {
     errors.push(`Deployment workflow must use only three actions/github-script@v7 steps. Found: ${actions.join(", ") || "(none)"}.`);

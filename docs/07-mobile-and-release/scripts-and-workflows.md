@@ -252,7 +252,9 @@ Both repository workflows prefer the local self-hosted runner with
 `runs-on: [self-hosted, Linux, X64, gova]`. A GitHub-hosted selector confirms the
 runner is unavailable through repeated checks before falling back to
 GitHub-hosted execution. Deployment still ends by dispatching the exact SHA to
-the Vercel production path. The runner's working directory is separate from
+the Vercel production path. The selector may read `GOVA_RUNNER_STATUS_TOKEN` to
+call the GitHub runner-status API; deploy still uses OIDC for the Vercel
+production endpoint. The runner's working directory is separate from
 `/home/hesham/gova`, so workflow checkout and cleanup never operate on the live
 developer workspace.
 

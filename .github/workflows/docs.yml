@@ -57,6 +57,7 @@ jobs:
         id: select
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GOVA_RUNNER_STATUS_TOKEN }}
           script: |
             const requiredLabels = ['self-hosted', 'Linux', 'X64', 'gova'];
             const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
