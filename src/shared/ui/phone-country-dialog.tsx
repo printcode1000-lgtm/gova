@@ -8,12 +8,19 @@ import {
   type PhoneCountryChoice,
 } from "@/shared/phone/phone-field-model";
 import type { PhoneCountryCode } from "@asol/auth-core";
+import {
+  composeUiInstanceId,
+  createOpaqueUiInstanceId,
+  createUiSubpartInstanceId,
+  type UiDescriptor,
+  uiAttributes,
+} from "@asol/ui-registry-core";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./dialog";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface PhoneCountryDialogProps {
   id?: string;
+  ui: UiDescriptor;
   open: boolean;
   choices: readonly PhoneCountryChoice[];
   selected: PhoneCountryCode;
@@ -27,6 +34,7 @@ interface PhoneCountryDialogProps {
 /** The country list behind a phone field: every country, searchable. */
 export function PhoneCountryDialog({
   id,
+  ui,
   open,
   choices,
   selected,
@@ -49,14 +57,57 @@ export function PhoneCountryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent ui={{ uid: "shared.phone-country-dialog.content-lQy7vN", id: "shared.phone-country-dialog.content" }} id={id} className="max-h-[80vh] max-w-md overflow-hidden p-0">
-        <DialogHeader ui={{ uid: "shared.phone-country-dialog.dialog-header-1M633G", id: "shared.phone-country-dialog.dialog-header" }} className="border-b border-outline-variant p-4">
-          <DialogTitle ui={{ uid: "shared.phone-country-dialog.dialog-title-VD4TMR", id: "shared.phone-country-dialog.dialog-title" }} className="text-base font-semibold">{title}</DialogTitle>
+      <DialogContent
+        ui={{
+          uid: "shared.phone-country-dialog.content-lQy7vN",
+          id: "shared.phone-country-dialog.content",
+          instance: createUiSubpartInstanceId(ui.uid, ui.instance, "country-dialog-content"),
+        }}
+        id={id}
+        className="max-h-[80vh] max-w-md overflow-hidden p-0"
+      >
+        <DialogHeader
+          ui={{
+            uid: "shared.phone-country-dialog.dialog-header-1M633G",
+            id: "shared.phone-country-dialog.dialog-header",
+            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "country-dialog-header"),
+          }}
+          className="border-b border-outline-variant p-4"
+        >
+          <DialogTitle
+            ui={{
+              uid: "shared.phone-country-dialog.dialog-title-VD4TMR",
+              id: "shared.phone-country-dialog.dialog-title",
+              instance: createUiSubpartInstanceId(ui.uid, ui.instance, "country-dialog-title"),
+            }}
+            className="text-base font-semibold"
+          >
+            {title}
+          </DialogTitle>
         </DialogHeader>
-        <div {...uiAttributes({ uid: "shared.phone-country-dialog.div-1LZJip", id: "shared.phone-country-dialog.div" })} className="p-3">
-          <div {...uiAttributes({ uid: "shared.phone-country-dialog.div.2-obTBi2", id: "shared.phone-country-dialog.div.2" })} className="relative">
+        <div
+          {...uiAttributes({
+            uid: "shared.phone-country-dialog.div-1LZJip",
+            id: "shared.phone-country-dialog.div",
+            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "search-region"),
+          })}
+          className="p-3"
+        >
+          <div
+            {...uiAttributes({
+              uid: "shared.phone-country-dialog.div.2-obTBi2",
+              id: "shared.phone-country-dialog.div.2",
+              instance: createUiSubpartInstanceId(ui.uid, ui.instance, "search-control"),
+            })}
+            className="relative"
+          >
             <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-            <input {...uiAttributes({ uid: "shared.phone-country-dialog.input-SZ90w7", id: "shared.phone-country-dialog.input" })}
+            <input
+              {...uiAttributes({
+                uid: "shared.phone-country-dialog.input-SZ90w7",
+                id: "shared.phone-country-dialog.input",
+                instance: createUiSubpartInstanceId(ui.uid, ui.instance, "search-input"),
+              })}
               type="search"
               inputMode="search"
               value={search}
@@ -67,16 +118,55 @@ export function PhoneCountryDialog({
             />
           </div>
         </div>
-        <div {...uiAttributes({ uid: "shared.phone-country-dialog.div.3-pH1R34", id: "shared.phone-country-dialog.div.3" })} className="max-h-[55vh] overflow-y-auto overscroll-y-contain px-3 pb-3">
+        <div
+          {...uiAttributes({
+            uid: "shared.phone-country-dialog.div.3-pH1R34",
+            id: "shared.phone-country-dialog.div.3",
+            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "country-list-region"),
+          })}
+          className="max-h-[55vh] overflow-y-auto overscroll-y-contain px-3 pb-3"
+        >
           {visible.length === 0 ? (
-            <p {...uiAttributes({ uid: "shared.phone-country-dialog.p-T2GMzw", id: "shared.phone-country-dialog.p" })} className="px-2 py-6 text-center text-sm text-on-surface-variant">
+            <p
+              {...uiAttributes({
+                uid: "shared.phone-country-dialog.p-T2GMzw",
+                id: "shared.phone-country-dialog.p",
+                instance: createUiSubpartInstanceId(ui.uid, ui.instance, "empty-state"),
+              })}
+              className="px-2 py-6 text-center text-sm text-on-surface-variant"
+            >
               {emptyLabel}
             </p>
           ) : (
-            <ul {...uiAttributes({ uid: "shared.phone-country-dialog.ul-5G1LWA", id: "shared.phone-country-dialog.ul" })} className="space-y-1">
+            <ul
+              {...uiAttributes({
+                uid: "shared.phone-country-dialog.ul-5G1LWA",
+                id: "shared.phone-country-dialog.ul",
+                instance: createUiSubpartInstanceId(ui.uid, ui.instance, "country-list"),
+              })}
+              className="space-y-1"
+            >
               {visible.map((choice) => (
-                <li key={choice.code} {...uiAttributes({ uid: "shared.phone-country-dialog.li-hBGkJ9", id: "shared.phone-country-dialog.li" , instance: createOpaqueUiInstanceId("iter-362cf72a3c", String(choice.code))})}>
-                  <button {...uiAttributes({ uid: "shared.phone-country-dialog.button-jSL3TK", id: "shared.phone-country-dialog.button" , instance: createOpaqueUiInstanceId("iter-3425546c7a", String(choice.code))})}
+                <li
+                  key={choice.code}
+                  {...uiAttributes({
+                    uid: "shared.phone-country-dialog.li-hBGkJ9",
+                    id: "shared.phone-country-dialog.li",
+                    instance: composeUiInstanceId(
+                      createUiSubpartInstanceId(ui.uid, ui.instance, "country-row"),
+                      createOpaqueUiInstanceId("phone-country", String(choice.code)),
+                    ),
+                  })}
+                >
+                  <button
+                    {...uiAttributes({
+                      uid: "shared.phone-country-dialog.button-jSL3TK",
+                      id: "shared.phone-country-dialog.button",
+                      instance: composeUiInstanceId(
+                        createUiSubpartInstanceId(ui.uid, ui.instance, "country-action"),
+                        createOpaqueUiInstanceId("phone-country", String(choice.code)),
+                      ),
+                    })}
                     type="button"
                     aria-pressed={choice.code === selected}
                     onClick={() => onSelect(choice.code)}
@@ -86,11 +176,45 @@ export function PhoneCountryDialog({
                         : "border-transparent bg-surface-container-low text-on-surface"
                     }`}
                   >
-                    <span {...uiAttributes({ uid: "shared.phone-country-dialog.span-Lr9KS0", id: "shared.phone-country-dialog.span" , instance: createOpaqueUiInstanceId("iter-4c4bd39598", String(choice.code))})} aria-hidden="true" className="text-lg leading-none">
+                    <span
+                      {...uiAttributes({
+                        uid: "shared.phone-country-dialog.span-Lr9KS0",
+                        id: "shared.phone-country-dialog.span",
+                        instance: composeUiInstanceId(
+                          createUiSubpartInstanceId(ui.uid, ui.instance, "country-flag"),
+                          createOpaqueUiInstanceId("phone-country", String(choice.code)),
+                        ),
+                      })}
+                      aria-hidden="true"
+                      className="text-lg leading-none"
+                    >
                       {choice.flag}
                     </span>
-                    <span {...uiAttributes({ uid: "shared.phone-country-dialog.span.2-n5dC9T", id: "shared.phone-country-dialog.span.2" , instance: createOpaqueUiInstanceId("iter-3c34f83116", String(choice.code))})} className="flex-1">{choice.name}</span>
-                    <span {...uiAttributes({ uid: "shared.phone-country-dialog.span.3-XWbWZ6", id: "shared.phone-country-dialog.span.3" , instance: createOpaqueUiInstanceId("iter-8a448c4635", String(choice.code))})} dir="ltr" className="text-xs text-on-surface-variant">
+                    <span
+                      {...uiAttributes({
+                        uid: "shared.phone-country-dialog.span.2-n5dC9T",
+                        id: "shared.phone-country-dialog.span.2",
+                        instance: composeUiInstanceId(
+                          createUiSubpartInstanceId(ui.uid, ui.instance, "country-name"),
+                          createOpaqueUiInstanceId("phone-country", String(choice.code)),
+                        ),
+                      })}
+                      className="flex-1"
+                    >
+                      {choice.name}
+                    </span>
+                    <span
+                      {...uiAttributes({
+                        uid: "shared.phone-country-dialog.span.3-XWbWZ6",
+                        id: "shared.phone-country-dialog.span.3",
+                        instance: composeUiInstanceId(
+                          createUiSubpartInstanceId(ui.uid, ui.instance, "country-code"),
+                          createOpaqueUiInstanceId("phone-country", String(choice.code)),
+                        ),
+                      })}
+                      dir="ltr"
+                      className="text-xs text-on-surface-variant"
+                    >
                       +{choice.callingCode}
                     </span>
                   </button>

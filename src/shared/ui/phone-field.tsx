@@ -16,10 +16,14 @@ import {
   phoneExampleNationalNumber,
   type PhoneCountryCode,
 } from "@asol/auth-core";
-import type { UiDescriptor } from "@asol/ui-registry-core";
+import {
+  createUiSubpartInstanceId,
+  type UiDescriptor,
+  uiAttributes,
+  uiForwardedAttributes,
+} from "@asol/ui-registry-core";
 
 import { PhoneCountryDialog } from "./phone-country-dialog";
-import { uiAttributes, uiForwardedAttributes } from "@asol/ui-registry-core";
 
 export type { PhoneFieldLabels };
 
@@ -41,11 +45,9 @@ export interface PhoneFieldProps {
 /**
  * One international phone input for the whole application.
  *
- * The country and the national digits are edited separately but leave as a
- * single E.164 string, so every form, schema, and stored row keeps one spelling
- * of a number. Digits typed on an Arabic or Persian keyboard are folded to
- * ASCII on the way in, and a national trunk zero is dropped, because neither
- * belongs in the value a country calling code already prefixes.
+ * The caller-owned descriptor scopes every fixed internal subpart. When the
+ * field itself repeats, the caller must provide ui.instance from stable domain
+ * identity; every internal part then inherits that runtime scope.
  */
 export function PhoneField({
   value,
@@ -72,7 +74,6 @@ export function PhoneField({
   const country = parsed.country;
   const callingCode = phoneCountryCallingCode(country);
   const selectedChoice = choices.find((choice) => choice.code === country);
-  // A real mobile number of the selected country, so the hint changes with it.
   const placeholder = phoneExampleNationalNumber(country) || labels.placeholder;
 
   const handleCountrySelect = (next: PhoneCountryCode) => {
@@ -87,18 +88,47 @@ export function PhoneField({
   };
 
   return (
-    <div {...uiAttributes({ uid: "shared.phone-field.div-D0c6E4", id: "shared.phone-field.div" })} id={id} className={cn("flex items-stretch gap-2", className)}>
-      <button {...uiAttributes({ uid: "shared.phone-field.button-X9ZI11", id: "shared.phone-field.button" })}
+    <div
+      {...uiAttributes({
+        uid: "shared.phone-field.div-D0c6E4",
+        id: "shared.phone-field.div",
+        instance: createUiSubpartInstanceId(ui.uid, ui.instance, "root"),
+      })}
+      id={id}
+      className={cn("flex items-stretch gap-2", className)}
+    >
+      <button
+        {...uiAttributes({
+          uid: "shared.phone-field.button-X9ZI11",
+          id: "shared.phone-field.button",
+          instance: createUiSubpartInstanceId(ui.uid, ui.instance, "country-trigger"),
+        })}
         type="button"
         disabled={disabled}
         aria-label={labels.country}
         onClick={() => setIsPickerOpen(true)}
         className="asol-control inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-outline-variant bg-surface px-2.5 text-sm text-on-surface transition disabled:opacity-60"
       >
-        <span {...uiAttributes({ uid: "shared.phone-field.span-vp5Hwi", id: "shared.phone-field.span" })} aria-hidden="true" className="text-base leading-none">
+        <span
+          {...uiAttributes({
+            uid: "shared.phone-field.span-vp5Hwi",
+            id: "shared.phone-field.span",
+            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "country-flag"),
+          })}
+          aria-hidden="true"
+          className="text-base leading-none"
+        >
           {selectedChoice?.flag ?? ""}
         </span>
-        <span {...uiAttributes({ uid: "shared.phone-field.span.2-kY7XG6", id: "shared.phone-field.span.2" })} dir="ltr" className="text-xs font-semibold">
+        <span
+          {...uiAttributes({
+            uid: "shared.phone-field.span.2-kY7XG6",
+            id: "shared.phone-field.span.2",
+            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "calling-code"),
+          })}
+          dir="ltr"
+          className="text-xs font-semibold"
+        >
           +{callingCode}
         </span>
       </button>
@@ -127,6 +157,7 @@ export function PhoneField({
         {...uiForwardedAttributes(ui, undefined, disabled ? "disabled" : undefined)}
       />
       <PhoneCountryDialog
+        ui={ui}
         open={isPickerOpen}
         choices={choices}
         selected={country}
