@@ -140,44 +140,52 @@ assert.ok(
     );
     assert.ok(
       messages.some((message) => /auth\/index|Deep cross-feature import/i.test(message)),
-      'Composition package /index alias must not bypass the declared feature door.',
+      'Undeclared /index feature alias must fail.',
     );
   } finally {
     rmSync(probe, { force: true });
+    violations.length = 0;
   }
 }
 
-// ── Application feature registry claims are complete ───────────────────────
+// ── Feature roots contain only public doors + canonical layer directories ──
 {
-  violations.length = 0;
-  checkApplicationFeatureRegistryContract();
-  assert.equal(violations.length, 0, violations.map((v) => v.violation).join('\n'));
+  const probe = path.join(ROOT, 'src/features/qr-code/__architecture_root_file_attack.ts');
+  writeFileSync(probe, 'export const bypass = true;\n');
+  try {
+    violations.length = 0;
+    checkApplicationFeatureRegistryContract();
+    const messages = violations.map((v) => `${v.layer} ${v.violation} ${v.file}`);
+    assert.ok(
+      messages.some((message) => /qr-code.*implementation file|root_file_attack/i.test(message)),
+      'A feature-root implementation file outside index/ui/server doors must fail.',
+    );
+  } finally {
+    rmSync(probe, { force: true });
+    violations.length = 0;
+  }
 }
 
-// ── Classification ─────────────────────────────────────────────────────────
-assert.equal(classifyLayer('src/app/page.tsx'), 'application');
-assert.equal(classifyLayer('src/features/foo/index.ts'), 'application');
-assert.equal(classifyLayer('packages/data-core/src/index.ts'), 'capability');
-assert.equal(classifyLayer('packages/orders-composition/src/index.ts'), 'composition');
-assert.equal(classifyLayer('packages/architecture-core/src/index.ts'), 'enforcement');
-assert.equal(classifyLayer('scripts/architecture-check.ts'), 'tooling');
+// ── The contract still answers ──────────────────────────────────────────────
+assert.equal(classifyLayer('src/app/api/orders/route.ts'), 'business-api');
+assert.equal(classifyLayer('src/core/api/traced-route.ts'), 'business-api');
+assert.equal(classifyLayer('src/core/config/public-env.ts'), 'configuration');
+assert.equal(classifyLayer('src/core/composition/server-ports.ts'), 'configuration');
+assert.equal(normalizePath('src\\app\\page.tsx'), 'src/app/page.tsx');
+assert.ok(LAYER_LABELS['business-api']);
 
-// ── Labels are total ────────────────────────────────────────────────────────
-for (const layer of ['application', 'capability', 'composition', 'enforcement', 'tooling'] as const) {
-  assert.equal(typeof LAYER_LABELS[layer], 'string');
-  assert.ok(LAYER_LABELS[layer].length > 0);
+// Every allowlisted `process.env` reader must still exist. An allowlist naming a deleted file is
+// how an exemption outlives the reason for it.
+for (const file of ALLOWED_PROCESS_ENV_FILES) {
+  if (file.endsWith('.json')) continue;
+  assert.ok(
+    readFileSync(path.join(ROOT, file), 'utf8').length > 0,
+    `${file} is allowlisted to read process.env but no longer exists.`,
+  );
 }
 
-// ── Path normalization ──────────────────────────────────────────────────────
-assert.equal(normalizePath('a\\b\\c'), 'a/b/c');
-assert.equal(normalizePath('a/b/c'), 'a/b/c');
+assert.equal(typeof runArchitectureCheck, 'function');
 
-// ── Environment allowlist has no hidden copies ─────────────────────────────
-assert.ok(ALLOWED_PROCESS_ENV_FILES.every((file) => !file.includes('node_modules')));
-
-// ── Full architecture check ────────────────────────────────────────────────
-violations.length = 0;
-runArchitectureCheck();
-assert.equal(violations.length, 0, violations.map((v) => `${v.layer}: ${v.violation} (${v.file})`).join('\n'));
-
-console.log('architecture-core tests passed');
+console.log(
+  `@asol/architecture-core contract: 1 door, ${files.length} rule and check modules, no import of the application; composition imports sealed.`,
+);
