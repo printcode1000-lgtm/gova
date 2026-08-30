@@ -5,10 +5,9 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/shared/utils';
-import { type UiDescriptor } from '@asol/ui-registry-core';
+import { createUiSubpartInstanceId, type UiDescriptor, uiAttributes } from '@asol/ui-registry-core';
 
 import { uiPrimitiveAttributes } from './ui-primitive-attributes';
-import { uiAttributes } from "@asol/ui-registry-core";
 
 const Select = SelectPrimitive.Root;
 
@@ -125,7 +124,7 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & { ui?: UiDescriptor }
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & { ui: UiDescriptor }
 >(({ className, children, ui, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
@@ -136,7 +135,14 @@ const SelectItem = React.forwardRef<
     {...props}
     {...uiPrimitiveAttributes('select-item', ui)}
   >
-    <span {...uiAttributes({ uid: "shared.select.span-P2XGV0", id: "shared.select.span" })} className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span
+      {...uiAttributes({
+        uid: 'shared.select.span-P2XGV0',
+        id: 'shared.select.span',
+        instance: createUiSubpartInstanceId(ui.uid, ui.instance, 'indicator'),
+      })}
+      className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center"
+    >
       <SelectPrimitive.ItemIndicator>
         <Check className="h-4 w-4" />
       </SelectPrimitive.ItemIndicator>
