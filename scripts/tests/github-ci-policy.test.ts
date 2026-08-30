@@ -20,25 +20,39 @@ const docsSource = readFileSync(path.join(process.cwd(), ".github", "workflows",
 const deploySource = readFileSync(path.join(process.cwd(), ".github", "workflows", "deploy-main.yml"), "utf8");
 assert.equal(docsWorkflowViolations(docsSource).length, 0, docsWorkflowViolations(docsSource).join("\n"));
 assert.equal(deploymentWorkflowViolations(deploySource).length, 0, deploymentWorkflowViolations(deploySource).join("\n"));
+assert.ok(
+  docsWorkflowViolations(docsSource.replace("runs-on: [self-hosted, Linux, X64, gova]", "runs-on: ubuntu-latest")).some(
+    (error) => error.includes("self-hosted"),
+  ),
+);
+assert.ok(
+  deploymentWorkflowViolations(
+    deploySource.replace("runs-on: [self-hosted, Linux, X64, gova]", "runs-on: ubuntu-latest"),
+  ).some((error) => error.includes("self-hosted")),
+);
 assert.ok(deploymentWorkflowViolations(deploySource.replace("id-token: write", "id-token: read")).some((error) => error.includes("id-token: write")));
 assert.ok(deploymentWorkflowViolations(`${deploySource}\n      - run: npm test\n`).some((error) => error.includes("shell commands")));
-assert.ok(deploymentWorkflowViolations(deploySource.replace("github.sha", "github.ref")).some((error) => error.includes("github.sha")));
+assert.ok(
+  deploymentWorkflowViolations(deploySource.replaceAll("github.sha", "github.ref")).some((error) =>
+    error.includes("github.sha"),
+  ),
+);
 
 assert.ok(
-  docsWorkflowViolations(docsSource.replace("fetch-depth: 0", "fetch-depth: 1")).some((error) =>
+  docsWorkflowViolations(docsSource.replaceAll("fetch-depth: 0", "fetch-depth: 1")).some((error) =>
     error.includes("fetch-depth: 0"),
   ),
 );
 assert.ok(
   docsWorkflowViolations(
-    docsSource.replace(
+    docsSource.replaceAll(
       "DOCS_CI_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}",
       "DOCS_CI_BASE_REF: HEAD~1",
     ),
   ).some((error) => error.includes("DOCS_CI_BASE_REF")),
 );
 assert.ok(
-  docsWorkflowViolations(docsSource.replace("npm run docs:diff -- --against-head", "npm run docs:check")).some(
+  docsWorkflowViolations(docsSource.replaceAll("npm run docs:diff -- --against-head", "npm run docs:check")).some(
     (error) => error.includes("docs:diff -- --against-head"),
   ),
 );
@@ -97,7 +111,7 @@ jobs:
 assert.ok(codeCi.some((error) => error.includes("npm run lint")));
 
 const extraJob = docsWorkflowViolations(`${docsSource}\n  code:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo hidden-code-ci\n`);
-assert.ok(extraJob.some((error) => error.includes("exactly one job")));
+assert.ok(extraJob.some((error) => error.includes("exactly these jobs")));
 assert.ok(extraJob.some((error) => error.includes("not allowed")));
 
 const alternateAction = docsWorkflowViolations(

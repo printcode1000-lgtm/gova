@@ -248,6 +248,14 @@ correctness gate. Every push to `main` starts the OIDC-authenticated deployment
 workflow for the exact pushed SHA; a commit that touches `docs/**` also runs the
 path-filtered docs workflow.
 
+Both repository workflows prefer the local self-hosted runner with
+`runs-on: [self-hosted, Linux, X64, gova]`. A GitHub-hosted selector confirms the
+runner is unavailable through repeated checks before falling back to
+GitHub-hosted execution. Deployment still ends by dispatching the exact SHA to
+the Vercel production path. The runner's working directory is separate from
+`/home/hesham/gova`, so workflow checkout and cleanup never operate on the live
+developer workspace.
+
 ## Branch protection
 
 **There is no branch protection on `main`, deliberately.**

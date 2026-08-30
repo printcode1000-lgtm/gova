@@ -1,6 +1,6 @@
 # Docs-focused GitHub Actions workflow.
 #
-# This is the only allowed workflow. It is path-filtered to documentation,
+# This is the only validation workflow. It is path-filtered to documentation,
 # agent instruction surfaces, and docs/knowledge/runtime tooling. Ordinary
 # code-only pushes do not run this job. Local `npm run github:ci-policy`
 # enforces the contract; that guard is not itself a general GitHub app CI job.
@@ -42,8 +42,82 @@ on:
       - "package-lock.json"
       - ".github/workflows/docs.yml"
 
+permissions:
+  actions: read
+  contents: read
+
 jobs:
-  docs:
+  select-runner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    outputs:
+      runner: ${{ steps.select.outputs.runner }}
+    steps:
+      - name: Prefer local runner when available
+        id: select
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const requiredLabels = ['self-hosted', 'Linux', 'X64', 'gova'];
+            const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+            let available = false;
+            for (let attempt = 1; attempt <= 12; attempt += 1) {
+              const response = await github.rest.actions.listSelfHostedRunnersForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100,
+              });
+              available = response.data.runners.some((runner) => {
+                const labels = new Set((runner.labels || []).map((label) => label.name));
+                return runner.status === 'online' && !runner.busy && requiredLabels.every((label) => labels.has(label));
+              });
+              if (available) break;
+              core.info(`Local gova runner is unavailable after check ${attempt}/12.`);
+              if (attempt < 12) await sleep(30_000);
+            }
+            const selected = available ? 'local' : 'github-hosted';
+            core.info(`Selected ${selected} execution path.`);
+            core.setOutput('runner', selected);
+
+  docs-local:
+    needs: select-runner
+    if: needs.select-runner.outputs.runner == 'local'
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 20
+    env:
+      DOCS_CI_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Regenerate documentation knowledge
+        run: npm run docs:generate
+
+      - name: Documentation CI
+        run: npm run docs:ci
+
+      - name: Generated documentation must match HEAD
+        run: npm run docs:diff -- --against-head
+
+      - name: Runtime compatibility contracts
+        run: npm run runtime:check
+
+  docs-github-hosted:
+    needs: select-runner
+    if: needs.select-runner.outputs.runner == 'github-hosted'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:

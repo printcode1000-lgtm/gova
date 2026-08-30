@@ -12,6 +12,14 @@ revision; this is release orchestration, not correctness CI.
 | Every push to `main` | **Deploy workflow** (`.github/workflows/deploy-main.yml`) |
 | Documentation, agent instruction surfaces, docs/knowledge/runtime tooling, or related package manifests listed below | **Docs workflow** (`.github/workflows/docs.yml`) in addition to deploy |
 
+Both workflows prefer the repository self-hosted runner labeled `gova`
+(`runs-on: [self-hosted, Linux, X64, gova]`). A selector job first runs on
+GitHub-hosted infrastructure, checks the repository runner list, and retries for
+up to twelve 30-second checks. Only when the local `gova` runner is still not
+online and idle does the workflow fall back to GitHub-hosted execution. The
+runner lives outside the live developer checkout so GitHub Actions can create
+and clean its own `_work` checkout without mutating `/home/hesham/gova`.
+
 The deploy workflow has one job and one action (`actions/github-script@v7`). It
 checks out no source, runs no shell command, and receives no GitHub secret. Its
 OIDC token is accepted only for this repository, the `push` event, `main`, the
@@ -43,6 +51,7 @@ and knowledge validation suite.
 ## What must not exist
 
 - Any workflow other than `docs.yml` and `deploy-main.yml`
+- Any workflow job that does not target the `gova` self-hosted runner label
 - `pull_request_target` / `workflow_dispatch` / `schedule` triggers
 - Pull-request templates or required PR merge
 - Branch protection or any active rule that can reject or delay an update to `main`

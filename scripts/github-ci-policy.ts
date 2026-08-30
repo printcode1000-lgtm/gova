@@ -14,6 +14,9 @@ import path from "node:path";
 const ROOT = process.cwd();
 const DOCS_WORKFLOW = "docs.yml";
 const DEPLOY_WORKFLOW = "deploy-main.yml";
+const SELF_HOSTED_RUNNER = "runs-on: [self-hosted, Linux, X64, gova]";
+const GITHUB_HOSTED_RUNNER = "runs-on: ubuntu-latest";
+const RUNNER_SELECTOR_API = "listSelfHostedRunnersForRepo";
 
 export const ALLOWED_WORKFLOW_FILES = [DEPLOY_WORKFLOW, DOCS_WORKFLOW] as const;
 
@@ -54,6 +57,7 @@ const ALLOWED_DOCS_RUN_COMMANDS = new Set([
 
 const ALLOWED_DOCS_ACTIONS = new Set([
   "actions/checkout@v4",
+  "actions/github-script@v7",
   "actions/setup-node@v4",
 ]);
 
@@ -177,12 +181,17 @@ export function docsWorkflowViolations(source: string): string[] {
   const errors: string[] = [];
   const body = stripYamlComments(source);
   if (!/^name:\s*docs\s*$/m.test(body)) errors.push("Docs workflow name must be exactly `docs`.");
+  if (!body.includes(SELF_HOSTED_RUNNER)) errors.push("Docs workflow must prefer the gova self-hosted runner.");
+  if (!body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Docs workflow must keep GitHub-hosted fallback.");
+  if (!body.includes(RUNNER_SELECTOR_API)) errors.push("Docs workflow must verify local runner availability before fallback.");
   errors.push(...hasDocsAwareTriggers(body));
   if (/\bpaths-ignore\s*:/.test(body)) errors.push("Docs workflow must not use paths-ignore; use an explicit positive path filter.");
-  if (!/^ {2}docs:\s*$/m.test(body)) errors.push("Docs workflow job id must be `docs`.");
   const jobIds = docsWorkflowJobIds(body);
-  if (jobIds.length !== 1 || jobIds[0] !== "docs") {
-    errors.push(`Docs workflow must contain exactly one job named docs. Found: ${jobIds.join(", ") || "(none)"}.`);
+  const expectedJobIds = ["select-runner", "docs-local", "docs-github-hosted"];
+  if (jobIds.length !== expectedJobIds.length || expectedJobIds.some((job, index) => jobIds[index] !== job)) {
+    errors.push(
+      `Docs workflow must contain exactly these jobs: ${expectedJobIds.join(", ")}. Found: ${jobIds.join(", ") || "(none)"}.`,
+    );
   }
   for (const requiredCommand of [
     "npm run docs:generate",
@@ -225,6 +234,11 @@ export function deploymentWorkflowViolations(source: string): string[] {
   const errors: string[] = [];
   const body = stripYamlComments(source);
   if (!/^name:\s*deploy-main\s*$/m.test(body)) errors.push("Deployment workflow name must be exactly `deploy-main`.");
+  if (!body.includes(SELF_HOSTED_RUNNER)) errors.push("Deployment workflow must prefer the gova self-hosted runner.");
+  if (!body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Deployment workflow must keep GitHub-hosted fallback.");
+  if (!body.includes(RUNNER_SELECTOR_API)) {
+    errors.push("Deployment workflow must verify local runner availability before fallback.");
+  }
   if (!/^ {2}push:\s*$/m.test(body) || !/^ {4}branches:\s*$/m.test(body) || !/^ {6}- main\s*$/m.test(body)) {
     errors.push("Deployment workflow must trigger only on push to main.");
   }
@@ -251,12 +265,15 @@ export function deploymentWorkflowViolations(source: string): string[] {
   if (/actions\/checkout@/i.test(body)) errors.push("Deployment workflow must not check out repository source.");
   if (/\$\{\{\s*secrets\./.test(body)) errors.push("Deployment workflow must not consume GitHub secrets.");
   const actions = [...body.matchAll(/^\s*(?:-\s*)?uses:\s*(\S+)\s*$/gm)].map((match) => match[1]!.replace(/['"]/g, ""));
-  if (actions.length !== 1 || actions[0] !== "actions/github-script@v7") {
-    errors.push(`Deployment workflow must use only actions/github-script@v7. Found: ${actions.join(", ") || "(none)"}.`);
+  if (actions.length !== 3 || actions.some((action) => action !== "actions/github-script@v7")) {
+    errors.push(`Deployment workflow must use only three actions/github-script@v7 steps. Found: ${actions.join(", ") || "(none)"}.`);
   }
   const jobIds = docsWorkflowJobIds(body);
-  if (jobIds.length !== 1 || jobIds[0] !== "deploy") {
-    errors.push(`Deployment workflow must contain exactly one job named deploy. Found: ${jobIds.join(", ") || "(none)"}.`);
+  const expectedJobIds = ["select-runner", "deploy-local", "deploy-github-hosted"];
+  if (jobIds.length !== expectedJobIds.length || expectedJobIds.some((job, index) => jobIds[index] !== job)) {
+    errors.push(
+      `Deployment workflow must contain exactly these jobs: ${expectedJobIds.join(", ")}. Found: ${jobIds.join(", ") || "(none)"}.`,
+    );
   }
   return errors;
 }

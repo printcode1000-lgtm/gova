@@ -84,3 +84,4 @@ export { collectUidCatalog, type UidCatalogEntry } from './dom-identity/uid-cata
 export { findPendingAstSourceMatches, type PendingAstSourceMatch } from './dom-identity/pending-source-match';
 export { readUiPageRegistryAst, type AstPageRegistryEntry } from './dom-identity/page-registry-reader';
 export { reachableProjectFiles } from './dom-identity/project-reachability';
+export { isIntrinsicJsxTag, jsxComponentName, localBindingTargets, parseTsx } from './dom-identity/tsx-ast';

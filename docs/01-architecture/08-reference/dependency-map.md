@@ -183,6 +183,9 @@ ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
 `@asol/map-core`
 ALLOWED_TO_IMPORT → `@asol/native-core`
 
+`@asol/map-core`
+ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
+
 ### @asol/native-core
 
 `@asol/native-core` has no production `@asol/*` imports.
@@ -358,4 +361,4 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 | Metric | Value |
 |---|---|
 | Packages | 43 |
-| Import edges | 60 |
+| Import edges | 61 |

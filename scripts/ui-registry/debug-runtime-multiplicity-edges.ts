@@ -1,12 +1,12 @@
 import ts from 'typescript';
 
-import { loadProjectTsx } from '@asol/architecture-core';
 import {
   isIntrinsicJsxTag,
   jsxComponentName,
+  loadProjectTsx,
   localBindingTargets,
   parseTsx,
-} from '../../packages/architecture-core/src/dom-identity/tsx-ast';
+} from '@asol/architecture-core';
 
 const TRACKED = new Set([
   'src/shared/layouts/AppShell.tsx#AppShell',

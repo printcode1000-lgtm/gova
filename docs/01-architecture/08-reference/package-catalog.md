@@ -588,7 +588,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/ui-registry-core/` |
 | **Purpose** | UiRegistry identity contract, page registry, and DOM attribute builders |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` |
+| **Public Exports** | `.` · `./tooling` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:ui-registry-core` |

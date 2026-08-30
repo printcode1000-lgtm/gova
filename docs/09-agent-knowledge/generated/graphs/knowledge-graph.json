@@ -6231,6 +6231,7 @@
         "@asol/trending-ribbon-core",
         "@asol/trending-ribbon-core/server",
         "@asol/ui-registry-core",
+        "@asol/ui-registry-core/tooling",
         "@asol/vercel-deploy-core",
         "@asol/vercel-deploy-core/github-push-identity",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
@@ -22340,9 +22341,11 @@
       "kind": "package",
       "name": "@asol/ui-registry-core",
       "path": "packages/ui-registry-core",
-      "summary": "UiRegistry identity contract, page registry, and DOM attribute builders; Layer: capability; Public exports: .",
+      "summary": "UiRegistry identity contract, page registry, and DOM attribute builders; Layer: capability; Public exports: ., ./tooling",
       "tags": [
         ".",
+        "./tooling",
+        "/tooling",
         "@asol/ui-registry-core",
         "and",
         "attribute",
@@ -26853,6 +26856,17 @@
       ]
     },
     {
+      "id": "script:scripts/ui-registry/add-duplicate-jsx-guard.mjs",
+      "kind": "script",
+      "name": "add-duplicate-jsx-guard.mjs",
+      "path": "scripts/ui-registry/add-duplicate-jsx-guard.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/add-duplicate-jsx-guard",
+        "scripts/ui-registry/add-duplicate-jsx-guard.mjs"
+      ]
+    },
+    {
       "id": "script:scripts/ui-registry/apply-pending-runner.ts",
       "kind": "script",
       "name": "apply-pending-runner.ts",
@@ -26908,6 +26922,105 @@
       ]
     },
     {
+      "id": "script:scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+      "kind": "script",
+      "name": "debug-runtime-multiplicity-edges.ts",
+      "path": "scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+      "tags": [
+        "scripts/ui-registry/debug-runtime-multiplicity-edges",
+        "scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-pharmacy-product-instance.mjs",
+      "kind": "script",
+      "name": "fix-pharmacy-product-instance.mjs",
+      "path": "scripts/ui-registry/fix-pharmacy-product-instance.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-pharmacy-product-instance",
+        "scripts/ui-registry/fix-pharmacy-product-instance.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-primary-contact-entry-instances.mjs",
+      "kind": "script",
+      "name": "fix-primary-contact-entry-instances.mjs",
+      "path": "scripts/ui-registry/fix-primary-contact-entry-instances.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-primary-contact-entry-instances",
+        "scripts/ui-registry/fix-primary-contact-entry-instances.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-repeated-computed-ui.mjs",
+      "kind": "script",
+      "name": "fix-repeated-computed-ui.mjs",
+      "path": "scripts/ui-registry/fix-repeated-computed-ui.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-repeated-computed-ui",
+        "scripts/ui-registry/fix-repeated-computed-ui.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-simple-computed-ui.mjs",
+      "kind": "script",
+      "name": "fix-simple-computed-ui.mjs",
+      "path": "scripts/ui-registry/fix-simple-computed-ui.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-simple-computed-ui",
+        "scripts/ui-registry/fix-simple-computed-ui.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-stage112-forwarding-seams.mjs",
+      "kind": "script",
+      "name": "fix-stage112-forwarding-seams.mjs",
+      "path": "scripts/ui-registry/fix-stage112-forwarding-seams.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-stage112-forwarding-seams",
+        "scripts/ui-registry/fix-stage112-forwarding-seams.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-stage121-storage-slot-instances.mjs",
+      "kind": "script",
+      "name": "fix-stage121-storage-slot-instances.mjs",
+      "path": "scripts/ui-registry/fix-stage121-storage-slot-instances.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-stage121-storage-slot-instances",
+        "scripts/ui-registry/fix-stage121-storage-slot-instances.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-stage124-single-ui-source.mjs",
+      "kind": "script",
+      "name": "fix-stage124-single-ui-source.mjs",
+      "path": "scripts/ui-registry/fix-stage124-single-ui-source.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-stage124-single-ui-source",
+        "scripts/ui-registry/fix-stage124-single-ui-source.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-stage62-duplicate-ui.mjs",
+      "kind": "script",
+      "name": "fix-stage62-duplicate-ui.mjs",
+      "path": "scripts/ui-registry/fix-stage62-duplicate-ui.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-stage62-duplicate-ui",
+        "scripts/ui-registry/fix-stage62-duplicate-ui.mjs"
+      ]
+    },
+    {
       "id": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
       "kind": "script",
       "name": "generate-component-marker-bridge.ts",
@@ -26941,6 +27054,50 @@
       ]
     },
     {
+      "id": "script:scripts/ui-registry/make-simulation-selection-explicit.mjs",
+      "kind": "script",
+      "name": "make-simulation-selection-explicit.mjs",
+      "path": "scripts/ui-registry/make-simulation-selection-explicit.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/make-simulation-selection-explicit",
+        "scripts/ui-registry/make-simulation-selection-explicit.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/migrate-contact-entry-instances.mjs",
+      "kind": "script",
+      "name": "migrate-contact-entry-instances.mjs",
+      "path": "scripts/ui-registry/migrate-contact-entry-instances.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/migrate-contact-entry-instances",
+        "scripts/ui-registry/migrate-contact-entry-instances.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/migrate-dialog-content-identities.ts",
+      "kind": "script",
+      "name": "migrate-dialog-content-identities.ts",
+      "path": "scripts/ui-registry/migrate-dialog-content-identities.ts",
+      "tags": [
+        "scripts/ui-registry/migrate-dialog-content-identities",
+        "scripts/ui-registry/migrate-dialog-content-identities.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/migrate-direct-iterator-instances.ts",
+      "kind": "script",
+      "name": "migrate-direct-iterator-instances.ts",
+      "path": "scripts/ui-registry/migrate-direct-iterator-instances.ts",
+      "tags": [
+        "scripts/ui-registry/migrate-direct-iterator-instances",
+        "scripts/ui-registry/migrate-direct-iterator-instances.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/ui-registry/pending-source-resolver.ts",
       "kind": "script",
       "name": "pending-source-resolver.ts",
@@ -26948,6 +27105,28 @@
       "tags": [
         "scripts/ui-registry/pending-source-resolver",
         "scripts/ui-registry/pending-source-resolver.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/runtime-multiplicity-audit.ts",
+      "kind": "script",
+      "name": "runtime-multiplicity-audit.ts",
+      "path": "scripts/ui-registry/runtime-multiplicity-audit.ts",
+      "tags": [
+        "scripts/ui-registry/runtime-multiplicity-audit",
+        "scripts/ui-registry/runtime-multiplicity-audit.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/runtime-multiplicity-summary.ts",
+      "kind": "script",
+      "name": "runtime-multiplicity-summary.ts",
+      "path": "scripts/ui-registry/runtime-multiplicity-summary.ts",
+      "tags": [
+        "scripts/ui-registry/runtime-multiplicity-summary",
+        "scripts/ui-registry/runtime-multiplicity-summary.ts",
         "ts"
       ]
     },
@@ -27564,6 +27743,17 @@
       ]
     },
     {
+      "id": "source:android/local.properties",
+      "kind": "source",
+      "name": "local.properties",
+      "path": "android/local.properties",
+      "tags": [
+        "android/local",
+        "android/local.properties",
+        "properties"
+      ]
+    },
+    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",
@@ -27630,6 +27820,17 @@
         "ios/app/app/appdelegate",
         "ios/app/app/appdelegate.swift",
         "swift"
+      ]
+    },
+    {
+      "id": "source:ios/App/App/GoogleService-Info.plist",
+      "kind": "source",
+      "name": "GoogleService-Info.plist",
+      "path": "ios/App/App/GoogleService-Info.plist",
+      "tags": [
+        "ios/app/app/googleservice-info",
+        "ios/app/app/googleservice-info.plist",
+        "plist"
       ]
     },
     {
@@ -28399,6 +28600,39 @@
       "tags": [
         "packages/architecture-core/src/dom-identity/mint",
         "packages/architecture-core/src/dom-identity/mint.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "kind": "source",
+      "name": "page-registry-reader.ts",
+      "path": "packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/page-registry-reader",
+        "packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "kind": "source",
+      "name": "pending-source-match.ts",
+      "path": "packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/pending-source-match",
+        "packages/architecture-core/src/dom-identity/pending-source-match.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "kind": "source",
+      "name": "project-reachability.ts",
+      "path": "packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/project-reachability",
+        "packages/architecture-core/src/dom-identity/project-reachability.ts",
         "ts"
       ]
     },
@@ -37382,6 +37616,17 @@
       ]
     },
     {
+      "id": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "kind": "source",
+      "name": "ui-forwarded-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-forwarded-attributes",
+        "packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
       "kind": "source",
       "name": "ui-instance.ts",
@@ -37411,6 +37656,17 @@
       "tags": [
         "packages/ui-registry-core/src/domain/ui-page-attributes",
         "packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "kind": "source",
+      "name": "ui-page-context-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-page-context-attributes",
+        "packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
         "ts"
       ]
     },
@@ -37643,6 +37899,17 @@
       "tags": [
         "packages/ui-registry-core/src/simulation/value-contracts",
         "packages/ui-registry-core/src/simulation/value-contracts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/tooling.ts",
+      "kind": "source",
+      "name": "tooling.ts",
+      "path": "packages/ui-registry-core/src/tooling.ts",
+      "tags": [
+        "packages/ui-registry-core/src/tooling",
+        "packages/ui-registry-core/src/tooling.ts",
         "ts"
       ]
     },
@@ -43653,18 +43920,6 @@
         "src/features/google-play-console/presentation/components/use-android-static-preview",
         "src/features/google-play-console/presentation/components/use-android-static-preview.ts",
         "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "kind": "source",
-      "name": "deploy-runbook-controls.ui.ts",
-      "path": "src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "tags": [
-        "src/features/google-play-console/presentation/deploy-runbook-controls",
-        "src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-        "ts",
-        "ui"
       ]
     },
     {
@@ -51591,6 +51846,18 @@
       "tags": [
         "packages/architecture-core/src/tests/dom-identity-coverage-contract",
         "packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "kind": "test",
+      "name": "dom-identity-repetition.test.ts",
+      "path": "packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/dom-identity-repetition",
+        "packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
         "test",
         "ts"
       ]
@@ -63941,6 +64208,12 @@
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/ui-registry-core",
       "kind": "references",
+      "detail": "@asol/ui-registry-core/tooling"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "references",
       "detail": "packages/ui-registry-core/"
     },
     {
@@ -71449,6 +71722,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
+      "to": "source:android/local.properties",
+      "kind": "references",
+      "detail": "android/local.properties"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
       "to": "source:packages/native-core/scripts/android-build-preflight.ts",
       "kind": "references",
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
@@ -71538,6 +71817,12 @@
       "to": "source:ios/App/App.xcodeproj/project.pbxproj",
       "kind": "references",
       "detail": "ios/App/App.xcodeproj/project.pbxproj"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
+      "to": "source:ios/App/App/GoogleService-Info.plist",
+      "kind": "references",
+      "detail": "ios/App/App/GoogleService-Info.plist"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
@@ -72048,6 +72333,12 @@
       "to": "source:android/capacitor.settings.gradle",
       "kind": "references",
       "detail": "android/capacitor.settings.gradle"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
+      "to": "source:android/local.properties",
+      "kind": "references",
+      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
@@ -72808,6 +73099,12 @@
       "to": "script:scripts/android/gradle.ts",
       "kind": "references",
       "detail": "scripts/android/gradle.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
+      "to": "source:android/local.properties",
+      "kind": "references",
+      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
@@ -75747,6 +76044,42 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/architecture-core/src/dom-identity/mint.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
       "kind": "documents",
       "detail": "packages/architecture-core/"
     },
@@ -80552,6 +80885,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -80565,6 +80904,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -80691,6 +81036,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/ui-registry-core/src/simulation/value-contracts.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ui-registry-core/src/tooling.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -80823,6 +81174,18 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
       "kind": "documents",
       "detail": "packages/architecture-core/"
     },
@@ -84530,6 +84893,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/add-duplicate-jsx-guard.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/ui-registry/apply-pending-runner.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -84560,6 +84929,60 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/fix-pharmacy-product-instance.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/fix-primary-contact-entry-instances.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/fix-repeated-computed-ui.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/fix-simple-computed-ui.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/fix-stage112-forwarding-seams.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/fix-stage121-storage-slot-instances.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/fix-stage124-single-ui-source.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/fix-stage62-duplicate-ui.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -84578,7 +85001,43 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/make-simulation-selection-explicit.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/migrate-contact-entry-instances.mjs",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/migrate-dialog-content-identities.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/migrate-direct-iterator-instances.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/ui-registry/pending-source-resolver.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/runtime-multiplicity-audit.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/ui-registry/runtime-multiplicity-summary.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -84920,6 +85379,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:android/local.properties",
+      "kind": "documents",
+      "detail": "android/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:android/settings.gradle",
       "kind": "documents",
       "detail": "android/"
@@ -84951,6 +85416,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:ios/App/App/AppDelegate.swift",
+      "kind": "documents",
+      "detail": "ios/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:ios/App/App/GoogleService-Info.plist",
       "kind": "documents",
       "detail": "ios/"
     },
@@ -90357,12 +90828,6 @@
     {
       "from": "domain:platform-features",
       "to": "source:src/features/google-play-console/presentation/components/use-android-static-preview.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
-      "to": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -100442,12 +100907,6 @@
     },
     {
       "from": "domain:ui-components",
-      "to": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
       "to": "source:src/features/google-play-console/presentation/deploy-runbook-copy.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -106874,6 +107333,11 @@
     },
     {
       "from": "package:@asol/architecture-core",
+      "to": "external-dependency:react",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/architecture-core",
       "to": "external-dependency:typescript",
       "kind": "imports"
     },
@@ -107101,6 +107565,11 @@
     {
       "from": "package:@asol/map-core",
       "to": "package:@asol/native-core",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/map-core",
+      "to": "package:@asol/ui-registry-core",
       "kind": "imports"
     },
     {
@@ -138655,6 +139124,11 @@
       "detail": "../src/core/config/runtime-context"
     },
     {
+      "from": "script:scripts/ui-registry/add-duplicate-jsx-guard.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
       "from": "script:scripts/ui-registry/apply-pending-runner.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -138740,6 +139214,99 @@
       "detail": "./generate-uid-inventory"
     },
     {
+      "from": "script:scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-pharmacy-product-instance.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-pharmacy-product-instance.mjs",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-primary-contact-entry-instances.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-primary-contact-entry-instances.mjs",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-repeated-computed-ui.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-repeated-computed-ui.mjs",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-simple-computed-ui.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-simple-computed-ui.mjs",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-stage112-forwarding-seams.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-stage112-forwarding-seams.mjs",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-stage121-storage-slot-instances.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-stage124-single-ui-source.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-stage62-duplicate-ui.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/fix-stage62-duplicate-ui.mjs",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
       "from": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -138779,9 +139346,59 @@
       "detail": "@asol/architecture-core"
     },
     {
+      "from": "script:scripts/ui-registry/make-simulation-selection-explicit.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/migrate-contact-entry-instances.mjs",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/migrate-contact-entry-instances.mjs",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/migrate-dialog-content-identities.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/migrate-dialog-content-identities.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/migrate-direct-iterator-instances.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/migrate-direct-iterator-instances.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/migrate-direct-iterator-instances.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
+    },
+    {
       "from": "script:scripts/ui-registry/pending-source-resolver.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/pending-source-resolver.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
     },
     {
       "from": "script:scripts/ui-registry/pending-source-resolver.ts",
@@ -138790,15 +139407,49 @@
       "detail": "@asol/ui-registry-core"
     },
     {
+      "from": "script:scripts/ui-registry/runtime-multiplicity-audit.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/runtime-multiplicity-audit.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/runtime-multiplicity-audit.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
+    },
+    {
+      "from": "script:scripts/ui-registry/runtime-multiplicity-summary.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ui-registry/runtime-multiplicity-summary.ts",
+      "to": "script:scripts/ui-registry/runtime-multiplicity-audit.ts",
+      "kind": "imports",
+      "detail": "./runtime-multiplicity-audit"
+    },
+    {
       "from": "script:scripts/ui-registry/simulation-registry-model.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
     },
     {
       "from": "script:scripts/ui-registry/simulation-registry-model.ts",
-      "to": "package:@asol/ui-registry-core",
+      "to": "external-dependency:typescript",
       "kind": "imports",
-      "detail": "@asol/ui-registry-core"
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/ui-registry/simulation-registry-model.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
     },
     {
       "from": "script:scripts/ui-registry/simulation-report.ts",
@@ -139421,6 +140072,11 @@
       "kind": "affects-runtime"
     },
     {
+      "from": "source:android/local.properties",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
       "from": "source:android/settings.gradle",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -139447,6 +140103,11 @@
     },
     {
       "from": "source:ios/App/App/AppDelegate.swift",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:ios/App/App/GoogleService-Info.plist",
       "to": "runtime:ios",
       "kind": "affects-runtime"
     },
@@ -141659,6 +142320,12 @@
     },
     {
       "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "kind": "imports",
+      "detail": "../dom-identity/page-registry-reader"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/ui-attribute-contract.ts",
       "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
       "kind": "imports",
       "detail": "../dom-identity/tsx-ast"
@@ -142156,6 +142823,132 @@
       "detail": "@asol/ui-registry-core"
     },
     {
+      "from": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "./tsx-ast"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "./tsx-ast"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "./tsx-ast"
+    },
+    {
       "from": "source:packages/architecture-core/src/dom-identity/repetition.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -142268,6 +143061,12 @@
       "to": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
       "kind": "imports",
       "detail": "./descriptor-literals"
+    },
+    {
+      "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "kind": "imports",
+      "detail": "./page-registry-reader"
     },
     {
       "from": "source:packages/architecture-core/src/dom-identity/uid-catalog.ts",
@@ -142415,6 +143214,12 @@
     },
     {
       "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/descriptor-literals.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/descriptor-literals"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
       "to": "source:packages/architecture-core/src/dom-identity/migration.ts",
       "kind": "imports",
       "detail": "./dom-identity/migration"
@@ -142427,9 +143232,33 @@
     },
     {
       "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/page-registry-reader"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/pending-source-match"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/project-reachability"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
       "to": "source:packages/architecture-core/src/dom-identity/repetition.ts",
       "kind": "imports",
       "detail": "./dom-identity/repetition"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/tsx-ast.ts",
+      "kind": "imports",
+      "detail": "./dom-identity/tsx-ast"
     },
     {
       "from": "source:packages/architecture-core/src/index.ts",
@@ -156722,6 +157551,12 @@
     },
     {
       "from": "source:packages/map-core/src/AddressBalloon.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:packages/map-core/src/AddressBalloon.tsx",
       "to": "source:packages/map-core/src/types.ts",
       "kind": "imports",
       "detail": "./types"
@@ -156779,6 +157614,12 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:packages/map-core/src/AsolMap.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:packages/map-core/src/AsolMap.tsx",
@@ -156857,6 +157698,12 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
+    },
+    {
+      "from": "source:packages/map-core/src/AsolMapControls.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:packages/map-core/src/AsolMapControls.tsx",
@@ -176023,6 +176870,12 @@
     },
     {
       "from": "source:packages/storage-image-manager-core/src/components/storage-image-manager-ui.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/components/storage-image-manager-ui.tsx",
       "to": "source:packages/storage-image-manager-core/src/components/storage-image-manager.types.ts",
       "kind": "imports",
       "detail": "./storage-image-manager.types"
@@ -178002,6 +178855,66 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-data-attributes.ts",
+      "kind": "imports",
+      "detail": "./ui-data-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-descriptor.ts",
+      "kind": "imports",
+      "detail": "./ui-descriptor"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
+      "kind": "imports",
+      "detail": "./ui-instance"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-state.ts",
+      "kind": "imports",
+      "detail": "./ui-state"
+    },
+    {
       "from": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -178111,6 +179024,54 @@
     },
     {
       "from": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
+      "kind": "imports",
+      "detail": "./ui-uid"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-definition.ts",
+      "kind": "imports",
+      "detail": "./ui-page-definition"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-token.ts",
+      "kind": "imports",
+      "detail": "./ui-token"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
       "to": "source:packages/ui-registry-core/src/domain/ui-uid.ts",
       "kind": "imports",
       "detail": "./ui-uid"
@@ -178453,6 +179414,12 @@
     },
     {
       "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-forwarded-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
       "to": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
       "kind": "imports",
       "detail": "./domain/ui-instance"
@@ -178468,6 +179435,12 @@
       "to": "source:packages/ui-registry-core/src/domain/ui-page-attributes.ts",
       "kind": "imports",
       "detail": "./domain/ui-page-attributes"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/index.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "kind": "imports",
+      "detail": "./domain/ui-page-context-attributes"
     },
     {
       "from": "source:packages/ui-registry-core/src/index.ts",
@@ -178516,12 +179489,6 @@
       "to": "source:packages/ui-registry-core/src/pending/source-locator-match.ts",
       "kind": "imports",
       "detail": "./pending/source-locator-match"
-    },
-    {
-      "from": "source:packages/ui-registry-core/src/index.ts",
-      "to": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
-      "kind": "imports",
-      "detail": "./registry/generated/ui-uid-inventory"
     },
     {
       "from": "source:packages/ui-registry-core/src/index.ts",
@@ -178630,12 +179597,6 @@
       "to": "source:packages/ui-registry-core/src/domain/ui-element-kind.ts",
       "kind": "imports",
       "detail": "../domain/ui-element-kind"
-    },
-    {
-      "from": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
-      "to": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
-      "kind": "imports",
-      "detail": "../domain/ui-instance"
     },
     {
       "from": "source:packages/ui-registry-core/src/pending/pending-request-validation.ts",
@@ -178993,6 +179954,12 @@
     },
     {
       "from": "source:packages/ui-registry-core/src/simulation/simulation-registry.ts",
+      "to": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
+      "kind": "imports",
+      "detail": "../domain/ui-instance"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/simulation/simulation-registry.ts",
       "to": "source:packages/ui-registry-core/src/domain/ui-interaction.ts",
       "kind": "imports",
       "detail": "../domain/ui-interaction"
@@ -179098,6 +180065,48 @@
       "from": "source:packages/ui-registry-core/src/simulation/value-contracts.ts",
       "to": "package:@asol/ui-registry-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/tooling.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/tooling.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/tooling.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/tooling.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/tooling.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/tooling.ts",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/tooling.ts",
+      "to": "source:packages/ui-registry-core/src/registry/generated/ui-uid-inventory.ts",
+      "kind": "imports",
+      "detail": "./registry/generated/ui-uid-inventory"
+    },
+    {
+      "from": "source:packages/ui-registry-core/src/tooling.ts",
+      "to": "source:packages/ui-registry-core/src/registry/ui-uid-catalog-entry.ts",
+      "kind": "imports",
+      "detail": "./registry/ui-uid-catalog-entry"
     },
     {
       "from": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
@@ -201624,42 +202633,6 @@
       "detail": "./android-release-paths-data"
     },
     {
-      "from": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "to": "feature:google-play-console",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "to": "package:@asol/ui-registry-core",
-      "kind": "imports",
-      "detail": "@asol/ui-registry-core"
-    },
-    {
       "from": "source:src/features/google-play-console/presentation/deploy-runbook-copy.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -201868,12 +202841,6 @@
       "to": "package:@asol/ui-registry-core",
       "kind": "imports",
       "detail": "@asol/ui-registry-core"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "to": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "kind": "imports",
-      "detail": "./deploy-runbook-controls.ui"
     },
     {
       "from": "source:src/features/google-play-console/presentation/DeployRunbookControls.tsx",
@@ -203962,12 +204929,6 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/tabs/tab-registry.ts",
-      "to": "package:@asol/ui-registry-core",
-      "kind": "imports",
-      "detail": "@asol/ui-registry-core"
     },
     {
       "from": "source:src/features/google-play-console/presentation/tabs/tab-registry.ts",
@@ -239281,6 +240242,12 @@
     },
     {
       "from": "source:src/shared/ui/confirm-dialog.tsx",
+      "to": "package:@asol/ui-registry-core",
+      "kind": "imports",
+      "detail": "@asol/ui-registry-core"
+    },
+    {
+      "from": "source:src/shared/ui/confirm-dialog.tsx",
       "to": "source:src/shared/ui/button.tsx",
       "kind": "imports",
       "detail": "./button"
@@ -240018,12 +240985,6 @@
       "to": "source:src/shared/ui/phone-country-dialog.tsx",
       "kind": "imports",
       "detail": "./phone-country-dialog"
-    },
-    {
-      "from": "source:src/shared/ui/phone-field.tsx",
-      "to": "source:src/shared/ui/ui-primitive-attributes.ts",
-      "kind": "imports",
-      "detail": "./ui-primitive-attributes"
     },
     {
       "from": "source:src/shared/ui/phone-field.tsx",
@@ -241155,6 +242116,58 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "source:packages/architecture-core/src/dom-identity/repetition.ts",
+      "kind": "imports",
+      "detail": "../dom-identity/repetition"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "external-dependency:react",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/architecture-core/src/tests/index.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -241195,6 +242208,12 @@
       "to": "test:packages/architecture-core/src/tests/application-cycle-contract.test.ts",
       "kind": "imports",
       "detail": "./application-cycle-contract.test"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/index.test.ts",
+      "to": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "kind": "imports",
+      "detail": "./dom-identity-repetition.test"
     },
     {
       "from": "test:packages/architecture-core/src/tests/index.test.ts",

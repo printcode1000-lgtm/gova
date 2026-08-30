@@ -6231,6 +6231,7 @@
         "@asol/trending-ribbon-core",
         "@asol/trending-ribbon-core/server",
         "@asol/ui-registry-core",
+        "@asol/ui-registry-core/tooling",
         "@asol/vercel-deploy-core",
         "@asol/vercel-deploy-core/github-push-identity",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
@@ -22340,9 +22341,11 @@
       "kind": "package",
       "name": "@asol/ui-registry-core",
       "path": "packages/ui-registry-core",
-      "summary": "UiRegistry identity contract, page registry, and DOM attribute builders; Layer: capability; Public exports: .",
+      "summary": "UiRegistry identity contract, page registry, and DOM attribute builders; Layer: capability; Public exports: ., ./tooling",
       "tags": [
         ".",
+        "./tooling",
+        "/tooling",
         "@asol/ui-registry-core",
         "and",
         "attribute",
@@ -26853,6 +26856,17 @@
       ]
     },
     {
+      "id": "script:scripts/ui-registry/add-duplicate-jsx-guard.mjs",
+      "kind": "script",
+      "name": "add-duplicate-jsx-guard.mjs",
+      "path": "scripts/ui-registry/add-duplicate-jsx-guard.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/add-duplicate-jsx-guard",
+        "scripts/ui-registry/add-duplicate-jsx-guard.mjs"
+      ]
+    },
+    {
       "id": "script:scripts/ui-registry/apply-pending-runner.ts",
       "kind": "script",
       "name": "apply-pending-runner.ts",
@@ -26908,6 +26922,105 @@
       ]
     },
     {
+      "id": "script:scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+      "kind": "script",
+      "name": "debug-runtime-multiplicity-edges.ts",
+      "path": "scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+      "tags": [
+        "scripts/ui-registry/debug-runtime-multiplicity-edges",
+        "scripts/ui-registry/debug-runtime-multiplicity-edges.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-pharmacy-product-instance.mjs",
+      "kind": "script",
+      "name": "fix-pharmacy-product-instance.mjs",
+      "path": "scripts/ui-registry/fix-pharmacy-product-instance.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-pharmacy-product-instance",
+        "scripts/ui-registry/fix-pharmacy-product-instance.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-primary-contact-entry-instances.mjs",
+      "kind": "script",
+      "name": "fix-primary-contact-entry-instances.mjs",
+      "path": "scripts/ui-registry/fix-primary-contact-entry-instances.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-primary-contact-entry-instances",
+        "scripts/ui-registry/fix-primary-contact-entry-instances.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-repeated-computed-ui.mjs",
+      "kind": "script",
+      "name": "fix-repeated-computed-ui.mjs",
+      "path": "scripts/ui-registry/fix-repeated-computed-ui.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-repeated-computed-ui",
+        "scripts/ui-registry/fix-repeated-computed-ui.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-simple-computed-ui.mjs",
+      "kind": "script",
+      "name": "fix-simple-computed-ui.mjs",
+      "path": "scripts/ui-registry/fix-simple-computed-ui.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-simple-computed-ui",
+        "scripts/ui-registry/fix-simple-computed-ui.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-stage112-forwarding-seams.mjs",
+      "kind": "script",
+      "name": "fix-stage112-forwarding-seams.mjs",
+      "path": "scripts/ui-registry/fix-stage112-forwarding-seams.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-stage112-forwarding-seams",
+        "scripts/ui-registry/fix-stage112-forwarding-seams.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-stage121-storage-slot-instances.mjs",
+      "kind": "script",
+      "name": "fix-stage121-storage-slot-instances.mjs",
+      "path": "scripts/ui-registry/fix-stage121-storage-slot-instances.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-stage121-storage-slot-instances",
+        "scripts/ui-registry/fix-stage121-storage-slot-instances.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-stage124-single-ui-source.mjs",
+      "kind": "script",
+      "name": "fix-stage124-single-ui-source.mjs",
+      "path": "scripts/ui-registry/fix-stage124-single-ui-source.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-stage124-single-ui-source",
+        "scripts/ui-registry/fix-stage124-single-ui-source.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/fix-stage62-duplicate-ui.mjs",
+      "kind": "script",
+      "name": "fix-stage62-duplicate-ui.mjs",
+      "path": "scripts/ui-registry/fix-stage62-duplicate-ui.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/fix-stage62-duplicate-ui",
+        "scripts/ui-registry/fix-stage62-duplicate-ui.mjs"
+      ]
+    },
+    {
       "id": "script:scripts/ui-registry/generate-component-marker-bridge.ts",
       "kind": "script",
       "name": "generate-component-marker-bridge.ts",
@@ -26941,6 +27054,50 @@
       ]
     },
     {
+      "id": "script:scripts/ui-registry/make-simulation-selection-explicit.mjs",
+      "kind": "script",
+      "name": "make-simulation-selection-explicit.mjs",
+      "path": "scripts/ui-registry/make-simulation-selection-explicit.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/make-simulation-selection-explicit",
+        "scripts/ui-registry/make-simulation-selection-explicit.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/migrate-contact-entry-instances.mjs",
+      "kind": "script",
+      "name": "migrate-contact-entry-instances.mjs",
+      "path": "scripts/ui-registry/migrate-contact-entry-instances.mjs",
+      "tags": [
+        "mjs",
+        "scripts/ui-registry/migrate-contact-entry-instances",
+        "scripts/ui-registry/migrate-contact-entry-instances.mjs"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/migrate-dialog-content-identities.ts",
+      "kind": "script",
+      "name": "migrate-dialog-content-identities.ts",
+      "path": "scripts/ui-registry/migrate-dialog-content-identities.ts",
+      "tags": [
+        "scripts/ui-registry/migrate-dialog-content-identities",
+        "scripts/ui-registry/migrate-dialog-content-identities.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/migrate-direct-iterator-instances.ts",
+      "kind": "script",
+      "name": "migrate-direct-iterator-instances.ts",
+      "path": "scripts/ui-registry/migrate-direct-iterator-instances.ts",
+      "tags": [
+        "scripts/ui-registry/migrate-direct-iterator-instances",
+        "scripts/ui-registry/migrate-direct-iterator-instances.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/ui-registry/pending-source-resolver.ts",
       "kind": "script",
       "name": "pending-source-resolver.ts",
@@ -26948,6 +27105,28 @@
       "tags": [
         "scripts/ui-registry/pending-source-resolver",
         "scripts/ui-registry/pending-source-resolver.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/runtime-multiplicity-audit.ts",
+      "kind": "script",
+      "name": "runtime-multiplicity-audit.ts",
+      "path": "scripts/ui-registry/runtime-multiplicity-audit.ts",
+      "tags": [
+        "scripts/ui-registry/runtime-multiplicity-audit",
+        "scripts/ui-registry/runtime-multiplicity-audit.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/ui-registry/runtime-multiplicity-summary.ts",
+      "kind": "script",
+      "name": "runtime-multiplicity-summary.ts",
+      "path": "scripts/ui-registry/runtime-multiplicity-summary.ts",
+      "tags": [
+        "scripts/ui-registry/runtime-multiplicity-summary",
+        "scripts/ui-registry/runtime-multiplicity-summary.ts",
         "ts"
       ]
     },
@@ -27564,6 +27743,17 @@
       ]
     },
     {
+      "id": "source:android/local.properties",
+      "kind": "source",
+      "name": "local.properties",
+      "path": "android/local.properties",
+      "tags": [
+        "android/local",
+        "android/local.properties",
+        "properties"
+      ]
+    },
+    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",
@@ -27630,6 +27820,17 @@
         "ios/app/app/appdelegate",
         "ios/app/app/appdelegate.swift",
         "swift"
+      ]
+    },
+    {
+      "id": "source:ios/App/App/GoogleService-Info.plist",
+      "kind": "source",
+      "name": "GoogleService-Info.plist",
+      "path": "ios/App/App/GoogleService-Info.plist",
+      "tags": [
+        "ios/app/app/googleservice-info",
+        "ios/app/app/googleservice-info.plist",
+        "plist"
       ]
     },
     {
@@ -28399,6 +28600,39 @@
       "tags": [
         "packages/architecture-core/src/dom-identity/mint",
         "packages/architecture-core/src/dom-identity/mint.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "kind": "source",
+      "name": "page-registry-reader.ts",
+      "path": "packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/page-registry-reader",
+        "packages/architecture-core/src/dom-identity/page-registry-reader.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "kind": "source",
+      "name": "pending-source-match.ts",
+      "path": "packages/architecture-core/src/dom-identity/pending-source-match.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/pending-source-match",
+        "packages/architecture-core/src/dom-identity/pending-source-match.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "kind": "source",
+      "name": "project-reachability.ts",
+      "path": "packages/architecture-core/src/dom-identity/project-reachability.ts",
+      "tags": [
+        "packages/architecture-core/src/dom-identity/project-reachability",
+        "packages/architecture-core/src/dom-identity/project-reachability.ts",
         "ts"
       ]
     },
@@ -37382,6 +37616,17 @@
       ]
     },
     {
+      "id": "source:packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "kind": "source",
+      "name": "ui-forwarded-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-forwarded-attributes",
+        "packages/ui-registry-core/src/domain/ui-forwarded-attributes.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/ui-registry-core/src/domain/ui-instance.ts",
       "kind": "source",
       "name": "ui-instance.ts",
@@ -37411,6 +37656,17 @@
       "tags": [
         "packages/ui-registry-core/src/domain/ui-page-attributes",
         "packages/ui-registry-core/src/domain/ui-page-attributes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "kind": "source",
+      "name": "ui-page-context-attributes.ts",
+      "path": "packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
+      "tags": [
+        "packages/ui-registry-core/src/domain/ui-page-context-attributes",
+        "packages/ui-registry-core/src/domain/ui-page-context-attributes.ts",
         "ts"
       ]
     },
@@ -37643,6 +37899,17 @@
       "tags": [
         "packages/ui-registry-core/src/simulation/value-contracts",
         "packages/ui-registry-core/src/simulation/value-contracts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ui-registry-core/src/tooling.ts",
+      "kind": "source",
+      "name": "tooling.ts",
+      "path": "packages/ui-registry-core/src/tooling.ts",
+      "tags": [
+        "packages/ui-registry-core/src/tooling",
+        "packages/ui-registry-core/src/tooling.ts",
         "ts"
       ]
     },
@@ -43653,18 +43920,6 @@
         "src/features/google-play-console/presentation/components/use-android-static-preview",
         "src/features/google-play-console/presentation/components/use-android-static-preview.ts",
         "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "kind": "source",
-      "name": "deploy-runbook-controls.ui.ts",
-      "path": "src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-      "tags": [
-        "src/features/google-play-console/presentation/deploy-runbook-controls",
-        "src/features/google-play-console/presentation/deploy-runbook-controls.ui.ts",
-        "ts",
-        "ui"
       ]
     },
     {
@@ -51591,6 +51846,18 @@
       "tags": [
         "packages/architecture-core/src/tests/dom-identity-coverage-contract",
         "packages/architecture-core/src/tests/dom-identity-coverage-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "kind": "test",
+      "name": "dom-identity-repetition.test.ts",
+      "path": "packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/dom-identity-repetition",
+        "packages/architecture-core/src/tests/dom-identity-repetition.test.ts",
         "test",
         "ts"
       ]
