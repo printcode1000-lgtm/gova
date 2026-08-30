@@ -241,7 +241,9 @@ if (currentOriginMain && currentOriginMain !== baseSha) {
 }
 
 heartbeat(agentId, "pushing");
-runIn("git", ["push", "origin", `HEAD:${targetRef}`]);
+// Fully qualified: the worktree is on a detached HEAD, so git cannot infer the
+// namespace of an unqualified destination and refuses to guess.
+runIn("git", ["push", "origin", `HEAD:refs/heads/${targetRef}`]);
 
 operation.write("success", 0);
 console.log(`resultingSha=${resultingSha}`);
