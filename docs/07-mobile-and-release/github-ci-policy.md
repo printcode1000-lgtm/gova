@@ -129,6 +129,29 @@ See [Local Agent Runner Pool](./local-agent-runner-pool.md).
 - Branch protection or any active rule that can reject or delay an update to `main`
 - A required status check named `verify` or any other job that blocks `main`
 
+### How `run:` steps are judged
+
+A workflow's `run:` values are checked in two different ways, because the two
+YAML forms mean different things:
+
+- **`run: <command>`** — one command, which must appear on that workflow's
+  allowlist. A local agent workflow may only invoke its own apply script.
+- **`run: |`** — a shell block. It is a script, not a command, so it is held to
+  the forbidden-command list instead: no `npm run build`, `npm test`,
+  `npm run architecture:check`, `npm ci`, deploy, or OTA command may appear
+  anywhere inside it.
+
+Both forms are enforced by `runValues()` in `scripts/github-ci-policy.ts` and
+covered by `npm run test:local-agent-workflows`, which asserts that the real
+workflows are clean *and* that a forbidden command planted inside a shell block
+is still refused.
+
+The distinction is not cosmetic. Reading a block scalar with the single-line
+expression yields the literal `|`, which is on no allowlist and was reported as a
+forbidden command — a false positive that failed `architecture:check`, and with it
+`npm run build` at gate 5 of 53, for each of the three legitimate shell blocks
+these workflows carry.
+
 `pull_request` is allowed only as a docs-aware informational workflow for the
 same path filter. It must not become a required status check.
 

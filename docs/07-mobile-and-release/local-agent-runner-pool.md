@@ -677,15 +677,17 @@ Other commands:
 | `npm run local-agent:dispatch:check -- <file>` | validate a request document |
 | `npm run local-agent:host:backup` | capture the host configuration that lives outside the project |
 | `npm run local-agent:host:restore` | replay that configuration onto a rebuilt machine |
-| `npm run test:local-agent-core` | control-plane regression and adversarial tests |
+| `npm run test:local-agent-core` | the package's own regression and adversarial tests |
+| `npm run test:local-agent-workflows` | the workflow-policy half, which reads `.github/workflows` |
 
 ## Host Backup And Recovery
 
 The repository can always be recloned. The parts of the local server that live
 *outside* it cannot: the systemd user units, linger, the runner registrations,
-and each runner's `.env` and `.path`. `npm run local-agent:host:backup` captures
-exactly those into `config/local-agent-host/`, which is tracked — so the recovery
-material travels with the git remote instead of dying with the disk.
+each runner's `.env` and `.path`, and the companion repositories that join this
+machine to the others. `npm run local-agent:host:backup` captures exactly those
+into `config/local-agent-host/`, which is tracked — so the recovery material
+travels with the git remote instead of dying with the disk.
 
 `.credentials`, `.credentials_rsaparams`, and `.registration-token` are never
 captured. They are registration secrets, and a rebuilt runner registers again

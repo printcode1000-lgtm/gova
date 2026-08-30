@@ -33,6 +33,13 @@ Before scan, `scripts/architecture-check.ts` runs:
 | Storage profiles validation | `@asol/storage-core/server` `validateStorageProfilesAtStartup()` |
 | Category data validation | `src/features/categories/infrastructure/validation.engine.ts` |
 
+Adding a package is therefore three edits, not one: the folder itself, an entry in
+`capability-registry.ts`, and its `workspacePackages` line in
+`config/runtime-compatibility-reference.json`. Missing the third fails the very
+first preflight with "is new and has not been compatibility-reviewed", and
+deleting a package without removing its line fails the same preflight with "is
+missing from the current repository".
+
 These stay in the CLI because `@asol/architecture-core` MUST NOT import application data (would violate the rules it enforces).
 
 ## Scan phases (`runArchitectureCheck`)
