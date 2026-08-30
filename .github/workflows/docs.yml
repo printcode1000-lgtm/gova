@@ -21,9 +21,12 @@ on:
       - "scripts/architecture-check.ts"
       - "scripts/runtime/**"
       - "scripts/github-ci-policy.ts"
+      - "scripts/local-agent-main-apply.ts"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/docs.yml"
+      - ".github/workflows/local-agent-main.yml"
+      - ".github/workflows/local-agent-workspace.yml"
   pull_request:
     branches:
       - main
@@ -38,9 +41,12 @@ on:
       - "scripts/architecture-check.ts"
       - "scripts/runtime/**"
       - "scripts/github-ci-policy.ts"
+      - "scripts/local-agent-main-apply.ts"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/docs.yml"
+      - ".github/workflows/local-agent-main.yml"
+      - ".github/workflows/local-agent-workspace.yml"
 
 permissions:
   actions: read

@@ -104,6 +104,22 @@ as labels such as `env:GOOGLE_PLAY_JSON_KEY_FILE`; the configured path is used
 only for the existence check and is never printed. Use the command to see what
 restore still owes a machine without dumping `.env` into a log.
 
+### Agent use of `secrets:backup` and `secrets:restore`
+
+Local and cloud-driven agents use `secrets:verify`, `secrets:restore`, and
+`secrets:backup` as a closed loop:
+
+- `secrets:verify` reports missing key names and file labels without values.
+- `secrets:restore` hydrates a clean local runner checkout from the encrypted
+  portable archive when the archive password is available locally.
+- `secrets:backup` refreshes the committed encrypted archive after a trusted
+  local change to ignored secret files.
+
+This lets a local runner recover the project secrets needed for deploy and
+release work while keeping plaintext credentials on the local machine. Agents
+must not send restored secrets to GitHub logs, workflow inputs, coordination
+messages, or commits.
+
 ### Auto-restore for release commands
 
 `scripts/ensure-release-secrets-restored.ts` restores the portable archive only

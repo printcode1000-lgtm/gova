@@ -13505,6 +13505,8 @@
         "scripts/docs/docs-ci.ts",
         "scripts/github-ci-policy",
         "scripts/github-ci-policy.ts",
+        "scripts/local-agent-main-apply",
+        "scripts/local-agent-main-apply.ts",
         "scripts/protect-main-branch",
         "scripts/protect-main-branch.ts",
         "scripts/runtime/check",
@@ -13518,6 +13520,43 @@
         "to",
         "ts",
         "wait"
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
+      "kind": "document",
+      "name": "Local Agent Runner Pool",
+      "path": "docs/07-mobile-and-release/local-agent-runner-pool.md",
+      "summary": "This document is the operating guide for cloud agents that need to execute work on the local machine through GitHub Actions.",
+      "tags": [
+        "actions",
+        "agent",
+        "agents",
+        "cloud",
+        "docs/07-mobile-and-release/local-agent-runner-pool",
+        "docs/07-mobile-and-release/local-agent-runner-pool.md",
+        "document",
+        "execute",
+        "for",
+        "github",
+        "guide",
+        "is",
+        "local",
+        "local agent runner pool",
+        "machine",
+        "md",
+        "need",
+        "on",
+        "operating",
+        "pool",
+        "runner",
+        "that",
+        "the",
+        "this",
+        "this document is the operating guide for cloud agents that need to execute work on the local machine through github actions.",
+        "through",
+        "to",
+        "work"
       ]
     },
     {
@@ -13635,6 +13674,8 @@
         "scripts & workflows",
         "scripts/build-all-services",
         "scripts/build-all-services.ts",
+        "scripts/local-agent-main-apply",
+        "scripts/local-agent-main-apply.ts",
         "scripts/verify-service-mirrors",
         "scripts/verify-service-mirrors.ts",
         "the",
@@ -17295,6 +17336,19 @@
       ]
     },
     {
+      "id": "environment-key:DOCS_CONTRACT_CHANGE",
+      "kind": "environment-key",
+      "name": "DOCS_CONTRACT_CHANGE",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "docs_contract_change",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD",
       "kind": "environment-key",
       "name": "FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD",
@@ -17646,6 +17700,19 @@
       ]
     },
     {
+      "id": "environment-key:GITHUB_RUN_ID",
+      "kind": "environment-key",
+      "name": "GITHUB_RUN_ID",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "github_run_id",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:GOOGLE_PLAY_JSON_KEY_FILE",
       "kind": "environment-key",
       "name": "GOOGLE_PLAY_JSON_KEY_FILE",
@@ -17867,6 +17934,19 @@
       ]
     },
     {
+      "id": "environment-key:GOVA_AGENT_COORDINATION_DIR",
+      "kind": "environment-key",
+      "name": "GOVA_AGENT_COORDINATION_DIR",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_agent_coordination_dir",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:HOME",
       "kind": "environment-key",
       "name": "HOME",
@@ -17939,6 +18019,45 @@
       "tags": [
         "environment",
         "legacy_product_database_url",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_ID",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_ID",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_id",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_TARGET_MODE",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_TARGET_MODE",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_target_mode",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_VERIFICATION",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_VERIFICATION",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_verification",
         "server",
         "server tooling environment",
         "tooling"
@@ -26313,6 +26432,17 @@
       "tags": [
         "scripts/load-release-env",
         "scripts/load-release-env.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent-main-apply.ts",
+      "kind": "script",
+      "name": "local-agent-main-apply.ts",
+      "path": "scripts/local-agent-main-apply.ts",
+      "tags": [
+        "scripts/local-agent-main-apply",
+        "scripts/local-agent-main-apply.ts",
         "ts"
       ]
     },
@@ -72655,6 +72785,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
+      "to": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
+      "kind": "references",
+      "detail": "./local-agent-runner-pool.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "to": "script:scripts/architecture-check.ts",
       "kind": "references",
       "detail": "scripts/architecture-check.ts"
@@ -72679,6 +72815,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
+      "to": "script:scripts/local-agent-main-apply.ts",
+      "kind": "references",
+      "detail": "scripts/local-agent-main-apply.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "to": "script:scripts/protect-main-branch.ts",
       "kind": "references",
       "detail": "scripts/protect-main-branch.ts"
@@ -72694,6 +72836,11 @@
       "to": "test:scripts/tests/github-ci-policy.test.ts",
       "kind": "references",
       "detail": "scripts/tests/github-ci-policy.test.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
@@ -72723,6 +72870,12 @@
       "to": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "kind": "references",
       "detail": "./github-ci-policy.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
+      "kind": "references",
+      "detail": "./local-agent-runner-pool.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
@@ -72862,6 +73015,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "to": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
+      "kind": "references",
+      "detail": "./local-agent-runner-pool.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
       "to": "domain:architecture",
       "kind": "references",
       "detail": "docs/01-architecture/"
@@ -72877,6 +73036,12 @@
       "to": "script:scripts/build-all-services.ts",
       "kind": "references",
       "detail": "scripts/build-all-services.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "to": "script:scripts/local-agent-main-apply.ts",
+      "kind": "references",
+      "detail": "scripts/local-agent-main-apply.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
@@ -84594,6 +84759,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/load-release-env.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent-main-apply.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -138203,6 +138374,41 @@
       "to": "package:@asol/env-core",
       "kind": "imports",
       "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:DOCS_CONTRACT_CHANGE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:GITHUB_RUN_ID",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:GOVA_AGENT_COORDINATION_DIR",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:LOCAL_AGENT_ID",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:LOCAL_AGENT_TARGET_MODE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:LOCAL_AGENT_VERIFICATION",
+      "kind": "uses-environment"
     },
     {
       "from": "script:scripts/open-android-outputs.ts",

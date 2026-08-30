@@ -9,6 +9,7 @@ import {
   deploymentWorkflowViolations,
   DOCS_WORKFLOW_PATH_FILTERS,
   FORBIDDEN_CI_PATHS,
+  localAgentWorkflowViolations,
   verifyGithubCiPolicy,
 } from "../github-ci-policy";
 import { blockingMainRules } from "../github-main-policy";
@@ -18,8 +19,39 @@ assert.deepEqual(live, [], live.join("\n"));
 
 const docsSource = readFileSync(path.join(process.cwd(), ".github", "workflows", "docs.yml"), "utf8");
 const deploySource = readFileSync(path.join(process.cwd(), ".github", "workflows", "deploy-main.yml"), "utf8");
+const localAgentSource = readFileSync(path.join(process.cwd(), ".github", "workflows", "local-agent-main.yml"), "utf8");
+const localAgentWorkspaceSource = readFileSync(
+  path.join(process.cwd(), ".github", "workflows", "local-agent-workspace.yml"),
+  "utf8",
+);
 assert.equal(docsWorkflowViolations(docsSource).length, 0, docsWorkflowViolations(docsSource).join("\n"));
 assert.equal(deploymentWorkflowViolations(deploySource).length, 0, deploymentWorkflowViolations(deploySource).join("\n"));
+assert.equal(localAgentWorkflowViolations(localAgentSource).length, 0, localAgentWorkflowViolations(localAgentSource).join("\n"));
+assert.equal(
+  localAgentWorkflowViolations(localAgentWorkspaceSource).length,
+  0,
+  localAgentWorkflowViolations(localAgentWorkspaceSource).join("\n"),
+);
+assert.ok(
+  localAgentWorkflowViolations(
+    localAgentSource.replace("runs-on: [self-hosted, Linux, X64, gova]", "runs-on: ubuntu-latest"),
+  ).some((error) => error.includes("self-hosted")),
+);
+assert.ok(
+  localAgentWorkflowViolations(localAgentSource.replace("contents: write", "contents: read")).some((error) =>
+    error.includes("contents: write"),
+  ),
+);
+assert.ok(
+  localAgentWorkflowViolations(`${localAgentSource}\n      GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}\n`).some((error) =>
+    error.includes("secrets"),
+  ),
+);
+assert.ok(
+  localAgentWorkflowViolations(`${localAgentSource}\n      - run: cat .env.local\n`).some((error) =>
+    error.includes("not allowed"),
+  ),
+);
 assert.ok(
   docsWorkflowViolations(docsSource.replace("runs-on: [self-hosted, Linux, X64, gova]", "runs-on: ubuntu-latest")).some(
     (error) => error.includes("self-hosted"),
@@ -185,6 +217,8 @@ try {
   mkdirSync(path.join(fixtureRoot, ".github", "workflows"), { recursive: true });
   writeFileSync(path.join(fixtureRoot, ".github", "workflows", "docs.yml"), docsSource);
   writeFileSync(path.join(fixtureRoot, ".github", "workflows", "deploy-main.yml"), deploySource);
+  writeFileSync(path.join(fixtureRoot, ".github", "workflows", "local-agent-main.yml"), localAgentSource);
+  writeFileSync(path.join(fixtureRoot, ".github", "workflows", "local-agent-workspace.yml"), localAgentWorkspaceSource);
   writeFileSync(path.join(fixtureRoot, ".travis.yml"), "language: node_js\n");
   const extraCi = collectGithubCiPolicyErrors(fixtureRoot);
   assert.ok(extraCi.some((error) => error.includes(".travis.yml")), extraCi.join("\n"));
@@ -204,7 +238,9 @@ jobs:
   );
   const extraWorkflow = collectGithubCiPolicyErrors(fixtureRoot);
   assert.ok(
-    extraWorkflow.some((error) => error.includes("Only deploy-main.yml, docs.yml may exist")),
+    extraWorkflow.some((error) =>
+      error.includes("Only deploy-main.yml, docs.yml, local-agent-main.yml, local-agent-workspace.yml may exist"),
+    ),
     extraWorkflow.join("\n"),
   );
 } finally {

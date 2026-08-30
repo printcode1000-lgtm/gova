@@ -258,6 +258,16 @@ production endpoint. The runner's working directory is separate from
 `/home/hesham/gova`, so workflow checkout and cleanup never operate on the live
 developer workspace.
 
+`local-agent-workspace.yml` is the controlled path for parallel remote edit
+requests. It is manually dispatched, runs only on the local `gova` runner pool,
+applies a supplied git diff through `scripts/local-agent-main-apply.ts`, runs one
+allowlisted verification command, commits, and pushes a `codex/agent-*` branch.
+`local-agent-main.yml` is the serialized direct-`main` variant. Both use the
+local coordination channel documented in
+[Local Agent Runner Pool](./local-agent-runner-pool.md). They cannot run
+arbitrary shell, cannot use GitHub-hosted fallback, and refuse secret-bearing
+file paths.
+
 ## Branch protection
 
 **There is no branch protection on `main`, deliberately.**

@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **236**
+Keys: **242**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -92,6 +92,7 @@ Keys: **236**
 | `CAPACITOR_SERVER_URL` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `CI` | server-only | unknown | `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `DOCS_CI_BASE_REF` | server-only | unknown | `scripts/docs/docs-ci.ts`, `scripts/docs/mutability-check.ts`, `scripts/runtime/check.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `DOCS_CONTRACT_CHANGE` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD` | server-only | dangerous | none | native/fastlane | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `FASTLANE_SKIP_UPDATE_CHECK` | server-only | unknown | `scripts/fastlane-runner.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `FASTLANE_USER` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
@@ -119,6 +120,7 @@ Keys: **236**
 | `GITHUB_ACTIONS` | server-only | unknown | `src/core/config/runtime-context.server.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GITHUB_ADMIN_TOKEN` | server-only | dangerous | `packages/release-core/src/pipeline/push-main-branch.ts`, `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `GITHUB_REPOSITORY` | server-only | unknown | `packages/release-core/src/pipeline/push-main-branch.ts`, `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `GITHUB_RUN_ID` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_JSON_KEY_FILE` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_PACKAGE_NAME` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
@@ -136,12 +138,16 @@ Keys: **236**
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_TRACK` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
+| `GOVA_AGENT_COORDINATION_DIR` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `HOME` | server-only | unknown | `packages/native-core/scripts/android-build-preflight.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `HOST` | server-only | unknown | `packages/ota-core/scripts/serve-static.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `JAVA_HOME` | server-only | unknown | `packages/native-core/scripts/android-build-preflight.ts`, `scripts/check-environment-requirements.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LANG` | server-only | unknown | `scripts/fastlane-runner.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LC_ALL` | server-only | unknown | `scripts/fastlane-runner.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LEGACY_PRODUCT_DATABASE_URL` | server-only | unknown | `packages/data-core/src/tooling/migrate-product-database.ts` | vercel/database | server-only | npm run runtime:check:changed |
+| `LOCAL_AGENT_ID` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `LOCAL_AGENT_TARGET_MODE` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `LOCAL_AGENT_VERIFICATION` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCALAPPDATA` | server-only | unknown | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `NEXT_PHASE` | server-only | dangerous | `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | allowed | `npm run build:static:local`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |

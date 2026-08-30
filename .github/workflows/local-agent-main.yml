@@ -1,0 +1,64 @@
+name: local-agent-main
+
+on:
+  workflow_dispatch:
+    inputs:
+      patch_base64:
+        description: "Base64-encoded git diff to apply."
+        required: true
+        type: string
+      commit_message:
+        description: "Commit message for the direct main update."
+        required: true
+        type: string
+      verification:
+        description: "Allowed verification command."
+        required: false
+        default: "github-ci-policy"
+        type: choice
+        options:
+          - github-ci-policy
+          - runtime-check
+          - docs-ci
+          - architecture-check
+          - typecheck
+          - lint
+          - none
+
+permissions:
+  contents: write
+
+concurrency:
+  group: asol-local-agent-main
+  cancel-in-progress: false
+
+jobs:
+  apply-and-push:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 60
+    env:
+      LOCAL_AGENT_PATCH_BASE64: ${{ inputs.patch_base64 }}
+      LOCAL_AGENT_COMMIT_MESSAGE: ${{ inputs.commit_message }}
+      LOCAL_AGENT_VERIFICATION: ${{ inputs.verification }}
+      LOCAL_AGENT_TARGET_MODE: main
+      GOVA_AGENT_COORDINATION_DIR: /home/hesham/github-runners/gova-coordination
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Apply patch, verify, commit, and push main
+        run: npx tsx scripts/local-agent-main-apply.ts

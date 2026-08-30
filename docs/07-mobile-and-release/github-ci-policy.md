@@ -11,6 +11,8 @@ revision; this is release orchestration, not correctness CI.
 |---|---|
 | Every push to `main` | **Deploy workflow** (`.github/workflows/deploy-main.yml`) |
 | Documentation, agent instruction surfaces, docs/knowledge/runtime tooling, or related package manifests listed below | **Docs workflow** (`.github/workflows/docs.yml`) in addition to deploy |
+| Explicit local-agent patch dispatch | **Local agent workflow** (`.github/workflows/local-agent-main.yml`) |
+| Explicit parallel agent workspace dispatch | **Local agent workspace workflow** (`.github/workflows/local-agent-workspace.yml`) |
 
 Both workflows prefer the repository self-hosted runner labeled `gova`
 (`runs-on: [self-hosted, Linux, X64, gova]`). A selector job first runs on
@@ -51,13 +53,25 @@ destructive database commands, or any application build.
 protected/generated/tooling/runtime-contract changes run the full documentation
 and knowledge validation suite.
 
+The local agent workflows are the only manually dispatched workflows. They run
+only on the `gova` self-hosted runner pool, accept a base64-encoded git diff plus
+a commit message, apply the patch through `scripts/local-agent-main-apply.ts`,
+run one allowed verification command, commit the result, and push. The workspace
+workflow pushes an isolated `codex/agent-*` branch for parallel agents. The main
+workflow pushes directly to `main` and is serialized by concurrency. Neither
+workflow accepts arbitrary shell commands, falls back to GitHub-hosted execution,
+or consumes GitHub secrets. Secret-bearing project files are rejected by the
+apply script. See [Local Agent Runner Pool](./local-agent-runner-pool.md).
+
 ## What must not exist
 
-- Any workflow other than `docs.yml` and `deploy-main.yml`
+- Any workflow other than `docs.yml`, `deploy-main.yml`,
+  `local-agent-main.yml`, and `local-agent-workspace.yml`
 - Any execution job that does not prefer the `gova` self-hosted runner before
   GitHub-hosted fallback
 - Any GitHub secret except `GOVA_RUNNER_STATUS_TOKEN` in the runner selector
-- `pull_request_target` / `workflow_dispatch` / `schedule` triggers
+- `pull_request_target` / `schedule` triggers
+- `workflow_dispatch` outside the local agent workflows
 - Pull-request templates or required PR merge
 - Branch protection or any active rule that can reject or delay an update to `main`
 - A required status check named `verify` or any other job that blocks `main`
