@@ -64,6 +64,7 @@ jobs:
     env:
       GOVA_LOCAL_WORKSPACE: /home/hesham/gova
       GOVA_AGENT_COORDINATION_DIR: /home/hesham/gova/.local/github-runners/gova-coordination
+      GOVA_AGENT_MAX_CONCURRENT_MUTATIONS: "1"
       LOCAL_AGENT_ID: ${{ inputs.agent_id }}
       LOCAL_AGENT_REQUEST_ID: ${{ inputs.request_id }}
       LOCAL_AGENT_PATCH_BASE64: ${{ inputs.patch_base64 }}
