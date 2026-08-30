@@ -128,6 +128,11 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run ios:push:validate` | `npx tsx packages/native-core/scripts/validate-ios-push-policy.ts` |
 | `npm run ios:spm:normalize` | `npx tsx packages/native-core/scripts/normalize-capacitor-spm-paths.ts` |
 | `npm run lint` | `eslint .` |
+| `npm run local-agent:cleanup` | `npx tsx scripts/local-agent-cleanup.ts` |
+| `npm run local-agent:coordination` | `npx tsx scripts/local-agent-coordination.ts` |
+| `npm run local-agent:dispatch:check` | `npx tsx scripts/local-agent-dispatch-check.ts` |
+| `npm run local-agent:doctor` | `npx tsx scripts/local-agent-doctor.ts` |
+| `npm run local-agent:status` | `npx tsx scripts/local-agent-status.ts` |
 | `npm run maplibre:sync` | `npx tsx scripts/sync-maplibre-worker.ts` |
 | `npm run notifications:check:local` | `npx tsx scripts/check-localhost-notifications.ts` |
 | `npm run notifications:deploy` | `npx tsx scripts/deploy-notifications-service.ts` |
@@ -219,6 +224,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:image-upload-queue` | `npx tsx src/features/storage/tests/image-upload-queue.test.ts` |
 | `npm run test:import-without-composition` | `npx tsx scripts/architecture/import-without-composition.test.ts` |
 | `npm run test:installation-bootstrap` | `npx tsx src/shared/installation/tests/installation-policy.test.ts` |
+| `npm run test:local-agent-core` | `npx tsx scripts/tests/local-agent-control-plane.test.ts` |
 | `npm run test:map-core` | `npx tsx packages/map-core/src/tests/index.test.ts` |
 | `npm run test:marketplace-orders` | `npx tsx packages/data-core/src/domains/marketplace-orders/tests/storage-profile-integration.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/schema-contract.test.ts && cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/marketplace-orders/tests/list-for-user.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/marketplace-orders.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/delivery-rejection.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/requirements-coverage.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/security-and-invariants.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/shipping-quotes.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/unified-delivery-plan.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/order-details-visibility.test.ts` |
 | `npm run test:native-core` | `npx tsx packages/native-core/src/tests/index.test.ts` |

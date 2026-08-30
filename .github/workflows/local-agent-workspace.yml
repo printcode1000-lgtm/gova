@@ -1,18 +1,22 @@
+# Isolated branch update by a local agent. This is the default path when more
+# than one agent is active: every job gets its own worktree and its own
+# codex/agent-* branch, so parallel agents never share a checkout and never
+# contend for main. No concurrency group — parallelism is the point.
 name: local-agent-workspace
 
 on:
   workflow_dispatch:
     inputs:
       agent_id:
-        description: "Short agent id for coordination and branch naming."
+        description: "Stable identifier of the requesting agent."
         required: true
         type: string
       patch_base64:
-        description: "Base64-encoded git diff to apply."
-        required: true
+        description: "Base64-encoded git diff to apply. Optional when a shell command is supplied."
+        required: false
         type: string
       commit_message:
-        description: "Commit message for the agent branch update."
+        description: "Commit message for the agent branch."
         required: true
         type: string
       verification:
@@ -29,39 +33,40 @@ on:
           - lint
           - none
       shell_command:
-        description: "Optional arbitrary shell command to run after patch application."
+        description: "Optional shell command. Supply this, a patch, or both."
+        required: false
+        type: string
+      scopes:
+        description: "Comma or newline separated paths to lock for the duration of this job."
+        required: false
+        type: string
+      request_id:
+        description: "Dispatch request id, set by the gateway."
         required: false
         type: string
 
 permissions:
   contents: write
 
+defaults:
+  run:
+    working-directory: /home/hesham/gova
+
 jobs:
   apply-and-push-branch:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 60
     env:
+      GOVA_LOCAL_WORKSPACE: /home/hesham/gova
+      GOVA_AGENT_COORDINATION_DIR: /home/hesham/gova/.local/github-runners/gova-coordination
       LOCAL_AGENT_ID: ${{ inputs.agent_id }}
+      LOCAL_AGENT_REQUEST_ID: ${{ inputs.request_id }}
       LOCAL_AGENT_PATCH_BASE64: ${{ inputs.patch_base64 }}
       LOCAL_AGENT_COMMIT_MESSAGE: ${{ inputs.commit_message }}
       LOCAL_AGENT_VERIFICATION: ${{ inputs.verification }}
       LOCAL_AGENT_SHELL_COMMAND: ${{ inputs.shell_command }}
+      LOCAL_AGENT_SCOPES: ${{ inputs.scopes }}
       LOCAL_AGENT_TARGET_MODE: branch
-      GOVA_AGENT_COORDINATION_DIR: /home/hesham/github-runners/gova-coordination
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      - name: Apply patch, verify, commit, and push branch
+      - name: Apply, verify, commit, and push the agent branch
         run: npx tsx scripts/local-agent-main-apply.ts

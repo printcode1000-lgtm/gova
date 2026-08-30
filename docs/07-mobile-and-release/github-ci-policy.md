@@ -9,20 +9,25 @@ revision; this is release orchestration, not correctness CI.
 
 | Change in the commit | GitHub Actions |
 |---|---|
-| Every push to `main` | **Deploy workflow** (`.github/workflows/deploy-main.yml`) |
+| Every push to `main` except control-plane-only changes | **Deploy workflow** (`.github/workflows/deploy-main.yml`) |
 | Documentation, agent instruction surfaces, docs/knowledge/runtime tooling, or related package manifests listed below | **Docs workflow** (`.github/workflows/docs.yml`) in addition to deploy |
 | Explicit local-agent state query | **Local agent status workflow** (`.github/workflows/local-agent-status.yml`) |
 | Explicit local-agent full read/search query | **Local agent inspect workflow** (`.github/workflows/local-agent-inspect.yml`) |
 | Explicit local-agent patch dispatch | **Local agent workflow** (`.github/workflows/local-agent-main.yml`) |
 | Explicit parallel agent workspace dispatch | **Local agent workspace workflow** (`.github/workflows/local-agent-workspace.yml`) |
+| Explicit agent coordination action | **Local agent coordination workflow** (`.github/workflows/local-agent-coordination.yml`) |
+| Push to an `agent-request/**` branch | **Dispatch gateway workflow** (`.github/workflows/local-agent-gateway.yml`) |
 
 Both workflows prefer the repository self-hosted runner labeled `gova`
 (`runs-on: [self-hosted, Linux, X64, gova]`). A selector job first runs on
 GitHub-hosted infrastructure, checks the repository runner list, and retries for
 up to twelve 30-second checks. Only when the local `gova` runner is still not
 online and idle does the workflow fall back to GitHub-hosted execution. The
-runner lives outside the live developer checkout so GitHub Actions can create
-and clean its own `_work` checkout without mutating `/home/hesham/gova`.
+runner pool lives under `/home/hesham/gova/.local/github-runners`, which is
+git-ignored, so the pool is inside the one project root while its `_work`
+checkouts stay out of the repository. Local agent jobs do not check out source at
+all: they run against `/home/hesham/gova` directly, and mutations happen in
+isolated worktrees so the live developer checkout is never reset.
 The selector is the only step allowed to read `GOVA_RUNNER_STATUS_TOKEN`; it is
 used only to call the GitHub runner-status API.
 
@@ -43,10 +48,11 @@ explicit positive path filter covering:
 - `.agents/**`
 - `scripts/docs/**`, `scripts/architecture/**`, `scripts/architecture-check.ts`
 - `scripts/runtime/**`, `scripts/github-ci-policy.ts`
-- `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts`,
-  `scripts/local-agent-status.ts`
+- `scripts/local-agent/**`, `scripts/local-agent-*.ts`
 - `package.json`, `package-lock.json`
 - `.github/workflows/docs.yml`
+- `.github/workflows/local-agent-coordination.yml`
+- `.github/workflows/local-agent-gateway.yml`
 - `.github/workflows/local-agent-inspect.yml`
 - `.github/workflows/local-agent-main.yml`
 - `.github/workflows/local-agent-status.yml`
@@ -60,6 +66,13 @@ destructive database commands, or any application build.
 `docs:ci` is smart/scoped: editable-doc-only changes can take a lighter path;
 protected/generated/tooling/runtime-contract changes run the full documentation
 and knowledge validation suite.
+
+The deploy workflow excludes control-plane paths (`.agent-control/**`,
+`.github/workflows/local-agent-*.yml`, `scripts/local-agent/**`,
+`scripts/local-agent-*.ts`, and the runner-pool document) from its `push` filter.
+A change to how agents coordinate on the local machine does not change what
+production serves, so it must not consume a deployment slot. The policy fails if
+any of those entries is removed.
 
 The local agent workflows are the only manually dispatched workflows. The status
 workflow is read-only, local-only, and can report metadata for up to 10,000
@@ -77,21 +90,41 @@ base64-encoded git diff plus a commit message, apply the patch through
 `scripts/local-agent-main-apply.ts`, run one allowed verification command,
 commit the result, and push. The workspace workflow pushes an isolated
 `codex/agent-*` branch for parallel agents. The main workflow pushes directly to
-`main` and is serialized by concurrency. Neither mutation workflow accepts
-arbitrary shell commands, falls back to GitHub-hosted execution, or consumes
-GitHub secrets. Secret-bearing project files are rejected by the apply script.
+`main` and is serialized by both a concurrency group and a `ref:main`
+coordination lock. A job may carry a patch, a shell command, both, or neither, so
+a shell-only job never has to fabricate a diff. `shell_command` executes with
+full local OS authority and is therefore the caller's responsibility. Neither
+mutation workflow falls back to GitHub-hosted execution or consumes GitHub
+secrets. Secret-bearing project files are rejected by the apply script and again
+by the gateway.
+
+The coordination workflow is the shared identity, heartbeat, lock, and messaging
+surface for cloud and local agents, and republishes a sanitized snapshot to the
+output-only `agent-control` branch.
+
+The dispatch gateway is the one local workflow that reacts to a push, and only on
+`agent-request/**` branches — never `main`. It exists so an agent without
+`workflow_dispatch` API access can still reach the pool: it validates the pushed
+request document against a closed contract and performs the real dispatch using a
+credential that stays on the machine, then deletes the request branch.
 See [Local Agent Runner Pool](./local-agent-runner-pool.md).
 
 ## What must not exist
 
 - Any workflow other than `docs.yml`, `deploy-main.yml`,
+  `local-agent-coordination.yml`, `local-agent-gateway.yml`,
   `local-agent-inspect.yml`, `local-agent-main.yml`,
-  `local-agent-status.yml`, and `local-agent-workspace.yml`
+  `local-agent-status.yml`, and `local-agent-workspace.yml` — temporary probe
+  workflows are rejected by the same allowlist
 - Any execution job that does not prefer the `gova` self-hosted runner before
   GitHub-hosted fallback
+- Any `actions/checkout`, `actions/setup-node`, or `npm ci` step in a local agent
+  workflow: `/home/hesham/gova` is already the workspace
 - Any GitHub secret except `GOVA_RUNNER_STATUS_TOKEN` in the runner selector
 - `pull_request_target` / `schedule` triggers
 - `workflow_dispatch` outside the local agent workflows
+- A `push` trigger on a local agent workflow other than the gateway, and any
+  gateway trigger on `main`
 - Pull-request templates or required PR merge
 - Branch protection or any active rule that can reject or delay an update to `main`
 - A required status check named `verify` or any other job that blocks `main`
@@ -144,9 +177,12 @@ Credential: `GITHUB_ADMIN_TOKEN` in `.env.local`. Never print the token.
   `.github/workflows/local-agent-main.yml`,
   `.github/workflows/local-agent-inspect.yml`,
   `.github/workflows/local-agent-status.yml`,
-  `.github/workflows/local-agent-workspace.yml`
+  `.github/workflows/local-agent-workspace.yml`,
+  `.github/workflows/local-agent-coordination.yml`,
+  `.github/workflows/local-agent-gateway.yml`
 - Policy: `scripts/github-ci-policy.ts`
-- Tests: `scripts/tests/github-ci-policy.test.ts`
+- Tests: `scripts/tests/github-ci-policy.test.ts`,
+  `scripts/tests/local-agent-control-plane.test.ts`
 - Protection script: `scripts/protect-main-branch.ts`
 - Branch creation ruleset: `scripts/block-branch-creation.ts`
 - Hook: `.githooks/pre-push.d/10-main-only`

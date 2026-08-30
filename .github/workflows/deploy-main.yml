@@ -9,6 +9,15 @@ on:
   push:
     branches:
       - main
+    # Agent control-plane changes are operational, not shippable: they alter how
+    # agents coordinate on this machine, never what production serves. Excluding
+    # them keeps a coordination commit from consuming a deployment slot.
+    paths-ignore:
+      - ".agent-control/**"
+      - ".github/workflows/local-agent-*.yml"
+      - "scripts/local-agent/**"
+      - "scripts/local-agent-*.ts"
+      - "docs/07-mobile-and-release/local-agent-runner-pool.md"
 
 permissions:
   actions: read

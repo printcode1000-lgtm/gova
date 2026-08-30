@@ -50,6 +50,9 @@ const NOT_SOURCE = new Set([
   '.secret-archive',
   '.ota',
   'test_profile', // gitignored local Chrome profiles
+  '.local', // local agent control plane runtime: runner installs, their _work
+  // checkouts, and agent worktrees. Copies of this repository, not this
+  // repository — sweeping them would judge the same files twice.
 ]);
 
 /** Roots the runner already walks in full; sweeping them again is wasted work. */

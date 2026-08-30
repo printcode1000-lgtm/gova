@@ -1,147 +1,163 @@
 # Local Agent Runner Pool
 
-This document is the operating guide for cloud agents that need to execute work
-on the local machine through GitHub Actions.
+This document is the operating guide for the local agent control plane: the
+self-hosted runner pool, the workflows that drive it, and the coordination
+channel that lets cloud and local agents work on Gova at the same time.
 
 ## Purpose
 
-The local runner pool lets multiple agents work on Gova at the same time without
-sharing one mutable checkout. Each runner instance receives one GitHub Actions
-job at a time. The project therefore runs six registered local runners so more
-than five agents can be active concurrently.
+`/home/hesham/gova` is the single project root. Everything the control plane
+needs at runtime lives beneath it, and every operation — inspection, mutation,
+verification, coordination — happens against that one clone.
+
+The pool lets several agents work concurrently without sharing one mutable
+checkout. Each runner takes one GitHub Actions job at a time, so six registered
+runners mean six agents can be executing simultaneously. Mutating agents work in
+isolated git worktrees, so parallelism never means two jobs editing the same
+files.
+
+## Filesystem Layout
+
+```text
+/home/hesham/gova                              the one real clone; objects, remotes, node_modules
+  .local/                                      git-ignored runtime root
+    github-runners/
+      gova-runner, gova-runner-2 … -6          the six runner installs
+      gova-coordination/                       the coordination channel
+        agents/                                one record per agent: declaration + heartbeat
+        locks/                                 scope locks
+        messages/                              short inter-agent notes
+        requests/                              the processed-request ledger
+        logs/operations/                       one JSON record per mutation run
+        logs/inspect/                          full inspection output
+    agent-worktrees/
+      __main                                   the serialized direct-main worktree
+      <agent_id>                               one isolated worktree per mutating agent
+```
+
+`.local/` is listed in `.gitignore`, excluded from `tsconfig.json`, and excluded
+from ESLint. Runner binaries, credentials, `_work` checkouts, logs, and every
+other runtime file stay out of the repository; only the scripts and workflows
+that drive them are committed.
+
+Because the runner pool now lives inside the repository directory, never run
+`git clean -fdx` in `/home/hesham/gova`: it would delete the pool along with the
+other ignored files. `npm run local-agent:doctor` verifies the pool is intact.
 
 ## Runner Pool
 
 | Runner | Local directory | Systemd user service |
 |---|---|---|
-| `gova-local` | `/home/hesham/github-runners/gova-runner` | `gova-github-runner.service` |
-| `gova-local-2` | `/home/hesham/github-runners/gova-runner-2` | `gova-github-runner-2.service` |
-| `gova-local-3` | `/home/hesham/github-runners/gova-runner-3` | `gova-github-runner-3.service` |
-| `gova-local-4` | `/home/hesham/github-runners/gova-runner-4` | `gova-github-runner-4.service` |
-| `gova-local-5` | `/home/hesham/github-runners/gova-runner-5` | `gova-github-runner-5.service` |
-| `gova-local-6` | `/home/hesham/github-runners/gova-runner-6` | `gova-github-runner-6.service` |
+| `gova-local` | `/home/hesham/gova/.local/github-runners/gova-runner` | `gova-github-runner.service` |
+| `gova-local-2` | `/home/hesham/gova/.local/github-runners/gova-runner-2` | `gova-github-runner-2.service` |
+| `gova-local-3` | `/home/hesham/gova/.local/github-runners/gova-runner-3` | `gova-github-runner-3.service` |
+| `gova-local-4` | `/home/hesham/gova/.local/github-runners/gova-runner-4` | `gova-github-runner-4.service` |
+| `gova-local-5` | `/home/hesham/gova/.local/github-runners/gova-runner-5` | `gova-github-runner-5.service` |
+| `gova-local-6` | `/home/hesham/gova/.local/github-runners/gova-runner-6` | `gova-github-runner-6.service` |
 
-Every runner uses the `gova` label. Jobs that must run locally target:
+Every runner uses the `gova` label. Local jobs target:
 
 ```yaml
 runs-on: [self-hosted, Linux, X64, gova]
 ```
 
-The runner service exposes these environment values:
+Each unit is a single self-contained systemd user unit — no drop-in fragments —
+exporting:
 
 ```text
 GOVA_LOCAL_WORKSPACE=/home/hesham/gova
 GOVA_LOCAL_SECRET_READ=local-only
 GOVA_LOCAL_SECRET_EXPORT=forbidden
-GOVA_AGENT_COORDINATION_DIR=/home/hesham/github-runners/gova-coordination
+GOVA_RUNNER_POOL_DIR=/home/hesham/gova/.local/github-runners
+GOVA_AGENT_COORDINATION_DIR=/home/hesham/gova/.local/github-runners/gova-coordination
 ```
 
-GitHub Actions jobs use the npm version already available with the configured
-Node.js environment. Workflows must not reinstall npm globally on every job.
+Local agent jobs use the Node and npm already installed for the runner user.
+Workflows must not check out the repository, install a Node toolchain, or run
+`npm ci`: `/home/hesham/gova` is already the workspace, with its dependencies
+already installed. `npm run github:ci-policy` fails if any of those reappear.
 
-## Coordination Channel
+## Permanent Workflows
 
-Agents coordinate through:
+Exactly eight workflows may exist. Anything else — including a temporary probe —
+fails `npm run github:ci-policy`.
+
+| Workflow | Trigger | Purpose |
+|---|---|---|
+| `deploy-main.yml` | push to `main`, control-plane paths excluded | OIDC production deployment |
+| `docs.yml` | push/PR on documentation paths | documentation validation |
+| `local-agent-status.yml` | `workflow_dispatch` | read-only workspace, pool, and coordination state |
+| `local-agent-inspect.yml` | `workflow_dispatch` | read/search/list/git inspection |
+| `local-agent-workspace.yml` | `workflow_dispatch` | isolated branch mutation (the default) |
+| `local-agent-main.yml` | `workflow_dispatch` | serialized direct-`main` mutation |
+| `local-agent-coordination.yml` | `workflow_dispatch` | identity, heartbeat, locks, messages, snapshot |
+| `local-agent-gateway.yml` | push to `agent-request/**` | dispatch gateway |
+
+### Status
+
+`local-agent-status.yml` runs `scripts/local-agent-status.ts` directly against
+`/home/hesham/gova`. It reports branch, `HEAD`, `origin/main`, clean/dirty state,
+per-path metadata, GitHub runner and run state, and the full coordination
+snapshot. The optional `paths` input accepts comma- or newline-separated
+workspace-relative paths, or `__tracked__` for up to 10,000 tracked files. It
+never prints file contents; secret-like paths report `content: "redacted"`.
+
+### Inspect
+
+`local-agent-inspect.yml` runs `scripts/local-agent-inspect.ts` with
+`mode=read|search|list|git`. `search` prefers ripgrep and falls back to
+`git grep` when ripgrep is not installed, so inspection never dies on a missing
+binary. Full output is written to `logs/inspect/` with mode 0600; only the output
+path and byte count reach the GitHub log, which avoids truncation and keeps
+volume off a surface far more widely visible than this machine. Secret-bearing
+paths are reported as redacted and never opened.
+
+### Mutation
+
+`local-agent-workspace.yml` is the default for more than one agent: each job gets
+its own worktree and pushes its own branch,
 
 ```text
-/home/hesham/github-runners/gova-coordination
+codex/agent-<agent_id>-<request_id | github_run_id>
 ```
 
-Required layout:
+with no concurrency group, because parallelism is the point.
 
-| Path | Purpose |
-|---|---|
-| `inbox/` | Agent-readable coordination notes or instructions. |
-| `locks/` | Atomic lock files created by workflows before mutating a target ref. |
-| `logs/` | Sanitized runner records. These must not include secrets or patch contents. |
-| `logs/operations/` | One rich JSON execution record per mutation run. |
+`local-agent-main.yml` is the serialized direct-`main` variant. It carries the
+`asol-local-agent-main` concurrency group *and* a `ref:main` coordination lock,
+so simultaneous direct-main requests queue and execute one at a time, each
+starting from a fresh `origin/main`.
 
-The coordination directory is local to the machine. It is not a project source of
-truth and must not be committed.
+Both delegate to `scripts/local-agent-main-apply.ts`, which:
 
-Mutation locks automatically recover when an existing lock is older than the
-configured stale-lock threshold. The default threshold is 90 minutes, which is
-longer than the 60-minute mutation job timeout. It can be overridden with
-`GOVA_AGENT_STALE_LOCK_MS`.
+1. declares the agent and acquires its locks — the target ref plus every path in
+   the optional `scopes` input;
+2. prepares an isolated worktree pinned to the freshest `origin/main`, with
+   `node_modules` symlinked from the main clone so verification needs no install;
+3. applies the patch, when one was supplied;
+4. runs `shell_command`, when one was supplied;
+5. runs the selected verification command;
+6. commits and pushes — unless nothing changed, which is a successful
+   verification-only run;
+7. refuses to push if `origin/main` moved while the job ran, rather than landing
+   work built on a stale base;
+8. releases its locks and writes the operation record, on every exit path.
 
-## Workflows
+The developer's own working tree in `/home/hesham/gova` is never checked out,
+reset, or cleaned by an agent job.
 
-Use `.github/workflows/local-agent-status.yml` before planning or mutating work.
-It is manually dispatched, read-only, local-only, and reports the current local
-checkout state plus GitHub runner/run state. Its optional `paths` input accepts
-comma-separated or newline-separated workspace-relative paths. Use
-`__tracked__` to inspect metadata for up to 10,000 tracked files in one job.
+#### Job shapes
 
-The status workflow delegates reads to:
+All four shapes are valid, and no agent is ever required to send a fake diff:
 
-```text
-scripts/local-agent-status.ts
-```
+| `patch_base64` | `shell_command` | Result |
+|---|---|---|
+| supplied | — | patch-only |
+| — | supplied | shell-only |
+| supplied | supplied | patch, then shell |
+| — | — | verification-only; nothing is committed |
 
-The script reports path existence, type, mode, size, modification time, Git
-tracking state, branch, local `HEAD`, `origin/main`, clean/dirty status, runner
-availability, and recent workflow runs. It never prints file contents. Paths
-that look like secrets are marked `secretLike` and their content is always
-reported as `redacted`.
-
-Use `.github/workflows/local-agent-inspect.yml` when an agent needs full
-workspace visibility instead of status metadata. It is manually dispatched,
-read-only, local-only, and can:
-
-- read complete files with `mode=read`;
-- search inside up to 50,000 files with `mode=search`;
-- list selected files with `mode=list`;
-- report Git state with `mode=git`.
-
-The `paths` input accepts explicit workspace-relative paths or `__tracked__`.
-The inspect workflow does not run `npm ci`; inspection uses the checked-out
-runner tooling directly and avoids dependency-install overhead on every read.
-The inspect script writes the full result to the local coordination log under
-`/home/hesham/github-runners/gova-coordination/logs/inspect/` and prints only
-the output path and byte count to GitHub logs. This avoids GitHub log truncation
-while still allowing the local runner job to read thousands of files line by
-line. Do not use this workflow to transmit secrets to remote systems.
-
-Use `.github/workflows/local-agent-workspace.yml` for parallel agent work. It is
-manually dispatched, runs only on the local runner pool, applies a supplied
-base64-encoded git diff, commits it, and pushes an isolated branch named:
-
-```text
-codex/agent-<agent_id>-<github_run_id>
-```
-
-This is the default workflow for more than one agent. It avoids direct
-contention on `main` while preserving each agent's result in GitHub.
-
-Use `.github/workflows/local-agent-main.yml` only for a reviewed direct update to
-`main`. It is also manually dispatched and local-only, but it keeps a
-workflow-level concurrency group so only one direct `main` writer runs at a
-time.
-
-Both workflows delegate file mutation to:
-
-```text
-scripts/local-agent-main-apply.ts
-```
-
-The script accepts a git diff, rejects secret-bearing file paths, applies the
-patch, optionally executes an arbitrary Bash command supplied through
-`shell_command`, runs the selected verification command, commits, and pushes.
-The shell command runs after the patch is applied and before the selected
-verification step, so shell-driven changes are included in verification and in
-the resulting commit.
-
-Each mutation writes a unique JSON record under `logs/operations/`. The record
-contains the agent id, target mode/ref, run id, runner/host information, PID,
-start/completion timestamps, duration, starting/resulting commit SHAs, changed
-files, selected verification, whether arbitrary shell was requested, stale-lock
-recovery state, final status, exit code, and failed command executable when a
-command fails. Shell command text, patch contents, and secret values are not
-stored in the record.
-
-## Verification Choices
-
-The built-in verification values are:
+### Verification Choices
 
 | Value | Command |
 |---|---|
@@ -153,102 +169,305 @@ The built-in verification values are:
 | `lint` | `npm run lint` |
 | `none` | No built-in verification command. |
 
-`local-agent-main.yml` and `local-agent-workspace.yml` also accept the optional
-`shell_command` dispatch input. Its content is executed with `/bin/bash -lc`
-without an allowlist, providing arbitrary local shell execution authority to the
-workflow caller.
+`shell_command` is executed with `/bin/bash -lc` without an allowlist. It carries
+the full local OS authority of the runner user, so callers are responsible for
+keeping its output free of secret material.
 
-## Main Push Rules
+## Dispatching From A Cloud Agent
 
-Parallel agents must push agent branches. A separate review or merge step decides
-what lands on `main`.
+### With workflow_dispatch API access
 
-Direct `main` pushes are allowed only through `local-agent-main.yml` or the
-existing local release path. The workflow uses a lock and a concurrency group so
-two agents cannot write `main` at the same time.
+Dispatch the workflow directly:
 
-Agents that need to land multiple independent jobs on `main` must dispatch one
-direct-main workflow per job. GitHub queues those jobs behind the same
-`asol-local-agent-main` concurrency group, so each job starts from fresh
-`origin/main`, applies its own patch, verifies, commits, and pushes before the
-next writer begins.
+```bash
+gh workflow run local-agent-workspace.yml \
+  -f agent_id='cloud-alpha' \
+  -f commit_message='chore: regenerate catalogs' \
+  -f shell_command='npm run docs:generate' \
+  -f verification='docs-ci' \
+  -f scopes='docs/09-agent-knowledge/generated'
+```
 
-Agents that need maximum parallelism must dispatch `local-agent-workspace.yml`
-first. Each job receives an isolated runner checkout and pushes its own
-`codex/agent-*` branch. That allows more than five agents to read thousands of
-files, edit independently, and publish branch results at the same time while
-keeping `main` serialization explicit.
+### Without workflow_dispatch API access
+
+Push a request document instead. The gateway converts it into a real
+`workflow_dispatch`:
+
+```text
+cloud agent -> git push agent-request/* -> gateway (local runner) -> workflow_dispatch -> local runner
+```
+
+Write `.agent-control/requests/<request_id>.json` on a branch named
+`agent-request/<request_id>`, branched from current `main`, and push it. The
+branch must come from `main` so it carries the gateway workflow; the gateway
+deletes the branch once processed.
+
+```json
+{
+  "version": 1,
+  "requestId": "req-2026-08-30-0001",
+  "agentId": "cloud-alpha",
+  "workflow": "local-agent-workspace",
+  "mode": "workspace",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "cloud-alpha",
+    "commit_message": "chore: regenerate catalogs",
+    "shell_command": "npm run docs:generate",
+    "verification": "docs-ci"
+  },
+  "createdAt": "2026-08-30T09:00:00Z"
+}
+```
+
+Validate it before pushing:
+
+```bash
+npm run local-agent:dispatch:check -- .agent-control/requests/req-2026-08-30-0001.json
+```
+
+Running the command with no argument prints the contract itself, including the
+accepted inputs of every dispatchable workflow.
+
+The gateway authenticates with a token that lives on the machine
+(`.env.local`), never a GitHub secret and never a workflow input, so no
+credential travels through the request channel.
+
+### Request contract
+
+| Field | Rule |
+|---|---|
+| `version` | `1` |
+| `requestId` | 8–64 characters of `[A-Za-z0-9._-]`, starting alphanumeric, single-use |
+| `agentId` | 3–48 characters of `[A-Za-z0-9._-]`, starting alphanumeric |
+| `workflow` | one of the five dispatchable workflows |
+| `mode` | must match the workflow's mode |
+| `ref` | `main` |
+| `inputs` | string map; only the inputs that workflow accepts |
+| `createdAt` | ISO-8601, at most 30 minutes old and not in the future |
+
+The gateway refuses a request that fails any of these, and records the refusal.
+
+## Agent Coordination
+
+GitHub is the shared coordination surface: cloud agents, local agents, and
+agents from other tools all read and write the same records through
+`local-agent-coordination.yml`, and read them back from the `agent-control`
+branch. Locally the same actions are available through
+`npm run local-agent:coordination`.
+
+| Action | Effect |
+|---|---|
+| `declare` | register identity, task, expected scopes, branch, status |
+| `heartbeat` | refresh liveness |
+| `lock` | reserve a path, module, or ref |
+| `unlock` | release one scope |
+| `release-all` | release everything the agent holds |
+| `recover-stale-locks` | reclaim every expired lock |
+| `message` | post a short note to one agent or to all |
+| `status` | read agents, locks, and messages |
+| `publish` | republish the snapshot to `agent-control` |
+
+### Identity and work declaration
+
+Every agent has a stable `agent_id` for the duration of its task. Its record
+carries the task, the paths or modules it expects to touch, its branch, its
+status, and its heartbeat.
+
+### Heartbeats
+
+An agent is `active` under five minutes since its last heartbeat, `idle` beyond
+that, and `stale` once its heartbeat TTL (15 minutes by default) expires. Stale
+agents are what make automatic recovery safe: their worktrees and locks can be
+reclaimed without asking anyone.
+
+### Locks
+
+A lock reserves one scope for one agent. Two scopes conflict when they are equal
+or when one path contains the other, so holding `src/app` blocks
+`src/app/page.tsx` and vice versa. Kinds are `path`, `module`, and `ref`.
+Acquisition is serialized through a registry mutex, so the "does anything
+conflict" scan cannot race. A lock older than `GOVA_AGENT_STALE_LOCK_MS`
+(90 minutes by default, longer than the 60-minute job timeout) is reclaimed
+automatically on the next acquisition attempt. Only the owner may release a live
+lock.
+
+### Messaging
+
+Message kinds are `editing`, `do-not-modify`, `dependency-changed`,
+`ready-for-merge`, `conflict-detected`, `lock-released`, and `note`. Bodies are
+at most 500 characters and are refused if they look like they carry a
+credential, because the channel is republished to GitHub.
+
+### Reading state from the cloud
+
+Every coordination action republishes a sanitized snapshot to the
+`agent-control` branch as `coordination-status.json`:
+
+```bash
+gh api repos/printcode1000-lgtm/gova/contents/coordination-status.json?ref=agent-control
+```
+
+The snapshot holds active agents, locks, recent messages, pending and completed
+requests, and recent operations. Host names, process ids, filesystem paths,
+patch bodies, shell command text, and input values are all excluded.
+
+`agent-control` is an output-only orphan branch, force-updated by git plumbing so
+no checkout is disturbed. Coordination traffic never lands on `main`, and pushing
+to `agent-control` triggers no workflow at all.
+
+## Parallelism And Conflict Prevention
+
+The default path for any agent that mutates code is its own branch. Direct-`main`
+work is the exception, and it is the only serialized path.
+
+Explicit guards:
+
+| Risk | Guard |
+|---|---|
+| Two agents editing the same scope | conflicting scope locks are refused |
+| Overwriting another agent's branch | one branch per `agent_id` + `request_id` |
+| Stale checkout | every job resets its worktree to the freshest `origin/main` |
+| Push built on an outdated `main` | pre-push check refuses when `origin/main` moved |
+| Concurrent direct-`main` | concurrency group plus a single `ref:main` lock |
+| Lock leaked by a crash | TTL expiry plus automatic stale-lock recovery |
+| Duplicate `request_id` | the request ledger refuses a second use |
+| Replayed dispatch document | requests older than 30 minutes are refused |
+| Secret exfiltration | secret paths refused in patches, inspection, and messages |
+
+Every mutation records its starting and resulting SHA.
+
+## Operation Logs
+
+Each mutation writes one JSON record under `logs/operations/`:
+
+request id, agent id, workflow, target mode and ref, run id, runner name, host,
+pid, starting SHA, resulting SHA, changed files, start and completion time,
+duration, verification, whether a patch was supplied, whether a shell command was
+supplied, lock scopes, stale-lock recovery state and reclaimed ids, retry count,
+status, exit code, and the failed command when one fails.
+
+Never stored: shell command text, patch contents, secret values, `.env` data,
+tokens, or credentials. A failed shell step is recorded as the literal
+`shell_command`, not as its text.
+
+Records stay local under
+`/home/hesham/gova/.local/github-runners/gova-coordination/`. The safe summary
+reaches cloud agents through the `agent-control` snapshot.
 
 ## Secrets
 
-The runner process can read local project secrets because it runs as the
-`hesham` user. Agents must treat that as local execution authority, not as
-permission to transmit secrets.
+The runner runs as the machine user and can read local project secrets. That is
+local execution authority, not permission to transmit.
 
-Rules:
+- No secret values in logs, coordination records, messages, branch names, or
+  request ids.
+- No workflow may upload `.env`, private keys, encrypted archives, or derived
+  secret material.
+- Inspection of a secret-bearing path returns metadata or `redacted`, never
+  content.
+- `scripts/local-agent-main-apply.ts` and the gateway both refuse patches
+  touching `.env*`, `.secret-archive`, `.ota/private-key`,
+  `config/secret-archive`, `.vercel/`, or `fastlane/.env`.
+- Values matching credential patterns are refused in dispatch inputs and
+  messages.
 
-- Do not print secret values in logs.
-- Do not include secret contents in coordination records.
-- Do not include secret files in patch inputs.
-- Do not add workflows that upload `.env`, private keys, encrypted archives, or
-  derived secret material.
+### Secret backup and restore for agents
 
-The apply script rejects patches that target `.env`, `.secret-archive`,
-`.ota/private-key`, or `config/secret-archive` paths. Arbitrary shell execution
-has the same local OS authority as the runner user, so callers are responsible
-for keeping shell output free of secret material.
-
-## Secret Backup And Restore For Agents
-
-`npm run secrets:backup` is the command that refreshes the portable encrypted
-secret archive committed under `config/`. It captures the git-ignored secret
-files that the project needs for deployment, mobile release, storage, provider
-access, and local production operations. It must be run after secret files are
-added, removed, rotated, or repaired.
-
-The command updates:
+`npm run secrets:backup` refreshes the portable encrypted archive committed under
+`config/`:
 
 ```text
 config/secret-archive-latest.zip.enc
 config/secret-archive-latest.zip.enc.private-key.pem
 ```
 
-These files are encrypted recovery artifacts, not plaintext secrets. They allow
-a clean checkout or a new local runner host to restore the required ignored
-files without manually reconstructing every provider credential.
+These are encrypted recovery artifacts, not plaintext secrets. `npm run
+secrets:restore` reads the archive, asking for the passphrase interactively or
+reading `ASOL_SECRET_ARCHIVE_PASSWORD`. `npm run secrets:verify` reports which
+keys are present without printing values.
 
-`npm run secrets:restore` is the recovery command. It reads the portable archive,
-asks for the archive passphrase when interactive, or reads
-`ASOL_SECRET_ARCHIVE_PASSWORD` in non-interactive execution. It restores missing
-secret files back to their expected local paths.
+Agents must never paste restored secret values into GitHub logs, workflow inputs,
+branch commits, coordination files, or comments. The only safe remote evidence is
+status such as `present`, `missing`, a file size, a checksum of an encrypted
+archive, an exit code, or a redacted failure message.
 
-Agents use these commands in three ways:
+## Control-Plane Changes Do Not Deploy
 
-1. Before local release or deployment work, run `npm run secrets:verify` to learn
-   which required keys or files are present without printing values.
-2. If required secrets are missing and the archive password is available locally,
-   run `npm run secrets:restore` so the job can continue on the local runner.
-3. After a trusted local operator changes secret files, run
-   `npm run secrets:backup` and commit the refreshed encrypted archive so future
-   runner workspaces can recover the same secret set.
+`deploy-main.yml` excludes the control plane from production deployment:
 
-Agents must never paste restored secret values into GitHub logs, workflow
-inputs, branch commits, coordination files, or issue comments. The only safe
-remote evidence is status such as `present`, `missing`, file size, checksum of an
-encrypted archive, command exit code, or a redacted failure message.
-
-## Local Health Checks
-
-Check runner services:
-
-```bash
-systemctl --user list-units 'gova-github-runner*' --no-pager
+```yaml
+paths-ignore:
+  - ".agent-control/**"
+  - ".github/workflows/local-agent-*.yml"
+  - "scripts/local-agent/**"
+  - "scripts/local-agent-*.ts"
+  - "docs/07-mobile-and-release/local-agent-runner-pool.md"
 ```
 
-Check GitHub runner registration:
+A coordination change alters how agents work on this machine; it does not change
+what production serves. `npm run github:ci-policy` fails if any of those entries
+is removed. Dispatch requests and coordination updates never touch `main` at all,
+so they cannot trigger a deployment in the first place.
+
+## Health Checks
 
 ```bash
-GITHUB_ADMIN_TOKEN=<redacted> gh api repos/printcode1000-lgtm/gova/actions/runners
+npm run local-agent:doctor
 ```
 
-Never print `GITHUB_ADMIN_TOKEN`; the command above documents the endpoint only.
+Verifies the workspace, the pool root, all six runner installs, the absence of
+the legacy root, coordination directory permissions, the six systemd services and
+their working directories, git state, agent worktrees, stale agents, stale locks,
+the request ledger, Node and npm, local GitHub connectivity, and the registration
+of every dispatchable workflow. It reports PASS, WARN, or FAIL per check and
+never prints a credential — the token is reported as present or absent only.
+
+Other commands:
+
+| Command | Purpose |
+|---|---|
+| `npm run local-agent:status` | full read-only state as JSON |
+| `npm run local-agent:coordination -- --action=status` | agents, locks, messages |
+| `npm run local-agent:cleanup` | reclaim stale locks, worktrees, and old records |
+| `npm run local-agent:dispatch:check -- <file>` | validate a request document |
+| `npm run test:local-agent-core` | control-plane regression and adversarial tests |
+
+## Recovery Procedures
+
+**A runner is down.** `systemctl --user restart gova-github-runner-<n>.service`,
+then confirm with `npm run local-agent:doctor`.
+
+**A lock is stuck.** It expires on its own after
+`GOVA_AGENT_STALE_LOCK_MS`. To reclaim immediately:
+`npm run local-agent:coordination -- --action=recover-stale-locks`.
+
+**An agent crashed mid-job.** Its heartbeat goes stale, its locks expire, and
+`npm run local-agent:cleanup` reclaims its worktree. Re-dispatch with a new
+`request_id`.
+
+**A push was refused because `origin/main` moved.** Rebuild the patch against
+current `main` and dispatch a new request; the control plane never force-lands
+work built on a stale base.
+
+**A worktree is corrupt.** `npm run local-agent:cleanup` prunes it; the next job
+recreates it from `origin/main`.
+
+**The coordination directory is missing.** Every writer recreates it on first
+use. Nothing in it is a source of truth.
+
+## Adding A Seventh Runner
+
+1. Install the runner into
+   `/home/hesham/gova/.local/github-runners/gova-runner-7` and register it as
+   `gova-local-7` with the `gova` label.
+2. Create `~/.config/systemd/user/gova-github-runner-7.service` as a copy of an
+   existing unit, with `WorkingDirectory` and `ExecStart` pointing at the new
+   directory and the same five `Environment=` lines.
+3. `systemctl --user daemon-reload && systemctl --user enable --now gova-github-runner-7.service`.
+4. Add `gova-runner-7`, `gova-github-runner-7.service`, and `gova-local-7` to the
+   three arrays in `scripts/local-agent/paths.ts`.
+5. Add the row to the Runner Pool table above.
+6. Confirm with `npm run local-agent:doctor`.
+
+No workflow changes are needed: jobs target the `gova` label, not a runner name.

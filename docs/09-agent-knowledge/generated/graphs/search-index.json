@@ -1653,6 +1653,77 @@
       ]
     },
     {
+      "id": "command:local-agent:cleanup",
+      "kind": "command",
+      "name": "npm run local-agent:cleanup",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cleanup",
+        "local-agent",
+        "local-agent:cleanup",
+        "npm",
+        "npm run local-agent:cleanup",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:coordination",
+      "kind": "command",
+      "name": "npm run local-agent:coordination",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "coordination",
+        "local-agent",
+        "local-agent:coordination",
+        "npm",
+        "npm run local-agent:coordination",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:dispatch:check",
+      "kind": "command",
+      "name": "npm run local-agent:dispatch:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "dispatch",
+        "local-agent",
+        "local-agent:dispatch:check",
+        "npm",
+        "npm run local-agent:dispatch:check",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:doctor",
+      "kind": "command",
+      "name": "npm run local-agent:doctor",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "doctor",
+        "local-agent",
+        "local-agent:doctor",
+        "npm",
+        "npm run local-agent:doctor",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:status",
+      "kind": "command",
+      "name": "npm run local-agent:status",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "local-agent",
+        "local-agent:status",
+        "npm",
+        "npm run local-agent:status",
+        "run",
+        "status"
+      ]
+    },
+    {
       "id": "command:maplibre:sync",
       "kind": "command",
       "name": "npm run maplibre:sync",
@@ -2934,6 +3005,20 @@
         "run",
         "test",
         "test:installation-bootstrap"
+      ]
+    },
+    {
+      "id": "command:test:local-agent-core",
+      "kind": "command",
+      "name": "npm run test:local-agent-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "local-agent-core",
+        "npm",
+        "npm run test:local-agent-core",
+        "run",
+        "test",
+        "test:local-agent-core"
       ]
     },
     {
@@ -13505,18 +13590,16 @@
         "scripts/docs/docs-ci.ts",
         "scripts/github-ci-policy",
         "scripts/github-ci-policy.ts",
-        "scripts/local-agent-inspect",
-        "scripts/local-agent-inspect.ts",
         "scripts/local-agent-main-apply",
         "scripts/local-agent-main-apply.ts",
-        "scripts/local-agent-status",
-        "scripts/local-agent-status.ts",
         "scripts/protect-main-branch",
         "scripts/protect-main-branch.ts",
         "scripts/runtime/check",
         "scripts/runtime/check.ts",
         "scripts/tests/github-ci-policy",
         "scripts/tests/github-ci-policy.test.ts",
+        "scripts/tests/local-agent-control-plane",
+        "scripts/tests/local-agent-control-plane.test.ts",
         "status",
         "test",
         "that",
@@ -13531,36 +13614,59 @@
       "kind": "document",
       "name": "Local Agent Runner Pool",
       "path": "docs/07-mobile-and-release/local-agent-runner-pool.md",
-      "summary": "This document is the operating guide for cloud agents that need to execute work on the local machine through GitHub Actions.",
+      "summary": "This document is the operating guide for the local agent control plane: the self-hosted runner pool, the workflows that drive it, and the coordination channel that lets cloud and local agents work on Gova at the same time.",
       "tags": [
-        "actions",
         "agent",
         "agents",
+        "and",
+        "at",
+        "channel",
         "cloud",
+        "control",
+        "coordination",
         "docs/07-mobile-and-release/local-agent-runner-pool",
         "docs/07-mobile-and-release/local-agent-runner-pool.md",
         "document",
-        "execute",
+        "drive",
+        "env",
+        "fastlane/",
+        "fastlane/.env",
         "for",
-        "github",
+        "gova",
         "guide",
         "is",
+        "it",
+        "lets",
         "local",
         "local agent runner pool",
-        "machine",
         "md",
-        "need",
         "on",
         "operating",
+        "plane",
         "pool",
         "runner",
+        "same",
+        "scripts/local-agent-inspect",
+        "scripts/local-agent-inspect.ts",
+        "scripts/local-agent-main-apply",
+        "scripts/local-agent-main-apply.ts",
+        "scripts/local-agent-status",
+        "scripts/local-agent-status.ts",
+        "scripts/local-agent/paths",
+        "scripts/local-agent/paths.ts",
+        "self-hosted",
+        "src/app",
+        "src/app/page",
+        "src/app/page.tsx",
         "that",
         "the",
         "this",
-        "this document is the operating guide for cloud agents that need to execute work on the local machine through github actions.",
-        "through",
-        "to",
-        "work"
+        "this document is the operating guide for the local agent control plane: the self-hosted runner pool, the workflows that drive it, and the coordination channel that lets cloud and local agents work on gova at the same time.",
+        "time",
+        "ts",
+        "tsx",
+        "work",
+        "workflows"
       ]
     },
     {
@@ -17665,6 +17771,19 @@
       ]
     },
     {
+      "id": "environment-key:GIT_INDEX_FILE",
+      "kind": "environment-key",
+      "name": "GIT_INDEX_FILE",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "git_index_file",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:GITHUB_ACTIONS",
       "kind": "environment-key",
       "name": "GITHUB_ACTIONS",
@@ -17685,6 +17804,19 @@
       "tags": [
         "environment",
         "github_admin_token",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:GITHUB_REF_NAME",
+      "kind": "environment-key",
+      "name": "GITHUB_REF_NAME",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "github_ref_name",
         "server",
         "server tooling environment",
         "tooling"
@@ -17951,6 +18083,19 @@
       ]
     },
     {
+      "id": "environment-key:GOVA_AGENT_STALE_LOCK_MS",
+      "kind": "environment-key",
+      "name": "GOVA_AGENT_STALE_LOCK_MS",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_agent_stale_lock_ms",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:GOVA_LOCAL_WORKSPACE",
       "kind": "environment-key",
       "name": "GOVA_LOCAL_WORKSPACE",
@@ -17964,13 +18109,13 @@
       ]
     },
     {
-      "id": "environment-key:GOVA_RUNNER_STATUS_TOKEN",
+      "id": "environment-key:GOVA_RUNNER_POOL_DIR",
       "kind": "environment-key",
-      "name": "GOVA_RUNNER_STATUS_TOKEN",
+      "name": "GOVA_RUNNER_POOL_DIR",
       "summary": "Server/tooling environment key name",
       "tags": [
         "environment",
-        "gova_runner_status_token",
+        "gova_runner_pool_dir",
         "server",
         "server tooling environment",
         "tooling"
@@ -18055,6 +18200,19 @@
       ]
     },
     {
+      "id": "environment-key:LOCAL_AGENT_COMMIT_MESSAGE",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_COMMIT_MESSAGE",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_commit_message",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:LOCAL_AGENT_ID",
       "kind": "environment-key",
       "name": "LOCAL_AGENT_ID",
@@ -18101,6 +18259,84 @@
       "tags": [
         "environment",
         "local_agent_inspect_pattern",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_ORIGIN",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_ORIGIN",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_origin",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_PATCH_BASE64",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_PATCH_BASE64",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_patch_base64",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_REQUEST_BRANCH",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_REQUEST_BRANCH",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_request_branch",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_REQUEST_ID",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_REQUEST_ID",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_request_id",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_SCOPES",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_SCOPES",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_scopes",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_SHELL_COMMAND",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_SHELL_COMMAND",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_shell_command",
         "server",
         "server tooling environment",
         "tooling"
@@ -18933,6 +19169,19 @@
       "tags": [
         "environment",
         "ruby_bin",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:RUNNER_NAME",
+      "kind": "environment-key",
+      "name": "RUNNER_NAME",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "runner_name",
         "server",
         "server tooling environment",
         "tooling"
@@ -26518,6 +26767,61 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent-cleanup.ts",
+      "kind": "script",
+      "name": "local-agent-cleanup.ts",
+      "path": "scripts/local-agent-cleanup.ts",
+      "tags": [
+        "scripts/local-agent-cleanup",
+        "scripts/local-agent-cleanup.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent-coordination.ts",
+      "kind": "script",
+      "name": "local-agent-coordination.ts",
+      "path": "scripts/local-agent-coordination.ts",
+      "tags": [
+        "scripts/local-agent-coordination",
+        "scripts/local-agent-coordination.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent-dispatch-check.ts",
+      "kind": "script",
+      "name": "local-agent-dispatch-check.ts",
+      "path": "scripts/local-agent-dispatch-check.ts",
+      "tags": [
+        "scripts/local-agent-dispatch-check",
+        "scripts/local-agent-dispatch-check.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent-doctor.ts",
+      "kind": "script",
+      "name": "local-agent-doctor.ts",
+      "path": "scripts/local-agent-doctor.ts",
+      "tags": [
+        "scripts/local-agent-doctor",
+        "scripts/local-agent-doctor.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent-gateway.ts",
+      "kind": "script",
+      "name": "local-agent-gateway.ts",
+      "path": "scripts/local-agent-gateway.ts",
+      "tags": [
+        "scripts/local-agent-gateway",
+        "scripts/local-agent-gateway.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent-inspect.ts",
       "kind": "script",
       "name": "local-agent-inspect.ts",
@@ -26547,6 +26851,160 @@
       "tags": [
         "scripts/local-agent-status",
         "scripts/local-agent-status.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/agent-registry.ts",
+      "kind": "script",
+      "name": "agent-registry.ts",
+      "path": "scripts/local-agent/agent-registry.ts",
+      "tags": [
+        "scripts/local-agent/agent-registry",
+        "scripts/local-agent/agent-registry.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/control-branch.ts",
+      "kind": "script",
+      "name": "control-branch.ts",
+      "path": "scripts/local-agent/control-branch.ts",
+      "tags": [
+        "scripts/local-agent/control-branch",
+        "scripts/local-agent/control-branch.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/coordination-snapshot.ts",
+      "kind": "script",
+      "name": "coordination-snapshot.ts",
+      "path": "scripts/local-agent/coordination-snapshot.ts",
+      "tags": [
+        "scripts/local-agent/coordination-snapshot",
+        "scripts/local-agent/coordination-snapshot.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/git.ts",
+      "kind": "script",
+      "name": "git.ts",
+      "path": "scripts/local-agent/git.ts",
+      "tags": [
+        "scripts/local-agent/git",
+        "scripts/local-agent/git.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/github-api.ts",
+      "kind": "script",
+      "name": "github-api.ts",
+      "path": "scripts/local-agent/github-api.ts",
+      "tags": [
+        "scripts/local-agent/github-api",
+        "scripts/local-agent/github-api.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/json-store.ts",
+      "kind": "script",
+      "name": "json-store.ts",
+      "path": "scripts/local-agent/json-store.ts",
+      "tags": [
+        "scripts/local-agent/json-store",
+        "scripts/local-agent/json-store.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/lock-store.ts",
+      "kind": "script",
+      "name": "lock-store.ts",
+      "path": "scripts/local-agent/lock-store.ts",
+      "tags": [
+        "scripts/local-agent/lock-store",
+        "scripts/local-agent/lock-store.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/message-store.ts",
+      "kind": "script",
+      "name": "message-store.ts",
+      "path": "scripts/local-agent/message-store.ts",
+      "tags": [
+        "scripts/local-agent/message-store",
+        "scripts/local-agent/message-store.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/operation-log.ts",
+      "kind": "script",
+      "name": "operation-log.ts",
+      "path": "scripts/local-agent/operation-log.ts",
+      "tags": [
+        "scripts/local-agent/operation-log",
+        "scripts/local-agent/operation-log.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/paths.ts",
+      "kind": "script",
+      "name": "paths.ts",
+      "path": "scripts/local-agent/paths.ts",
+      "tags": [
+        "scripts/local-agent/paths",
+        "scripts/local-agent/paths.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/request-contract.ts",
+      "kind": "script",
+      "name": "request-contract.ts",
+      "path": "scripts/local-agent/request-contract.ts",
+      "tags": [
+        "scripts/local-agent/request-contract",
+        "scripts/local-agent/request-contract.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/request-store.ts",
+      "kind": "script",
+      "name": "request-store.ts",
+      "path": "scripts/local-agent/request-store.ts",
+      "tags": [
+        "scripts/local-agent/request-store",
+        "scripts/local-agent/request-store.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/secret-paths.ts",
+      "kind": "script",
+      "name": "secret-paths.ts",
+      "path": "scripts/local-agent/secret-paths.ts",
+      "tags": [
+        "scripts/local-agent/secret-paths",
+        "scripts/local-agent/secret-paths.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/worktree.ts",
+      "kind": "script",
+      "name": "worktree.ts",
+      "path": "scripts/local-agent/worktree.ts",
+      "tags": [
+        "scripts/local-agent/worktree",
+        "scripts/local-agent/worktree.ts",
         "ts"
       ]
     },
@@ -53761,6 +54219,18 @@
       "tags": [
         "scripts/tests/github-ci-policy",
         "scripts/tests/github-ci-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "kind": "test",
+      "name": "local-agent-control-plane.test.ts",
+      "path": "scripts/tests/local-agent-control-plane.test.ts",
+      "tags": [
+        "scripts/tests/local-agent-control-plane",
+        "scripts/tests/local-agent-control-plane.test.ts",
         "test",
         "ts"
       ]

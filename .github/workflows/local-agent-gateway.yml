@@ -1,0 +1,33 @@
+# Dispatch gateway for agents that cannot call the workflow_dispatch API.
+#
+#   cloud agent -> git push agent-request/* -> this job -> workflow_dispatch -> local runner
+#
+# The request document is validated against the closed contract in
+# scripts/local-agent/request-contract.ts before anything is dispatched, and the
+# request branch is deleted once processed. Nothing here lands on main, so
+# coordination traffic never reaches the branch whose pushes deploy production.
+name: local-agent-gateway
+
+on:
+  push:
+    branches:
+      - "agent-request/**"
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    working-directory: /home/hesham/gova
+
+jobs:
+  gateway:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 10
+    env:
+      GOVA_LOCAL_WORKSPACE: /home/hesham/gova
+      GOVA_AGENT_COORDINATION_DIR: /home/hesham/gova/.local/github-runners/gova-coordination
+      LOCAL_AGENT_REQUEST_BRANCH: ${{ github.ref_name }}
+    steps:
+      - name: Validate the request and dispatch the target workflow
+        run: npx tsx scripts/local-agent-gateway.ts

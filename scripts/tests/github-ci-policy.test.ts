@@ -28,6 +28,14 @@ const localAgentWorkspaceSource = readFileSync(
   "utf8",
 );
 const localAgentStatusSource = readFileSync(path.join(process.cwd(), ".github", "workflows", "local-agent-status.yml"), "utf8");
+const localAgentCoordinationSource = readFileSync(
+  path.join(process.cwd(), ".github", "workflows", "local-agent-coordination.yml"),
+  "utf8",
+);
+const localAgentGatewaySource = readFileSync(
+  path.join(process.cwd(), ".github", "workflows", "local-agent-gateway.yml"),
+  "utf8",
+);
 assert.equal(docsWorkflowViolations(docsSource).length, 0, docsWorkflowViolations(docsSource).join("\n"));
 assert.equal(deploymentWorkflowViolations(deploySource).length, 0, deploymentWorkflowViolations(deploySource).join("\n"));
 assert.equal(
@@ -265,6 +273,11 @@ try {
   writeFileSync(path.join(fixtureRoot, ".github", "workflows", "local-agent-main.yml"), localAgentSource);
   writeFileSync(path.join(fixtureRoot, ".github", "workflows", "local-agent-status.yml"), localAgentStatusSource);
   writeFileSync(path.join(fixtureRoot, ".github", "workflows", "local-agent-workspace.yml"), localAgentWorkspaceSource);
+  writeFileSync(
+    path.join(fixtureRoot, ".github", "workflows", "local-agent-coordination.yml"),
+    localAgentCoordinationSource,
+  );
+  writeFileSync(path.join(fixtureRoot, ".github", "workflows", "local-agent-gateway.yml"), localAgentGatewaySource);
   writeFileSync(path.join(fixtureRoot, ".travis.yml"), "language: node_js\n");
   const extraCi = collectGithubCiPolicyErrors(fixtureRoot);
   assert.ok(extraCi.some((error) => error.includes(".travis.yml")), extraCi.join("\n"));
@@ -286,7 +299,7 @@ jobs:
   assert.ok(
     extraWorkflow.some((error) =>
       error.includes(
-        "Only deploy-main.yml, docs.yml, local-agent-inspect.yml, local-agent-main.yml, local-agent-status.yml, local-agent-workspace.yml may exist",
+        "Only deploy-main.yml, docs.yml, local-agent-coordination.yml, local-agent-gateway.yml, local-agent-inspect.yml, local-agent-main.yml, local-agent-status.yml, local-agent-workspace.yml may exist",
       ),
     ),
     extraWorkflow.join("\n"),

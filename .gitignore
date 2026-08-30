@@ -150,3 +150,10 @@ public/sync_data/sync_sqlite/system-ops.db
 # It holds a rewritten copy of src/ and the Next `out/` while build:static runs,
 # and survives on disk whenever that build is interrupted. Never committed.
 .tmp-static-build/
+
+# Local agent control plane runtime root. Holds the six GitHub Actions
+# self-hosted runner installs, their _work checkouts, agent worktrees, and the
+# coordination channel (locks, messages, agent registry, operation logs).
+# Binaries, runner credentials, workspaces, and runtime state never get
+# committed; only the scripts and workflows that drive them do.
+.local/

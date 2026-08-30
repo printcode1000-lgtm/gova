@@ -1,11 +1,20 @@
+# Direct main update by a local agent. Serialized by a workflow concurrency
+# group and a coordination lock, so several agents may request a main landing at
+# once and they queue instead of racing. Work happens in an isolated worktree
+# rebased on the freshest origin/main; the developer's own checkout is untouched.
 name: local-agent-main
 
 on:
   workflow_dispatch:
     inputs:
+      agent_id:
+        description: "Stable identifier of the requesting agent."
+        required: false
+        default: agent
+        type: string
       patch_base64:
-        description: "Base64-encoded git diff to apply."
-        required: true
+        description: "Base64-encoded git diff to apply. Optional when a shell command is supplied."
+        required: false
         type: string
       commit_message:
         description: "Commit message for the direct main update."
@@ -25,7 +34,15 @@ on:
           - lint
           - none
       shell_command:
-        description: "Optional arbitrary shell command to run after patch application."
+        description: "Optional shell command. Supply this, a patch, or both."
+        required: false
+        type: string
+      scopes:
+        description: "Comma or newline separated paths to lock for the duration of this job."
+        required: false
+        type: string
+      request_id:
+        description: "Dispatch request id, set by the gateway."
         required: false
         type: string
 
@@ -36,31 +53,25 @@ concurrency:
   group: asol-local-agent-main
   cancel-in-progress: false
 
+defaults:
+  run:
+    working-directory: /home/hesham/gova
+
 jobs:
   apply-and-push:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 60
     env:
+      GOVA_LOCAL_WORKSPACE: /home/hesham/gova
+      GOVA_AGENT_COORDINATION_DIR: /home/hesham/gova/.local/github-runners/gova-coordination
+      LOCAL_AGENT_ID: ${{ inputs.agent_id }}
+      LOCAL_AGENT_REQUEST_ID: ${{ inputs.request_id }}
       LOCAL_AGENT_PATCH_BASE64: ${{ inputs.patch_base64 }}
       LOCAL_AGENT_COMMIT_MESSAGE: ${{ inputs.commit_message }}
       LOCAL_AGENT_VERIFICATION: ${{ inputs.verification }}
       LOCAL_AGENT_SHELL_COMMAND: ${{ inputs.shell_command }}
+      LOCAL_AGENT_SCOPES: ${{ inputs.scopes }}
       LOCAL_AGENT_TARGET_MODE: main
-      GOVA_AGENT_COORDINATION_DIR: /home/hesham/github-runners/gova-coordination
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      - name: Apply patch, verify, commit, and push main
+      - name: Apply, verify, commit, and push main
         run: npx tsx scripts/local-agent-main-apply.ts

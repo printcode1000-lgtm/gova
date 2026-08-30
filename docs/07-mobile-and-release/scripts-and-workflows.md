@@ -42,7 +42,16 @@ gh workflow run local-agent-status.yml -f paths='__tracked__'
 gh workflow run local-agent-inspect.yml -f agent_id='agent-1' -f mode='search' -f paths='__tracked__' -f pattern='ProductRepository'
 gh workflow run local-agent-inspect.yml -f agent_id='agent-1' -f mode='read' -f paths='package.json,docs/README.md'
 gh workflow run local-agent-workspace.yml -f agent_id='agent-1' -f patch_base64='<base64-diff>' -f commit_message='Agent change'
-gh workflow run local-agent-main.yml -f patch_base64='<base64-diff>' -f commit_message='Main change'
+gh workflow run local-agent-workspace.yml -f agent_id='agent-1' -f shell_command='npm run docs:generate' -f commit_message='Regenerate catalogs'
+gh workflow run local-agent-main.yml -f agent_id='agent-1' -f patch_base64='<base64-diff>' -f commit_message='Main change'
+gh workflow run local-agent-coordination.yml -f agent_id='agent-1' -f action='lock' -f scope='src/app'
+
+# Local agent control plane (machine-local)
+npm run local-agent:doctor
+npm run local-agent:status
+npm run local-agent:coordination -- --action=status
+npm run local-agent:cleanup
+npm run local-agent:dispatch:check -- .agent-control/requests/<request_id>.json
 
 # Schema & database
 npm run db:drizzle -- generate
@@ -261,9 +270,12 @@ runner is unavailable through repeated checks before falling back to
 GitHub-hosted execution. Deployment still ends by dispatching the exact SHA to
 the Vercel production path. The selector may read `GOVA_RUNNER_STATUS_TOKEN` to
 call the GitHub runner-status API; deploy still uses OIDC for the Vercel
-production endpoint. The runner's working directory is separate from
-`/home/hesham/gova`, so workflow checkout and cleanup never operate on the live
-developer workspace.
+production endpoint. The runner pool lives under
+`/home/hesham/gova/.local/github-runners`, which git ignores, so the pool sits
+inside the one project root while its `_work` checkouts stay untracked. Local
+agent jobs never check out source: they run against `/home/hesham/gova` directly
+and mutate through isolated worktrees, so the live developer workspace is never
+reset or cleaned.
 
 Local agent workflows are manually dispatched only. `local-agent-status.yml`
 reads local and GitHub state without mutating anything and can inspect metadata
@@ -279,11 +291,24 @@ jobs are serialized by the workflow concurrency group.
 requests. It is manually dispatched, runs only on the local `gova` runner pool,
 applies a supplied git diff through `scripts/local-agent-main-apply.ts`, runs one
 allowlisted verification command, commits, and pushes a `codex/agent-*` branch.
-`local-agent-main.yml` is the serialized direct-`main` variant. Both use the
-local coordination channel documented in
-[Local Agent Runner Pool](./local-agent-runner-pool.md). They cannot run
-arbitrary shell, cannot use GitHub-hosted fallback, and refuse secret-bearing
+`local-agent-main.yml` is the serialized direct-`main` variant. A job may carry a
+patch, a shell command, both, or neither, so a shell-only job never has to
+fabricate a diff. Both use the local coordination channel documented in
+[Local Agent Runner Pool](./local-agent-runner-pool.md). They cannot use
+GitHub-hosted fallback, cannot consume GitHub secrets, and refuse secret-bearing
 file paths.
+
+`local-agent-coordination.yml` is the shared identity, heartbeat, lock, and
+messaging surface, and republishes a sanitized snapshot to the output-only
+`agent-control` branch that cloud agents read.
+
+`local-agent-gateway.yml` is the dispatch gateway for agents without
+`workflow_dispatch` API access: it triggers on a push to an `agent-request/**`
+branch, validates the pushed request document, and performs the real dispatch
+with a credential that never leaves the machine.
+
+Control-plane paths are excluded from `deploy-main.yml`, so a coordination change
+does not consume a production deployment.
 
 ## Branch protection
 

@@ -115,10 +115,12 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `FIREBASE_PROJECT_NAME` | server/tooling | 0 |  |
 | `FIREBASE_PROJECT_NUMBER` | server/tooling | 0 |  |
 | `FIREBASE_STORAGE_BUCKET` | server/tooling | 0 |  |
+| `GIT_INDEX_FILE` | server/tooling | 1 | `scripts/local-agent/control-branch.ts` |
 | `GITHUB_ACTIONS` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
 | `GITHUB_ADMIN_TOKEN` | server/tooling | 3 | `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts`, `packages/release-core/src/pipeline/push-main-branch.ts` |
+| `GITHUB_REF_NAME` | server/tooling | 1 | `scripts/local-agent-gateway.ts` |
 | `GITHUB_REPOSITORY` | server/tooling | 3 | `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts`, `packages/release-core/src/pipeline/push-main-branch.ts` |
-| `GITHUB_RUN_ID` | server/tooling | 2 | `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts` |
+| `GITHUB_RUN_ID` | server/tooling | 4 | `scripts/local-agent-coordination.ts`, `scripts/local-agent-gateway.ts`, `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts` |
 | `GOOGLE_PLAY_JSON_KEY_FILE` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_PACKAGE_NAME` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
@@ -136,19 +138,27 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_TRACK` | server/tooling | 0 |  |
-| `GOVA_AGENT_COORDINATION_DIR` | server/tooling | 2 | `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts` |
-| `GOVA_LOCAL_WORKSPACE` | server/tooling | 2 | `scripts/local-agent-inspect.ts`, `scripts/local-agent-status.ts` |
-| `GOVA_RUNNER_STATUS_TOKEN` | server/tooling | 1 | `scripts/local-agent-status.ts` |
+| `GOVA_AGENT_COORDINATION_DIR` | server/tooling | 2 | `scripts/local-agent/paths.ts`, `scripts/tests/local-agent-control-plane.test.ts` |
+| `GOVA_AGENT_STALE_LOCK_MS` | server/tooling | 2 | `scripts/local-agent/lock-store.ts`, `scripts/tests/local-agent-control-plane.test.ts` |
+| `GOVA_LOCAL_WORKSPACE` | server/tooling | 1 | `scripts/local-agent/paths.ts` |
+| `GOVA_RUNNER_POOL_DIR` | server/tooling | 1 | `scripts/local-agent/paths.ts` |
 | `HOME` | server/tooling | 1 | `packages/native-core/scripts/android-build-preflight.ts` |
 | `HOST` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
 | `JAVA_HOME` | server/tooling | 2 | `scripts/check-environment-requirements.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
 | `LANG` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `LC_ALL` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `LEGACY_PRODUCT_DATABASE_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-product-database.ts` |
+| `LOCAL_AGENT_COMMIT_MESSAGE` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_ID` | server/tooling | 2 | `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_INSPECT_MODE` | server/tooling | 1 | `scripts/local-agent-inspect.ts` |
 | `LOCAL_AGENT_INSPECT_PATHS` | server/tooling | 1 | `scripts/local-agent-inspect.ts` |
 | `LOCAL_AGENT_INSPECT_PATTERN` | server/tooling | 1 | `scripts/local-agent-inspect.ts` |
+| `LOCAL_AGENT_ORIGIN` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
+| `LOCAL_AGENT_PATCH_BASE64` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
+| `LOCAL_AGENT_REQUEST_BRANCH` | server/tooling | 1 | `scripts/local-agent-gateway.ts` |
+| `LOCAL_AGENT_REQUEST_ID` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
+| `LOCAL_AGENT_SCOPES` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
+| `LOCAL_AGENT_SHELL_COMMAND` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_STATUS_PATHS` | server/tooling | 1 | `scripts/local-agent-status.ts` |
 | `LOCAL_AGENT_TARGET_MODE` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_VERIFICATION` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
@@ -213,6 +223,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `R2_SECRET_ACCESS_KEY` | server/tooling | 2 | `packages/storage-core/src/tests/integration/credential-isolation.test.ts`, `packages/storage-core/src/tests/unit/account-credentials.test.ts` |
 | `R2_WAREHOUSE_NAME` | server/tooling | 0 |  |
 | `RUBY_BIN` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
+| `RUNNER_NAME` | server/tooling | 1 | `scripts/local-agent/operation-log.ts` |
 | `SYNTHETIC_ANALYTICS_R2_ACCESS_KEY_ID` | server/tooling | 1 | `packages/storage-core/src/tests/integration/add-account.test.ts` |
 | `SYNTHETIC_ANALYTICS_R2_BUCKET_NAME` | server/tooling | 1 | `packages/storage-core/src/tests/integration/add-account.test.ts` |
 | `SYNTHETIC_ANALYTICS_R2_ENDPOINT` | server/tooling | 1 | `packages/storage-core/src/tests/integration/add-account.test.ts` |

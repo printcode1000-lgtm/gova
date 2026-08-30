@@ -367,6 +367,7 @@
   ],
   "exclude": [
     "node_modules",
+    ".local",
     "out",
     ".next/types/validator.ts",
     ".next/dev/types/**/*.ts",

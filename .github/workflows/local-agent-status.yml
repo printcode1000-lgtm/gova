@@ -1,10 +1,13 @@
+# Read-only state of the local machine, the runner pool, and the coordination
+# channel. Runs directly against /home/hesham/gova with the dependencies already
+# installed there: no checkout, no npm ci, no GitHub-hosted fallback.
 name: local-agent-status
 
 on:
   workflow_dispatch:
     inputs:
       paths:
-        description: "Comma or newline separated local workspace paths to inspect."
+        description: "Comma or newline separated paths to report on. Use __tracked__ for every tracked file."
         required: false
         type: string
 
@@ -12,28 +15,18 @@ permissions:
   actions: read
   contents: read
 
+defaults:
+  run:
+    working-directory: /home/hesham/gova
+
 jobs:
   local-status:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 15
+    timeout-minutes: 10
     env:
       GOVA_LOCAL_WORKSPACE: /home/hesham/gova
       GOVA_RUNNER_STATUS_TOKEN: ${{ secrets.GOVA_RUNNER_STATUS_TOKEN }}
       LOCAL_AGENT_STATUS_PATHS: ${{ inputs.paths }}
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      - name: Read local and GitHub state
+      - name: Report local workspace, runner pool, and coordination state
         run: npx tsx scripts/local-agent-status.ts

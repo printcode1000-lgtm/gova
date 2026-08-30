@@ -15,6 +15,7 @@ module.exports = [
       '.claude/**',
       '.devin/**',
       'tmp/**',
+      '.local/**',
     ],
   },
   {

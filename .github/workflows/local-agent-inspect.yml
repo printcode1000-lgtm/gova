@@ -1,57 +1,59 @@
+# Read-only inspection of the local workspace on behalf of a remote agent.
+# Full results are written to the local coordination channel; the GitHub log
+# receives only a summary, because job logs truncate and travel further than
+# this machine.
 name: local-agent-inspect
 
 on:
   workflow_dispatch:
     inputs:
       agent_id:
-        description: "Short agent id for coordination output naming."
+        description: "Stable identifier of the requesting agent."
         required: true
         type: string
       mode:
         description: "Inspection mode."
-        required: true
-        default: "search"
+        required: false
+        default: search
         type: choice
         options:
-          - read
           - search
+          - read
           - list
           - git
       paths:
-        description: "Comma or newline separated workspace paths, or __tracked__ for tracked files."
+        description: "Comma or newline separated paths. Use __tracked__ for every tracked file."
         required: false
-        default: "__tracked__"
+        default: __tracked__
         type: string
       pattern:
-        description: "Search pattern for search mode."
+        description: "Search pattern, required for search mode."
+        required: false
+        type: string
+      request_id:
+        description: "Dispatch request id, set by the gateway."
         required: false
         type: string
 
 permissions:
   contents: read
 
+defaults:
+  run:
+    working-directory: /home/hesham/gova
+
 jobs:
   inspect:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 60
+    timeout-minutes: 30
     env:
       GOVA_LOCAL_WORKSPACE: /home/hesham/gova
-      GOVA_AGENT_COORDINATION_DIR: /home/hesham/github-runners/gova-coordination
+      GOVA_AGENT_COORDINATION_DIR: /home/hesham/gova/.local/github-runners/gova-coordination
       LOCAL_AGENT_ID: ${{ inputs.agent_id }}
+      LOCAL_AGENT_REQUEST_ID: ${{ inputs.request_id }}
       LOCAL_AGENT_INSPECT_MODE: ${{ inputs.mode }}
       LOCAL_AGENT_INSPECT_PATHS: ${{ inputs.paths }}
       LOCAL_AGENT_INSPECT_PATTERN: ${{ inputs.pattern }}
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Inspect local workspace
+      - name: Inspect the local workspace
         run: npx tsx scripts/local-agent-inspect.ts
