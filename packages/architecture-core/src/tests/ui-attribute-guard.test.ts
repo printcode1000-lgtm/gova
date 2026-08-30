@@ -49,6 +49,19 @@ const probes: Record<string, string> = {
   "computed-uid.tsx":
     'import { uiAttributes } from "@asol/ui-registry-core";\n' +
     "export const G = (index: number) => <i {...uiAttributes({ uid: `probe.item-${index}`, id: \"probe.item\", kind: \"item\" })} />;\n",
+  // Semantic ids are authored source literals too.
+  "computed-id.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    'export const G2 = (suffix: string) => <i {...uiAttributes({ uid: "probe.computed-id-A1b2C4", id: `probe.${suffix}`, kind: "item" })} />;\n',
+  // Shorthand uid/id fields are computed and must stay fail-closed.
+  "shorthand-uid.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    'const uid = "probe.shorthand-uid-A1b2C5";\n' +
+    'export const G3 = () => <i {...uiAttributes({ uid, id: "probe.shorthand-uid", kind: "item" })} />;\n',
+  "shorthand-id.tsx":
+    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
+    'const id = "probe.shorthand-id";\n' +
+    'export const G4 = () => <i {...uiAttributes({ uid: "probe.shorthand-id-A1b2C6", id, kind: "item" })} />;\n',
   // The same identity described two different ways.
   "drift-a.tsx":
     'import { uiAttributes } from "@asol/ui-registry-core";\n' +
@@ -76,14 +89,22 @@ const probes: Record<string, string> = {
     'export const J = () => <i {...uiComponentAttributes("button")} />;\n',
   // Hand-written instance metadata bypasses the registry API.
   "manual-instance.tsx": 'export const L = () => <i data-ui-instance="probe" />;\n',
-  // An instance id built from a loop index is not stable across reordering.
+  // An approved constructor that references a loop index is still unstable.
   "index-instance.tsx":
-    'import { uiAttributes } from "@asol/ui-registry-core";\n' +
-    "export const M = (rows: string[]) => rows.map((row, index) => <i {...uiAttributes({ uid: \"probe.row-A1bcd4\", id: \"probe.row\", kind: \"item\", instance: index })} />);\n",
-  // A stable domain identifier is the legitimate shape and must not be reported.
+    'import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";\n' +
+    "export const M = (rows: string[]) => rows.map((row, index) => <i {...uiAttributes({ uid: \"probe.row-A1bcd4\", id: \"probe.row\", kind: \"item\", instance: createUiInstanceId(String(index)) })} />);\n",
+  // A stable domain identifier must be converted to a branded opaque instance.
   "domain-instance.tsx":
+    'import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";\n' +
+    "export const N = (rows: { id: string }[]) => rows.map((row) => <i {...uiAttributes({ uid: \"probe.row2-B2cde5\", id: \"probe.row2\", kind: \"item\", instance: createOpaqueUiInstanceId(\"probe-row\", row.id) })} />);\n",
+  // Shorthand instance fields are valid only when their identifier resolves to
+  // an approved constructor/forwarded instance.
+  "shorthand-approved-instance.tsx":
+    'import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";\n' +
+    "export const O = (row: { id: string }) => { const instance = createOpaqueUiInstanceId(\"probe-row\", row.id); return <i {...uiAttributes({ uid: \"probe.shorthand-ok-C3def6\", id: \"probe.shorthand-ok\", kind: \"item\", instance })} />; };\n",
+  "shorthand-raw-instance.tsx":
     'import { uiAttributes } from "@asol/ui-registry-core";\n' +
-    "export const N = (rows: { id: string }[]) => rows.map((row) => <i {...uiAttributes({ uid: \"probe.row2-B2cde5\", id: \"probe.row2\", kind: \"item\", instance: row.id })} />);\n",
+    "export const P = (row: { id: string }) => { const instance = row.id; return <i {...uiAttributes({ uid: \"probe.shorthand-raw-D4efg7\", id: \"probe.shorthand-raw\", kind: \"item\", instance })} />; };\n",
 };
 
 // A uid from a page other than the one this test strips, so the duplicate
@@ -121,24 +142,33 @@ for (const [label, pattern] of [
   ["duplicate uid", /duplicate\.tsx[^\n]*globally unique/],
   ["manual data-ui-uid", /manual\.tsx[^\n]*Manual data-ui-uid/],
   ["computed uid", /computed-uid\.tsx[^\n]*computes its uid/],
+  ["computed semantic id", /computed-id\.tsx[^\n]*computes its semantic id/],
+  ["shorthand uid stays computed", /shorthand-uid\.tsx[^\n]*computes its uid/],
+  ["shorthand id stays computed", /shorthand-id\.tsx[^\n]*computes its semantic id/],
   ["descriptor drift", /drift-b\.tsx[^\n]*drifts from its registration/],
   ["helper-level uid", /ui-component-attributes\.ts[^\n]*helper-level uid/],
   ["a key written after the spread", /key-after-spread\.tsx[^\n]*key follows the uiAttributes spread/],
   ["multiple registry descriptor sources", /multiple-ui-sources\.tsx[^\n]*multiple UiRegistry descriptor sources/],
   ["ui prop plus registry spread", /ui-plus-spread\.tsx[^\n]*multiple UiRegistry descriptor sources/],
   ["manual data-ui-instance", /manual-instance\.tsx[^\n]*Manual data-ui-instance/],
-  ["index-derived instance", /index-instance\.tsx[^\n]*derives \\"instance\\" from an array index/],
+  ["index-derived instance", /index-instance\.tsx[^\n]*reorderable array index/],
+  ["unsafe shorthand instance", /shorthand-raw-instance\.tsx[^\n]*approved constructor or forward caller ui\.instance/],
 ] as const) {
   assert.match(reported, pattern, `The guard must fail for ${label}.`);
 }
 
 // The intentional unregistered fallback is never reported.
 assert.doesNotMatch(reported, /fallback\.tsx/, "Generic component fallbacks stay legal.");
-// A stable domain-id instance is the legitimate shape and must not be reported.
+// A branded opaque instance derived from a stable domain identifier is legal.
 assert.doesNotMatch(
   reported,
   /domain-instance\.tsx/,
-  "An instance id derived from a stable domain identifier stays legal.",
+  "An opaque instance derived from a stable domain identifier stays legal.",
+);
+assert.doesNotMatch(
+  reported,
+  /shorthand-approved-instance\.tsx/,
+  "A shorthand instance resolving to an approved constructor stays legal.",
 );
 
 console.log("UI attribute guard adversarial tests passed.");
