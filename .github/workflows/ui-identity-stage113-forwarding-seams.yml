@@ -1,4 +1,4 @@
-name: ui-identity-stage113-forwarding-seams
+name: ui-identity-stage121-storage-slot-instances
 
 on:
   push:
@@ -26,8 +26,8 @@ jobs:
         run: npm install --global npm@11.19.0
       - name: Install dependencies
         run: npm ci --ignore-scripts
-      - name: Apply hardened Stage 112 forwarding seam migration
-        run: node scripts/ui-registry/fix-stage112-forwarding-seams.mjs
+      - name: Scope StorageImageSlot DOM with slot runtime instance
+        run: node scripts/ui-registry/fix-stage121-storage-slot-instances.mjs
       - name: Regenerate canonical UiRegistry artifacts
         run: |
           npm run ui-registry:generated-catalog:generate
@@ -40,14 +40,16 @@ jobs:
           npm run ui-registry:component-bridge:check
           npm run ui-registry:static-dom-ids:check
           npm run typecheck
-      - name: Commit Stage 113 migration
+      - name: Measure corrected runtime multiplicity
+        run: npx tsx scripts/ui-registry/runtime-multiplicity-summary.ts
+      - name: Commit Stage 121 migration
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src packages
           if git diff --cached --quiet; then
-            echo "No Stage 113 changes"
+            echo "No Stage 121 changes"
             exit 0
           fi
-          git commit -m "Stage 113: apply forwarding seam migration"
+          git commit -m "Stage 121: scope StorageImageSlot runtime identity"
           git push origin HEAD:main
