@@ -30,6 +30,7 @@ import { postMessage, listMessages } from "../local-agent/message-store";
 import { validateDispatchRequest, DISPATCHABLE_WORKFLOWS, MAX_REQUEST_AGE_MS } from "../local-agent/request-contract";
 import { isSecretPath, patchSecretViolations, looksLikeSecretValue } from "../local-agent/secret-paths";
 import { buildCoordinationSnapshot } from "../local-agent/coordination-snapshot";
+import { MAIN_WORKTREE_SLUG, worktreeSlug } from "../local-agent/worktree";
 import { recordRequest, knownRequestIds } from "../local-agent/request-store";
 import {
   ALLOWED_WORKFLOW_FILES,
@@ -155,12 +156,64 @@ assert.equal(
   true,
   "patch plus shell jobs validate",
 );
+// Verification-only is a real shape: no patch, no shell, but something to check.
+// It has to validate through the gateway exactly as it does through a direct
+// dispatch, and it has to hold when `verification` is omitted and the workflow's
+// own default applies.
+assert.equal(
+  validateDispatchRequest(
+    validRequest({
+      workflow: "local-agent-workspace",
+      mode: "workspace",
+      inputs: { agent_id: "a1", commit_message: "chore: verify only", verification: "typecheck" },
+    }),
+  ).valid,
+  true,
+  "verification-only workspace jobs validate",
+);
+assert.equal(
+  validateDispatchRequest(
+    validRequest({
+      workflow: "local-agent-main",
+      mode: "main",
+      inputs: { agent_id: "a1", commit_message: "chore: verify only", verification: "github-ci-policy" },
+    }),
+  ).valid,
+  true,
+  "verification-only main jobs validate",
+);
+assert.equal(
+  validateDispatchRequest(
+    validRequest({
+      workflow: "local-agent-main",
+      mode: "main",
+      inputs: { agent_id: "a1", commit_message: "chore: verify only" },
+    }),
+  ).valid,
+  true,
+  "an omitted verification falls back to the workflow default, not to nothing",
+);
 assert.match(
   validateDispatchRequest(
-    validRequest({ workflow: "local-agent-main", mode: "main", inputs: { agent_id: "a1", commit_message: "empty" } }),
+    validRequest({
+      workflow: "local-agent-main",
+      mode: "main",
+      inputs: { agent_id: "a1", commit_message: "empty", verification: "none" },
+    }),
   ).errors.join(" "),
-  /at least one of/,
-  "a mutation with neither patch nor shell is refused",
+  /would do nothing/,
+  "only the genuinely empty job is refused",
+);
+assert.match(
+  validateDispatchRequest(
+    validRequest({
+      workflow: "local-agent-main",
+      mode: "main",
+      inputs: { agent_id: "a1", commit_message: "x", verification: "npm run rm-rf" },
+    }),
+  ).errors.join(" "),
+  /verification must be one of/,
+  "the verification allowlist is closed",
 );
 
 const secretPatch = Buffer.from("diff --git a/.env.local b/.env.local\n+TOKEN=1\n").toString("base64");
@@ -232,6 +285,32 @@ acquireLock({ agentId: "agent-six", kind: "ref", scope: "ref:codex/agent-six-2" 
 assert.equal(listLocks().length, 2, "parallel branch agents hold independent ref locks");
 releaseAgentLocks("agent-five");
 releaseAgentLocks("agent-six");
+
+// --- worktree isolation ---------------------------------------------------------
+
+// Two jobs from one agent must not share a mutable directory: the agent id is
+// stable across a task, so a retry or a second request would otherwise reset and
+// clean a run that is still in flight.
+assert.notEqual(
+  worktreeSlug("branch", "same-agent", "req-1"),
+  worktreeSlug("branch", "same-agent", "req-2"),
+  "same agent, different requests get different worktrees",
+);
+assert.notEqual(
+  worktreeSlug("branch", "agent-x", "req-1"),
+  worktreeSlug("branch", "agent-y", "req-1"),
+  "different agents get different worktrees",
+);
+assert.equal(
+  worktreeSlug("main", "any-agent", "req-1"),
+  MAIN_WORKTREE_SLUG,
+  "direct-main keeps one shared worktree; it is serialized",
+);
+assert.equal(
+  worktreeSlug("main", "other-agent", "req-2"),
+  worktreeSlug("main", "any-agent", "req-1"),
+  "every direct-main job reuses that same worktree",
+);
 
 // --- agents and heartbeats ---------------------------------------------------
 

@@ -6,7 +6,7 @@ import { gitSoft } from "./local-agent/git";
 import { listJsonFiles } from "./local-agent/json-store";
 import { recoverStaleLocks } from "./local-agent/lock-store";
 import { agentsDir, inspectLogsDir, messagesDir, worktreesDir } from "./local-agent/paths";
-import { pruneWorktrees } from "./local-agent/worktree";
+import { MAIN_WORKTREE_SLUG, pruneWorktrees } from "./local-agent/worktree";
 
 /**
  * Reclaim what finished jobs left behind.
@@ -60,7 +60,11 @@ function pruneStaleAgentWorktrees(dryRun: boolean): string[] {
   const root = worktreesDir();
   if (!existsSync(root)) return removed;
   for (const name of readdirSync(root)) {
-    if (name === "__main" || live.has(name)) continue;
+    // Branch worktrees are named <agent_id>-<job_id>, so a live agent is
+    // recognised by prefix. The shared direct-main worktree is never pruned:
+    // it is reused by the next serialized writer.
+    if (name === MAIN_WORKTREE_SLUG) continue;
+    if ([...live].some((agentId) => name === agentId || name.startsWith(`${agentId}-`))) continue;
     if (!olderThan(path.join(root, name), RETENTION_MS)) continue;
     if (!dryRun) rmSync(path.join(root, name), { recursive: true, force: true });
     removed.push(name);

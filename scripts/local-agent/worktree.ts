@@ -18,8 +18,24 @@ import { workspaceDir, worktreesDir } from "./paths";
 
 export const MAIN_WORKTREE_SLUG = "__main";
 
-export function worktreeSlug(targetMode: string, agentId: string): string {
-  return targetMode === "main" ? MAIN_WORKTREE_SLUG : safeIdentifier(agentId, 48) || "agent";
+/**
+ * One worktree per *job*, not per agent.
+ *
+ * An agent id is stable across a task, so two jobs from the same agent — a
+ * retry, or two requests issued back to back — would otherwise land in the same
+ * mutable directory and reset and clean each other mid-run. Appending the
+ * request or run id makes every branch job's worktree its own, while leaving
+ * parallelism between different agents untouched.
+ *
+ * Direct-`main` deliberately keeps a single shared worktree: that path is
+ * serialized by a concurrency group and a `ref:main` lock, so exactly one job
+ * can be inside it at a time and reusing it is what keeps the common case fast.
+ */
+export function worktreeSlug(targetMode: string, agentId: string, jobId: string): string {
+  if (targetMode === "main") return MAIN_WORKTREE_SLUG;
+  const agent = safeIdentifier(agentId, 40) || "agent";
+  const job = safeIdentifier(jobId, 32) || `${Date.now()}`;
+  return `${agent}-${job}`;
 }
 
 export function worktreePath(slug: string): string {

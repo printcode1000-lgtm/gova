@@ -250993,6 +250993,12 @@
     },
     {
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/worktree.ts",
+      "kind": "imports",
+      "detail": "../local-agent/worktree"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
       "to": "script:scripts/github-ci-policy.ts",
       "kind": "tests"
     },
@@ -251029,6 +251035,11 @@
     {
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
       "to": "script:scripts/local-agent/secret-paths.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/worktree.ts",
       "kind": "tests"
     },
     {

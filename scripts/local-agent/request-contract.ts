@@ -50,6 +50,19 @@ export type DispatchableWorkflow = keyof typeof DISPATCHABLE_WORKFLOWS;
 
 export const ALLOWED_DISPATCH_REFS = ["main"] as const;
 
+/** Mirrors the verification allowlist in `scripts/local-agent-main-apply.ts`. */
+export const ALLOWED_VERIFICATIONS = [
+  "github-ci-policy",
+  "runtime-check",
+  "docs-ci",
+  "architecture-check",
+  "typecheck",
+  "lint",
+  "none",
+] as const;
+
+export const DEFAULT_VERIFICATION = "github-ci-policy";
+
 /** Requests older than this are refused, so a replayed document cannot re-run. */
 export const MAX_REQUEST_AGE_MS = 30 * 60 * 1000;
 /** Small tolerance for clock skew between a cloud agent and this machine. */
@@ -120,8 +133,21 @@ function validateInputs(workflow: DispatchableWorkflow, inputs: Record<string, u
   if (workflow === "local-agent-workspace" || workflow === "local-agent-main") {
     const hasPatch = typeof inputs.patch_base64 === "string" && inputs.patch_base64.trim().length > 0;
     const hasShell = typeof inputs.shell_command === "string" && inputs.shell_command.trim().length > 0;
-    if (!hasPatch && !hasShell) {
-      errors.push(`${workflow} needs at least one of inputs.patch_base64 or inputs.shell_command.`);
+    // The workflow's own default applies when the request omits the input.
+    const verification =
+      typeof inputs.verification === "string" && inputs.verification.trim()
+        ? inputs.verification.trim()
+        : DEFAULT_VERIFICATION;
+    if (!(ALLOWED_VERIFICATIONS as readonly string[]).includes(verification)) {
+      errors.push(`inputs.verification must be one of: ${ALLOWED_VERIFICATIONS.join(", ")}.`);
+    }
+    // A job with no patch and no shell is a verification-only run, which is a
+    // real and useful shape: prove the tree still passes a check. It is only
+    // meaningless when there is nothing to verify either.
+    if (!hasPatch && !hasShell && verification === "none") {
+      errors.push(
+        `${workflow} would do nothing: supply inputs.patch_base64, inputs.shell_command, or a verification other than "none".`,
+      );
     }
   }
   return errors;

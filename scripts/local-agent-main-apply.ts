@@ -10,7 +10,7 @@ import { LockConflictError, acquireLock, releaseAgentLocks } from "./local-agent
 import { OperationLog } from "./local-agent/operation-log";
 import { coordinationDir, messagesDir, requestsDir } from "./local-agent/paths";
 import { patchSecretViolations } from "./local-agent/secret-paths";
-import { prepareWorktree, worktreeSlug } from "./local-agent/worktree";
+import { prepareWorktree, removeWorktree, worktreeSlug } from "./local-agent/worktree";
 
 /**
  * Apply one agent mutation on the local machine and push it.
@@ -82,6 +82,10 @@ const operation = new OperationLog({
   shellCommandProvided: shellCommand.length > 0,
 });
 
+// Assigned once the worktree is chosen. The exit handler may fire before that —
+// a scope conflict aborts before any worktree exists — so it stays nullable.
+let worktreeName: string | null = null;
+
 let released = false;
 function releaseHeld(): void {
   if (released) return;
@@ -90,6 +94,15 @@ function releaseHeld(): void {
     releaseAgentLocks(agentId);
   } catch {
     // Best effort: stale-lock recovery reclaims anything left behind.
+  }
+  // A branch worktree belongs to one job. Leaving it behind would grow the disk
+  // by a full checkout per run; direct-main's shared worktree is kept because it
+  // is reused by the next serialized writer.
+  if (targetMode !== "branch" || worktreeName === null) return;
+  try {
+    removeWorktree(worktreeName);
+  } catch {
+    // npm run local-agent:cleanup reclaims whatever is left.
   }
 }
 
@@ -146,7 +159,8 @@ operation.write("running");
 
 // --- worktree ---------------------------------------------------------------
 
-const slug = worktreeSlug(targetMode, agentId);
+const slug = worktreeSlug(targetMode, agentId, requestId ?? runId);
+worktreeName = slug;
 let prepared: { worktree: string; baseSha: string };
 try {
   prepared = prepareWorktree(slug);

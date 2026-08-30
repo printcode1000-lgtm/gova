@@ -32,7 +32,7 @@ files.
         logs/inspect/                          full inspection output
     agent-worktrees/
       __main                                   the serialized direct-main worktree
-      <agent_id>                               one isolated worktree per mutating agent
+      <agent_id>-<job_id>                      one isolated worktree per branch job
 ```
 
 `.local/` is listed in `.gitignore`, excluded from `tsconfig.json`, and excluded
@@ -146,16 +146,38 @@ Both delegate to `scripts/local-agent-main-apply.ts`, which:
 The developer's own working tree in `/home/hesham/gova` is never checked out,
 reset, or cleaned by an agent job.
 
+#### Worktree isolation
+
+Branch jobs get a worktree named `<agent_id>-<job_id>`, where the job id is the
+request id when the gateway supplied one and the GitHub run id otherwise. Keying
+on the agent alone would not be enough: an `agent_id` is stable for a whole task,
+so a retry or a second request from the same agent would land in the same mutable
+directory and reset and clean a run still in flight. The worktree is removed when
+the job exits, so per-job isolation does not cost a checkout per run on disk.
+
+Direct-`main` deliberately shares one `__main` worktree. That path is serialized
+by a concurrency group *and* a `ref:main` lock, so exactly one job can be inside
+it at a time, and reusing it keeps the common case to a fetch and a reset.
+
+Parallelism between different agents is untouched by either rule.
+
 #### Job shapes
 
-All four shapes are valid, and no agent is ever required to send a fake diff:
+All four shapes are valid, and no agent is ever required to send a fake diff.
+The same shapes are accepted through a direct `workflow_dispatch` and through the
+gateway:
 
-| `patch_base64` | `shell_command` | Result |
-|---|---|---|
-| supplied | — | patch-only |
-| — | supplied | shell-only |
-| supplied | supplied | patch, then shell |
-| — | — | verification-only; nothing is committed |
+| `patch_base64` | `shell_command` | `verification` | Result |
+|---|---|---|---|
+| supplied | — | any | patch-only |
+| — | supplied | any | shell-only |
+| supplied | supplied | any | patch, then shell |
+| — | — | not `none` | verification-only; nothing is committed |
+| — | — | `none` | refused: the job would do nothing |
+
+Omitting `verification` means the workflow's own default, `github-ci-policy` — so
+a request that carries only a commit message is a verification-only run, not an
+empty one.
 
 ### Verification Choices
 
@@ -244,6 +266,7 @@ credential travels through the request channel.
 | `mode` | must match the workflow's mode |
 | `ref` | `main` |
 | `inputs` | string map; only the inputs that workflow accepts |
+| `inputs.verification` | one of the verification choices below; defaults to `github-ci-policy` |
 | `createdAt` | ISO-8601, at most 30 minutes old and not in the future |
 
 The gateway refuses a request that fails any of these, and records the refusal.
