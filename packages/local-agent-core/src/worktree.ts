@@ -90,12 +90,56 @@ export function pruneWorktrees(): string[] {
     .map((line) => line.slice("worktree ".length));
 }
 
-export function removeWorktree(slug: string): boolean {
+/** Where rescued work is parked, one ref per worktree slug. */
+export const RESCUE_REF_NAMESPACE = "refs/gova-rescue";
+
+/**
+ * Preserve uncommitted work before its worktree is destroyed.
+ *
+ * Removal is `--force` followed by an unconditional `rm -rf`, because a cleanup
+ * that can be blocked is a cleanup that stops running. But the jobs whose
+ * worktrees get reclaimed are largely jobs that were killed — by the
+ * out-of-memory killer, by a cancelled run — and killing one mid-edit is exactly
+ * when its changes are worth keeping.
+ *
+ * `git stash create` writes a commit object for the current state without
+ * touching the worktree or the stash list, and a worktree shares its object
+ * database with the main checkout. So the commit survives the directory: parking
+ * it under a ref makes it recoverable long after the worktree is gone, and costs
+ * one object nobody has to remember to clean up.
+ *
+ * Returns the ref it wrote, or null when there was nothing to rescue. Never
+ * throws: losing the rescue must not stop the cleanup.
+ */
+export function rescueWorktreeChanges(slug: string): string | null {
+  const worktree = worktreePath(slug);
+  if (!existsSync(worktree)) return null;
+  try {
+    if (!gitSoft(["status", "--porcelain"], worktree).trim()) return null;
+    // Include untracked files: a killed job's new file is work too.
+    const created = gitSoft(["stash", "create", "--include-untracked"], worktree).trim();
+    if (!created) return null;
+    const ref = `${RESCUE_REF_NAMESPACE}/${slug}`;
+    const stored = runCapture("git", ["update-ref", ref, created], workspaceDir());
+    return stored.status === 0 ? ref : null;
+  } catch {
+    return null;
+  }
+}
+
+export interface WorktreeRemoval {
+  removed: boolean;
+  /** Ref holding the work that would otherwise have been destroyed. */
+  rescuedRef: string | null;
+}
+
+export function removeWorktree(slug: string): WorktreeRemoval {
   const root = workspaceDir();
   const worktree = worktreePath(slug);
-  if (!existsSync(worktree)) return false;
+  if (!existsSync(worktree)) return { removed: false, rescuedRef: null };
+  const rescuedRef = rescueWorktreeChanges(slug);
   const result = runCapture("git", ["worktree", "remove", "--force", worktree], root);
   if (result.status !== 0) rmSync(worktree, { recursive: true, force: true });
   gitSoft(["worktree", "prune"], root);
-  return true;
+  return { removed: true, rescuedRef };
 }

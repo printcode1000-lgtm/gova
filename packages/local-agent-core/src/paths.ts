@@ -60,7 +60,11 @@ export function worktreesDir(): string {
 
 export const HOST_PROFILES = {
   desktop: { slug: "local", runnerSlug: "runner", serviceSlug: "", sliceName: "gova-runners.slice", size: 6 },
-  laptop: { slug: "laptop", runnerSlug: "laptop-runner", serviceSlug: "laptop-", sliceName: "gova-laptop-runners.slice", size: 3 },
+  // Five, not three: the laptop's ceiling was its runner count, not its memory.
+  // It has four cores and ~14GB available against a desktop whose swap is
+  // exhausted, so moving work here is what relieves the machine that is actually
+  // under pressure. The slice still bounds the aggregate at 7G/9G.
+  laptop: { slug: "laptop", runnerSlug: "laptop-runner", serviceSlug: "laptop-", sliceName: "gova-laptop-runners.slice", size: 5 },
 } as const;
 
 export type HostProfileName = keyof typeof HOST_PROFILES;

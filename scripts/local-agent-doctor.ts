@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, statSync } from "node:fs";
 import path from "node:path";
-import { agentsDir, coordinationDir, DISPATCHABLE_WORKFLOWS, gitSoft, hasGithubToken, hostProfile, hostProfileName, isOpen, listAgents, listLocks, listOperations, listRequests, listRunners, locksDir, logsDir, maxConcurrentMutations, memoryFloorMb, memoryFloorReason, messagesDir, operationLogsDir, pendingReservationMb, readMemory, requestsDir, RUNNER_DIRECTORY_NAMES, RUNNER_GITHUB_NAMES, RUNNER_SERVICE_NAMES, runnerPoolDir, workflowExists, workspaceDir, worktreesDir } from "@asol/local-agent-core";
+import { agentsDir, assessSwap, coordinationDir, DISPATCHABLE_WORKFLOWS, gitSoft, hasGithubToken, hostProfile, hostProfileName, isOpen, listAgents, listLocks, listOperations, listRequests, listRunners, locksDir, logsDir, maxConcurrentMutations, memoryFloorMb, memoryFloorReason, messagesDir, operationLogsDir, pendingReservationMb, readMemory, requestsDir, RUNNER_DIRECTORY_NAMES, RUNNER_GITHUB_NAMES, RUNNER_SERVICE_NAMES, runnerPoolDir, workflowExists, workspaceDir, worktreesDir } from "@asol/local-agent-core";
 import { companionRepositoryStates, hostToolState } from "@asol/local-agent-core/host";
 import { probeRemoteHosts, readRemoteHostsCache } from "@asol/local-agent-core/monitor";
 /**
@@ -189,6 +189,15 @@ function checkMemory(): void {
       `swap is ${Math.round((1 - swapFreeRatio) * 100)}% used (${memory.swapFreeMb}MB free of ${memory.swapTotalMb}MB); the machine is close to an out-of-memory kill.`,
       "WARN",
     );
+    // Say what to do about it, not just that it is bad. A full swap does not
+    // drain on its own, and the flush is only safe while RAM can hold the pages
+    // being pulled back — so the doctor states which of those two is true.
+    const hygiene = assessSwap(memory);
+    if (hygiene.verdict === "flush-recommended") {
+      record("memory.swap-flush", "WARN", `${hygiene.reason}. Run: ${hygiene.command}`);
+    } else if (hygiene.verdict === "flush-unsafe") {
+      record("memory.swap-flush", "WARN", hygiene.reason);
+    }
   }
   record("memory.budget", "PASS", `at most ${maxConcurrentMutations()} concurrent mutation(s).`);
 }

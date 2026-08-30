@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, rmSync, statSync } from "node:fs";
 import path from "node:path";
-import { agentsDir, gitSoft, inspectLogsDir, isOpen, listAgents, listJsonFiles, listOperations, MAIN_WORKTREE_SLUG, messagesDir, pruneWorktrees, reconcileOrphanedOperations, recoverStaleLocks, removeWorktree, worktreesDir, worktreeSlug } from "@asol/local-agent-core";
+import { assessSwap, agentsDir, gitSoft, inspectLogsDir, isOpen, listAgents, listJsonFiles, listOperations, MAIN_WORKTREE_SLUG, messagesDir, pruneWorktrees, reconcileOrphanedOperations, recoverStaleLocks, removeWorktree, worktreesDir, worktreeSlug } from "@asol/local-agent-core";
 /**
  * Reclaim what finished jobs left behind.
  *
@@ -76,8 +76,14 @@ function pruneStaleAgentWorktrees(dryRun: boolean): string[] {
       if (!olderThan(path.join(root, name), RETENTION_MS)) continue;
     }
     if (owningOperation && runningPids.has(owningOperation.pid) && !finished) continue;
-    if (!dryRun) removeWorktree(name);
-    removed.push(name);
+    if (dryRun) {
+      removed.push(name);
+      continue;
+    }
+    const outcome = removeWorktree(name);
+    // Say when work was saved. A rescued ref nobody is told about is the same as
+    // a lost one.
+    removed.push(outcome.rescuedRef ? `${name} (rescued to ${outcome.rescuedRef})` : name);
   }
   return removed;
 }
@@ -101,6 +107,10 @@ function main(): void {
     staleGatewayRefs: gitSoft(["for-each-ref", "--format=%(refname)", "refs/gova-gateway"], process.cwd())
       .split("\n")
       .filter(Boolean),
+    // Cleanup is what runs when a batch of work ends, which is exactly when a
+    // full swap should be noticed: nothing is holding those pages any more, and
+    // leaving them there keeps the admission floor raised for the next batch.
+    swap: assessSwap(),
   };
   console.log(JSON.stringify(result, null, 2));
 }

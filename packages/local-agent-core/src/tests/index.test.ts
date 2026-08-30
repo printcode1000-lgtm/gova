@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
 import { hostname, tmpdir } from "node:os";
 import path from "node:path";
 
@@ -16,7 +16,7 @@ import path from "node:path";
 const sandbox = mkdtempSync(path.join(tmpdir(), "gova-control-plane-test-"));
 process.env.GOVA_AGENT_COORDINATION_DIR = sandbox;
 process.env.GOVA_AGENT_STALE_LOCK_MS = String(60 * 60 * 1000);
-import { acquireLock, buildCoordinationSnapshot, declareAgent, DEFAULT_HEARTBEAT_TTL_MS, DISPATCHABLE_WORKFLOWS, isOpen, isSecretPath, knownRequestIds, listAgents, listLocks, listMessages, listOperations, livenessOf, LockConflictError, lockId, looksLikeSecretValue, MAIN_WORKTREE_SLUG, MAX_REQUEST_AGE_MS, maxConcurrentMutations, memoryFloorFor, memoryFloorMb, ownerIsAlive, patchSecretViolations, pendingReservationMb, postMessage, readMemory, reconcileOrphanedOperations, recordRequest, recoverStaleLocks, releaseAgentLocks, releaseLock, scopesConflict, swapIsHealthy, validateDispatchRequest, waitForAdmission, worktreeSlug } from "@asol/local-agent-core";
+import { acquireLock, assessSwap, prepareWorktree, removeWorktree, RESCUE_REF_NAMESPACE, worktreePath, buildCoordinationSnapshot, declareAgent, DEFAULT_HEARTBEAT_TTL_MS, DISPATCHABLE_WORKFLOWS, isOpen, isSecretPath, knownRequestIds, listAgents, listLocks, listMessages, listOperations, livenessOf, LockConflictError, lockId, looksLikeSecretValue, MAIN_WORKTREE_SLUG, MAX_REQUEST_AGE_MS, maxConcurrentMutations, memoryFloorFor, memoryFloorMb, ownerIsAlive, patchSecretViolations, pendingReservationMb, postMessage, readMemory, reconcileOrphanedOperations, recordRequest, recoverStaleLocks, releaseAgentLocks, releaseLock, scopesConflict, FLUSH_SAFETY_MARGIN_MB, SWAP_FLUSH_COMMAND, swapIsHealthy, validateDispatchRequest, waitForAdmission, worktreeSlug } from "@asol/local-agent-core";
 import { envWithHostToolShims, hostToolAllowed, setHostToolAllowed, wrapLoginShellCommand } from "@asol/local-agent-core/host";
 import { buildWatchModel, EMPTY_GITHUB_SAMPLE, humanDuration, renderFrame, sshAliases, visibleLength } from "@asol/local-agent-core/monitor";
 
@@ -596,6 +596,74 @@ assert.equal(humanDuration(90_000), "1m30s");
 assert.equal(humanDuration(3_600_000), "1h00m");
 assert.equal(humanDuration(-1), "\u2014");
 releaseAgentLocks("watched-agent");
+
+
+
+// --- worktree rescue -------------------------------------------------------------
+
+// Cleanup removes a dead job's worktree with --force, and the jobs whose
+// worktrees get reclaimed are largely jobs that were killed. Killing one
+// mid-edit is exactly when its changes are worth keeping, so removal must not be
+// the same thing as destruction.
+{
+  const slug = "rescue-contract-probe";
+  prepareWorktree(slug);
+  const dir = worktreePath(slug);
+  writeFileSync(path.join(dir, "RESCUED.txt"), "must survive\n");
+  execFileSync("git", ["-C", dir, "add", "RESCUED.txt"]);
+
+  const outcome = removeWorktree(slug);
+  assert.equal(outcome.removed, true, "the worktree is still removed");
+  assert.equal(outcome.rescuedRef, `${RESCUE_REF_NAMESPACE}/${slug}`, "and the work is parked under a ref");
+  assert.equal(existsSync(dir), false, "the directory is gone");
+
+  const recovered = execFileSync("git", ["show", `${outcome.rescuedRef}:RESCUED.txt`], { encoding: "utf8" });
+  assert.equal(recovered.trim(), "must survive", "the content is readable after the directory is destroyed");
+  execFileSync("git", ["update-ref", "-d", outcome.rescuedRef!]);
+}
+
+// A clean worktree has nothing to rescue, and must not leave a ref behind.
+{
+  const slug = "rescue-clean-probe";
+  prepareWorktree(slug);
+  const outcome = removeWorktree(slug);
+  assert.equal(outcome.removed, true);
+  assert.equal(outcome.rescuedRef, null, "a clean worktree produces no rescue ref");
+}
+
+// Removing something that is not there is not an error, and rescues nothing.
+assert.deepEqual(removeWorktree("worktree-that-never-existed"), { removed: false, rescuedRef: null });
+
+// --- swap hygiene ---------------------------------------------------------------
+
+// A full swap does not drain on its own, and the flush that empties it pulls
+// every swapped page back into RAM. Recommending one that cannot fit would trade
+// a slow machine for a killed one, so the safety check is the point of this.
+assert.equal(assessSwap({ availableMb: 8_000, totalMb: 16_000, swapFreeMb: 4_000, swapTotalMb: 4_096 }).verdict, "healthy");
+assert.equal(assessSwap({ availableMb: 8_000, totalMb: 16_000, swapFreeMb: 0, swapTotalMb: 0 }).verdict, "no-swap");
+
+const recommended = assessSwap({ availableMb: 6_000, totalMb: 16_000, swapFreeMb: 2, swapTotalMb: 4_096 });
+assert.equal(recommended.verdict, "flush-recommended", "a full swap with room in RAM should be flushed");
+assert.equal(recommended.command, SWAP_FLUSH_COMMAND);
+assert.equal(recommended.usedMb, 4_094);
+
+// 4094MB swapped needs 4094 + 1024 available; 4500 is not enough.
+const unsafe = assessSwap({ availableMb: 4_500, totalMb: 16_000, swapFreeMb: 2, swapTotalMb: 4_096 });
+assert.equal(unsafe.verdict, "flush-unsafe", "a flush that cannot fit in RAM must not be recommended");
+assert.equal(unsafe.command, null, "an unsafe verdict offers no command to run");
+assert.match(unsafe.reason, /Wait for jobs to finish/);
+
+// The boundary itself: exactly the margin is enough, one megabyte less is not.
+assert.equal(
+  assessSwap({ availableMb: 4_094 + FLUSH_SAFETY_MARGIN_MB, totalMb: 16_000, swapFreeMb: 2, swapTotalMb: 4_096 }).verdict,
+  "flush-recommended",
+);
+assert.equal(
+  assessSwap({ availableMb: 4_094 + FLUSH_SAFETY_MARGIN_MB - 1, totalMb: 16_000, swapFreeMb: 2, swapTotalMb: 4_096 }).verdict,
+  "flush-unsafe",
+);
+
+assert.equal(assessSwap(null).verdict, "no-swap", "an unreadable /proc/meminfo recommends nothing");
 
 // --- cleanup ------------------------------------------------------------------
 

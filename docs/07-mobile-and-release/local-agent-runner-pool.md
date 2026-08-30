@@ -80,7 +80,7 @@ globally distinct names for the three runners on `hesham-HP-EliteBook-840-G3`.
 | Profile | GitHub name prefix | Runner directories | Services |
 |---|---|---|---|
 | `desktop` | `gova-local` | `gova-runner` through `gova-runner-6` | `gova-github-runner.service` through `gova-github-runner-6.service` |
-| `laptop` | `gova-laptop` | `gova-laptop-runner` through `gova-laptop-runner-3` | `gova-laptop-github-runner.service` through `gova-laptop-github-runner-3.service` |
+| `laptop` | `gova-laptop` | `gova-laptop-runner` through `gova-laptop-runner-5` | `gova-laptop-github-runner.service` through `gova-laptop-github-runner-5.service` |
 
 | Runner | Local directory | Systemd user service |
 |---|---|---|
@@ -498,6 +498,92 @@ killed job is the same disk and memory pressure that caused the problem.
 `npm run local-agent:doctor` reports available memory, swap headroom, the
 concurrency budget, and the count of reconciled records. The monitor shows the
 same memory line in its header, in red once the floor is crossed.
+
+## Nothing Is Lost To Cleanup
+
+`npm run local-agent:cleanup` removes a dead job's worktree with
+`git worktree remove --force` followed by an unconditional delete, because a
+cleanup that can be blocked is a cleanup that stops running. But the worktrees it
+reclaims mostly belong to jobs that were *killed* — by the out-of-memory killer,
+by a cancelled run — and killing one mid-edit is exactly when its changes are
+worth keeping.
+
+So removal is not the same as destruction. Before the directory goes,
+`rescueWorktreeChanges()` runs `git stash create --include-untracked` inside it,
+which writes a commit object for the current state without touching the worktree
+or the stash list. A worktree shares its object database with the main checkout,
+so that commit outlives the directory. It is parked at:
+
+```text
+refs/gova-rescue/<worktree-slug>
+```
+
+Cleanup reports it in `prunedWorktrees` as `<slug> (rescued to refs/gova-rescue/<slug>)`.
+
+### Recovering rescued work
+
+```bash
+git for-each-ref refs/gova-rescue                  # what was saved
+git show --stat refs/gova-rescue/<slug>            # what is in it
+git show refs/gova-rescue/<slug>:path/to/file      # read one file
+git stash apply refs/gova-rescue/<slug>            # restore into the working tree
+git update-ref -d refs/gova-rescue/<slug>          # discard once handled
+```
+
+A clean worktree produces no ref, so the namespace only ever holds work that
+would otherwise have been thrown away. The rescue never throws and never blocks:
+if it fails, cleanup proceeds anyway — losing the rescue must not cost the
+cleanup.
+
+## Swap Hygiene
+
+Swap that has filled does not empty on its own. Pages written under an earlier
+spike stay there long after the pressure passed, so free swap keeps falling
+across a working day until it reaches zero — which is exactly the state that
+satisfies half of earlyoom's kill condition permanently and forces the admission
+floor up from 2048MB to `10% of MemTotal + 1536MB`. On this machine that is the
+difference between a 2048MB floor and a 3106MB one, which is roughly one job's
+worth of parallelism lost.
+
+The flush is `sudo swapoff -a && sudo swapon -a`. It pulls every swapped page
+back into RAM, so it is only safe while RAM can hold them: run it with more
+swapped than free and the kernel starts killing processes to make room.
+
+`assessSwap()` answers both questions and never runs anything — swap is system
+configuration, and the operator decides when their machine reorganises its
+memory:
+
+| Verdict | Meaning |
+|---|---|
+| `no-swap` | none configured; nothing to flush |
+| `healthy` | more than half the swap is free |
+| `flush-recommended` | swap is under pressure and RAM has room, with a 1024MB margin |
+| `flush-unsafe` | swap is under pressure but a flush would not fit; wait for jobs to finish |
+
+It is reported at the two moments that matter:
+
+- **`npm run local-agent:doctor`** — before starting work, as `memory.swap-flush`,
+  carrying the exact command when a flush is safe.
+- **`npm run local-agent:cleanup`** — after work ends, in the `swap` field. That
+  is the natural moment: nothing is holding those pages any more, and leaving them
+  keeps the floor raised for the next batch.
+
+### Growing the swap
+
+A 4GB swap file on a 15.7GB machine refills quickly under a six-runner pool. The
+file is `/swap.img` and already listed in `/etc/fstab`. Growing it is a system
+configuration change and is done by the operator, not by the control plane:
+
+```bash
+sudo swapoff /swap.img
+sudo fallocate -l 12G /swap.img     # or: sudo dd if=/dev/zero of=/swap.img bs=1M count=12288
+sudo chmod 600 /swap.img
+sudo mkswap /swap.img
+sudo swapon /swap.img
+```
+
+The existing `/etc/fstab` line needs no change — it names the path, not the size.
+Confirm with `swapon --show` and `npm run local-agent:doctor`.
 
 ## Remote Hosts
 

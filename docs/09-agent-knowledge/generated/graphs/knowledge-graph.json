@@ -32195,6 +32195,17 @@
       ]
     },
     {
+      "id": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "kind": "source",
+      "name": "swap-hygiene.ts",
+      "path": "packages/local-agent-core/src/swap-hygiene.ts",
+      "tags": [
+        "packages/local-agent-core/src/swap-hygiene",
+        "packages/local-agent-core/src/swap-hygiene.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/local-agent-core/src/watch-model.ts",
       "kind": "source",
       "name": "watch-model.ts",
@@ -76673,6 +76684,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/local-agent-core/src/secret-paths.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/swap-hygiene.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -150640,6 +150657,12 @@
     },
     {
       "from": "source:packages/local-agent-core/src/index.ts",
+      "to": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "kind": "imports",
+      "detail": "./swap-hygiene"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/index.ts",
       "to": "source:packages/local-agent-core/src/worktree.ts",
       "kind": "imports",
       "detail": "./worktree"
@@ -151069,6 +151092,42 @@
       "from": "source:packages/local-agent-core/src/secret-paths.ts",
       "to": "package:@asol/local-agent-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "to": "source:packages/local-agent-core/src/admission.ts",
+      "kind": "imports",
+      "detail": "./admission"
     },
     {
       "from": "source:packages/local-agent-core/src/watch-model.ts",

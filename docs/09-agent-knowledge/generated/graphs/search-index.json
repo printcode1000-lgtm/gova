@@ -32195,6 +32195,17 @@
       ]
     },
     {
+      "id": "source:packages/local-agent-core/src/swap-hygiene.ts",
+      "kind": "source",
+      "name": "swap-hygiene.ts",
+      "path": "packages/local-agent-core/src/swap-hygiene.ts",
+      "tags": [
+        "packages/local-agent-core/src/swap-hygiene",
+        "packages/local-agent-core/src/swap-hygiene.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/local-agent-core/src/watch-model.ts",
       "kind": "source",
       "name": "watch-model.ts",
