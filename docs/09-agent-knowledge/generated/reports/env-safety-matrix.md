@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **259**
+Keys: **260**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -144,7 +144,7 @@ Keys: **259**
 | `GOVA_AGENT_STALE_LOCK_MS` | server-only | unknown | `scripts/local-agent/lock-store.ts`, `scripts/tests/local-agent-control-plane.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_LOCAL_WORKSPACE` | server-only | unknown | `scripts/local-agent/paths.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_RUNNER_POOL_DIR` | server-only | unknown | `scripts/local-agent/paths.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `HOME` | server-only | unknown | `packages/native-core/scripts/android-build-preflight.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `HOME` | server-only | unknown | `packages/native-core/scripts/android-build-preflight.ts`, `scripts/local-agent/host-inventory.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `HOST` | server-only | unknown | `packages/ota-core/scripts/serve-static.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `JAVA_HOME` | server-only | unknown | `packages/native-core/scripts/android-build-preflight.ts`, `scripts/check-environment-requirements.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LANG` | server-only | unknown | `scripts/fastlane-runner.ts` | unclassified | server-only | npm run runtime:check:changed |
@@ -253,6 +253,7 @@ Keys: **259**
 | `TURSO_PRODUCT_ORGANIZATION` | server-only | unknown | none | vercel/database | missing/unknown consumers | npm run runtime:check:changed |
 | `TURSO_PROFILES_API_TOKEN` | server-only | dangerous | none | vercel/database | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `TURSO_PROFILES_ORGANIZATION` | server-only | unknown | none | vercel/database | missing/unknown consumers | npm run runtime:check:changed |
+| `USER` | server-only | unknown | `scripts/local-agent-host-restore.ts`, `scripts/local-agent/host-inventory.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `VERCEL` | server-only | dangerous | `packages/native-core/scripts/validate-ios-push-policy.ts`, `scripts/schema-sync.ts`, `scripts/test-data-health-environment.ts`, `src/core/config/runtime-context.server.ts`, `src/features/data-health/tests/development-guard.test.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `VERCEL_ACCESS_TOKEN` | server-only | dangerous | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `VERCEL_ENV` | server-only | unknown | `src/core/config/runtime-context.server.ts` | vercel/database | server-only | npm run runtime:check:changed |

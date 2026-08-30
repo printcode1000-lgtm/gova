@@ -1710,6 +1710,36 @@
       ]
     },
     {
+      "id": "command:local-agent:host:backup",
+      "kind": "command",
+      "name": "npm run local-agent:host:backup",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "backup",
+        "host",
+        "local-agent",
+        "local-agent:host:backup",
+        "npm",
+        "npm run local-agent:host:backup",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:host:restore",
+      "kind": "command",
+      "name": "npm run local-agent:host:restore",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "host",
+        "local-agent",
+        "local-agent:host:restore",
+        "npm",
+        "npm run local-agent:host:restore",
+        "restore",
+        "run"
+      ]
+    },
+    {
       "id": "command:local-agent:status",
       "kind": "command",
       "name": "npm run local-agent:status",
@@ -19539,6 +19569,19 @@
       ]
     },
     {
+      "id": "environment-key:USER",
+      "kind": "environment-key",
+      "name": "USER",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling",
+        "user"
+      ]
+    },
+    {
       "id": "environment-key:VERCEL",
       "kind": "environment-key",
       "name": "VERCEL",
@@ -26822,6 +26865,28 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent-host-backup.ts",
+      "kind": "script",
+      "name": "local-agent-host-backup.ts",
+      "path": "scripts/local-agent-host-backup.ts",
+      "tags": [
+        "scripts/local-agent-host-backup",
+        "scripts/local-agent-host-backup.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent-host-restore.ts",
+      "kind": "script",
+      "name": "local-agent-host-restore.ts",
+      "path": "scripts/local-agent-host-restore.ts",
+      "tags": [
+        "scripts/local-agent-host-restore",
+        "scripts/local-agent-host-restore.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent-inspect.ts",
       "kind": "script",
       "name": "local-agent-inspect.ts",
@@ -26917,6 +26982,17 @@
       "tags": [
         "scripts/local-agent/github-api",
         "scripts/local-agent/github-api.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/host-inventory.ts",
+      "kind": "script",
+      "name": "host-inventory.ts",
+      "path": "scripts/local-agent/host-inventory.ts",
+      "tags": [
+        "scripts/local-agent/host-inventory",
+        "scripts/local-agent/host-inventory.ts",
         "ts"
       ]
     },

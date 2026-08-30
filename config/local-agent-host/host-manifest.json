@@ -1,0 +1,141 @@
+{
+  "capturedAt": "2026-08-30T06:42:56.104Z",
+  "workspace": "/home/hesham/gova",
+  "runnerPoolDir": "/home/hesham/gova/.local/github-runners",
+  "host": {
+    "hostname": "hesham-HP-EliteDesk-800-G2-TWR",
+    "kernel": "7.0.0-30-generic",
+    "distribution": "Ubuntu 24.04.4 LTS"
+  },
+  "toolchain": {
+    "node": "v24.20.0",
+    "npm": "11.19.0",
+    "git": "git version 2.43.0"
+  },
+  "linger": true,
+  "repository": {
+    "origin": "https://github.com/printcode1000-lgtm/gova.git",
+    "hooksPath": ".githooks",
+    "credentialHelper": "/home/hesham/gova/scripts/local-agent/git-credential-local.sh"
+  },
+  "runners": [
+    {
+      "directoryName": "gova-runner",
+      "githubName": "gova-local",
+      "serviceName": "gova-github-runner.service",
+      "installed": true,
+      "runnerVersion": "2.337.0",
+      "workFolder": "_work",
+      "labels": [
+        "self-hosted",
+        "Linux",
+        "X64",
+        "gova"
+      ]
+    },
+    {
+      "directoryName": "gova-runner-2",
+      "githubName": "gova-local-2",
+      "serviceName": "gova-github-runner-2.service",
+      "installed": true,
+      "runnerVersion": "2.337.0",
+      "workFolder": "_work",
+      "labels": [
+        "self-hosted",
+        "Linux",
+        "X64",
+        "gova",
+        "gova-agent"
+      ]
+    },
+    {
+      "directoryName": "gova-runner-3",
+      "githubName": "gova-local-3",
+      "serviceName": "gova-github-runner-3.service",
+      "installed": true,
+      "runnerVersion": "2.337.0",
+      "workFolder": "_work",
+      "labels": [
+        "self-hosted",
+        "Linux",
+        "X64",
+        "gova",
+        "gova-agent"
+      ]
+    },
+    {
+      "directoryName": "gova-runner-4",
+      "githubName": "gova-local-4",
+      "serviceName": "gova-github-runner-4.service",
+      "installed": true,
+      "runnerVersion": "2.337.0",
+      "workFolder": "_work",
+      "labels": [
+        "self-hosted",
+        "Linux",
+        "X64",
+        "gova",
+        "gova-agent"
+      ]
+    },
+    {
+      "directoryName": "gova-runner-5",
+      "githubName": "gova-local-5",
+      "serviceName": "gova-github-runner-5.service",
+      "installed": true,
+      "runnerVersion": "2.337.0",
+      "workFolder": "_work",
+      "labels": [
+        "self-hosted",
+        "Linux",
+        "X64",
+        "gova",
+        "gova-agent"
+      ]
+    },
+    {
+      "directoryName": "gova-runner-6",
+      "githubName": "gova-local-6",
+      "serviceName": "gova-github-runner-6.service",
+      "installed": true,
+      "runnerVersion": "2.337.0",
+      "workFolder": "_work",
+      "labels": [
+        "self-hosted",
+        "Linux",
+        "X64",
+        "gova",
+        "gova-agent"
+      ]
+    }
+  ],
+  "systemdUnits": [
+    "gova-github-runner.service",
+    "gova-github-runner-2.service",
+    "gova-github-runner-3.service",
+    "gova-github-runner-4.service",
+    "gova-github-runner-5.service",
+    "gova-github-runner-6.service"
+  ],
+  "githubRunnerQueryError": null,
+  "excludedSecretFiles": [
+    "gova-runner/.credentials",
+    "gova-runner/.credentials_rsaparams",
+    "gova-runner/.registration-token",
+    "gova-runner-2/.credentials",
+    "gova-runner-2/.credentials_rsaparams",
+    "gova-runner-2/.registration-token",
+    "gova-runner-3/.credentials",
+    "gova-runner-3/.credentials_rsaparams",
+    "gova-runner-3/.registration-token",
+    "gova-runner-4/.credentials",
+    "gova-runner-4/.credentials_rsaparams",
+    "gova-runner-4/.registration-token",
+    "gova-runner-5/.credentials",
+    "gova-runner-5/.credentials_rsaparams",
+    "gova-runner-5/.registration-token",
+    "gova-runner-6/.credentials",
+    "gova-runner-6/.credentials_rsaparams",
+    "gova-runner-6/.registration-token"
+  ]
+}

@@ -431,7 +431,45 @@ Other commands:
 | `npm run local-agent:coordination -- --action=status` | agents, locks, messages |
 | `npm run local-agent:cleanup` | reclaim stale locks, worktrees, and old records |
 | `npm run local-agent:dispatch:check -- <file>` | validate a request document |
+| `npm run local-agent:host:backup` | capture the host configuration that lives outside the project |
+| `npm run local-agent:host:restore` | replay that configuration onto a rebuilt machine |
 | `npm run test:local-agent-core` | control-plane regression and adversarial tests |
+
+## Host Backup And Recovery
+
+The repository can always be recloned. The parts of the local server that live
+*outside* it cannot: the systemd user units, linger, the runner registrations,
+and each runner's `.env` and `.path`. `npm run local-agent:host:backup` captures
+exactly those into `config/local-agent-host/`, which is tracked — so the recovery
+material travels with the git remote instead of dying with the disk.
+
+`.credentials`, `.credentials_rsaparams`, and `.registration-token` are never
+captured. They are registration secrets, and a rebuilt runner registers again
+with a fresh token derived from `GITHUB_ADMIN_TOKEN`; replaying an old credential
+would be insecure and would not work. Runner `.env` lines that look like
+credentials are redacted before being written.
+
+Re-run the backup after adding or removing a runner, editing a unit, changing
+labels, or upgrading the runner release. `--dry-run` shows what would be written.
+
+### Rebuilding a machine from nothing
+
+1. Install Node and git; clone the repository to `/home/hesham/gova`.
+2. `npm run secrets:restore` — brings back the git-ignored secret files,
+   including the token restore needs.
+3. `npm ci`
+4. `npm run local-agent:host:restore` — recreates the pool root, downloads the
+   recorded runner release, registers all six runners with their recorded names,
+   labels, and work folders, restores their environment files, installs the
+   systemd units, and enables and starts them. Every step is idempotent, so it is
+   equally safe on a half-broken machine. `--dry-run` lists the steps first.
+5. `loginctl enable-linger $USER` if restore reports it missing. This is the one
+   step that can prompt for authentication, so restore never performs it — it
+   tells you instead. Without linger the pool stops at logout.
+6. `npm run local-agent:doctor` — every check must pass.
+
+Restore never uses `sudo`: the pool is made of systemd *user* units and needs no
+system-level privilege.
 
 ## Recovery Procedures
 

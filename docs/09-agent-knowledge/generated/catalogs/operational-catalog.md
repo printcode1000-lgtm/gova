@@ -132,6 +132,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run local-agent:coordination` | `npx tsx scripts/local-agent-coordination.ts` |
 | `npm run local-agent:dispatch:check` | `npx tsx scripts/local-agent-dispatch-check.ts` |
 | `npm run local-agent:doctor` | `npx tsx scripts/local-agent-doctor.ts` |
+| `npm run local-agent:host:backup` | `npx tsx scripts/local-agent-host-backup.ts` |
+| `npm run local-agent:host:restore` | `npx tsx scripts/local-agent-host-restore.ts` |
 | `npm run local-agent:status` | `npx tsx scripts/local-agent-status.ts` |
 | `npm run maplibre:sync` | `npx tsx scripts/sync-maplibre-worker.ts` |
 | `npm run notifications:check:local` | `npx tsx scripts/check-localhost-notifications.ts` |

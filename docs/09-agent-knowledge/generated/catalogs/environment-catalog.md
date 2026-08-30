@@ -142,7 +142,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `GOVA_AGENT_STALE_LOCK_MS` | server/tooling | 2 | `scripts/local-agent/lock-store.ts`, `scripts/tests/local-agent-control-plane.test.ts` |
 | `GOVA_LOCAL_WORKSPACE` | server/tooling | 1 | `scripts/local-agent/paths.ts` |
 | `GOVA_RUNNER_POOL_DIR` | server/tooling | 1 | `scripts/local-agent/paths.ts` |
-| `HOME` | server/tooling | 1 | `packages/native-core/scripts/android-build-preflight.ts` |
+| `HOME` | server/tooling | 2 | `scripts/local-agent/host-inventory.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
 | `HOST` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
 | `JAVA_HOME` | server/tooling | 2 | `scripts/check-environment-requirements.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
 | `LANG` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
@@ -251,6 +251,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `TURSO_PRODUCT_ORGANIZATION` | server/tooling | 0 |  |
 | `TURSO_PROFILES_API_TOKEN` | server/tooling | 0 |  |
 | `TURSO_PROFILES_ORGANIZATION` | server/tooling | 0 |  |
+| `USER` | server/tooling | 2 | `scripts/local-agent-host-restore.ts`, `scripts/local-agent/host-inventory.ts` |
 | `VERCEL` | server/tooling | 6 | `scripts/schema-sync.ts`, `scripts/test-data-health-environment.ts`, `packages/native-core/scripts/validate-ios-push-policy.ts`, `src/core/config/runtime-context.server.ts`, `src/features/data-health/tests/development-guard.test.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `VERCEL_ACCESS_TOKEN` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
 | `VERCEL_ENV` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
