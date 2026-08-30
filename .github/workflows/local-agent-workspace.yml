@@ -1,7 +1,6 @@
-# Isolated branch update by a local agent. This is the default path when more
-# than one agent is active: every job gets its own worktree and its own
-# codex/agent-* branch, so parallel agents never share a checkout and never
-# contend for main. Heavy mutations are admitted serially by the control plane.
+# Isolated branch update by a local agent. Every job gets its own worktree and
+# codex/agent-* branch. Mutation jobs are serialized at the workflow layer so
+# waiting work does not occupy self-hosted runners or count itself as admitted.
 name: local-agent-workspace
 
 on:
@@ -47,6 +46,10 @@ on:
 
 permissions:
   contents: write
+
+concurrency:
+  group: asol-local-agent-mutation
+  cancel-in-progress: false
 
 defaults:
   run:
