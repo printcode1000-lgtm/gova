@@ -36,6 +36,9 @@ GOVA_LOCAL_SECRET_EXPORT=forbidden
 GOVA_AGENT_COORDINATION_DIR=/home/hesham/github-runners/gova-coordination
 ```
 
+GitHub Actions jobs use the npm version already available with the configured
+Node.js environment. Workflows must not reinstall npm globally on every job.
+
 ## Coordination Channel
 
 Agents coordinate through:
@@ -50,10 +53,16 @@ Required layout:
 |---|---|
 | `inbox/` | Agent-readable coordination notes or instructions. |
 | `locks/` | Atomic lock files created by workflows before mutating a target ref. |
-| `logs/` | Sanitized completion records. These must not include secrets or patch contents. |
+| `logs/` | Sanitized runner records. These must not include secrets or patch contents. |
+| `logs/operations/` | One rich JSON execution record per mutation run. |
 
 The coordination directory is local to the machine. It is not a project source of
 truth and must not be committed.
+
+Mutation locks automatically recover when an existing lock is older than the
+configured stale-lock threshold. The default threshold is 90 minutes, which is
+longer than the 60-minute mutation job timeout. It can be overridden with
+`GOVA_AGENT_STALE_LOCK_MS`.
 
 ## Workflows
 
@@ -85,6 +94,8 @@ read-only, local-only, and can:
 - report Git state with `mode=git`.
 
 The `paths` input accepts explicit workspace-relative paths or `__tracked__`.
+The inspect workflow does not run `npm ci`; inspection uses the checked-out
+runner tooling directly and avoids dependency-install overhead on every read.
 The inspect script writes the full result to the local coordination log under
 `/home/hesham/github-runners/gova-coordination/logs/inspect/` and prints only
 the output path and byte count to GitHub logs. This avoids GitHub log truncation
@@ -114,11 +125,23 @@ scripts/local-agent-main-apply.ts
 ```
 
 The script accepts a git diff, rejects secret-bearing file paths, applies the
-patch, runs one allowlisted verification command, commits, and pushes.
+patch, optionally executes an arbitrary Bash command supplied through
+`shell_command`, runs the selected verification command, commits, and pushes.
+The shell command runs after the patch is applied and before the selected
+verification step, so shell-driven changes are included in verification and in
+the resulting commit.
+
+Each mutation writes a unique JSON record under `logs/operations/`. The record
+contains the agent id, target mode/ref, run id, runner/host information, PID,
+start/completion timestamps, duration, starting/resulting commit SHAs, changed
+files, selected verification, whether arbitrary shell was requested, stale-lock
+recovery state, final status, exit code, and failed command executable when a
+command fails. Shell command text, patch contents, and secret values are not
+stored in the record.
 
 ## Verification Choices
 
-The allowed verification values are:
+The built-in verification values are:
 
 | Value | Command |
 |---|---|
@@ -128,9 +151,12 @@ The allowed verification values are:
 | `architecture-check` | `npm run architecture:check` |
 | `typecheck` | `npm run typecheck` |
 | `lint` | `npm run lint` |
-| `none` | No verification command. |
+| `none` | No built-in verification command. |
 
-Workflows must not accept arbitrary shell commands from dispatch inputs.
+`local-agent-main.yml` and `local-agent-workspace.yml` also accept the optional
+`shell_command` dispatch input. Its content is executed with `/bin/bash -lc`
+without an allowlist, providing arbitrary local shell execution authority to the
+workflow caller.
 
 ## Main Push Rules
 
@@ -168,7 +194,9 @@ Rules:
   derived secret material.
 
 The apply script rejects patches that target `.env`, `.secret-archive`,
-`.ota/private-key`, or `config/secret-archive` paths.
+`.ota/private-key`, or `config/secret-archive` paths. Arbitrary shell execution
+has the same local OS authority as the runner user, so callers are responsible
+for keeping shell output free of secret material.
 
 ## Secret Backup And Restore For Agents
 
