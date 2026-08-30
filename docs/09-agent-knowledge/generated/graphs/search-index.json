@@ -26866,6 +26866,17 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent/control-branch-namespaces.ts",
+      "kind": "script",
+      "name": "control-branch-namespaces.ts",
+      "path": "scripts/local-agent/control-branch-namespaces.ts",
+      "tags": [
+        "scripts/local-agent/control-branch-namespaces",
+        "scripts/local-agent/control-branch-namespaces.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent/control-branch.ts",
       "kind": "script",
       "name": "control-branch.ts",

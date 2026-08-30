@@ -2,6 +2,8 @@ import { execFileSync } from 'child_process';
 import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 
+import { CONTROL_PLANE_BRANCH_NAMESPACES } from './local-agent/control-branch-namespaces';
+
 /**
  * Blocks branch creation on GitHub for every ref except `main`.
  *
@@ -33,6 +35,7 @@ const REMOVE = process.argv.includes('--remove');
 const RULESET_NAME = 'main-only';
 
 const API = 'https://api.github.com';
+
 
 function resolveRepository(): string {
   const configured = process.env.GITHUB_REPOSITORY?.trim();
@@ -66,7 +69,7 @@ function buildPayload(): RulesetPayload {
         // creation rule would not fire on it either way — the exclusion is there so a
         // future rule added to this ruleset cannot accidentally catch it.
         include: ['~ALL'],
-        exclude: ['refs/heads/main'],
+        exclude: ['refs/heads/main', ...CONTROL_PLANE_BRANCH_NAMESPACES],
       },
     },
     // Creation only. Not `deletion` and not `update`: deleting a stray branch must stay

@@ -26866,6 +26866,17 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent/control-branch-namespaces.ts",
+      "kind": "script",
+      "name": "control-branch-namespaces.ts",
+      "path": "scripts/local-agent/control-branch-namespaces.ts",
+      "tags": [
+        "scripts/local-agent/control-branch-namespaces",
+        "scripts/local-agent/control-branch-namespaces.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent/control-branch.ts",
       "kind": "script",
       "name": "control-branch.ts",
@@ -85494,6 +85505,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent/control-branch-namespaces.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/local-agent/control-branch.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -137709,6 +137726,12 @@
     },
     {
       "from": "script:scripts/block-branch-creation.ts",
+      "to": "script:scripts/local-agent/control-branch-namespaces.ts",
+      "kind": "imports",
+      "detail": "./local-agent/control-branch-namespaces"
+    },
+    {
+      "from": "script:scripts/block-branch-creation.ts",
       "to": "environment-key:GITHUB_ADMIN_TOKEN",
       "kind": "uses-environment"
     },
@@ -139134,6 +139157,12 @@
       "kind": "affects-runtime"
     },
     {
+      "from": "script:scripts/github-ci-policy.ts",
+      "to": "script:scripts/local-agent/control-branch-namespaces.ts",
+      "kind": "imports",
+      "detail": "./local-agent/control-branch-namespaces"
+    },
+    {
       "from": "script:scripts/github-main-policy.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -139620,6 +139649,11 @@
       "to": "script:scripts/local-agent/paths.ts",
       "kind": "imports",
       "detail": "./paths"
+    },
+    {
+      "from": "script:scripts/local-agent/control-branch-namespaces.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "script:scripts/local-agent/control-branch.ts",

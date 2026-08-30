@@ -1,6 +1,8 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
+import { CONTROL_PLANE_BRANCH_NAMESPACES } from "./local-agent/control-branch-namespaces";
+
 /**
  * Local GitHub CI policy.
  *
@@ -644,6 +646,36 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
     errors.push(...localAgentGatewayWorkflowViolations(readFileSync(gatewayPath, "utf8")));
   } else {
     errors.push(`Missing .github/workflows/${LOCAL_AGENT_GATEWAY_WORKFLOW}.`);
+  }
+  // `main` stays the only project branch, but the control plane needs three
+  // namespaces to be creatable. The ruleset script and the pre-push hook must
+  // agree with that list exactly — no more, no less.
+  const namespacesPath = path.join(root, "scripts", "local-agent", "control-branch-namespaces.ts");
+  if (existsSync(namespacesPath)) {
+    const source = readFileSync(namespacesPath, "utf8");
+    const declared = [...source.matchAll(/"(refs\/heads\/[^"]+)"/g)].map((match) => match[1]!);
+    if (declared.join(",") !== CONTROL_PLANE_BRANCH_NAMESPACES.join(",")) {
+      errors.push(`Control-plane branch namespaces changed unexpectedly: ${declared.join(", ") || "(none)"}.`);
+    }
+  } else {
+    errors.push("Missing scripts/local-agent/control-branch-namespaces.ts.");
+  }
+  const blockBranchesPath = path.join(root, "scripts", "block-branch-creation.ts");
+  if (existsSync(blockBranchesPath)) {
+    const source = readFileSync(blockBranchesPath, "utf8");
+    if (!source.includes("'refs/heads/main', ...CONTROL_PLANE_BRANCH_NAMESPACES")) {
+      errors.push("main-only ruleset must exclude main plus exactly the control-plane namespaces.");
+    }
+  }
+  const hookPath = path.join(root, ".githooks", "pre-push.d", "10-main-only");
+  if (existsSync(hookPath)) {
+    const hook = readFileSync(hookPath, "utf8");
+    for (const namespace of CONTROL_PLANE_BRANCH_NAMESPACES) {
+      const pattern = namespace.replace(/\*\*$/, "*");
+      if (!hook.includes(`${pattern})`)) {
+        errors.push(`pre-push hook must let the control-plane namespace through: ${namespace}`);
+      }
+    }
   }
   const protectPath = path.join(root, "scripts", "protect-main-branch.ts");
   if (existsSync(protectPath)) {
