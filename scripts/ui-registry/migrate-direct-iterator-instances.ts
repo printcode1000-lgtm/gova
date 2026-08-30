@@ -165,24 +165,66 @@ function instanceExpression(
   };
 }
 
+/**
+ * Adds runtime helper imports without text-scanning across import declarations.
+ * Type-only imports never receive runtime helpers, and an existing local value
+ * binding is never duplicated.
+ */
 function ensureImports(source: string, names: readonly string[]): string {
   const needed = [...new Set(names)].filter(Boolean);
   if (needed.length === 0) return source;
+
   const from = "@asol/ui-registry-core";
-  const importPattern = /import\s*\{([\s\S]*?)\}\s*from\s*["']@asol\/ui-registry-core["'];?/m;
-  const match = importPattern.exec(source);
-  if (match) {
-    const existing = match[1]!.split(",").map((part) => part.trim()).filter(Boolean);
-    const merged = [...existing];
-    for (const name of needed) if (!existing.some((entry) => entry === name || entry.startsWith(`${name} as `))) merged.push(name);
-    const replacement = `import { ${merged.join(", ")} } from "${from}";`;
-    return source.slice(0, match.index) + replacement + source.slice(match.index + match[0].length);
+  const sourceFile = ts.createSourceFile(
+    "iterator-migration.tsx",
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const registryImports = sourceFile.statements.filter(
+    (statement): statement is ts.ImportDeclaration =>
+      ts.isImportDeclaration(statement) &&
+      ts.isStringLiteral(statement.moduleSpecifier) &&
+      statement.moduleSpecifier.text === from,
+  );
+
+  const localValueBindings = new Set<string>();
+  let valueNamedImports: ts.NamedImports | null = null;
+  for (const declaration of registryImports) {
+    const clause = declaration.importClause;
+    if (!clause || clause.isTypeOnly) continue;
+    if (clause.name) localValueBindings.add(clause.name.text);
+    const bindings = clause.namedBindings;
+    if (!bindings || !ts.isNamedImports(bindings)) continue;
+    valueNamedImports ??= bindings;
+    for (const element of bindings.elements) {
+      if (!element.isTypeOnly) localValueBindings.add(element.name.text);
+    }
   }
 
-  const insertAt = source.startsWith("'use client';") || source.startsWith('"use client";')
-    ? source.indexOf("\n") + 1
-    : 0;
-  return source.slice(0, insertAt) + `\nimport { ${needed.join(", ")} } from "${from}";\n` + source.slice(insertAt);
+  const missing = needed.filter((name) => !localValueBindings.has(name));
+  if (missing.length === 0) return source;
+
+  if (valueNamedImports) {
+    const insertAt = valueNamedImports.getEnd() - 1;
+    const prefix = valueNamedImports.elements.length > 0 ? ", " : "";
+    return source.slice(0, insertAt) + `${prefix}${missing.join(", ")}` + source.slice(insertAt);
+  }
+
+  const firstStatement = sourceFile.statements[0];
+  let insertAt = 0;
+  if (
+    firstStatement &&
+    ts.isExpressionStatement(firstStatement) &&
+    ts.isStringLiteral(firstStatement.expression)
+  ) {
+    insertAt = firstStatement.getEnd();
+  }
+  const before = source.slice(0, insertAt);
+  const after = source.slice(insertAt);
+  const leadingNewline = insertAt > 0 ? "\n" : "";
+  return `${before}${leadingNewline}import { ${missing.join(", ")} } from "${from}";\n${after}`;
 }
 
 const root = cwd();
