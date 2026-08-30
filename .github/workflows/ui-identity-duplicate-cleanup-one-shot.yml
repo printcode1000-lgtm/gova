@@ -36,12 +36,18 @@ jobs:
       - name: Verify immediate identity contracts
         run: |
           npm run ui-registry:uid-coverage:check
+          npm run ui-registry:generated-catalog:check
+          npm run ui-registry:component-bridge:check
           npm run ui-registry:static-dom-ids:check
           npm run typecheck
       - name: Commit migration
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Scope direct iterator DOM copies by runtime instance"
+          git add src packages scripts
+          if git diff --cached --quiet; then
+            echo "No iterator migration changes"
+            exit 0
+          fi
+          git commit -m "Stage 116: scope direct iterator DOM copies"
           git push origin HEAD:main
