@@ -1754,6 +1754,35 @@
       ]
     },
     {
+      "id": "command:local-agent:watch",
+      "kind": "command",
+      "name": "npm run local-agent:watch",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "local-agent",
+        "local-agent:watch",
+        "npm",
+        "npm run local-agent:watch",
+        "run",
+        "watch"
+      ]
+    },
+    {
+      "id": "command:local-agent:watch:window",
+      "kind": "command",
+      "name": "npm run local-agent:watch:window",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "local-agent",
+        "local-agent:watch:window",
+        "npm",
+        "npm run local-agent:watch:window",
+        "run",
+        "watch",
+        "window"
+      ]
+    },
+    {
       "id": "command:maplibre:sync",
       "kind": "command",
       "name": "npm run maplibre:sync",
@@ -26920,6 +26949,17 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent-watch.ts",
+      "kind": "script",
+      "name": "local-agent-watch.ts",
+      "path": "scripts/local-agent-watch.ts",
+      "tags": [
+        "scripts/local-agent-watch",
+        "scripts/local-agent-watch.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent/agent-registry.ts",
       "kind": "script",
       "name": "agent-registry.ts",
@@ -27081,6 +27121,28 @@
       "tags": [
         "scripts/local-agent/secret-paths",
         "scripts/local-agent/secret-paths.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/watch-model.ts",
+      "kind": "script",
+      "name": "watch-model.ts",
+      "path": "scripts/local-agent/watch-model.ts",
+      "tags": [
+        "scripts/local-agent/watch-model",
+        "scripts/local-agent/watch-model.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/watch-render.ts",
+      "kind": "script",
+      "name": "watch-render.ts",
+      "path": "scripts/local-agent/watch-render.ts",
+      "tags": [
+        "scripts/local-agent/watch-render",
+        "scripts/local-agent/watch-render.ts",
         "ts"
       ]
     },
@@ -57047,6 +57109,21 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:local-agent:watch:window",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:local-agent:watch",
+      "to": "script:scripts/local-agent-watch.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:local-agent:watch",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:maplibre:sync",
       "to": "script:scripts/sync-maplibre-worker.ts",
       "kind": "invokes"
@@ -85607,6 +85684,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent-watch.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/local-agent/agent-registry.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -85692,6 +85775,18 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/local-agent/secret-paths.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent/watch-model.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent/watch-render.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -139799,6 +139894,35 @@
       "kind": "uses-environment"
     },
     {
+      "from": "script:scripts/local-agent-watch.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/local-agent-watch.ts",
+      "to": "script:scripts/local-agent/github-api.ts",
+      "kind": "imports",
+      "detail": "./local-agent/github-api"
+    },
+    {
+      "from": "script:scripts/local-agent-watch.ts",
+      "to": "script:scripts/local-agent/paths.ts",
+      "kind": "imports",
+      "detail": "./local-agent/paths"
+    },
+    {
+      "from": "script:scripts/local-agent-watch.ts",
+      "to": "script:scripts/local-agent/watch-model.ts",
+      "kind": "imports",
+      "detail": "./local-agent/watch-model"
+    },
+    {
+      "from": "script:scripts/local-agent-watch.ts",
+      "to": "script:scripts/local-agent/watch-render.ts",
+      "kind": "imports",
+      "detail": "./local-agent/watch-render"
+    },
+    {
       "from": "script:scripts/local-agent/agent-registry.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -140050,6 +140174,70 @@
       "from": "script:scripts/local-agent/secret-paths.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "script:scripts/local-agent/agent-registry.ts",
+      "kind": "imports",
+      "detail": "./agent-registry"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "script:scripts/local-agent/git.ts",
+      "kind": "imports",
+      "detail": "./git"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "script:scripts/local-agent/github-api.ts",
+      "kind": "imports",
+      "detail": "./github-api"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "script:scripts/local-agent/lock-store.ts",
+      "kind": "imports",
+      "detail": "./lock-store"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "script:scripts/local-agent/message-store.ts",
+      "kind": "imports",
+      "detail": "./message-store"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "script:scripts/local-agent/operation-log.ts",
+      "kind": "imports",
+      "detail": "./operation-log"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "script:scripts/local-agent/paths.ts",
+      "kind": "imports",
+      "detail": "./paths"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "script:scripts/local-agent/request-store.ts",
+      "kind": "imports",
+      "detail": "./request-store"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-render.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-render.ts",
+      "to": "script:scripts/local-agent/watch-model.ts",
+      "kind": "imports",
+      "detail": "./watch-model"
     },
     {
       "from": "script:scripts/local-agent/worktree.ts",
@@ -250993,6 +251181,18 @@
     },
     {
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/watch-model.ts",
+      "kind": "imports",
+      "detail": "../local-agent/watch-model"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/watch-render.ts",
+      "kind": "imports",
+      "detail": "../local-agent/watch-render"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
       "to": "script:scripts/local-agent/worktree.ts",
       "kind": "imports",
       "detail": "../local-agent/worktree"
@@ -251035,6 +251235,16 @@
     {
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
       "to": "script:scripts/local-agent/secret-paths.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/watch-model.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/watch-render.ts",
       "kind": "tests"
     },
     {

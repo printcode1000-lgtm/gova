@@ -1754,6 +1754,35 @@
       ]
     },
     {
+      "id": "command:local-agent:watch",
+      "kind": "command",
+      "name": "npm run local-agent:watch",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "local-agent",
+        "local-agent:watch",
+        "npm",
+        "npm run local-agent:watch",
+        "run",
+        "watch"
+      ]
+    },
+    {
+      "id": "command:local-agent:watch:window",
+      "kind": "command",
+      "name": "npm run local-agent:watch:window",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "local-agent",
+        "local-agent:watch:window",
+        "npm",
+        "npm run local-agent:watch:window",
+        "run",
+        "watch",
+        "window"
+      ]
+    },
+    {
       "id": "command:maplibre:sync",
       "kind": "command",
       "name": "npm run maplibre:sync",
@@ -26920,6 +26949,17 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent-watch.ts",
+      "kind": "script",
+      "name": "local-agent-watch.ts",
+      "path": "scripts/local-agent-watch.ts",
+      "tags": [
+        "scripts/local-agent-watch",
+        "scripts/local-agent-watch.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent/agent-registry.ts",
       "kind": "script",
       "name": "agent-registry.ts",
@@ -27081,6 +27121,28 @@
       "tags": [
         "scripts/local-agent/secret-paths",
         "scripts/local-agent/secret-paths.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/watch-model.ts",
+      "kind": "script",
+      "name": "watch-model.ts",
+      "path": "scripts/local-agent/watch-model.ts",
+      "tags": [
+        "scripts/local-agent/watch-model",
+        "scripts/local-agent/watch-model.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/watch-render.ts",
+      "kind": "script",
+      "name": "watch-render.ts",
+      "path": "scripts/local-agent/watch-render.ts",
+      "tags": [
+        "scripts/local-agent/watch-render",
+        "scripts/local-agent/watch-render.ts",
         "ts"
       ]
     },

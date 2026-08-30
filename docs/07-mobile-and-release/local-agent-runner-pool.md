@@ -451,6 +451,8 @@ Other commands:
 | Command | Purpose |
 |---|---|
 | `npm run local-agent:status` | full read-only state as JSON |
+| `npm run local-agent:watch` | live monitor in this terminal |
+| `npm run local-agent:watch:window` | live monitor in its own window |
 | `npm run local-agent:coordination -- --action=status` | agents, locks, messages |
 | `npm run local-agent:cleanup` | reclaim stale locks, worktrees, and old records |
 | `npm run local-agent:dispatch:check -- <file>` | validate a request document |
@@ -493,6 +495,56 @@ labels, or upgrading the runner release. `--dry-run` shows what would be written
 
 Restore never uses `sudo`: the pool is made of systemd *user* units and needs no
 system-level privilege.
+
+## Live Monitor
+
+```bash
+npm run local-agent:watch:window
+```
+
+Opens a window showing what the pool is doing right now: each runner with its
+systemd state, its GitHub state, and the workflow and job it is currently
+executing with elapsed time; every declared agent with its liveness, heartbeat
+age, task, branch, and reserved scopes; every held lock with its holder and age;
+mutations in flight with their runner and elapsed time; recent operations with
+status, duration, and `SHA→SHA`; the coordination messages; and the gateway
+request ledger.
+
+### It cannot get in the way
+
+The monitor is a reader and nothing else. It takes no lock, declares no agent,
+refreshes no heartbeat, writes no record, and dispatches no job, so it never
+appears in the state it reports and never competes for a runner slot. A
+regression test renders a frame and asserts the coordination channel is
+byte-identical afterwards.
+
+It is also cheap. Local change arrives through inotify rather than polling, so an
+idle pool costs an idle process; the only timer is a three-second repaint for
+elapsed counters. GitHub is asked every 15 seconds with conditional requests, so
+an unchanged answer returns `304` and costs no rate-limit budget. It never runs
+`git fetch`: `origin/main` is whatever the last agent job already brought down,
+which also keeps it from racing a job that is mid-fetch. Secret-bearing paths are
+never read.
+
+### Running it
+
+| Command | Effect |
+|---|---|
+| `npm run local-agent:watch` | live, in the current terminal — works over SSH and inside tmux |
+| `npm run local-agent:watch:window` | its own window, sized and titled |
+| `npm run local-agent:watch -- --once` | print one frame and exit; this is what tests and scripts use |
+| `npm run local-agent:watch -- --offline` | local sources only, zero network |
+| `npm run local-agent:watch -- --github-interval=30000` | slow the GitHub timer down (minimum 5s) |
+| `bash scripts/local-agent/watch-window.sh --install-desktop` | add a launcher to the applications menu |
+
+Keys: `1`–`7` focus one panel, `esc` show them all, `p` pause, `o` toggle the
+GitHub reads, `q` quit.
+
+The window wrapper picks the first terminal emulator that is actually installed —
+`gnome-terminal`, `konsole`, `xfce4-terminal`, `x-terminal-emulator`, `xterm` —
+and tells you to run the monitor directly if none is present. That fallback
+matters: the monitor is an ordinary terminal program, so the absence of a desktop
+never makes it unavailable.
 
 ## Recovery Procedures
 

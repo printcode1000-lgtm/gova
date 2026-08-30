@@ -121,6 +121,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run local-agent:host:backup` | `Tooling` | 1 |  | 0 |
 | `npm run local-agent:host:restore` | `Tooling` | 1 |  | 0 |
 | `npm run local-agent:status` | `Tooling` | 1 |  | 0 |
+| `npm run local-agent:watch` | `Tooling` | 1 |  | 0 |
+| `npm run local-agent:watch:window` | `Tooling` | 0 |  | 0 |
 | `npm run maplibre:sync` | `Tooling` | 1 |  | 0 |
 | `npm run notifications:check:local` | `Tooling` | 1 |  | 0 |
 | `npm run notifications:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |

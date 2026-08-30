@@ -271,6 +271,8 @@
     "github:ci-policy": "npx tsx scripts/github-ci-policy.ts",
     "local-agent:doctor": "npx tsx scripts/local-agent-doctor.ts",
     "local-agent:status": "npx tsx scripts/local-agent-status.ts",
+    "local-agent:watch": "npx tsx scripts/local-agent-watch.ts",
+    "local-agent:watch:window": "bash scripts/local-agent/watch-window.sh",
     "local-agent:coordination": "npx tsx scripts/local-agent-coordination.ts",
     "local-agent:cleanup": "npx tsx scripts/local-agent-cleanup.ts",
     "local-agent:host:backup": "npx tsx scripts/local-agent-host-backup.ts",

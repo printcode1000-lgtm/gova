@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -31,6 +31,8 @@ import { validateDispatchRequest, DISPATCHABLE_WORKFLOWS, MAX_REQUEST_AGE_MS } f
 import { isSecretPath, patchSecretViolations, looksLikeSecretValue } from "../local-agent/secret-paths";
 import { buildCoordinationSnapshot } from "../local-agent/coordination-snapshot";
 import { MAIN_WORKTREE_SLUG, worktreeSlug } from "../local-agent/worktree";
+import { EMPTY_GITHUB_SAMPLE, buildWatchModel } from "../local-agent/watch-model";
+import { humanDuration, renderFrame, visibleLength } from "../local-agent/watch-render";
 import { recordRequest, knownRequestIds } from "../local-agent/request-store";
 import {
   ALLOWED_WORKFLOW_FILES,
@@ -425,6 +427,58 @@ for (const contract of Object.values(DISPATCHABLE_WORKFLOWS)) {
     `${contract.file} must be a permanent workflow`,
   );
 }
+
+// --- monitor ---------------------------------------------------------------------
+
+// The monitor must be a reader. If rendering a frame could ever write, it would
+// show up in the state it reports and compete with the agents it watches.
+declareAgent({ agentId: "watched-agent", origin: "cloud", task: "being watched", scopes: ["src/app"] });
+acquireLock({ agentId: "watched-agent", kind: "path", scope: "src/app" });
+
+function coordinationFingerprint(): string {
+  const walk = (dir: string): string[] => {
+    let entries: string[] = [];
+    try {
+      entries = readdirSync(dir);
+    } catch {
+      return [];
+    }
+    return entries.flatMap((entry) => {
+      const full = path.join(dir, entry);
+      const stats = statSync(full);
+      return stats.isDirectory() ? walk(full) : [`${full}:${stats.size}:${stats.mtimeMs}`];
+    });
+  };
+  return walk(sandbox).sort().join("|");
+}
+
+const beforeFrames = coordinationFingerprint();
+const model = buildWatchModel(EMPTY_GITHUB_SAMPLE);
+const frame = renderFrame(model, { width: 120, height: 60, color: false, paused: false, focus: null });
+assert.equal(coordinationFingerprint(), beforeFrames, "rendering the monitor must not touch the coordination channel");
+
+assert.match(frame, /watched-agent/, "the frame reports the declared agent");
+assert.match(frame, /path:src\/app/, "the frame reports the held lock");
+assert.match(frame, /runners \(6\)/, "the frame lists the whole pool");
+
+// A focused frame shows one panel; an unfocused one shows them all.
+const focused = renderFrame(model, { width: 120, height: 60, color: false, paused: false, focus: "locks" });
+assert.equal(focused.includes("path:src/app"), true);
+assert.equal(/^ agents /m.test(focused), false, "a focused frame drops the other panels");
+assert.equal(/^ agents /m.test(frame), true, "an unfocused frame keeps them");
+
+// Colour must not change the layout the width calculations depend on.
+assert.equal(
+  visibleLength(renderFrame(model, { width: 120, height: 60, color: true, paused: false, focus: "locks" }).split("\n")[0]!),
+  visibleLength(focused.split("\n")[0]!),
+  "colour is invisible to width",
+);
+
+assert.equal(humanDuration(45_000), "45s");
+assert.equal(humanDuration(90_000), "1m30s");
+assert.equal(humanDuration(3_600_000), "1h00m");
+assert.equal(humanDuration(-1), "\u2014");
+releaseAgentLocks("watched-agent");
 
 // --- cleanup ------------------------------------------------------------------
 
