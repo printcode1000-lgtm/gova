@@ -5,8 +5,8 @@
  * usage count. Two unrelated route/page roots may each use the same component
  * once without ever producing two simultaneous runtime copies. A component is
  * repeated when one render tree can reach it more than once: directly through
- * an iterator/multiple sibling usages, transitively through repeated parents or
- * converging child paths, or recursively through a component cycle.
+ * an iterator/multiple compatible usages, transitively through repeated parents
+ * or converging child paths, or recursively through a component cycle.
  */
 import ts from 'typescript';
 
@@ -22,6 +22,11 @@ const FILE_NODE_PREFIX = '@file:';
 const MODULE_HOST_SUFFIX = '#@module';
 
 type Multiplicity = 0 | 1 | 2;
+
+type CallSite = {
+  readonly node: ts.JsxOpeningElement | ts.JsxSelfClosingElement;
+  readonly multiplicity: Multiplicity;
+};
 
 function isIteratorCall(node: ts.Node): node is ts.CallExpression {
   if (!ts.isCallExpression(node)) return false;
@@ -113,6 +118,91 @@ function addEdge(
   edges.set(caller, targets);
 }
 
+function isDescendantOf(node: ts.Node, ancestor: ts.Node): boolean {
+  let current: ts.Node | undefined = node;
+  while (current) {
+    if (current === ancestor) return true;
+    current = current.parent;
+  }
+  return false;
+}
+
+function branchOfConditional(
+  node: ts.Node,
+  conditional: ts.ConditionalExpression,
+): 'true' | 'false' | null {
+  if (isDescendantOf(node, conditional.whenTrue)) return 'true';
+  if (isDescendantOf(node, conditional.whenFalse)) return 'false';
+  return null;
+}
+
+function branchOfIf(node: ts.Node, statement: ts.IfStatement): 'then' | 'else' | null {
+  if (isDescendantOf(node, statement.thenStatement)) return 'then';
+  if (statement.elseStatement && isDescendantOf(node, statement.elseStatement)) return 'else';
+  return null;
+}
+
+function jsxTagText(tagName: ts.JsxTagNameExpression): string {
+  return tagName.getText();
+}
+
+function suspenseRole(node: ts.Node, element: ts.JsxElement): 'fallback' | 'children' | null {
+  if (jsxTagText(element.openingElement.tagName) !== 'Suspense') return null;
+  let current: ts.Node | undefined = node;
+  while (current && current !== element) {
+    if (
+      ts.isJsxAttribute(current) &&
+      current.name.getText() === 'fallback' &&
+      isDescendantOf(current, element.openingElement)
+    ) {
+      return 'fallback';
+    }
+    current = current.parent;
+  }
+  return isDescendantOf(node, element) ? 'children' : null;
+}
+
+/**
+ * Whether two component call sites are statically proven unable to render at
+ * the same time. The proof is deliberately narrow: opposite ternary branches,
+ * opposite if/else branches, and React Suspense fallback versus its children.
+ * Anything else remains compatible and therefore fails closed as multiplicity.
+ */
+function areMutuallyExclusive(a: ts.Node, b: ts.Node): boolean {
+  let current: ts.Node | undefined = a.parent;
+  while (current) {
+    if (ts.isConditionalExpression(current) && isDescendantOf(b, current)) {
+      const left = branchOfConditional(a, current);
+      const right = branchOfConditional(b, current);
+      if (left && right && left !== right) return true;
+    }
+    if (ts.isIfStatement(current) && isDescendantOf(b, current)) {
+      const left = branchOfIf(a, current);
+      const right = branchOfIf(b, current);
+      if (left && right && left !== right) return true;
+    }
+    if (ts.isJsxElement(current) && isDescendantOf(b, current)) {
+      const left = suspenseRole(a, current);
+      const right = suspenseRole(b, current);
+      if (left && right && left !== right) return true;
+    }
+    current = current.parent;
+  }
+  return false;
+}
+
+function simultaneousMultiplicity(sites: readonly CallSite[]): Multiplicity {
+  if (sites.some((site) => site.multiplicity >= 2)) return 2;
+  if (sites.length === 0) return 0;
+  if (sites.length === 1) return 1;
+  for (let left = 0; left < sites.length; left += 1) {
+    for (let right = left + 1; right < sites.length; right += 1) {
+      if (!areMutuallyExclusive(sites[left]!.node, sites[right]!.node)) return 2;
+    }
+  }
+  return 1;
+}
+
 export interface HostMultiplicity {
   /** Defining files repeated only when a precise exported symbol cannot be resolved. */
   readonly repeatingFiles: ReadonlySet<string>;
@@ -158,6 +248,7 @@ function occurrencesFromRoot(
 
 export function hostMultiplicity(sources: ReadonlyMap<string, string>): HostMultiplicity {
   const edges = new Map<string, Map<string, Multiplicity>>();
+  const callSites = new Map<string, Map<string, CallSite[]>>();
   const roots = new Set<string>();
   const forcedRepeated = new Set<string>();
   const namesByFile = new Map<string, Set<string>>();
@@ -176,6 +267,14 @@ export function hostMultiplicity(sources: ReadonlyMap<string, string>): HostMult
     }
     if (localNames.has(name)) return symbolKey(path, name);
     return null;
+  };
+
+  const addCallSite = (caller: string, target: string, site: CallSite): void => {
+    const targets = callSites.get(caller) ?? new Map<string, CallSite[]>();
+    const sites = targets.get(target) ?? [];
+    sites.push(site);
+    targets.set(target, sites);
+    callSites.set(caller, targets);
   };
 
   for (const [path, source] of sources) {
@@ -200,7 +299,10 @@ export function hostMultiplicity(sources: ReadonlyMap<string, string>): HostMult
               const caller = hostName ? symbolKey(path, hostName) : `${path}${MODULE_HOST_SUFFIX}`;
               roots.add(caller);
               roots.add(target);
-              addEdge(edges, caller, target, isInsideIteratorCallback(node) ? 2 : 1);
+              addCallSite(caller, target, {
+                node,
+                multiplicity: isInsideIteratorCallback(node) ? 2 : 1,
+              });
             }
           }
         }
@@ -208,6 +310,12 @@ export function hostMultiplicity(sources: ReadonlyMap<string, string>): HostMult
       ts.forEachChild(node, visit);
     }
     visit(sourceFile);
+  }
+
+  for (const [caller, targets] of callSites) {
+    for (const [target, sites] of targets) {
+      addEdge(edges, caller, target, simultaneousMultiplicity(sites));
+    }
   }
 
   // Fail closed when import/export resolution can identify only the defining
