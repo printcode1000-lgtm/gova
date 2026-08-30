@@ -81,6 +81,7 @@ export function AndroidReleasePaths({
               <TabsContent key={path.id} ui={{ uid: "google-play-console.android-release-paths.tabs-content-WRo24V", id: "google-play-console.android-release-paths.tabs-content" , instance: createOpaqueUiInstanceId("iter-c0e63841f7", String(path.id))}} value={path.id} className="mt-2 space-y-3">
                 <p {...uiAttributes({ uid: "google-play-console.android-release-paths.p.6-5BqQgX", id: "google-play-console.android-release-paths.p.6" , instance: createOpaqueUiInstanceId("iter-f06251a89f", String(path.id))})} className="text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
                 <AndroidReleaseRunbookTree
+                  instance={createOpaqueUiInstanceId("path", path.id)}
                   runbook={androidReleaseRunbookFor(path.id)}
                   selected={enabledBranches}
                   setSelected={setEnabledBranches}

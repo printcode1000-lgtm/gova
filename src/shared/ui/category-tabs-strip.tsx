@@ -2,7 +2,13 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { createOpaqueUiInstanceId, uiAttributes, uiForwardedAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import {
+  createOpaqueUiInstanceId,
+  createUiSubpartInstanceId,
+  uiAttributes,
+  uiForwardedAttributes,
+  type UiDescriptor,
+} from "@asol/ui-registry-core";
 
 export interface CategoryTabsStripItem {
   id: string;
@@ -70,7 +76,7 @@ export function CategoryTabsStrip({
   const style = LEVEL_STYLE[level];
 
   return (
-    <div {...uiAttributes({ uid: "shared.category-tabs-strip.div-VEz49x", id: "shared.category-tabs-strip.div" })}
+    <div {...uiAttributes({ uid: "shared.category-tabs-strip.div-VEz49x", id: "shared.category-tabs-strip.div", instance: createUiSubpartInstanceId(ui.uid, ui.instance, "strip") })}
       id={id}
       data-snapshot-scroll={snapshotId ? "" : undefined}
       data-snapshot-id={snapshotId}

@@ -6,7 +6,7 @@ import { Clipboard, Eraser } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import type { DeployTab } from "./DeployRunbookTypes";
 import { parseDeployRunbookLogSnapshot } from "./deploy-runbook-log-snapshot";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createUiInstanceId, uiAttributes, type UiInstanceId } from "@asol/ui-registry-core";
 
 export function ExecutionIndicator(props: { log: string; tab: DeployTab; status: string } & { id?: string }) {
   const snapshot = React.useMemo(
@@ -15,23 +15,27 @@ export function ExecutionIndicator(props: { log: string; tab: DeployTab; status:
   );
   return (
     <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div-hFudM8", id: "google-play-console.deploy-runbook-terminal.div" })} id={props.id} className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-      <IndicatorCard label="الحالة" value={props.status} help="حالة الـ job كما يراها مشغل الأوامر." />
+      <IndicatorCard instance={createUiInstanceId("status")} label="الحالة" value={props.status} help="حالة الـ job كما يراها مشغل الأوامر." />
       <IndicatorCard
+        instance={createUiInstanceId("command")}
         label="الأمر"
         value={snapshot.commandFamily}
         help="هل السجل الحالي من Deploy All أم Deploy Push."
       />
       <IndicatorCard
+        instance={createUiInstanceId("phase")}
         label="المرحلة"
         value={snapshot.phase}
         help="آخر مرحلة ظهرت في الطرفية."
       />
       <IndicatorCard
+        instance={createUiInstanceId("section")}
         label="القسم"
         value={snapshot.section}
         help="آخر قسم داخلي معروف داخل المرحلة."
       />
       <IndicatorCard
+        instance={createUiInstanceId("branch")}
         label="الفرع / الأمر"
         value={snapshot.branch}
         help="آخر branch أو npm script بدأ تنفيذه."
@@ -91,15 +95,16 @@ function IndicatorCard(props: {
   value: string;
   help: string;
   className?: string;
+  instance: UiInstanceId;
 } & { id?: string }) {
   return (
-    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.4-0BDOs8", id: "google-play-console.deploy-runbook-terminal.div.4" })} id={props.id} className={props.className ?? ""}>
-      <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.5-Hfl0AT", id: "google-play-console.deploy-runbook-terminal.div.5" })} className="min-w-0 rounded-md border bg-surface p-3">
-        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.6-yUkG3c", id: "google-play-console.deploy-runbook-terminal.div.6" })} className="text-xs text-on-surface-variant">{props.label}</div>
-        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.7-IrDD77", id: "google-play-console.deploy-runbook-terminal.div.7" })} className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
+    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.4-0BDOs8", id: "google-play-console.deploy-runbook-terminal.div.4", instance: props.instance })} id={props.id} className={props.className ?? ""}>
+      <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.5-Hfl0AT", id: "google-play-console.deploy-runbook-terminal.div.5", instance: props.instance })} className="min-w-0 rounded-md border bg-surface p-3">
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.6-yUkG3c", id: "google-play-console.deploy-runbook-terminal.div.6", instance: props.instance })} className="text-xs text-on-surface-variant">{props.label}</div>
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.7-IrDD77", id: "google-play-console.deploy-runbook-terminal.div.7", instance: props.instance })} className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
           {props.value || "—"}
         </div>
-        <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.p-8CjEYD", id: "google-play-console.deploy-runbook-terminal.p" })} className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
+        <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.p-8CjEYD", id: "google-play-console.deploy-runbook-terminal.p", instance: props.instance })} className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
       </div>
     </div>
   );

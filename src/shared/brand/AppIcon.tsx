@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { BRANDING_WEB_APP_ICON_PATH } from '@asol/branding-core';
 import { withBasePath } from '@/core/config/public-env';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 type AppIconSize = 'sm' | 'md' | 'lg';
 
@@ -17,10 +17,11 @@ interface AppIconProps {
 }
 
 export default function AppIcon({ id, size = 'lg', className = '' }: AppIconProps & { id?: string }) {
+  const instance = createOpaqueUiInstanceId("app-icon", id ?? size);
   const sizes = sizeClasses[size];
 
   return (
-    <div {...uiAttributes({ uid: "shared.brand.app-icon.div-4vmYu5", id: "shared.brand.app-icon.div" })} id={id} className={`relative ${className}`}>
+    <div {...uiAttributes({ uid: "shared.brand.app-icon.div-4vmYu5", id: "shared.brand.app-icon.div", instance: instance })} id={id} className={`relative ${className}`}>
       <Image
         src={withBasePath(BRANDING_WEB_APP_ICON_PATH)}
         alt="Asol App Icon"

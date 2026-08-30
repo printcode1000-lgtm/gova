@@ -7,7 +7,7 @@ import { RunbookPanel, Option } from "./DeployRunbookControls";
 import { DEPLOY_ALL_RUNBOOK } from "@asol/release-core/console";
 import type { DeployTab } from "./DeployRunbookTypes";
 import { ALL_BRANCH_HELP, deployAllScenarios } from "./deploy-runbook-copy";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createUiInstanceId, uiAttributes, type UiInstanceId } from "@asol/ui-registry-core";
 
 export function Header({ id }: { id?: string }) {
   return (
@@ -76,16 +76,19 @@ export function Summary(props: {
   return (
     <section {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.section-tt8Wiv", id: "google-play-console.deploy-runbook-page-sections.section" })} id={props.id} className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       <InfoCard
+        instance={createUiInstanceId("active-branches")}
         title="الفروع المفعّلة"
         value={`${props.selectedCount} / ${props.totalCount}`}
         help="كل checkbox يحدد هل يدخل هذا الفرع ضمن خطة التشغيل الحالية أم يتم تجاوزه."
       />
       <InfoCard
+        instance={createUiInstanceId("execution-status")}
         title="حالة التنفيذ"
         value={props.status}
         help="العملية تستمر كـ job محلي حتى لو أغلقت الصفحة."
       />
       <InfoCard
+        instance={createUiInstanceId("error-behavior")}
         title="سلوك الخطأ"
         value={props.continueOnError ? "استمرار" : "توقف"}
         help="الافتراضي يوقف التسلسل عند أول خطأ لحماية النشر من نتائج نصف مكتملة."
@@ -107,6 +110,7 @@ export function DeployAllPanel(props: {
 } & { id?: string }) {
   return (
     <RunbookPanel id={props.id}
+      instance={createUiInstanceId("deploy-all")}
       title="Deploy All"
       description="المسار الكامل: فحوصات، بناء، قواعد بيانات، خدمات، GitHub، ثم تحقق Vercel."
       runbook={DEPLOY_ALL_RUNBOOK}
@@ -120,6 +124,7 @@ export function DeployAllPanel(props: {
       extraOptions={
         <>
           <Option
+            instance={createUiInstanceId("continue-on-error")}
             checked={props.continueOnError}
             onChange={props.setContinueOnError}
             label="الاستمرار بعد الخطأ"
@@ -129,6 +134,7 @@ export function DeployAllPanel(props: {
             }
           />
           <Option
+            instance={createUiInstanceId("skip-preflight")}
             checked={props.skipPreflight}
             onChange={props.setSkipPreflight}
             label="تجاوز preflight"
@@ -148,13 +154,14 @@ function InfoCard(props: {
   value: string;
   help: string;
   className?: string;
+  instance: UiInstanceId;
 } & { id?: string }) {
   return (
-    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.div.2-uX76m0", id: "google-play-console.deploy-runbook-page-sections.div.2" })} id={props.id} className={props.className ?? ""}>
-      <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.div.3-M6vdGi", id: "google-play-console.deploy-runbook-page-sections.div.3" })} className="min-w-0 rounded-md border bg-surface p-3">
-        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.div.4-3Gbi1U", id: "google-play-console.deploy-runbook-page-sections.div.4" })} className="text-xs text-on-surface-variant">{props.title}</div>
-        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.div.5-hZ0JDj", id: "google-play-console.deploy-runbook-page-sections.div.5" })} className="mt-1 text-lg font-semibold break-words">{props.value}</div>
-        <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.p.2-tlONG2", id: "google-play-console.deploy-runbook-page-sections.p.2" })} className="mt-1 text-xs text-on-surface-variant break-words">{props.help}</p>
+    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.div.2-uX76m0", id: "google-play-console.deploy-runbook-page-sections.div.2", instance: props.instance })} id={props.id} className={props.className ?? ""}>
+      <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.div.3-M6vdGi", id: "google-play-console.deploy-runbook-page-sections.div.3", instance: props.instance })} className="min-w-0 rounded-md border bg-surface p-3">
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.div.4-3Gbi1U", id: "google-play-console.deploy-runbook-page-sections.div.4", instance: props.instance })} className="text-xs text-on-surface-variant">{props.title}</div>
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.div.5-hZ0JDj", id: "google-play-console.deploy-runbook-page-sections.div.5", instance: props.instance })} className="mt-1 text-lg font-semibold break-words">{props.value}</div>
+        <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-page-sections.p.2-tlONG2", id: "google-play-console.deploy-runbook-page-sections.p.2", instance: props.instance })} className="mt-1 text-xs text-on-surface-variant break-words">{props.help}</p>
       </div>
     </div>
   );

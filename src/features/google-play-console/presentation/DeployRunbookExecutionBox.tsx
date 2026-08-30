@@ -7,7 +7,7 @@ import { Button } from "@/shared/ui/button";
 import { NativeCore } from "@asol/native-core";
 import { Option } from "./DeployRunbookControls";
 import { DeployRunbookCollapsible } from "./DeployRunbookCollapsible";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function ExecutionBox(props: {
   locked: boolean;
@@ -36,6 +36,7 @@ export function ExecutionBox(props: {
       </header>
 
       <DeployRunbookCollapsible id="google-play-console.deploy-runbook-execution-box.deploy-runbook-collapsible"
+        instance={createUiInstanceId("command-preview")}
         title="معاينة الأمر"
         description="الأمر الذي سيُنفَّذ فعلياً عبر job النظام."
       >
@@ -50,23 +51,27 @@ export function ExecutionBox(props: {
       </DeployRunbookCollapsible>
 
       <DeployRunbookCollapsible id="google-play-console.deploy-runbook-execution-box.deploy-runbook-collapsible.2"
+        instance={createUiInstanceId("security-options")}
         title="خيارات الأمان"
         description="تجاوزات حساسة للنشر والـ manifest والملفات المؤقتة."
       >
         <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.div.8-0J2Z6t", id: "google-play-console.deploy-runbook-execution-box.div.8" })} id="google-play-console.deploy-runbook-execution-box.div.2" className="grid gap-2">
           <Option id="google-play-console.deploy-runbook-execution-box.option"
+            instance={createUiInstanceId("allow-empty")}
             checked={props.allowEmpty}
             onChange={props.setAllowEmpty}
             label="السماح بتنفيذ فارغ"
             help="يسمح بإعادة نشر نفس commit أو إنشاء commit فارغ عند الحاجة."
           />
           <Option id="google-play-console.deploy-runbook-execution-box.option.2"
+            instance={createUiInstanceId("allow-manifest-downgrade")}
             checked={props.allowManifestDowngrade}
             onChange={props.setAllowManifestDowngrade}
             label="السماح بخفض manifest"
             help="يتجاوز حماية خفض releaseId/version. لا تستخدمه إلا إذا كان الخفض مقصوداً."
           />
           <Option id="google-play-console.deploy-runbook-execution-box.option.3"
+            instance={createUiInstanceId("allow-scratch-files")}
             checked={props.allowScratchFiles}
             onChange={props.setAllowScratchFiles}
             label="السماح بملفات scratch"
@@ -76,6 +81,7 @@ export function ExecutionBox(props: {
       </DeployRunbookCollapsible>
 
       <DeployRunbookCollapsible id="google-play-console.deploy-runbook-execution-box.deploy-runbook-collapsible.3"
+        instance={createUiInstanceId("run-control")}
         title="تشغيل وإيقاف"
         description="عبارة التأكيد مطلوبة قبل بدء أي نشر إنتاجي."
       >
@@ -139,6 +145,7 @@ export function ExecutionBox(props: {
 }
 
 function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: string) => void }) {
+  const instance = createOpaqueUiInstanceId("phrase-help", props.exactPhrase);
   const [copied, setCopied] = React.useState(false);
 
   const applyPhrase = () => {
@@ -150,10 +157,10 @@ function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: s
   };
 
   return (
-    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.div.12-aEW4Dg", id: "google-play-console.deploy-runbook-execution-box.div.12" })} id="google-play-console.deploy-runbook-execution-box.div.6" className="flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant">
-      <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.p.8-wVjO6t", id: "google-play-console.deploy-runbook-execution-box.p.8" })} id="google-play-console.deploy-runbook-execution-box.p.4" className="min-w-0 break-words">
+    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.div.12-aEW4Dg", id: "google-play-console.deploy-runbook-execution-box.div.12", instance: instance })} id="google-play-console.deploy-runbook-execution-box.div.6" className="flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant">
+      <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.p.8-wVjO6t", id: "google-play-console.deploy-runbook-execution-box.p.8", instance: instance })} id="google-play-console.deploy-runbook-execution-box.p.4" className="min-w-0 break-words">
         يجب كتابة{" "}
-        <button {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.button.5-H9O5oN", id: "google-play-console.deploy-runbook-execution-box.button.5" })} id="google-play-console.deploy-runbook-execution-box.button"
+        <button {...uiAttributes({ uid: "google-play-console.deploy-runbook-execution-box.button.5-H9O5oN", id: "google-play-console.deploy-runbook-execution-box.button.5", instance: instance })} id="google-play-console.deploy-runbook-execution-box.button"
           type="button"
           className="font-mono text-primary underline-offset-2 active:underline"
           dir="ltr"
@@ -170,6 +177,7 @@ function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: s
           kind: "action",
           action: "copy-confirmation-phrase",
           part: "execution",
+          instance: instance,
         }}
         type="button"
         variant="outline"

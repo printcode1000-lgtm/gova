@@ -11,7 +11,7 @@ import {
   dangerousBranchIds,
   PhaseBlock,
 } from "./DeployRunbookPhaseTree";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
+import { composeUiInstanceId, createOpaqueUiInstanceId, createUiInstanceId, uiAttributes, type UiInstanceId } from "@asol/ui-registry-core";
 
 const SELECT_BTN =
   "h-auto w-full min-w-0 justify-start whitespace-normal py-2 text-left";
@@ -28,6 +28,7 @@ export function RunbookPanel(props: {
   onScenarioChange: (value: string) => void;
   scenarios: readonly (readonly [string, string])[];
   extraOptions?: React.ReactNode;
+  instance?: UiInstanceId;
 } & { id?: string }) {
   const toggle = (id: string) => {
     const next = new Set(props.selected);
@@ -41,17 +42,19 @@ export function RunbookPanel(props: {
   const selectedInRunbook = allIds.filter((id) => props.selected.has(id)).length;
 
   return (
-    <section {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.section-pTX47t", id: "google-play-console.deploy-runbook-controls.section" })} id={props.id} className="min-w-0 space-y-3">
-      <header {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.header-y9RljT", id: "google-play-console.deploy-runbook-controls.header" })} className="min-w-0 rounded-md border bg-surface p-3 sm:p-4">
-        <h2 {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.h2-UmTM66", id: "google-play-console.deploy-runbook-controls.h2" })} className="text-lg font-semibold break-words sm:text-xl">{props.title}</h2>
-        <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.p-1RFHqC", id: "google-play-console.deploy-runbook-controls.p" })} className="mt-1 text-sm text-on-surface-variant break-words">{props.description}</p>
+    <section {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.section-pTX47t", id: "google-play-console.deploy-runbook-controls.section", instance: props.instance })} id={props.id} className="min-w-0 space-y-3">
+      <header {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.header-y9RljT", id: "google-play-console.deploy-runbook-controls.header", instance: props.instance })} className="min-w-0 rounded-md border bg-surface p-3 sm:p-4">
+        <h2 {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.h2-UmTM66", id: "google-play-console.deploy-runbook-controls.h2", instance: props.instance })} className="text-lg font-semibold break-words sm:text-xl">{props.title}</h2>
+        <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.p-1RFHqC", id: "google-play-console.deploy-runbook-controls.p", instance: props.instance })} className="mt-1 text-sm text-on-surface-variant break-words">{props.description}</p>
       </header>
 
       <DeployRunbookCollapsible
+        instance={props.instance ? composeUiInstanceId(props.instance, createUiInstanceId("scenario")) : createUiInstanceId("scenario")}
         title="وضع التشغيل"
         description="يحدد السيناريو الأمر الأعلى؛ checkboxes الفروع تحدد ما يُنفَّذ داخل الشجرة."
       >
         <ScenarioSelect
+          instance={props.instance}
           label={props.scenarioLabel}
           value={props.scenarioValue}
           onChange={props.onScenarioChange}
@@ -60,16 +63,17 @@ export function RunbookPanel(props: {
       </DeployRunbookCollapsible>
 
       <DeployRunbookCollapsible
+        instance={props.instance ? composeUiInstanceId(props.instance, createUiInstanceId("bulk-select")) : createUiInstanceId("bulk-select")}
         title="اختيار الفروع"
         description="تفعيل أو تجاوز الفروع دفعة واحدة قبل فتح شجرة المراحل."
         badge={
-          <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span-EbU1Lm", id: "google-play-console.deploy-runbook-controls.span" })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+          <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span-EbU1Lm", id: "google-play-console.deploy-runbook-controls.span", instance: props.instance })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
             {selectedInRunbook} / {allIds.length}
           </span>
         }
       >
-        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div-Uv4XYH", id: "google-play-console.deploy-runbook-controls.div" })} className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <Button ui={{ uid: "deploy-runbook.controls.select-all-v4wrX5", id: "deploy-runbook.controls.select-all", kind: "action", action: "select-all", part: "selection" }}
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div-Uv4XYH", id: "google-play-console.deploy-runbook-controls.div", instance: props.instance })} className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <Button ui={{ uid: "deploy-runbook.controls.select-all-v4wrX5", id: "deploy-runbook.controls.select-all", kind: "action", action: "select-all", part: "selection", instance: props.instance }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set(allIds))}
@@ -77,7 +81,7 @@ export function RunbookPanel(props: {
             <CheckSquare className="h-4 w-4 shrink-0" />
             تفعيل الكل
           </Button>
-          <Button ui={{ uid: "deploy-runbook.controls.select-none-q9bRsA", id: "deploy-runbook.controls.select-none", kind: "action", action: "select-none", part: "selection" }}
+          <Button ui={{ uid: "deploy-runbook.controls.select-none-q9bRsA", id: "deploy-runbook.controls.select-none", kind: "action", action: "select-none", part: "selection", instance: props.instance }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set())}
@@ -85,14 +89,14 @@ export function RunbookPanel(props: {
             <Square className="h-4 w-4 shrink-0" />
             تجاوز الكل
           </Button>
-          <Button ui={{ uid: "deploy-runbook.controls.select-safe-mSNY7v", id: "deploy-runbook.controls.select-safe", kind: "action", action: "select-safe", part: "selection" }}
+          <Button ui={{ uid: "deploy-runbook.controls.select-safe-mSNY7v", id: "deploy-runbook.controls.select-safe", kind: "action", action: "select-safe", part: "selection", instance: props.instance }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set(safeIds))}
           >
             الفروع الآمنة فقط
           </Button>
-          <Button ui={{ uid: "deploy-runbook.controls.select-dangerous-9fJZtW", id: "deploy-runbook.controls.select-dangerous", kind: "action", action: "select-dangerous", part: "selection" }}
+          <Button ui={{ uid: "deploy-runbook.controls.select-dangerous-9fJZtW", id: "deploy-runbook.controls.select-dangerous", kind: "action", action: "select-dangerous", part: "selection", instance: props.instance }}
             variant="outline"
             className={SELECT_BTN}
             onClick={() => props.setSelected(new Set(dangerousIds))}
@@ -104,23 +108,25 @@ export function RunbookPanel(props: {
 
       {props.extraOptions ? (
         <DeployRunbookCollapsible
+          instance={props.instance ? composeUiInstanceId(props.instance, createUiInstanceId("advanced-options")) : createUiInstanceId("advanced-options")}
           title="خيارات التشغيل"
           description="سلوك التسلسل عند الأخطاء وتجاوز preflight."
         >
-          <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div.2-VJt2GO", id: "google-play-console.deploy-runbook-controls.div.2" })} className="grid grid-cols-1 gap-2 lg:grid-cols-2">{props.extraOptions}</div>
+          <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div.2-VJt2GO", id: "google-play-console.deploy-runbook-controls.div.2", instance: props.instance })} className="grid grid-cols-1 gap-2 lg:grid-cols-2">{props.extraOptions}</div>
         </DeployRunbookCollapsible>
       ) : null}
 
       <DeployRunbookCollapsible
+        instance={props.instance ? composeUiInstanceId(props.instance, createUiInstanceId("tree")) : createUiInstanceId("tree")}
         title="شجرة المراحل والفروع"
         description="كل مرحلة قابلة للطي؛ داخلها أقسام ثم فروع تنفيذية بأوامر npm."
         badge={
-          <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.2-cXuA0r", id: "google-play-console.deploy-runbook-controls.span.2" })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+          <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.2-cXuA0r", id: "google-play-console.deploy-runbook-controls.span.2", instance: props.instance })} className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
             {props.runbook.length} مراحل
           </span>
         }
       >
-        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div.3-1zfGaU", id: "google-play-console.deploy-runbook-controls.div.3" })} className="space-y-3">
+        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.div.3-1zfGaU", id: "google-play-console.deploy-runbook-controls.div.3", instance: props.instance })} className="space-y-3">
           {props.runbook.map((phase) => (
             <PhaseBlock
               key={phase.id}
@@ -141,19 +147,20 @@ export function Option(props: {
   onChange: (value: boolean) => void;
   label: string;
   help: string;
+  instance?: UiInstanceId;
 } & { id?: string }) {
   return (
-    <label {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.label-Y2nOg9", id: "google-play-console.deploy-runbook-controls.label" })} id={props.id} className="block min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
-      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.3-6WG3Nt", id: "google-play-console.deploy-runbook-controls.span.3" })} className="flex items-start gap-2">
-        <input {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.input-44qAeO", id: "google-play-console.deploy-runbook-controls.input" })}
+    <label {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.label-Y2nOg9", id: "google-play-console.deploy-runbook-controls.label", instance: props.instance })} id={props.id} className="block min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
+      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.3-6WG3Nt", id: "google-play-console.deploy-runbook-controls.span.3", instance: props.instance })} className="flex items-start gap-2">
+        <input {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.input-44qAeO", id: "google-play-console.deploy-runbook-controls.input", instance: props.instance })}
           type="checkbox"
           className="mt-0.5 shrink-0"
           checked={props.checked}
           onChange={(event) => props.onChange(event.target.checked)}
         />
-        <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.4-rOjP1E", id: "google-play-console.deploy-runbook-controls.span.4" })} className="min-w-0 font-medium break-words">{props.label}</span>
+        <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.4-rOjP1E", id: "google-play-console.deploy-runbook-controls.span.4", instance: props.instance })} className="min-w-0 font-medium break-words">{props.label}</span>
       </span>
-      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.5-mHP92M", id: "google-play-console.deploy-runbook-controls.span.5" })} className="mt-1 block text-xs text-on-surface-variant break-words">
+      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.5-mHP92M", id: "google-play-console.deploy-runbook-controls.span.5", instance: props.instance })} className="mt-1 block text-xs text-on-surface-variant break-words">
         {props.help}
       </span>
     </label>
@@ -165,11 +172,12 @@ function ScenarioSelect(props: {
   value: string;
   onChange: (value: string) => void;
   scenarios: readonly (readonly [string, string])[];
+  instance?: UiInstanceId;
 }) {
   return (
-    <label {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.label.2-7w1ODE", id: "google-play-console.deploy-runbook-controls.label.2" })} className="block space-y-2 text-sm">
-      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.6-7ZZGar", id: "google-play-console.deploy-runbook-controls.span.6" })} className="font-medium">{props.label}</span>
-      <select {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.select-h3UdSs", id: "google-play-console.deploy-runbook-controls.select" })}
+    <label {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.label.2-7w1ODE", id: "google-play-console.deploy-runbook-controls.label.2", instance: props.instance })} className="block space-y-2 text-sm">
+      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.6-7ZZGar", id: "google-play-console.deploy-runbook-controls.span.6", instance: props.instance })} className="font-medium">{props.label}</span>
+      <select {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.select-h3UdSs", id: "google-play-console.deploy-runbook-controls.select", instance: props.instance })}
         className="block w-full min-w-0 max-w-full rounded-md border bg-background p-2 md:max-w-md"
         value={props.value}
         onChange={(event) => props.onChange(event.target.value)}
@@ -178,7 +186,7 @@ function ScenarioSelect(props: {
           <option key={value} {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.option-2ANG8J", id: "google-play-console.deploy-runbook-controls.option" , instance: createOpaqueUiInstanceId("iter-c297eba839", String(value))})} value={value}>{label}</option>
         ))}
       </select>
-      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.7-163qEs", id: "google-play-console.deploy-runbook-controls.span.7" })} className="block text-xs text-on-surface-variant">
+      <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.7-163qEs", id: "google-play-console.deploy-runbook-controls.span.7", instance: props.instance })} className="block text-xs text-on-surface-variant">
         يحدد السيناريو الأمر الأعلى، بينما تحدد checkboxes الفروع المفعّلة داخل الشجرة.
       </span>
     </label>

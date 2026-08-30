@@ -2,8 +2,11 @@
 
 import * as React from "react";
 
-import type { UiDescriptor } from "@asol/ui-registry-core";
-import { uiAttributes } from "@asol/ui-registry-core";
+import {
+  createOpaqueUiInstanceId,
+  type UiDescriptor,
+  uiAttributes,
+} from "@asol/ui-registry-core";
 import type { DialogState, StorageImageAspectRatio } from "./storage-image-manager.types";
 
 export function cn(...classes: Array<string | false | null | undefined>) {
@@ -76,13 +79,16 @@ export const aspectClasses: Record<StorageImageAspectRatio, string> = {
 export function StorageImageSlotFrame({
   children,
   aspectRatio,
+  id,
 }: {
   children: React.ReactNode;
   aspectRatio: StorageImageAspectRatio;
+  id?: string;
 }) {
+  const instance = createOpaqueUiInstanceId("storage-image-slot-frame", id ?? "frame");
   return (
-    <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.div-1BFgja", id: "packages.storage-image-manager-core.storage-image-manager-ui.div" })} className="w-full min-w-0 overflow-hidden rounded-lg border-2 border-primary/20 bg-primary/5 p-0.5">
-      <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.div.2-YFd63f", id: "packages.storage-image-manager-core.storage-image-manager-ui.div.2" })}
+    <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.div-1BFgja", id: "packages.storage-image-manager-core.storage-image-manager-ui.div", instance: instance })} className="w-full min-w-0 overflow-hidden rounded-lg border-2 border-primary/20 bg-primary/5 p-0.5">
+      <div {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager-ui.div.2-YFd63f", id: "packages.storage-image-manager-core.storage-image-manager-ui.div.2", instance: instance })}
         className={cn(
           "relative w-full min-w-0 overflow-hidden",
           aspectClasses[aspectRatio],

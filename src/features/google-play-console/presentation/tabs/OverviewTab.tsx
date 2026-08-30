@@ -5,7 +5,7 @@ import { Activity, LockKeyhole, Package, Radio, ShieldCheck } from "lucide-react
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import { useReleaseOverview } from "../hooks/use-release-overview";
 import { Metric } from "../components/Metric";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function OverviewTab() {
   const { t } = useAdminArabic();
@@ -16,10 +16,11 @@ export function OverviewTab() {
   return (
     <section {...uiAttributes({ uid: "google-play-console.tabs.overview-tab.section.4-a5FqtF", id: "google-play-console.tabs.overview-tab.section.4" })} id="google-play-console.tabs.overview-tab.section" className="space-y-4">
       <div {...uiAttributes({ uid: "google-play-console.tabs.overview-tab.div.10-eSCk6Z", id: "google-play-console.tabs.overview-tab.div.10" })} id="google-play-console.tabs.overview-tab.div.2" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <Metric id="google-play-console.tabs.overview-tab.metric" icon={Package} label={t("releaseConsole.overview.package")} value={snapshot.packageName} />
-        <Metric id="google-play-console.tabs.overview-tab.metric.2" label={t("releaseConsole.overview.defaultLanguage")} value={snapshot.defaultLanguage} />
-        <Metric id="google-play-console.tabs.overview-tab.metric.3" icon={Radio} label={t("releaseConsole.overview.liveOta")} value={snapshot.liveOtaVersion ?? "-"} />
+        <Metric id="google-play-console.tabs.overview-tab.metric" instance={createUiInstanceId("package")} icon={Package} label={t("releaseConsole.overview.package")} value={snapshot.packageName} />
+        <Metric id="google-play-console.tabs.overview-tab.metric.2" instance={createUiInstanceId("default-language")} label={t("releaseConsole.overview.defaultLanguage")} value={snapshot.defaultLanguage} />
+        <Metric id="google-play-console.tabs.overview-tab.metric.3" instance={createUiInstanceId("live-ota")} icon={Radio} label={t("releaseConsole.overview.liveOta")} value={snapshot.liveOtaVersion ?? "-"} />
         <Metric id="google-play-console.tabs.overview-tab.metric.4"
+          instance={createUiInstanceId("active-tracks")}
           icon={Activity}
           label={t("releaseConsole.overview.activeTracks")}
           value={activeTracks.length}

@@ -10,7 +10,7 @@ import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import type { GooglePlayTrackName } from "../../domain/store-assets-types";
 import { usePlayTracks } from "../hooks/use-play-tracks";
 import { usePlayTracksPageSave } from "../hooks/use-play-tracks-page-save";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, createUiInstanceId, uiAttributes, type UiInstanceId } from "@asol/ui-registry-core";
 
 const TRACKS: GooglePlayTrackName[] = ["internal", "alpha", "beta", "production"];
 
@@ -70,7 +70,7 @@ export function PlayTracksTab() {
       <div {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.div.8-6L15gc", id: "google-play-console.tabs.play-tracks-tab.div.8" })} id="google-play-console.tabs.play-tracks-tab.div.3" className="grid gap-4 lg:grid-cols-2">
         <section {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.section.5-JCC7JY", id: "google-play-console.tabs.play-tracks-tab.section.5" })} id="google-play-console.tabs.play-tracks-tab.section.2" className="space-y-3 rounded-md border bg-surface p-4">
           <h2 {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.h2.4-WT9V0L", id: "google-play-console.tabs.play-tracks-tab.h2.4" })} id="google-play-console.tabs.play-tracks-tab.h2" className="font-semibold">{t("releaseConsole.tracks.update")}</h2>
-          <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select" value={track} onChange={setTrack} />
+          <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select" instance={createUiInstanceId("target-track")} value={track} onChange={setTrack} />
           <Input id="google-play-console.tabs.play-tracks-tab.input"
             ui={{
               uid: "release-console.tracks.version-code-A2cEvY",
@@ -106,9 +106,9 @@ export function PlayTracksTab() {
         <section {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.section.6-ZR0I34", id: "google-play-console.tabs.play-tracks-tab.section.6" })} id="google-play-console.tabs.play-tracks-tab.section.3" className="space-y-3 rounded-md border bg-surface p-4">
           <h2 {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.h2.5-CWd65i", id: "google-play-console.tabs.play-tracks-tab.h2.5" })} id="google-play-console.tabs.play-tracks-tab.h2.2" className="font-semibold">{t("releaseConsole.tracks.promote")}</h2>
           <div {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.div.9-HqVg1W", id: "google-play-console.tabs.play-tracks-tab.div.9" })} id="google-play-console.tabs.play-tracks-tab.div.4" className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-            <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select.2" value={fromTrack} onChange={setFromTrack} />
+            <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select.2" instance={createUiInstanceId("from-track")} value={fromTrack} onChange={setFromTrack} />
             <ArrowRight id="google-play-console.tabs.play-tracks-tab.arrow-right" className="h-4 w-4" />
-            <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select.3" value={toTrack} onChange={setToTrack} />
+            <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select.3" instance={createUiInstanceId("to-track")} value={toTrack} onChange={setToTrack} />
           </div>
           <Button id="google-play-console.tabs.play-tracks-tab.button"
             ui={{
@@ -137,12 +137,13 @@ export function PlayTracksTab() {
   );
 }
 
-function TrackSelect({ id, value, onChange }: {
+function TrackSelect({ id, value, onChange, instance }: {
   value: GooglePlayTrackName;
   onChange: (value: GooglePlayTrackName) => void;
+  instance?: UiInstanceId;
 } & { id?: string }) {
   return (
-    <select {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.select.3-msH3LN", id: "google-play-console.tabs.play-tracks-tab.select.3" })} id={id} className="h-10 w-full rounded-md border bg-background px-3" value={value}
+    <select {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.select.3-msH3LN", id: "google-play-console.tabs.play-tracks-tab.select.3", instance: instance })} id={id} className="h-10 w-full rounded-md border bg-background px-3" value={value}
       onChange={(event) => onChange(event.target.value as GooglePlayTrackName)} dir="ltr">
       {TRACKS.map((item) => <option key={item} {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.option.2-8MYxUo", id: "google-play-console.tabs.play-tracks-tab.option.2" , instance: createOpaqueUiInstanceId("iter-bb36b844fa", String(item))})}>{item}</option>)}
     </select>

@@ -7,7 +7,7 @@ import {
   nextNativePatchVersion,
   releaseContentVersion,
 } from "@asol/ota-core";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, createUiInstanceId, uiAttributes, type UiInstanceId } from "@asol/ui-registry-core";
 
 /** The shell this run will produce, before any content number is derived. */
 function targetNativeVersion(
@@ -43,15 +43,15 @@ export function ReleaseCurrentVersions({ id, versions, t }: {
   return <section {...uiAttributes({ uid: "google-play-console.release-version-summary.section-VlZ4YR", id: "google-play-console.release-version-summary.section" })} id={id} className="space-y-2" aria-label={t("releaseConsole.confirmRun.versionSummaryTitle")}>
     <h3 {...uiAttributes({ uid: "google-play-console.release-version-summary.h3-7H2dp3", id: "google-play-console.release-version-summary.h3" })} className="font-semibold">{t("releaseConsole.confirmRun.versionSummaryTitle")}</h3>
     <div {...uiAttributes({ uid: "google-play-console.release-version-summary.div-dFE3Zi", id: "google-play-console.release-version-summary.div" })} className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
-      <VersionCard label={t("releaseConsole.confirmRun.currentAndroidProductionVersion")}
+      <VersionCard instance={createUiInstanceId("current-android-production")} label={t("releaseConsole.confirmRun.currentAndroidProductionVersion")}
         value={versions.androidProduction ?? unavailable} />
-      <VersionCard label={t("releaseConsole.confirmRun.currentAndroidVersion")}
+      <VersionCard instance={createUiInstanceId("current-android")} label={t("releaseConsole.confirmRun.currentAndroidVersion")}
         value={versions.androidCurrent ?? unavailable} />
-      <VersionCard label={t("releaseConsole.confirmRun.currentIosProductionVersion")}
+      <VersionCard instance={createUiInstanceId("current-ios-production")} label={t("releaseConsole.confirmRun.currentIosProductionVersion")}
         value={versions.iosProduction ?? unavailable} />
-      <VersionCard label={t("releaseConsole.confirmRun.currentContentVersion")}
+      <VersionCard instance={createUiInstanceId("current-content")} label={t("releaseConsole.confirmRun.currentContentVersion")}
         value={versions.contentCurrent ?? unavailable} />
-      <VersionCard label={t("releaseConsole.confirmRun.currentOtaVersion")}
+      <VersionCard instance={createUiInstanceId("current-ota")} label={t("releaseConsole.confirmRun.currentOtaVersion")}
         value={versions.otaCurrent ?? unavailable} />
     </div>
     {versions.androidTruthError ? (
@@ -108,22 +108,23 @@ export function ReleaseSelectedVersions({ id, commandId, versions, parameters, t
     <h3 {...uiAttributes({ uid: "google-play-console.release-version-summary.h3.2-Z8Zf7X", id: "google-play-console.release-version-summary.h3.2" })} className="font-semibold">{t("releaseConsole.confirmRun.planSummaryTitle")}</h3>
     <div {...uiAttributes({ uid: "google-play-console.release-version-summary.div.2-34O3Ry", id: "google-play-console.release-version-summary.div.2" })} className="grid gap-2 sm:grid-cols-2">
       {selected.map(([label, version]) => (
-        <VersionCard key={label} label={t(`releaseConsole.confirmRun.${label}`)}
+        <VersionCard key={label} instance={createOpaqueUiInstanceId("version", label)} label={t(`releaseConsole.confirmRun.${label}`)}
           value={version} emphasized />
       ))}
     </div>
   </section>;
 }
 
-function VersionCard({ id, label, value, emphasized = false }: {
+function VersionCard({ id, label, value, emphasized = false, instance }: {
   label: string;
   value: string;
   emphasized?: boolean;
+  instance?: UiInstanceId;
 } & { id?: string }) {
-  return <div {...uiAttributes({ uid: "google-play-console.release-version-summary.div.3-c9LMQZ", id: "google-play-console.release-version-summary.div.3" })} id={id} role="status" className={`rounded-lg border p-3 ${emphasized
+  return <div {...uiAttributes({ uid: "google-play-console.release-version-summary.div.3-c9LMQZ", id: "google-play-console.release-version-summary.div.3", instance: instance })} id={id} role="status" className={`rounded-lg border p-3 ${emphasized
     ? "border-primary bg-primary/10"
     : "bg-muted/40"}`}>
-    <p {...uiAttributes({ uid: "google-play-console.release-version-summary.p.5-sXIMJ1", id: "google-play-console.release-version-summary.p.5" })} className="text-xs leading-5 text-on-surface-variant">{label}</p>
-    <code {...uiAttributes({ uid: "google-play-console.release-version-summary.code-5hALKu", id: "google-play-console.release-version-summary.code" })} className="mt-1 block text-lg font-bold" dir="ltr">{value}</code>
+    <p {...uiAttributes({ uid: "google-play-console.release-version-summary.p.5-sXIMJ1", id: "google-play-console.release-version-summary.p.5", instance: instance })} className="text-xs leading-5 text-on-surface-variant">{label}</p>
+    <code {...uiAttributes({ uid: "google-play-console.release-version-summary.code-5hALKu", id: "google-play-console.release-version-summary.code", instance: instance })} className="mt-1 block text-lg font-bold" dir="ltr">{value}</code>
   </div>;
 }

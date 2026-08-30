@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/shared/utils";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export const COLLAPSED_SUPER_ADMIN_GROUPS = {
   content: false,
@@ -175,14 +175,15 @@ function SuperAdminGroup({ id,
   onToggle: () => void;
   children: React.ReactNode;
 } & { id?: string }) {
+  const instance = createOpaqueUiInstanceId("super-admin-group", id ?? "group");
   return (
-    <div {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.5-vhRUu9", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.5" })} id={id} className={shellClass}>
-      <button {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.button.3-7uP6B7", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.button.3" })} type="button" onClick={onToggle} aria-expanded={open} className={buttonClass}>
+    <div {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.5-vhRUu9", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.5", instance: instance })} id={id} className={shellClass}>
+      <button {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.button.3-7uP6B7", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.button.3", instance: instance })} type="button" onClick={onToggle} aria-expanded={open} className={buttonClass}>
         {icon}
         {label}
         <ChevronDown className={cn("ms-auto h-4 w-4 transition-transform", open && "rotate-180")} />
       </button>
-      {open && <div {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.6-2pG0Vp", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.6" })} className={panelClass}>{children}</div>}
+      {open && <div {...uiAttributes({ uid: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.6-2pG0Vp", id: "shared.layouts.app-sidebar.app-sidebar-super-admin-section.div.6", instance: instance })} className={panelClass}>{children}</div>}
     </div>
   );
 }

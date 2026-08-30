@@ -9,7 +9,7 @@ import { useStoreAssets } from "../hooks/use-store-assets";
 import type { GooglePlayStoreListing } from "../../domain/store-assets-types";
 import { Field } from "../components/Field";
 import { useStoreTextPageSave } from "../hooks/use-store-text-page-save";
-import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
+import { composeUiInstanceId, createOpaqueUiInstanceId, createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function StoreTextTab() {
   const { t } = useAdminArabic();
@@ -24,13 +24,13 @@ export function StoreTextTab() {
     <section {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.section.2-hLuD91", id: "google-play-console.tabs.store-text-tab.section.2" })} id="google-play-console.tabs.store-text-tab.section" className="grid gap-4 xl:grid-cols-[1fr_22rem]">
       <div {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.div.6-MO9Azg", id: "google-play-console.tabs.store-text-tab.div.6" })} id="google-play-console.tabs.store-text-tab.div.2" className="space-y-4">
         <div {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.div.7-B5sdi7", id: "google-play-console.tabs.store-text-tab.div.7" })} id="google-play-console.tabs.store-text-tab.div.3" className="grid gap-3 rounded-md border bg-surface p-4 md:grid-cols-2">
-          <Field id="google-play-console.tabs.store-text-tab.field" label={t("releaseConsole.text.website")} value={store.details.contactWebsite ?? ""}
+          <Field id="google-play-console.tabs.store-text-tab.field" instance={createUiInstanceId("contact-website")} label={t("releaseConsole.text.website")} value={store.details.contactWebsite ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, contactWebsite: value })} />
-          <Field id="google-play-console.tabs.store-text-tab.field.2" label={t("releaseConsole.text.email")} value={store.details.contactEmail ?? ""}
+          <Field id="google-play-console.tabs.store-text-tab.field.2" instance={createUiInstanceId("contact-email")} label={t("releaseConsole.text.email")} value={store.details.contactEmail ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, contactEmail: value })} />
-          <Field id="google-play-console.tabs.store-text-tab.field.3" label={t("releaseConsole.text.phone")} value={store.details.contactPhone ?? ""}
+          <Field id="google-play-console.tabs.store-text-tab.field.3" instance={createUiInstanceId("contact-phone")} label={t("releaseConsole.text.phone")} value={store.details.contactPhone ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, contactPhone: value })} />
-          <Field id="google-play-console.tabs.store-text-tab.field.4" label={t("releaseConsole.text.defaultLanguage")} value={store.details.defaultLanguage ?? ""}
+          <Field id="google-play-console.tabs.store-text-tab.field.4" instance={createUiInstanceId("default-language")} label={t("releaseConsole.text.defaultLanguage")} value={store.details.defaultLanguage ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, defaultLanguage: value })} />
         </div>
         {store.listings.map((listing, index) => {
@@ -46,13 +46,13 @@ export function StoreTextTab() {
                 </Button>
               </div>
               <div {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.div.9-JKCt25", id: "google-play-console.tabs.store-text-tab.div.9", instance: listingInstance })} className="grid gap-3 md:grid-cols-2">
-                <Field label={t("releaseConsole.text.language")} value={listing.language}
+                <Field instance={composeUiInstanceId(listingInstance, createUiInstanceId("language"))} label={t("releaseConsole.text.language")} value={listing.language}
                   onChange={(value) => patch(index, { language: value })} />
-                <Field label={t("releaseConsole.text.title")} value={listing.title ?? ""}
+                <Field instance={composeUiInstanceId(listingInstance, createUiInstanceId("title"))} label={t("releaseConsole.text.title")} value={listing.title ?? ""}
                   onChange={(value) => patch(index, { title: value })} />
-                <Field label={t("releaseConsole.text.shortDescription")} value={listing.shortDescription ?? ""}
+                <Field instance={composeUiInstanceId(listingInstance, createUiInstanceId("short-description"))} label={t("releaseConsole.text.shortDescription")} value={listing.shortDescription ?? ""}
                   onChange={(value) => patch(index, { shortDescription: value })} />
-                <Field label={t("releaseConsole.text.video")} value={listing.video ?? ""}
+                <Field instance={composeUiInstanceId(listingInstance, createUiInstanceId("video"))} label={t("releaseConsole.text.video")} value={listing.video ?? ""}
                   onChange={(value) => patch(index, { video: value })} />
               </div>
               <label {...uiAttributes({ uid: "google-play-console.tabs.store-text-tab.label.2-y2tnQ5", id: "google-play-console.tabs.store-text-tab.label.2", instance: listingInstance })} className="mt-3 block text-xs text-on-surface-variant">

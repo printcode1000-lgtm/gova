@@ -9,7 +9,7 @@ import { useBundleAnalysis } from "../hooks/use-bundle-analysis";
 import { CategoryTree } from "../components/CategoryTree";
 import { DeltaTable } from "../components/DeltaTable";
 import { Metric } from "../components/Metric";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function BundleAnalysisTab() {
   const { t } = useAdminArabic();
@@ -46,10 +46,10 @@ export function BundleAnalysisTab() {
       {bundle.analysis ? (
         <>
           <div {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.div.9-x2Hr3S", id: "google-play-console.tabs.bundle-analysis-tab.div.9" })} id="google-play-console.tabs.bundle-analysis-tab.div.2" className="grid gap-3 md:grid-cols-4">
-            <Metric id="google-play-console.tabs.bundle-analysis-tab.metric" label={t("releaseConsole.analysis.archiveBytes")} value={bundle.analysis.archiveBytes} />
-            <Metric id="google-play-console.tabs.bundle-analysis-tab.metric.2" label={t("releaseConsole.analysis.compressedBytes")}
+            <Metric id="google-play-console.tabs.bundle-analysis-tab.metric" instance={createUiInstanceId("archive-bytes")} label={t("releaseConsole.analysis.archiveBytes")} value={bundle.analysis.archiveBytes} />
+            <Metric id="google-play-console.tabs.bundle-analysis-tab.metric.2" instance={createUiInstanceId("compressed-bytes")} label={t("releaseConsole.analysis.compressedBytes")}
               value={bundle.analysis.totalCompressedBytes} />
-            <Metric id="google-play-console.tabs.bundle-analysis-tab.metric.3" label={t("releaseConsole.analysis.entries")} value={bundle.analysis.entryCount} />
+            <Metric id="google-play-console.tabs.bundle-analysis-tab.metric.3" instance={createUiInstanceId("entries")} label={t("releaseConsole.analysis.entries")} value={bundle.analysis.entryCount} />
             <div {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.div.10-sA3Bb5", id: "google-play-console.tabs.bundle-analysis-tab.div.10" })} id="google-play-console.tabs.bundle-analysis-tab.div.3" className="rounded-md border-2 border-error bg-error-container p-4 text-on-error-container">
               <div {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.div.11-8wZRPp", id: "google-play-console.tabs.bundle-analysis-tab.div.11" })} id="google-play-console.tabs.bundle-analysis-tab.div.4" className="text-xs font-semibold">{t("releaseConsole.analysis.unclassified")}</div>
               <div {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.div.12-hMVJG8", id: "google-play-console.tabs.bundle-analysis-tab.div.12" })} id="google-play-console.tabs.bundle-analysis-tab.div.5" className="mt-2 text-xl font-bold">{unclassified?.compressedBytes ?? 0}</div>

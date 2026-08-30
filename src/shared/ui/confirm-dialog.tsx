@@ -55,7 +55,7 @@ export function ConfirmDialog({
         ui={{
           uid: "shared.confirm-dialog.content-1p9SW8",
           id: "shared.confirm-dialog.content",
-          instance,
+          instance: instance,
         }}
         id={id}
         className="max-w-sm"
@@ -64,14 +64,14 @@ export function ConfirmDialog({
           ui={{
             uid: "shared.confirm-dialog.dialog-header-5jp7QZ",
             id: "shared.confirm-dialog.dialog-header",
-            instance,
+            instance: instance,
           }}
         >
           <DialogTitle
             ui={{
               uid: "shared.confirm-dialog.dialog-title-nA4Pye",
               id: "shared.confirm-dialog.dialog-title",
-              instance,
+              instance: instance,
             }}
             className="flex items-center gap-2 text-base"
           >
@@ -84,7 +84,7 @@ export function ConfirmDialog({
             ui={{
               uid: "shared.confirm-dialog.dialog-description-IiGu4p",
               id: "shared.confirm-dialog.dialog-description",
-              instance,
+              instance: instance,
             }}
             className="text-sm text-on-surface-variant"
           >
@@ -95,7 +95,7 @@ export function ConfirmDialog({
           ui={{
             uid: "shared.confirm-dialog.dialog-footer-TSOQS2",
             id: "shared.confirm-dialog.dialog-footer",
-            instance,
+            instance: instance,
           }}
           className="gap-2"
         >
@@ -103,7 +103,7 @@ export function ConfirmDialog({
             ui={{
               uid: "shared.confirm-dialog.button-D4WPM3",
               id: "shared.confirm-dialog.button",
-              instance,
+              instance: instance,
             }}
             type="button"
             variant="outline"
@@ -115,7 +115,7 @@ export function ConfirmDialog({
             ui={{
               uid: "shared.confirm-dialog.button.2-Uo8Nog",
               id: "shared.confirm-dialog.button.2",
-              instance,
+              instance: instance,
             }}
             type="button"
             variant={tone === "destructive" ? "destructive" : "default"}

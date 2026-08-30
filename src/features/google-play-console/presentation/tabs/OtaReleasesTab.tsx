@@ -9,7 +9,7 @@ import { useOtaAdmin } from "../hooks/use-ota-admin";
 import { useOtaRolloutPageSave } from "../hooks/use-ota-rollout-page-save";
 import { Metric } from "../components/Metric";
 import { OtaReleaseChanges } from "../components/OtaReleaseChanges";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function OtaReleasesTab() {
   const { t } = useAdminArabic();
@@ -55,13 +55,13 @@ export function OtaReleasesTab() {
       ) : release && current?.manifest && ota.dashboard ? (
         <>
           <div {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.div.22-Ys8xLC", id: "google-play-console.tabs.ota-releases-tab.div.22" })} id="google-play-console.tabs.ota-releases-tab.div.8" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            <Metric id="google-play-console.tabs.ota-releases-tab.metric" label={t("releaseConsole.ota.currentVersion")} value={release.version}
+            <Metric id="google-play-console.tabs.ota-releases-tab.metric" instance={createUiInstanceId("current-version")} label={t("releaseConsole.ota.currentVersion")} value={release.version}
               detail={release.releaseId} />
-            <Metric id="google-play-console.tabs.ota-releases-tab.metric.2" label={t("releaseConsole.ota.approval")}
+            <Metric id="google-play-console.tabs.ota-releases-tab.metric.2" instance={createUiInstanceId("approval")} label={t("releaseConsole.ota.approval")}
               value={t(release.approved ? "releaseConsole.common.yes" : "releaseConsole.common.no")} />
-            <Metric id="google-play-console.tabs.ota-releases-tab.metric.3" label={t("releaseConsole.ota.size")} value={release.size}
+            <Metric id="google-play-console.tabs.ota-releases-tab.metric.3" instance={createUiInstanceId("size")} label={t("releaseConsole.ota.size")} value={release.size}
               detail={`${release.fileCount} ${t("releaseConsole.ota.files")}`} />
-            <Metric id="google-play-console.tabs.ota-releases-tab.metric.4" label={t("releaseConsole.ota.mandatory")}
+            <Metric id="google-play-console.tabs.ota-releases-tab.metric.4" instance={createUiInstanceId("mandatory")} label={t("releaseConsole.ota.mandatory")}
               value={t(release.mandatory ? "releaseConsole.common.yes" : "releaseConsole.common.no")} />
           </div>
           <section {...uiAttributes({ uid: "google-play-console.tabs.ota-releases-tab.section.8-JC5sCg", id: "google-play-console.tabs.ota-releases-tab.section.8" })} id="google-play-console.tabs.ota-releases-tab.section.2" className="flex flex-wrap items-end gap-3 rounded-md border bg-surface p-4">
