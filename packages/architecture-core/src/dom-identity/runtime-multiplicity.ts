@@ -3,7 +3,7 @@ import { cwd } from 'node:process';
 import ts from 'typescript';
 
 import { findDescriptorLiterals } from './descriptor-literals';
-import { hostMultiplicity, isInsideIteratorCallback } from './repetition';
+import { hostMultiplicity, isInsideIteratorCallback, type HostMultiplicity } from './repetition';
 import { loadProjectTsx } from './analyzer';
 
 export interface RuntimeMultiplicityFinding {
@@ -74,17 +74,11 @@ function symbolKey(file: string, component: string): string {
   return `${file}#${component}`;
 }
 
-/**
- * Canonical multiplicity audit for inline UiRegistry descriptor sites.
- *
- * A descriptor needs a runtime instance when it is emitted directly from an
- * iterator callback or when its owning component/template can occur more than
- * once in one render graph. This function is package-owned so reporting and
- * architecture enforcement cannot drift apart.
- */
-export function runtimeMultiplicityReport(root = cwd()): RuntimeMultiplicityReport {
-  const sources = loadProjectTsx(root);
-  const multiplicity = hostMultiplicity(sources);
+/** Package-owned implementation shared by the architecture guard and CLI. */
+export function runtimeMultiplicityReportFromSources(
+  sources: ReadonlyMap<string, string>,
+  multiplicity: HostMultiplicity,
+): RuntimeMultiplicityReport {
   const findings: RuntimeMultiplicityFinding[] = [];
   let canonicalInlineDescriptors = 0;
   let directIteratorSites = 0;
@@ -133,4 +127,17 @@ export function runtimeMultiplicityReport(root = cwd()): RuntimeMultiplicityRepo
       (a, b) => a.file.localeCompare(b.file) || a.line - b.line || a.uid.localeCompare(b.uid),
     ),
   };
+}
+
+/**
+ * Canonical multiplicity audit for inline UiRegistry descriptor sites.
+ *
+ * A descriptor needs a runtime instance when it is emitted directly from an
+ * iterator callback or when its owning component/template can occur more than
+ * once in one render graph. This function is package-owned so reporting and
+ * architecture enforcement cannot drift apart.
+ */
+export function runtimeMultiplicityReport(root = cwd()): RuntimeMultiplicityReport {
+  const sources = loadProjectTsx(root);
+  return runtimeMultiplicityReportFromSources(sources, hostMultiplicity(sources));
 }
