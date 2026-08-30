@@ -15,7 +15,7 @@ on:
     paths-ignore:
       - ".agent-control/**"
       - ".github/workflows/local-agent-*.yml"
-      - "scripts/local-agent/**"
+      - "packages/local-agent-core/**"
       - "scripts/local-agent-*.ts"
       - "docs/07-mobile-and-release/local-agent-runner-pool.md"
 

@@ -126,7 +126,7 @@ Ordering that is declared and asserted before every run:
 - `server-build` before `static-build`; any static/native payload verification must depend on `static-build`.
 - Phase order supplies the rest: publish precedes every remote deployment, and every remote deployment precedes `main` verification and `smoke:deployed`.
 
-Run concurrently: `lint`, `typecheck`, `architecture:check`, `simulation:coverage`, the UiRegistry pending check, the production doctor, the Vercel account check, mirror verification and the function-size budget.
+Run concurrently: `lint`, `typecheck`, `architecture:check`, the production doctor, the Vercel account check, mirror verification and the function-size budget.
 
 Run alone: documentation generation, the full test gate, database preparation, both builds, the mirror sync, and both smoke gates — each writes tracked files, drives the database, or binds a port.
 

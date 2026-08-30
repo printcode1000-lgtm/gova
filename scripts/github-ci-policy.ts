@@ -1,8 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-
-import { CONTROL_PLANE_BRANCH_NAMESPACES } from "./local-agent/control-branch-namespaces";
-
+import { CONTROL_PLANE_BRANCH_NAMESPACES } from "@asol/local-agent-core";
 /**
  * Local GitHub CI policy.
  *
@@ -34,7 +32,7 @@ const LOCAL_WORKING_DIRECTORY = "working-directory: /home/hesham/gova";
 export const DEPLOY_CONTROL_PLANE_IGNORES = [
   ".agent-control/**",
   ".github/workflows/local-agent-*.yml",
-  "scripts/local-agent/**",
+  "packages/local-agent-core/**",
   "scripts/local-agent-*.ts",
   "docs/07-mobile-and-release/local-agent-runner-pool.md",
 ] as const;
@@ -78,6 +76,71 @@ const FORBIDDEN_COMMANDS = [
   "npm run ota",
 ] as const;
 
+/**
+ * The `run:` values of a workflow, split by YAML form.
+ *
+ * A single-line `run: npx tsx …` names one command, and the allowlists below are
+ * written in those terms. A block scalar — `run: |` followed by an indented
+ * script — is not a command at all; matching it with the same expression yields
+ * the literal `|`, which is in no allowlist and reported as a forbidden command.
+ * That is why every local agent workflow failed this policy: the three shell
+ * blocks they legitimately carry were each read as a command named `|`.
+ *
+ * So the two forms are separated and judged on their own terms: an inline
+ * command must be on the allowlist, while a block is a shell script and is held
+ * to the forbidden-command list instead.
+ */
+export function runValues(body: string): { inline: string[]; blocks: string[] } {
+  const lines = body.split(/\r?\n/);
+  const inline: string[] = [];
+  const blocks: string[] = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const match = /^(\s*)(?:-\s*)?run:[ \t]*(.*)$/.exec(lines[index]!);
+    if (!match) continue;
+    const value = match[2]!.trim();
+    if (!/^[|>][+-]?$/.test(value)) {
+      if (value) inline.push(value.replace(/^['"]|['"]$/g, ""));
+      continue;
+    }
+    // A block scalar owns every following line indented deeper than the key.
+    const keyIndent = match[1]!.length;
+    const collected: string[] = [];
+    for (let cursor = index + 1; cursor < lines.length; cursor += 1) {
+      const line = lines[cursor]!;
+      if (line.trim() === "") {
+        collected.push("");
+        continue;
+      }
+      const indent = line.length - line.trimStart().length;
+      if (indent <= keyIndent) break;
+      collected.push(line.trim());
+    }
+    blocks.push(collected.join("\n"));
+  }
+  return { inline, blocks };
+}
+
+/**
+ * Judge a workflow's `run:` values: inline commands against the allowlist, shell
+ * blocks against the commands no local agent workflow may ever invoke.
+ */
+function runCommandViolations(body: string, allowed: ReadonlySet<string>, label: string): string[] {
+  const errors: string[] = [];
+  const { inline, blocks } = runValues(body);
+  for (const command of inline) {
+    if (!allowed.has(command)) errors.push(`${label} run command is not allowed: ${command}`);
+  }
+  for (const block of blocks) {
+    for (const forbidden of FORBIDDEN_COMMANDS) {
+      if (block.includes(forbidden)) {
+        errors.push(`${label} shell block must not run ${forbidden}.`);
+      }
+    }
+  }
+  return errors;
+}
+
 const ALLOWED_DOCS_RUN_COMMANDS = new Set([
   "npm install -g npm@11",
   "npm ci --ignore-scripts",
@@ -117,7 +180,7 @@ export const DOCS_WORKFLOW_PATH_FILTERS = [
   "scripts/architecture-check.ts",
   "scripts/runtime/**",
   "scripts/github-ci-policy.ts",
-  "scripts/local-agent/**",
+  "packages/local-agent-core/**",
   "scripts/local-agent-*.ts",
   "package.json",
   "package-lock.json",
@@ -413,12 +476,7 @@ export function localAgentWorkflowViolations(source: string): string[] {
     errors.push("Local agent workflow must not require patch_base64; shell-only jobs are valid.");
   }
   if (body.includes("${{ secrets.")) errors.push("Local agent workflow must not consume GitHub secrets.");
-  for (const match of body.matchAll(/^\s*(?:-\s*)?run:[ \t]+(.+?)[ \t]*$/gm)) {
-    const command = match[1]!.replace(/^['"]|['"]$/g, "");
-    if (!ALLOWED_LOCAL_AGENT_RUN_COMMANDS.has(command)) {
-      errors.push(`Local agent workflow run command is not allowed: ${command}`);
-    }
-  }
+  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_RUN_COMMANDS, "Local agent workflow"));
   const jobIds = docsWorkflowJobIds(body);
   const allowedJobIds = ["apply-and-push", "apply-and-push-branch"];
   if (jobIds.length !== 1 || !allowedJobIds.includes(jobIds[0]!)) {
@@ -453,12 +511,7 @@ export function localAgentStatusWorkflowViolations(source: string): string[] {
   if (!body.includes("npx tsx scripts/local-agent-status.ts")) {
     errors.push("Local agent status workflow must delegate reads to scripts/local-agent-status.ts.");
   }
-  for (const match of body.matchAll(/^\s*(?:-\s*)?run:[ \t]+(.+?)[ \t]*$/gm)) {
-    const command = match[1]!.replace(/^['"]|['"]$/g, "");
-    if (!ALLOWED_LOCAL_AGENT_STATUS_RUN_COMMANDS.has(command)) {
-      errors.push(`Local agent status workflow run command is not allowed: ${command}`);
-    }
-  }
+  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_STATUS_RUN_COMMANDS, "Local agent status workflow"));
   const jobIds = docsWorkflowJobIds(body);
   if (jobIds.length !== 1 || jobIds[0] !== "local-status") {
     errors.push(`Local agent status workflow must contain exactly one job named local-status. Found: ${jobIds.join(", ") || "(none)"}.`);
@@ -492,12 +545,7 @@ export function localAgentInspectWorkflowViolations(source: string): string[] {
     errors.push("Local agent inspect workflow must delegate reads to scripts/local-agent-inspect.ts.");
   }
   if (body.includes("${{ secrets.")) errors.push("Local agent inspect workflow must not consume GitHub secrets.");
-  for (const match of body.matchAll(/^\s*(?:-\s*)?run:[ \t]+(.+?)[ \t]*$/gm)) {
-    const command = match[1]!.replace(/^['"]|['"]$/g, "");
-    if (!ALLOWED_LOCAL_AGENT_INSPECT_RUN_COMMANDS.has(command)) {
-      errors.push(`Local agent inspect workflow run command is not allowed: ${command}`);
-    }
-  }
+  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_INSPECT_RUN_COMMANDS, "Local agent inspect workflow"));
   const jobIds = docsWorkflowJobIds(body);
   if (jobIds.length !== 1 || jobIds[0] !== "inspect") {
     errors.push(`Local agent inspect workflow must contain exactly one job named inspect. Found: ${jobIds.join(", ") || "(none)"}.`);
@@ -531,12 +579,7 @@ export function localAgentCoordinationWorkflowViolations(source: string): string
   if (!body.includes("npx tsx scripts/local-agent-coordination.ts")) {
     errors.push("Local agent coordination workflow must delegate to scripts/local-agent-coordination.ts.");
   }
-  for (const match of body.matchAll(/^\s*(?:-\s*)?run:[ \t]+(.+?)[ \t]*$/gm)) {
-    const command = match[1]!.replace(/^['"]|['"]$/g, "");
-    if (!ALLOWED_LOCAL_AGENT_COORDINATION_RUN_COMMANDS.has(command)) {
-      errors.push(`Local agent coordination workflow run command is not allowed: ${command}`);
-    }
-  }
+  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_COORDINATION_RUN_COMMANDS, "Local agent coordination workflow"));
   const jobIds = docsWorkflowJobIds(body);
   if (jobIds.length !== 1 || jobIds[0] !== "coordinate") {
     errors.push(`Local agent coordination workflow must contain exactly one job named coordinate. Found: ${jobIds.join(", ") || "(none)"}.`);
@@ -575,12 +618,7 @@ export function localAgentGatewayWorkflowViolations(source: string): string[] {
   if (!body.includes("npx tsx scripts/local-agent-gateway.ts")) {
     errors.push("Dispatch gateway workflow must delegate validation and dispatch to scripts/local-agent-gateway.ts.");
   }
-  for (const match of body.matchAll(/^\s*(?:-\s*)?run:[ \t]+(.+?)[ \t]*$/gm)) {
-    const command = match[1]!.replace(/^['"]|['"]$/g, "");
-    if (!ALLOWED_LOCAL_AGENT_GATEWAY_RUN_COMMANDS.has(command)) {
-      errors.push(`Dispatch gateway workflow run command is not allowed: ${command}`);
-    }
-  }
+  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_GATEWAY_RUN_COMMANDS, "Local agent gateway workflow"));
   const jobIds = docsWorkflowJobIds(body);
   if (jobIds.length !== 1 || jobIds[0] !== "gateway") {
     errors.push(`Dispatch gateway workflow must contain exactly one job named gateway. Found: ${jobIds.join(", ") || "(none)"}.`);
@@ -650,7 +688,7 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
   // `main` stays the only project branch, but the control plane needs three
   // namespaces to be creatable. The ruleset script and the pre-push hook must
   // agree with that list exactly — no more, no less.
-  const namespacesPath = path.join(root, "scripts", "local-agent", "control-branch-namespaces.ts");
+  const namespacesPath = path.join(root, "packages", "local-agent-core", "src", "control-branch-namespaces.ts");
   if (existsSync(namespacesPath)) {
     const source = readFileSync(namespacesPath, "utf8");
     const declared = [...source.matchAll(/"(refs\/heads\/[^"]+)"/g)].map((match) => match[1]!);
@@ -658,7 +696,7 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
       errors.push(`Control-plane branch namespaces changed unexpectedly: ${declared.join(", ") || "(none)"}.`);
     }
   } else {
-    errors.push("Missing scripts/local-agent/control-branch-namespaces.ts.");
+    errors.push("Missing packages/local-agent-core/src/control-branch-namespaces.ts.");
   }
   const blockBranchesPath = path.join(root, "scripts", "block-branch-creation.ts");
   if (existsSync(blockBranchesPath)) {

@@ -9,7 +9,6 @@ import { Badge } from '@/shared/ui/badge';
 import { Checkbox } from '@/shared/ui/checkbox';
 import { cn } from '@/shared/utils';
 import { ChevronDown, ChevronRight, Tag } from 'lucide-react';
-import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 const SUBCATEGORY_KEYS: Record<string, string> = {
   'T-Shirts': 't_shirts',
@@ -58,21 +57,21 @@ export function CategoriesSection() {
   };
 
   return (
-    <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.3-I4h6iL", id: "onboarding.sections.categories-section.div.3" })} id="onboarding.sections.categories-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card ui={{ uid: "onboarding.sections.categories-section.card.2-rEAh9H", id: "onboarding.sections.categories-section.card.2" }} id="onboarding.sections.categories-section.card">
-        <CardHeader ui={{ uid: "onboarding.sections.categories-section.card-header.2-J3y8Ay", id: "onboarding.sections.categories-section.card-header.2" }} id="onboarding.sections.categories-section.card-header">
-          <CardTitle ui={{ uid: "onboarding.sections.categories-section.card-title.2-qNs4n7", id: "onboarding.sections.categories-section.card-title.2" }} id="onboarding.sections.categories-section.card-title" className="flex items-center gap-2">
+    <div id="onboarding.sections.categories-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.categories-section.card">
+        <CardHeader id="onboarding.sections.categories-section.card-header">
+          <CardTitle id="onboarding.sections.categories-section.card-title" className="flex items-center gap-2">
             <Tag id="onboarding.sections.categories-section.tag" className="h-5 w-5" />
             {t('onboarding.categories.title')}
           </CardTitle>
-          <CardDescription ui={{ uid: "onboarding.sections.categories-section.card-description.2-DgPI4w", id: "onboarding.sections.categories-section.card-description.2" }} id="onboarding.sections.categories-section.card-description">{t('onboarding.categories.description')}</CardDescription>
+          <CardDescription id="onboarding.sections.categories-section.card-description">{t('onboarding.categories.description')}</CardDescription>
         </CardHeader>
-        <CardContent ui={{ uid: "onboarding.sections.categories-section.card-content.2-1F2AVe", id: "onboarding.sections.categories-section.card-content.2" }} id="onboarding.sections.categories-section.card-content" className="space-y-4">
+        <CardContent id="onboarding.sections.categories-section.card-content" className="space-y-4">
           {errors.categories && (
-            <p {...uiAttributes({ uid: "onboarding.sections.categories-section.p.2-713ZFM", id: "onboarding.sections.categories-section.p.2" })} id="onboarding.sections.categories-section.p" className="text-sm text-destructive">{errors.categories}</p>
+            <p id="onboarding.sections.categories-section.p" className="text-sm text-destructive">{errors.categories}</p>
           )}
 
-          <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.4-vkqO4H", id: "onboarding.sections.categories-section.div.4" })} id="onboarding.sections.categories-section.div.2" className="space-y-2">
+          <div id="onboarding.sections.categories-section.div.2" className="space-y-2">
             {categories.selectedCategories.map((category) => {
               const isExpanded = expandedCategories.includes(category.id);
               const categoryConfig = constants.fashionCategories.find(
@@ -82,7 +81,7 @@ export function CategoriesSection() {
 
               return (
                 <div
-                  key={category.id} {...uiAttributes({ uid: "onboarding.sections.categories-section.div.5-zYM2qK", id: "onboarding.sections.categories-section.div.5" , instance: createOpaqueUiInstanceId("iter-4b31ae477b", String(category.id))})}
+                  key={category.id}
                   className={cn(
                     'rounded-lg border transition-all',
                     category.isSelected
@@ -90,21 +89,21 @@ export function CategoriesSection() {
                       : 'border-border',
                   )}
                 >
-                  <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.6-B2O2TC", id: "onboarding.sections.categories-section.div.6" , instance: createOpaqueUiInstanceId("iter-2074e26c9d", String(category.id))})} className="flex items-center gap-3 p-4">
-                    <Checkbox ui={{ uid: "onboarding.sections.categories-section.checkbox-25XC95", id: "onboarding.sections.categories-section.checkbox" , instance: createOpaqueUiInstanceId("iter-df184776f6", String(category.id))}}
+                  <div className="flex items-center gap-3 p-4">
+                    <Checkbox
                       checked={category.isSelected}
                       onCheckedChange={() => toggleCategory(category.id)}
                     />
-                    <span {...uiAttributes({ uid: "onboarding.sections.categories-section.span-X25IMP", id: "onboarding.sections.categories-section.span" , instance: createOpaqueUiInstanceId("iter-127b3f8fd4", String(category.id))})} className="flex-1 font-medium">
+                    <span className="flex-1 font-medium">
                       {t(`onboarding.constants.fashionCategories.${category.id}`)}
                     </span>
                     {category.isSelected && subcategories.length > 0 && (
-                      <button {...uiAttributes({ uid: "onboarding.sections.categories-section.button-53HTaC", id: "onboarding.sections.categories-section.button" , instance: createOpaqueUiInstanceId("iter-627af8d49f", String(category.id))})}
+                      <button
                         type="button"
                         onClick={() => toggleExpand(category.id)}
                         className="flex items-center gap-1 text-sm text-muted-foreground"
                       >
-                        <Badge ui={{ uid: "onboarding.sections.categories-section.badge-4pXOWF", id: "onboarding.sections.categories-section.badge" , instance: createOpaqueUiInstanceId("iter-c3788b2ef3", String(category.id))}} variant="secondary" className="mr-2">
+                        <Badge variant="secondary" className="mr-2">
                           {t('onboarding.categories.subcategories', { count: subcategories.length })}
                         </Badge>
                         {isExpanded ? (
@@ -117,10 +116,10 @@ export function CategoriesSection() {
                   </div>
 
                   {category.isSelected && isExpanded && subcategories.length > 0 && (
-                    <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.7-Yo4Bat", id: "onboarding.sections.categories-section.div.7" , instance: createOpaqueUiInstanceId("iter-f0c8fe7593", String(category.id))})} className="px-4 pb-4 pt-0 animate-in slide-in-from-top-2 duration-200">
-                      <div {...uiAttributes({ uid: "onboarding.sections.categories-section.div.8-DtrG94", id: "onboarding.sections.categories-section.div.8" , instance: createOpaqueUiInstanceId("iter-56509417dc", String(category.id))})} className="flex flex-wrap gap-2 pl-7">
+                    <div className="px-4 pb-4 pt-0 animate-in slide-in-from-top-2 duration-200">
+                      <div className="flex flex-wrap gap-2 pl-7">
                         {subcategories.map((sub) => (
-                          <Badge key={sub} ui={{ uid: "onboarding.sections.categories-section.badge.2-J2Q5Bc", id: "onboarding.sections.categories-section.badge.2" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-8bad8ad05a", String(sub)), createOpaqueUiInstanceId("iter-e4f5e8a6c5", String(sub)))}} variant="outline">
+                          <Badge key={sub} variant="outline">
                             {t(
                               `onboarding.constants.fashionCategories.${category.id}.subcategories.${subcategoryKey(sub)}`,
                             )}

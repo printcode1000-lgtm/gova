@@ -26,7 +26,6 @@ import {
   isOverlayChromeTarget,
 } from "@/shared/ui/overlay-chrome";
 import { OverlayChromeBranch } from "@/shared/ui/overlay-chrome-branch";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 const REFRESH_MS = 20_000;
 const LOGS_ROUTE = "/super-admin/logs";
@@ -183,7 +182,6 @@ export function SuperAdminErrorFloatingButton() {
     return (
       <OverlayChromeBranch id="system-logs.super-admin-error-floating-button.overlay-chrome-branch" className="contents">
         <button
-          {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.button.7-pB6cMV", id: "system-logs.super-admin-error-floating-button.button.7" })}
           type="button"
           onClick={() => setExpanded(true)}
           className={
@@ -195,7 +193,7 @@ export function SuperAdminErrorFloatingButton() {
           aria-label={`أخطاء النظام: ${errorCount} — عرض الأدوات`}
           {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
         >
-          <span {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.span.7-Ga4UNa", id: "system-logs.super-admin-error-floating-button.span.7" })} id="system-logs.super-admin-error-floating-button.span" className="tabular-nums">{errorCount}</span>
+          <span id="system-logs.super-admin-error-floating-button.span" className="tabular-nums">{errorCount}</span>
         </button>
       </OverlayChromeBranch>
     );
@@ -204,7 +202,6 @@ export function SuperAdminErrorFloatingButton() {
   return (
     <OverlayChromeBranch id="system-logs.super-admin-error-floating-button.overlay-chrome-branch.2" className="contents">
       <div
-        {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.div-n64bML", id: "system-logs.super-admin-error-floating-button.div" })}
         ref={toolbarRef}
         className={
           FLOATING_POSITION_CLASS +
@@ -214,7 +211,7 @@ export function SuperAdminErrorFloatingButton() {
         aria-label={`أخطاء النظام: ${errorCount}`}
         {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
       >
-        <button {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.button.4-IOTr8W", id: "system-logs.super-admin-error-floating-button.button.4" })} id="system-logs.super-admin-error-floating-button.button"
+        <button id="system-logs.super-admin-error-floating-button.button"
           type="button"
           onClick={() => {
             setExpanded(false);
@@ -223,15 +220,15 @@ export function SuperAdminErrorFloatingButton() {
           className="flex items-center gap-1 rounded-full px-2 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
           aria-label={`فتح سجل الأخطاء: ${errorCount}`}
         >
-          <span {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.span.8-4OJj17", id: "system-logs.super-admin-error-floating-button.span.8" })} id="system-logs.super-admin-error-floating-button.span.2" className="relative flex h-4 w-4 shrink-0 items-center justify-center">
+          <span id="system-logs.super-admin-error-floating-button.span.2" className="relative flex h-4 w-4 shrink-0 items-center justify-center">
             <Bug id="system-logs.super-admin-error-floating-button.bug" className="h-4 w-4" />
-            <span {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.span.9-Ey5YHK", id: "system-logs.super-admin-error-floating-button.span.9" })} id="system-logs.super-admin-error-floating-button.span.3" className="absolute -end-0.5 -top-0.5 h-2 w-2 rounded-full bg-white ring-1 ring-error" />
+            <span id="system-logs.super-admin-error-floating-button.span.3" className="absolute -end-0.5 -top-0.5 h-2 w-2 rounded-full bg-white ring-1 ring-error" />
           </span>
-          <span {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.span.10-9ZPVps", id: "system-logs.super-admin-error-floating-button.span.10" })} id="system-logs.super-admin-error-floating-button.span.4" className="tabular-nums">{errorCount}</span>
+          <span id="system-logs.super-admin-error-floating-button.span.4" className="tabular-nums">{errorCount}</span>
           <ChevronLeft id="system-logs.super-admin-error-floating-button.chevron-left" className="h-3.5 w-3.5 shrink-0" />
         </button>
-        <span {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.span.11-9AsAuy", id: "system-logs.super-admin-error-floating-button.span.11" })} id="system-logs.super-admin-error-floating-button.span.5" className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
-        <button {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.button.5-JGk3Ti", id: "system-logs.super-admin-error-floating-button.button.5" })} id="system-logs.super-admin-error-floating-button.button.2"
+        <span id="system-logs.super-admin-error-floating-button.span.5" className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
+        <button id="system-logs.super-admin-error-floating-button.button.2"
           type="button"
           onClick={() => void copyErrorLogs()}
           className="rounded-full px-1.5 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
@@ -245,8 +242,8 @@ export function SuperAdminErrorFloatingButton() {
             <ClipboardCopy id="system-logs.super-admin-error-floating-button.clipboard-copy" className="h-3.5 w-3.5 shrink-0" />
           )}
         </button>
-        <span {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.span.12-h1XO3t", id: "system-logs.super-admin-error-floating-button.span.12" })} id="system-logs.super-admin-error-floating-button.span.6" className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
-        <button {...uiAttributes({ uid: "system-logs.super-admin-error-floating-button.button.6-TMcZ2z", id: "system-logs.super-admin-error-floating-button.button.6" })} id="system-logs.super-admin-error-floating-button.button.3"
+        <span id="system-logs.super-admin-error-floating-button.span.6" className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
+        <button id="system-logs.super-admin-error-floating-button.button.3"
           type="button"
           onClick={stageClearAllLogs}
           className="rounded-full px-1.5 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"

@@ -43,7 +43,6 @@ import type { DbRow, OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 import { CustomRequestRow } from "./OrderDetailsPageContent.custom-request-row";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export function ShippingQuotePanel({ id,
   sellerOrderId,
@@ -85,15 +84,15 @@ export function ShippingQuotePanel({ id,
   };
 
   return (
-    <section {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.section-F5Ft98", id: "orders.order-details.order-details-page-content.shipping-quotes.section" })} id={id} className="mt-4 overflow-hidden rounded-xl border border-primary/25 bg-primary/5">
-      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.div-y9TGg2", id: "orders.order-details.order-details-page-content.shipping-quotes.div" })} className="flex flex-wrap items-center justify-between gap-2 border-b border-primary/15 px-3 py-3">
-        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.div.2-Djl8wQ", id: "orders.order-details.order-details-page-content.shipping-quotes.div.2" })} className="flex items-center gap-2">
-          <span {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.span-S597Iz", id: "orders.order-details.order-details-page-content.shipping-quotes.span" })} className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary">
+    <section id={id} className="mt-4 overflow-hidden rounded-xl border border-primary/25 bg-primary/5">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-primary/15 px-3 py-3">
+        <div className="flex items-center gap-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary">
             <MapPin className="h-5 w-5" />
           </span>
-          <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.div.3-1NEX4P", id: "orders.order-details.order-details-page-content.shipping-quotes.div.3" })}>
-            <h3 {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.h3-2T1zxJ", id: "orders.order-details.order-details-page-content.shipping-quotes.h3" })} className="text-sm font-bold">عرض الشحن حسب المكان</h3>
-            <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.p-10HJt0", id: "orders.order-details.order-details-page-content.shipping-quotes.p" })} className="text-xs text-muted-foreground">
+          <div>
+            <h3 className="text-sm font-bold">عرض الشحن حسب المكان</h3>
+            <p className="text-xs text-muted-foreground">
               الإصدار {String(latest.version ?? 1)} ·{" "}
               {statusText[status] ?? status}
             </p>
@@ -109,7 +108,7 @@ export function ShippingQuotePanel({ id,
       </div>
 
       {status !== "requested" ? (
-        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.div.4-oUq8jm", id: "orders.order-details.order-details-page-content.shipping-quotes.div.4" })} className="grid gap-2 px-3 py-3 text-sm sm:grid-cols-3">
+        <div className="grid gap-2 px-3 py-3 text-sm sm:grid-cols-3">
           <QuoteAmount
             label="الشحن الأساسي"
             value={latest.base_shipping_price}
@@ -127,23 +126,23 @@ export function ShippingQuotePanel({ id,
             emphasized
           />
           {latest.notes ? (
-            <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.p.2-Jg8H17", id: "orders.order-details.order-details-page-content.shipping-quotes.p.2" })} className="rounded-lg bg-surface px-3 py-2 text-xs leading-5 text-muted-foreground sm:col-span-3">
+            <p className="rounded-lg bg-surface px-3 py-2 text-xs leading-5 text-muted-foreground sm:col-span-3">
               {String(latest.notes)}
             </p>
           ) : null}
         </div>
       ) : (
-        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.p.3-AiC0dZ", id: "orders.order-details.order-details-page-content.shipping-quotes.p.3" })} className="px-3 py-3 text-sm leading-6 text-muted-foreground">
+        <p className="px-3 py-3 text-sm leading-6 text-muted-foreground">
           تُراجع وجهة المشتري أولًا، ثم تُرسل قيمة الشحن. لا تُضاف القيمة إلى
           إجمالي الطلب إلا بعد موافقة المشتري.
         </p>
       )}
 
       {canSend ? (
-        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.div.5-G016iE", id: "orders.order-details.order-details-page-content.shipping-quotes.div.5" })} className="grid gap-3 border-t border-primary/15 px-3 py-3 sm:grid-cols-[180px_1fr_auto] sm:items-end">
-          <label {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.label-6V60fU", id: "orders.order-details.order-details-page-content.shipping-quotes.label" })} className="space-y-1 text-xs font-semibold">
+        <div className="grid gap-3 border-t border-primary/15 px-3 py-3 sm:grid-cols-[180px_1fr_auto] sm:items-end">
+          <label className="space-y-1 text-xs font-semibold">
             قيمة الشحن الأساسية بالجنيه
-            <Input ui={{ uid: "orders.shipping-quote.amount-U6PMk0", id: "orders.shipping-quote.amount", kind: "field", part: "quote" }}
+            <Input
               type="number"
               min={0}
               step="0.01"
@@ -153,9 +152,9 @@ export function ShippingQuotePanel({ id,
               placeholder="0.00"
             />
           </label>
-          <label {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.label.2-0TT3IL", id: "orders.order-details.order-details-page-content.shipping-quotes.label.2" })} className="space-y-1 text-xs font-semibold">
+          <label className="space-y-1 text-xs font-semibold">
             توضيح اختياري للمشتري
-            <Textarea ui={{ uid: "orders.shipping-quote.notes-0CoZxW", id: "orders.shipping-quote.notes", kind: "field", part: "quote" }}
+            <Textarea
               value={notes}
               onChange={(event) => setNotes(event.target.value)}
               maxLength={1000}
@@ -163,7 +162,7 @@ export function ShippingQuotePanel({ id,
               placeholder="المسافة أو طريقة التوصيل أو مدة الوصول"
             />
           </label>
-          <button {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.button-dsId5P", id: "orders.order-details.order-details-page-content.shipping-quotes.button" })}
+          <button
             type="button"
             disabled={!validAmount || sending || Boolean(busyAction)}
             onClick={() =>
@@ -186,7 +185,7 @@ export function ShippingQuotePanel({ id,
       ) : null}
 
       {canRespond ? (
-        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.div.6-aT8LP9", id: "orders.order-details.order-details-page-content.shipping-quotes.div.6" })} className="flex flex-wrap gap-2 border-t border-primary/15 px-3 py-3">
+        <div className="flex flex-wrap gap-2 border-t border-primary/15 px-3 py-3">
           <OrderActionButton
             action="buyer_accept_shipping_quote"
             busyAction={busyAction}
@@ -226,11 +225,11 @@ export function QuoteAmount({ id,
   emphasized?: boolean;
 } & { id?: string }) {
   return (
-    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.div.7-WZL7Hp", id: "orders.order-details.order-details-page-content.shipping-quotes.div.7" })} id={id}
+    <div id={id}
       className={`rounded-lg bg-surface px-3 py-2 ${emphasized ? "ring-1 ring-primary/30" : ""}`}
     >
-      <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.p.4-UMO1Mk", id: "orders.order-details.order-details-page-content.shipping-quotes.p.4" })} className="text-xs text-muted-foreground">{label}</p>
-      <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipping-quotes.p.5-RAIoW8", id: "orders.order-details.order-details-page-content.shipping-quotes.p.5" })}
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p
         className={`mt-1 ${emphasized ? "font-bold text-primary" : "font-semibold"}`}
       >
         {formatMoney(value, currency)}

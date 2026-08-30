@@ -3,7 +3,7 @@
 #   cloud agent -> git push agent-request/* -> this job -> workflow_dispatch -> local runner
 #
 # The request document is validated against the closed contract in
-# scripts/local-agent/request-contract.ts before anything is dispatched, and the
+# packages/local-agent-core/src/request-contract.ts before anything is dispatched, and the
 # request branch is deleted once processed. Nothing here lands on main, so
 # coordination traffic never reaches the branch whose pushes deploy production.
 name: local-agent-gateway

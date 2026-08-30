@@ -1,14 +1,6 @@
 import { existsSync, readdirSync, rmSync, statSync } from "node:fs";
 import path from "node:path";
-
-import { listAgents } from "./local-agent/agent-registry";
-import { gitSoft } from "./local-agent/git";
-import { listJsonFiles } from "./local-agent/json-store";
-import { recoverStaleLocks } from "./local-agent/lock-store";
-import { listOperations, reconcileOrphanedOperations } from "./local-agent/operation-log";
-import { agentsDir, inspectLogsDir, messagesDir, worktreesDir } from "./local-agent/paths";
-import { MAIN_WORKTREE_SLUG, pruneWorktrees, removeWorktree, worktreeSlug } from "./local-agent/worktree";
-
+import { agentsDir, gitSoft, inspectLogsDir, isOpen, listAgents, listJsonFiles, listOperations, MAIN_WORKTREE_SLUG, messagesDir, pruneWorktrees, reconcileOrphanedOperations, recoverStaleLocks, removeWorktree, worktreesDir, worktreeSlug } from "@asol/local-agent-core";
 /**
  * Reclaim what finished jobs left behind.
  *
@@ -62,7 +54,7 @@ function pruneStaleAgentWorktrees(dryRun: boolean): string[] {
   // Waiting out the retention window would keep a full checkout per killed job on
   // disk, which is exactly the pressure that killed them.
   const runningPids = new Set(
-    listOperations(200).filter((operation) => operation.status === "running").map((operation) => operation.pid),
+    listOperations(200).filter((operation) => isOpen(operation.status)).map((operation) => operation.pid),
   );
   const root = worktreesDir();
   if (!existsSync(root)) return removed;
@@ -78,7 +70,7 @@ function pruneStaleAgentWorktrees(dryRun: boolean): string[] {
         operation.targetMode === "branch" &&
         worktreeSlug("branch", operation.agentId, operation.requestId ?? operation.runId) === name,
     );
-    const finished = owningOperation !== undefined && owningOperation.status !== "running";
+    const finished = owningOperation !== undefined && !isOpen(owningOperation.status);
     if (!finished) {
       if ([...live].some((agentId) => name === agentId || name.startsWith(`${agentId}-`))) continue;
       if (!olderThan(path.join(root, name), RETENTION_MS)) continue;

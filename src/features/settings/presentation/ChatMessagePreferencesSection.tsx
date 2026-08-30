@@ -2,7 +2,6 @@
 
 import { SettingsToggleRow } from "./SettingsToggleRow";
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 /**
  * The account's chat intake preferences: who may start a conversation from a
@@ -14,8 +13,8 @@ export function ChatMessagePreferencesSection({
   state: NotificationDeviceSettingsCardState;
 }) {
   return (
-    <div {...uiAttributes({ uid: "settings.chat-message-preferences-section.div.2-H00Yqd", id: "settings.chat-message-preferences-section.div.2" })} id="settings.chat-message-preferences-section.div" className="grid gap-3">
-      <SettingsToggleRow ui={{ uid: "settings.chat-message-preferences-section.settings-toggle-row.3-gXMUG7", id: "settings.chat-message-preferences-section.settings-toggle-row.3" }} id="settings.chat-message-preferences-section.settings-toggle-row"
+    <div id="settings.chat-message-preferences-section.div" className="grid gap-3">
+      <SettingsToggleRow id="settings.chat-message-preferences-section.settings-toggle-row"
         title={state.t("notifications.deviceCard.specialtyRequestsTitle")}
         description={state.t(
           "notifications.deviceCard.specialtyRequestsDescription",
@@ -24,7 +23,7 @@ export function ChatMessagePreferencesSection({
         disabled={!state.preferencesAvailable || state.specialtyPreferenceBusy}
         onChange={(enabled) => void state.updateSpecialtyRequests(enabled)}
       />
-      <SettingsToggleRow ui={{ uid: "settings.chat-message-preferences-section.settings-toggle-row.4-3R4XTT", id: "settings.chat-message-preferences-section.settings-toggle-row.4" }} id="settings.chat-message-preferences-section.settings-toggle-row.2"
+      <SettingsToggleRow id="settings.chat-message-preferences-section.settings-toggle-row.2"
         title={state.t("notifications.deviceCard.productConversationsTitle")}
         description={state.t(
           "notifications.deviceCard.productConversationsDescription",
@@ -34,7 +33,7 @@ export function ChatMessagePreferencesSection({
         onChange={(enabled) => void state.updateProductConversations(enabled)}
       />
       {state.preferencesAvailable ? null : (
-        <p {...uiAttributes({ uid: "settings.chat-message-preferences-section.p.2-pqH2Pq", id: "settings.chat-message-preferences-section.p.2" })} id="settings.chat-message-preferences-section.p" className="rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
+        <p id="settings.chat-message-preferences-section.p" className="rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
           {state.t("notifications.deviceCard.chatPreferencesUnavailable")}
         </p>
       )}

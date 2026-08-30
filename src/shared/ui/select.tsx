@@ -5,9 +5,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/shared/utils';
-import { createUiSubpartInstanceId, type UiDescriptor, uiAttributes } from '@asol/ui-registry-core';
 
-import { uiPrimitiveAttributes } from './ui-primitive-attributes';
 
 const Select = SelectPrimitive.Root;
 
@@ -17,8 +15,8 @@ const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & { ui?: UiDescriptor }
->(({ className, children, disabled, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & { }
+>(({ className, children, disabled, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     disabled={disabled}
@@ -27,7 +25,6 @@ const SelectTrigger = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('select-trigger', ui, disabled ? 'disabled' : undefined)}
   >
     {children}
     <SelectPrimitive.Icon asChild>
@@ -39,8 +36,8 @@ SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton> & { ui?: UiDescriptor }
->(({ className, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton> & { }
+>(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollUpButton
     ref={ref}
     className={cn(
@@ -48,7 +45,6 @@ const SelectScrollUpButton = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('select-scroll-up-button', ui)}
   >
     <ChevronUp className="h-4 w-4" />
   </SelectPrimitive.ScrollUpButton>
@@ -57,8 +53,8 @@ SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
 
 const SelectScrollDownButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton> & { ui?: UiDescriptor }
->(({ className, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton> & { }
+>(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollDownButton
     ref={ref}
     className={cn(
@@ -66,7 +62,6 @@ const SelectScrollDownButton = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('select-scroll-down-button', ui)}
   >
     <ChevronDown className="h-4 w-4" />
   </SelectPrimitive.ScrollDownButton>
@@ -91,7 +86,6 @@ const SelectContent = React.forwardRef<
       {...props}
     >
       <SelectScrollUpButton
-        ui={{ uid: 'shared.ui.select.scroll-up-button-Xr4Ks9', id: 'shared.ui.select.scroll-up-button' }}
       />
       <SelectPrimitive.Viewport
         className={cn(
@@ -103,7 +97,6 @@ const SelectContent = React.forwardRef<
         {children}
       </SelectPrimitive.Viewport>
       <SelectScrollDownButton
-        ui={{ uid: 'shared.ui.select.scroll-down-button-Tn6Vp1', id: 'shared.ui.select.scroll-down-button' }}
       />
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
@@ -124,8 +117,8 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & { ui: UiDescriptor }
->(({ className, children, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & { }
+>(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
@@ -133,14 +126,8 @@ const SelectItem = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('select-item', ui)}
   >
     <span
-      {...uiAttributes({
-        uid: 'shared.select.span-P2XGV0',
-        id: 'shared.select.span',
-        instance: createUiSubpartInstanceId(ui.uid, ui.instance, 'indicator'),
-      })}
       className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center"
     >
       <SelectPrimitive.ItemIndicator>

@@ -9,10 +9,12 @@ Restart=always
 RestartSec=10
 KillSignal=SIGINT
 TimeoutStopSec=30
-# Keep one runaway job inside its own cgroup. Without this the machine's
-# out-of-memory killer resolves memory pressure across the whole session, which
-# takes down several unrelated jobs at once; MemoryHigh throttles the offender
-# instead, and MemoryMax stops it before it reaches that point.
+Slice=gova-runners.slice
+# Two bounds, and they answer different questions. The per-unit limits below keep
+# one runaway job inside its own cgroup. The slice bounds what the whole pool may
+# hold at once, which is what the kills were actually about: three ordinary jobs
+# adding up past the point where the machine's out-of-memory killer acts across
+# the entire session.
 MemoryHigh=3G
 MemoryMax=4G
 Environment=GOVA_LOCAL_WORKSPACE=/home/hesham/gova

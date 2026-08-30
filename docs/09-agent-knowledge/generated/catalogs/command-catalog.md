@@ -164,8 +164,6 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run services:build` | `Tooling` | 1 |  | 0 |
 | `npm run services:sync` | `Tooling` | 1 |  | 0 |
 | `npm run services:verify` | `Tooling` | 1 |  | 0 |
-| `npm run simulation:coverage` | `Tooling` | 3 |  | 0 |
-| `npm run simulation:discovery:update` | `Tooling` | 1 |  | 0 |
 | `npm run smoke:deployed` | `Tooling` | 1 |  | 0 |
 | `npm run smoke:production` | `Tooling` | 1 |  | 0 |
 | `npm run smoke:services` | `Tooling` | 1 |  | 0 |
@@ -215,6 +213,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:import-without-composition` | `Tooling` | 1 |  | 0 |
 | `npm run test:installation-bootstrap` | `Tooling` | 1 |  | 0 |
 | `npm run test:local-agent-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:local-agent-workflows` | `Tooling` | 1 |  | 0 |
 | `npm run test:map-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:marketplace-orders` | `Tooling` | 10 |  | 1 |
 | `npm run test:native-core` | `Tooling` | 1 |  | 0 |
@@ -267,21 +266,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:system-logs-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:trending-ribbon-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:turso-read-retry` | `Tooling` | 1 |  | 0 |
-| `npm run test:ui-registry-core` | `Tooling` | 14 |  | 0 |
 | `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run typecheck` | `Tooling` | 0 |  | 0 |
-| `npm run ui-registry:apply-pending` | `Tooling` | 1 |  | 2 |
-| `npm run ui-registry:component-bridge:check` | `Tooling` | 1 |  | 0 |
-| `npm run ui-registry:component-bridge:generate` | `Tooling` | 1 |  | 0 |
-| `npm run ui-registry:generated-catalog:check` | `Tooling` | 1 |  | 0 |
-| `npm run ui-registry:generated-catalog:generate` | `Tooling` | 1 |  | 0 |
-| `npm run ui-registry:pending:check` | `Tooling` | 1 |  | 1 |
-| `npm run ui-registry:simulation:generate` | `Tooling` | 1 |  | 0 |
-| `npm run ui-registry:simulation:report` | `Tooling` | 1 |  | 0 |
-| `npm run ui-registry:static-dom-ids:apply` | `Static out`, `Tooling` | 1 |  | 0 |
-| `npm run ui-registry:static-dom-ids:check` | `Static out`, `Tooling` | 1 |  | 0 |
-| `npm run ui-registry:uid-coverage:check` | `Tooling` | 1 |  | 0 |
-| `npm run ui-registry:uid-migration:apply` | `Tooling` | 1 |  | 0 |
 | `npm run validate-storage-profiles` | `Tooling` | 1 |  | 0 |
 | `npm run validate:app-versions` | `Tooling` | 1 |  | 0 |
 | `npm run validate:error-logging` | `Tooling` | 1 |  | 0 |

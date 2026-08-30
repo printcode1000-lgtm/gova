@@ -20,7 +20,6 @@ import {
   ProductReviewReplyDialog,
 } from "./product-reviews/ProductReviewDialogs";
 import { ProductReviewsSummary } from "./product-reviews/ProductReviewsSummary";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function ProductReviews({ id,
   productId,
@@ -242,12 +241,10 @@ export function ProductReviews({ id,
     targetEnabled;
   const average = result?.average ?? 0,
     total = result?.total ?? 0;
-  const instance = id ? createOpaqueUiInstanceId("reviews", id) : undefined;
   return (
-    <div {...uiAttributes({ uid: "product.product-reviews.div-kO8Dq0", id: "product.product-reviews.div", instance: instance })} id={id} className="min-w-0 space-y-5">
+    <div id={id} className="min-w-0 space-y-5">
       <ProductReviewsSummary
         id={id ? `${id}.summary` : "summary"}
-        instance={instance}
         average={average}
         total={total}
         canRate={canRate}
@@ -256,14 +253,14 @@ export function ProductReviews({ id,
         }
         onRate={() => openReview(result?.currentUserReview ?? null)}
       />
-      <section {...uiAttributes({ uid: "product.product-reviews.section-rT3DcR", id: "product.product-reviews.section", instance: instance })} ref={sectionRef} className="min-w-0 space-y-4">
-        <div {...uiAttributes({ uid: "product.product-reviews.div.2-9PHM59", id: "product.product-reviews.div.2", instance: instance })} className="flex min-w-0 flex-wrap items-center justify-between gap-2">
-          <h3 {...uiAttributes({ uid: "product.product-reviews.h3-QBpW8a", id: "product.product-reviews.h3", instance: instance })} className="flex min-w-0 items-center gap-2 break-words text-xl font-bold">
+      <section ref={sectionRef} className="min-w-0 space-y-4">
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+          <h3 className="flex min-w-0 items-center gap-2 break-words text-xl font-bold">
             <MessageSquare className="h-5 w-5" />
             تقييمات العملاء
           </h3>
           {result?.hasMore ? (
-            <button {...uiAttributes({ uid: "product.product-reviews.button-umTuG0", id: "product.product-reviews.button", instance: instance })}
+            <button
               type="button"
               onClick={() => load(result.reviews.length, true)}
               className="flex max-w-full items-center gap-1 break-words text-sm font-semibold text-primary"
@@ -273,59 +270,59 @@ export function ProductReviews({ id,
             </button>
           ) : null}
         </div>
-        <div {...uiAttributes({ uid: "product.product-reviews.div.3-RG1zFD", id: "product.product-reviews.div.3", instance: instance })} className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
-          <div {...uiAttributes({ uid: "product.product-reviews.div.4-C7m2Qp", id: "product.product-reviews.div.4", instance: instance })} className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0">
-            <strong {...uiAttributes({ uid: "product.product-reviews.strong-g6UoU9", id: "product.product-reviews.strong", instance: instance })} className="text-5xl">{average.toFixed(1)}</strong>
-            <Stars instance={instance} value={average} size="text-2xl" />
-            <p {...uiAttributes({ uid: "product.product-reviews.p-iLGm36", id: "product.product-reviews.p", instance: instance })} className="mt-2 break-words text-sm text-muted-foreground">
+        <div className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
+          <div className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0">
+            <strong className="text-5xl">{average.toFixed(1)}</strong>
+            <Stars value={average} size="text-2xl" />
+            <p className="mt-2 break-words text-sm text-muted-foreground">
               بناءً على {total} تقييم
             </p>
           </div>
-          <div {...uiAttributes({ uid: "product.product-reviews.div.5-fAm8iS", id: "product.product-reviews.div.5", instance: instance })} className="min-w-0 space-y-2">
+          <div className="min-w-0 space-y-2">
             {(result?.distribution ?? []).map((item) => (
               <div
-                key={item.rating} {...uiAttributes({ uid: "product.product-reviews.div.6-syXK9B", id: "product.product-reviews.div.6" , instance: createOpaqueUiInstanceId("iter-2912da4086", String(item.rating))})}
+                key={item.rating}
                 className="grid min-w-0 grid-cols-[52px_1fr_32px] items-center gap-2 text-sm"
               >
-                <span {...uiAttributes({ uid: "product.product-reviews.span-GWPJ4I", id: "product.product-reviews.span" , instance: createOpaqueUiInstanceId("iter-c325e30c07", String(item.rating))})}>{item.rating} نجوم</span>
-                <div {...uiAttributes({ uid: "product.product-reviews.div.7-M56nVV", id: "product.product-reviews.div.7" , instance: createOpaqueUiInstanceId("iter-b1d51b089d", String(item.rating))})} className="h-2 overflow-hidden rounded-full bg-muted">
-                  <div {...uiAttributes({ uid: "product.product-reviews.div.8-78EuYQ", id: "product.product-reviews.div.8" , instance: createOpaqueUiInstanceId("iter-d1872849da", String(item.rating))})}
+                <span>{item.rating} نجوم</span>
+                <div className="h-2 overflow-hidden rounded-full bg-muted">
+                  <div
                     className="h-full bg-amber-500"
                     style={{ width: `${item.percentage}%` }}
                   />
                 </div>
-                <span {...uiAttributes({ uid: "product.product-reviews.span.2-0uhcyI", id: "product.product-reviews.span.2" , instance: createOpaqueUiInstanceId("iter-2561be47bf", String(item.rating))})}>{item.count}</span>
+                <span>{item.count}</span>
               </div>
             ))}
           </div>
         </div>
-        <div {...uiAttributes({ uid: "product.product-reviews.div.9-5TaEB7", id: "product.product-reviews.div.9", instance: instance })} className="flex justify-end">
-          <select {...uiAttributes({ uid: "product.product-reviews.select-4RFBRH", id: "product.product-reviews.select", instance: instance })}
+        <div className="flex justify-end">
+          <select
             value={sort}
             onChange={(event) => setSort(event.target.value as ReviewSort)}
             className="asol-control asol-field-surface border border-input px-3"
           >
-            <option {...uiAttributes({ uid: "product.product-reviews.option-0eH4Cw", id: "product.product-reviews.option", instance: instance })} value="newest">الأحدث أولًا</option>
-            <option {...uiAttributes({ uid: "product.product-reviews.option.2-SVxj5E", id: "product.product-reviews.option.2", instance: instance })} value="highest">الأعلى تقييمًا</option>
-            <option {...uiAttributes({ uid: "product.product-reviews.option.3-Bke05N", id: "product.product-reviews.option.3", instance: instance })} value="lowest">الأدنى تقييمًا</option>
+            <option value="newest">الأحدث أولًا</option>
+            <option value="highest">الأعلى تقييمًا</option>
+            <option value="lowest">الأدنى تقييمًا</option>
           </select>
         </div>
         {loading && !result ? (
-          <p {...uiAttributes({ uid: "product.product-reviews.p.2-sssxG5", id: "product.product-reviews.p.2", instance: instance })} className="py-8 text-center">جارٍ التحميل…</p>
+          <p className="py-8 text-center">جارٍ التحميل…</p>
         ) : result?.reviews.length === 0 ? (
-          <p {...uiAttributes({ uid: "product.product-reviews.p.3-GXI6VN", id: "product.product-reviews.p.3", instance: instance })} className="rounded-2xl border bg-card p-8 text-center text-muted-foreground">
+          <p className="rounded-2xl border bg-card p-8 text-center text-muted-foreground">
             لا توجد مراجعات بعد.
           </p>
         ) : (
-          <div {...uiAttributes({ uid: "product.product-reviews.div.10-2DxS5b", id: "product.product-reviews.div.10", instance: instance })} className="min-w-0 space-y-3">
+          <div className="min-w-0 space-y-3">
             {result?.reviews.map((review) => (
               <article
-                key={review.id} {...uiAttributes({ uid: "product.product-reviews.article-Y6zctA", id: "product.product-reviews.article" , instance: createOpaqueUiInstanceId("iter-f555271633", String(review.id))})}
+                key={review.id}
                 className="min-w-0 rounded-2xl border bg-card p-4"
               >
-                <div {...uiAttributes({ uid: "product.product-reviews.div.11-XExs5f", id: "product.product-reviews.div.11" , instance: createOpaqueUiInstanceId("iter-1abd6a4554", String(review.id))})} className="flex min-w-0 gap-3">
+                <div className="flex min-w-0 gap-3">
                   {review.reviewerAvatarUrl ? (
-                    <span {...uiAttributes({ uid: "product.product-reviews.span.3-9cnOI1", id: "product.product-reviews.span.3" , instance: createOpaqueUiInstanceId("iter-a660c80509", String(review.id))})} className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full">
+                    <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full">
                       <Image
                         src={review.reviewerAvatarUrl}
                         alt={review.reviewerName}
@@ -336,35 +333,35 @@ export function ProductReviews({ id,
                       />
                     </span>
                   ) : (
-                    <div {...uiAttributes({ uid: "product.product-reviews.div.12-sf57Q5", id: "product.product-reviews.div.12" , instance: createOpaqueUiInstanceId("iter-e4ca535b73", String(review.id))})} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 font-bold text-primary">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 font-bold text-primary">
                       {review.reviewerName.slice(0, 1).toUpperCase()}
                     </div>
                   )}
-                  <div {...uiAttributes({ uid: "product.product-reviews.div.13-Tm1r7j", id: "product.product-reviews.div.13" , instance: createOpaqueUiInstanceId("iter-440e463623", String(review.id))})} className="min-w-0 flex-1">
-                    <div {...uiAttributes({ uid: "product.product-reviews.div.14-KPDva5", id: "product.product-reviews.div.14" , instance: createOpaqueUiInstanceId("iter-f87b03cda3", String(review.id))})} className="flex min-w-0 flex-wrap items-center gap-2">
-                      <strong {...uiAttributes({ uid: "product.product-reviews.strong.2-eAEA6b", id: "product.product-reviews.strong.2" , instance: createOpaqueUiInstanceId("iter-62d6f850de", String(review.id))})} className="min-w-0 break-words">{review.reviewerName}</strong>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
+                      <strong className="min-w-0 break-words">{review.reviewerName}</strong>
                       {review.verifiedPurchase ? (
-                        <span {...uiAttributes({ uid: "product.product-reviews.span.4-RvML4D", id: "product.product-reviews.span.4" , instance: createOpaqueUiInstanceId("iter-ca2733fe3e", String(review.id))})} className="max-w-full break-words rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
+                        <span className="max-w-full break-words rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
                           Verified Purchase
                         </span>
                       ) : null}
                     </div>
-                    <div {...uiAttributes({ uid: "product.product-reviews.div.15-KQvYJ5", id: "product.product-reviews.div.15" , instance: createOpaqueUiInstanceId("iter-3cea09cb23", String(review.id))})} className="flex min-w-0 flex-wrap items-center gap-2">
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
                       <Stars value={review.rating} />
-                      <span {...uiAttributes({ uid: "product.product-reviews.span.5-XwaNP5", id: "product.product-reviews.span.5" , instance: createOpaqueUiInstanceId("iter-08e2c8b107", String(review.id))})} className="text-xs text-muted-foreground">
+                      <span className="text-xs text-muted-foreground">
                         {relativeDate(review.createdAt)}
                       </span>
                     </div>
-                    <p {...uiAttributes({ uid: "product.product-reviews.p.4-6FIB7T", id: "product.product-reviews.p.4" , instance: createOpaqueUiInstanceId("iter-02c45c957a", String(review.id))})} className="mt-1 break-words text-sm text-muted-foreground">
+                    <p className="mt-1 break-words text-sm text-muted-foreground">
                       {productName}
                     </p>
                     {commentsEnabled && review.comment ? (
-                      <p {...uiAttributes({ uid: "product.product-reviews.p.5-8MtAG5", id: "product.product-reviews.p.5" , instance: createOpaqueUiInstanceId("iter-9fc94cd9ad", String(review.id))})} className="mt-3 whitespace-pre-wrap break-words">
+                      <p className="mt-3 whitespace-pre-wrap break-words">
                         {review.comment}
                       </p>
                     ) : null}
-                    <div {...uiAttributes({ uid: "product.product-reviews.div.16-8AtJYf", id: "product.product-reviews.div.16" , instance: createOpaqueUiInstanceId("iter-e0365fa01e", String(review.id))})} className="mt-3 flex min-w-0 flex-wrap gap-2 text-sm">
-                      <button {...uiAttributes({ uid: "product.product-reviews.button.2-ISIw8N", id: "product.product-reviews.button.2" , instance: createOpaqueUiInstanceId("iter-353d606653", String(review.id))})}
+                    <div className="mt-3 flex min-w-0 flex-wrap gap-2 text-sm">
+                      <button
                         type="button"
                         disabled={!isLoggedIn}
                         onClick={async () => {
@@ -392,14 +389,14 @@ export function ProductReviews({ id,
                       </button>
                       {session?.uid === review.uid ? (
                         <>
-                          <button {...uiAttributes({ uid: "product.product-reviews.button.3-pxo1P1", id: "product.product-reviews.button.3" , instance: createOpaqueUiInstanceId("iter-0d974da8fe", String(review.id))})}
+                          <button
                             type="button"
                             onClick={() => openReview(review)}
                             className="text-primary"
                           >
                             تعديل
                           </button>
-                          <button {...uiAttributes({ uid: "product.product-reviews.button.4-8NspUe", id: "product.product-reviews.button.4" , instance: createOpaqueUiInstanceId("iter-822512b831", String(review.id))})}
+                          <button
                             type="button"
                             onClick={() => stageReviewDelete(review.id)}
                             className="text-destructive"
@@ -409,7 +406,7 @@ export function ProductReviews({ id,
                         </>
                       ) : null}
                       {isSeller ? (
-                        <button {...uiAttributes({ uid: "product.product-reviews.button.5-iQa4E5", id: "product.product-reviews.button.5" , instance: createOpaqueUiInstanceId("iter-87d8bdb82a", String(review.id))})}
+                        <button
                           type="button"
                           onClick={() => {
                             setReplyReview(review);
@@ -422,11 +419,11 @@ export function ProductReviews({ id,
                       ) : null}
                     </div>
                     {review.reply ? (
-                      <div {...uiAttributes({ uid: "product.product-reviews.div.17-0wWToo", id: "product.product-reviews.div.17" , instance: createOpaqueUiInstanceId("iter-2636d808e4", String(review.id))})} className="mt-3 min-w-0 rounded-xl bg-muted/50 p-3">
-                        <strong {...uiAttributes({ uid: "product.product-reviews.strong.3-1Lhfb7", id: "product.product-reviews.strong.3" , instance: createOpaqueUiInstanceId("iter-30575235b4", String(review.id))})} className="break-words text-sm">رد البائع</strong>
-                        <p {...uiAttributes({ uid: "product.product-reviews.p.6-s6UdGN", id: "product.product-reviews.p.6" , instance: createOpaqueUiInstanceId("iter-b468ffb040", String(review.id))})} className="mt-1 whitespace-pre-wrap break-words">{review.reply.text}</p>
+                      <div className="mt-3 min-w-0 rounded-xl bg-muted/50 p-3">
+                        <strong className="break-words text-sm">رد البائع</strong>
+                        <p className="mt-1 whitespace-pre-wrap break-words">{review.reply.text}</p>
                         {isSeller ? (
-                          <button {...uiAttributes({ uid: "product.product-reviews.button.6-P2G64U", id: "product.product-reviews.button.6" , instance: createOpaqueUiInstanceId("iter-f0ab89e173", String(review.id))})}
+                          <button
                             type="button"
                             onClick={() => stageReplyDelete(review.id)}
                             className="mt-2 text-sm text-destructive"
@@ -443,7 +440,7 @@ export function ProductReviews({ id,
           </div>
         )}
         {result?.hasMore ? (
-          <button {...uiAttributes({ uid: "product.product-reviews.button.7-tA8BeO", id: "product.product-reviews.button.7", instance: instance })}
+          <button
             type="button"
             disabled={loading}
             onClick={() => load(result.reviews.length, true)}
@@ -456,7 +453,6 @@ export function ProductReviews({ id,
       {modal ? (
         <ProductReviewDialog
           id={id ? `${id}.review-dialog` : "review-dialog"}
-          instance={instance}
           comment={comment}
           commentsEnabled={commentsEnabled}
           editing={editing}
@@ -469,7 +465,6 @@ export function ProductReviews({ id,
       {replyReview ? (
         <ProductReviewReplyDialog
           id={id ? `${id}.reply-dialog` : "reply-dialog"}
-          instance={instance}
           replyText={replyText}
           onClose={() => setReplyReview(null)}
           onReplyTextChange={changeReplyText}

@@ -6,10 +6,7 @@ import { Check, ChevronRight, Circle } from 'lucide-react';
 
 import { cn } from '@/shared/utils';
 import { preventDismissForOverlayChrome } from '@/shared/ui/overlay-chrome';
-import { type UiDescriptor } from '@asol/ui-registry-core';
 
-import { uiPrimitiveAttributes } from './ui-primitive-attributes';
-import { uiAttributes } from "@asol/ui-registry-core";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -93,9 +90,8 @@ const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
     inset?: boolean;
-    ui?: UiDescriptor;
   }
->(({ className, inset, ui, ...props }, ref) => (
+>(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
@@ -104,7 +100,6 @@ const DropdownMenuItem = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('dropdown-menu-item', ui)}
   />
 ));
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
@@ -122,7 +117,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     checked={checked}
     {...props}
   >
-    <span {...uiAttributes({ uid: "shared.dropdown-menu.span-S0R2RL", id: "shared.dropdown-menu.span" })} className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
         <Check className="h-4 w-4" />
       </DropdownMenuPrimitive.ItemIndicator>
@@ -144,7 +139,7 @@ const DropdownMenuRadioItem = React.forwardRef<
     )}
     {...props}
   >
-    <span {...uiAttributes({ uid: "shared.dropdown-menu.span.2-2Xa23j", id: "shared.dropdown-menu.span.2" })} className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
         <Circle className="h-2 w-2 fill-current" />
       </DropdownMenuPrimitive.ItemIndicator>
@@ -158,9 +153,8 @@ const DropdownMenuLabel = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
     inset?: boolean;
-    ui?: UiDescriptor;
   }
->(({ className, inset, ui, ...props }, ref) => (
+>(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
@@ -169,34 +163,30 @@ const DropdownMenuLabel = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('dropdown-menu-label', ui)}
   />
 ));
 DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
 
 const DropdownMenuSeparator = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator> & { ui?: UiDescriptor }
->(({ className, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator> & { }
+>(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
     className={cn('-mx-1 my-1 h-px bg-muted', className)}
     {...props}
-    {...uiPrimitiveAttributes('dropdown-menu-separator', ui)}
   />
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
 const DropdownMenuShortcut = ({
   className,
-  ui,
   ...props
-}: React.HTMLAttributes<HTMLSpanElement> & { ui?: UiDescriptor }) => {
+}: React.HTMLAttributes<HTMLSpanElement> & { }) => {
   return (
     <span
       className={cn('ml-auto text-xs tracking-widest opacity-60', className)}
       {...props}
-      {...uiPrimitiveAttributes('dropdown-menu-shortcut', ui)}
     />
   );
 };

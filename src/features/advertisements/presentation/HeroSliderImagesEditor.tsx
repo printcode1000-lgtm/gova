@@ -14,7 +14,6 @@ import {
   DEFAULT_HOME_HERO_TRANSITION,
   DEFAULT_HOME_HERO_TRANSITION_DURATION,
 } from "@asol/hero-slider-core";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 const HERO_SLIDER_IMAGE_SLOTS = [
   { id: "hero-slide-1", storageProfileId: "cover", maxItems: 1, aspectRatio: "landscape", allowReplace: true },
@@ -122,21 +121,21 @@ export const HeroSliderImagesEditor = React.forwardRef<
   };
 
   return (
-    <section {...uiAttributes({ uid: "advertisements.hero-slider-images-editor.section-eYu7ID", id: "advertisements.hero-slider-images-editor.section" })}
+    <section
       id={id}
       className="mt-4 rounded-xl border bg-card p-4 shadow-sm"
       aria-label="تعديل صور العرض"
     >
-      <div {...uiAttributes({ uid: "advertisements.hero-slider-images-editor.div.4-RK5uHK", id: "advertisements.hero-slider-images-editor.div.4" })} id="advertisements.hero-slider-images-editor.div" className="mb-4 flex items-center gap-2">
+      <div id="advertisements.hero-slider-images-editor.div" className="mb-4 flex items-center gap-2">
         <ImageIcon id="advertisements.hero-slider-images-editor.image-icon" className="h-5 w-5 text-primary" />
-        <div {...uiAttributes({ uid: "advertisements.hero-slider-images-editor.div.5-3C0xYg", id: "advertisements.hero-slider-images-editor.div.5" })} id="advertisements.hero-slider-images-editor.div.2">
-          <h2 {...uiAttributes({ uid: "advertisements.hero-slider-images-editor.h2.2-Ipw7Ic", id: "advertisements.hero-slider-images-editor.h2.2" })} id="advertisements.hero-slider-images-editor.h2" className="font-semibold">صور واجهة المتجر</h2>
-          <p {...uiAttributes({ uid: "advertisements.hero-slider-images-editor.p.2-J0D2IF", id: "advertisements.hero-slider-images-editor.p.2" })} id="advertisements.hero-slider-images-editor.p" className="text-sm text-muted-foreground">
+        <div id="advertisements.hero-slider-images-editor.div.2">
+          <h2 id="advertisements.hero-slider-images-editor.h2" className="font-semibold">صور واجهة المتجر</h2>
+          <p id="advertisements.hero-slider-images-editor.p" className="text-sm text-muted-foreground">
             يمكنك إضافة أو استبدال {MAX_PROFILE_SLIDES} صور بحد أقصى. بقية إعدادات العرض ثابتة.
           </p>
         </div>
       </div>
-      <div {...uiAttributes({ uid: "advertisements.hero-slider-images-editor.div.6-F3fFW6", id: "advertisements.hero-slider-images-editor.div.6" })} id="advertisements.hero-slider-images-editor.div.3" className="grid grid-cols-2 gap-3">
+      <div id="advertisements.hero-slider-images-editor.div.3" className="grid grid-cols-2 gap-3">
         {storefrontSlots.map((slotConfig, index) => (
           <StorageImageManager
             ref={(manager) => {

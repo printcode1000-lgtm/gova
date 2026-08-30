@@ -20,7 +20,6 @@ import {
 import { PharmacyCategoryIcon } from "./PharmacyCategoryIcon";
 
 import { text, CreateCategoryDialog, IconButton, ManagerColumn, ProductManagerCard, StatusBadge, VisibilityButton, LoadingFrame, MessageFrame } from "./catalog-manager/PharmacyCatalogManagerPage.dialogs";
-import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 import {
   buildAddPharmacyProductHref,
   sortedPharmacyCategories,
@@ -254,10 +253,10 @@ export function PharmacyCatalogManagerPage() {
   }
 
   return (
-    <main {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.main.2-o7WAm2", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.main.2" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.main" className="min-h-screen bg-background px-4 py-5">
-      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.4-R69k32", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.4" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div" className="mx-auto flex max-w-7xl flex-col gap-4">
-        <header {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.header.2-8uJJ3Y", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.header.2" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.header" className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-          <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.5-gQo1O7", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.5" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.2">
+    <main id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.main" className="min-h-screen bg-background px-4 py-5">
+      <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div" className="mx-auto flex max-w-7xl flex-col gap-4">
+        <header id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.header" className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+          <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.2">
             <Link id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.link"
               href="/profile?mode=edit&tab=products"
               className="mb-2 inline-flex items-center gap-2 text-xs font-semibold text-primary"
@@ -265,8 +264,8 @@ export function PharmacyCatalogManagerPage() {
               <ArrowRight id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.arrow-right" className="h-4 w-4" />
               {text.back}
             </Link>
-            <h1 {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1.2-nQM2jZ", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1.2" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1" className="text-2xl font-bold text-on-surface">{text.title}</h1>
-            <p {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.3-Ka9v0C", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.3" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p" className="mt-1 text-sm text-on-surface-variant">{text.subtitle}</p>
+            <h1 id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1" className="text-2xl font-bold text-on-surface">{text.title}</h1>
+            <p id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p" className="mt-1 text-sm text-on-surface-variant">{text.subtitle}</p>
           </div>
           <Link id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.link.2"
             href={addProductHref}
@@ -278,7 +277,7 @@ export function PharmacyCatalogManagerPage() {
         </header>
 
         {error ? (
-          <p {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.4-2kKKN2", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.4" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.2" className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+          <p id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.2" className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
             {error}
           </p>
         ) : null}
@@ -286,7 +285,7 @@ export function PharmacyCatalogManagerPage() {
         {!catalog && busy ? (
           <LoadingFrame id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.loading-frame.2" compact />
         ) : (
-          <section {...uiAttributes({ uid: "pharmacy-catalog-empty-fYw1eB", id: "pharmacy-catalog-empty", kind: "region", simulation: { kind: "state", id: "pharmacy-catalog-empty" } })}
+          <section
             className="grid min-h-[620px] overflow-hidden rounded-lg border border-outline-variant bg-surface lg:grid-cols-[300px_330px_1fr]"
           >
             <ManagerColumn id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.manager-column"
@@ -297,31 +296,30 @@ export function PharmacyCatalogManagerPage() {
             >
               {categories.map((category) => (
                 <div
-                  key={category.id} {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.6-Z3R36Z", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.6" , instance: createOpaqueUiInstanceId("iter-e6abef6beb", String(category.id))})}
+                  key={category.id}
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     category.id === activeCategoryId
                       ? "border-primary bg-primary/10"
                       : "border-outline-variant"
                   } ${category.status === "hidden" ? "opacity-55" : ""}`}
                 >
-                  <button {...uiAttributes({ uid: "pharmacy-category-06QfVC", id: "pharmacy-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "pharmacy-category" } , instance: createOpaqueUiInstanceId("iter-39e54e71d9", String(category.id))})}
+                  <button
                     type="button"
                     onClick={() => setActiveCategoryId(category.id)}
                     className="flex min-w-0 flex-1 items-center gap-2 text-start"
                   >
                     <PharmacyCategoryIcon icon={category.icon} className="h-4 w-4 text-center text-primary" />
-                    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span-3QR4GH", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span" , instance: createOpaqueUiInstanceId("iter-88f6283786", String(category.id))})} className="min-w-0 flex-1 truncate font-semibold">{category.nameAr}</span>
-                  <StatusBadge hidden={category.status === "hidden"} instance={createOpaqueUiInstanceId("iter-314", String(category.id))} />
+                    <span className="min-w-0 flex-1 truncate font-semibold">{category.nameAr}</span>
+                  <StatusBadge hidden={category.status === "hidden"} />
                   </button>
                   <IconButton
                     title={text.edit}
                     disabled={busy}
                     onClick={() => openEditCategory(category)}
-                    instance={createOpaqueUiInstanceId("iter-316", String(category.id))}
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </IconButton>
-                  <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button-DU20BK", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button" , instance: createOpaqueUiInstanceId("iter-a9bf75015f", String(category.id))}}
+                  <VisibilityButton
                     hidden={category.status === "hidden"}
                     disabled={busy}
                     onClick={() => toggleCategory(category)}
@@ -338,31 +336,30 @@ export function PharmacyCatalogManagerPage() {
             >
               {subcategories.map((subcategory) => (
                 <div
-                  key={subcategory.id} {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.7-aZ7v1P", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.7" , instance: createOpaqueUiInstanceId("iter-5dbab5fc58", String(subcategory.id))})}
+                  key={subcategory.id}
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     subcategory.id === activeSubcategoryId
                       ? "border-tertiary bg-tertiary/10"
                       : "border-outline-variant"
                   } ${subcategory.status === "hidden" ? "opacity-55" : ""}`}
                 >
-                  <button {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.button-4GHDSw", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.button" , instance: createOpaqueUiInstanceId("iter-6b2b89ef6d", String(subcategory.id))})}
+                  <button
                     type="button"
                     onClick={() => setActiveSubcategoryId(subcategory.id)}
                     className="flex min-w-0 flex-1 items-center gap-2 text-start"
                   >
                     <PharmacyCategoryIcon icon={activeCategory?.icon} className="h-4 w-4 text-center text-tertiary" />
-                    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2-ODA1rv", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2" , instance: createOpaqueUiInstanceId("iter-77fa045fbf", String(subcategory.id))})} className="min-w-0 flex-1 truncate font-semibold">{subcategory.nameAr}</span>
-                  <StatusBadge hidden={subcategory.status === "hidden"} instance={createOpaqueUiInstanceId("iter-354", String(subcategory.id))} />
+                    <span className="min-w-0 flex-1 truncate font-semibold">{subcategory.nameAr}</span>
+                  <StatusBadge hidden={subcategory.status === "hidden"} />
                   </button>
                   <IconButton
                     title={text.edit}
                     disabled={busy}
                     onClick={() => openEditSubcategory(subcategory)}
-                    instance={createOpaqueUiInstanceId("iter-356", String(subcategory.id))}
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </IconButton>
-                  <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button.2-Gl4X0V", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button.2" , instance: createOpaqueUiInstanceId("iter-267ca0fc67", String(subcategory.id))}}
+                  <VisibilityButton
                     hidden={subcategory.status === "hidden"}
                     disabled={busy}
                     onClick={() => toggleSubcategory(subcategory)}
@@ -373,18 +370,17 @@ export function PharmacyCatalogManagerPage() {
 
             <ManagerColumn id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.manager-column.3" title={text.products} disabled={busy}>
               {products.length === 0 ? (
-                <p {...uiAttributes({ uid: "pharmacy-products-empty-BrW6Lv", id: "pharmacy-products-empty", kind: "region", simulation: { kind: "state", id: "pharmacy-products-empty" } })} className="rounded-lg border border-dashed border-outline-variant p-8 text-center text-sm text-on-surface-variant">
+                <p className="rounded-lg border border-dashed border-outline-variant p-8 text-center text-sm text-on-surface-variant">
                   {text.emptyProducts}
                 </p>
               ) : (
-                <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.8-Wun1V8", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.8" })} id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.3" className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.3" className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
                   {products.map((product) => (
                     <ProductManagerCard
                       key={product.id}
                       product={product}
                       disabled={busy}
                       onToggle={() => toggleProduct(product)}
-                      instance={createOpaqueUiInstanceId("pharmacy-product", product.id)}
                     />
                   ))}
                 </div>

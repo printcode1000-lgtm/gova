@@ -115,7 +115,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `FIREBASE_PROJECT_NAME` | server/tooling | 0 |  |
 | `FIREBASE_PROJECT_NUMBER` | server/tooling | 0 |  |
 | `FIREBASE_STORAGE_BUCKET` | server/tooling | 0 |  |
-| `GIT_INDEX_FILE` | server/tooling | 1 | `scripts/local-agent/control-branch.ts` |
+| `GIT_INDEX_FILE` | server/tooling | 1 | `packages/local-agent-core/src/control-branch.ts` |
 | `GITHUB_ACTIONS` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
 | `GITHUB_ADMIN_TOKEN` | server/tooling | 3 | `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts`, `packages/release-core/src/pipeline/push-main-branch.ts` |
 | `GITHUB_REF_NAME` | server/tooling | 1 | `scripts/local-agent-gateway.ts` |
@@ -138,14 +138,15 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_TRACK` | server/tooling | 0 |  |
-| `GOVA_AGENT_ADMISSION_TIMEOUT_MS` | server/tooling | 1 | `scripts/tests/local-agent-control-plane.test.ts` |
-| `GOVA_AGENT_COORDINATION_DIR` | server/tooling | 2 | `scripts/local-agent/paths.ts`, `scripts/tests/local-agent-control-plane.test.ts` |
-| `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | server/tooling | 1 | `scripts/tests/local-agent-control-plane.test.ts` |
-| `GOVA_AGENT_MEMORY_FLOOR_MB` | server/tooling | 1 | `scripts/tests/local-agent-control-plane.test.ts` |
-| `GOVA_AGENT_STALE_LOCK_MS` | server/tooling | 2 | `scripts/local-agent/lock-store.ts`, `scripts/tests/local-agent-control-plane.test.ts` |
-| `GOVA_LOCAL_WORKSPACE` | server/tooling | 1 | `scripts/local-agent/paths.ts` |
-| `GOVA_RUNNER_POOL_DIR` | server/tooling | 1 | `scripts/local-agent/paths.ts` |
-| `HOME` | server/tooling | 2 | `scripts/local-agent/host-inventory.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
+| `GOVA_AGENT_ADMISSION_TIMEOUT_MS` | server/tooling | 1 | `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_AGENT_COORDINATION_DIR` | server/tooling | 2 | `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | server/tooling | 1 | `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_AGENT_MEMORY_FLOOR_MB` | server/tooling | 2 | `packages/local-agent-core/src/admission.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_AGENT_STALE_LOCK_MS` | server/tooling | 2 | `packages/local-agent-core/src/lock-store.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_HOST_PROFILE` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
+| `GOVA_LOCAL_WORKSPACE` | server/tooling | 2 | `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_RUNNER_POOL_DIR` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
+| `HOME` | server/tooling | 2 | `packages/local-agent-core/src/host-inventory.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
 | `HOST` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
 | `JAVA_HOME` | server/tooling | 2 | `scripts/check-environment-requirements.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
 | `LANG` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
@@ -189,8 +190,8 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `NEXT_PUBLIC_SUPER_ADMIN_PHONE` | client-visible | 2 | `npm run test:notifications`, `packages/auth-core/src/domain/super-admin.ts` |
 | `NEXT_PUBLIC_SUPER_ADMIN_UID` | client-visible | 2 | `npm run test:notifications`, `packages/auth-core/src/domain/super-admin.ts` |
 | `NEXT_RUNTIME` | server/tooling | 3 | `services/sub2main/src/instrumentation.ts`, `services/submain/src/instrumentation.ts`, `src/instrumentation.ts` |
-| `NODE_ENV` | server/tooling | 8 | `npm run test:release-commands`, `npm run ui-registry:apply-pending`, `packages/observability-core/src/ports/index.ts`, `packages/storage-core/src/server/providers/provider-resolver.ts`, `src/core/config/public-env.ts`, `src/core/config/runtime-context.server.ts` |
-| `NODE_OPTIONS` | server/tooling | 21 | `npm run test:account-deletion-schema`, `npm run test:auth-email-uniqueness`, `npm run test:backup-core`, `npm run test:catalog-studio`, `npm run test:data-health`, `npm run test:dev-cloud-backup` |
+| `NODE_ENV` | server/tooling | 7 | `npm run test:release-commands`, `packages/observability-core/src/ports/index.ts`, `packages/storage-core/src/server/providers/provider-resolver.ts`, `src/core/config/public-env.ts`, `src/core/config/runtime-context.server.ts`, `packages/storage-core/src/tests/integration/parameterized-store.test.ts` |
+| `NODE_OPTIONS` | server/tooling | 19 | `npm run test:account-deletion-schema`, `npm run test:auth-email-uniqueness`, `npm run test:backup-core`, `npm run test:catalog-studio`, `npm run test:data-health`, `npm run test:dev-cloud-backup` |
 | `OLD_R2_PUBLIC_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-r2-image-public-url.ts` |
 | `ORDERS_CORE_DATABASE_AUTH_TOKEN` | server/tooling | 0 |  |
 | `ORDERS_CORE_DATABASE_URL` | server/tooling | 1 | `services/submain/src/app/api/health/route.ts` |
@@ -226,7 +227,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `R2_SECRET_ACCESS_KEY` | server/tooling | 2 | `packages/storage-core/src/tests/integration/credential-isolation.test.ts`, `packages/storage-core/src/tests/unit/account-credentials.test.ts` |
 | `R2_WAREHOUSE_NAME` | server/tooling | 0 |  |
 | `RUBY_BIN` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
-| `RUNNER_NAME` | server/tooling | 1 | `scripts/local-agent/operation-log.ts` |
+| `RUNNER_NAME` | server/tooling | 1 | `packages/local-agent-core/src/operation-log.ts` |
 | `SYNTHETIC_ANALYTICS_R2_ACCESS_KEY_ID` | server/tooling | 1 | `packages/storage-core/src/tests/integration/add-account.test.ts` |
 | `SYNTHETIC_ANALYTICS_R2_BUCKET_NAME` | server/tooling | 1 | `packages/storage-core/src/tests/integration/add-account.test.ts` |
 | `SYNTHETIC_ANALYTICS_R2_ENDPOINT` | server/tooling | 1 | `packages/storage-core/src/tests/integration/add-account.test.ts` |
@@ -254,7 +255,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `TURSO_PRODUCT_ORGANIZATION` | server/tooling | 0 |  |
 | `TURSO_PROFILES_API_TOKEN` | server/tooling | 0 |  |
 | `TURSO_PROFILES_ORGANIZATION` | server/tooling | 0 |  |
-| `USER` | server/tooling | 2 | `scripts/local-agent-host-restore.ts`, `scripts/local-agent/host-inventory.ts` |
+| `USER` | server/tooling | 2 | `scripts/local-agent-host-restore.ts`, `packages/local-agent-core/src/host-inventory.ts` |
 | `VERCEL` | server/tooling | 6 | `scripts/schema-sync.ts`, `scripts/test-data-health-environment.ts`, `packages/native-core/scripts/validate-ios-push-policy.ts`, `src/core/config/runtime-context.server.ts`, `src/features/data-health/tests/development-guard.test.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `VERCEL_ACCESS_TOKEN` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
 | `VERCEL_ENV` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { shouldUseUnoptimizedImage } from "@asol/storage-core";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 import {
   getHeroImageStyle,
@@ -68,7 +67,7 @@ export function HeroSliderSlide({
     });
 
   return (
-    <div {...uiAttributes({ uid: "home-promotion-N611zJ", id: "home-promotion", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "home-promotion" } })}
+    <div
       style={slideStyle}
       className={slideClass}
       onClick={() => onSlideClick(slide.action)}
@@ -103,20 +102,20 @@ export function HeroSliderSlide({
           unoptimized={shouldUseUnoptimizedImage(slide.image)}
         />
       ) : (
-        <div {...uiAttributes({ uid: "advertisements.hero-slider-slide.div-rW8eYS", id: "advertisements.hero-slider-slide.div" })} className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
+        <div className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
           {unavailableLabel}
         </div>
       )}
       {(slide.title || slide.subtitle) && (
-        <div {...uiAttributes({ uid: "advertisements.hero-slider-slide.div.2-6YH6UF", id: "advertisements.hero-slider-slide.div.2" })} className="absolute inset-0 z-10 flex items-center px-4 sm:px-6">
-          <div {...uiAttributes({ uid: "advertisements.hero-slider-slide.div.3-WMRPh5", id: "advertisements.hero-slider-slide.div.3" })} className="w-fit max-w-[88%] px-0 py-0 pe-0 text-white sm:max-w-[60%]">
+        <div className="absolute inset-0 z-10 flex items-center px-4 sm:px-6">
+          <div className="w-fit max-w-[88%] px-0 py-0 pe-0 text-white sm:max-w-[60%]">
             {slide.subtitle && (
-              <span {...uiAttributes({ uid: "advertisements.hero-slider-slide.span-p3t6LV", id: "advertisements.hero-slider-slide.span" })} className="mb-2 block w-fit rounded-full bg-black/45 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
+              <span className="mb-2 block w-fit rounded-full bg-black/45 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
                 {slide.subtitle}
               </span>
             )}
             {slide.title && (
-              <h2 {...uiAttributes({ uid: "advertisements.hero-slider-slide.h2-6oZHD9", id: "advertisements.hero-slider-slide.h2" })} className="text-2xl font-bold leading-tight drop-shadow-sm">
+              <h2 className="text-2xl font-bold leading-tight drop-shadow-sm">
                 {slide.title}
               </h2>
             )}

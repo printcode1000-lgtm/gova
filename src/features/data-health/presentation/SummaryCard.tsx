@@ -1,5 +1,5 @@
 
-import { uiAttributes } from "@asol/ui-registry-core";export function SummaryCard({ id,
+export function SummaryCard({ id,
   label,
   value,
   tone = "default",
@@ -19,9 +19,9 @@ import { uiAttributes } from "@asol/ui-registry-core";export function SummaryCar
             ? "border-green-200 bg-green-50 text-green-700"
             : "bg-surface text-on-surface";
   return (
-    <div {...uiAttributes({ uid: "data-health.summary-card.div-8Q2K0b", id: "data-health.summary-card.div" })} id={id} className={`rounded-md border p-3 ${toneClass}`}>
-      <div {...uiAttributes({ uid: "data-health.summary-card.div.2-v2HRBS", id: "data-health.summary-card.div.2" })} className="text-xs opacity-80">{label}</div>
-      <div {...uiAttributes({ uid: "data-health.summary-card.div.3-6PYgMA", id: "data-health.summary-card.div.3" })} className="mt-1 text-xl font-semibold">{value}</div>
+    <div id={id} className={`rounded-md border p-3 ${toneClass}`}>
+      <div className="text-xs opacity-80">{label}</div>
+      <div className="mt-1 text-xl font-semibold">{value}</div>
     </div>
   );
 }

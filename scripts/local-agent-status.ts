@@ -1,12 +1,6 @@
 import { existsSync, lstatSync, statSync } from "node:fs";
 import path from "node:path";
-
-import { git, gitSoft } from "./local-agent/git";
-import { listRunners, listRuns } from "./local-agent/github-api";
-import { buildCoordinationSnapshot } from "./local-agent/coordination-snapshot";
-import { relativeInsideWorkspace, workspaceDir } from "./local-agent/paths";
-import { isSecretPath } from "./local-agent/secret-paths";
-
+import { buildCoordinationSnapshot, git, gitSoft, isSecretPath, listRunners, listRuns, relativeInsideWorkspace, workspaceDir } from "@asol/local-agent-core";
 /**
  * Read-only state of the local machine, the runner pool, and the control plane.
  *

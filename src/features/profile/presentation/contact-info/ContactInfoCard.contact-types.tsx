@@ -15,7 +15,6 @@ import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGps
 import type { LocationEntry } from '@/features/profile/domain/profile-contacts.entity';
 import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-style";
 import { shareLocationUrl } from "@/features/sharing/ui";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export const SOCIAL_PLATFORMS = [
   'instagram',
@@ -149,25 +148,25 @@ export function ContactQuickAddGrid({ id,
   const addedCount = items.reduce((total, item) => total + item.count, 0);
 
   return (
-    <div {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.div-1fmNnR", id: "profile.contact-info.contact-info-card.contact-types.div" })} id={id} className="rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3 sm:p-4">
-      <div {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.div.2-m979N4", id: "profile.contact-info.contact-info-card.contact-types.div.2" })} className="mb-3 flex items-center justify-between gap-3">
-        <p {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.p-q2qKMw", id: "profile.contact-info.contact-info-card.contact-types.p" })} className="flex items-center gap-2 text-sm font-bold text-on-surface">
-          <span {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.span-0KNBs1", id: "profile.contact-info.contact-info-card.contact-types.span" })} className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+    <div id={id} className="rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3 sm:p-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="flex items-center gap-2 text-sm font-bold text-on-surface">
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
           </span>
           {title}
         </p>
         {addedCount > 0 ? (
-          <span {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.span.2-B4oGGo", id: "profile.contact-info.contact-info-card.contact-types.span.2" })} className="rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">
+          <span className="rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">
             {addedCount}
           </span>
         ) : null}
       </div>
 
-      <div {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.div.3-LU86H9", id: "profile.contact-info.contact-info-card.contact-types.div.3" })} className="flex snap-x snap-mandatory gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex snap-x snap-mandatory gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {items.map((item) => (
           <button
-            key={item.id} {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.button-r5883E", id: "profile.contact-info.contact-info-card.contact-types.button" , instance: createOpaqueUiInstanceId("iter-58cffe8d7a", String(item.id))})}
+            key={item.id}
             type="button"
             aria-pressed={item.id === selectedId}
             onClick={() => onSelect(item.id)}
@@ -179,7 +178,7 @@ export function ContactQuickAddGrid({ id,
             }`}
           >
             {item.count > 0 ? (
-              <span {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.span.3-Rl0Pdc", id: "profile.contact-info.contact-info-card.contact-types.span.3" , instance: createOpaqueUiInstanceId("iter-6c0afc6100", String(item.id))})} className="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
+              <span className="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
                 {item.count}
               </span>
             ) : null}
@@ -188,7 +187,7 @@ export function ContactQuickAddGrid({ id,
               className="h-11 w-11 transition-transform"
               style={{ color: getContactVisualColor(item.id) }}
             />
-            <span {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.span.4-6BnkTL", id: "profile.contact-info.contact-info-card.contact-types.span.4" , instance: createOpaqueUiInstanceId("iter-f207f5926b", String(item.id))})}
+            <span
               className="line-clamp-2 w-[4.5rem] origin-top scale-[0.75] text-center text-[10px] font-semibold leading-[11px] tracking-tight text-muted-foreground"
             >
               {item.label}

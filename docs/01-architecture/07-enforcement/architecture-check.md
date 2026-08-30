@@ -30,7 +30,6 @@ Before scan, `scripts/architecture-check.ts` runs:
 | Generated Build/Test gate contract | `scripts/generated-gate-contract.ts` |
 | GitHub CI policy | `scripts/github-ci-policy.ts` |
 | Agent knowledge documentation | `scripts/docs/check.ts` |
-| Static DOM id contract | `scripts/ui-registry/static-dom-ids/check-static-dom-ids.ts` |
 | Storage profiles validation | `@asol/storage-core/server` `validateStorageProfilesAtStartup()` |
 | Category data validation | `src/features/categories/infrastructure/validation.engine.ts` |
 

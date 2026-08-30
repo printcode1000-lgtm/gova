@@ -14,7 +14,6 @@ import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
 import { OtpInput } from './OtpInput';
 import { usePhoneVerification } from '@/features/auth/application/hooks/use-phone-verification';
 import { canSendPhoneOtp, formatPhoneDisplay } from './phone-verification-model';
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface PhoneVerificationProps {
   // Props mode (for profile)
@@ -124,15 +123,15 @@ export function PhoneVerification({ id,
   if (isFormMode && formContext) {
     // Form mode (registration)
     return (
-      <div {...uiAttributes({ uid: "auth.phone-verification.div-491v8O", id: "auth.phone-verification.div" })} id={id} className="space-y-4">
+      <div id={id} className="space-y-4">
         <Controller
           name="phone"
           control={formContext.control}
           render={({ field, fieldState }) => (
-            <div {...uiAttributes({ uid: "auth.phone-verification.div.8-L1hIfR", id: "auth.phone-verification.div.8" })} id="auth.phone-verification.div.2" className="space-y-2">
-              <span {...uiAttributes({ uid: "auth.phone-verification.span.2-t8WB6G", id: "auth.phone-verification.span.2" })} id="auth.phone-verification.span" className="text-sm font-semibold text-on-surface">{t('auth.phone.label')}</span>
-              <div {...uiAttributes({ uid: "auth.phone-verification.div.15-dUdLp3", id: "auth.phone-verification.div.15" })} id="auth.phone-verification.div.3" className="flex items-center gap-2">
-                <PhoneField ui={{ uid: "auth.phone-verification.phone-field-rBh4RE", id: "auth.phone-verification.phone-field" }} id="auth.phone-verification.div.4"
+            <div id="auth.phone-verification.div.2" className="space-y-2">
+              <span id="auth.phone-verification.span" className="text-sm font-semibold text-on-surface">{t('auth.phone.label')}</span>
+              <div id="auth.phone-verification.div.3" className="flex items-center gap-2">
+                <PhoneField id="auth.phone-verification.div.4"
                   className="flex-1"
                   labels={phoneLabels}
                   disabled={phoneVerified}
@@ -154,7 +153,7 @@ export function PhoneVerification({ id,
                   }}
                 />
                 {!phoneVerified && (
-                  <button {...uiAttributes({ uid: "auth.phone-verification.button.9-YF9OS0", id: "auth.phone-verification.button.9" })} id="auth.phone-verification.button"
+                  <button id="auth.phone-verification.button"
                     type="button"
                     onClick={() => void handleSendOtpWrapper()}
                     disabled={isSending || !canSend}
@@ -166,23 +165,23 @@ export function PhoneVerification({ id,
                   >
                     {isWaveActive && (
                       <>
-                        <span {...uiAttributes({ uid: "auth.phone-verification.span.8-AmMBs8", id: "auth.phone-verification.span.8" })} id="auth.phone-verification.span.3"
+                        <span id="auth.phone-verification.span.3"
                           aria-hidden="true"
                           className="asol-phone-verify-wave pointer-events-none absolute inset-0 rounded-full"
                         />
-                        <span {...uiAttributes({ uid: "auth.phone-verification.span.13-3uzgA4", id: "auth.phone-verification.span.13" })} id="auth.phone-verification.span.4"
+                        <span id="auth.phone-verification.span.4"
                           aria-hidden="true"
                           className="asol-phone-verify-wave asol-phone-verify-wave--delayed pointer-events-none absolute inset-0 rounded-full"
                         />
                       </>
                     )}
-                    <span {...uiAttributes({ uid: "auth.phone-verification.span.14-KLp8Gl", id: "auth.phone-verification.span.14" })} id="auth.phone-verification.span.5" className="relative z-10 text-center leading-none">
+                    <span id="auth.phone-verification.span.5" className="relative z-10 text-center leading-none">
                       {isSending ? '...' : otpSent ? t('auth.phone.resend') : t('auth.phone.verify')}
                     </span>
                   </button>
                 )}
                 {phoneVerified && (
-                  <button {...uiAttributes({ uid: "auth.phone-verification.button.10-J4Z1bU", id: "auth.phone-verification.button.10" })} id="auth.phone-verification.button.2"
+                  <button id="auth.phone-verification.button.2"
                     type="button"
                     onClick={handleEditPhoneWrapper}
                     aria-label={t('auth.phone.edit')}
@@ -193,24 +192,24 @@ export function PhoneVerification({ id,
                 )}
               </div>
               {phoneVerified && (
-                <p {...uiAttributes({ uid: "auth.phone-verification.p.13-qYBKc4", id: "auth.phone-verification.p.13" })} id="auth.phone-verification.p" className="text-xs text-success flex items-center gap-1 mt-1">
+                <p id="auth.phone-verification.p" className="text-xs text-success flex items-center gap-1 mt-1">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   {t('auth.phone.verified')}
                 </p>
               )}
-              {fieldState.error && <p {...uiAttributes({ uid: "auth.phone-verification.p.14-Q8QmQW", id: "auth.phone-verification.p.14" })} id="auth.phone-verification.p.2" className="text-xs text-error">{fieldState.error.message}</p>}
-              {otpError && !otpSent && <p {...uiAttributes({ uid: "auth.phone-verification.p.15-Ob339n", id: "auth.phone-verification.p.15" })} id="auth.phone-verification.p.3" className="text-xs text-error mt-1">{otpError}</p>}
+              {fieldState.error && <p id="auth.phone-verification.p.2" className="text-xs text-error">{fieldState.error.message}</p>}
+              {otpError && !otpSent && <p id="auth.phone-verification.p.3" className="text-xs text-error mt-1">{otpError}</p>}
             </div>
           )}
         />
 
         {otpSent && !phoneVerified && (
-          <div {...uiAttributes({ uid: "auth.phone-verification.div.16-59D0OV", id: "auth.phone-verification.div.16" })} id="auth.phone-verification.div.5" className="asol-auth-tonal-panel space-y-4">
-            <div {...uiAttributes({ uid: "auth.phone-verification.div.17-08s7CF", id: "auth.phone-verification.div.17" })} id="auth.phone-verification.div.6" className="space-y-1">
-              <p {...uiAttributes({ uid: "auth.phone-verification.p.16-rlA7Hs", id: "auth.phone-verification.p.16" })} id="auth.phone-verification.p.4" className="text-sm font-semibold text-on-surface">{t('auth.phone.enterOtp')}</p>
-              <p {...uiAttributes({ uid: "auth.phone-verification.p.17-OJX5rF", id: "auth.phone-verification.p.17" })} id="auth.phone-verification.p.5" className="text-xs text-on-surface-variant">
+          <div id="auth.phone-verification.div.5" className="asol-auth-tonal-panel space-y-4">
+            <div id="auth.phone-verification.div.6" className="space-y-1">
+              <p id="auth.phone-verification.p.4" className="text-sm font-semibold text-on-surface">{t('auth.phone.enterOtp')}</p>
+              <p id="auth.phone-verification.p.5" className="text-xs text-on-surface-variant">
                 {t('auth.phone.sentTo')}{' '}
-                <span {...uiAttributes({ uid: "auth.phone-verification.span.15-U4AhDz", id: "auth.phone-verification.span.15" })} id="auth.phone-verification.span.6" className="font-medium text-on-surface">{formatPhoneDisplay(phone)}</span>
+                <span id="auth.phone-verification.span.6" className="font-medium text-on-surface">{formatPhoneDisplay(phone)}</span>
               </p>
             </div>
 
@@ -222,10 +221,10 @@ export function PhoneVerification({ id,
               hasError={!!otpError}
             />
 
-            {otpError && <p {...uiAttributes({ uid: "auth.phone-verification.p.18-g1AUg7", id: "auth.phone-verification.p.18" })} id="auth.phone-verification.p.6" className="text-xs text-error text-center">{otpError}</p>}
+            {otpError && <p id="auth.phone-verification.p.6" className="text-xs text-error text-center">{otpError}</p>}
 
-            <div {...uiAttributes({ uid: "auth.phone-verification.div.18-1kxIc5", id: "auth.phone-verification.div.18" })} id="auth.phone-verification.div.7" className="flex items-center gap-3 w-full">
-              <button {...uiAttributes({ uid: "auth.phone-verification.button.11-fn5VD2", id: "auth.phone-verification.button.11" })} id="auth.phone-verification.button.3"
+            <div id="auth.phone-verification.div.7" className="flex items-center gap-3 w-full">
+              <button id="auth.phone-verification.button.3"
                 type="button"
                 onClick={() => void handleVerifyOtpWrapper()}
                 disabled={otp.length !== 4 || isVerifying}
@@ -233,7 +232,7 @@ export function PhoneVerification({ id,
               >
                 {isVerifying ? t('auth.phone.verifying') : t('auth.phone.verifyOtp')}
               </button>
-              <button {...uiAttributes({ uid: "auth.phone-verification.button.12-ZOfM4W", id: "auth.phone-verification.button.12" })} id="auth.phone-verification.button.4"
+              <button id="auth.phone-verification.button.4"
                 type="button"
                 onClick={() => void handleSendOtpWrapper()}
                 disabled={countdown > 0 || isSending}
@@ -250,14 +249,14 @@ export function PhoneVerification({ id,
 
   // Props mode (profile)
   return (
-    <div {...uiAttributes({ uid: "auth.phone-verification.div.19-1erw0G", id: "auth.phone-verification.div.19" })} id={id} className="space-y-4">
-      <div {...uiAttributes({ uid: "auth.phone-verification.div.20-RBYKU0", id: "auth.phone-verification.div.20" })} id="auth.phone-verification.div.9" className="space-y-2">
-        <span {...uiAttributes({ uid: "auth.phone-verification.span.16-lIf6Lo", id: "auth.phone-verification.span.16" })} id="auth.phone-verification.span.7" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-on-surface">
+    <div id={id} className="space-y-4">
+      <div id="auth.phone-verification.div.9" className="space-y-2">
+        <span id="auth.phone-verification.span.7" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-on-surface">
           <Smartphone className="h-4 w-4 text-primary" />
           {t('auth.login.phone')}
         </span>
-        <div {...uiAttributes({ uid: "auth.phone-verification.div.21-86aeiM", id: "auth.phone-verification.div.21" })} id="auth.phone-verification.div.10" className="flex items-center gap-2">
-          <PhoneField ui={{ uid: "auth.phone-verification.phone-field.2-UmH3XS", id: "auth.phone-verification.phone-field.2" }} id="auth.phone-verification.div.11"
+        <div id="auth.phone-verification.div.10" className="flex items-center gap-2">
+          <PhoneField id="auth.phone-verification.div.11"
             className="min-w-0 flex-1"
             labels={phoneLabels}
             disabled={phoneVerified}
@@ -277,7 +276,7 @@ export function PhoneVerification({ id,
           />
 
           {!phoneVerified ? (
-            <button {...uiAttributes({ uid: "auth.phone-verification.button.13-8HpXLB", id: "auth.phone-verification.button.13" })} id="auth.phone-verification.button.5"
+            <button id="auth.phone-verification.button.5"
               type="button"
               onClick={() => void handleSendOtpWrapper()}
               disabled={isSending || !canSend}
@@ -289,17 +288,17 @@ export function PhoneVerification({ id,
             >
               {isWaveActive && (
                 <>
-                  <span {...uiAttributes({ uid: "auth.phone-verification.span.17-mACA0M", id: "auth.phone-verification.span.17" })} id="auth.phone-verification.span.9"
+                  <span id="auth.phone-verification.span.9"
                     aria-hidden="true"
                     className="asol-phone-verify-wave pointer-events-none absolute inset-0 rounded-full"
                   />
-                  <span {...uiAttributes({ uid: "auth.phone-verification.span.18-LI54IG", id: "auth.phone-verification.span.18" })} id="auth.phone-verification.span.10"
+                  <span id="auth.phone-verification.span.10"
                     aria-hidden="true"
                     className="asol-phone-verify-wave asol-phone-verify-wave--delayed pointer-events-none absolute inset-0 rounded-full"
                   />
                 </>
               )}
-              <span {...uiAttributes({ uid: "auth.phone-verification.span.19-BBnv7Y", id: "auth.phone-verification.span.19" })} id="auth.phone-verification.span.11" className="relative z-10 text-center leading-none">
+              <span id="auth.phone-verification.span.11" className="relative z-10 text-center leading-none">
                 {isSending
                   ? '...'
                   : otpSent
@@ -308,7 +307,7 @@ export function PhoneVerification({ id,
               </span>
             </button>
           ) : (
-            <button {...uiAttributes({ uid: "auth.phone-verification.button.14-WQ7VA7", id: "auth.phone-verification.button.14" })} id="auth.phone-verification.button.6"
+            <button id="auth.phone-verification.button.6"
               type="button"
               onClick={handleEditPhoneWrapper}
               aria-label={t('auth.phone.edit')}
@@ -320,24 +319,24 @@ export function PhoneVerification({ id,
         </div>
 
         {phoneVerified ? (
-          <p {...uiAttributes({ uid: "auth.phone-verification.p.19-l4aaNh", id: "auth.phone-verification.p.19" })} id="auth.phone-verification.p.7" className="mt-1 flex items-center gap-1 text-[10px] sm:text-xs text-success">
+          <p id="auth.phone-verification.p.7" className="mt-1 flex items-center gap-1 text-[10px] sm:text-xs text-success">
             <CheckCircle2 className="h-3.5 w-3.5" />
             {t('auth.phone.verified')}
           </p>
         ) : null}
-        {error ? <p {...uiAttributes({ uid: "auth.phone-verification.p.20-Rr7JuL", id: "auth.phone-verification.p.20" })} id="auth.phone-verification.p.8" className="text-[10px] sm:text-xs text-error">{error}</p> : null}
-        {otpError && !otpSent ? <p {...uiAttributes({ uid: "auth.phone-verification.p.21-S7Urew", id: "auth.phone-verification.p.21" })} id="auth.phone-verification.p.9" className="text-[10px] sm:text-xs text-error mt-1">{otpError}</p> : null}
+        {error ? <p id="auth.phone-verification.p.8" className="text-[10px] sm:text-xs text-error">{error}</p> : null}
+        {otpError && !otpSent ? <p id="auth.phone-verification.p.9" className="text-[10px] sm:text-xs text-error mt-1">{otpError}</p> : null}
       </div>
 
       {otpSent && !phoneVerified ? (
-        <div {...uiAttributes({ uid: "auth.phone-verification.div.22-k4vxMR", id: "auth.phone-verification.div.22" })} id="auth.phone-verification.div.12" className="asol-auth-tonal-panel space-y-3 sm:space-y-4">
-          <div {...uiAttributes({ uid: "auth.phone-verification.div.23-6ZKnAe", id: "auth.phone-verification.div.23" })} id="auth.phone-verification.div.13" className="space-y-1">
-            <p {...uiAttributes({ uid: "auth.phone-verification.p.22-m5csVf", id: "auth.phone-verification.p.22" })} id="auth.phone-verification.p.10" className="text-xs sm:text-sm font-semibold text-on-surface">
+        <div id="auth.phone-verification.div.12" className="asol-auth-tonal-panel space-y-3 sm:space-y-4">
+          <div id="auth.phone-verification.div.13" className="space-y-1">
+            <p id="auth.phone-verification.p.10" className="text-xs sm:text-sm font-semibold text-on-surface">
               {t('auth.phone.enterOtp')}
             </p>
-            <p {...uiAttributes({ uid: "auth.phone-verification.p.23-iRz1DT", id: "auth.phone-verification.p.23" })} id="auth.phone-verification.p.11" className="text-[10px] sm:text-xs text-on-surface-variant">
+            <p id="auth.phone-verification.p.11" className="text-[10px] sm:text-xs text-on-surface-variant">
               {t('auth.phone.sentTo')}{' '}
-              <span {...uiAttributes({ uid: "auth.phone-verification.span.20-ZG4M6k", id: "auth.phone-verification.span.20" })} id="auth.phone-verification.span.12" className="font-medium text-on-surface">
+              <span id="auth.phone-verification.span.12" className="font-medium text-on-surface">
                 {formatPhoneDisplay(phone)}
               </span>
             </p>
@@ -351,11 +350,11 @@ export function PhoneVerification({ id,
             hasError={Boolean(otpError)}
           />
           {otpError ? (
-            <p {...uiAttributes({ uid: "auth.phone-verification.p.24-Q9WHL5", id: "auth.phone-verification.p.24" })} id="auth.phone-verification.p.12" className="text-center text-[10px] sm:text-xs text-error">{otpError}</p>
+            <p id="auth.phone-verification.p.12" className="text-center text-[10px] sm:text-xs text-error">{otpError}</p>
           ) : null}
 
-          <div {...uiAttributes({ uid: "auth.phone-verification.div.24-GWn4eq", id: "auth.phone-verification.div.24" })} id="auth.phone-verification.div.14" className="flex w-full items-center gap-2 sm:gap-3">
-            <button {...uiAttributes({ uid: "auth.phone-verification.button.15-q8SVHj", id: "auth.phone-verification.button.15" })} id="auth.phone-verification.button.7"
+          <div id="auth.phone-verification.div.14" className="flex w-full items-center gap-2 sm:gap-3">
+            <button id="auth.phone-verification.button.7"
               type="button"
               onClick={() => void handleVerifyOtpWrapper()}
               disabled={otp.length !== 4 || isVerifying}
@@ -365,7 +364,7 @@ export function PhoneVerification({ id,
                 ? t('auth.phone.verifying')
                 : t('auth.phone.verifyOtp')}
             </button>
-            <button {...uiAttributes({ uid: "auth.phone-verification.button.16-1XGXi2", id: "auth.phone-verification.button.16" })} id="auth.phone-verification.button.8"
+            <button id="auth.phone-verification.button.8"
               type="button"
               onClick={() => void handleSendOtpWrapper()}
               disabled={countdown > 0 || isSending}

@@ -2,7 +2,6 @@
 
 import { OptionCheckbox, ProductStyleCard } from "@/shared/ui/product-style-card";
 import type { ProductSpecificationsStyleSettings } from "@/shared/ui/product-style-settings";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductSpecificationsStyleEditorProps {
   value: ProductSpecificationsStyleSettings;
@@ -24,7 +23,7 @@ export function ProductSpecificationsStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div {...uiAttributes({ uid: "product.style-editors.specifications.product-specifications-style-editor.div.2-eEu2V8", id: "product.style-editors.specifications.product-specifications-style-editor.div.2" })} id="product.style-editors.specifications.product-specifications-style-editor.div" className="grid gap-2">
+      <div id="product.style-editors.specifications.product-specifications-style-editor.div" className="grid gap-2">
         <OptionCheckbox id="product.style-editors.specifications.product-specifications-style-editor.option-checkbox" label="اللون" checked={value.color} disabled={disabled} onChange={(color) => onChange({ ...value, color })} />
         <OptionCheckbox id="product.style-editors.specifications.product-specifications-style-editor.option-checkbox.2" label="الأبعاد" checked={value.dimensions} disabled={disabled} onChange={(dimensions) => onChange({ ...value, dimensions })} />
         <OptionCheckbox id="product.style-editors.specifications.product-specifications-style-editor.option-checkbox.3" label="الحالة" checked={value.condition} disabled={disabled} onChange={(condition) => onChange({ ...value, condition })} />

@@ -35,7 +35,6 @@ import type {
 } from "./types";
 import "./AsolMap.css";
 import { SOURCE, present, point, error, addDataLayers } from "./parts/AsolMap.map-types";
-import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 /*
  * MapLibre resolves its worker as `new URL('./maplibre-gl-worker.mjs', import.meta.url)`.
@@ -580,17 +579,16 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
       [startGps],
     );
 
-    const instance = createOpaqueUiInstanceId("asol-map", props.id ?? "map");
 
     return (
-      <section {...uiAttributes({ uid: "packages.map-core.asol-map.section-1or6FU", id: "packages.map-core.asol-map.section", instance: instance })}
+      <section
         id={props.id}
         className={`asol-map ${theme.className ?? ""} ${props.className ?? ""}`}
         style={props.style}
         aria-label={props.ariaLabel ?? "Interactive map"}
         aria-busy={status === "loading"}
       >
-        <div {...uiAttributes({ uid: "packages.map-core.asol-map.div-mNM9oR", id: "packages.map-core.asol-map.div", instance: instance })}
+        <div
           ref={containerRef}
           className="asol-map__canvas"
           role="application"
@@ -608,15 +606,15 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
         )}
         {props.children}
         {status === "loading" && (
-          <div {...uiAttributes({ uid: "packages.map-core.asol-map.div.2-GMA7AV", id: "packages.map-core.asol-map.div.2", instance: instance })} className="asol-map__overlay" role="status">
-            <span {...uiAttributes({ uid: "packages.map-core.asol-map.span-4J9Smn", id: "packages.map-core.asol-map.span", instance: instance })} className="asol-map__spinner" aria-hidden="true" />
-            <span {...uiAttributes({ uid: "packages.map-core.asol-map.span.2-06jX0x", id: "packages.map-core.asol-map.span.2", instance: instance })}>{props.loadingLabel ?? "Loading map…"}</span>
+          <div className="asol-map__overlay" role="status">
+            <span className="asol-map__spinner" aria-hidden="true" />
+            <span>{props.loadingLabel ?? "Loading map…"}</span>
           </div>
         )}
         {status === "error" && (
-          <div {...uiAttributes({ uid: "packages.map-core.asol-map.div.3-BODh7v", id: "packages.map-core.asol-map.div.3", instance: instance })} className="asol-map__overlay" role="alert">
-            <p {...uiAttributes({ uid: "packages.map-core.asol-map.p-MYq7cD", id: "packages.map-core.asol-map.p", instance: instance })}>{fatal?.message ?? "The map could not be loaded."}</p>
-            <button {...uiAttributes({ uid: "packages.map-core.asol-map.button-31d0UB", id: "packages.map-core.asol-map.button", instance: instance })}
+          <div className="asol-map__overlay" role="alert">
+            <p>{fatal?.message ?? "The map could not be loaded."}</p>
+            <button
               className="asol-map__retry"
               type="button"
               onClick={() => {

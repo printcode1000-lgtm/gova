@@ -1,11 +1,9 @@
-import { existsSync, watch, type FSWatcher } from "node:fs";
+import { existsSync, watch, writeFileSync, type FSWatcher } from "node:fs";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
-
-import { listActiveJobs, listRunners, hasGithubToken } from "./local-agent/github-api";
-import { agentsDir, coordinationDir, locksDir, messagesDir, operationLogsDir, requestsDir } from "./local-agent/paths";
-import { EMPTY_GITHUB_SAMPLE, buildWatchModel, type GithubSample } from "./local-agent/watch-model";
-import { PANEL_ORDER, renderFrame, type PanelKey } from "./local-agent/watch-render";
-
+import { agentsDir, coordinationDir, ensureDir, hasGithubToken, listActiveJobs, listRunners, localRootDir, locksDir, messagesDir, operationLogsDir, requestsDir } from "@asol/local-agent-core";
+import { toggleHostToolAllowed } from "@asol/local-agent-core/host";
+import { buildWatchModel, EMPTY_GITHUB_SAMPLE, type GithubSample, PANEL_ORDER, type PanelKey, remoteHostsCachePath, renderFrame } from "@asol/local-agent-core/monitor";
 /**
  * A live view of the local server that never touches it.
  *
@@ -61,6 +59,17 @@ function frame(): string {
   });
 }
 
+function plainFrame(): string {
+  const model = buildWatchModel(state.githubEnabled ? state.github : EMPTY_GITHUB_SAMPLE);
+  return renderFrame(model, {
+    width: process.stdout.columns || 120,
+    height: process.stdout.rows || 40,
+    color: false,
+    paused: true,
+    focus: state.focus,
+  });
+}
+
 function draw(): void {
   if (state.paused) return;
   state.dirty = false;
@@ -99,7 +108,7 @@ async function pollGithub(): Promise<void> {
  */
 function watchLocalSources(onChange: () => void): FSWatcher[] {
   const watchers: FSWatcher[] = [];
-  const targets = [coordinationDir(), agentsDir(), locksDir(), messagesDir(), requestsDir(), operationLogsDir()];
+  const targets = [coordinationDir(), agentsDir(), locksDir(), messagesDir(), requestsDir(), operationLogsDir(), path.dirname(remoteHostsCachePath()), localRootDir()];
   for (const target of targets) {
     if (!existsSync(target)) continue;
     try {
@@ -121,6 +130,20 @@ function watchLocalSources(onChange: () => void): FSWatcher[] {
   return watchers;
 }
 
+function copyFrame(): void {
+  const text = plainFrame();
+  const dir = ensureDir(path.join(localRootDir(), "monitor-frames"));
+  const filePath = path.join(dir, `frame-${new Date().toISOString().replace(/[:.]/g, "-")}.txt`);
+  writeFileSync(filePath, `${text}\n`, { mode: 0o600 });
+  for (const command of ["wl-copy", "xclip", "xsel"]) {
+    const args = command === "xclip" ? ["-selection", "clipboard"] : command === "xsel" ? ["--clipboard", "--input"] : [];
+    const result = spawnSync(command, args, { input: text, encoding: "utf8", stdio: ["pipe", "ignore", "ignore"] });
+    if (result.status === 0) break;
+  }
+  state.paused = true;
+  process.stdout.write(`\u001B[H\u001B[0J${frame()}\nframe copied to ${filePath}\u001B[0J`);
+}
+
 function bindKeys(quit: () => void): void {
   if (!process.stdin.isTTY) return;
   process.stdin.setRawMode(true);
@@ -129,6 +152,8 @@ function bindKeys(quit: () => void): void {
   process.stdin.on("data", (key: string) => {
     if (key === "q" || key === "\u0003") return quit();
     if (key === "p") state.paused = !state.paused;
+    else if (key === "c") return copyFrame();
+    else if (key === "a") toggleHostToolAllowed();
     else if (key === "o") state.githubEnabled = !state.githubEnabled && hasGithubToken();
     else if (key === "\u001B") state.focus = null;
     else if (key >= "1" && key <= String(PANEL_ORDER.length)) state.focus = PANEL_ORDER[Number(key) - 1] ?? null;

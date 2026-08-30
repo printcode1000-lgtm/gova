@@ -4,7 +4,6 @@ import { Button } from "@/shared/ui/button";
 
 import { dateText } from "./data-health-labels";
 import type { HistoryResponse } from "./data-health-page-types";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function DataHealthHistoryPanel({
   history,
@@ -22,14 +21,14 @@ export function DataHealthHistoryPanel({
   onClearCleanupAudit: () => void;
 }) {
   return (
-    <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.14-y2PSrh", id: "data-health.data-health-history-panel.div.14" })} id="data-health.data-health-history-panel.div" className="grid gap-4 xl:grid-cols-2">
-      <section {...uiAttributes({ uid: "data-health.data-health-history-panel.section.4-0aXW59", id: "data-health.data-health-history-panel.section.4" })} id="data-health.data-health-history-panel.section" className="overflow-hidden rounded-md border bg-surface">
-        <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.15-J6j6Kw", id: "data-health.data-health-history-panel.div.15" })} id="data-health.data-health-history-panel.div.2" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-          <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.16-F5RP6G", id: "data-health.data-health-history-panel.div.16" })} id="data-health.data-health-history-panel.div.3" className="flex items-center gap-2 font-semibold">
+    <div id="data-health.data-health-history-panel.div" className="grid gap-4 xl:grid-cols-2">
+      <section id="data-health.data-health-history-panel.section" className="overflow-hidden rounded-md border bg-surface">
+        <div id="data-health.data-health-history-panel.div.2" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div id="data-health.data-health-history-panel.div.3" className="flex items-center gap-2 font-semibold">
             <History id="data-health.data-health-history-panel.history" className="h-4 w-4" />
             سجل الفحوصات
           </div>
-          <Button id="data-health.data-health-history-panel.button" ui={{ uid: "data-health.history.clear-runs-54IYBD", id: "data-health.history.clear-runs", kind: "action", action: "clear-run-history", part: "history" }}
+          <Button id="data-health.data-health-history-panel.button"
             type="button"
             size="sm"
             variant="outline"
@@ -40,32 +39,32 @@ export function DataHealthHistoryPanel({
             إضافة حذف السجل للحفظ
           </Button>
         </div>
-        <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.17-Dj5GLV", id: "data-health.data-health-history-panel.div.17" })} id="data-health.data-health-history-panel.div.4" className="divide-y">
+        <div id="data-health.data-health-history-panel.div.4" className="divide-y">
           {history.runs.map((run) => (
-            <div key={run.id} {...uiAttributes({ uid: "data-health.data-health-history-panel.div.18-gV49Ri", id: "data-health.data-health-history-panel.div.18" , instance: createOpaqueUiInstanceId("iter-f2068d49e6", String(run.id))})} className="grid grid-cols-[1fr_auto] gap-2 p-3 text-sm">
-              <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.19-xHgfs6", id: "data-health.data-health-history-panel.div.19" , instance: createOpaqueUiInstanceId("iter-972cc2d8ac", String(run.id))})}>
-                <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.20-BYK0j7", id: "data-health.data-health-history-panel.div.20" , instance: createOpaqueUiInstanceId("iter-a6a1cf2a12", String(run.id))})}>{dateText(run.completedAt || run.startedAt)}</div>
-                <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.21-65i1fD", id: "data-health.data-health-history-panel.div.21" , instance: createOpaqueUiInstanceId("iter-78f6ba58eb", String(run.id))})} className="mt-1 text-xs text-on-surface-variant">
+            <div key={run.id} className="grid grid-cols-[1fr_auto] gap-2 p-3 text-sm">
+              <div>
+                <div>{dateText(run.completedAt || run.startedAt)}</div>
+                <div className="mt-1 text-xs text-on-surface-variant">
                   {run.scannedRecords} سجل، {run.total} مشكلة، {run.critical} حرجة
                 </div>
               </div>
-              <span {...uiAttributes({ uid: "data-health.data-health-history-panel.span-wXoLy6", id: "data-health.data-health-history-panel.span" , instance: createOpaqueUiInstanceId("iter-4eb02de8cd", String(run.id))})} className="text-xs text-on-surface-variant">{run.durationMs} ms</span>
+              <span className="text-xs text-on-surface-variant">{run.durationMs} ms</span>
             </div>
           ))}
           {history.runs.length === 0 ? (
-            <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.22-6F2I7O", id: "data-health.data-health-history-panel.div.22" })} id="data-health.data-health-history-panel.div.5" className="p-6 text-center text-sm text-on-surface-variant">
+            <div id="data-health.data-health-history-panel.div.5" className="p-6 text-center text-sm text-on-surface-variant">
               لا يوجد سجل بعد.
             </div>
           ) : null}
         </div>
       </section>
-      <section {...uiAttributes({ uid: "data-health.data-health-history-panel.section.5-6q0g0D", id: "data-health.data-health-history-panel.section.5" })} id="data-health.data-health-history-panel.section.2" className="overflow-hidden rounded-md border bg-surface">
-        <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.23-K0XMI0", id: "data-health.data-health-history-panel.div.23" })} id="data-health.data-health-history-panel.div.6" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-          <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.24-2JTW2n", id: "data-health.data-health-history-panel.div.24" })} id="data-health.data-health-history-panel.div.7" className="flex items-center gap-2 font-semibold">
+      <section id="data-health.data-health-history-panel.section.2" className="overflow-hidden rounded-md border bg-surface">
+        <div id="data-health.data-health-history-panel.div.6" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div id="data-health.data-health-history-panel.div.7" className="flex items-center gap-2 font-semibold">
             <ShieldCheck id="data-health.data-health-history-panel.shield-check" className="h-4 w-4" />
             تدقيق التنظيف
           </div>
-          <Button id="data-health.data-health-history-panel.button.2" ui={{ uid: "data-health.history.clear-audit-V4POBR", id: "data-health.history.clear-audit", kind: "action", action: "clear-cleanup-audit", part: "history" }}
+          <Button id="data-health.data-health-history-panel.button.2"
             type="button"
             size="sm"
             variant="outline"
@@ -76,37 +75,37 @@ export function DataHealthHistoryPanel({
             إضافة حذف التدقيق للحفظ
           </Button>
         </div>
-        <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.25-uNDiS1", id: "data-health.data-health-history-panel.div.25" })} id="data-health.data-health-history-panel.div.8" className="divide-y">
+        <div id="data-health.data-health-history-panel.div.8" className="divide-y">
           {history.audit.map((entry) => (
-            <div key={entry.id} {...uiAttributes({ uid: "data-health.data-health-history-panel.div.26-qUmo0J", id: "data-health.data-health-history-panel.div.26" , instance: createOpaqueUiInstanceId("iter-e04fca6886", String(entry.id))})} className="p-3 text-sm">
-              <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.27-Vpj0TZ", id: "data-health.data-health-history-panel.div.27" , instance: createOpaqueUiInstanceId("iter-5cf1fb6c09", String(entry.id))})} className="flex items-center justify-between gap-2">
-                <span {...uiAttributes({ uid: "data-health.data-health-history-panel.span.2-FxIU3v", id: "data-health.data-health-history-panel.span.2" , instance: createOpaqueUiInstanceId("iter-9eb2542691", String(entry.id))})}>{entry.action}</span>
-                <span {...uiAttributes({ uid: "data-health.data-health-history-panel.span.3-VAC69R", id: "data-health.data-health-history-panel.span.3" , instance: createOpaqueUiInstanceId("iter-02e9bf6320", String(entry.id))})} className={entry.status === "cleaned" ? "text-green-700" : "text-amber-700"}>
+            <div key={entry.id} className="p-3 text-sm">
+              <div className="flex items-center justify-between gap-2">
+                <span>{entry.action}</span>
+                <span className={entry.status === "cleaned" ? "text-green-700" : "text-amber-700"}>
                   {entry.status === "cleaned" ? "تم" : "تم التجاوز"}
                 </span>
               </div>
-              <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.28-ya62zI", id: "data-health.data-health-history-panel.div.28" , instance: createOpaqueUiInstanceId("iter-def09c9b5b", String(entry.id))})} className="mt-1 break-all text-xs text-on-surface-variant" dir="ltr">
+              <div className="mt-1 break-all text-xs text-on-surface-variant" dir="ltr">
                 {entry.recordId}
               </div>
-              <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.29-WoS3Q0", id: "data-health.data-health-history-panel.div.29" , instance: createOpaqueUiInstanceId("iter-5b535b8814", String(entry.id))})} className="mt-1 text-xs text-on-surface-variant">
+              <div className="mt-1 text-xs text-on-surface-variant">
                 {dateText(entry.createdAt)}، المسؤول {entry.adminUid}
               </div>
             </div>
           ))}
           {history.audit.length === 0 ? (
-            <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.30-23NEcM", id: "data-health.data-health-history-panel.div.30" })} id="data-health.data-health-history-panel.div.9" className="p-6 text-center text-sm text-on-surface-variant">
+            <div id="data-health.data-health-history-panel.div.9" className="p-6 text-center text-sm text-on-surface-variant">
               لم تُنفذ عمليات تنظيف بعد.
             </div>
           ) : null}
         </div>
       </section>
-      <section {...uiAttributes({ uid: "data-health.data-health-history-panel.section.6-Uo9E3i", id: "data-health.data-health-history-panel.section.6" })} id="data-health.data-health-history-panel.section.3" className="overflow-hidden rounded-md border bg-surface xl:col-span-2">
-        <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.31-Y0JS2H", id: "data-health.data-health-history-panel.div.31" })} id="data-health.data-health-history-panel.div.10" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-          <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.32-roJqr3", id: "data-health.data-health-history-panel.div.32" })} id="data-health.data-health-history-panel.div.11" className="flex items-center gap-2 font-semibold">
+      <section id="data-health.data-health-history-panel.section.3" className="overflow-hidden rounded-md border bg-surface xl:col-span-2">
+        <div id="data-health.data-health-history-panel.div.10" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div id="data-health.data-health-history-panel.div.11" className="flex items-center gap-2 font-semibold">
             <ShieldCheck id="data-health.data-health-history-panel.shield-check.2" className="h-4 w-4" />
             الحجر الصحي
           </div>
-          <Button id="data-health.data-health-history-panel.button.3" ui={{ uid: "data-health.history.clear-quarantine-IWlW3x", id: "data-health.history.clear-quarantine", kind: "action", action: "clear-quarantine", part: "history" }}
+          <Button id="data-health.data-health-history-panel.button.3"
             type="button"
             size="sm"
             variant="outline"
@@ -117,26 +116,26 @@ export function DataHealthHistoryPanel({
             إضافة تنظيف الحجر للحفظ
           </Button>
         </div>
-        <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.33-9cPNoz", id: "data-health.data-health-history-panel.div.33" })} id="data-health.data-health-history-panel.div.12" className="divide-y">
+        <div id="data-health.data-health-history-panel.div.12" className="divide-y">
           {history.quarantine.map((entry) => (
-            <div key={entry.id} {...uiAttributes({ uid: "data-health.data-health-history-panel.div.34-AY23W4", id: "data-health.data-health-history-panel.div.34" , instance: createOpaqueUiInstanceId("iter-291b5fb0af", String(entry.id))})} className="flex flex-wrap items-center justify-between gap-3 p-3 text-sm">
-              <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.35-ytWi0h", id: "data-health.data-health-history-panel.div.35" , instance: createOpaqueUiInstanceId("iter-f0d0ecbaa3", String(entry.id))})} className="min-w-0 flex-1">
-                <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.36-xBq5tG", id: "data-health.data-health-history-panel.div.36" , instance: createOpaqueUiInstanceId("iter-f57fd6dfd8", String(entry.id))})} className="font-medium">
+            <div key={entry.id} className="flex flex-wrap items-center justify-between gap-3 p-3 text-sm">
+              <div className="min-w-0 flex-1">
+                <div className="font-medium">
                   {entry.resourceType === "image" ? "ملف صورة" : "سجل"} في الحجر
                 </div>
-                <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.37-a9nx0O", id: "data-health.data-health-history-panel.div.37" , instance: createOpaqueUiInstanceId("iter-062cd1e53f", String(entry.id))})} className="mt-1 break-all text-xs text-on-surface-variant" dir="ltr">
+                <div className="mt-1 break-all text-xs text-on-surface-variant" dir="ltr">
                   {entry.resourceKey || `${entry.database}.${entry.table}:${entry.recordId}`}
                 </div>
-                <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.38-6TgEKR", id: "data-health.data-health-history-panel.div.38" , instance: createOpaqueUiInstanceId("iter-f8e38bea64", String(entry.id))})} className="mt-1 text-xs text-on-surface-variant">
+                <div className="mt-1 text-xs text-on-surface-variant">
                   مؤهل للحذف {dateText(entry.eligibleForDeletionAt)}
                 </div>
               </div>
-              <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.39-2w0qM8", id: "data-health.data-health-history-panel.div.39" , instance: createOpaqueUiInstanceId("iter-50d10b85b4", String(entry.id))})} className="flex gap-2">
-                <Button ui={{ uid: "data-health.data-health-history-panel.button.4-ZHo5iu", id: "data-health.data-health-history-panel.button.4" , instance: createOpaqueUiInstanceId("iter-3634e87fea", String(entry.id))}} size="sm" variant="outline" onClick={() => void onRelease(entry.id)}>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={() => void onRelease(entry.id)}>
                   إخراج من الحجر
                 </Button>
                 {entry.resourceType === "image" ? (
-                  <Button ui={{ uid: "data-health.data-health-history-panel.button.5-I8eTuI", id: "data-health.data-health-history-panel.button.5" , instance: createOpaqueUiInstanceId("iter-748ce3f936", String(entry.id))}}
+                  <Button
                     size="sm"
                     variant="outline"
                     disabled={!entry.eligible}
@@ -150,7 +149,7 @@ export function DataHealthHistoryPanel({
             </div>
           ))}
           {history.quarantine.length === 0 ? (
-            <div {...uiAttributes({ uid: "data-health.data-health-history-panel.div.40-RZ6G5K", id: "data-health.data-health-history-panel.div.40" })} id="data-health.data-health-history-panel.div.13" className="p-6 text-center text-sm text-on-surface-variant">
+            <div id="data-health.data-health-history-panel.div.13" className="p-6 text-center text-sm text-on-surface-variant">
               لا توجد عناصر في الحجر.
             </div>
           ) : null}

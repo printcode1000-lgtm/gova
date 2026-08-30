@@ -1,8 +1,5 @@
 import { readFileSync } from "node:fs";
-
-import { knownRequestIds } from "./local-agent/request-store";
-import { DISPATCHABLE_WORKFLOWS, validateDispatchRequest } from "./local-agent/request-contract";
-
+import { DISPATCHABLE_WORKFLOWS, knownRequestIds, validateDispatchRequest } from "@asol/local-agent-core";
 /**
  * Validate a dispatch request document before it is pushed.
  *

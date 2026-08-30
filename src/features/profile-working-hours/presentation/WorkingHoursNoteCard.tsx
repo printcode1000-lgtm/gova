@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { StickyNote } from "lucide-react";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface WorkingHoursNoteCardProps {
   mode: "edit" | "preview";
@@ -38,16 +37,16 @@ export function WorkingHoursNoteCard({ id,
   if (!isEdit && !note) return null;
 
   return (
-    <section {...uiAttributes({ uid: "profile-working-hours.working-hours-note-card.section-s8W6ic", id: "profile-working-hours.working-hours-note-card.section" })}
+    <section
       id={id}
       className="min-w-0 space-y-3 rounded-xl border border-outline-variant bg-surface p-4"
     >
-      <h3 {...uiAttributes({ uid: "profile-working-hours.working-hours-note-card.h3-E34DlF", id: "profile-working-hours.working-hours-note-card.h3" })} className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
+      <h3 className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
         <StickyNote className="h-5 w-5 text-primary" />
         {text.title}
       </h3>
       {isEdit ? (
-        <textarea {...uiAttributes({ uid: "profile-working-hours.working-hours-note-card.textarea-Vx40jG", id: "profile-working-hours.working-hours-note-card.textarea" })}
+        <textarea
           value={note}
           onChange={(event) =>
             onChange?.(event.target.value.slice(0, NOTE_MAX_LENGTH))
@@ -59,7 +58,7 @@ export function WorkingHoursNoteCard({ id,
           className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface outline-none transition focus:border-primary"
         />
       ) : (
-        <p {...uiAttributes({ uid: "profile-working-hours.working-hours-note-card.p-6g3GJC", id: "profile-working-hours.working-hours-note-card.p" })} className="whitespace-pre-wrap break-words rounded-lg bg-surface-container-low p-3 text-xs text-on-surface-variant">
+        <p className="whitespace-pre-wrap break-words rounded-lg bg-surface-container-low p-3 text-xs text-on-surface-variant">
           {note}
         </p>
       )}

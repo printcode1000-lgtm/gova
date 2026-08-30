@@ -8,8 +8,8 @@ import {
  *
  * The sections are ordered for a reader — environment, source, data, builds,
  * services — and running them in that order end to end is the safe thing to do
- * and also the slow thing to do: `lint`, `typecheck`, `simulation:coverage` and
- * the UiRegistry check share no state with each other and none of them can
+ * and also the slow thing to do: `lint`, `typecheck` and
+ * the independent source checks share no state with each other and none can
  * affect the build that follows. Running them one after another is not a
  * guarantee, it is an accident of how a list is written.
  *
@@ -39,7 +39,7 @@ export interface PreflightNode {
    *
    * Exclusive branches fail fast: everything after a broken build is measuring
    * a build that does not exist. Parallel quality checks do not — a run that
-   * reports "lint and typecheck and the UiRegistry check all failed" is one
+   * reports "lint and typecheck and architecture all failed" is one
    * fix cycle, and three sequential failures are three.
    */
   readonly failFast: boolean;
@@ -83,8 +83,6 @@ export const PREFLIGHT_NODE_POLICY: Readonly<Record<string, PreflightNodePolicy>
   architecture: parallelCheck(["knowledge"]),
   // The `test` gate re-syncs service mirrors and touches the database.
   tests: exclusiveStep(),
-  "simulation-coverage": parallelCheck(),
-  "ui-registry-pending": parallelCheck(),
 
   "local-db": exclusiveStep(),
   "release-schema": exclusiveStep(["local-db"]),

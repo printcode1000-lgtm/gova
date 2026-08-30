@@ -6,7 +6,6 @@ import { Clipboard, Eraser } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import type { DeployTab } from "./DeployRunbookTypes";
 import { parseDeployRunbookLogSnapshot } from "./deploy-runbook-log-snapshot";
-import { createUiInstanceId, uiAttributes, type UiInstanceId } from "@asol/ui-registry-core";
 
 export function ExecutionIndicator(props: { log: string; tab: DeployTab; status: string } & { id?: string }) {
   const snapshot = React.useMemo(
@@ -14,28 +13,24 @@ export function ExecutionIndicator(props: { log: string; tab: DeployTab; status:
     [props.log, props.tab],
   );
   return (
-    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div-hFudM8", id: "google-play-console.deploy-runbook-terminal.div" })} id={props.id} className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-      <IndicatorCard instance={createUiInstanceId("status")} label="الحالة" value={props.status} help="حالة الـ job كما يراها مشغل الأوامر." />
+    <div id={props.id} className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+      <IndicatorCard label="الحالة" value={props.status} help="حالة الـ job كما يراها مشغل الأوامر." />
       <IndicatorCard
-        instance={createUiInstanceId("command")}
         label="الأمر"
         value={snapshot.commandFamily}
         help="هل السجل الحالي من Deploy All أم Deploy Push."
       />
       <IndicatorCard
-        instance={createUiInstanceId("phase")}
         label="المرحلة"
         value={snapshot.phase}
         help="آخر مرحلة ظهرت في الطرفية."
       />
       <IndicatorCard
-        instance={createUiInstanceId("section")}
         label="القسم"
         value={snapshot.section}
         help="آخر قسم داخلي معروف داخل المرحلة."
       />
       <IndicatorCard
-        instance={createUiInstanceId("branch")}
         label="الفرع / الأمر"
         value={snapshot.branch}
         help="آخر branch أو npm script بدأ تنفيذه."
@@ -48,13 +43,13 @@ export function ExecutionIndicator(props: { log: string; tab: DeployTab; status:
 export function TerminalOutput(props: { text: string } & { id?: string }) {
   const empty = "لا يوجد خرج بعد. شغّل أحد التبويبين لعرض سجل الطرفية هنا.";
   return (
-    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.2-9ek0Vr", id: "google-play-console.deploy-runbook-terminal.div.2" })} id={props.id}
+    <div id={props.id}
       className={
         "asol-terminal-scroll min-h-48 max-h-[32rem] w-full min-w-0 " +
         "sm:min-h-64 sm:max-h-[42rem] rounded-md bg-muted"
       }
     >
-      <pre {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.pre-kAy0PE", id: "google-play-console.deploy-runbook-terminal.pre" })} className="min-w-0 p-3 text-xs whitespace-pre-wrap break-words" dir="ltr">
+      <pre className="min-w-0 p-3 text-xs whitespace-pre-wrap break-words" dir="ltr">
         {props.text || empty}
       </pre>
     </div>
@@ -63,26 +58,12 @@ export function TerminalOutput(props: { text: string } & { id?: string }) {
 
 export function TerminalActions(props: { onCopy: () => void; onClear: () => void } & { id?: string }) {
   return (
-    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.3-8cveT1", id: "google-play-console.deploy-runbook-terminal.div.3" })} id={props.id} className="flex flex-wrap items-center gap-2">
-      <Button
-        ui={{
-          uid: "deploy-runbook.terminal.copy-IkfF09",
-          id: "deploy-runbook.terminal.copy",
-          kind: "action",
-          action: "copy-output",
-          part: "terminal",
-        }} variant="outline" size="sm" className="shrink-0" onClick={props.onCopy}>
+    <div id={props.id} className="flex flex-wrap items-center gap-2">
+      <Button variant="outline" size="sm" className="shrink-0" onClick={props.onCopy}>
         <Clipboard className="h-4 w-4" />
         نسخ
       </Button>
-      <Button
-        ui={{
-          uid: "deploy-runbook.terminal.clear-8A2xQ5",
-          id: "deploy-runbook.terminal.clear",
-          kind: "action",
-          action: "clear-output",
-          part: "terminal",
-        }} variant="outline" size="sm" className="shrink-0" onClick={props.onClear}>
+      <Button variant="outline" size="sm" className="shrink-0" onClick={props.onClear}>
         <Eraser className="h-4 w-4" />
         مسح العرض
       </Button>
@@ -95,16 +76,15 @@ function IndicatorCard(props: {
   value: string;
   help: string;
   className?: string;
-  instance: UiInstanceId;
 } & { id?: string }) {
   return (
-    <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.4-0BDOs8", id: "google-play-console.deploy-runbook-terminal.div.4", instance: props.instance })} id={props.id} className={props.className ?? ""}>
-      <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.5-Hfl0AT", id: "google-play-console.deploy-runbook-terminal.div.5", instance: props.instance })} className="min-w-0 rounded-md border bg-surface p-3">
-        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.6-yUkG3c", id: "google-play-console.deploy-runbook-terminal.div.6", instance: props.instance })} className="text-xs text-on-surface-variant">{props.label}</div>
-        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.div.7-IrDD77", id: "google-play-console.deploy-runbook-terminal.div.7", instance: props.instance })} className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
+    <div id={props.id} className={props.className ?? ""}>
+      <div className="min-w-0 rounded-md border bg-surface p-3">
+        <div className="text-xs text-on-surface-variant">{props.label}</div>
+        <div className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
           {props.value || "—"}
         </div>
-        <p {...uiAttributes({ uid: "google-play-console.deploy-runbook-terminal.p-8CjEYD", id: "google-play-console.deploy-runbook-terminal.p", instance: props.instance })} className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
+        <p className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
       </div>
     </div>
   );

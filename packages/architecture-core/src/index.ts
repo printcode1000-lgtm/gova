@@ -50,44 +50,8 @@ export { checkFeatureDoorContract } from './checks/feature-door-contract';
 export { checkFeatureDependencyContract } from './checks/feature-dependency-contract';
 export { checkFeatureApplicationDoorPurityContract } from './checks/feature-application-door-purity-contract';
 export { checkArchitectureDocsDriftContract } from './checks/architecture-docs-drift-contract';
-export { checkUiAttributeContract } from './checks/ui-attribute-contract';
-export {
-  DOM_IDENTITY_COVERAGE_EXCEPTIONS,
-  checkDomIdentityCoverageContract,
-  type DomIdentityCoverageException,
-} from './checks/dom-identity-coverage-contract';
-export { checkUiSimulationContract } from './checks/ui-simulation-contract';
 export { checkPackageSealContract } from './checks/package-seal-contract';
 export { checkCapabilityOwnershipContract } from './checks/capability-ownership-contract';
 export { checkRepositorySweepContract } from './checks/repository-sweep-contract';
 export type { ArchitectureCheckOptions } from './runner';
 export { runArchitectureCheck } from './runner';
-
-export {
-  buildDomIdentityInventory,
-  loadProjectTsx,
-  findDescriptorLiterals,
-  isInsideIteratorCallback,
-  isActionableDomUsage,
-  type DomIdentityInventory,
-  type DomUsageSite,
-  type DomUsageOwnership,
-  type UiRegistrationKind,
-  type DescriptorLiteral,
-  type DescriptorLiteralField,
-} from './dom-identity/analyzer';
-export type { StaticInteractionMetadata, StaticSimulationMetadata } from './dom-identity/descriptor-literals';
-export { planUidMigration, applyUidMigration, type UidMigrationEdit, type UidMigrationSkip, type UidMigrationPlan } from './dom-identity/migration';
-export { fileSemanticPrefix, mintSemanticId, mintUid } from './dom-identity/mint';
-export { hostMultiplicity, type HostMultiplicity } from './dom-identity/repetition';
-export {
-  runtimeMultiplicityReport,
-  runtimeMultiplicityReportFromSources,
-  type RuntimeMultiplicityFinding,
-  type RuntimeMultiplicityReport,
-} from './dom-identity/runtime-multiplicity';
-export { collectUidCatalog, type UidCatalogEntry } from './dom-identity/uid-catalog';
-export { findPendingAstSourceMatches, type PendingAstSourceMatch } from './dom-identity/pending-source-match';
-export { readUiPageRegistryAst, type AstPageRegistryEntry } from './dom-identity/page-registry-reader';
-export { reachableProjectFiles } from './dom-identity/project-reachability';
-export { isIntrinsicJsxTag, jsxComponentName, localBindingTargets, parseTsx } from './dom-identity/tsx-ast';

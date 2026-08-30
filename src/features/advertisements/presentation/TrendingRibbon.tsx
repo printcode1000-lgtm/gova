@@ -4,7 +4,6 @@ import { TrendingUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "@/shared/i18n";
-import { composeUiInstanceId, createOpaqueUiInstanceId, createUiPositionInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export interface TrendingRibbonItem {
   label: string;
@@ -210,7 +209,7 @@ export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: stri
   const displayLabel = label.includes(".") ? t(label) : label;
 
   return (
-    <div {...uiAttributes({ uid: "advertisements.trending-ribbon.div-VD4jzv", id: "advertisements.trending-ribbon.div" })} id={id}
+    <div id={id}
       dir={isRTL ? "rtl" : "ltr"}
       ref={containerRef}
       onPointerDown={handlePointerDown}
@@ -229,29 +228,25 @@ export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: stri
       }}
       className="asol-section-tonal-error overflow-hidden relative flex items-center py-2 mx-2 sm:mx-4 rounded-xl touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto"
     >
-      <div {...uiAttributes({ uid: "advertisements.trending-ribbon.div.2-WYC4y5", id: "advertisements.trending-ribbon.div.2" })} className="flex items-center gap-2 px-4 z-10 border-s border-outline-variant/40 shrink-0 asol-tonal-error rounded-e-xl py-1">
+      <div className="flex items-center gap-2 px-4 z-10 border-s border-outline-variant/40 shrink-0 asol-tonal-error rounded-e-xl py-1">
         <TrendingUp
           className="w-5 h-5 text-error animate-pulse-subtle"
           aria-hidden
         />
-        <span {...uiAttributes({ uid: "advertisements.trending-ribbon.span-9isl5C", id: "advertisements.trending-ribbon.span" })} className="text-xs font-bold text-on-error-container">
+        <span className="text-xs font-bold text-on-error-container">
           {displayLabel}
         </span>
       </div>
 
-      <div {...uiAttributes({ uid: "advertisements.trending-ribbon.div.3-X5X7pe", id: "advertisements.trending-ribbon.div.3" })} className="flex-1 overflow-hidden" dir="ltr">
-        <div {...uiAttributes({ uid: "advertisements.trending-ribbon.div.4-sBbO0W", id: "advertisements.trending-ribbon.div.4" })}
+      <div className="flex-1 overflow-hidden" dir="ltr">
+        <div
           ref={trackRef}
           className="flex w-max will-change-transform gap-8 items-center pr-4"
         >
           {loopItems.map((item, i) => {
-            const ribbonInstance = composeUiInstanceId(
-              createOpaqueUiInstanceId("trending-item", item.action || item.label || String(i)),
-              createUiPositionInstanceId("ribbon-copy", i),
-            );
             return (
-              <span key={`${item.action}-${i}`} {...uiAttributes({ uid: "advertisements.trending-ribbon.span.2-jDNz1Y", id: "advertisements.trending-ribbon.span.2", instance: ribbonInstance })} className="flex items-center gap-8 shrink-0">
-                <button {...uiAttributes({ uid: "advertisements.trending-ribbon.button-w1f28N", id: "advertisements.trending-ribbon.button", instance: ribbonInstance })}
+              <span key={`${item.action}-${i}`} className="flex items-center gap-8 shrink-0">
+                <button
                   dir={isRTL ? "rtl" : "ltr"}
                   type="button"
                   onClick={(e) => handleItemClick(e, item.action)}
@@ -260,7 +255,7 @@ export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: stri
                 >
                   {item.label}
                 </button>
-                <span {...uiAttributes({ uid: "advertisements.trending-ribbon.span.3-RpNc5M", id: "advertisements.trending-ribbon.span.3", instance: ribbonInstance })} className="text-error font-bold">•</span>
+                <span className="text-error font-bold">•</span>
               </span>
             );
           })}

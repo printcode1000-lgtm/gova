@@ -4,7 +4,7 @@
 
 The `src/features/password-recovery` module provides an independent password recovery flow via email. The user begins with their registered phone number, receives a 6-digit verification code, and sets a new password upon code verification.
 
-Phone validation and normalization are not owned by password recovery. `normalizeRecoveryPhone()` delegates to the canonical Egyptian mobile-phone rule exported by `@asol/auth-core`; the recovery layer only maps an invalid canonical phone to the recovery-specific error key. This keeps registration, login, profile updates, recovery, and simulation on one phone source of truth.
+Phone validation and normalization are not owned by password recovery. `normalizeRecoveryPhone()` delegates to the canonical Egyptian mobile-phone rule exported by `@asol/auth-core`; the recovery layer only maps an invalid canonical phone to the recovery-specific error key. This keeps registration, login, profile updates, and recovery on one phone source of truth.
 
 ## User Flow
 

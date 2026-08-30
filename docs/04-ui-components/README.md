@@ -7,7 +7,6 @@ Canonical UI behavior and interaction policies shared across pages and features.
 ## Read First
 
 - [Touch Interaction Policy](./touch-interaction-policy.md) — binding touch-first interaction rules.
-- [UI Attribute System](./ui-attribute-system.md) — typed page and component diagnostic identities.
 - [Page Snapshot System](./page-snapshot-system.md) — required top-level page snapshot behavior.
 - [Profile Edit Navigation](./profile-edit-navigation.md) — direct profile-section selection, active-tab synchronization, and snapshot restoration rules.
 - [Profile Preview Responsive Layout](./profile-preview-responsive-layout.md) — production and static profile-preview containment rules.

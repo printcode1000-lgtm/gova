@@ -6,9 +6,6 @@ import { ROOT, SRC, SCRIPTS, violations, walk, rel } from './checks/architecture
 import { checkNotificationModuleContract } from './checks/notification-contract';
 import { checkDeadContractRules } from './checks/storage-core-contract';
 import { checkTouchInteractionContract } from './checks/touch-interaction-contract';
-import { checkUiAttributeContract } from './checks/ui-attribute-contract';
-import { checkDomIdentityCoverageContract } from './checks/dom-identity-coverage-contract';
-import { checkUiSimulationContract } from './checks/ui-simulation-contract';
 import { checkMapLibreWorkerContract } from './checks/maplibre-worker-contract';
 import {
   checkFile,
@@ -81,8 +78,6 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   checkFeatureDependencyContract();
   checkFeatureApplicationDoorPurityContract();
   checkArchitectureDocsDriftContract();
-  checkDomIdentityCoverageContract();
-  checkUiSimulationContract();
 
   // Root files owned by a capability for vendor purposes (e.g. capacitor.config.ts).
   for (const rootFile of ROOT_VENDOR_OWNED_FILES) {
@@ -127,7 +122,6 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
     checkVendorOwnershipContract(file, content);
   }
   checkTouchInteractionContract();
-  checkUiAttributeContract();
   checkMapLibreWorkerContract();
   checkGeneratedDataAccessArtifacts();
   checkSystemLogsBootstrapContract();

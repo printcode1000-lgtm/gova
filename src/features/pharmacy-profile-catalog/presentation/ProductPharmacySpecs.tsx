@@ -16,7 +16,6 @@ import type {
   ProductMode,
 } from "@/features/product/ui";
 import { PharmacySelect } from "./PharmacySelect";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductPharmacySpecsProps {
   mode: ProductMode;
@@ -248,7 +247,7 @@ export function ProductPharmacySpecs({
 
   if (mode === "view") {
     return (
-      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.product-pharmacy-specs.div.3-Hxiku2", id: "pharmacy-profile-catalog.product-pharmacy-specs.div.3" })} id="pharmacy-profile-catalog.product-pharmacy-specs.div" className="grid gap-3 sm:grid-cols-2">
+      <div id="pharmacy-profile-catalog.product-pharmacy-specs.div" className="grid gap-3 sm:grid-cols-2">
         {config.pharmacyCategory ? (
           <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field"
             label="التصنيف الرئيسي"
@@ -319,9 +318,9 @@ export function ProductPharmacySpecs({
   }
 
   return (
-    <div {...uiAttributes({ uid: "pharmacy-profile-catalog.product-pharmacy-specs.div.4-xRaAY2", id: "pharmacy-profile-catalog.product-pharmacy-specs.div.4" })} id="pharmacy-profile-catalog.product-pharmacy-specs.div.2" className="grid gap-3 sm:grid-cols-2">
+    <div id="pharmacy-profile-catalog.product-pharmacy-specs.div.2" className="grid gap-3 sm:grid-cols-2">
       {config.pharmacyCategory ? (
-        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select" ui={{ uid: "pharmacy-catalog.specs.category-K7ccOS", id: "pharmacy-catalog.specs.category", kind: "field", part: "specs" }}
+        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select"
           label="التصنيف الرئيسي"
           value={selectedCategory ? String(selectedCategory.id) : ""}
           disabled={categories.length === 0}
@@ -334,7 +333,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.pharmacySubcategory ? (
-        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.2" ui={{ uid: "pharmacy-catalog.specs.subcategory-bl01Lc", id: "pharmacy-catalog.specs.subcategory", kind: "field", part: "specs" }}
+        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.2"
           label="التصنيف الفرعي"
           value={selectedSubcategory ? String(selectedSubcategory.id) : ""}
           disabled={subcategories.length === 0}
@@ -373,7 +372,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.form ? (
-        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.3" ui={{ uid: "pharmacy-catalog.specs.form-AbS623", id: "pharmacy-catalog.specs.form", kind: "field", part: "specs" }}
+        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.3"
           label="شكل الدواء"
           value={selectedForm?.id ?? ""}
           disabled={forms.length === 0}
@@ -386,7 +385,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.concentration ? (
-        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.4" ui={{ uid: "pharmacy-catalog.specs.strength-IfRd6w", id: "pharmacy-catalog.specs.strength", kind: "field", part: "specs" }}
+        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.4"
           label="التركيز"
           value={selectedStrength?.id ?? ""}
           disabled={strengths.length === 0}

@@ -10,7 +10,6 @@ import { StorageImageManager, type StorageImageManagerHandle } from '@/features/
 import { registerPageSaveImageUploadHandle } from '@/features/page-save';
 import { useOnboardingSaveBridge } from '@/features/page-save/ui';
 import { StorageProfiles, type StoredImage } from '@asol/storage-core';
-import { uiAttributes } from "@asol/ui-registry-core";
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
   "Women's Fashion": 'womensFashion',
@@ -105,16 +104,16 @@ export function StoreIdentitySection() {
   };
 
   return (
-    <div {...uiAttributes({ uid: "onboarding.sections.store-identity-section.div.4-DKG1x3", id: "onboarding.sections.store-identity-section.div.4" })} id="onboarding.sections.store-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card ui={{ uid: "onboarding.sections.store-identity-section.card.2-R64otv", id: "onboarding.sections.store-identity-section.card.2" }} id="onboarding.sections.store-identity-section.card">
-        <CardHeader ui={{ uid: "onboarding.sections.store-identity-section.card-header.2-DWl618", id: "onboarding.sections.store-identity-section.card-header.2" }} id="onboarding.sections.store-identity-section.card-header">
-          <CardTitle ui={{ uid: "onboarding.sections.store-identity-section.card-title.2-bOPgT1", id: "onboarding.sections.store-identity-section.card-title.2" }} id="onboarding.sections.store-identity-section.card-title">{t('onboarding.storeIdentity.title')}</CardTitle>
-          <CardDescription ui={{ uid: "onboarding.sections.store-identity-section.card-description.2-XfOhO0", id: "onboarding.sections.store-identity-section.card-description.2" }} id="onboarding.sections.store-identity-section.card-description">{t('onboarding.storeIdentity.description')}</CardDescription>
+    <div id="onboarding.sections.store-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.store-identity-section.card">
+        <CardHeader id="onboarding.sections.store-identity-section.card-header">
+          <CardTitle id="onboarding.sections.store-identity-section.card-title">{t('onboarding.storeIdentity.title')}</CardTitle>
+          <CardDescription id="onboarding.sections.store-identity-section.card-description">{t('onboarding.storeIdentity.description')}</CardDescription>
         </CardHeader>
-        <CardContent ui={{ uid: "onboarding.sections.store-identity-section.card-content.2-Vvbx41", id: "onboarding.sections.store-identity-section.card-content.2" }} id="onboarding.sections.store-identity-section.card-content" className="space-y-6">
-          <div {...uiAttributes({ uid: "onboarding.sections.store-identity-section.div.5-2UjMJI", id: "onboarding.sections.store-identity-section.div.5" })} id="onboarding.sections.store-identity-section.div.2" className="grid gap-6 lg:grid-cols-2">
+        <CardContent id="onboarding.sections.store-identity-section.card-content" className="space-y-6">
+          <div id="onboarding.sections.store-identity-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.store-identity-section.form-field" label={t('onboarding.storeIdentity.storeName')} htmlFor="onboarding.store-identity.store-name" required error={errors.storeName}>
-              <FormInput ui={{ uid: 'onboarding.store-identity.store-name-uoWh3D', id: 'onboarding.store-identity.store-name', kind: 'field', part: 'form' }}
+              <FormInput
                 id="onboarding.store-identity.store-name"
                 value={storeIdentity.storeName}
                 onChange={(e) => updateStoreIdentity({ storeName: e.target.value })}
@@ -124,7 +123,7 @@ export function StoreIdentitySection() {
             </FormField>
 
             <FormField id="onboarding.sections.store-identity-section.form-field.2" label={t('onboarding.storeIdentity.storeCategory')} htmlFor="storeCategory" required error={errors.storeCategory}>
-              <FormSelect id="onboarding.sections.store-identity-section.form-select" ui={{ uid: 'onboarding.store-identity.store-category-W7KlKN', id: 'onboarding.store-identity.store-category', kind: 'field', part: 'form' }}
+              <FormSelect id="onboarding.sections.store-identity-section.form-select"
                 value={storeIdentity.storeCategory}
                 onValueChange={(v) => updateStoreIdentity({ storeCategory: v })}
                 options={constants.storeCategories.map((c) => ({
@@ -144,7 +143,7 @@ export function StoreIdentitySection() {
             hint={`${storeIdentity.storeDescription.length}/500`}
             error={errors.storeDescription}
           >
-            <FormTextarea ui={{ uid: 'onboarding.store-identity.store-description-43W1KQ', id: 'onboarding.store-identity.store-description', kind: 'field', part: 'form' }}
+            <FormTextarea
               id="onboarding.store-identity.store-description"
               value={storeIdentity.storeDescription}
               onChange={(e) => updateStoreIdentity({ storeDescription: e.target.value })}
@@ -160,7 +159,7 @@ export function StoreIdentitySection() {
             htmlFor="onboarding.store-identity.store-story"
             hint={t('onboarding.storeIdentity.storyHint')}
           >
-            <FormTextarea ui={{ uid: 'onboarding.store-identity.store-story-Cm95SJ', id: 'onboarding.store-identity.store-story', kind: 'field', part: 'form' }}
+            <FormTextarea
               id="onboarding.store-identity.store-story"
               value={storeIdentity.storeStory}
               onChange={(e) => updateStoreIdentity({ storeStory: e.target.value })}
@@ -170,7 +169,7 @@ export function StoreIdentitySection() {
             />
           </FormField>
 
-          <div {...uiAttributes({ uid: "onboarding.sections.store-identity-section.div.6-tq5MY4", id: "onboarding.sections.store-identity-section.div.6" })} id="onboarding.sections.store-identity-section.div.3" className="grid gap-6 lg:grid-cols-2">
+          <div id="onboarding.sections.store-identity-section.div.3" className="grid gap-6 lg:grid-cols-2">
             <StorageImageManager
               ref={setLogoHandle}
               config={{

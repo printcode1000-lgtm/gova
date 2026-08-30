@@ -4,16 +4,14 @@ import * as React from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 
 import { cn } from '@/shared/utils';
-import { type UiDescriptor } from '@asol/ui-registry-core';
 
-import { uiPrimitiveAttributes } from './ui-primitive-attributes';
 
 const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & { ui?: UiDescriptor }
->(({ className, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & { }
+>(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
     className={cn(
@@ -21,15 +19,14 @@ const TabsList = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('tabs-list', ui)}
   />
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & { ui?: UiDescriptor }
->(({ className, disabled, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & { }
+>(({ className, disabled, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
     disabled={disabled}
@@ -38,15 +35,14 @@ const TabsTrigger = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('tabs-trigger', ui, disabled ? 'disabled' : undefined)}
   />
 ));
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content> & { ui?: UiDescriptor }
->(({ className, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content> & { }
+>(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
@@ -54,7 +50,6 @@ const TabsContent = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('tabs-content', ui)}
   />
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;

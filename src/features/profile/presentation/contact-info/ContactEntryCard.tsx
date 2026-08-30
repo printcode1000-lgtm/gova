@@ -6,8 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 import { Button } from "@/shared/ui/button";
-import type { UiInstanceId } from "@asol/ui-registry-core";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 /**
  * One contact entry: a phone number, an address, a link.
@@ -18,7 +16,6 @@ import { uiAttributes } from "@asol/ui-registry-core";
  */
 export function ContactEntryCard({
   id,
-  instance,
   color,
   icon,
   title,
@@ -27,7 +24,6 @@ export function ContactEntryCard({
   children,
 }: {
   id?: string;
-  instance: UiInstanceId;
   color: string;
   icon: IconDefinition;
   title: string;
@@ -37,13 +33,13 @@ export function ContactEntryCard({
   children: React.ReactNode;
 }) {
   return (
-    <div {...uiAttributes({ uid: "profile.contact-info.contact-entry-card.div-MWY0r7", id: "profile.contact-info.contact-entry-card.div", instance })}
+    <div
       id={id}
       className="space-y-2 rounded-lg border p-3"
       style={{ backgroundColor: `${color}10`, borderColor: `${color}44` }}
     >
-      <div {...uiAttributes({ uid: "profile.contact-info.contact-entry-card.div.2-1NV0DS", id: "profile.contact-info.contact-entry-card.div.2", instance })} className="flex items-center justify-between gap-2">
-        <span {...uiAttributes({ uid: "profile.contact-info.contact-entry-card.span-D1ArYX", id: "profile.contact-info.contact-entry-card.span", instance })}
+      <div className="flex items-center justify-between gap-2">
+        <span
           className="flex items-center gap-2 text-xs font-semibold"
           style={{ color }}
         >
@@ -52,14 +48,6 @@ export function ContactEntryCard({
         </span>
         {onRemove ? (
           <Button
-            ui={{
-              uid: "profile.contact.remove-entry-lh8Dtu",
-              id: "profile.contact.remove-entry",
-              kind: "item",
-              interaction: { type: "tap" },
-              simulation: { kind: "list-item", id: "profile.contact.remove-entry" },
-              instance,
-            }}
             variant="ghost"
             size="icon"
             onClick={onRemove}

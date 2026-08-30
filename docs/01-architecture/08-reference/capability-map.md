@@ -11,7 +11,7 @@ Machine-readable capability ownership reference. Each capability has exactly one
 
 ## Scope
 
-All 43 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
+All 42 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
 
 ## Source of Truth
 
@@ -153,7 +153,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Database access, sharding, and domain repositories |
 | **Owner Package** | `@asol/data-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/data-core` · `@asol/data-core/account-deletion` · `@asol/data-core/advertisements` · `@asol/data-core/auth` · `@asol/data-core/auth/entities` · `@asol/data-core/browser` · `@asol/data-core/composition` · `@asol/data-core/data-health` · `@asol/data-core/dev-cloud-backup` · `@asol/data-core/feature-flags` · `@asol/data-core/follow` · `@asol/data-core/follow/entities` · `@asol/data-core/marketplace-orders` · `@asol/data-core/notifications` · `@asol/data-core/ota` · `@asol/data-core/password-recovery` · `@asol/data-core/pharmacy-profile-catalog` · `@asol/data-core/pharmacy-profile-catalog/entities` · `@asol/data-core/product` · `@asol/data-core/product-search` · `@asol/data-core/product-search-fields` · `@asol/data-core/product-search/entities` · `@asol/data-core/product/entities` · `@asol/data-core/profile` · `@asol/data-core/profile/entities` · `@asol/data-core/provisioning` · `@asol/data-core/runtime-config` · `@asol/data-core/seller-discounts` · `@asol/data-core/seller-discounts/entities` · `@asol/data-core/super-admin` · `@asol/data-core/system-logs` · `@asol/data-core/telemetry` · `@asol/data-core/tooling` · `@asol/data-core/ui-registry` |
+| **Public Gateway** | `@asol/data-core` · `@asol/data-core/account-deletion` · `@asol/data-core/advertisements` · `@asol/data-core/auth` · `@asol/data-core/auth/entities` · `@asol/data-core/browser` · `@asol/data-core/composition` · `@asol/data-core/data-health` · `@asol/data-core/dev-cloud-backup` · `@asol/data-core/feature-flags` · `@asol/data-core/follow` · `@asol/data-core/follow/entities` · `@asol/data-core/marketplace-orders` · `@asol/data-core/notifications` · `@asol/data-core/ota` · `@asol/data-core/password-recovery` · `@asol/data-core/pharmacy-profile-catalog` · `@asol/data-core/pharmacy-profile-catalog/entities` · `@asol/data-core/product` · `@asol/data-core/product-search` · `@asol/data-core/product-search-fields` · `@asol/data-core/product-search/entities` · `@asol/data-core/product/entities` · `@asol/data-core/profile` · `@asol/data-core/profile/entities` · `@asol/data-core/provisioning` · `@asol/data-core/runtime-config` · `@asol/data-core/seller-discounts` · `@asol/data-core/seller-discounts/entities` · `@asol/data-core/super-admin` · `@asol/data-core/system-logs` · `@asol/data-core/telemetry` · `@asol/data-core/tooling` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `drizzle-orm/better-sqlite3`, `drizzle-orm/libsql` |
@@ -287,6 +287,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 **Source Map:** `packages/hero-slider-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
+## local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking
+
+| Field | Value |
+|---|---|
+| **Capability** | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking |
+| **Owner Package** | `@asol/local-agent-core` |
+| **Architectural Layer** | capability |
+| **Public Gateway** | `@asol/local-agent-core` · `@asol/local-agent-core/host` · `@asol/local-agent-core/monitor` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `N/A` (capability must not import `@/`) |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/local-agent-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
 
 ---
 
@@ -632,24 +650,6 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
-## Real-user page interaction simulation and coverage discovery
-
-| Field | Value |
-|---|---|
-| **Capability** | Real-user page interaction simulation and coverage discovery |
-| **Owner Package** | `@asol/simulation-core` |
-| **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/simulation-core` · `@asol/simulation-core/discovery` |
-| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
-| **Composition Root** | `N/A` (capability must not import `@/`) |
-| **Infrastructure Owner** | none (pure logic or ports) |
-| **Status** | CLOSED (sealed package with registry entry) |
-| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
-
-**Source Map:** `packages/simulation-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
-
----
-
 ## Object storage (R2/S3) access
 
 | Field | Value |
@@ -740,24 +740,6 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
-## UiRegistry identity contract, page registry, and DOM attribute builders
-
-| Field | Value |
-|---|---|
-| **Capability** | UiRegistry identity contract, page registry, and DOM attribute builders |
-| **Owner Package** | `@asol/ui-registry-core` |
-| **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/ui-registry-core` · `@asol/ui-registry-core/tooling` |
-| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
-| **Composition Root** | `N/A` (capability must not import `@/`) |
-| **Infrastructure Owner** | none (pure logic or ports) |
-| **Status** | CLOSED (sealed package with registry entry) |
-| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
-
-**Source Map:** `packages/ui-registry-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
-
----
-
 ## Trending ribbon UI capability
 
 | Field | Value |
@@ -798,9 +780,9 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 | Metric | Value |
 |---|---|
-| Sealed packages | 43 |
+| Sealed packages | 42 |
 | Layer `bridge` | 1 |
-| Layer `capability` | 34 |
+| Layer `capability` | 33 |
 | Layer `composition` | 6 |
 | Layer `declarations` | 1 |
 | Layer `enforcement` | 1 |

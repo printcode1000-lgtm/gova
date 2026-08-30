@@ -39,7 +39,7 @@ export function NumberInput({ id,
   placeholder: string;
 } & { id?: string }) {
   return (
-    <Input ui={{ uid: "seller-discounts.discount-editor.seller-discounts-manager.section-03.input-8A9U1C", id: "seller-discounts.discount-editor.seller-discounts-manager.section-03.input" }} id={id}
+    <Input id={id}
       type="number"
       min={0}
       value={value === 0 ? "" : String(value)}
@@ -59,7 +59,7 @@ export function MinorCurrencyInput({ id,
   placeholder: string;
 } & { id?: string }) {
   return (
-    <Input ui={{ uid: "seller-discounts.discount-editor.seller-discounts-manager.section-03.input.2-XRos6F", id: "seller-discounts.discount-editor.seller-discounts-manager.section-03.input.2" }} id={id}
+    <Input id={id}
       type="number"
       min={0}
       step="0.01"
@@ -81,7 +81,7 @@ export function Toggle({ id,
   onClick: () => void;
 } & { id?: string }) {
   return (
-    <Button ui={{ uid: "seller-discounts.discount-editor.seller-discounts-manager.section-03.button-C9d96O", id: "seller-discounts.discount-editor.seller-discounts-manager.section-03.button" }} id={id}
+    <Button id={id}
       type="button"
       variant={active ? "default" : "outline"}
       className="h-8 rounded-full px-3 text-xs"

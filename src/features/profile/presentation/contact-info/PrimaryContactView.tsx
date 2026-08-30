@@ -23,35 +23,34 @@ import { ContactSectionHeader } from "./ContactSectionHeader";
 import { ContactEntryCard } from "./ContactEntryCard";
 import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
 import { foldPasswordDigits } from "@asol/auth-core";
-import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function PrimaryContactView({ model }: { model: ContactInfoCardModel }) {
 const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, pendingRemoval, requestRemoveEntry, cancelRemoveEntry, confirmRemoveEntry, groupedSocialLinks } = model;
 const phoneLabels = phoneFieldLabels(t, locale);
 return (
-        <Card ui={{ uid: "profile.contact-info.primary-contact-view.card.4-WfL7n4", id: "profile.contact-info.primary-contact-view.card.4" }} id="profile.contact-info.primary-contact-view.card">
-          <CardHeader ui={{ uid: "profile.contact-info.primary-contact-view.card-header.4-bmKiJ7", id: "profile.contact-info.primary-contact-view.card-header.4" }} id="profile.contact-info.primary-contact-view.card-header">
-            <CardTitle ui={{ uid: "profile.contact-info.primary-contact-view.card-title.3-G0Fk0K", id: "profile.contact-info.primary-contact-view.card-title.3" }} id="profile.contact-info.primary-contact-view.card-title">{t('onboarding.contactInfo.title')}</CardTitle>
-            <CardDescription ui={{ uid: "profile.contact-info.primary-contact-view.card-description.3-7s4Bl0", id: "profile.contact-info.primary-contact-view.card-description.3" }} id="profile.contact-info.primary-contact-view.card-description">{t('onboarding.contactInfo.description')}</CardDescription>
+        <Card id="profile.contact-info.primary-contact-view.card">
+          <CardHeader id="profile.contact-info.primary-contact-view.card-header">
+            <CardTitle id="profile.contact-info.primary-contact-view.card-title">{t('onboarding.contactInfo.title')}</CardTitle>
+            <CardDescription id="profile.contact-info.primary-contact-view.card-description">{t('onboarding.contactInfo.description')}</CardDescription>
           </CardHeader>
-          <CardContent ui={{ uid: "profile.contact-info.primary-contact-view.card-content.4-p7k8pY", id: "profile.contact-info.primary-contact-view.card-content.4" }} id="profile.contact-info.primary-contact-view.card-content" className="space-y-6">
+          <CardContent id="profile.contact-info.primary-contact-view.card-content" className="space-y-6">
             {/* Primary Contact Section */}
-            <Card ui={{ uid: "profile.contact-info.primary-contact-view.card.5-98LYy2", id: "profile.contact-info.primary-contact-view.card.5" }} id="profile.contact-info.primary-contact-view.card.2">
-              <CardHeader ui={{ uid: "profile.contact-info.primary-contact-view.card-header.5-CPPX1S", id: "profile.contact-info.primary-contact-view.card-header.5" }} id="profile.contact-info.primary-contact-view.card-header.2">
+            <Card id="profile.contact-info.primary-contact-view.card.2">
+              <CardHeader id="profile.contact-info.primary-contact-view.card-header.2">
                 <ContactSectionHeader id="profile.contact-info.primary-contact-view.contact-section-header"
                   icon={Phone}
                   title={t('onboarding.contactInfo.primaryContact')}
                   description={t('onboarding.contactInfo.primaryContactHint')}
                 />
               </CardHeader>
-              <CardContent ui={{ uid: "profile.contact-info.primary-contact-view.card-content.5-u1ZyOf", id: "profile.contact-info.primary-contact-view.card-content.5" }} id="profile.contact-info.primary-contact-view.card-content.2" className="space-y-4">
+              <CardContent id="profile.contact-info.primary-contact-view.card-content.2" className="space-y-4">
                 {/* Primary WhatsApp */}
-                <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.18-Kyr8V7", id: "profile.contact-info.primary-contact-view.div.18" })} id="profile.contact-info.primary-contact-view.div" className="space-y-2">
-                  <Label ui={{ uid: "profile.contact-info.primary-contact-view.label.6-KjNR7h", id: "profile.contact-info.primary-contact-view.label.6" }} id="profile.contact-info.primary-contact-view.label" className="text-sm font-semibold flex items-center gap-2 text-on-surface">
+                <div id="profile.contact-info.primary-contact-view.div" className="space-y-2">
+                  <Label id="profile.contact-info.primary-contact-view.label" className="text-sm font-semibold flex items-center gap-2 text-on-surface">
                     <MessageCircle id="profile.contact-info.primary-contact-view.message-circle" className="h-4 w-4 text-primary" />
                     {t('onboarding.contactInfo.phoneTypes.whatsapp')}
                   </Label>
-                  <PhoneField ui={{ uid: "profile.contact-info.primary-contact-view.phone-field-uhUt9T", id: "profile.contact-info.primary-contact-view.phone-field" }} id="profile.contact-info.primary-contact-view.div.2"
+                  <PhoneField id="profile.contact-info.primary-contact-view.div.2"
                     labels={phoneLabels}
                     inputClassName="auth-input w-full"
                     value={localData.phones.find((p) => p.id === 'primary-whatsapp')?.number || ''}
@@ -61,12 +60,12 @@ return (
                 </div>
 
                 {/* Primary Email */}
-                <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.19-52yZMF", id: "profile.contact-info.primary-contact-view.div.19" })} id="profile.contact-info.primary-contact-view.div.3" className="space-y-2">
-                  <Label ui={{ uid: "profile.contact-info.primary-contact-view.label.7-D7zReG", id: "profile.contact-info.primary-contact-view.label.7" }} id="profile.contact-info.primary-contact-view.label.2" className="text-sm font-medium flex items-center gap-2">
+                <div id="profile.contact-info.primary-contact-view.div.3" className="space-y-2">
+                  <Label id="profile.contact-info.primary-contact-view.label.2" className="text-sm font-medium flex items-center gap-2">
                     <Mail id="profile.contact-info.primary-contact-view.mail" className="h-4 w-4 text-muted-foreground" />
                     {t('onboarding.contactInfo.email')}
                   </Label>
-                  <Input id="profile.contact-info.primary-contact-view.input.2" ui={{ uid: 'profile.contact.primary-email-eJHx5o', id: 'profile.contact.primary-email', kind: 'field', part: 'primary' }}
+                  <Input id="profile.contact-info.primary-contact-view.input.2"
                     value={localData.emails.find((e) => e.id === 'primary')?.email || ''}
                     onChange={(e) => updateEmail('primary', { email: e.target.value })}
                     placeholder={t('onboarding.contactInfo.emailPlaceholder')}
@@ -77,8 +76,8 @@ return (
 
                 {/* Password Change Section */}
                 {!readOnly && (
-                  <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.20-QoH391", id: "profile.contact-info.primary-contact-view.div.20" })} id="profile.contact-info.primary-contact-view.div.4" className="space-y-2">
-                    <Button id="profile.contact-info.primary-contact-view.button" ui={{ uid: 'profile.contact.toggle-password-xs20PV', id: 'profile.contact.toggle-password', kind: 'action', action: 'toggle-password-form', part: 'password' }}
+                  <div id="profile.contact-info.primary-contact-view.div.4" className="space-y-2">
+                    <Button id="profile.contact-info.primary-contact-view.button"
                       variant="ghost"
                       size="sm"
                       className="w-full justify-start gap-2"
@@ -89,10 +88,10 @@ return (
                       <ChevronDown id="profile.contact-info.primary-contact-view.chevron-down" className={`h-4 w-4 transition-transform ${isPasswordOpen ? 'rotate-180' : ''}`} />
                     </Button>
                     {isPasswordOpen && (
-                      <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.21-j7OAUC", id: "profile.contact-info.primary-contact-view.div.21" })} id="profile.contact-info.primary-contact-view.div.5" className="space-y-4 pt-4">
-                        <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.22-fP8B4g", id: "profile.contact-info.primary-contact-view.div.22" })} id="profile.contact-info.primary-contact-view.div.6" className="space-y-2">
-                          <Label ui={{ uid: "profile.contact-info.primary-contact-view.label.8-M9SgSA", id: "profile.contact-info.primary-contact-view.label.8" }} id="profile.contact-info.primary-contact-view.label.3" htmlFor="profile.primary-contact.current-password">{t('onboarding.contactInfo.currentPassword')}</Label>
-                          <Input ui={{ uid: 'profile.contact.current-password-f4RHGb', id: 'profile.contact.current-password', kind: 'field', part: 'password' }}
+                      <div id="profile.contact-info.primary-contact-view.div.5" className="space-y-4 pt-4">
+                        <div id="profile.contact-info.primary-contact-view.div.6" className="space-y-2">
+                          <Label id="profile.contact-info.primary-contact-view.label.3" htmlFor="profile.primary-contact.current-password">{t('onboarding.contactInfo.currentPassword')}</Label>
+                          <Input
                             id="profile.primary-contact.current-password"
                             type="password"
                             value={passwordData.currentPassword}
@@ -100,9 +99,9 @@ return (
                             placeholder={t('onboarding.contactInfo.currentPasswordPlaceholder')}
                           />
                         </div>
-                        <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.23-2pGmF2", id: "profile.contact-info.primary-contact-view.div.23" })} id="profile.contact-info.primary-contact-view.div.7" className="space-y-2">
-                          <Label ui={{ uid: "profile.contact-info.primary-contact-view.label.9-O7fDiC", id: "profile.contact-info.primary-contact-view.label.9" }} id="profile.contact-info.primary-contact-view.label.4" htmlFor="profile.primary-contact.new-password">{t('onboarding.contactInfo.newPassword')}</Label>
-                          <Input ui={{ uid: 'profile.contact.new-password-QXC1u7', id: 'profile.contact.new-password', kind: 'field', part: 'password' }}
+                        <div id="profile.contact-info.primary-contact-view.div.7" className="space-y-2">
+                          <Label id="profile.contact-info.primary-contact-view.label.4" htmlFor="profile.primary-contact.new-password">{t('onboarding.contactInfo.newPassword')}</Label>
+                          <Input
                             id="profile.primary-contact.new-password"
                             type="password"
                             value={passwordData.newPassword}
@@ -110,9 +109,9 @@ return (
                             placeholder={t('onboarding.contactInfo.newPasswordPlaceholder')}
                           />
                         </div>
-                        <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.24-hT1M41", id: "profile.contact-info.primary-contact-view.div.24" })} id="profile.contact-info.primary-contact-view.div.8" className="space-y-2">
-                          <Label ui={{ uid: "profile.contact-info.primary-contact-view.label.10-M1EFmB", id: "profile.contact-info.primary-contact-view.label.10" }} id="profile.contact-info.primary-contact-view.label.5" htmlFor="profile.primary-contact.confirm-password">{t('onboarding.contactInfo.confirmPassword')}</Label>
-                          <Input ui={{ uid: 'profile.contact.confirm-password-JJ8pJH', id: 'profile.contact.confirm-password', kind: 'field', part: 'password' }}
+                        <div id="profile.contact-info.primary-contact-view.div.8" className="space-y-2">
+                          <Label id="profile.contact-info.primary-contact-view.label.5" htmlFor="profile.primary-contact.confirm-password">{t('onboarding.contactInfo.confirmPassword')}</Label>
+                          <Input
                             id="profile.primary-contact.confirm-password"
                             type="password"
                             value={passwordData.confirmPassword}
@@ -128,19 +127,19 @@ return (
             </Card>
 
             {/* Additional Contact Section */}
-            <Card ui={{ uid: "profile.contact-info.primary-contact-view.card.6-ckL1qu", id: "profile.contact-info.primary-contact-view.card.6" }} id="profile.contact-info.primary-contact-view.card.3">
-              <CardHeader ui={{ uid: "profile.contact-info.primary-contact-view.card-header.6-3Q7WrX", id: "profile.contact-info.primary-contact-view.card-header.6" }} id="profile.contact-info.primary-contact-view.card-header.3">
-                <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.25-y5eJsW", id: "profile.contact-info.primary-contact-view.div.25" })} id="profile.contact-info.primary-contact-view.div.9" className="flex items-center justify-between">
-                  <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.26-oWNaW6", id: "profile.contact-info.primary-contact-view.div.26" })} id="profile.contact-info.primary-contact-view.div.10">
-                    <CardTitle ui={{ uid: "profile.contact-info.primary-contact-view.card-title.4-XTp2V6", id: "profile.contact-info.primary-contact-view.card-title.4" }} id="profile.contact-info.primary-contact-view.card-title.2" className="text-base flex items-center gap-2">
+            <Card id="profile.contact-info.primary-contact-view.card.3">
+              <CardHeader id="profile.contact-info.primary-contact-view.card-header.3">
+                <div id="profile.contact-info.primary-contact-view.div.9" className="flex items-center justify-between">
+                  <div id="profile.contact-info.primary-contact-view.div.10">
+                    <CardTitle id="profile.contact-info.primary-contact-view.card-title.2" className="text-base flex items-center gap-2">
                       <Share2 id="profile.contact-info.primary-contact-view.share2" className="h-4 w-4 text-muted-foreground" />
                       {t('onboarding.contactInfo.additionalContact')}
                     </CardTitle>
-                    <CardDescription ui={{ uid: "profile.contact-info.primary-contact-view.card-description.4-bo41kO", id: "profile.contact-info.primary-contact-view.card-description.4" }} id="profile.contact-info.primary-contact-view.card-description.2" className="text-xs">{t('onboarding.contactInfo.additionalContactHint')}</CardDescription>
+                    <CardDescription id="profile.contact-info.primary-contact-view.card-description.2" className="text-xs">{t('onboarding.contactInfo.additionalContactHint')}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent ui={{ uid: "profile.contact-info.primary-contact-view.card-content.6-2AxKiE", id: "profile.contact-info.primary-contact-view.card-content.6" }} id="profile.contact-info.primary-contact-view.card-content.3" className="space-y-3 sm:space-y-4">
+              <CardContent id="profile.contact-info.primary-contact-view.card-content.3" className="space-y-3 sm:space-y-4">
                 {!readOnly && (
                   <ContactQuickAddGrid id="profile.contact-info.primary-contact-view.contact-quick-add-grid"
                     items={quickAddItems}
@@ -156,18 +155,18 @@ return (
               if (!typePhones || typePhones.length === 0) return null;
 
               return (
-                <div key={type} {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.27-mUDB2C", id: "profile.contact-info.primary-contact-view.div.27" , instance: createOpaqueUiInstanceId("iter-701344824c", String(type))})} className="space-y-2">
-                  <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.28-B9F7uL", id: "profile.contact-info.primary-contact-view.div.28" , instance: createOpaqueUiInstanceId("iter-3e135bc04d", String(type))})} className="flex items-center gap-2">
+                <div key={type} className="space-y-2">
+                  <div className="flex items-center gap-2">
                     <FontAwesomeIcon
                       icon={quickAddIcon(type)}
                       className="h-4 w-4"
                       style={{ color: quickAddColor(type) }}
                     />
-                    <span {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.span-91SBX7", id: "profile.contact-info.primary-contact-view.span" , instance: createOpaqueUiInstanceId("iter-3c094a1d8b", String(type))})} className="text-xs sm:text-sm font-semibold" style={{ color: quickAddColor(type) }}>
+                    <span className="text-xs sm:text-sm font-semibold" style={{ color: quickAddColor(type) }}>
                       {t(`onboarding.contactInfo.phoneTypes.${type}`)}
                     </span>
                     {!readOnly && (
-                      <Button ui={{ uid: "profile.contact-info.primary-contact-view.button.4-Ni9o7J", id: "profile.contact-info.primary-contact-view.button.4" , instance: createOpaqueUiInstanceId("iter-211d540c33", String(type))}}
+                      <Button
                         variant="outline"
                         size="sm"
                         onClick={() => addAnotherPhone(type)}
@@ -177,11 +176,10 @@ return (
                       </Button>
                     )}
                   </div>
-                  <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.29-0PXYIJ", id: "profile.contact-info.primary-contact-view.div.29" , instance: createOpaqueUiInstanceId("iter-ded519f3a3", String(type))})} className="space-y-2">
+                  <div className="space-y-2">
                     {typePhones.map((phone, index) => (
                       <ContactEntryCard
                         key={phone.id}
-                        instance={createOpaqueUiInstanceId("profile-contact-phone", phone.id)}
                         color={quickAddColor(type)}
                         icon={quickAddIcon(type)}
                         title={`${t(`onboarding.contactInfo.phoneTypes.${type}`)} #${index + 1}`}
@@ -192,7 +190,7 @@ return (
                             : () => requestRemoveEntry('phone', phone.id)
                         }
                       >
-                        <PhoneField ui={{ uid: "profile.contact-info.primary-contact-view.phone-field.2-0UyUJd", id: "profile.contact-info.primary-contact-view.phone-field.2", instance: createOpaqueUiInstanceId("profile-contact-phone", phone.id) }}
+                        <PhoneField
                           labels={phoneLabels}
                           inputClassName="auth-input w-full text-sm"
                           value={phone.number}
@@ -208,14 +206,14 @@ return (
 
             {/* Additional Emails */}
             {activeKindId === 'email' && localData.emails.filter((e) => e.id !== 'primary').length > 0 && (
-              <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.30-SQKMX9", id: "profile.contact-info.primary-contact-view.div.30" })} id="profile.contact-info.primary-contact-view.div.11" className="space-y-2">
-                <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.31-1cAI28", id: "profile.contact-info.primary-contact-view.div.31" })} id="profile.contact-info.primary-contact-view.div.12" className="flex items-center gap-2">
-                  <span {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.span.6-W3cTdF", id: "profile.contact-info.primary-contact-view.span.6" })} id="profile.contact-info.primary-contact-view.span.2" className="text-sm font-semibold flex items-center gap-2">
+              <div id="profile.contact-info.primary-contact-view.div.11" className="space-y-2">
+                <div id="profile.contact-info.primary-contact-view.div.12" className="flex items-center gap-2">
+                  <span id="profile.contact-info.primary-contact-view.span.2" className="text-sm font-semibold flex items-center gap-2">
                     <FontAwesomeIcon id="profile.contact-info.primary-contact-view.font-awesome-icon" icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
-                    <span {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.span.7-wpN3kl", id: "profile.contact-info.primary-contact-view.span.7" })} id="profile.contact-info.primary-contact-view.span.3" style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
+                    <span id="profile.contact-info.primary-contact-view.span.3" style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
-                    <Button id="profile.contact-info.primary-contact-view.button.2" ui={{ uid: 'profile.contact.add-email-2UgRs5', id: 'profile.contact.add-email', kind: 'action', action: 'add-email', part: 'emails' }}
+                    <Button id="profile.contact-info.primary-contact-view.button.2"
                       variant="outline"
                       size="sm"
                       onClick={addEmail}
@@ -225,11 +223,10 @@ return (
                     </Button>
                   )}
                 </div>
-                <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.32-3XCLJP", id: "profile.contact-info.primary-contact-view.div.32" })} id="profile.contact-info.primary-contact-view.div.13" className="space-y-2">
+                <div id="profile.contact-info.primary-contact-view.div.13" className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink, index) => (
                     <ContactEntryCard
                       key={emailLink.id}
-                      instance={createOpaqueUiInstanceId("profile-contact-email", emailLink.id)}
                       color={quickAddColor('email')}
                       icon={quickAddIcon('email')}
                       title={`${t('onboarding.contactInfo.email')} #${index + 1}`}
@@ -240,7 +237,7 @@ return (
                           : () => requestRemoveEntry('email', emailLink.id)
                       }
                     >
-                      <Input ui={{ uid: "profile.contact-info.primary-contact-view.input-SRkyk5", id: "profile.contact-info.primary-contact-view.input", instance: createOpaqueUiInstanceId("profile-contact-email", emailLink.id) }}
+                      <Input
                         value={emailLink.email}
                         onChange={(e) => updateEmail(emailLink.id, { email: e.target.value })}
                         placeholder={t('onboarding.contactInfo.emailPlaceholder')}
@@ -255,25 +252,25 @@ return (
 
             {/* Social Links */}
             {SOCIAL_PLATFORMS.some((platform) => platform === activeKindId) && localData.socialLinks.length > 0 && (
-              <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.33-JmLX82", id: "profile.contact-info.primary-contact-view.div.33" })} id="profile.contact-info.primary-contact-view.div.14" className="space-y-4">
+              <div id="profile.contact-info.primary-contact-view.div.14" className="space-y-4">
                 {SOCIAL_PLATFORMS.map((platform) => {
                   if (platform !== activeKindId) return null;
                   const platformLinks = groupedSocialLinks[platform];
                   if (!platformLinks || platformLinks.length === 0) return null;
 
                   return (
-                    <div key={platform} {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.34-JzkZl6", id: "profile.contact-info.primary-contact-view.div.34" , instance: createOpaqueUiInstanceId("iter-8e6014e6b5", String(platform))})} className="space-y-2">
-                      <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.35-Pb7ruu", id: "profile.contact-info.primary-contact-view.div.35" , instance: createOpaqueUiInstanceId("iter-db68dd8179", String(platform))})} className="flex items-center gap-2">
+                    <div key={platform} className="space-y-2">
+                      <div className="flex items-center gap-2">
                         <FontAwesomeIcon
                           icon={quickAddIcon(platform)}
                           className="h-4 w-4"
                           style={{ color: quickAddColor(platform) }}
                         />
-                        <span {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.span.8-U9HSp2", id: "profile.contact-info.primary-contact-view.span.8" , instance: createOpaqueUiInstanceId("iter-67f69e8090", String(platform))})} className="text-sm font-semibold" style={{ color: quickAddColor(platform) }}>
+                        <span className="text-sm font-semibold" style={{ color: quickAddColor(platform) }}>
                           {t(`onboarding.contactInfo.platforms.${platform}`)}
                         </span>
                         {!readOnly && (
-                          <Button ui={{ uid: "profile.contact-info.primary-contact-view.button.5-llj6Tk", id: "profile.contact-info.primary-contact-view.button.5" , instance: createOpaqueUiInstanceId("iter-b47daba3aa", String(platform))}}
+                          <Button
                             variant="outline"
                             size="sm"
                             onClick={() => addAnotherLink(platform)}
@@ -283,11 +280,10 @@ return (
                           </Button>
                         )}
                       </div>
-                      <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.36-C8sF2X", id: "profile.contact-info.primary-contact-view.div.36" , instance: createOpaqueUiInstanceId("iter-34dce49b1d", String(platform))})} className="space-y-2">
+                      <div className="space-y-2">
                         {platformLinks.map((link, index) => (
                           <ContactEntryCard
                             key={link.id}
-                            instance={createOpaqueUiInstanceId("profile-contact-social", link.id)}
                             color={quickAddColor(platform)}
                             icon={quickAddIcon(platform)}
                             title={`${t(`onboarding.contactInfo.platforms.${platform}`)} #${index + 1}`}
@@ -298,7 +294,7 @@ return (
                                 : () => requestRemoveEntry('social', link.id)
                             }
                           >
-                            <Input ui={{ uid: "profile.contact-info.primary-contact-view.input.3-3MRiGl", id: "profile.contact-info.primary-contact-view.input.3", instance: createOpaqueUiInstanceId("profile-contact-social", link.id) }}
+                            <Input
                               value={link.url}
                               onChange={(e) => updateSocialLink(link.id, { url: e.target.value })}
                               placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}
@@ -317,14 +313,14 @@ return (
 
             {/* Websites */}
             {activeKindId === 'website' && localData.websites.length > 0 && (
-              <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.37-2HBZYE", id: "profile.contact-info.primary-contact-view.div.37" })} id="profile.contact-info.primary-contact-view.div.15" className="space-y-2">
-                <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.38-id4RIp", id: "profile.contact-info.primary-contact-view.div.38" })} id="profile.contact-info.primary-contact-view.div.16" className="flex items-center gap-2">
-                  <span {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.span.9-Y1RJj9", id: "profile.contact-info.primary-contact-view.span.9" })} id="profile.contact-info.primary-contact-view.span.4" className="text-sm font-semibold flex items-center gap-2">
+              <div id="profile.contact-info.primary-contact-view.div.15" className="space-y-2">
+                <div id="profile.contact-info.primary-contact-view.div.16" className="flex items-center gap-2">
+                  <span id="profile.contact-info.primary-contact-view.span.4" className="text-sm font-semibold flex items-center gap-2">
                     <FontAwesomeIcon id="profile.contact-info.primary-contact-view.font-awesome-icon.2" icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
-                    <span {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.span.10-NK8z7I", id: "profile.contact-info.primary-contact-view.span.10" })} id="profile.contact-info.primary-contact-view.span.5" style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
+                    <span id="profile.contact-info.primary-contact-view.span.5" style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
-                    <Button id="profile.contact-info.primary-contact-view.button.3" ui={{ uid: 'profile.contact.add-website-nQM78h', id: 'profile.contact.add-website', kind: 'action', action: 'add-website', part: 'websites' }}
+                    <Button id="profile.contact-info.primary-contact-view.button.3"
                       variant="outline"
                       size="sm"
                       onClick={addWebsite}
@@ -334,11 +330,10 @@ return (
                     </Button>
                   )}
                 </div>
-                <div {...uiAttributes({ uid: "profile.contact-info.primary-contact-view.div.39-i2UHnH", id: "profile.contact-info.primary-contact-view.div.39" })} id="profile.contact-info.primary-contact-view.div.17" className="space-y-2">
+                <div id="profile.contact-info.primary-contact-view.div.17" className="space-y-2">
                   {localData.websites.map((site, index) => (
                     <ContactEntryCard
                       key={site.id}
-                      instance={createOpaqueUiInstanceId("profile-contact-website", site.id)}
                       color={quickAddColor('website')}
                       icon={quickAddIcon('website')}
                       title={`${t('onboarding.contactInfo.website')} #${index + 1}`}
@@ -347,7 +342,7 @@ return (
                         readOnly ? undefined : () => requestRemoveEntry('website', site.id)
                       }
                     >
-                      <Input ui={{ uid: "profile.contact-info.primary-contact-view.input.4-n4YYrj", id: "profile.contact-info.primary-contact-view.input.4", instance: createOpaqueUiInstanceId("profile-contact-website", site.id) }}
+                      <Input
                         value={site.url}
                         onChange={(e) => updateWebsite(site.id, { url: e.target.value })}
                         placeholder={t('onboarding.contactInfo.websitePlaceholder')}

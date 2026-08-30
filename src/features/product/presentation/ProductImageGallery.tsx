@@ -3,7 +3,6 @@
 import Image from "next/image";
 import * as React from "react";
 import { shouldUseUnoptimizedImage, type StoredImage } from "@asol/storage-core";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 type Point = { x: number; y: number };
 const distance = (a: Point, b: Point) => Math.hypot(b.x - a.x, b.y - a.y);
@@ -48,11 +47,10 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
     if (activeIndex >= validImages.length) setActiveIndex(0);
   }, [activeIndex, validImages.length]);
 
-  const resolvedInstance = id ? createOpaqueUiInstanceId("image-gallery", id) : undefined;
 
   if (validImages.length === 0) {
     return (
-      <div {...uiAttributes({ uid: "product.product-image-gallery.div-0ofAZk", id: "product.product-image-gallery.div", instance: resolvedInstance })} id={id} className="flex aspect-square w-full items-center justify-center rounded-2xl bg-muted text-sm text-muted-foreground sm:aspect-[4/3]">
+      <div id={id} className="flex aspect-square w-full items-center justify-center rounded-2xl bg-muted text-sm text-muted-foreground sm:aspect-[4/3]">
         لا توجد صور
       </div>
     );
@@ -166,8 +164,8 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
   };
 
   return (
-    <div {...uiAttributes({ uid: "product.product-image-gallery.div.2-S3P4eU", id: "product.product-image-gallery.div.2", instance: resolvedInstance })} id={id} className="w-full">
-      <div {...uiAttributes({ uid: "product.product-image-gallery.div.3-qoEG0u", id: "product.product-image-gallery.div.3", instance: resolvedInstance })}
+    <div id={id} className="w-full">
+      <div
         className="relative aspect-square overflow-hidden rounded-2xl bg-muted sm:aspect-[4/3]"
         style={{ touchAction: "none" }}
         onPointerDown={pointerDown}
@@ -176,7 +174,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
         onPointerCancel={pointerEnd}
         onPointerLeave={clearGesture}
       >
-        <div {...uiAttributes({ uid: "product.product-image-gallery.div.4-y2DJYg", id: "product.product-image-gallery.div.4", instance: resolvedInstance })}
+        <div
           className={`relative h-full w-full transition-[opacity,transform] duration-300 ${loaded.has(active.url) ? "opacity-100" : "opacity-0"}`}
           style={{
             transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
@@ -198,13 +196,13 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
         </div>
       </div>
       {validImages.length > 1 ? (
-        <div {...uiAttributes({ uid: "product.product-image-gallery.div.5-0GwLZQ", id: "product.product-image-gallery.div.5", instance: resolvedInstance })}
+        <div
           className="mt-3 flex justify-center gap-2 overflow-x-auto pb-1"
           style={{ touchAction: "pan-x" }}
         >
           {validImages.map((image, index) => (
             <button
-              key={image.imageKey} {...uiAttributes({ uid: "product.product-image-gallery.button-2o4GJc", id: "product.product-image-gallery.button" , instance: createOpaqueUiInstanceId("iter-fca1ce2588", String(image.imageKey))})}
+              key={image.imageKey}
               type="button"
               aria-label={`الصورة ${index + 1}`}
               aria-pressed={activeIndex === index}

@@ -50,7 +50,6 @@ import {
   SellerFulfillmentEditPanel,
 } from "./OrderDetailsPageContent.seller-fulfillment-panels";
 import { deliveryStopAddress } from "./order-delivery-stop-model";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export { deliveryStopAddress } from "./order-delivery-stop-model";
 
@@ -111,19 +110,19 @@ export function SellerOrderCard({ id,
   const fulfillmentSnapshot = parseSellerOrderFulfillmentSnapshot(sellerOrder);
 
   return (
-    <article {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.article-OZC7QA", id: "orders.order-details.order-details-page-content.seller-orders.article" })} id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.div-XpSy2G", id: "orders.order-details.order-details-page-content.seller-orders.div" })} className="flex flex-wrap items-start justify-between gap-3 border-b border-outline-variant pb-3">
-        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.div.2-M9X6eN", id: "orders.order-details.order-details-page-content.seller-orders.div.2" })}>
-          <h2 {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.h2-USZk32", id: "orders.order-details.order-details-page-content.seller-orders.h2" })} className="font-bold">{profileName(sellerProfile, sellerId)}</h2>
-          <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.p-wUAJw4", id: "orders.order-details.order-details-page-content.seller-orders.p" })} className="text-sm text-muted-foreground">
+    <article id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-outline-variant pb-3">
+        <div>
+          <h2 className="font-bold">{profileName(sellerProfile, sellerId)}</h2>
+          <p className="text-sm text-muted-foreground">
             {text.sellerStatus}: {statusLabel(sellerOrder.status)}
           </p>
           {carrierId ? (
-            <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.p.2-Pkst2I", id: "orders.order-details.order-details-page-content.seller-orders.p.2" })} className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-muted-foreground">
               {text.carrier}: {profileName(carrierProfile, carrierId)}
             </p>
           ) : (
-            <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.p.3-r7WjJo", id: "orders.order-details.order-details-page-content.seller-orders.p.3" })} className="mt-1 text-sm text-error">{text.noCarrier}</p>
+            <p className="mt-1 text-sm text-error">{text.noCarrier}</p>
           )}
         </div>
         <ProfileLinks sellerId={sellerId} carrierId={carrierId} />
@@ -140,19 +139,19 @@ export function SellerOrderCard({ id,
 
       {showFulfillmentEdit ? <SellerFulfillmentEditPanel orderId={orderId} /> : null}
 
-      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.div.3-15I5VV", id: "orders.order-details.order-details-page-content.seller-orders.div.3" })} className="mt-3 rounded-lg border border-outline-variant bg-muted/10 p-3 text-sm">
-        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.p.4-h0Dhqq", id: "orders.order-details.order-details-page-content.seller-orders.p.4" })} className="text-xs font-semibold text-muted-foreground">تسعير الشحن على الطلب</p>
-        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.p.5-59Iq3F", id: "orders.order-details.order-details-page-content.seller-orders.p.5" })} className="mt-1 leading-6 text-on-surface">
+      <div className="mt-3 rounded-lg border border-outline-variant bg-muted/10 p-3 text-sm">
+        <p className="text-xs font-semibold text-muted-foreground">تسعير الشحن على الطلب</p>
+        <p className="mt-1 leading-6 text-on-surface">
           {sellerFulfillmentShippingSummary(fulfillmentSnapshot)}
         </p>
-        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.p.6-W9o5jg", id: "orders.order-details.order-details-page-content.seller-orders.p.6" })} className="mt-3 text-xs font-semibold text-muted-foreground">سياسة الإرجاع على الطلب</p>
-        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.p.7-40YgAX", id: "orders.order-details.order-details-page-content.seller-orders.p.7" })} className="mt-1 leading-6 text-on-surface">
+        <p className="mt-3 text-xs font-semibold text-muted-foreground">سياسة الإرجاع على الطلب</p>
+        <p className="mt-1 leading-6 text-on-surface">
           {sellerFulfillmentReturnsSummary(fulfillmentSnapshot)}
         </p>
       </div>
 
       {hasPendingItems ? (
-        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.p.8-oPzA6O", id: "orders.order-details.order-details-page-content.seller-orders.p.8" })}
+        <p
           className={`mt-3 rounded-lg px-3 py-2 text-sm ${
             isSeller
               ? "bg-primary/10 text-primary"
@@ -175,7 +174,7 @@ export function SellerOrderCard({ id,
         />
       ) : null}
 
-      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.div.4-cAX6t4", id: "orders.order-details.order-details-page-content.seller-orders.div.4" })} className="mt-4 space-y-3">
+      <div className="mt-4 space-y-3">
         {sellerItems.map((item) => (
           <OrderItemRow
             key={String(item.id)}
@@ -200,7 +199,7 @@ export function SellerOrderCard({ id,
         ))}
       </div>
 
-      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-orders.div.5-yRok09", id: "orders.order-details.order-details-page-content.seller-orders.div.5" })} className="mt-4 flex flex-wrap gap-2 border-t border-outline-variant pt-3">
+      <div className="mt-4 flex flex-wrap gap-2 border-t border-outline-variant pt-3">
         {isBuyer ? (
           <OrderActionButton
             action="buyer_cancel_seller_order"

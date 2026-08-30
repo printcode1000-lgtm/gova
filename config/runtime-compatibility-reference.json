@@ -177,6 +177,7 @@
     "format-core": "@asol/format-core@0.1.0",
     "google-play-store-assets-core": "@asol/google-play-store-assets-core@0.1.0",
     "hero-slider-core": "@asol/hero-slider-core@0.1.0",
+    "local-agent-core": "@asol/local-agent-core@0.1.0",
     "map-core": "@asol/map-core@0.1.0",
     "native-core": "@asol/native-core@0.1.0",
     "notifications-composition": "@asol/notifications-composition@0.1.0",
@@ -196,14 +197,12 @@
     "service-mirror-core": "@asol/service-mirror-core@0.1.0",
     "service-runtime-core": "@asol/service-runtime-core@0.1.0",
     "signed-token-core": "@asol/signed-token-core@0.1.0",
-    "simulation-core": "@asol/simulation-core@0.1.0",
     "storage-core": "@asol/storage-core@0.1.0",
     "storage-image-manager-core": "@asol/storage-image-manager-core@0.1.0",
     "sub2main-composition": "@asol/sub2main-composition@0.1.0",
     "submain-composition": "@asol/submain-composition@0.1.0",
     "system-logs-core": "@asol/system-logs-core@0.1.0",
     "trending-ribbon-core": "@asol/trending-ribbon-core@0.1.0",
-    "ui-registry-core": "@asol/ui-registry-core@0.1.0",
     "vercel-deploy-core": "@asol/vercel-deploy-core@0.1.0"
   },
   "services": {

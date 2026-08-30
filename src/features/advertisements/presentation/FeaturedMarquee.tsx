@@ -6,12 +6,6 @@ import { useEffect, useRef, useState } from 'react';
 import { ProductCard } from '@/features/product-card/ui';
 import { createFeaturedProductCardViewModel } from '@/features/product-card';
 import { useTranslation } from '@/shared/i18n';
-import {
-  composeUiInstanceId,
-  createOpaqueUiInstanceId,
-  createUiPositionInstanceId,
-  uiAttributes,
-} from '@asol/ui-registry-core';
 
 export interface FeaturedMarqueeItem {
   id: string;
@@ -176,16 +170,16 @@ export function FeaturedMarquee({ id, config }: FeaturedMarqueeProps & { id?: st
   if (!hasItems) return null;
 
   return (
-    <section {...uiAttributes({ uid: "advertisements.featured-marquee.section-1a7ZKt", id: "advertisements.featured-marquee.section" })} id={id} className="space-y-3 overflow-hidden">
-      <div {...uiAttributes({ uid: "advertisements.featured-marquee.div-Stx3v7", id: "advertisements.featured-marquee.div" })} className="flex items-center mb-4">
-        <h3 {...uiAttributes({ uid: "advertisements.featured-marquee.h3-lF0Hiv", id: "advertisements.featured-marquee.h3" })} className="text-lg font-semibold text-tertiary flex items-center gap-2">
+    <section id={id} className="space-y-3 overflow-hidden">
+      <div className="flex items-center mb-4">
+        <h3 className="text-lg font-semibold text-tertiary flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-tertiary animate-pulse-subtle" aria-hidden />
           {t(sectionTitle)}
         </h3>
-        <div {...uiAttributes({ uid: "advertisements.featured-marquee.div.2-IV8j9k", id: "advertisements.featured-marquee.div.2" })} className="title-line-contact"></div>
+        <div className="title-line-contact"></div>
       </div>
 
-      <div {...uiAttributes({ uid: "advertisements.featured-marquee.div.3-R78lEg", id: "advertisements.featured-marquee.div.3" })}
+      <div
         ref={containerRef}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -200,19 +194,14 @@ export function FeaturedMarquee({ id, config }: FeaturedMarqueeProps & { id?: st
         className="relative overflow-hidden py-4 rounded-xl asol-surface-neutral touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto"
         dir="ltr"
       >
-        <div {...uiAttributes({ uid: "advertisements.featured-marquee.div.4-1Q8rZu", id: "advertisements.featured-marquee.div.4" })}
+        <div
           ref={trackRef}
           className="flex w-max will-change-transform gap-4 pr-4"
         >
           {marqueeItems.map((item, idx) => {
-            const marqueeInstance = composeUiInstanceId(
-              createOpaqueUiInstanceId("featured-product", item.id),
-              createUiPositionInstanceId("marquee-copy", idx),
-            );
             return (
               <div
                 key={`${item.id}-${idx}`}
-                {...uiAttributes({ uid: "advertisements.featured-marquee.div.5-7maD81", id: "advertisements.featured-marquee.div.5", instance: marqueeInstance })}
                 aria-label={item.title}
                 className="shrink-0 w-40"
               >
@@ -220,13 +209,6 @@ export function FeaturedMarquee({ id, config }: FeaturedMarqueeProps & { id?: st
                   card={createFeaturedProductCardViewModel(item)}
                   variant="featured-marquee"
                   favoriteEnabled={false}
-                  ui={{
-                    uid: "featured-marquee.product-card-M6cR2t",
-                    id: "featured-marquee.product-card",
-                    kind: "item",
-                    interaction: { type: "tap" },
-                    instance: marqueeInstance,
-                  }}
                   onOpen={(event) => handleItemClick(event, item.action)}
                 />
               </div>

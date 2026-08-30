@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { SellersPageContent } from "@/features/categories/ui";
 import { categoryService } from "@/features/categories";
 import { notFound } from "next/navigation";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface SellersPageProps {
   params: Promise<{ categoryId: string; subcategoryId: string }>;
@@ -62,7 +61,7 @@ export default async function SellersPage({
   }
 
   return (
-    <Suspense fallback={<div {...uiAttributes({ uid: "categories.category-id.sellers.subcategory-id.page.div.2-PFZD55", id: "categories.category-id.sellers.subcategory-id.page.div.2" })} id="categories.category-id.sellers.subcategory-id.page.div">Loading...</div>}>
+    <Suspense fallback={<div id="categories.category-id.sellers.subcategory-id.page.div">Loading...</div>}>
       <SellersPageContent 
         categoryId={Number(categoryId)}
         subcategoryId={Number(subcategoryId)}

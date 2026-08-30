@@ -6,7 +6,6 @@ import {
 } from "@/features/product-card";
 
 import type { ProfileProductsTabsLabels } from "./ProfileProductsTabs";
-import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function ProfileProductsGrid({
   featuredProductIds,
@@ -28,7 +27,7 @@ export function ProfileProductsGrid({
   onViewProduct: (product: ProductRecord) => void;
 }) {
   return (
-    <div {...uiAttributes({ uid: "profile-products.profile-products-grid.div.2-9LC6Sr", id: "profile-products.profile-products-grid.div.2" })} id="profile-products.profile-products-grid.div" className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+    <div id="profile-products.profile-products-grid.div" className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
       {products.map((product) => {
         const featured = featuredProductIds.includes(product.id);
         const card = createProductCardViewModel(product);
@@ -64,13 +63,6 @@ export function ProfileProductsGrid({
             variant={showManagement ? "profile-edit" : "profile-preview"}
             className="min-w-0"
             actions={actions}
-            ui={{
-              uid: "profile-products.card-P7rD4m",
-              id: "profile-products.card",
-              kind: "item",
-              interaction: { type: "tap" },
-              instance: createOpaqueUiInstanceId("profile-product", product.id),
-            }}
             onOpen={() => onViewProduct(product)}
           />
         );

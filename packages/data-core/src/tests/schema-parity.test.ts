@@ -52,7 +52,6 @@ const MIGRATION_SOURCES = [
     dirs: [path.join(SRC, 'core/database/profile/migrations')],
     files: [
       path.join(SRC, 'domains/data-health/db/metadata-schema.ts'),
-      path.join(SRC, 'domains/ui-registry/db/pending-schema.ts'),
     ],
   },
   {

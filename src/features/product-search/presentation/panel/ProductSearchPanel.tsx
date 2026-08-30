@@ -23,10 +23,7 @@ import { defaultFieldKeys } from "./product-search-fields";
 import type { ProductSearchPanelProps } from "./product-search-panel.types";
 import { runProductSearchPanelRequest } from "./product-search-panel-request";
 import { buildProductSearchCategoryTabs } from "./product-search-category-tabs";
-import { uiAttributes, type UiDescriptor , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
-const SEARCH_MAIN_CATEGORY_UI: UiDescriptor = { uid: "search-main-category-76NCg1", id: "search-main-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "search-main-category" } };
-const SEARCH_SUBCATEGORY_UI: UiDescriptor = { uid: "search-subcategory-HX5YZy", id: "search-subcategory", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "search-subcategory" } };
 
 export function ProductSearchPanel({ id,
   variant,
@@ -166,7 +163,7 @@ export function ProductSearchPanel({ id,
 
   const categoryControls =
     fixedMainCategoryId && fixedSubcategoryId ? null : (
-      <div {...uiAttributes({ uid: "product-search.panel.product-search-panel.div.8-1wc1iR", id: "product-search.panel.product-search-panel.div.8" })}
+      <div
         id="product-search.panel.product-search-panel.div"
         className="space-y-2"
       >
@@ -174,7 +171,6 @@ export function ProductSearchPanel({ id,
           items={categoryTabs}
           level="main"
           selectedId={mainCategoryId}
-          itemUi={SEARCH_MAIN_CATEGORY_UI}
           onSelect={(id) => {
             setMainCategoryId(id);
             setSubcategoryId("");
@@ -186,7 +182,6 @@ export function ProductSearchPanel({ id,
             items={subOptions}
             level="sub"
             selectedId={subcategoryId}
-            itemUi={SEARCH_SUBCATEGORY_UI}
             onSelect={(id) => {
               setSubcategoryId(id);
               setFieldKeys([]);
@@ -197,12 +192,11 @@ export function ProductSearchPanel({ id,
     );
 
   return (
-    <section {...uiAttributes({ uid: "product-search.panel.product-search-panel.section-GxYzs2", id: "product-search.panel.product-search-panel.section" })} id={id} className={isCompact ? "space-y-3" : "space-y-5"}>
+    <section id={id} className={isCompact ? "space-y-3" : "space-y-5"}>
       {!isCompact ? (
-        <div {...uiAttributes({ uid: "product-search.panel.product-search-panel.div.9-kNIW8L", id: "product-search.panel.product-search-panel.div.9" })} id="product-search.panel.product-search-panel.div.2" className="flex gap-2">
+        <div id="product-search.panel.product-search-panel.div.2" className="flex gap-2">
           {(["products", "sellers"] as ProductSearchMode[]).map((item) => (
             <button key={item}
-              {...uiAttributes({ uid: "search-sellers-mode-GBOEa3", id: "search-sellers-mode", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "search-sellers-mode" } , instance: createOpaqueUiInstanceId("iter-b8051d3cd1", String(item))})}
               type="button"
               onClick={() => setActiveMode(item)}
               className={`h-10 rounded-lg border px-4 text-sm font-semibold ${
@@ -225,10 +219,10 @@ export function ProductSearchPanel({ id,
 
       {categoryControls}
 
-      <div {...uiAttributes({ uid: "product-search.panel.product-search-panel.div.10-ICHDV8", id: "product-search.panel.product-search-panel.div.10" })} id="product-search.panel.product-search-panel.div.3" className="grid gap-2 sm:grid-cols-[1fr_auto]">
-        <div {...uiAttributes({ uid: "product-search.panel.product-search-panel.div.11-xa7bSu", id: "product-search.panel.product-search-panel.div.11" })} id="product-search.panel.product-search-panel.div.4" className="relative">
+      <div id="product-search.panel.product-search-panel.div.3" className="grid gap-2 sm:grid-cols-[1fr_auto]">
+        <div id="product-search.panel.product-search-panel.div.4" className="relative">
           <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-          <Input ui={{ uid: "product-search.query-hAl4PO", id: "product-search.query", kind: "field", part: "search", interaction: { type: "type", valueContract: "search-term" }, simulation: { kind: "field", id: "search-query" }}}
+          <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={(event) => {
@@ -242,7 +236,7 @@ export function ProductSearchPanel({ id,
             className="asol-input-decorated-start"
           />
           {query ? (
-            <button {...uiAttributes({ uid: "product-search.panel.product-search-panel.button.3-SCCi0i", id: "product-search.panel.product-search-panel.button.3" })} id="product-search.panel.product-search-panel.button"
+            <button id="product-search.panel.product-search-panel.button"
               type="button"
               onClick={() => setQuery("")}
               className="absolute end-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
@@ -252,7 +246,7 @@ export function ProductSearchPanel({ id,
             </button>
           ) : null}
         </div>
-        <button {...uiAttributes({ uid: "product-search.panel.product-search-panel.button.4-VTTmL2", id: "product-search.panel.product-search-panel.button.4" })} id="product-search.panel.product-search-panel.button.2"
+        <button id="product-search.panel.product-search-panel.button.2"
           type="button"
           disabled={!canSearch || isLoading}
           onClick={() => void runSearch()}
@@ -276,35 +270,35 @@ export function ProductSearchPanel({ id,
             locale={locale}
             onChange={setFieldKeys}
           />
-          <div {...uiAttributes({ uid: "product-search.panel.product-search-panel.div.12-Dkf4QK", id: "product-search.panel.product-search-panel.div.12" })} id="product-search.panel.product-search-panel.div.5" className="grid gap-2 sm:grid-cols-[220px_180px_auto]">
-            <select {...uiAttributes({ uid: "product-search.panel.product-search-panel.select.5-Ddjk05", id: "product-search.panel.product-search-panel.select.5" })} id="product-search.panel.product-search-panel.select"
+          <div id="product-search.panel.product-search-panel.div.5" className="grid gap-2 sm:grid-cols-[220px_180px_auto]">
+            <select id="product-search.panel.product-search-panel.select"
               value={sort}
               onChange={(event) =>
                 setSort(event.target.value as ProductSearchSort)
               }
               className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
             >
-              <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option-64c6XA", id: "product-search.panel.product-search-panel.option" })} value="relevance">
+              <option value="relevance">
                 {locale === "ar" ? "افتراضي" : "Default"}
               </option>
-              <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.2-88TT4i", id: "product-search.panel.product-search-panel.option.2" })} value="newest">
+              <option value="newest">
                 {locale === "ar" ? "الأحدث" : "Newest"}
               </option>
-              <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.3-5PE1WL", id: "product-search.panel.product-search-panel.option.3" })} value="oldest">
+              <option value="oldest">
                 {locale === "ar" ? "الأقدم" : "Oldest"}
               </option>
-              <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.4-Ul5FVG", id: "product-search.panel.product-search-panel.option.4" })} value="name">
+              <option value="name">
                 {locale === "ar" ? "الاسم" : "Name"}
               </option>
-              <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.5-Pq4I3u", id: "product-search.panel.product-search-panel.option.5" })} value="price_asc">
+              <option value="price_asc">
                 {locale === "ar" ? "الأقل سعرًا" : "Lowest price"}
               </option>
-              <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.6-RG5U4A", id: "product-search.panel.product-search-panel.option.6" })} value="price_desc">
+              <option value="price_desc">
                 {locale === "ar" ? "الأعلى سعرًا" : "Highest price"}
               </option>
             </select>
             {hasRatingFilter ? (
-              <select {...uiAttributes({ uid: "product-search.panel.product-search-panel.select.6-9AR6ny", id: "product-search.panel.product-search-panel.select.6" })} id="product-search.panel.product-search-panel.select.2"
+              <select id="product-search.panel.product-search-panel.select.2"
                 value={filters.minRating ?? ""}
                 onChange={(event) =>
                   setFilters((current) => ({
@@ -315,26 +309,26 @@ export function ProductSearchPanel({ id,
                 }
                 className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
               >
-                <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.7-8Bt3Sv", id: "product-search.panel.product-search-panel.option.7" })} value="">
+                <option value="">
                   {locale === "ar" ? "أي تقييم" : "Any rating"}
                 </option>
-                <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.8-wO4XZq", id: "product-search.panel.product-search-panel.option.8" })} value="4">
+                <option value="4">
                   {locale === "ar" ? "4 فأعلى" : "4 and up"}
                 </option>
-                <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.9-n0EJuk", id: "product-search.panel.product-search-panel.option.9" })} value="3">
+                <option value="3">
                   {locale === "ar" ? "3 فأعلى" : "3 and up"}
                 </option>
-                <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.10-U7DWSF", id: "product-search.panel.product-search-panel.option.10" })} value="2">
+                <option value="2">
                   {locale === "ar" ? "2 فأعلى" : "2 and up"}
                 </option>
-                <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.11-5mIf4Q", id: "product-search.panel.product-search-panel.option.11" })} value="1">
+                <option value="1">
                   {locale === "ar" ? "1 فأعلى" : "1 and up"}
                 </option>
               </select>
             ) : null}
             {!isCompact ? (
-              <label {...uiAttributes({ uid: "product-search.panel.product-search-panel.label.2-PIYm1P", id: "product-search.panel.product-search-panel.label.2" })} id="product-search.panel.product-search-panel.label" className="inline-flex items-center gap-2 text-xs text-on-surface">
-                <input {...uiAttributes({ uid: "product-search.panel.product-search-panel.input.2-WL7TdJ", id: "product-search.panel.product-search-panel.input.2" })} id="product-search.panel.product-search-panel.input"
+              <label id="product-search.panel.product-search-panel.label" className="inline-flex items-center gap-2 text-xs text-on-surface">
+                <input id="product-search.panel.product-search-panel.input"
                   type="checkbox"
                   checked={Boolean(filters.availableOnly)}
                   onChange={(event) =>
@@ -350,18 +344,18 @@ export function ProductSearchPanel({ id,
           </div>
         </>
       ) : (
-        <div {...uiAttributes({ uid: "product-search.panel.product-search-panel.div.13-ZUE5f7", id: "product-search.panel.product-search-panel.div.13" })} id="product-search.panel.product-search-panel.div.6" className="grid gap-2 sm:grid-cols-[220px_180px]">
-          <select {...uiAttributes({ uid: "product-search.panel.product-search-panel.select.7-L5h1L9", id: "product-search.panel.product-search-panel.select.7" })} id="product-search.panel.product-search-panel.select.3"
+        <div id="product-search.panel.product-search-panel.div.6" className="grid gap-2 sm:grid-cols-[220px_180px]">
+          <select id="product-search.panel.product-search-panel.select.3"
             value={sort}
             onChange={(event) => setSort(event.target.value as SellerSearchSort)}
             className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
           >
-            <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.12-H9czWt", id: "product-search.panel.product-search-panel.option.12" })} value="relevance">
+            <option value="relevance">
               {locale === "ar" ? "الأكثر صلة" : "Relevance"}
             </option>
-            <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.13-w0Ip52", id: "product-search.panel.product-search-panel.option.13" })} value="name">{locale === "ar" ? "الاسم" : "Name"}</option>
+            <option value="name">{locale === "ar" ? "الاسم" : "Name"}</option>
           </select>
-          <select {...uiAttributes({ uid: "product-search.panel.product-search-panel.select.8-Awa4X9", id: "product-search.panel.product-search-panel.select.8" })} id="product-search.panel.product-search-panel.select.4"
+          <select id="product-search.panel.product-search-panel.select.4"
             value={sellerMinRating ?? ""}
             onChange={(event) =>
               setSellerMinRating(
@@ -370,19 +364,19 @@ export function ProductSearchPanel({ id,
             }
             className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
           >
-            <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.14-3RzfN6", id: "product-search.panel.product-search-panel.option.14" })} value="">
+            <option value="">
               {locale === "ar" ? "أي تقييم" : "Any rating"}
             </option>
-            <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.15-BNbA1Y", id: "product-search.panel.product-search-panel.option.15" })} value="4">{locale === "ar" ? "4 فأعلى" : "4 and up"}</option>
-            <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.16-Cbi0yY", id: "product-search.panel.product-search-panel.option.16" })} value="3">{locale === "ar" ? "3 فأعلى" : "3 and up"}</option>
-            <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.17-YA45BQ", id: "product-search.panel.product-search-panel.option.17" })} value="2">{locale === "ar" ? "2 فأعلى" : "2 and up"}</option>
-            <option {...uiAttributes({ uid: "product-search.panel.product-search-panel.option.18-lI9OeL", id: "product-search.panel.product-search-panel.option.18" })} value="1">{locale === "ar" ? "1 فأعلى" : "1 and up"}</option>
+            <option value="4">{locale === "ar" ? "4 فأعلى" : "4 and up"}</option>
+            <option value="3">{locale === "ar" ? "3 فأعلى" : "3 and up"}</option>
+            <option value="2">{locale === "ar" ? "2 فأعلى" : "2 and up"}</option>
+            <option value="1">{locale === "ar" ? "1 فأعلى" : "1 and up"}</option>
           </select>
         </div>
       )}
 
       {!isCompact ? (
-        <div {...uiAttributes({ uid: "product-search.panel.product-search-panel.div.14-qK35aT", id: "product-search.panel.product-search-panel.div.14" })} id="product-search.panel.product-search-panel.div.7" className="text-xs text-on-surface-variant">
+        <div id="product-search.panel.product-search-panel.div.7" className="text-xs text-on-surface-variant">
           {hasSearched
             ? locale === "ar"
               ? `عدد النتائج: ${total}`

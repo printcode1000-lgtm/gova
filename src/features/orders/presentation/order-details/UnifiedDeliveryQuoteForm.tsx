@@ -4,7 +4,6 @@ import { Loader2, Send } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
 import type { RunAction } from "./OrderDetailsPageContent.navigation-summary";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export function UnifiedDeliveryQuoteForm({
   planId,
@@ -38,10 +37,10 @@ export function UnifiedDeliveryQuoteForm({
   runAction: RunAction;
 }) {
   return (
-    <div {...uiAttributes({ uid: "orders.order-details.unified-delivery-quote-form.div.2-8FWfh9", id: "orders.order-details.unified-delivery-quote-form.div.2" })} id="orders.order-details.unified-delivery-quote-form.div" className="grid gap-3 border-t border-primary/15 p-4 sm:grid-cols-2 lg:grid-cols-[160px_160px_1fr_auto] lg:items-end">
-      <label {...uiAttributes({ uid: "orders.order-details.unified-delivery-quote-form.label.4-E95BZ9", id: "orders.order-details.unified-delivery-quote-form.label.4" })} id="orders.order-details.unified-delivery-quote-form.label" className="space-y-1 text-xs font-semibold">
+    <div id="orders.order-details.unified-delivery-quote-form.div" className="grid gap-3 border-t border-primary/15 p-4 sm:grid-cols-2 lg:grid-cols-[160px_160px_1fr_auto] lg:items-end">
+      <label id="orders.order-details.unified-delivery-quote-form.label" className="space-y-1 text-xs font-semibold">
         قيمة التوصيل
-        <Input id="orders.order-details.unified-delivery-quote-form.input" ui={{ uid: "orders.delivery-quote.base-amount-5b8ZwD", id: "orders.delivery-quote.base-amount", kind: "field", part: "quote" }}
+        <Input id="orders.order-details.unified-delivery-quote-form.input"
           type="number"
           min={0}
           step="0.01"
@@ -52,9 +51,9 @@ export function UnifiedDeliveryQuoteForm({
         />
       </label>
       {candidateRequiresSpecialVehicle ? (
-        <label {...uiAttributes({ uid: "orders.order-details.unified-delivery-quote-form.label.5-ZIw5X1", id: "orders.order-details.unified-delivery-quote-form.label.5" })} id="orders.order-details.unified-delivery-quote-form.label.2" className="space-y-1 text-xs font-semibold">
+        <label id="orders.order-details.unified-delivery-quote-form.label.2" className="space-y-1 text-xs font-semibold">
           سيارة النقل مرة واحدة
-          <Input id="orders.order-details.unified-delivery-quote-form.input.2" ui={{ uid: "orders.delivery-quote.vehicle-amount-ZPo0HL", id: "orders.delivery-quote.vehicle-amount", kind: "field", part: "quote" }}
+          <Input id="orders.order-details.unified-delivery-quote-form.input.2"
             type="number"
             min={0}
             step="0.01"
@@ -65,9 +64,9 @@ export function UnifiedDeliveryQuoteForm({
           />
         </label>
       ) : null}
-      <label {...uiAttributes({ uid: "orders.order-details.unified-delivery-quote-form.label.6-eexi8N", id: "orders.order-details.unified-delivery-quote-form.label.6" })} id="orders.order-details.unified-delivery-quote-form.label.3" className="space-y-1 text-xs font-semibold">
+      <label id="orders.order-details.unified-delivery-quote-form.label.3" className="space-y-1 text-xs font-semibold">
         تفاصيل المسار والمدة
-        <Textarea id="orders.order-details.unified-delivery-quote-form.textarea" ui={{ uid: "orders.delivery-quote.notes-ZELQ2o", id: "orders.delivery-quote.notes", kind: "field", part: "quote" }}
+        <Textarea id="orders.order-details.unified-delivery-quote-form.textarea"
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
           maxLength={1000}
@@ -75,7 +74,7 @@ export function UnifiedDeliveryQuoteForm({
           placeholder="عدد محطات الاستلام والمدة المتوقعة"
         />
       </label>
-      <button {...uiAttributes({ uid: "orders.order-details.unified-delivery-quote-form.button.2-i2vjNv", id: "orders.order-details.unified-delivery-quote-form.button.2" })} id="orders.order-details.unified-delivery-quote-form.button"
+      <button id="orders.order-details.unified-delivery-quote-form.button"
         type="button"
         disabled={!validQuote || sending || Boolean(busyAction)}
         onClick={() =>

@@ -3,9 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/shared/utils';
-import { type UiDescriptor } from '@asol/ui-registry-core';
 
-import { uiPrimitiveAttributes } from './ui-primitive-attributes';
 
 const buttonVariants = cva(
   'asol-control inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
@@ -40,11 +38,10 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  ui?: UiDescriptor;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, disabled, ui, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, disabled, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
@@ -52,7 +49,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled}
         {...props}
-        {...uiPrimitiveAttributes('button', ui, disabled ? 'disabled' : undefined)}
       />
     );
   }

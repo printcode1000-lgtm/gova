@@ -10,7 +10,6 @@ import {
   sortAccountDevices,
 } from "./account-devices-model";
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 /**
  * Every device registered on the account, with a way to revoke one.
@@ -32,17 +31,17 @@ export function AccountDevicesSection({
   );
 
   return (
-    <div {...uiAttributes({ uid: "settings.account-devices-section.div.5-cZOh1X", id: "settings.account-devices-section.div.5" })} id="settings.account-devices-section.div" className="space-y-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
-      <div {...uiAttributes({ uid: "settings.account-devices-section.div.6-8GQMNW", id: "settings.account-devices-section.div.6" })} id="settings.account-devices-section.div.2" className="flex items-center justify-between gap-3">
-        <div {...uiAttributes({ uid: "settings.account-devices-section.div.7-KTN5Wn", id: "settings.account-devices-section.div.7" })} id="settings.account-devices-section.div.3" className="min-w-0">
-          <p {...uiAttributes({ uid: "settings.account-devices-section.p.4-TX375t", id: "settings.account-devices-section.p.4" })} id="settings.account-devices-section.p" className="text-sm font-semibold text-on-surface">
+    <div id="settings.account-devices-section.div" className="space-y-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
+      <div id="settings.account-devices-section.div.2" className="flex items-center justify-between gap-3">
+        <div id="settings.account-devices-section.div.3" className="min-w-0">
+          <p id="settings.account-devices-section.p" className="text-sm font-semibold text-on-surface">
             {state.t("notifications.accountDevices.title")}
           </p>
-          <p {...uiAttributes({ uid: "settings.account-devices-section.p.5-13BGmq", id: "settings.account-devices-section.p.5" })} id="settings.account-devices-section.p.2" className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+          <p id="settings.account-devices-section.p.2" className="mt-1 text-xs leading-relaxed text-on-surface-variant">
             {state.t("notifications.accountDevices.description")}
           </p>
         </div>
-        <button {...uiAttributes({ uid: "settings.account-devices-section.button.2-6f41Xs", id: "settings.account-devices-section.button.2" })} id="settings.account-devices-section.button"
+        <button id="settings.account-devices-section.button"
           type="button"
           disabled={state.accountDevicesLoading}
           onClick={() => void state.refreshAccountDevices()}
@@ -54,35 +53,35 @@ export function AccountDevicesSection({
       </div>
 
       {state.accountDevicesLoading && devices.length === 0 ? (
-        <div {...uiAttributes({ uid: "settings.account-devices-section.div.8-78K0XF", id: "settings.account-devices-section.div.8" })} id="settings.account-devices-section.div.4" className="space-y-2" aria-busy="true">
-          <Skeleton ui={{ uid: "settings.account-devices-section.skeleton.3-UG1UCx", id: "settings.account-devices-section.skeleton.3" }} id="settings.account-devices-section.skeleton" className="h-14 w-full rounded-xl" />
-          <Skeleton ui={{ uid: "settings.account-devices-section.skeleton.4-9E1TH0", id: "settings.account-devices-section.skeleton.4" }} id="settings.account-devices-section.skeleton.2" className="h-14 w-full rounded-xl" />
+        <div id="settings.account-devices-section.div.4" className="space-y-2" aria-busy="true">
+          <Skeleton id="settings.account-devices-section.skeleton" className="h-14 w-full rounded-xl" />
+          <Skeleton id="settings.account-devices-section.skeleton.2" className="h-14 w-full rounded-xl" />
         </div>
       ) : state.accountDevicesFailed ? (
-        <p {...uiAttributes({ uid: "settings.account-devices-section.p.6-ugEo1y", id: "settings.account-devices-section.p.6" })} id="settings.account-devices-section.p.3" className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">
+        <p id="settings.account-devices-section.p.3" className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">
           {state.t("notifications.accountDevices.loadError")}
         </p>
       ) : devices.length === 0 ? (
-        <p {...uiAttributes({ uid: "account-devices-empty-RP4KoU", id: "account-devices-empty", kind: "region", simulation: { kind: "state", id: "account-devices-empty" } })} className="rounded-lg bg-surface-variant px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
+        <p className="rounded-lg bg-surface-variant px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
           {state.t("notifications.accountDevices.empty")}
         </p>
       ) : (
-        <ul {...uiAttributes({ uid: "settings.account-devices-section.ul.2-2VLIC4", id: "settings.account-devices-section.ul.2" })} id="settings.account-devices-section.ul" className="space-y-2">
+        <ul id="settings.account-devices-section.ul" className="space-y-2">
           {devices.map((device) => {
             const isThisDevice = state.localDeviceIds.includes(device.deviceId);
             return (
               <li
-                key={device.id} {...uiAttributes({ uid: "settings.account-devices-section.li-NA9EPm", id: "settings.account-devices-section.li" , instance: createOpaqueUiInstanceId("iter-537838772a", String(device.id))})}
+                key={device.id}
                 className="flex items-center justify-between gap-3 rounded-xl border border-outline-variant p-3"
               >
-                <div {...uiAttributes({ uid: "settings.account-devices-section.div.9-SnC1Rp", id: "settings.account-devices-section.div.9" , instance: createOpaqueUiInstanceId("iter-2a48123a97", String(device.id))})} className="min-w-0">
-                  <p {...uiAttributes({ uid: "settings.account-devices-section.p.7-0CNeO9", id: "settings.account-devices-section.p.7" , instance: createOpaqueUiInstanceId("iter-8362e45e52", String(device.id))})} className="truncate text-sm font-semibold text-on-surface">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-on-surface">
                     {state.t(accountDevicePlatformKey(device))}
                     {isThisDevice
                       ? ` — ${state.t("notifications.accountDevices.thisDevice")}`
                       : ""}
                   </p>
-                  <p {...uiAttributes({ uid: "settings.account-devices-section.p.8-JpV5NK", id: "settings.account-devices-section.p.8" , instance: createOpaqueUiInstanceId("iter-a1e82e9ca0", String(device.id))})} className="mt-0.5 truncate text-xs text-on-surface-variant">
+                  <p className="mt-0.5 truncate text-xs text-on-surface-variant">
                     {state.t("notifications.accountDevices.lastSeen", {
                       at: formatDateTime(
                         device.lastSeenAt ?? device.updatedAt,
@@ -91,7 +90,7 @@ export function AccountDevicesSection({
                     })}
                   </p>
                 </div>
-                <button {...uiAttributes({ uid: "notifications-revoke-device-H2bryb", id: "notifications-revoke-device", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notifications-revoke-device" } , instance: createOpaqueUiInstanceId("iter-77f113ca42", String(device.id))})}
+                <button
                   type="button"
                   disabled={state.revokingDeviceId === device.deviceId}
                   onClick={() => void state.revokeAccountDevice(device.deviceId)}

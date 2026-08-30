@@ -16,7 +16,6 @@ import {
 } from "@/features/favorites";
 import { useTranslation } from "@/shared/i18n";
 import { cn } from "@/shared/utils";
-import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export default function FavoritesPage() {
   const router = useRouter();
@@ -46,21 +45,21 @@ export default function FavoritesPage() {
       };
 
   return (
-    <div {...uiAttributes({ uid: "favorites.page.div.9-KH7QfW", id: "favorites.page.div.9" })} id="favorites.page.div" className="mx-auto w-full max-w-6xl px-4 py-6" dir={isRTL ? "rtl" : "ltr"}>
-      <header {...uiAttributes({ uid: "favorites.page.header.2-ut6KY6", id: "favorites.page.header.2" })} id="favorites.page.header" className="mb-5">
-        <div {...uiAttributes({ uid: "favorites.page.div.10-13wO1j", id: "favorites.page.div.10" })} id="favorites.page.div.2" className="flex items-center gap-3">
-          <div {...uiAttributes({ uid: "favorites.page.div.11-hBfFK9", id: "favorites.page.div.11" })} id="favorites.page.div.3" className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-container text-on-primary-container">
+    <div id="favorites.page.div" className="mx-auto w-full max-w-6xl px-4 py-6" dir={isRTL ? "rtl" : "ltr"}>
+      <header id="favorites.page.header" className="mb-5">
+        <div id="favorites.page.div.2" className="flex items-center gap-3">
+          <div id="favorites.page.div.3" className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-container text-on-primary-container">
             <Heart id="favorites.page.heart" className={cn("h-6 w-6", items.length > 0 && "fill-current")} />
           </div>
-          <div {...uiAttributes({ uid: "favorites.page.div.12-D8TT4s", id: "favorites.page.div.12" })} id="favorites.page.div.4">
-            <h1 {...uiAttributes({ uid: "favorites.page.h1.2-0KaC35", id: "favorites.page.h1.2" })} id="favorites.page.h1" className="text-xl font-bold text-on-surface">{labels.title}</h1>
-            <p {...uiAttributes({ uid: "favorites.page.p.3-ETB4tf", id: "favorites.page.p.3" })} id="favorites.page.p" className="mt-0.5 text-xs text-on-surface-variant">{labels.description}</p>
+          <div id="favorites.page.div.4">
+            <h1 id="favorites.page.h1" className="text-xl font-bold text-on-surface">{labels.title}</h1>
+            <p id="favorites.page.p" className="mt-0.5 text-xs text-on-surface-variant">{labels.description}</p>
           </div>
         </div>
       </header>
 
-      <div {...uiAttributes({ uid: "favorites.page.div.13-4GZiXh", id: "favorites.page.div.13" })} id="favorites.page.div.5" className="mb-5 grid grid-cols-2 rounded-xl bg-surface-container p-1">
-        <button {...uiAttributes({ uid: "favorites-products-aAVb4f", id: "favorites-products", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "favorites-products" } })}
+      <div id="favorites.page.div.5" className="mb-5 grid grid-cols-2 rounded-xl bg-surface-container p-1">
+        <button
           type="button"
           onClick={() => setActiveTab("product")}
           className={cn(
@@ -70,9 +69,9 @@ export default function FavoritesPage() {
         >
           <Package id="favorites.page.package" className="h-4 w-4" />
           {labels.products}
-          <span {...uiAttributes({ uid: "favorites.page.span.3-BY65Kv", id: "favorites.page.span.3" })} id="favorites.page.span" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{productCount}</span>
+          <span id="favorites.page.span" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{productCount}</span>
         </button>
-        <button {...uiAttributes({ uid: "favorites-sellers-VcECw3", id: "favorites-sellers", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "favorites-sellers" } })}
+        <button
           type="button"
           onClick={() => setActiveTab("seller")}
           className={cn(
@@ -82,22 +81,22 @@ export default function FavoritesPage() {
         >
           <Store id="favorites.page.store" className="h-4 w-4" />
           {labels.sellers}
-          <span {...uiAttributes({ uid: "favorites.page.span.4-xMPtM3", id: "favorites.page.span.4" })} id="favorites.page.span.2" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{sellerCount}</span>
+          <span id="favorites.page.span.2" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{sellerCount}</span>
         </button>
       </div>
 
       {isLoading ? (
-        <div {...uiAttributes({ uid: "favorites.page.div.14-mSi2QG", id: "favorites.page.div.14" })} id="favorites.page.div.6" className="flex min-h-48 items-center justify-center">
-          <LoadingSpinner ui={{ uid: "favorites.loading-spinner-L5oP2r", id: "favorites.loading-spinner" }} id="favorites.page.loading-spinner" size="sm" />
+        <div id="favorites.page.div.6" className="flex min-h-48 items-center justify-center">
+          <LoadingSpinner id="favorites.page.loading-spinner" size="sm" />
         </div>
       ) : visibleItems.length === 0 ? (
-        <section {...uiAttributes({ uid: "favorites.page.section.2-2Y4yr3", id: "favorites.page.section.2" })} id="favorites.page.section" className="flex min-h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-6 text-center">
+        <section id="favorites.page.section" className="flex min-h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-6 text-center">
           {activeTab === "product" ? (
             <Package id="favorites.page.package.2" className="mb-3 h-10 w-10 text-on-surface-variant" />
           ) : (
             <Store id="favorites.page.store.2" className="mb-3 h-10 w-10 text-on-surface-variant" />
           )}
-          <p {...uiAttributes({ uid: "favorites.page.p.4-TqHO2F", id: "favorites.page.p.4" })} id="favorites.page.p.2" className="text-sm font-medium text-on-surface">
+          <p id="favorites.page.p.2" className="text-sm font-medium text-on-surface">
             {activeTab === "product" ? labels.emptyProducts : labels.emptySellers}
           </p>
           <Link id="favorites.page.link" href="/search" className="mt-4 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary no-underline transition active:scale-95">
@@ -105,7 +104,7 @@ export default function FavoritesPage() {
           </Link>
         </section>
       ) : activeTab === "product" ? (
-        <div {...uiAttributes({ uid: "favorites.page.div.15-VCN7Ve", id: "favorites.page.div.15" })} id="favorites.page.div.7" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div id="favorites.page.div.7" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {visibleItems.map((item) => {
             const card = productCardFromFavorite(item);
             return (
@@ -113,21 +112,13 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
-                ui={{
-                  uid: "favorites-open-g10UQZ",
-                  id: "favorites-open",
-                  kind: "item",
-                  interaction: { type: "tap" },
-                  simulation: { kind: "list-item", id: "favorites-open" },
-                  instance: createOpaqueUiInstanceId("favorite-product", item.key),
-                }}
                 onOpen={() => router.push(card.href || "/search")}
               />
             );
           })}
         </div>
       ) : (
-        <div {...uiAttributes({ uid: "favorites.page.div.16-oc3lVT", id: "favorites.page.div.16" })} id="favorites.page.div.8" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div id="favorites.page.div.8" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {visibleItems.map((item) => {
             const card = sellerCardFromFavorite(item);
             return (
@@ -135,14 +126,6 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
-                ui={{
-                  uid: "favorites-seller-open-F4sO8p",
-                  id: "favorites-seller-open",
-                  kind: "item",
-                  interaction: { type: "tap" },
-                  simulation: { kind: "list-item", id: "favorites-seller-open" },
-                  instance: createOpaqueUiInstanceId("favorite-seller", item.key),
-                }}
                 onOpen={() => router.push(card.href || "/search")}
               />
             );

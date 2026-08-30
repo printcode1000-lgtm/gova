@@ -34,7 +34,6 @@ import { AdminCopyValue } from "./AdminCopyValue";
 import { productPageClipboard } from "./product-page-clipboard";
 import { productPageRouteModel } from "./product-page-route-model";
 import { useProductPageLoader } from "./use-product-page-loader";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 function getProductImageKeysFingerprint(
   images: ProductDetails["images"],
@@ -140,7 +139,7 @@ export function ProductPageContent({ id,
           imageUrl: details.images.find((image) => image.url)?.url,
         }}
         trigger={
-          <Button ui={{ uid: "product.share-m9IepD", id: "product.share", kind: "action", action: "share-product", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-share" } }} type="button" variant="outline" className="gap-2">
+          <Button type="button" variant="outline" className="gap-2">
             <Share2 className="h-4 w-4" />
             {locale === "ar" ? "مشاركة المنتج" : "Share product"}
           </Button>
@@ -149,8 +148,8 @@ export function ProductPageContent({ id,
     ) : null;
   const profileAction =
     mode === "view" && product?.uid ? (
-      <Button ui={{ uid: "product.owner-profile-ruTId9", id: "product.owner-profile", kind: "action", action: "open-owner-profile", part: "actions" }} asChild variant="outline" className="gap-2">
-        <Link {...uiAttributes({ uid: "product-owner-profile-G7Eesj", id: "product-owner-profile", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-owner-profile" } })}
+      <Button asChild variant="outline" className="gap-2">
+        <Link
           href={`/profile?mode=preview&uid=${encodeURIComponent(product.uid)}`}
         >
           <UserCircle className="h-4 w-4" />
@@ -160,7 +159,7 @@ export function ProductPageContent({ id,
     ) : null;
   const favoriteAction =
     mode === "view" && product ? (
-      <FavoriteButton ui={{ uid: "product-favorite-6pOZr6", id: "product-favorite", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-favorite" } }}
+      <FavoriteButton
         item={favoriteFromProductCard(createProductCardViewModel(product))}
         label={locale === "ar" ? "المفضلة" : "Favorite"}
         className="h-10 w-auto gap-2 rounded-xl px-4"
@@ -218,7 +217,7 @@ export function ProductPageContent({ id,
     }
   };
   const contactAction = mode === "view" && product?.uid ? (
-    <Button ui={{ uid: "product.contact-owner-4l2mEW", id: "product.contact-owner", kind: "action", action: "contact-owner", part: "actions", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-contact" } }}
+    <Button
       type="button"
       variant="outline"
       className="gap-2"
@@ -421,22 +420,22 @@ export function ProductPageContent({ id,
 
   if (loading || sessionLoading)
     return (
-      <div {...uiAttributes({ uid: "product.product-page-content.div-1iKLQB", id: "product.product-page-content.div" })} id={id} className="flex min-h-[50vh] items-center justify-center">
-        <LoadingSpinner ui={{ uid: "product.product-page-content.loading-spinner-JQD3t5", id: "product.product-page-content.loading-spinner" }} size="lg" />
+      <div id={id} className="flex min-h-[50vh] items-center justify-center">
+        <LoadingSpinner size="lg" />
       </div>
     );
 
   if (error && !style)
     return (
-      <p {...uiAttributes({ uid: "product.product-page-content.p-vLKv56", id: "product.product-page-content.p" })} id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
+      <p id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
         {error}
       </p>
     );
 
   if (editable && !isLoggedIn)
     return (
-      <div {...uiAttributes({ uid: "product.product-page-content.div.2-OzTJ2H", id: "product.product-page-content.div.2" })} id={id} className="m-6 rounded-2xl border p-6 text-center">
-        <p {...uiAttributes({ uid: "product.product-page-content.p.2-EmYZ6h", id: "product.product-page-content.p.2" })}>يجب تسجيل الدخول لإنشاء المنتج أو تعديله.</p>
+      <div id={id} className="m-6 rounded-2xl border p-6 text-center">
+        <p>يجب تسجيل الدخول لإنشاء المنتج أو تعديله.</p>
         <Link
           href="/login"
           className="mt-4 inline-block rounded-xl bg-primary px-4 py-2 text-on-primary"
@@ -448,13 +447,13 @@ export function ProductPageContent({ id,
 
   if (mode === "edit" && !ownerAllowed)
     return (
-      <p {...uiAttributes({ uid: "product.product-page-content.p.3-7x3suY", id: "product.product-page-content.p.3" })} id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
+      <p id={id} className="m-6 rounded-2xl bg-destructive/10 p-5 text-center text-destructive">
         لا يمكنك تعديل منتج يخص مستخدمًا آخر.
       </p>
     );
 
   return (
-    <main {...uiAttributes({ uid: "product.product-page-content.main-X6E5AG", id: "product.product-page-content.main" })} id={id} className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6">
+    <main id={id} className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6">
       <ProductComponentsRenderer
         mode={mode}
         components={style?.components ?? createDefaultProductStyleComponents()}
@@ -471,16 +470,16 @@ export function ProductPageContent({ id,
         onImagesPendingChange={setImagesPending}
       />
       {error ? (
-        <p {...uiAttributes({ uid: "product.product-page-content.p.4-7XB2i2", id: "product.product-page-content.p.4" })} className="rounded-xl bg-destructive/10 p-3 text-destructive">
+        <p className="rounded-xl bg-destructive/10 p-3 text-destructive">
           {error}
         </p>
       ) : null}
       {mode === "view" && isSuperAdminSession(session) ? (
-        <div {...uiAttributes({ uid: "product.product-page-content.div.3-t4Nr7G", id: "product.product-page-content.div.3" })} className="rounded-2xl border border-warning/30 bg-warning/5 p-4 sm:p-5">
-          <h3 {...uiAttributes({ uid: "product.product-page-content.h3-HwDx8R", id: "product.product-page-content.h3" })} className="text-sm font-semibold text-warning">
+        <div className="rounded-2xl border border-warning/30 bg-warning/5 p-4 sm:p-5">
+          <h3 className="text-sm font-semibold text-warning">
             {locale === "ar" ? "لوحة الإدارة الخارقة" : "Super Admin Panel"}
           </h3>
-          <div {...uiAttributes({ uid: "product.product-page-content.div.4-yxH8kY", id: "product.product-page-content.div.4" })} className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
+          <div className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
             <AdminCopyValue
               id="product.product-page-content.admin-copy.product-id"
               label={locale === "ar" ? "معرف المنتج" : "Product ID"}

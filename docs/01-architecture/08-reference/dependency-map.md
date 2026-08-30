@@ -64,9 +64,6 @@ ALLOWED_TO_IMPORT → `@asol/notifications-core/builder`
 `@asol/architecture-core`
 ALLOWED_TO_IMPORT → `@asol/ota-core/publishing`
 
-`@asol/architecture-core`
-ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
-
 ### @asol/auth-core
 
 `@asol/auth-core`
@@ -147,9 +144,6 @@ ALLOWED_TO_IMPORT → `@asol/system-logs-core/server`
 `@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/trending-ribbon-core`
 
-`@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
-
 ### @asol/data-health-core
 
 `@asol/data-health-core` has no production `@asol/*` imports.
@@ -178,13 +172,14 @@ ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
 
 `@asol/hero-slider-core` has no production `@asol/*` imports.
 
+### @asol/local-agent-core
+
+`@asol/local-agent-core` has no production `@asol/*` imports.
+
 ### @asol/map-core
 
 `@asol/map-core`
 ALLOWED_TO_IMPORT → `@asol/native-core`
-
-`@asol/map-core`
-ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
 
 ### @asol/native-core
 
@@ -299,11 +294,6 @@ ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
 
 `@asol/signed-token-core` has no production `@asol/*` imports.
 
-### @asol/simulation-core
-
-`@asol/simulation-core`
-ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
-
 ### @asol/storage-core
 
 `@asol/storage-core`
@@ -322,9 +312,6 @@ ALLOWED_TO_IMPORT → `@asol/storage-core`
 
 `@asol/storage-image-manager-core`
 ALLOWED_TO_IMPORT → `@asol/system-logs-core`
-
-`@asol/storage-image-manager-core`
-ALLOWED_TO_IMPORT → `@asol/ui-registry-core`
 
 ### @asol/sub2main-composition
 
@@ -347,10 +334,6 @@ ALLOWED_TO_IMPORT → `@asol/orders-core`
 
 `@asol/trending-ribbon-core` has no production `@asol/*` imports.
 
-### @asol/ui-registry-core
-
-`@asol/ui-registry-core` has no production `@asol/*` imports.
-
 ### @asol/vercel-deploy-core
 
 `@asol/vercel-deploy-core`
@@ -360,5 +343,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 43 |
-| Import edges | 61 |
+| Packages | 42 |
+| Import edges | 56 |

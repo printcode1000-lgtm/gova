@@ -1,16 +1,13 @@
 import * as React from 'react';
 
 import { cn } from '@/shared/utils';
-import { type UiDescriptor } from '@asol/ui-registry-core';
 
-import { uiPrimitiveAttributes } from './ui-primitive-attributes';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  ui?: UiDescriptor;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, disabled, ui, ...props }, ref) => {
+  ({ className, type, disabled, ...props }, ref) => {
     return (
       <input
         type={type}
@@ -21,7 +18,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         ref={ref}
         {...props}
-        {...uiPrimitiveAttributes('input', ui, disabled ? 'disabled' : undefined)}
       />
     );
   }

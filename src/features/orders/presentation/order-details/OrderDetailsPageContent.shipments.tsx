@@ -43,7 +43,6 @@ import type { DbRow, OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 import { shipmentActionAvailability } from "./shipment-action-model";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export function OrderLevelActions({ id,
   order,
@@ -59,9 +58,9 @@ export function OrderLevelActions({ id,
   runAction: RunAction;
 } & { id?: string }) {
   return (
-    <section {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.section-EDnh6M", id: "orders.order-details.order-details-page-content.shipments.section" })} id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-      <h2 {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.h2-mVuX0H", id: "orders.order-details.order-details-page-content.shipments.h2" })} className="font-bold">{text.orderActions}</h2>
-      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.div-6UDqDS", id: "orders.order-details.order-details-page-content.shipments.div" })} className="mt-3 space-y-2">
+    <section id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+      <h2 className="font-bold">{text.orderActions}</h2>
+      <div className="mt-3 space-y-2">
         {isBuyer && canCancelStatus(order.calculated_status) ? (
           <OrderActionButton
             action="buyer_cancel_order"
@@ -101,12 +100,12 @@ export function ShipmentsPanel({ id,
   runAction: RunAction;
 } & { id?: string }) {
   return (
-    <section {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.section.2-AMQ2QL", id: "orders.order-details.order-details-page-content.shipments.section.2" })} id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-      <h2 {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.h2.2-3Mzj67", id: "orders.order-details.order-details-page-content.shipments.h2.2" })} className="font-bold">{text.shipments}</h2>
+    <section id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+      <h2 className="font-bold">{text.shipments}</h2>
       {details.shipments.length === 0 ? (
-        <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.p-ABK6Dr", id: "orders.order-details.order-details-page-content.shipments.p" })} className="mt-2 text-sm text-muted-foreground">{text.noShipments}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{text.noShipments}</p>
       ) : (
-        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.div.2-NTF9wR", id: "orders.order-details.order-details-page-content.shipments.div.2" })} className="mt-3 space-y-3">
+        <div className="mt-3 space-y-3">
           {details.shipments.map((shipment) => (
             <ShipmentCard
               key={String(shipment.id)}
@@ -154,14 +153,14 @@ export function ShipmentCard({ id,
   } = shipmentActionAvailability(shipment.status);
 
   return (
-    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.div.3-WNR2cB", id: "orders.order-details.order-details-page-content.shipments.div.3" })} id={id} className="rounded-lg border border-outline-variant p-3">
-      <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.p.2-XjTlC5", id: "orders.order-details.order-details-page-content.shipments.p.2" })} className="text-sm font-semibold">{statusLabel(shipment.status)}</p>
-      <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.p.3-VNmr8v", id: "orders.order-details.order-details-page-content.shipments.p.3" })} className="text-xs text-muted-foreground">
+    <div id={id} className="rounded-lg border border-outline-variant p-3">
+      <p className="text-sm font-semibold">{statusLabel(shipment.status)}</p>
+      <p className="text-xs text-muted-foreground">
         {text.carrierCompany}:{" "}
         {profileName(details.profiles[carrierId], carrierId || text.unknown)}
       </p>
       {isCarrier ? (
-        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.div.4-3Zdn6l", id: "orders.order-details.order-details-page-content.shipments.div.4" })} className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           {canReceive ? (
             <OrderActionButton
               action="carrier_receive_shipment"
@@ -212,11 +211,11 @@ export function ShipmentCard({ id,
         </div>
       ) : null}
       {shipmentItems.length > 0 ? (
-        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.div.5-HvolX3", id: "orders.order-details.order-details-page-content.shipments.div.5" })} className="mt-3 border-t border-outline-variant pt-3">
-          <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.p.4-W7tRZm", id: "orders.order-details.order-details-page-content.shipments.p.4" })} className="mb-2 text-xs font-semibold text-muted-foreground">
+        <div className="mt-3 border-t border-outline-variant pt-3">
+          <p className="mb-2 text-xs font-semibold text-muted-foreground">
             {text.shipmentItems}
           </p>
-          <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.div.6-MNm434", id: "orders.order-details.order-details-page-content.shipments.div.6" })} className="space-y-2">
+          <div className="space-y-2">
             {shipmentItems.map((shipmentItem) => (
               <ShipmentItemRow
                 key={String(shipmentItem.id)}
@@ -253,11 +252,11 @@ export function ShipmentItemRow({ id,
   );
   const title = String(orderItem?.product_name_snapshot ?? text.product);
   return (
-    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.div.7-q5F6wD", id: "orders.order-details.order-details-page-content.shipments.div.7" })} id={id} className="rounded-lg bg-background p-2 text-sm">
-      <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.div.8-eKUN73", id: "orders.order-details.order-details-page-content.shipments.div.8" })} className="flex flex-wrap items-center justify-between gap-2">
-        <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.div.9-0UIjn9", id: "orders.order-details.order-details-page-content.shipments.div.9" })}>
-          <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.p.5-3vY24T", id: "orders.order-details.order-details-page-content.shipments.p.5" })} className="font-semibold">{title}</p>
-          <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.shipments.p.6-qZA9Xe", id: "orders.order-details.order-details-page-content.shipments.p.6" })} className="text-xs text-muted-foreground">
+    <div id={id} className="rounded-lg bg-background p-2 text-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <p className="font-semibold">{title}</p>
+          <p className="text-xs text-muted-foreground">
             {text.quantity}: {String(shipmentItem.quantity ?? 1)} -{" "}
             {statusLabel(shipmentItem.status)}
           </p>

@@ -24,7 +24,6 @@ import {
   Summary,
   TabButtons,
 } from "./DeployRunbookPageSections";
-import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 export function DeployRunbookPage() {
   const { session, isLoading } = useSession();
@@ -43,12 +42,12 @@ export function DeployRunbookPage() {
   const [confirmation, setConfirmation] = React.useState("");
 
   if (isLoading) {
-    return <main {...uiAttributes({ uid: "google-play-console.deploy-runbook-page.main.4-fMil1o", id: "google-play-console.deploy-runbook-page.main.4" })} id="google-play-console.deploy-runbook-page.main" className="p-4 text-sm text-on-surface-variant">جار التحميل...</main>;
+    return <main id="google-play-console.deploy-runbook-page.main" className="p-4 text-sm text-on-surface-variant">جار التحميل...</main>;
   }
   if (!allowed) {
     return (
-      <main {...uiAttributes({ uid: "google-play-console.deploy-runbook-page.main.5-Q6X2Mg", id: "google-play-console.deploy-runbook-page.main.5" })} id="google-play-console.deploy-runbook-page.main.2" className="mx-auto max-w-2xl p-4 sm:p-6">
-        <div {...uiAttributes({ uid: "google-play-console.deploy-runbook-page.div.2-quiON0", id: "google-play-console.deploy-runbook-page.div.2" })} id="google-play-console.deploy-runbook-page.div" className="rounded-md bg-error-container p-4 text-on-error-container">
+      <main id="google-play-console.deploy-runbook-page.main.2" className="mx-auto max-w-2xl p-4 sm:p-6">
+        <div id="google-play-console.deploy-runbook-page.div" className="rounded-md bg-error-container p-4 text-on-error-container">
           هذه الصفحة متاحة للسوبر أدمن فقط.
         </div>
       </main>
@@ -105,7 +104,7 @@ export function DeployRunbookPage() {
     );
 
   return (
-    <main {...uiAttributes({ uid: "google-play-console.deploy-runbook-page.main.6-2nwM18", id: "google-play-console.deploy-runbook-page.main.6" })} id="google-play-console.deploy-runbook-page.main.3"
+    <main id="google-play-console.deploy-runbook-page.main.3"
       className="mx-auto w-full min-w-0 max-w-7xl space-y-3 p-3 pb-24 sm:space-y-4 sm:p-4"
       dir="rtl"
     >
@@ -113,7 +112,6 @@ export function DeployRunbookPage() {
       <TabButtons id="google-play-console.deploy-runbook-page.tab-buttons" tab={tab} setTab={setTab} />
 
       <DeployRunbookCollapsible id="google-play-console.deploy-runbook-page.deploy-runbook-collapsible"
-        instance={createUiInstanceId("status-summary")}
         title="ملخص الحالة"
         description="نظرة سريعة على الفروع المفعّلة وحالة التنفيذ وسلوك الخطأ."
         badge={<StatusBadge id="google-play-console.deploy-runbook-page.status-badge" status={activeJob?.status ?? "جاهز"} />}
@@ -139,7 +137,6 @@ export function DeployRunbookPage() {
         />
       ) : (
         <RunbookPanel id="google-play-console.deploy-runbook-page.runbook-panel"
-          instance={createUiInstanceId("deploy-push")}
           title="Deploy Push"
           description="المسار السريع: أسرار، commit، push، ثم تحقق Vercel للأهداف المختارة دون فحوصات build/test."
           runbook={DEPLOY_PUSH_RUNBOOK}

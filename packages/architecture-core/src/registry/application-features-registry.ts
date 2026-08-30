@@ -115,7 +115,6 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
   feature('seller-discounts', 'Seller discount rules UI and services', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], ['cart', 'profile'], FULL),
   feature('settings', 'Settings screens', ['.', './ui'], WEB_MOBILE, [], ['app-reset', 'auth', 'notifications', 'specialty-chat'], CLIENT_UI),
   feature('sharing', 'Native/web sharing orchestration', ['.', './ui', './server'], WEB_SERVER, ['@asol/native-core'], ['product', 'profile', 'qr-code', 'system-logs'], [false, true, true]),
-  feature('simulation', 'Super-admin real-user interaction simulation and runtime adapters', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/simulation-core'], ['auth', 'categories', 'profile'], FULL),
   feature('specialty-chat', 'Specialty chat surfaces', ['.', './server'], WEB_MOBILE_SERVER, [], ['auth', 'categories', 'notifications', 'product', 'profile'], FULL),
   feature('splash', 'Splash screen', ['.', './ui'], WEB_MOBILE, [], ['auth', 'categories'], CLIENT_UI),
   feature('storage', 'Storage upload application wiring and UI', ['.', './ui', './server'], WEB_MOBILE_SERVER, ['@asol/storage-core', '@asol/storage-image-manager-core'], ['auth'], FULL),

@@ -1,7 +1,6 @@
 import type * as React from "react";
 
 import type { StorageProfileId, StoredImage } from "@asol/storage-core";
-import type { UiDescriptor } from "@asol/ui-registry-core";
 
 export type StorageImageAspectRatio =
   | "square"
@@ -17,9 +16,6 @@ export interface StorageImageManagerConfig {
   allowReplace: boolean;
   deleteFromStorageOnRemove?: boolean;
   storageScope?: string;
-  /** Stable `data-simulation-file` marker for the first slot's device picker. */
-  /** Registered UiRegistry descriptor for the first upload slot. */
-  ui?: UiDescriptor;
 }
 
 export type StorageImageManagerTranslate = (

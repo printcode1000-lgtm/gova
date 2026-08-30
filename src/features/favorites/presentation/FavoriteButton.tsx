@@ -7,14 +7,12 @@ import { cn } from "@/shared/utils";
 
 import type { FavoriteItemInput } from "../domain/favorite.entity";
 import { useFavorites } from "./hooks/FavoritesProvider";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 interface FavoriteButtonProps {
   item: FavoriteItemInput;
   className?: string;
   label?: React.ReactNode;
   /** Registered UiRegistry descriptor for this instance, from the caller. */
-  ui?: UiDescriptor;
   /**
    * "favorite" (default) shows a heart for a private saved-item list.
    * "follow" shows a follow-style icon for targets that also become a
@@ -24,7 +22,7 @@ interface FavoriteButtonProps {
   variant?: "favorite" | "follow";
 }
 
-export function FavoriteButton({ item, className, label, ui, variant = "favorite" }: FavoriteButtonProps & { id?: string }) {
+export function FavoriteButton({ item, className, label, variant = "favorite" }: FavoriteButtonProps & { id?: string }) {
   const { isFavorite, isLoading, toggleFavorite } = useFavorites();
   const [isMutating, setIsMutating] = React.useState(false);
   const active = isFavorite(item.type, item.targetId);
@@ -52,7 +50,6 @@ export function FavoriteButton({ item, className, label, ui, variant = "favorite
 
   return (
     <button
-      {...(ui ? uiAttributes(ui) : {})}
       type="button"
       aria-label={ariaLabel}
       onClick={(event) => void handleClick(event)}
@@ -74,7 +71,7 @@ export function FavoriteButton({ item, className, label, ui, variant = "favorite
       ) : (
         <Heart className={cn("h-5 w-5", active && "fill-current")} />
       )}
-      {label ? <span {...uiAttributes({ uid: "favorites.favorite-button.span-10LCVa", id: "favorites.favorite-button.span" })}>{label}</span> : null}
+      {label ? <span>{label}</span> : null}
     </button>
   );
 }

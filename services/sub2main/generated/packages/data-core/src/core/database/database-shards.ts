@@ -40,7 +40,6 @@ export const PROFILE_SHARDS = {
     "data_health_locks",
     "data_health_order_purge_plans",
     "data_health_storage_deletion_tasks",
-    "ui_registry_pending_requests",
   ],
 } as const;
 

@@ -40,7 +40,6 @@ import {
 } from "./notifications-page-model";
 import { useNotificationsFilter } from "./hooks/use-notifications-filter";
 import { NotificationsEmptyState } from "./NotificationsEmptyState";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function NotificationsPageContent() {
   const router = useRouter();
@@ -111,7 +110,7 @@ export function NotificationsPageContent() {
 
   if (isLoading) {
     return (
-      <main {...uiAttributes({ uid: "notifications.notifications-page-content.main.4-nAzmC8", id: "notifications.notifications-page-content.main.4" })} id="notifications.notifications-page-content.main" className="flex min-h-[55vh] items-center justify-center">
+      <main id="notifications.notifications-page-content.main" className="flex min-h-[55vh] items-center justify-center">
         <Loader2 id="notifications.notifications-page-content.loader2" className="h-6 w-6 animate-spin text-primary" />
       </main>
     );
@@ -119,10 +118,10 @@ export function NotificationsPageContent() {
 
   if (!uid) {
     return (
-      <main {...uiAttributes({ uid: "notifications.notifications-page-content.main.5-1YGUFU", id: "notifications.notifications-page-content.main.5" })} id="notifications.notifications-page-content.main.2" className="mx-auto max-w-4xl px-4 py-10 text-center">
+      <main id="notifications.notifications-page-content.main.2" className="mx-auto max-w-4xl px-4 py-10 text-center">
         <Bell id="notifications.notifications-page-content.bell" className="mx-auto h-10 w-10 text-on-surface-variant" />
-        <h1 {...uiAttributes({ uid: "notifications.notifications-page-content.h1.3-kR6WCx", id: "notifications.notifications-page-content.h1.3" })} id="notifications.notifications-page-content.h1" className="mt-4 text-2xl font-bold">{copy.title}</h1>
-        <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.3-lwOFc3", id: "notifications.notifications-page-content.p.3" })} id="notifications.notifications-page-content.p" className="mt-2 text-sm text-on-surface-variant">{copy.login}</p>
+        <h1 id="notifications.notifications-page-content.h1" className="mt-4 text-2xl font-bold">{copy.title}</h1>
+        <p id="notifications.notifications-page-content.p" className="mt-2 text-sm text-on-surface-variant">{copy.login}</p>
         <Link id="notifications.notifications-page-content.link" href="/login" className="mt-5 inline-flex rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary">
           {copy.signIn}
         </Link>
@@ -131,14 +130,14 @@ export function NotificationsPageContent() {
   }
 
   return (
-    <main {...uiAttributes({ uid: "notifications.notifications-page-content.main.6-sFo2Qv", id: "notifications.notifications-page-content.main.6" })} id="notifications.notifications-page-content.main.3" className="mx-auto w-full max-w-5xl px-3 py-5 sm:px-6">
-      <header {...uiAttributes({ uid: "notifications.notifications-page-content.header.2-3XJrO5", id: "notifications.notifications-page-content.header.2" })} id="notifications.notifications-page-content.header" className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-        <div {...uiAttributes({ uid: "notifications.notifications-page-content.div.3-UCZA9G", id: "notifications.notifications-page-content.div.3" })} id="notifications.notifications-page-content.div">
-          <h1 {...uiAttributes({ uid: "notifications.notifications-page-content.h1.4-neQHr5", id: "notifications.notifications-page-content.h1.4" })} id="notifications.notifications-page-content.h1.2" className="flex items-center gap-2 text-2xl font-bold">
+    <main id="notifications.notifications-page-content.main.3" className="mx-auto w-full max-w-5xl px-3 py-5 sm:px-6">
+      <header id="notifications.notifications-page-content.header" className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+        <div id="notifications.notifications-page-content.div">
+          <h1 id="notifications.notifications-page-content.h1.2" className="flex items-center gap-2 text-2xl font-bold">
             <Bell id="notifications.notifications-page-content.bell.2" className="h-6 w-6 text-primary" aria-hidden="true" />
             {copy.title}
           </h1>
-          <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.4-rlPt9d", id: "notifications.notifications-page-content.p.4" })} id="notifications.notifications-page-content.p.2" className="mt-1 text-sm text-on-surface-variant">
+          <p id="notifications.notifications-page-content.p.2" className="mt-1 text-sm text-on-surface-variant">
             {filterSummary(filter, filteredNotifications.length, locale)}
           </p>
         </div>
@@ -150,7 +149,7 @@ export function NotificationsPageContent() {
         tonal, horizontally snapping strip, with the active tab pulsing behind
         its icon.
       */}
-      <nav {...uiAttributes({ uid: "notifications.notifications-page-content.nav.2-MxRvK2", id: "notifications.notifications-page-content.nav.2" })} id="notifications.notifications-page-content.nav"
+      <nav id="notifications.notifications-page-content.nav"
         className="mb-5 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl"
         aria-label={copy.title}
       >
@@ -158,7 +157,7 @@ export function NotificationsPageContent() {
           The strip position is derived from the selected tab, so it is
           deliberately not captured for generic snapshot scroll restoration.
         */}
-        <div {...uiAttributes({ uid: "notifications.notifications-page-content.div.4-ZSp5KJ", id: "notifications.notifications-page-content.div.4" })} id="notifications.notifications-page-content.div.2"
+        <div id="notifications.notifications-page-content.div.2"
           ref={tabsScrollRef}
           data-snapshot-id="notifications-filter-tabs-scroll"
           className="flex snap-x snap-mandatory items-stretch gap-1.5 overflow-x-auto overscroll-x-contain px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -169,7 +168,6 @@ export function NotificationsPageContent() {
             const active = filter === item.id;
             return (
               <button key={item.id}
-                {...uiAttributes({ uid: "notification-filter-bvMK2l", id: "notification-filter", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-filter" } , instance: createOpaqueUiInstanceId("iter-1c262ded39", String(item.id))})}
                 ref={(node) => {
                   filterButtonRefs.current[item.id] = node;
                 }}
@@ -187,10 +185,10 @@ export function NotificationsPageContent() {
                   borderColor: active ? `${color}AA` : `${color}55`,
                 }}
               >
-                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span-2fhChX", id: "notifications.notifications-page-content.span" , instance: createOpaqueUiInstanceId("iter-a7dfe55ee8", String(item.id))})} className="relative flex h-9 w-9 shrink-0 items-center justify-center">
+                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center">
                   {active ? (
                     <>
-                      <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.2-9TphEI", id: "notifications.notifications-page-content.span.2" , instance: createOpaqueUiInstanceId("iter-57979b1544", String(item.id))})}
+                      <span
                         className="asol-profile-tab-wave pointer-events-none absolute inset-0 rounded-full"
                         style={{
                           color: `${color}80`,
@@ -198,7 +196,7 @@ export function NotificationsPageContent() {
                           backgroundColor: `${color}20`,
                         }}
                       />
-                      <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.3-6sWf9c", id: "notifications.notifications-page-content.span.3" , instance: createOpaqueUiInstanceId("iter-6c5192ec2c", String(item.id))})}
+                      <span
                         className="asol-profile-tab-wave asol-profile-tab-wave--delayed pointer-events-none absolute inset-0 rounded-full"
                         style={{
                           color: `${color}66`,
@@ -221,7 +219,7 @@ export function NotificationsPageContent() {
                     }}
                   />
                 </span>
-                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.4-5UKozj", id: "notifications.notifications-page-content.span.4" , instance: createOpaqueUiInstanceId("iter-f008c4c50f", String(item.id))})}
+                <span
                   className="line-clamp-2 block w-full text-center font-semibold tracking-tight text-on-surface-variant"
                   style={{ fontSize: "0.5rem", lineHeight: "0.6rem" }}
                 >
@@ -238,7 +236,7 @@ export function NotificationsPageContent() {
       ) : filter === NotificationCategories.Chat ? (
         <ChatConversationList conversations={conversations} locale={locale} />
       ) : (
-        <section {...uiAttributes({ uid: "notifications.notifications-page-content.section.3-1h8sG4", id: "notifications.notifications-page-content.section.3" })} id="notifications.notifications-page-content.section" className="space-y-3">
+        <section id="notifications.notifications-page-content.section" className="space-y-3">
           {groups.map((group) => (
             <NotificationGroupCard
               key={group.key}
@@ -275,7 +273,7 @@ function ChatConversationList({
   locale: "ar" | "en";
 }) {
   return (
-    <section {...uiAttributes({ uid: "notifications.notifications-page-content.section.4-U689OE", id: "notifications.notifications-page-content.section.4" })} id="notifications.notifications-page-content.section.2" className="overflow-hidden rounded-2xl border border-outline-variant bg-surface shadow-sm">
+    <section id="notifications.notifications-page-content.section.2" className="overflow-hidden rounded-2xl border border-outline-variant bg-surface shadow-sm">
       {conversations.map((conversation, index) => {
         const outgoing = conversation.latest.metadata?.outgoing === true;
         const specialty = String(
@@ -299,24 +297,24 @@ function ChatConversationList({
               index > 0 && "border-t border-outline-variant/70",
             )}
           >
-            <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.5-kzucJ5", id: "notifications.notifications-page-content.span.5" , instance: createOpaqueUiInstanceId("iter-e46a22491e", String(conversation.key))})} className={cn("flex h-12 w-12 shrink-0 items-center justify-center rounded-full", categoryTone(NotificationCategories.Chat))}>
+            <span className={cn("flex h-12 w-12 shrink-0 items-center justify-center rounded-full", categoryTone(NotificationCategories.Chat))}>
               <MessageCircle className="h-6 w-6" />
             </span>
-            <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.6-0TJ8XA", id: "notifications.notifications-page-content.span.6" , instance: createOpaqueUiInstanceId("iter-e4093ff797", String(conversation.key))})} className="min-w-0 flex-1">
-              <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.7-PX2cRu", id: "notifications.notifications-page-content.span.7" , instance: createOpaqueUiInstanceId("iter-80dfe4f103", String(conversation.key))})} className="flex items-center justify-between gap-3">
-                <strong {...uiAttributes({ uid: "notifications.notifications-page-content.strong-2xTYQ9", id: "notifications.notifications-page-content.strong" , instance: createOpaqueUiInstanceId("iter-31fc9bec50", String(conversation.key))})} className="truncate text-sm text-on-surface">{title}</strong>
-                <time {...uiAttributes({ uid: "notifications.notifications-page-content.time-rL7o8X", id: "notifications.notifications-page-content.time" , instance: createOpaqueUiInstanceId("iter-ac00b7c51e", String(conversation.key))})} className="shrink-0 text-[11px] text-on-surface-variant">
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center justify-between gap-3">
+                <strong className="truncate text-sm text-on-surface">{title}</strong>
+                <time className="shrink-0 text-[11px] text-on-surface-variant">
                   {formatDate(conversation.latest.createdAt, locale)}
                 </time>
               </span>
-              {specialty ? <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.8-0y4mDr", id: "notifications.notifications-page-content.span.8" , instance: createOpaqueUiInstanceId("iter-56fe694814", String(conversation.key))})} className="mt-0.5 block truncate text-xs font-semibold text-primary">{specialty}</span> : null}
-              <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.9-i50MEL", id: "notifications.notifications-page-content.span.9" , instance: createOpaqueUiInstanceId("iter-4e12a06091", String(conversation.key))})} className="mt-1 flex items-center justify-between gap-2">
-                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.10-9ZViso", id: "notifications.notifications-page-content.span.10" , instance: createOpaqueUiInstanceId("iter-7b206717e7", String(conversation.key))})} className="truncate text-sm text-on-surface-variant">
+              {specialty ? <span className="mt-0.5 block truncate text-xs font-semibold text-primary">{specialty}</span> : null}
+              <span className="mt-1 flex items-center justify-between gap-2">
+                <span className="truncate text-sm text-on-surface-variant">
                   {outgoing ? (locale === "ar" ? "أنت: " : "You:") : ""}
                   {conversation.latest.body}
                 </span>
                 {conversation.unreadCount > 0 ? (
-                  <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.11-O87hYM", id: "notifications.notifications-page-content.span.11" , instance: createOpaqueUiInstanceId("iter-7cabe6bb2d", String(conversation.key))})} className="flex min-w-5 shrink-0 items-center justify-center rounded-full bg-error px-1.5 py-0.5 text-[11px] font-bold text-on-error">
+                  <span className="flex min-w-5 shrink-0 items-center justify-center rounded-full bg-error px-1.5 py-0.5 text-[11px] font-bold text-on-error">
                     {conversation.unreadCount}
                   </span>
                 ) : null}
@@ -349,7 +347,7 @@ function NotificationGroupCard({
   const isCritical = group.latest.priority === NotificationPriorities.Critical;
   const canArchive = group.category !== NotificationCategories.Payment;
   return (
-    <article {...uiAttributes({ uid: "notifications.notifications-page-content.article-q3UpqI", id: "notifications.notifications-page-content.article" })}
+    <article
       id={`notification-group-${encodeURIComponent(group.key)}`}
       tabIndex={-1}
       className={cn(
@@ -362,31 +360,31 @@ function NotificationGroupCard({
         isCritical && "border-error/60",
       )}
     >
-      <div {...uiAttributes({ uid: "notifications.notifications-page-content.div.5-99MW5p", id: "notifications.notifications-page-content.div.5" })} className="flex gap-3 p-4">
-        <div {...uiAttributes({ uid: "notifications.notifications-page-content.div.6-KuG40j", id: "notifications.notifications-page-content.div.6" })} className={cn("flex h-11 w-11 shrink-0 items-center justify-center rounded-full", categoryTone(group.category))}>
+      <div className="flex gap-3 p-4">
+        <div className={cn("flex h-11 w-11 shrink-0 items-center justify-center rounded-full", categoryTone(group.category))}>
           <Icon className="h-5 w-5" />
         </div>
-        <div {...uiAttributes({ uid: "notifications.notifications-page-content.div.7-9KVV18", id: "notifications.notifications-page-content.div.7" })} className="min-w-0 flex-1">
-          <div {...uiAttributes({ uid: "notifications.notifications-page-content.div.8-7URT2W", id: "notifications.notifications-page-content.div.8" })} className="flex items-start justify-between gap-3">
-            <div {...uiAttributes({ uid: "notifications.notifications-page-content.div.9-58uTYt", id: "notifications.notifications-page-content.div.9" })} className="min-w-0">
-              {paymentAmount ? <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.5-9SdvWl", id: "notifications.notifications-page-content.p.5" })} className="mb-1 text-xl font-bold text-on-surface">{paymentAmount}</p> : null}
-              <h2 {...uiAttributes({ uid: "notifications.notifications-page-content.h2-RQsr0B", id: "notifications.notifications-page-content.h2" })} className="truncate font-bold text-on-surface">{group.latest.title}</h2>
-              <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.6-1GF8cu", id: "notifications.notifications-page-content.p.6" })} className="mt-1 line-clamp-2 text-sm leading-6 text-on-surface-variant">{group.latest.body}</p>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              {paymentAmount ? <p className="mb-1 text-xl font-bold text-on-surface">{paymentAmount}</p> : null}
+              <h2 className="truncate font-bold text-on-surface">{group.latest.title}</h2>
+              <p className="mt-1 line-clamp-2 text-sm leading-6 text-on-surface-variant">{group.latest.body}</p>
             </div>
             {group.unreadCount > 0 ? (
-              <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.12-9LgVMM", id: "notifications.notifications-page-content.span.12" })} className="shrink-0 rounded-full bg-error px-2 py-1 text-xs font-bold text-on-error">
+              <span className="shrink-0 rounded-full bg-error px-2 py-1 text-xs font-bold text-on-error">
                 {group.unreadCount > 1 ? group.unreadCount : locale === "ar" ? "جديد" : "New"}
               </span>
             ) : null}
           </div>
-          <div {...uiAttributes({ uid: "notifications.notifications-page-content.div.10-hTd6VT", id: "notifications.notifications-page-content.div.10" })} className="mt-3 flex flex-wrap items-center justify-between gap-2">
-            <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.7-ESrV2C", id: "notifications.notifications-page-content.p.7" })} className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+            <p className="flex items-center gap-1.5 text-xs text-on-surface-variant">
               <Clock3 className="h-3.5 w-3.5" />
               {formatDate(group.latest.createdAt, locale)}
             </p>
-            <div {...uiAttributes({ uid: "notifications.notifications-page-content.div.11-mD5Mdx", id: "notifications.notifications-page-content.div.11" })} className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
               {group.unreadCount > 0 ? (
-                <button {...uiAttributes({ uid: "notification-read-15IATb", id: "notification-read", kind: "item", interaction: { type: "toggle" }, simulation: { kind: "list-item", id: "notification-read" } })}
+                <button
                   type="button"
                   onClick={onRead}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold"
@@ -396,7 +394,7 @@ function NotificationGroupCard({
                 </button>
               ) : null}
               {(group.latest.route?.href || group.category === NotificationCategories.Chat) ? (
-                <button {...uiAttributes({ uid: "notification-open-9HZKVZ", id: "notification-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-open" } })}
+                <button
                   type="button"
                   onClick={onOpen}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-on-primary"
@@ -406,7 +404,7 @@ function NotificationGroupCard({
                 </button>
               ) : null}
               {canArchive ? (
-                <button {...uiAttributes({ uid: "notification-dismiss-46S7bK", id: "notification-dismiss", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-dismiss" } })}
+                <button
                   type="button"
                   onClick={onDismiss}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-on-surface-variant"
@@ -421,22 +419,22 @@ function NotificationGroupCard({
       </div>
 
       {group.items.length > 1 ? (
-        <details {...uiAttributes({ uid: "notifications.notifications-page-content.details-1b9vRI", id: "notifications.notifications-page-content.details" })} className="border-t border-outline-variant/70 bg-surface-container/50">
-          <summary {...uiAttributes({ uid: "notifications.notifications-page-content.summary-WbqN7M", id: "notifications.notifications-page-content.summary" })} className="flex list-none items-center justify-between gap-2 px-4 py-3 text-sm font-semibold text-primary">
-            <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.13-GZu6AP", id: "notifications.notifications-page-content.span.13" })}>
+        <details className="border-t border-outline-variant/70 bg-surface-container/50">
+          <summary className="flex list-none items-center justify-between gap-2 px-4 py-3 text-sm font-semibold text-primary">
+            <span>
               {locale === "ar"
                 ? `عرض سجل التحديثات (${group.items.length})`
                 : `Show update history (${group.items.length})`}
             </span>
             <ChevronDown className="h-4 w-4" />
           </summary>
-          <ol {...uiAttributes({ uid: "notifications.notifications-page-content.ol-RlZO9W", id: "notifications.notifications-page-content.ol" })} className="space-y-0 px-4 pb-4">
+          <ol className="space-y-0 px-4 pb-4">
             {group.items.map((item, index) => (
-              <li key={item.id} {...uiAttributes({ uid: "notifications.notifications-page-content.li-Ne81fP", id: "notifications.notifications-page-content.li" , instance: createOpaqueUiInstanceId("iter-6e12e8face", String(item.id))})} className="relative border-s border-outline-variant pb-4 ps-4 last:pb-0">
-                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.14-LzaE4k", id: "notifications.notifications-page-content.span.14" , instance: createOpaqueUiInstanceId("iter-67215b4daf", String(item.id))})} className={cn("absolute -start-1.5 top-1 h-3 w-3 rounded-full", index === 0 ? "bg-primary" : "bg-outline-variant")} />
-                <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.8-2U9gId", id: "notifications.notifications-page-content.p.8" , instance: createOpaqueUiInstanceId("iter-971edacea2", String(item.id))})} className="text-sm font-semibold text-on-surface">{item.title}</p>
-                <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.9-R4ha5C", id: "notifications.notifications-page-content.p.9" , instance: createOpaqueUiInstanceId("iter-d11bc70f99", String(item.id))})} className="mt-0.5 text-sm text-on-surface-variant">{item.body}</p>
-                <time {...uiAttributes({ uid: "notifications.notifications-page-content.time.2-3lYQBu", id: "notifications.notifications-page-content.time.2" , instance: createOpaqueUiInstanceId("iter-7b68220519", String(item.id))})} className="mt-1 block text-[11px] text-on-surface-variant">{formatDate(item.createdAt, locale)}</time>
+              <li key={item.id} className="relative border-s border-outline-variant pb-4 ps-4 last:pb-0">
+                <span className={cn("absolute -start-1.5 top-1 h-3 w-3 rounded-full", index === 0 ? "bg-primary" : "bg-outline-variant")} />
+                <p className="text-sm font-semibold text-on-surface">{item.title}</p>
+                <p className="mt-0.5 text-sm text-on-surface-variant">{item.body}</p>
+                <time className="mt-1 block text-[11px] text-on-surface-variant">{formatDate(item.createdAt, locale)}</time>
               </li>
             ))}
           </ol>

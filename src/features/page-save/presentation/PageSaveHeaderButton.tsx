@@ -5,11 +5,6 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 
 import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
 import {
-  createUiSubpartInstanceId,
-  uiAttributes,
-  type UiDescriptor,
-} from "@asol/ui-registry-core";
-import {
   acknowledgePageSaveResult,
   getPageSaveSnapshot,
   openPageSaveDialog,
@@ -23,7 +18,6 @@ import { PageSaveDialog } from "./PageSaveDialog";
 const SUCCESS_FLASH_MS = 1800;
 
 interface PageSaveHeaderControlProps {
-  ui: UiDescriptor;
   isDirty: boolean;
   hasPersistedPending: boolean;
   isSaving: boolean;
@@ -37,7 +31,6 @@ interface PageSaveHeaderControlProps {
  * fixed internal subparts are runtime-scoped from that caller identity.
  */
 function PageSaveHeaderControl({
-  ui,
   isDirty,
   hasPersistedPending,
   isSaving,
@@ -47,7 +40,6 @@ function PageSaveHeaderControl({
 }: PageSaveHeaderControlProps) {
   return (
     <button
-      {...uiAttributes(ui)}
       type="button"
       id="header-page-save-button"
       onClick={onOpen}
@@ -65,21 +57,11 @@ function PageSaveHeaderControl({
       {(isDirty || hasPersistedPending) && !isSaving && !successFlash ? (
         <>
           <span
-            {...uiAttributes({
-              uid: "page-save.page-save-header-button.span.3-9qLHB1",
-              id: "page-save.page-save-header-button.span.3",
-              instance: createUiSubpartInstanceId(ui.uid, ui.instance, "dirty-wave"),
-            })}
             id="page-save.page-save-header-button.span"
             aria-hidden="true"
             className="asol-page-save-wave pointer-events-none absolute inset-0 rounded-full"
           />
           <span
-            {...uiAttributes({
-              uid: "page-save.page-save-header-button.span.4-ilDY2h",
-              id: "page-save.page-save-header-button.span.4",
-              instance: createUiSubpartInstanceId(ui.uid, ui.instance, "dirty-wave-delayed"),
-            })}
             id="page-save.page-save-header-button.span.2"
             aria-hidden="true"
             className="asol-page-save-wave asol-page-save-wave--delayed pointer-events-none absolute inset-0 rounded-full"
@@ -94,11 +76,6 @@ function PageSaveHeaderControl({
         />
       ) : isSaving ? (
         <LoadingSpinner
-          ui={{
-            uid: "page-save.page-save-header-button.loading-spinner.2-OgGq92",
-            id: "page-save.page-save-header-button.loading-spinner.2",
-            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "spinner"),
-          }}
           id="page-save.page-save-header-button.loading-spinner"
           size="sm"
           className="relative z-10"
@@ -204,63 +181,22 @@ export function PageSaveHeaderButton() {
   const control =
     registrationId === "profile-edit" ? (
       <PageSaveHeaderControl
-        ui={{
-          uid: "profile-save-Pwo7A2",
-          id: "profile-save",
-          kind: "action",
-          action: "open-page-save",
-          part: "save",
-          interaction: { type: "tap" },
-          simulation: { kind: "event", id: "profile-save" },
-        }}
         {...controlProps}
       />
     ) : registrationId === "pharmacy-catalog-manager" ? (
       <PageSaveHeaderControl
-        ui={{
-          uid: "pharmacy-save-wk68NN",
-          id: "pharmacy-save",
-          kind: "action",
-          action: "open-page-save",
-          part: "save",
-          interaction: { type: "tap" },
-          simulation: { kind: "event", id: "pharmacy-save" },
-        }}
         {...controlProps}
       />
     ) : registrationId === "custom-request" ? (
       <PageSaveHeaderControl
-        ui={{
-          uid: "custom-request-submit-IyKED5",
-          id: "custom-request-submit",
-          kind: "action",
-          action: "open-page-save",
-          part: "save",
-          interaction: { type: "tap" },
-          simulation: { kind: "event", id: "custom-request-submit" },
-        }}
         {...controlProps}
       />
     ) : registrationId === null ? (
       <PageSaveHeaderControl
-        ui={{
-          uid: "app.header.page-save-pN948A",
-          id: "app.header.page-save",
-          kind: "action",
-          action: "open-page-save",
-          part: "save",
-        }}
         {...controlProps}
       />
     ) : (
       <PageSaveHeaderControl
-        ui={{
-          uid: "page-save.page-save-header-button.button-7dyU83",
-          id: "page-save.page-save-header-button.button",
-          kind: "action",
-          action: "open-page-save",
-          part: "save",
-        }}
         {...controlProps}
       />
     );

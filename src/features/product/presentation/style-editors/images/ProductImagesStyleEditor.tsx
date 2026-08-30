@@ -4,7 +4,6 @@ import * as React from "react";
 
 import { ProductStyleCard } from "@/shared/ui/product-style-card";
 import type { ProductImagesStyleSettings } from "@/shared/ui/product-style-settings";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductImagesStyleEditorProps {
   value: ProductImagesStyleSettings;
@@ -26,9 +25,9 @@ export function ProductImagesStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <label {...uiAttributes({ uid: "product.style-editors.images.product-images-style-editor.label.2-Edt5gT", id: "product.style-editors.images.product-images-style-editor.label.2" })} id="product.style-editors.images.product-images-style-editor.label" className="flex items-center gap-3 text-sm">
+      <label id="product.style-editors.images.product-images-style-editor.label" className="flex items-center gap-3 text-sm">
         عدد الصور
-        <input {...uiAttributes({ uid: "product.style-editors.images.product-images-style-editor.input.2-7n9UFO", id: "product.style-editors.images.product-images-style-editor.input.2" })} id="product.style-editors.images.product-images-style-editor.input"
+        <input id="product.style-editors.images.product-images-style-editor.input"
           type="number"
           min={1}
           step={1}

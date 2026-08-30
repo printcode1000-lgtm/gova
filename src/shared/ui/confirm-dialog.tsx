@@ -3,7 +3,6 @@
 import * as React from "react";
 import { AlertTriangle } from "lucide-react";
 
-import { createOpaqueUiInstanceId } from "@asol/ui-registry-core";
 
 import { Button } from "./button";
 import {
@@ -47,32 +46,16 @@ export function ConfirmDialog({
   onConfirm,
   onOpenChange,
 }: ConfirmDialogProps) {
-  const instance = createOpaqueUiInstanceId("confirm-dialog", id);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        ui={{
-          uid: "shared.confirm-dialog.content-1p9SW8",
-          id: "shared.confirm-dialog.content",
-          instance: instance,
-        }}
         id={id}
         className="max-w-sm"
       >
         <DialogHeader
-          ui={{
-            uid: "shared.confirm-dialog.dialog-header-5jp7QZ",
-            id: "shared.confirm-dialog.dialog-header",
-            instance: instance,
-          }}
         >
           <DialogTitle
-            ui={{
-              uid: "shared.confirm-dialog.dialog-title-nA4Pye",
-              id: "shared.confirm-dialog.dialog-title",
-              instance: instance,
-            }}
             className="flex items-center gap-2 text-base"
           >
             {tone === "destructive" ? (
@@ -81,30 +64,15 @@ export function ConfirmDialog({
             {title}
           </DialogTitle>
           <DialogDescription
-            ui={{
-              uid: "shared.confirm-dialog.dialog-description-IiGu4p",
-              id: "shared.confirm-dialog.dialog-description",
-              instance: instance,
-            }}
             className="text-sm text-on-surface-variant"
           >
             {message}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter
-          ui={{
-            uid: "shared.confirm-dialog.dialog-footer-TSOQS2",
-            id: "shared.confirm-dialog.dialog-footer",
-            instance: instance,
-          }}
           className="gap-2"
         >
           <Button
-            ui={{
-              uid: "shared.confirm-dialog.button-D4WPM3",
-              id: "shared.confirm-dialog.button",
-              instance: instance,
-            }}
             type="button"
             variant="outline"
             onClick={() => onOpenChange(false)}
@@ -112,11 +80,6 @@ export function ConfirmDialog({
             {cancelLabel}
           </Button>
           <Button
-            ui={{
-              uid: "shared.confirm-dialog.button.2-Uo8Nog",
-              id: "shared.confirm-dialog.button.2",
-              instance: instance,
-            }}
             type="button"
             variant={tone === "destructive" ? "destructive" : "default"}
             onClick={() => {

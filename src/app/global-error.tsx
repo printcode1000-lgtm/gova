@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { registerBrowserPorts } from "@/core/composition/browser-ports";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export default function GlobalError({
   error,
@@ -27,14 +26,14 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html {...uiAttributes({ uid: "global-error.html-2VSe9Q", id: "global-error.html" })} lang="ar" dir="rtl">
-      <body {...uiAttributes({ uid: "global-error.body-LRK8qc", id: "global-error.body" })}>
-        <main {...uiAttributes({ uid: "global-error.main.2-C33mPx", id: "global-error.main.2" })} id="global-error.main" className="container mx-auto max-w-lg px-4 py-12 text-center">
-          <h1 {...uiAttributes({ uid: "global-error.h1.2-lE5AZO", id: "global-error.h1.2" })} id="global-error.h1" className="text-xl font-bold text-error">حدث خطأ غير متوقع</h1>
-          <p {...uiAttributes({ uid: "global-error.p.2-5LxozQ", id: "global-error.p.2" })} id="global-error.p" className="mt-2 text-sm text-on-surface-variant">
+    <html lang="ar" dir="rtl">
+      <body>
+        <main id="global-error.main" className="container mx-auto max-w-lg px-4 py-12 text-center">
+          <h1 id="global-error.h1" className="text-xl font-bold text-error">حدث خطأ غير متوقع</h1>
+          <p id="global-error.p" className="mt-2 text-sm text-on-surface-variant">
             تم تسجيل تفاصيل الخطأ في سجل النظام.
           </p>
-          <button {...uiAttributes({ uid: "global-error.button.2-tEBTG3", id: "global-error.button.2" })} id="global-error.button" type="button" className="auth-cta mt-5 px-6" onClick={reset}>
+          <button id="global-error.button" type="button" className="auth-cta mt-5 px-6" onClick={reset}>
             إعادة المحاولة
           </button>
         </main>

@@ -1,11 +1,6 @@
 "use client";
 
 import { ToggleSwitch } from "@/shared/ui/toggle-switch";
-import {
-  createUiSubpartInstanceId,
-  uiAttributes,
-  type UiDescriptor,
-} from "@asol/ui-registry-core";
 
 interface SettingsToggleRowProps {
   title: string;
@@ -14,7 +9,6 @@ interface SettingsToggleRowProps {
   disabled?: boolean;
   emphasised?: boolean;
   /** Registered UiRegistry descriptor for this row's switch and runtime scope. */
-  ui: UiDescriptor;
   onChange: (next: boolean) => void;
 }
 
@@ -26,16 +20,10 @@ export function SettingsToggleRow({
   checked,
   disabled = false,
   emphasised = false,
-  ui,
   onChange,
 }: SettingsToggleRowProps & { id?: string }) {
   return (
     <div
-      {...uiAttributes({
-        uid: "settings.settings-toggle-row.div-687FJH",
-        id: "settings.settings-toggle-row.div",
-        instance: createUiSubpartInstanceId(ui.uid, ui.instance, "row"),
-      })}
       id={id}
       className={
         emphasised
@@ -44,36 +32,20 @@ export function SettingsToggleRow({
       }
     >
       <div
-        {...uiAttributes({
-          uid: "settings.settings-toggle-row.div.2-HqrV8B",
-          id: "settings.settings-toggle-row.div.2",
-          instance: createUiSubpartInstanceId(ui.uid, ui.instance, "copy"),
-        })}
         className="min-w-0"
       >
         <p
-          {...uiAttributes({
-            uid: "settings.settings-toggle-row.p-yEBmt5",
-            id: "settings.settings-toggle-row.p",
-            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "title"),
-          })}
           className="text-sm font-semibold text-on-surface"
         >
           {title}
         </p>
         <p
-          {...uiAttributes({
-            uid: "settings.settings-toggle-row.p.2-4H7dJG",
-            id: "settings.settings-toggle-row.p.2",
-            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "description"),
-          })}
           className="mt-1 text-xs leading-relaxed text-on-surface-variant"
         >
           {description}
         </p>
       </div>
       <ToggleSwitch
-        ui={ui}
         checked={checked}
         onChange={onChange}
         label={title}

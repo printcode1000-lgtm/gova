@@ -16,6 +16,33 @@ runners mean six agents can be executing simultaneously. Mutating agents work in
 isolated git worktrees, so parallelism never means two jobs editing the same
 files.
 
+## Where The Code Lives
+
+The whole system is one sealed package, `@asol/local-agent-core`, with three
+doors:
+
+| Door | Covers |
+|---|---|
+| `@asol/local-agent-core` | agents, locks, requests, worktrees, operation log, memory admission |
+| `@asol/local-agent-core/monitor` | the watch model, the pure renderer, remote-host probes |
+| `@asol/local-agent-core/host` | runner and systemd inventory, host tools, companion repositories |
+
+```text
+packages/local-agent-core/
+  src/                 the modules, plus index.ts / monitor.ts / host.ts as the doors
+  src/tests/           npm run test:local-agent-core
+  scripts/             watch-window.sh, git-credential-local.sh
+scripts/local-agent-*.ts                          the CLIs, thin wrappers around the doors
+scripts/tests/local-agent-control-plane.test.ts   npm run test:local-agent-workflows
+```
+
+The CLIs stay outside the package on purpose, the same way
+`scripts/architecture-check.ts` wraps `@asol/architecture-core`: a sealed package
+must not reach back into the repository's own workflows or application data, so
+anything that reads those lives in the CLI. That split is also why the test suite
+is in two halves — the package's behaviour is tested inside it, and the assertions
+that read `.github/workflows` stay in `scripts/tests/`.
+
 ## Filesystem Layout
 
 ```text
@@ -46,6 +73,15 @@ other ignored files. `npm run local-agent:doctor` verifies the pool is intact.
 
 ## Runner Pool
 
+`GOVA_HOST_PROFILE` selects the runner naming profile. The default is `desktop`,
+which preserves the six existing desktop runners. The `laptop` profile uses
+globally distinct names for the three runners on `hesham-HP-EliteBook-840-G3`.
+
+| Profile | GitHub name prefix | Runner directories | Services |
+|---|---|---|---|
+| `desktop` | `gova-local` | `gova-runner` through `gova-runner-6` | `gova-github-runner.service` through `gova-github-runner-6.service` |
+| `laptop` | `gova-laptop` | `gova-laptop-runner` through `gova-laptop-runner-3` | `gova-laptop-github-runner.service` through `gova-laptop-github-runner-3.service` |
+
 | Runner | Local directory | Systemd user service |
 |---|---|---|
 | `gova-local` | `/home/hesham/gova/.local/github-runners/gova-runner` | `gova-github-runner.service` |
@@ -71,6 +107,11 @@ GOVA_LOCAL_SECRET_EXPORT=forbidden
 GOVA_RUNNER_POOL_DIR=/home/hesham/gova/.local/github-runners
 GOVA_AGENT_COORDINATION_DIR=/home/hesham/gova/.local/github-runners/gova-coordination
 ```
+
+The desktop units run inside `gova-runners.slice`, with `MemoryAccounting=yes`,
+`MemoryHigh=7G`, and `MemoryMax=9G`. Per-unit `MemoryMax=4G` contains one
+runaway job; the slice bounds the whole pool so six units cannot collectively
+authorize more memory than the desktop can survive.
 
 Local agent jobs use the Node and npm already installed for the runner user.
 Workflows must not check out the repository, install a Node toolchain, or run
@@ -130,18 +171,20 @@ starting from a fresh `origin/main`.
 
 Both delegate to `scripts/local-agent-main-apply.ts`, which:
 
-1. declares the agent and acquires its locks — the target ref plus every path in
-   the optional `scopes` input;
-2. prepares an isolated worktree pinned to the freshest `origin/main`, with
+1. writes a `waiting` operation record, declares the agent, and acquires its
+   locks — the target ref plus every path in the optional `scopes` input;
+2. waits for memory admission, records `reservedMb` and `admittedAt`, then marks
+   the operation `running`;
+3. prepares an isolated worktree pinned to the freshest `origin/main`, with
    `node_modules` symlinked from the main clone so verification needs no install;
-3. applies the patch, when one was supplied;
-4. runs `shell_command`, when one was supplied;
-5. runs the selected verification command;
-6. commits and pushes — unless nothing changed, which is a successful
+4. applies the patch, when one was supplied;
+5. runs `shell_command`, when one was supplied;
+6. runs the selected verification command;
+7. commits and pushes — unless nothing changed, which is a successful
    verification-only run;
-7. refuses to push if `origin/main` moved while the job ran, rather than landing
+8. refuses to push if `origin/main` moved while the job ran, rather than landing
    work built on a stale base;
-8. releases its locks and writes the operation record, on every exit path.
+9. releases its locks and writes the operation record, on every exit path.
 
 The developer's own working tree in `/home/hesham/gova` is never checked out,
 reset, or cleaned by an agent job.
@@ -194,6 +237,26 @@ empty one.
 `shell_command` is executed with `/bin/bash -lc` without an allowlist. It carries
 the full local OS authority of the runner user, so callers are responsible for
 keeping its output free of secret material.
+
+### How run steps are validated
+
+`npm run github:ci-policy` checks every `run:` in these workflows, and it reads the
+two YAML forms differently because they mean different things:
+
+- **`run: <command>`** — one command, which must be on that workflow's allowlist.
+  A local agent workflow may only invoke its own apply script.
+- **`run: |`** — a shell block. It is a script, not a command, so it is held to the
+  forbidden-command list instead: no `npm run build`, no `npm test`, no deploy, no
+  `npm ci`.
+
+Reading a block scalar with the single-line expression yields the literal `|`,
+which is on no allowlist and was reported as a forbidden command. That is a false
+positive, and it failed `architecture:check` — and therefore `npm run build` at
+gate 5 of 53 — for every one of the three legitimate shell blocks these workflows
+carry. `runValues()` in `scripts/github-ci-policy.ts` separates the two forms, and
+`scripts/tests/local-agent-control-plane.test.ts` asserts both that the real
+workflows are clean and that a `npm run build` planted inside a block is still
+refused.
 
 ## Dispatching From A Cloud Agent
 
@@ -379,18 +442,27 @@ This happened. Four concurrent mutations died at once with exit 143 while
 
 ### Admission control
 
-Before a mutation touches anything it waits for two conditions:
+Before a mutation touches anything it writes an operation record as `waiting`,
+then waits for two conditions. It becomes `running` only once admitted, because a
+queued job holds no meaningful memory.
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `GOVA_AGENT_MEMORY_FLOOR_MB` | 2048 | `MemAvailable` must be at least this |
-| `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | 3 | mutations genuinely running on this machine |
+| `GOVA_AGENT_MEMORY_FLOOR_MB` | unset | explicit memory floor override |
+| `GOVA_AGENT_JOB_RESERVE_MB` | 1536 | memory reserved by a newly admitted job |
+| `GOVA_AGENT_RESERVATION_MS` | 90000 | how long an admission reservation stays active |
+| `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | 1 | mutations genuinely running on this machine |
 | `GOVA_AGENT_ADMISSION_TIMEOUT_MS` | 900000 | how long to wait before refusing |
 
+Without an explicit floor, healthy swap keeps the floor at `2048MB`. Missing or
+exhausted swap raises it to `max(2048MB, round(MemTotal * 0.1) + reserve)`,
+matching earlyoom's 10% memory line plus one observed heavy job. Fresh
+`running` operations admitted on this host reserve memory for 90 seconds, so
+jobs admitted seconds apart cannot all spend the same free megabytes.
+
 Waiting costs an idle runner; not waiting costs four killed jobs. A job that
-waits out the timeout is refused *before* it prepares a worktree or takes a
-scope lock, so a refusal leaves nothing behind to clean up — the agent simply
-re-dispatches.
+waits out the timeout is refused before it prepares a worktree, so the agent
+simply re-dispatches.
 
 The runner units also carry `MemoryHigh=3G` and `MemoryMax=4G`, so a single
 runaway job is throttled inside its own cgroup instead of being resolved at the
@@ -426,6 +498,84 @@ killed job is the same disk and memory pressure that caused the problem.
 `npm run local-agent:doctor` reports available memory, swap headroom, the
 concurrency budget, and the count of reconciled records. The monitor shows the
 same memory line in its header, in red once the floor is crossed.
+
+## Remote Hosts
+
+`packages/local-agent-core/src/remote-hosts.ts` parses concrete aliases from
+`~/.ssh/config`, skipping wildcard patterns. Each alias is probed with one
+non-interactive SSH call using `BatchMode=yes` and `ConnectTimeout=6`, then cached
+in `.local/remote-hosts.json`.
+
+The probe reports hostname, CPU count, memory, swap, Node version, whether
+`~/gova` exists, and registered runner count. Runner count is the number of
+`.runner` files under `~/gova/.local/github-runners`, not a name match, because
+host profiles use different names. `npm run local-agent:doctor` refreshes the
+cache. The monitor only reads the cache, so repaint never waits on SSH and its
+only write remains the explicit `a` key.
+
+## Host Tools
+
+Antigravity is excluded by default. A missing or unreadable
+`.local/host-tools.json` means both `antigravity` and `agy` are refused.
+Refusing shims live in `.local/host-tool-shims`, are prepended to `PATH` for
+agent child processes, and are reasserted inside `bash -lc` commands after login
+profile setup.
+
+The shims exit 127 for `antigravity` and `agy`. They do not remove
+`/usr/local/bin` or `~/.local/bin`, so unrelated binaries such as `node` and
+`git` still work. The monitor's `a` key is the only write path for toggling this
+policy.
+
+## Peer Link
+
+The pool spans two machines, and `p2p-link` is what joins them: it publishes STUN
+and LAN candidates to a Cloudflare R2 object, UDP hole-punches, and relays SSH and
+RDP over the punched path — which is what lets this host reach the laptop when the
+two are not on the same router and the `.local` mDNS name resolves to nothing.
+
+It is a **companion repository**: referenced, never vendored. It is a Python GTK
+application with its own origin
+(`https://github.com/printcode1000-lgtm/p2p-link.git`) and its own history, so
+copying its source into a TypeScript package would fork it — two copies drifting,
+and a fix landing in whichever one the next person happened to open. What this
+repository records is where it belongs, where it comes from, and what proves it
+works: `COMPANION_REPOSITORIES` in `@asol/local-agent-core/host`.
+
+| Field | Value |
+|---|---|
+| Install path | `/home/hesham/p2p-link` (identical on every host by design) |
+| Origin | `https://github.com/printcode1000-lgtm/p2p-link.git` |
+| Entry point | `scripts/p2p-link-gui.sh` |
+
+### What reports it
+
+`npm run local-agent:doctor` reports `companion.p2p-link` with its `HEAD` and
+whether the entry point is present. `npm run local-agent:host:backup` captures its
+state into the host inventory, so a rebuilt machine knows it was supposed to be
+there.
+
+### Recovery
+
+`npm run local-agent:host:restore` handles the three cases separately, because
+they are not the same problem:
+
+| State | Action |
+|---|---|
+| Missing | clone it from its own origin |
+| Present, origin matches, clean | fetch and `merge --ff-only` |
+| Present, origin differs | **skip** and report the mismatch |
+| Present with uncommitted changes | **skip** and report the count |
+
+The last two are refusals on purpose. A companion checkout is a working directory
+on this machine, not a build artefact: a different origin may be a deliberate
+fork, and uncommitted changes are somebody's unfinished work. Restore reports
+either and stops rather than resolving it by destroying something.
+
+The fast-forward target is resolved by asking, in order, `origin/HEAD`, then the
+branch's own upstream, then `origin/main`. `origin/HEAD` is the obvious answer and
+what a fresh clone gets, but it is a local symbolic ref that real checkouts often
+lack — p2p-link did not have it, and asking for it unguarded aborted the whole
+restore on the one repository it exists to recover.
 
 ## Operation Logs
 
@@ -492,7 +642,7 @@ archive, an exit code, or a redacted failure message.
 paths-ignore:
   - ".agent-control/**"
   - ".github/workflows/local-agent-*.yml"
-  - "scripts/local-agent/**"
+  - "packages/local-agent-core/src/**"
   - "scripts/local-agent-*.ts"
   - "docs/07-mobile-and-release/local-agent-runner-pool.md"
 ```
@@ -575,16 +725,17 @@ Opens a window showing what the pool is doing right now: each runner with its
 systemd state, its GitHub state, and the workflow and job it is currently
 executing with elapsed time; every declared agent with its liveness, heartbeat
 age, task, branch, and reserved scopes; every held lock with its holder and age;
-mutations in flight with their runner and elapsed time; recent operations with
-status, duration, and `SHA→SHA`; the coordination messages; and the gateway
-request ledger.
+mutations queued or in flight with their runner and elapsed time; recent
+operations with status, duration, and `SHA→SHA`; the coordination messages; the
+gateway request ledger; host-tool policy; and cached remote-host probes.
 
 ### It cannot get in the way
 
-The monitor is a reader and nothing else. It takes no lock, declares no agent,
-refreshes no heartbeat, writes no record, and dispatches no job, so it never
-appears in the state it reports and never competes for a runner slot. A
-regression test renders a frame and asserts the coordination channel is
+The monitor is a reader except for the explicit `a` key that toggles
+`.local/host-tools.json`, outside the coordination directory. It takes no lock,
+declares no agent, refreshes no heartbeat, writes no record, and dispatches no
+job, so it never appears in the state it reports and never competes for a runner
+slot. A regression test renders a frame and asserts the coordination channel is
 byte-identical afterwards.
 
 It is also cheap. Local change arrives through inotify rather than polling, so an
@@ -604,10 +755,12 @@ never read.
 | `npm run local-agent:watch -- --once` | print one frame and exit; this is what tests and scripts use |
 | `npm run local-agent:watch -- --offline` | local sources only, zero network |
 | `npm run local-agent:watch -- --github-interval=30000` | slow the GitHub timer down (minimum 5s) |
-| `bash scripts/local-agent/watch-window.sh --install-desktop` | add a launcher to the applications menu |
+| `bash packages/local-agent-core/scripts/watch-window.sh --install-desktop` | add a launcher to the applications menu |
 
-Keys: `1`–`7` focus one panel, `esc` show them all, `p` pause, `o` toggle the
-GitHub reads, `q` quit.
+Keys: `1`–`9` focus one panel, `esc` show them all, `p` pause, `o` toggle the
+GitHub reads, `c` copies the current frame without colour escapes and always
+writes `.local/monitor-frames/frame-*.txt`, `a` toggles Antigravity inclusion,
+and `q` quits.
 
 The window wrapper picks the first terminal emulator that is actually installed —
 `gnome-terminal`, `konsole`, `xfce4-terminal`, `x-terminal-emulator`, `xterm` —
@@ -656,7 +809,9 @@ use. Nothing in it is a source of truth.
    directory and the same five `Environment=` lines.
 3. `systemctl --user daemon-reload && systemctl --user enable --now gova-github-runner-7.service`.
 4. Add `gova-runner-7`, `gova-github-runner-7.service`, and `gova-local-7` to the
-   three arrays in `scripts/local-agent/paths.ts`.
+   `desktop` profile's `size` in `HOST_PROFILES`
+   (`packages/local-agent-core/src/paths.ts`). Every name — directory, service and
+   GitHub — is derived from the profile, so one number covers all three.
 5. Add the row to the Runner Pool table above.
 6. Confirm with `npm run local-agent:doctor`.
 

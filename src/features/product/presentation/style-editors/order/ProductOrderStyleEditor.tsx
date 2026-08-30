@@ -5,7 +5,6 @@ import {
   ProductStyleCard,
 } from "@/shared/ui/product-style-card";
 import type { ProductOrderStyleSettings } from "@/shared/ui/product-style-settings";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductOrderStyleEditorProps {
   value: ProductOrderStyleSettings;
@@ -27,7 +26,7 @@ export function ProductOrderStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div {...uiAttributes({ uid: "product.style-editors.order.product-order-style-editor.div.2-k80hRd", id: "product.style-editors.order.product-order-style-editor.div.2" })} id="product.style-editors.order.product-order-style-editor.div" className="grid gap-2">
+      <div id="product.style-editors.order.product-order-style-editor.div" className="grid gap-2">
         <OptionCheckbox id="product.style-editors.order.product-order-style-editor.option-checkbox"
           label="السلة"
           checked={value.cart}

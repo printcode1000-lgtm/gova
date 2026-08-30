@@ -9,7 +9,6 @@ import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Checkbox } from '@/shared/ui/checkbox';
 import { cn } from '@/shared/utils';
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const COUNTRY_KEYS: Record<string, string> = {
   'United States': 'unitedStates',
@@ -67,16 +66,16 @@ export function LocationSection() {
   };
 
   return (
-    <div {...uiAttributes({ uid: "onboarding.sections.location-section.div.4-IFW09f", id: "onboarding.sections.location-section.div.4" })} id="onboarding.sections.location-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card ui={{ uid: "onboarding.sections.location-section.card.3-RX4dZO", id: "onboarding.sections.location-section.card.3" }} id="onboarding.sections.location-section.card">
-        <CardHeader ui={{ uid: "onboarding.sections.location-section.card-header.3-zB3HLC", id: "onboarding.sections.location-section.card-header.3" }} id="onboarding.sections.location-section.card-header">
-          <CardTitle ui={{ uid: "onboarding.sections.location-section.card-title.3-p7BNUO", id: "onboarding.sections.location-section.card-title.3" }} id="onboarding.sections.location-section.card-title">{t('onboarding.location.title')}</CardTitle>
-          <CardDescription ui={{ uid: "onboarding.sections.location-section.card-description.3-375KFb", id: "onboarding.sections.location-section.card-description.3" }} id="onboarding.sections.location-section.card-description">{t('onboarding.location.description')}</CardDescription>
+    <div id="onboarding.sections.location-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.location-section.card">
+        <CardHeader id="onboarding.sections.location-section.card-header">
+          <CardTitle id="onboarding.sections.location-section.card-title">{t('onboarding.location.title')}</CardTitle>
+          <CardDescription id="onboarding.sections.location-section.card-description">{t('onboarding.location.description')}</CardDescription>
         </CardHeader>
-        <CardContent ui={{ uid: "onboarding.sections.location-section.card-content.3-7Lfjiu", id: "onboarding.sections.location-section.card-content.3" }} id="onboarding.sections.location-section.card-content" className="space-y-6">
-          <div {...uiAttributes({ uid: "onboarding.sections.location-section.div.5-Rorm7L", id: "onboarding.sections.location-section.div.5" })} id="onboarding.sections.location-section.div.2" className="grid gap-6 lg:grid-cols-2">
+        <CardContent id="onboarding.sections.location-section.card-content" className="space-y-6">
+          <div id="onboarding.sections.location-section.div.2" className="grid gap-6 lg:grid-cols-2">
             <FormField id="onboarding.sections.location-section.form-field" label={t('onboarding.location.country')} htmlFor="country" required error={errors.country}>
-              <FormSelect id="onboarding.sections.location-section.form-select" ui={{ uid: 'onboarding.location.country-ZUTvz1', id: 'onboarding.location.country', kind: 'field', part: 'form' }}
+              <FormSelect id="onboarding.sections.location-section.form-select"
                 value={location.country}
                 onValueChange={(v) => updateLocation({ country: v })}
                 options={constants.countries.map((c) => ({
@@ -89,7 +88,7 @@ export function LocationSection() {
             </FormField>
 
             <FormField id="onboarding.sections.location-section.form-field.2" label={t('onboarding.location.city')} htmlFor="city" required error={errors.city}>
-              <FormInput ui={{ uid: 'onboarding.location.city-L0aVzc', id: 'onboarding.location.city', kind: 'field', part: 'form' }}
+              <FormInput
                 id="city"
                 value={location.city}
                 onChange={(e) => updateLocation({ city: e.target.value })}
@@ -100,7 +99,7 @@ export function LocationSection() {
           </div>
 
           <FormField id="onboarding.sections.location-section.form-field.3" label={t('onboarding.location.address')} htmlFor="address" required error={errors.address}>
-            <FormInput ui={{ uid: 'onboarding.location.address-QDsd6M', id: 'onboarding.location.address', kind: 'field', part: 'form' }}
+            <FormInput
               id="address"
               value={location.address}
               onChange={(e) => updateLocation({ address: e.target.value })}
@@ -110,7 +109,7 @@ export function LocationSection() {
           </FormField>
 
           <FormField id="onboarding.sections.location-section.form-field.4" label={t('onboarding.location.postalCode')} htmlFor="postalCode" hint={t('onboarding.common.optional')}>
-            <FormInput ui={{ uid: 'onboarding.location.postal-code-1BYVKu', id: 'onboarding.location.postal-code', kind: 'field', part: 'form' }}
+            <FormInput
               id="postalCode"
               value={location.postalCode}
               onChange={(e) => updateLocation({ postalCode: e.target.value })}
@@ -120,21 +119,21 @@ export function LocationSection() {
         </CardContent>
       </Card>
 
-      <Card ui={{ uid: "onboarding.sections.location-section.card.4-04e2A0", id: "onboarding.sections.location-section.card.4" }} id="onboarding.sections.location-section.card.2">
-        <CardHeader ui={{ uid: "onboarding.sections.location-section.card-header.4-Re41M6", id: "onboarding.sections.location-section.card-header.4" }} id="onboarding.sections.location-section.card-header.2">
-          <CardTitle ui={{ uid: "onboarding.sections.location-section.card-title.4-E2KoSJ", id: "onboarding.sections.location-section.card-title.4" }} id="onboarding.sections.location-section.card-title.2" className="flex items-center gap-2">
+      <Card id="onboarding.sections.location-section.card.2">
+        <CardHeader id="onboarding.sections.location-section.card-header.2">
+          <CardTitle id="onboarding.sections.location-section.card-title.2" className="flex items-center gap-2">
             <Globe id="onboarding.sections.location-section.globe" className="h-5 w-5" />
             {t('onboarding.location.shippingCountries')}
           </CardTitle>
-          <CardDescription ui={{ uid: "onboarding.sections.location-section.card-description.4-qDjPv7", id: "onboarding.sections.location-section.card-description.4" }} id="onboarding.sections.location-section.card-description.2">{t('onboarding.location.shippingCountriesDesc')}</CardDescription>
+          <CardDescription id="onboarding.sections.location-section.card-description.2">{t('onboarding.location.shippingCountriesDesc')}</CardDescription>
         </CardHeader>
-        <CardContent ui={{ uid: "onboarding.sections.location-section.card-content.4-Hj6gM7", id: "onboarding.sections.location-section.card-content.4" }} id="onboarding.sections.location-section.card-content.2">
-          <div {...uiAttributes({ uid: "onboarding.sections.location-section.div.6-bH3rMV", id: "onboarding.sections.location-section.div.6" })} id="onboarding.sections.location-section.div.3" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <CardContent id="onboarding.sections.location-section.card-content.2">
+          <div id="onboarding.sections.location-section.div.3" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {constants.countries.map((country) => {
               const isSelected = location.shippingRegions.some((r) => r.country === country);
               return (
                 <label
-                  key={country} {...uiAttributes({ uid: "onboarding.sections.location-section.label-x4aD6I", id: "onboarding.sections.location-section.label" , instance: createOpaqueUiInstanceId("iter-9cee69760c", String(country))})}
+                  key={country}
                   className={cn(
                     'flex items-center gap-2 p-3 rounded-lg border transition-all',
                     isSelected
@@ -142,11 +141,11 @@ export function LocationSection() {
                       : 'border-border',
                   )}
                 >
-                  <Checkbox ui={{ uid: "onboarding.sections.location-section.checkbox-Dnft4T", id: "onboarding.sections.location-section.checkbox" , instance: createOpaqueUiInstanceId("iter-b3e89500d4", String(country))}}
+                  <Checkbox
                     checked={isSelected}
                     onCheckedChange={() => toggleShippingCountry(country)}
                   />
-                  <span {...uiAttributes({ uid: "onboarding.sections.location-section.span-YUdM27", id: "onboarding.sections.location-section.span" , instance: createOpaqueUiInstanceId("iter-0c35bcd766", String(country))})} className="text-sm">
+                  <span className="text-sm">
                     {t(`onboarding.constants.countries.${COUNTRY_KEYS[country]}`)}
                   </span>
                 </label>

@@ -33,7 +33,6 @@ import {
   type SpecialtyRemoval,
 } from "./specialties-delete-impact";
 import { SpecialtiesToast } from "./SpecialtiesToast";
-import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 /**
  * EXCEPTIONAL CATEGORIES:
@@ -468,22 +467,22 @@ export const SpecialtiesCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div {...uiAttributes({ uid: "profile.specialties-card.div.16-Wgr6EY", id: "profile.specialties-card.div.16" })} id="profile.specialties-card.div" className="flex justify-center py-8">
-        <LoadingSpinner ui={{ uid: "profile.specialties-card.loading-spinner.3-IT5r5A", id: "profile.specialties-card.loading-spinner.3" }} id="profile.specialties-card.loading-spinner" size="lg" />
+      <div id="profile.specialties-card.div" className="flex justify-center py-8">
+        <LoadingSpinner id="profile.specialties-card.loading-spinner" size="lg" />
       </div>
     );
   }
 
   if (loadFailed) {
     return (
-      <div {...uiAttributes({ uid: "profile.specialties-card.div.17-wCL9bd", id: "profile.specialties-card.div.17" })}
+      <div
         id="profile.specialties-card.div.15"
         className="space-y-3 rounded-xl border border-error/40 bg-error/10 p-4 text-center"
       >
-        <p {...uiAttributes({ uid: "profile.specialties-card.p.3-0xDCq9", id: "profile.specialties-card.p.3" })} id="profile.specialties-card.p.2" className="text-sm text-on-surface">
+        <p id="profile.specialties-card.p.2" className="text-sm text-on-surface">
           {t("profile.specialties.loadFailed")}
         </p>
-        <Button id="profile.specialties-card.button.4" ui={{ uid: "profile.specialties.retry-load-fN6qOS", id: "profile.specialties.retry-load", kind: "action", action: "retry-load", part: "specialties" }}
+        <Button id="profile.specialties-card.button.4"
           type="button"
           variant="outline"
           onClick={() => void loadSpecialties()}
@@ -496,8 +495,8 @@ export const SpecialtiesCard = React.forwardRef<
 
   return (
     <>
-      <div {...uiAttributes({ uid: "profile.specialties-card.div.18-wCZ2zd", id: "profile.specialties-card.div.18" })} id="profile.specialties-card.div.2" className="space-y-4">
-        <div {...uiAttributes({ uid: "profile.specialties-card.div.19-7uGYEX", id: "profile.specialties-card.div.19" })} id="profile.specialties-card.div.3" className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
+      <div id="profile.specialties-card.div.2" className="space-y-4">
+        <div id="profile.specialties-card.div.3" className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
           {displayCategories.map((category) => {
             const categoryId = category.id.toString();
             const categoryName =
@@ -506,12 +505,12 @@ export const SpecialtiesCard = React.forwardRef<
 
             return (
               <div
-                key={category.id} {...uiAttributes({ uid: "profile.specialties-card.div.20-D0zJ10", id: "profile.specialties-card.div.20" , instance: createOpaqueUiInstanceId("iter-e74465a738", String(category.id))})}
+                key={category.id}
                 className="relative flex flex-col gap-1 group transition-transform duration-200 active:scale-95"
                 onClick={() => handleCategoryClick(category)}
               >
-                <div {...uiAttributes({ uid: "profile.specialties-card.div.21-iIZ1D9", id: "profile.specialties-card.div.21" , instance: createOpaqueUiInstanceId("iter-6df8d4dfcf", String(category.id))})} className="relative aspect-[4/3.5] rounded-lg overflow-hidden border-2 border-transparent transition-all">
-                  <div {...uiAttributes({ uid: "profile.specialties-card.div.22-S55dlK", id: "profile.specialties-card.div.22" , instance: createOpaqueUiInstanceId("iter-71dce2d07d", String(category.id))})} className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright transition-opacity">
+                <div className="relative aspect-[4/3.5] rounded-lg overflow-hidden border-2 border-transparent transition-all">
+                  <div className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright transition-opacity">
                     <Image
                       src={imgSrc}
                       alt={categoryName}
@@ -519,16 +518,16 @@ export const SpecialtiesCard = React.forwardRef<
                       className="object-cover"
                     />
                     {selectedSpecialties.includes(categoryId) && (
-                      <div {...uiAttributes({ uid: "profile.specialties-card.div.23-km9Xwf", id: "profile.specialties-card.div.23" , instance: createOpaqueUiInstanceId("iter-3e11ee6bf8", String(category.id))})} className="absolute inset-0 bg-primary/20" />
+                      <div className="absolute inset-0 bg-primary/20" />
                     )}
                   </div>
                 </div>
-                <div {...uiAttributes({ uid: "profile.specialties-card.div.24-8Xlph7", id: "profile.specialties-card.div.24" , instance: createOpaqueUiInstanceId("iter-b9a2f60d98", String(category.id))})}
+                <div
                   className="flex items-center gap-1"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div {...uiAttributes({ uid: "profile.specialties-card.div.25-GV0mN3", id: "profile.specialties-card.div.25" , instance: createOpaqueUiInstanceId("iter-1540843ace", String(category.id))})} onClick={(e) => e.stopPropagation()}>
-                    <Checkbox ui={{ uid: "profile.specialties-card.checkbox-lCwqA5", id: "profile.specialties-card.checkbox" , instance: createOpaqueUiInstanceId("iter-c57744fee2", String(category.id))}}
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
                       id={categoryId}
                       checked={selectedSpecialties.includes(categoryId)}
                       onCheckedChange={() => {
@@ -542,7 +541,7 @@ export const SpecialtiesCard = React.forwardRef<
                       className="h-4 w-4"
                     />
                   </div>
-                  <Label ui={{ uid: "profile.specialties-card.label-3N5lT9", id: "profile.specialties-card.label" , instance: createOpaqueUiInstanceId("iter-276939a65b", String(category.id))}}
+                  <Label
                     htmlFor={categoryId}
                     className="text-[10px] font-normal leading-3 truncate peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
@@ -558,20 +557,20 @@ export const SpecialtiesCard = React.forwardRef<
           Object.values(selectedSubcategories).some(
             (arr) => arr.length > 0,
           )) && (
-          <div {...uiAttributes({ uid: "profile.specialties-card.div.26-s9db7E", id: "profile.specialties-card.div.26" })} id="profile.specialties-card.div.4" className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1.5 overflow-x-auto overscroll-x-contain pt-2">
+          <div id="profile.specialties-card.div.4" className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1.5 overflow-x-auto overscroll-x-contain pt-2">
             {selectedSpecialties.map((categoryId) => {
               const categoryName = getCategoryName(categoryId);
               const subIds = selectedSubcategories[categoryId] || [];
 
               return (
                 <div
-                  key={categoryId} {...uiAttributes({ uid: "profile.specialties-card.div.27-2Lzc9F", id: "profile.specialties-card.div.27" , instance: createOpaqueUiInstanceId("iter-500933de28", String(categoryId))})}
+                  key={categoryId}
                   className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container-high border border-outline-variant/50"
                 >
-                  <span {...uiAttributes({ uid: "profile.specialties-card.span-53Mdc2", id: "profile.specialties-card.span" , instance: createOpaqueUiInstanceId("iter-0653ecf2de", String(categoryId))})} className="text-[11px] font-medium text-on-surface">
+                  <span className="text-[11px] font-medium text-on-surface">
                     {categoryName}
                   </span>
-                  <button {...uiAttributes({ uid: "profile.specialties-card.button.5-z52WRc", id: "profile.specialties-card.button.5" , instance: createOpaqueUiInstanceId("iter-1969922f49", String(categoryId))})}
+                  <button
                     type="button"
                     onClick={() => removeMainSpecialty(categoryId)}
                     className="p-0.5 rounded transition-colors"
@@ -580,16 +579,16 @@ export const SpecialtiesCard = React.forwardRef<
                     <X className="h-3 w-3" />
                   </button>
                   {subIds.length > 0 && (
-                    <div {...uiAttributes({ uid: "profile.specialties-card.div.28-TYERX1", id: "profile.specialties-card.div.28" , instance: createOpaqueUiInstanceId("iter-4083ea8b06", String(categoryId))})} className="flex flex-nowrap gap-0.5 pl-1 border-l border-outline-variant/50">
+                    <div className="flex flex-nowrap gap-0.5 pl-1 border-l border-outline-variant/50">
                       {subIds.map((subId) => (
                         <div
-                          key={subId} {...uiAttributes({ uid: "profile.specialties-card.div.29-Fhfd42", id: "profile.specialties-card.div.29" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-80c91603fe", String(subId)), createOpaqueUiInstanceId("iter-51f45715f5", String(subId)))})}
+                          key={subId}
                           className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-surface-container border border-outline-variant/30"
                         >
-                          <span {...uiAttributes({ uid: "profile.specialties-card.span.2-cWahn0", id: "profile.specialties-card.span.2" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-6b6c1a86da", String(subId)), createOpaqueUiInstanceId("iter-fc1a59b996", String(subId)))})} className="text-[10px] text-on-surface-variant">
+                          <span className="text-[10px] text-on-surface-variant">
                             {getSubcategoryName(categoryId, subId)}
                           </span>
-                          <button {...uiAttributes({ uid: "profile.specialties-card.button.6-M9VZr2", id: "profile.specialties-card.button.6" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-90d5a2cffd", String(subId)), createOpaqueUiInstanceId("iter-3153d785c7", String(subId)))})}
+                          <button
                             type="button"
                             onClick={() =>
                               removeSubSpecialty(categoryId, subId)
@@ -612,12 +611,12 @@ export const SpecialtiesCard = React.forwardRef<
 
       {/* Subcategories Dialog */}
       {isDialogOpen && selectedCategoryForDialog && (
-        <div {...uiAttributes({ uid: "profile.specialties-card.div.30-onOi1U", id: "profile.specialties-card.div.30" })} id="profile.specialties-card.div.5" className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div {...uiAttributes({ uid: "profile.specialties-card.div.31-77EEho", id: "profile.specialties-card.div.31" })} id="profile.specialties-card.div.6" className="bg-surface rounded-2xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
-            <div {...uiAttributes({ uid: "profile.specialties-card.div.32-bIu3wo", id: "profile.specialties-card.div.32" })} id="profile.specialties-card.div.7" className="flex items-center justify-between p-4 border-b border-outline-variant">
-              <div {...uiAttributes({ uid: "profile.specialties-card.div.33-Q4EKm4", id: "profile.specialties-card.div.33" })} id="profile.specialties-card.div.8" className="flex items-center gap-3">
+        <div id="profile.specialties-card.div.5" className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div id="profile.specialties-card.div.6" className="bg-surface rounded-2xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <div id="profile.specialties-card.div.7" className="flex items-center justify-between p-4 border-b border-outline-variant">
+              <div id="profile.specialties-card.div.8" className="flex items-center gap-3">
                 {isDoctorAppointmentView && (
-                  <button {...uiAttributes({ uid: "profile.specialties-card.button.7-60zQos", id: "profile.specialties-card.button.7" })} id="profile.specialties-card.button"
+                  <button id="profile.specialties-card.button"
                     type="button"
                     onClick={() => setIsDoctorAppointmentView(false)}
                     className="px-3 py-1.5 rounded-lg text-sm bg-surface-container transition-colors"
@@ -625,7 +624,7 @@ export const SpecialtiesCard = React.forwardRef<
                     {locale === "ar" ? "\u0631\u062c\u0648\u0639" : "Back"}
                   </button>
                 )}
-                <h2 {...uiAttributes({ uid: "profile.specialties-card.h2.2-2N7V8t", id: "profile.specialties-card.h2.2" })} id="profile.specialties-card.h2" className="text-lg font-semibold text-on-surface">
+                <h2 id="profile.specialties-card.h2" className="text-lg font-semibold text-on-surface">
                   {isDoctorAppointmentView
                     ? locale === "ar"
                       ? "\u0643\u0634\u0641 \u0637\u0628\u064a"
@@ -635,7 +634,7 @@ export const SpecialtiesCard = React.forwardRef<
                       : selectedCategoryForDialog?.nameEn}
                 </h2>
               </div>
-              <button {...uiAttributes({ uid: "profile.specialties-card.button.8-PdDx11", id: "profile.specialties-card.button.8" })} id="profile.specialties-card.button.2"
+              <button id="profile.specialties-card.button.2"
                 type="button"
                 onClick={() => setIsDialogOpen(false)}
                 className="p-2 rounded-full transition-colors"
@@ -644,20 +643,20 @@ export const SpecialtiesCard = React.forwardRef<
                 <X id="profile.specialties-card.x" className="h-5 w-5 text-on-surface-variant" />
               </button>
             </div>
-            <div {...uiAttributes({ uid: "profile.specialties-card.div.34-K97HeF", id: "profile.specialties-card.div.34" })} id="profile.specialties-card.div.9" className="flex-1 overflow-y-auto p-4">
+            <div id="profile.specialties-card.div.9" className="flex-1 overflow-y-auto p-4">
               {isLoadingSubcategories ? (
-                <div {...uiAttributes({ uid: "profile.specialties-card.div.35-T64uPm", id: "profile.specialties-card.div.35" })} id="profile.specialties-card.div.10" className="flex justify-center py-8">
-                  <LoadingSpinner ui={{ uid: "profile.specialties-card.loading-spinner.4-EM6RGn", id: "profile.specialties-card.loading-spinner.4" }} id="profile.specialties-card.loading-spinner.2" size="lg" />
+                <div id="profile.specialties-card.div.10" className="flex justify-center py-8">
+                  <LoadingSpinner id="profile.specialties-card.loading-spinner.2" size="lg" />
                 </div>
               ) : visibleSubcategories.length === 0 &&
                 doctorAppointmentSubcategories.length === 0 ? (
-                <p {...uiAttributes({ uid: "profile.specialties-card.p.4-ra7GoT", id: "profile.specialties-card.p.4" })} id="profile.specialties-card.p" className="text-center text-on-surface-variant py-8">
+                <p id="profile.specialties-card.p" className="text-center text-on-surface-variant py-8">
                   {locale === "ar"
                     ? "لا توجد تخصصات فرعية"
                     : "No subcategories"}
                 </p>
               ) : (
-                <div {...uiAttributes({ uid: "profile.specialties-card.div.36-G2x7l7", id: "profile.specialties-card.div.36" })} id="profile.specialties-card.div.11" className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
+                <div id="profile.specialties-card.div.11" className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
                   {visibleSubcategories.map((subcategory) => {
                     const subcategoryId =
                       subcategory.originalId?.toString() ||
@@ -682,7 +681,7 @@ export const SpecialtiesCard = React.forwardRef<
 
                     return (
                       <div
-                        key={subcategory.id} {...uiAttributes({ uid: "profile.specialties-card.div.37-IoD44U", id: "profile.specialties-card.div.37" , instance: createOpaqueUiInstanceId("iter-939d6cade0", String(subcategory.id))})}
+                        key={subcategory.id}
                         className={`relative flex flex-col gap-1 group ${
                           isGroup
                             ? "transition-transform duration-200 active:scale-95"
@@ -692,8 +691,8 @@ export const SpecialtiesCard = React.forwardRef<
                           if (isGroup) setIsDoctorAppointmentView(true);
                         }}
                       >
-                        <div {...uiAttributes({ uid: "profile.specialties-card.div.38-H70G6U", id: "profile.specialties-card.div.38" , instance: createOpaqueUiInstanceId("iter-fae1a62b42", String(subcategory.id))})} className="relative aspect-[4/3.5] rounded-lg overflow-hidden border-2 border-transparent transition-all">
-                          <div {...uiAttributes({ uid: "profile.specialties-card.div.39-70G39G", id: "profile.specialties-card.div.39" , instance: createOpaqueUiInstanceId("iter-777071192d", String(subcategory.id))})} className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright transition-opacity">
+                        <div className="relative aspect-[4/3.5] rounded-lg overflow-hidden border-2 border-transparent transition-all">
+                          <div className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright transition-opacity">
                             <Image
                               src={imgSrc}
                               alt={subcategoryName}
@@ -701,13 +700,13 @@ export const SpecialtiesCard = React.forwardRef<
                               className="object-cover"
                             />
                             {isChecked && (
-                              <div {...uiAttributes({ uid: "profile.specialties-card.div.40-89Q1IY", id: "profile.specialties-card.div.40" , instance: createOpaqueUiInstanceId("iter-3a921d897e", String(subcategory.id))})} className="absolute inset-0 bg-primary/20" />
+                              <div className="absolute inset-0 bg-primary/20" />
                             )}
                           </div>
                         </div>
-                        <div {...uiAttributes({ uid: "profile.specialties-card.div.41-KMOG2S", id: "profile.specialties-card.div.41" , instance: createOpaqueUiInstanceId("iter-d9643fd1b0", String(subcategory.id))})} className="flex items-center gap-1">
+                        <div className="flex items-center gap-1">
                           {!isGroup && (
-                            <Checkbox ui={{ uid: "profile.specialties-card.checkbox.2-95I3yB", id: "profile.specialties-card.checkbox.2" , instance: createOpaqueUiInstanceId("iter-5c3776bce0", String(subcategory.id))}}
+                            <Checkbox
                               id={`sub-${subcategoryId}`}
                               checked={isChecked}
                               onCheckedChange={() =>
@@ -717,7 +716,7 @@ export const SpecialtiesCard = React.forwardRef<
                               className="h-4 w-4"
                             />
                           )}
-                          <Label ui={{ uid: "profile.specialties-card.label.2-eU3SAU", id: "profile.specialties-card.label.2" , instance: createOpaqueUiInstanceId("iter-bee551bebc", String(subcategory.id))}}
+                          <Label
                             htmlFor={`sub-${subcategoryId}`}
                             className="text-[10px] font-normal leading-3 truncate peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                           >
@@ -730,25 +729,25 @@ export const SpecialtiesCard = React.forwardRef<
                 </div>
               )}
             </div>
-            <div {...uiAttributes({ uid: "profile.specialties-card.div.42-44Pv0S", id: "profile.specialties-card.div.42" })} id="profile.specialties-card.div.12" className="p-4 border-t border-outline-variant flex flex-col gap-3">
+            <div id="profile.specialties-card.div.12" className="p-4 border-t border-outline-variant flex flex-col gap-3">
               {selectedCategoryForDialog &&
                 selectedSubcategories[selectedCategoryForDialog.id.toString()]
                   ?.length > 0 && (
-                  <div {...uiAttributes({ uid: "profile.specialties-card.div.43-6qcGBZ", id: "profile.specialties-card.div.43" })} id="profile.specialties-card.div.13" className="flex flex-wrap gap-1.5">
+                  <div id="profile.specialties-card.div.13" className="flex flex-wrap gap-1.5">
                     {selectedSubcategories[
                       selectedCategoryForDialog.id.toString()
                     ].map((subId) => (
                       <div
-                        key={subId} {...uiAttributes({ uid: "profile.specialties-card.div.44-2V6ArE", id: "profile.specialties-card.div.44" , instance: createOpaqueUiInstanceId("iter-71df2608ff", String(subId))})}
+                        key={subId}
                         className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container-high border border-outline-variant/50"
                       >
-                        <span {...uiAttributes({ uid: "profile.specialties-card.span.3-Di6dJv", id: "profile.specialties-card.span.3" , instance: createOpaqueUiInstanceId("iter-57801db356", String(subId))})} className="text-[11px] font-medium text-on-surface">
+                        <span className="text-[11px] font-medium text-on-surface">
                           {getSubcategoryName(
                             selectedCategoryForDialog.id.toString(),
                             subId,
                           )}
                         </span>
-                        <button {...uiAttributes({ uid: "profile.specialties-card.button.9-YBl4ZB", id: "profile.specialties-card.button.9" , instance: createOpaqueUiInstanceId("iter-168459b193", String(subId))})}
+                        <button
                           type="button"
                           onClick={() =>
                             removeSubSpecialty(
@@ -765,8 +764,8 @@ export const SpecialtiesCard = React.forwardRef<
                     ))}
                   </div>
                 )}
-              <div {...uiAttributes({ uid: "profile.specialties-card.div.45-uRsk3f", id: "profile.specialties-card.div.45" })} id="profile.specialties-card.div.14" className="flex justify-end">
-                <button {...uiAttributes({ uid: "profile.specialties-card.button.10-uGTR3O", id: "profile.specialties-card.button.10" })} id="profile.specialties-card.button.3"
+              <div id="profile.specialties-card.div.14" className="flex justify-end">
+                <button id="profile.specialties-card.button.3"
                   type="button"
                   onClick={() => setIsDialogOpen(false)}
                   className="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium transition-colors"

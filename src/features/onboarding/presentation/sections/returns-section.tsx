@@ -11,7 +11,6 @@ import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
 import { Label } from '@/shared/ui/label';
 import { cn } from '@/shared/utils';
 import type { ReturnPolicyType } from '@/features/onboarding/domain/types';
-import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 const POLICY_TYPES: ReturnPolicyType[] = [
   'full_returns',
@@ -35,26 +34,26 @@ export function ReturnsSection() {
   };
 
   return (
-    <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.6-4MQ3PX", id: "onboarding.sections.returns-section.div.6" })} id="onboarding.sections.returns-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card ui={{ uid: "onboarding.sections.returns-section.card.2-hK7Z9b", id: "onboarding.sections.returns-section.card.2" }} id="onboarding.sections.returns-section.card">
-        <CardHeader ui={{ uid: "onboarding.sections.returns-section.card-header.2-KP5ATe", id: "onboarding.sections.returns-section.card-header.2" }} id="onboarding.sections.returns-section.card-header">
-          <CardTitle ui={{ uid: "onboarding.sections.returns-section.card-title.2-5aS0Z5", id: "onboarding.sections.returns-section.card-title.2" }} id="onboarding.sections.returns-section.card-title" className="flex items-center gap-2">
+    <div id="onboarding.sections.returns-section.div" className="space-y-6 animate-in fade-in duration-300">
+      <Card id="onboarding.sections.returns-section.card">
+        <CardHeader id="onboarding.sections.returns-section.card-header">
+          <CardTitle id="onboarding.sections.returns-section.card-title" className="flex items-center gap-2">
             <RotateCcw id="onboarding.sections.returns-section.rotate-ccw" className="h-5 w-5" />
             {t('onboarding.returns.title')}
           </CardTitle>
-          <CardDescription ui={{ uid: "onboarding.sections.returns-section.card-description.2-M4X0LY", id: "onboarding.sections.returns-section.card-description.2" }} id="onboarding.sections.returns-section.card-description">{t('onboarding.returns.description')}</CardDescription>
+          <CardDescription id="onboarding.sections.returns-section.card-description">{t('onboarding.returns.description')}</CardDescription>
         </CardHeader>
-        <CardContent ui={{ uid: "onboarding.sections.returns-section.card-content.2-3OOXzH", id: "onboarding.sections.returns-section.card-content.2" }} id="onboarding.sections.returns-section.card-content" className="space-y-6">
-          <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.7-Ur0GpK", id: "onboarding.sections.returns-section.div.7" })} id="onboarding.sections.returns-section.div.2" className="space-y-4">
-            <Label ui={{ uid: "onboarding.sections.returns-section.label.2-8a3lBB", id: "onboarding.sections.returns-section.label.2" }} id="onboarding.sections.returns-section.label" className="text-base">{t('onboarding.returns.policyType')}</Label>
-            <RadioGroup ui={{ uid: "onboarding.sections.returns-section.radio-group.2-J2UP3G", id: "onboarding.sections.returns-section.radio-group.2" }} id="onboarding.sections.returns-section.radio-group"
+        <CardContent id="onboarding.sections.returns-section.card-content" className="space-y-6">
+          <div id="onboarding.sections.returns-section.div.2" className="space-y-4">
+            <Label id="onboarding.sections.returns-section.label" className="text-base">{t('onboarding.returns.policyType')}</Label>
+            <RadioGroup id="onboarding.sections.returns-section.radio-group"
               value={returns.policyType}
               onValueChange={(v) => updateReturns({ policyType: v as ReturnPolicyType })}
               className="grid gap-3 sm:grid-cols-2"
             >
               {POLICY_TYPES.map((policy) => (
                 <div
-                  key={policy} {...uiAttributes({ uid: "onboarding.sections.returns-section.div.8-PeZ3VH", id: "onboarding.sections.returns-section.div.8", instance: createUiInstanceId(policy) })}
+                  key={policy}
                   className={cn(
                     'relative flex items-start gap-3 rounded-lg border p-4 transition-all',
                     returns.policyType === policy
@@ -62,12 +61,12 @@ export function ReturnsSection() {
                       : 'border-border',
                   )}
                 >
-                  <RadioGroupItem ui={{ uid: "onboarding.sections.returns-section.radio-group-item-t90iyB", id: "onboarding.sections.returns-section.radio-group-item", kind: "field", action: "select-policy", part: "policy", instance: createUiInstanceId(policy) }} value={policy} id={policy} className="mt-0.5" />
-                  <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.9-Y3QGzW", id: "onboarding.sections.returns-section.div.9", instance: createUiInstanceId(policy) })} className="flex-1">
-                    <Label ui={{ uid: "onboarding.sections.returns-section.label.3-gYY3L0", id: "onboarding.sections.returns-section.label.3", instance: createUiInstanceId(policy) }} htmlFor={policy} className="font-medium">
+                  <RadioGroupItem value={policy} id={policy} className="mt-0.5" />
+                  <div className="flex-1">
+                    <Label htmlFor={policy} className="font-medium">
                       {t(`onboarding.returns.policyTypes.${policy}.label`)}
                     </Label>
-                    <p {...uiAttributes({ uid: "onboarding.sections.returns-section.p-55UNY5", id: "onboarding.sections.returns-section.p", instance: createUiInstanceId(policy) })} className="text-sm text-muted-foreground mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       {t(`onboarding.returns.policyTypes.${policy}.description`)}
                     </p>
                   </div>
@@ -77,16 +76,16 @@ export function ReturnsSection() {
           </div>
 
           {returns.policyType !== 'no_returns' && (
-            <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.10-4L98FZ", id: "onboarding.sections.returns-section.div.10" })} id="onboarding.sections.returns-section.div.3" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
-              <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.11-i6sZWh", id: "onboarding.sections.returns-section.div.11" })} id="onboarding.sections.returns-section.div.4" className="grid gap-6 sm:grid-cols-2">
+            <div id="onboarding.sections.returns-section.div.3" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
+              <div id="onboarding.sections.returns-section.div.4" className="grid gap-6 sm:grid-cols-2">
                 <FormField id="onboarding.sections.returns-section.form-field"
                   label={t('onboarding.returns.returnPeriod')}
                   htmlFor="returnPeriod"
                   hint={t('onboarding.returns.returnPeriodHint')}
                 >
-                  <div {...uiAttributes({ uid: "onboarding.sections.returns-section.div.12-fbNvT6", id: "onboarding.sections.returns-section.div.12" })} id="onboarding.sections.returns-section.div.5" className="flex items-center gap-2">
+                  <div id="onboarding.sections.returns-section.div.5" className="flex items-center gap-2">
                     <CalendarDays id="onboarding.sections.returns-section.calendar-days" className="h-5 w-5 text-muted-foreground" />
-                    <FormSelect id="onboarding.sections.returns-section.form-select" ui={{ uid: 'onboarding.returns.return-period-NE7mB4', id: 'onboarding.returns.return-period', kind: 'field', part: 'form' }}
+                    <FormSelect id="onboarding.sections.returns-section.form-select"
                       value={returns.returnPeriod.toString()}
                       onValueChange={(v) => updateReturns({ returnPeriod: parseInt(v) })}
                       options={RETURN_PERIODS.map((value) => ({
@@ -98,7 +97,7 @@ export function ReturnsSection() {
                 </FormField>
 
                 <FormField id="onboarding.sections.returns-section.form-field.2" label={t('onboarding.returns.refundMethod')} htmlFor="refundMethod">
-                  <FormSelect id="onboarding.sections.returns-section.form-select.2" ui={{ uid: 'onboarding.returns.refund-method-B9j88E', id: 'onboarding.returns.refund-method', kind: 'field', part: 'form' }}
+                  <FormSelect id="onboarding.sections.returns-section.form-select.2"
                     value={returns.refundMethod}
                     onValueChange={(v) => updateReturns({ refundMethod: v as 'original' | 'store_credit' | 'choice' })}
                     options={REFUND_METHODS.map((value) => ({
@@ -114,7 +113,7 @@ export function ReturnsSection() {
                 htmlFor="policyDescription"
                 hint={t('onboarding.returns.policyDescriptionHint')}
               >
-                <FormTextarea ui={{ uid: 'onboarding.returns.policy-description-pO9fsl', id: 'onboarding.returns.policy-description', kind: 'field', part: 'form' }}
+                <FormTextarea
                   id="policyDescription"
                   value={returns.policyDescription}
                   onChange={(e) => updateReturns({ policyDescription: e.target.value })}

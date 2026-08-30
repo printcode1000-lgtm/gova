@@ -2,12 +2,11 @@
 
 import { ProfilePreviewContent } from "../ProfilePreviewContent";
 import type { ProfilePageContentModel } from "./ProfilePageContent.model";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export function ProfilePreviewView({ model }: { model: ProfilePageContentModel }) {
 const { initialPublicProfile, t, locale, router, session, isLoggedIn, isLoading, setSession, superAdmin, searchParams, mode, uid, isViewingOtherProfile, showEditCard, showPreviewCard, matchingInitialProfile, storeImages, isLoadingStoreImages, storeDetails, isLoadingStoreDetails, previewUid, isPreviewOwner, previewContacts, isLoadingPreviewContacts, previewFulfillment, isLoadingPreviewFulfillment, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, carouselRef, panelRefs, navButtonRefs, activeSectionIndex, handleCarouselScroll, selectSection, goToAdjacentSection, sectionStatuses, saveError, isUnifiedSaving,  handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus, handleSaveChangedSections,  editSnapshotReady, restoreEditSnapshot, restoredEditSnapshotRef, featuredProducts, setFeaturedProducts, isLoadingFeaturedProducts, setIsLoadingFeaturedProducts, heroSliderConfig, profileFeaturedConfig, profileTrendingConfig, dirtySections, dirtyLabels, isSaveBlocked, saveProfileChanges, earlyView } = model;
 return (
-        <div {...uiAttributes({ uid: "profile.profile-page.profile-preview-view.div.2-9RcBAB", id: "profile.profile-page.profile-preview-view.div.2" })} id="profile.profile-page.profile-preview-view.div" className="pt-0.5 sm:pt-1">
+        <div id="profile.profile-page.profile-preview-view.div" className="pt-0.5 sm:pt-1">
           <ProfilePreviewContent
             locale={locale === "ar" ? "ar" : "en"}
             previewUid={previewUid}

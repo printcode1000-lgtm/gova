@@ -22,7 +22,6 @@ import { useTranslation } from "@/shared/i18n";
 import { cn } from "@/shared/utils";
 import { specialtyChatClient } from "../application/specialty-chat-client";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 import {
   chatMessageDayKey,
   formatChatMessageDay,
@@ -127,7 +126,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
 
   if (isLoading) {
     return (
-      <main {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.main.3-9WZCrH", id: "specialty-chat.chat-thread-page-content.main.3" })} id="specialty-chat.chat-thread-page-content.main" className="flex min-h-[60vh] items-center justify-center">
+      <main id="specialty-chat.chat-thread-page-content.main" className="flex min-h-[60vh] items-center justify-center">
         <Loader2 id="specialty-chat.chat-thread-page-content.loader2" className="h-6 w-6 animate-spin text-primary" />
       </main>
     );
@@ -135,9 +134,9 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
 
   if (!conversation) {
     return (
-      <main {...uiAttributes({ uid: "chat-conversation-missing-TXa01l", id: "chat-conversation-missing", kind: "region", simulation: { kind: "state", id: "chat-conversation-missing" } })} className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
+      <main className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
         <MessageCircle id="specialty-chat.chat-thread-page-content.message-circle" className="h-12 w-12 text-muted-foreground" />
-        <h1 {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.h1.2-n1hF1w", id: "specialty-chat.chat-thread-page-content.h1.2" })} id="specialty-chat.chat-thread-page-content.h1" className="mt-4 text-xl font-bold">
+        <h1 id="specialty-chat.chat-thread-page-content.h1" className="mt-4 text-xl font-bold">
           {locale === "ar" ? "المحادثة غير موجودة على هذا الجهاز" : "Conversation not found on this device"}
         </h1>
         <Link id="specialty-chat.chat-thread-page-content.link" href="/notifications?filter=chat" className="mt-5 rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary">
@@ -163,21 +162,21 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
 
   return (
-    <main {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.main.4-Oa3eJ3", id: "specialty-chat.chat-thread-page-content.main.4" })} id="specialty-chat.chat-thread-page-content.main.2" className="mx-auto w-full max-w-3xl px-3 pb-40 pt-3 sm:px-5">
-      <header {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.header.2-nTh5mM", id: "specialty-chat.chat-thread-page-content.header.2" })} id="specialty-chat.chat-thread-page-content.header" className="sticky top-0 z-20 -mx-3 flex items-center gap-3 border-b border-outline-variant bg-surface/95 px-3 py-3 backdrop-blur sm:-mx-5 sm:px-5">
+    <main id="specialty-chat.chat-thread-page-content.main.2" className="mx-auto w-full max-w-3xl px-3 pb-40 pt-3 sm:px-5">
+      <header id="specialty-chat.chat-thread-page-content.header" className="sticky top-0 z-20 -mx-3 flex items-center gap-3 border-b border-outline-variant bg-surface/95 px-3 py-3 backdrop-blur sm:-mx-5 sm:px-5">
         <Link id="specialty-chat.chat-thread-page-content.link.2" href="/notifications?filter=chat" aria-label={locale === "ar" ? "العودة" : "Back"} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
           <BackIcon className="h-5 w-5" />
         </Link>
-        <span {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.span.4-gH8JfF", id: "specialty-chat.chat-thread-page-content.span.4" })} id="specialty-chat.chat-thread-page-content.span" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+        <span id="specialty-chat.chat-thread-page-content.span" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
           <MessageCircle id="specialty-chat.chat-thread-page-content.message-circle.2" className="h-5 w-5" />
         </span>
-        <span {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.span.5-1JjKWE", id: "specialty-chat.chat-thread-page-content.span.5" })} id="specialty-chat.chat-thread-page-content.span.2" className="min-w-0">
-          <strong {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.strong-JQr9jR", id: "specialty-chat.chat-thread-page-content.strong" })} className="block truncate text-on-surface">{title}</strong>
-          {specialty ? <span {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.span.6-BF1Vao", id: "specialty-chat.chat-thread-page-content.span.6" })} id="specialty-chat.chat-thread-page-content.span.3" className="block truncate text-xs text-muted-foreground">{specialty}</span> : null}
+        <span id="specialty-chat.chat-thread-page-content.span.2" className="min-w-0">
+          <strong className="block truncate text-on-surface">{title}</strong>
+          {specialty ? <span id="specialty-chat.chat-thread-page-content.span.3" className="block truncate text-xs text-muted-foreground">{specialty}</span> : null}
         </span>
       </header>
 
-      <section {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.section.2-vZA7kS", id: "specialty-chat.chat-thread-page-content.section.2" })} id="specialty-chat.chat-thread-page-content.section" className="space-y-2 py-4" aria-label={title}>
+      <section id="specialty-chat.chat-thread-page-content.section" className="space-y-2 py-4" aria-label={title}>
         {messages.map((message, index) => {
           const outgoing = message.metadata?.outgoing === true;
           const showDay = index === 0 || chatMessageDayKey(messages[index - 1].createdAt) !== chatMessageDayKey(message.createdAt);
@@ -186,14 +185,14 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
           return (
             <React.Fragment key={message.id}>
               {showDay ? (
-                <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.5-kcX9AN", id: "specialty-chat.chat-thread-page-content.div.5" , instance: createOpaqueUiInstanceId("iter-35e9b9513d", String(message.id))})} className="flex justify-center py-2">
-                  <time {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.time-9aJNHo", id: "specialty-chat.chat-thread-page-content.time" , instance: createOpaqueUiInstanceId("iter-93c621f4f0", String(message.id))})} className="rounded-full bg-surface-container px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
+                <div className="flex justify-center py-2">
+                  <time className="rounded-full bg-surface-container px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
                     {formatChatMessageDay(message.createdAt, locale)}
                   </time>
                 </div>
               ) : null}
-              <article {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.article-w3ay5J", id: "specialty-chat.chat-thread-page-content.article" , instance: createOpaqueUiInstanceId("iter-1f7b8ddea2", String(message.id))})} className={cn("flex", outgoing ? "justify-end" : "justify-start")}>
-                <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.6-I3xwL8", id: "specialty-chat.chat-thread-page-content.div.6" , instance: createOpaqueUiInstanceId("iter-de6e4f95a2", String(message.id))})}
+              <article className={cn("flex", outgoing ? "justify-end" : "justify-start")}>
+                <div
                   className={cn(
                     "max-w-[86%] rounded-2xl px-3 py-2 shadow-sm sm:max-w-[75%]",
                     outgoing
@@ -201,8 +200,8 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
                       : "rounded-es-md border border-outline-variant bg-surface-container text-on-surface",
                   )}
                 >
-                  <p {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.p.3-VF8yeT", id: "specialty-chat.chat-thread-page-content.p.3" , instance: createOpaqueUiInstanceId("iter-d39c968215", String(message.id))})} className="whitespace-pre-wrap break-words text-sm leading-6">{message.body}</p>
-                  <span {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.span.7-QwgF9H", id: "specialty-chat.chat-thread-page-content.span.7" , instance: createOpaqueUiInstanceId("iter-135a9f754e", String(message.id))})} className={cn("mt-1 flex items-center justify-end gap-1 text-[10px]", outgoing ? "text-on-primary/75" : "text-muted-foreground")}>
+                  <p className="whitespace-pre-wrap break-words text-sm leading-6">{message.body}</p>
+                  <span className={cn("mt-1 flex items-center justify-end gap-1 text-[10px]", outgoing ? "text-on-primary/75" : "text-muted-foreground")}>
                     {formatChatMessageTime(message.createdAt, locale)}
                     {outgoing ? (
                       read || received ? (
@@ -217,18 +216,18 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
             </React.Fragment>
           );
         })}
-        <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.7-4dHNn0", id: "specialty-chat.chat-thread-page-content.div.7" })} id="specialty-chat.chat-thread-page-content.div" ref={endRef} />
+        <div id="specialty-chat.chat-thread-page-content.div" ref={endRef} />
       </section>
 
-      <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.8-6DSIWk", id: "specialty-chat.chat-thread-page-content.div.8" })} id="specialty-chat.chat-thread-page-content.div.2"
+      <div id="specialty-chat.chat-thread-page-content.div.2"
         className="fixed inset-x-0 z-40 px-3 sm:px-5"
         style={{ bottom: BOTTOM_NAV_CLEARANCE }}
       >
-        <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.9-1nHhLM", id: "specialty-chat.chat-thread-page-content.div.9" })} id="specialty-chat.chat-thread-page-content.div.3" className="mx-auto max-w-3xl rounded-2xl border border-outline-variant bg-surface/95 p-2 shadow-xl backdrop-blur">
-          {status ? <p {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.p.4-WN03P8", id: "specialty-chat.chat-thread-page-content.p.4" })} id="specialty-chat.chat-thread-page-content.p" className="mb-2 rounded-xl bg-error/10 px-3 py-2 text-xs font-semibold text-error" role="status">{status}</p> : null}
+        <div id="specialty-chat.chat-thread-page-content.div.3" className="mx-auto max-w-3xl rounded-2xl border border-outline-variant bg-surface/95 p-2 shadow-xl backdrop-blur">
+          {status ? <p id="specialty-chat.chat-thread-page-content.p" className="mb-2 rounded-xl bg-error/10 px-3 py-2 text-xs font-semibold text-error" role="status">{status}</p> : null}
           {canReply ? (
-            <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.10-3eRQtL", id: "specialty-chat.chat-thread-page-content.div.10" })} id="specialty-chat.chat-thread-page-content.div.4" className="flex items-end gap-2">
-              <textarea {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.textarea.2-uKx7Ee", id: "specialty-chat.chat-thread-page-content.textarea.2" })} id="specialty-chat.chat-thread-page-content.textarea"
+            <div id="specialty-chat.chat-thread-page-content.div.4" className="flex items-end gap-2">
+              <textarea id="specialty-chat.chat-thread-page-content.textarea"
                 value={reply}
                 onChange={(event) => setReply(event.target.value.slice(0, 800))}
                 onKeyDown={(event) => {
@@ -241,7 +240,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
                 placeholder={locale === "ar" ? "اكتب رسالة..." : "Write a message..."}
                 className="max-h-28 min-h-11 min-w-0 flex-1 resize-none rounded-xl border border-outline-variant bg-surface-container px-3 py-2.5 text-sm outline-none focus:border-primary"
               />
-              <button {...uiAttributes({ uid: "chat-reply-j1I7FI", id: "chat-reply", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "chat-reply" } })}
+              <button
                 type="button"
                 disabled={replying || !reply.trim()}
                 onClick={() => void sendReply()}
@@ -252,7 +251,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
               </button>
             </div>
           ) : (
-            <p {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.p.5-hN8HFP", id: "specialty-chat.chat-thread-page-content.p.5" })} id="specialty-chat.chat-thread-page-content.p.2" className="px-3 py-2 text-center text-sm text-muted-foreground">
+            <p id="specialty-chat.chat-thread-page-content.p.2" className="px-3 py-2 text-center text-sm text-muted-foreground">
               {conversation.kind === "broadcast"
                 ? locale === "ar"
                   ? "ستظهر محادثة مستقلة هنا عند وصول رد من أحد مقدمي الخدمة."

@@ -11,12 +11,6 @@ import type {
 } from "@/features/seller-card";
 import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { FavoriteButton, favoriteFromSellerCard } from "@/features/favorites";
-import {
-  composeUiInstanceId,
-  createUiPositionInstanceId,
-  uiAttributes,
-  type UiDescriptor,
-} from "@asol/ui-registry-core";
 
 interface SellerCardProps {
   card: SellerCardViewModel;
@@ -25,7 +19,6 @@ interface SellerCardProps {
   className?: string;
   favoriteEnabled?: boolean;
   /** Caller-owned identity for the card's primary action. Mandatory. */
-  ui: UiDescriptor;
   onOpen?: (
     event: React.MouseEvent<HTMLButtonElement>,
     card: SellerCardViewModel,
@@ -76,7 +69,6 @@ export function SellerCard({ id,
   actions = [],
   className = "",
   favoriteEnabled,
-  ui,
   onOpen,
 }: SellerCardProps & { id?: string }) {
   const horizontal = variant === "linked-provider" || variant === "compact";
@@ -86,29 +78,21 @@ export function SellerCard({ id,
     Boolean(card.uid);
 
   return (
-    <article {...uiAttributes({ uid: "seller-card.seller-card.article-23D8I4", id: "seller-card.seller-card.article", instance: ui.instance })} id={id} className={`relative ${variantClass[variant]} ${className}`}>
+    <article id={id} className={`relative ${variantClass[variant]} ${className}`}>
       {showFavorite ? (
         <FavoriteButton
           item={favoriteFromSellerCard(card)}
           variant="follow"
-          ui={{
-            uid: "seller-card.favorite-button-J8fV4n",
-            id: "seller-card.favorite-button",
-            kind: "action",
-            action: "follow",
-            instance: ui.instance,
-          }}
           className="absolute end-2 top-2 z-10"
         />
       ) : null}
       <button
-        {...uiAttributes(ui)}
         type="button"
         onClick={(event) => onOpen?.(event, card)}
         className={`w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${horizontal ? "flex items-center gap-3" : "block"}`}
         aria-label={card.title || card.href}
       >
-        <div {...uiAttributes({ uid: "seller-card.seller-card.div-fJoWj4", id: "seller-card.seller-card.div", instance: ui.instance })}
+        <div
           className={`relative shrink-0 overflow-hidden bg-surface-bright ${avatarClass[variant]}`}
         >
           {card.avatarUrl ? (
@@ -121,34 +105,29 @@ export function SellerCard({ id,
               unoptimized={shouldUseUnoptimizedImage(card.avatarUrl)}
             />
           ) : (
-            <div {...uiAttributes({ uid: "seller-card.seller-card.div.2-YgWTs0", id: "seller-card.seller-card.div.2", instance: ui.instance })} className="flex h-full w-full items-center justify-center text-lg font-bold text-on-surface-variant">
+            <div className="flex h-full w-full items-center justify-center text-lg font-bold text-on-surface-variant">
               {card.initials !== "?" ? card.initials : <Store className="h-6 w-6" />}
             </div>
           )}
         </div>
-        <div {...uiAttributes({ uid: "seller-card.seller-card.div.3-k73YXl", id: "seller-card.seller-card.div.3", instance: ui.instance })} className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
+        <div className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
           {card.title ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p-ux907S", id: "seller-card.seller-card.p", instance: ui.instance })} className="line-clamp-2 text-sm font-semibold text-on-surface">{card.title}</p>
+            <p className="line-clamp-2 text-sm font-semibold text-on-surface">{card.title}</p>
           ) : null}
           {card.subtitle ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p.2-OGZb4s", id: "seller-card.seller-card.p.2", instance: ui.instance })} className="mt-1 truncate text-[11px] text-on-surface-variant">{card.subtitle}</p>
+            <p className="mt-1 truncate text-[11px] text-on-surface-variant">{card.subtitle}</p>
           ) : null}
           {card.description && !horizontal ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p.3-uDh5dG", id: "seller-card.seller-card.p.3", instance: ui.instance })} className="mt-1 line-clamp-2 text-[11px] text-on-surface-variant">{card.description}</p>
+            <p className="mt-1 line-clamp-2 text-[11px] text-on-surface-variant">{card.description}</p>
           ) : null}
           {card.ratingText ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p.4-xT90kW", id: "seller-card.seller-card.p.4", instance: ui.instance })} className="mt-1 text-[11px] font-medium text-tertiary">{card.ratingText}</p>
+            <p className="mt-1 text-[11px] font-medium text-tertiary">{card.ratingText}</p>
           ) : null}
           {card.badges.length > 0 ? (
-            <div {...uiAttributes({ uid: "seller-card.seller-card.div.4-B71tCG", id: "seller-card.seller-card.div.4", instance: ui.instance })} className="mt-2 flex flex-wrap justify-center gap-1">
+            <div className="mt-2 flex flex-wrap justify-center gap-1">
               {card.badges.map((badge, badgeIndex) => (
                 <span
                   key={badge.label}
-                  {...uiAttributes({
-                    uid: "seller-card.seller-card.span-J664v9",
-                    id: "seller-card.seller-card.span",
-                    instance: composeUiInstanceId(ui.instance, createUiPositionInstanceId("badge-slot", badgeIndex)),
-                  })}
                   className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(badge.tone)}`}
                 >
                   {badge.label}
@@ -157,23 +136,18 @@ export function SellerCard({ id,
             </div>
           ) : null}
           {!horizontal ? (
-            <p {...uiAttributes({ uid: "seller-card.seller-card.p.5-LX1ofW", id: "seller-card.seller-card.p.5", instance: ui.instance })} className="mt-1 truncate text-[10px] text-on-surface-variant">{card.uid}</p>
+            <p className="mt-1 truncate text-[10px] text-on-surface-variant">{card.uid}</p>
           ) : null}
         </div>
       </button>
       {actions.length > 0 ? (
-        <div {...uiAttributes({ uid: "seller-card.seller-card.div.5-S2AW4b", id: "seller-card.seller-card.div.5", instance: ui.instance })}
+        <div
           className="mt-3 grid gap-1"
           style={{ gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))` }}
         >
           {actions.map((action, actionIndex) => (
             <button
               key={`${action.kind}-${action.label}`}
-              {...uiAttributes({
-                uid: "seller-card.seller-card.button-Qu9XU8",
-                id: "seller-card.seller-card.button",
-                instance: composeUiInstanceId(ui.instance, createUiPositionInstanceId("action-slot", actionIndex)),
-              })}
               type="button"
               disabled={action.disabled}
               onClick={action.onClick}

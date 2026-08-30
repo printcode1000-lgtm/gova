@@ -7,9 +7,9 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **97**
+Owners scored: **95**
 Average coverage: **81%**
-Weak owners (<70%): **13**
+Weak owners (<70%): **12**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -23,7 +23,6 @@ Weak owners (<70%): **13**
 | `src/features/navigation` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/network` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/ota` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
-| `src/features/simulation` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/splash` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/voice-input` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `packages/account-declarations` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
@@ -68,6 +67,7 @@ Weak owners (<70%): **13**
 | `packages/env-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/featured-marquee-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/hero-slider-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/local-agent-core` | package | yes | yes | yes | yes | yes | NO | yes | yes | 88% |
 | `packages/map-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/notifications-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/notifications-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -76,12 +76,10 @@ Weak owners (<70%): **13**
 | `packages/products-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/profiles-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/service-mirror-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
-| `packages/simulation-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/storage-image-manager-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/sub2main-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/submain-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/trending-ribbon-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
-| `packages/ui-registry-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/vercel-deploy-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/advertisements` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/auth` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

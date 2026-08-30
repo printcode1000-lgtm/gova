@@ -4,7 +4,6 @@ import * as React from "react";
 import { CheckCircle2 } from "lucide-react";
 
 import { useTranslation } from "@/shared/i18n";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export const LOGIN_SUCCESS_TOAST_EVENT = "asol-login-success-toast";
 const LOGIN_SUCCESS_TOAST_STORAGE_KEY = "asol-login-success-toast";
@@ -100,15 +99,15 @@ export function LoginSuccessToast() {
       : t("auth.login.successMessage");
 
   return (
-    <div {...uiAttributes({ uid: "auth.login-success-toast.div.3-P41ZSz", id: "auth.login-success-toast.div.3" })} id="auth.login-success-toast.div"
+    <div id="auth.login-success-toast.div"
       role="status"
       aria-live="polite"
       className="fixed left-1/2 top-1/2 z-[80] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 items-start gap-3 rounded-lg border border-success/30 bg-surface px-4 py-3 text-on-surface shadow-lg"
     >
       <CheckCircle2 id="auth.login-success-toast.check-circle2" className="mt-0.5 h-5 w-5 shrink-0 text-success" />
-      <div {...uiAttributes({ uid: "auth.login-success-toast.div.4-HjyFa5", id: "auth.login-success-toast.div.4" })} id="auth.login-success-toast.div.2" className="min-w-0">
-        <p {...uiAttributes({ uid: "auth.login-success-toast.p.3-ASC9yy", id: "auth.login-success-toast.p.3" })} id="auth.login-success-toast.p" className="text-sm font-bold">{title}</p>
-        <p {...uiAttributes({ uid: "auth.login-success-toast.p.4-SI14NZ", id: "auth.login-success-toast.p.4" })} id="auth.login-success-toast.p.2" className="text-xs">{message}</p>
+      <div id="auth.login-success-toast.div.2" className="min-w-0">
+        <p id="auth.login-success-toast.p" className="text-sm font-bold">{title}</p>
+        <p id="auth.login-success-toast.p.2" className="text-xs">{message}</p>
       </div>
     </div>
   );

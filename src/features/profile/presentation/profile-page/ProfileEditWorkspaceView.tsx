@@ -28,12 +28,11 @@ import {
   ProfileEditSaveFeedback,
   ProfileEditTabsBar,
 } from "./ProfileEditWorkspaceChrome";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export function ProfileEditWorkspaceView({ model }: { model: ProfilePageContentModel }) {
 const { t, locale, session, superAdmin, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, animateCarouselHeight, carouselRef, panelRefs, handleCarouselScroll, sectionStatuses, saveError, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus } = model;
 return (
-        <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.4-7brUzC", id: "profile.profile-page.profile-edit-workspace-view.div.4" })}
+        <div
           id="edit-profile-card"
           className="mx-auto flex w-full max-w-4xl flex-col gap-3 pt-1 sm:gap-4 sm:pt-2"
         >
@@ -41,10 +40,10 @@ return (
 
           <ProfileEditSaveFeedback id="profile.profile-page.profile-edit-workspace-view.profile-edit-save-feedback" model={model} />
 
-          <Card ui={{ uid: "profile.profile-page.profile-edit-workspace-view.card.2-7izQJ3", id: "profile.profile-page.profile-edit-workspace-view.card.2" }} id="profile.profile-page.profile-edit-workspace-view.card" className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
-            <CardContent ui={{ uid: "profile.profile-page.profile-edit-workspace-view.card-content.2-0netG4", id: "profile.profile-page.profile-edit-workspace-view.card-content.2" }} id="profile.profile-page.profile-edit-workspace-view.card-content" className="p-0">
-              <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.5-TC33k0", id: "profile.profile-page.profile-edit-workspace-view.div.5" })} id="profile.profile-page.profile-edit-workspace-view.div" className="relative">
-                <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.6-3Pi6KY", id: "profile.profile-page.profile-edit-workspace-view.div.6" })} id="profile.profile-page.profile-edit-workspace-view.div.2"
+          <Card id="profile.profile-page.profile-edit-workspace-view.card" className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
+            <CardContent id="profile.profile-page.profile-edit-workspace-view.card-content" className="p-0">
+              <div id="profile.profile-page.profile-edit-workspace-view.div" className="relative">
+                <div id="profile.profile-page.profile-edit-workspace-view.div.2"
                   data-snapshot-id="profile-edit-carousel-scroll"
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
@@ -54,7 +53,7 @@ return (
                   }}
                   className="flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] ease-out [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 >
-                  <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.7-ZJXS53", id: "profile.profile-page.profile-edit-workspace-view.div.7" })}
+                  <div
                     ref={(node) => {
                       panelRefs.current.registration = node;
                     }}
@@ -77,7 +76,7 @@ return (
                       />
                     </ProfileEditSectionFrame>
                   </div>
-                  <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.8-x1GEie", id: "profile.profile-page.profile-edit-workspace-view.div.8" })}
+                  <div
                     ref={(node) => {
                       panelRefs.current.specialties = node;
                     }}
@@ -102,7 +101,7 @@ return (
                       />
                     </ProfileEditSectionFrame>
                   </div>
-                  <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.9-HBx6Oh", id: "profile.profile-page.profile-edit-workspace-view.div.9" })}
+                  <div
                     ref={(node) => {
                       panelRefs.current.store = node;
                     }}
@@ -125,7 +124,7 @@ return (
                       />
                     </ProfileEditSectionFrame>
                   </div>
-                  <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.10-2VVr40", id: "profile.profile-page.profile-edit-workspace-view.div.10" })}
+                  <div
                     ref={(node) => {
                       panelRefs.current.products = node;
                     }}
@@ -149,7 +148,7 @@ return (
                       />
                     </ProfileEditSectionFrame>
                   </div>
-                  <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.11-5CjOJ5", id: "profile.profile-page.profile-edit-workspace-view.div.11" })}
+                  <div
                     ref={(node) => {
                       panelRefs.current.contact = node;
                     }}
@@ -173,7 +172,7 @@ return (
                       />
                     </ProfileEditSectionFrame>
                   </div>
-                  <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.12-GZ25OU", id: "profile.profile-page.profile-edit-workspace-view.div.12" })}
+                  <div
                     ref={(node) => {
                       panelRefs.current.workingHours = node;
                     }}
@@ -196,7 +195,7 @@ return (
                       />
                     </ProfileEditSectionFrame>
                   </div>
-                  <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.13-QKx35J", id: "profile.profile-page.profile-edit-workspace-view.div.13" })}
+                  <div
                     ref={(node) => {
                       panelRefs.current.fulfillment = node;
                     }}
@@ -219,7 +218,7 @@ return (
                       />
                     </ProfileEditSectionFrame>
                   </div>
-                  <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.14-S9JPOq", id: "profile.profile-page.profile-edit-workspace-view.div.14" })}
+                  <div
                     ref={(node) => {
                       panelRefs.current.discounts = node;
                     }}
@@ -248,7 +247,7 @@ return (
               </div>
 
               {saveError ? (
-                <div {...uiAttributes({ uid: "profile.profile-page.profile-edit-workspace-view.div.15-N75kQH", id: "profile.profile-page.profile-edit-workspace-view.div.15" })} id="profile.profile-page.profile-edit-workspace-view.div.3" className="mx-3 mb-3 rounded-lg bg-error/15 px-3 py-2 text-sm text-error sm:mx-5">
+                <div id="profile.profile-page.profile-edit-workspace-view.div.3" className="mx-3 mb-3 rounded-lg bg-error/15 px-3 py-2 text-sm text-error sm:mx-5">
                   {saveError}
                 </div>
               ) : null}

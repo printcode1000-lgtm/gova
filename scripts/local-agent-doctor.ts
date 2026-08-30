@@ -1,31 +1,9 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, statSync } from "node:fs";
 import path from "node:path";
-
-import { listAgents } from "./local-agent/agent-registry";
-import { gitSoft } from "./local-agent/git";
-import { hasGithubToken, listRunners, workflowExists } from "./local-agent/github-api";
-import { listLocks } from "./local-agent/lock-store";
-import { listOperations } from "./local-agent/operation-log";
-import { maxConcurrentMutations, memoryFloorMb, readMemory } from "./local-agent/admission";
-import {
-  RUNNER_DIRECTORY_NAMES,
-  RUNNER_GITHUB_NAMES,
-  RUNNER_SERVICE_NAMES,
-  agentsDir,
-  coordinationDir,
-  locksDir,
-  logsDir,
-  messagesDir,
-  operationLogsDir,
-  requestsDir,
-  runnerPoolDir,
-  workspaceDir,
-  worktreesDir,
-} from "./local-agent/paths";
-import { DISPATCHABLE_WORKFLOWS } from "./local-agent/request-contract";
-import { listRequests } from "./local-agent/request-store";
-
+import { agentsDir, coordinationDir, DISPATCHABLE_WORKFLOWS, gitSoft, hasGithubToken, hostProfile, hostProfileName, isOpen, listAgents, listLocks, listOperations, listRequests, listRunners, locksDir, logsDir, maxConcurrentMutations, memoryFloorMb, memoryFloorReason, messagesDir, operationLogsDir, pendingReservationMb, readMemory, requestsDir, RUNNER_DIRECTORY_NAMES, RUNNER_GITHUB_NAMES, RUNNER_SERVICE_NAMES, runnerPoolDir, workflowExists, workspaceDir, worktreesDir } from "@asol/local-agent-core";
+import { companionRepositoryStates, hostToolState } from "@asol/local-agent-core/host";
+import { probeRemoteHosts, readRemoteHostsCache } from "@asol/local-agent-core/monitor";
 /**
  * Health check for the whole local agent control plane.
  *
@@ -92,6 +70,7 @@ function execIgnored(workspace: string): boolean {
 
 function checkPool(): void {
   const pool = runnerPoolDir();
+  record("host.profile", "PASS", `${hostProfileName()} profile, ${hostProfile().size} runner(s).`);
   assert("runner-pool.root", existsSync(pool), `Runner pool root: ${pool}`, `Missing runner pool root: ${pool}`);
   for (const name of RUNNER_DIRECTORY_NAMES) {
     const dir = path.join(pool, name);
@@ -131,6 +110,8 @@ function checkCoordination(): void {
 }
 
 function checkServices(): void {
+  const slice = systemctl(["is-active", hostProfile().sliceName]);
+  assert(`service.${hostProfile().sliceName}.active`, slice === "active", "active/running", `not active (${slice || "unknown"})`, "WARN");
   for (const service of RUNNER_SERVICE_NAMES) {
     const active = systemctl(["is-active", service]) === "active";
     const workingDirectory = systemctl(["show", service, "-p", "WorkingDirectory", "--value"]);
@@ -140,6 +121,14 @@ function checkServices(): void {
       workingDirectory.startsWith(runnerPoolDir()),
       `WorkingDirectory is inside the pool root.`,
       `WorkingDirectory is "${workingDirectory}", outside ${runnerPoolDir()}.`,
+    );
+    const assignedSlice = systemctl(["show", service, "-p", "Slice", "--value"]);
+    assert(
+      `service.${service}.slice`,
+      assignedSlice === hostProfile().sliceName,
+      `Slice=${assignedSlice}`,
+      `Slice=${assignedSlice || "(unset)"}; expected ${hostProfile().sliceName}.`,
+      "WARN",
     );
   }
 }
@@ -182,10 +171,12 @@ function checkMemory(): void {
     return;
   }
   const floor = memoryFloorMb();
+  const reason = memoryFloorReason(memory);
+  const reserved = pendingReservationMb();
   assert(
     "memory.available",
     memory.availableMb >= floor,
-    `${memory.availableMb}MB available of ${memory.totalMb}MB (floor ${floor}MB).`,
+    `${memory.availableMb}MB available of ${memory.totalMb}MB (floor ${floor}MB${reason ? ` ${reason}` : ""}, reserved ${reserved}MB).`,
     `only ${memory.availableMb}MB available of ${memory.totalMb}MB; mutations wait below ${floor}MB.`,
     "WARN",
   );
@@ -204,11 +195,52 @@ function checkMemory(): void {
 
 function checkAbandonedOperations(): void {
   const abandoned = listOperations(200).filter((operation) => operation.abandoned === true);
-  const running = listOperations(200).filter((operation) => operation.status === "running");
+  const open = listOperations(200).filter((operation) => isOpen(operation.status));
   record(
     "operations.in-flight",
     "PASS",
-    `${running.length} running, ${abandoned.length} previously abandoned and reconciled.`,
+    `${open.length} open, ${abandoned.length} previously abandoned and reconciled.`,
+  );
+}
+
+function checkHostTools(): void {
+  const state = hostToolState();
+  record(
+    "host-tools.antigravity",
+    state.allowed ? "WARN" : "PASS",
+    state.allowed
+      ? `${state.tool} allowed by ${state.policyPath}.`
+      : `${state.tool} excluded by default; policy=${state.policyPath}, shims=${state.shimDir}.`,
+  );
+}
+
+function checkCompanionRepositories(): void {
+  for (const repo of companionRepositoryStates()) {
+    assert(
+      `companion.${repo.name}`,
+      repo.exists && repo.originMatches && repo.entryPointExists,
+      `${repo.path} at ${repo.head ?? "unknown"}; entry ${repo.entryPoint}.`,
+      !repo.exists
+        ? `${repo.path} is missing; restore will clone ${repo.origin}.`
+        : `origin/entry mismatch: origin=${repo.currentOrigin ?? "(none)"}, entry=${repo.entryPointExists}.`,
+      "WARN",
+    );
+  }
+}
+
+async function checkRemoteHosts(): Promise<void> {
+  let remotes = readRemoteHostsCache();
+  try {
+    remotes = await probeRemoteHosts();
+  } catch {
+    // Keep the previous cache when probing itself cannot complete.
+  }
+  record(
+    "remote-hosts.cache",
+    "PASS",
+    remotes.length === 0
+      ? "No cached remote host probes yet."
+      : remotes.map((host) => `${host.alias}:${host.ok ? `${host.registeredRunners} runner(s)` : "unreachable"}`).join(", "),
   );
 }
 
@@ -256,6 +288,9 @@ async function main(): Promise<void> {
   checkToolchain();
   checkMemory();
   checkAbandonedOperations();
+  checkHostTools();
+  checkCompanionRepositories();
+  await checkRemoteHosts();
   await checkGithub();
 
   const width = Math.max(...checks.map((check) => check.name.length));

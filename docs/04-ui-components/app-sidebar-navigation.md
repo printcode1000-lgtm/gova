@@ -75,7 +75,6 @@ after the role each destination performs.
 | الإشعارات والبث | بث إشعار لكل المستخدمين | `/super-admin/notifications-broadcast` |
 | النظام وحسابات المستخدمين | سجل أحداث النظام | `/super-admin/logs` |
 | النظام وحسابات المستخدمين | إدارة حسابات المستخدمين | `/super-admin/users` |
-| النظام وحسابات المستخدمين | محاكاة المستخدم وE2E | `/super-admin/simulation` |
 
 Development-only surfaces are deliberately absent. `/dev/cloud-accounts` and
 `/dev/notification-tests` moved out of `/super-admin` so they stay out of the

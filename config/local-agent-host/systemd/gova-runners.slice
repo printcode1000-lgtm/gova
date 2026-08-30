@@ -1,0 +1,20 @@
+[Unit]
+Description=Gova local agent runner pool
+Before=slices.target
+
+[Slice]
+# The bound that per-unit limits cannot express.
+#
+# Each runner already carries MemoryMax, which contains one runaway job. It says
+# nothing about the sum: six units at 4G each authorise 24G on a 15.7G machine,
+# and the kills that prompted this were not one greedy job but three ordinary
+# ones adding up. earlyoom then resolves the shortfall system-wide, picking its
+# victim by badness score rather than by which cgroup overspent — so a job that
+# stayed inside its own limit is killed for another's demand.
+#
+# Putting the whole pool in one slice makes the aggregate a real, enforced
+# number. Reclaim starts at MemoryHigh and the pool is stopped at MemoryMax,
+# both well below the point where earlyoom would act for the whole session.
+MemoryAccounting=yes
+MemoryHigh=7G
+MemoryMax=9G

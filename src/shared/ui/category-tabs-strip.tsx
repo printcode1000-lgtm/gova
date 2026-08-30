@@ -2,13 +2,6 @@
 
 import * as React from "react";
 import Image from "next/image";
-import {
-  createOpaqueUiInstanceId,
-  createUiSubpartInstanceId,
-  uiAttributes,
-  uiForwardedAttributes,
-  type UiDescriptor,
-} from "@asol/ui-registry-core";
 
 export interface CategoryTabsStripItem {
   id: string;
@@ -26,7 +19,6 @@ interface CategoryTabsStripProps {
   selectedId: string;
   level?: CategoryTabsStripLevel;
   snapshotId?: string;
-  itemUi: UiDescriptor;
   onSelect: (id: string) => void;
 }
 
@@ -70,13 +62,12 @@ export function CategoryTabsStrip({
   selectedId,
   level = "main",
   snapshotId,
-  itemUi: ui,
   onSelect,
 }: CategoryTabsStripProps & { id?: string }) {
   const style = LEVEL_STYLE[level];
 
   return (
-    <div {...uiAttributes({ uid: "shared.category-tabs-strip.div-VEz49x", id: "shared.category-tabs-strip.div", instance: createUiSubpartInstanceId(ui.uid, ui.instance, "strip") })}
+    <div
       id={id}
       data-snapshot-scroll={snapshotId ? "" : undefined}
       data-snapshot-id={snapshotId}
@@ -85,7 +76,6 @@ export function CategoryTabsStrip({
       {items.map((item) => (
         <button
           key={item.id}
-          {...uiForwardedAttributes(ui, createOpaqueUiInstanceId("category-tab", item.id))}
           type="button"
           aria-pressed={item.id === selectedId}
           onClick={() => onSelect(item.id)}
@@ -94,7 +84,7 @@ export function CategoryTabsStrip({
           }`}
         >
           {item.imageUrl ? (
-            <span {...uiAttributes({ uid: "shared.category-tabs-strip.span-XuoZe0", id: "shared.category-tabs-strip.span" , instance: createOpaqueUiInstanceId("iter-8fc433f4cd", String(item.id))})} className={style.image}>
+            <span className={style.image}>
               <Image
                 src={item.imageUrl}
                 alt={item.label}
@@ -103,9 +93,9 @@ export function CategoryTabsStrip({
               />
             </span>
           ) : null}
-          <span {...uiAttributes({ uid: "shared.category-tabs-strip.span.2-KXDQ6N", id: "shared.category-tabs-strip.span.2" , instance: createOpaqueUiInstanceId("iter-a2ac0b436f", String(item.id))})} className="whitespace-nowrap">{item.label}</span>
+          <span className="whitespace-nowrap">{item.label}</span>
           {typeof item.count === "number" ? (
-            <span {...uiAttributes({ uid: "shared.category-tabs-strip.span.3-61oJVU", id: "shared.category-tabs-strip.span.3" , instance: createOpaqueUiInstanceId("iter-221ff5de57", String(item.id))})} className="rounded-full bg-black/10 px-1.5 text-[10px]">
+            <span className="rounded-full bg-black/10 px-1.5 text-[10px]">
               {item.count}
             </span>
           ) : null}

@@ -2,7 +2,7 @@ import { execFileSync } from 'child_process';
 import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 
-import { CONTROL_PLANE_BRANCH_NAMESPACES } from './local-agent/control-branch-namespaces';
+import { CONTROL_PLANE_BRANCH_NAMESPACES } from '@asol/local-agent-core';
 
 /**
  * Blocks branch creation on GitHub for every ref except `main`.

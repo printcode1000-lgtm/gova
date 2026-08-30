@@ -1,16 +1,13 @@
 import * as React from 'react';
 
 import { cn } from '@/shared/utils';
-import { type UiDescriptor } from '@asol/ui-registry-core';
 
-import { uiPrimitiveAttributes } from './ui-primitive-attributes';
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  ui?: UiDescriptor;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, disabled, ui, ...props }, ref) => {
+  ({ className, disabled, ...props }, ref) => {
     return (
       <textarea
         className={cn(
@@ -20,7 +17,6 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         disabled={disabled}
         ref={ref}
         {...props}
-        {...uiPrimitiveAttributes('textarea', ui, disabled ? 'disabled' : undefined)}
       />
     );
   }

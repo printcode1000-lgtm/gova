@@ -7,7 +7,6 @@ import {
   STATUS_COLORS,
   type TreeNode,
 } from "@asol/observability-core";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface MonitorTreeItemProps {
   node: TreeNode;
@@ -24,8 +23,8 @@ export function MonitorTreeItem({ id,
   const hasChildren = node.children && node.children.length > 0;
 
   return (
-    <div {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.div-ZPN7D8", id: "dev.monitor.monitor-tree-item.div" })} id={id} className="tree-node">
-      <div {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.div.2-sU4GEO", id: "dev.monitor.monitor-tree-item.div.2" })}
+    <div id={id} className="tree-node">
+      <div
         className="tree-node-row"
         onClick={() => {
           if (hasChildren) {
@@ -44,10 +43,10 @@ export function MonitorTreeItem({ id,
             : "",
         }}
       >
-        <div {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.div.3-9293Az", id: "dev.monitor.monitor-tree-item.div.3" })} className="tree-node-info">
-          {hasChildren && <span {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.span-u6D7Ij", id: "dev.monitor.monitor-tree-item.span" })}>{isOpen ? "▼" : "▶"}</span>}
+        <div className="tree-node-info">
+          {hasChildren && <span>{isOpen ? "▼" : "▶"}</span>}
           {!hasChildren && (
-            <div {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.div.4-q5H6MH", id: "dev.monitor.monitor-tree-item.div.4" })}
+            <div
               className="layer-dot"
               style={{
                 background: node.records?.[0]?.table
@@ -56,19 +55,19 @@ export function MonitorTreeItem({ id,
               }}
             />
           )}
-          <span {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.span.2-A96KEb", id: "dev.monitor.monitor-tree-item.span.2" })} style={{ fontWeight: hasChildren ? "bold" : "normal" }}>
+          <span style={{ fontWeight: hasChildren ? "bold" : "normal" }}>
             {node.label}
           </span>
           {hasChildren && (
-            <span {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.span.3-Y41UFj", id: "dev.monitor.monitor-tree-item.span.3" })} style={{ color: "var(--text-muted)", fontSize: "11px" }}>
+            <span style={{ color: "var(--text-muted)", fontSize: "11px" }}>
               ({node.count})
             </span>
           )}
         </div>
 
         {!hasChildren && node.records?.[0] && (
-          <div {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.div.5-t5JiZ2", id: "dev.monitor.monitor-tree-item.div.5" })} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <span {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.span.4-Qc1U3Z", id: "dev.monitor.monitor-tree-item.span.4" })}
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <span
               style={{
                 color: STATUS_COLORS[node.records[0].status],
                 fontSize: "11px",
@@ -77,7 +76,7 @@ export function MonitorTreeItem({ id,
             >
               {node.records[0].status.toUpperCase()}
             </span>
-            <span {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.span.5-fjL4Rv", id: "dev.monitor.monitor-tree-item.span.5" })} style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+            <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
               {Math.round(
                 node.records[0].executionTime ||
                   node.records[0].completedAt - node.records[0].startedAt,
@@ -89,7 +88,7 @@ export function MonitorTreeItem({ id,
       </div>
 
       {isOpen && hasChildren && (
-        <div {...uiAttributes({ uid: "dev.monitor.monitor-tree-item.div.6-3VFPnK", id: "dev.monitor.monitor-tree-item.div.6" })}>
+        <div>
           {node.children.map((child) => (
             <MonitorTreeItem
               key={child.key}

@@ -12,7 +12,6 @@ import type {
 } from "../domain/pharmacy-profile-catalog.types";
 import type { ProductRecord } from "@asol/product-core";
 import { PharmacyCategoryIcon } from "./PharmacyCategoryIcon";
-import { createOpaqueUiInstanceId, createUiSubpartInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 const text = {
   sections: "\u0623\u0642\u0633\u0627\u0645 \u0627\u0644\u0635\u064a\u062f\u0644\u064a\u0629",
@@ -119,9 +118,9 @@ export function PharmacyNestedTabs({
   if (!catalog) return null;
 
   return (
-    <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.6-9g4EPD", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.6" })} id="pharmacy-profile-catalog.pharmacy-nested-tabs.div" className="space-y-2 rounded-lg border border-outline-variant bg-surface-container-low p-2">
-      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.7-1krOnD", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.7" })} id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.2" className="flex flex-wrap items-center justify-between gap-2">
-        <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.8-d9qTCA", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.8" })} id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.3" className="text-xs font-semibold text-on-surface">{text.sections}</div>
+    <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div" className="space-y-2 rounded-lg border border-outline-variant bg-surface-container-low p-2">
+      <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.2" className="flex flex-wrap items-center justify-between gap-2">
+        <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.3" className="text-xs font-semibold text-on-surface">{text.sections}</div>
         {showManagement ? (
           <Link id="pharmacy-profile-catalog.pharmacy-nested-tabs.link"
             href={managerHref}
@@ -133,7 +132,7 @@ export function PharmacyNestedTabs({
         ) : null}
       </div>
 
-      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.9-38RjCp", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.9" })} id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.4" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.4" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {categories.map((category) => (
           <PharmacyTabButton
             key={category.id}
@@ -145,7 +144,7 @@ export function PharmacyNestedTabs({
         ))}
       </div>
 
-      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.10-1McuK0", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.div.10" })} id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.5" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.5" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {subcategories.map((subcategory) => (
           <PharmacyTabButton
             key={subcategory.id}
@@ -174,9 +173,8 @@ function PharmacyTabButton({ id,
   compact?: boolean;
   onClick: () => void;
 } & { id?: string }) {
-  const instance = createOpaqueUiInstanceId("pharmacy-tab", item.id);
   return (
-    <button {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.button-0NOsxC", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.button", instance: instance })} id={id}
+    <button id={id}
       type="button"
       onClick={onClick}
       className={`inline-flex min-w-fit items-center gap-2 rounded-md border px-3 font-semibold transition ${
@@ -190,7 +188,7 @@ function PharmacyTabButton({ id,
       }`}
     >
       <PharmacyCategoryIcon icon={icon} className="h-4 w-4 text-center" />
-      <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-nested-tabs.span-XYgd3E", id: "pharmacy-profile-catalog.pharmacy-nested-tabs.span", instance: createUiSubpartInstanceId("pharmacy-profile-catalog.pharmacy-nested-tabs.button-0NOsxC", instance, "label") })} className="whitespace-nowrap">{item.nameAr}</span>
+      <span className="whitespace-nowrap">{item.nameAr}</span>
     </button>
   );
 }

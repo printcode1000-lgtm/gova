@@ -13,7 +13,6 @@ import {
 } from "@/features/categories/presentation/category-grid-styles";
 import { useTranslation } from "@/shared/i18n";
 import type { CategoryTree } from "@/features/categories";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface CategorySubcategoriesPageProps {
   categoryTree: CategoryTree;
@@ -83,8 +82,8 @@ export function CategorySubcategoriesPage({
     : "/images/mainCategories";
 
   return (
-    <div {...uiAttributes({ uid: "categories.category-subcategories-page.div.7-Q4lc9j", id: "categories.category-subcategories-page.div.7" })} id="categories.category-subcategories-page.div" className="space-y-5 px-4 py-5">
-      <div {...uiAttributes({ uid: "categories.category-subcategories-page.div.8-v92y2I", id: "categories.category-subcategories-page.div.8" })} id="categories.category-subcategories-page.div.2" className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
+    <div id="categories.category-subcategories-page.div" className="space-y-5 px-4 py-5">
+      <div id="categories.category-subcategories-page.div.2" className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
         {headerImage && (
           <Image id="categories.category-subcategories-page.image"
             src={`${headerImageBasePath}/${headerImage}`}
@@ -94,15 +93,15 @@ export function CategorySubcategoriesPage({
             priority
           />
         )}
-        <div {...uiAttributes({ uid: "categories.category-subcategories-page.div.9-AoNGZ5", id: "categories.category-subcategories-page.div.9" })} id="categories.category-subcategories-page.div.3" className="relative z-10">
-          <h1 {...uiAttributes({ uid: "categories.category-subcategories-page.h1.2-NAAX62", id: "categories.category-subcategories-page.h1.2" })} id="categories.category-subcategories-page.h1" className="text-2xl font-bold text-on-surface">{pageTitle}</h1>
+        <div id="categories.category-subcategories-page.div.3" className="relative z-10">
+          <h1 id="categories.category-subcategories-page.h1" className="text-2xl font-bold text-on-surface">{pageTitle}</h1>
         </div>
-        <div {...uiAttributes({ uid: "categories.category-subcategories-page.div.10-HS14Wu", id: "categories.category-subcategories-page.div.10" })} id="categories.category-subcategories-page.div.4" className="relative">
+        <div id="categories.category-subcategories-page.div.4" className="relative">
           <Search id="categories.category-subcategories-page.search"
             className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
             aria-hidden
           />
-          <input {...uiAttributes({ uid: "categories.category-subcategories-page.input.2-0tCXl0", id: "categories.category-subcategories-page.input.2" })} id="categories.category-subcategories-page.input"
+          <input id="categories.category-subcategories-page.input"
             type="search"
             value={searchText}
             onChange={(event) => setSearchText(event.target.value)}
@@ -117,20 +116,20 @@ export function CategorySubcategoriesPage({
       </div>
 
       {visibleItems.length === 0 ? (
-        <p {...uiAttributes({ uid: "categories.category-subcategories-page.p.3-aBQ0yR", id: "categories.category-subcategories-page.p.3" })} id="categories.category-subcategories-page.p" className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
+        <p id="categories.category-subcategories-page.p" className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
           {locale === "ar"
             ? "\u0644\u0627 \u062a\u0648\u062c\u062f \u062a\u0635\u0646\u064a\u0641\u0627\u062a \u0641\u0631\u0639\u064a\u0629"
             : "No subcategories"}
         </p>
       ) : filteredItems.length === 0 ? (
-        <p {...uiAttributes({ uid: "categories.category-subcategories-page.p.4-b0EuOI", id: "categories.category-subcategories-page.p.4" })} id="categories.category-subcategories-page.p.2" className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
+        <p id="categories.category-subcategories-page.p.2" className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
           {locale === "ar"
             ? "\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u062a\u0627\u0626\u062c \u0645\u0637\u0627\u0628\u0642\u0629"
             : "No matching results"}
         </p>
       ) : (
-        <div {...uiAttributes({ uid: "categories.category-subcategories-page.div.11-Ka9DbB", id: "categories.category-subcategories-page.div.11" })} id="categories.category-subcategories-page.div.5" className="asol-section-tonal asol-section-tonal-primary-soft">
-          <div {...uiAttributes({ uid: "categories.category-subcategories-page.div.12-IoQ0nU", id: "categories.category-subcategories-page.div.12" })} id="categories.category-subcategories-page.div.6" className={categoryGridClassName}>
+        <div id="categories.category-subcategories-page.div.5" className="asol-section-tonal asol-section-tonal-primary-soft">
+          <div id="categories.category-subcategories-page.div.6" className={categoryGridClassName}>
             {filteredItems.map((item) => {
               const name = locale === "ar" ? item.nameAr : item.nameEn;
               const imageSrc = item.imageUrl;
@@ -139,7 +138,6 @@ export function CategorySubcategoriesPage({
 
               return (
                 <button key={item.id}
-                  {...uiAttributes({ uid: "category-item-N5DI5e", id: "category-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "category-item" } , instance: createOpaqueUiInstanceId("iter-2a37ce42e0", String(item.id))})}
                   type="button"
                   className={categoryTileClassName}
                   onClick={() => {
@@ -153,7 +151,7 @@ export function CategorySubcategoriesPage({
                   }}
                   aria-label={altText}
                 >
-                  <div {...uiAttributes({ uid: "categories.category-subcategories-page.div.13-MJ6mVy", id: "categories.category-subcategories-page.div.13" , instance: createOpaqueUiInstanceId("iter-5507f68c71", String(item.id))})} className={categoryTileImageClassName}>
+                  <div className={categoryTileImageClassName}>
                     <Image
                       src={imageSrc}
                       alt={altText}
@@ -162,7 +160,7 @@ export function CategorySubcategoriesPage({
                       className="object-cover"
                     />
                   </div>
-                  <span {...uiAttributes({ uid: "categories.category-subcategories-page.span-IME94h", id: "categories.category-subcategories-page.span" , instance: createOpaqueUiInstanceId("iter-219aeb3dbd", String(item.id))})} className={categoryTileTitleClassName}>
+                  <span className={categoryTileTitleClassName}>
                     {name}
                   </span>
                 </button>

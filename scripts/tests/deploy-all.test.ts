@@ -195,11 +195,6 @@ assert.match(
   "Success line must record when preflight was skipped.",
 );
 assert.equal(FAIL_PREFIX, "[deploy:all] FAILED —", "Failure prefix must be stable.");
-assert.ok(
-  PREFLIGHT_STEPS.includes("simulation:coverage"),
-  "deploy:all preflight must run the simulation discovery guard.",
-);
-
 // ── 9. Phased deploy resolves the full release order by default ────────────
 assert.deepEqual(
   resolvePhasesToRun({ listPhases: false }),

@@ -20,7 +20,6 @@ import {
   ProfileProductsTabsEmpty,
   ProfileProductsTabsLoading,
 } from "./ProfileProductsTabsStates";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export interface ProfileProductsTabsLabels {
   title: string;
@@ -132,20 +131,19 @@ export function ProfileProductsTabs({ id,
 
   if (tabs.length === 0) {
     return (
-      <section {...uiAttributes({ uid: "profile-products.profile-products-tabs.section-IxtyM7", id: "profile-products.profile-products-tabs.section" })} id={id} className="space-y-3">
+      <section id={id} className="space-y-3">
         <ProfileProductsTabsEmpty label={labels.emptySpecialties} />
       </section>
     );
   }
 
   return (
-    <section {...uiAttributes({ uid: "profile-products.profile-products-tabs.section.2-PVWke7", id: "profile-products.profile-products-tabs.section.2" })} id={id} className="space-y-4">
+    <section id={id} className="space-y-4">
       <CategoryTabsStrip
         items={tabs}
         level="main"
         selectedId={selectedMainId}
         snapshotId={`profile-products-main-${mode}-${ownerUid}`}
-        itemUi={{ uid: "profile-products.main-tab-4Qm8ZK", id: "profile-products.main-tab", kind: "item" }}
         onSelect={onSelectMain}
       />
 
@@ -160,20 +158,19 @@ export function ProfileProductsTabs({ id,
           level="sub"
           selectedId={selectedSubId}
           snapshotId={`profile-products-sub-${mode}-${ownerUid}`}
-          itemUi={{ uid: "profile-products.sub-tab-7Nv2XP", id: "profile-products.sub-tab", kind: "item" }}
           onSelect={onSelectSub}
         />
       ) : null}
 
       {activeSubTab ? (
-        <section {...uiAttributes({ uid: "profile-products.profile-products-tabs.section.3-d2UHpZ", id: "profile-products.profile-products-tabs.section.3" })} className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low/30">
-          <button {...uiAttributes({ uid: "profile-products.profile-products-tabs.button-I75rNO", id: "profile-products.profile-products-tabs.button" })}
+        <section className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low/30">
+          <button
             type="button"
             aria-expanded={isSearchOpen}
             onClick={() => setIsSearchOpen((current) => !current)}
             className="flex w-full items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-on-surface"
           >
-            <span {...uiAttributes({ uid: "profile-products.profile-products-tabs.span-yMCaV5", id: "profile-products.profile-products-tabs.span" })} className="inline-flex items-center gap-2">
+            <span className="inline-flex items-center gap-2">
               <Search className="h-4 w-4 text-primary" />
               {labels.searchTitle}
             </span>
@@ -182,7 +179,7 @@ export function ProfileProductsTabs({ id,
             />
           </button>
           {isSearchOpen ? (
-            <div {...uiAttributes({ uid: "profile-products.profile-products-tabs.div-1gXtGy", id: "profile-products.profile-products-tabs.div" })} className="border-t border-outline-variant p-3">
+            <div className="border-t border-outline-variant p-3">
               <ProductSearchPanel
                 variant="compact"
                 ownerUid={ownerUid}
@@ -195,8 +192,8 @@ export function ProfileProductsTabs({ id,
             </div>
           ) : null}
           {showManagement ? (
-            <div {...uiAttributes({ uid: "profile-products.profile-products-tabs.div.2-AFc9PY", id: "profile-products.profile-products-tabs.div.2" })} className="border-t border-outline-variant px-3 py-2">
-              <button {...uiAttributes({ uid: "profile-products.profile-products-tabs.button.2-7mTQ30", id: "profile-products.profile-products-tabs.button.2" })}
+            <div className="border-t border-outline-variant px-3 py-2">
+              <button
                 type="button"
                 aria-pressed={showFeaturedOnly}
                 onClick={() => setShowFeaturedOnly((current) => !current)}
@@ -208,7 +205,7 @@ export function ProfileProductsTabs({ id,
               >
                 <Star className={`h-4 w-4 ${showFeaturedOnly ? "fill-current" : ""}`} />
                 {labels.featuredOnly}
-                <span {...uiAttributes({ uid: "profile-products.profile-products-tabs.span.2-XC6qPH", id: "profile-products.profile-products-tabs.span.2" })} className="rounded-full bg-black/10 px-1.5 text-[10px]">
+                <span className="rounded-full bg-black/10 px-1.5 text-[10px]">
                   {featuredProductIds.length}
                 </span>
               </button>
@@ -227,7 +224,7 @@ export function ProfileProductsTabs({ id,
         />
       ) : null}
 
-      <div {...uiAttributes({ uid: "profile-products.profile-products-tabs.div.3-VZ49VJ", id: "profile-products.profile-products-tabs.div.3" })} className="min-h-[160px]">
+      <div className="min-h-[160px]">
         {productsLoading ? (
           <ProfileProductsTabsLoading size="sm" />
         ) : visibleProducts.length === 0 ? (
@@ -251,8 +248,8 @@ export function ProfileProductsTabs({ id,
       </div>
 
       {showManagement && activeSubTab && onAddProduct ? (
-        <div {...uiAttributes({ uid: "profile-products.profile-products-tabs.div.4-t8Y2cC", id: "profile-products.profile-products-tabs.div.4" })} className="flex justify-end">
-          <button {...uiAttributes({ uid: "profile-products.profile-products-tabs.button.3-tV1XR6", id: "profile-products.profile-products-tabs.button.3" })}
+        <div className="flex justify-end">
+          <button
             type="button"
             onClick={() =>
               onAddProduct(

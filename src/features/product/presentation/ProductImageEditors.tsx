@@ -9,7 +9,6 @@ import {
   resolveProductStorageProfileId,
   type StoredImage,
 } from "@asol/storage-core";
-import { createOpaqueUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
 
 function normalizeProductImages(images: Array<StoredImage | null | undefined>, maxImages: number): StoredImage[] {
   return images
@@ -72,10 +71,9 @@ export const ProductImageEditors = React.forwardRef<
     [maxImages],
   );
 
-  const resolvedInstance = id ? createOpaqueUiInstanceId("image-editors", id) : undefined;
 
   return (
-    <div {...uiAttributes({ uid: "product.product-image-editors.div-K29aZE", id: "product.product-image-editors.div", instance: resolvedInstance })} id={id} className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+    <div id={id} className="grid grid-cols-2 gap-3 sm:grid-cols-3">
       {slots.map((index) => {
         const slotImage = normalized[index] ?? null;
         return (

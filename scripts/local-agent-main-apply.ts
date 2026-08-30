@@ -2,17 +2,8 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-
-import { declareAgent, heartbeat, normalizeAgentId } from "./local-agent/agent-registry";
-import { git, gitLines, gitSoft, runCapture } from "./local-agent/git";
-import { ensureDir } from "./local-agent/json-store";
-import { LockConflictError, acquireLock, releaseAgentLocks } from "./local-agent/lock-store";
-import { OperationLog } from "./local-agent/operation-log";
-import { coordinationDir, messagesDir, requestsDir } from "./local-agent/paths";
-import { patchSecretViolations } from "./local-agent/secret-paths";
-import { waitForAdmission } from "./local-agent/admission";
-import { prepareWorktree, removeWorktree, worktreeSlug } from "./local-agent/worktree";
-
+import { acquireLock, coordinationDir, declareAgent, ensureDir, git, gitLines, gitSoft, heartbeat, isOpen, jobReserveMb, LockConflictError, messagesDir, normalizeAgentId, OperationLog, patchSecretViolations, prepareWorktree, releaseAgentLocks, removeWorktree, requestsDir, runCapture, waitForAdmission, worktreeSlug } from "@asol/local-agent-core";
+import { envWithHostToolShims, wrapLoginShellCommand } from "@asol/local-agent-core/host";
 /**
  * Apply one agent mutation on the local machine and push it.
  *
@@ -108,7 +99,7 @@ function releaseHeld(): void {
 }
 
 process.once("exit", (code) => {
-  if (operation.record.status === "running") {
+  if (isOpen(operation.record.status)) {
     try {
       operation.write(code === 0 ? "success" : "failed", code);
     } catch {
@@ -181,7 +172,7 @@ for (const entry of lockScopes) {
 operation.record.lockScopes = lockScopes.map((entry) => entry.scope);
 operation.record.recoveredStaleLockIds = recoveredStaleLockIds;
 operation.record.staleLockRecovered = recoveredStaleLockIds.length > 0;
-operation.write("running");
+operation.write("waiting");
 
 // --- admission --------------------------------------------------------------
 
@@ -194,6 +185,9 @@ if (!admission.admitted) {
     `Refusing to start: ${admission.reason}. Nothing was touched; re-dispatch when the machine is quieter.`,
   );
 }
+operation.record.reservedMb = jobReserveMb();
+operation.record.admittedAt = new Date().toISOString();
+operation.write("running");
 if (admission.waitedMs > 0) console.log(`admitted after ${Math.round(admission.waitedMs / 1000)}s`);
 
 // --- worktree ---------------------------------------------------------------
@@ -218,7 +212,7 @@ console.log(`startingSha=${baseSha}`);
 function runIn(command: string, args: string[], extraEnv: Record<string, string> = {}): void {
   const result = spawnSync(command, args, {
     cwd: worktree,
-    env: { ...process.env, ...extraEnv },
+    env: envWithHostToolShims({ ...process.env, ...extraEnv }),
     stdio: "inherit",
   });
   if (result.status !== 0) {
@@ -246,7 +240,7 @@ if (patchText) {
 
 if (shellCommand) {
   heartbeat(agentId, "shell");
-  runIn("/bin/bash", ["-lc", shellCommand], {
+  runIn("/bin/bash", ["-lc", wrapLoginShellCommand(shellCommand)], {
     DOCS_CONTRACT_CHANGE: process.env.DOCS_CONTRACT_CHANGE || "1",
     GOVA_LOCAL_WORKSPACE: worktree,
   });

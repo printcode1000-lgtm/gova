@@ -10,7 +10,6 @@ import { useSession } from "@/features/auth/ui";
 import { useTranslation } from "@/shared/i18n";
 import { specialtyChatClient } from "../application/specialty-chat-client";
 import { getSpecialtyChatSubOptions } from "../domain/specialty-options";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 function makeId(prefix: string) {
   const value = typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -102,65 +101,65 @@ export function SpecialtyRequestPageContent() {
     }
   };
 
-  if (isLoading) return <main {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.main.4-F7C2Pw", id: "specialty-chat.specialty-request-page-content.main.4" })} id="specialty-chat.specialty-request-page-content.main" className="flex min-h-[60vh] items-center justify-center"><Loader2 id="specialty-chat.specialty-request-page-content.loader2" className="h-7 w-7 animate-spin text-primary" /></main>;
+  if (isLoading) return <main id="specialty-chat.specialty-request-page-content.main" className="flex min-h-[60vh] items-center justify-center"><Loader2 id="specialty-chat.specialty-request-page-content.loader2" className="h-7 w-7 animate-spin text-primary" /></main>;
   if (!session?.sessionToken) return (
-    <main {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.main.5-aJ5oNc", id: "specialty-chat.specialty-request-page-content.main.5" })} id="specialty-chat.specialty-request-page-content.main.2" className="mx-auto max-w-xl px-4 py-14 text-center">
+    <main id="specialty-chat.specialty-request-page-content.main.2" className="mx-auto max-w-xl px-4 py-14 text-center">
       <Users id="specialty-chat.specialty-request-page-content.users" className="mx-auto h-12 w-12 text-primary" />
-      <h1 {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.h1.3-Me3XN6", id: "specialty-chat.specialty-request-page-content.h1.3" })} id="specialty-chat.specialty-request-page-content.h1" className="mt-4 text-2xl font-bold">{copy.title}</h1>
-      <p {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.p.6-lqVb2p", id: "specialty-chat.specialty-request-page-content.p.6" })} id="specialty-chat.specialty-request-page-content.p" className="mt-2 text-on-surface-variant">{copy.login}</p>
+      <h1 id="specialty-chat.specialty-request-page-content.h1" className="mt-4 text-2xl font-bold">{copy.title}</h1>
+      <p id="specialty-chat.specialty-request-page-content.p" className="mt-2 text-on-surface-variant">{copy.login}</p>
       <Link id="specialty-chat.specialty-request-page-content.link" href="/login" className="mt-6 inline-flex rounded-xl bg-primary px-6 py-3 font-bold text-on-primary">{copy.signIn}</Link>
     </main>
   );
 
   return (
-    <main {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.main.6-c3CwuM", id: "specialty-chat.specialty-request-page-content.main.6" })} id="specialty-chat.specialty-request-page-content.main.3" className="mx-auto w-full max-w-5xl px-4 pb-28 pt-5 sm:px-6 sm:pt-8" dir={isRTL ? "rtl" : "ltr"}>
-      <div {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.div.7-RyIQI4", id: "specialty-chat.specialty-request-page-content.div.7" })} id="specialty-chat.specialty-request-page-content.div" className="mb-5 flex items-start gap-3">
-        <button {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.button.3-jIwv18", id: "specialty-chat.specialty-request-page-content.button.3" })} id="specialty-chat.specialty-request-page-content.button" type="button" onClick={() => router.back()} className="asol-control-icon mt-1 shrink-0 rounded-full" aria-label={locale === "ar" ? "رجوع" : "Back"}>
+    <main id="specialty-chat.specialty-request-page-content.main.3" className="mx-auto w-full max-w-5xl px-4 pb-28 pt-5 sm:px-6 sm:pt-8" dir={isRTL ? "rtl" : "ltr"}>
+      <div id="specialty-chat.specialty-request-page-content.div" className="mb-5 flex items-start gap-3">
+        <button id="specialty-chat.specialty-request-page-content.button" type="button" onClick={() => router.back()} className="asol-control-icon mt-1 shrink-0 rounded-full" aria-label={locale === "ar" ? "رجوع" : "Back"}>
           <ArrowLeft id="specialty-chat.specialty-request-page-content.arrow-left" className={isRTL ? "h-5 w-5 rotate-180" : "h-5 w-5"} />
         </button>
-        <span {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.span.3-7i53rD", id: "specialty-chat.specialty-request-page-content.span.3" })} id="specialty-chat.specialty-request-page-content.span" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-primary"><Users id="specialty-chat.specialty-request-page-content.users.2" className="h-6 w-6" /></span>
-        <div {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.div.8-V0lAsq", id: "specialty-chat.specialty-request-page-content.div.8" })} id="specialty-chat.specialty-request-page-content.div.2"><h1 {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.h1.4-JI98CM", id: "specialty-chat.specialty-request-page-content.h1.4" })} id="specialty-chat.specialty-request-page-content.h1.2" className="text-2xl font-bold">{copy.title}</h1><p {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.p.7-Nv6U6G", id: "specialty-chat.specialty-request-page-content.p.7" })} id="specialty-chat.specialty-request-page-content.p.2" className="mt-1 max-w-2xl text-sm leading-6 text-on-surface-variant">{copy.subtitle}</p></div>
+        <span id="specialty-chat.specialty-request-page-content.span" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-primary"><Users id="specialty-chat.specialty-request-page-content.users.2" className="h-6 w-6" /></span>
+        <div id="specialty-chat.specialty-request-page-content.div.2"><h1 id="specialty-chat.specialty-request-page-content.h1.2" className="text-2xl font-bold">{copy.title}</h1><p id="specialty-chat.specialty-request-page-content.p.2" className="mt-1 max-w-2xl text-sm leading-6 text-on-surface-variant">{copy.subtitle}</p></div>
       </div>
 
-      <form {...uiAttributes({ uid: "specialty-submit-9Y3awl", id: "specialty-submit", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "specialty-submit" } })} onSubmit={submit} className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
-        <fieldset {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.fieldset.2-TR05yI", id: "specialty-chat.specialty-request-page-content.fieldset.2" })} id="specialty-chat.specialty-request-page-content.fieldset" disabled={busy || result?.kind === "success"} className="min-w-0 space-y-6 disabled:opacity-70">
-          <div {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.div.9-2oPaAk", id: "specialty-chat.specialty-request-page-content.div.9" })} id="specialty-chat.specialty-request-page-content.div.3" className="min-w-0">
-            <p {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.p.8-lmv1eT", id: "specialty-chat.specialty-request-page-content.p.8" })} id="specialty-chat.specialty-request-page-content.p.3" className="mb-3 font-bold">{copy.main}</p>
-            <div {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.div.10-QN96Gx", id: "specialty-chat.specialty-request-page-content.div.10" })} id="specialty-chat.specialty-request-page-content.div.4" className="flex w-full max-w-full gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <form onSubmit={submit} className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
+        <fieldset id="specialty-chat.specialty-request-page-content.fieldset" disabled={busy || result?.kind === "success"} className="min-w-0 space-y-6 disabled:opacity-70">
+          <div id="specialty-chat.specialty-request-page-content.div.3" className="min-w-0">
+            <p id="specialty-chat.specialty-request-page-content.p.3" className="mb-3 font-bold">{copy.main}</p>
+            <div id="specialty-chat.specialty-request-page-content.div.4" className="flex w-full max-w-full gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {mains.map((item) => {
                 const selected = mainId === String(item.id);
-                return <button key={item.id} {...uiAttributes({ uid: "specialty-main-T70LbT", id: "specialty-main", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "specialty-main" } , instance: createOpaqueUiInstanceId("iter-fbabc0879c", String(item.id))})} type="button" aria-pressed={selected} onClick={() => { setMainId(String(item.id)); setSubId(""); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-primary bg-primary text-on-primary shadow-md" : "border-outline-variant bg-surface-container text-on-surface"}`}>
-                  {item.imageUrl ? <Image src={item.imageUrl} alt="" width={56} height={56} className="h-12 w-12 rounded-xl object-cover sm:h-14 sm:w-14" /> : <span {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.span.4-MkA5Zu", id: "specialty-chat.specialty-request-page-content.span.4" , instance: createOpaqueUiInstanceId("iter-5a4a7395f9", String(item.id))})} className="flex h-12 w-12 items-center justify-center rounded-xl bg-current/10 sm:h-14 sm:w-14"><Users className="h-5 w-5" /></span>}
+                return <button key={item.id} type="button" aria-pressed={selected} onClick={() => { setMainId(String(item.id)); setSubId(""); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-primary bg-primary text-on-primary shadow-md" : "border-outline-variant bg-surface-container text-on-surface"}`}>
+                  {item.imageUrl ? <Image src={item.imageUrl} alt="" width={56} height={56} className="h-12 w-12 rounded-xl object-cover sm:h-14 sm:w-14" /> : <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-current/10 sm:h-14 sm:w-14"><Users className="h-5 w-5" /></span>}
                   {locale === "ar" ? item.nameAr : item.nameEn}
                 </button>;
               })}
             </div>
           </div>
 
-          {main ? <div {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.div.11-p1hWu3", id: "specialty-chat.specialty-request-page-content.div.11" })} id="specialty-chat.specialty-request-page-content.div.5" className="min-w-0">
-            <p {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.p.9-9HAV6s", id: "specialty-chat.specialty-request-page-content.p.9" })} id="specialty-chat.specialty-request-page-content.p.4" className="mb-3 font-bold">{copy.sub}</p>
-            <div {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.div.12-LToU0J", id: "specialty-chat.specialty-request-page-content.div.12" })} id="specialty-chat.specialty-request-page-content.div.6" className="flex w-full max-w-full gap-3 overflow-x-auto rounded-2xl bg-surface-container-low p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {main ? <div id="specialty-chat.specialty-request-page-content.div.5" className="min-w-0">
+            <p id="specialty-chat.specialty-request-page-content.p.4" className="mb-3 font-bold">{copy.sub}</p>
+            <div id="specialty-chat.specialty-request-page-content.div.6" className="flex w-full max-w-full gap-3 overflow-x-auto rounded-2xl bg-surface-container-low p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {subs.map((item) => {
                 const value = String(item.originalId); const selected = subId === value;
-                return <button key={value} {...uiAttributes({ uid: "specialty-sub-XC2bEX", id: "specialty-sub", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "specialty-sub" } , instance: createOpaqueUiInstanceId("iter-29b4be0249", String(value))})} type="button" aria-pressed={selected} onClick={() => { setSubId(value); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-secondary bg-secondary text-secondary-foreground shadow-md" : "border-outline-variant bg-surface text-on-surface"}`}>
-                  {item.imageUrl ? <Image src={item.imageUrl} alt="" width={48} height={48} className="h-11 w-11 rounded-xl object-cover sm:h-12 sm:w-12" /> : <span {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.span.5-YA5y2Q", id: "specialty-chat.specialty-request-page-content.span.5" , instance: createOpaqueUiInstanceId("iter-0d82774a8a", String(value))})} className="flex h-11 w-11 items-center justify-center rounded-xl bg-current/10 sm:h-12 sm:w-12"><Users className="h-5 w-5" /></span>}
+                return <button key={value} type="button" aria-pressed={selected} onClick={() => { setSubId(value); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-secondary bg-secondary text-secondary-foreground shadow-md" : "border-outline-variant bg-surface text-on-surface"}`}>
+                  {item.imageUrl ? <Image src={item.imageUrl} alt="" width={48} height={48} className="h-11 w-11 rounded-xl object-cover sm:h-12 sm:w-12" /> : <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-current/10 sm:h-12 sm:w-12"><Users className="h-5 w-5" /></span>}
                   {locale === "ar" ? item.nameAr : item.nameEn}
                 </button>;
               })}
             </div>
           </div> : null}
 
-          <label {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.label.2-jVK9DO", id: "specialty-chat.specialty-request-page-content.label.2" })} id="specialty-chat.specialty-request-page-content.label" className="grid gap-2 font-bold">{copy.message}
-            <textarea {...uiAttributes({ uid: "specialty-message-QjzRg0", id: "specialty-message", kind: "field", interaction: { type: "type", valueContract: "long-text" }, simulation: { kind: "field", id: "specialty-message" } })} value={message} onChange={(event) => { setMessage(event.target.value.slice(0, 800)); setResult(null); }} maxLength={800} rows={6} className="min-h-40 w-full min-w-0 max-w-full resize-y rounded-2xl border border-outline-variant bg-surface px-4 py-3 font-normal" placeholder={copy.placeholder} required />
-            <span {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.span.6-RfRit0", id: "specialty-chat.specialty-request-page-content.span.6" })} id="specialty-chat.specialty-request-page-content.span.2" className="text-end text-xs font-normal text-on-surface-variant">{message.length}/800</span>
+          <label id="specialty-chat.specialty-request-page-content.label" className="grid gap-2 font-bold">{copy.message}
+            <textarea value={message} onChange={(event) => { setMessage(event.target.value.slice(0, 800)); setResult(null); }} maxLength={800} rows={6} className="min-h-40 w-full min-w-0 max-w-full resize-y rounded-2xl border border-outline-variant bg-surface px-4 py-3 font-normal" placeholder={copy.placeholder} required />
+            <span id="specialty-chat.specialty-request-page-content.span.2" className="text-end text-xs font-normal text-on-surface-variant">{message.length}/800</span>
           </label>
         </fieldset>
 
-        {result ? <p {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.p.10-D6H6vA", id: "specialty-chat.specialty-request-page-content.p.10" })} id="specialty-chat.specialty-request-page-content.p.5" className={`rounded-2xl px-4 py-3 text-sm font-semibold leading-6 ${result.kind === "success" ? "bg-success/15 text-on-surface" : result.kind === "empty" ? "bg-warning/15 text-on-surface" : "bg-error/15 text-error"}`} role={result.kind === "error" ? "alert" : "status"}>
+        {result ? <p id="specialty-chat.specialty-request-page-content.p.5" className={`rounded-2xl px-4 py-3 text-sm font-semibold leading-6 ${result.kind === "success" ? "bg-success/15 text-on-surface" : result.kind === "empty" ? "bg-warning/15 text-on-surface" : "bg-error/15 text-error"}`} role={result.kind === "error" ? "alert" : "status"}>
           {result.kind === "success" ? <MessageCircle id="specialty-chat.specialty-request-page-content.message-circle" className="me-2 inline h-5 w-5" /> : null}{result.message}
         </p> : null}
 
-        <button {...uiAttributes({ uid: "specialty-chat.specialty-request-page-content.button.4-3uiOmM", id: "specialty-chat.specialty-request-page-content.button.4" })} id="specialty-chat.specialty-request-page-content.button.2" type="submit" disabled={busy || !main || !sub || !message.trim() || result?.kind === "success"} className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-4 text-lg font-bold text-on-primary disabled:opacity-50">
+        <button id="specialty-chat.specialty-request-page-content.button.2" type="submit" disabled={busy || !main || !sub || !message.trim() || result?.kind === "success"} className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-4 text-lg font-bold text-on-primary disabled:opacity-50">
           {busy ? <Loader2 id="specialty-chat.specialty-request-page-content.loader2.2" className="h-5 w-5 animate-spin" /> : <Send id="specialty-chat.specialty-request-page-content.send" className="h-5 w-5" />}{copy.submit}
         </button>
       </form>

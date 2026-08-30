@@ -7,7 +7,6 @@ import {
   type RunAction,
   isPendingSellerResponse,
 } from "./OrderDetailsPageContent.navigation-summary";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export function CustomRequestActions({
   item,
@@ -36,7 +35,7 @@ export function CustomRequestActions({
   };
 
   return (
-    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.custom-request-actions.div.2-6BXQsC", id: "orders.order-details.order-details-page-content.custom-request-actions.div.2" })} id="orders.order-details.order-details-page-content.custom-request-actions.div" className="mt-3 flex flex-wrap gap-2">
+    <div id="orders.order-details.order-details-page-content.custom-request-actions.div" className="mt-3 flex flex-wrap gap-2">
       {isSeller && isPendingSellerResponse(item.status) ? (
         <>
           <OrderActionButton

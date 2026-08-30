@@ -17,7 +17,6 @@ import { isDevelopment } from '@/core/config';
 import { OVERLAY_CHROME_ATTRIBUTE } from '@/shared/ui/overlay-chrome';
 import { OverlayChromeBranch } from '@/shared/ui/overlay-chrome-branch';
 import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@asol/data-core/browser';
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const pages = [
   { path: '/', name: 'شاشة البداية' },
@@ -134,7 +133,7 @@ export function DeveloperBadge() {
     >
       <DropdownMenu>
         <DropdownMenuTrigger id="dev-tools.developer-badge.dropdown-menu-trigger" asChild>
-          <Badge ui={{ uid: "dev-tools.developer-badge.badge.2-Fi89Y6", id: "dev-tools.developer-badge.badge.2" }} id="dev-tools.developer-badge.badge" variant="destructive" className="pointer-events-auto">
+          <Badge id="dev-tools.developer-badge.badge" variant="destructive" className="pointer-events-auto">
             ASOL DEV
           </Badge>
         </DropdownMenuTrigger>
@@ -143,17 +142,17 @@ export function DeveloperBadge() {
           className="w-64 max-h-[80vh] overflow-y-auto"
           {...{ [OVERLAY_CHROME_ATTRIBUTE]: 'true' }}
         >
-          <DropdownMenuLabel ui={{ uid: "dev-tools.developer-badge.dropdown-menu-label.2-LCe1zh", id: "dev-tools.developer-badge.dropdown-menu-label.2" }} id="dev-tools.developer-badge.dropdown-menu-label">صفحات المشروع</DropdownMenuLabel>
-          <DropdownMenuSeparator ui={{ uid: "dev-tools.developer-badge.dropdown-menu-separator.2-2JaIMA", id: "dev-tools.developer-badge.dropdown-menu-separator.2" }} id="dev-tools.developer-badge.dropdown-menu-separator" />
+          <DropdownMenuLabel id="dev-tools.developer-badge.dropdown-menu-label">صفحات المشروع</DropdownMenuLabel>
+          <DropdownMenuSeparator id="dev-tools.developer-badge.dropdown-menu-separator" />
           {pages.map((page) => (
-            <div key={page.path} {...uiAttributes({ uid: "dev-tools.developer-badge.div-7Y0G0I", id: "dev-tools.developer-badge.div" , instance: createOpaqueUiInstanceId("iter-80d64cd6fe", String(page.path))})} className="flex items-center justify-between px-2">
-              <DropdownMenuItem ui={{ uid: "dev-tools.developer-badge.dropdown-menu-item-Mt3nxG", id: "dev-tools.developer-badge.dropdown-menu-item" , instance: createOpaqueUiInstanceId("iter-316bacd46a", String(page.path))}} asChild className="flex-1">
+            <div key={page.path} className="flex items-center justify-between px-2">
+              <DropdownMenuItem asChild className="flex-1">
                 <Link href={page.path} className={pathname === page.path ? 'bg-accent' : ''}>
                   {page.name}
                 </Link>
               </DropdownMenuItem>
               {page.path === '/' && (
-                <Button ui={{ uid: 'dev.developer-badge.toggle-splash-nav-lTk8oE', id: 'dev.developer-badge.toggle-splash-nav', kind: 'action', action: 'toggle-splash-nav', part: 'menu' , instance: createOpaqueUiInstanceId("iter-72bcde3000", String(page.path))}}
+                <Button
                   variant={isSplashNavEnabled ? 'default' : 'destructive'}
                   size="sm"
                   onClick={(event) => {

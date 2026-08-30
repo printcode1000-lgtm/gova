@@ -1,16 +1,4 @@
-import { declareAgent, heartbeat, listAgents, normalizeAgentId } from "./local-agent/agent-registry";
-import { CONTROL_BRANCH, SNAPSHOT_FILE, publishControlBranch } from "./local-agent/control-branch";
-import { buildCoordinationSnapshot } from "./local-agent/coordination-snapshot";
-import {
-  LockConflictError,
-  acquireLock,
-  listLocks,
-  recoverStaleLocks,
-  releaseAgentLocks,
-  releaseLock,
-} from "./local-agent/lock-store";
-import { listMessages, postMessage } from "./local-agent/message-store";
-
+import { acquireLock, buildCoordinationSnapshot, CONTROL_BRANCH, declareAgent, heartbeat, listAgents, listLocks, listMessages, LockConflictError, normalizeAgentId, postMessage, publishControlBranch, recoverStaleLocks, releaseAgentLocks, releaseLock, SNAPSHOT_FILE } from "@asol/local-agent-core";
 /**
  * The coordination command surface shared by cloud and local agents.
  *

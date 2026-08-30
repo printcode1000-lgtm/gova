@@ -1,12 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-
-import { git, gitSoft, runCapture } from "./local-agent/git";
-import { ensureDir, safeIdentifier } from "./local-agent/json-store";
-import { heartbeat } from "./local-agent/agent-registry";
-import { inspectLogsDir, relativeInsideWorkspace, workspaceDir } from "./local-agent/paths";
-import { isSecretPath } from "./local-agent/secret-paths";
-
+import { ensureDir, git, gitSoft, heartbeat, inspectLogsDir, isSecretPath, relativeInsideWorkspace, runCapture, safeIdentifier, workspaceDir } from "@asol/local-agent-core";
 /**
  * Read-only inspection of the local workspace on behalf of a remote agent.
  *

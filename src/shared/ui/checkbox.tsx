@@ -5,14 +5,12 @@ import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { Check } from 'lucide-react';
 
 import { cn } from '@/shared/utils';
-import { type UiDescriptor } from '@asol/ui-registry-core';
 
-import { uiPrimitiveAttributes } from './ui-primitive-attributes';
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & { ui?: UiDescriptor }
->(({ className, disabled, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & { }
+>(({ className, disabled, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
     disabled={disabled}
@@ -21,7 +19,6 @@ const Checkbox = React.forwardRef<
       className
     )}
     {...props}
-    {...uiPrimitiveAttributes('checkbox', ui, disabled ? 'disabled' : undefined)}
   >
     <CheckboxPrimitive.Indicator
       className={cn('flex items-center justify-center text-current')}

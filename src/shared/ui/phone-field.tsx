@@ -16,12 +16,6 @@ import {
   phoneExampleNationalNumber,
   type PhoneCountryCode,
 } from "@asol/auth-core";
-import {
-  createUiSubpartInstanceId,
-  type UiDescriptor,
-  uiAttributes,
-  uiForwardedAttributes,
-} from "@asol/ui-registry-core";
 
 import { PhoneCountryDialog } from "./phone-country-dialog";
 
@@ -32,7 +26,6 @@ export interface PhoneFieldProps {
   value: string;
   labels: PhoneFieldLabels;
   id?: string;
-  ui: UiDescriptor;
   disabled?: boolean;
   invalid?: boolean;
   className?: string;
@@ -53,7 +46,6 @@ export function PhoneField({
   value,
   labels,
   id,
-  ui,
   disabled = false,
   invalid = false,
   className,
@@ -89,20 +81,10 @@ export function PhoneField({
 
   return (
     <div
-      {...uiAttributes({
-        uid: "shared.phone-field.div-D0c6E4",
-        id: "shared.phone-field.div",
-        instance: createUiSubpartInstanceId(ui.uid, ui.instance, "root"),
-      })}
       id={id}
       className={cn("flex items-stretch gap-2", className)}
     >
       <button
-        {...uiAttributes({
-          uid: "shared.phone-field.button-X9ZI11",
-          id: "shared.phone-field.button",
-          instance: createUiSubpartInstanceId(ui.uid, ui.instance, "country-trigger"),
-        })}
         type="button"
         disabled={disabled}
         aria-label={labels.country}
@@ -110,22 +92,12 @@ export function PhoneField({
         className="asol-control inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-outline-variant bg-surface px-2.5 text-sm text-on-surface transition disabled:opacity-60"
       >
         <span
-          {...uiAttributes({
-            uid: "shared.phone-field.span-vp5Hwi",
-            id: "shared.phone-field.span",
-            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "country-flag"),
-          })}
           aria-hidden="true"
           className="text-base leading-none"
         >
           {selectedChoice?.flag ?? ""}
         </span>
         <span
-          {...uiAttributes({
-            uid: "shared.phone-field.span.2-kY7XG6",
-            id: "shared.phone-field.span.2",
-            instance: createUiSubpartInstanceId(ui.uid, ui.instance, "calling-code"),
-          })}
           dir="ltr"
           className="text-xs font-semibold"
         >
@@ -154,10 +126,8 @@ export function PhoneField({
           invalid && "border-error",
           inputClassName,
         )}
-        {...uiForwardedAttributes(ui, undefined, disabled ? "disabled" : undefined)}
       />
       <PhoneCountryDialog
-        ui={ui}
         open={isPickerOpen}
         choices={choices}
         selected={country}

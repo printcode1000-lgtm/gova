@@ -3,7 +3,6 @@
 import * as React from "react";
 import { OptionCheckbox } from "@/shared/ui/product-style-card";
 import type { ProductSearchColumnSettings } from "@/shared/ui/product-style-settings";
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface ProductSearchColumnsStyleEditorProps {
   value: ProductSearchColumnSettings;
@@ -110,18 +109,18 @@ export function ProductSearchColumnsStyleEditor({
   };
 
   return (
-    <section {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.section.2-Ha3V2m", id: "product.style-editors.search-columns.product-search-columns-style-editor.section.2" })} id="product.style-editors.search-columns.product-search-columns-style-editor.section" className="rounded-xl border border-outline-variant bg-background p-4 shadow-sm">
-      <div {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.div.3-M64UTH", id: "product.style-editors.search-columns.product-search-columns-style-editor.div.3" })} id="product.style-editors.search-columns.product-search-columns-style-editor.div" className="border-b border-outline-variant pb-3">
-        <h3 {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.h3.2-m6Qq1b", id: "product.style-editors.search-columns.product-search-columns-style-editor.h3.2" })} id="product.style-editors.search-columns.product-search-columns-style-editor.h3" className="text-sm font-bold">أعمدة البحث</h3>
-        <p {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.p.2-34XZtN", id: "product.style-editors.search-columns.product-search-columns-style-editor.p.2" })} id="product.style-editors.search-columns.product-search-columns-style-editor.p" className="mt-1 text-xs text-muted-foreground">
+    <section id="product.style-editors.search-columns.product-search-columns-style-editor.section" className="rounded-xl border border-outline-variant bg-background p-4 shadow-sm">
+      <div id="product.style-editors.search-columns.product-search-columns-style-editor.div" className="border-b border-outline-variant pb-3">
+        <h3 id="product.style-editors.search-columns.product-search-columns-style-editor.h3" className="text-sm font-bold">أعمدة البحث</h3>
+        <p id="product.style-editors.search-columns.product-search-columns-style-editor.p" className="mt-1 text-xs text-muted-foreground">
           هذه الحاوية لا تملك ترتيبًا. ترتيب المكونات يتحكم فقط في ظهور المكونات داخل صفحة المنتج.
         </p>
       </div>
-      <div {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.div.4-3K6uzo", id: "product.style-editors.search-columns.product-search-columns-style-editor.div.4" })} id="product.style-editors.search-columns.product-search-columns-style-editor.div.2" className="mt-4 space-y-4">
+      <div id="product.style-editors.search-columns.product-search-columns-style-editor.div.2" className="mt-4 space-y-4">
         {GROUPS.map((group) => (
-          <div key={group.key} {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.div.5-tgWUk6", id: "product.style-editors.search-columns.product-search-columns-style-editor.div.5" , instance: createOpaqueUiInstanceId("iter-27b4ab2356", String(group.key))})} className="rounded-lg border border-outline-variant p-3">
-            <h4 {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.h4-fFJqF7", id: "product.style-editors.search-columns.product-search-columns-style-editor.h4" , instance: createOpaqueUiInstanceId("iter-b7c34bfb35", String(group.key))})} className="mb-2 text-xs font-bold text-primary">{group.title}</h4>
-            <div {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.div.6-w9XRyB", id: "product.style-editors.search-columns.product-search-columns-style-editor.div.6" , instance: createOpaqueUiInstanceId("iter-feb0566778", String(group.key))})} className="grid gap-2">
+          <div key={group.key} className="rounded-lg border border-outline-variant p-3">
+            <h4 className="mb-2 text-xs font-bold text-primary">{group.title}</h4>
+            <div className="grid gap-2">
               {group.options.map(([optionKey, label]) => (
                 <OptionCheckbox
                   key={optionKey}

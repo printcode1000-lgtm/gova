@@ -8,7 +8,6 @@ import type {
   ProfileContactsController,
   ProfileSectionStatus,
 } from './profile-save-controller';
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProfileContactsCardProps {
   onStatusChange?: (status: ProfileSectionStatus) => void;
@@ -51,16 +50,16 @@ export const ProfileContactsCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div {...uiAttributes({ uid: "profile.profile-contacts-card.div.4-U2abt9", id: "profile.profile-contacts-card.div.4" })} id="profile.profile-contacts-card.div" className="py-10 text-center text-sm text-on-surface-variant">
+      <div id="profile.profile-contacts-card.div" className="py-10 text-center text-sm text-on-surface-variant">
         {t('profile.loading')}
       </div>
     );
   }
 
   return (
-    <div {...uiAttributes({ uid: "profile.profile-contacts-card.div.5-v1MNAz", id: "profile.profile-contacts-card.div.5" })} id="profile.profile-contacts-card.div.2" className="space-y-4">
+    <div id="profile.profile-contacts-card.div.2" className="space-y-4">
       {error ? (
-        <div {...uiAttributes({ uid: "profile.profile-contacts-card.div.6-H7KNtJ", id: "profile.profile-contacts-card.div.6" })} id="profile.profile-contacts-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <div id="profile.profile-contacts-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error}
         </div>
       ) : null}

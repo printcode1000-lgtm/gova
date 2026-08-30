@@ -152,9 +152,6 @@
       "@asol/data-core/super-admin": [
         "./packages/data-core/src/domains/super-admin/index.server.ts"
       ],
-      "@asol/data-core/ui-registry": [
-        "./packages/data-core/src/domains/ui-registry/index.server.ts"
-      ],
       "@asol/data-core/system-logs": [
         "./packages/data-core/src/domains/system-logs/index.server.ts"
       ],
@@ -197,6 +194,9 @@
       "@asol/hero-slider-core/server": [
         "./packages/hero-slider-core/src/server.ts"
       ],
+      "@asol/local-agent-core": ["./packages/local-agent-core/src/index.ts"],
+      "@asol/local-agent-core/monitor": ["./packages/local-agent-core/src/monitor.ts"],
+      "@asol/local-agent-core/host": ["./packages/local-agent-core/src/host.ts"],
       "@asol/map-core": [
         "./packages/map-core/src/index.ts"
       ],
@@ -328,9 +328,6 @@
       ],
       "@asol/trending-ribbon-core/server": [
         "./packages/trending-ribbon-core/src/server.ts"
-      ],
-      "@asol/ui-registry-core": [
-        "./packages/ui-registry-core/src/index.ts"
       ],
       "@asol/vercel-deploy-core": [
         "./packages/vercel-deploy-core/src/index.ts"

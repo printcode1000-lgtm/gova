@@ -10,18 +10,6 @@ import { useTranslation } from '@/shared/i18n';
 import { useResolvedColorScheme } from '@/shared/preferences';
 import { useNotificationBadge } from '@/features/notifications/ui';
 import { useFavorites } from '@/features/favorites';
-import { uiAttributes, type UiDescriptor , createOpaqueUiInstanceId} from '@asol/ui-registry-core';
-
-/**
- * Each tab is registered explicitly so its uid stays stable no matter how the
- * route list is ordered, translated, or re-rendered.
- */
-const NAV_ITEM_UI = {
-  home: { uid: 'app.bottom-nav.home-X9BdD9', id: 'app.bottom-nav.home', kind: 'action', action: 'navigate-home', part: 'item' },
-  notifications: { uid: 'app.bottom-nav.notifications-3tXfie', id: 'app.bottom-nav.notifications', kind: 'action', action: 'navigate-notifications', part: 'item' },
-  favorites: { uid: 'app.bottom-nav.favorites-41rYgS', id: 'app.bottom-nav.favorites', kind: 'action', action: 'navigate-favorites', part: 'item', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'nav-favorites' } },
-  orders: { uid: 'app.bottom-nav.orders-t7L2as', id: 'app.bottom-nav.orders', kind: 'action', action: 'navigate-orders', part: 'item' },
-} as const satisfies Record<string, UiDescriptor>;
 
 export function BottomNavBar() {
   const navRef = useRef<HTMLElement>(null);
@@ -53,15 +41,14 @@ export function BottomNavBar() {
   }, []);
 
   const navItems = [
-    { href: '/home', icon: Home, label: t('nav.home'), showBadge: false, ui: NAV_ITEM_UI.home },
-    { href: '/notifications', icon: Bell, label: t('nav.notifications'), showBadge: notificationBadge > 0, badgeCount: notificationBadge, ui: NAV_ITEM_UI.notifications },
-    { href: '/favorites', icon: Heart, label: t('nav.favorites'), showBadge: false, ui: NAV_ITEM_UI.favorites },
-    { href: '/orders', icon: Receipt, label: t('nav.orders'), showBadge: false, ui: NAV_ITEM_UI.orders },
+    { href: '/home', icon: Home, label: t('nav.home'), showBadge: false, },
+    { href: '/notifications', icon: Bell, label: t('nav.notifications'), showBadge: notificationBadge > 0, badgeCount: notificationBadge, },
+    { href: '/favorites', icon: Heart, label: t('nav.favorites'), showBadge: false, },
+    { href: '/orders', icon: Receipt, label: t('nav.orders'), showBadge: false, },
   ];
 
   return (
     <nav
-      {...uiAttributes({ uid: 'app.bottom-nav-BI6bI8', id: 'app.bottom-nav', kind: 'region', part: 'bottom' })}
       ref={navRef}
       id="bottom-navigation-bar"
       className={cn(
@@ -69,14 +56,13 @@ export function BottomNavBar() {
         resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'
       )}
     >
-      {navItems.map(({ href, icon: Icon, label, showBadge, badgeCount, ui }) => {
+      {navItems.map(({ href, icon: Icon, label, showBadge, badgeCount, }) => {
         const isActive = pathname === href || pathname.startsWith(`${href}/`);
         const favoriteHasItems = href === '/favorites' && favoriteCount > 0;
 
         return (
           <Link
             key={href}
-            {...uiAttributes(ui)}
             id={`nav-item-${href.slice(1)}`}
             href={href}
             className={cn(
@@ -98,14 +84,14 @@ export function BottomNavBar() {
               style={{ transform: isActive ? 'scale(1.1)' : 'scale(1)' }}
             />
             {showBadge && (
-              <span key="badge" {...uiAttributes({ uid: "shared.layouts.bottom-nav-bar.span-vFC7Nf", id: "shared.layouts.bottom-nav-bar.span" , instance: createOpaqueUiInstanceId("iter-2f5a5c236a", String("badge"))})} className={cn(
+              <span key="badge" className={cn(
                 "absolute top-0 end-1/2 flex min-h-4 min-w-4 translate-x-4 items-center justify-center rounded-full border-2 bg-error px-1 text-[9px] font-bold leading-none text-on-error animate-pulse-subtle",
                 resolvedScheme === 'dark' ? 'border-surface-bright' : 'border-blue-200'
               )}>
                 {badgeCount && badgeCount > 9 ? '9+' : badgeCount}
               </span>
             )}
-            <span key="label" {...uiAttributes({ uid: "shared.layouts.bottom-nav-bar.span.2-PUBJ7K", id: "shared.layouts.bottom-nav-bar.span.2" , instance: createOpaqueUiInstanceId("iter-77ec0fcb64", String("label"))})} className="text-[10px] leading-3 font-semibold mt-0.5">{label}</span>
+            <span key="label" className="text-[10px] leading-3 font-semibold mt-0.5">{label}</span>
           </Link>
         );
       })}

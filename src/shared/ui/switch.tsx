@@ -4,9 +4,7 @@ import * as React from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 
 import { cn } from "@/shared/utils";
-import { type UiDescriptor } from "@asol/ui-registry-core";
 
-import { uiPrimitiveAttributes } from "./ui-primitive-attributes";
 
 const switchRootClassName =
   "peer relative inline-flex h-8 w-14 shrink-0 rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=unchecked]:border-outline-variant data-[state=unchecked]:bg-surface-variant";
@@ -16,14 +14,13 @@ const switchThumbClassName =
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & { ui?: UiDescriptor }
->(({ className, disabled, ui, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & { }
+>(({ className, disabled, ...props }, ref) => (
   <SwitchPrimitives.Root
     className={cn(switchRootClassName, className)}
     disabled={disabled}
     {...props}
     ref={ref}
-    {...uiPrimitiveAttributes("switch", ui, disabled ? "disabled" : undefined)}
   >
     <SwitchPrimitives.Thumb className={switchThumbClassName} />
   </SwitchPrimitives.Root>

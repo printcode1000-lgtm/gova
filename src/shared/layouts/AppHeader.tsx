@@ -14,7 +14,6 @@ import {
   type AsolInstallPrompt,
 } from '@/features/sharing';
 import { PageSaveHeaderButton } from '@/features/page-save/ui';
-import { uiAttributes } from '@asol/ui-registry-core';
 
 import { AppSidebar } from './AppSidebar';
 
@@ -44,16 +43,15 @@ export function AppHeader({
 
   return (
     <>
-      <header {...uiAttributes({ uid: 'app.header-D7X3uK', id: 'app.header', kind: 'region', part: 'top' })} className={cn(
+      <header className={cn(
         "fixed top-0 w-full z-50 pt-[var(--asol-app-header-inset)] shadow-sm border-b border-outline-variant rounded-b-2xl",
         resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'
       )}>
         {/* Row height is driven by the shared variable so the content padding
             in `.asol-shell-main` can never drift out of sync with it. */}
-        <div {...uiAttributes({ uid: "shared.layouts.app-header.div.4-6hf0TD", id: "shared.layouts.app-header.div.4" })} id="shared.layouts.app-header.div" className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
-          <div {...uiAttributes({ uid: "shared.layouts.app-header.div.5-MR0az3", id: "shared.layouts.app-header.div.5" })} id="shared.layouts.app-header.div.2" className="flex items-center gap-3">
+        <div id="shared.layouts.app-header.div" className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
+          <div id="shared.layouts.app-header.div.2" className="flex items-center gap-3">
             <button
-              {...uiAttributes({ uid: 'app.header.menu-xS4nIG', id: 'app.header.menu', kind: 'action', action: 'open-sidebar', part: 'menu' })}
               type="button"
               id="header-menu-button"
               className={cn(
@@ -76,10 +74,10 @@ export function AppHeader({
             <PageSaveHeaderButton />
           </div>
 
-          <div {...uiAttributes({ uid: "shared.layouts.app-header.div.6-6hPZRx", id: "shared.layouts.app-header.div.6" })} id="shared.layouts.app-header.div.3" className="flex items-center gap-2">
+          <div id="shared.layouts.app-header.div.3" className="flex items-center gap-2">
             <SpecialtyRequestComposer />
 
-            <Link {...uiAttributes({ uid: 'home-search-r8SiS9', id: 'home-search', kind: 'action', action: 'navigate-search', part: 'search', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'home-search' } })}
+            <Link
               href="/search"
               id="header-search-button"
               className={cn(
@@ -96,7 +94,7 @@ export function AppHeader({
               <Search id="shared.layouts.app-header.search" className="w-5 h-5" />
             </Link>
 
-            <Link {...uiAttributes({ uid: 'nav-cart-a5OnHB', id: 'nav-cart', kind: 'action', action: 'navigate-cart', part: 'cart', interaction: { type: 'tap' }, simulation: { kind: 'event', id: 'nav-cart' } })}
+            <Link
               href="/cart"
               id="header-cart-button"
               className={cn(
@@ -113,7 +111,7 @@ export function AppHeader({
               <ShoppingCart id="shared.layouts.app-header.shopping-cart" className="w-5 h-5" />
               {totalQuantity > 0 ? (
                 <span id="shared.layouts.app-header.span"
-                  key={flashToken} {...uiAttributes({ uid: "shared.layouts.app-header.span.2-m5jRMH", id: "shared.layouts.app-header.span.2" })}
+                  key={flashToken}
                   className="absolute top-2 end-2 w-2 h-2 rounded-full bg-error border border-background animate-pulse-subtle data-[flash=true]:animate-[ping_0.65s_ease-out_1]"
                   data-flash={flashToken > 0}
                 />

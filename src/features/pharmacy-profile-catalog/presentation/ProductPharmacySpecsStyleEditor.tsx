@@ -5,7 +5,6 @@ import {
   ProductStyleCard,
 } from "@/shared/ui/product-style-card";
 import type { ProductPharmacySpecsStyleSettings } from "@/shared/ui/product-style-settings";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 interface ProductPharmacySpecsStyleEditorProps {
   value: ProductPharmacySpecsStyleSettings;
@@ -27,7 +26,7 @@ export function ProductPharmacySpecsStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div {...uiAttributes({ uid: "pharmacy-profile-catalog.product-pharmacy-specs-style-editor.div.2-JJ0HHC", id: "pharmacy-profile-catalog.product-pharmacy-specs-style-editor.div.2" })} id="pharmacy-profile-catalog.product-pharmacy-specs-style-editor.div" className="grid gap-2 md:grid-cols-2">
+      <div id="pharmacy-profile-catalog.product-pharmacy-specs-style-editor.div" className="grid gap-2 md:grid-cols-2">
         <OptionCheckbox id="pharmacy-profile-catalog.product-pharmacy-specs-style-editor.option-checkbox"
           label="التصنيف الرئيسي"
           checked={value.pharmacyCategory}

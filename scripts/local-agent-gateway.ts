@@ -1,12 +1,4 @@
-import { CONTROL_BRANCH, SNAPSHOT_FILE, publishControlBranch } from "./local-agent/control-branch";
-import { buildCoordinationSnapshot } from "./local-agent/coordination-snapshot";
-import { declareAgent } from "./local-agent/agent-registry";
-import { DISPATCHABLE_WORKFLOWS, validateDispatchRequest } from "./local-agent/request-contract";
-import { dispatchWorkflow, hasGithubToken } from "./local-agent/github-api";
-import { gitSoft, runCapture } from "./local-agent/git";
-import { knownRequestIds, recordFromRequest, recordRequest } from "./local-agent/request-store";
-import { workspaceDir } from "./local-agent/paths";
-
+import { buildCoordinationSnapshot, CONTROL_BRANCH, declareAgent, DISPATCHABLE_WORKFLOWS, dispatchWorkflow, gitSoft, hasGithubToken, knownRequestIds, publishControlBranch, recordFromRequest, recordRequest, runCapture, SNAPSHOT_FILE, validateDispatchRequest, workspaceDir } from "@asol/local-agent-core";
 /**
  * The dispatch gateway.
  *

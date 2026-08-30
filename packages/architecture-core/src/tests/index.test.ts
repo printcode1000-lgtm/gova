@@ -13,7 +13,6 @@ import {
   violations,
 } from '../index';
 import './application-cycle-contract.test';
-import './dom-identity-repetition.test';
 
 const ROOT = process.cwd();
 const PACKAGE = 'packages/architecture-core';

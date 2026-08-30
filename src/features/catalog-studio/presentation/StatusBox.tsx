@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { cn } from "@/shared/utils";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export function StatusBox({ id,
   kind,
@@ -11,7 +10,7 @@ export function StatusBox({ id,
   children: React.ReactNode;
 } & { id?: string }) {
   return (
-    <div {...uiAttributes({ uid: "catalog-studio.status-box.div-X3u80l", id: "catalog-studio.status-box.div" })} id={id}
+    <div id={id}
       className={cn(
         "rounded-xl border px-4 py-3 text-sm",
         kind === "error" &&

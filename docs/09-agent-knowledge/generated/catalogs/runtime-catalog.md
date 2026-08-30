@@ -9,13 +9,13 @@ The project has five mandatory application surfaces — Development, Web, Static
 
 | Runtime | Summary | Commands | Config | Consumed artifacts | Directly mapped source nodes |
 |---|---|---:|---:|---:|---:|
-| Android | Capacitor Android shell. Production consumes out/ as webDir and adds Android-native plugins, policies, resources, signing and store artifacts. | 32 | 3 | 2 | 1720 |
-| Development | Next.js development runtime on port 3001; Capacitor can optionally live-reload from it through CAPACITOR_SERVER_URL. | 2 | 2 | 0 | 2235 |
-| iOS | Capacitor iOS shell. Production consumes out/ as webDir and adds iOS-native plugins, entitlements, signing, archive and TestFlight/App Store behavior. | 13 | 3 | 2 | 1706 |
+| Android | Capacitor Android shell. Production consumes out/ as webDir and adds Android-native plugins, policies, resources, signing and store artifacts. | 32 | 3 | 2 | 1659 |
+| Development | Next.js development runtime on port 3001; Capacitor can optionally live-reload from it through CAPACITOR_SERVER_URL. | 2 | 2 | 0 | 2165 |
+| iOS | Capacitor iOS shell. Production consumes out/ as webDir and adds iOS-native plugins, entitlements, signing, archive and TestFlight/App Store behavior. | 13 | 3 | 2 | 1645 |
 | Independent services | Separately deployed service runtimes under services/*; they are not exercised by the root next start process. | 6 | 0 | 0 | 63 |
-| Static out | Static Next.js export in out/. It has no bundled src/app/api handlers and must use a remote API base URL; it is the web payload copied into native shells. | 27 | 2 | 1 | 1694 |
-| Tooling | Repository scripts, generators, validation, deployment orchestration and release tooling executed by Node/npm. | 281 | 3 | 0 | 231 |
-| Web | Server-capable Next.js web application. Production builds produce .next and deployment may run on Vercel/serverless infrastructure. | 20 | 3 | 1 | 2235 |
+| Static out | Static Next.js export in out/. It has no bundled src/app/api handlers and must use a remote API base URL; it is the web payload copied into native shells. | 25 | 2 | 1 | 1633 |
+| Tooling | Repository scripts, generators, validation, deployment orchestration and release tooling executed by Node/npm. | 267 | 3 | 0 | 168 |
+| Web | Server-capable Next.js web application. Production builds produce .next and deployment may run on Vercel/serverless infrastructure. | 20 | 3 | 1 | 2165 |
 
 ## Artifact Topology
 

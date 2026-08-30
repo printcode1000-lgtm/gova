@@ -1,16 +1,7 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
-
-import { listRunners } from "./local-agent/github-api";
-import {
-  HOST_BACKUP_DIRECTORY,
-  NEVER_BACKED_UP,
-  collectHostInventory,
-  excludedSecretFiles,
-  redactEnvironmentFile,
-} from "./local-agent/host-inventory";
-import { workspaceDir } from "./local-agent/paths";
-
+import { listRunners, workspaceDir } from "@asol/local-agent-core";
+import { collectHostInventory, excludedSecretFiles, HOST_BACKUP_DIRECTORY, NEVER_BACKED_UP, redactEnvironmentFile } from "@asol/local-agent-core/host";
 /**
  * Capture the host configuration the local server depends on.
  *

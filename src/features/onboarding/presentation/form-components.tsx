@@ -15,8 +15,6 @@ import {
 } from '@/shared/ui/select';
 import { Badge } from '@/shared/ui/badge';
 import { useTranslation } from '@/shared/i18n';
-import type { UiDescriptor } from '@asol/ui-registry-core';
-import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface FormFieldProps {
   label: string;
@@ -38,17 +36,17 @@ export function FormField({ id,
   className,
 }: FormFieldProps & { id?: string }) {
   return (
-    <div {...uiAttributes({ uid: "onboarding.form-components.div-c0qJJQ", id: "onboarding.form-components.div" })} id={id} className={cn('space-y-2', className)}>
-      <div {...uiAttributes({ uid: "onboarding.form-components.div.2-kVZ1Q7", id: "onboarding.form-components.div.2" })} className="flex items-center justify-between">
-        <Label ui={{ uid: "onboarding.form-components.label-7dVI0c", id: "onboarding.form-components.label" }} htmlFor={htmlFor} className="text-sm font-medium">
+    <div id={id} className={cn('space-y-2', className)}>
+      <div className="flex items-center justify-between">
+        <Label htmlFor={htmlFor} className="text-sm font-medium">
           {label}
-          {required && <span {...uiAttributes({ uid: "onboarding.form-components.span-BEG75L", id: "onboarding.form-components.span" })} className="text-destructive ml-1">*</span>}
+          {required && <span className="text-destructive ml-1">*</span>}
         </Label>
-        {hint && <span {...uiAttributes({ uid: "onboarding.form-components.span.2-5LVOlZ", id: "onboarding.form-components.span.2" })} className="text-xs text-muted-foreground">{hint}</span>}
+        {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
       </div>
       {children}
       {error && (
-        <p {...uiAttributes({ uid: "onboarding.form-components.p-0Ng8Hx", id: "onboarding.form-components.p" })} className="text-xs text-destructive flex items-center gap-1">
+        <p className="text-xs text-destructive flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {error}
         </p>
@@ -60,7 +58,6 @@ export function FormField({ id,
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   /** Per-instance UiRegistry identity, supplied by the calling section. */
-  ui?: UiDescriptor;
 }
 
 export function FormInput({ error, className, ...props }: FormInputProps & { id?: string }) {
@@ -75,7 +72,6 @@ export function FormInput({ error, className, ...props }: FormInputProps & { id?
 interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string;
   /** Per-instance UiRegistry identity, supplied by the calling section. */
-  ui?: UiDescriptor;
 }
 
 export function FormTextarea({ error, className, ...props }: FormTextareaProps & { id?: string }) {
@@ -89,7 +85,6 @@ export function FormTextarea({ error, className, ...props }: FormTextareaProps &
 
 interface FormSelectProps {
   /** Per-instance UiRegistry identity, supplied by the calling section. */
-  ui?: UiDescriptor;
   value: string;
   onValueChange: (value: string) => void;
   options: { value: string; label: string }[];
@@ -99,7 +94,6 @@ interface FormSelectProps {
 }
 
 export function FormSelect({ id,
-  ui,
   value,
   onValueChange,
   options,
@@ -109,12 +103,12 @@ export function FormSelect({ id,
 }: FormSelectProps & { id?: string }) {
   return (
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
-      <SelectTrigger id={id} ui={ui} className={cn(error && 'border-destructive')}>
+      <SelectTrigger id={id} className={cn(error && 'border-destructive')}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={option.value} ui={{ uid: "onboarding.form-components.select-item-GBKxb8", id: "onboarding.form-components.select-item" , instance: createOpaqueUiInstanceId("iter-019034b704", String(option.value))}} value={option.value}>
+          <SelectItem key={option.value} value={option.value}>
             {option.label}
           </SelectItem>
         ))}
@@ -159,14 +153,14 @@ export function MultiSelect({ id,
   };
 
   return (
-    <div {...uiAttributes({ uid: "onboarding.form-components.div.3-ii4jNP", id: "onboarding.form-components.div.3" })} id={id} className="space-y-2">
-      <div {...uiAttributes({ uid: "onboarding.form-components.div.4-Um97pP", id: "onboarding.form-components.div.4" })} className="flex flex-wrap gap-2">
+    <div id={id} className="space-y-2">
+      <div className="flex flex-wrap gap-2">
         {value.map((v) => {
           const option = options.find((o) => o.value === v);
           return (
-            <Badge id={id} key={v} ui={{ uid: "onboarding.form-components.badge-Na9dZt", id: "onboarding.form-components.badge" , instance: createOpaqueUiInstanceId("iter-7d395e29bc", String(v))}} variant="secondary" className="gap-1 pr-1">
+            <Badge id={id} key={v} variant="secondary" className="gap-1 pr-1">
               {option?.label || v}
-              <button {...uiAttributes({ uid: "onboarding.form-components.button-S0gxOR", id: "onboarding.form-components.button" , instance: createOpaqueUiInstanceId("iter-8e2f796313", String(v))})}
+              <button
                 type="button"
                 onClick={() => handleRemove(v)}
                 className="ml-1 rounded-full"
@@ -179,18 +173,18 @@ export function MultiSelect({ id,
       </div>
 
       {(!max || value.length < max) && (
-        <div {...uiAttributes({ uid: "onboarding.form-components.div.5-kfRI7U", id: "onboarding.form-components.div.5" })} className="relative">
-          <Input ui={{ uid: "onboarding.form-components.input-2Sfv2v", id: "onboarding.form-components.input" }}
+        <div className="relative">
+          <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={resolvedPlaceholder}
             className="w-full"
           />
           {search && filteredOptions.length > 0 && (
-            <div {...uiAttributes({ uid: "onboarding.form-components.div.6-oWLYd5", id: "onboarding.form-components.div.6" })} className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-10 max-h-40 overflow-auto">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-10 max-h-40 overflow-auto">
               {filteredOptions.map((opt) => (
                 <button
-                  key={opt.value} {...uiAttributes({ uid: "onboarding.form-components.button.2-Xh7BUo", id: "onboarding.form-components.button.2" , instance: createOpaqueUiInstanceId("iter-bf2b572ec5", String(opt.value))})}
+                  key={opt.value}
                   type="button"
                   className="w-full px-3 py-2 text-left text-sm transition-colors"
                   onClick={() => handleSelect(opt.value)}
@@ -228,7 +222,7 @@ export function CheckboxGroup({ id,
   };
 
   return (
-    <div {...uiAttributes({ uid: "onboarding.form-components.div.7-KE05Zm", id: "onboarding.form-components.div.7" })} id={id}
+    <div id={id}
       className="grid gap-2"
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
     >
@@ -236,7 +230,7 @@ export function CheckboxGroup({ id,
         const isSelected = value.includes(opt.value);
         return (
           <button id={id}
-            key={opt.value} {...uiAttributes({ uid: "onboarding.form-components.button.3-Foxhp3", id: "onboarding.form-components.button.3" , instance: createOpaqueUiInstanceId("iter-790fcfc508", String(opt.value))})}
+            key={opt.value}
             type="button"
             onClick={() => toggle(opt.value)}
             className={cn(
@@ -246,7 +240,7 @@ export function CheckboxGroup({ id,
                 : 'border-border'
             )}
           >
-            <div {...uiAttributes({ uid: "onboarding.form-components.div.8-jHlWA3", id: "onboarding.form-components.div.8" , instance: createOpaqueUiInstanceId("iter-c5a2f1a89a", String(opt.value))})}
+            <div
               className={cn(
                 'flex h-4 w-4 items-center justify-center rounded border transition-colors',
                 isSelected ? 'bg-primary border-primary' : 'border-muted-foreground'

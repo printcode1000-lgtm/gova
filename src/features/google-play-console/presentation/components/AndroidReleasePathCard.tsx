@@ -13,7 +13,6 @@ import {
   StatusChip,
   StopButton,
 } from "./ReleaseJobIndicators";
-import { uiAttributes } from "@asol/ui-registry-core";
 
 export function AndroidReleasePathCard({
   busy,
@@ -46,24 +45,24 @@ export function AndroidReleasePathCard({
   const disabled = busy || !enabled || missingEnv.length > 0;
 
   return (
-    <article {...uiAttributes({ uid: "google-play-console.android-release-path-card.article.2-k7PS3g", id: "google-play-console.android-release-path-card.article.2" })} id="google-play-console.android-release-path-card.article" className="rounded-md border bg-surface p-3">
-      <label {...uiAttributes({ uid: "google-play-console.android-release-path-card.label.2-SWoxZ3", id: "google-play-console.android-release-path-card.label.2" })} id="google-play-console.android-release-path-card.label" className="flex items-start gap-2">
-        <input {...uiAttributes({ uid: "google-play-console.android-release-path-card.input.2-d6P34R", id: "google-play-console.android-release-path-card.input.2" })} id="google-play-console.android-release-path-card.input"
+    <article id="google-play-console.android-release-path-card.article" className="rounded-md border bg-surface p-3">
+      <label id="google-play-console.android-release-path-card.label" className="flex items-start gap-2">
+        <input id="google-play-console.android-release-path-card.input"
           checked={enabled}
           className="mt-1 h-4 w-4 accent-primary"
           type="checkbox"
           onChange={(event) => setEnabled(event.target.checked)}
         />
-        <span {...uiAttributes({ uid: "google-play-console.android-release-path-card.span.4-5WdxFX", id: "google-play-console.android-release-path-card.span.4" })} id="google-play-console.android-release-path-card.span">
-          <span {...uiAttributes({ uid: "google-play-console.android-release-path-card.span.5-L4nG12", id: "google-play-console.android-release-path-card.span.5" })} id="google-play-console.android-release-path-card.span.2" className="block font-semibold">{t(path.title)}</span>
-          <span {...uiAttributes({ uid: "google-play-console.android-release-path-card.span.6-45NA4R", id: "google-play-console.android-release-path-card.span.6" })} id="google-play-console.android-release-path-card.span.3" className="mt-1 block text-xs leading-5 text-on-surface-variant">
+        <span id="google-play-console.android-release-path-card.span">
+          <span id="google-play-console.android-release-path-card.span.2" className="block font-semibold">{t(path.title)}</span>
+          <span id="google-play-console.android-release-path-card.span.3" className="mt-1 block text-xs leading-5 text-on-surface-variant">
             {t("releaseConsole.androidPaths.branchCheckboxHelp")}
           </span>
         </span>
       </label>
-      <p {...uiAttributes({ uid: "google-play-console.android-release-path-card.p.4-0F5yZK", id: "google-play-console.android-release-path-card.p.4" })} id="google-play-console.android-release-path-card.p" className="mt-3 text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
-      <div {...uiAttributes({ uid: "google-play-console.android-release-path-card.div.2-SPX8Oy", id: "google-play-console.android-release-path-card.div.2" })} id="google-play-console.android-release-path-card.div" className="mt-3 flex flex-wrap gap-2">
-        <Button ui={{ uid: "google-play-console.android-release-path-card.button.2-1dzDF0", id: "google-play-console.android-release-path-card.button.2" }} id="google-play-console.android-release-path-card.button"
+      <p id="google-play-console.android-release-path-card.p" className="mt-3 text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
+      <div id="google-play-console.android-release-path-card.div" className="mt-3 flex flex-wrap gap-2">
+        <Button id="google-play-console.android-release-path-card.button"
           disabled={disabled}
           variant={path.danger ? "destructive" : "default"}
           onClick={() => void start({ commandId: path.id })}
@@ -92,13 +91,13 @@ export function AndroidReleasePathCard({
         ))}
         {running && job ? <StopButton id="google-play-console.android-release-path-card.stop-button" cancel={cancel} job={job} t={t} /> : null}
       </div>
-      <p {...uiAttributes({ uid: "google-play-console.android-release-path-card.p.5-sT10JZ", id: "google-play-console.android-release-path-card.p.5" })} id="google-play-console.android-release-path-card.p.2" className="mt-2 text-xs leading-5 text-on-surface-variant">
+      <p id="google-play-console.android-release-path-card.p.2" className="mt-2 text-xs leading-5 text-on-surface-variant">
         {enabled
           ? t("releaseConsole.androidPaths.enabledBranchHelp")
           : t("releaseConsole.androidPaths.skippedBranchHelp")}
       </p>
       {missingEnv.length > 0 ? (
-        <p {...uiAttributes({ uid: "google-play-console.android-release-path-card.p.6-Waj1mL", id: "google-play-console.android-release-path-card.p.6" })} id="google-play-console.android-release-path-card.p.3" className="mt-2 rounded-md bg-muted p-2 text-xs">
+        <p id="google-play-console.android-release-path-card.p.3" className="mt-2 rounded-md bg-muted p-2 text-xs">
           {t("releaseConsole.build.notReady", { names: missingEnv.join(", ") })}
         </p>
       ) : null}
