@@ -14,7 +14,7 @@ import { MONITOR_TABS } from './monitor-tabs';
 
 // Guard production environment
 import { isDevelopment } from '@/core/config';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 if (!isDevelopment) {
   notFound();
@@ -709,7 +709,7 @@ export default function MonitorPage() {
       <nav {...uiAttributes({ uid: "dev.monitor.page.nav.2-P8d569", id: "dev.monitor.page.nav.2" })} id="dev.monitor.page.nav" className="tabs no-print">
         {MONITOR_TABS.map((tab) => (
           <button
-            key={tab.id} {...uiAttributes({ uid: "dev.monitor.page.button.17-9U6iiE", id: "dev.monitor.page.button.17" })}
+            key={tab.id} {...uiAttributes({ uid: "dev.monitor.page.button.17-9U6iiE", id: "dev.monitor.page.button.17" , instance: createOpaqueUiInstanceId("iter-23fa672a24", String(tab.id))})}
             className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
             onClick={() => setActiveTab(tab.id)}
           >
@@ -729,7 +729,7 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ feature: e.target.value })}
             >
               <option {...uiAttributes({ uid: "dev.monitor.page.option-P1Etj0", id: "dev.monitor.page.option" })} value="">كل الميزات</option>
-              {filterOptions.features.map((f) => <option key={f} {...uiAttributes({ uid: "dev.monitor.page.option.2-YP0c1r", id: "dev.monitor.page.option.2" })} value={f}>{f}</option>)}
+              {filterOptions.features.map((f) => <option key={f} {...uiAttributes({ uid: "dev.monitor.page.option.2-YP0c1r", id: "dev.monitor.page.option.2" , instance: createOpaqueUiInstanceId("iter-2468f3542e", String(f))})} value={f}>{f}</option>)}
             </select>
           </div>
 
@@ -741,7 +741,7 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ page: e.target.value })}
             >
               <option {...uiAttributes({ uid: "dev.monitor.page.option.3-r7lTOB", id: "dev.monitor.page.option.3" })} value="">كل الصفحات</option>
-              {filterOptions.pages.map((p) => <option key={p} {...uiAttributes({ uid: "dev.monitor.page.option.4-1CJMVs", id: "dev.monitor.page.option.4" })} value={p}>{p}</option>)}
+              {filterOptions.pages.map((p) => <option key={p} {...uiAttributes({ uid: "dev.monitor.page.option.4-1CJMVs", id: "dev.monitor.page.option.4" , instance: createOpaqueUiInstanceId("iter-d4c9dbddb5", String(p))})} value={p}>{p}</option>)}
             </select>
           </div>
 
@@ -753,7 +753,7 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ component: e.target.value })}
             >
               <option {...uiAttributes({ uid: "dev.monitor.page.option.5-b6QX8e", id: "dev.monitor.page.option.5" })} value="">كل المكوّنات</option>
-              {filterOptions.components.map((c) => <option key={c} {...uiAttributes({ uid: "dev.monitor.page.option.6-U0sf66", id: "dev.monitor.page.option.6" })} value={c}>{c}</option>)}
+              {filterOptions.components.map((c) => <option key={c} {...uiAttributes({ uid: "dev.monitor.page.option.6-U0sf66", id: "dev.monitor.page.option.6" , instance: createOpaqueUiInstanceId("iter-95922ac316", String(c))})} value={c}>{c}</option>)}
             </select>
           </div>
 
@@ -765,7 +765,7 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ hook: e.target.value })}
             >
               <option {...uiAttributes({ uid: "dev.monitor.page.option.7-0MzwGo", id: "dev.monitor.page.option.7" })} value="">كل الخطافات</option>
-              {filterOptions.hooks.map((h) => <option key={h} {...uiAttributes({ uid: "dev.monitor.page.option.8-5k7dOw", id: "dev.monitor.page.option.8" })} value={h}>{h}</option>)}
+              {filterOptions.hooks.map((h) => <option key={h} {...uiAttributes({ uid: "dev.monitor.page.option.8-5k7dOw", id: "dev.monitor.page.option.8" , instance: createOpaqueUiInstanceId("iter-8efe5eaf95", String(h))})} value={h}>{h}</option>)}
             </select>
           </div>
 
@@ -777,7 +777,7 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ service: e.target.value })}
             >
               <option {...uiAttributes({ uid: "dev.monitor.page.option.9-kq6KN5", id: "dev.monitor.page.option.9" })} value="">كل الخدمات</option>
-              {filterOptions.services.map((s) => <option key={s} {...uiAttributes({ uid: "dev.monitor.page.option.10-1btU6H", id: "dev.monitor.page.option.10" })} value={s}>{s}</option>)}
+              {filterOptions.services.map((s) => <option key={s} {...uiAttributes({ uid: "dev.monitor.page.option.10-1btU6H", id: "dev.monitor.page.option.10" , instance: createOpaqueUiInstanceId("iter-1651b8f907", String(s))})} value={s}>{s}</option>)}
             </select>
           </div>
 
@@ -789,7 +789,7 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ repository: e.target.value })}
             >
               <option {...uiAttributes({ uid: "dev.monitor.page.option.11-HCOqc8", id: "dev.monitor.page.option.11" })} value="">كل المستودعات</option>
-              {filterOptions.repositories.map((r) => <option key={r} {...uiAttributes({ uid: "dev.monitor.page.option.12-5m0Xp4", id: "dev.monitor.page.option.12" })} value={r}>{r}</option>)}
+              {filterOptions.repositories.map((r) => <option key={r} {...uiAttributes({ uid: "dev.monitor.page.option.12-5m0Xp4", id: "dev.monitor.page.option.12" , instance: createOpaqueUiInstanceId("iter-98d1a9da86", String(r))})} value={r}>{r}</option>)}
             </select>
           </div>
 
@@ -801,7 +801,7 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ table: e.target.value })}
             >
               <option {...uiAttributes({ uid: "dev.monitor.page.option.13-6EV0Zc", id: "dev.monitor.page.option.13" })} value="">كل الجداول</option>
-              {filterOptions.tables.map((t) => <option key={t} {...uiAttributes({ uid: "dev.monitor.page.option.14-ZzamS5", id: "dev.monitor.page.option.14" })} value={t}>{t}</option>)}
+              {filterOptions.tables.map((t) => <option key={t} {...uiAttributes({ uid: "dev.monitor.page.option.14-ZzamS5", id: "dev.monitor.page.option.14" , instance: createOpaqueUiInstanceId("iter-364712a015", String(t))})} value={t}>{t}</option>)}
             </select>
           </div>
 
@@ -813,7 +813,7 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ entity: e.target.value })}
             >
               <option {...uiAttributes({ uid: "dev.monitor.page.option.15-soQAx1", id: "dev.monitor.page.option.15" })} value="">كل الكيانات</option>
-              {filterOptions.entities.map((ent) => <option key={ent} {...uiAttributes({ uid: "dev.monitor.page.option.16-IG3JL4", id: "dev.monitor.page.option.16" })} value={ent}>{ent}</option>)}
+              {filterOptions.entities.map((ent) => <option key={ent} {...uiAttributes({ uid: "dev.monitor.page.option.16-IG3JL4", id: "dev.monitor.page.option.16" , instance: createOpaqueUiInstanceId("iter-0bfeb8c199", String(ent))})} value={ent}>{ent}</option>)}
             </select>
           </div>
 
@@ -825,7 +825,7 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ queryKey: e.target.value })}
             >
               <option {...uiAttributes({ uid: "dev.monitor.page.option.17-yKBG3k", id: "dev.monitor.page.option.17" })} value="">كل مفاتيح الاستعلام</option>
-              {filterOptions.queryKeys.map((qk) => <option key={qk} {...uiAttributes({ uid: "dev.monitor.page.option.18-9yAG4E", id: "dev.monitor.page.option.18" })} value={qk}>{qk}</option>)}
+              {filterOptions.queryKeys.map((qk) => <option key={qk} {...uiAttributes({ uid: "dev.monitor.page.option.18-9yAG4E", id: "dev.monitor.page.option.18" , instance: createOpaqueUiInstanceId("iter-145be09feb", String(qk))})} value={qk}>{qk}</option>)}
             </select>
           </div>
 
@@ -990,10 +990,10 @@ export default function MonitorPage() {
                   </thead>
                   <tbody {...uiAttributes({ uid: "dev.monitor.page.tbody.2-IW7YU4", id: "dev.monitor.page.tbody.2" })} id="dev.monitor.page.tbody">
                     {stats.slowestOps.map((op) => (
-                      <tr key={op.id} {...uiAttributes({ uid: "dev.monitor.page.tr.3-3dZ19G", id: "dev.monitor.page.tr.3" })} style={{ borderBottom: '1px solid var(--border)' }} onClick={() => selectOperation(op.id)}>
-                        <td {...uiAttributes({ uid: "dev.monitor.page.td-dy3jtO", id: "dev.monitor.page.td" })} style={{ padding: '6px', fontWeight: 600 }}>{op.table}</td>
-                        <td {...uiAttributes({ uid: "dev.monitor.page.td.2-EgIqQ4", id: "dev.monitor.page.td.2" })} style={{ padding: '6px' }}><span {...uiAttributes({ uid: "dev.monitor.page.span.87-gUR4yn", id: "dev.monitor.page.span.87" })} style={{ color: OP_TYPE_COLORS[op.operationType] }}>{op.operationType}</span></td>
-                        <td {...uiAttributes({ uid: "dev.monitor.page.td.3-x1K333", id: "dev.monitor.page.td.3" })} style={{ padding: '6px', textAlign: 'right', fontWeight: 700, color: op.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : 'var(--text-main)' }}>{op.executionTime} ms</td>
+                      <tr key={op.id} {...uiAttributes({ uid: "dev.monitor.page.tr.3-3dZ19G", id: "dev.monitor.page.tr.3" , instance: createOpaqueUiInstanceId("iter-ce10dbbdac", String(op.id))})} style={{ borderBottom: '1px solid var(--border)' }} onClick={() => selectOperation(op.id)}>
+                        <td {...uiAttributes({ uid: "dev.monitor.page.td-dy3jtO", id: "dev.monitor.page.td" , instance: createOpaqueUiInstanceId("iter-b4eafcfecd", String(op.id))})} style={{ padding: '6px', fontWeight: 600 }}>{op.table}</td>
+                        <td {...uiAttributes({ uid: "dev.monitor.page.td.2-EgIqQ4", id: "dev.monitor.page.td.2" , instance: createOpaqueUiInstanceId("iter-b7a4549b85", String(op.id))})} style={{ padding: '6px' }}><span {...uiAttributes({ uid: "dev.monitor.page.span.87-gUR4yn", id: "dev.monitor.page.span.87" , instance: createOpaqueUiInstanceId("iter-b7a4549b85", String(op.id))})} style={{ color: OP_TYPE_COLORS[op.operationType] }}>{op.operationType}</span></td>
+                        <td {...uiAttributes({ uid: "dev.monitor.page.td.3-x1K333", id: "dev.monitor.page.td.3" , instance: createOpaqueUiInstanceId("iter-44e8458a1a", String(op.id))})} style={{ padding: '6px', textAlign: 'right', fontWeight: 700, color: op.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : 'var(--text-main)' }}>{op.executionTime} ms</td>
                       </tr>
                     ))}
                   </tbody>
@@ -1008,14 +1008,14 @@ export default function MonitorPage() {
                   <div {...uiAttributes({ uid: "dev.monitor.page.div.177-pp7FNn", id: "dev.monitor.page.div.177" })} id="dev.monitor.page.div.56" style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد مشاكل N+1 أو تكرار.</div>
                 ) : (
                   filteredOps.filter(o => o.isDuplicate || o.isN1).map((op) => (
-                    <div key={op.id} {...uiAttributes({ uid: "dev.monitor.page.div.178-Hv0UPX", id: "dev.monitor.page.div.178" })} className="tree-node-row" onClick={() => selectOperation(op.id)} style={{ borderLeft: op.isDuplicate ? '3px solid #ef4444' : '3px solid #f97316', paddingLeft: '8px' }}>
-                      <div {...uiAttributes({ uid: "dev.monitor.page.div.179-HHjS1E", id: "dev.monitor.page.div.179" })}>
-                        <div {...uiAttributes({ uid: "dev.monitor.page.div.180-guCul2", id: "dev.monitor.page.div.180" })} style={{ fontSize: '11px', color: 'var(--text-muted)' }}>التدفق: {op.requestFlowId.slice(0, 8)}…</div>
-                        <div {...uiAttributes({ uid: "dev.monitor.page.div.181-GJfMy7", id: "dev.monitor.page.div.181" })} style={{ fontWeight: 600 }}>{op.operationType} {op.table}</div>
+                    <div key={op.id} {...uiAttributes({ uid: "dev.monitor.page.div.178-Hv0UPX", id: "dev.monitor.page.div.178" , instance: createOpaqueUiInstanceId("iter-7e34b57028", String(op.id))})} className="tree-node-row" onClick={() => selectOperation(op.id)} style={{ borderLeft: op.isDuplicate ? '3px solid #ef4444' : '3px solid #f97316', paddingLeft: '8px' }}>
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.179-HHjS1E", id: "dev.monitor.page.div.179" , instance: createOpaqueUiInstanceId("iter-c412ee7305", String(op.id))})}>
+                        <div {...uiAttributes({ uid: "dev.monitor.page.div.180-guCul2", id: "dev.monitor.page.div.180" , instance: createOpaqueUiInstanceId("iter-ee0b6609d4", String(op.id))})} style={{ fontSize: '11px', color: 'var(--text-muted)' }}>التدفق: {op.requestFlowId.slice(0, 8)}…</div>
+                        <div {...uiAttributes({ uid: "dev.monitor.page.div.181-GJfMy7", id: "dev.monitor.page.div.181" , instance: createOpaqueUiInstanceId("iter-e599fe3ee6", String(op.id))})} style={{ fontWeight: 600 }}>{op.operationType} {op.table}</div>
                       </div>
-                      <div {...uiAttributes({ uid: "dev.monitor.page.div.182-p1J1HF", id: "dev.monitor.page.div.182" })} style={{ display: 'flex', gap: '4px' }}>
-                        {op.isDuplicate && <span {...uiAttributes({ uid: "dev.monitor.page.span.88-rX6Af4", id: "dev.monitor.page.span.88" })} style={{ background: '#ef4444', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>مكرر</span>}
-                        {op.isN1 && <span {...uiAttributes({ uid: "dev.monitor.page.span.89-P9trFD", id: "dev.monitor.page.span.89" })} style={{ background: '#f97316', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>تنبيه N+1</span>}
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.182-p1J1HF", id: "dev.monitor.page.div.182" , instance: createOpaqueUiInstanceId("iter-31bf447741", String(op.id))})} style={{ display: 'flex', gap: '4px' }}>
+                        {op.isDuplicate && <span {...uiAttributes({ uid: "dev.monitor.page.span.88-rX6Af4", id: "dev.monitor.page.span.88" , instance: createOpaqueUiInstanceId("iter-96bb9521ad", String(op.id))})} style={{ background: '#ef4444', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>مكرر</span>}
+                        {op.isN1 && <span {...uiAttributes({ uid: "dev.monitor.page.span.89-P9trFD", id: "dev.monitor.page.span.89" , instance: createOpaqueUiInstanceId("iter-995fcda82b", String(op.id))})} style={{ background: '#f97316', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>تنبيه N+1</span>}
                       </div>
                     </div>
                   ))
@@ -1094,7 +1094,7 @@ export default function MonitorPage() {
               onChange={(e) => setSelectedFlowId(e.target.value)}
             >
               {flows.map((f) => (
-                <option key={f.id} {...uiAttributes({ uid: "dev.monitor.page.option.36-21Vbew", id: "dev.monitor.page.option.36" })} value={f.id}>
+                <option key={f.id} {...uiAttributes({ uid: "dev.monitor.page.option.36-21Vbew", id: "dev.monitor.page.option.36" , instance: createOpaqueUiInstanceId("iter-dfe071ae48", String(f.id))})} value={f.id}>
                   تدفق {f.id.slice(0, 8)}… ({f.feature}) — {formatAdminClock(f.timestamp, { seconds: true })}
                 </option>
               ))}
@@ -1120,15 +1120,15 @@ export default function MonitorPage() {
                     const totalDuration = flowEnd - flowStart || 1;
 
                     return (
-                      <div className="flame-row" key={layer} {...uiAttributes({ uid: "dev.monitor.page.div.197-3jXSt9", id: "dev.monitor.page.div.197" })}>
-                        <div {...uiAttributes({ uid: "dev.monitor.page.div.198-WhP8y9", id: "dev.monitor.page.div.198" })} className="flame-row-label">{layer}</div>
-                        <div {...uiAttributes({ uid: "dev.monitor.page.div.199-9OfRmo", id: "dev.monitor.page.div.199" })} className="flame-bars-container">
+                      <div className="flame-row" key={layer} {...uiAttributes({ uid: "dev.monitor.page.div.197-3jXSt9", id: "dev.monitor.page.div.197" , instance: createOpaqueUiInstanceId("iter-fd793ae5a9", String(layer))})}>
+                        <div {...uiAttributes({ uid: "dev.monitor.page.div.198-WhP8y9", id: "dev.monitor.page.div.198" , instance: createOpaqueUiInstanceId("iter-1b34248e2e", String(layer))})} className="flame-row-label">{layer}</div>
+                        <div {...uiAttributes({ uid: "dev.monitor.page.div.199-9OfRmo", id: "dev.monitor.page.div.199" , instance: createOpaqueUiInstanceId("iter-67b064f46f", String(layer))})} className="flame-bars-container">
                           {layerItems.map((item) => {
                             const left = ((item.startedAt - flowStart) / totalDuration) * 100;
                             const width = Math.max(((item.completedAt - item.startedAt) / totalDuration) * 100, 1.5);
                             return (
                               <div
-                                key={item.id} {...uiAttributes({ uid: "dev.monitor.page.div.200-FEPj5H", id: "dev.monitor.page.div.200" })}
+                                key={item.id} {...uiAttributes({ uid: "dev.monitor.page.div.200-FEPj5H", id: "dev.monitor.page.div.200" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-9d4cd2e681", String(item.id)), createOpaqueUiInstanceId("iter-4e1639de1c", String(item.id)))})}
                                 className="flame-bar"
                                 onClick={() => selectOperation(item.id)}
                                 style={{
@@ -1169,16 +1169,16 @@ export default function MonitorPage() {
                 <div {...uiAttributes({ uid: "dev.monitor.page.div.205-YEod5p", id: "dev.monitor.page.div.205" })} id="dev.monitor.page.div.75" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {flowOps.slice(0, replayIndex).map((op, i) => (
                     <div
-                      key={op.id} {...uiAttributes({ uid: "dev.monitor.page.div.206-Dre47W", id: "dev.monitor.page.div.206" })}
+                      key={op.id} {...uiAttributes({ uid: "dev.monitor.page.div.206-Dre47W", id: "dev.monitor.page.div.206" , instance: createOpaqueUiInstanceId("iter-fe77326d10", String(op.id))})}
                       className="tree-node-row"
                       style={{ borderLeft: `3px solid ${op.table ? LAYER_COLORS.database : LAYER_COLORS.hook}` }}
                       onClick={() => selectOperation(op.id)}
                     >
-                      <div {...uiAttributes({ uid: "dev.monitor.page.div.207-cd55Ec", id: "dev.monitor.page.div.207" })}>
-                        <span {...uiAttributes({ uid: "dev.monitor.page.span.90-dH5Xq5", id: "dev.monitor.page.span.90" })} style={{ color: 'var(--text-muted)', marginRight: '8px' }}>#{i + 1}</span>
-                        <span {...uiAttributes({ uid: "dev.monitor.page.span.91-c1y6DZ", id: "dev.monitor.page.span.91" })} style={{ fontWeight: 600 }}>{op.table ? `${op.operationType} ${op.table}` : op.queryKey || op.id.slice(0, 8)}</span>
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.207-cd55Ec", id: "dev.monitor.page.div.207" , instance: createOpaqueUiInstanceId("iter-154d8444d4", String(op.id))})}>
+                        <span {...uiAttributes({ uid: "dev.monitor.page.span.90-dH5Xq5", id: "dev.monitor.page.span.90" , instance: createOpaqueUiInstanceId("iter-baadf44203", String(op.id))})} style={{ color: 'var(--text-muted)', marginRight: '8px' }}>#{i + 1}</span>
+                        <span {...uiAttributes({ uid: "dev.monitor.page.span.91-c1y6DZ", id: "dev.monitor.page.span.91" , instance: createOpaqueUiInstanceId("iter-e0ed06b447", String(op.id))})} style={{ fontWeight: 600 }}>{op.table ? `${op.operationType} ${op.table}` : op.queryKey || op.id.slice(0, 8)}</span>
                       </div>
-                      <div {...uiAttributes({ uid: "dev.monitor.page.div.208-rSx405", id: "dev.monitor.page.div.208" })} style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.208-rSx405", id: "dev.monitor.page.div.208" , instance: createOpaqueUiInstanceId("iter-015ccfb5d4", String(op.id))})} style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                         +{Math.round(op.executionTime)}ms
                       </div>
                     </div>
@@ -1261,12 +1261,12 @@ export default function MonitorPage() {
                           const color = LAYER_COLORS[node.layer] || '#64748b';
                           return (
                             <g
-                              key={node.id} {...uiAttributes({ uid: "dev.monitor.page.g.2-0fwmtS", id: "dev.monitor.page.g.2" })}
+                              key={node.id} {...uiAttributes({ uid: "dev.monitor.page.g.2-0fwmtS", id: "dev.monitor.page.g.2" , instance: createOpaqueUiInstanceId("iter-97d0592892", String(node.id))})}
                               transform={`translate(${pos.x - 30}, ${pos.y - 20})`}
                               onClick={() => selectOperation(node.recordId)}
                             >
-                              <rect {...uiAttributes({ uid: "dev.monitor.page.rect-Xm0M5L", id: "dev.monitor.page.rect" })} width="60" height="40" rx="6" fill={color} stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-                              <text {...uiAttributes({ uid: "dev.monitor.page.text-mT96RO", id: "dev.monitor.page.text" })} x="30" y="24" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold">
+                              <rect {...uiAttributes({ uid: "dev.monitor.page.rect-Xm0M5L", id: "dev.monitor.page.rect" , instance: createOpaqueUiInstanceId("iter-6a2043cd42", String(node.id))})} width="60" height="40" rx="6" fill={color} stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+                              <text {...uiAttributes({ uid: "dev.monitor.page.text-mT96RO", id: "dev.monitor.page.text" , instance: createOpaqueUiInstanceId("iter-66a1c6f22b", String(node.id))})} x="30" y="24" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold">
                                 {node.label.slice(0, 10)}
                               </text>
                             </g>
@@ -1340,12 +1340,12 @@ export default function MonitorPage() {
                           if (!pos) return null;
                           const color = node.type === 'service' ? '#22c55e' : node.type === 'repository' ? '#a855f7' : '#f97316';
                           return (
-                            <g key={node.id} {...uiAttributes({ uid: "dev.monitor.page.g.4-5SH3LD", id: "dev.monitor.page.g.4" })} transform={`translate(${pos.x - 75}, ${pos.y - 25})`}>
-                              <rect {...uiAttributes({ uid: "dev.monitor.page.rect.2-zCJ99N", id: "dev.monitor.page.rect.2" })} width="150" height="50" rx="8" fill="var(--bg-card)" stroke={color} strokeWidth="2" />
-                              <text {...uiAttributes({ uid: "dev.monitor.page.text.2-o8UsXK", id: "dev.monitor.page.text.2" })} x="75" y="24" textAnchor="middle" fill="var(--text-main)" fontSize="10" fontWeight="bold">
+                            <g key={node.id} {...uiAttributes({ uid: "dev.monitor.page.g.4-5SH3LD", id: "dev.monitor.page.g.4" , instance: createOpaqueUiInstanceId("iter-eb5b28784a", String(node.id))})} transform={`translate(${pos.x - 75}, ${pos.y - 25})`}>
+                              <rect {...uiAttributes({ uid: "dev.monitor.page.rect.2-zCJ99N", id: "dev.monitor.page.rect.2" , instance: createOpaqueUiInstanceId("iter-cfd9a9100a", String(node.id))})} width="150" height="50" rx="8" fill="var(--bg-card)" stroke={color} strokeWidth="2" />
+                              <text {...uiAttributes({ uid: "dev.monitor.page.text.2-o8UsXK", id: "dev.monitor.page.text.2" , instance: createOpaqueUiInstanceId("iter-287b80e5e5", String(node.id))})} x="75" y="24" textAnchor="middle" fill="var(--text-main)" fontSize="10" fontWeight="bold">
                                 {node.label.slice(0, 22)}
                               </text>
-                              <text {...uiAttributes({ uid: "dev.monitor.page.text.3-KDKs4V", id: "dev.monitor.page.text.3" })} x="75" y="40" textAnchor="middle" fill="var(--text-muted)" fontSize="8">
+                              <text {...uiAttributes({ uid: "dev.monitor.page.text.3-KDKs4V", id: "dev.monitor.page.text.3" , instance: createOpaqueUiInstanceId("iter-7c53bed584", String(node.id))})} x="75" y="40" textAnchor="middle" fill="var(--text-muted)" fontSize="8">
                                 العدد: {node.count}
                               </text>
                             </g>
@@ -1367,9 +1367,9 @@ export default function MonitorPage() {
           <div {...uiAttributes({ uid: "dev.monitor.page.div.218-irar2L", id: "dev.monitor.page.div.218" })} id="dev.monitor.page.div.85" className="detail-section">
             <div {...uiAttributes({ uid: "dev.monitor.page.div.219-W25T1f", id: "dev.monitor.page.div.219" })} id="dev.monitor.page.div.86" className="detail-section-title">أكثر الميزات نشاطاً</div>
             {stats.mostActiveFeatures.map((f, i) => (
-              <div key={f.name} {...uiAttributes({ uid: "dev.monitor.page.div.220-z0npG2", id: "dev.monitor.page.div.220" })} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <span {...uiAttributes({ uid: "dev.monitor.page.span.92-aE8ZFI", id: "dev.monitor.page.span.92" })}>{i+1}. {f.name}</span>
-                <span {...uiAttributes({ uid: "dev.monitor.page.span.93-6CrKuE", id: "dev.monitor.page.span.93" })} style={{ fontWeight: 'bold' }}>{f.count} عملية</span>
+              <div key={f.name} {...uiAttributes({ uid: "dev.monitor.page.div.220-z0npG2", id: "dev.monitor.page.div.220" , instance: createOpaqueUiInstanceId("iter-0274fd6f34", String(f.name))})} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.92-aE8ZFI", id: "dev.monitor.page.span.92" , instance: createOpaqueUiInstanceId("iter-03e725508c", String(f.name))})}>{i+1}. {f.name}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.93-6CrKuE", id: "dev.monitor.page.span.93" , instance: createOpaqueUiInstanceId("iter-e59a9c76b6", String(f.name))})} style={{ fontWeight: 'bold' }}>{f.count} عملية</span>
               </div>
             ))}
           </div>
@@ -1377,9 +1377,9 @@ export default function MonitorPage() {
           <div {...uiAttributes({ uid: "dev.monitor.page.div.221-4KTFLZ", id: "dev.monitor.page.div.221" })} id="dev.monitor.page.div.87" className="detail-section">
             <div {...uiAttributes({ uid: "dev.monitor.page.div.222-1qLJJ5", id: "dev.monitor.page.div.222" })} id="dev.monitor.page.div.88" className="detail-section-title">أكثر الصفحات نشاطاً</div>
             {stats.mostActivePages.map((p, i) => (
-              <div key={p.name} {...uiAttributes({ uid: "dev.monitor.page.div.223-4m1bO9", id: "dev.monitor.page.div.223" })} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <span {...uiAttributes({ uid: "dev.monitor.page.span.94-2QQhtq", id: "dev.monitor.page.span.94" })}>{i+1}. {p.name}</span>
-                <span {...uiAttributes({ uid: "dev.monitor.page.span.95-0YWGkk", id: "dev.monitor.page.span.95" })} style={{ fontWeight: 'bold' }}>{p.count} عملية</span>
+              <div key={p.name} {...uiAttributes({ uid: "dev.monitor.page.div.223-4m1bO9", id: "dev.monitor.page.div.223" , instance: createOpaqueUiInstanceId("iter-4302c7694d", String(p.name))})} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.94-2QQhtq", id: "dev.monitor.page.span.94" , instance: createOpaqueUiInstanceId("iter-d5779fca26", String(p.name))})}>{i+1}. {p.name}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.95-0YWGkk", id: "dev.monitor.page.span.95" , instance: createOpaqueUiInstanceId("iter-1af70bba3c", String(p.name))})} style={{ fontWeight: 'bold' }}>{p.count} عملية</span>
               </div>
             ))}
           </div>
@@ -1387,9 +1387,9 @@ export default function MonitorPage() {
           <div {...uiAttributes({ uid: "dev.monitor.page.div.224-gHl7Qq", id: "dev.monitor.page.div.224" })} id="dev.monitor.page.div.89" className="detail-section">
             <div {...uiAttributes({ uid: "dev.monitor.page.div.225-RDtE9a", id: "dev.monitor.page.div.225" })} id="dev.monitor.page.div.90" className="detail-section-title">أكثر الجداول نشاطاً</div>
             {stats.mostActiveTables.map((t, i) => (
-              <div key={t.name} {...uiAttributes({ uid: "dev.monitor.page.div.226-p3tXB4", id: "dev.monitor.page.div.226" })} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <span {...uiAttributes({ uid: "dev.monitor.page.span.96-TdVb2E", id: "dev.monitor.page.span.96" })}>{i+1}. {t.name}</span>
-                <span {...uiAttributes({ uid: "dev.monitor.page.span.97-f9PB24", id: "dev.monitor.page.span.97" })} style={{ fontWeight: 'bold' }}>{t.count} عملية</span>
+              <div key={t.name} {...uiAttributes({ uid: "dev.monitor.page.div.226-p3tXB4", id: "dev.monitor.page.div.226" , instance: createOpaqueUiInstanceId("iter-1e08af9b5c", String(t.name))})} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.96-TdVb2E", id: "dev.monitor.page.span.96" , instance: createOpaqueUiInstanceId("iter-50442b4d77", String(t.name))})}>{i+1}. {t.name}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.97-f9PB24", id: "dev.monitor.page.span.97" , instance: createOpaqueUiInstanceId("iter-3fdcd4c3b0", String(t.name))})} style={{ fontWeight: 'bold' }}>{t.count} عملية</span>
               </div>
             ))}
           </div>
@@ -1397,9 +1397,9 @@ export default function MonitorPage() {
           <div {...uiAttributes({ uid: "dev.monitor.page.div.227-ZmEC48", id: "dev.monitor.page.div.227" })} id="dev.monitor.page.div.91" className="detail-section">
             <div {...uiAttributes({ uid: "dev.monitor.page.div.228-34IWfS", id: "dev.monitor.page.div.228" })} id="dev.monitor.page.div.92" className="detail-section-title">أكثر المستودعات نشاطاً</div>
             {stats.mostActiveRepositories.map((r, i) => (
-              <div key={r.name} {...uiAttributes({ uid: "dev.monitor.page.div.229-7moUgx", id: "dev.monitor.page.div.229" })} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <span {...uiAttributes({ uid: "dev.monitor.page.span.98-CEG0xv", id: "dev.monitor.page.span.98" })}>{i+1}. {r.name}</span>
-                <span {...uiAttributes({ uid: "dev.monitor.page.span.99-HEM9jy", id: "dev.monitor.page.span.99" })} style={{ fontWeight: 'bold' }}>{r.count} عملية</span>
+              <div key={r.name} {...uiAttributes({ uid: "dev.monitor.page.div.229-7moUgx", id: "dev.monitor.page.div.229" , instance: createOpaqueUiInstanceId("iter-28c5686363", String(r.name))})} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.98-CEG0xv", id: "dev.monitor.page.span.98" , instance: createOpaqueUiInstanceId("iter-8b5584bbb4", String(r.name))})}>{i+1}. {r.name}</span>
+                <span {...uiAttributes({ uid: "dev.monitor.page.span.99-HEM9jy", id: "dev.monitor.page.span.99" , instance: createOpaqueUiInstanceId("iter-407abd6d2c", String(r.name))})} style={{ fontWeight: 'bold' }}>{r.count} عملية</span>
               </div>
             ))}
           </div>
@@ -1427,13 +1427,13 @@ export default function MonitorPage() {
                 </div>
               ) : (
                 operations.filter((o) => o.pinned).map((op) => (
-                  <div key={op.id} {...uiAttributes({ uid: "dev.monitor.page.div.234-J0EUPX", id: "dev.monitor.page.div.234" })} className="tree-node-row" onClick={() => selectOperation(op.id)}>
-                    <div {...uiAttributes({ uid: "dev.monitor.page.div.235-KGQD82", id: "dev.monitor.page.div.235" })} className="tree-node-info">
-                      <div {...uiAttributes({ uid: "dev.monitor.page.div.236-M0KRKu", id: "dev.monitor.page.div.236" })} className="layer-dot" style={{ background: op.table ? LAYER_COLORS.database : LAYER_COLORS.hook }} />
-                      <span {...uiAttributes({ uid: "dev.monitor.page.span.100-EJ0PwH", id: "dev.monitor.page.span.100" })} style={{ fontWeight: 600 }}>{op.table ? `${op.operationType} ${op.table}` : op.queryKey || op.id}</span>
-                      <span {...uiAttributes({ uid: "dev.monitor.page.span.101-4zZanM", id: "dev.monitor.page.span.101" })} style={{ color: 'var(--text-muted)', fontSize: '11px' }}>({op.feature})</span>
+                  <div key={op.id} {...uiAttributes({ uid: "dev.monitor.page.div.234-J0EUPX", id: "dev.monitor.page.div.234" , instance: createOpaqueUiInstanceId("iter-beeb426e30", String(op.id))})} className="tree-node-row" onClick={() => selectOperation(op.id)}>
+                    <div {...uiAttributes({ uid: "dev.monitor.page.div.235-KGQD82", id: "dev.monitor.page.div.235" , instance: createOpaqueUiInstanceId("iter-e2bf4c8b38", String(op.id))})} className="tree-node-info">
+                      <div {...uiAttributes({ uid: "dev.monitor.page.div.236-M0KRKu", id: "dev.monitor.page.div.236" , instance: createOpaqueUiInstanceId("iter-44f5ed690b", String(op.id))})} className="layer-dot" style={{ background: op.table ? LAYER_COLORS.database : LAYER_COLORS.hook }} />
+                      <span {...uiAttributes({ uid: "dev.monitor.page.span.100-EJ0PwH", id: "dev.monitor.page.span.100" , instance: createOpaqueUiInstanceId("iter-73bce38833", String(op.id))})} style={{ fontWeight: 600 }}>{op.table ? `${op.operationType} ${op.table}` : op.queryKey || op.id}</span>
+                      <span {...uiAttributes({ uid: "dev.monitor.page.span.101-4zZanM", id: "dev.monitor.page.span.101" , instance: createOpaqueUiInstanceId("iter-ef721c3e6d", String(op.id))})} style={{ color: 'var(--text-muted)', fontSize: '11px' }}>({op.feature})</span>
                     </div>
-                    <button {...uiAttributes({ uid: "dev.monitor.page.button.20-440V0k", id: "dev.monitor.page.button.20" })}
+                    <button {...uiAttributes({ uid: "dev.monitor.page.button.20-440V0k", id: "dev.monitor.page.button.20" , instance: createOpaqueUiInstanceId("iter-0766361fce", String(op.id))})}
                       className="btn"
                       style={{ padding: '2px 8px', fontSize: '10px' }}
                       onClick={(e) => {

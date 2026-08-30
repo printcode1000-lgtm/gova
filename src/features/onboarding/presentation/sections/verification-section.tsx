@@ -12,7 +12,7 @@ import { cn } from '@/shared/utils';
 import type { DocumentType, VerificationDocument } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
 import { NativeCore, isCancelledError } from '@asol/native-core';
-import { createUiInstanceId, uiAttributes } from '@asol/ui-registry-core';
+import { createUiInstanceId, uiAttributes , createOpaqueUiInstanceId} from '@asol/ui-registry-core';
 
 const DOCUMENT_TYPES: DocumentType[] = [
   'business_license',
@@ -156,7 +156,7 @@ export function VerificationSection() {
                   <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.13-pvW0FE", id: "onboarding.sections.verification-section.div.13", instance: createUiInstanceId(docType) })} className="flex-1">
                     <div {...uiAttributes({ uid: "onboarding.sections.verification-section.div.14-PP1jy9", id: "onboarding.sections.verification-section.div.14", instance: createUiInstanceId(docType) })} className="flex items-center gap-2">
                       <FileText className="h-4 w-4 text-muted-foreground" />
-                      <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.3-e9Cm7w", id: "onboarding.sections.verification-section.span.3" })} className="font-medium text-sm">
+                      <span {...uiAttributes({ uid: "onboarding.sections.verification-section.span.3-e9Cm7w", id: "onboarding.sections.verification-section.span.3" , instance: createOpaqueUiInstanceId("iter-c4d83a7756", String(docType))})} className="font-medium text-sm">
                         {t(`onboarding.verification.documents.${docType}.label`)}
                       </span>
                       {uploadedDoc && (

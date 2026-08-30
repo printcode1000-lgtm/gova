@@ -1,5 +1,5 @@
 import type { ProductReview } from "@/features/product";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 /**
  * Composition surfaces only. Persisting a review or a seller reply is staged
@@ -35,7 +35,7 @@ export function ProductReviewDialog({ id,
         <div {...uiAttributes({ uid: "product.product-reviews.product-review-dialogs.div.3-0HUmAt", id: "product.product-reviews.product-review-dialogs.div.3" })} className="my-5 flex justify-center gap-1" dir="ltr">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
-              key={star} {...uiAttributes({ uid: "product.product-reviews.product-review-dialogs.button-1Tq74F", id: "product.product-reviews.product-review-dialogs.button" })}
+              key={star} {...uiAttributes({ uid: "product.product-reviews.product-review-dialogs.button-1Tq74F", id: "product.product-reviews.product-review-dialogs.button" , instance: createOpaqueUiInstanceId("iter-a4a90ec2c1", String(star))})}
               type="button"
               onClick={() => onRatingChange(star)}
               className={`text-3xl ${star <= rating ? "text-amber-500" : "text-gray-300"}`}

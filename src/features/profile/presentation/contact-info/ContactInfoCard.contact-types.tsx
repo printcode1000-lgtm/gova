@@ -15,7 +15,7 @@ import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGps
 import type { LocationEntry } from '@/features/profile/domain/profile-contacts.entity';
 import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-style";
 import { shareLocationUrl } from "@/features/sharing/ui";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export const SOCIAL_PLATFORMS = [
   'instagram',
@@ -167,7 +167,7 @@ export function ContactQuickAddGrid({ id,
       <div {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.div.3-LU86H9", id: "profile.contact-info.contact-info-card.contact-types.div.3" })} className="flex snap-x snap-mandatory gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {items.map((item) => (
           <button
-            key={item.id} {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.button-r5883E", id: "profile.contact-info.contact-info-card.contact-types.button" })}
+            key={item.id} {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.button-r5883E", id: "profile.contact-info.contact-info-card.contact-types.button" , instance: createOpaqueUiInstanceId("iter-58cffe8d7a", String(item.id))})}
             type="button"
             aria-pressed={item.id === selectedId}
             onClick={() => onSelect(item.id)}
@@ -179,7 +179,7 @@ export function ContactQuickAddGrid({ id,
             }`}
           >
             {item.count > 0 ? (
-              <span {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.span.3-Rl0Pdc", id: "profile.contact-info.contact-info-card.contact-types.span.3" })} className="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
+              <span {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.span.3-Rl0Pdc", id: "profile.contact-info.contact-info-card.contact-types.span.3" , instance: createOpaqueUiInstanceId("iter-6c0afc6100", String(item.id))})} className="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
                 {item.count}
               </span>
             ) : null}
@@ -188,7 +188,7 @@ export function ContactQuickAddGrid({ id,
               className="h-11 w-11 transition-transform"
               style={{ color: getContactVisualColor(item.id) }}
             />
-            <span {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.span.4-6BnkTL", id: "profile.contact-info.contact-info-card.contact-types.span.4" })}
+            <span {...uiAttributes({ uid: "profile.contact-info.contact-info-card.contact-types.span.4-6BnkTL", id: "profile.contact-info.contact-info-card.contact-types.span.4" , instance: createOpaqueUiInstanceId("iter-f207f5926b", String(item.id))})}
               className="line-clamp-2 w-[4.5rem] origin-top scale-[0.75] text-center text-[10px] font-semibold leading-[11px] tracking-tight text-muted-foreground"
             >
               {item.label}

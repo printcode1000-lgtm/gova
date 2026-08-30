@@ -3,7 +3,7 @@
 import * as React from "react";
 import { OptionCheckbox } from "@/shared/ui/product-style-card";
 import type { ProductSearchColumnSettings } from "@/shared/ui/product-style-settings";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface ProductSearchColumnsStyleEditorProps {
   value: ProductSearchColumnSettings;
@@ -119,9 +119,9 @@ export function ProductSearchColumnsStyleEditor({
       </div>
       <div {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.div.4-3K6uzo", id: "product.style-editors.search-columns.product-search-columns-style-editor.div.4" })} id="product.style-editors.search-columns.product-search-columns-style-editor.div.2" className="mt-4 space-y-4">
         {GROUPS.map((group) => (
-          <div key={group.key} {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.div.5-tgWUk6", id: "product.style-editors.search-columns.product-search-columns-style-editor.div.5" })} className="rounded-lg border border-outline-variant p-3">
-            <h4 {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.h4-fFJqF7", id: "product.style-editors.search-columns.product-search-columns-style-editor.h4" })} className="mb-2 text-xs font-bold text-primary">{group.title}</h4>
-            <div {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.div.6-w9XRyB", id: "product.style-editors.search-columns.product-search-columns-style-editor.div.6" })} className="grid gap-2">
+          <div key={group.key} {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.div.5-tgWUk6", id: "product.style-editors.search-columns.product-search-columns-style-editor.div.5" , instance: createOpaqueUiInstanceId("iter-27b4ab2356", String(group.key))})} className="rounded-lg border border-outline-variant p-3">
+            <h4 {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.h4-fFJqF7", id: "product.style-editors.search-columns.product-search-columns-style-editor.h4" , instance: createOpaqueUiInstanceId("iter-b7c34bfb35", String(group.key))})} className="mb-2 text-xs font-bold text-primary">{group.title}</h4>
+            <div {...uiAttributes({ uid: "product.style-editors.search-columns.product-search-columns-style-editor.div.6-w9XRyB", id: "product.style-editors.search-columns.product-search-columns-style-editor.div.6" , instance: createOpaqueUiInstanceId("iter-feb0566778", String(group.key))})} className="grid gap-2">
               {group.options.map(([optionKey, label]) => (
                 <OptionCheckbox
                   key={optionKey}

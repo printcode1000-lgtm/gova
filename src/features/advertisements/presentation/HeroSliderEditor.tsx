@@ -12,7 +12,7 @@ import {
 
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 import { Label } from "@/shared/ui/label";
 import { Switch } from "@/shared/ui/switch";
 import { StorageProfiles, type StoredImage } from "@asol/storage-core";
@@ -131,7 +131,7 @@ export const HeroSliderEditor = React.forwardRef<
             }
           >
             {heroSliderTransitions.map((transition) => (
-              <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option-U9f7gb", id: "advertisements.hero-slider-editor.option" })} value={transition}>
+              <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option-U9f7gb", id: "advertisements.hero-slider-editor.option" , instance: createOpaqueUiInstanceId("iter-f3f7d864ac", String(transition))})} value={transition}>
                 {heroSliderTransitionLabels[transition]}
               </option>
             ))}
@@ -325,7 +325,7 @@ export const HeroSliderEditor = React.forwardRef<
                   }
                 >
                   {heroSliderTransitions.map((transition) => (
-                    <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option.2-bE6uzW", id: "advertisements.hero-slider-editor.option.2" })} value={transition}>
+                    <option key={transition} {...uiAttributes({ uid: "advertisements.hero-slider-editor.option.2-bE6uzW", id: "advertisements.hero-slider-editor.option.2" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-5566b9f83b", String(transition)), createOpaqueUiInstanceId("iter-bfd0a98806", String(transition)))})} value={transition}>
                       {heroSliderTransitionLabels[transition]}
                     </option>
                   ))}

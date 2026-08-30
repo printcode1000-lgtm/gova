@@ -26,7 +26,7 @@ import type {
   ContactGroup,
   CustomActionButton as CustomActionButtonModel,
 } from "./contact-action-bar.types";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export type {
   ContactActionBarData,
@@ -136,8 +136,8 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
             {group.label}
           </DropdownMenuLabel>
           {group.options.map((option) => (
-            <DropdownMenuItem key={option.id} ui={{ uid: "shared.contact-action-bar.dropdown-menu-item-pPmT47", id: "shared.contact-action-bar.dropdown-menu-item" }} asChild>
-              <a {...uiAttributes({ uid: "shared.contact-action-bar.a.2-VyGAE3", id: "shared.contact-action-bar.a.2" })}
+            <DropdownMenuItem key={option.id} ui={{ uid: "shared.contact-action-bar.dropdown-menu-item-pPmT47", id: "shared.contact-action-bar.dropdown-menu-item" , instance: createOpaqueUiInstanceId("iter-f3d11f04bc", String(option.id))}} asChild>
+              <a {...uiAttributes({ uid: "shared.contact-action-bar.a.2-VyGAE3", id: "shared.contact-action-bar.a.2" , instance: createOpaqueUiInstanceId("iter-611c428815", String(option.id))})}
                 href={option.href}
                 target={isExternalHref(option.href) ? "_blank" : undefined}
                 rel={isExternalHref(option.href) ? "noreferrer" : undefined}
@@ -147,11 +147,11 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
                   borderInlineStart: `3px solid ${color}`,
                 }}
               >
-                <span {...uiAttributes({ uid: "shared.contact-action-bar.span.2-rw7MXq", id: "shared.contact-action-bar.span.2" })} className="max-w-56 truncate font-medium">
+                <span {...uiAttributes({ uid: "shared.contact-action-bar.span.2-rw7MXq", id: "shared.contact-action-bar.span.2" , instance: createOpaqueUiInstanceId("iter-87d28ebcde", String(option.id))})} className="max-w-56 truncate font-medium">
                   {option.label}
                 </span>
                 {option.detail ? (
-                  <span {...uiAttributes({ uid: "shared.contact-action-bar.span.3-5OS1nm", id: "shared.contact-action-bar.span.3" })} className="max-w-56 truncate text-xs text-muted-foreground">
+                  <span {...uiAttributes({ uid: "shared.contact-action-bar.span.3-5OS1nm", id: "shared.contact-action-bar.span.3" , instance: createOpaqueUiInstanceId("iter-5e5b0a0d45", String(option.id))})} className="max-w-56 truncate text-xs text-muted-foreground">
                     {option.detail}
                   </span>
                 ) : null}

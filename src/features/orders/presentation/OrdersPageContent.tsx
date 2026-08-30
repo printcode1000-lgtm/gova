@@ -20,7 +20,7 @@ import {
 } from "./order-labels";
 import type { OrderListItem, OrderListResponse } from "./order-types";
 import { ordersPageCopy } from "./orders-page-copy";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 const PAGE_SIZE = 5;
 
@@ -127,33 +127,33 @@ export function OrdersPageContent() {
               const detailRole = primaryViewerRole(viewerRoles, admin);
               return (
                 <Link key={id}
-                  {...uiAttributes({ uid: "orders-open-0xH8x3", id: "orders-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "orders-open" } })}
+                  {...uiAttributes({ uid: "orders-open-0xH8x3", id: "orders-open", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "orders-open" } , instance: createOpaqueUiInstanceId("iter-e61b71c9ba", String(id))})}
                   href={`/orders/details?orderId=${encodeURIComponent(id)}&role=${detailRole}`}
                   className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm transition"
                 >
-                  <div {...uiAttributes({ uid: "orders.orders-page-content.div.8-aoxS7H", id: "orders.orders-page-content.div.8" })} className="flex items-start justify-between gap-3">
-                    <div {...uiAttributes({ uid: "orders.orders-page-content.div.9-CBWX6M", id: "orders.orders-page-content.div.9" })}>
-                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.9-1IdtXq", id: "orders.orders-page-content.p.9" })} className="text-xs text-muted-foreground">{copy.orderNumber}</p>
-                      <h2 {...uiAttributes({ uid: "orders.orders-page-content.h2.3-4LxI9M", id: "orders.orders-page-content.h2.3" })} className="font-bold">
+                  <div {...uiAttributes({ uid: "orders.orders-page-content.div.8-aoxS7H", id: "orders.orders-page-content.div.8" , instance: createOpaqueUiInstanceId("iter-1097140e90", String(id))})} className="flex items-start justify-between gap-3">
+                    <div {...uiAttributes({ uid: "orders.orders-page-content.div.9-CBWX6M", id: "orders.orders-page-content.div.9" , instance: createOpaqueUiInstanceId("iter-27af9c1812", String(id))})}>
+                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.9-1IdtXq", id: "orders.orders-page-content.p.9" , instance: createOpaqueUiInstanceId("iter-b835a11351", String(id))})} className="text-xs text-muted-foreground">{copy.orderNumber}</p>
+                      <h2 {...uiAttributes({ uid: "orders.orders-page-content.h2.3-4LxI9M", id: "orders.orders-page-content.h2.3" , instance: createOpaqueUiInstanceId("iter-3024bb8d36", String(id))})} className="font-bold">
                         {String(order.order_number ?? id)}
                       </h2>
-                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.10-0C6CkF", id: "orders.orders-page-content.p.10" })} className="mt-1 text-xs text-muted-foreground">
+                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.10-0C6CkF", id: "orders.orders-page-content.p.10" , instance: createOpaqueUiInstanceId("iter-e74567af2e", String(id))})} className="mt-1 text-xs text-muted-foreground">
                         {copy.orderDate}: {formatOrderDate(order.created_at, locale)}
                       </p>
                     </div>
-                    <span {...uiAttributes({ uid: "orders.orders-page-content.span.3-4QJop2", id: "orders.orders-page-content.span.3" })} className="rounded-full bg-muted px-3 py-1 text-xs font-semibold">
+                    <span {...uiAttributes({ uid: "orders.orders-page-content.span.3-4QJop2", id: "orders.orders-page-content.span.3" , instance: createOpaqueUiInstanceId("iter-544a71dc7d", String(id))})} className="rounded-full bg-muted px-3 py-1 text-xs font-semibold">
                       {statusLabel(order.calculated_status, locale)}
                     </span>
                   </div>
 
                   {viewerRoles.length > 0 ? (
-                    <div {...uiAttributes({ uid: "orders.orders-page-content.div.10-RAjk3f", id: "orders.orders-page-content.div.10" })} className="mt-3 flex flex-wrap gap-2">
-                      <span {...uiAttributes({ uid: "orders.orders-page-content.span.4-Pjv4n2", id: "orders.orders-page-content.span.4" })} className="text-xs text-muted-foreground">
+                    <div {...uiAttributes({ uid: "orders.orders-page-content.div.10-RAjk3f", id: "orders.orders-page-content.div.10" , instance: createOpaqueUiInstanceId("iter-3f39caf52c", String(id))})} className="mt-3 flex flex-wrap gap-2">
+                      <span {...uiAttributes({ uid: "orders.orders-page-content.span.4-Pjv4n2", id: "orders.orders-page-content.span.4" , instance: createOpaqueUiInstanceId("iter-696609d859", String(id))})} className="text-xs text-muted-foreground">
                         {copy.yourRole}:
                       </span>
                       {viewerRoles.map((role) => (
                         <span
-                          key={`${id}-${role}`} {...uiAttributes({ uid: "orders.orders-page-content.span.5-Nb6VUo", id: "orders.orders-page-content.span.5" })}
+                          key={`${id}-${role}`} {...uiAttributes({ uid: "orders.orders-page-content.span.5-Nb6VUo", id: "orders.orders-page-content.span.5" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-89a2e7097c", String(`${id}-${role}`)), createOpaqueUiInstanceId("iter-024114b2d9", String(`${id}-${role}`)))})}
                           className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary"
                         >
                           {viewerRoleLabel(role, locale)}
@@ -162,10 +162,10 @@ export function OrdersPageContent() {
                     </div>
                   ) : null}
 
-                  <div {...uiAttributes({ uid: "orders.orders-page-content.div.11-1KdHHv", id: "orders.orders-page-content.div.11" })} className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                    <div {...uiAttributes({ uid: "orders.orders-page-content.div.12-JyjHE1", id: "orders.orders-page-content.div.12" })}>
-                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.11-72d7oT", id: "orders.orders-page-content.p.11" })} className="text-muted-foreground">{copy.total}</p>
-                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.12-MzAHD5", id: "orders.orders-page-content.p.12" })} className="font-bold">
+                  <div {...uiAttributes({ uid: "orders.orders-page-content.div.11-1KdHHv", id: "orders.orders-page-content.div.11" , instance: createOpaqueUiInstanceId("iter-cf9d8240a5", String(id))})} className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                    <div {...uiAttributes({ uid: "orders.orders-page-content.div.12-JyjHE1", id: "orders.orders-page-content.div.12" , instance: createOpaqueUiInstanceId("iter-ec68167508", String(id))})}>
+                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.11-72d7oT", id: "orders.orders-page-content.p.11" , instance: createOpaqueUiInstanceId("iter-857228b35e", String(id))})} className="text-muted-foreground">{copy.total}</p>
+                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.12-MzAHD5", id: "orders.orders-page-content.p.12" , instance: createOpaqueUiInstanceId("iter-a8e7c88bbd", String(id))})} className="font-bold">
                         {formatMoney(
                           order.grand_total,
                           String(order.currency ?? "EGP"),
@@ -173,9 +173,9 @@ export function OrdersPageContent() {
                         )}
                       </p>
                     </div>
-                    <div {...uiAttributes({ uid: "orders.orders-page-content.div.13-YJMSK2", id: "orders.orders-page-content.div.13" })}>
-                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.13-AL67Bf", id: "orders.orders-page-content.p.13" })} className="text-muted-foreground">{copy.remaining}</p>
-                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.14-2W4SMh", id: "orders.orders-page-content.p.14" })} className="font-bold">
+                    <div {...uiAttributes({ uid: "orders.orders-page-content.div.13-YJMSK2", id: "orders.orders-page-content.div.13" , instance: createOpaqueUiInstanceId("iter-adffcd4ba4", String(id))})}>
+                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.13-AL67Bf", id: "orders.orders-page-content.p.13" , instance: createOpaqueUiInstanceId("iter-d85e9524ca", String(id))})} className="text-muted-foreground">{copy.remaining}</p>
+                      <p {...uiAttributes({ uid: "orders.orders-page-content.p.14-2W4SMh", id: "orders.orders-page-content.p.14" , instance: createOpaqueUiInstanceId("iter-2e55f802b1", String(id))})} className="font-bold">
                         {formatMoney(
                           order.remaining_total,
                           String(order.currency ?? "EGP"),

@@ -21,7 +21,7 @@ import {
   severityLabels,
 } from "./data-health-labels";
 import { DataHealthFilters } from "./DataHealthFilters";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function DataHealthFindingsPanel(props: {
   report: DataHealthReport;
@@ -110,9 +110,9 @@ export function DataHealthFindingsPanel(props: {
             </thead>
             <tbody {...uiAttributes({ uid: "data-health.data-health-findings-panel.tbody.2-2rmsLz", id: "data-health.data-health-findings-panel.tbody.2" })} id="data-health.data-health-findings-panel.tbody">
               {props.visible.map((issue) => (
-                <tr key={issue.id} {...uiAttributes({ uid: "data-health.data-health-findings-panel.tr.4-azUS9p", id: "data-health.data-health-findings-panel.tr.4" })} className="border-t align-top">
-                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.2-KJO8DL", id: "data-health.data-health-findings-panel.td.2" })} className="p-3">
-                    <input {...uiAttributes({ uid: "data-health.data-health-findings-panel.input.3-5SVE6h", id: "data-health.data-health-findings-panel.input.3" })}
+                <tr key={issue.id} {...uiAttributes({ uid: "data-health.data-health-findings-panel.tr.4-azUS9p", id: "data-health.data-health-findings-panel.tr.4" , instance: createOpaqueUiInstanceId("iter-9747f449b8", String(issue.id))})} className="border-t align-top">
+                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.2-KJO8DL", id: "data-health.data-health-findings-panel.td.2" , instance: createOpaqueUiInstanceId("iter-45e1a1dd7c", String(issue.id))})} className="p-3">
+                    <input {...uiAttributes({ uid: "data-health.data-health-findings-panel.input.3-5SVE6h", id: "data-health.data-health-findings-panel.input.3" , instance: createOpaqueUiInstanceId("iter-90132ed3a7", String(issue.id))})}
                       type="checkbox"
                       checked={props.selectedIds.has(issue.id)}
                       disabled={!issue.canClean}
@@ -120,28 +120,28 @@ export function DataHealthFindingsPanel(props: {
                       aria-label={`تحديد ${issue.title}`}
                     />
                   </td>
-                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.3-UgmX6N", id: "data-health.data-health-findings-panel.td.3" })} className="max-w-md p-3">
-                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.17-2I5QUT", id: "data-health.data-health-findings-panel.div.17" })} className="font-medium">{issue.title}</div>
-                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.18-QkDlV0", id: "data-health.data-health-findings-panel.div.18" })} className="mt-1 line-clamp-2 text-xs text-on-surface-variant">
+                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.3-UgmX6N", id: "data-health.data-health-findings-panel.td.3" , instance: createOpaqueUiInstanceId("iter-af7d3668e3", String(issue.id))})} className="max-w-md p-3">
+                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.17-2I5QUT", id: "data-health.data-health-findings-panel.div.17" , instance: createOpaqueUiInstanceId("iter-8fba187719", String(issue.id))})} className="font-medium">{issue.title}</div>
+                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.18-QkDlV0", id: "data-health.data-health-findings-panel.div.18" , instance: createOpaqueUiInstanceId("iter-4ecb4dcde2", String(issue.id))})} className="mt-1 line-clamp-2 text-xs text-on-surface-variant">
                       {issue.details}
                     </div>
-                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.19-S0Uy7q", id: "data-health.data-health-findings-panel.div.19" })} className="mt-1 break-all text-xs text-on-surface-variant" dir="ltr">
+                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.19-S0Uy7q", id: "data-health.data-health-findings-panel.div.19" , instance: createOpaqueUiInstanceId("iter-efa8010808", String(issue.id))})} className="mt-1 break-all text-xs text-on-surface-variant" dir="ltr">
                       {issue.recordId}
                     </div>
                   </td>
-                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.4-3CzvvT", id: "data-health.data-health-findings-panel.td.4" })} className="p-3">
-                    <span {...uiAttributes({ uid: "data-health.data-health-findings-panel.span.2-4MBwnT", id: "data-health.data-health-findings-panel.span.2" })} className={`rounded-full border px-2 py-1 text-xs ${severityClass(issue.severity)}`}>
+                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.4-3CzvvT", id: "data-health.data-health-findings-panel.td.4" , instance: createOpaqueUiInstanceId("iter-0b8508ead3", String(issue.id))})} className="p-3">
+                    <span {...uiAttributes({ uid: "data-health.data-health-findings-panel.span.2-4MBwnT", id: "data-health.data-health-findings-panel.span.2" , instance: createOpaqueUiInstanceId("iter-7ffbcf458a", String(issue.id))})} className={`rounded-full border px-2 py-1 text-xs ${severityClass(issue.severity)}`}>
                       {severityLabels[issue.severity]}
                     </span>
-                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.20-gQMa84", id: "data-health.data-health-findings-panel.div.20" })} className="mt-2 text-xs text-on-surface-variant">
+                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.20-gQMa84", id: "data-health.data-health-findings-panel.div.20" , instance: createOpaqueUiInstanceId("iter-f29c436eff", String(issue.id))})} className="mt-2 text-xs text-on-surface-variant">
                       {categoryLabels[issue.category]}
                     </div>
                   </td>
-                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.5-Kc4yhH", id: "data-health.data-health-findings-panel.td.5" })} className="p-3 text-xs">
-                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.21-1LMoI7", id: "data-health.data-health-findings-panel.div.21" })}>{issue.database}</div>
-                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.22-H74crY", id: "data-health.data-health-findings-panel.div.22" })} className="text-on-surface-variant">{issue.table}</div>
+                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.5-Kc4yhH", id: "data-health.data-health-findings-panel.td.5" , instance: createOpaqueUiInstanceId("iter-ebcdf48bc7", String(issue.id))})} className="p-3 text-xs">
+                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.21-1LMoI7", id: "data-health.data-health-findings-panel.div.21" , instance: createOpaqueUiInstanceId("iter-b41bda3651", String(issue.id))})}>{issue.database}</div>
+                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.22-H74crY", id: "data-health.data-health-findings-panel.div.22" , instance: createOpaqueUiInstanceId("iter-edfb11a391", String(issue.id))})} className="text-on-surface-variant">{issue.table}</div>
                   </td>
-                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.6-4ZiDgA", id: "data-health.data-health-findings-panel.td.6" })} className="p-3 text-xs">
+                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.6-4ZiDgA", id: "data-health.data-health-findings-panel.td.6" , instance: createOpaqueUiInstanceId("iter-56fd1731a3", String(issue.id))})} className="p-3 text-xs">
                     {issue.state === "new"
                       ? "جديدة"
                       : issue.state === "recurring"
@@ -150,8 +150,8 @@ export function DataHealthFindingsPanel(props: {
                           ? "في الحجر"
                           : "متجاهلة"}
                   </td>
-                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.7-ww1oQ3", id: "data-health.data-health-findings-panel.td.7" })} className="p-3 text-xs">
-                    <span {...uiAttributes({ uid: "data-health.data-health-findings-panel.span.3-Rln83E", id: "data-health.data-health-findings-panel.span.3" })}
+                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.7-ww1oQ3", id: "data-health.data-health-findings-panel.td.7" , instance: createOpaqueUiInstanceId("iter-10352967a4", String(issue.id))})} className="p-3 text-xs">
+                    <span {...uiAttributes({ uid: "data-health.data-health-findings-panel.span.3-Rln83E", id: "data-health.data-health-findings-panel.span.3" , instance: createOpaqueUiInstanceId("iter-6a38d51ffd", String(issue.id))})}
                       className={`rounded-full px-2 py-1 ${
                         issue.canClean
                           ? "bg-green-50 text-green-700"
@@ -161,9 +161,9 @@ export function DataHealthFindingsPanel(props: {
                       {cleanupLabels[issue.cleanupAction]}
                     </span>
                   </td>
-                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.8-a4QK65", id: "data-health.data-health-findings-panel.td.8" })} className="p-3">
-                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.23-UN8V03", id: "data-health.data-health-findings-panel.div.23" })} className="flex gap-1">
-                      <Button ui={{ uid: "data-health.data-health-findings-panel.button.5-B1TUMd", id: "data-health.data-health-findings-panel.button.5" }}
+                  <td {...uiAttributes({ uid: "data-health.data-health-findings-panel.td.8-a4QK65", id: "data-health.data-health-findings-panel.td.8" , instance: createOpaqueUiInstanceId("iter-7fc5186e74", String(issue.id))})} className="p-3">
+                    <div {...uiAttributes({ uid: "data-health.data-health-findings-panel.div.23-UN8V03", id: "data-health.data-health-findings-panel.div.23" , instance: createOpaqueUiInstanceId("iter-7ae22189f4", String(issue.id))})} className="flex gap-1">
+                      <Button ui={{ uid: "data-health.data-health-findings-panel.button.5-B1TUMd", id: "data-health.data-health-findings-panel.button.5" , instance: createOpaqueUiInstanceId("iter-7d5f06c787", String(issue.id))}}
                         type="button"
                         size="icon"
                         variant="ghost"
@@ -173,7 +173,7 @@ export function DataHealthFindingsPanel(props: {
                         <Eye className="h-4 w-4" />
                       </Button>
                       {issue.route ? (
-                        <Button ui={{ uid: "data-health.data-health-findings-panel.button.6-AYEU6I", id: "data-health.data-health-findings-panel.button.6" }} asChild size="icon" variant="ghost" aria-label="فتح السجل">
+                        <Button ui={{ uid: "data-health.data-health-findings-panel.button.6-AYEU6I", id: "data-health.data-health-findings-panel.button.6" , instance: createOpaqueUiInstanceId("iter-6abe8eaf61", String(issue.id))}} asChild size="icon" variant="ghost" aria-label="فتح السجل">
                           <Link href={issue.route}>
                             <ExternalLink className="h-4 w-4" />
                           </Link>

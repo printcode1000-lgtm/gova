@@ -28,7 +28,7 @@ import {
   asolDbSetSuperAdminOriginalSession,
 } from "@asol/data-core/browser";
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 interface AdminUserResult {
   uid: string;
@@ -303,65 +303,65 @@ export function SuperAdminUsersPage() {
             </thead>
             <tbody {...uiAttributes({ uid: "super-admin.super-admin-users-page.tbody.2-SRdo1H", id: "super-admin.super-admin-users-page.tbody.2" })} id="super-admin.super-admin-users-page.tbody">
               {results.map((user) => (
-                <tr key={user.uid} {...uiAttributes({ uid: "super-admin.super-admin-users-page.tr.4-2RCIDC", id: "super-admin.super-admin-users-page.tr.4" })} className="border-t align-top">
-                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.2-k0IG3Q", id: "super-admin.super-admin-users-page.td.2" })} className="max-w-xs p-3">
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.22-0RL7g1", id: "super-admin.super-admin-users-page.div.22" })} className="font-medium">
+                <tr key={user.uid} {...uiAttributes({ uid: "super-admin.super-admin-users-page.tr.4-2RCIDC", id: "super-admin.super-admin-users-page.tr.4" , instance: createOpaqueUiInstanceId("iter-18f5d51792", String(user.uid))})} className="border-t align-top">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.2-k0IG3Q", id: "super-admin.super-admin-users-page.td.2" , instance: createOpaqueUiInstanceId("iter-c1f87a6e4b", String(user.uid))})} className="max-w-xs p-3">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.22-0RL7g1", id: "super-admin.super-admin-users-page.div.22" , instance: createOpaqueUiInstanceId("iter-e9b98f348d", String(user.uid))})} className="font-medium">
                       {user.storeName || user.email || user.uid}
                     </div>
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.23-DIXQT6", id: "super-admin.super-admin-users-page.div.23" })} className="mt-1 break-all text-xs text-on-surface-variant">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.23-DIXQT6", id: "super-admin.super-admin-users-page.div.23" , instance: createOpaqueUiInstanceId("iter-a1f3bb1d33", String(user.uid))})} className="mt-1 break-all text-xs text-on-surface-variant">
                       {user.uid}
                     </div>
                     {user.storeDescription ? (
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.24-s7qiAC", id: "super-admin.super-admin-users-page.div.24" })} className="mt-1 line-clamp-2 text-xs text-on-surface-variant">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.24-s7qiAC", id: "super-admin.super-admin-users-page.div.24" , instance: createOpaqueUiInstanceId("iter-d7b23062c2", String(user.uid))})} className="mt-1 line-clamp-2 text-xs text-on-surface-variant">
                         {user.storeDescription}
                       </div>
                     ) : null}
                   </td>
-                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.3-iSlnj1", id: "super-admin.super-admin-users-page.td.3" })} className="p-3" dir="ltr">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.3-iSlnj1", id: "super-admin.super-admin-users-page.td.3" , instance: createOpaqueUiInstanceId("iter-93d71a18bb", String(user.uid))})} className="p-3" dir="ltr">
                     {user.phone || "-"}
                     {user.email ? (
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.25-UN7pxD", id: "super-admin.super-admin-users-page.div.25" })} className="mt-1 text-xs text-on-surface-variant">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.25-UN7pxD", id: "super-admin.super-admin-users-page.div.25" , instance: createOpaqueUiInstanceId("iter-6970f6b3ee", String(user.uid))})} className="mt-1 text-xs text-on-surface-variant">
                         {user.email}
                       </div>
                     ) : null}
                   </td>
-                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.4-6LtjIX", id: "super-admin.super-admin-users-page.td.4" })} className="p-3">
-                    <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.11-pY4fKq", id: "super-admin.super-admin-users-page.span.11" })} className="rounded-full bg-primary/10 px-2 py-1 text-primary">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.4-6LtjIX", id: "super-admin.super-admin-users-page.td.4" , instance: createOpaqueUiInstanceId("iter-047abcb7c4", String(user.uid))})} className="p-3">
+                    <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.11-pY4fKq", id: "super-admin.super-admin-users-page.span.11" , instance: createOpaqueUiInstanceId("iter-d54c4566c8", String(user.uid))})} className="rounded-full bg-primary/10 px-2 py-1 text-primary">
                       {user.productCount}
                     </span>
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.26-pPSH8p", id: "super-admin.super-admin-users-page.div.26" })} className="mt-2 text-xs text-on-surface-variant">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.26-pPSH8p", id: "super-admin.super-admin-users-page.div.26" , instance: createOpaqueUiInstanceId("iter-b06938c8ed", String(user.uid))})} className="mt-2 text-xs text-on-surface-variant">
                       {user.hasProfile ? "له بروفايل" : "بدون بروفايل"}
                     </div>
                   </td>
-                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.5-4aMSmR", id: "super-admin.super-admin-users-page.td.5" })} className="max-w-md p-3">
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.27-iK9XLk", id: "super-admin.super-admin-users-page.div.27" })} className="flex flex-wrap gap-1">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.5-4aMSmR", id: "super-admin.super-admin-users-page.td.5" , instance: createOpaqueUiInstanceId("iter-d7d1eeb9b5", String(user.uid))})} className="max-w-md p-3">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.27-iK9XLk", id: "super-admin.super-admin-users-page.div.27" , instance: createOpaqueUiInstanceId("iter-597f10c281", String(user.uid))})} className="flex flex-wrap gap-1">
                       {user.specialties.slice(0, 8).map((item) => (
                         <span
-                          key={item} {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.12-B3DayU", id: "super-admin.super-admin-users-page.span.12" })}
+                          key={item} {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.12-B3DayU", id: "super-admin.super-admin-users-page.span.12" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-9e1fd068c2", String(item)), createOpaqueUiInstanceId("iter-9b4a9431dd", String(item)))})}
                           className="rounded-full border px-2 py-1 text-xs"
                         >
                           {specialtyLabel(item)}
                         </span>
                       ))}
                       {user.specialties.length > 8 ? (
-                        <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.13-0AG0Ml", id: "super-admin.super-admin-users-page.span.13" })} className="rounded-full border px-2 py-1 text-xs">
+                        <span {...uiAttributes({ uid: "super-admin.super-admin-users-page.span.13-0AG0Ml", id: "super-admin.super-admin-users-page.span.13" , instance: createOpaqueUiInstanceId("iter-942994bd94", String(user.uid))})} className="rounded-full border px-2 py-1 text-xs">
                           +{user.specialties.length - 8}
                         </span>
                       ) : null}
                     </div>
                   </td>
-                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.6-mOlV6W", id: "super-admin.super-admin-users-page.td.6" })} className="p-3 text-xs text-on-surface-variant">
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.28-OQx94z", id: "super-admin.super-admin-users-page.div.28" })}>تسجيل: {dateText(user.createdAt)}</div>
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.29-BljQ0S", id: "super-admin.super-admin-users-page.div.29" })}>آخر دخول: {dateText(user.lastLoginAt)}</div>
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.6-mOlV6W", id: "super-admin.super-admin-users-page.td.6" , instance: createOpaqueUiInstanceId("iter-811b017942", String(user.uid))})} className="p-3 text-xs text-on-surface-variant">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.28-OQx94z", id: "super-admin.super-admin-users-page.div.28" , instance: createOpaqueUiInstanceId("iter-bf22a3f2ff", String(user.uid))})}>تسجيل: {dateText(user.createdAt)}</div>
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.29-BljQ0S", id: "super-admin.super-admin-users-page.div.29" , instance: createOpaqueUiInstanceId("iter-f74e7017c3", String(user.uid))})}>آخر دخول: {dateText(user.lastLoginAt)}</div>
                   </td>
-                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.7-48adPP", id: "super-admin.super-admin-users-page.td.7" })} className="p-3">
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.30-SAXz5T", id: "super-admin.super-admin-users-page.div.30" })} className="flex flex-wrap gap-2">
-                      <Button ui={{ uid: "super-admin.super-admin-users-page.button.2-31Nz6b", id: "super-admin.super-admin-users-page.button.2" }} asChild variant="outline" size="sm">
+                  <td {...uiAttributes({ uid: "super-admin.super-admin-users-page.td.7-48adPP", id: "super-admin.super-admin-users-page.td.7" , instance: createOpaqueUiInstanceId("iter-b600f72090", String(user.uid))})} className="p-3">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-users-page.div.30-SAXz5T", id: "super-admin.super-admin-users-page.div.30" , instance: createOpaqueUiInstanceId("iter-7f5f4eefa7", String(user.uid))})} className="flex flex-wrap gap-2">
+                      <Button ui={{ uid: "super-admin.super-admin-users-page.button.2-31Nz6b", id: "super-admin.super-admin-users-page.button.2" , instance: createOpaqueUiInstanceId("iter-1fb8c9e745", String(user.uid))}} asChild variant="outline" size="sm">
                         <Link href={`/profile?mode=preview&uid=${user.uid}`}>
                           البروفايل
                         </Link>
                       </Button>
-                      <Button ui={{ uid: "super-admin.super-admin-users-page.button.3-AzAM0e", id: "super-admin.super-admin-users-page.button.3" }}
+                      <Button ui={{ uid: "super-admin.super-admin-users-page.button.3-AzAM0e", id: "super-admin.super-admin-users-page.button.3" , instance: createOpaqueUiInstanceId("iter-cbce58106a", String(user.uid))}}
                         type="button"
                         size="sm"
                         onClick={() => impersonate(user.uid)}
@@ -376,7 +376,7 @@ export function SuperAdminUsersPage() {
                           </>
                         )}
                       </Button>
-                      <Button ui={{ uid: "super-admin.super-admin-users-page.button.4-VHi6rY", id: "super-admin.super-admin-users-page.button.4" }}
+                      <Button ui={{ uid: "super-admin.super-admin-users-page.button.4-VHi6rY", id: "super-admin.super-admin-users-page.button.4" , instance: createOpaqueUiInstanceId("iter-adfbe485ac", String(user.uid))}}
                         type="button"
                         variant="destructive"
                         size="sm"

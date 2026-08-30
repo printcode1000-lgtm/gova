@@ -6,7 +6,7 @@ import type {
   BuildCommandCatalogEntry,
   BuildParameterName,
 } from "@asol/release-core/console";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 /** Documentation row inside an expanded command card. */
 export function Doc({ label, value }: { label: string; value: string }) {
@@ -55,15 +55,15 @@ export function Parameter({ id, command, schema, value, t, onChange }: {
       <div {...uiAttributes({ uid: "google-play-console.command-parameter-fields.div.4-Oi2HST", id: "google-play-console.command-parameter-fields.div.4" })} className="grid gap-2 sm:grid-cols-2">
         {schema.values.map((item) => {
           const selected = value === item;
-          return <label id={id} key={item} {...uiAttributes({ uid: "google-play-console.command-parameter-fields.label.2-H5IZQ9", id: "google-play-console.command-parameter-fields.label.2" })}
+          return <label id={id} key={item} {...uiAttributes({ uid: "google-play-console.command-parameter-fields.label.2-H5IZQ9", id: "google-play-console.command-parameter-fields.label.2" , instance: createOpaqueUiInstanceId("iter-6287ad0ce6", String(item))})}
             className={` rounded-lg border p-3 transition-colors ${selected
               ? "border-primary bg-primary/10 ring-1 ring-primary"
               : "bg-surface"}`}>
-            <span {...uiAttributes({ uid: "google-play-console.command-parameter-fields.span-9dSBVk", id: "google-play-console.command-parameter-fields.span" })} className="flex items-start gap-2">
-              <input {...uiAttributes({ uid: "google-play-console.command-parameter-fields.input.2-0AEmsY", id: "google-play-console.command-parameter-fields.input.2" })} type="radio" name={`${command.id}-${schema.name}`}
+            <span {...uiAttributes({ uid: "google-play-console.command-parameter-fields.span-9dSBVk", id: "google-play-console.command-parameter-fields.span" , instance: createOpaqueUiInstanceId("iter-177b96ce98", String(item))})} className="flex items-start gap-2">
+              <input {...uiAttributes({ uid: "google-play-console.command-parameter-fields.input.2-0AEmsY", id: "google-play-console.command-parameter-fields.input.2" , instance: createOpaqueUiInstanceId("iter-cc92c23f5e", String(item))})} type="radio" name={`${command.id}-${schema.name}`}
                 value={item} checked={selected}
                 onChange={() => onChange(command.id, schema.name, item)} />
-              <span {...uiAttributes({ uid: "google-play-console.command-parameter-fields.span.2-UH77Zn", id: "google-play-console.command-parameter-fields.span.2" })} className="font-medium">{t(`releaseConsole.parameterValues.${item}`)}</span>
+              <span {...uiAttributes({ uid: "google-play-console.command-parameter-fields.span.2-UH77Zn", id: "google-play-console.command-parameter-fields.span.2" , instance: createOpaqueUiInstanceId("iter-b6161103cd", String(item))})} className="font-medium">{t(`releaseConsole.parameterValues.${item}`)}</span>
             </span>
           </label>;
         })}
@@ -82,7 +82,7 @@ export function Parameter({ id, command, schema, value, t, onChange }: {
         onChange={(event) => onChange(command.id, schema.name, event.target.value)}>
         <option {...uiAttributes({ uid: "google-play-console.command-parameter-fields.option-fdBnM3", id: "google-play-console.command-parameter-fields.option" })} value="">{t(`releaseConsole.parameters.${schema.name}`)}</option>
         {schema.values.map((item) => (
-          <option key={item} {...uiAttributes({ uid: "google-play-console.command-parameter-fields.option.2-FO07v9", id: "google-play-console.command-parameter-fields.option.2" })} value={item}>
+          <option key={item} {...uiAttributes({ uid: "google-play-console.command-parameter-fields.option.2-FO07v9", id: "google-play-console.command-parameter-fields.option.2" , instance: createOpaqueUiInstanceId("iter-fd249e5394", String(item))})} value={item}>
             {t(`releaseConsole.parameterValues.${item}`)}
           </option>
         ))}

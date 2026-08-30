@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 
 import { categoryLabels } from "./data-health-labels";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function DataHealthFilters(props: {
   query: string;
@@ -41,7 +41,7 @@ export function DataHealthFilters(props: {
       <FilterSelect id="data-health.data-health-filters.filter-select.2" value={props.category} onChange={props.setCategory}>
         <option {...uiAttributes({ uid: "data-health.data-health-filters.option.5-7IfLpI", id: "data-health.data-health-filters.option.5" })} value="all">كل الأنواع</option>
         {Object.entries(categoryLabels).map(([value, label]) => (
-          <option key={value} {...uiAttributes({ uid: "data-health.data-health-filters.option.6-2hYtY6", id: "data-health.data-health-filters.option.6" })} value={value}>
+          <option key={value} {...uiAttributes({ uid: "data-health.data-health-filters.option.6-2hYtY6", id: "data-health.data-health-filters.option.6" , instance: createOpaqueUiInstanceId("iter-599ffec2e1", String(value))})} value={value}>
             {label}
           </option>
         ))}
@@ -49,7 +49,7 @@ export function DataHealthFilters(props: {
       <FilterSelect id="data-health.data-health-filters.filter-select.3" value={props.database} onChange={props.setDatabase}>
         <option {...uiAttributes({ uid: "data-health.data-health-filters.option.7-AiMH1s", id: "data-health.data-health-filters.option.7" })} value="all">كل القواعد</option>
         {props.databases.map((value) => (
-          <option key={value} {...uiAttributes({ uid: "data-health.data-health-filters.option.8-UEp4Li", id: "data-health.data-health-filters.option.8" })} value={value}>
+          <option key={value} {...uiAttributes({ uid: "data-health.data-health-filters.option.8-UEp4Li", id: "data-health.data-health-filters.option.8" , instance: createOpaqueUiInstanceId("iter-7315094f96", String(value))})} value={value}>
             {value}
           </option>
         ))}

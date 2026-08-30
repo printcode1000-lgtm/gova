@@ -16,7 +16,7 @@ import {
 import { Badge } from '@/shared/ui/badge';
 import { useTranslation } from '@/shared/i18n';
 import type { UiDescriptor } from '@asol/ui-registry-core';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface FormFieldProps {
   label: string;
@@ -114,7 +114,7 @@ export function FormSelect({ id,
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={option.value} ui={{ uid: "onboarding.form-components.select-item-GBKxb8", id: "onboarding.form-components.select-item" }} value={option.value}>
+          <SelectItem key={option.value} ui={{ uid: "onboarding.form-components.select-item-GBKxb8", id: "onboarding.form-components.select-item" , instance: createOpaqueUiInstanceId("iter-019034b704", String(option.value))}} value={option.value}>
             {option.label}
           </SelectItem>
         ))}
@@ -164,9 +164,9 @@ export function MultiSelect({ id,
         {value.map((v) => {
           const option = options.find((o) => o.value === v);
           return (
-            <Badge id={id} key={v} ui={{ uid: "onboarding.form-components.badge-Na9dZt", id: "onboarding.form-components.badge" }} variant="secondary" className="gap-1 pr-1">
+            <Badge id={id} key={v} ui={{ uid: "onboarding.form-components.badge-Na9dZt", id: "onboarding.form-components.badge" , instance: createOpaqueUiInstanceId("iter-7d395e29bc", String(v))}} variant="secondary" className="gap-1 pr-1">
               {option?.label || v}
-              <button {...uiAttributes({ uid: "onboarding.form-components.button-S0gxOR", id: "onboarding.form-components.button" })}
+              <button {...uiAttributes({ uid: "onboarding.form-components.button-S0gxOR", id: "onboarding.form-components.button" , instance: createOpaqueUiInstanceId("iter-8e2f796313", String(v))})}
                 type="button"
                 onClick={() => handleRemove(v)}
                 className="ml-1 rounded-full"
@@ -190,7 +190,7 @@ export function MultiSelect({ id,
             <div {...uiAttributes({ uid: "onboarding.form-components.div.6-oWLYd5", id: "onboarding.form-components.div.6" })} className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-10 max-h-40 overflow-auto">
               {filteredOptions.map((opt) => (
                 <button
-                  key={opt.value} {...uiAttributes({ uid: "onboarding.form-components.button.2-Xh7BUo", id: "onboarding.form-components.button.2" })}
+                  key={opt.value} {...uiAttributes({ uid: "onboarding.form-components.button.2-Xh7BUo", id: "onboarding.form-components.button.2" , instance: createOpaqueUiInstanceId("iter-bf2b572ec5", String(opt.value))})}
                   type="button"
                   className="w-full px-3 py-2 text-left text-sm transition-colors"
                   onClick={() => handleSelect(opt.value)}
@@ -236,7 +236,7 @@ export function CheckboxGroup({ id,
         const isSelected = value.includes(opt.value);
         return (
           <button id={id}
-            key={opt.value} {...uiAttributes({ uid: "onboarding.form-components.button.3-Foxhp3", id: "onboarding.form-components.button.3" })}
+            key={opt.value} {...uiAttributes({ uid: "onboarding.form-components.button.3-Foxhp3", id: "onboarding.form-components.button.3" , instance: createOpaqueUiInstanceId("iter-790fcfc508", String(opt.value))})}
             type="button"
             onClick={() => toggle(opt.value)}
             className={cn(
@@ -246,7 +246,7 @@ export function CheckboxGroup({ id,
                 : 'border-border'
             )}
           >
-            <div {...uiAttributes({ uid: "onboarding.form-components.div.8-jHlWA3", id: "onboarding.form-components.div.8" })}
+            <div {...uiAttributes({ uid: "onboarding.form-components.div.8-jHlWA3", id: "onboarding.form-components.div.8" , instance: createOpaqueUiInstanceId("iter-c5a2f1a89a", String(opt.value))})}
               className={cn(
                 'flex h-4 w-4 items-center justify-center rounded border transition-colors',
                 isSelected ? 'bg-primary border-primary' : 'border-muted-foreground'

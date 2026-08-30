@@ -1,5 +1,5 @@
 
-import { uiAttributes } from "@asol/ui-registry-core";export function DevCloudBackupDetail({ id,
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";export function DevCloudBackupDetail({ id,
   label,
   value,
   ltr,
@@ -46,7 +46,7 @@ export function DevCloudBackupDiffList({ id,
       <div {...uiAttributes({ uid: "dev-cloud-backup.dev-cloud-backup-detail.div.9-8jj1Sd", id: "dev-cloud-backup.dev-cloud-backup-detail.div.9" })} className="max-h-48 overflow-y-auto">
         {items.map((item) => (
           <div
-            key={item} {...uiAttributes({ uid: "dev-cloud-backup.dev-cloud-backup-detail.div.10-0Ax440", id: "dev-cloud-backup.dev-cloud-backup-detail.div.10" })}
+            key={item} {...uiAttributes({ uid: "dev-cloud-backup.dev-cloud-backup-detail.div.10-0Ax440", id: "dev-cloud-backup.dev-cloud-backup-detail.div.10" , instance: createOpaqueUiInstanceId("iter-79ad8ce1bc", String(item))})}
             className="border-b px-3 py-2 text-xs last:border-b-0"
             dir="ltr"
           >

@@ -22,7 +22,7 @@ import { clearAllClientStorage } from '@/features/app-reset';
 import { useTranslation } from "@/shared/i18n";
 import { accountDeletionApiService } from "../application/services/account-deletion-api-service";
 import { notifications } from "@/features/notifications";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 import { foldPasswordDigits } from "@asol/auth-core";
 
 const COPY = {
@@ -207,9 +207,9 @@ export function AccountDeletionPageContent() {
           {c.items.map((item, index) => {
             const Icon = [UserX, PackageX, Trash2, LockKeyhole][index];
             return (
-              <div key={item} {...uiAttributes({ uid: "auth.account-deletion-page-content.div.7-DZg8D6", id: "auth.account-deletion-page-content.div.7" })} className="flex gap-3 rounded-xl bg-surface-container p-4">
+              <div key={item} {...uiAttributes({ uid: "auth.account-deletion-page-content.div.7-DZg8D6", id: "auth.account-deletion-page-content.div.7" , instance: createOpaqueUiInstanceId("iter-16be9a44f7", String(item))})} className="flex gap-3 rounded-xl bg-surface-container p-4">
                 <Icon className="h-5 w-5 shrink-0 text-error" />
-                <span {...uiAttributes({ uid: "auth.account-deletion-page-content.span.2-ltl8cJ", id: "auth.account-deletion-page-content.span.2" })}>{item}</span>
+                <span {...uiAttributes({ uid: "auth.account-deletion-page-content.span.2-ltl8cJ", id: "auth.account-deletion-page-content.span.2" , instance: createOpaqueUiInstanceId("iter-860c95638b", String(item))})}>{item}</span>
               </div>
             );
           })}

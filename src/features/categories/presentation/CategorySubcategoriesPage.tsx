@@ -13,7 +13,7 @@ import {
 } from "@/features/categories/presentation/category-grid-styles";
 import { useTranslation } from "@/shared/i18n";
 import type { CategoryTree } from "@/features/categories";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface CategorySubcategoriesPageProps {
   categoryTree: CategoryTree;
@@ -139,7 +139,7 @@ export function CategorySubcategoriesPage({
 
               return (
                 <button key={item.id}
-                  {...uiAttributes({ uid: "category-item-N5DI5e", id: "category-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "category-item" } })}
+                  {...uiAttributes({ uid: "category-item-N5DI5e", id: "category-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "category-item" } , instance: createOpaqueUiInstanceId("iter-2a37ce42e0", String(item.id))})}
                   type="button"
                   className={categoryTileClassName}
                   onClick={() => {
@@ -153,7 +153,7 @@ export function CategorySubcategoriesPage({
                   }}
                   aria-label={altText}
                 >
-                  <div {...uiAttributes({ uid: "categories.category-subcategories-page.div.13-MJ6mVy", id: "categories.category-subcategories-page.div.13" })} className={categoryTileImageClassName}>
+                  <div {...uiAttributes({ uid: "categories.category-subcategories-page.div.13-MJ6mVy", id: "categories.category-subcategories-page.div.13" , instance: createOpaqueUiInstanceId("iter-5507f68c71", String(item.id))})} className={categoryTileImageClassName}>
                     <Image
                       src={imageSrc}
                       alt={altText}
@@ -162,7 +162,7 @@ export function CategorySubcategoriesPage({
                       className="object-cover"
                     />
                   </div>
-                  <span {...uiAttributes({ uid: "categories.category-subcategories-page.span-IME94h", id: "categories.category-subcategories-page.span" })} className={categoryTileTitleClassName}>
+                  <span {...uiAttributes({ uid: "categories.category-subcategories-page.span-IME94h", id: "categories.category-subcategories-page.span" , instance: createOpaqueUiInstanceId("iter-219aeb3dbd", String(item.id))})} className={categoryTileTitleClassName}>
                     {name}
                   </span>
                 </button>

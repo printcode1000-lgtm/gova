@@ -33,7 +33,7 @@ import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 import { usePageSaveRegistration } from "@/features/page-save/ui";
 
 import { ResolvedItem, getProductName, getProductPrice, getProductImage, buildProductAction } from "./featured-marquee/SuperAdminFeaturedMarqueePage.product-display";
-import { createUiInstanceId, uiAttributes } from "@asol/ui-registry-core";
+import { createUiInstanceId, uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 /** Stable authored preset values; one source UID is distinguished by runtime instance. */
 const INTERVAL_PRESETS = [5, 15, 30, 60] as const;
@@ -413,12 +413,12 @@ export function SuperAdminFeaturedMarqueePage() {
           <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.34-9a2OQx", id: "super-admin.super-admin-featured-marquee-page.div.34" })} id="super-admin.super-admin-featured-marquee-page.div.16" className="space-y-2">
             {items.map((item, index) => (
               <div
-                key={item.productId} {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.35-O91tXN", id: "super-admin.super-admin-featured-marquee-page.div.35" })}
+                key={item.productId} {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.35-O91tXN", id: "super-admin.super-admin-featured-marquee-page.div.35" , instance: createOpaqueUiInstanceId("iter-47187e69b8", String(item.productId))})}
                 onDragOver={(event) => handleDragOver(event, index)}
                 onDragEnd={handleDragEnd}
                 className="flex items-center gap-3 rounded-lg border bg-surface p-2 transition-colors"
               >
-                <span {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.span-Y7lcEi", id: "super-admin.super-admin-featured-marquee-page.span" })}
+                <span {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.span-Y7lcEi", id: "super-admin.super-admin-featured-marquee-page.span" , instance: createOpaqueUiInstanceId("iter-02036c1f65", String(item.productId))})}
                   data-drag-handle
                   draggable
                   onDragStart={() => handleDragStart(index)}
@@ -429,9 +429,9 @@ export function SuperAdminFeaturedMarqueePage() {
                   <GripVertical className="h-4 w-4 text-muted-foreground" />
                 </span>
 
-                <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.36-7TVl4s", id: "super-admin.super-admin-featured-marquee-page.div.36" })} className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md bg-surface-bright">
+                <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.36-7TVl4s", id: "super-admin.super-admin-featured-marquee-page.div.36" , instance: createOpaqueUiInstanceId("iter-8a07018ebd", String(item.productId))})} className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md bg-surface-bright">
                   {item.isLoading ? (
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.37-FiN5Bz", id: "super-admin.super-admin-featured-marquee-page.div.37" })} className="flex h-full w-full items-center justify-center">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.37-FiN5Bz", id: "super-admin.super-admin-featured-marquee-page.div.37" , instance: createOpaqueUiInstanceId("iter-9e3c74ab5e", String(item.productId))})} className="flex h-full w-full items-center justify-center">
                       <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                     </div>
                   ) : item.product && getProductImage(item.product) ? (
@@ -442,39 +442,39 @@ export function SuperAdminFeaturedMarqueePage() {
                       className="object-cover"
                     />
                   ) : (
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.38-UF78wM", id: "super-admin.super-admin-featured-marquee-page.div.38" })} className="flex h-full w-full items-center justify-center">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.38-UF78wM", id: "super-admin.super-admin-featured-marquee-page.div.38" , instance: createOpaqueUiInstanceId("iter-92fb240a4c", String(item.productId))})} className="flex h-full w-full items-center justify-center">
                       <Package className="h-5 w-5 text-muted-foreground" />
                     </div>
                   )}
                 </div>
 
-                <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.39-kQ4WlN", id: "super-admin.super-admin-featured-marquee-page.div.39" })} className="min-w-0 flex-1">
+                <div {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.div.39-kQ4WlN", id: "super-admin.super-admin-featured-marquee-page.div.39" , instance: createOpaqueUiInstanceId("iter-834a1b6512", String(item.productId))})} className="min-w-0 flex-1">
                   {item.isLoading ? (
-                    <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.18-iiLm7g", id: "super-admin.super-admin-featured-marquee-page.p.18" })} className="text-sm text-muted-foreground">
+                    <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.18-iiLm7g", id: "super-admin.super-admin-featured-marquee-page.p.18" , instance: createOpaqueUiInstanceId("iter-bc9746759c", String(item.productId))})} className="text-sm text-muted-foreground">
                       جاري التحميل...
                     </p>
                   ) : item.error ? (
-                    <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.19-hSUlH5", id: "super-admin.super-admin-featured-marquee-page.p.19" })} className="text-sm text-destructive">{item.error}</p>
+                    <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.19-hSUlH5", id: "super-admin.super-admin-featured-marquee-page.p.19" , instance: createOpaqueUiInstanceId("iter-fe8cfec14a", String(item.productId))})} className="text-sm text-destructive">{item.error}</p>
                   ) : item.product ? (
                     <>
-                      <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.20-Dwy0Xe", id: "super-admin.super-admin-featured-marquee-page.p.20" })} className="truncate text-sm font-medium">
+                      <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.20-Dwy0Xe", id: "super-admin.super-admin-featured-marquee-page.p.20" , instance: createOpaqueUiInstanceId("iter-887b355258", String(item.productId))})} className="truncate text-sm font-medium">
                         {getProductName(item.product)}
                       </p>
-                      <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.21-eR2jw7", id: "super-admin.super-admin-featured-marquee-page.p.21" })} className="text-xs text-primary">
+                      <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.21-eR2jw7", id: "super-admin.super-admin-featured-marquee-page.p.21" , instance: createOpaqueUiInstanceId("iter-e545cc138a", String(item.productId))})} className="text-xs text-primary">
                         {getProductPrice(item.product) || "-"}
                       </p>
                     </>
                   ) : null}
-                  <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.22-64nVFv", id: "super-admin.super-admin-featured-marquee-page.p.22" })} className="truncate text-[10px] text-muted-foreground">
+                  <p {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.p.22-64nVFv", id: "super-admin.super-admin-featured-marquee-page.p.22" , instance: createOpaqueUiInstanceId("iter-cf6b798fc1", String(item.productId))})} className="truncate text-[10px] text-muted-foreground">
                     ID: {item.productId}
                   </p>
                 </div>
 
-                <span {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.span.2-gS83ZR", id: "super-admin.super-admin-featured-marquee-page.span.2" })} className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                <span {...uiAttributes({ uid: "super-admin.super-admin-featured-marquee-page.span.2-gS83ZR", id: "super-admin.super-admin-featured-marquee-page.span.2" , instance: createOpaqueUiInstanceId("iter-ba1820f6bc", String(item.productId))})} className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                   #{index + 1}
                 </span>
 
-                <Button ui={{ uid: "super-admin.super-admin-featured-marquee-page.button.4-0AWpSh", id: "super-admin.super-admin-featured-marquee-page.button.4" }}
+                <Button ui={{ uid: "super-admin.super-admin-featured-marquee-page.button.4-0AWpSh", id: "super-admin.super-admin-featured-marquee-page.button.4" , instance: createOpaqueUiInstanceId("iter-70fc0a5fbb", String(item.productId))}}
                   type="button"
                   variant="ghost"
                   size="sm"

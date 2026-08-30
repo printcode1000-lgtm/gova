@@ -21,7 +21,7 @@ import { IframeSimulationExecutionPort } from "../infrastructure/iframe-simulati
 import { internalCatalogImagePool } from "../infrastructure/internal-catalog-image-pool";
 import { SimulationProgressPanel } from "./SimulationProgressPanel";
 import { simulationRuntimeLabel } from "./simulation-runtime-label";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function SuperAdminPageSimulation({ page }: { page: UserPageDefinition }) {
   const { session, isLoading } = useSession();
@@ -93,18 +93,18 @@ export function SuperAdminPageSimulation({ page }: { page: UserPageDefinition })
           <h2 {...uiAttributes({ uid: "simulation.super-admin-page-simulation.h2.2-US4HCY", id: "simulation.super-admin-page-simulation.h2.2" })} id="simulation.super-admin-page-simulation.h2" className="font-bold text-on-surface">أحداث المستخدم الحقيقية</h2>
           <div {...uiAttributes({ uid: "simulation.super-admin-page-simulation.div.11-kR0PRl", id: "simulation.super-admin-page-simulation.div.11" })} id="simulation.super-admin-page-simulation.div.5" className="space-y-2">
             {page.interactions.map((interaction) => (
-              <div key={interaction.id} {...uiAttributes({ uid: "simulation.super-admin-page-simulation.div.12-9JAl9j", id: "simulation.super-admin-page-simulation.div.12" })} className="flex min-w-0 flex-col gap-3 rounded-xl bg-surface-container-low p-3 sm:flex-row sm:items-center sm:justify-between">
-                <div {...uiAttributes({ uid: "simulation.super-admin-page-simulation.div.13-4UIBPH", id: "simulation.super-admin-page-simulation.div.13" })} className="min-w-0 flex-1 break-words">
-                  <div {...uiAttributes({ uid: "simulation.super-admin-page-simulation.div.14-Fgm1XU", id: "simulation.super-admin-page-simulation.div.14" })} className="font-semibold text-on-surface">{interaction.label}</div>
-                  <div {...uiAttributes({ uid: "simulation.super-admin-page-simulation.div.15-Jt4Smd", id: "simulation.super-admin-page-simulation.div.15" })} className="text-xs text-on-surface-variant">{interaction.description}</div>
+              <div key={interaction.id} {...uiAttributes({ uid: "simulation.super-admin-page-simulation.div.12-9JAl9j", id: "simulation.super-admin-page-simulation.div.12" , instance: createOpaqueUiInstanceId("iter-126c4c29cf", String(interaction.id))})} className="flex min-w-0 flex-col gap-3 rounded-xl bg-surface-container-low p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div {...uiAttributes({ uid: "simulation.super-admin-page-simulation.div.13-4UIBPH", id: "simulation.super-admin-page-simulation.div.13" , instance: createOpaqueUiInstanceId("iter-ce8e44f4bd", String(interaction.id))})} className="min-w-0 flex-1 break-words">
+                  <div {...uiAttributes({ uid: "simulation.super-admin-page-simulation.div.14-Fgm1XU", id: "simulation.super-admin-page-simulation.div.14" , instance: createOpaqueUiInstanceId("iter-0d4c1069fd", String(interaction.id))})} className="font-semibold text-on-surface">{interaction.label}</div>
+                  <div {...uiAttributes({ uid: "simulation.super-admin-page-simulation.div.15-Jt4Smd", id: "simulation.super-admin-page-simulation.div.15" , instance: createOpaqueUiInstanceId("iter-8a851cfaa9", String(interaction.id))})} className="text-xs text-on-surface-variant">{interaction.description}</div>
                 </div>
-                <Button ui={{ uid: "simulation.super-admin-page-simulation.button-69rM1t", id: "simulation.super-admin-page-simulation.button" }}
+                <Button ui={{ uid: "simulation.super-admin-page-simulation.button-69rM1t", id: "simulation.super-admin-page-simulation.button" , instance: createOpaqueUiInstanceId("iter-d4722f8c5e", String(interaction.id))}}
                   type="button"
                   onClick={() => void run(interaction.id)}
                   disabled={Boolean(runningId)}
                   className="w-full shrink-0 sm:w-auto"
                 >
-                  {runningId === interaction.id ? <span {...uiAttributes({ uid: "simulation.super-admin-page-simulation.span.3-98gPNX", id: "simulation.super-admin-page-simulation.span.3" })} className="animate-pulse">جارٍ التنفيذ</span> : <><Play className="h-4 w-4" /> تشغيل</>}
+                  {runningId === interaction.id ? <span {...uiAttributes({ uid: "simulation.super-admin-page-simulation.span.3-98gPNX", id: "simulation.super-admin-page-simulation.span.3" , instance: createOpaqueUiInstanceId("iter-b38f760ba5", String(interaction.id))})} className="animate-pulse">جارٍ التنفيذ</span> : <><Play className="h-4 w-4" /> تشغيل</>}
                 </Button>
               </div>
             ))}

@@ -26,7 +26,7 @@ import { useSellerDiscounts } from "./hooks/use-seller-discounts";
 
 import { SellerDiscountsController, TYPE_LABELS_AR, TYPE_LABELS_EN, DISCOUNT_TYPES, isDirty, normalizeForSave } from "./discount-editor/SellerDiscountsManager.discount-form";
 import { DiscountEditor } from "./discount-editor/SellerDiscountsManager.form-controls";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export type { SellerDiscountsController } from "./discount-editor/SellerDiscountsManager.discount-form";
 
@@ -119,7 +119,7 @@ export const SellerDiscountsManager = React.forwardRef<
           <div {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.div.12-5Sjw1U", id: "seller-discounts.seller-discounts-manager.div.12" })} id="seller-discounts.seller-discounts-manager.div.4" className="grid grid-flow-col grid-rows-2 gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {DISCOUNT_TYPES.map((type) => (
               <button
-                key={type} {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.button-Z30KIg", id: "seller-discounts.seller-discounts-manager.button" })}
+                key={type} {...uiAttributes({ uid: "seller-discounts.seller-discounts-manager.button-Z30KIg", id: "seller-discounts.seller-discounts-manager.button" , instance: createOpaqueUiInstanceId("iter-e74335e94f", String(type))})}
                 type="button"
                 onClick={() => addDiscount(type)}
                 className="inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border border-outline-variant bg-surface px-2.5 text-xs font-semibold text-on-surface shadow-sm"

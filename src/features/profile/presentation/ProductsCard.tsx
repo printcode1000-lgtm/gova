@@ -20,7 +20,7 @@ import type {
 import { useTranslation } from '@/shared/i18n';
 import { cloneShowcase, isShowcaseDirty } from './products-card-model';
 import { usePageSaveOperations } from '@/features/page-save/ui';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface ProductsCardProps {
   uid: string;
@@ -328,11 +328,11 @@ export const ProductsCard = React.forwardRef<
               <div {...uiAttributes({ uid: "profile.products-card.div.14-dA8Whr", id: "profile.products-card.div.14" })} id="profile.products-card.div.7" className="flex flex-wrap gap-2">
                 {showcase.trending.items.map((item) => (
                   <span
-                    key={item.id} {...uiAttributes({ uid: "profile.products-card.span.5-MxGo8y", id: "profile.products-card.span.5" })}
+                    key={item.id} {...uiAttributes({ uid: "profile.products-card.span.5-MxGo8y", id: "profile.products-card.span.5" , instance: createOpaqueUiInstanceId("iter-7e5c0faa23", String(item.id))})}
                     className="inline-flex items-center gap-2 rounded-full border border-outline-variant bg-surface px-3 py-1 text-xs"
                   >
                     {item.label}
-                    <button {...uiAttributes({ uid: "profile.products-card.button.3-EE2L5g", id: "profile.products-card.button.3" })}
+                    <button {...uiAttributes({ uid: "profile.products-card.button.3-EE2L5g", id: "profile.products-card.button.3" , instance: createOpaqueUiInstanceId("iter-49a00fb1da", String(item.id))})}
                       type="button"
                       onClick={() => removeTrendingItem(item.id)}
                       className="text-destructive"

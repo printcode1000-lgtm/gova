@@ -40,7 +40,7 @@ import { cn } from "@/shared/utils";
 
 import { sections, formatForCopy, formatEntryForCopy } from "./logs/SuperAdminLogsPage.log-formatters";
 import { CloudErrorsContainer } from "./logs/SuperAdminLogsPage.cloud-errors";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 // Clipboard access belongs to Native Core, which picks the native or web
 // implementation. It returns a Result rather than throwing, so a copy button on
@@ -368,7 +368,7 @@ export function SuperAdminLogsPage() {
           const TabIcon = item.icon;
           return (
             <button
-              key={item.level} {...uiAttributes({ uid: "super-admin.super-admin-logs-page.button.5-OKx5Vg", id: "super-admin.super-admin-logs-page.button.5" })}
+              key={item.level} {...uiAttributes({ uid: "super-admin.super-admin-logs-page.button.5-OKx5Vg", id: "super-admin.super-admin-logs-page.button.5" , instance: createOpaqueUiInstanceId("iter-f770e60732", String(item.level))})}
               type="button"
               onClick={() => setActive(item.level)}
               className={cn(
@@ -377,19 +377,19 @@ export function SuperAdminLogsPage() {
                   "border-primary ring-2 ring-primary/20",
               )}
             >
-              <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.15-9gAb9u", id: "super-admin.super-admin-logs-page.div.15" })} className="flex min-w-0 items-center justify-between gap-1.5 sm:gap-3">
-                <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span-rVmQ35", id: "super-admin.super-admin-logs-page.span" })} className="flex min-w-0 items-center gap-1.5 font-semibold sm:gap-2">
+              <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.15-9gAb9u", id: "super-admin.super-admin-logs-page.div.15" , instance: createOpaqueUiInstanceId("iter-4503419921", String(item.level))})} className="flex min-w-0 items-center justify-between gap-1.5 sm:gap-3">
+                <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span-rVmQ35", id: "super-admin.super-admin-logs-page.span" , instance: createOpaqueUiInstanceId("iter-be948a3fb4", String(item.level))})} className="flex min-w-0 items-center gap-1.5 font-semibold sm:gap-2">
                   <TabIcon
                     className={cn(
                       "h-4 w-4 shrink-0 sm:h-5 sm:w-5",
                       item.color,
                     )}
                   />
-                  <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.2-jZ41WP", id: "super-admin.super-admin-logs-page.span.2" })} className="truncate text-sm sm:text-base">
+                  <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.2-jZ41WP", id: "super-admin.super-admin-logs-page.span.2" , instance: createOpaqueUiInstanceId("iter-839feb3ffb", String(item.level))})} className="truncate text-sm sm:text-base">
                     {item.title}
                   </span>
                 </span>
-                <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.3-03XcTf", id: "super-admin.super-admin-logs-page.span.3" })} className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-bold sm:px-2.5 sm:py-1">
+                <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.3-03XcTf", id: "super-admin.super-admin-logs-page.span.3" , instance: createOpaqueUiInstanceId("iter-c751778602", String(item.level))})} className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-bold sm:px-2.5 sm:py-1">
                   {grouped[item.level].length}
                 </span>
               </div>
@@ -433,27 +433,27 @@ export function SuperAdminLogsPage() {
             <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.19-Icrc53", id: "super-admin.super-admin-logs-page.div.19" })} id="super-admin.super-admin-logs-page.div.9" className="space-y-3">
               {[...current].reverse().map((entry) => (
                 <article
-                  key={entry.id} {...uiAttributes({ uid: "super-admin.super-admin-logs-page.article.7-x3h1gI", id: "super-admin.super-admin-logs-page.article.7" })}
+                  key={entry.id} {...uiAttributes({ uid: "super-admin.super-admin-logs-page.article.7-x3h1gI", id: "super-admin.super-admin-logs-page.article.7" , instance: createOpaqueUiInstanceId("iter-5a1a8761fa", String(entry.id))})}
                   className="rounded-lg border bg-background p-3 text-sm"
                 >
-                  <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.20-Z0ZpV0", id: "super-admin.super-admin-logs-page.div.20" })} className="mb-2 flex items-start justify-between gap-3">
-                    <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.21-XOf2FA", id: "super-admin.super-admin-logs-page.div.21" })}
+                  <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.20-Z0ZpV0", id: "super-admin.super-admin-logs-page.div.20" , instance: createOpaqueUiInstanceId("iter-035f973635", String(entry.id))})} className="mb-2 flex items-start justify-between gap-3">
+                    <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.21-XOf2FA", id: "super-admin.super-admin-logs-page.div.21" , instance: createOpaqueUiInstanceId("iter-5fd3fac4d7", String(entry.id))})}
                       className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground"
                       dir="ltr"
                     >
-                      <time {...uiAttributes({ uid: "super-admin.super-admin-logs-page.time-b9dXii", id: "super-admin.super-admin-logs-page.time" })} aria-label="آخر ظهور">
+                      <time {...uiAttributes({ uid: "super-admin.super-admin-logs-page.time-b9dXii", id: "super-admin.super-admin-logs-page.time" , instance: createOpaqueUiInstanceId("iter-39568a856b", String(entry.id))})} aria-label="آخر ظهور">
                         {formatDateTimeDefault(entry.lastOccurredAt)}
                       </time>
-                      <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.4-b63V7N", id: "super-admin.super-admin-logs-page.span.4" })}>{entry.platform}</span>
-                      <code {...uiAttributes({ uid: "super-admin.super-admin-logs-page.code-Gpi6KW", id: "super-admin.super-admin-logs-page.code" })}>{entry.consoleMethod}</code>
-                      <code {...uiAttributes({ uid: "super-admin.super-admin-logs-page.code.2-1J47rm", id: "super-admin.super-admin-logs-page.code.2" })}>{entry.page}</code>
+                      <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.4-b63V7N", id: "super-admin.super-admin-logs-page.span.4" , instance: createOpaqueUiInstanceId("iter-6c029684b9", String(entry.id))})}>{entry.platform}</span>
+                      <code {...uiAttributes({ uid: "super-admin.super-admin-logs-page.code-Gpi6KW", id: "super-admin.super-admin-logs-page.code" , instance: createOpaqueUiInstanceId("iter-361c6518ed", String(entry.id))})}>{entry.consoleMethod}</code>
+                      <code {...uiAttributes({ uid: "super-admin.super-admin-logs-page.code.2-1J47rm", id: "super-admin.super-admin-logs-page.code.2" , instance: createOpaqueUiInstanceId("iter-e170a2f133", String(entry.id))})}>{entry.page}</code>
                       {typeof entry.id === "number" && entry.id < 0 && (
-                        <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.5-37LMf5", id: "super-admin.super-admin-logs-page.span.5" })} className="rounded-full bg-primary/10 px-2 py-0.5 font-bold text-primary">
+                        <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.5-37LMf5", id: "super-admin.super-admin-logs-page.span.5" , instance: createOpaqueUiInstanceId("iter-dda1144eb6", String(entry.id))})} className="rounded-full bg-primary/10 px-2 py-0.5 font-bold text-primary">
                           محفوظ
                         </span>
                       )}
                       {entry.occurrences > 1 && (
-                        <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.6-3W5WFH", id: "super-admin.super-admin-logs-page.span.6" })}
+                        <span {...uiAttributes({ uid: "super-admin.super-admin-logs-page.span.6-3W5WFH", id: "super-admin.super-admin-logs-page.span.6" , instance: createOpaqueUiInstanceId("iter-94ef83ca83", String(entry.id))})}
                           className="rounded-full bg-muted px-2 py-0.5 font-bold"
                           aria-label="عدد مرات التكرار"
                         >
@@ -461,7 +461,7 @@ export function SuperAdminLogsPage() {
                         </span>
                       )}
                     </div>
-                    <Button ui={{ uid: "super-admin.super-admin-logs-page.button.6-W4aPZ5", id: "super-admin.super-admin-logs-page.button.6" }}
+                    <Button ui={{ uid: "super-admin.super-admin-logs-page.button.6-W4aPZ5", id: "super-admin.super-admin-logs-page.button.6" , instance: createOpaqueUiInstanceId("iter-3d33ee2831", String(entry.id))}}
                       type="button"
                       size="icon"
                       variant="ghost"
@@ -471,77 +471,77 @@ export function SuperAdminLogsPage() {
                       <ClipboardCopy className="h-4 w-4" />
                     </Button>
                   </div>
-                  <pre {...uiAttributes({ uid: "super-admin.super-admin-logs-page.pre-GAX4sq", id: "super-admin.super-admin-logs-page.pre" })}
+                  <pre {...uiAttributes({ uid: "super-admin.super-admin-logs-page.pre-GAX4sq", id: "super-admin.super-admin-logs-page.pre" , instance: createOpaqueUiInstanceId("iter-7563ff18df", String(entry.id))})}
                     className="whitespace-pre-wrap break-words font-mono text-xs leading-6"
                     dir="ltr"
                   >
                     {entry.message}
                   </pre>
                   {(entry.level === "warning" || entry.level === "error") && (
-                    <dl {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dl-7gRRmo", id: "super-admin.super-admin-logs-page.dl" })}
+                    <dl {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dl-7gRRmo", id: "super-admin.super-admin-logs-page.dl" , instance: createOpaqueUiInstanceId("iter-af3229ebcc", String(entry.id))})}
                       className="mt-3 grid gap-2 rounded-md bg-muted/40 p-3 text-xs sm:grid-cols-2"
                       dir="ltr"
                     >
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.22-MZ0DN6", id: "super-admin.super-admin-logs-page.div.22" })}>
-                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt-9HelXa", id: "super-admin.super-admin-logs-page.dt" })} className="text-muted-foreground">النوع</dt>
-                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd-6T55Dl", id: "super-admin.super-admin-logs-page.dd" })} className="font-mono">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.22-MZ0DN6", id: "super-admin.super-admin-logs-page.div.22" , instance: createOpaqueUiInstanceId("iter-9eb7271d74", String(entry.id))})}>
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt-9HelXa", id: "super-admin.super-admin-logs-page.dt" , instance: createOpaqueUiInstanceId("iter-4019da71c1", String(entry.id))})} className="text-muted-foreground">النوع</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd-6T55Dl", id: "super-admin.super-admin-logs-page.dd" , instance: createOpaqueUiInstanceId("iter-b3d2f8fb77", String(entry.id))})} className="font-mono">
                           {entry.errorName ?? "غير محدد"}
                         </dd>
                       </div>
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.23-9NJhXD", id: "super-admin.super-admin-logs-page.div.23" })}>
-                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.2-7U7zqW", id: "super-admin.super-admin-logs-page.dt.2" })} className="text-muted-foreground">عدد التكرار</dt>
-                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.2-IMQAt7", id: "super-admin.super-admin-logs-page.dd.2" })}>{entry.occurrences}</dd>
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.23-9NJhXD", id: "super-admin.super-admin-logs-page.div.23" , instance: createOpaqueUiInstanceId("iter-07c06c2850", String(entry.id))})}>
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.2-7U7zqW", id: "super-admin.super-admin-logs-page.dt.2" , instance: createOpaqueUiInstanceId("iter-5e8d249cb0", String(entry.id))})} className="text-muted-foreground">عدد التكرار</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.2-IMQAt7", id: "super-admin.super-admin-logs-page.dd.2" , instance: createOpaqueUiInstanceId("iter-e047ea15d9", String(entry.id))})}>{entry.occurrences}</dd>
                       </div>
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.24-effNF4", id: "super-admin.super-admin-logs-page.div.24" })}>
-                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.3-gjMGw9", id: "super-admin.super-admin-logs-page.dt.3" })} className="text-muted-foreground">الميزة</dt>
-                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.3-R43S9G", id: "super-admin.super-admin-logs-page.dd.3" })} className="font-mono">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.24-effNF4", id: "super-admin.super-admin-logs-page.div.24" , instance: createOpaqueUiInstanceId("iter-4e5e20de98", String(entry.id))})}>
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.3-gjMGw9", id: "super-admin.super-admin-logs-page.dt.3" , instance: createOpaqueUiInstanceId("iter-01237cfdf8", String(entry.id))})} className="text-muted-foreground">الميزة</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.3-R43S9G", id: "super-admin.super-admin-logs-page.dd.3" , instance: createOpaqueUiInstanceId("iter-c40fcbb8fe", String(entry.id))})} className="font-mono">
                           {entry.feature ?? "غير محدد"}
                         </dd>
                       </div>
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.25-9bFbRM", id: "super-admin.super-admin-logs-page.div.25" })}>
-                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.4-u9GdTD", id: "super-admin.super-admin-logs-page.dt.4" })} className="text-muted-foreground">العملية</dt>
-                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.4-1Eby9e", id: "super-admin.super-admin-logs-page.dd.4" })} className="font-mono">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.25-9bFbRM", id: "super-admin.super-admin-logs-page.div.25" , instance: createOpaqueUiInstanceId("iter-52ed035543", String(entry.id))})}>
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.4-u9GdTD", id: "super-admin.super-admin-logs-page.dt.4" , instance: createOpaqueUiInstanceId("iter-2a8539e3d5", String(entry.id))})} className="text-muted-foreground">العملية</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.4-1Eby9e", id: "super-admin.super-admin-logs-page.dd.4" , instance: createOpaqueUiInstanceId("iter-41c52746fc", String(entry.id))})} className="font-mono">
                           {entry.operation ?? "غير محددة"}
                         </dd>
                       </div>
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.26-A27WfQ", id: "super-admin.super-admin-logs-page.div.26" })}>
-                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.5-M8SgNC", id: "super-admin.super-admin-logs-page.dt.5" })} className="text-muted-foreground">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.26-A27WfQ", id: "super-admin.super-admin-logs-page.div.26" , instance: createOpaqueUiInstanceId("iter-8fa3557964", String(entry.id))})}>
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.5-M8SgNC", id: "super-admin.super-admin-logs-page.dt.5" , instance: createOpaqueUiInstanceId("iter-a97e3b24fb", String(entry.id))})} className="text-muted-foreground">
                           أول ظهور
                         </dt>
-                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.5-VV176K", id: "super-admin.super-admin-logs-page.dd.5" })}>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.5-VV176K", id: "super-admin.super-admin-logs-page.dd.5" , instance: createOpaqueUiInstanceId("iter-24aa07f65f", String(entry.id))})}>
                           {formatDateTimeDefault(entry.firstOccurredAt)}
                         </dd>
                       </div>
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.27-5HCeI8", id: "super-admin.super-admin-logs-page.div.27" })}>
-                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.6-1s6wDT", id: "super-admin.super-admin-logs-page.dt.6" })} className="text-muted-foreground">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.27-5HCeI8", id: "super-admin.super-admin-logs-page.div.27" , instance: createOpaqueUiInstanceId("iter-dce05e8475", String(entry.id))})}>
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.6-1s6wDT", id: "super-admin.super-admin-logs-page.dt.6" , instance: createOpaqueUiInstanceId("iter-acc5cd6982", String(entry.id))})} className="text-muted-foreground">
                           آخر ظهور
                         </dt>
-                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.6-T1OCQ4", id: "super-admin.super-admin-logs-page.dd.6" })}>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.6-T1OCQ4", id: "super-admin.super-admin-logs-page.dd.6" , instance: createOpaqueUiInstanceId("iter-7da16b8267", String(entry.id))})}>
                           {formatDateTimeDefault(entry.lastOccurredAt)}
                         </dd>
                       </div>
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.28-eG8XMp", id: "super-admin.super-admin-logs-page.div.28" })} className="sm:col-span-2">
-                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.7-2fWEaE", id: "super-admin.super-admin-logs-page.dt.7" })} className="text-muted-foreground">المصدر</dt>
-                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.7-KTYrX3", id: "super-admin.super-admin-logs-page.dd.7" })} className="break-all font-mono">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.28-eG8XMp", id: "super-admin.super-admin-logs-page.div.28" , instance: createOpaqueUiInstanceId("iter-3ee8708e04", String(entry.id))})} className="sm:col-span-2">
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.7-2fWEaE", id: "super-admin.super-admin-logs-page.dt.7" , instance: createOpaqueUiInstanceId("iter-d45d2357bd", String(entry.id))})} className="text-muted-foreground">المصدر</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.7-KTYrX3", id: "super-admin.super-admin-logs-page.dd.7" , instance: createOpaqueUiInstanceId("iter-a77fa2ae9b", String(entry.id))})} className="break-all font-mono">
                           {entry.sourceFile
                             ? `${entry.sourceFile}:${entry.sourceLine ?? "?"}:${entry.sourceColumn ?? "?"}`
                             : entry.page}
                         </dd>
                       </div>
-                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.29-0NAgEP", id: "super-admin.super-admin-logs-page.div.29" })} className="sm:col-span-2">
-                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.8-a61Nhk", id: "super-admin.super-admin-logs-page.dt.8" })} className="text-muted-foreground">وكيل المستخدم</dt>
-                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.8-LX4v4q", id: "super-admin.super-admin-logs-page.dd.8" })} className="break-all font-mono">
+                      <div {...uiAttributes({ uid: "super-admin.super-admin-logs-page.div.29-0NAgEP", id: "super-admin.super-admin-logs-page.div.29" , instance: createOpaqueUiInstanceId("iter-2b6e91f6a4", String(entry.id))})} className="sm:col-span-2">
+                        <dt {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dt.8-a61Nhk", id: "super-admin.super-admin-logs-page.dt.8" , instance: createOpaqueUiInstanceId("iter-41fbcf805c", String(entry.id))})} className="text-muted-foreground">وكيل المستخدم</dt>
+                        <dd {...uiAttributes({ uid: "super-admin.super-admin-logs-page.dd.8-LX4v4q", id: "super-admin.super-admin-logs-page.dd.8" , instance: createOpaqueUiInstanceId("iter-d9feca7fd9", String(entry.id))})} className="break-all font-mono">
                           {entry.userAgent}
                         </dd>
                       </div>
                     </dl>
                   )}
                   {entry.stack && (
-                    <details {...uiAttributes({ uid: "super-admin.super-admin-logs-page.details-DD9k2F", id: "super-admin.super-admin-logs-page.details" })} className="mt-2">
-                      <summary {...uiAttributes({ uid: "super-admin.super-admin-logs-page.summary-Cw2Rbu", id: "super-admin.super-admin-logs-page.summary" })} className="text-xs font-medium text-primary">
+                    <details {...uiAttributes({ uid: "super-admin.super-admin-logs-page.details-DD9k2F", id: "super-admin.super-admin-logs-page.details" , instance: createOpaqueUiInstanceId("iter-1d6ec04af7", String(entry.id))})} className="mt-2">
+                      <summary {...uiAttributes({ uid: "super-admin.super-admin-logs-page.summary-Cw2Rbu", id: "super-admin.super-admin-logs-page.summary" , instance: createOpaqueUiInstanceId("iter-2d12d2158e", String(entry.id))})} className="text-xs font-medium text-primary">
                         تتبع المكدس
                       </summary>
-                      <pre {...uiAttributes({ uid: "super-admin.super-admin-logs-page.pre.2-WFMj1l", id: "super-admin.super-admin-logs-page.pre.2" })}
+                      <pre {...uiAttributes({ uid: "super-admin.super-admin-logs-page.pre.2-WFMj1l", id: "super-admin.super-admin-logs-page.pre.2" , instance: createOpaqueUiInstanceId("iter-4a10d814e9", String(entry.id))})}
                         className="mt-2 whitespace-pre-wrap break-words border-t pt-2 font-mono text-xs"
                         dir="ltr"
                       >

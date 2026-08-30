@@ -3,7 +3,7 @@
 import * as React from "react";
 import { SlidersHorizontal } from "lucide-react";
 import type { ProductSearchField } from "@/features/product-search";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface ProductSearchFieldSelectorProps {
   fields: ProductSearchField[];
@@ -63,20 +63,20 @@ export function ProductSearchFieldSelector({
       <div {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.div.6-BY0SdT", id: "product-search.panel.product-search-field-selector.div.6" })} id="product-search.panel.product-search-field-selector.div.3" className="flex flex-wrap gap-2">
         {fields.map((field) => (
           <label
-            key={field.key} {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.label-Fkd0Aa", id: "product-search.panel.product-search-field-selector.label" })}
+            key={field.key} {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.label-Fkd0Aa", id: "product-search.panel.product-search-field-selector.label" , instance: createOpaqueUiInstanceId("iter-19dca9765f", String(field.key))})}
             className={`inline-flex h-8  items-center gap-2 rounded-lg border px-2 text-xs transition ${
               selected.has(field.key)
                 ? "border-primary bg-primary text-on-primary"
                 : "border-outline-variant bg-surface text-on-surface"
             }`}
           >
-            <input {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.input-To8ZEy", id: "product-search.panel.product-search-field-selector.input" })}
+            <input {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.input-To8ZEy", id: "product-search.panel.product-search-field-selector.input" , instance: createOpaqueUiInstanceId("iter-f3b17f491e", String(field.key))})}
               type="checkbox"
               checked={selected.has(field.key)}
               onChange={() => toggle(field.key)}
               className="sr-only"
             />
-            <span {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.span.3-dTF52O", id: "product-search.panel.product-search-field-selector.span.3" })}>{locale === "ar" ? field.labelAr : field.labelEn}</span>
+            <span {...uiAttributes({ uid: "product-search.panel.product-search-field-selector.span.3-dTF52O", id: "product-search.panel.product-search-field-selector.span.3" , instance: createOpaqueUiInstanceId("iter-dc9e5087a0", String(field.key))})}>{locale === "ar" ? field.labelAr : field.labelEn}</span>
           </label>
         ))}
       </div>

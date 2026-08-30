@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Button } from "@/shared/ui/button";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 import {
   Dialog,
   DialogContent,
@@ -109,16 +109,16 @@ export function PageSaveDialog() {
                 {t("pageSave.interrupted.heading")}
               </p>
               {snapshot.interrupted.map((operation) => (
-                <div key={operation.entry.operationId} {...uiAttributes({ uid: "page-save.page-save-dialog.div.9-Y59HBL", id: "page-save.page-save-dialog.div.9" })} className="space-y-1">
-                  <p {...uiAttributes({ uid: "page-save.page-save-dialog.p.7-c09GY3", id: "page-save.page-save-dialog.p.7" })} className="text-sm font-semibold text-on-surface">
+                <div key={operation.entry.operationId} {...uiAttributes({ uid: "page-save.page-save-dialog.div.9-Y59HBL", id: "page-save.page-save-dialog.div.9" , instance: createOpaqueUiInstanceId("iter-30fe94a447", String(operation.entry.operationId))})} className="space-y-1">
+                  <p {...uiAttributes({ uid: "page-save.page-save-dialog.p.7-c09GY3", id: "page-save.page-save-dialog.p.7" , instance: createOpaqueUiInstanceId("iter-759febda7c", String(operation.entry.operationId))})} className="text-sm font-semibold text-on-surface">
                     {operation.entry.label}
                   </p>
-                  <p {...uiAttributes({ uid: "page-save.page-save-dialog.p.8-TZ2Ygo", id: "page-save.page-save-dialog.p.8" })} className="text-xs leading-5 text-on-surface-variant">
+                  <p {...uiAttributes({ uid: "page-save.page-save-dialog.p.8-TZ2Ygo", id: "page-save.page-save-dialog.p.8" , instance: createOpaqueUiInstanceId("iter-d61b991230", String(operation.entry.operationId))})} className="text-xs leading-5 text-on-surface-variant">
                     {operation.verdict === "needsConfirmation"
                       ? t("pageSave.interrupted.needsConfirmation")
                       : t("pageSave.interrupted.failed")}
                   </p>
-                  <Button ui={{ uid: "page-save.page-save-dialog.button.3-Jj9FDm", id: "page-save.page-save-dialog.button.3" }}
+                  <Button ui={{ uid: "page-save.page-save-dialog.button.3-Jj9FDm", id: "page-save.page-save-dialog.button.3" , instance: createOpaqueUiInstanceId("iter-ef8cb84fc6", String(operation.entry.operationId))}}
                     type="button"
                     size="sm"
                     variant="outline"
@@ -142,10 +142,10 @@ export function PageSaveDialog() {
             .filter((item) => item.isDirty)
             .map((item) => (
               <label
-                key={item.id} {...uiAttributes({ uid: "page-save.page-save-dialog.label-HAVkb2", id: "page-save.page-save-dialog.label" })}
+                key={item.id} {...uiAttributes({ uid: "page-save.page-save-dialog.label-HAVkb2", id: "page-save.page-save-dialog.label" , instance: createOpaqueUiInstanceId("iter-230632f860", String(item.id))})}
                 className="flex items-start gap-3 rounded-2xl border border-outline-variant/40 bg-surface/80 px-3 py-3"
               >
-                <Checkbox ui={{ uid: "page-save.page-save-dialog.checkbox-gY0XbA", id: "page-save.page-save-dialog.checkbox" }}
+                <Checkbox ui={{ uid: "page-save.page-save-dialog.checkbox-gY0XbA", id: "page-save.page-save-dialog.checkbox" , instance: createOpaqueUiInstanceId("iter-727c25be6b", String(item.id))}}
                   checked={item.ephemeral ? item.selected : true}
                   disabled={!item.ephemeral || !item.canSave || isSaving}
                   aria-disabled={!item.ephemeral || !item.canSave || isSaving}
@@ -159,20 +159,20 @@ export function PageSaveDialog() {
                   }}
                   aria-label={item.label}
                 />
-                <span {...uiAttributes({ uid: "page-save.page-save-dialog.span-ASb680", id: "page-save.page-save-dialog.span" })} className="min-w-0 flex-1">
-                  <span {...uiAttributes({ uid: "page-save.page-save-dialog.span.2-DbWZE3", id: "page-save.page-save-dialog.span.2" })} className="block text-sm font-semibold text-on-surface">
+                <span {...uiAttributes({ uid: "page-save.page-save-dialog.span-ASb680", id: "page-save.page-save-dialog.span" , instance: createOpaqueUiInstanceId("iter-db54a5a77c", String(item.id))})} className="min-w-0 flex-1">
+                  <span {...uiAttributes({ uid: "page-save.page-save-dialog.span.2-DbWZE3", id: "page-save.page-save-dialog.span.2" , instance: createOpaqueUiInstanceId("iter-662e3f4f6c", String(item.id))})} className="block text-sm font-semibold text-on-surface">
                     {item.label}
                   </span>
-                  <span {...uiAttributes({ uid: "page-save.page-save-dialog.span.3-kU4eDQ", id: "page-save.page-save-dialog.span.3" })} className="mt-1 block text-xs leading-5 text-on-surface-variant">
+                  <span {...uiAttributes({ uid: "page-save.page-save-dialog.span.3-kU4eDQ", id: "page-save.page-save-dialog.span.3" , instance: createOpaqueUiInstanceId("iter-f8b66c5767", String(item.id))})} className="mt-1 block text-xs leading-5 text-on-surface-variant">
                     {describePageSaveItem(t, item)}
                   </span>
                   {!item.canSave ? (
-                    <span {...uiAttributes({ uid: "page-save.page-save-dialog.span.4-y4OQM6", id: "page-save.page-save-dialog.span.4" })} className="mt-1 block text-xs text-error">
+                    <span {...uiAttributes({ uid: "page-save.page-save-dialog.span.4-y4OQM6", id: "page-save.page-save-dialog.span.4" , instance: createOpaqueUiInstanceId("iter-56a8cbe796", String(item.id))})} className="mt-1 block text-xs text-error">
                       {t("pageSave.itemBlocked")}
                     </span>
                   ) : null}
                   {!item.ephemeral ? (
-                    <span {...uiAttributes({ uid: "page-save.page-save-dialog.span.5-DE7KRb", id: "page-save.page-save-dialog.span.5" })} className="mt-1 block text-xs text-on-surface-variant">
+                    <span {...uiAttributes({ uid: "page-save.page-save-dialog.span.5-DE7KRb", id: "page-save.page-save-dialog.span.5" , instance: createOpaqueUiInstanceId("iter-9ffea82e64", String(item.id))})} className="mt-1 block text-xs text-on-surface-variant">
                       {t("pageSave.itemAlwaysIncluded")}
                     </span>
                   ) : null}

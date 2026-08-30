@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { useTranslation } from '@/shared/i18n';
 import type { TranslationKey } from '@/shared/i18n';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface ProgressIndicatorProps {
   progress: number;
@@ -48,7 +48,7 @@ export default function ProgressIndicator({
         (canViewDetails ? (
           <div {...uiAttributes({ uid: "splash.progress-indicator.div.9-HzbM6U", id: "splash.progress-indicator.div.9" })} id="splash.progress-indicator.div.3" className="mt-2 grid w-full gap-1 rounded-xl border border-outline-variant/70 bg-surface-container/70 px-3 py-2 text-center text-[11px] font-semibold text-on-surface-variant">
             {details.map((detail) => (
-              <span key={detail} {...uiAttributes({ uid: "splash.progress-indicator.span.3-r4Wa48", id: "splash.progress-indicator.span.3" })}>{detail}</span>
+              <span key={detail} {...uiAttributes({ uid: "splash.progress-indicator.span.3-r4Wa48", id: "splash.progress-indicator.span.3" , instance: createOpaqueUiInstanceId("iter-3807bdb3ae", String(detail))})}>{detail}</span>
             ))}
           </div>
         ) : (

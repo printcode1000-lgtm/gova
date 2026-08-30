@@ -16,7 +16,7 @@ import { Label } from '@/shared/ui/label';
 import { cn } from '@/shared/utils';
 import type { Collection } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 function generateId() {
   return nextSellerId('col');
@@ -129,7 +129,7 @@ export function CollectionsSection() {
                   <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.17-2ZqwKA", id: "onboarding.sections.collections-section.div.17" })} id="onboarding.sections.collections-section.div.6" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {data.products.products.map((product) => (
                       <label
-                        key={product.id} {...uiAttributes({ uid: "onboarding.sections.collections-section.label.2-Q79X3F", id: "onboarding.sections.collections-section.label.2" })}
+                        key={product.id} {...uiAttributes({ uid: "onboarding.sections.collections-section.label.2-Q79X3F", id: "onboarding.sections.collections-section.label.2" , instance: createOpaqueUiInstanceId("iter-aa9981fdd2", String(product.id))})}
                         className={cn(
                           'flex items-center gap-3 p-3 rounded-lg border transition-all',
                           newCollection.productIds?.includes(product.id)
@@ -137,11 +137,11 @@ export function CollectionsSection() {
                             : 'border-border',
                         )}
                       >
-                        <Checkbox ui={{ uid: "onboarding.sections.collections-section.checkbox-7ZRV1j", id: "onboarding.sections.collections-section.checkbox" }}
+                        <Checkbox ui={{ uid: "onboarding.sections.collections-section.checkbox-7ZRV1j", id: "onboarding.sections.collections-section.checkbox" , instance: createOpaqueUiInstanceId("iter-6f09968494", String(product.id))}}
                           checked={newCollection.productIds?.includes(product.id)}
                           onCheckedChange={() => toggleProductInCollection(product.id)}
                         />
-                        <span {...uiAttributes({ uid: "onboarding.sections.collections-section.span-4MSxmG", id: "onboarding.sections.collections-section.span" })} className="text-sm truncate">{product.title}</span>
+                        <span {...uiAttributes({ uid: "onboarding.sections.collections-section.span-4MSxmG", id: "onboarding.sections.collections-section.span" , instance: createOpaqueUiInstanceId("iter-d35e133237", String(product.id))})} className="text-sm truncate">{product.title}</span>
                       </label>
                     ))}
                   </div>
@@ -176,11 +176,11 @@ export function CollectionsSection() {
               <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.22-0c9Ljz", id: "onboarding.sections.collections-section.div.22" })} id="onboarding.sections.collections-section.div.11" className="grid gap-4 sm:grid-cols-2">
                 {data.collections.collections.map((collection) => (
                   <div
-                    key={collection.id} {...uiAttributes({ uid: "onboarding.sections.collections-section.div.23-UZZW6Z", id: "onboarding.sections.collections-section.div.23" })}
+                    key={collection.id} {...uiAttributes({ uid: "onboarding.sections.collections-section.div.23-UZZW6Z", id: "onboarding.sections.collections-section.div.23" , instance: createOpaqueUiInstanceId("iter-5a2efcb72d", String(collection.id))})}
                     className="relative overflow-hidden rounded-lg border"
                   >
                     {collection.coverImage ? (
-                      <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.24-7Yzvyl", id: "onboarding.sections.collections-section.div.24" })} className="aspect-video relative">
+                      <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.24-7Yzvyl", id: "onboarding.sections.collections-section.div.24" , instance: createOpaqueUiInstanceId("iter-c31c439a31", String(collection.id))})} className="aspect-video relative">
                         <Image
                           src={collection.coverImage.url}
                           alt={collection.name}
@@ -189,21 +189,21 @@ export function CollectionsSection() {
                           className="object-cover"
                           unoptimized={shouldUseUnoptimizedImage(collection.coverImage.url)}
                         />
-                        <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.25-BGZO6a", id: "onboarding.sections.collections-section.div.25" })} className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
-                        <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.26-5zanYX", id: "onboarding.sections.collections-section.div.26" })} className="absolute bottom-0 left-0 right-0 p-4">
-                          <h4 {...uiAttributes({ uid: "onboarding.sections.collections-section.h4-E8KeLH", id: "onboarding.sections.collections-section.h4" })} className="font-medium">{collection.name}</h4>
-                          <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.27-PXZ6On", id: "onboarding.sections.collections-section.div.27" })} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.25-BGZO6a", id: "onboarding.sections.collections-section.div.25" , instance: createOpaqueUiInstanceId("iter-450e608b4e", String(collection.id))})} className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
+                        <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.26-5zanYX", id: "onboarding.sections.collections-section.div.26" , instance: createOpaqueUiInstanceId("iter-4297c6e2a3", String(collection.id))})} className="absolute bottom-0 left-0 right-0 p-4">
+                          <h4 {...uiAttributes({ uid: "onboarding.sections.collections-section.h4-E8KeLH", id: "onboarding.sections.collections-section.h4" , instance: createOpaqueUiInstanceId("iter-a368364a40", String(collection.id))})} className="font-medium">{collection.name}</h4>
+                          <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.27-PXZ6On", id: "onboarding.sections.collections-section.div.27" , instance: createOpaqueUiInstanceId("iter-833820d10a", String(collection.id))})} className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Package className="h-3 w-3" />
                             {t('onboarding.common.products', { count: collection.productIds.length })}
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.28-7qUIHW", id: "onboarding.sections.collections-section.div.28" })} className="aspect-video bg-muted flex items-center justify-center">
+                      <div {...uiAttributes({ uid: "onboarding.sections.collections-section.div.28-7qUIHW", id: "onboarding.sections.collections-section.div.28" , instance: createOpaqueUiInstanceId("iter-f91d9d6e77", String(collection.id))})} className="aspect-video bg-muted flex items-center justify-center">
                         <FolderOpen className="h-12 w-12 text-muted-foreground" />
                       </div>
                     )}
-                    <Button ui={{ uid: "onboarding.sections.collections-section.button.5-t6tjO3", id: "onboarding.sections.collections-section.button.5" }}
+                    <Button ui={{ uid: "onboarding.sections.collections-section.button.5-t6tjO3", id: "onboarding.sections.collections-section.button.5" , instance: createOpaqueUiInstanceId("iter-4a130a00f5", String(collection.id))}}
                       variant="ghost"
                       size="icon"
                       className="absolute top-2 right-2"

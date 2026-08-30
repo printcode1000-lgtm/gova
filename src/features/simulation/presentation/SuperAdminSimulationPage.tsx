@@ -26,7 +26,7 @@ import {
 } from "./SimulationProgressPanel";
 import { SimulationUsersStatus } from "./SimulationUsersStatus";
 import { simulationRuntimeLabel } from "./simulation-runtime-label";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const initialPage = USER_PAGE_REGISTRY[0];
 type PageInteraction = UserPageDefinition["interactions"][number];
@@ -246,7 +246,7 @@ export function SuperAdminSimulationPage() {
                   className="h-11 w-full min-w-0 rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {USER_PAGE_REGISTRY.map((page) => (
-                    <option key={page.id} {...uiAttributes({ uid: "simulation.super-admin-simulation-page.option-RNfT5K", id: "simulation.super-admin-simulation-page.option" })} value={page.id}>
+                    <option key={page.id} {...uiAttributes({ uid: "simulation.super-admin-simulation-page.option-RNfT5K", id: "simulation.super-admin-simulation-page.option" , instance: createOpaqueUiInstanceId("iter-d23bce75de", String(page.id))})} value={page.id}>
                       {page.label} — {page.route}
                     </option>
                   ))}
@@ -292,7 +292,7 @@ export function SuperAdminSimulationPage() {
                   className="h-11 w-full min-w-0 rounded-xl border border-outline-variant bg-surface-container-low px-3 text-sm text-on-surface outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {selectedInteractions.map((interaction) => (
-                    <option key={interaction.id} {...uiAttributes({ uid: "simulation.super-admin-simulation-page.option.2-B1gFwY", id: "simulation.super-admin-simulation-page.option.2" })} value={interaction.id}>
+                    <option key={interaction.id} {...uiAttributes({ uid: "simulation.super-admin-simulation-page.option.2-B1gFwY", id: "simulation.super-admin-simulation-page.option.2" , instance: createOpaqueUiInstanceId("iter-3827baac5d", String(interaction.id))})} value={interaction.id}>
                       {interaction.label}
                     </option>
                   ))}

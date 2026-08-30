@@ -31,7 +31,7 @@ import { cartPageCopy } from "./cart-page-copy";
 import { buildCartSellerGroups, sellerIdsFromCartItems } from "./cart-seller-groups";
 import { submitCartOrder } from "./cart-order-submit";
 import { useCartCheckoutSettings } from "./use-cart-checkout-settings";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 export function CartPageContent() {
   const router = useRouter();
@@ -197,13 +197,13 @@ export function CartPageContent() {
             ) : null}
             {sellerGroups.map((group) => (
               <div
-                key={group.sellerId} {...uiAttributes({ uid: "cart.cart-page-content.div.24-ZH6UD8", id: "cart.cart-page-content.div.24" })}
+                key={group.sellerId} {...uiAttributes({ uid: "cart.cart-page-content.div.24-ZH6UD8", id: "cart.cart-page-content.div.24" , instance: createOpaqueUiInstanceId("iter-4700ef576f", String(group.sellerId))})}
                 className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm"
               >
-                <div {...uiAttributes({ uid: "cart.cart-page-content.div.25-SN5we4", id: "cart.cart-page-content.div.25" })} className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant pb-3">
-                  <div {...uiAttributes({ uid: "cart.cart-page-content.div.26-Ks9XBW", id: "cart.cart-page-content.div.26" })}>
-                    <h2 {...uiAttributes({ uid: "cart.cart-page-content.h2.6-nA3JLR", id: "cart.cart-page-content.h2.6" })} className="text-sm font-bold">{copy.seller}</h2>
-                    <p {...uiAttributes({ uid: "cart.cart-page-content.p.12-GD3NUM", id: "cart.cart-page-content.p.12" })} className="text-xs text-muted-foreground">
+                <div {...uiAttributes({ uid: "cart.cart-page-content.div.25-SN5we4", id: "cart.cart-page-content.div.25" , instance: createOpaqueUiInstanceId("iter-6798018e39", String(group.sellerId))})} className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant pb-3">
+                  <div {...uiAttributes({ uid: "cart.cart-page-content.div.26-Ks9XBW", id: "cart.cart-page-content.div.26" , instance: createOpaqueUiInstanceId("iter-8833b5237d", String(group.sellerId))})}>
+                    <h2 {...uiAttributes({ uid: "cart.cart-page-content.h2.6-nA3JLR", id: "cart.cart-page-content.h2.6" , instance: createOpaqueUiInstanceId("iter-46827628aa", String(group.sellerId))})} className="text-sm font-bold">{copy.seller}</h2>
+                    <p {...uiAttributes({ uid: "cart.cart-page-content.p.12-GD3NUM", id: "cart.cart-page-content.p.12" , instance: createOpaqueUiInstanceId("iter-13d73e8543", String(group.sellerId))})} className="text-xs text-muted-foreground">
                       {unifiedDeliveryAvailable
                         ? `مرجع التوصيل المنفصل: ${formatMoney(group.shippingMinor)}`
                         : group.quoteRequired
@@ -222,7 +222,7 @@ export function CartPageContent() {
                     {copy.viewSeller}
                   </Link>
                   {group.hasSpecialVehicle ? (
-                    <span {...uiAttributes({ uid: "cart.cart-page-content.span.17-apW0HY", id: "cart.cart-page-content.span.17" })} className="rounded-full bg-warning/10 px-2 py-1 text-xs font-semibold text-warning">
+                    <span {...uiAttributes({ uid: "cart.cart-page-content.span.17-apW0HY", id: "cart.cart-page-content.span.17" , instance: createOpaqueUiInstanceId("iter-9ed1b72e01", String(group.sellerId))})} className="rounded-full bg-warning/10 px-2 py-1 text-xs font-semibold text-warning">
                       يتضمن منتجًا يحتاج سيارة نقل
                     </span>
                   ) : null}
@@ -231,18 +231,18 @@ export function CartPageContent() {
                 {discountQuote?.sellers
                   .find((seller) => seller.sellerUid === group.sellerId)
                   ?.applied.length ? (
-                  <div {...uiAttributes({ uid: "cart.cart-page-content.div.27-jTQW1X", id: "cart.cart-page-content.div.27" })} className="mb-3 rounded-lg border border-primary/20 bg-primary/10 p-3 text-sm">
-                    <p {...uiAttributes({ uid: "cart.cart-page-content.p.13-3H6h3B", id: "cart.cart-page-content.p.13" })} className="font-bold text-primary">خصومات مطبقة</p>
-                    <div {...uiAttributes({ uid: "cart.cart-page-content.div.28-O8Vj1H", id: "cart.cart-page-content.div.28" })} className="mt-2 space-y-1 text-xs text-on-surface">
+                  <div {...uiAttributes({ uid: "cart.cart-page-content.div.27-jTQW1X", id: "cart.cart-page-content.div.27" , instance: createOpaqueUiInstanceId("iter-146abd56ab", String(group.sellerId))})} className="mb-3 rounded-lg border border-primary/20 bg-primary/10 p-3 text-sm">
+                    <p {...uiAttributes({ uid: "cart.cart-page-content.p.13-3H6h3B", id: "cart.cart-page-content.p.13" , instance: createOpaqueUiInstanceId("iter-64b69410ef", String(group.sellerId))})} className="font-bold text-primary">خصومات مطبقة</p>
+                    <div {...uiAttributes({ uid: "cart.cart-page-content.div.28-O8Vj1H", id: "cart.cart-page-content.div.28" , instance: createOpaqueUiInstanceId("iter-46fa0cd0f9", String(group.sellerId))})} className="mt-2 space-y-1 text-xs text-on-surface">
                       {discountQuote.sellers
                         .find((seller) => seller.sellerUid === group.sellerId)!
                         .applied.map((discount) => (
                           <div
-                            key={discount.discountId} {...uiAttributes({ uid: "cart.cart-page-content.div.29-BOa9jv", id: "cart.cart-page-content.div.29" })}
+                            key={discount.discountId} {...uiAttributes({ uid: "cart.cart-page-content.div.29-BOa9jv", id: "cart.cart-page-content.div.29" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-be631dc320", String(discount.discountId)), createOpaqueUiInstanceId("iter-03794db4a0", String(discount.discountId)))})}
                             className="flex justify-between gap-3"
                           >
-                            <span {...uiAttributes({ uid: "cart.cart-page-content.span.18-JKWnQ3", id: "cart.cart-page-content.span.18" })}>{discount.title}</span>
-                            <span {...uiAttributes({ uid: "cart.cart-page-content.span.19-25Ct4Y", id: "cart.cart-page-content.span.19" })} className="font-semibold text-primary">
+                            <span {...uiAttributes({ uid: "cart.cart-page-content.span.18-JKWnQ3", id: "cart.cart-page-content.span.18" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-4bad829dea", String(discount.discountId)), createOpaqueUiInstanceId("iter-5d882af73c", String(discount.discountId)))})}>{discount.title}</span>
+                            <span {...uiAttributes({ uid: "cart.cart-page-content.span.19-25Ct4Y", id: "cart.cart-page-content.span.19" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-9edc9938cd", String(discount.discountId)), createOpaqueUiInstanceId("iter-25cd09805a", String(discount.discountId)))})} className="font-semibold text-primary">
                               {discount.shippingDiscountMinor ===
                               Number.MAX_SAFE_INTEGER
                                 ? "شحن مجاني"
@@ -256,14 +256,14 @@ export function CartPageContent() {
                   </div>
                 ) : null}
 
-                <div {...uiAttributes({ uid: "cart.cart-page-content.div.30-jMX7h6", id: "cart.cart-page-content.div.30" })} className="space-y-3">
+                <div {...uiAttributes({ uid: "cart.cart-page-content.div.30-jMX7h6", id: "cart.cart-page-content.div.30" , instance: createOpaqueUiInstanceId("iter-ed2260c138", String(group.sellerId))})} className="space-y-3">
                   {group.items.map((item) => (
                     <article
-                      key={item.id} {...uiAttributes({ uid: "cart.cart-page-content.article-108XMM", id: "cart.cart-page-content.article" })}
+                      key={item.id} {...uiAttributes({ uid: "cart.cart-page-content.article-108XMM", id: "cart.cart-page-content.article" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-14795fa10a", String(item.id)), createOpaqueUiInstanceId("iter-19289279a6", String(item.id)))})}
                       className="rounded-xl border border-outline-variant bg-background p-4"
                     >
-                      <div {...uiAttributes({ uid: "cart.cart-page-content.div.31-tCF21Q", id: "cart.cart-page-content.div.31" })} className="flex gap-4">
-                        <div {...uiAttributes({ uid: "cart.cart-page-content.div.32-013PnD", id: "cart.cart-page-content.div.32" })} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-outline-variant bg-muted">
+                      <div {...uiAttributes({ uid: "cart.cart-page-content.div.31-tCF21Q", id: "cart.cart-page-content.div.31" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-a65cbfe020", String(item.id)), createOpaqueUiInstanceId("iter-5b05aab02d", String(item.id)))})} className="flex gap-4">
+                        <div {...uiAttributes({ uid: "cart.cart-page-content.div.32-013PnD", id: "cart.cart-page-content.div.32" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-9c3ffb7ed5", String(item.id)), createOpaqueUiInstanceId("iter-4a643aaf08", String(item.id)))})} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-outline-variant bg-muted">
                           {item.imageUrl ? (
                             <Image
                               src={item.imageUrl}
@@ -273,24 +273,24 @@ export function CartPageContent() {
                               className="object-cover"
                             />
                           ) : (
-                            <div {...uiAttributes({ uid: "cart.cart-page-content.div.33-S8Rnyd", id: "cart.cart-page-content.div.33" })} className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                            <div {...uiAttributes({ uid: "cart.cart-page-content.div.33-S8Rnyd", id: "cart.cart-page-content.div.33" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-c496012579", String(item.id)), createOpaqueUiInstanceId("iter-5966598851", String(item.id)))})} className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
                               {copy.noImage}
                             </div>
                           )}
                         </div>
-                        <div {...uiAttributes({ uid: "cart.cart-page-content.div.34-0Sf8Ay", id: "cart.cart-page-content.div.34" })} className="min-w-0 flex-1">
-                          <div {...uiAttributes({ uid: "cart.cart-page-content.div.35-P7y6ds", id: "cart.cart-page-content.div.35" })} className="flex flex-wrap items-start justify-between gap-3">
-                            <div {...uiAttributes({ uid: "cart.cart-page-content.div.36-6hwURf", id: "cart.cart-page-content.div.36" })} className="min-w-0">
-                              <h2 {...uiAttributes({ uid: "cart.cart-page-content.h2.7-5VxQJK", id: "cart.cart-page-content.h2.7" })} className="truncate font-bold text-on-surface">
+                        <div {...uiAttributes({ uid: "cart.cart-page-content.div.34-0Sf8Ay", id: "cart.cart-page-content.div.34" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-20b51dca69", String(item.id)), createOpaqueUiInstanceId("iter-e45dd35e7d", String(item.id)))})} className="min-w-0 flex-1">
+                          <div {...uiAttributes({ uid: "cart.cart-page-content.div.35-P7y6ds", id: "cart.cart-page-content.div.35" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-d29e31708e", String(item.id)), createOpaqueUiInstanceId("iter-e1a2cd4b38", String(item.id)))})} className="flex flex-wrap items-start justify-between gap-3">
+                            <div {...uiAttributes({ uid: "cart.cart-page-content.div.36-6hwURf", id: "cart.cart-page-content.div.36" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-4f51fe2f0d", String(item.id)), createOpaqueUiInstanceId("iter-c9a71f24d4", String(item.id)))})} className="min-w-0">
+                              <h2 {...uiAttributes({ uid: "cart.cart-page-content.h2.7-5VxQJK", id: "cart.cart-page-content.h2.7" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-838e0b6bd5", String(item.id)), createOpaqueUiInstanceId("iter-b2dd2543dd", String(item.id)))})} className="truncate font-bold text-on-surface">
                                 {item.name}
                               </h2>
                               {item.requiresSpecialVehicle ? (
-                                <span {...uiAttributes({ uid: "cart.cart-page-content.span.20-6wK5J3", id: "cart.cart-page-content.span.20" })} className="mt-2 inline-flex rounded-full bg-warning/10 px-2 py-1 text-xs font-semibold text-warning">
+                                <span {...uiAttributes({ uid: "cart.cart-page-content.span.20-6wK5J3", id: "cart.cart-page-content.span.20" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-a59bef63cb", String(item.id)), createOpaqueUiInstanceId("iter-5ab4100c44", String(item.id)))})} className="mt-2 inline-flex rounded-full bg-warning/10 px-2 py-1 text-xs font-semibold text-warning">
                                   يحتاج سيارة خاصة
                                 </span>
                               ) : null}
                             </div>
-                            <button {...uiAttributes({ uid: "cart-remove-SlqB5g", id: "cart-remove", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "cart-remove" } })}
+                            <button {...uiAttributes({ uid: "cart-remove-SlqB5g", id: "cart-remove", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "cart-remove" } , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-04f04cb4df", String(item.id)), createOpaqueUiInstanceId("iter-a140ec6595", String(item.id)))})}
                               type="button"
                               onClick={() => void removeCartItem(item.id)}
                               className="rounded-full p-2 text-muted-foreground transition"
@@ -300,9 +300,9 @@ export function CartPageContent() {
                             </button>
                           </div>
 
-                          <div {...uiAttributes({ uid: "cart.cart-page-content.div.37-ETX8Fp", id: "cart.cart-page-content.div.37" })} className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                            <div {...uiAttributes({ uid: "cart.cart-page-content.div.38-t2wW4j", id: "cart.cart-page-content.div.38" })} className="inline-flex items-center overflow-hidden rounded-lg border border-outline-variant">
-                              <button {...uiAttributes({ uid: "cart-decrease-AyGe00", id: "cart-decrease", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "cart-decrease" } })}
+                          <div {...uiAttributes({ uid: "cart.cart-page-content.div.37-ETX8Fp", id: "cart.cart-page-content.div.37" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-491520b1e2", String(item.id)), createOpaqueUiInstanceId("iter-9789069e99", String(item.id)))})} className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                            <div {...uiAttributes({ uid: "cart.cart-page-content.div.38-t2wW4j", id: "cart.cart-page-content.div.38" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-5851d404cd", String(item.id)), createOpaqueUiInstanceId("iter-01f8d2ed4f", String(item.id)))})} className="inline-flex items-center overflow-hidden rounded-lg border border-outline-variant">
+                              <button {...uiAttributes({ uid: "cart-decrease-AyGe00", id: "cart-decrease", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "cart-decrease" } , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-0503ba1f70", String(item.id)), createOpaqueUiInstanceId("iter-c23b2bbe52", String(item.id)))})}
                                 type="button"
                                 onClick={() =>
                                   void updateCartItemQuantity(
@@ -315,10 +315,10 @@ export function CartPageContent() {
                               >
                                 <Minus className="h-4 w-4" />
                               </button>
-                              <span {...uiAttributes({ uid: "cart.cart-page-content.span.21-iL0sNo", id: "cart.cart-page-content.span.21" })} className="min-w-10 px-3 text-center text-sm font-bold">
+                              <span {...uiAttributes({ uid: "cart.cart-page-content.span.21-iL0sNo", id: "cart.cart-page-content.span.21" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-6410db3132", String(item.id)), createOpaqueUiInstanceId("iter-324dbdb0e3", String(item.id)))})} className="min-w-10 px-3 text-center text-sm font-bold">
                                 {item.quantity}
                               </span>
-                              <button {...uiAttributes({ uid: "cart-increase-EKf2uz", id: "cart-increase", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "cart-increase" } })}
+                              <button {...uiAttributes({ uid: "cart-increase-EKf2uz", id: "cart-increase", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "cart-increase" } , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-e3848b468e", String(item.id)), createOpaqueUiInstanceId("iter-13f7dc749f", String(item.id)))})}
                                 type="button"
                                 onClick={() =>
                                   void updateCartItemQuantity(
@@ -332,11 +332,11 @@ export function CartPageContent() {
                                 <Plus className="h-4 w-4" />
                               </button>
                             </div>
-                            <div {...uiAttributes({ uid: "cart.cart-page-content.div.39-BN8nrP", id: "cart.cart-page-content.div.39" })} className="text-end">
-                              <p {...uiAttributes({ uid: "cart.cart-page-content.p.14-9X8WlW", id: "cart.cart-page-content.p.14" })} className="text-xs text-muted-foreground">
+                            <div {...uiAttributes({ uid: "cart.cart-page-content.div.39-BN8nrP", id: "cart.cart-page-content.div.39" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-68a816cfa9", String(item.id)), createOpaqueUiInstanceId("iter-ebc6d76c7f", String(item.id)))})} className="text-end">
+                              <p {...uiAttributes({ uid: "cart.cart-page-content.p.14-9X8WlW", id: "cart.cart-page-content.p.14" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-b3d58c7673", String(item.id)), createOpaqueUiInstanceId("iter-72463fe3b8", String(item.id)))})} className="text-xs text-muted-foreground">
                                 {copy.unitPrice}
                               </p>
-                              <p {...uiAttributes({ uid: "cart.cart-page-content.p.15-5fWmE7", id: "cart.cart-page-content.p.15" })} className="font-bold">
+                              <p {...uiAttributes({ uid: "cart.cart-page-content.p.15-5fWmE7", id: "cart.cart-page-content.p.15" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-fe2e924720", String(item.id)), createOpaqueUiInstanceId("iter-2ff5511788", String(item.id)))})} className="font-bold">
                                 {item.unitPriceMinor === 0 && item.priceLabel
                                   ? item.priceLabel
                                   : formatMoney(item.unitPriceMinor)}
@@ -349,20 +349,20 @@ export function CartPageContent() {
                   ))}
                 </div>
 
-                <details {...uiAttributes({ uid: "cart.cart-page-content.details-2lY116", id: "cart.cart-page-content.details" })} className="mt-4 rounded-lg border border-outline-variant bg-muted/20 p-3">
-                  <summary {...uiAttributes({ uid: "cart.cart-page-content.summary-x3AEdS", id: "cart.cart-page-content.summary" })} className="flex list-none items-center justify-between gap-3 text-sm font-bold">
+                <details {...uiAttributes({ uid: "cart.cart-page-content.details-2lY116", id: "cart.cart-page-content.details" , instance: createOpaqueUiInstanceId("iter-16bb18e524", String(group.sellerId))})} className="mt-4 rounded-lg border border-outline-variant bg-muted/20 p-3">
+                  <summary {...uiAttributes({ uid: "cart.cart-page-content.summary-x3AEdS", id: "cart.cart-page-content.summary" , instance: createOpaqueUiInstanceId("iter-8206c89198", String(group.sellerId))})} className="flex list-none items-center justify-between gap-3 text-sm font-bold">
                     سياسة الشحن والإرجاع الخاصة بالبائع
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </summary>
-                  <div {...uiAttributes({ uid: "cart.cart-page-content.div.40-ASH060", id: "cart.cart-page-content.div.40" })} className="mt-3 space-y-2 text-sm text-muted-foreground">
+                  <div {...uiAttributes({ uid: "cart.cart-page-content.div.40-ASH060", id: "cart.cart-page-content.div.40" , instance: createOpaqueUiInstanceId("iter-7b82b65019", String(group.sellerId))})} className="mt-3 space-y-2 text-sm text-muted-foreground">
                     {group.settings.shippingPricing.notes ? (
-                      <p {...uiAttributes({ uid: "cart.cart-page-content.p.16-tUA8JW", id: "cart.cart-page-content.p.16" })} className="whitespace-pre-wrap rounded-lg bg-background p-3">
+                      <p {...uiAttributes({ uid: "cart.cart-page-content.p.16-tUA8JW", id: "cart.cart-page-content.p.16" , instance: createOpaqueUiInstanceId("iter-774712ca08", String(group.sellerId))})} className="whitespace-pre-wrap rounded-lg bg-background p-3">
                         ملاحظات الشحن: {group.settings.shippingPricing.notes}
                       </p>
                     ) : null}
-                    <p {...uiAttributes({ uid: "cart.cart-page-content.p.17-tTJw65", id: "cart.cart-page-content.p.17" })}>
+                    <p {...uiAttributes({ uid: "cart.cart-page-content.p.17-tTJw65", id: "cart.cart-page-content.p.17" , instance: createOpaqueUiInstanceId("iter-2deda9621e", String(group.sellerId))})}>
                       الحالة:{""}
-                      <span {...uiAttributes({ uid: "cart.cart-page-content.span.22-sM1I4r", id: "cart.cart-page-content.span.22" })} className="font-semibold text-on-surface">
+                      <span {...uiAttributes({ uid: "cart.cart-page-content.span.22-sM1I4r", id: "cart.cart-page-content.span.22" , instance: createOpaqueUiInstanceId("iter-ff72822c86", String(group.sellerId))})} className="font-semibold text-on-surface">
                         {group.settings.returns.enabled
                           ? "الإرجاع متاح"
                           : "الإرجاع غير متاح"}
@@ -370,15 +370,15 @@ export function CartPageContent() {
                     </p>
                     {group.settings.returns.enabled ? (
                       <>
-                        <p {...uiAttributes({ uid: "cart.cart-page-content.p.18-0Ffu0F", id: "cart.cart-page-content.p.18" })}>
+                        <p {...uiAttributes({ uid: "cart.cart-page-content.p.18-0Ffu0F", id: "cart.cart-page-content.p.18" , instance: createOpaqueUiInstanceId("iter-e3a1ec5082", String(group.sellerId))})}>
                           عدد أيام الإرجاع:{""}
-                          <span {...uiAttributes({ uid: "cart.cart-page-content.span.23-8PTDKC", id: "cart.cart-page-content.span.23" })} className="font-semibold text-on-surface">
+                          <span {...uiAttributes({ uid: "cart.cart-page-content.span.23-8PTDKC", id: "cart.cart-page-content.span.23" , instance: createOpaqueUiInstanceId("iter-fa191c7b93", String(group.sellerId))})} className="font-semibold text-on-surface">
                             {group.settings.returns.returnWindowDays}
                           </span>
                         </p>
-                        <p {...uiAttributes({ uid: "cart.cart-page-content.p.19-1S4ZFU", id: "cart.cart-page-content.p.19" })}>
+                        <p {...uiAttributes({ uid: "cart.cart-page-content.p.19-1S4ZFU", id: "cart.cart-page-content.p.19" , instance: createOpaqueUiInstanceId("iter-8b163f4d3d", String(group.sellerId))})}>
                           تكلفة شحن الإرجاع:{""}
-                          <span {...uiAttributes({ uid: "cart.cart-page-content.span.24-VD31Nc", id: "cart.cart-page-content.span.24" })} className="font-semibold text-on-surface">
+                          <span {...uiAttributes({ uid: "cart.cart-page-content.span.24-VD31Nc", id: "cart.cart-page-content.span.24" , instance: createOpaqueUiInstanceId("iter-1b8a900c31", String(group.sellerId))})} className="font-semibold text-on-surface">
                             {group.settings.returns.returnShippingPayer ===
                             "buyer"
                               ? "المشتري"
@@ -391,11 +391,11 @@ export function CartPageContent() {
                       </>
                     ) : null}
                     {group.settings.returns.policyText ? (
-                      <p {...uiAttributes({ uid: "cart.cart-page-content.p.20-DWy1M3", id: "cart.cart-page-content.p.20" })} className="whitespace-pre-wrap rounded-lg bg-background p-3">
+                      <p {...uiAttributes({ uid: "cart.cart-page-content.p.20-DWy1M3", id: "cart.cart-page-content.p.20" , instance: createOpaqueUiInstanceId("iter-70a2d66d28", String(group.sellerId))})} className="whitespace-pre-wrap rounded-lg bg-background p-3">
                         {group.settings.returns.policyText}
                       </p>
                     ) : (
-                      <p {...uiAttributes({ uid: "cart.cart-page-content.p.21-V6xrDW", id: "cart.cart-page-content.p.21" })}>لا يوجد نص سياسة مضاف من البائع.</p>
+                      <p {...uiAttributes({ uid: "cart.cart-page-content.p.21-V6xrDW", id: "cart.cart-page-content.p.21" , instance: createOpaqueUiInstanceId("iter-af614fdcc0", String(group.sellerId))})}>لا يوجد نص سياسة مضاف من البائع.</p>
                     )}
                   </div>
                 </details>

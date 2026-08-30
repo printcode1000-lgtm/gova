@@ -24,7 +24,7 @@ import {
   type RemoteDeployAllStage,
 } from "@asol/vercel-deploy-core/remote-deploy-contracts";
 import { deployAllBranchIds } from "@asol/release-core/console";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const TIMELINE: readonly RemoteDeployAllStage[] = REMOTE_DEPLOY_ALL_STAGES.filter(
   (stage) => stage !== "idle",
@@ -115,7 +115,7 @@ export function ProductionDeployPage() {
           </p>
           <ul {...uiAttributes({ uid: "release-commands.production-deploy-page.ul.2-G9OXOU", id: "release-commands.production-deploy-page.ul.2" })} id="release-commands.production-deploy-page.ul" className="mt-2 list-inside list-disc" dir="ltr">
             {readiness.missingConfiguration.map((key) => (
-              <li key={key} {...uiAttributes({ uid: "release-commands.production-deploy-page.li-TIqkv4", id: "release-commands.production-deploy-page.li" })}>{key}</li>
+              <li key={key} {...uiAttributes({ uid: "release-commands.production-deploy-page.li-TIqkv4", id: "release-commands.production-deploy-page.li" , instance: createOpaqueUiInstanceId("iter-c282b1f009", String(key))})}>{key}</li>
             ))}
           </ul>
         </section>
@@ -125,7 +125,7 @@ export function ProductionDeployPage() {
         {tab === "deploy:push" ? (
           <>
             <label {...uiAttributes({ uid: "release-commands.production-deploy-page.label.6-UtA0RB", id: "release-commands.production-deploy-page.label.6" })} id="release-commands.production-deploy-page.label" className="block text-sm font-medium" htmlFor="production-deploy-target">هدف Deploy Push</label>
-            <select {...uiAttributes({ uid: "release-commands.production-deploy-page.select-E9fknV", id: "release-commands.production-deploy-page.select" })} id="production-deploy-target" value={target} onChange={(event) => setTarget(event.target.value as PushTarget)} className="h-10 w-full rounded-md border bg-background px-3 text-sm" aria-label="هدف Deploy Push">{PUSH_TARGETS.map(([value, label]) => <option key={value} {...uiAttributes({ uid: "release-commands.production-deploy-page.option-cI47A0", id: "release-commands.production-deploy-page.option" })} value={value}>{label}</option>)}</select>
+            <select {...uiAttributes({ uid: "release-commands.production-deploy-page.select-E9fknV", id: "release-commands.production-deploy-page.select" })} id="production-deploy-target" value={target} onChange={(event) => setTarget(event.target.value as PushTarget)} className="h-10 w-full rounded-md border bg-background px-3 text-sm" aria-label="هدف Deploy Push">{PUSH_TARGETS.map(([value, label]) => <option key={value} {...uiAttributes({ uid: "release-commands.production-deploy-page.option-cI47A0", id: "release-commands.production-deploy-page.option" , instance: createOpaqueUiInstanceId("iter-6fb98d732e", String(value))})} value={value}>{label}</option>)}</select>
           </>
         ) : (
           <DeployAllOptions
@@ -200,7 +200,7 @@ export function ProductionDeployPage() {
             const timing = timings.get(stage);
             return (
               <li
-                key={stage} {...uiAttributes({ uid: "release-commands.production-deploy-page.li.2-FRBQ0r", id: "release-commands.production-deploy-page.li.2" })}
+                key={stage} {...uiAttributes({ uid: "release-commands.production-deploy-page.li.2-FRBQ0r", id: "release-commands.production-deploy-page.li.2" , instance: createOpaqueUiInstanceId("iter-9a5e4a123c", String(stage))})}
                 className={
                   "flex items-baseline justify-between gap-2 " +
                   (currentIndex > index
@@ -210,11 +210,11 @@ export function ProductionDeployPage() {
                       : "opacity-60")
                 }
               >
-                <span {...uiAttributes({ uid: "release-commands.production-deploy-page.span.2-9jwKX1", id: "release-commands.production-deploy-page.span.2" })}>
+                <span {...uiAttributes({ uid: "release-commands.production-deploy-page.span.2-9jwKX1", id: "release-commands.production-deploy-page.span.2" , instance: createOpaqueUiInstanceId("iter-3202d568d3", String(stage))})}>
                   {currentIndex > index ? "✓ " : currentIndex === index ? "• " : "○ "}
                   {productionDeployStageLabel(stage)}
                 </span>
-                <span {...uiAttributes({ uid: "release-commands.production-deploy-page.span.3-g8xQc1", id: "release-commands.production-deploy-page.span.3" })} dir="ltr" className="font-mono text-xs tabular-nums">
+                <span {...uiAttributes({ uid: "release-commands.production-deploy-page.span.3-g8xQc1", id: "release-commands.production-deploy-page.span.3" , instance: createOpaqueUiInstanceId("iter-664737f634", String(stage))})} dir="ltr" className="font-mono text-xs tabular-nums">
                   {timing ? formatDeployDuration(timing.elapsedMs) : ""}
                 </span>
               </li>
@@ -283,7 +283,7 @@ function DeployAllOptions(props: {
         className="h-10 w-full rounded-md border bg-background px-3 text-sm"
         aria-label="وضع Deploy All"
       >
-        {DEPLOY_ALL_RESUME_MODES.map(([value, label]) => <option key={value} {...uiAttributes({ uid: "release-commands.production-deploy-page.option.2-hDqF18", id: "release-commands.production-deploy-page.option.2" })} value={value}>{label}</option>)}
+        {DEPLOY_ALL_RESUME_MODES.map(([value, label]) => <option key={value} {...uiAttributes({ uid: "release-commands.production-deploy-page.option.2-hDqF18", id: "release-commands.production-deploy-page.option.2" , instance: createOpaqueUiInstanceId("iter-1c745946e4", String(value))})} value={value}>{label}</option>)}
       </select>
       {needsBranch ? (
         <>
@@ -296,7 +296,7 @@ function DeployAllOptions(props: {
             aria-label="فرع runbook"
             dir="ltr"
           >
-            {DEPLOY_ALL_BRANCH_IDS.map((id) => <option key={id} {...uiAttributes({ uid: "release-commands.production-deploy-page.option.3-kR2XVR", id: "release-commands.production-deploy-page.option.3" })} value={id}>{id}</option>)}
+            {DEPLOY_ALL_BRANCH_IDS.map((id) => <option key={id} {...uiAttributes({ uid: "release-commands.production-deploy-page.option.3-kR2XVR", id: "release-commands.production-deploy-page.option.3" , instance: createOpaqueUiInstanceId("iter-8de0bdcc97", String(id))})} value={id}>{id}</option>)}
           </select>
         </>
       ) : null}

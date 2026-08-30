@@ -15,7 +15,7 @@ import { cn } from '@/shared/utils';
 import type { CouponCode } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
 import { generateCouponCode } from './marketing-section-model';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function MarketingSection() {
   const { t } = useTranslation();
@@ -113,7 +113,7 @@ export function MarketingSection() {
                 <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.17-W7SqAI", id: "onboarding.sections.marketing-section.div.17" })} id="onboarding.sections.marketing-section.div.5" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {products.products.map((product) => (
                     <label
-                      key={product.id} {...uiAttributes({ uid: "onboarding.sections.marketing-section.label.2-pKnTf9", id: "onboarding.sections.marketing-section.label.2" })}
+                      key={product.id} {...uiAttributes({ uid: "onboarding.sections.marketing-section.label.2-pKnTf9", id: "onboarding.sections.marketing-section.label.2" , instance: createOpaqueUiInstanceId("iter-9cf94d0f2e", String(product.id))})}
                       className={cn(
                         'flex items-center gap-3 p-3 rounded-lg border transition-all',
                         marketing.featuredProductIds.includes(product.id)
@@ -121,7 +121,7 @@ export function MarketingSection() {
                           : 'border-border',
                       )}
                     >
-                      <input {...uiAttributes({ uid: "onboarding.sections.marketing-section.input-xLKDT3", id: "onboarding.sections.marketing-section.input" })}
+                      <input {...uiAttributes({ uid: "onboarding.sections.marketing-section.input-xLKDT3", id: "onboarding.sections.marketing-section.input" , instance: createOpaqueUiInstanceId("iter-f79d60b7d4", String(product.id))})}
                         type="checkbox"
                         checked={marketing.featuredProductIds.includes(product.id)}
                         onChange={() => toggleFeaturedProduct(product.id)}
@@ -131,9 +131,9 @@ export function MarketingSection() {
                         }
                         className="rounded border-gray-300"
                       />
-                      <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.18-U7LBxe", id: "onboarding.sections.marketing-section.div.18" })} className="flex-1 min-w-0">
-                        <p {...uiAttributes({ uid: "onboarding.sections.marketing-section.p.7-jKMXv5", id: "onboarding.sections.marketing-section.p.7" })} className="text-sm font-medium truncate">{product.title}</p>
-                        <p {...uiAttributes({ uid: "onboarding.sections.marketing-section.p.8-WFQEs5", id: "onboarding.sections.marketing-section.p.8" })} className="text-xs text-muted-foreground">${product.basePrice.toFixed(2)}</p>
+                      <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.18-U7LBxe", id: "onboarding.sections.marketing-section.div.18" , instance: createOpaqueUiInstanceId("iter-7e61396171", String(product.id))})} className="flex-1 min-w-0">
+                        <p {...uiAttributes({ uid: "onboarding.sections.marketing-section.p.7-jKMXv5", id: "onboarding.sections.marketing-section.p.7" , instance: createOpaqueUiInstanceId("iter-090c46ac45", String(product.id))})} className="text-sm font-medium truncate">{product.title}</p>
+                        <p {...uiAttributes({ uid: "onboarding.sections.marketing-section.p.8-WFQEs5", id: "onboarding.sections.marketing-section.p.8" , instance: createOpaqueUiInstanceId("iter-98ecc0d092", String(product.id))})} className="text-xs text-muted-foreground">${product.basePrice.toFixed(2)}</p>
                       </div>
                     </label>
                   ))}
@@ -220,20 +220,20 @@ export function MarketingSection() {
                   <h4 {...uiAttributes({ uid: "onboarding.sections.marketing-section.h4.4-nPa06a", id: "onboarding.sections.marketing-section.h4.4" })} id="onboarding.sections.marketing-section.h4.2" className="font-medium">{t('onboarding.marketing.activeCoupons')}</h4>
                   {marketing.coupons.map((coupon) => (
                     <div
-                      key={coupon.id} {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.25-YWuj8O", id: "onboarding.sections.marketing-section.div.25" })}
+                      key={coupon.id} {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.25-YWuj8O", id: "onboarding.sections.marketing-section.div.25" , instance: createOpaqueUiInstanceId("iter-0cc3fd12cf", String(coupon.id))})}
                       className="flex items-center justify-between p-3 rounded-lg border"
                     >
-                      <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.26-gR2PYH", id: "onboarding.sections.marketing-section.div.26" })} className="flex items-center gap-3">
-                        <code {...uiAttributes({ uid: "onboarding.sections.marketing-section.code-rcu53H", id: "onboarding.sections.marketing-section.code" })} className="px-2 py-1 rounded bg-muted font-mono text-sm">
+                      <div {...uiAttributes({ uid: "onboarding.sections.marketing-section.div.26-gR2PYH", id: "onboarding.sections.marketing-section.div.26" , instance: createOpaqueUiInstanceId("iter-b9b4058815", String(coupon.id))})} className="flex items-center gap-3">
+                        <code {...uiAttributes({ uid: "onboarding.sections.marketing-section.code-rcu53H", id: "onboarding.sections.marketing-section.code" , instance: createOpaqueUiInstanceId("iter-0bf7004b12", String(coupon.id))})} className="px-2 py-1 rounded bg-muted font-mono text-sm">
                           {coupon.code}
                         </code>
-                        <Badge ui={{ uid: "onboarding.sections.marketing-section.badge.3-QFL2P0", id: "onboarding.sections.marketing-section.badge.3" }} variant="secondary">
+                        <Badge ui={{ uid: "onboarding.sections.marketing-section.badge.3-QFL2P0", id: "onboarding.sections.marketing-section.badge.3" , instance: createOpaqueUiInstanceId("iter-bf1bff35c2", String(coupon.id))}} variant="secondary">
                           {coupon.discountType === 'percentage'
                             ? t('onboarding.marketing.percentOff', { value: coupon.discountValue })
                             : t('onboarding.marketing.amountOff', { value: coupon.discountValue })}
                         </Badge>
                       </div>
-                      <Button ui={{ uid: "onboarding.sections.marketing-section.button.3-l3LHRd", id: "onboarding.sections.marketing-section.button.3" }} variant="ghost" size="icon" onClick={() => removeCoupon(coupon.id)}>
+                      <Button ui={{ uid: "onboarding.sections.marketing-section.button.3-l3LHRd", id: "onboarding.sections.marketing-section.button.3" , instance: createOpaqueUiInstanceId("iter-35c74960f9", String(coupon.id))}} variant="ghost" size="icon" onClick={() => removeCoupon(coupon.id)}>
                         <X className="h-4 w-4" />
                       </Button>
                     </div>

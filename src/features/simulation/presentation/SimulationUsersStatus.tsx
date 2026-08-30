@@ -5,7 +5,7 @@ import { CheckCircle2, Loader2, RefreshCw, XCircle } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { useSimulationUsersBootstrap } from "./use-simulation-users-bootstrap";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function SimulationUsersStatus() {
   const state = useSimulationUsersBootstrap();
@@ -38,7 +38,7 @@ export function SimulationUsersStatus() {
           const failed = result?.status === "failed";
           const specialty = result?.specialtySelection;
           return (
-            <div key={user.id} {...uiAttributes({ uid: "simulation.simulation-users-status.div.7-F3yX21", id: "simulation.simulation-users-status.div.7" })} className="flex min-w-0 items-start gap-2 rounded-xl bg-surface-container-low p-3 text-sm">
+            <div key={user.id} {...uiAttributes({ uid: "simulation.simulation-users-status.div.7-F3yX21", id: "simulation.simulation-users-status.div.7" , instance: createOpaqueUiInstanceId("iter-98c28be27a", String(user.id))})} className="flex min-w-0 items-start gap-2 rounded-xl bg-surface-container-low p-3 text-sm">
               {failed ? (
                 <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-error" aria-hidden />
               ) : result ? (
@@ -46,22 +46,22 @@ export function SimulationUsersStatus() {
               ) : (
                 <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-on-surface-variant" aria-hidden />
               )}
-              <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.8-d6Jdlm", id: "simulation.simulation-users-status.div.8" })} className="min-w-0 flex-1 break-words">
-                <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.9-iWXG97", id: "simulation.simulation-users-status.div.9" })} className="font-semibold text-on-surface">{user.storeName}</div>
-                <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.10-eWGLW6", id: "simulation.simulation-users-status.div.10" })} className="text-xs text-on-surface-variant" dir="ltr">{user.phone}</div>
+              <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.8-d6Jdlm", id: "simulation.simulation-users-status.div.8" , instance: createOpaqueUiInstanceId("iter-07ff8d70fa", String(user.id))})} className="min-w-0 flex-1 break-words">
+                <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.9-iWXG97", id: "simulation.simulation-users-status.div.9" , instance: createOpaqueUiInstanceId("iter-8ccc033e38", String(user.id))})} className="font-semibold text-on-surface">{user.storeName}</div>
+                <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.10-eWGLW6", id: "simulation.simulation-users-status.div.10" , instance: createOpaqueUiInstanceId("iter-cb8cb3f62d", String(user.id))})} className="text-xs text-on-surface-variant" dir="ltr">{user.phone}</div>
                 {specialty ? (
-                  <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.11-AU8h0a", id: "simulation.simulation-users-status.div.11" })} className="mt-1 space-y-0.5 text-xs text-on-surface-variant">
-                    <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.12-ezw3L8", id: "simulation.simulation-users-status.div.12" })}>
-                      التصنيف الرئيسي: <span {...uiAttributes({ uid: "simulation.simulation-users-status.span-FC6rVQ", id: "simulation.simulation-users-status.span" })} className="font-semibold text-on-surface">{specialty.main.nameAr}</span>
+                  <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.11-AU8h0a", id: "simulation.simulation-users-status.div.11" , instance: createOpaqueUiInstanceId("iter-51b7a7cb71", String(user.id))})} className="mt-1 space-y-0.5 text-xs text-on-surface-variant">
+                    <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.12-ezw3L8", id: "simulation.simulation-users-status.div.12" , instance: createOpaqueUiInstanceId("iter-64a4e69bf9", String(user.id))})}>
+                      التصنيف الرئيسي: <span {...uiAttributes({ uid: "simulation.simulation-users-status.span-FC6rVQ", id: "simulation.simulation-users-status.span" , instance: createOpaqueUiInstanceId("iter-33110abafb", String(user.id))})} className="font-semibold text-on-surface">{specialty.main.nameAr}</span>
                     </div>
                     {specialty.sub ? (
-                      <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.13-OTb8Yr", id: "simulation.simulation-users-status.div.13" })}>
-                        التصنيف الفرعي: <span {...uiAttributes({ uid: "simulation.simulation-users-status.span.2-Z6LJ9Z", id: "simulation.simulation-users-status.span.2" })} className="font-semibold text-on-surface">{specialty.sub.nameAr}</span>
+                      <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.13-OTb8Yr", id: "simulation.simulation-users-status.div.13" , instance: createOpaqueUiInstanceId("iter-8151fc7070", String(user.id))})}>
+                        التصنيف الفرعي: <span {...uiAttributes({ uid: "simulation.simulation-users-status.span.2-Z6LJ9Z", id: "simulation.simulation-users-status.span.2" , instance: createOpaqueUiInstanceId("iter-13b66b6dfa", String(user.id))})} className="font-semibold text-on-surface">{specialty.sub.nameAr}</span>
                       </div>
                     ) : null}
                   </div>
                 ) : null}
-                {failed ? <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.14-49Jee3", id: "simulation.simulation-users-status.div.14" })} className="break-words text-xs text-error">{result.error}</div> : null}
+                {failed ? <div {...uiAttributes({ uid: "simulation.simulation-users-status.div.14-49Jee3", id: "simulation.simulation-users-status.div.14" , instance: createOpaqueUiInstanceId("iter-84a51518b7", String(user.id))})} className="break-words text-xs text-error">{result.error}</div> : null}
               </div>
             </div>
           );

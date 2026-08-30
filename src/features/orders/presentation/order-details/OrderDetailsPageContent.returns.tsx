@@ -42,7 +42,7 @@ import {
 import type { DbRow, OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 export function ReturnsPanel({
   details,
@@ -87,19 +87,19 @@ export function ReturnsPanel({
               isSeller && String(returnRequest.status) === "requested";
             return (
               <div
-                key={returnRequestId} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.div.3-SslQC9", id: "orders.order-details.order-details-page-content.returns.div.3" })}
+                key={returnRequestId} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.div.3-SslQC9", id: "orders.order-details.order-details-page-content.returns.div.3" , instance: createOpaqueUiInstanceId("iter-0b9f49876c", String(returnRequestId))})}
                 className="rounded-lg border border-outline-variant p-3 text-sm"
               >
-                <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.p.3-XMf61Z", id: "orders.order-details.order-details-page-content.returns.p.3" })} className="font-semibold">
+                <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.p.3-XMf61Z", id: "orders.order-details.order-details-page-content.returns.p.3" , instance: createOpaqueUiInstanceId("iter-b00834572b", String(returnRequestId))})} className="font-semibold">
                   {text.returnStatus}: {statusLabel(returnRequest.status)}
                 </p>
                 {returnRequest.reason ? (
-                  <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.p.4-Ld8WhM", id: "orders.order-details.order-details-page-content.returns.p.4" })} className="mt-1 text-xs text-muted-foreground">
+                  <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.p.4-Ld8WhM", id: "orders.order-details.order-details-page-content.returns.p.4" , instance: createOpaqueUiInstanceId("iter-894da5b746", String(returnRequestId))})} className="mt-1 text-xs text-muted-foreground">
                     {text.returnReason}: {String(returnRequest.reason)}
                   </p>
                 ) : null}
                 {requestItems.length > 0 ? (
-                  <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.div.4-uWf6I4", id: "orders.order-details.order-details-page-content.returns.div.4" })} className="mt-2 space-y-1">
+                  <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.div.4-uWf6I4", id: "orders.order-details.order-details-page-content.returns.div.4" , instance: createOpaqueUiInstanceId("iter-8df927b685", String(returnRequestId))})} className="mt-2 space-y-1">
                     {requestItems.map((requestItem) => {
                       const orderItem = details.orderItems.find(
                         (item) =>
@@ -107,7 +107,7 @@ export function ReturnsPanel({
                       );
                       return (
                         <p
-                          key={String(requestItem.id)} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.p.5-KmC5E1", id: "orders.order-details.order-details-page-content.returns.p.5" })}
+                          key={String(requestItem.id)} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.p.5-KmC5E1", id: "orders.order-details.order-details-page-content.returns.p.5" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-b78e88bc93", String(String(requestItem.id))), createOpaqueUiInstanceId("iter-d68daa3873", String(String(requestItem.id))))})}
                           className="text-xs text-muted-foreground"
                         >
                           {String(
@@ -120,7 +120,7 @@ export function ReturnsPanel({
                   </div>
                 ) : null}
                 {canDecide ? (
-                  <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.div.5-j0nHBz", id: "orders.order-details.order-details-page-content.returns.div.5" })} className="mt-3 flex flex-wrap gap-2">
+                  <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.returns.div.5-j0nHBz", id: "orders.order-details.order-details-page-content.returns.div.5" , instance: createOpaqueUiInstanceId("iter-3334151484", String(returnRequestId))})} className="mt-3 flex flex-wrap gap-2">
                     <OrderActionButton
                       action="seller_approve_return"
                       busyAction={busyAction}

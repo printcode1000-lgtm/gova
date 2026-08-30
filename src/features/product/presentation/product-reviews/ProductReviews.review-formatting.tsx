@@ -3,7 +3,7 @@
 import type {
   ProductReviewsResult,
 } from "@/features/product";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export const PAGE_SIZE = 3;
 
@@ -29,7 +29,7 @@ export function Stars({ id, value, size = "text-lg" }: { value: number; size?: s
     <span {...uiAttributes({ uid: "product.product-reviews.product-reviews.review-formatting.span-X7xLrb", id: "product.product-reviews.product-reviews.review-formatting.span" })} id={id} className={`inline-flex ${size}`} dir="ltr">
       {[1, 2, 3, 4, 5].map((star) => (
         <span
-          key={star} {...uiAttributes({ uid: "product.product-reviews.product-reviews.review-formatting.span.2-0ZlsQJ", id: "product.product-reviews.product-reviews.review-formatting.span.2" })}
+          key={star} {...uiAttributes({ uid: "product.product-reviews.product-reviews.review-formatting.span.2-0ZlsQJ", id: "product.product-reviews.product-reviews.review-formatting.span.2" , instance: createOpaqueUiInstanceId("iter-a3738eddfd", String(star))})}
           className={
             star <= Math.round(value) ? "text-amber-500" : "text-gray-300"
           }

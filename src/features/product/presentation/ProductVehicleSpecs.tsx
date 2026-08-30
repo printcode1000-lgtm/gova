@@ -12,7 +12,7 @@ import type {
   ProductMode,
   ProductComponentConfig,
 } from "./product-component.types";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 const FALLBACK_IMAGE = "/images/subCategories/Cars for Sale.webp";
 
@@ -78,7 +78,7 @@ export function ProductVehicleSpecs({ id,
       <div {...uiAttributes({ uid: "product.product-vehicle-specs.div-FJ6CHB", id: "product.product-vehicle-specs.div" })} id={id} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {selected.map(({ group, value, option }) => (
           <div
-            key={group.key} {...uiAttributes({ uid: "product.product-vehicle-specs.div.2-T0vZaC", id: "product.product-vehicle-specs.div.2" })}
+            key={group.key} {...uiAttributes({ uid: "product.product-vehicle-specs.div.2-T0vZaC", id: "product.product-vehicle-specs.div.2" , instance: createOpaqueUiInstanceId("iter-d0108fad70", String(group.key))})}
             className="flex items-center gap-3 rounded-xl border bg-muted/20 p-3"
           >
             {group.supportsImage ? (
@@ -91,11 +91,11 @@ export function ProductVehicleSpecs({ id,
                 className="h-16 w-16 shrink-0 rounded-lg object-contain bg-background"
               />
             ) : null}
-            <div {...uiAttributes({ uid: "product.product-vehicle-specs.div.3-3W1Ozx", id: "product.product-vehicle-specs.div.3" })} className="min-w-0">
-              <p {...uiAttributes({ uid: "product.product-vehicle-specs.p.3-a4n0nQ", id: "product.product-vehicle-specs.p.3" })} className="text-xs text-muted-foreground">{group.name.ar}</p>
-              <p {...uiAttributes({ uid: "product.product-vehicle-specs.p.4-IVp3N3", id: "product.product-vehicle-specs.p.4" })} className="mt-1 font-semibold">{option?.name.ar || value}</p>
+            <div {...uiAttributes({ uid: "product.product-vehicle-specs.div.3-3W1Ozx", id: "product.product-vehicle-specs.div.3" , instance: createOpaqueUiInstanceId("iter-bcf3cde459", String(group.key))})} className="min-w-0">
+              <p {...uiAttributes({ uid: "product.product-vehicle-specs.p.3-a4n0nQ", id: "product.product-vehicle-specs.p.3" , instance: createOpaqueUiInstanceId("iter-8ab41fe912", String(group.key))})} className="text-xs text-muted-foreground">{group.name.ar}</p>
+              <p {...uiAttributes({ uid: "product.product-vehicle-specs.p.4-IVp3N3", id: "product.product-vehicle-specs.p.4" , instance: createOpaqueUiInstanceId("iter-63da414441", String(group.key))})} className="mt-1 font-semibold">{option?.name.ar || value}</p>
               {option?.name.en ? (
-                <p {...uiAttributes({ uid: "product.product-vehicle-specs.p.5-g2gJb8", id: "product.product-vehicle-specs.p.5" })} className="truncate text-xs text-muted-foreground" dir="ltr">
+                <p {...uiAttributes({ uid: "product.product-vehicle-specs.p.5-g2gJb8", id: "product.product-vehicle-specs.p.5" , instance: createOpaqueUiInstanceId("iter-1cd9f3261f", String(group.key))})} className="truncate text-xs text-muted-foreground" dir="ltr">
                   {option.name.en}
                 </p>
               ) : null}
@@ -114,26 +114,26 @@ export function ProductVehicleSpecs({ id,
         const selectedOption = options[group.key]?.find((item) => item.id === selectedId);
         return (
           <details id={id}
-            key={group.key} {...uiAttributes({ uid: "product.product-vehicle-specs.details-Rfv3Lh", id: "product.product-vehicle-specs.details" })}
+            key={group.key} {...uiAttributes({ uid: "product.product-vehicle-specs.details-Rfv3Lh", id: "product.product-vehicle-specs.details" , instance: createOpaqueUiInstanceId("iter-94275a8601", String(group.key))})}
             className="rounded-xl border bg-card"
             open={false}
           >
-            <summary {...uiAttributes({ uid: "product.product-vehicle-specs.summary-D9xbUC", id: "product.product-vehicle-specs.summary" })} className="px-4 py-3 font-semibold">
+            <summary {...uiAttributes({ uid: "product.product-vehicle-specs.summary-D9xbUC", id: "product.product-vehicle-specs.summary" , instance: createOpaqueUiInstanceId("iter-0133df9e85", String(group.key))})} className="px-4 py-3 font-semibold">
               {group.name.ar}
               {selectedOption ? (
-                <span {...uiAttributes({ uid: "product.product-vehicle-specs.span-NZTy95", id: "product.product-vehicle-specs.span" })} className="mr-2 text-sm font-normal text-primary">
+                <span {...uiAttributes({ uid: "product.product-vehicle-specs.span-NZTy95", id: "product.product-vehicle-specs.span" , instance: createOpaqueUiInstanceId("iter-4ed3417023", String(group.key))})} className="mr-2 text-sm font-normal text-primary">
                   (
                   {selectedOption.name.ar}
                   )
                 </span>
               ) : null}
             </summary>
-            <div {...uiAttributes({ uid: "product.product-vehicle-specs.div.5-v3yNkZ", id: "product.product-vehicle-specs.div.5" })} className="grid grid-cols-2 gap-2 border-t p-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div {...uiAttributes({ uid: "product.product-vehicle-specs.div.5-v3yNkZ", id: "product.product-vehicle-specs.div.5" , instance: createOpaqueUiInstanceId("iter-27a9983998", String(group.key))})} className="grid grid-cols-2 gap-2 border-t p-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {(options[group.key] ?? []).map((option) => {
                 const selected = selectedId === option.id;
                 return (
                   <button id={id}
-                    key={option.id} {...uiAttributes({ uid: "product.product-vehicle-specs.button-KB2KXM", id: "product.product-vehicle-specs.button" })}
+                    key={option.id} {...uiAttributes({ uid: "product.product-vehicle-specs.button-KB2KXM", id: "product.product-vehicle-specs.button" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-b240b05c46", String(option.id)), createOpaqueUiInstanceId("iter-96158fa1c1", String(option.id)))})}
                     type="button"
                     aria-pressed={selected}
                     onClick={() =>
@@ -158,7 +158,7 @@ export function ProductVehicleSpecs({ id,
                         className="mx-auto h-16 w-full rounded-lg object-contain"
                       />
                     ) : null}
-                    <span {...uiAttributes({ uid: "product.product-vehicle-specs.span.2-851IGF", id: "product.product-vehicle-specs.span.2" })} className="mt-2 block text-sm font-medium">
+                    <span {...uiAttributes({ uid: "product.product-vehicle-specs.span.2-851IGF", id: "product.product-vehicle-specs.span.2" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-53001be164", String(option.id)), createOpaqueUiInstanceId("iter-3b11526f99", String(option.id)))})} className="mt-2 block text-sm font-medium">
                       {option.name.ar}
                     </span>
                   </button>

@@ -1,7 +1,7 @@
 import { DatabaseZap } from "lucide-react";
 
 import type { DataHealthReport } from "@asol/data-health-core";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function DataHealthSchemaPanel({
   report,
@@ -38,10 +38,10 @@ export function DataHealthSchemaPanel({
         </div>
       ) : null}
       {comparison?.databases.map((database) => (
-        <div key={database.database} {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.11-w0f6NJ", id: "data-health.data-health-schema-panel.div.11" })} className="rounded-md border bg-surface p-3">
-          <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.12-OWf8fY", id: "data-health.data-health-schema-panel.div.12" })} className="flex flex-wrap items-center justify-between gap-2">
-            <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.13-V5W3SV", id: "data-health.data-health-schema-panel.div.13" })} className="font-semibold">{database.database}</div>
-            <span {...uiAttributes({ uid: "data-health.data-health-schema-panel.span-4Z8uYI", id: "data-health.data-health-schema-panel.span" })}
+        <div key={database.database} {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.11-w0f6NJ", id: "data-health.data-health-schema-panel.div.11" , instance: createOpaqueUiInstanceId("iter-2169ae7ce4", String(database.database))})} className="rounded-md border bg-surface p-3">
+          <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.12-OWf8fY", id: "data-health.data-health-schema-panel.div.12" , instance: createOpaqueUiInstanceId("iter-90121d5b0e", String(database.database))})} className="flex flex-wrap items-center justify-between gap-2">
+            <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.13-V5W3SV", id: "data-health.data-health-schema-panel.div.13" , instance: createOpaqueUiInstanceId("iter-70b262e665", String(database.database))})} className="font-semibold">{database.database}</div>
+            <span {...uiAttributes({ uid: "data-health.data-health-schema-panel.span-4Z8uYI", id: "data-health.data-health-schema-panel.span" , instance: createOpaqueUiInstanceId("iter-421a9373ee", String(database.database))})}
               className={`rounded-full px-2 py-1 text-xs ${
                 database.status === "matched"
                   ? "bg-green-50 text-green-700"
@@ -60,14 +60,14 @@ export function DataHealthSchemaPanel({
             </span>
           </div>
           {database.message ? (
-            <p {...uiAttributes({ uid: "data-health.data-health-schema-panel.p.3-YBRu7U", id: "data-health.data-health-schema-panel.p.3" })} className="mt-2 text-sm text-on-surface-variant">{database.message}</p>
+            <p {...uiAttributes({ uid: "data-health.data-health-schema-panel.p.3-YBRu7U", id: "data-health.data-health-schema-panel.p.3" , instance: createOpaqueUiInstanceId("iter-9ee0de1a68", String(database.database))})} className="mt-2 text-sm text-on-surface-variant">{database.message}</p>
           ) : null}
           {database.sqliteVersion ? (
-            <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.14-I98xWI", id: "data-health.data-health-schema-panel.div.14" })} className="mt-2 grid gap-2 text-xs md:grid-cols-2" dir="ltr">
-              <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.15-dR7NPx", id: "data-health.data-health-schema-panel.div.15" })} className="break-all rounded bg-muted p-2">
+            <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.14-I98xWI", id: "data-health.data-health-schema-panel.div.14" , instance: createOpaqueUiInstanceId("iter-3341cda243", String(database.database))})} className="mt-2 grid gap-2 text-xs md:grid-cols-2" dir="ltr">
+              <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.15-dR7NPx", id: "data-health.data-health-schema-panel.div.15" , instance: createOpaqueUiInstanceId("iter-b453ab572b", String(database.database))})} className="break-all rounded bg-muted p-2">
                 SQLite: {database.sqliteVersion}
               </div>
-              <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.16-rd8Wyv", id: "data-health.data-health-schema-panel.div.16" })} className="break-all rounded bg-muted p-2">
+              <div {...uiAttributes({ uid: "data-health.data-health-schema-panel.div.16-rd8Wyv", id: "data-health.data-health-schema-panel.div.16" , instance: createOpaqueUiInstanceId("iter-50cc1d840e", String(database.database))})} className="break-all rounded bg-muted p-2">
                 Turso: {database.tursoVersion}
               </div>
             </div>

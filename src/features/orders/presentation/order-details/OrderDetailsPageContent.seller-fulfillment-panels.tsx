@@ -12,7 +12,7 @@ import {
 } from "./OrderDetailsPageContent.navigation-summary";
 import { useProfileFulfillmentSettings } from "@/features/profile/ui";
 import { useProfileCarrierLabels } from "@/features/profile/ui";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function SellerCarrierLinkPanel({ id,
   orderId,
@@ -65,7 +65,7 @@ export function SellerCarrierLinkPanel({ id,
             className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
           >
             {carrierUids.map((uid) => (
-              <option key={uid} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.option-EEKE1g", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.option" })} value={uid}>
+              <option key={uid} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.seller-fulfillment-panels.option-EEKE1g", id: "orders.order-details.order-details-page-content.seller-fulfillment-panels.option" , instance: createOpaqueUiInstanceId("iter-87b45b0bd5", String(uid))})} value={uid}>
                 {labelForUid(uid)}
               </option>
             ))}

@@ -10,7 +10,7 @@ import {
 import type { PhoneCountryCode } from "@asol/auth-core";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./dialog";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface PhoneCountryDialogProps {
   id?: string;
@@ -75,8 +75,8 @@ export function PhoneCountryDialog({
           ) : (
             <ul {...uiAttributes({ uid: "shared.phone-country-dialog.ul-5G1LWA", id: "shared.phone-country-dialog.ul" })} className="space-y-1">
               {visible.map((choice) => (
-                <li key={choice.code} {...uiAttributes({ uid: "shared.phone-country-dialog.li-hBGkJ9", id: "shared.phone-country-dialog.li" })}>
-                  <button {...uiAttributes({ uid: "shared.phone-country-dialog.button-jSL3TK", id: "shared.phone-country-dialog.button" })}
+                <li key={choice.code} {...uiAttributes({ uid: "shared.phone-country-dialog.li-hBGkJ9", id: "shared.phone-country-dialog.li" , instance: createOpaqueUiInstanceId("iter-362cf72a3c", String(choice.code))})}>
+                  <button {...uiAttributes({ uid: "shared.phone-country-dialog.button-jSL3TK", id: "shared.phone-country-dialog.button" , instance: createOpaqueUiInstanceId("iter-3425546c7a", String(choice.code))})}
                     type="button"
                     aria-pressed={choice.code === selected}
                     onClick={() => onSelect(choice.code)}
@@ -86,11 +86,11 @@ export function PhoneCountryDialog({
                         : "border-transparent bg-surface-container-low text-on-surface"
                     }`}
                   >
-                    <span {...uiAttributes({ uid: "shared.phone-country-dialog.span-Lr9KS0", id: "shared.phone-country-dialog.span" })} aria-hidden="true" className="text-lg leading-none">
+                    <span {...uiAttributes({ uid: "shared.phone-country-dialog.span-Lr9KS0", id: "shared.phone-country-dialog.span" , instance: createOpaqueUiInstanceId("iter-4c4bd39598", String(choice.code))})} aria-hidden="true" className="text-lg leading-none">
                       {choice.flag}
                     </span>
-                    <span {...uiAttributes({ uid: "shared.phone-country-dialog.span.2-n5dC9T", id: "shared.phone-country-dialog.span.2" })} className="flex-1">{choice.name}</span>
-                    <span {...uiAttributes({ uid: "shared.phone-country-dialog.span.3-XWbWZ6", id: "shared.phone-country-dialog.span.3" })} dir="ltr" className="text-xs text-on-surface-variant">
+                    <span {...uiAttributes({ uid: "shared.phone-country-dialog.span.2-n5dC9T", id: "shared.phone-country-dialog.span.2" , instance: createOpaqueUiInstanceId("iter-3c34f83116", String(choice.code))})} className="flex-1">{choice.name}</span>
+                    <span {...uiAttributes({ uid: "shared.phone-country-dialog.span.3-XWbWZ6", id: "shared.phone-country-dialog.span.3" , instance: createOpaqueUiInstanceId("iter-8a448c4635", String(choice.code))})} dir="ltr" className="text-xs text-on-surface-variant">
                       +{choice.callingCode}
                     </span>
                   </button>

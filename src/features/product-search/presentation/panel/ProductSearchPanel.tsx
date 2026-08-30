@@ -23,7 +23,7 @@ import { defaultFieldKeys } from "./product-search-fields";
 import type { ProductSearchPanelProps } from "./product-search-panel.types";
 import { runProductSearchPanelRequest } from "./product-search-panel-request";
 import { buildProductSearchCategoryTabs } from "./product-search-category-tabs";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { uiAttributes, type UiDescriptor , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const SEARCH_MAIN_CATEGORY_UI: UiDescriptor = { uid: "search-main-category-76NCg1", id: "search-main-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "search-main-category" } };
 const SEARCH_SUBCATEGORY_UI: UiDescriptor = { uid: "search-subcategory-HX5YZy", id: "search-subcategory", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "search-subcategory" } };
@@ -202,7 +202,7 @@ export function ProductSearchPanel({ id,
         <div {...uiAttributes({ uid: "product-search.panel.product-search-panel.div.9-kNIW8L", id: "product-search.panel.product-search-panel.div.9" })} id="product-search.panel.product-search-panel.div.2" className="flex gap-2">
           {(["products", "sellers"] as ProductSearchMode[]).map((item) => (
             <button key={item}
-              {...uiAttributes({ uid: "search-sellers-mode-GBOEa3", id: "search-sellers-mode", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "search-sellers-mode" } })}
+              {...uiAttributes({ uid: "search-sellers-mode-GBOEa3", id: "search-sellers-mode", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "search-sellers-mode" } , instance: createOpaqueUiInstanceId("iter-b8051d3cd1", String(item))})}
               type="button"
               onClick={() => setActiveMode(item)}
               className={`h-10 rounded-lg border px-4 text-sm font-semibold ${

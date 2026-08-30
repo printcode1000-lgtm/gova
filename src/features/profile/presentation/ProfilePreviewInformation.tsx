@@ -17,7 +17,7 @@ import {
 import type { ProfileFulfillmentSettings } from "@/features/profile/domain/profile-fulfillment-settings.entity";
 import type { StoreDetailsData } from "@/features/profile/domain/store-details.entity";
 import { useProfileCarrierLabels } from "@/features/profile/presentation/hooks/use-profile-carrier-labels";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 interface ProfilePreviewInformationProps {
   locale: "ar" | "en";
@@ -97,18 +97,18 @@ export function ProfilePreviewMetrics({
     <div {...uiAttributes({ uid: "profile.profile-preview-information.div.9-xQG9sJ", id: "profile.profile-preview-information.div.9" })} id="profile.profile-preview-information.div" className="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {metrics.map((metric) => (
         <article
-          key={metric.title} {...uiAttributes({ uid: "profile.profile-preview-information.article-VC9N7d", id: "profile.profile-preview-information.article" })}
+          key={metric.title} {...uiAttributes({ uid: "profile.profile-preview-information.article-VC9N7d", id: "profile.profile-preview-information.article" , instance: createOpaqueUiInstanceId("iter-8bdd28bb66", String(metric.title))})}
           className="min-w-0 rounded-2xl border border-outline-variant/70 bg-surface p-4 shadow-sm"
         >
-          <div {...uiAttributes({ uid: "profile.profile-preview-information.div.10-UFyZ5p", id: "profile.profile-preview-information.div.10" })}
+          <div {...uiAttributes({ uid: "profile.profile-preview-information.div.10-UFyZ5p", id: "profile.profile-preview-information.div.10" , instance: createOpaqueUiInstanceId("iter-96140a4ae4", String(metric.title))})}
             className={`mb-3 flex h-11 w-11 items-center justify-center rounded-xl ${metric.tone}`}
           >
             <FontAwesomeIcon icon={metric.icon} />
           </div>
-          <p {...uiAttributes({ uid: "profile.profile-preview-information.p.6-1Dg3Bk", id: "profile.profile-preview-information.p.6" })} className="break-words text-xs font-semibold text-on-surface-variant">
+          <p {...uiAttributes({ uid: "profile.profile-preview-information.p.6-1Dg3Bk", id: "profile.profile-preview-information.p.6" , instance: createOpaqueUiInstanceId("iter-caf47d4a51", String(metric.title))})} className="break-words text-xs font-semibold text-on-surface-variant">
             {metric.title}
           </p>
-          <p {...uiAttributes({ uid: "profile.profile-preview-information.p.7-06SXox", id: "profile.profile-preview-information.p.7" })} className="mt-1 break-words font-bold text-on-surface">{metric.value}</p>
+          <p {...uiAttributes({ uid: "profile.profile-preview-information.p.7-06SXox", id: "profile.profile-preview-information.p.7" , instance: createOpaqueUiInstanceId("iter-8491d2c96c", String(metric.title))})} className="mt-1 break-words font-bold text-on-surface">{metric.value}</p>
         </article>
       ))}
     </div>
@@ -212,14 +212,14 @@ export function ProfileFulfillmentPreviewCard({
       <div {...uiAttributes({ uid: "profile.profile-preview-information.div.13-I5Qtga", id: "profile.profile-preview-information.div.13" })} id="profile.profile-preview-information.div.4" className="grid min-w-0 gap-3 sm:grid-cols-2">
         {rows.map((row) => (
           <div
-            key={row.label} {...uiAttributes({ uid: "profile.profile-preview-information.div.14-MMv3z1", id: "profile.profile-preview-information.div.14" })}
+            key={row.label} {...uiAttributes({ uid: "profile.profile-preview-information.div.14-MMv3z1", id: "profile.profile-preview-information.div.14" , instance: createOpaqueUiInstanceId("iter-c218b8b8ad", String(row.label))})}
             className="min-w-0 rounded-xl bg-surface-container-low p-3"
           >
-            <p {...uiAttributes({ uid: "profile.profile-preview-information.p.9-fEEmY6", id: "profile.profile-preview-information.p.9" })} className="flex min-w-0 items-start gap-2 text-xs text-on-surface-variant">
+            <p {...uiAttributes({ uid: "profile.profile-preview-information.p.9-fEEmY6", id: "profile.profile-preview-information.p.9" , instance: createOpaqueUiInstanceId("iter-ec1d89027b", String(row.label))})} className="flex min-w-0 items-start gap-2 text-xs text-on-surface-variant">
               <FontAwesomeIcon icon={row.icon} className="mt-0.5 flex-shrink-0 text-secondary" />
-              <span {...uiAttributes({ uid: "profile.profile-preview-information.span.3-W6zU1b", id: "profile.profile-preview-information.span.3" })} className="min-w-0 break-words">{row.label}</span>
+              <span {...uiAttributes({ uid: "profile.profile-preview-information.span.3-W6zU1b", id: "profile.profile-preview-information.span.3" , instance: createOpaqueUiInstanceId("iter-60ecba4fed", String(row.label))})} className="min-w-0 break-words">{row.label}</span>
             </p>
-            <p {...uiAttributes({ uid: "profile.profile-preview-information.p.10-7MsNAE", id: "profile.profile-preview-information.p.10" })} className="mt-1 break-words font-semibold">{row.value}</p>
+            <p {...uiAttributes({ uid: "profile.profile-preview-information.p.10-7MsNAE", id: "profile.profile-preview-information.p.10" , instance: createOpaqueUiInstanceId("iter-c8f7ea4717", String(row.label))})} className="mt-1 break-words font-semibold">{row.value}</p>
           </div>
         ))}
       </div>
@@ -261,7 +261,7 @@ export function ProfileFulfillmentPreviewCard({
           <div {...uiAttributes({ uid: "profile.profile-preview-information.div.18-05WW5B", id: "profile.profile-preview-information.div.18" })} id="profile.profile-preview-information.div.8" className="flex min-w-0 flex-wrap gap-2">
             {carriers.map((carrier) => (
               <span
-                key={carrier.uid} {...uiAttributes({ uid: "profile.profile-preview-information.span.4-XP60hy", id: "profile.profile-preview-information.span.4" })}
+                key={carrier.uid} {...uiAttributes({ uid: "profile.profile-preview-information.span.4-XP60hy", id: "profile.profile-preview-information.span.4" , instance: createOpaqueUiInstanceId("iter-d9b0278883", String(carrier.uid))})}
                 className="min-w-0 max-w-full break-words rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary"
               >
                 {carrier.label}

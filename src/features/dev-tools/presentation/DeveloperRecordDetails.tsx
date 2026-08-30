@@ -1,5 +1,5 @@
 
-import { uiAttributes } from "@asol/ui-registry-core";type DetailRecord = Record<string, unknown>;
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";type DetailRecord = Record<string, unknown>;
 
 function formatDetailValue(value: unknown) {
   if (value === null) return "null";
@@ -22,16 +22,16 @@ export function SelectedRecordDetails({ id,
         <dl {...uiAttributes({ uid: "dev-tools.developer-record-details.dl-8IaQSm", id: "dev-tools.developer-record-details.dl" })} className="divide-y text-sm">
           {Object.entries(record).map(([key, value]) => (
             <div
-              key={key} {...uiAttributes({ uid: "dev-tools.developer-record-details.div.2-E3saZY", id: "dev-tools.developer-record-details.div.2" })}
+              key={key} {...uiAttributes({ uid: "dev-tools.developer-record-details.div.2-E3saZY", id: "dev-tools.developer-record-details.div.2" , instance: createOpaqueUiInstanceId("iter-27dfe50fd9", String(key))})}
               className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(130px,0.4fr)_1fr] sm:gap-4"
             >
-              <dt {...uiAttributes({ uid: "dev-tools.developer-record-details.dt-Un7wm3", id: "dev-tools.developer-record-details.dt" })}
+              <dt {...uiAttributes({ uid: "dev-tools.developer-record-details.dt-Un7wm3", id: "dev-tools.developer-record-details.dt" , instance: createOpaqueUiInstanceId("iter-805dc3c1ae", String(key))})}
                 className="font-mono text-xs font-semibold text-primary"
                 dir="ltr"
               >
                 {key}
               </dt>
-              <dd {...uiAttributes({ uid: "dev-tools.developer-record-details.dd-GIC0H9", id: "dev-tools.developer-record-details.dd" })}
+              <dd {...uiAttributes({ uid: "dev-tools.developer-record-details.dd-GIC0H9", id: "dev-tools.developer-record-details.dd" , instance: createOpaqueUiInstanceId("iter-1941c73862", String(key))})}
                 className="break-all whitespace-pre-wrap text-muted-foreground"
                 dir="auto"
               >

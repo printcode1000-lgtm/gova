@@ -7,7 +7,7 @@ import * as React from "react";
 
 import { useTranslation } from "@/shared/i18n";
 import type { CollectionDisplay } from "@/features/categories";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 import {
   categoryGridClassName,
   categoryTileClassName,
@@ -91,12 +91,12 @@ export function CollectionSubcategoriesPage({
 
             return (
               <Link key={item.id}
-                {...uiAttributes({ uid: "collection-item-XJ5IGf", id: "collection-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "collection-item" } })}
+                {...uiAttributes({ uid: "collection-item-XJ5IGf", id: "collection-item", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "collection-item" } , instance: createOpaqueUiInstanceId("iter-d2507a7444", String(item.id))})}
                 href={`/categories/${item.id}`}
                 className={categoryTileClassName}
                 aria-label={altText}
               >
-                <div key="media" {...uiAttributes({ uid: "categories.collection-subcategories-page.div.13-UZX92K", id: "categories.collection-subcategories-page.div.13" })} className={categoryTileImageClassName}>
+                <div key="media" {...uiAttributes({ uid: "categories.collection-subcategories-page.div.13-UZX92K", id: "categories.collection-subcategories-page.div.13" , instance: createOpaqueUiInstanceId("iter-2454d55556", String("media"))})} className={categoryTileImageClassName}>
                   <Image
                     src={imageSrc}
                     alt={altText}
@@ -104,7 +104,7 @@ export function CollectionSubcategoriesPage({
                     className="object-cover transition-opacity"
                   />
                 </div>
-                <span key="label" {...uiAttributes({ uid: "categories.collection-subcategories-page.span-OmRU04", id: "categories.collection-subcategories-page.span" })} className={categoryTileTitleClassName}>{name}</span>
+                <span key="label" {...uiAttributes({ uid: "categories.collection-subcategories-page.span-OmRU04", id: "categories.collection-subcategories-page.span" , instance: createOpaqueUiInstanceId("iter-6622d4fe36", String("label"))})} className={categoryTileTitleClassName}>{name}</span>
               </Link>
             );
           })}

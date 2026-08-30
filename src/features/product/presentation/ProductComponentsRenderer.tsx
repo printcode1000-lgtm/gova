@@ -24,7 +24,7 @@ import {
   PRODUCT_COMPONENT_TITLES,
   type BasicFieldKind,
 } from "./product-components-renderer.config";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 export {
   PRODUCT_DEMO_DETAILS,
   PRODUCT_DEMO_IMAGES,
@@ -159,9 +159,9 @@ export function ProductComponentsRenderer({ id,
           const showProfile = config.profile !== false;
           return (
             <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
-              <div {...uiAttributes({ uid: "product.product-components-renderer.div-6bEE2s", id: "product.product-components-renderer.div" })} className="flex flex-wrap gap-2">
+              <div {...uiAttributes({ uid: "product.product-components-renderer.div-6bEE2s", id: "product.product-components-renderer.div" , instance: createOpaqueUiInstanceId("iter-944a17088f", String(key))})} className="flex flex-wrap gap-2">
                 {config.cart ? (
-                  <ProductAddToCartButton ui={{ uid: "product-add-cart-IC6TTn", id: "product-add-cart", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-add-cart" } }}
+                  <ProductAddToCartButton ui={{ uid: "product-add-cart-IC6TTn", id: "product-add-cart", kind: "action", interaction: { type: "tap" }, simulation: { kind: "event", id: "product-add-cart" } , instance: createOpaqueUiInstanceId("iter-9a2eabd7f5", String(key))}}
                     productId={productId}
                     sellerId={ownerUid}
                     product={product}
@@ -228,7 +228,7 @@ export function ProductComponentsRenderer({ id,
 
         return (
           <ProductComponentFrame id={id} key={key} title={PRODUCT_COMPONENT_TITLES[key] ?? key}>
-            <div {...uiAttributes({ uid: "product.product-components-renderer.div.2-vHb5aX", id: "product.product-components-renderer.div.2" })} className="grid gap-3 sm:grid-cols-2">
+            <div {...uiAttributes({ uid: "product.product-components-renderer.div.2-vHb5aX", id: "product.product-components-renderer.div.2" , instance: createOpaqueUiInstanceId("iter-6c374192fb", String(key))})} className="grid gap-3 sm:grid-cols-2">
               {(PRODUCT_COMPONENT_FIELDS[key] ?? []).map(([fieldKey, label, kind]) => {
                 if (config[fieldKey] === false) return null;
                 return (

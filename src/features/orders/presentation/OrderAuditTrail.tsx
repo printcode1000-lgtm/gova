@@ -2,7 +2,7 @@
 
 import type { DbRow } from "./order-types";
 import { actionLabel, statusLabel } from "./order-labels";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 function auditTitle(entry: DbRow) {
   const nextStatus = entry.new_status;
@@ -21,10 +21,10 @@ export function OrderAuditTrail({ audit }: { audit: DbRow[] }) {
       ) : (
         <div {...uiAttributes({ uid: "orders.order-audit-trail.div.2-76CKIl", id: "orders.order-audit-trail.div.2" })} id="orders.order-audit-trail.div" className="mt-3 space-y-2">
           {audit.slice(0, 8).map((entry) => (
-            <div key={String(entry.id)} {...uiAttributes({ uid: "orders.order-audit-trail.div.3-IvT7wH", id: "orders.order-audit-trail.div.3" })} className="text-sm">
-              <p {...uiAttributes({ uid: "orders.order-audit-trail.p.3-s8PdYP", id: "orders.order-audit-trail.p.3" })} className="font-semibold">{auditTitle(entry)}</p>
+            <div key={String(entry.id)} {...uiAttributes({ uid: "orders.order-audit-trail.div.3-IvT7wH", id: "orders.order-audit-trail.div.3" , instance: createOpaqueUiInstanceId("iter-bba68fb7a5", String(String(entry.id)))})} className="text-sm">
+              <p {...uiAttributes({ uid: "orders.order-audit-trail.p.3-s8PdYP", id: "orders.order-audit-trail.p.3" , instance: createOpaqueUiInstanceId("iter-2a96b909ad", String(String(entry.id)))})} className="font-semibold">{auditTitle(entry)}</p>
               {entry.new_status ? (
-                <p {...uiAttributes({ uid: "orders.order-audit-trail.p.4-Z39F0d", id: "orders.order-audit-trail.p.4" })} className="text-xs text-muted-foreground">
+                <p {...uiAttributes({ uid: "orders.order-audit-trail.p.4-Z39F0d", id: "orders.order-audit-trail.p.4" , instance: createOpaqueUiInstanceId("iter-91d7d34b18", String(String(entry.id)))})} className="text-xs text-muted-foreground">
                   {actionLabel(entry.action)}
                 </p>
               ) : null}

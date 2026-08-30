@@ -55,18 +55,18 @@ return (
               if (!typePhones || typePhones.length === 0) return null;
 
               return (
-                <div key={type} {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.15-5uU765", id: "profile.contact-info.additional-contact-view.div.15" })} className="space-y-2">
-                  <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.16-0SJTgu", id: "profile.contact-info.additional-contact-view.div.16" })} className="flex items-center gap-2">
+                <div key={type} {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.15-5uU765", id: "profile.contact-info.additional-contact-view.div.15" , instance: createOpaqueUiInstanceId("iter-f0858785af", String(type))})} className="space-y-2">
+                  <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.16-0SJTgu", id: "profile.contact-info.additional-contact-view.div.16" , instance: createOpaqueUiInstanceId("iter-f3a666d710", String(type))})} className="flex items-center gap-2">
                     <FontAwesomeIcon
                       icon={quickAddIcon(type)}
                       className="h-4 w-4"
                       style={{ color: quickAddColor(type) }}
                     />
-                    <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.7-i8Aar6", id: "profile.contact-info.additional-contact-view.span.7" })} className="text-sm font-semibold" style={{ color: quickAddColor(type) }}>
+                    <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.7-i8Aar6", id: "profile.contact-info.additional-contact-view.span.7" , instance: createOpaqueUiInstanceId("iter-2a49607ecc", String(type))})} className="text-sm font-semibold" style={{ color: quickAddColor(type) }}>
                       {t(`onboarding.contactInfo.phoneTypes.${type}`)}
                     </span>
                     {!readOnly && (
-                      <Button ui={{ uid: "profile.contact-info.additional-contact-view.button.4-dR4MfM", id: "profile.contact-info.additional-contact-view.button.4" }}
+                      <Button ui={{ uid: "profile.contact-info.additional-contact-view.button.4-dR4MfM", id: "profile.contact-info.additional-contact-view.button.4" , instance: createOpaqueUiInstanceId("iter-7272438e8e", String(type))}}
                         variant="outline"
                         size="sm"
                         onClick={() => addAnotherPhone(type)}
@@ -76,7 +76,7 @@ return (
                       </Button>
                     )}
                   </div>
-                  <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.17-zPOR6U", id: "profile.contact-info.additional-contact-view.div.17" })} className="space-y-2">
+                  <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.17-zPOR6U", id: "profile.contact-info.additional-contact-view.div.17" , instance: createOpaqueUiInstanceId("iter-414abc51f9", String(type))})} className="space-y-2">
                     {typePhones.map((phone, index) => (
                       <ContactEntryCard
                         key={phone.id}
@@ -161,18 +161,18 @@ return (
                   if (!platformLinks || platformLinks.length === 0) return null;
 
                   return (
-                    <div key={platform} {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.22-6AhWCr", id: "profile.contact-info.additional-contact-view.div.22" })} className="space-y-2">
-                      <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.23-k8ufCF", id: "profile.contact-info.additional-contact-view.div.23" })} className="flex items-center gap-2">
+                    <div key={platform} {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.22-6AhWCr", id: "profile.contact-info.additional-contact-view.div.22" , instance: createOpaqueUiInstanceId("iter-f7a8c4f4bb", String(platform))})} className="space-y-2">
+                      <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.23-k8ufCF", id: "profile.contact-info.additional-contact-view.div.23" , instance: createOpaqueUiInstanceId("iter-555c9273a5", String(platform))})} className="flex items-center gap-2">
                         <FontAwesomeIcon
                           icon={quickAddIcon(platform)}
                           className="h-4 w-4"
                           style={{ color: quickAddColor(platform) }}
                         />
-                        <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.10-TIRfy2", id: "profile.contact-info.additional-contact-view.span.10" })} className="text-sm font-semibold" style={{ color: quickAddColor(platform) }}>
+                        <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.10-TIRfy2", id: "profile.contact-info.additional-contact-view.span.10" , instance: createOpaqueUiInstanceId("iter-4ffdea704a", String(platform))})} className="text-sm font-semibold" style={{ color: quickAddColor(platform) }}>
                           {t(`onboarding.contactInfo.platforms.${platform}`)}
                         </span>
                         {!readOnly && (
-                          <Button ui={{ uid: "profile.contact-info.additional-contact-view.button.5-HYa46Q", id: "profile.contact-info.additional-contact-view.button.5" }}
+                          <Button ui={{ uid: "profile.contact-info.additional-contact-view.button.5-HYa46Q", id: "profile.contact-info.additional-contact-view.button.5" , instance: createOpaqueUiInstanceId("iter-00957e1452", String(platform))}}
                             variant="outline"
                             size="sm"
                             onClick={() => addAnotherLink(platform)}
@@ -182,7 +182,7 @@ return (
                           </Button>
                         )}
                       </div>
-                      <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.24-KQR0uO", id: "profile.contact-info.additional-contact-view.div.24" })} className="space-y-2">
+                      <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.24-KQR0uO", id: "profile.contact-info.additional-contact-view.div.24" , instance: createOpaqueUiInstanceId("iter-37e3f93a8d", String(platform))})} className="space-y-2">
                         {platformLinks.map((link, index) => (
                           <ContactEntryCard
                             key={link.id}
@@ -283,20 +283,20 @@ return (
                 <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.30-3o5nW3", id: "profile.contact-info.additional-contact-view.div.30" })} id="profile.contact-info.additional-contact-view.div.12" className="space-y-4">
                   {localData.locations.map((loc, idx) => (
                     <div
-                      key={loc.id} {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.31-hZ4jcz", id: "profile.contact-info.additional-contact-view.div.31" })}
+                      key={loc.id} {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.31-hZ4jcz", id: "profile.contact-info.additional-contact-view.div.31" , instance: createOpaqueUiInstanceId("iter-b07dbc5b73", String(loc.id))})}
                       className="space-y-3 rounded-xl border p-4"
                       style={{
                         backgroundColor: `${quickAddColor('location')}10`,
                         borderColor: `${quickAddColor('location')}44`,
                       }}
                     >
-                      <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.32-Hjyy2n", id: "profile.contact-info.additional-contact-view.div.32" })} className="flex items-center justify-between gap-3">
-                        <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.15-sRW8Ey", id: "profile.contact-info.additional-contact-view.span.15" })} className="flex items-center gap-2 text-xs font-semibold" style={{ color: quickAddColor('location') }}>
+                      <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.32-Hjyy2n", id: "profile.contact-info.additional-contact-view.div.32" , instance: createOpaqueUiInstanceId("iter-231a9da029", String(loc.id))})} className="flex items-center justify-between gap-3">
+                        <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.15-sRW8Ey", id: "profile.contact-info.additional-contact-view.span.15" , instance: createOpaqueUiInstanceId("iter-b7c04b731e", String(loc.id))})} className="flex items-center gap-2 text-xs font-semibold" style={{ color: quickAddColor('location') }}>
                           <FontAwesomeIcon icon={quickAddIcon('location')} className="h-3.5 w-3.5" />
                           {locale === 'ar' ? `الموقع #${idx + 1}` : `Location #${idx + 1}`}
                         </span>
                         {!readOnly && (
-                          <Button ui={{ uid: "profile.contact-info.additional-contact-view.button.6-zLOQ6S", id: "profile.contact-info.additional-contact-view.button.6" }}
+                          <Button ui={{ uid: "profile.contact-info.additional-contact-view.button.6-zLOQ6S", id: "profile.contact-info.additional-contact-view.button.6" , instance: createOpaqueUiInstanceId("iter-71bfac1496", String(loc.id))}}
                             variant="ghost"
                             size="icon"
                             onClick={() => requestRemoveEntry('location', loc.id)}
@@ -309,9 +309,9 @@ return (
                       </div>
 
                       {!readOnly ? (
-                        <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.33-7PANzd", id: "profile.contact-info.additional-contact-view.div.33" })} className="space-y-2">
+                        <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.33-7PANzd", id: "profile.contact-info.additional-contact-view.div.33" , instance: createOpaqueUiInstanceId("iter-e80dbf4d03", String(loc.id))})} className="space-y-2">
                           {openMapId === loc.id ? (
-                            <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.34-0SJ1a3", id: "profile.contact-info.additional-contact-view.div.34" })} className="space-y-2">
+                            <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.34-0SJ1a3", id: "profile.contact-info.additional-contact-view.div.34" , instance: createOpaqueUiInstanceId("iter-ff102c39f9", String(loc.id))})} className="space-y-2">
                               <AsolMap
                                 id={`map-${loc.id}`}
                                 modes={['picker']}
@@ -397,13 +397,13 @@ return (
                                 onClose={() => setOpenMapId(null)}
                               />
                               {mapMessages[loc.id] && (
-                                <p {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.p-2x9W6D", id: "profile.contact-info.additional-contact-view.p" })} className="text-xs font-medium text-primary mt-1" role="status">
+                                <p {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.p-2x9W6D", id: "profile.contact-info.additional-contact-view.p" , instance: createOpaqueUiInstanceId("iter-8ac0c4ee9c", String(loc.id))})} className="text-xs font-medium text-primary mt-1" role="status">
                                   {mapMessages[loc.id]}
                                 </p>
                               )}
                             </div>
                           ) : (
-                            <button {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.button.7-i04oH8", id: "profile.contact-info.additional-contact-view.button.7" })}
+                            <button {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.button.7-i04oH8", id: "profile.contact-info.additional-contact-view.button.7" , instance: createOpaqueUiInstanceId("iter-00cc31f312", String(loc.id))})}
                               type="button"
                               onClick={() => setOpenMapId(loc.id)}
                               className="asol-control border border-input px-4 font-medium"
@@ -413,10 +413,10 @@ return (
                           )}
                         </div>
                       ) : (
-                        <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.35-Xawx4W", id: "profile.contact-info.additional-contact-view.div.35" })} className="space-y-1">
-                          <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.36-FVb18O", id: "profile.contact-info.additional-contact-view.div.36" })} className="text-sm font-medium">{loc.address || (locale === 'ar' ? 'بدون عنوان' : 'No address')}</div>
+                        <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.35-Xawx4W", id: "profile.contact-info.additional-contact-view.div.35" , instance: createOpaqueUiInstanceId("iter-f4448a6d15", String(loc.id))})} className="space-y-1">
+                          <div {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.div.36-FVb18O", id: "profile.contact-info.additional-contact-view.div.36" , instance: createOpaqueUiInstanceId("iter-e9069ab33d", String(loc.id))})} className="text-sm font-medium">{loc.address || (locale === 'ar' ? 'بدون عنوان' : 'No address')}</div>
                           {loc.latitude && loc.longitude ? (
-                            <a {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.a-OYr0yo", id: "profile.contact-info.additional-contact-view.a" })}
+                            <a {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.a-OYr0yo", id: "profile.contact-info.additional-contact-view.a" , instance: createOpaqueUiInstanceId("iter-40a2feeffd", String(loc.id))})}
                               href={geoLocationUrl(loc.latitude, loc.longitude)}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -426,7 +426,7 @@ return (
                               {locale === 'ar' ? 'فتح في الخرائط' : 'Open in maps'}
                             </a>
                           ) : (
-                            <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.16-0GmKt9", id: "profile.contact-info.additional-contact-view.span.16" })} className="text-xs text-muted-foreground">
+                            <span {...uiAttributes({ uid: "profile.contact-info.additional-contact-view.span.16-0GmKt9", id: "profile.contact-info.additional-contact-view.span.16" , instance: createOpaqueUiInstanceId("iter-11e407ab29", String(loc.id))})} className="text-xs text-muted-foreground">
                               {locale === 'ar' ? 'لم يتم تحديد موقع جغرافي' : 'No coordinates selected'}
                             </span>
                           )}

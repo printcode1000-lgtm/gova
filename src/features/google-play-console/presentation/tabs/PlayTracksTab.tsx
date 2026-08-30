@@ -10,7 +10,7 @@ import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import type { GooglePlayTrackName } from "../../domain/store-assets-types";
 import { usePlayTracks } from "../hooks/use-play-tracks";
 import { usePlayTracksPageSave } from "../hooks/use-play-tracks-page-save";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const TRACKS: GooglePlayTrackName[] = ["internal", "alpha", "beta", "production"];
 
@@ -59,9 +59,9 @@ export function PlayTracksTab() {
     <section {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.section.4-OW8Crg", id: "google-play-console.tabs.play-tracks-tab.section.4" })} id="google-play-console.tabs.play-tracks-tab.section" className="space-y-4">
       <div {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.div.6-34zyDO", id: "google-play-console.tabs.play-tracks-tab.div.6" })} id="google-play-console.tabs.play-tracks-tab.div.2" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {(tracks.snapshot.tracks ?? []).map((item) => (
-          <div key={item.track} {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.div.7-KKTDL1", id: "google-play-console.tabs.play-tracks-tab.div.7" })} className="rounded-md border bg-surface p-3">
-            <h2 {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.h2.3-Q9DI4n", id: "google-play-console.tabs.play-tracks-tab.h2.3" })} className="font-semibold" dir="ltr">{item.track}</h2>
-            <pre {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.pre-dI7ZJq", id: "google-play-console.tabs.play-tracks-tab.pre" })} className="mt-2 max-h-48 overflow-auto rounded-md bg-muted p-2 text-xs" dir="ltr">
+          <div key={item.track} {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.div.7-KKTDL1", id: "google-play-console.tabs.play-tracks-tab.div.7" , instance: createOpaqueUiInstanceId("iter-75f832878b", String(item.track))})} className="rounded-md border bg-surface p-3">
+            <h2 {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.h2.3-Q9DI4n", id: "google-play-console.tabs.play-tracks-tab.h2.3" , instance: createOpaqueUiInstanceId("iter-22b17f5767", String(item.track))})} className="font-semibold" dir="ltr">{item.track}</h2>
+            <pre {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.pre-dI7ZJq", id: "google-play-console.tabs.play-tracks-tab.pre" , instance: createOpaqueUiInstanceId("iter-38f7732b08", String(item.track))})} className="mt-2 max-h-48 overflow-auto rounded-md bg-muted p-2 text-xs" dir="ltr">
               {JSON.stringify(item.releases, null, 2)}
             </pre>
           </div>
@@ -82,7 +82,7 @@ export function PlayTracksTab() {
           <select {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.select.2-N2PQMl", id: "google-play-console.tabs.play-tracks-tab.select.2" })} id="google-play-console.tabs.play-tracks-tab.select" className="h-10 w-full rounded-md border bg-background px-3" value={status}
             onChange={(event) => setStatus(event.target.value as typeof status)}>
             {(["draft", "inProgress", "halted", "completed"] as const).map((value) => (
-              <option key={value} {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.option-O0Flg8", id: "google-play-console.tabs.play-tracks-tab.option" })} value={value}>{t(`releaseConsole.tracks.status.${value}`)}</option>
+              <option key={value} {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.option-O0Flg8", id: "google-play-console.tabs.play-tracks-tab.option" , instance: createOpaqueUiInstanceId("iter-65e5b9e0c5", String(value))})} value={value}>{t(`releaseConsole.tracks.status.${value}`)}</option>
             ))}
           </select>
           <Input id="google-play-console.tabs.play-tracks-tab.input.2"
@@ -144,7 +144,7 @@ function TrackSelect({ id, value, onChange }: {
   return (
     <select {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.select.3-msH3LN", id: "google-play-console.tabs.play-tracks-tab.select.3" })} id={id} className="h-10 w-full rounded-md border bg-background px-3" value={value}
       onChange={(event) => onChange(event.target.value as GooglePlayTrackName)} dir="ltr">
-      {TRACKS.map((item) => <option key={item} {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.option.2-8MYxUo", id: "google-play-console.tabs.play-tracks-tab.option.2" })}>{item}</option>)}
+      {TRACKS.map((item) => <option key={item} {...uiAttributes({ uid: "google-play-console.tabs.play-tracks-tab.option.2-8MYxUo", id: "google-play-console.tabs.play-tracks-tab.option.2" , instance: createOpaqueUiInstanceId("iter-bb36b844fa", String(item))})}>{item}</option>)}
     </select>
   );
 }

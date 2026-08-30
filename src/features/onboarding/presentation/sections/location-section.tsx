@@ -9,7 +9,7 @@ import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Checkbox } from '@/shared/ui/checkbox';
 import { cn } from '@/shared/utils';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const COUNTRY_KEYS: Record<string, string> = {
   'United States': 'unitedStates',
@@ -134,7 +134,7 @@ export function LocationSection() {
               const isSelected = location.shippingRegions.some((r) => r.country === country);
               return (
                 <label
-                  key={country} {...uiAttributes({ uid: "onboarding.sections.location-section.label-x4aD6I", id: "onboarding.sections.location-section.label" })}
+                  key={country} {...uiAttributes({ uid: "onboarding.sections.location-section.label-x4aD6I", id: "onboarding.sections.location-section.label" , instance: createOpaqueUiInstanceId("iter-9cee69760c", String(country))})}
                   className={cn(
                     'flex items-center gap-2 p-3 rounded-lg border transition-all',
                     isSelected
@@ -142,11 +142,11 @@ export function LocationSection() {
                       : 'border-border',
                   )}
                 >
-                  <Checkbox ui={{ uid: "onboarding.sections.location-section.checkbox-Dnft4T", id: "onboarding.sections.location-section.checkbox" }}
+                  <Checkbox ui={{ uid: "onboarding.sections.location-section.checkbox-Dnft4T", id: "onboarding.sections.location-section.checkbox" , instance: createOpaqueUiInstanceId("iter-b3e89500d4", String(country))}}
                     checked={isSelected}
                     onCheckedChange={() => toggleShippingCountry(country)}
                   />
-                  <span {...uiAttributes({ uid: "onboarding.sections.location-section.span-YUdM27", id: "onboarding.sections.location-section.span" })} className="text-sm">
+                  <span {...uiAttributes({ uid: "onboarding.sections.location-section.span-YUdM27", id: "onboarding.sections.location-section.span" , instance: createOpaqueUiInstanceId("iter-0c35bcd766", String(country))})} className="text-sm">
                     {t(`onboarding.constants.countries.${COUNTRY_KEYS[country]}`)}
                   </span>
                 </label>

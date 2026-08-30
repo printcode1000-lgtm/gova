@@ -13,7 +13,7 @@ import {
   DevCloudBackupDiffList,
   DevCloudBackupSummary,
 } from "./DevCloudBackupDetail";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function DevCloudBackupResultsCard({
   diff,
@@ -114,7 +114,7 @@ export function DevCloudBackupResultsCard({
           {preview.warnings.length ? (
             <div {...uiAttributes({ uid: "dev-cloud-backup.dev-cloud-backup-results-card.div.22-cH0Xaf", id: "dev-cloud-backup.dev-cloud-backup-results-card.div.22" })} id="dev-cloud-backup.dev-cloud-backup-results-card.div.11" className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
               {preview.warnings.slice(0, 10).map((warning) => (
-                <div key={warning} {...uiAttributes({ uid: "dev-cloud-backup.dev-cloud-backup-results-card.div.23-NyOQu3", id: "dev-cloud-backup.dev-cloud-backup-results-card.div.23" })} dir="ltr">
+                <div key={warning} {...uiAttributes({ uid: "dev-cloud-backup.dev-cloud-backup-results-card.div.23-NyOQu3", id: "dev-cloud-backup.dev-cloud-backup-results-card.div.23" , instance: createOpaqueUiInstanceId("iter-a7a6442303", String(warning))})} dir="ltr">
                   {warning}
                 </div>
               ))}

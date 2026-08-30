@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from "@/shared/ui/select";
 import type { UiDescriptor } from "@asol/ui-registry-core";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function PharmacySelect({ id,
   ui,
@@ -35,7 +35,7 @@ export function PharmacySelect({ id,
         </SelectTrigger>
         <SelectContent>
           {options.map((option) => (
-            <SelectItem key={option.value} ui={{ uid: "pharmacy-profile-catalog.pharmacy-select.select-item-kSx6L9", id: "pharmacy-profile-catalog.pharmacy-select.select-item" }} value={option.value}>
+            <SelectItem key={option.value} ui={{ uid: "pharmacy-profile-catalog.pharmacy-select.select-item-kSx6L9", id: "pharmacy-profile-catalog.pharmacy-select.select-item" , instance: createOpaqueUiInstanceId("iter-5dee23aa78", String(option.value))}} value={option.value}>
               {option.label}
             </SelectItem>
           ))}

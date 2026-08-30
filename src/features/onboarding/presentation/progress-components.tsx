@@ -24,7 +24,7 @@ import { Progress } from '@/shared/ui/progress';
 import type { OnboardingStep } from '@/features/onboarding/domain/types';
 import { useOnboardingStore, stepOrder } from '@/features/onboarding/domain/store';
 import { useTranslation } from '@/shared/i18n';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const stepIcons: Record<OnboardingStep, React.ComponentType<{ className?: string }>> = {
   'store-identity': Store,
@@ -108,7 +108,7 @@ export function OnboardingSidebar({ id,
 
         return (
           <button id={id}
-            key={step} {...uiAttributes({ uid: "onboarding.progress-components.button-q90Vej", id: "onboarding.progress-components.button" })}
+            key={step} {...uiAttributes({ uid: "onboarding.progress-components.button-q90Vej", id: "onboarding.progress-components.button" , instance: createOpaqueUiInstanceId("iter-e813b1bd0b", String(step))})}
             type="button"
             onClick={() => {
               onStepNavigate?.();
@@ -121,7 +121,7 @@ export function OnboardingSidebar({ id,
               !isComplete && !isCurrent && 'text-muted-foreground',
             )}
           >
-            <div {...uiAttributes({ uid: "onboarding.progress-components.div.5-F3GIxK", id: "onboarding.progress-components.div.5" })}
+            <div {...uiAttributes({ uid: "onboarding.progress-components.div.5-F3GIxK", id: "onboarding.progress-components.div.5" , instance: createOpaqueUiInstanceId("iter-36c5d4ca60", String(step))})}
               className={cn(
                 'flex h-8 w-8 items-center justify-center rounded-full shrink-0 transition-colors',
                 isComplete && 'bg-merchant-success text-merchant-success-foreground',
@@ -131,11 +131,11 @@ export function OnboardingSidebar({ id,
             >
               {isComplete ? <Check className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
             </div>
-            <div {...uiAttributes({ uid: "onboarding.progress-components.div.6-dVIR1w", id: "onboarding.progress-components.div.6" })} className="flex-1 min-w-0">
-              <p {...uiAttributes({ uid: "onboarding.progress-components.p.2-I8DPuM", id: "onboarding.progress-components.p.2" })} className={cn('text-sm truncate', isCurrent && 'font-semibold')}>
+            <div {...uiAttributes({ uid: "onboarding.progress-components.div.6-dVIR1w", id: "onboarding.progress-components.div.6" , instance: createOpaqueUiInstanceId("iter-63a4d6ef10", String(step))})} className="flex-1 min-w-0">
+              <p {...uiAttributes({ uid: "onboarding.progress-components.p.2-I8DPuM", id: "onboarding.progress-components.p.2" , instance: createOpaqueUiInstanceId("iter-b4c26eb623", String(step))})} className={cn('text-sm truncate', isCurrent && 'font-semibold')}>
                 {config.title}
               </p>
-              <p {...uiAttributes({ uid: "onboarding.progress-components.p.3-k0QD2C", id: "onboarding.progress-components.p.3" })} className="text-xs text-muted-foreground truncate">{config.description}</p>
+              <p {...uiAttributes({ uid: "onboarding.progress-components.p.3-k0QD2C", id: "onboarding.progress-components.p.3" , instance: createOpaqueUiInstanceId("iter-c60c2d147c", String(step))})} className="text-xs text-muted-foreground truncate">{config.description}</p>
             </div>
           </button>
         );

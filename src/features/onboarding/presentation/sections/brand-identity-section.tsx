@@ -11,7 +11,7 @@ import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const BRAND_VALUE_KEYS: Record<string, string> = {
   Sustainability: 'sustainability',
@@ -138,10 +138,10 @@ export function BrandIdentitySection() {
 
             <div {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.div.11-EemgB9", id: "onboarding.sections.brand-identity-section.div.11" })} id="onboarding.sections.brand-identity-section.div.5" className="flex flex-wrap gap-2">
               {brandIdentity.uniqueSellingPoints.map((usp) => (
-                <Badge key={usp} ui={{ uid: "onboarding.sections.brand-identity-section.badge-og89wP", id: "onboarding.sections.brand-identity-section.badge" }} variant="secondary" className="gap-1 pl-3">
+                <Badge key={usp} ui={{ uid: "onboarding.sections.brand-identity-section.badge-og89wP", id: "onboarding.sections.brand-identity-section.badge" , instance: createOpaqueUiInstanceId("iter-a010717893", String(usp))}} variant="secondary" className="gap-1 pl-3">
                   <Sparkles className="h-3 w-3" />
                   {usp}
-                  <button {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.button.2-UuU4Rj", id: "onboarding.sections.brand-identity-section.button.2" })} type="button" onClick={() => removeUSP(usp)} className="ml-1 rounded-full">
+                  <button {...uiAttributes({ uid: "onboarding.sections.brand-identity-section.button.2-UuU4Rj", id: "onboarding.sections.brand-identity-section.button.2" , instance: createOpaqueUiInstanceId("iter-8964f66d88", String(usp))})} type="button" onClick={() => removeUSP(usp)} className="ml-1 rounded-full">
                     <X className="h-3 w-3" />
                   </button>
                 </Badge>

@@ -11,7 +11,7 @@ import { Button } from '@/shared/ui/button';
 import { Label } from '@/shared/ui/label';
 import { PhoneField } from '@/shared/ui/phone-field';
 import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const SOCIAL_PLATFORMS = [
   'instagram',
@@ -143,7 +143,7 @@ export function ContactInfoSection() {
                 <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.15-YFG0On", id: "onboarding.sections.contact-info-section.div.15" })} id="onboarding.sections.contact-info-section.div.7" className="flex flex-wrap gap-1">
                   {availablePlatforms.map((platform) => (
                     <Button
-                      key={platform} ui={{ uid: "onboarding.sections.contact-info-section.button-1IM4Gz", id: "onboarding.sections.contact-info-section.button" }}
+                      key={platform} ui={{ uid: "onboarding.sections.contact-info-section.button-1IM4Gz", id: "onboarding.sections.contact-info-section.button" , instance: createOpaqueUiInstanceId("iter-56bd6b2249", String(platform))}}
                       variant="outline"
                       size="sm"
                       onClick={() => addSocialLink(platform)}
@@ -160,12 +160,12 @@ export function ContactInfoSection() {
             {contactInfo.socialLinks.length > 0 && (
               <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.16-3Vf6Ui", id: "onboarding.sections.contact-info-section.div.16" })} id="onboarding.sections.contact-info-section.div.8" className="space-y-3">
                 {contactInfo.socialLinks.map((link) => (
-                  <div key={link.platform} {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.17-j91C0D", id: "onboarding.sections.contact-info-section.div.17" })} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                    <span {...uiAttributes({ uid: "onboarding.sections.contact-info-section.span-U5zQs0", id: "onboarding.sections.contact-info-section.span" })} className="text-sm font-medium">
+                  <div key={link.platform} {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.17-j91C0D", id: "onboarding.sections.contact-info-section.div.17" , instance: createOpaqueUiInstanceId("iter-3835b8cf1a", String(link.platform))})} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <span {...uiAttributes({ uid: "onboarding.sections.contact-info-section.span-U5zQs0", id: "onboarding.sections.contact-info-section.span" , instance: createOpaqueUiInstanceId("iter-8e40a32630", String(link.platform))})} className="text-sm font-medium">
                       {t(`onboarding.contactInfo.platforms.${link.platform}`)}
                     </span>
-                    <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.18-KQ7yHG", id: "onboarding.sections.contact-info-section.div.18" })} className="flex-1 flex gap-2">
-                      <FormInput ui={{ uid: "onboarding.sections.contact-info-section.form-input-kiYw9z", id: "onboarding.sections.contact-info-section.form-input" }}
+                    <div {...uiAttributes({ uid: "onboarding.sections.contact-info-section.div.18-KQ7yHG", id: "onboarding.sections.contact-info-section.div.18" , instance: createOpaqueUiInstanceId("iter-bf6db7be17", String(link.platform))})} className="flex-1 flex gap-2">
+                      <FormInput ui={{ uid: "onboarding.sections.contact-info-section.form-input-kiYw9z", id: "onboarding.sections.contact-info-section.form-input" , instance: createOpaqueUiInstanceId("iter-0b0b34d3d6", String(link.platform))}}
                         value={link.url}
                         onChange={(e) => updateSocialLink(link.platform, { url: e.target.value })}
                         placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}
@@ -173,7 +173,7 @@ export function ContactInfoSection() {
                         className="flex-1"
                       />
                     </div>
-                    <Button ui={{ uid: "onboarding.sections.contact-info-section.button.2-jDAp98", id: "onboarding.sections.contact-info-section.button.2" }}
+                    <Button ui={{ uid: "onboarding.sections.contact-info-section.button.2-jDAp98", id: "onboarding.sections.contact-info-section.button.2" , instance: createOpaqueUiInstanceId("iter-5dbbbd5e45", String(link.platform))}}
                       variant="ghost"
                       size="icon"
                       onClick={() => removeSocialLink(link.platform)}

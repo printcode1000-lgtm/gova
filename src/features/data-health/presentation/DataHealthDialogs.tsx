@@ -16,7 +16,7 @@ import type {
 
 import { cleanupLabels, dateText, severityLabels } from "./data-health-labels";
 import { DetailRow } from "./DetailRow";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function DataHealthDialogs(props: {
   detail: DataHealthIssue | null;
@@ -117,9 +117,9 @@ function CleanupPlanDialog({
         </DialogHeader>
         <div {...uiAttributes({ uid: "data-health.data-health-dialogs.div.14-pMtp40", id: "data-health.data-health-dialogs.div.14" })} id="data-health.data-health-dialogs.div.4" className="space-y-2">
           {plan?.preview.map((item) => (
-            <div key={item.issueId} {...uiAttributes({ uid: "data-health.data-health-dialogs.div.15-EqqjN4", id: "data-health.data-health-dialogs.div.15" })} className="rounded-md border p-3 text-sm">
-              <div {...uiAttributes({ uid: "data-health.data-health-dialogs.div.16-P8biR8", id: "data-health.data-health-dialogs.div.16" })} className="font-medium">{item.title}</div>
-              <div {...uiAttributes({ uid: "data-health.data-health-dialogs.div.17-B24K7v", id: "data-health.data-health-dialogs.div.17" })} className="mt-1 text-xs text-on-surface-variant">
+            <div key={item.issueId} {...uiAttributes({ uid: "data-health.data-health-dialogs.div.15-EqqjN4", id: "data-health.data-health-dialogs.div.15" , instance: createOpaqueUiInstanceId("iter-3039ac37f5", String(item.issueId))})} className="rounded-md border p-3 text-sm">
+              <div {...uiAttributes({ uid: "data-health.data-health-dialogs.div.16-P8biR8", id: "data-health.data-health-dialogs.div.16" , instance: createOpaqueUiInstanceId("iter-3012cc9cf8", String(item.issueId))})} className="font-medium">{item.title}</div>
+              <div {...uiAttributes({ uid: "data-health.data-health-dialogs.div.17-B24K7v", id: "data-health.data-health-dialogs.div.17" , instance: createOpaqueUiInstanceId("iter-a3f92befc5", String(item.issueId))})} className="mt-1 text-xs text-on-surface-variant">
                 {cleanupLabels[item.action]}،{" "}
                 {item.cleanupMode === "quarantine" ? "حجر 30 يومًا" : "تنفيذ مباشر"}
               </div>
@@ -193,9 +193,9 @@ function OrderPurgeDialog({
         </div>
         <div {...uiAttributes({ uid: "data-health.data-health-dialogs.div.21-L1C4yZ", id: "data-health.data-health-dialogs.div.21" })} id="data-health.data-health-dialogs.div.8" className="max-h-52 overflow-y-auto rounded-md border">
           {Object.entries(orderPurgePlan?.tableCounts ?? {}).map(([table, count]) => (
-            <div key={table} {...uiAttributes({ uid: "data-health.data-health-dialogs.div.22-7G637n", id: "data-health.data-health-dialogs.div.22" })} className="flex items-center justify-between border-b px-3 py-2 text-sm last:border-b-0">
-              <span {...uiAttributes({ uid: "data-health.data-health-dialogs.span-S52iZ8", id: "data-health.data-health-dialogs.span" })} dir="ltr">{table}</span>
-              <span {...uiAttributes({ uid: "data-health.data-health-dialogs.span.2-pSOQm6", id: "data-health.data-health-dialogs.span.2" })}>{count}</span>
+            <div key={table} {...uiAttributes({ uid: "data-health.data-health-dialogs.div.22-7G637n", id: "data-health.data-health-dialogs.div.22" , instance: createOpaqueUiInstanceId("iter-8a586583f0", String(table))})} className="flex items-center justify-between border-b px-3 py-2 text-sm last:border-b-0">
+              <span {...uiAttributes({ uid: "data-health.data-health-dialogs.span-S52iZ8", id: "data-health.data-health-dialogs.span" , instance: createOpaqueUiInstanceId("iter-616c141c9f", String(table))})} dir="ltr">{table}</span>
+              <span {...uiAttributes({ uid: "data-health.data-health-dialogs.span.2-pSOQm6", id: "data-health.data-health-dialogs.span.2" , instance: createOpaqueUiInstanceId("iter-91a3989603", String(table))})}>{count}</span>
             </div>
           ))}
         </div>

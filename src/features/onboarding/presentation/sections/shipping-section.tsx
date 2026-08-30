@@ -13,7 +13,7 @@ import { Label } from '@/shared/ui/label';
 import type { ShippingMethod, ShippingProvider } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
 import { SHIPPING_ICONS, SHIPPING_PROVIDERS } from './shipping-section-model';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function ShippingSection() {
   const { t } = useTranslation();
@@ -107,16 +107,16 @@ export function ShippingSection() {
             <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.10-nkQMY4", id: "onboarding.sections.shipping-section.div.10" })} id="onboarding.sections.shipping-section.div.4" className="space-y-4">
               {shipping.methods.map((method) => (
                 <div
-                  key={method.id} {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.11-YevUG5", id: "onboarding.sections.shipping-section.div.11" })}
+                  key={method.id} {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.11-YevUG5", id: "onboarding.sections.shipping-section.div.11" , instance: createOpaqueUiInstanceId("iter-832d3e541c", String(method.id))})}
                   className="p-4 rounded-lg border space-y-4 animate-in slide-in-from-top-2 duration-200"
                 >
-                  <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.12-2oKVjR", id: "onboarding.sections.shipping-section.div.12" })} className="flex items-start justify-between">
-                    <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.13-54WA5W", id: "onboarding.sections.shipping-section.div.13" })} className="flex items-center gap-3">
-                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.14-bbDL9y", id: "onboarding.sections.shipping-section.div.14" })} className="text-2xl">
+                  <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.12-2oKVjR", id: "onboarding.sections.shipping-section.div.12" , instance: createOpaqueUiInstanceId("iter-3d162765ac", String(method.id))})} className="flex items-start justify-between">
+                    <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.13-54WA5W", id: "onboarding.sections.shipping-section.div.13" , instance: createOpaqueUiInstanceId("iter-6f37c4295f", String(method.id))})} className="flex items-center gap-3">
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.14-bbDL9y", id: "onboarding.sections.shipping-section.div.14" , instance: createOpaqueUiInstanceId("iter-7ad5036523", String(method.id))})} className="text-2xl">
                         {shippingProviderOptions.find((p) => p.value === method.provider)?.icon || '📦'}
                       </div>
-                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.15-1mjlO3", id: "onboarding.sections.shipping-section.div.15" })}>
-                        <FormSelect ui={{ uid: "onboarding.sections.shipping-section.form-select-1PyYjH", id: "onboarding.sections.shipping-section.form-select" }}
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.15-1mjlO3", id: "onboarding.sections.shipping-section.div.15" , instance: createOpaqueUiInstanceId("iter-649118776f", String(method.id))})}>
+                        <FormSelect ui={{ uid: "onboarding.sections.shipping-section.form-select-1PyYjH", id: "onboarding.sections.shipping-section.form-select" , instance: createOpaqueUiInstanceId("iter-fcc208c21a", String(method.id))}}
                           value={method.provider}
                           onValueChange={(v) => {
                             const provider = shippingProviderOptions.find((p) => p.value === v);
@@ -132,7 +132,7 @@ export function ShippingSection() {
                         />
                       </div>
                     </div>
-                    <Button ui={{ uid: "onboarding.sections.shipping-section.button.3-VVo9HX", id: "onboarding.sections.shipping-section.button.3" }}
+                    <Button ui={{ uid: "onboarding.sections.shipping-section.button.3-VVo9HX", id: "onboarding.sections.shipping-section.button.3" , instance: createOpaqueUiInstanceId("iter-6a0db5644e", String(method.id))}}
                       variant="ghost"
                       size="icon"
                       onClick={() => removeMethod(method.id)}
@@ -141,10 +141,10 @@ export function ShippingSection() {
                     </Button>
                   </div>
 
-                  <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.16-Yt7dPb", id: "onboarding.sections.shipping-section.div.16" })} className="grid gap-4 sm:grid-cols-3">
+                  <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.16-Yt7dPb", id: "onboarding.sections.shipping-section.div.16" , instance: createOpaqueUiInstanceId("iter-038fbb7e1d", String(method.id))})} className="grid gap-4 sm:grid-cols-3">
                     <FormField label={t('onboarding.shipping.deliveryTime')} htmlFor={`delivery-${method.id}`}>
-                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.17-l8Y8N8", id: "onboarding.sections.shipping-section.div.17" })} className="flex items-center gap-2">
-                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input-QzfVI2", id: "onboarding.sections.shipping-section.form-input" }}
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.17-l8Y8N8", id: "onboarding.sections.shipping-section.div.17" , instance: createOpaqueUiInstanceId("iter-f3cd318846", String(method.id))})} className="flex items-center gap-2">
+                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input-QzfVI2", id: "onboarding.sections.shipping-section.form-input" , instance: createOpaqueUiInstanceId("iter-4e521d4fea", String(method.id))}}
                           type="number"
                           value={method.deliveryDays.min}
                           onChange={(e) =>
@@ -155,8 +155,8 @@ export function ShippingSection() {
                           className="w-20"
                           min={0}
                         />
-                        <span {...uiAttributes({ uid: "onboarding.sections.shipping-section.span-x0FEEV", id: "onboarding.sections.shipping-section.span" })} className="text-muted-foreground">{t('onboarding.common.to')}</span>
-                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input.2-2LJ736", id: "onboarding.sections.shipping-section.form-input.2" }}
+                        <span {...uiAttributes({ uid: "onboarding.sections.shipping-section.span-x0FEEV", id: "onboarding.sections.shipping-section.span" , instance: createOpaqueUiInstanceId("iter-7e59eb1577", String(method.id))})} className="text-muted-foreground">{t('onboarding.common.to')}</span>
+                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input.2-2LJ736", id: "onboarding.sections.shipping-section.form-input.2" , instance: createOpaqueUiInstanceId("iter-8048652457", String(method.id))}}
                           type="number"
                           value={method.deliveryDays.max}
                           onChange={(e) =>
@@ -167,14 +167,14 @@ export function ShippingSection() {
                           className="w-20"
                           min={0}
                         />
-                        <span {...uiAttributes({ uid: "onboarding.sections.shipping-section.span.2-U6b5GU", id: "onboarding.sections.shipping-section.span.2" })} className="text-muted-foreground">{t('onboarding.common.days')}</span>
+                        <span {...uiAttributes({ uid: "onboarding.sections.shipping-section.span.2-U6b5GU", id: "onboarding.sections.shipping-section.span.2" , instance: createOpaqueUiInstanceId("iter-b5413c2f0d", String(method.id))})} className="text-muted-foreground">{t('onboarding.common.days')}</span>
                       </div>
                     </FormField>
 
                     <FormField label={t('onboarding.shipping.shippingFee')} htmlFor={`fee-${method.id}`}>
-                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.18-93K7ZA", id: "onboarding.sections.shipping-section.div.18" })} className="relative">
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.18-93K7ZA", id: "onboarding.sections.shipping-section.div.18" , instance: createOpaqueUiInstanceId("iter-a9240306ae", String(method.id))})} className="relative">
                         <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input.3-x95ZIS", id: "onboarding.sections.shipping-section.form-input.3" }}
+                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input.3-x95ZIS", id: "onboarding.sections.shipping-section.form-input.3" , instance: createOpaqueUiInstanceId("iter-7c9bb54e9a", String(method.id))}}
                           type="number"
                           value={method.fee}
                           onChange={(e) => updateMethod(method.id, { fee: parseFloat(e.target.value) || 0 })}
@@ -186,9 +186,9 @@ export function ShippingSection() {
                     </FormField>
 
                     <FormField label={t('onboarding.shipping.freeOver')} htmlFor={`threshold-${method.id}`} hint={t('onboarding.common.optional')}>
-                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.19-B0IdUB", id: "onboarding.sections.shipping-section.div.19" })} className="relative">
+                      <div {...uiAttributes({ uid: "onboarding.sections.shipping-section.div.19-B0IdUB", id: "onboarding.sections.shipping-section.div.19" , instance: createOpaqueUiInstanceId("iter-d1a0ffc3e5", String(method.id))})} className="relative">
                         <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input.4-2MB8rA", id: "onboarding.sections.shipping-section.form-input.4" }}
+                        <FormInput ui={{ uid: "onboarding.sections.shipping-section.form-input.4-2MB8rA", id: "onboarding.sections.shipping-section.form-input.4" , instance: createOpaqueUiInstanceId("iter-36e736da85", String(method.id))}}
                           type="number"
                           value={method.freeThreshold || ''}
                           onChange={(e) =>

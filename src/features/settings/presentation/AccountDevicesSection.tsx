@@ -10,7 +10,7 @@ import {
   sortAccountDevices,
 } from "./account-devices-model";
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 /**
  * Every device registered on the account, with a way to revoke one.
@@ -72,17 +72,17 @@ export function AccountDevicesSection({
             const isThisDevice = state.localDeviceIds.includes(device.deviceId);
             return (
               <li
-                key={device.id} {...uiAttributes({ uid: "settings.account-devices-section.li-NA9EPm", id: "settings.account-devices-section.li" })}
+                key={device.id} {...uiAttributes({ uid: "settings.account-devices-section.li-NA9EPm", id: "settings.account-devices-section.li" , instance: createOpaqueUiInstanceId("iter-537838772a", String(device.id))})}
                 className="flex items-center justify-between gap-3 rounded-xl border border-outline-variant p-3"
               >
-                <div {...uiAttributes({ uid: "settings.account-devices-section.div.9-SnC1Rp", id: "settings.account-devices-section.div.9" })} className="min-w-0">
-                  <p {...uiAttributes({ uid: "settings.account-devices-section.p.7-0CNeO9", id: "settings.account-devices-section.p.7" })} className="truncate text-sm font-semibold text-on-surface">
+                <div {...uiAttributes({ uid: "settings.account-devices-section.div.9-SnC1Rp", id: "settings.account-devices-section.div.9" , instance: createOpaqueUiInstanceId("iter-2a48123a97", String(device.id))})} className="min-w-0">
+                  <p {...uiAttributes({ uid: "settings.account-devices-section.p.7-0CNeO9", id: "settings.account-devices-section.p.7" , instance: createOpaqueUiInstanceId("iter-8362e45e52", String(device.id))})} className="truncate text-sm font-semibold text-on-surface">
                     {state.t(accountDevicePlatformKey(device))}
                     {isThisDevice
                       ? ` — ${state.t("notifications.accountDevices.thisDevice")}`
                       : ""}
                   </p>
-                  <p {...uiAttributes({ uid: "settings.account-devices-section.p.8-JpV5NK", id: "settings.account-devices-section.p.8" })} className="mt-0.5 truncate text-xs text-on-surface-variant">
+                  <p {...uiAttributes({ uid: "settings.account-devices-section.p.8-JpV5NK", id: "settings.account-devices-section.p.8" , instance: createOpaqueUiInstanceId("iter-a1e82e9ca0", String(device.id))})} className="mt-0.5 truncate text-xs text-on-surface-variant">
                     {state.t("notifications.accountDevices.lastSeen", {
                       at: formatDateTime(
                         device.lastSeenAt ?? device.updatedAt,
@@ -91,7 +91,7 @@ export function AccountDevicesSection({
                     })}
                   </p>
                 </div>
-                <button {...uiAttributes({ uid: "notifications-revoke-device-H2bryb", id: "notifications-revoke-device", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notifications-revoke-device" } })}
+                <button {...uiAttributes({ uid: "notifications-revoke-device-H2bryb", id: "notifications-revoke-device", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notifications-revoke-device" } , instance: createOpaqueUiInstanceId("iter-77f113ca42", String(device.id))})}
                   type="button"
                   disabled={state.revokingDeviceId === device.deviceId}
                   onClick={() => void state.revokeAccountDevice(device.deviceId)}

@@ -5,7 +5,7 @@ import { Check, CheckCircle2, Circle, Copy, Loader2, MinusCircle, XCircle } from
 import * as React from "react";
 
 import { simulationProgressClipboard } from "./simulation-progress-clipboard";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 export type SimulationProgressRunStatus =
   | "pending"
@@ -130,14 +130,14 @@ function StepList({ id, steps }: { steps: readonly SimulationProgressStep[] } & 
   return (
     <ol {...uiAttributes({ uid: "simulation.simulation-progress-panel.ol-8zIWdP", id: "simulation.simulation-progress-panel.ol" })} id={id} className="min-w-0 space-y-2">
       {steps.map((step) => (
-        <li key={step.id} {...uiAttributes({ uid: "simulation.simulation-progress-panel.li-proEX1", id: "simulation.simulation-progress-panel.li" })} className="flex min-w-0 items-start gap-3 rounded-xl bg-surface-container-low p-3">
+        <li key={step.id} {...uiAttributes({ uid: "simulation.simulation-progress-panel.li-proEX1", id: "simulation.simulation-progress-panel.li" , instance: createOpaqueUiInstanceId("iter-4ebfcfbf16", String(step.id))})} className="flex min-w-0 items-start gap-3 rounded-xl bg-surface-container-low p-3">
           {step.status === "passed" ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> :
             step.status === "failed" ? <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-error" /> :
               step.status === "running" ? <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-secondary" /> :
                 <Circle className="mt-0.5 h-4 w-4 shrink-0 text-on-surface-variant" />}
-          <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div-jJY0LD", id: "simulation.simulation-progress-panel.div" })} className="min-w-0 flex-1 break-words">
-            <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.2-1Paf0E", id: "simulation.simulation-progress-panel.div.2" })} className="text-sm font-semibold text-on-surface">{step.label}</div>
-            {step.detail ? <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.3-J3W64I", id: "simulation.simulation-progress-panel.div.3" })} className="break-words text-xs text-on-surface-variant">{step.detail}</div> : null}
+          <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div-jJY0LD", id: "simulation.simulation-progress-panel.div" , instance: createOpaqueUiInstanceId("iter-2a8afcde49", String(step.id))})} className="min-w-0 flex-1 break-words">
+            <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.2-1Paf0E", id: "simulation.simulation-progress-panel.div.2" , instance: createOpaqueUiInstanceId("iter-327c81d166", String(step.id))})} className="text-sm font-semibold text-on-surface">{step.label}</div>
+            {step.detail ? <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.3-J3W64I", id: "simulation.simulation-progress-panel.div.3" , instance: createOpaqueUiInstanceId("iter-643d3baa8b", String(step.id))})} className="break-words text-xs text-on-surface-variant">{step.detail}</div> : null}
           </div>
         </li>
       ))}
@@ -232,29 +232,29 @@ export function SimulationProgressPanel({ id,
       {runs.length > 0 ? (
         <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.7-jSCQR6", id: "simulation.simulation-progress-panel.div.7" })} className="min-w-0 space-y-4">
           {pageGroups.map((group) => (
-            <section key={group.pageId} {...uiAttributes({ uid: "simulation.simulation-progress-panel.section.2-51qqT8", id: "simulation.simulation-progress-panel.section.2" })} className="min-w-0 space-y-2 overflow-hidden rounded-xl border border-outline-variant p-3">
-              <h3 {...uiAttributes({ uid: "simulation.simulation-progress-panel.h3-Fb5mzx", id: "simulation.simulation-progress-panel.h3" })} className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-bold text-on-surface">
-                <span {...uiAttributes({ uid: "simulation.simulation-progress-panel.span-6enXzQ", id: "simulation.simulation-progress-panel.span" })} className="break-words">الصفحة: {group.pageLabel}</span>
+            <section key={group.pageId} {...uiAttributes({ uid: "simulation.simulation-progress-panel.section.2-51qqT8", id: "simulation.simulation-progress-panel.section.2" , instance: createOpaqueUiInstanceId("iter-82171e46bb", String(group.pageId))})} className="min-w-0 space-y-2 overflow-hidden rounded-xl border border-outline-variant p-3">
+              <h3 {...uiAttributes({ uid: "simulation.simulation-progress-panel.h3-Fb5mzx", id: "simulation.simulation-progress-panel.h3" , instance: createOpaqueUiInstanceId("iter-3360ec0261", String(group.pageId))})} className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-bold text-on-surface">
+                <span {...uiAttributes({ uid: "simulation.simulation-progress-panel.span-6enXzQ", id: "simulation.simulation-progress-panel.span" , instance: createOpaqueUiInstanceId("iter-12660c6479", String(group.pageId))})} className="break-words">الصفحة: {group.pageLabel}</span>
                 {group.pageRoute ? (
-                  <code {...uiAttributes({ uid: "simulation.simulation-progress-panel.code-RBOR7l", id: "simulation.simulation-progress-panel.code" })} className="max-w-full break-all rounded-md bg-surface-container-low px-2 py-1 text-[11px] font-semibold text-primary" dir="ltr">
+                  <code {...uiAttributes({ uid: "simulation.simulation-progress-panel.code-RBOR7l", id: "simulation.simulation-progress-panel.code" , instance: createOpaqueUiInstanceId("iter-53dac7408d", String(group.pageId))})} className="max-w-full break-all rounded-md bg-surface-container-low px-2 py-1 text-[11px] font-semibold text-primary" dir="ltr">
                     {group.pageRoute}
                   </code>
                 ) : null}
               </h3>
-              <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.8-tPG2Rf", id: "simulation.simulation-progress-panel.div.8" })} className="min-w-0 space-y-3">
+              <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.8-tPG2Rf", id: "simulation.simulation-progress-panel.div.8" , instance: createOpaqueUiInstanceId("iter-e75da8598a", String(group.pageId))})} className="min-w-0 space-y-3">
                 {group.runs.map((run) => (
-                  <article key={run.id} {...uiAttributes({ uid: "simulation.simulation-progress-panel.article-dqrMZ8", id: "simulation.simulation-progress-panel.article" })} className="min-w-0 space-y-2 overflow-hidden rounded-xl bg-surface-container-low p-3">
-                    <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.9-aS1dv3", id: "simulation.simulation-progress-panel.div.9" })} className="flex min-w-0 flex-col gap-2 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
-                      <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.10-U9fLn0", id: "simulation.simulation-progress-panel.div.10" })} className="min-w-0 break-words text-sm font-semibold text-on-surface">{run.interactionLabel}</div>
-                      <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.11-sP9AT9", id: "simulation.simulation-progress-panel.div.11" })} className="flex shrink-0 items-center gap-2 text-xs font-semibold text-on-surface-variant">
+                  <article key={run.id} {...uiAttributes({ uid: "simulation.simulation-progress-panel.article-dqrMZ8", id: "simulation.simulation-progress-panel.article" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-765b6b545f", String(run.id)), createOpaqueUiInstanceId("iter-d66ca8ac23", String(run.id)))})} className="min-w-0 space-y-2 overflow-hidden rounded-xl bg-surface-container-low p-3">
+                    <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.9-aS1dv3", id: "simulation.simulation-progress-panel.div.9" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-a0163d17d6", String(run.id)), createOpaqueUiInstanceId("iter-02fa7166da", String(run.id)))})} className="flex min-w-0 flex-col gap-2 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
+                      <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.10-U9fLn0", id: "simulation.simulation-progress-panel.div.10" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-65d88b9dc3", String(run.id)), createOpaqueUiInstanceId("iter-88861a7b4d", String(run.id)))})} className="min-w-0 break-words text-sm font-semibold text-on-surface">{run.interactionLabel}</div>
+                      <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.11-sP9AT9", id: "simulation.simulation-progress-panel.div.11" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-c2fb2fd847", String(run.id)), createOpaqueUiInstanceId("iter-4829f105bc", String(run.id)))})} className="flex shrink-0 items-center gap-2 text-xs font-semibold text-on-surface-variant">
                         {statusIcon(run.status)}
-                        <span {...uiAttributes({ uid: "simulation.simulation-progress-panel.span.2-E9Any8", id: "simulation.simulation-progress-panel.span.2" })}>{statusLabel(run.status)}</span>
+                        <span {...uiAttributes({ uid: "simulation.simulation-progress-panel.span.2-E9Any8", id: "simulation.simulation-progress-panel.span.2" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-78df468c5c", String(run.id)), createOpaqueUiInstanceId("iter-fc8c54208c", String(run.id)))})}>{statusLabel(run.status)}</span>
                       </div>
                     </div>
                     {run.steps.length > 0 ? <StepList steps={run.steps} /> : null}
                     {run.error ? (
-                      <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.12-b0OgqP", id: "simulation.simulation-progress-panel.div.12" })} className="break-words rounded-lg bg-error/10 p-3 text-xs text-error">
-                        <span {...uiAttributes({ uid: "simulation.simulation-progress-panel.span.3-J4ptCO", id: "simulation.simulation-progress-panel.span.3" })} className="font-bold">رسالة الخطأ: </span>{run.error}
+                      <div {...uiAttributes({ uid: "simulation.simulation-progress-panel.div.12-b0OgqP", id: "simulation.simulation-progress-panel.div.12" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-04a0217ac2", String(run.id)), createOpaqueUiInstanceId("iter-a1fb94eab2", String(run.id)))})} className="break-words rounded-lg bg-error/10 p-3 text-xs text-error">
+                        <span {...uiAttributes({ uid: "simulation.simulation-progress-panel.span.3-J4ptCO", id: "simulation.simulation-progress-panel.span.3" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-2093707e9b", String(run.id)), createOpaqueUiInstanceId("iter-cdf6c06a4f", String(run.id)))})} className="font-bold">رسالة الخطأ: </span>{run.error}
                       </div>
                     ) : null}
                   </article>

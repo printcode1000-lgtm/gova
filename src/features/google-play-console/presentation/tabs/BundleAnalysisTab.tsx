@@ -9,7 +9,7 @@ import { useBundleAnalysis } from "../hooks/use-bundle-analysis";
 import { CategoryTree } from "../components/CategoryTree";
 import { DeltaTable } from "../components/DeltaTable";
 import { Metric } from "../components/Metric";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function BundleAnalysisTab() {
   const { t } = useAdminArabic();
@@ -28,7 +28,7 @@ export function BundleAnalysisTab() {
         <select {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.select.2-9FO7QC", id: "google-play-console.tabs.bundle-analysis-tab.select.2" })} id="google-play-console.tabs.bundle-analysis-tab.select" className="h-10 min-w-72 flex-1 rounded-md border bg-background px-3" value={selected}
           onChange={(event) => setSelected(event.target.value)} dir="ltr">
           <option {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.option-L7WZIU", id: "google-play-console.tabs.bundle-analysis-tab.option" })} value="">{t("releaseConsole.analysis.selectArtifact")}</option>
-          {artifacts.map((item) => <option key={`${item.jobId}:${item.name}`} {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.option.2-2LD6Ag", id: "google-play-console.tabs.bundle-analysis-tab.option.2" })}
+          {artifacts.map((item) => <option key={`${item.jobId}:${item.name}`} {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.option.2-2LD6Ag", id: "google-play-console.tabs.bundle-analysis-tab.option.2" , instance: createOpaqueUiInstanceId("iter-a97aa11bed", String(`${item.jobId}:${item.name}`))})}
             value={`${item.jobId}:${item.name}`}>{item.name}</option>)}
         </select>
         <Button id="google-play-console.tabs.bundle-analysis-tab.button"
@@ -61,7 +61,7 @@ export function BundleAnalysisTab() {
               <h2 {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.h2.3-bOmC43", id: "google-play-console.tabs.bundle-analysis-tab.h2.3" })} id="google-play-console.tabs.bundle-analysis-tab.h2" className="mb-3 font-semibold">{t("releaseConsole.analysis.delivery")}</h2>
               <div {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.div.13-qZFC2m", id: "google-play-console.tabs.bundle-analysis-tab.div.13" })} id="google-play-console.tabs.bundle-analysis-tab.div.6" className="grid gap-2 md:grid-cols-2">
                 {bundle.analysis.deliveryEstimates.map((estimate) => (
-                  <div key={`${estimate.abi}:${estimate.density}:${estimate.language}`} {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.div.14-X1KC7p", id: "google-play-console.tabs.bundle-analysis-tab.div.14" })}
+                  <div key={`${estimate.abi}:${estimate.density}:${estimate.language}`} {...uiAttributes({ uid: "google-play-console.tabs.bundle-analysis-tab.div.14-X1KC7p", id: "google-play-console.tabs.bundle-analysis-tab.div.14" , instance: createOpaqueUiInstanceId("iter-15c759ed76", String(`${estimate.abi}:${estimate.density}:${estimate.language}`))})}
                     className="rounded-md bg-muted p-3 text-sm" dir="ltr">
                     {estimate.abi} / {estimate.density ?? "-"} / {estimate.language ?? "-"}:&nbsp;
                     {estimate.compressedBytes}

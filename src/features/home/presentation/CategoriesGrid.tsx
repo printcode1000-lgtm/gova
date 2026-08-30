@@ -11,7 +11,7 @@ import {
   categoryTileTitleClassName,
 } from "@/features/categories/ui";
 import { useTranslation } from "@/shared/i18n";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 import {
   CATEGORY_CONSTANTS,
   type CategoryDisplay,
@@ -40,12 +40,12 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
           const categoryKey = cat.canonicalKey ?? `${cat.kind}-${cat.id}`;
           return (
             <Link key={categoryKey}
-              {...uiAttributes({ uid: "home-category-BxYuR3", id: "home-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "home-category" } })}
+              {...uiAttributes({ uid: "home-category-BxYuR3", id: "home-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "home-category" } , instance: createOpaqueUiInstanceId("iter-1b8b471608", String(categoryKey))})}
               href={getCategoryHref(cat)}
               className={categoryTileClassName}
               aria-label={name}
             >
-              <div key="media" {...uiAttributes({ uid: "home.categories-grid.div.3-cXhT4y", id: "home.categories-grid.div.3" })} className={categoryTileImageClassName}>
+              <div key="media" {...uiAttributes({ uid: "home.categories-grid.div.3-cXhT4y", id: "home.categories-grid.div.3" , instance: createOpaqueUiInstanceId("iter-a6506d5b08", String("media"))})} className={categoryTileImageClassName}>
                 <Image
                   src={imgSrc}
                   alt={name}
@@ -54,7 +54,7 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
                   className="object-cover"
                 />
               </div>
-              <span key="label" {...uiAttributes({ uid: "home.categories-grid.span-f57aFV", id: "home.categories-grid.span" })} className={categoryTileTitleClassName}>
+              <span key="label" {...uiAttributes({ uid: "home.categories-grid.span-f57aFV", id: "home.categories-grid.span" , instance: createOpaqueUiInstanceId("iter-2955c38c4e", String("label"))})} className={categoryTileTitleClassName}>
                 {name}
               </span>
             </Link>

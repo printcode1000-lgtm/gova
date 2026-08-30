@@ -36,7 +36,7 @@ import type { PersistentSystemLogEntry } from "@/features/system-logs";
 import { cn } from "@/shared/utils";
 import { redactSystemLogText } from "@asol/system-logs-core";
 import { cloudSource, formatCloudEntryForCopy } from "./SuperAdminLogsPage.log-formatters";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 // Clipboard access belongs to Native Core, which picks the native or web
 // implementation. It returns a Result rather than throwing, so a copy button on
@@ -181,7 +181,7 @@ export function CloudErrorsContainer({
           ]
             .sort()
             .map((value) => (
-              <option key={value} {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.option.2-m0ObfJ", id: "super-admin.logs.super-admin-logs-page.cloud-errors.option.2" })} value={value}>
+              <option key={value} {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.option.2-m0ObfJ", id: "super-admin.logs.super-admin-logs-page.cloud-errors.option.2" , instance: createOpaqueUiInstanceId("iter-b39e7e4fa3", String(value))})} value={value}>
                 {value === "unknown" ? "بدون حالة" : value}
               </option>
             ))}
@@ -193,7 +193,7 @@ export function CloudErrorsContainer({
         >
           <option {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.option.3-G1tzCo", id: "super-admin.logs.super-admin-logs-page.cloud-errors.option.3" })} value="all">كل الخدمات والميزات</option>
           {features.map((value) => (
-            <option key={value} {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.option.4-DOFrY9", id: "super-admin.logs.super-admin-logs-page.cloud-errors.option.4" })} value={value}>
+            <option key={value} {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.option.4-DOFrY9", id: "super-admin.logs.super-admin-logs-page.cloud-errors.option.4" , instance: createOpaqueUiInstanceId("iter-b6c3e89b95", String(value))})} value={value}>
               {value}
             </option>
           ))}
@@ -216,19 +216,19 @@ export function CloudErrorsContainer({
           <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.12-6cNKKI", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.12" })} id="super-admin.logs.super-admin-logs-page.cloud-errors.div.6" className="space-y-3">
             {filtered.map((entry) => (
               <article
-                key={entry.id} {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.article-Z9GMYF", id: "super-admin.logs.super-admin-logs-page.cloud-errors.article" })}
+                key={entry.id} {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.article-Z9GMYF", id: "super-admin.logs.super-admin-logs-page.cloud-errors.article" , instance: createOpaqueUiInstanceId("iter-5191c40ef8", String(entry.id))})}
                 className="rounded-lg border bg-background p-4 text-sm"
               >
-                <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.13-ZTvUD6", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.13" })} className="flex flex-wrap items-start justify-between gap-3">
-                  <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.14-dX59m5", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.14" })} className="min-w-0">
-                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.15-B0dYPW", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.15" })} className="mb-2 flex flex-wrap items-center gap-2 text-xs">
-                      <span {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.span.5-h87KQr", id: "super-admin.logs.super-admin-logs-page.cloud-errors.span.5" })} className="rounded bg-destructive/10 px-2 py-0.5 font-bold text-destructive">
+                <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.13-ZTvUD6", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.13" , instance: createOpaqueUiInstanceId("iter-19cad64b8b", String(entry.id))})} className="flex flex-wrap items-start justify-between gap-3">
+                  <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.14-dX59m5", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.14" , instance: createOpaqueUiInstanceId("iter-6cc12e04b2", String(entry.id))})} className="min-w-0">
+                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.15-B0dYPW", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.15" , instance: createOpaqueUiInstanceId("iter-eb428207e2", String(entry.id))})} className="mb-2 flex flex-wrap items-center gap-2 text-xs">
+                      <span {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.span.5-h87KQr", id: "super-admin.logs.super-admin-logs-page.cloud-errors.span.5" , instance: createOpaqueUiInstanceId("iter-30ec874312", String(entry.id))})} className="rounded bg-destructive/10 px-2 py-0.5 font-bold text-destructive">
                         {entry.statusCode ?? "ERROR"}
                       </span>
-                      <code {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.code-H0tM5W", id: "super-admin.logs.super-admin-logs-page.cloud-errors.code" })} dir="ltr">
+                      <code {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.code-H0tM5W", id: "super-admin.logs.super-admin-logs-page.cloud-errors.code" , instance: createOpaqueUiInstanceId("iter-cdc9d46c66", String(entry.id))})} dir="ltr">
                         {entry.requestMethod ?? "SERVER"} {cloudSource(entry)}
                       </code>
-                      <span {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.span.6-BzD2p2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.span.6" })}
+                      <span {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.span.6-BzD2p2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.span.6" , instance: createOpaqueUiInstanceId("iter-38e2357ace", String(entry.id))})}
                         className={cn(
                           "rounded px-2 py-0.5 font-bold",
                           entry.trustLevel === "trusted-server"
@@ -241,75 +241,75 @@ export function CloudErrorsContainer({
                           : "سجل قديم"}
                       </span>
                       {entry.occurrences > 1 && (
-                        <span {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.span.7-8cOEV9", id: "super-admin.logs.super-admin-logs-page.cloud-errors.span.7" })} className="rounded bg-muted px-2 py-0.5 font-bold">
+                        <span {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.span.7-8cOEV9", id: "super-admin.logs.super-admin-logs-page.cloud-errors.span.7" , instance: createOpaqueUiInstanceId("iter-ce51eee1f5", String(entry.id))})} className="rounded bg-muted px-2 py-0.5 font-bold">
                           ×{entry.occurrences}
                         </span>
                       )}
                     </div>
-                    <h3 {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.h3-3V3hVR", id: "super-admin.logs.super-admin-logs-page.cloud-errors.h3" })} className="font-mono text-sm font-semibold" dir="ltr">
+                    <h3 {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.h3-3V3hVR", id: "super-admin.logs.super-admin-logs-page.cloud-errors.h3" , instance: createOpaqueUiInstanceId("iter-ff038254c3", String(entry.id))})} className="font-mono text-sm font-semibold" dir="ltr">
                       {entry.errorName ?? "ServerError"}
                     </h3>
-                    <p {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.p.8-kpQ62s", id: "super-admin.logs.super-admin-logs-page.cloud-errors.p.8" })} className="mt-1 break-words text-sm" dir="ltr">
+                    <p {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.p.8-kpQ62s", id: "super-admin.logs.super-admin-logs-page.cloud-errors.p.8" , instance: createOpaqueUiInstanceId("iter-1cf4f38e3f", String(entry.id))})} className="mt-1 break-words text-sm" dir="ltr">
                       {entry.message}
                     </p>
                   </div>
-                  <time {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.time-YU9QYe", id: "super-admin.logs.super-admin-logs-page.cloud-errors.time" })} className="shrink-0 text-xs text-muted-foreground">
+                  <time {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.time-YU9QYe", id: "super-admin.logs.super-admin-logs-page.cloud-errors.time" , instance: createOpaqueUiInstanceId("iter-23209daf92", String(entry.id))})} className="shrink-0 text-xs text-muted-foreground">
                     {formatDateTimeDefault(entry.lastOccurredAt)}
                   </time>
                 </div>
                 {(entry.messageTruncated || entry.stackTruncated) && (
-                  <p {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.p.9-tfO0oU", id: "super-admin.logs.super-admin-logs-page.cloud-errors.p.9" })} className="mt-3 rounded-md bg-amber-500/10 p-2 text-xs text-amber-800">
+                  <p {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.p.9-tfO0oU", id: "super-admin.logs.super-admin-logs-page.cloud-errors.p.9" , instance: createOpaqueUiInstanceId("iter-834c2da5a6", String(entry.id))})} className="mt-3 rounded-md bg-amber-500/10 p-2 text-xs text-amber-800">
                     بعض البيانات الأصلية تجاوزت حد التخزين؛ النسخ يحتوي كل
                     البيانات المحفوظة مع توضيح الجزء المقصوص.
                   </p>
                 )}
-                <details {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.details-X9LG3l", id: "super-admin.logs.super-admin-logs-page.cloud-errors.details" })} className="mt-3 rounded-md bg-muted/30 p-3">
-                  <summary {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.summary-f9ZpdD", id: "super-admin.logs.super-admin-logs-page.cloud-errors.summary" })} className="text-xs font-semibold text-primary">
+                <details {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.details-X9LG3l", id: "super-admin.logs.super-admin-logs-page.cloud-errors.details" , instance: createOpaqueUiInstanceId("iter-44d4196d26", String(entry.id))})} className="mt-3 rounded-md bg-muted/30 p-3">
+                  <summary {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.summary-f9ZpdD", id: "super-admin.logs.super-admin-logs-page.cloud-errors.summary" , instance: createOpaqueUiInstanceId("iter-4b270936bc", String(entry.id))})} className="text-xs font-semibold text-primary">
                     عرض كل التفاصيل
                   </summary>
-                  <dl {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dl-IA6iFg", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dl" })}
+                  <dl {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dl-IA6iFg", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dl" , instance: createOpaqueUiInstanceId("iter-4cd41154df", String(entry.id))})}
                     className="mt-3 grid gap-2 text-xs sm:grid-cols-2"
                     dir="ltr"
                   >
-                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.16-yWQQ5m", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.16" })}>
-                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt-zCp5lU", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt" })} className="text-muted-foreground">الميزة</dt>
-                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd-DJ2IG0", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd" })} className="font-mono">
+                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.16-yWQQ5m", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.16" , instance: createOpaqueUiInstanceId("iter-5ee4fcd35b", String(entry.id))})}>
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt-zCp5lU", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt" , instance: createOpaqueUiInstanceId("iter-b29a46bd6c", String(entry.id))})} className="text-muted-foreground">الميزة</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd-DJ2IG0", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd" , instance: createOpaqueUiInstanceId("iter-cf868af2c7", String(entry.id))})} className="font-mono">
                         {entry.feature ?? "غير محدد"}
                       </dd>
                     </div>
-                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.17-6rLfE1", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.17" })}>
-                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.2-gLDG70", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.2" })} className="text-muted-foreground">العملية</dt>
-                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.2-GH2OKn", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.2" })} className="font-mono">
+                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.17-6rLfE1", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.17" , instance: createOpaqueUiInstanceId("iter-ae15a6950b", String(entry.id))})}>
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.2-gLDG70", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.2" , instance: createOpaqueUiInstanceId("iter-9092b16cb9", String(entry.id))})} className="text-muted-foreground">العملية</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.2-GH2OKn", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.2" , instance: createOpaqueUiInstanceId("iter-f9f1de0781", String(entry.id))})} className="font-mono">
                         {entry.operation ?? "غير محددة"}
                       </dd>
                     </div>
-                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.18-YYc5gD", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.18" })}>
-                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.3-n6eDPQ", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.3" })} className="text-muted-foreground">
+                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.18-YYc5gD", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.18" , instance: createOpaqueUiInstanceId("iter-5b2a9b6935", String(entry.id))})}>
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.3-n6eDPQ", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.3" , instance: createOpaqueUiInstanceId("iter-e77474e868", String(entry.id))})} className="text-muted-foreground">
                         أول ظهور
                       </dt>
-                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.3-VJW4Oc", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.3" })}>{entry.firstOccurredAt}</dd>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.3-VJW4Oc", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.3" , instance: createOpaqueUiInstanceId("iter-907178567c", String(entry.id))})}>{entry.firstOccurredAt}</dd>
                     </div>
-                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.19-qsRB19", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.19" })}>
-                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.4-Z3K3LI", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.4" })} className="text-muted-foreground">آخر ظهور</dt>
-                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.4-sX1MOC", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.4" })}>{entry.lastOccurredAt}</dd>
+                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.19-qsRB19", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.19" , instance: createOpaqueUiInstanceId("iter-23006b3f52", String(entry.id))})}>
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.4-Z3K3LI", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.4" , instance: createOpaqueUiInstanceId("iter-897725127f", String(entry.id))})} className="text-muted-foreground">آخر ظهور</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.4-sX1MOC", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.4" , instance: createOpaqueUiInstanceId("iter-aac35e18ec", String(entry.id))})}>{entry.lastOccurredAt}</dd>
                     </div>
-                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.20-4qRptL", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.20" })}>
-                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.5-PrEY1d", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.5" })} className="text-muted-foreground">إصدار التطبيق</dt>
-                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.5-TFTlz2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.5" })}>{entry.appVersion ?? "غير محدد"}</dd>
+                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.20-4qRptL", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.20" , instance: createOpaqueUiInstanceId("iter-36c84dec37", String(entry.id))})}>
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.5-PrEY1d", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.5" , instance: createOpaqueUiInstanceId("iter-901579c4ba", String(entry.id))})} className="text-muted-foreground">إصدار التطبيق</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.5-TFTlz2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.5" , instance: createOpaqueUiInstanceId("iter-6c79179e6e", String(entry.id))})}>{entry.appVersion ?? "غير محدد"}</dd>
                     </div>
-                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.21-6fJK60", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.21" })}>
-                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.6-2FqIJJ", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.6" })} className="text-muted-foreground">الإصدار الأصلي</dt>
-                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.6-eOaSo0", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.6" })}>{entry.nativeVersion ?? "غير محدد"}</dd>
+                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.21-6fJK60", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.21" , instance: createOpaqueUiInstanceId("iter-e19ed64e5d", String(entry.id))})}>
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.6-2FqIJJ", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.6" , instance: createOpaqueUiInstanceId("iter-c80a4f403a", String(entry.id))})} className="text-muted-foreground">الإصدار الأصلي</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.6-eOaSo0", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.6" , instance: createOpaqueUiInstanceId("iter-04ad8d93ae", String(entry.id))})}>{entry.nativeVersion ?? "غير محدد"}</dd>
                     </div>
-                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.22-3W5Qdm", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.22" })} className="sm:col-span-2">
-                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.7-16kAK2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.7" })} className="text-muted-foreground">البصمة</dt>
-                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.7-L5s7D6", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.7" })} className="break-all font-mono">
+                    <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.22-3W5Qdm", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.22" , instance: createOpaqueUiInstanceId("iter-d3d059eb46", String(entry.id))})} className="sm:col-span-2">
+                      <dt {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.7-16kAK2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dt.7" , instance: createOpaqueUiInstanceId("iter-4dbfe9903f", String(entry.id))})} className="text-muted-foreground">البصمة</dt>
+                      <dd {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.7-L5s7D6", id: "super-admin.logs.super-admin-logs-page.cloud-errors.dd.7" , instance: createOpaqueUiInstanceId("iter-33e4c85ef8", String(entry.id))})} className="break-all font-mono">
                         {entry.fingerprint}
                       </dd>
                     </div>
                   </dl>
                   {entry.stack && (
-                    <pre {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.pre-GXOZ4P", id: "super-admin.logs.super-admin-logs-page.cloud-errors.pre" })}
+                    <pre {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.pre-GXOZ4P", id: "super-admin.logs.super-admin-logs-page.cloud-errors.pre" , instance: createOpaqueUiInstanceId("iter-3bc595bf80", String(entry.id))})}
                       className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap border-t pt-3 font-mono text-xs"
                       dir="ltr"
                     >
@@ -317,8 +317,8 @@ export function CloudErrorsContainer({
                     </pre>
                   )}
                 </details>
-                <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.23-BGfqT2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.23" })} className="mt-3 flex flex-wrap gap-2">
-                  <Button ui={{ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.button.3-QfAg9q", id: "super-admin.logs.super-admin-logs-page.cloud-errors.button.3" }}
+                <div {...uiAttributes({ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.div.23-BGfqT2", id: "super-admin.logs.super-admin-logs-page.cloud-errors.div.23" , instance: createOpaqueUiInstanceId("iter-da42a5c9bb", String(entry.id))})} className="mt-3 flex flex-wrap gap-2">
+                  <Button ui={{ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.button.3-QfAg9q", id: "super-admin.logs.super-admin-logs-page.cloud-errors.button.3" , instance: createOpaqueUiInstanceId("iter-9e02777a23", String(entry.id))}}
                     type="button"
                     size="sm"
                     variant="outline"
@@ -334,7 +334,7 @@ export function CloudErrorsContainer({
                       ? "تم النسخ"
                       : "نسخ التفاصيل"}
                   </Button>
-                  <Button ui={{ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.button.4-RTwHa5", id: "super-admin.logs.super-admin-logs-page.cloud-errors.button.4" }}
+                  <Button ui={{ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.button.4-RTwHa5", id: "super-admin.logs.super-admin-logs-page.cloud-errors.button.4" , instance: createOpaqueUiInstanceId("iter-60171bcfc9", String(entry.id))}}
                     type="button"
                     size="sm"
                     variant="outline"
@@ -348,7 +348,7 @@ export function CloudErrorsContainer({
                     <FileJson className="me-2 h-4 w-4" />
                     {copyState === `${entry.id}:json` ? "تم النسخ" : "نسخ JSON"}
                   </Button>
-                  <Button ui={{ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.button.5-2Fytk9", id: "super-admin.logs.super-admin-logs-page.cloud-errors.button.5" }}
+                  <Button ui={{ uid: "super-admin.logs.super-admin-logs-page.cloud-errors.button.5-2Fytk9", id: "super-admin.logs.super-admin-logs-page.cloud-errors.button.5" , instance: createOpaqueUiInstanceId("iter-b41dfe6679", String(entry.id))}}
                     type="button"
                     size="sm"
                     variant="ghost"

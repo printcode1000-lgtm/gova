@@ -15,7 +15,7 @@ import { AndroidReleasePathActions } from "./AndroidReleasePathActions";
 import { AndroidReleasePathsTerminal } from "./AndroidReleasePathsTerminal";
 import { AndroidReleaseRunbookTree } from "./AndroidReleaseRunbookTree";
 import { useAndroidStaticPreview } from "./use-android-static-preview";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const DEFAULT_ENABLED_BRANCHES = new Set<string>(allAndroidReleaseBranchIds());
 const DEFAULT_ACTIVE_PATH = ANDROID_RELEASE_PATHS[0]?.id ?? "release-android";
@@ -72,14 +72,14 @@ export function AndroidReleasePaths({
           <Tabs className="mt-2" value={activePath} onValueChange={setActivePath}>
             <TabsList ui={{ uid: "google-play-console.android-release-paths.tabs-list.2-tNKz37", id: "google-play-console.android-release-paths.tabs-list.2" }} id="google-play-console.android-release-paths.tabs-list" className="flex h-auto w-full flex-wrap justify-start gap-1">
               {ANDROID_RELEASE_PATHS.map((path) => (
-                <TabsTrigger key={path.id} ui={{ uid: "google-play-console.android-release-paths.tabs-trigger-0IpQ8l", id: "google-play-console.android-release-paths.tabs-trigger" }} value={path.id}>
+                <TabsTrigger key={path.id} ui={{ uid: "google-play-console.android-release-paths.tabs-trigger-0IpQ8l", id: "google-play-console.android-release-paths.tabs-trigger" , instance: createOpaqueUiInstanceId("iter-ac58df7566", String(path.id))}} value={path.id}>
                   {t(path.title)}
                 </TabsTrigger>
               ))}
             </TabsList>
             {ANDROID_RELEASE_PATHS.map((path) => (
-              <TabsContent key={path.id} ui={{ uid: "google-play-console.android-release-paths.tabs-content-WRo24V", id: "google-play-console.android-release-paths.tabs-content" }} value={path.id} className="mt-2 space-y-3">
-                <p {...uiAttributes({ uid: "google-play-console.android-release-paths.p.6-5BqQgX", id: "google-play-console.android-release-paths.p.6" })} className="text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
+              <TabsContent key={path.id} ui={{ uid: "google-play-console.android-release-paths.tabs-content-WRo24V", id: "google-play-console.android-release-paths.tabs-content" , instance: createOpaqueUiInstanceId("iter-c0e63841f7", String(path.id))}} value={path.id} className="mt-2 space-y-3">
+                <p {...uiAttributes({ uid: "google-play-console.android-release-paths.p.6-5BqQgX", id: "google-play-console.android-release-paths.p.6" , instance: createOpaqueUiInstanceId("iter-f06251a89f", String(path.id))})} className="text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
                 <AndroidReleaseRunbookTree
                   runbook={androidReleaseRunbookFor(path.id)}
                   selected={enabledBranches}

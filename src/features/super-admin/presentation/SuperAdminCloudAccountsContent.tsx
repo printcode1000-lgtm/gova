@@ -15,7 +15,7 @@ import {
   listVercelCloudAccounts,
   TURSO_CLOUD_ACCOUNTS,
 } from "./cloud-accounts-reference";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 function SectionTitle({ id, children }: { children: React.ReactNode } & { id?: string }) {
   return (
@@ -149,27 +149,27 @@ export function SuperAdminCloudAccountsContent() {
         </thead>
         <tbody {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tbody.9-L6kF5K", id: "super-admin.super-admin-cloud-accounts-content.tbody.9" })} id="super-admin.super-admin-cloud-accounts-content.tbody.2">
           {vercelAccounts.map((account) => (
-            <tr key={account.name} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.32-GO6DO4", id: "super-admin.super-admin-cloud-accounts-content.tr.32" })} className="border-t align-top">
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.55-Ggdb0W", id: "super-admin.super-admin-cloud-accounts-content.td.55" })} className="p-2 sm:p-3" dir="ltr">
+            <tr key={account.name} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.32-GO6DO4", id: "super-admin.super-admin-cloud-accounts-content.tr.32" , instance: createOpaqueUiInstanceId("iter-01f34e7b4d", String(account.name))})} className="border-t align-top">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.55-Ggdb0W", id: "super-admin.super-admin-cloud-accounts-content.td.55" , instance: createOpaqueUiInstanceId("iter-1e9f59234e", String(account.name))})} className="p-2 sm:p-3" dir="ltr">
                 {account.accountLabel}
               </td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.56-24OliQ", id: "super-admin.super-admin-cloud-accounts-content.td.56" })} className="p-2 sm:p-3" dir="ltr">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.56-24OliQ", id: "super-admin.super-admin-cloud-accounts-content.td.56" , instance: createOpaqueUiInstanceId("iter-5a4d812958", String(account.name))})} className="p-2 sm:p-3" dir="ltr">
                 {account.project}
               </td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.57-Obv5Da", id: "super-admin.super-admin-cloud-accounts-content.td.57" })} className="p-2 sm:p-3" dir="ltr">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.57-Obv5Da", id: "super-admin.super-admin-cloud-accounts-content.td.57" , instance: createOpaqueUiInstanceId("iter-ff93254d22", String(account.name))})} className="p-2 sm:p-3" dir="ltr">
                 {account.email}
               </td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.58-xb6GFi", id: "super-admin.super-admin-cloud-accounts-content.td.58" })} className="p-2 sm:p-3">{account.servesAr}</td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.59-G956Nj", id: "super-admin.super-admin-cloud-accounts-content.td.59" })} className="p-2 sm:p-3">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.58-xb6GFi", id: "super-admin.super-admin-cloud-accounts-content.td.58" , instance: createOpaqueUiInstanceId("iter-170e7f0c5a", String(account.name))})} className="p-2 sm:p-3">{account.servesAr}</td>
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.59-G956Nj", id: "super-admin.super-admin-cloud-accounts-content.td.59" , instance: createOpaqueUiInstanceId("iter-e1b2d86222", String(account.name))})} className="p-2 sm:p-3">
                 {account.githubConnected ? (
                   <>
-                    <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.2-Ni9z2W", id: "super-admin.super-admin-cloud-accounts-content.strong.2" })}>متصل</strong> — كل push يعيد النشر
+                    <strong {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.strong.2-Ni9z2W", id: "super-admin.super-admin-cloud-accounts-content.strong.2" , instance: createOpaqueUiInstanceId("iter-fd9f34d4b0", String(account.name))})}>متصل</strong> — كل push يعيد النشر
                   </>
                 ) : (
                   "غير متصل"
                 )}
               </td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.60-ND6NkY", id: "super-admin.super-admin-cloud-accounts-content.td.60" })} className="p-2 sm:p-3" dir="ltr">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.60-ND6NkY", id: "super-admin.super-admin-cloud-accounts-content.td.60" , instance: createOpaqueUiInstanceId("iter-a73c88c5e7", String(account.name))})} className="p-2 sm:p-3" dir="ltr">
                 {account.updatedByAr}
               </td>
             </tr>
@@ -217,16 +217,16 @@ export function SuperAdminCloudAccountsContent() {
         </thead>
         <tbody {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tbody.10-iCgw31", id: "super-admin.super-admin-cloud-accounts-content.tbody.10" })} id="super-admin.super-admin-cloud-accounts-content.tbody.3">
           {TURSO_CLOUD_ACCOUNTS.map((account) => (
-            <tr key={account.account} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.34-V7C9EK", id: "super-admin.super-admin-cloud-accounts-content.tr.34" })} className="border-t align-top">
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.61-dtOTD1", id: "super-admin.super-admin-cloud-accounts-content.td.61" })} className="p-2 sm:p-3" dir="ltr">
+            <tr key={account.account} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.34-V7C9EK", id: "super-admin.super-admin-cloud-accounts-content.tr.34" , instance: createOpaqueUiInstanceId("iter-739ceb8059", String(account.account))})} className="border-t align-top">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.61-dtOTD1", id: "super-admin.super-admin-cloud-accounts-content.td.61" , instance: createOpaqueUiInstanceId("iter-4d6b130731", String(account.account))})} className="p-2 sm:p-3" dir="ltr">
                 {account.account}
               </td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.62-6BS5HE", id: "super-admin.super-admin-cloud-accounts-content.td.62" })} className="p-2 sm:p-3">{account.databases}</td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.63-59JJ7c", id: "super-admin.super-admin-cloud-accounts-content.td.63" })} className="p-2 sm:p-3" dir="ltr">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.62-6BS5HE", id: "super-admin.super-admin-cloud-accounts-content.td.62" , instance: createOpaqueUiInstanceId("iter-4ec69ccad8", String(account.account))})} className="p-2 sm:p-3">{account.databases}</td>
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.63-59JJ7c", id: "super-admin.super-admin-cloud-accounts-content.td.63" , instance: createOpaqueUiInstanceId("iter-9615799f11", String(account.account))})} className="p-2 sm:p-3" dir="ltr">
                 {account.email}
               </td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.64-G5AFkb", id: "super-admin.super-admin-cloud-accounts-content.td.64" })} className="p-2 sm:p-3">{account.domainAr}</td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.65-29ChF5", id: "super-admin.super-admin-cloud-accounts-content.td.65" })} className="p-2 sm:p-3" dir="ltr">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.64-G5AFkb", id: "super-admin.super-admin-cloud-accounts-content.td.64" , instance: createOpaqueUiInstanceId("iter-8c0c37ac84", String(account.account))})} className="p-2 sm:p-3">{account.domainAr}</td>
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.65-29ChF5", id: "super-admin.super-admin-cloud-accounts-content.td.65" , instance: createOpaqueUiInstanceId("iter-7fd70e1350", String(account.account))})} className="p-2 sm:p-3" dir="ltr">
                 {account.readByAr}
               </td>
             </tr>
@@ -327,7 +327,7 @@ export function SuperAdminCloudAccountsContent() {
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.39-6L3FPY", id: "super-admin.super-admin-cloud-accounts-content.tr.39" })} id="super-admin.super-admin-cloud-accounts-content.tr.11">
             <th {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.th.41-3XI8tA", id: "super-admin.super-admin-cloud-accounts-content.th.41" })} id="super-admin.super-admin-cloud-accounts-content.th.18" className="p-2 text-start sm:p-3"> </th>
             {r2Accounts.map((account) => (
-              <th key={account.id} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.th.42-1XATLG", id: "super-admin.super-admin-cloud-accounts-content.th.42" })} className="p-2 text-start sm:p-3">
+              <th key={account.id} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.th.42-1XATLG", id: "super-admin.super-admin-cloud-accounts-content.th.42" , instance: createOpaqueUiInstanceId("iter-7b02a5481a", String(account.id))})} className="p-2 text-start sm:p-3">
                 {account.columnLabelAr}
               </th>
             ))}
@@ -337,7 +337,7 @@ export function SuperAdminCloudAccountsContent() {
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.40-Enu0dE", id: "super-admin.super-admin-cloud-accounts-content.tr.40" })} id="super-admin.super-admin-cloud-accounts-content.tr.12" className="border-t align-top">
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.75-87wVaM", id: "super-admin.super-admin-cloud-accounts-content.td.75" })} id="super-admin.super-admin-cloud-accounts-content.td.19" className="p-2 sm:p-3">المتغيرات</td>
             {r2Accounts.map((account) => (
-              <td key={`${account.id}-env`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.76-5XmxEE", id: "super-admin.super-admin-cloud-accounts-content.td.76" })} className="p-2 sm:p-3" dir="ltr">
+              <td key={`${account.id}-env`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.76-5XmxEE", id: "super-admin.super-admin-cloud-accounts-content.td.76" , instance: createOpaqueUiInstanceId("iter-88d6efade4", String(`${account.id}-env`))})} className="p-2 sm:p-3" dir="ltr">
                 {account.envPrefixLabel}
               </td>
             ))}
@@ -345,7 +345,7 @@ export function SuperAdminCloudAccountsContent() {
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.41-JN9z0b", id: "super-admin.super-admin-cloud-accounts-content.tr.41" })} id="super-admin.super-admin-cloud-accounts-content.tr.13" className="border-t align-top">
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.77-19UDf2", id: "super-admin.super-admin-cloud-accounts-content.td.77" })} id="super-admin.super-admin-cloud-accounts-content.td.20" className="p-2 sm:p-3">الحساب</td>
             {r2Accounts.map((account) => (
-              <td key={`${account.id}-id`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.78-QSvdB3", id: "super-admin.super-admin-cloud-accounts-content.td.78" })} className="p-2 sm:p-3" dir="ltr">
+              <td key={`${account.id}-id`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.78-QSvdB3", id: "super-admin.super-admin-cloud-accounts-content.td.78" , instance: createOpaqueUiInstanceId("iter-16ed896dbf", String(`${account.id}-id`))})} className="p-2 sm:p-3" dir="ltr">
                 {abbreviateAccountId(account.accountId)}
               </td>
             ))}
@@ -353,7 +353,7 @@ export function SuperAdminCloudAccountsContent() {
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.42-hvTVv1", id: "super-admin.super-admin-cloud-accounts-content.tr.42" })} id="super-admin.super-admin-cloud-accounts-content.tr.14" className="border-t align-top">
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.79-YEfK8X", id: "super-admin.super-admin-cloud-accounts-content.td.79" })} id="super-admin.super-admin-cloud-accounts-content.td.21" className="p-2 sm:p-3">البريد الإلكتروني</td>
             {r2Accounts.map((account) => (
-              <td key={`${account.id}-email`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.80-nqA4w6", id: "super-admin.super-admin-cloud-accounts-content.td.80" })} className="p-2 sm:p-3" dir="ltr">
+              <td key={`${account.id}-email`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.80-nqA4w6", id: "super-admin.super-admin-cloud-accounts-content.td.80" , instance: createOpaqueUiInstanceId("iter-64759dc85d", String(`${account.id}-email`))})} className="p-2 sm:p-3" dir="ltr">
                 {account.email}
               </td>
             ))}
@@ -361,7 +361,7 @@ export function SuperAdminCloudAccountsContent() {
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.43-y8UVck", id: "super-admin.super-admin-cloud-accounts-content.tr.43" })} id="super-admin.super-admin-cloud-accounts-content.tr.15" className="border-t align-top">
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.81-TC3JEK", id: "super-admin.super-admin-cloud-accounts-content.td.81" })} id="super-admin.super-admin-cloud-accounts-content.td.22" className="p-2 sm:p-3">الحاوية (Bucket)</td>
             {r2Accounts.map((account) => (
-              <td key={`${account.id}-bucket`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.82-MN6slb", id: "super-admin.super-admin-cloud-accounts-content.td.82" })} className="p-2 sm:p-3" dir="ltr">
+              <td key={`${account.id}-bucket`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.82-MN6slb", id: "super-admin.super-admin-cloud-accounts-content.td.82" , instance: createOpaqueUiInstanceId("iter-893fb07d9c", String(`${account.id}-bucket`))})} className="p-2 sm:p-3" dir="ltr">
                 {account.bucketName}
               </td>
             ))}
@@ -369,7 +369,7 @@ export function SuperAdminCloudAccountsContent() {
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.44-Tf1XdS", id: "super-admin.super-admin-cloud-accounts-content.tr.44" })} id="super-admin.super-admin-cloud-accounts-content.tr.16" className="border-t align-top">
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.83-DS8g2J", id: "super-admin.super-admin-cloud-accounts-content.td.83" })} id="super-admin.super-admin-cloud-accounts-content.td.23" className="p-2 sm:p-3">معرّف المزوّد / الهدف</td>
             {r2Accounts.map((account) => (
-              <td key={`${account.id}-target`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.84-FN4XFU", id: "super-admin.super-admin-cloud-accounts-content.td.84" })} className="p-2 sm:p-3" dir="ltr">
+              <td key={`${account.id}-target`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.84-FN4XFU", id: "super-admin.super-admin-cloud-accounts-content.td.84" , instance: createOpaqueUiInstanceId("iter-1b71e40d7f", String(`${account.id}-target`))})} className="p-2 sm:p-3" dir="ltr">
                 {account.targetLabel}
               </td>
             ))}
@@ -377,7 +377,7 @@ export function SuperAdminCloudAccountsContent() {
           <tr {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.45-6BQPIR", id: "super-admin.super-admin-cloud-accounts-content.tr.45" })} id="super-admin.super-admin-cloud-accounts-content.tr.17" className="border-t align-top">
             <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.85-cLm0Dj", id: "super-admin.super-admin-cloud-accounts-content.td.85" })} id="super-admin.super-admin-cloud-accounts-content.td.24" className="p-2 sm:p-3">العنوان العام</td>
             {r2Accounts.map((account) => (
-              <td key={`${account.id}-url`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.86-pd50Vh", id: "super-admin.super-admin-cloud-accounts-content.td.86" })} className="p-2 sm:p-3" dir="ltr">
+              <td key={`${account.id}-url`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.86-pd50Vh", id: "super-admin.super-admin-cloud-accounts-content.td.86" , instance: createOpaqueUiInstanceId("iter-c775ff0289", String(`${account.id}-url`))})} className="p-2 sm:p-3" dir="ltr">
                 {publicHost(account.publicUrl)}
               </td>
             ))}
@@ -453,11 +453,11 @@ export function SuperAdminCloudAccountsContent() {
         </thead>
         <tbody {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tbody.14-yt59Al", id: "super-admin.super-admin-cloud-accounts-content.tbody.14" })} id="super-admin.super-admin-cloud-accounts-content.tbody.7">
           {r2Accounts.map((account) => (
-            <tr key={`usage-${account.id}`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.55-fGMx92", id: "super-admin.super-admin-cloud-accounts-content.tr.55" })} className="border-t align-top">
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.108-K4IaGO", id: "super-admin.super-admin-cloud-accounts-content.td.108" })} className="p-2 sm:p-3">
-                <span {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.span.85-9eRJIS", id: "super-admin.super-admin-cloud-accounts-content.span.85" })} dir="ltr">{account.bucketName}</span> ({account.columnLabelAr})
+            <tr key={`usage-${account.id}`} {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.tr.55-fGMx92", id: "super-admin.super-admin-cloud-accounts-content.tr.55" , instance: createOpaqueUiInstanceId("iter-d5ea5ba92e", String(`usage-${account.id}`))})} className="border-t align-top">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.108-K4IaGO", id: "super-admin.super-admin-cloud-accounts-content.td.108" , instance: createOpaqueUiInstanceId("iter-5d96aa224f", String(`usage-${account.id}`))})} className="p-2 sm:p-3">
+                <span {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.span.85-9eRJIS", id: "super-admin.super-admin-cloud-accounts-content.span.85" , instance: createOpaqueUiInstanceId("iter-b8295b20f5", String(`usage-${account.id}`))})} dir="ltr">{account.bucketName}</span> ({account.columnLabelAr})
               </td>
-              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.109-pl9L4x", id: "super-admin.super-admin-cloud-accounts-content.td.109" })} className="p-2 sm:p-3" dir="ltr">
+              <td {...uiAttributes({ uid: "super-admin.super-admin-cloud-accounts-content.td.109-pl9L4x", id: "super-admin.super-admin-cloud-accounts-content.td.109" , instance: createOpaqueUiInstanceId("iter-408d2f7e54", String(`usage-${account.id}`))})} className="p-2 sm:p-3" dir="ltr">
                 {account.targetLabel}
               </td>
             </tr>

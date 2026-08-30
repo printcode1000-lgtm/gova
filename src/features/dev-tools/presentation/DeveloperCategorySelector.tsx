@@ -52,7 +52,7 @@ import {
   SelectedRecordDetails,
   type DetailRecord,
 } from "./DeveloperRecordDetails";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const MEDICAL_SERVICES_CATEGORY_ID = CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID;
 const DOCTOR_APPOINTMENT_VALUE = CATEGORY_CONSTANTS.DOCTOR_APPOINTMENT_VALUE;
@@ -324,7 +324,7 @@ export function DeveloperCategorySelector() {
                 <SelectContent id="dev-tools.developer-category-selector.select-content">
                   {mainCategoryOptions.map((category) => (
                     <SelectItem
-                      key={category.id} ui={{ uid: "dev-tools.developer-category-selector.select-item-oDQ2K4", id: "dev-tools.developer-category-selector.select-item" }}
+                      key={category.id} ui={{ uid: "dev-tools.developer-category-selector.select-item-oDQ2K4", id: "dev-tools.developer-category-selector.select-item" , instance: createOpaqueUiInstanceId("iter-7c1148461d", String(category.id))}}
                       value={category.id.toString()}
                     >
                       {bilingualLabel(category.titleAr, category.titleEn)}
@@ -353,7 +353,7 @@ export function DeveloperCategorySelector() {
                 <SelectContent id="dev-tools.developer-category-selector.select-content.2">
                   {subcategoryOptions.map((subcategory) => (
                     <SelectItem
-                      key={subcategory.value} ui={{ uid: "dev-tools.developer-category-selector.select-item.2-g2H2l7", id: "dev-tools.developer-category-selector.select-item.2" }}
+                      key={subcategory.value} ui={{ uid: "dev-tools.developer-category-selector.select-item.2-g2H2l7", id: "dev-tools.developer-category-selector.select-item.2" , instance: createOpaqueUiInstanceId("iter-397cb96cc9", String(subcategory.value))}}
                       value={subcategory.value}
                     >
                       {bilingualLabel(subcategory.titleAr, subcategory.titleEn)}
@@ -468,7 +468,7 @@ export function DeveloperCategorySelector() {
                         ] as const
                       ).map(([mode, label]) => (
                         <button
-                          key={mode} {...uiAttributes({ uid: "dev-tools.developer-category-selector.button.3-Jy0sGU", id: "dev-tools.developer-category-selector.button.3" })}
+                          key={mode} {...uiAttributes({ uid: "dev-tools.developer-category-selector.button.3-Jy0sGU", id: "dev-tools.developer-category-selector.button.3" , instance: createOpaqueUiInstanceId("iter-0fcbd2e15c", String(mode))})}
                           type="button"
                           onClick={() => setPreviewMode(mode)}
                           className={`rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors ${

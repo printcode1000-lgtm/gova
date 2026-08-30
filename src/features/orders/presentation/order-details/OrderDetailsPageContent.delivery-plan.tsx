@@ -46,7 +46,7 @@ import { deliveryStopAddress } from "./OrderDetailsPageContent.seller-orders";
 import { QuoteAmount } from "./OrderDetailsPageContent.shipping-quotes";
 import { unifiedDeliveryPlanStatusText } from "./unified-delivery-plan-model";
 import { UnifiedDeliveryQuoteForm } from "./UnifiedDeliveryQuoteForm";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function UnifiedDeliveryPlanPanel({
   plan,
@@ -208,17 +208,17 @@ export function UnifiedDeliveryPlanPanel({
         <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.21-bP4F7s", id: "orders.order-details.order-details-page-content.delivery-plan.div.21" })} id="orders.order-details.order-details-page-content.delivery-plan.div.9" className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {activeStops.map((stop, index) => (
             <div
-              key={String(stop.id)} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.22-u8hkSy", id: "orders.order-details.order-details-page-content.delivery-plan.div.22" })}
+              key={String(stop.id)} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.22-u8hkSy", id: "orders.order-details.order-details-page-content.delivery-plan.div.22" , instance: createOpaqueUiInstanceId("iter-90aecfb95b", String(String(stop.id)))})}
               className="rounded-lg border border-outline-variant bg-surface px-3 py-2"
             >
-              <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.13-2HMsP2", id: "orders.order-details.order-details-page-content.delivery-plan.p.13" })} className="text-xs font-bold">
+              <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.13-2HMsP2", id: "orders.order-details.order-details-page-content.delivery-plan.p.13" , instance: createOpaqueUiInstanceId("iter-7492c619d9", String(String(stop.id)))})} className="text-xs font-bold">
                 {index + 1}.{" "}
                 {profileName(
                   details.profiles[String(stop.seller_id)],
                   String(stop.seller_id),
                 )}
               </p>
-              <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.14-AOt3Pr", id: "orders.order-details.order-details-page-content.delivery-plan.p.14" })} className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
+              <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.14-AOt3Pr", id: "orders.order-details.order-details-page-content.delivery-plan.p.14" , instance: createOpaqueUiInstanceId("iter-e6f3b3f4e9", String(String(stop.id)))})} className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
                 {deliveryStopAddress(stop.pickup_address_snapshot_json)}
               </p>
             </div>
@@ -241,19 +241,19 @@ export function UnifiedDeliveryPlanPanel({
                 Number(quote.total_shipping_price);
               return (
                 <article
-                  key={String(quote.id)} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.article-x39nVM", id: "orders.order-details.order-details-page-content.delivery-plan.article" })}
+                  key={String(quote.id)} {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.article-x39nVM", id: "orders.order-details.order-details-page-content.delivery-plan.article" , instance: createOpaqueUiInstanceId("iter-1664325dbd", String(String(quote.id)))})}
                   className={`rounded-xl border bg-surface p-3 ${
                     quote.status === "accepted"
                       ? "border-success/50 ring-1 ring-success/20"
                       : "border-outline-variant"
                   }`}
                 >
-                  <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.25-2f8RXb", id: "orders.order-details.order-details-page-content.delivery-plan.div.25" })} className="flex items-start justify-between gap-2">
-                    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.26-Lu5TCQ", id: "orders.order-details.order-details-page-content.delivery-plan.div.26" })}>
-                      <h4 {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.h4-snP00W", id: "orders.order-details.order-details-page-content.delivery-plan.h4" })} className="text-sm font-bold">
+                  <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.25-2f8RXb", id: "orders.order-details.order-details-page-content.delivery-plan.div.25" , instance: createOpaqueUiInstanceId("iter-2b3324ff79", String(String(quote.id)))})} className="flex items-start justify-between gap-2">
+                    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.26-Lu5TCQ", id: "orders.order-details.order-details-page-content.delivery-plan.div.26" , instance: createOpaqueUiInstanceId("iter-c448123a0a", String(String(quote.id)))})}>
+                      <h4 {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.h4-snP00W", id: "orders.order-details.order-details-page-content.delivery-plan.h4" , instance: createOpaqueUiInstanceId("iter-f09b54b6a5", String(String(quote.id)))})} className="text-sm font-bold">
                         {profileName(details.profiles[providerId], providerId)}
                       </h4>
-                      <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.15-DXFu9W", id: "orders.order-details.order-details-page-content.delivery-plan.p.15" })} className="mt-1 text-xs text-muted-foreground">
+                      <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.15-DXFu9W", id: "orders.order-details.order-details-page-content.delivery-plan.p.15" , instance: createOpaqueUiInstanceId("iter-1192b3ff2d", String(String(quote.id)))})} className="mt-1 text-xs text-muted-foreground">
                         عرض رقم {String(quote.version)} ·{" "}
                         {quote.status === "accepted"
                           ? "مقبول"
@@ -266,11 +266,11 @@ export function UnifiedDeliveryPlanPanel({
                         يغطي {coveredStopCount} من {activeStops.length} محطات
                       </p>
                     </div>
-                    <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.16-X3N0UB", id: "orders.order-details.order-details-page-content.delivery-plan.p.16" })} className="font-bold text-primary">
+                    <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.16-X3N0UB", id: "orders.order-details.order-details-page-content.delivery-plan.p.16" , instance: createOpaqueUiInstanceId("iter-aecb835d7f", String(String(quote.id)))})} className="font-bold text-primary">
                       {formatMoney(quote.total_shipping_price, currency)}
                     </p>
                   </div>
-                  <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.27-5tyZzK", id: "orders.order-details.order-details-page-content.delivery-plan.div.27" })} className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                  <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.27-5tyZzK", id: "orders.order-details.order-details-page-content.delivery-plan.div.27" , instance: createOpaqueUiInstanceId("iter-0bd1a19e81", String(String(quote.id)))})} className="mt-3 grid grid-cols-2 gap-2 text-xs">
                     <QuoteAmount
                       label="التوصيل"
                       value={quote.base_shipping_price}
@@ -283,7 +283,7 @@ export function UnifiedDeliveryPlanPanel({
                     />
                   </div>
                   {fallbackKnown && coversWholePlan && saving !== 0 ? (
-                    <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.17-2Y7Ghm", id: "orders.order-details.order-details-page-content.delivery-plan.p.17" })}
+                    <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.17-2Y7Ghm", id: "orders.order-details.order-details-page-content.delivery-plan.p.17" , instance: createOpaqueUiInstanceId("iter-c41884c5b0", String(String(quote.id)))})}
                       className={`mt-2 text-xs font-semibold ${
                         saving > 0 ? "text-success" : "text-warning"
                       }`}
@@ -294,12 +294,12 @@ export function UnifiedDeliveryPlanPanel({
                     </p>
                   ) : null}
                   {quote.notes ? (
-                    <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.18-f90Jhj", id: "orders.order-details.order-details-page-content.delivery-plan.p.18" })} className="mt-2 text-xs leading-5 text-muted-foreground">
+                    <p {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.p.18-f90Jhj", id: "orders.order-details.order-details-page-content.delivery-plan.p.18" , instance: createOpaqueUiInstanceId("iter-df9bcd9e22", String(String(quote.id)))})} className="mt-2 text-xs leading-5 text-muted-foreground">
                       {String(quote.notes)}
                     </p>
                   ) : null}
                   {isBuyer && quote.status === "pending_buyer" ? (
-                    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.28-riV4ly", id: "orders.order-details.order-details-page-content.delivery-plan.div.28" })} className="mt-3 flex flex-wrap gap-2">
+                    <div {...uiAttributes({ uid: "orders.order-details.order-details-page-content.delivery-plan.div.28-riV4ly", id: "orders.order-details.order-details-page-content.delivery-plan.div.28" , instance: createOpaqueUiInstanceId("iter-0533a0a874", String(String(quote.id)))})} className="mt-3 flex flex-wrap gap-2">
                       <OrderActionButton
                         action="buyer_accept_unified_delivery_quote"
                         busyAction={busyAction}

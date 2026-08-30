@@ -11,7 +11,7 @@ import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import { GOOGLE_PLAY_IMAGE_TYPES, type GooglePlayImageType } from "../../domain/store-assets-types";
 import { useStoreAssets } from "../hooks/use-store-assets";
 import { useStoreImagesPageSave } from "../hooks/use-store-images-page-save";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId, composeUiInstanceId} from "@asol/ui-registry-core";
 
 export function StoreImagesTab() {
   const { t } = useAdminArabic();
@@ -34,7 +34,7 @@ export function StoreImagesTab() {
           onChange={(event) => store.setImageType(event.target.value as GooglePlayImageType)}
         >
           {GOOGLE_PLAY_IMAGE_TYPES.map((type) => (
-            <option key={type} {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.option-w694O3", id: "google-play-console.tabs.store-images-tab.option" })} value={type}>{t(`releaseConsole.imageTypes.${type}`)}</option>
+            <option key={type} {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.option-w694O3", id: "google-play-console.tabs.store-images-tab.option" , instance: createOpaqueUiInstanceId("iter-f4354e730d", String(type))})} value={type}>{t(`releaseConsole.imageTypes.${type}`)}</option>
           ))}
         </select>
         <Input id="google-play-console.tabs.store-images-tab.input.2"
@@ -57,19 +57,19 @@ export function StoreImagesTab() {
       ) : null}
       <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.7-8DW3Wp", id: "google-play-console.tabs.store-images-tab.div.7" })} id="google-play-console.tabs.store-images-tab.div.3" className="grid gap-3 md:grid-cols-2">
         {store.snapshot.images.map((group) => (
-          <section key={`${group.language}:${group.imageType}`} {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.section.4-R6Aq6U", id: "google-play-console.tabs.store-images-tab.section.4" })} className="rounded-md border bg-surface p-3">
-            <h2 {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.h2.2-RRG40v", id: "google-play-console.tabs.store-images-tab.h2.2" })} className="mb-2 text-sm font-semibold">
+          <section key={`${group.language}:${group.imageType}`} {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.section.4-R6Aq6U", id: "google-play-console.tabs.store-images-tab.section.4" , instance: createOpaqueUiInstanceId("iter-24de0baa8f", String(`${group.language}:${group.imageType}`))})} className="rounded-md border bg-surface p-3">
+            <h2 {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.h2.2-RRG40v", id: "google-play-console.tabs.store-images-tab.h2.2" , instance: createOpaqueUiInstanceId("iter-e5718d5e41", String(`${group.language}:${group.imageType}`))})} className="mb-2 text-sm font-semibold">
               {group.language} / {t(`releaseConsole.imageTypes.${group.imageType}`)}
             </h2>
-            <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.8-e2MZMy", id: "google-play-console.tabs.store-images-tab.div.8" })} className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.8-e2MZMy", id: "google-play-console.tabs.store-images-tab.div.8" , instance: createOpaqueUiInstanceId("iter-9f713b5d1e", String(`${group.language}:${group.imageType}`))})} className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {group.images.map((item) => (
-                <figure key={item.id} {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.figure-FABN6g", id: "google-play-console.tabs.store-images-tab.figure" })} className="overflow-hidden rounded-md border bg-background">
+                <figure key={item.id} {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.figure-FABN6g", id: "google-play-console.tabs.store-images-tab.figure" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-ff2f13afea", String(item.id)), createOpaqueUiInstanceId("iter-02ad044942", String(item.id)))})} className="overflow-hidden rounded-md border bg-background">
                   <StoreImagePreview
                     id={item.id}
                     url={item.url}
                     unavailableLabel={t("releaseConsole.images.unavailable")}
                   />
-                  <Button ui={{ uid: "google-play-console.tabs.store-images-tab.button-w0XGxc", id: "google-play-console.tabs.store-images-tab.button" }}
+                  <Button ui={{ uid: "google-play-console.tabs.store-images-tab.button-w0XGxc", id: "google-play-console.tabs.store-images-tab.button" , instance: composeUiInstanceId(createOpaqueUiInstanceId("iter-7baea23c0b", String(item.id)), createOpaqueUiInstanceId("iter-620fe8010c", String(item.id)))}}
                     className="w-full"
                     size="sm"
                     variant="ghost"
@@ -81,7 +81,7 @@ export function StoreImagesTab() {
                 </figure>
               ))}
               {!group.images.length ? (
-                <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.9-g5Mw5V", id: "google-play-console.tabs.store-images-tab.div.9" })} className="flex gap-2 text-xs">
+                <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.9-g5Mw5V", id: "google-play-console.tabs.store-images-tab.div.9" , instance: createOpaqueUiInstanceId("iter-e76c0607f0", String(`${group.language}:${group.imageType}`))})} className="flex gap-2 text-xs">
                   <Upload className="h-4 w-4" />
                   {t("releaseConsole.empty")}
                 </div>
@@ -94,9 +94,9 @@ export function StoreImagesTab() {
         <h2 {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.h2.3-94YvOL", id: "google-play-console.tabs.store-images-tab.h2.3" })} id="google-play-console.tabs.store-images-tab.h2" className="mb-3 font-semibold">{t("releaseConsole.images.backups")}</h2>
         <div {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.10-VGtSD5", id: "google-play-console.tabs.store-images-tab.div.10" })} id="google-play-console.tabs.store-images-tab.div.4" className="grid gap-2 md:grid-cols-2">
           {(store.snapshot.backups ?? []).map((backup) => (
-            <div key={backup.name} {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.11-H1S2h5", id: "google-play-console.tabs.store-images-tab.div.11" })} className="flex items-center justify-between gap-2 rounded-md border p-2 text-sm">
-              <span {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.span-BN4i7L", id: "google-play-console.tabs.store-images-tab.span" })} className="min-w-0 truncate" dir="ltr">{backup.name}</span>
-              <Button ui={{ uid: "google-play-console.tabs.store-images-tab.button.2-75EGgf", id: "google-play-console.tabs.store-images-tab.button.2" }}
+            <div key={backup.name} {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.div.11-H1S2h5", id: "google-play-console.tabs.store-images-tab.div.11" , instance: createOpaqueUiInstanceId("iter-6705cfed95", String(backup.name))})} className="flex items-center justify-between gap-2 rounded-md border p-2 text-sm">
+              <span {...uiAttributes({ uid: "google-play-console.tabs.store-images-tab.span-BN4i7L", id: "google-play-console.tabs.store-images-tab.span" , instance: createOpaqueUiInstanceId("iter-8c0c5be90c", String(backup.name))})} className="min-w-0 truncate" dir="ltr">{backup.name}</span>
+              <Button ui={{ uid: "google-play-console.tabs.store-images-tab.button.2-75EGgf", id: "google-play-console.tabs.store-images-tab.button.2" , instance: createOpaqueUiInstanceId("iter-907dceb76b", String(backup.name))}}
                 size="sm"
                 variant="outline"
                 onClick={() => store.stageBackupRestore(backup.name)}

@@ -13,7 +13,7 @@ import { Badge } from '@/shared/ui/badge';
 import type { Product } from '@/features/onboarding/domain/types';
 import { nextSellerId } from '@/features/onboarding/domain/next-id';
 import { ProductForm } from './ProductForm';
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 function generateId() {
   return nextSellerId('prod');
@@ -119,23 +119,23 @@ export function ProductsSection() {
             <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.8-Dmg0fS", id: "onboarding.sections.products-section.div.8" })} id="onboarding.sections.products-section.div.4" className="space-y-4">
               {data.products.products.map((product) => (
                 <div
-                  key={product.id} {...uiAttributes({ uid: "onboarding.sections.products-section.div.9-TC9lW2", id: "onboarding.sections.products-section.div.9" })}
+                  key={product.id} {...uiAttributes({ uid: "onboarding.sections.products-section.div.9-TC9lW2", id: "onboarding.sections.products-section.div.9" , instance: createOpaqueUiInstanceId("iter-f9b9f3d423", String(product.id))})}
                   className="flex items-center gap-4 p-4 rounded-lg border transition-colors"
                 >
-                  <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.10-oV3OnQ", id: "onboarding.sections.products-section.div.10" })} className="flex-1 min-w-0">
-                    <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.11-fZd9jT", id: "onboarding.sections.products-section.div.11" })} className="flex items-center gap-2">
-                      <h4 {...uiAttributes({ uid: "onboarding.sections.products-section.h4-1TR4gv", id: "onboarding.sections.products-section.h4" })} className="font-medium truncate">{product.title}</h4>
+                  <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.10-oV3OnQ", id: "onboarding.sections.products-section.div.10" , instance: createOpaqueUiInstanceId("iter-320d284b2f", String(product.id))})} className="flex-1 min-w-0">
+                    <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.11-fZd9jT", id: "onboarding.sections.products-section.div.11" , instance: createOpaqueUiInstanceId("iter-91156a3a2f", String(product.id))})} className="flex items-center gap-2">
+                      <h4 {...uiAttributes({ uid: "onboarding.sections.products-section.h4-1TR4gv", id: "onboarding.sections.products-section.h4" , instance: createOpaqueUiInstanceId("iter-4424bf0cb6", String(product.id))})} className="font-medium truncate">{product.title}</h4>
                       {product.isFeatured && (
-                        <Badge ui={{ uid: "onboarding.sections.products-section.badge-z7MtjP", id: "onboarding.sections.products-section.badge" }} variant="secondary">{t('onboarding.products.featuredBadge')}</Badge>
+                        <Badge ui={{ uid: "onboarding.sections.products-section.badge-z7MtjP", id: "onboarding.sections.products-section.badge" , instance: createOpaqueUiInstanceId("iter-a3454b5573", String(product.id))}} variant="secondary">{t('onboarding.products.featuredBadge')}</Badge>
                       )}
                     </div>
-                    <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.12-RJWZG2", id: "onboarding.sections.products-section.div.12" })} className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                      <span {...uiAttributes({ uid: "onboarding.sections.products-section.span-b32guY", id: "onboarding.sections.products-section.span" })}>{product.category}</span>
-                      <span {...uiAttributes({ uid: "onboarding.sections.products-section.span.2-8RMZd6", id: "onboarding.sections.products-section.span.2" })}>${product.basePrice.toFixed(2)}</span>
-                      <span {...uiAttributes({ uid: "onboarding.sections.products-section.span.3-5g86JR", id: "onboarding.sections.products-section.span.3" })}>{t('onboarding.common.variants', { count: product.variants.length })}</span>
+                    <div {...uiAttributes({ uid: "onboarding.sections.products-section.div.12-RJWZG2", id: "onboarding.sections.products-section.div.12" , instance: createOpaqueUiInstanceId("iter-3a843f2f73", String(product.id))})} className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                      <span {...uiAttributes({ uid: "onboarding.sections.products-section.span-b32guY", id: "onboarding.sections.products-section.span" , instance: createOpaqueUiInstanceId("iter-7f5e5cceb6", String(product.id))})}>{product.category}</span>
+                      <span {...uiAttributes({ uid: "onboarding.sections.products-section.span.2-8RMZd6", id: "onboarding.sections.products-section.span.2" , instance: createOpaqueUiInstanceId("iter-e6f44e672d", String(product.id))})}>${product.basePrice.toFixed(2)}</span>
+                      <span {...uiAttributes({ uid: "onboarding.sections.products-section.span.3-5g86JR", id: "onboarding.sections.products-section.span.3" , instance: createOpaqueUiInstanceId("iter-148fe19c05", String(product.id))})}>{t('onboarding.common.variants', { count: product.variants.length })}</span>
                     </div>
                   </div>
-                  <Button ui={{ uid: "onboarding.sections.products-section.button.3-bPy26k", id: "onboarding.sections.products-section.button.3" }} variant="ghost" size="sm" onClick={() => removeProduct(product.id)}>
+                  <Button ui={{ uid: "onboarding.sections.products-section.button.3-bPy26k", id: "onboarding.sections.products-section.button.3" , instance: createOpaqueUiInstanceId("iter-81af3d768f", String(product.id))}} variant="ghost" size="sm" onClick={() => removeProduct(product.id)}>
                     <X className="h-4 w-4" />
                   </Button>
                 </div>

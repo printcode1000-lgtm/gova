@@ -40,7 +40,7 @@ import {
 } from "./notifications-page-model";
 import { useNotificationsFilter } from "./hooks/use-notifications-filter";
 import { NotificationsEmptyState } from "./NotificationsEmptyState";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function NotificationsPageContent() {
   const router = useRouter();
@@ -169,7 +169,7 @@ export function NotificationsPageContent() {
             const active = filter === item.id;
             return (
               <button key={item.id}
-                {...uiAttributes({ uid: "notification-filter-bvMK2l", id: "notification-filter", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-filter" } })}
+                {...uiAttributes({ uid: "notification-filter-bvMK2l", id: "notification-filter", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "notification-filter" } , instance: createOpaqueUiInstanceId("iter-1c262ded39", String(item.id))})}
                 ref={(node) => {
                   filterButtonRefs.current[item.id] = node;
                 }}
@@ -187,10 +187,10 @@ export function NotificationsPageContent() {
                   borderColor: active ? `${color}AA` : `${color}55`,
                 }}
               >
-                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span-2fhChX", id: "notifications.notifications-page-content.span" })} className="relative flex h-9 w-9 shrink-0 items-center justify-center">
+                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span-2fhChX", id: "notifications.notifications-page-content.span" , instance: createOpaqueUiInstanceId("iter-a7dfe55ee8", String(item.id))})} className="relative flex h-9 w-9 shrink-0 items-center justify-center">
                   {active ? (
                     <>
-                      <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.2-9TphEI", id: "notifications.notifications-page-content.span.2" })}
+                      <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.2-9TphEI", id: "notifications.notifications-page-content.span.2" , instance: createOpaqueUiInstanceId("iter-57979b1544", String(item.id))})}
                         className="asol-profile-tab-wave pointer-events-none absolute inset-0 rounded-full"
                         style={{
                           color: `${color}80`,
@@ -198,7 +198,7 @@ export function NotificationsPageContent() {
                           backgroundColor: `${color}20`,
                         }}
                       />
-                      <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.3-6sWf9c", id: "notifications.notifications-page-content.span.3" })}
+                      <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.3-6sWf9c", id: "notifications.notifications-page-content.span.3" , instance: createOpaqueUiInstanceId("iter-6c5192ec2c", String(item.id))})}
                         className="asol-profile-tab-wave asol-profile-tab-wave--delayed pointer-events-none absolute inset-0 rounded-full"
                         style={{
                           color: `${color}66`,
@@ -221,7 +221,7 @@ export function NotificationsPageContent() {
                     }}
                   />
                 </span>
-                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.4-5UKozj", id: "notifications.notifications-page-content.span.4" })}
+                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.4-5UKozj", id: "notifications.notifications-page-content.span.4" , instance: createOpaqueUiInstanceId("iter-f008c4c50f", String(item.id))})}
                   className="line-clamp-2 block w-full text-center font-semibold tracking-tight text-on-surface-variant"
                   style={{ fontSize: "0.5rem", lineHeight: "0.6rem" }}
                 >
@@ -299,24 +299,24 @@ function ChatConversationList({
               index > 0 && "border-t border-outline-variant/70",
             )}
           >
-            <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.5-kzucJ5", id: "notifications.notifications-page-content.span.5" })} className={cn("flex h-12 w-12 shrink-0 items-center justify-center rounded-full", categoryTone(NotificationCategories.Chat))}>
+            <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.5-kzucJ5", id: "notifications.notifications-page-content.span.5" , instance: createOpaqueUiInstanceId("iter-e46a22491e", String(conversation.key))})} className={cn("flex h-12 w-12 shrink-0 items-center justify-center rounded-full", categoryTone(NotificationCategories.Chat))}>
               <MessageCircle className="h-6 w-6" />
             </span>
-            <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.6-0TJ8XA", id: "notifications.notifications-page-content.span.6" })} className="min-w-0 flex-1">
-              <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.7-PX2cRu", id: "notifications.notifications-page-content.span.7" })} className="flex items-center justify-between gap-3">
-                <strong {...uiAttributes({ uid: "notifications.notifications-page-content.strong-2xTYQ9", id: "notifications.notifications-page-content.strong" })} className="truncate text-sm text-on-surface">{title}</strong>
-                <time {...uiAttributes({ uid: "notifications.notifications-page-content.time-rL7o8X", id: "notifications.notifications-page-content.time" })} className="shrink-0 text-[11px] text-on-surface-variant">
+            <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.6-0TJ8XA", id: "notifications.notifications-page-content.span.6" , instance: createOpaqueUiInstanceId("iter-e4093ff797", String(conversation.key))})} className="min-w-0 flex-1">
+              <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.7-PX2cRu", id: "notifications.notifications-page-content.span.7" , instance: createOpaqueUiInstanceId("iter-80dfe4f103", String(conversation.key))})} className="flex items-center justify-between gap-3">
+                <strong {...uiAttributes({ uid: "notifications.notifications-page-content.strong-2xTYQ9", id: "notifications.notifications-page-content.strong" , instance: createOpaqueUiInstanceId("iter-31fc9bec50", String(conversation.key))})} className="truncate text-sm text-on-surface">{title}</strong>
+                <time {...uiAttributes({ uid: "notifications.notifications-page-content.time-rL7o8X", id: "notifications.notifications-page-content.time" , instance: createOpaqueUiInstanceId("iter-ac00b7c51e", String(conversation.key))})} className="shrink-0 text-[11px] text-on-surface-variant">
                   {formatDate(conversation.latest.createdAt, locale)}
                 </time>
               </span>
-              {specialty ? <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.8-0y4mDr", id: "notifications.notifications-page-content.span.8" })} className="mt-0.5 block truncate text-xs font-semibold text-primary">{specialty}</span> : null}
-              <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.9-i50MEL", id: "notifications.notifications-page-content.span.9" })} className="mt-1 flex items-center justify-between gap-2">
-                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.10-9ZViso", id: "notifications.notifications-page-content.span.10" })} className="truncate text-sm text-on-surface-variant">
+              {specialty ? <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.8-0y4mDr", id: "notifications.notifications-page-content.span.8" , instance: createOpaqueUiInstanceId("iter-56fe694814", String(conversation.key))})} className="mt-0.5 block truncate text-xs font-semibold text-primary">{specialty}</span> : null}
+              <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.9-i50MEL", id: "notifications.notifications-page-content.span.9" , instance: createOpaqueUiInstanceId("iter-4e12a06091", String(conversation.key))})} className="mt-1 flex items-center justify-between gap-2">
+                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.10-9ZViso", id: "notifications.notifications-page-content.span.10" , instance: createOpaqueUiInstanceId("iter-7b206717e7", String(conversation.key))})} className="truncate text-sm text-on-surface-variant">
                   {outgoing ? (locale === "ar" ? "أنت: " : "You:") : ""}
                   {conversation.latest.body}
                 </span>
                 {conversation.unreadCount > 0 ? (
-                  <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.11-O87hYM", id: "notifications.notifications-page-content.span.11" })} className="flex min-w-5 shrink-0 items-center justify-center rounded-full bg-error px-1.5 py-0.5 text-[11px] font-bold text-on-error">
+                  <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.11-O87hYM", id: "notifications.notifications-page-content.span.11" , instance: createOpaqueUiInstanceId("iter-7cabe6bb2d", String(conversation.key))})} className="flex min-w-5 shrink-0 items-center justify-center rounded-full bg-error px-1.5 py-0.5 text-[11px] font-bold text-on-error">
                     {conversation.unreadCount}
                   </span>
                 ) : null}
@@ -432,11 +432,11 @@ function NotificationGroupCard({
           </summary>
           <ol {...uiAttributes({ uid: "notifications.notifications-page-content.ol-RlZO9W", id: "notifications.notifications-page-content.ol" })} className="space-y-0 px-4 pb-4">
             {group.items.map((item, index) => (
-              <li key={item.id} {...uiAttributes({ uid: "notifications.notifications-page-content.li-Ne81fP", id: "notifications.notifications-page-content.li" })} className="relative border-s border-outline-variant pb-4 ps-4 last:pb-0">
-                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.14-LzaE4k", id: "notifications.notifications-page-content.span.14" })} className={cn("absolute -start-1.5 top-1 h-3 w-3 rounded-full", index === 0 ? "bg-primary" : "bg-outline-variant")} />
-                <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.8-2U9gId", id: "notifications.notifications-page-content.p.8" })} className="text-sm font-semibold text-on-surface">{item.title}</p>
-                <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.9-R4ha5C", id: "notifications.notifications-page-content.p.9" })} className="mt-0.5 text-sm text-on-surface-variant">{item.body}</p>
-                <time {...uiAttributes({ uid: "notifications.notifications-page-content.time.2-3lYQBu", id: "notifications.notifications-page-content.time.2" })} className="mt-1 block text-[11px] text-on-surface-variant">{formatDate(item.createdAt, locale)}</time>
+              <li key={item.id} {...uiAttributes({ uid: "notifications.notifications-page-content.li-Ne81fP", id: "notifications.notifications-page-content.li" , instance: createOpaqueUiInstanceId("iter-6e12e8face", String(item.id))})} className="relative border-s border-outline-variant pb-4 ps-4 last:pb-0">
+                <span {...uiAttributes({ uid: "notifications.notifications-page-content.span.14-LzaE4k", id: "notifications.notifications-page-content.span.14" , instance: createOpaqueUiInstanceId("iter-67215b4daf", String(item.id))})} className={cn("absolute -start-1.5 top-1 h-3 w-3 rounded-full", index === 0 ? "bg-primary" : "bg-outline-variant")} />
+                <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.8-2U9gId", id: "notifications.notifications-page-content.p.8" , instance: createOpaqueUiInstanceId("iter-971edacea2", String(item.id))})} className="text-sm font-semibold text-on-surface">{item.title}</p>
+                <p {...uiAttributes({ uid: "notifications.notifications-page-content.p.9-R4ha5C", id: "notifications.notifications-page-content.p.9" , instance: createOpaqueUiInstanceId("iter-d11bc70f99", String(item.id))})} className="mt-0.5 text-sm text-on-surface-variant">{item.body}</p>
+                <time {...uiAttributes({ uid: "notifications.notifications-page-content.time.2-3lYQBu", id: "notifications.notifications-page-content.time.2" , instance: createOpaqueUiInstanceId("iter-7b68220519", String(item.id))})} className="mt-1 block text-[11px] text-on-surface-variant">{formatDate(item.createdAt, locale)}</time>
               </li>
             ))}
           </ol>

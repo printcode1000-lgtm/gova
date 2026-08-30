@@ -297,20 +297,20 @@ export function PharmacyCatalogManagerPage() {
             >
               {categories.map((category) => (
                 <div
-                  key={category.id} {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.6-Z3R36Z", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.6" })}
+                  key={category.id} {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.6-Z3R36Z", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.6" , instance: createOpaqueUiInstanceId("iter-e6abef6beb", String(category.id))})}
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     category.id === activeCategoryId
                       ? "border-primary bg-primary/10"
                       : "border-outline-variant"
                   } ${category.status === "hidden" ? "opacity-55" : ""}`}
                 >
-                  <button {...uiAttributes({ uid: "pharmacy-category-06QfVC", id: "pharmacy-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "pharmacy-category" } })}
+                  <button {...uiAttributes({ uid: "pharmacy-category-06QfVC", id: "pharmacy-category", kind: "item", interaction: { type: "tap" }, simulation: { kind: "list-item", id: "pharmacy-category" } , instance: createOpaqueUiInstanceId("iter-39e54e71d9", String(category.id))})}
                     type="button"
                     onClick={() => setActiveCategoryId(category.id)}
                     className="flex min-w-0 flex-1 items-center gap-2 text-start"
                   >
                     <PharmacyCategoryIcon icon={category.icon} className="h-4 w-4 text-center text-primary" />
-                    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span-3QR4GH", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span" })} className="min-w-0 flex-1 truncate font-semibold">{category.nameAr}</span>
+                    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span-3QR4GH", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span" , instance: createOpaqueUiInstanceId("iter-88f6283786", String(category.id))})} className="min-w-0 flex-1 truncate font-semibold">{category.nameAr}</span>
                   <StatusBadge hidden={category.status === "hidden"} />
                   </button>
                   <IconButton
@@ -320,7 +320,7 @@ export function PharmacyCatalogManagerPage() {
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </IconButton>
-                  <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button-DU20BK", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button" }}
+                  <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button-DU20BK", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button" , instance: createOpaqueUiInstanceId("iter-a9bf75015f", String(category.id))}}
                     hidden={category.status === "hidden"}
                     disabled={busy}
                     onClick={() => toggleCategory(category)}
@@ -337,20 +337,20 @@ export function PharmacyCatalogManagerPage() {
             >
               {subcategories.map((subcategory) => (
                 <div
-                  key={subcategory.id} {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.7-aZ7v1P", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.7" })}
+                  key={subcategory.id} {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.7-aZ7v1P", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.7" , instance: createOpaqueUiInstanceId("iter-5dbab5fc58", String(subcategory.id))})}
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     subcategory.id === activeSubcategoryId
                       ? "border-tertiary bg-tertiary/10"
                       : "border-outline-variant"
                   } ${subcategory.status === "hidden" ? "opacity-55" : ""}`}
                 >
-                  <button {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.button-4GHDSw", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.button" })}
+                  <button {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.button-4GHDSw", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.button" , instance: createOpaqueUiInstanceId("iter-6b2b89ef6d", String(subcategory.id))})}
                     type="button"
                     onClick={() => setActiveSubcategoryId(subcategory.id)}
                     className="flex min-w-0 flex-1 items-center gap-2 text-start"
                   >
                     <PharmacyCategoryIcon icon={activeCategory?.icon} className="h-4 w-4 text-center text-tertiary" />
-                    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2-ODA1rv", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2" })} className="min-w-0 flex-1 truncate font-semibold">{subcategory.nameAr}</span>
+                    <span {...uiAttributes({ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2-ODA1rv", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.span.2" , instance: createOpaqueUiInstanceId("iter-77fa045fbf", String(subcategory.id))})} className="min-w-0 flex-1 truncate font-semibold">{subcategory.nameAr}</span>
                   <StatusBadge hidden={subcategory.status === "hidden"} />
                   </button>
                   <IconButton
@@ -360,7 +360,7 @@ export function PharmacyCatalogManagerPage() {
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </IconButton>
-                  <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button.2-Gl4X0V", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button.2" }}
+                  <VisibilityButton ui={{ uid: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button.2-Gl4X0V", id: "pharmacy-profile-catalog.pharmacy-catalog-manager-page.visibility-button.2" , instance: createOpaqueUiInstanceId("iter-267ca0fc67", String(subcategory.id))}}
                     hidden={subcategory.status === "hidden"}
                     disabled={busy}
                     onClick={() => toggleSubcategory(subcategory)}

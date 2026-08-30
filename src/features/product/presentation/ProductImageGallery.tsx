@@ -3,7 +3,7 @@
 import Image from "next/image";
 import * as React from "react";
 import { shouldUseUnoptimizedImage, type StoredImage } from "@asol/storage-core";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 type Point = { x: number; y: number };
 const distance = (a: Point, b: Point) => Math.hypot(b.x - a.x, b.y - a.y);
@@ -202,7 +202,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
         >
           {validImages.map((image, index) => (
             <button
-              key={image.imageKey} {...uiAttributes({ uid: "product.product-image-gallery.button-2o4GJc", id: "product.product-image-gallery.button" })}
+              key={image.imageKey} {...uiAttributes({ uid: "product.product-image-gallery.button-2o4GJc", id: "product.product-image-gallery.button" , instance: createOpaqueUiInstanceId("iter-fca1ce2588", String(image.imageKey))})}
               type="button"
               aria-label={`الصورة ${index + 1}`}
               aria-pressed={activeIndex === index}

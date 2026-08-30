@@ -22,7 +22,7 @@ import { useTranslation } from "@/shared/i18n";
 import { cn } from "@/shared/utils";
 import { specialtyChatClient } from "../application/specialty-chat-client";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 import {
   chatMessageDayKey,
   formatChatMessageDay,
@@ -186,14 +186,14 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
           return (
             <React.Fragment key={message.id}>
               {showDay ? (
-                <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.5-kcX9AN", id: "specialty-chat.chat-thread-page-content.div.5" })} className="flex justify-center py-2">
-                  <time {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.time-9aJNHo", id: "specialty-chat.chat-thread-page-content.time" })} className="rounded-full bg-surface-container px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
+                <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.5-kcX9AN", id: "specialty-chat.chat-thread-page-content.div.5" , instance: createOpaqueUiInstanceId("iter-35e9b9513d", String(message.id))})} className="flex justify-center py-2">
+                  <time {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.time-9aJNHo", id: "specialty-chat.chat-thread-page-content.time" , instance: createOpaqueUiInstanceId("iter-93c621f4f0", String(message.id))})} className="rounded-full bg-surface-container px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
                     {formatChatMessageDay(message.createdAt, locale)}
                   </time>
                 </div>
               ) : null}
-              <article {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.article-w3ay5J", id: "specialty-chat.chat-thread-page-content.article" })} className={cn("flex", outgoing ? "justify-end" : "justify-start")}>
-                <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.6-I3xwL8", id: "specialty-chat.chat-thread-page-content.div.6" })}
+              <article {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.article-w3ay5J", id: "specialty-chat.chat-thread-page-content.article" , instance: createOpaqueUiInstanceId("iter-1f7b8ddea2", String(message.id))})} className={cn("flex", outgoing ? "justify-end" : "justify-start")}>
+                <div {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.div.6-I3xwL8", id: "specialty-chat.chat-thread-page-content.div.6" , instance: createOpaqueUiInstanceId("iter-de6e4f95a2", String(message.id))})}
                   className={cn(
                     "max-w-[86%] rounded-2xl px-3 py-2 shadow-sm sm:max-w-[75%]",
                     outgoing
@@ -201,8 +201,8 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
                       : "rounded-es-md border border-outline-variant bg-surface-container text-on-surface",
                   )}
                 >
-                  <p {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.p.3-VF8yeT", id: "specialty-chat.chat-thread-page-content.p.3" })} className="whitespace-pre-wrap break-words text-sm leading-6">{message.body}</p>
-                  <span {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.span.7-QwgF9H", id: "specialty-chat.chat-thread-page-content.span.7" })} className={cn("mt-1 flex items-center justify-end gap-1 text-[10px]", outgoing ? "text-on-primary/75" : "text-muted-foreground")}>
+                  <p {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.p.3-VF8yeT", id: "specialty-chat.chat-thread-page-content.p.3" , instance: createOpaqueUiInstanceId("iter-d39c968215", String(message.id))})} className="whitespace-pre-wrap break-words text-sm leading-6">{message.body}</p>
+                  <span {...uiAttributes({ uid: "specialty-chat.chat-thread-page-content.span.7-QwgF9H", id: "specialty-chat.chat-thread-page-content.span.7" , instance: createOpaqueUiInstanceId("iter-135a9f754e", String(message.id))})} className={cn("mt-1 flex items-center justify-end gap-1 text-[10px]", outgoing ? "text-on-primary/75" : "text-muted-foreground")}>
                     {formatChatMessageTime(message.createdAt, locale)}
                     {outgoing ? (
                       read || received ? (

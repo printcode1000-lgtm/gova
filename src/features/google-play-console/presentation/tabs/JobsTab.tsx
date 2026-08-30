@@ -7,7 +7,7 @@ import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
 import { useReleaseJobs } from "../hooks/use-release-jobs";
 import { LogViewer } from "../components/LogViewer";
 import { ReleaseJobStopDialog } from "../components/ReleaseJobStopDialog";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 export function JobsTab() {
   const { t } = useAdminArabic();
@@ -20,10 +20,10 @@ export function JobsTab() {
         onConfirm={() => void jobs.confirmCancel()} onCancel={jobs.dismissCancel} />
       <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.7-TjnU5V", id: "google-play-console.tabs.jobs-tab.div.7" })} id="google-play-console.tabs.jobs-tab.div" className="space-y-2 rounded-md border bg-surface p-3">
         {jobs.jobs.map((job) => (
-          <button key={job.id} {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.button.2-pGW3ra", id: "google-play-console.tabs.jobs-tab.button.2" })} type="button" onClick={() => jobs.setSelectedJobId(job.id)}
+          <button key={job.id} {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.button.2-pGW3ra", id: "google-play-console.tabs.jobs-tab.button.2" , instance: createOpaqueUiInstanceId("iter-fd11b4744a", String(job.id))})} type="button" onClick={() => jobs.setSelectedJobId(job.id)}
             className="block w-full rounded-md border bg-muted p-3 text-start text-sm">
-            <strong {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.strong-B4xFhR", id: "google-play-console.tabs.jobs-tab.strong" })} className="block">{job.command.script}</strong>
-            <span {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.span-h7kCHP", id: "google-play-console.tabs.jobs-tab.span" })} className="text-xs text-on-surface-variant">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
+            <strong {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.strong-B4xFhR", id: "google-play-console.tabs.jobs-tab.strong" , instance: createOpaqueUiInstanceId("iter-5674ee25cf", String(job.id))})} className="block">{job.command.script}</strong>
+            <span {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.span-h7kCHP", id: "google-play-console.tabs.jobs-tab.span" , instance: createOpaqueUiInstanceId("iter-8b51491669", String(job.id))})} className="text-xs text-on-surface-variant">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
           </button>
         ))}
         {!jobs.jobs.length ? <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.8-WdS1S9", id: "google-play-console.tabs.jobs-tab.div.8" })} id="google-play-console.tabs.jobs-tab.div.2" className="text-sm">{t("releaseConsole.empty")}</div> : null}
@@ -47,9 +47,9 @@ export function JobsTab() {
         <LogViewer text={jobs.log} emptyText={t("releaseConsole.jobs.noLog")} />
         <div {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.div.12-chEl3S", id: "google-play-console.tabs.jobs-tab.div.12" })} id="google-play-console.tabs.jobs-tab.div.6" className="grid gap-2 md:grid-cols-2">
           {(selected?.artifacts ?? []).map((artifact) => (
-            <a key={artifact.name} {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.a-2SzruY", id: "google-play-console.tabs.jobs-tab.a" })} className="flex gap-2 rounded-md border p-2 text-xs"
+            <a key={artifact.name} {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.a-2SzruY", id: "google-play-console.tabs.jobs-tab.a" , instance: createOpaqueUiInstanceId("iter-057029118a", String(artifact.name))})} className="flex gap-2 rounded-md border p-2 text-xs"
               href={`/api/super-admin/build-jobs/${selected.id}/artifacts/${encodeURIComponent(artifact.name)}`}>
-              <Download className="h-4 w-4" /><span {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.span.2-lW2HHS", id: "google-play-console.tabs.jobs-tab.span.2" })} className="truncate">{artifact.path}</span>
+              <Download className="h-4 w-4" /><span {...uiAttributes({ uid: "google-play-console.tabs.jobs-tab.span.2-lW2HHS", id: "google-play-console.tabs.jobs-tab.span.2" , instance: createOpaqueUiInstanceId("iter-5357af8aa1", String(artifact.name))})} className="truncate">{artifact.path}</span>
             </a>
           ))}
         </div>

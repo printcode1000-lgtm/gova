@@ -11,7 +11,7 @@ import {
   dangerousBranchIds,
   PhaseBlock,
 } from "./DeployRunbookPhaseTree";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes , createOpaqueUiInstanceId} from "@asol/ui-registry-core";
 
 const SELECT_BTN =
   "h-auto w-full min-w-0 justify-start whitespace-normal py-2 text-left";
@@ -175,7 +175,7 @@ function ScenarioSelect(props: {
         onChange={(event) => props.onChange(event.target.value)}
       >
         {props.scenarios.map(([value, label]) => (
-          <option key={value} {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.option-2ANG8J", id: "google-play-console.deploy-runbook-controls.option" })} value={value}>{label}</option>
+          <option key={value} {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.option-2ANG8J", id: "google-play-console.deploy-runbook-controls.option" , instance: createOpaqueUiInstanceId("iter-c297eba839", String(value))})} value={value}>{label}</option>
         ))}
       </select>
       <span {...uiAttributes({ uid: "google-play-console.deploy-runbook-controls.span.7-163qEs", id: "google-play-console.deploy-runbook-controls.span.7" })} className="block text-xs text-on-surface-variant">
