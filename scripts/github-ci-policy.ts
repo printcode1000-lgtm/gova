@@ -15,7 +15,9 @@ const ROOT = process.cwd();
 const DOCS_WORKFLOW = "docs.yml";
 const DEPLOY_WORKFLOW = "deploy-main.yml";
 const LOCAL_AGENT_WORKFLOW = "local-agent-main.yml";
+const LOCAL_AGENT_INSPECT_WORKFLOW = "local-agent-inspect.yml";
 const LOCAL_AGENT_WORKSPACE_WORKFLOW = "local-agent-workspace.yml";
+const LOCAL_AGENT_STATUS_WORKFLOW = "local-agent-status.yml";
 const SELF_HOSTED_RUNNER = "runs-on: [self-hosted, Linux, X64, gova]";
 const GITHUB_HOSTED_RUNNER = "runs-on: ubuntu-latest";
 const RUNNER_SELECTOR_API = "listSelfHostedRunnersForRepo";
@@ -24,7 +26,9 @@ const RUNNER_STATUS_SECRET = "secrets.GOVA_RUNNER_STATUS_TOKEN";
 export const ALLOWED_WORKFLOW_FILES = [
   DEPLOY_WORKFLOW,
   DOCS_WORKFLOW,
+  LOCAL_AGENT_INSPECT_WORKFLOW,
   LOCAL_AGENT_WORKFLOW,
+  LOCAL_AGENT_STATUS_WORKFLOW,
   LOCAL_AGENT_WORKSPACE_WORKFLOW,
 ] as const;
 
@@ -74,6 +78,18 @@ const ALLOWED_LOCAL_AGENT_RUN_COMMANDS = new Set([
   "npx tsx scripts/local-agent-main-apply.ts",
 ]);
 
+const ALLOWED_LOCAL_AGENT_STATUS_RUN_COMMANDS = new Set([
+  "npm install -g npm@11",
+  "npm ci --ignore-scripts",
+  "npx tsx scripts/local-agent-status.ts",
+]);
+
+const ALLOWED_LOCAL_AGENT_INSPECT_RUN_COMMANDS = new Set([
+  "npm install -g npm@11",
+  "npm ci --ignore-scripts",
+  "npx tsx scripts/local-agent-inspect.ts",
+]);
+
 export const DOCS_WORKFLOW_PATH_FILTERS = [
   "docs/**",
   "AGENTS.md",
@@ -85,12 +101,16 @@ export const DOCS_WORKFLOW_PATH_FILTERS = [
   "scripts/architecture-check.ts",
   "scripts/runtime/**",
   "scripts/github-ci-policy.ts",
+  "scripts/local-agent-inspect.ts",
   "scripts/local-agent-main-apply.ts",
+  "scripts/local-agent-status.ts",
   "package.json",
   "package-lock.json",
   ".github/workflows/docs.yml",
+  ".github/workflows/local-agent-inspect.yml",
   ".github/workflows/local-agent-main.yml",
   ".github/workflows/local-agent-workspace.yml",
+  ".github/workflows/local-agent-status.yml",
 ] as const;
 
 export const FORBIDDEN_CI_PATHS = [
@@ -347,9 +367,88 @@ export function localAgentWorkflowViolations(source: string): string[] {
   if (jobIds.length !== 1 || !allowedJobIds.includes(jobIds[0]!)) {
     errors.push(`Local agent workflow must contain exactly one approved apply job. Found: ${jobIds.join(", ") || "(none)"}.`);
   }
-  for (const event of FORBIDDEN_EVENTS) {
+  for (const event of [...FORBIDDEN_EVENTS, "push", "pull_request"] as const) {
     if (new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m").test(body)) {
       errors.push(`GitHub event ${event} is forbidden for the local agent workflow.`);
+    }
+  }
+  return errors;
+}
+
+export function localAgentStatusWorkflowViolations(source: string): string[] {
+  const errors: string[] = [];
+  const body = stripYamlComments(source);
+  if (!/^name:\s*local-agent-status\s*$/m.test(body)) {
+    errors.push("Local agent status workflow name must be exactly `local-agent-status`.");
+  }
+  if (!/^ {2}workflow_dispatch:\s*$/m.test(body)) errors.push("Local agent status workflow must be manually dispatched.");
+  if (!body.includes("paths:")) errors.push("Local agent status workflow must accept paths input.");
+  if (!body.includes("permissions:") || !body.includes("actions: read") || !body.includes("contents: read")) {
+    errors.push("Local agent status workflow must be read-only.");
+  }
+  if (body.includes("contents: write")) errors.push("Local agent status workflow must not push.");
+  if (!body.includes(SELF_HOSTED_RUNNER)) errors.push("Local agent status workflow must run only on the gova self-hosted runner.");
+  if (body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Local agent status workflow must not fall back to GitHub-hosted execution.");
+  if (!body.includes("GOVA_RUNNER_STATUS_TOKEN: ${{ secrets.GOVA_RUNNER_STATUS_TOKEN }}")) {
+    errors.push("Local agent status workflow must use the runner status token for GitHub state reads.");
+  }
+  if (!body.includes("npx tsx scripts/local-agent-status.ts")) {
+    errors.push("Local agent status workflow must delegate reads to scripts/local-agent-status.ts.");
+  }
+  for (const match of body.matchAll(/^\s*(?:-\s*)?run:\s*(.+?)\s*$/gm)) {
+    const command = match[1]!.replace(/^['"]|['"]$/g, "");
+    if (!ALLOWED_LOCAL_AGENT_STATUS_RUN_COMMANDS.has(command)) {
+      errors.push(`Local agent status workflow run command is not allowed: ${command}`);
+    }
+  }
+  const jobIds = docsWorkflowJobIds(body);
+  if (jobIds.length !== 1 || jobIds[0] !== "local-status") {
+    errors.push(`Local agent status workflow must contain exactly one job named local-status. Found: ${jobIds.join(", ") || "(none)"}.`);
+  }
+  for (const event of [...FORBIDDEN_EVENTS, "push", "pull_request"] as const) {
+    if (new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m").test(body)) {
+      errors.push(`GitHub event ${event} is forbidden for the local agent status workflow.`);
+    }
+  }
+  return errors;
+}
+
+export function localAgentInspectWorkflowViolations(source: string): string[] {
+  const errors: string[] = [];
+  const body = stripYamlComments(source);
+  if (!/^name:\s*local-agent-inspect\s*$/m.test(body)) {
+    errors.push("Local agent inspect workflow name must be exactly `local-agent-inspect`.");
+  }
+  if (!/^ {2}workflow_dispatch:\s*$/m.test(body)) errors.push("Local agent inspect workflow must be manually dispatched.");
+  for (const input of ["agent_id:", "mode:", "paths:", "pattern:"]) {
+    if (!body.includes(input)) errors.push(`Local agent inspect workflow must accept ${input} input.`);
+  }
+  if (!body.includes("permissions:") || !body.includes("contents: read")) {
+    errors.push("Local agent inspect workflow must be read-only.");
+  }
+  if (body.includes("contents: write")) errors.push("Local agent inspect workflow must not push.");
+  if (!body.includes(SELF_HOSTED_RUNNER)) errors.push("Local agent inspect workflow must run only on the gova self-hosted runner.");
+  if (body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Local agent inspect workflow must not fall back to GitHub-hosted execution.");
+  if (!body.includes("GOVA_AGENT_COORDINATION_DIR: /home/hesham/github-runners/gova-coordination")) {
+    errors.push("Local agent inspect workflow must write through the local coordination channel.");
+  }
+  if (!body.includes("npx tsx scripts/local-agent-inspect.ts")) {
+    errors.push("Local agent inspect workflow must delegate reads to scripts/local-agent-inspect.ts.");
+  }
+  if (body.includes("${{ secrets.")) errors.push("Local agent inspect workflow must not consume GitHub secrets.");
+  for (const match of body.matchAll(/^\s*(?:-\s*)?run:\s*(.+?)\s*$/gm)) {
+    const command = match[1]!.replace(/^['"]|['"]$/g, "");
+    if (!ALLOWED_LOCAL_AGENT_INSPECT_RUN_COMMANDS.has(command)) {
+      errors.push(`Local agent inspect workflow run command is not allowed: ${command}`);
+    }
+  }
+  const jobIds = docsWorkflowJobIds(body);
+  if (jobIds.length !== 1 || jobIds[0] !== "inspect") {
+    errors.push(`Local agent inspect workflow must contain exactly one job named inspect. Found: ${jobIds.join(", ") || "(none)"}.`);
+  }
+  for (const event of [...FORBIDDEN_EVENTS, "push", "pull_request"] as const) {
+    if (new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m").test(body)) {
+      errors.push(`GitHub event ${event} is forbidden for the local agent inspect workflow.`);
     }
   }
   return errors;
@@ -376,6 +475,12 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
   const deployPath = path.join(workflowsDir, DEPLOY_WORKFLOW);
   if (existsSync(deployPath)) errors.push(...deploymentWorkflowViolations(readFileSync(deployPath, "utf8")));
   else errors.push(`Missing .github/workflows/${DEPLOY_WORKFLOW}.`);
+  const localAgentInspectPath = path.join(workflowsDir, LOCAL_AGENT_INSPECT_WORKFLOW);
+  if (existsSync(localAgentInspectPath)) {
+    errors.push(...localAgentInspectWorkflowViolations(readFileSync(localAgentInspectPath, "utf8")));
+  } else {
+    errors.push(`Missing .github/workflows/${LOCAL_AGENT_INSPECT_WORKFLOW}.`);
+  }
   const localAgentPath = path.join(workflowsDir, LOCAL_AGENT_WORKFLOW);
   if (existsSync(localAgentPath)) errors.push(...localAgentWorkflowViolations(readFileSync(localAgentPath, "utf8")));
   else errors.push(`Missing .github/workflows/${LOCAL_AGENT_WORKFLOW}.`);
@@ -384,6 +489,12 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
     errors.push(...localAgentWorkflowViolations(readFileSync(localAgentWorkspacePath, "utf8")));
   } else {
     errors.push(`Missing .github/workflows/${LOCAL_AGENT_WORKSPACE_WORKFLOW}.`);
+  }
+  const localAgentStatusPath = path.join(workflowsDir, LOCAL_AGENT_STATUS_WORKFLOW);
+  if (existsSync(localAgentStatusPath)) {
+    errors.push(...localAgentStatusWorkflowViolations(readFileSync(localAgentStatusPath, "utf8")));
+  } else {
+    errors.push(`Missing .github/workflows/${LOCAL_AGENT_STATUS_WORKFLOW}.`);
   }
   const protectPath = path.join(root, "scripts", "protect-main-branch.ts");
   if (existsSync(protectPath)) {

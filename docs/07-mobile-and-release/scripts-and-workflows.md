@@ -37,6 +37,13 @@ npm run github:protect -- --remove     # delete leftover protection (apply is fo
 npm run github:block-branches -- --dry-run
 npm run github:ci-policy
 
+# Local agent GitHub workflows
+gh workflow run local-agent-status.yml -f paths='__tracked__'
+gh workflow run local-agent-inspect.yml -f agent_id='agent-1' -f mode='search' -f paths='__tracked__' -f pattern='ProductRepository'
+gh workflow run local-agent-inspect.yml -f agent_id='agent-1' -f mode='read' -f paths='package.json,docs/README.md'
+gh workflow run local-agent-workspace.yml -f agent_id='agent-1' -f patch_base64='<base64-diff>' -f commit_message='Agent change'
+gh workflow run local-agent-main.yml -f patch_base64='<base64-diff>' -f commit_message='Main change'
+
 # Schema & database
 npm run db:drizzle -- generate
 npm run db:drizzle -- generate --config drizzle.profile.config.ts
@@ -257,6 +264,16 @@ call the GitHub runner-status API; deploy still uses OIDC for the Vercel
 production endpoint. The runner's working directory is separate from
 `/home/hesham/gova`, so workflow checkout and cleanup never operate on the live
 developer workspace.
+
+Local agent workflows are manually dispatched only. `local-agent-status.yml`
+reads local and GitHub state without mutating anything and can inspect metadata
+for up to 10,000 tracked files with `paths='__tracked__'`.
+`local-agent-inspect.yml` performs full local reads and searches across up to
+50,000 tracked files and writes the complete output into the local coordination
+log so GitHub log truncation does not cut the result. Agent mutation should
+start with `local-agent-workspace.yml` for isolated parallel branches. Use
+`local-agent-main.yml` only when a job must push directly to `main`; direct-main
+jobs are serialized by the workflow concurrency group.
 
 `local-agent-workspace.yml` is the controlled path for parallel remote edit
 requests. It is manually dispatched, runs only on the local `gova` runner pool,

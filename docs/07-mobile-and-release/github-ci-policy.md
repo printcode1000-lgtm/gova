@@ -11,6 +11,8 @@ revision; this is release orchestration, not correctness CI.
 |---|---|
 | Every push to `main` | **Deploy workflow** (`.github/workflows/deploy-main.yml`) |
 | Documentation, agent instruction surfaces, docs/knowledge/runtime tooling, or related package manifests listed below | **Docs workflow** (`.github/workflows/docs.yml`) in addition to deploy |
+| Explicit local-agent state query | **Local agent status workflow** (`.github/workflows/local-agent-status.yml`) |
+| Explicit local-agent full read/search query | **Local agent inspect workflow** (`.github/workflows/local-agent-inspect.yml`) |
 | Explicit local-agent patch dispatch | **Local agent workflow** (`.github/workflows/local-agent-main.yml`) |
 | Explicit parallel agent workspace dispatch | **Local agent workspace workflow** (`.github/workflows/local-agent-workspace.yml`) |
 
@@ -41,8 +43,14 @@ explicit positive path filter covering:
 - `.agents/**`
 - `scripts/docs/**`, `scripts/architecture/**`, `scripts/architecture-check.ts`
 - `scripts/runtime/**`, `scripts/github-ci-policy.ts`
+- `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts`,
+  `scripts/local-agent-status.ts`
 - `package.json`, `package-lock.json`
 - `.github/workflows/docs.yml`
+- `.github/workflows/local-agent-inspect.yml`
+- `.github/workflows/local-agent-main.yml`
+- `.github/workflows/local-agent-status.yml`
+- `.github/workflows/local-agent-workspace.yml`
 
 It installs the lockfile with lifecycle scripts disabled, runs
 `npm run docs:ci` and `npm run runtime:check`, and must not run lint,
@@ -53,20 +61,32 @@ destructive database commands, or any application build.
 protected/generated/tooling/runtime-contract changes run the full documentation
 and knowledge validation suite.
 
-The local agent workflows are the only manually dispatched workflows. They run
-only on the `gova` self-hosted runner pool, accept a base64-encoded git diff plus
-a commit message, apply the patch through `scripts/local-agent-main-apply.ts`,
-run one allowed verification command, commit the result, and push. The workspace
-workflow pushes an isolated `codex/agent-*` branch for parallel agents. The main
-workflow pushes directly to `main` and is serialized by concurrency. Neither
-workflow accepts arbitrary shell commands, falls back to GitHub-hosted execution,
-or consumes GitHub secrets. Secret-bearing project files are rejected by the
-apply script. See [Local Agent Runner Pool](./local-agent-runner-pool.md).
+The local agent workflows are the only manually dispatched workflows. The status
+workflow is read-only, local-only, and can report metadata for up to 10,000
+tracked files with the `__tracked__` input. It summarizes GitHub runner/run
+state through `GOVA_RUNNER_STATUS_TOKEN` and never prints file contents.
+
+The inspect workflow is also read-only and local-only. It gives agents full
+local read/search capability for planning: complete file reads, ripgrep-based
+search, file lists, and Git state. It can inspect up to 50,000 selected tracked
+files and stores the complete output in the local coordination directory instead
+of GitHub logs so GitHub log truncation does not cut the result.
+
+The mutation workflows run only on the `gova` self-hosted runner pool, accept a
+base64-encoded git diff plus a commit message, apply the patch through
+`scripts/local-agent-main-apply.ts`, run one allowed verification command,
+commit the result, and push. The workspace workflow pushes an isolated
+`codex/agent-*` branch for parallel agents. The main workflow pushes directly to
+`main` and is serialized by concurrency. Neither mutation workflow accepts
+arbitrary shell commands, falls back to GitHub-hosted execution, or consumes
+GitHub secrets. Secret-bearing project files are rejected by the apply script.
+See [Local Agent Runner Pool](./local-agent-runner-pool.md).
 
 ## What must not exist
 
 - Any workflow other than `docs.yml`, `deploy-main.yml`,
-  `local-agent-main.yml`, and `local-agent-workspace.yml`
+  `local-agent-inspect.yml`, `local-agent-main.yml`,
+  `local-agent-status.yml`, and `local-agent-workspace.yml`
 - Any execution job that does not prefer the `gova` self-hosted runner before
   GitHub-hosted fallback
 - Any GitHub secret except `GOVA_RUNNER_STATUS_TOKEN` in the runner selector
@@ -120,7 +140,11 @@ Credential: `GITHUB_ADMIN_TOKEN` in `.env.local`. Never print the token.
 
 ## Source map
 
-- Workflows: `.github/workflows/docs.yml`, `.github/workflows/deploy-main.yml`
+- Workflows: `.github/workflows/docs.yml`, `.github/workflows/deploy-main.yml`,
+  `.github/workflows/local-agent-main.yml`,
+  `.github/workflows/local-agent-inspect.yml`,
+  `.github/workflows/local-agent-status.yml`,
+  `.github/workflows/local-agent-workspace.yml`
 - Policy: `scripts/github-ci-policy.ts`
 - Tests: `scripts/tests/github-ci-policy.test.ts`
 - Protection script: `scripts/protect-main-branch.ts`

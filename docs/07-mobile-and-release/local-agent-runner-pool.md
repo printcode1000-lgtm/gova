@@ -57,6 +57,40 @@ truth and must not be committed.
 
 ## Workflows
 
+Use `.github/workflows/local-agent-status.yml` before planning or mutating work.
+It is manually dispatched, read-only, local-only, and reports the current local
+checkout state plus GitHub runner/run state. Its optional `paths` input accepts
+comma-separated or newline-separated workspace-relative paths. Use
+`__tracked__` to inspect metadata for up to 10,000 tracked files in one job.
+
+The status workflow delegates reads to:
+
+```text
+scripts/local-agent-status.ts
+```
+
+The script reports path existence, type, mode, size, modification time, Git
+tracking state, branch, local `HEAD`, `origin/main`, clean/dirty status, runner
+availability, and recent workflow runs. It never prints file contents. Paths
+that look like secrets are marked `secretLike` and their content is always
+reported as `redacted`.
+
+Use `.github/workflows/local-agent-inspect.yml` when an agent needs full
+workspace visibility instead of status metadata. It is manually dispatched,
+read-only, local-only, and can:
+
+- read complete files with `mode=read`;
+- search inside up to 50,000 files with `mode=search`;
+- list selected files with `mode=list`;
+- report Git state with `mode=git`.
+
+The `paths` input accepts explicit workspace-relative paths or `__tracked__`.
+The inspect script writes the full result to the local coordination log under
+`/home/hesham/github-runners/gova-coordination/logs/inspect/` and prints only
+the output path and byte count to GitHub logs. This avoids GitHub log truncation
+while still allowing the local runner job to read thousands of files line by
+line. Do not use this workflow to transmit secrets to remote systems.
+
 Use `.github/workflows/local-agent-workspace.yml` for parallel agent work. It is
 manually dispatched, runs only on the local runner pool, applies a supplied
 base64-encoded git diff, commits it, and pushes an isolated branch named:
@@ -106,6 +140,18 @@ what lands on `main`.
 Direct `main` pushes are allowed only through `local-agent-main.yml` or the
 existing local release path. The workflow uses a lock and a concurrency group so
 two agents cannot write `main` at the same time.
+
+Agents that need to land multiple independent jobs on `main` must dispatch one
+direct-main workflow per job. GitHub queues those jobs behind the same
+`asol-local-agent-main` concurrency group, so each job starts from fresh
+`origin/main`, applies its own patch, verifies, commits, and pushes before the
+next writer begins.
+
+Agents that need maximum parallelism must dispatch `local-agent-workspace.yml`
+first. Each job receives an isolated runner checkout and pushes its own
+`codex/agent-*` branch. That allows more than five agents to read thousands of
+files, edit independently, and publish branch results at the same time while
+keeping `main` serialization explicit.
 
 ## Secrets
 

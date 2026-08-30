@@ -13505,8 +13505,12 @@
         "scripts/docs/docs-ci.ts",
         "scripts/github-ci-policy",
         "scripts/github-ci-policy.ts",
+        "scripts/local-agent-inspect",
+        "scripts/local-agent-inspect.ts",
         "scripts/local-agent-main-apply",
         "scripts/local-agent-main-apply.ts",
+        "scripts/local-agent-status",
+        "scripts/local-agent-status.ts",
         "scripts/protect-main-branch",
         "scripts/protect-main-branch.ts",
         "scripts/runtime/check",
@@ -17947,6 +17951,32 @@
       ]
     },
     {
+      "id": "environment-key:GOVA_LOCAL_WORKSPACE",
+      "kind": "environment-key",
+      "name": "GOVA_LOCAL_WORKSPACE",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_local_workspace",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:GOVA_RUNNER_STATUS_TOKEN",
+      "kind": "environment-key",
+      "name": "GOVA_RUNNER_STATUS_TOKEN",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_runner_status_token",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:HOME",
       "kind": "environment-key",
       "name": "HOME",
@@ -18032,6 +18062,58 @@
       "tags": [
         "environment",
         "local_agent_id",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_INSPECT_MODE",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_INSPECT_MODE",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_inspect_mode",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_INSPECT_PATHS",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_INSPECT_PATHS",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_inspect_paths",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_INSPECT_PATTERN",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_INSPECT_PATTERN",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_inspect_pattern",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_STATUS_PATHS",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_STATUS_PATHS",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_status_paths",
         "server",
         "server tooling environment",
         "tooling"
@@ -26436,6 +26518,17 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent-inspect.ts",
+      "kind": "script",
+      "name": "local-agent-inspect.ts",
+      "path": "scripts/local-agent-inspect.ts",
+      "tags": [
+        "scripts/local-agent-inspect",
+        "scripts/local-agent-inspect.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent-main-apply.ts",
       "kind": "script",
       "name": "local-agent-main-apply.ts",
@@ -26443,6 +26536,17 @@
       "tags": [
         "scripts/local-agent-main-apply",
         "scripts/local-agent-main-apply.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent-status.ts",
+      "kind": "script",
+      "name": "local-agent-status.ts",
+      "path": "scripts/local-agent-status.ts",
+      "tags": [
+        "scripts/local-agent-status",
+        "scripts/local-agent-status.ts",
         "ts"
       ]
     },
