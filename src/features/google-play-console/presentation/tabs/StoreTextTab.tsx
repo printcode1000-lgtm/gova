@@ -22,7 +22,10 @@ export function StoreTextTab() {
   return (
     <section id="google-play-console.tabs.store-text-tab.section" className="grid gap-4 xl:grid-cols-[1fr_22rem]">
       <div id="google-play-console.tabs.store-text-tab.div.2" className="space-y-4">
-        <div id="google-play-console.tabs.store-text-tab.div.3" className="grid gap-3 rounded-md border bg-surface p-4 md:grid-cols-2">
+        <div
+          id="google-play-console.tabs.store-text-tab.div.3"
+          className="grid gap-3 rounded-md border bg-surface p-4 md:grid-cols-2"
+        >
           <Field id="google-play-console.tabs.store-text-tab.field" label={t("releaseConsole.text.website")} value={store.details.contactWebsite ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, contactWebsite: value })} />
           <Field id="google-play-console.tabs.store-text-tab.field.2" label={t("releaseConsole.text.email")} value={store.details.contactEmail ?? ""}
@@ -63,13 +66,20 @@ export function StoreTextTab() {
           );
         })}
         <div id="google-play-console.tabs.store-text-tab.div.4" className="flex gap-2">
-          <Button id="google-play-console.tabs.store-text-tab.button" variant="outline" onClick={() => store.setListings([...store.listings, { language: "en-US" }])}>
+          <Button
+            id="google-play-console.tabs.store-text-tab.button"
+            variant="outline"
+            onClick={() => store.setListings([...store.listings, { language: "en-US" }])}
+          >
             <Plus id="google-play-console.tabs.store-text-tab.plus" className="h-4 w-4" />{t("releaseConsole.text.addLanguage")}
           </Button>
         </div>
       </div>
       <aside id="google-play-console.tabs.store-text-tab.aside" className="rounded-md border bg-surface p-4">
-        <h2 id="google-play-console.tabs.store-text-tab.h2" className="text-sm font-semibold">{t("releaseConsole.text.pendingDiff")}</h2>
+        <h2
+          id="google-play-console.tabs.store-text-tab.h2"
+          className="text-sm font-semibold">{t("releaseConsole.text.pendingDiff")}</h2
+        >
         <pre className="mt-2 max-h-96 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
           {JSON.stringify({ before: store.snapshot.listings, after: store.listings }, null, 2)}
         </pre>

@@ -57,19 +57,37 @@ export function AndroidReleasePaths({
   const selectedInTab = activeBranchIds.filter((id) => enabledBranches.has(id)).length;
 
   return (
-    <section id="google-play-console.android-release-paths.section" className="rounded-lg border bg-surface-container-low p-2">
-      <h2 id="google-play-console.android-release-paths.h2" className="font-semibold">{t("releaseConsole.androidPaths.groupTitle")}</h2>
+    <section
+      id="google-play-console.android-release-paths.section"
+      className="rounded-lg border bg-surface-container-low p-2"
+    >
+      <h2
+        id="google-play-console.android-release-paths.h2"
+        className="font-semibold">{t("releaseConsole.androidPaths.groupTitle")}</h2
+      >
       <p id="google-play-console.android-release-paths.p" className="mt-1 text-xs leading-5 text-on-surface-variant">
         {t("releaseConsole.androidPaths.groupHelp")}
       </p>
       <div id="google-play-console.android-release-paths.div" className="mt-3 space-y-3">
-        <section id="google-play-console.android-release-paths.section.2" className="rounded-lg border bg-surface-container p-2">
-          <h3 id="google-play-console.android-release-paths.h3" className="text-sm font-semibold">{t("releaseConsole.androidPaths.phaseTitle")}</h3>
-          <p id="google-play-console.android-release-paths.p.2" className="mt-1 text-xs leading-5 text-on-surface-variant">
+        <section
+          id="google-play-console.android-release-paths.section.2"
+          className="rounded-lg border bg-surface-container p-2"
+        >
+          <h3
+            id="google-play-console.android-release-paths.h3"
+            className="text-sm font-semibold">{t("releaseConsole.androidPaths.phaseTitle")}</h3
+          >
+          <p
+            id="google-play-console.android-release-paths.p.2"
+            className="mt-1 text-xs leading-5 text-on-surface-variant"
+          >
             {t("releaseConsole.androidPaths.phaseHelp")}
           </p>
           <Tabs className="mt-2" value={activePath} onValueChange={setActivePath}>
-            <TabsList id="google-play-console.android-release-paths.tabs-list" className="flex h-auto w-full flex-wrap justify-start gap-1">
+            <TabsList
+              id="google-play-console.android-release-paths.tabs-list"
+              className="flex h-auto w-full flex-wrap justify-start gap-1"
+            >
               {ANDROID_RELEASE_PATHS.map((path) => (
                 <TabsTrigger key={path.id} value={path.id}>
                   {t(path.title)}

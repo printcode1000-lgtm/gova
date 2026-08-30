@@ -30,7 +30,12 @@ export function JobsTab() {
       <div id="google-play-console.tabs.jobs-tab.div.3" className="space-y-3 rounded-md border bg-surface p-3">
         {selected ? <div id="google-play-console.tabs.jobs-tab.div.4" className="flex justify-between gap-2"><strong>{selected.id}</strong>
           {selected.status === "running" || selected.status === "queued" ? (
-            <Button id="google-play-console.tabs.jobs-tab.button" size="sm" variant="outline" onClick={() => void jobs.cancel(selected)}>
+            <Button
+              id="google-play-console.tabs.jobs-tab.button"
+              size="sm"
+              variant="outline"
+              onClick={() => void jobs.cancel(selected)}
+            >
               <Square id="google-play-console.tabs.jobs-tab.square" className="h-4 w-4" />{t("releaseConsole.actions.cancel")}
             </Button>
           ) : null}</div> : null}

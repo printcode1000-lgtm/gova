@@ -54,13 +54,22 @@ export function AndroidReleasePathCard({
           onChange={(event) => setEnabled(event.target.checked)}
         />
         <span id="google-play-console.android-release-path-card.span">
-          <span id="google-play-console.android-release-path-card.span.2" className="block font-semibold">{t(path.title)}</span>
-          <span id="google-play-console.android-release-path-card.span.3" className="mt-1 block text-xs leading-5 text-on-surface-variant">
+          <span
+            id="google-play-console.android-release-path-card.span.2"
+            className="block font-semibold">{t(path.title)}</span
+          >
+          <span
+            id="google-play-console.android-release-path-card.span.3"
+            className="mt-1 block text-xs leading-5 text-on-surface-variant"
+          >
             {t("releaseConsole.androidPaths.branchCheckboxHelp")}
           </span>
         </span>
       </label>
-      <p id="google-play-console.android-release-path-card.p" className="mt-3 text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
+      <p
+        id="google-play-console.android-release-path-card.p"
+        className="mt-3 text-sm leading-6 text-on-surface-variant">{t(path.description)}</p
+      >
       <div id="google-play-console.android-release-path-card.div" className="mt-3 flex flex-wrap gap-2">
         <Button id="google-play-console.android-release-path-card.button"
           disabled={disabled}
@@ -68,7 +77,10 @@ export function AndroidReleasePathCard({
           onClick={() => void start({ commandId: path.id })}
         >
           {running ? (
-            <LoaderCircle id="google-play-console.android-release-path-card.loader-circle" className="h-4 w-4 animate-spin" />
+            <LoaderCircle
+              id="google-play-console.android-release-path-card.loader-circle"
+              className="h-4 w-4 animate-spin"
+            />
           ) : path.danger ? (
             <CloudUpload id="google-play-console.android-release-path-card.cloud-upload" className="h-4 w-4" />
           ) : (
@@ -91,7 +103,10 @@ export function AndroidReleasePathCard({
         ))}
         {running && job ? <StopButton id="google-play-console.android-release-path-card.stop-button" cancel={cancel} job={job} t={t} /> : null}
       </div>
-      <p id="google-play-console.android-release-path-card.p.2" className="mt-2 text-xs leading-5 text-on-surface-variant">
+      <p
+        id="google-play-console.android-release-path-card.p.2"
+        className="mt-2 text-xs leading-5 text-on-surface-variant"
+      >
         {enabled
           ? t("releaseConsole.androidPaths.enabledBranchHelp")
           : t("releaseConsole.androidPaths.skippedBranchHelp")}

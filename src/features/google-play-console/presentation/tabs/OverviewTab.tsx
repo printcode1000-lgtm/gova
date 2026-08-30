@@ -15,9 +15,23 @@ export function OverviewTab() {
   return (
     <section id="google-play-console.tabs.overview-tab.section" className="space-y-4">
       <div id="google-play-console.tabs.overview-tab.div.2" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <Metric id="google-play-console.tabs.overview-tab.metric" icon={Package} label={t("releaseConsole.overview.package")} value={snapshot.packageName} />
-        <Metric id="google-play-console.tabs.overview-tab.metric.2" label={t("releaseConsole.overview.defaultLanguage")} value={snapshot.defaultLanguage} />
-        <Metric id="google-play-console.tabs.overview-tab.metric.3" icon={Radio} label={t("releaseConsole.overview.liveOta")} value={snapshot.liveOtaVersion ?? "-"} />
+        <Metric
+          id="google-play-console.tabs.overview-tab.metric"
+          icon={Package}
+          label={t("releaseConsole.overview.package")}
+          value={snapshot.packageName}
+        />
+        <Metric
+          id="google-play-console.tabs.overview-tab.metric.2"
+          label={t("releaseConsole.overview.defaultLanguage")}
+          value={snapshot.defaultLanguage}
+        />
+        <Metric
+          id="google-play-console.tabs.overview-tab.metric.3"
+          icon={Radio}
+          label={t("releaseConsole.overview.liveOta")}
+          value={snapshot.liveOtaVersion ?? "-"}
+        />
         <Metric id="google-play-console.tabs.overview-tab.metric.4"
           icon={Activity}
           label={t("releaseConsole.overview.activeTracks")}
@@ -30,9 +44,18 @@ export function OverviewTab() {
             <ShieldCheck id="google-play-console.tabs.overview-tab.shield-check" className="h-4 w-4 text-primary" />{t("releaseConsole.overview.guard")}
           </h2>
           <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-            <div id="google-play-console.tabs.overview-tab.div.4">{t("releaseConsole.overview.allowed")}: {String(snapshot.environment.allowed)}</div>
-            <div id="google-play-console.tabs.overview-tab.div.5">{t("releaseConsole.overview.mode")}: {snapshot.environment.nodeEnv}</div>
-            <div id="google-play-console.tabs.overview-tab.div.6">{t("releaseConsole.overview.publicMode")}: {snapshot.environment.publicMode}</div>
+            <div
+              id="google-play-console.tabs.overview-tab.div.4">{t("releaseConsole.overview.allowed")}:
+              {String(snapshot.environment.allowed)}</div
+            >
+            <div
+              id="google-play-console.tabs.overview-tab.div.5">{t("releaseConsole.overview.mode")}:
+              {snapshot.environment.nodeEnv}</div
+            >
+            <div
+              id="google-play-console.tabs.overview-tab.div.6">{t("releaseConsole.overview.publicMode")}:
+              {snapshot.environment.publicMode}</div
+            >
             <div id="google-play-console.tabs.overview-tab.div.7">{t("releaseConsole.overview.credentialSource")}:&nbsp;
               {t("releaseConsole.overview.serviceAccountCredential")}</div>
           </dl>

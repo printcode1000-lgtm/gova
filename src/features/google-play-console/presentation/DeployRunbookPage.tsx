@@ -47,7 +47,10 @@ export function DeployRunbookPage() {
   if (!allowed) {
     return (
       <main id="google-play-console.deploy-runbook-page.main.2" className="mx-auto max-w-2xl p-4 sm:p-6">
-        <div id="google-play-console.deploy-runbook-page.div" className="rounded-md bg-error-container p-4 text-on-error-container">
+        <div
+          id="google-play-console.deploy-runbook-page.div"
+          className="rounded-md bg-error-container p-4 text-on-error-container"
+        >
           هذه الصفحة متاحة للسوبر أدمن فقط.
         </div>
       </main>

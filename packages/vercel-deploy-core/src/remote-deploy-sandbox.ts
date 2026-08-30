@@ -61,13 +61,45 @@ const MAX_LOG_TAIL_BYTES = 200_000;
 /**
  * How long a run may stay in `preparing` before another start may replace it.
  *
- * `running` is left alone however long it takes — a release legitimately runs
- * for an hour. `preparing` is owned by the request that created it, and that
- * request lives inside a serverless function that can be cut off before the
- * runner is detached; without this window the console would be locked out of
- * its own release forever.
+ * `preparing` is owned by the request that created it, and that request lives
+ * inside a serverless function that can be cut off before the runner is
+ * detached; without this window the console would be locked out of its own
+ * release forever.
  */
 const STALE_PREPARING_MS = 15 * 60 * 1000;
+
+/**
+ * Margin added to the sandbox's own timeout before a `running` snapshot is
+ * treated as abandoned.
+ *
+ * `running` used to be left alone however long it took, on the reasoning that a
+ * release legitimately runs for an hour. But a run does not only end by
+ * finishing: the sandbox can be killed, the callback can be lost, the job can
+ * time out fetching an OIDC token. When that happens the snapshot stays
+ * `running` forever, every later deploy is refused with
+ * `remoteDeployAllAlreadyRunning`, and production simply stops updating — which
+ * is exactly what happened, for six and a half hours, before this was fixed.
+ *
+ * The sandbox cannot outlive its own timeout, so a snapshot that has not been
+ * touched for longer than that timeout has no process behind it. The margin
+ * covers clock skew and a slow final write, so a healthy long release is never
+ * mistaken for a dead one.
+ */
+const RUNNING_ABANDON_MARGIN_MS = 10 * 60 * 1000;
+
+/** True when a non-terminal snapshot has outlived the process that owned it. */
+export function isAbandonedSnapshot(
+  status: string,
+  updatedAt: string,
+  now = Date.now(),
+  timeoutMs = sandboxTimeoutMs(),
+): boolean {
+  const age = now - Date.parse(updatedAt);
+  if (!Number.isFinite(age)) return false;
+  if (status === "preparing") return age > STALE_PREPARING_MS;
+  if (status === "running") return age > timeoutMs + RUNNING_ABANDON_MARGIN_MS;
+  return false;
+}
 
 interface RemoteDeployEnvironment {
   archivePassword: string;
@@ -341,10 +373,9 @@ export async function startRemoteDeployAll(input: {
 
   const previous = await readSnapshot(sandbox);
   if (!isRemoteDeployAllTerminal(previous.status) && previous.status !== "idle") {
-    const abandoned =
-      previous.status === "preparing" &&
-      Date.now() - Date.parse(previous.updatedAt) > STALE_PREPARING_MS;
-    if (!abandoned) throw new Error("remoteDeployAllAlreadyRunning");
+    if (!isAbandonedSnapshot(previous.status, previous.updatedAt)) {
+      throw new Error("remoteDeployAllAlreadyRunning");
+    }
   }
 
   await sandbox.fs.rm(workspacePath(sandbox, LOCK_DIRECTORY), { recursive: true, force: true });

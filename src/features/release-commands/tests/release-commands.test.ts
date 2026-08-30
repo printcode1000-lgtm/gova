@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { isAbandonedSnapshot } from "@asol/vercel-deploy-core/remote-deploy-sandbox";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
@@ -968,6 +969,36 @@ async function verifyProductionDeployConsole() {
     1,
     "the archive password is passed to the sandbox command and nowhere else",
   );
+
+  // A dead run must not hold the deploy lock forever.
+  //
+  // `running` used to be exempt from abandonment on the reasoning that a release
+  // legitimately takes an hour. But a run also ends by dying — a killed sandbox,
+  // a lost callback, an OIDC token timeout — and the snapshot then stays
+  // `running` for good, every later deploy is refused, and production stops
+  // updating. That is not hypothetical: it held production for six and a half
+  // hours. The sandbox cannot outlive its own timeout, so a snapshot untouched
+  // for longer than that has no process behind it.
+  const timeout = 45 * 60 * 1000;
+  const ago = (ms: number) => new Date(Date.now() - ms).toISOString();
+
+  assert.equal(isAbandonedSnapshot("running", ago(30 * 60 * 1000), Date.now(), timeout), false,
+    "a release still inside its sandbox timeout is live and must keep the lock");
+  assert.equal(isAbandonedSnapshot("running", ago(50 * 60 * 1000), Date.now(), timeout), false,
+    "the margin keeps a slow final write from looking dead");
+  assert.equal(isAbandonedSnapshot("running", ago(60 * 60 * 1000), Date.now(), timeout), true,
+    "past the sandbox timeout plus margin nothing can still be running; the lock must be reclaimable");
+
+  assert.equal(isAbandonedSnapshot("preparing", ago(5 * 60 * 1000), Date.now(), timeout), false);
+  assert.equal(isAbandonedSnapshot("preparing", ago(20 * 60 * 1000), Date.now(), timeout), true,
+    "preparing keeps its own shorter window, owned by a request that can be cut off");
+
+  // Terminal states are not the lock's business, and a malformed timestamp must
+  // never be read as permission to steal a live lock.
+  assert.equal(isAbandonedSnapshot("succeeded", ago(10 * 60 * 60 * 1000), Date.now(), timeout), false);
+  assert.equal(isAbandonedSnapshot("failed", ago(10 * 60 * 60 * 1000), Date.now(), timeout), false);
+  assert.equal(isAbandonedSnapshot("running", "not-a-date", Date.now(), timeout), false,
+    "an unparseable timestamp must fail closed, leaving the lock held");
 
   // Durations come from the sandbox's own timestamps, so a console opened
   // halfway through a release still reports them, and a reopened one does not

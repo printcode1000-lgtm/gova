@@ -23,7 +23,10 @@ export function BundleAnalysisTab() {
   const unclassified = bundle.analysis?.categories.find((item) => item.id === "unclassified");
   return (
     <section id="google-play-console.tabs.bundle-analysis-tab.section" className="space-y-4">
-      <div id="google-play-console.tabs.bundle-analysis-tab.div" className="flex flex-wrap gap-2 rounded-md border bg-surface p-3">
+      <div
+        id="google-play-console.tabs.bundle-analysis-tab.div"
+        className="flex flex-wrap gap-2 rounded-md border bg-surface p-3"
+      >
         <select id="google-play-console.tabs.bundle-analysis-tab.select" className="h-10 min-w-72 flex-1 rounded-md border bg-background px-3" value={selected}
           onChange={(event) => setSelected(event.target.value)} dir="ltr">
           <option value="">{t("releaseConsole.analysis.selectArtifact")}</option>
@@ -38,19 +41,42 @@ export function BundleAnalysisTab() {
       {bundle.analysis ? (
         <>
           <div id="google-play-console.tabs.bundle-analysis-tab.div.2" className="grid gap-3 md:grid-cols-4">
-            <Metric id="google-play-console.tabs.bundle-analysis-tab.metric" label={t("releaseConsole.analysis.archiveBytes")} value={bundle.analysis.archiveBytes} />
+            <Metric
+              id="google-play-console.tabs.bundle-analysis-tab.metric"
+              label={t("releaseConsole.analysis.archiveBytes")}
+              value={bundle.analysis.archiveBytes}
+            />
             <Metric id="google-play-console.tabs.bundle-analysis-tab.metric.2" label={t("releaseConsole.analysis.compressedBytes")}
               value={bundle.analysis.totalCompressedBytes} />
-            <Metric id="google-play-console.tabs.bundle-analysis-tab.metric.3" label={t("releaseConsole.analysis.entries")} value={bundle.analysis.entryCount} />
-            <div id="google-play-console.tabs.bundle-analysis-tab.div.3" className="rounded-md border-2 border-error bg-error-container p-4 text-on-error-container">
-              <div id="google-play-console.tabs.bundle-analysis-tab.div.4" className="text-xs font-semibold">{t("releaseConsole.analysis.unclassified")}</div>
-              <div id="google-play-console.tabs.bundle-analysis-tab.div.5" className="mt-2 text-xl font-bold">{unclassified?.compressedBytes ?? 0}</div>
+            <Metric
+              id="google-play-console.tabs.bundle-analysis-tab.metric.3"
+              label={t("releaseConsole.analysis.entries")}
+              value={bundle.analysis.entryCount}
+            />
+            <div
+              id="google-play-console.tabs.bundle-analysis-tab.div.3"
+              className="rounded-md border-2 border-error bg-error-container p-4 text-on-error-container"
+            >
+              <div
+                id="google-play-console.tabs.bundle-analysis-tab.div.4"
+                className="text-xs font-semibold">{t("releaseConsole.analysis.unclassified")}</div
+              >
+              <div
+                id="google-play-console.tabs.bundle-analysis-tab.div.5"
+                className="mt-2 text-xl font-bold">{unclassified?.compressedBytes ?? 0}</div
+              >
             </div>
           </div>
           <CategoryTree nodes={bundle.analysis.categories} />
           {bundle.analysis.deliveryEstimates?.length ? (
-            <section id="google-play-console.tabs.bundle-analysis-tab.section.2" className="rounded-md border bg-surface p-4">
-              <h2 id="google-play-console.tabs.bundle-analysis-tab.h2" className="mb-3 font-semibold">{t("releaseConsole.analysis.delivery")}</h2>
+            <section
+              id="google-play-console.tabs.bundle-analysis-tab.section.2"
+              className="rounded-md border bg-surface p-4"
+            >
+              <h2
+                id="google-play-console.tabs.bundle-analysis-tab.h2"
+                className="mb-3 font-semibold">{t("releaseConsole.analysis.delivery")}</h2
+              >
               <div id="google-play-console.tabs.bundle-analysis-tab.div.6" className="grid gap-2 md:grid-cols-2">
                 {bundle.analysis.deliveryEstimates.map((estimate) => (
                   <div key={`${estimate.abi}:${estimate.density}:${estimate.language}`}
@@ -67,18 +93,32 @@ export function BundleAnalysisTab() {
           ) : null}
         </>
       ) : null}
-      <section id="google-play-console.tabs.bundle-analysis-tab.section.3" className="space-y-3 rounded-md border bg-surface p-4">
-        <h2 id="google-play-console.tabs.bundle-analysis-tab.h2.2" className="font-semibold">{t("releaseConsole.analysis.compare")}</h2>
+      <section
+        id="google-play-console.tabs.bundle-analysis-tab.section.3"
+        className="space-y-3 rounded-md border bg-surface p-4"
+      >
+        <h2
+          id="google-play-console.tabs.bundle-analysis-tab.h2.2"
+          className="font-semibold">{t("releaseConsole.analysis.compare")}</h2
+        >
         <div id="google-play-console.tabs.bundle-analysis-tab.div.7" className="grid gap-2 md:grid-cols-[1fr_1fr_auto]">
           <input id="google-play-console.tabs.bundle-analysis-tab.input" className="h-10 rounded-md border bg-background px-3" value={left}
             onChange={(event) => setLeft(event.target.value)} placeholder={t("releaseConsole.analysis.leftSha")} />
           <input id="google-play-console.tabs.bundle-analysis-tab.input.2" className="h-10 rounded-md border bg-background px-3" value={right}
             onChange={(event) => setRight(event.target.value)} placeholder={t("releaseConsole.analysis.rightSha")} />
-          <Button id="google-play-console.tabs.bundle-analysis-tab.button.2" disabled={!left || !right || bundle.busy} onClick={() => void bundle.compare(left, right)}>
+          <Button
+            id="google-play-console.tabs.bundle-analysis-tab.button.2"
+            disabled={!left || !right || bundle.busy}
+            onClick={() => void bundle.compare(left, right)}
+          >
             {t("releaseConsole.analysis.compare")}
           </Button>
         </div>
-        <DeltaTable id="google-play-console.tabs.bundle-analysis-tab.delta-table" rows={bundle.comparison?.categories ?? []} emptyText={t("releaseConsole.empty")} />
+        <DeltaTable
+          id="google-play-console.tabs.bundle-analysis-tab.delta-table"
+          rows={bundle.comparison?.categories ?? []}
+          emptyText={t("releaseConsole.empty")}
+        />
       </section>
     </section>
   );

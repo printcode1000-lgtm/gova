@@ -35,14 +35,22 @@ export function AndroidReleasePathActions({
         onClick={() => void start({ commandId: "android-open-outputs" })}
       >
         {openOutputsRunning ? (
-          <LoaderCircle id="google-play-console.android-release-path-actions.loader-circle" className="h-4 w-4 animate-spin" />
+          <LoaderCircle
+            id="google-play-console.android-release-path-actions.loader-circle"
+            className="h-4 w-4 animate-spin"
+          />
         ) : (
           <FolderOpen id="google-play-console.android-release-path-actions.folder-open" className="h-4 w-4" />
         )}
         {t("releaseConsole.androidPaths.openOutputs")}
       </Button>
       {openOutputsRunning && openOutputsJob ? (
-        <StopButton id="google-play-console.android-release-path-actions.stop-button" cancel={cancel} job={openOutputsJob} t={t} />
+        <StopButton
+          id="google-play-console.android-release-path-actions.stop-button"
+          cancel={cancel}
+          job={openOutputsJob}
+          t={t}
+        />
       ) : null}
       <Button id="google-play-console.android-release-path-actions.button.2"
         disabled={previewState === "checking"}
@@ -50,7 +58,10 @@ export function AndroidReleasePathActions({
         onClick={() => void openPreview()}
       >
         {previewState === "checking" ? (
-          <LoaderCircle id="google-play-console.android-release-path-actions.loader-circle.2" className="h-4 w-4 animate-spin" />
+          <LoaderCircle
+            id="google-play-console.android-release-path-actions.loader-circle.2"
+            className="h-4 w-4 animate-spin"
+          />
         ) : (
           <ExternalLink id="google-play-console.android-release-path-actions.external-link" className="h-4 w-4" />
         )}

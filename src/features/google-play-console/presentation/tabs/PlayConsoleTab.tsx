@@ -15,8 +15,16 @@ export function PlayConsoleTab() {
   return (
     <section id="google-play-console.tabs.play-console-tab.section" className="space-y-4">
       <div id="google-play-console.tabs.play-console-tab.div" className="flex justify-end">
-        <Button id="google-play-console.tabs.play-console-tab.button" variant="outline" disabled={busy} onClick={() => void refresh()}>
-          <RefreshCw id="google-play-console.tabs.play-console-tab.refresh-cw" className={busy ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
+        <Button
+          id="google-play-console.tabs.play-console-tab.button"
+          variant="outline"
+          disabled={busy}
+          onClick={() => void refresh()}
+        >
+          <RefreshCw
+            id="google-play-console.tabs.play-console-tab.refresh-cw"
+            className={busy ? "h-4 w-4 animate-spin" : "h-4 w-4"}
+          />
           {t("releaseConsole.actions.refresh")}
         </Button>
       </div>
@@ -26,14 +34,37 @@ export function PlayConsoleTab() {
           <div id="google-play-console.tabs.play-console-tab.div.3" className="grid gap-3 md:grid-cols-4">
             <Metric id="google-play-console.tabs.play-console-tab.metric" label={t("releaseConsole.play.successfulEndpoints")}
               value={snapshot.summary.successfulEndpoints} />
-            <Metric id="google-play-console.tabs.play-console-tab.metric.2" label={t("releaseConsole.play.failedEndpoints")} value={snapshot.summary.failedEndpoints} />
-            <Metric id="google-play-console.tabs.play-console-tab.metric.3" label={t("releaseConsole.play.tracks")} value={snapshot.summary.tracks} />
-            <Metric id="google-play-console.tabs.play-console-tab.metric.4" label={t("releaseConsole.play.releases")} value={snapshot.summary.releases} />
+            <Metric
+              id="google-play-console.tabs.play-console-tab.metric.2"
+              label={t("releaseConsole.play.failedEndpoints")}
+              value={snapshot.summary.failedEndpoints}
+            />
+            <Metric
+              id="google-play-console.tabs.play-console-tab.metric.3"
+              label={t("releaseConsole.play.tracks")}
+              value={snapshot.summary.tracks}
+            />
+            <Metric
+              id="google-play-console.tabs.play-console-tab.metric.4"
+              label={t("releaseConsole.play.releases")}
+              value={snapshot.summary.releases}
+            />
           </div>
-          <section id="google-play-console.tabs.play-console-tab.section.2" className="rounded-md border bg-surface p-4">
-            <h2 id="google-play-console.tabs.play-console-tab.h2" className="mb-3 font-semibold">{t("releaseConsole.play.connection")}</h2>
+          <section
+            id="google-play-console.tabs.play-console-tab.section.2"
+            className="rounded-md border bg-surface p-4"
+          >
+            <h2
+              id="google-play-console.tabs.play-console-tab.h2"
+              className="mb-3 font-semibold">{t("releaseConsole.play.connection")}</h2
+            >
             <dl className="grid gap-2">
-              <InfoRow id="google-play-console.tabs.play-console-tab.info-row" label={t("releaseConsole.overview.package")} value={snapshot.config.packageName} ltr />
+              <InfoRow
+                id="google-play-console.tabs.play-console-tab.info-row"
+                label={t("releaseConsole.overview.package")}
+                value={snapshot.config.packageName}
+                ltr
+              />
               <InfoRow id="google-play-console.tabs.play-console-tab.info-row.2" label={t("releaseConsole.play.serviceAccount")}
                 value={snapshot.config.serviceAccountEmail || "-"} ltr />
               <InfoRow id="google-play-console.tabs.play-console-tab.info-row.3" label={t("releaseConsole.play.projectId")}

@@ -27,7 +27,10 @@ export function ExecutionBox(props: {
 }) {
   return (
     <aside id="google-play-console.deploy-runbook-execution-box.aside" className="min-w-0 w-full space-y-3">
-      <header id="google-play-console.deploy-runbook-execution-box.header" className="rounded-md border bg-surface p-3 sm:p-4">
+      <header
+        id="google-play-console.deploy-runbook-execution-box.header"
+        className="rounded-md border bg-surface p-3 sm:p-4"
+      >
         <h2 id="google-play-console.deploy-runbook-execution-box.h2" className="font-semibold">التنفيذ</h2>
         <p id="google-play-console.deploy-runbook-execution-box.p" className="mt-1 text-xs text-on-surface-variant">
           شغّل أو أوقف job النظام المحلي بعد مراجعة الأمر وعبارة التأكيد.
@@ -38,11 +41,17 @@ export function ExecutionBox(props: {
         title="معاينة الأمر"
         description="الأمر الذي سيُنفَّذ فعلياً عبر job النظام."
       >
-        <div id="google-play-console.deploy-runbook-execution-box.div" className="min-w-0 overflow-x-auto rounded-md bg-muted p-3 text-xs">
+        <div
+          id="google-play-console.deploy-runbook-execution-box.div"
+          className="min-w-0 overflow-x-auto rounded-md bg-muted p-3 text-xs"
+        >
           <code className="block min-w-0 whitespace-pre-wrap break-all text-left" dir="ltr">
             {props.commandPreview}
           </code>
-          <p id="google-play-console.deploy-runbook-execution-box.p.2" className="mt-2 break-words text-on-surface-variant">
+          <p
+            id="google-play-console.deploy-runbook-execution-box.p.2"
+            className="mt-2 break-words text-on-surface-variant"
+          >
             راجع المعاينة قبل التشغيل؛ السجل الكامل يظهر في الطرفية.
           </p>
         </div>
@@ -93,25 +102,39 @@ export function ExecutionBox(props: {
             <ConfirmationPhraseHelp exactPhrase={props.exactPhrase} onApply={props.setConfirmation} />
           </div>
           {props.startError ? (
-            <p id="google-play-console.deploy-runbook-execution-box.p.3" className="rounded-md bg-error-container p-2 text-sm text-on-error-container break-words">
+            <p
+              id="google-play-console.deploy-runbook-execution-box.p.3"
+              className="rounded-md bg-error-container p-2 text-sm text-on-error-container break-words"
+            >
               {props.startError}
             </p>
           ) : null}
-          <div id="google-play-console.deploy-runbook-execution-box.div.5" className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <div
+            id="google-play-console.deploy-runbook-execution-box.div.5"
+            className="flex flex-col gap-2 sm:flex-row sm:flex-wrap"
+          >
             <Button id="google-play-console.deploy-runbook-execution-box.button.2"
               className="w-full sm:w-auto"
               disabled={props.locked || props.confirmation !== props.exactPhrase}
               onClick={props.onStart}
             >
               {props.locked ? (
-                <LoaderCircle id="google-play-console.deploy-runbook-execution-box.loader-circle" className="h-4 w-4 animate-spin" />
+                <LoaderCircle
+                  id="google-play-console.deploy-runbook-execution-box.loader-circle"
+                  className="h-4 w-4 animate-spin"
+                />
               ) : (
                 <Play id="google-play-console.deploy-runbook-execution-box.play" className="h-4 w-4" />
               )}
               {props.locked ? "قيد التشغيل" : "تشغيل"}
             </Button>
             {props.activeJob ? (
-              <Button id="google-play-console.deploy-runbook-execution-box.button.3" variant="destructive" className="w-full sm:w-auto" onClick={props.onCancel}>
+              <Button
+                id="google-play-console.deploy-runbook-execution-box.button.3"
+                variant="destructive"
+                className="w-full sm:w-auto"
+                onClick={props.onCancel}
+              >
                 <StopCircle id="google-play-console.deploy-runbook-execution-box.stop-circle" className="h-4 w-4" />
                 إيقاف
               </Button>
@@ -135,7 +158,10 @@ function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: s
   };
 
   return (
-    <div id="google-play-console.deploy-runbook-execution-box.div.6" className="flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant">
+    <div
+      id="google-play-console.deploy-runbook-execution-box.div.6"
+      className="flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant"
+    >
       <p id="google-play-console.deploy-runbook-execution-box.p.4" className="min-w-0 break-words">
         يجب كتابة{" "}
         <button id="google-play-console.deploy-runbook-execution-box.button"

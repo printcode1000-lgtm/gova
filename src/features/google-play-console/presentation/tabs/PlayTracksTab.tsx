@@ -67,8 +67,14 @@ export function PlayTracksTab() {
         ))}
       </div>
       <div id="google-play-console.tabs.play-tracks-tab.div.3" className="grid gap-4 lg:grid-cols-2">
-        <section id="google-play-console.tabs.play-tracks-tab.section.2" className="space-y-3 rounded-md border bg-surface p-4">
-          <h2 id="google-play-console.tabs.play-tracks-tab.h2" className="font-semibold">{t("releaseConsole.tracks.update")}</h2>
+        <section
+          id="google-play-console.tabs.play-tracks-tab.section.2"
+          className="space-y-3 rounded-md border bg-surface p-4"
+        >
+          <h2
+            id="google-play-console.tabs.play-tracks-tab.h2"
+            className="font-semibold">{t("releaseConsole.tracks.update")}</h2
+          >
           <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select" value={track} onChange={setTrack} />
           <Input id="google-play-console.tabs.play-tracks-tab.input" value={versionCode} onChange={(event) => setVersionCode(event.target.value)}
             placeholder={t("releaseConsole.tracks.versionCode")} dir="ltr" />
@@ -84,20 +90,51 @@ export function PlayTracksTab() {
           <Textarea id="google-play-console.tabs.play-tracks-tab.textarea" value={notes} onChange={(event) => setNotes(event.target.value)}
             placeholder={t("releaseConsole.tracks.changelog")} />
         </section>
-        <section id="google-play-console.tabs.play-tracks-tab.section.3" className="space-y-3 rounded-md border bg-surface p-4">
-          <h2 id="google-play-console.tabs.play-tracks-tab.h2.2" className="font-semibold">{t("releaseConsole.tracks.promote")}</h2>
-          <div id="google-play-console.tabs.play-tracks-tab.div.4" className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-            <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select.2" value={fromTrack} onChange={setFromTrack} />
+        <section
+          id="google-play-console.tabs.play-tracks-tab.section.3"
+          className="space-y-3 rounded-md border bg-surface p-4"
+        >
+          <h2
+            id="google-play-console.tabs.play-tracks-tab.h2.2"
+            className="font-semibold">{t("releaseConsole.tracks.promote")}</h2
+          >
+          <div
+            id="google-play-console.tabs.play-tracks-tab.div.4"
+            className="grid grid-cols-[1fr_auto_1fr] items-center gap-2"
+          >
+            <TrackSelect
+              id="google-play-console.tabs.play-tracks-tab.track-select.2"
+              value={fromTrack}
+              onChange={setFromTrack}
+            />
             <ArrowRight id="google-play-console.tabs.play-tracks-tab.arrow-right" className="h-4 w-4" />
-            <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select.3" value={toTrack} onChange={setToTrack} />
+            <TrackSelect
+              id="google-play-console.tabs.play-tracks-tab.track-select.3"
+              value={toTrack}
+              onChange={setToTrack}
+            />
           </div>
-          <Button id="google-play-console.tabs.play-tracks-tab.button" disabled={!versionCode || tracks.busy} onClick={() => void promote()}>
+          <Button
+            id="google-play-console.tabs.play-tracks-tab.button"
+            disabled={!versionCode || tracks.busy}
+            onClick={() => void promote()}
+          >
             {t("releaseConsole.tracks.promote")}
           </Button>
           <label id="google-play-console.tabs.play-tracks-tab.label" className="block border-t pt-3 text-sm">
-            <span id="google-play-console.tabs.play-tracks-tab.span" className="mb-2 flex items-center gap-2 font-medium"><FileUp id="google-play-console.tabs.play-tracks-tab.file-up" className="h-4 w-4" />
+            <span
+              id="google-play-console.tabs.play-tracks-tab.span"
+              className="mb-2 flex items-center gap-2 font-medium"><FileUp
+              id="google-play-console.tabs.play-tracks-tab.file-up"
+              className="h-4 w-4"
+            />
               {t("releaseConsole.tracks.mapping")}</span>
-            <Input id="google-play-console.tabs.play-tracks-tab.input.3" type="file" accept="text/plain" onChange={(event) => void mapping(event.target.files)} />
+            <Input
+              id="google-play-console.tabs.play-tracks-tab.input.3"
+              type="file"
+              accept="text/plain"
+              onChange={(event) => void mapping(event.target.files)}
+            />
           </label>
         </section>
       </div>

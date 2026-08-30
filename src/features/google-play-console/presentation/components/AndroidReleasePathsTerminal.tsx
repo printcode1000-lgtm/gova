@@ -39,12 +39,18 @@ export function AndroidReleasePathsTerminal(props: {
   );
 
   return (
-    <section id="google-play-console.android-release-paths-terminal.section" className="mt-3 grid min-w-0 grid-cols-1 gap-3">
+    <section
+      id="google-play-console.android-release-paths-terminal.section"
+      className="mt-3 grid min-w-0 grid-cols-1 gap-3"
+    >
       <DeployRunbookCollapsible id="google-play-console.android-release-paths-terminal.deploy-runbook-collapsible"
         title={props.t("releaseConsole.androidPaths.executionIndicatorsTitle")}
         description={props.t("releaseConsole.androidPaths.executionIndicatorsHelp")}
       >
-        <div id="google-play-console.android-release-paths-terminal.div" className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+        <div
+          id="google-play-console.android-release-paths-terminal.div"
+          className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5"
+        >
           <IndicatorCard id="google-play-console.android-release-paths-terminal.indicator-card"
             label={props.t("releaseConsole.androidPaths.indicatorStatus")}
             value={snapshot.status}
