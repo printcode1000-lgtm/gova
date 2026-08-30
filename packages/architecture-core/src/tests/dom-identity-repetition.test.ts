@@ -36,6 +36,76 @@ function multiplicity(files: Record<string, string>) {
 
 {
   const result = multiplicity({
+    'src/widget.tsx': 'export function Widget() { return <div />; }',
+    'src/dashboard.tsx': [
+      'import { Widget } from "./widget";',
+      'export function Dashboard({ ready }: { ready: boolean }) {',
+      '  return ready ? <Widget /> : <Widget />;',
+      '}',
+    ].join('\n'),
+  });
+  assert.equal(
+    result.repeatingSymbols.has(symbolKey('src/widget.tsx', 'Widget')),
+    false,
+    'Opposite ternary branches are mutually exclusive and must count as one runtime copy.',
+  );
+}
+
+{
+  const result = multiplicity({
+    'src/widget.tsx': 'export function Widget() { return <div />; }',
+    'src/dashboard.tsx': [
+      'import { Widget } from "./widget";',
+      'export function Dashboard({ ready }: { ready: boolean }) {',
+      '  if (ready) return <Widget />;',
+      '  else return <Widget />;',
+      '}',
+    ].join('\n'),
+  });
+  assert.equal(
+    result.repeatingSymbols.has(symbolKey('src/widget.tsx', 'Widget')),
+    false,
+    'Opposite if/else branches are mutually exclusive and must count as one runtime copy.',
+  );
+}
+
+{
+  const result = multiplicity({
+    'src/widget.tsx': 'export function Widget() { return <div />; }',
+    'src/dashboard.tsx': [
+      'import { Suspense } from "react";',
+      'import { Widget } from "./widget";',
+      'export function Dashboard() {',
+      '  return <Suspense fallback={<Widget />}><Widget /></Suspense>;',
+      '}',
+    ].join('\n'),
+  });
+  assert.equal(
+    result.repeatingSymbols.has(symbolKey('src/widget.tsx', 'Widget')),
+    false,
+    'Suspense fallback and resolved children are mutually exclusive runtime branches.',
+  );
+}
+
+{
+  const result = multiplicity({
+    'src/widget.tsx': 'export function Widget() { return <div />; }',
+    'src/dashboard.tsx': [
+      'import { Widget } from "./widget";',
+      'export function Dashboard({ a, b }: { a: boolean; b: boolean }) {',
+      '  return <>{a ? <Widget /> : null}{b ? <Widget /> : null}</>;',
+      '}',
+    ].join('\n'),
+  });
+  assert.equal(
+    result.repeatingSymbols.has(symbolKey('src/widget.tsx', 'Widget')),
+    true,
+    'Independent conditionals can both render and therefore remain multiplicity.',
+  );
+}
+
+{
+  const result = multiplicity({
     'src/leaf.tsx': 'export function Leaf() { return <span />; }',
     'src/left.tsx': 'import { Leaf } from "./leaf"; export function Left() { return <Leaf />; }',
     'src/right.tsx': 'import { Leaf } from "./leaf"; export function Right() { return <Leaf />; }',
