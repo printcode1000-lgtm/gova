@@ -256,9 +256,13 @@ assert.throws(
   /token or secret/,
 );
 assert.throws(() => createUiInstanceId("550e8400-e29b-41d4-a716-446655440000"), /UUID/);
+const allowedUuidInstance = createUiInstanceId("550e8400-e29b-41d4-a716-446655440000", { allowUuid: true });
+assert.equal(isUiInstanceId(allowedUuidInstance), true);
+assert.notEqual(allowedUuidInstance, "550e8400-e29b-41d4-a716-446655440000");
+assert.match(allowedUuidInstance, /^uuid-[a-z0-9]+$/);
 assert.equal(
+  allowedUuidInstance,
   createUiInstanceId("550e8400-e29b-41d4-a716-446655440000", { allowUuid: true }),
-  "550e8400-e29b-41d4-a716-446655440000",
 );
 assert.throws(() => createUiInstanceId(""), /must not be empty/);
 assert.throws(() => createUiInstanceId("a".repeat(65)), /at most 64 characters/);
