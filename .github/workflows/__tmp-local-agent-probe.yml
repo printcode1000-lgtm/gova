@@ -14,7 +14,7 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Audit UI multiplicity locally
+      - name: Inspect real local control-plane files
         shell: bash
         run: |
           set -euo pipefail
@@ -23,13 +23,30 @@ jobs:
           git checkout main >/dev/null 2>&1
           git reset --hard origin/main >/dev/null 2>&1
           echo "HEAD=$(git rev-parse HEAD)"
-          npx tsx scripts/ui-registry/runtime-multiplicity-audit.ts > /tmp/ui-multiplicity.txt
-          head -n 8 /tmp/ui-multiplicity.txt
-          echo '--- grouped by reason ---'
-          awk '/^UNRESOLVED / {c[$2]++} END {for (k in c) print k, c[k]}' /tmp/ui-multiplicity.txt | sort
-          echo '--- top files ---'
-          awk '/^UNRESOLVED / {split($3,a,":"); c[a[1]]++} END {for (k in c) print c[k], k}' /tmp/ui-multiplicity.txt | sort -nr | head -n 40
-          echo '--- top reusable components ---'
-          awk '/^UNRESOLVED reusable-template / {sub(/^.*component=/,""); c[$0]++} END {for (k in c) print c[k], k}' /tmp/ui-multiplicity.txt | sort -nr | head -n 40
-          echo '--- migration scripts ---'
-          find scripts/ui-registry -maxdepth 2 -type f \( -name '*fix*' -o -name '*migrat*' -o -name '*multiplicity*' \) -print | sort
+          echo "BRANCH=$(git branch --show-current)"
+          echo "DIRTY=$(git status --porcelain | wc -l)"
+          echo '--- control files ---'
+          for f in \
+            .github/workflows/local-agent-status.yml \
+            .github/workflows/local-agent-inspect.yml \
+            .github/workflows/local-agent-main.yml \
+            .github/workflows/local-agent-workspace.yml \
+            .github/workflows/deploy-main.yml \
+            scripts/local-agent-status.ts \
+            scripts/local-agent-inspect.ts \
+            scripts/local-agent-main-apply.ts \
+            docs/07-mobile-and-release/local-agent-runner-pool.md; do
+            if [ -f "$f" ]; then
+              printf '%s\t%s\t%s bytes\n' "$(sha256sum "$f" | cut -d' ' -f1)" "$f" "$(stat -c %s "$f")"
+            else
+              echo "MISSING $f"
+            fi
+          done
+          echo '--- coordination directory ---'
+          find /home/hesham/github-runners/gova-coordination -maxdepth 2 -type d -printf '%p\n' 2>/dev/null | sort | head -n 80 || true
+          echo '--- active runner services ---'
+          systemctl --user list-units 'gova-github-runner*' --no-pager --all || true
+          echo '--- local-agent workflow triggers ---'
+          grep -nE 'workflow_dispatch|runs-on:|npm ci|GOVA_LOCAL_WORKSPACE|concurrency|shell_command' .github/workflows/local-agent-*.yml || true
+          echo '--- deploy-main trigger header ---'
+          sed -n '1,35p' .github/workflows/deploy-main.yml
