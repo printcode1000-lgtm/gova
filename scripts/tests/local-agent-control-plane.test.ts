@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { hostname, tmpdir } from "node:os";
 import path from "node:path";
 
 /**
@@ -24,8 +24,12 @@ import {
   listLocks,
   recoverStaleLocks,
   scopesConflict,
+  ownerIsAlive,
+  lockId,
   LockConflictError,
 } from "../local-agent/lock-store";
+import { listOperations, reconcileOrphanedOperations } from "../local-agent/operation-log";
+import { maxConcurrentMutations, memoryFloorMb, readMemory, waitForAdmission } from "../local-agent/admission";
 import { postMessage, listMessages } from "../local-agent/message-store";
 import { validateDispatchRequest, DISPATCHABLE_WORKFLOWS, MAX_REQUEST_AGE_MS } from "../local-agent/request-contract";
 import { isSecretPath, patchSecretViolations, looksLikeSecretValue } from "../local-agent/secret-paths";
@@ -427,6 +431,104 @@ for (const contract of Object.values(DISPATCHABLE_WORKFLOWS)) {
     `${contract.file} must be a permanent workflow`,
   );
 }
+
+// --- termination recovery -----------------------------------------------------
+
+// The pool's worst failure is not a crash but an out-of-memory kill: SIGTERM
+// arrives, the job dies without an epilogue, and its lock and its record outlive
+// it. A lock whose owning process is gone must be reclaimable immediately rather
+// than after the full stale timeout.
+const deadPid = 2_147_483_600; // Above /proc/sys/kernel/pid_max; cannot be live.
+acquireLock({ agentId: "killed-agent", kind: "path", scope: "src/killed" });
+const killedLockPath = path.join(sandbox, "locks", `${lockId("path", "src/killed")}.json`);
+const killedLock = JSON.parse(readFileSync(killedLockPath, "utf8")) as Record<string, unknown>;
+writeFileSync(killedLockPath, JSON.stringify({ ...killedLock, pid: deadPid, host: hostname() }));
+
+assert.equal(ownerIsAlive({ ...killedLock, pid: deadPid, host: hostname() } as never), false, "a dead pid reads as dead");
+assert.equal(
+  ownerIsAlive({ ...killedLock, pid: deadPid, host: "some-other-machine" } as never),
+  null,
+  "a pid from another host tells us nothing",
+);
+assert.equal(
+  listLocks().some((lock) => lock.scope === "src/killed" && lock.stale),
+  true,
+  "a lock whose owner is gone is stale at once, without waiting out the TTL",
+);
+assert.equal(recoverStaleLocks().length >= 1, true, "and it is reclaimed");
+assert.equal(listLocks().some((lock) => lock.scope === "src/killed"), false);
+
+// A record left "running" by a killed job must not keep claiming to be in flight.
+const orphanPath = path.join(sandbox, "logs", "operations", "orphan-run.json");
+mkdirSync(path.dirname(orphanPath), { recursive: true });
+writeFileSync(
+  orphanPath,
+  JSON.stringify({
+    requestId: null,
+    agentId: "killed-agent",
+    workflow: "local-agent-workspace",
+    targetMode: "branch",
+    targetRef: "codex/agent-killed-agent-1",
+    runId: "run",
+    runnerName: null,
+    host: hostname(),
+    pid: deadPid,
+    startingSha: null,
+    resultingSha: null,
+    changedFiles: [],
+    startedAt: new Date().toISOString(),
+    completedAt: null,
+    durationMs: 0,
+    verification: "none",
+    patchProvided: false,
+    shellCommandProvided: true,
+    lockScopes: [],
+    staleLockRecovered: false,
+    recoveredStaleLockIds: [],
+    retryCount: 0,
+    status: "running",
+    exitCode: null,
+    failedCommand: null,
+    terminatedBy: null,
+  }),
+);
+const reconciled = reconcileOrphanedOperations();
+assert.equal(reconciled.length, 1, "the abandoned record is closed out");
+assert.equal(reconciled[0]!.status, "failed");
+assert.equal(reconciled[0]!.abandoned, true);
+assert.equal(
+  listOperations(50).some((operation) => operation.status === "running"),
+  false,
+  "nothing still claims to be in flight",
+);
+
+// --- admission control ----------------------------------------------------------
+
+// Six runners can each start a job that pulls in a heavy toolchain. Waiting for
+// capacity is the whole point: the alternative is the machine choosing which
+// jobs to kill.
+assert.equal(readMemory() !== null, true, "memory is readable on this platform");
+const reading = readMemory()!;
+assert.equal(reading.totalMb > 0, true);
+assert.equal(reading.availableMb >= 0, true);
+assert.equal(maxConcurrentMutations() >= 1, true, "the budget is at least one, or nothing could ever run");
+
+process.env.GOVA_AGENT_MAX_CONCURRENT_MUTATIONS = "4";
+assert.equal(maxConcurrentMutations(), 4, "the budget is configurable");
+process.env.GOVA_AGENT_MEMORY_FLOOR_MB = "1";
+assert.equal(memoryFloorMb(), 1);
+process.env.GOVA_AGENT_ADMISSION_TIMEOUT_MS = "0";
+assert.equal(waitForAdmission().admitted, true, "a quiet machine admits immediately");
+
+// With the floor above total memory the decision must be a clean refusal, not a
+// hang: a refused job has touched nothing and leaves nothing to clean up.
+process.env.GOVA_AGENT_MEMORY_FLOOR_MB = String(reading.totalMb * 10);
+const refused = waitForAdmission();
+assert.equal(refused.admitted, false, "an impossible floor refuses instead of hanging");
+assert.match(refused.reason ?? "", /available/);
+delete process.env.GOVA_AGENT_MEMORY_FLOOR_MB;
+delete process.env.GOVA_AGENT_MAX_CONCURRENT_MUTATIONS;
+delete process.env.GOVA_AGENT_ADMISSION_TIMEOUT_MS;
 
 // --- monitor ---------------------------------------------------------------------
 

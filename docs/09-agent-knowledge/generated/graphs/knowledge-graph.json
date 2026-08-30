@@ -18129,6 +18129,19 @@
       ]
     },
     {
+      "id": "environment-key:GOVA_AGENT_ADMISSION_TIMEOUT_MS",
+      "kind": "environment-key",
+      "name": "GOVA_AGENT_ADMISSION_TIMEOUT_MS",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_agent_admission_timeout_ms",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:GOVA_AGENT_COORDINATION_DIR",
       "kind": "environment-key",
       "name": "GOVA_AGENT_COORDINATION_DIR",
@@ -18136,6 +18149,32 @@
       "tags": [
         "environment",
         "gova_agent_coordination_dir",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:GOVA_AGENT_MAX_CONCURRENT_MUTATIONS",
+      "kind": "environment-key",
+      "name": "GOVA_AGENT_MAX_CONCURRENT_MUTATIONS",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_agent_max_concurrent_mutations",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:GOVA_AGENT_MEMORY_FLOOR_MB",
+      "kind": "environment-key",
+      "name": "GOVA_AGENT_MEMORY_FLOOR_MB",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_agent_memory_floor_mb",
         "server",
         "server tooling environment",
         "tooling"
@@ -26956,6 +26995,17 @@
       "tags": [
         "scripts/local-agent-watch",
         "scripts/local-agent-watch.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/admission.ts",
+      "kind": "script",
+      "name": "admission.ts",
+      "path": "scripts/local-agent/admission.ts",
+      "tags": [
+        "scripts/local-agent/admission",
+        "scripts/local-agent/admission.ts",
         "ts"
       ]
     },
@@ -85690,6 +85740,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent/admission.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/local-agent/agent-registry.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -139452,6 +139508,12 @@
     },
     {
       "from": "script:scripts/local-agent-cleanup.ts",
+      "to": "script:scripts/local-agent/operation-log.ts",
+      "kind": "imports",
+      "detail": "./local-agent/operation-log"
+    },
+    {
+      "from": "script:scripts/local-agent-cleanup.ts",
       "to": "script:scripts/local-agent/paths.ts",
       "kind": "imports",
       "detail": "./local-agent/paths"
@@ -139526,6 +139588,12 @@
     },
     {
       "from": "script:scripts/local-agent-doctor.ts",
+      "to": "script:scripts/local-agent/admission.ts",
+      "kind": "imports",
+      "detail": "./local-agent/admission"
+    },
+    {
+      "from": "script:scripts/local-agent-doctor.ts",
       "to": "script:scripts/local-agent/agent-registry.ts",
       "kind": "imports",
       "detail": "./local-agent/agent-registry"
@@ -139547,6 +139615,12 @@
       "to": "script:scripts/local-agent/lock-store.ts",
       "kind": "imports",
       "detail": "./local-agent/lock-store"
+    },
+    {
+      "from": "script:scripts/local-agent-doctor.ts",
+      "to": "script:scripts/local-agent/operation-log.ts",
+      "kind": "imports",
+      "detail": "./local-agent/operation-log"
     },
     {
       "from": "script:scripts/local-agent-doctor.ts",
@@ -139752,6 +139826,12 @@
     },
     {
       "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "script:scripts/local-agent/admission.ts",
+      "kind": "imports",
+      "detail": "./local-agent/admission"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
       "to": "script:scripts/local-agent/agent-registry.ts",
       "kind": "imports",
       "detail": "./local-agent/agent-registry"
@@ -139921,6 +140001,17 @@
       "to": "script:scripts/local-agent/watch-render.ts",
       "kind": "imports",
       "detail": "./local-agent/watch-render"
+    },
+    {
+      "from": "script:scripts/local-agent/admission.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/local-agent/admission.ts",
+      "to": "script:scripts/local-agent/operation-log.ts",
+      "kind": "imports",
+      "detail": "./operation-log"
     },
     {
       "from": "script:scripts/local-agent/agent-registry.ts",
@@ -140179,6 +140270,12 @@
       "from": "script:scripts/local-agent/watch-model.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/local-agent/watch-model.ts",
+      "to": "script:scripts/local-agent/admission.ts",
+      "kind": "imports",
+      "detail": "./admission"
     },
     {
       "from": "script:scripts/local-agent/watch-model.ts",
@@ -251139,6 +251236,12 @@
     },
     {
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/admission.ts",
+      "kind": "imports",
+      "detail": "../local-agent/admission"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
       "to": "script:scripts/local-agent/agent-registry.ts",
       "kind": "imports",
       "detail": "../local-agent/agent-registry"
@@ -251160,6 +251263,12 @@
       "to": "script:scripts/local-agent/message-store.ts",
       "kind": "imports",
       "detail": "../local-agent/message-store"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/operation-log.ts",
+      "kind": "imports",
+      "detail": "../local-agent/operation-log"
     },
     {
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
@@ -251204,6 +251313,11 @@
     },
     {
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/admission.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
       "to": "script:scripts/local-agent/agent-registry.ts",
       "kind": "tests"
     },
@@ -251220,6 +251334,11 @@
     {
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
       "to": "script:scripts/local-agent/message-store.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "script:scripts/local-agent/operation-log.ts",
       "kind": "tests"
     },
     {
@@ -251254,7 +251373,22 @@
     },
     {
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "environment-key:GOVA_AGENT_ADMISSION_TIMEOUT_MS",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
       "to": "environment-key:GOVA_AGENT_COORDINATION_DIR",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "environment-key:GOVA_AGENT_MAX_CONCURRENT_MUTATIONS",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "to": "environment-key:GOVA_AGENT_MEMORY_FLOOR_MB",
       "kind": "uses-environment"
     },
     {

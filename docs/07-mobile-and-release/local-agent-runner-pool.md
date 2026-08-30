@@ -353,12 +353,79 @@ Explicit guards:
 | Stale checkout | every job resets its worktree to the freshest `origin/main` |
 | Push built on an outdated `main` | pre-push check refuses when `origin/main` moved |
 | Concurrent direct-`main` | concurrency group plus a single `ref:main` lock |
-| Lock leaked by a crash | TTL expiry plus automatic stale-lock recovery |
+| Lock leaked by a crash | the owning process is checked; a dead owner is stale at once, TTL as backstop |
+| Several jobs killed at once by memory pressure | admission control: a memory floor and a concurrency budget |
+| Record stuck reporting work that is not happening | abandoned operations are reconciled from the owning pid |
 | Duplicate `request_id` | the request ledger refuses a second use |
 | Replayed dispatch document | requests older than 30 minutes are refused |
 | Secret exfiltration | secret paths refused in patches, inspection, and messages |
 
 Every mutation records its starting and resulting SHA.
+
+## Capacity And Termination
+
+### Why this exists
+
+Six runners can each start a job whose `shell_command` pulls in a heavy nested
+toolchain. Nothing about the pool stops that, so the machine's out-of-memory
+killer settles it instead — and it settles it badly: it sends SIGTERM across the
+session, several unrelated jobs die within seconds of each other, and each leaves
+behind a held lock, a full worktree, and a record still claiming to be in flight.
+Every agent that then wants one of those scopes waits out the stale timeout for a
+holder that no longer exists.
+
+This happened. Four concurrent mutations died at once with exit 143 while
+`MemAvailable` was below 10% and swap was fully consumed.
+
+### Admission control
+
+Before a mutation touches anything it waits for two conditions:
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `GOVA_AGENT_MEMORY_FLOOR_MB` | 2048 | `MemAvailable` must be at least this |
+| `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | 3 | mutations genuinely running on this machine |
+| `GOVA_AGENT_ADMISSION_TIMEOUT_MS` | 900000 | how long to wait before refusing |
+
+Waiting costs an idle runner; not waiting costs four killed jobs. A job that
+waits out the timeout is refused *before* it prepares a worktree or takes a
+scope lock, so a refusal leaves nothing behind to clean up — the agent simply
+re-dispatches.
+
+The runner units also carry `MemoryHigh=3G` and `MemoryMax=4G`, so a single
+runaway job is throttled inside its own cgroup instead of being resolved at the
+expense of the whole session.
+
+### Termination
+
+`scripts/local-agent-main-apply.ts` handles `SIGTERM`, `SIGINT`, and `SIGHUP`.
+Node runs no `exit` handler for a default-handled signal, so without this a
+killed job would leave all three artefacts behind. The handler releases the
+locks, removes the worktree, writes the record as `failed` with `terminatedBy`
+set, and exits `128 + signal` — so `143` still reads as SIGTERM to everything
+downstream, and a job killed from outside is distinguishable from one that failed
+on its own.
+
+### Reconciliation
+
+Two guards catch whatever still slips through:
+
+- **Locks.** A lock records the pid and host that took it. If that host is this
+  one and the process is gone, the lock is stale immediately rather than after
+  ninety minutes. A pid from another host, or a recycled pid, still falls back to
+  the TTL.
+- **Operations.** `reconcileOrphanedOperations()` closes out any record left
+  `running` by a process that no longer exists, marking it `abandoned`. It runs
+  inside admission control and inside `npm run local-agent:cleanup`, so "in
+  flight" keeps meaning in flight.
+
+`npm run local-agent:cleanup` also reclaims the worktree of any finished job at
+once rather than waiting out the retention window — keeping a full checkout per
+killed job is the same disk and memory pressure that caused the problem.
+
+`npm run local-agent:doctor` reports available memory, swap headroom, the
+concurrency budget, and the count of reconciled records. The monitor shows the
+same memory line in its header, in red once the floor is crossed.
 
 ## Operation Logs
 
@@ -368,7 +435,9 @@ request id, agent id, workflow, target mode and ref, run id, runner name, host,
 pid, starting SHA, resulting SHA, changed files, start and completion time,
 duration, verification, whether a patch was supplied, whether a shell command was
 supplied, lock scopes, stale-lock recovery state and reclaimed ids, retry count,
-status, exit code, and the failed command when one fails.
+status, exit code, the failed command when one fails, `terminatedBy` when a signal
+ended the job, `abandoned` when reconciliation closed the record out, and
+`admissionWaitMs` when the job waited for capacity.
 
 Never stored: shell command text, patch contents, secret values, `.env` data,
 tokens, or credentials. A failed shell step is recorded as the literal
@@ -551,9 +620,17 @@ never makes it unavailable.
 **A runner is down.** `systemctl --user restart gova-github-runner-<n>.service`,
 then confirm with `npm run local-agent:doctor`.
 
-**A lock is stuck.** It expires on its own after
-`GOVA_AGENT_STALE_LOCK_MS`. To reclaim immediately:
+**A lock is stuck.** If its owning process is gone it is already stale and the
+next acquisition reclaims it. Otherwise it expires after
+`GOVA_AGENT_STALE_LOCK_MS`. To reclaim now:
 `npm run local-agent:coordination -- --action=recover-stale-locks`.
+
+**Jobs died with exit 143.** That is SIGTERM, not a code failure — a job timeout,
+a cancelled run, or the machine's out-of-memory killer. Check
+`npm run local-agent:doctor` for memory and swap headroom, then
+`npm run local-agent:cleanup` to reconcile records and reclaim locks and
+worktrees. Lower `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` or raise
+`GOVA_AGENT_MEMORY_FLOOR_MB` if it recurs.
 
 **An agent crashed mid-job.** Its heartbeat goes stale, its locks expire, and
 `npm run local-agent:cleanup` reclaims its worktree. Re-dispatch with a new

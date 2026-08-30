@@ -9,6 +9,12 @@ Restart=always
 RestartSec=10
 KillSignal=SIGINT
 TimeoutStopSec=30
+# Keep one runaway job inside its own cgroup. Without this the machine's
+# out-of-memory killer resolves memory pressure across the whole session, which
+# takes down several unrelated jobs at once; MemoryHigh throttles the offender
+# instead, and MemoryMax stops it before it reaches that point.
+MemoryHigh=3G
+MemoryMax=4G
 Environment=GOVA_LOCAL_WORKSPACE=/home/hesham/gova
 Environment=GOVA_LOCAL_SECRET_READ=local-only
 Environment=GOVA_LOCAL_SECRET_EXPORT=forbidden

@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **260**
+Keys: **263**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -140,7 +140,10 @@ Keys: **260**
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_TRACK` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
+| `GOVA_AGENT_ADMISSION_TIMEOUT_MS` | server-only | unknown | `scripts/tests/local-agent-control-plane.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_AGENT_COORDINATION_DIR` | server-only | unknown | `scripts/local-agent/paths.ts`, `scripts/tests/local-agent-control-plane.test.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | server-only | unknown | `scripts/tests/local-agent-control-plane.test.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `GOVA_AGENT_MEMORY_FLOOR_MB` | server-only | unknown | `scripts/tests/local-agent-control-plane.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_AGENT_STALE_LOCK_MS` | server-only | unknown | `scripts/local-agent/lock-store.ts`, `scripts/tests/local-agent-control-plane.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_LOCAL_WORKSPACE` | server-only | unknown | `scripts/local-agent/paths.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_RUNNER_POOL_DIR` | server-only | unknown | `scripts/local-agent/paths.ts` | unclassified | server-only | npm run runtime:check:changed |

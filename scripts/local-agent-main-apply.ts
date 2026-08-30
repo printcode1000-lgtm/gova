@@ -10,6 +10,7 @@ import { LockConflictError, acquireLock, releaseAgentLocks } from "./local-agent
 import { OperationLog } from "./local-agent/operation-log";
 import { coordinationDir, messagesDir, requestsDir } from "./local-agent/paths";
 import { patchSecretViolations } from "./local-agent/secret-paths";
+import { waitForAdmission } from "./local-agent/admission";
 import { prepareWorktree, removeWorktree, worktreeSlug } from "./local-agent/worktree";
 
 /**
@@ -117,6 +118,31 @@ process.once("exit", (code) => {
   releaseHeld();
 });
 
+/**
+ * Die tidily when something else decides this job is over.
+ *
+ * Node runs no `exit` handler for a default-handled signal, so a job killed from
+ * outside — the machine's out-of-memory killer, a job timeout, a cancelled run —
+ * would otherwise leave its locks held, its worktree on disk, and its record
+ * claiming to be in flight until the stale timeout expired. Catching the signal
+ * turns all three into a clean, correctly labelled failure, and re-raising it
+ * keeps the exit status honest: 128 plus the signal number, so `143` still reads
+ * as SIGTERM to everything downstream.
+ */
+for (const signal of ["SIGTERM", "SIGINT", "SIGHUP"] as const) {
+  process.once(signal, () => {
+    operation.record.terminatedBy = signal;
+    operation.record.failedCommand = operation.record.failedCommand ?? `terminated-by-${signal}`;
+    try {
+      operation.write("failed", 128 + (signal === "SIGINT" ? 2 : signal === "SIGHUP" ? 1 : 15));
+    } catch {
+      // Never let bookkeeping delay the exit.
+    }
+    releaseHeld();
+    process.exit(128 + (signal === "SIGINT" ? 2 : signal === "SIGHUP" ? 1 : 15));
+  });
+}
+
 function abort(message: string, exitCode = 1): never {
   console.error(message);
   operation.write("failed", exitCode);
@@ -156,6 +182,19 @@ operation.record.lockScopes = lockScopes.map((entry) => entry.scope);
 operation.record.recoveredStaleLockIds = recoveredStaleLockIds;
 operation.record.staleLockRecovered = recoveredStaleLockIds.length > 0;
 operation.write("running");
+
+// --- admission --------------------------------------------------------------
+
+const admission = waitForAdmission((reason, waitedMs) => {
+  console.log(`waiting for capacity: ${reason} (${Math.round(waitedMs / 1000)}s)`);
+});
+operation.record.admissionWaitMs = admission.waitedMs;
+if (!admission.admitted) {
+  abort(
+    `Refusing to start: ${admission.reason}. Nothing was touched; re-dispatch when the machine is quieter.`,
+  );
+}
+if (admission.waitedMs > 0) console.log(`admitted after ${Math.round(admission.waitedMs / 1000)}s`);
 
 // --- worktree ---------------------------------------------------------------
 

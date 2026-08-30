@@ -91,6 +91,23 @@ function statusColour(status: string): Colour {
   return status === "running" ? "cyan" : "red";
 }
 
+/**
+ * Memory headroom, shown in the header because it is the pool's real limit.
+ *
+ * An out-of-memory kill is the failure that takes several jobs down at once, so
+ * the number that predicts it belongs where it is seen without looking for it.
+ */
+function memoryLine(model: WatchModel, options: RenderOptions): string {
+  const reading = model.memory.reading;
+  if (!reading) return paint("memory: unreadable", "dim", options.color);
+  const tight = reading.availableMb < model.memory.floorMb;
+  const swapTight = reading.swapTotalMb > 0 && reading.swapFreeMb / reading.swapTotalMb <= 0.1;
+  const text =
+    `memory ${reading.availableMb}MB free of ${reading.totalMb}MB (floor ${model.memory.floorMb}MB)` +
+    (reading.swapTotalMb > 0 ? `   swap ${reading.swapFreeMb}MB of ${reading.swapTotalMb}MB free` : "");
+  return paint(text, tight || swapTight ? "red" : "dim", options.color);
+}
+
 function renderHeader(model: WatchModel, options: RenderOptions): string[] {
   const online = model.runners.filter((runner) => runner.githubStatus === "online").length;
   const busy = model.runners.filter((runner) => runner.busy).length;
@@ -119,10 +136,11 @@ function renderHeader(model: WatchModel, options: RenderOptions): string[] {
       options.color,
     ),
     paint(
-      `runners ${online}/${model.runners.length} online, ${busy} busy   agents ${activeAgents} active/${model.agents.length}   locks ${heldLocks}   running ${model.running.length}`,
+      `runners ${online}/${model.runners.length} online, ${busy} busy   agents ${activeAgents} active/${model.agents.length}   locks ${heldLocks}   running ${model.running.length}/${model.memory.budget}`,
       "dim",
       options.color,
     ),
+    memoryLine(model, options),
     "",
   ];
 }

@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 
 import { listAgents, type AgentSnapshot } from "./agent-registry";
+import { maxConcurrentMutations, memoryFloorMb, readMemory, type MemoryReading } from "./admission";
 import { gitSoft } from "./git";
 import type { ActiveJob, RunnerSummary } from "./github-api";
 import { listLocks, type LockSnapshot } from "./lock-store";
@@ -51,6 +52,7 @@ export interface WatchModel {
   messages: MessageRecord[];
   requests: RequestRecord[];
   worktrees: string[];
+  memory: { reading: MemoryReading | null; floorMb: number; budget: number };
   github: { enabled: boolean; error: string | null; lastPolledAt: number | null };
 }
 
@@ -137,6 +139,7 @@ export function buildWatchModel(github: GithubSample = EMPTY_GITHUB_SAMPLE, now 
     messages: listMessages({ limit: 8 }),
     requests: listRequests(8),
     worktrees: agentWorktrees(),
+    memory: { reading: readMemory(), floorMb: memoryFloorMb(), budget: maxConcurrentMutations() },
     github: { enabled: github.polledAt !== null, error: github.error, lastPolledAt: github.polledAt },
   };
 }

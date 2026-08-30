@@ -5,8 +5,9 @@ import { listAgents } from "./local-agent/agent-registry";
 import { gitSoft } from "./local-agent/git";
 import { listJsonFiles } from "./local-agent/json-store";
 import { recoverStaleLocks } from "./local-agent/lock-store";
+import { listOperations, reconcileOrphanedOperations } from "./local-agent/operation-log";
 import { agentsDir, inspectLogsDir, messagesDir, worktreesDir } from "./local-agent/paths";
-import { MAIN_WORKTREE_SLUG, pruneWorktrees } from "./local-agent/worktree";
+import { MAIN_WORKTREE_SLUG, pruneWorktrees, removeWorktree, worktreeSlug } from "./local-agent/worktree";
 
 /**
  * Reclaim what finished jobs left behind.
@@ -57,6 +58,12 @@ function pruneInspectLogs(ageMs: number, dryRun: boolean): string[] {
 function pruneStaleAgentWorktrees(dryRun: boolean): string[] {
   const removed: string[] = [];
   const live = new Set(listAgents().filter((agent) => agent.liveness !== "stale").map((agent) => agent.agentId));
+  // A worktree whose job is provably over can go immediately, whatever its age.
+  // Waiting out the retention window would keep a full checkout per killed job on
+  // disk, which is exactly the pressure that killed them.
+  const runningPids = new Set(
+    listOperations(200).filter((operation) => operation.status === "running").map((operation) => operation.pid),
+  );
   const root = worktreesDir();
   if (!existsSync(root)) return removed;
   for (const name of readdirSync(root)) {
@@ -64,9 +71,20 @@ function pruneStaleAgentWorktrees(dryRun: boolean): string[] {
     // recognised by prefix. The shared direct-main worktree is never pruned:
     // it is reused by the next serialized writer.
     if (name === MAIN_WORKTREE_SLUG) continue;
-    if ([...live].some((agentId) => name === agentId || name.startsWith(`${agentId}-`))) continue;
-    if (!olderThan(path.join(root, name), RETENTION_MS)) continue;
-    if (!dryRun) rmSync(path.join(root, name), { recursive: true, force: true });
+    // Ask the same function the job used, so a name the slug truncated still
+    // matches the operation that created it.
+    const owningOperation = listOperations(200).find(
+      (operation) =>
+        operation.targetMode === "branch" &&
+        worktreeSlug("branch", operation.agentId, operation.requestId ?? operation.runId) === name,
+    );
+    const finished = owningOperation !== undefined && owningOperation.status !== "running";
+    if (!finished) {
+      if ([...live].some((agentId) => name === agentId || name.startsWith(`${agentId}-`))) continue;
+      if (!olderThan(path.join(root, name), RETENTION_MS)) continue;
+    }
+    if (owningOperation && runningPids.has(owningOperation.pid) && !finished) continue;
+    if (!dryRun) removeWorktree(name);
     removed.push(name);
   }
   return removed;
@@ -76,6 +94,12 @@ function main(): void {
   const dryRun = argFlag("dry-run");
   const result = {
     dryRun,
+    // Reconcile first: a record left "running" by a killed job is what makes the
+    // monitor report work that is not happening, and its lock is reclaimed in the
+    // same pass because the owning process is provably gone.
+    abandonedOperations: dryRun
+      ? []
+      : reconcileOrphanedOperations().map((operation) => `${operation.agentId}:${operation.targetRef}`),
     recoveredLocks: dryRun ? [] : recoverStaleLocks(),
     prunedMessages: pruneFiles(messagesDir(), RETENTION_MS, dryRun),
     prunedAgents: pruneFiles(agentsDir(), RETENTION_MS, dryRun),

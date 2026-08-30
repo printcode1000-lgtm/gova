@@ -18129,6 +18129,19 @@
       ]
     },
     {
+      "id": "environment-key:GOVA_AGENT_ADMISSION_TIMEOUT_MS",
+      "kind": "environment-key",
+      "name": "GOVA_AGENT_ADMISSION_TIMEOUT_MS",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_agent_admission_timeout_ms",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:GOVA_AGENT_COORDINATION_DIR",
       "kind": "environment-key",
       "name": "GOVA_AGENT_COORDINATION_DIR",
@@ -18136,6 +18149,32 @@
       "tags": [
         "environment",
         "gova_agent_coordination_dir",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:GOVA_AGENT_MAX_CONCURRENT_MUTATIONS",
+      "kind": "environment-key",
+      "name": "GOVA_AGENT_MAX_CONCURRENT_MUTATIONS",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_agent_max_concurrent_mutations",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:GOVA_AGENT_MEMORY_FLOOR_MB",
+      "kind": "environment-key",
+      "name": "GOVA_AGENT_MEMORY_FLOOR_MB",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_agent_memory_floor_mb",
         "server",
         "server tooling environment",
         "tooling"
@@ -26956,6 +26995,17 @@
       "tags": [
         "scripts/local-agent-watch",
         "scripts/local-agent-watch.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/admission.ts",
+      "kind": "script",
+      "name": "admission.ts",
+      "path": "scripts/local-agent/admission.ts",
+      "tags": [
+        "scripts/local-agent/admission",
+        "scripts/local-agent/admission.ts",
         "ts"
       ]
     },

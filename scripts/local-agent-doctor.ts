@@ -6,6 +6,8 @@ import { listAgents } from "./local-agent/agent-registry";
 import { gitSoft } from "./local-agent/git";
 import { hasGithubToken, listRunners, workflowExists } from "./local-agent/github-api";
 import { listLocks } from "./local-agent/lock-store";
+import { listOperations } from "./local-agent/operation-log";
+import { maxConcurrentMutations, memoryFloorMb, readMemory } from "./local-agent/admission";
 import {
   RUNNER_DIRECTORY_NAMES,
   RUNNER_GITHUB_NAMES,
@@ -165,6 +167,51 @@ function checkCoordinationState(): void {
   record("requests", "PASS", `${requests.length} recorded, ${failed.length} rejected or failed.`);
 }
 
+/**
+ * Memory headroom.
+ *
+ * The pool's worst failure mode is not a crash but an out-of-memory kill: the
+ * machine resolves pressure by sending SIGTERM across the session, several jobs
+ * die at once, and their locks and worktrees outlive them. Reporting the headroom
+ * makes that visible before it happens rather than after.
+ */
+function checkMemory(): void {
+  const memory = readMemory();
+  if (!memory) {
+    record("memory", "WARN", "/proc/meminfo is unreadable; admission control cannot see memory pressure.");
+    return;
+  }
+  const floor = memoryFloorMb();
+  assert(
+    "memory.available",
+    memory.availableMb >= floor,
+    `${memory.availableMb}MB available of ${memory.totalMb}MB (floor ${floor}MB).`,
+    `only ${memory.availableMb}MB available of ${memory.totalMb}MB; mutations wait below ${floor}MB.`,
+    "WARN",
+  );
+  if (memory.swapTotalMb > 0) {
+    const swapFreeRatio = memory.swapFreeMb / memory.swapTotalMb;
+    assert(
+      "memory.swap",
+      swapFreeRatio > 0.1,
+      `${memory.swapFreeMb}MB of ${memory.swapTotalMb}MB swap free.`,
+      `swap is ${Math.round((1 - swapFreeRatio) * 100)}% used (${memory.swapFreeMb}MB free of ${memory.swapTotalMb}MB); the machine is close to an out-of-memory kill.`,
+      "WARN",
+    );
+  }
+  record("memory.budget", "PASS", `at most ${maxConcurrentMutations()} concurrent mutation(s).`);
+}
+
+function checkAbandonedOperations(): void {
+  const abandoned = listOperations(200).filter((operation) => operation.abandoned === true);
+  const running = listOperations(200).filter((operation) => operation.status === "running");
+  record(
+    "operations.in-flight",
+    "PASS",
+    `${running.length} running, ${abandoned.length} previously abandoned and reconciled.`,
+  );
+}
+
 function checkToolchain(): void {
   const node = process.version;
   const major = Number(node.replace("v", "").split(".")[0]);
@@ -207,6 +254,8 @@ async function main(): Promise<void> {
   checkGitState();
   checkCoordinationState();
   checkToolchain();
+  checkMemory();
+  checkAbandonedOperations();
   await checkGithub();
 
   const width = Math.max(...checks.map((check) => check.name.length));

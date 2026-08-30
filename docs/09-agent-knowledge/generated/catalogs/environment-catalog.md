@@ -138,7 +138,10 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_TRACK` | server/tooling | 0 |  |
+| `GOVA_AGENT_ADMISSION_TIMEOUT_MS` | server/tooling | 1 | `scripts/tests/local-agent-control-plane.test.ts` |
 | `GOVA_AGENT_COORDINATION_DIR` | server/tooling | 2 | `scripts/local-agent/paths.ts`, `scripts/tests/local-agent-control-plane.test.ts` |
+| `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | server/tooling | 1 | `scripts/tests/local-agent-control-plane.test.ts` |
+| `GOVA_AGENT_MEMORY_FLOOR_MB` | server/tooling | 1 | `scripts/tests/local-agent-control-plane.test.ts` |
 | `GOVA_AGENT_STALE_LOCK_MS` | server/tooling | 2 | `scripts/local-agent/lock-store.ts`, `scripts/tests/local-agent-control-plane.test.ts` |
 | `GOVA_LOCAL_WORKSPACE` | server/tooling | 1 | `scripts/local-agent/paths.ts` |
 | `GOVA_RUNNER_POOL_DIR` | server/tooling | 1 | `scripts/local-agent/paths.ts` |

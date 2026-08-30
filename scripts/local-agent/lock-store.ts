@@ -81,8 +81,37 @@ export function ageOf(record: LockRecord, now = Date.now()): number {
   return Number.isFinite(acquiredMs) ? now - acquiredMs : Number.POSITIVE_INFINITY;
 }
 
+/**
+ * Is the process that took this lock still alive?
+ *
+ * Only meaningful for a lock taken on this machine, so the host is checked
+ * first — a pid from another host says nothing about a pid here. `EPERM` counts
+ * as alive: the process exists, it just is not ours to signal.
+ */
+export function ownerIsAlive(record: LockRecord): boolean | null {
+  if (record.host !== hostname() || typeof record.pid !== "number") return null;
+  try {
+    process.kill(record.pid, 0);
+    return true;
+  } catch (error) {
+    return (error as NodeJS.ErrnoException).code === "EPERM";
+  }
+}
+
+/**
+ * A lock is stale when its TTL has passed *or* when the process that took it is
+ * gone.
+ *
+ * The TTL alone is a poor guard against a job killed mid-flight: an
+ * out-of-memory kill or a cancelled run leaves the lock behind, and every other
+ * agent then waits out the full TTL for a holder that no longer exists. Checking
+ * the owning process turns that ninety-minute wait into an immediate reclaim,
+ * while the TTL still covers the cases a pid cannot — a lock from another host,
+ * or a pid that has been recycled.
+ */
 export function isStale(record: LockRecord, now = Date.now()): boolean {
-  return ageOf(record, now) > (record.ttlMs || staleLockMs());
+  if (ageOf(record, now) > (record.ttlMs || staleLockMs())) return true;
+  return ownerIsAlive(record) === false;
 }
 
 export function listLocks(now = Date.now()): LockSnapshot[] {

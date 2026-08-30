@@ -1,7 +1,7 @@
 import { hostname } from "node:os";
 import path from "node:path";
 
-import { readJsonDir, safeIdentifier, writeJsonFile } from "./json-store";
+import { listJsonFiles, readJsonDir, readJsonFile, safeIdentifier, writeJsonFile } from "./json-store";
 import { operationLogsDir } from "./paths";
 
 /**
@@ -41,6 +41,12 @@ export interface OperationRecord {
   status: OperationStatus;
   exitCode: number | null;
   failedCommand: string | null;
+  /** Set when the job was killed by a signal rather than failing on its own. */
+  terminatedBy: string | null;
+  /** Set when the record was closed out by reconciliation, not by the job. */
+  abandoned?: boolean;
+  /** How long the job waited for memory and a concurrency slot before starting. */
+  admissionWaitMs?: number;
 }
 
 export interface OperationLogInit {
@@ -89,6 +95,7 @@ export class OperationLog {
       status: "running",
       exitCode: null,
       failedCommand: null,
+      terminatedBy: null,
     };
     const name = `${safeIdentifier(init.targetRef, 80)}-${safeIdentifier(init.runId, 32)}.json`;
     this.filePath = path.join(operationLogsDir(), name);
@@ -113,4 +120,44 @@ export function listOperations(limit = 50): OperationRecord[] {
   return readJsonDir<OperationRecord>(operationLogsDir())
     .sort((left, right) => right.startedAt.localeCompare(left.startedAt))
     .slice(0, limit);
+}
+
+function processIsAlive(record: OperationRecord): boolean | null {
+  if (record.host !== hostname() || typeof record.pid !== "number") return null;
+  try {
+    process.kill(record.pid, 0);
+    return true;
+  } catch (error) {
+    return (error as NodeJS.ErrnoException).code === "EPERM";
+  }
+}
+
+/**
+ * Close out records left `running` by a job that died without an epilogue.
+ *
+ * A process killed outright — an out-of-memory SIGTERM, a cancelled run — never
+ * gets to write its own ending, so its record claims to be in flight forever and
+ * the monitor and the snapshot both report work that is not happening. Anything
+ * whose process is provably gone is marked `abandoned` here, which is what keeps
+ * "in flight" meaning in flight.
+ */
+export function reconcileOrphanedOperations(): OperationRecord[] {
+  const reconciled: OperationRecord[] = [];
+  // Rewrite each record in the file it was read from. Recomputing the name from
+  // its fields would leave the original behind still claiming to be running.
+  for (const filePath of listJsonFiles(operationLogsDir())) {
+    const record = readJsonFile<OperationRecord>(filePath);
+    if (!record || record.status !== "running") continue;
+    if (processIsAlive(record) !== false) continue;
+    const updated: OperationRecord = {
+      ...record,
+      status: "failed",
+      abandoned: true,
+      completedAt: record.completedAt ?? new Date().toISOString(),
+      failedCommand: record.failedCommand ?? "process-terminated-without-epilogue",
+    };
+    writeJsonFile(filePath, updated);
+    reconciled.push(updated);
+  }
+  return reconciled;
 }
