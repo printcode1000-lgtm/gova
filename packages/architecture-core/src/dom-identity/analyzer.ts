@@ -103,7 +103,8 @@ function isCanonicalLiteralDescriptor(expression: ts.Expression | undefined): bo
 function spreadRegistrationKind(property: ts.JsxSpreadAttribute): UiRegistrationKind | null {
   const expression = property.expression;
   if (!ts.isCallExpression(expression) || !ts.isIdentifier(expression.expression)) return null;
-  if (expression.expression.text !== 'uiAttributes' && expression.expression.text !== 'uiPageAttributes') return null;
+  const callName = expression.expression.text;
+  if (callName !== 'uiAttributes' && callName !== 'uiPageAttributes' && callName !== 'uiForwardedAttributes') return null;
   const descriptor = expression.arguments[0];
   if (isCanonicalLiteralDescriptor(descriptor)) return 'literal';
   if (descriptor && ts.isIdentifier(descriptor) && descriptor.text === 'ui') return 'forwarded';

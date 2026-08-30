@@ -129,6 +129,7 @@ export function WorkingHoursCard({ id,
           count: day.open ? day.periods.length : undefined,
         }))}
         selectedId={selectedDayId}
+        itemUi={{ uid: "profile-working-hours.day-tab-5Kt9RM", id: "profile-working-hours.day-tab", kind: "item" }}
         onSelect={(dayId) => setSelectedDayId(dayId as WorkingDayId)}
       />
 

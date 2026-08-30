@@ -32,6 +32,7 @@ export {
   uiInstanceIdRejectionReason,
 } from "./domain/ui-instance";
 export { uiAttributes } from "./domain/ui-attributes";
+export { uiForwardedAttributes } from "./domain/ui-forwarded-attributes";
 export { uiComponentAttributes } from "./domain/ui-component-attributes";
 export { uiPageAttributes } from "./domain/ui-page-attributes";
 export { uiPageContextAttributes } from "./domain/ui-page-context-attributes";

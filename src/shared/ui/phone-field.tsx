@@ -19,8 +19,7 @@ import {
 import type { UiDescriptor } from "@asol/ui-registry-core";
 
 import { PhoneCountryDialog } from "./phone-country-dialog";
-import { uiPrimitiveAttributes } from "./ui-primitive-attributes";
-import { uiAttributes } from "@asol/ui-registry-core";
+import { uiAttributes, uiForwardedAttributes } from "@asol/ui-registry-core";
 
 export type { PhoneFieldLabels };
 
@@ -29,7 +28,7 @@ export interface PhoneFieldProps {
   value: string;
   labels: PhoneFieldLabels;
   id?: string;
-  ui?: UiDescriptor;
+  ui: UiDescriptor;
   disabled?: boolean;
   invalid?: boolean;
   className?: string;
@@ -125,7 +124,7 @@ export function PhoneField({
           invalid && "border-error",
           inputClassName,
         )}
-        {...uiPrimitiveAttributes("input", ui, disabled ? "disabled" : undefined)}
+        {...uiForwardedAttributes(ui, undefined, disabled ? "disabled" : undefined)}
       />
       <PhoneCountryDialog
         open={isPickerOpen}

@@ -145,6 +145,7 @@ export function ProfileProductsTabs({ id,
         level="main"
         selectedId={selectedMainId}
         snapshotId={`profile-products-main-${mode}-${ownerUid}`}
+        itemUi={{ uid: "profile-products.main-tab-4Qm8ZK", id: "profile-products.main-tab", kind: "item" }}
         onSelect={onSelectMain}
       />
 
@@ -159,6 +160,7 @@ export function ProfileProductsTabs({ id,
           level="sub"
           selectedId={selectedSubId}
           snapshotId={`profile-products-sub-${mode}-${ownerUid}`}
+          itemUi={{ uid: "profile-products.sub-tab-7Nv2XP", id: "profile-products.sub-tab", kind: "item" }}
           onSelect={onSelectSub}
         />
       ) : null}

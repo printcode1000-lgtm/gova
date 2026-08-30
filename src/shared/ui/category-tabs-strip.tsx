@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, uiAttributes, uiForwardedAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 
 export interface CategoryTabsStripItem {
   id: string;
@@ -20,7 +20,7 @@ interface CategoryTabsStripProps {
   selectedId: string;
   level?: CategoryTabsStripLevel;
   snapshotId?: string;
-  itemUi?: UiDescriptor;
+  itemUi: UiDescriptor;
   onSelect: (id: string) => void;
 }
 
@@ -64,7 +64,7 @@ export function CategoryTabsStrip({
   selectedId,
   level = "main",
   snapshotId,
-  itemUi,
+  itemUi: ui,
   onSelect,
 }: CategoryTabsStripProps & { id?: string }) {
   const style = LEVEL_STYLE[level];
@@ -79,7 +79,7 @@ export function CategoryTabsStrip({
       {items.map((item) => (
         <button
           key={item.id}
-          {...(itemUi ? uiAttributes(itemUi) : {})}
+          {...uiForwardedAttributes(ui, createOpaqueUiInstanceId("category-tab", item.id))}
           type="button"
           aria-pressed={item.id === selectedId}
           onClick={() => onSelect(item.id)}

@@ -81,7 +81,7 @@ function rootSpreadsIdentifier(
   );
 }
 
-const UI_REGISTRY_CALL_NAMES = new Set(['uiAttributes', 'uiComponentAttributes', 'uiPrimitiveAttributes']);
+const UI_REGISTRY_CALL_NAMES = new Set(['uiAttributes', 'uiComponentAttributes', 'uiPrimitiveAttributes', 'uiForwardedAttributes']);
 
 function callReferencesBinding(call: ts.CallExpression, uiBindingName: string): boolean {
   for (const argument of call.arguments) {

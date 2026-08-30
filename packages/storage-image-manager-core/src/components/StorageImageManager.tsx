@@ -11,7 +11,7 @@ import {
 import { NativeCore } from "@asol/native-core";
 import { useStorageProfileUpload } from "../hooks/use-storage-profile-upload";
 import { imageUploadQueue } from "../services/image-upload-queue";
-import { isUiUid, uiAttributes, type UiDescriptor } from "@asol/ui-registry-core";
+import { createOpaqueUiInstanceId, isUiUid, uiAttributes, uiForwardedAttributes, type UiDescriptor } from "@asol/ui-registry-core";
 import {
   buildImageUploadDraftKey,
   createImageUploadDraft,
@@ -286,6 +286,8 @@ const StorageImageSlot = React.forwardRef<
   onPreviewChange,
 }, ref) {
   const t = translate ?? defaultTranslate;
+  const slotUiInstance = createOpaqueUiInstanceId("storage-image-slot", `${config.id}:${index}`);
+  const ui = index === 0 ? config.ui : undefined;
   const inputRef = React.useRef<HTMLInputElement>(null);
   const cameraInputRef = React.useRef<HTMLInputElement>(null);
   const imageRef = React.useRef<HTMLImageElement>(null);
@@ -841,6 +843,19 @@ const StorageImageSlot = React.forwardRef<
     }
   };
 
+  const handleDeviceFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    traceStorageImageManager(config.id, "web-file-input-changed", {
+      index,
+      selected: Boolean(file),
+    });
+    if (file && canChoose) {
+      setStage("selecting");
+      void processFile(file);
+    }
+    event.target.value = "";
+  };
+
   const removeCurrent = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -998,26 +1013,27 @@ const StorageImageSlot = React.forwardRef<
         </DropdownMenu.Root>
       )}
 
-      <input
-        ref={inputRef}
-        {...(index === 0 && config.ui ? uiAttributes(config.ui) : {})}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(event) => {
-          const file = event.target.files?.[0];
-          traceStorageImageManager(config.id, "web-file-input-changed", {
-            index,
-            selected: Boolean(file),
-          });
-          if (file && canChoose) {
-            setStage("selecting");
-            void processFile(file);
-          }
-          event.target.value = "";
-        }}
-        disabled={busy}
-      />
+      {ui ? (
+        <input
+          ref={inputRef}
+          {...uiForwardedAttributes(ui, slotUiInstance)}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleDeviceFileChange}
+          disabled={busy}
+        />
+      ) : (
+        <input
+          ref={inputRef}
+          {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.input.2-K7mQ4P", id: "packages.storage-image-manager-core.storage-image-manager.input.2", instance: slotUiInstance })}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleDeviceFileChange}
+          disabled={busy}
+        />
+      )}
 
       <input {...uiAttributes({ uid: "packages.storage-image-manager-core.storage-image-manager.input-MPqO1Y", id: "packages.storage-image-manager-core.storage-image-manager.input" })}
         ref={cameraInputRef}

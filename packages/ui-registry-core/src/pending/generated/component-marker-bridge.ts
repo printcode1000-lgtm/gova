@@ -24,7 +24,7 @@ export const COMPONENT_MARKER_BRIDGE: Readonly<Record<string, readonly string[]>
   "dropdown-menu-label": ["DropdownMenuLabel"],
   "dropdown-menu-separator": ["DropdownMenuSeparator"],
   "dropdown-menu-shortcut": ["DropdownMenuShortcut"],
-  "input": ["Input", "PhoneField"],
+  "input": ["Input"],
   "label": ["Label"],
   "loading-spinner": ["LoadingSpinner"],
   "progress": ["Progress"],
