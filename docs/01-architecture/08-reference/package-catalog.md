@@ -140,7 +140,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/data-core/` |
 | **Purpose** | Database access, sharding, and domain repositories |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./control-ota` · `./control-system-logs` · `./data-health` · `./dev-cloud-backup` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./ota-runtime` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` |
+| **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./control-ota` · `./control-release-state` · `./control-system-logs` · `./data-health` · `./dev-cloud-backup` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./ota-runtime` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` |
 | **Infrastructure Privileges** | `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `drizzle-orm/better-sqlite3`, `drizzle-orm/libsql` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:data-core` |
@@ -630,7 +630,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/vercel-deploy-core/` |
 | **Purpose** | Vercel deployment orchestration |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./github-push-identity` · `./release-rollback` · `./remote-deploy-contracts` · `./remote-deploy-sandbox` |
+| **Public Exports** | `.` · `./github-push-identity` · `./release-rollback` · `./release-state` · `./remote-deploy-contracts` · `./remote-deploy-sandbox` |
 | **Infrastructure Privileges** | `@vercel/sandbox`, `jose` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:vercel-deploy-core` |

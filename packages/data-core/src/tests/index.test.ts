@@ -58,6 +58,7 @@ const EXPECTED_DOORS = [
   // System Logs persistence for the control runtime: the exact profile-shard
   // adapter, with no other data source reachable from it.
   './control-system-logs',
+  './control-release-state',
   './password-recovery',
   './pharmacy-profile-catalog',
   './product',

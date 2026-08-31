@@ -42,7 +42,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_CATALOG_PUBLIC_ROOT` | server/tooling | 1 | `packages/catalog-core/src/server/validate-catalog-v3.ts` |
 | `ASOL_CATALOG_ROOT` | server/tooling | 1 | `packages/catalog-core/src/server/validate-catalog-v3.ts` |
 | `ASOL_CONTROL_SMOKE_PORT` | server/tooling | 1 | `scripts/smoke-control-service.ts` |
-| `ASOL_CORS_ORIGINS` | server/tooling | 2 | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts` |
+| `ASOL_CORS_ORIGINS` | server/tooling | 4 | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts`, `src/core/config/cors-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `ASOL_DATA_SOURCE` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
 | `ASOL_DEPLOY_CALLBACK_SECRET` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_DEPLOY_CALLBACK_URL` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
@@ -78,7 +78,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_REMOTE_DEPLOY_REQUEST_ID` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_REMOTE_DEPLOY_SANDBOX` | server/tooling | 2 | `scripts/check-environment-requirements.ts`, `services/control/src/app/api/health/route.ts` |
 | `ASOL_REMOTE_DEPLOY_SANDBOX_NAME` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
-| `ASOL_RUNTIME_ROLE` | server/tooling | 1 | `src/core/config/runtime-role.ts` |
+| `ASOL_RUNTIME_ROLE` | server/tooling | 2 | `scripts/vercel-deployment-build.ts`, `src/core/config/runtime-role.ts` |
 | `ASOL_SCHEMA_SYNC_EXACT` | server/tooling | 1 | `scripts/schema-sync.ts` |
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server/tooling | 2 | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` |
 | `ASOL_SERVICE_SMOKE_ONLY` | server/tooling | 1 | `scripts/check-service-smoke.ts` |

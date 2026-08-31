@@ -23,11 +23,38 @@ import {
   resolveDeploymentRepository,
   validateGitHubPushClaims,
 } from '../github-push-identity';
+import {
+  RELEASE_WORKLOADS,
+  applyReleaseStateMutation,
+  releaseReadinessStatusFromStore,
+  releaseStateIsReady,
+  type DurableReleaseState,
+  type ReleaseStateStore,
+} from '../release-state';
 
 function assert(condition: boolean, message: string): void {
   if (!condition) {
     throw new Error(`Assertion failed: ${message}`);
   }
+}
+
+class MemoryReleaseStateStore implements ReleaseStateStore {
+  private readonly states = new Map<string, DurableReleaseState>();
+
+  async read(revision: string): Promise<DurableReleaseState | null> {
+    return this.states.get(revision) ?? null;
+  }
+
+  async write(state: DurableReleaseState, expectedVersion: number | null): Promise<DurableReleaseState> {
+    const current = this.states.get(state.revision);
+    if ((current?.version ?? null) !== expectedVersion) throw new Error('releaseStateVersionConflict');
+    this.states.set(state.revision, state);
+    return state;
+  }
+}
+
+function passed(evidence: string) {
+  return { status: 'passed' as const, smokeStatus: 'passed' as const, evidence };
 }
 
 async function runTests(): Promise<void> {
@@ -215,6 +242,80 @@ async function runTests(): Promise<void> {
     'Automated revision deploys verify ancestry and check out the authenticated SHA',
   );
   console.log('  ✔ Release checkout survives a shallow, detached clone.');
+
+  const releaseStore = new MemoryReleaseStateStore();
+  const revision = 'b'.repeat(40);
+  const fullWorkloads = Object.fromEntries(
+    RELEASE_WORKLOADS.map((name) => [name, passed(`${name} deployment and smoke passed`)]),
+  );
+
+  let releaseState = await applyReleaseStateMutation(releaseStore, {
+    revision,
+    runId: 'bootstrap-control',
+    operationId: 'bootstrap-control',
+    source: 'bootstrap',
+    control: passed('candidate control deployed and smoked'),
+    readinessEvidence: ['bootstrap control can create the first durable release row'],
+  });
+  assert(!releaseStateIsReady(releaseState), 'First bootstrap release alone is not ready');
+  assert(await releaseReadinessStatusFromStore(releaseStore, revision) === 'pending', 'Bootstrap-only state is pending');
+
+  releaseState = await applyReleaseStateMutation(releaseStore, {
+    revision,
+    runId: 'sandbox-release',
+    operationId: 'sandbox-terminal',
+    source: 'sandbox',
+    workloads: fullWorkloads,
+    readinessEvidence: ['sandbox-driven full release wrote all workload results'],
+  });
+  assert(releaseState.status === 'ready', 'Exact-SHA ready transition requires control and six workloads');
+  assert(await releaseReadinessStatusFromStore(releaseStore, revision) === 'ready', 'Ready state reads after process disappearance');
+
+  const duplicate = await applyReleaseStateMutation(releaseStore, {
+    revision,
+    runId: 'sandbox-release',
+    operationId: 'sandbox-terminal',
+    source: 'sandbox',
+    failureDetails: ['duplicate must not change state'],
+  });
+  assert(duplicate.version === releaseState.version, 'Duplicate callback/write is idempotent');
+
+  const staleRevision = 'c'.repeat(40);
+  assert(await releaseReadinessStatusFromStore(releaseStore, staleRevision) === 'pending', 'Stale SHA cannot satisfy another revision');
+
+  const partialStore = new MemoryReleaseStateStore();
+  await applyReleaseStateMutation(partialStore, {
+    revision: 'd'.repeat(40),
+    runId: 'partial',
+    operationId: 'partial-control',
+    source: 'sandbox',
+    control: passed('control passed'),
+    workloads: { notifications: passed('one workload passed') },
+  });
+  assert(await releaseReadinessStatusFromStore(partialStore, 'd'.repeat(40)) === 'pending', 'Partial six-service success is not ready');
+
+  const controlFailureStore = new MemoryReleaseStateStore();
+  await applyReleaseStateMutation(controlFailureStore, {
+    revision: 'e'.repeat(40),
+    runId: 'control-failure',
+    operationId: 'control-failure',
+    source: 'sandbox',
+    control: { status: 'failed', smokeStatus: 'failed', failure: 'control failed' },
+    failureDetails: ['control failed'],
+  });
+  assert(await releaseReadinessStatusFromStore(controlFailureStore, 'e'.repeat(40)) === 'failed', 'Control failure persists');
+
+  const rollbackStore = new MemoryReleaseStateStore();
+  const rolledBack = await applyReleaseStateMutation(rollbackStore, {
+    revision: 'f'.repeat(40),
+    runId: 'rollback',
+    operationId: 'rollback',
+    source: 'cli',
+    rollback: { status: 'passed', evidence: 'previous deployment restored', updatedAt: new Date().toISOString() },
+  });
+  assert(rolledBack.status === 'rolled_back', 'Rollback result persists');
+  assert(await releaseReadinessStatusFromStore(rollbackStore, 'f'.repeat(40)) === 'failed', 'Rolled back release is not ready');
+  console.log('  ✔ Durable exact-SHA release state covers bootstrap, sandbox, disappearance, duplicates, stale SHA, partials, failures, rollback, and ready.');
 
   console.log('\n✅ All @asol/vercel-deploy-core tests passed successfully!');
 }

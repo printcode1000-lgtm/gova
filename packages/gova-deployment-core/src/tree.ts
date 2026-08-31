@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 /**
@@ -39,11 +39,41 @@ export const GOVA_OMITTED_APP_TREES = [
   'src/app/dev',
 ] as const;
 
+export const GOVA_OMITTED_FILES = [] as const;
+
+const GOVA_VIEW_FILE_OVERRIDES: Record<string, string> = {
+  'src/app/s/product/page.tsx': `import { Suspense } from "react";
+
+import { ProductPageContent } from "@/features/product/ui";
+
+export default function ProductSharePage() {
+  return (
+    <Suspense fallback={null}>
+      <ProductPageContent id="s.product.page.product-page-content" initialProduct={null} />
+    </Suspense>
+  );
+}
+`,
+  'src/app/s/profile/page.tsx': `import { Suspense } from "react";
+
+import { ProfilePageContent } from "@/features/profile/ui";
+
+export default function ProfileSharePage() {
+  return (
+    <Suspense fallback={null}>
+      <ProfilePageContent id="s.profile.page.profile-page-content" initialPublicProfile={null} />
+    </Suspense>
+  );
+}
+`,
+};
+
 /** What gova still answers itself. Everything else under `/api` is a redirect. */
 export const GOVA_KEPT_API_ROUTES = ['health'] as const;
 
 export interface GovaDeploymentManifest {
   omittedTrees: readonly string[];
+  omittedFiles: readonly string[];
   keptApiRoutes: readonly string[];
   /** Repository-relative paths of every route module the view omits, sorted. */
   omittedRouteModules: readonly string[];
@@ -80,6 +110,7 @@ export function govaDeploymentManifest(root: string): GovaDeploymentManifest {
   );
   return {
     omittedTrees: GOVA_OMITTED_APP_TREES,
+    omittedFiles: GOVA_OMITTED_FILES,
     keptApiRoutes: GOVA_KEPT_API_ROUTES,
     omittedRouteModules: all.filter((file) => !kept.has(file)).sort(),
     keptRouteModules: [...kept].sort(),
@@ -108,14 +139,27 @@ const COPY_IGNORED = new Set([
   GOVA_DEPLOYMENT_DIR,
 ]);
 
-function copyTree(source: string, destination: string): void {
+function copyTree(source: string, destination: string, root = source): void {
   mkdirSync(destination, { recursive: true });
   for (const entry of readdirSync(source, { withFileTypes: true })) {
-    if (COPY_IGNORED.has(entry.name)) continue;
     const from = path.join(source, entry.name);
+    const relative = path.relative(root, from).split(path.sep).join('/');
+    if (COPY_IGNORED.has(entry.name) && !relative.includes('/')) continue;
+    if (relative === 'services') continue;
     const to = path.join(destination, entry.name);
-    if (entry.isDirectory()) copyTree(from, to);
+    if (entry.isDirectory()) copyTree(from, to, root);
     else cpSync(from, to);
+  }
+}
+
+function linkWorkspacePackages(target: string): void {
+  const packagesRoot = path.join(target, 'packages');
+  const scopeRoot = path.join(target, 'node_modules', '@asol');
+  if (!existsSync(packagesRoot)) return;
+  mkdirSync(scopeRoot, { recursive: true });
+  for (const entry of readdirSync(packagesRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    symlinkSync(path.join('..', '..', 'packages', entry.name), path.join(scopeRoot, entry.name), 'dir');
   }
 }
 
@@ -134,6 +178,9 @@ export function buildGovaDeploymentTree(root: string): GovaDeploymentManifest {
   for (const tree of GOVA_OMITTED_APP_TREES) {
     rmSync(path.join(target, tree), { recursive: true, force: true });
   }
+  for (const file of GOVA_OMITTED_FILES) {
+    rmSync(path.join(target, file), { force: true });
+  }
   for (const route of GOVA_KEPT_API_ROUTES) {
     const source = path.join(root, 'src/app/api', route);
     if (!existsSync(source)) throw new Error(`gova keeps ${route} but it does not exist`);
@@ -141,6 +188,12 @@ export function buildGovaDeploymentTree(root: string): GovaDeploymentManifest {
     mkdirSync(path.dirname(destination), { recursive: true });
     cpSync(source, destination, { recursive: true });
   }
+  for (const [file, content] of Object.entries(GOVA_VIEW_FILE_OVERRIDES)) {
+    const destination = path.join(target, file);
+    mkdirSync(path.dirname(destination), { recursive: true });
+    writeFileSync(destination, content, 'utf8');
+  }
+  linkWorkspacePackages(target);
 
   const manifest = govaDeploymentManifest(root);
   writeFileSync(

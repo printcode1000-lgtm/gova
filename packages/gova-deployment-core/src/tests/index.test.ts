@@ -23,6 +23,8 @@ function fixtureRepository(): string {
   write(path.join(root, 'src/app/api/products/route.ts'));
   write(path.join(root, 'src/app/api/dev/catalog-studio/route.ts'));
   write(path.join(root, 'src/app/page.tsx'), 'export default function Page() { return null; }\n');
+  write(path.join(root, 'packages/gova-deployment-core/package.json'), '{"name":"@asol/gova-deployment-core","exports":{".":"./src/index.ts"}}\n');
+  write(path.join(root, 'packages/gova-deployment-core/src/index.ts'), 'export {}\n');
   write(path.join(root, 'public/logo.png'), 'png');
   write(path.join(root, 'package.json'), '{}\n');
   return root;
@@ -33,10 +35,14 @@ function fixtureRepository(): string {
   const root = fixtureRepository();
   const manifest = buildGovaDeploymentTree(root);
   const view = path.join(root, GOVA_DEPLOYMENT_DIR);
+  write(path.join(root, 'src/proxy.ts'));
+  buildGovaDeploymentTree(root);
 
   assert.ok(existsSync(path.join(view, 'src/app/api/health/route.ts')), 'health must survive');
   assert.ok(existsSync(path.join(view, 'src/app/page.tsx')), 'pages must survive');
   assert.ok(existsSync(path.join(view, 'public/logo.png')), 'static assets must survive');
+  assert.ok(existsSync(path.join(view, 'src/proxy.ts')), 'gova compatibility proxy must survive');
+  assert.ok(existsSync(path.join(view, 'node_modules/@asol/gova-deployment-core')), 'workspace packages resolve inside the view');
 
   for (const omitted of [
     'src/app/api/super-admin/build-jobs/route.ts',

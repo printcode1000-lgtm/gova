@@ -99,6 +99,7 @@ export interface StartRemoteDeployAllInput {
 export interface RemoteDeployAllCallbackInput {
   snapshot: RemoteDeployAllSnapshot;
   logTail: string;
+  releaseStateMutation?: import("./release-state").ReleaseStateMutation;
 }
 
 export function isRemoteDeployAllTerminal(status: RemoteDeployAllStatus): boolean {

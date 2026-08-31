@@ -27,6 +27,33 @@
         "./src/*",
         "./generated/src/*"
       ],
+      "@asol/account-declarations": [
+        "./generated/packages/account-declarations/src/index.ts"
+      ],
+      "@asol/account-declarations/gova": [
+        "./generated/packages/account-declarations/src/accounts/gova.ts"
+      ],
+      "@asol/account-declarations/control": [
+        "./generated/packages/account-declarations/src/accounts/control.ts"
+      ],
+      "@asol/account-declarations/notifications": [
+        "./generated/packages/account-declarations/src/accounts/notifications.ts"
+      ],
+      "@asol/account-declarations/products": [
+        "./generated/packages/account-declarations/src/accounts/products.ts"
+      ],
+      "@asol/account-declarations/orders": [
+        "./generated/packages/account-declarations/src/accounts/orders.ts"
+      ],
+      "@asol/account-declarations/profiles": [
+        "./generated/packages/account-declarations/src/accounts/profiles.ts"
+      ],
+      "@asol/account-declarations/submain": [
+        "./generated/packages/account-declarations/src/accounts/submain.ts"
+      ],
+      "@asol/account-declarations/sub2main": [
+        "./generated/packages/account-declarations/src/accounts/sub2main.ts"
+      ],
       "@asol/auth-core": [
         "./generated/packages/auth-core/src/index.ts"
       ],
@@ -71,6 +98,9 @@
       ],
       "@asol/data-core/control-system-logs": [
         "./generated/packages/data-core/src/control-system-logs.ts"
+      ],
+      "@asol/data-core/control-release-state": [
+        "./generated/packages/data-core/src/control-release-state.ts"
       ],
       "@asol/data-core/control-ota": [
         "./generated/packages/data-core/src/control-ota.ts"
@@ -278,6 +308,9 @@
       ],
       "@asol/vercel-deploy-core/release-rollback": [
         "./generated/packages/vercel-deploy-core/src/release-rollback.ts"
+      ],
+      "@asol/vercel-deploy-core/release-state": [
+        "./generated/packages/vercel-deploy-core/src/release-state.ts"
       ],
       "@asol/vercel-deploy-core/github-push-identity": [
         "./generated/packages/vercel-deploy-core/src/github-push-identity.ts"

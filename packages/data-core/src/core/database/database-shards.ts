@@ -32,6 +32,7 @@ export const PROFILE_SHARDS = {
   ],
   "system-ops": [
     "system_logs",
+    "control_release_state",
     "data_health_runs",
     "data_health_findings",
     "data_health_cleanup_plans",

@@ -415,8 +415,22 @@ export const systemLogs = sqliteTable(
   ],
 );
 
+export const controlReleaseState = sqliteTable(
+  "control_release_state",
+  {
+    revision: text("revision").primaryKey().notNull(),
+    version: integer("version").notNull(),
+    stateJson: text("state_json").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => [
+    index("control_release_state_updated_at_idx").on(table.updatedAt),
+  ],
+);
+
 export type UserProfileRow = typeof userProfiles.$inferSelect;
 export type NewUserProfileRow = typeof userProfiles.$inferInsert;
+export type ControlReleaseStateRow = typeof controlReleaseState.$inferSelect;
 export type FollowRow = typeof follows.$inferSelect;
 export type NewFollowRow = typeof follows.$inferInsert;
 export type ProfileContactPointRow = typeof profileContactPoints.$inferSelect;

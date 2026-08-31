@@ -38,6 +38,10 @@
       "types": "./src/control-system-logs.ts",
       "default": "./src/control-system-logs.ts"
     },
+    "./control-release-state": {
+      "types": "./src/control-release-state.ts",
+      "default": "./src/control-release-state.ts"
+    },
     "./control-ota": {
       "types": "./src/control-ota.ts",
       "default": "./src/control-ota.ts"

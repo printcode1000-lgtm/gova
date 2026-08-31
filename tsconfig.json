@@ -92,6 +92,9 @@
       "@asol/data-core": [
         "./packages/data-core/src/index.ts"
       ],
+      "@asol/data-core/control-release-state": [
+        "./packages/data-core/src/control-release-state.ts"
+      ],
       "@asol/data-core/account-deletion": [
         "./packages/data-core/src/domains/account-deletion/index.server.ts"
       ],
@@ -334,6 +337,9 @@
       ],
       "@asol/vercel-deploy-core": [
         "./packages/vercel-deploy-core/src/index.ts"
+      ],
+      "@asol/vercel-deploy-core/release-state": [
+        "./packages/vercel-deploy-core/src/release-state.ts"
       ],
       "@asol/data-core/auth/entities": [
         "./packages/data-core/src/domains/auth/entities/index.ts"

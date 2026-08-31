@@ -44,6 +44,8 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   // The seven public owner origins, read as literals so the bundler inlines
   // them. It is the only thing the gova compatibility boundary imports.
   'src/core/config/business-api-origins.ts',
+  // Public CORS origins for the API transport proxy; no credentials are read here.
+  'src/core/config/cors-origins.ts',
   // Which runtime this process is. Read here so the composition root can branch
   // on the role without reading the environment itself.
   'src/core/config/runtime-role.ts',

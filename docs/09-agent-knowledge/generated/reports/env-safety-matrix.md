@@ -44,7 +44,7 @@ Keys: **269**
 | `ASOL_CATALOG_PUBLIC_ROOT` | server-only | unknown | `packages/catalog-core/src/server/validate-catalog-v3.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_CATALOG_ROOT` | server-only | unknown | `packages/catalog-core/src/server/validate-catalog-v3.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_CONTROL_SMOKE_PORT` | server-only | unknown | `scripts/smoke-control-service.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `ASOL_CORS_ORIGINS` | server-only | unknown | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_CORS_ORIGINS` | server-only | dangerous | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts`, `src/core/api/tests/compatibility-boundary.test.ts`, `src/core/config/cors-origins.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_DATA_SOURCE` | server-only | unknown | `src/core/config/runtime-context.server.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_CALLBACK_SECRET` | server-only | dangerous | `scripts/run-remote-deploy-all.mjs` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_DEPLOY_CALLBACK_URL` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
@@ -80,7 +80,7 @@ Keys: **269**
 | `ASOL_REMOTE_DEPLOY_REQUEST_ID` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_REMOTE_DEPLOY_SANDBOX` | server-only | unknown | `scripts/check-environment-requirements.ts`, `services/control/src/app/api/health/route.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_REMOTE_DEPLOY_SANDBOX_NAME` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
-| `ASOL_RUNTIME_ROLE` | server-only | dangerous | `src/core/config/runtime-role.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_RUNTIME_ROLE` | server-only | dangerous | `scripts/vercel-deployment-build.ts`, `src/core/config/runtime-role.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_SCHEMA_SYNC_EXACT` | server-only | unknown | `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server-only | unknown | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SERVICE_SMOKE_ONLY` | server-only | unknown | `scripts/check-service-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |

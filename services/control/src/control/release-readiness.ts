@@ -1,9 +1,14 @@
 import 'server-only';
 
-import { isRemoteDeployAllTerminal } from '@asol/vercel-deploy-core/remote-deploy-contracts';
-import { getRemoteDeployAllResult } from '@asol/vercel-deploy-core/remote-deploy-sandbox';
+import { controlReleaseStateDataSource } from '@asol/data-core/control-release-state';
+import {
+  SqlReleaseStateStore,
+  releaseReadinessStatusFromStore,
+} from '@asol/vercel-deploy-core';
 
 export type ReleaseReadinessStatus = 'pending' | 'ready' | 'failed';
+
+const store = new SqlReleaseStateStore(controlReleaseStateDataSource);
 
 /**
  * Whether one exact commit has finished deploying.
@@ -18,8 +23,5 @@ export type ReleaseReadinessStatus = 'pending' | 'ready' | 'failed';
  * would abort a release that had not yet begun.
  */
 export async function releaseReadinessFor(revision: string): Promise<ReleaseReadinessStatus> {
-  const { snapshot } = await getRemoteDeployAllResult();
-  if (snapshot.revision !== revision) return 'pending';
-  if (!isRemoteDeployAllTerminal(snapshot.status)) return 'pending';
-  return snapshot.status === 'succeeded' ? 'ready' : 'failed';
+  return releaseReadinessStatusFromStore(store, revision);
 }

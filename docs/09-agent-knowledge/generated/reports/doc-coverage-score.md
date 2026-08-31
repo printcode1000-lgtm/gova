@@ -8,7 +8,7 @@
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
 Owners scored: **98**
-Average coverage: **81%**
+Average coverage: **82%**
 Weak owners (<70%): **13**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
@@ -31,7 +31,6 @@ Weak owners (<70%): **13**
 | `packages/dev-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/format-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/google-play-store-assets-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
-| `packages/gova-deployment-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/page-save-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/page-snapshot-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/product-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
@@ -68,6 +67,7 @@ Weak owners (<70%): **13**
 | `packages/branding-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/env-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/featured-marquee-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/gova-deployment-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/hero-slider-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/local-agent-core` | package | yes | yes | yes | yes | yes | NO | yes | yes | 88% |
 | `packages/map-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

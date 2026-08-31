@@ -74,6 +74,7 @@ try {
     "packages/data-core/src/core/database/profile/migrations/0012_seller_discounts.sql",
     "packages/data-core/src/core/database/profile/migrations/0013_system_logs.sql",
     "packages/data-core/src/core/database/profile/migrations/0014_phone_e164_search_keys.sql",
+    "packages/data-core/src/core/database/profile/migrations/0015_control_release_state.sql",
   ]) {
     profileDatabase.exec(readFileSync(path.join(process.cwd(), migration), "utf8"));
   }

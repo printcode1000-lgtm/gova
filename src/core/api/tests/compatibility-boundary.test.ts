@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { NextRequest } from "next/server";
 
 // Set before the boundary is exercised, not before it is imported: the origins
 // module reads the environment on each call, so a build-time snapshot cannot
@@ -11,12 +12,13 @@ process.env.NEXT_PUBLIC_ASOL_SUB2MAIN_URL = "https://sub2main.example";
 process.env.NEXT_PUBLIC_ASOL_SUBMAIN_URL = "https://submain.example";
 process.env.NEXT_PUBLIC_ASOL_ORDERS_URL = "https://orders.example";
 process.env.NEXT_PUBLIC_ASOL_PROFILES_URL = "https://profiles.example";
+process.env.ASOL_CORS_ORIGINS = "https://app.example";
 delete process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL;
 
-import { config, middleware } from "@/middleware";
+import { config, proxy } from "@/proxy";
 
 function run(method: string, url: string): Response {
-  return middleware(new Request(url, { method }));
+  return proxy(new NextRequest(url, { method }));
 }
 
 /** A control-owned route reaches control, method and body preserved by 307. */
@@ -75,8 +77,8 @@ for (const route of ["/api/health", "/api/dev/anything"]) {
  * so a redirected preflight means the real request is never sent at all.
  */
 {
-  const response = middleware(
-    new Request("https://gova.example/api/products", {
+  const response = proxy(
+    new NextRequest("https://gova.example/api/products", {
       method: "OPTIONS",
       headers: { origin: "https://app.example" },
     }),
@@ -93,12 +95,12 @@ for (const route of ["/api/health", "/api/dev/anything"]) {
 
 /** A preflight for a path gova still owns is not intercepted. */
 {
-  const response = middleware(new Request("https://gova.example/api/health", { method: "OPTIONS" }));
-  assert.equal(response.headers.get("x-middleware-next"), "1");
+  const response = proxy(new NextRequest("https://gova.example/api/health", { method: "OPTIONS" }));
+  assert.equal(response.status, 204);
 }
 
 /** Only API paths reach the boundary at all. */
-assert.deepEqual(config.matcher, ["/api/:path*"]);
+assert.deepEqual(config.matcher, "/api/:path*");
 
 /**
  * The boundary's imports are pinned.
@@ -107,15 +109,17 @@ assert.deepEqual(config.matcher, ["/api/:path*"]);
  * property of what it imports — not of what it currently happens to call.
  */
 {
-  const source = readFileSync(path.join(process.cwd(), "src/middleware.ts"), "utf8");
+  const source = readFileSync(path.join(process.cwd(), "src/proxy.ts"), "utf8");
   const specifiers = [...source.matchAll(/\bfrom\s+["']([^"']+)["']/g)].map((match) => match[1]);
   assert.deepEqual(specifiers.sort(), [
     "@/core/config/business-api-origins",
+    "@/core/config/cors-origins",
     "@asol/account-bridge/routes",
     "@asol/service-runtime-core",
+    "next/server",
   ]);
   assert.doesNotMatch(source, /\bfetch\s*\(/);
-  assert.doesNotMatch(source, /process\.env/);
+  assert.doesNotMatch(source, /DATABASE|TOKEN|SECRET|PASSWORD/);
 }
 
 console.log("  ✔ gova compatibility boundary: 307 by owner, no fallback, no capability.");

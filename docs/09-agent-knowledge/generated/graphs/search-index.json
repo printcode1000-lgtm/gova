@@ -6291,6 +6291,7 @@
         "@asol/data-core/browser",
         "@asol/data-core/composition",
         "@asol/data-core/control-ota",
+        "@asol/data-core/control-release-state",
         "@asol/data-core/control-system-logs",
         "@asol/data-core/data-health",
         "@asol/data-core/dev-cloud-backup",
@@ -6392,6 +6393,7 @@
         "@asol/vercel-deploy-core",
         "@asol/vercel-deploy-core/github-push-identity",
         "@asol/vercel-deploy-core/release-rollback",
+        "@asol/vercel-deploy-core/release-state",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
         "@asol/vercel-deploy-core/remote-deploy-sandbox",
         "application_features",
@@ -22126,7 +22128,7 @@
       "kind": "package",
       "name": "@asol/data-core",
       "path": "packages/data-core",
-      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-system-logs, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling",
+      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling",
       "tags": [
         ".",
         "./account-deletion",
@@ -22136,6 +22138,7 @@
         "./browser",
         "./composition",
         "./control-ota",
+        "./control-release-state",
         "./control-system-logs",
         "./data-health",
         "./dev-cloud-backup",
@@ -22171,6 +22174,7 @@
         "/browser",
         "/composition",
         "/control-ota",
+        "/control-release-state",
         "/control-system-logs",
         "/data-health",
         "/dev-cloud-backup",
@@ -22974,15 +22978,17 @@
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
       "path": "packages/vercel-deploy-core",
-      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./release-rollback, ./remote-deploy-contracts, ./remote-deploy-sandbox",
+      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
       "tags": [
         ".",
         "./github-push-identity",
         "./release-rollback",
+        "./release-state",
         "./remote-deploy-contracts",
         "./remote-deploy-sandbox",
         "/github-push-identity",
         "/release-rollback",
+        "/release-state",
         "/remote-deploy-contracts",
         "/remote-deploy-sandbox",
         "@asol/vercel-deploy-core",
@@ -29427,6 +29433,17 @@
       "tags": [
         "packages/data-core/src/control-ota",
         "packages/data-core/src/control-ota.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/control-release-state.ts",
+      "kind": "source",
+      "name": "control-release-state.ts",
+      "path": "packages/data-core/src/control-release-state.ts",
+      "tags": [
+        "packages/data-core/src/control-release-state",
+        "packages/data-core/src/control-release-state.ts",
         "ts"
       ]
     },
@@ -37959,6 +37976,17 @@
       ]
     },
     {
+      "id": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "kind": "source",
+      "name": "release-state.ts",
+      "path": "packages/vercel-deploy-core/src/release-state.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/release-state",
+        "packages/vercel-deploy-core/src/release-state.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
       "kind": "source",
       "name": "remote-deploy-contracts.ts",
@@ -41791,6 +41819,17 @@
       "tags": [
         "src/core/config/control-env",
         "src/core/config/control-env.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/core/config/cors-origins.ts",
+      "kind": "source",
+      "name": "cors-origins.ts",
+      "path": "src/core/config/cors-origins.ts",
+      "tags": [
+        "src/core/config/cors-origins",
+        "src/core/config/cors-origins.ts",
         "ts"
       ]
     },
@@ -51443,17 +51482,6 @@
       "tags": [
         "src/instrumentation",
         "src/instrumentation.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/middleware.ts",
-      "kind": "source",
-      "name": "middleware.ts",
-      "path": "src/middleware.ts",
-      "tags": [
-        "src/middleware",
-        "src/middleware.ts",
         "ts"
       ]
     },

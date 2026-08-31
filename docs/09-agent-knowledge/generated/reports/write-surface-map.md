@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **373**
+Detected write-like surfaces: **374**
 Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -354,6 +354,7 @@ Unproven gateway paths: **146**
 | `src/features/profile/server/services/profile-service.bootstrap.server.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/profile/server/services/profile-service.server.ts` | `profile` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | development, web | medium |
 | `src/features/profile/tests/profiles-service-module-contract.test.ts` | `profile` | delete, patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `src/features/release-commands/server/services/production-deploy-service.server.ts` | `release-commands` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/release-commands/tests/release-commands.test.ts` | `release-commands` | patch, publish, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/seller-card/presentation/SellerCard.tsx` | `seller-card` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/seller-discounts/domain/seller-discount.entity.ts` | `seller-discounts` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |

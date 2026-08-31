@@ -4,6 +4,11 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 
 import {
+  GOVA_DEPLOYMENT_DIR,
+  buildGovaDeploymentTree,
+  assertGovaArtifact,
+} from "@asol/gova-deployment-core";
+import {
   assertVercelHostEnvironment,
   assertVercelRuntimeEnvironment,
   foreignRuntimeEnvNames,
@@ -16,10 +21,11 @@ import { assertVercelBuildArtifact } from "./vercel-build-artifact-guard";
  * Correctness gates stay on `npm run build` / `deploy:all` preflight.
  */
 const ROOT = process.cwd();
+const BUILD_ROOT = path.join(ROOT, GOVA_DEPLOYMENT_DIR);
 
-function run(command: string, args: string[]): void {
+function run(command: string, args: string[], cwd = ROOT): void {
   const result = spawnSync(command, args, {
-    cwd: ROOT,
+    cwd,
     env: process.env,
     stdio: "inherit",
     shell: false,
@@ -29,19 +35,18 @@ function run(command: string, args: string[]): void {
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
-function runNpmScript(script: string): void {
-  const npmCli = process.env.npm_execpath?.trim();
-  if (npmCli) {
-    run(process.execPath, [npmCli, "run", script]);
-    return;
-  }
-  throw new Error("npm_execpath is required so the Vercel build can invoke npm without a shell.");
-}
-
 function nextBin(): string {
   const candidate = path.join(ROOT, "node_modules", "next", "dist", "bin", "next");
   if (!existsSync(candidate)) {
     throw new Error("Pinned Next.js binary is missing after npm ci.");
+  }
+  return candidate;
+}
+
+function tsxBin(): string {
+  const candidate = path.join(ROOT, "node_modules", ".bin", "tsx");
+  if (!existsSync(candidate)) {
+    throw new Error("Pinned tsx binary is missing after npm ci.");
   }
   return candidate;
 }
@@ -65,14 +70,19 @@ function main(): void {
     );
   }
 
-  console.log("[vercel-build] next build");
-  run(process.execPath, [nextBin(), "build"]);
+  console.log(`[vercel-build] generating ${GOVA_DEPLOYMENT_DIR}`);
+  buildGovaDeploymentTree(ROOT);
 
-  assertVercelBuildArtifact(ROOT);
-  console.log("[vercel-build] required Next.js server manifests and root route trace are present.");
+  process.env.ASOL_RUNTIME_ROLE = "gova-frontend";
+  console.log(`[vercel-build] next build (${GOVA_DEPLOYMENT_DIR})`);
+  run(process.execPath, [nextBin(), "build"], BUILD_ROOT);
+
+  assertVercelBuildArtifact(BUILD_ROOT);
+  assertGovaArtifact(BUILD_ROOT);
+  console.log("[vercel-build] gova-only .next artifact contains no Business API or dev API functions.");
 
   console.log("[vercel-build] vercel:function-size:check");
-  runNpmScript("vercel:function-size:check");
+  run(tsxBin(), ["scripts/check-vercel-function-size.ts"], BUILD_ROOT);
   console.log("[vercel-build] hosted artifact is within Vercel upload limits.");
 }
 

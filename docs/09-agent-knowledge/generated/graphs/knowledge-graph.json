@@ -6291,6 +6291,7 @@
         "@asol/data-core/browser",
         "@asol/data-core/composition",
         "@asol/data-core/control-ota",
+        "@asol/data-core/control-release-state",
         "@asol/data-core/control-system-logs",
         "@asol/data-core/data-health",
         "@asol/data-core/dev-cloud-backup",
@@ -6392,6 +6393,7 @@
         "@asol/vercel-deploy-core",
         "@asol/vercel-deploy-core/github-push-identity",
         "@asol/vercel-deploy-core/release-rollback",
+        "@asol/vercel-deploy-core/release-state",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
         "@asol/vercel-deploy-core/remote-deploy-sandbox",
         "application_features",
@@ -22126,7 +22128,7 @@
       "kind": "package",
       "name": "@asol/data-core",
       "path": "packages/data-core",
-      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-system-logs, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling",
+      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling",
       "tags": [
         ".",
         "./account-deletion",
@@ -22136,6 +22138,7 @@
         "./browser",
         "./composition",
         "./control-ota",
+        "./control-release-state",
         "./control-system-logs",
         "./data-health",
         "./dev-cloud-backup",
@@ -22171,6 +22174,7 @@
         "/browser",
         "/composition",
         "/control-ota",
+        "/control-release-state",
         "/control-system-logs",
         "/data-health",
         "/dev-cloud-backup",
@@ -22974,15 +22978,17 @@
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
       "path": "packages/vercel-deploy-core",
-      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./release-rollback, ./remote-deploy-contracts, ./remote-deploy-sandbox",
+      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
       "tags": [
         ".",
         "./github-push-identity",
         "./release-rollback",
+        "./release-state",
         "./remote-deploy-contracts",
         "./remote-deploy-sandbox",
         "/github-push-identity",
         "/release-rollback",
+        "/release-state",
         "/remote-deploy-contracts",
         "/remote-deploy-sandbox",
         "@asol/vercel-deploy-core",
@@ -29427,6 +29433,17 @@
       "tags": [
         "packages/data-core/src/control-ota",
         "packages/data-core/src/control-ota.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/control-release-state.ts",
+      "kind": "source",
+      "name": "control-release-state.ts",
+      "path": "packages/data-core/src/control-release-state.ts",
+      "tags": [
+        "packages/data-core/src/control-release-state",
+        "packages/data-core/src/control-release-state.ts",
         "ts"
       ]
     },
@@ -37959,6 +37976,17 @@
       ]
     },
     {
+      "id": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "kind": "source",
+      "name": "release-state.ts",
+      "path": "packages/vercel-deploy-core/src/release-state.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/release-state",
+        "packages/vercel-deploy-core/src/release-state.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
       "kind": "source",
       "name": "remote-deploy-contracts.ts",
@@ -41791,6 +41819,17 @@
       "tags": [
         "src/core/config/control-env",
         "src/core/config/control-env.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/core/config/cors-origins.ts",
+      "kind": "source",
+      "name": "cors-origins.ts",
+      "path": "src/core/config/cors-origins.ts",
+      "tags": [
+        "src/core/config/cors-origins",
+        "src/core/config/cors-origins.ts",
         "ts"
       ]
     },
@@ -51443,17 +51482,6 @@
       "tags": [
         "src/instrumentation",
         "src/instrumentation.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/middleware.ts",
-      "kind": "source",
-      "name": "middleware.ts",
-      "path": "src/middleware.ts",
-      "tags": [
-        "src/middleware",
-        "src/middleware.ts",
         "ts"
       ]
     },
@@ -64084,6 +64112,12 @@
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/data-core",
       "kind": "references",
+      "detail": "@asol/data-core/control-release-state"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
       "detail": "@asol/data-core/control-system-logs"
     },
     {
@@ -64895,6 +64929,12 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "references",
       "detail": "@asol/vercel-deploy-core/release-rollback"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "references",
+      "detail": "@asol/vercel-deploy-core/release-state"
     },
     {
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
@@ -77048,6 +77088,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/data-core/src/control-release-state.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/data-core/src/control-system-logs.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -81560,6 +81606,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -82473,6 +82525,12 @@
     {
       "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/control-ota.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/control-release-state.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
     },
@@ -87141,6 +87199,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:packages/vercel-deploy-core/src/release-rollback.ts",
+      "kind": "documents",
+      "detail": "packages/vercel-deploy-core/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:packages/vercel-deploy-core/src/release-state.ts",
       "kind": "documents",
       "detail": "packages/vercel-deploy-core/"
     },
@@ -107043,6 +107107,11 @@
     },
     {
       "from": "feature:release-commands",
+      "to": "package:@asol/data-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:release-commands",
       "to": "package:@asol/google-play-store-assets-core",
       "kind": "imports"
     },
@@ -107770,6 +107839,21 @@
     {
       "from": "package:@asol/featured-marquee-core",
       "to": "external-dependency:zod",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/gova-deployment-core",
+      "to": "external-dependency:react",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/gova-deployment-core",
+      "to": "feature:product",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/gova-deployment-core",
+      "to": "feature:profile",
       "kind": "imports"
     },
     {
@@ -111954,114 +112038,6 @@
       "from": "route:/api/health:handler",
       "to": "source:src/app/api/health/route.ts",
       "kind": "contains"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "feature:system-logs",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/backup-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/data-health-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/dev-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/env-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/featured-marquee-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/hero-slider-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/notifications-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/observability-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/orders-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/product-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/system-logs-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/trending-ribbon-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
     },
     {
       "from": "route:/api/notifications/broadcast/recipients:handler",
@@ -136132,6 +136108,12 @@
     },
     {
       "from": "script:scripts/vercel-deployment-build.ts",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "imports",
+      "detail": "@asol/gova-deployment-core"
+    },
+    {
+      "from": "script:scripts/vercel-deployment-build.ts",
       "to": "script:scripts/vercel-build-artifact-guard.ts",
       "kind": "imports",
       "detail": "./vercel-build-artifact-guard"
@@ -136141,6 +136123,11 @@
       "to": "script:scripts/vercel-deployment-guards.ts",
       "kind": "imports",
       "detail": "./vercel-deployment-guards"
+    },
+    {
+      "from": "script:scripts/vercel-deployment-build.ts",
+      "to": "environment-key:ASOL_RUNTIME_ROLE",
+      "kind": "uses-environment"
     },
     {
       "from": "script:scripts/vercel-deployment-guards.ts",
@@ -141297,6 +141284,33 @@
       "to": "source:packages/data-core/src/domains/ota/repositories/ota-release-repository.ts",
       "kind": "imports",
       "detail": "./domains/ota/repositories/ota-release-repository"
+    },
+    {
+      "from": "source:packages/data-core/src/control-release-state.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/control-release-state.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/control-release-state.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/control-release-state.ts",
+      "to": "external-dependency:server-only",
+      "kind": "imports",
+      "detail": "server-only"
+    },
+    {
+      "from": "source:packages/data-core/src/control-release-state.ts",
+      "to": "source:packages/data-core/src/core/database/profile-sharded-db-client.ts",
+      "kind": "imports",
+      "detail": "./core/database/profile-sharded-db-client"
     },
     {
       "from": "source:packages/data-core/src/control-system-logs.ts",
@@ -153287,6 +153301,24 @@
       "from": "source:packages/gova-deployment-core/src/tree.ts",
       "to": "package:@asol/gova-deployment-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/gova-deployment-core/src/tree.ts",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:packages/gova-deployment-core/src/tree.ts",
+      "to": "source:src/features/product/ui.ts",
+      "kind": "imports",
+      "detail": "@/features/product/ui"
+    },
+    {
+      "from": "source:packages/gova-deployment-core/src/tree.ts",
+      "to": "source:src/features/profile/ui.ts",
+      "kind": "imports",
+      "detail": "@/features/profile/ui"
     },
     {
       "from": "source:packages/hero-slider-core/src/domain/hero-slider.entity.ts",
@@ -175386,6 +175418,12 @@
     },
     {
       "from": "source:packages/vercel-deploy-core/src/index.ts",
+      "to": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "kind": "imports",
+      "detail": "./release-state"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/index.ts",
       "to": "source:packages/vercel-deploy-core/src/vercel-deployment-monitor.ts",
       "kind": "imports",
       "detail": "./vercel-deployment-monitor"
@@ -175421,6 +175459,36 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -175449,6 +175517,12 @@
       "from": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
+      "to": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "kind": "imports",
+      "detail": "./release-state"
     },
     {
       "from": "source:packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
@@ -176538,15 +176612,15 @@
     },
     {
       "from": "source:services/control/src/control/release-readiness.ts",
-      "to": "package:@asol/vercel-deploy-core",
+      "to": "package:@asol/data-core",
       "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
+      "detail": "@asol/data-core/control-release-state"
     },
     {
       "from": "source:services/control/src/control/release-readiness.ts",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-sandbox"
+      "detail": "@asol/vercel-deploy-core"
     },
     {
       "from": "source:services/control/src/control/super-admin-route.ts",
@@ -178667,12 +178741,6 @@
       "from": "source:src/app/api/health/route.ts",
       "to": "runtime:web",
       "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/api/health/route.ts",
-      "to": "source:src/core/api/api-response.ts",
-      "kind": "imports",
-      "detail": "@/core/api/api-response"
     },
     {
       "from": "source:src/app/api/notifications/broadcast/recipients/route.ts",
@@ -185553,6 +185621,36 @@
       "to": "source:src/core/config/server-env/server-env.values.system-logs.ts",
       "kind": "imports",
       "detail": "./server-env/server-env.values.system-logs"
+    },
+    {
+      "from": "source:src/core/config/cors-origins.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/cors-origins.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/cors-origins.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/cors-origins.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/cors-origins.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/cors-origins.ts",
+      "to": "environment-key:ASOL_CORS_ORIGINS",
+      "kind": "uses-environment"
     },
     {
       "from": "source:src/core/config/development-guard.server.ts",
@@ -223927,6 +224025,12 @@
     },
     {
       "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/control-release-state"
+    },
+    {
+      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
       "to": "package:@asol/notifications-core",
       "kind": "imports",
       "detail": "@asol/notifications-core/grant-collector"
@@ -223936,6 +224040,12 @@
       "to": "package:@asol/notifications-core",
       "kind": "imports",
       "detail": "@asol/notifications-core/grant-envelope"
+    },
+    {
+      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
     },
     {
       "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
@@ -231765,49 +231875,6 @@
       "kind": "uses-environment"
     },
     {
-      "from": "source:src/middleware.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/middleware.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/middleware.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/middleware.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/middleware.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/middleware.ts",
-      "to": "package:@asol/account-bridge",
-      "kind": "imports",
-      "detail": "@asol/account-bridge/routes"
-    },
-    {
-      "from": "source:src/middleware.ts",
-      "to": "package:@asol/service-runtime-core",
-      "kind": "imports",
-      "detail": "@asol/service-runtime-core"
-    },
-    {
-      "from": "source:src/middleware.ts",
-      "to": "source:src/core/config/business-api-origins.ts",
-      "kind": "imports",
-      "detail": "@/core/config/business-api-origins"
-    },
-    {
       "from": "source:src/proxy.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -231840,15 +231907,27 @@
     },
     {
       "from": "source:src/proxy.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "imports",
+      "detail": "@asol/account-bridge/routes"
+    },
+    {
+      "from": "source:src/proxy.ts",
       "to": "package:@asol/service-runtime-core",
       "kind": "imports",
       "detail": "@asol/service-runtime-core"
     },
     {
       "from": "source:src/proxy.ts",
-      "to": "source:src/core/config/server-env.ts",
+      "to": "source:src/core/config/business-api-origins.ts",
       "kind": "imports",
-      "detail": "@/core/config/server-env"
+      "detail": "@/core/config/business-api-origins"
+    },
+    {
+      "from": "source:src/proxy.ts",
+      "to": "source:src/core/config/cors-origins.ts",
+      "kind": "imports",
+      "detail": "@/core/config/cors-origins"
     },
     {
       "from": "source:src/shared/app-init/AppInitScript.tsx",
@@ -242398,6 +242477,12 @@
     },
     {
       "from": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
+      "to": "source:packages/vercel-deploy-core/src/release-state.ts",
+      "kind": "imports",
+      "detail": "../release-state"
+    },
+    {
+      "from": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
       "to": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
       "kind": "imports",
       "detail": "../remote-deploy-contracts"
@@ -243023,14 +243108,30 @@
     },
     {
       "from": "test:src/core/api/tests/compatibility-boundary.test.ts",
-      "to": "source:src/middleware.ts",
+      "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "@/middleware"
+      "detail": "next/server"
     },
     {
       "from": "test:src/core/api/tests/compatibility-boundary.test.ts",
-      "to": "source:src/middleware.ts",
+      "to": "source:src/proxy.ts",
+      "kind": "imports",
+      "detail": "@/proxy"
+    },
+    {
+      "from": "test:src/core/api/tests/compatibility-boundary.test.ts",
+      "to": "external-dependency:next",
       "kind": "tests"
+    },
+    {
+      "from": "test:src/core/api/tests/compatibility-boundary.test.ts",
+      "to": "source:src/proxy.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/core/api/tests/compatibility-boundary.test.ts",
+      "to": "environment-key:ASOL_CORS_ORIGINS",
+      "kind": "uses-environment"
     },
     {
       "from": "test:src/core/api/tests/compatibility-boundary.test.ts",

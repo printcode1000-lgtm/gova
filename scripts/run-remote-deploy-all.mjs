@@ -24,6 +24,7 @@ const LOG_FILE = path.join(STATE_DIRECTORY, "remote.log");
 const LOCK_DIRECTORY = path.join(STATE_DIRECTORY, "remote.lock");
 const MAX_LOG_TAIL_BYTES = 200_000;
 const PHASE_MARKER = /\[deploy:all\] ── phase: ([a-z0-9-]+) ──/;
+const WORKLOADS = ["notifications", "products", "orders", "profiles", "submain", "sub2main"];
 
 function argumentValue(name) {
   const prefix = `--${name}=`;
@@ -139,6 +140,49 @@ async function readLogTail() {
   }
 }
 
+async function readJsonFile(file) {
+  try {
+    return JSON.parse(await readFile(file, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function releaseStateMutationFor(snapshot) {
+  const revision = snapshot.revision?.trim();
+  if (!/^[0-9a-f]{40}$/.test(revision || "")) return undefined;
+  const checkpoints = (await readJsonFile(path.join(STATE_DIRECTORY, "branch-checkpoints.json")))?.checkpoints ?? [];
+  const succeeded = new Set(
+    checkpoints.filter((item) => item?.status === "success").map((item) => item.branchId),
+  );
+  const failed = checkpoints
+    .filter((item) => item?.status === "failed" && item?.errorSummary)
+    .map((item) => `${item.branchId}: ${item.errorSummary}`);
+  const fullTarget = snapshot.target === "all";
+  const successfulFullRun = snapshot.status === "succeeded" && fullTarget;
+  const component = (branchId) => ({
+    status: successfulFullRun && succeeded.has(branchId) ? "passed" : "failed",
+    smokeStatus: successfulFullRun && succeeded.has("deployed-smoke") ? "passed" : "failed",
+    evidence: successfulFullRun ? `${branchId} and deployed-smoke passed for ${revision}` : undefined,
+    failure: successfulFullRun ? undefined : snapshot.error || "release did not complete every required branch",
+  });
+  return {
+    revision,
+    runId: snapshot.requestId || process.env.ASOL_REMOTE_DEPLOY_REQUEST_ID || "",
+    operationId: `remote-terminal:${snapshot.requestId || "unknown"}:${snapshot.status}`,
+    source: "callback",
+    status: successfulFullRun ? "running" : "failed",
+    control: component("main-ready"),
+    workloads: Object.fromEntries(
+      WORKLOADS.map((name) => [name, component(`${name}-deploy-command`)]),
+    ),
+    readinessEvidence: successfulFullRun
+      ? [`deploy:all terminal callback passed for ${revision}`, "smoke:deployed passed"]
+      : [],
+    failureDetails: successfulFullRun ? [] : [snapshot.error || "deploy:all did not succeed", ...failed],
+  };
+}
+
 /**
  * Stream a child process into the log, advancing the stage on every phase
  * banner `deploy:all` prints. Parsing its own output keeps the pipeline the
@@ -190,7 +234,11 @@ async function postTerminalCallback(snapshot) {
     const response = await fetch(url, {
       method: "POST",
       headers: { Authorization: `Bearer ${secret}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ snapshot, logTail: await readLogTail() }),
+      body: JSON.stringify({
+        snapshot,
+        logTail: await readLogTail(),
+        releaseStateMutation: await releaseStateMutationFor(snapshot),
+      }),
     });
     if (!response.ok) {
       await appendLog(`\n[remote-deploy] callback rejected (${response.status}).\n`);

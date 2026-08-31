@@ -92,6 +92,9 @@
       "@asol/data-core/control-system-logs": [
         "./generated/packages/data-core/src/control-system-logs.ts"
       ],
+      "@asol/data-core/control-release-state": [
+        "./generated/packages/data-core/src/control-release-state.ts"
+      ],
       "@asol/data-core/control-ota": [
         "./generated/packages/data-core/src/control-ota.ts"
       ],

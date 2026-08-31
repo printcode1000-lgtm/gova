@@ -12,6 +12,7 @@ import {
 // live in their own package: see @asol/account-declarations for why that matters.
 export * from '@asol/account-declarations';
 export * from './vercel-deployment-monitor';
+export * from './release-state';
 
 export interface VercelHeaders {
   Authorization: string;

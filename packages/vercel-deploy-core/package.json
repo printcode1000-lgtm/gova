@@ -22,6 +22,10 @@
       "types": "./src/release-rollback.ts",
       "default": "./src/release-rollback.ts"
     },
+    "./release-state": {
+      "types": "./src/release-state.ts",
+      "default": "./src/release-state.ts"
+    },
     "./github-push-identity": {
       "types": "./src/github-push-identity.ts",
       "default": "./src/github-push-identity.ts"

@@ -46,7 +46,22 @@ Control also serves two operational routes that belong to no business owner:
 
 It is the one control surface a release pipeline polls without a Super Admin
 session, so it is deliberately blind: no logs, no stage, no sandbox name, no
-error text, no configuration. Two rules follow from that:
+error text, no configuration. Its source of truth is the control-owned
+`control_release_state` table in the system-ops shard, written only by the
+authorized release callback or bootstrap release path. The Vercel Sandbox may
+disappear after a run; readiness survives because the barrier never reads the
+Sandbox filesystem.
+
+`ready` is derived, not written by trust. The durable row must name the exact
+40-character revision, a passed control result, passed results for
+notifications, products, orders, profiles, submain and sub2main, passed smoke
+evidence for the same revision, timestamps, and no persisted rollback success.
+Targeted workload deploys and stale SHAs can update their own evidence, but they
+cannot satisfy a full-release row for another revision. Duplicate callbacks are
+idempotent through their operation id, and version conflicts fail closed rather
+than overwriting newer state.
+
+Two public-read rules follow from that:
 
 - A revision the runtime has no record of is `pending`, not `failed`. The
   pipeline may be asking before the deploy started, and `failed` would abort a
