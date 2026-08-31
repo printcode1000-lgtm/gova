@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "requestId": "localrunner-policy-verify-20260831-1944",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Regenerate docs and verify Local Runner policy",
+    "verification": "none",
+    "timeout_minutes": "15",
+    "shell_command": "set -euo pipefail\nnpm run test:local-agent-core\nnpm run test:local-agent-workflows\nnpm run github:ci-policy\nnpm run docs:generate\nnpm run docs:ci"
+  },
+  "createdAt": "2026-08-31T19:44:00.000Z"
+}
