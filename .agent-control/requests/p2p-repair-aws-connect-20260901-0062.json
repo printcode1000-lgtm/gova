@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-repair-aws-connect-20260901-0062",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Repair local R2 runtime dependency and prove direct connection",
+    "verification": "none",
+    "timeout_minutes": "15",
+    "execution_target": "isolated-worktree",
+    "shell_command": "set -euo pipefail\ncd /home/hesham/gova\nversion=$(node -p \"require('./node_modules/@aws-sdk/client-s3/package.json').version\")\necho repairing_client_s3=$version\nnpm install --no-save --package-lock=false --ignore-scripts \"@aws-sdk/client-s3@$version\" >/dev/null\nsystemctl --user restart gova-direct-agent.service\nfor i in 1 2 3 4 5 6 7 8 9 10; do if [ -s .local/direct-agent/state.json ] && ss -lnt 2>/dev/null | grep -q ':48732 '; then break; fi; sleep 1; done\necho service=$(systemctl --user is-active gova-direct-agent.service || true)\necho port_48732=$(ss -lnt 2>/dev/null | grep -q ':48732 ' && echo listening || echo closed)\nif ! [ -s .local/direct-agent/state.json ] || ! ss -lnt 2>/dev/null | grep -q ':48732 '; then journalctl --user -u gova-direct-agent.service -n 25 --no-pager; exit 1; fi\ngit show origin/agent-request/chatgpt:.agent-control/payloads/p2p-local-direct-proof-20260901-0053.sh | bash"
+  },
+  "createdAt": "2026-08-31T22:02:00.000Z"
+}
