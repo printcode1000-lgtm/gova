@@ -17,9 +17,9 @@ import {
 } from "@asol/local-agent-core/direct";
 import {
   createOtaR2Client,
-  loadOtaEnvironment,
   putOtaObject,
-} from "@asol/ota-core/publishing";
+} from "../packages/ota-core/src/publishing/adapters/r2-storage.adapter";
+import { loadOtaEnvironment } from "../packages/ota-core/src/publishing/config/ota-config";
 
 function git(args: string[]): string {
   const result = spawnSync("git", args, { encoding: "utf8" });
