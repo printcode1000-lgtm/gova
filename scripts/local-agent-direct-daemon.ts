@@ -25,9 +25,9 @@ import {
   deleteOtaObject,
   getOtaObjectBytes,
   listOtaObjectKeys,
-  loadOtaEnvironment,
   putOtaObject,
-} from "@asol/ota-core/publishing";
+} from "../packages/ota-core/src/publishing/adapters/r2-storage.adapter";
+import { loadOtaEnvironment } from "../packages/ota-core/src/publishing/config/ota-config";
 import { runDirectBootstrapCycle } from "./local-agent-direct-bootstrap";
 
 loadOtaEnvironment();
@@ -47,6 +47,10 @@ let lastError: string | null = null;
 let bootstrapBusy = false;
 let discoveryBusy = false;
 let rendezvousBusy = false;
+let bootstrapTimer: ReturnType<typeof setInterval>;
+let discoveryTimer: ReturnType<typeof setInterval>;
+let rendezvousTimer: ReturnType<typeof setInterval>;
+let stateTimer: ReturnType<typeof setInterval>;
 
 function state(): DirectDaemonState {
   return { schemaVersion: 1, pid: process.pid, running: !stopping, hostId, port, bindHost: "0.0.0.0", serverKeyId: identity.serverKeyId, startedAt, updatedAt: new Date().toISOString(), discoveryLastPublishedAt, bootstrapLastCycleAt, lastError };
@@ -108,13 +112,22 @@ async function shutdown(signal: string): Promise<void> {
   webRtc.closeAll(); await server.stop(); persist(); process.exit(0);
 }
 
-const previous=readDirectDaemonState();
-if (directDaemonStateIsLive(previous) && previous?.pid !== process.pid) throw new Error(`Direct daemon already running with pid ${previous?.pid}.`);
-await server.start(); persist();
-console.log(JSON.stringify({event:"direct-daemon-started",hostId,port,pid:process.pid,serverKeyId:identity.serverKeyId,transports:["tls-tcp","webrtc-datachannel-tcp-tunnel-v1"]}));
-await Promise.all([refreshDiscovery(),bootstrapCycle(),rendezvousCycle()]);
-const bootstrapTimer=setInterval(()=>{void bootstrapCycle()},DIRECT_BOOTSTRAP_POLL_MS);
-const discoveryTimer=setInterval(()=>{void refreshDiscovery()},DIRECT_DISCOVERY_REFRESH_MS);
-const rendezvousTimer=setInterval(()=>{void rendezvousCycle()},DIRECT_RENDEZVOUS_POLL_MS);
-const stateTimer=setInterval(persist,30_000);
-for (const signal of ["SIGTERM","SIGINT","SIGHUP"] as const) process.once(signal,()=>{void shutdown(signal)});
+async function main(): Promise<void> {
+  const previous=readDirectDaemonState();
+  if (directDaemonStateIsLive(previous) && previous?.pid !== process.pid) throw new Error(`Direct daemon already running with pid ${previous?.pid}.`);
+  await server.start(); persist();
+  console.log(JSON.stringify({event:"direct-daemon-started",hostId,port,pid:process.pid,serverKeyId:identity.serverKeyId,transports:["tls-tcp","webrtc-datachannel-tcp-tunnel-v1"]}));
+  await Promise.all([refreshDiscovery(),bootstrapCycle(),rendezvousCycle()]);
+  bootstrapTimer=setInterval(()=>{void bootstrapCycle()},DIRECT_BOOTSTRAP_POLL_MS);
+  discoveryTimer=setInterval(()=>{void refreshDiscovery()},DIRECT_DISCOVERY_REFRESH_MS);
+  rendezvousTimer=setInterval(()=>{void rendezvousCycle()},DIRECT_RENDEZVOUS_POLL_MS);
+  stateTimer=setInterval(persist,30_000);
+  for (const signal of ["SIGTERM","SIGINT","SIGHUP"] as const) process.once(signal,()=>{void shutdown(signal)});
+}
+
+void main().catch((error) => {
+  lastError = `daemon-start:${error instanceof Error ? error.message : String(error)}`;
+  persist();
+  console.error(error);
+  process.exitCode = 1;
+});
