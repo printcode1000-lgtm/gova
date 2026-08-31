@@ -6,7 +6,8 @@ import { DIRECT_AUTH_BRANCH, DIRECT_AUTH_DIRECTORY } from "./direct/authorizatio
 import { DIRECT_PROTOCOL_VERSION } from "./direct/protocol";
 import { directAuthResultKeyPrefix } from "./direct/bootstrap";
 import { DIRECT_RENDEZVOUS_PREFIX, DIRECT_RENDEZVOUS_TTL_MS } from "./direct/rendezvous";
-import { DIRECT_WEBRTC_TUNNEL_KIND } from "./direct/webrtc-tunnel";
+
+const DIRECT_WEBRTC_TUNNEL_KIND = "webrtc-datachannel-tcp-tunnel-v1" as const;
 
 export const DEVICE_DISCOVERY_PORT_ENV = "ASOL_DEVICE_DISCOVERY_PORT";
 export const DEVICE_DISCOVERY_PASSWORD_ENV = "ASOL_DEVICE_DISCOVERY_PORT_PASSWORD";
