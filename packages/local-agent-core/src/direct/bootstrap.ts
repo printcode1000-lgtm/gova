@@ -8,6 +8,7 @@ import { DIRECT_FILE_MODE, directBootstrapResultsDir, ensureDirectDir } from "./
 import type { DirectSession } from "./session";
 
 export const DIRECT_AUTH_RESULT_PREFIX = "direct-auth-results";
+export const DIRECT_AUTH_RESULT_DIRECTORY = ".agent-control/direct-auth-results";
 
 export interface DirectBootstrapGrant {
   schemaVersion: 1;
