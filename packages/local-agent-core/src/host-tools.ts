@@ -1,16 +1,12 @@
+import { existsSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
+import { ensureDir, readJsonFile, writeJsonFile } from "./json-store";
 import { localRootDir } from "./paths";
 
 export const MANAGED_HOST_TOOL = "antigravity";
+const TOOL_ALIASES = ["antigravity", "agy"] as const;
 
-/**
- * Compatibility shape retained for callers and the monitor.
- *
- * Host-tool exclusion is intentionally disabled. Local-agent shell execution is
- * full-host-control: tools installed for the runner user stay reachable exactly
- * as they are from that user's normal login shell.
- */
 export interface HostToolPolicy {
   antigravity?: { allowed?: boolean };
 }
@@ -23,44 +19,53 @@ export function hostToolShimDir(): string {
   return path.join(localRootDir(), "host-tool-shims");
 }
 
-export function readHostToolPolicy(): HostToolPolicy {
-  return { antigravity: { allowed: true } };
+export function readHostToolPolicy(): HostToolPolicy | null {
+  return readJsonFile<HostToolPolicy>(hostToolPolicyPath());
 }
 
 export function hostToolAllowed(): boolean {
-  return true;
+  const policy = readHostToolPolicy();
+  return policy?.antigravity?.allowed === true;
 }
 
-/** Host-tool blocking is retired; the control plane always stays unrestricted. */
-export function setHostToolAllowed(_allowed: boolean): void {
-  // Deliberately a no-op. Kept only so older callers do not break.
+export function setHostToolAllowed(allowed: boolean): void {
+  writeJsonFile(hostToolPolicyPath(), { antigravity: { allowed } });
 }
 
 export function toggleHostToolAllowed(): boolean {
-  return true;
+  const next = !hostToolAllowed();
+  setHostToolAllowed(next);
+  return next;
 }
 
 export function hostToolState(): { tool: string; allowed: boolean; policyPath: string; shimDir: string } {
   return {
     tool: MANAGED_HOST_TOOL,
-    allowed: true,
+    allowed: hostToolAllowed(),
     policyPath: hostToolPolicyPath(),
     shimDir: hostToolShimDir(),
   };
 }
 
-/**
- * Compatibility API. No blocking shims are created because host tools are
- * intentionally available to authenticated local-runner jobs.
- */
 export function ensureHostToolShims(): string {
-  return hostToolShimDir();
+  const dir = ensureDir(hostToolShimDir());
+  if (hostToolAllowed()) return dir;
+  const body = "#!/bin/sh\nprintf '%s\\n' 'host tool is excluded by .local/host-tools.json' >&2\nexit 127\n";
+  for (const name of TOOL_ALIASES) {
+    const shimPath = path.join(dir, name);
+    if (!existsSync(shimPath)) writeFileSync(shimPath, body, { mode: 0o755 });
+  }
+  return dir;
 }
 
 export function envWithHostToolShims(env: NodeJS.ProcessEnv = process.env): NodeJS.ProcessEnv {
-  return { ...env };
+  if (hostToolAllowed()) return { ...env };
+  const shimDir = ensureHostToolShims();
+  return { ...env, PATH: `${shimDir}:${env.PATH ?? ""}` };
 }
 
 export function wrapLoginShellCommand(command: string): string {
-  return command;
+  if (hostToolAllowed()) return command;
+  const shimDir = ensureHostToolShims().replace(/'/g, "'\\''");
+  return `PATH='${shimDir}':$PATH; export PATH; ${command}`;
 }
