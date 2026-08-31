@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-phase2-host-discovery-v2-final-20260831-2333",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Add Host Discovery v2 for direct P2P bootstrap",
+    "verification": "none",
+    "timeout_minutes": "35",
+    "execution_target": "isolated-worktree",
+    "shell_command": "set -euo pipefail\ngit show origin/agent-request/chatgpt:.agent-control/payloads/p2p-phase2-final.sh | bash"
+  },
+  "createdAt": "2026-08-31T20:33:00.000Z"
+}
