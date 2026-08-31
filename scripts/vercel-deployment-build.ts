@@ -15,10 +15,12 @@ import {
   runtimeAccountFromEnv,
 } from "./vercel-deployment-guards";
 import { assertVercelBuildArtifact } from "./vercel-build-artifact-guard";
+import { assertHostedGovaReleaseReady } from "./release-readiness-barrier";
 
 /**
- * Hosted Vercel build: environment health + a runnable Next.js artifact.
- * Correctness gates stay on `npm run build` / `deploy:all` preflight.
+ * Hosted Vercel build: environment health + an exact-SHA release barrier + a
+ * runnable gova-only Next.js artifact. Correctness gates stay on local
+ * `npm run build` / `deploy:all` preflight.
  */
 const ROOT = process.cwd();
 const BUILD_ROOT = path.join(ROOT, GOVA_DEPLOYMENT_DIR);
@@ -51,7 +53,7 @@ function tsxBin(): string {
   return candidate;
 }
 
-function main(): void {
+async function main(): Promise<void> {
   console.log("[vercel-build] Deployment/Smoke Guards only — not a correctness suite.");
   const host = assertVercelHostEnvironment();
   console.log(`[vercel-build] host Node ${host.nodeVersion} is within engines.`);
@@ -70,6 +72,17 @@ function main(): void {
     );
   }
 
+  if (runtime !== "gova") {
+    throw new Error(`build:vercel is the gova frontend builder, not runtime "${runtime}".`);
+  }
+
+  // A GitHub-linked gova build starts at the same time as the release workflow.
+  // It must not produce a publishable frontend artifact until control proves
+  // that control + all six Git-disconnected workloads are READY for this exact
+  // 40-character Git SHA. Failed/timeout readiness is fail-closed, leaving the
+  // previous gova production deployment active.
+  await assertHostedGovaReleaseReady();
+
   console.log(`[vercel-build] generating ${GOVA_DEPLOYMENT_DIR}`);
   buildGovaDeploymentTree(ROOT);
 
@@ -86,4 +99,7 @@ function main(): void {
   console.log("[vercel-build] hosted artifact is within Vercel upload limits.");
 }
 
-main();
+void main().catch((error) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+});
