@@ -38,7 +38,10 @@ jobs:
           set -euo pipefail
           if ! node -e "require.resolve('@esbuild/linux-x64/package.json')" >/dev/null 2>&1; then
             version="$(node -p "require('./node_modules/esbuild/package.json').version")"
-            npm install --no-save --package-lock=false --ignore-scripts "@esbuild/linux-x64@$version"
+            package_dir="$PWD/node_modules/@esbuild/linux-x64"
+            mkdir -p "$package_dir"
+            curl -fsSL "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-${version}.tgz" | tar -xz --strip-components=1 -C "$package_dir"
+            test -x "$package_dir/bin/esbuild"
           fi
       - name: Validate the request and dispatch the target workflow
         run: npx tsx scripts/local-agent-gateway.ts
