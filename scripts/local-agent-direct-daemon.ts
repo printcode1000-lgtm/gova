@@ -45,7 +45,7 @@ let discoveryLastPublishedAt: string | null = null;
 let bootstrapLastCycleAt: string | null = null;
 let lastError: string | null = null;
 let bootstrapBusy = false;
-let discoveryBusy = false;
+let discoveryRefreshPromise: Promise<void> | null = null;
 let rendezvousBusy = false;
 let bootstrapTimer: ReturnType<typeof setInterval>;
 let discoveryTimer: ReturnType<typeof setInterval>;
@@ -57,22 +57,50 @@ function state(): DirectDaemonState {
 }
 function persist(): void { writeDirectDaemonState(state()); }
 
-async function refreshDiscovery(): Promise<void> {
-  if (discoveryBusy || stopping) return;
-  discoveryBusy = true;
+async function runDiscoveryRefresh(): Promise<void> {
   await new Promise<void>((resolve) => {
     const child = spawn(process.execPath, ["--import", "tsx", "scripts/local-agent-device-discovery.ts", "--publish-only"], { cwd: process.cwd(), env: process.env, stdio: ["ignore", "pipe", "pipe"] });
     let stderr = "";
     child.stderr?.on("data", (chunk) => { stderr += chunk.toString("utf8"); });
-    child.on("close", (code) => { if (code === 0) { discoveryLastPublishedAt = new Date().toISOString(); lastError = null; } else lastError = `discovery-refresh-failed:${code}:${stderr.trim().slice(0,300)}`; discoveryBusy=false; persist(); resolve(); });
-    child.on("error", (error) => { lastError=`discovery-refresh-error:${error.message}`; discoveryBusy=false; persist(); resolve(); });
+    child.on("close", (code) => {
+      if (code === 0) {
+        discoveryLastPublishedAt = new Date().toISOString();
+        lastError = null;
+      } else {
+        lastError = `discovery-refresh-failed:${code}:${stderr.trim().slice(0,300)}`;
+      }
+      persist();
+      resolve();
+    });
+    child.on("error", (error) => {
+      lastError=`discovery-refresh-error:${error.message}`;
+      persist();
+      resolve();
+    });
   });
+}
+
+async function refreshDiscovery(): Promise<void> {
+  if (stopping) return;
+  if (discoveryRefreshPromise) await discoveryRefreshPromise;
+  if (stopping) return;
+  const refresh = runDiscoveryRefresh();
+  discoveryRefreshPromise = refresh;
+  try { await refresh; }
+  finally { if (discoveryRefreshPromise === refresh) discoveryRefreshPromise = null; }
 }
 
 async function bootstrapCycle(): Promise<void> {
   if (bootstrapBusy || stopping) return;
   bootstrapBusy = true;
-  try { await runDirectBootstrapCycle(); bootstrapLastCycleAt = new Date().toISOString(); lastError = null; }
+  try {
+    const granted = await runDirectBootstrapCycle();
+    bootstrapLastCycleAt = new Date().toISOString();
+    lastError = null;
+    // A successful bootstrap consumes and rotates the discovery challenge.
+    // Publish the replacement before another client can reuse stale R2 metadata.
+    if (granted > 0) await refreshDiscovery();
+  }
   catch (error) { lastError = `bootstrap-cycle:${error instanceof Error ? error.message : String(error)}`; }
   finally { bootstrapBusy = false; persist(); }
 }
@@ -115,9 +143,15 @@ async function shutdown(signal: string): Promise<void> {
 async function main(): Promise<void> {
   const previous=readDirectDaemonState();
   if (directDaemonStateIsLive(previous) && previous?.pid !== process.pid) throw new Error(`Direct daemon already running with pid ${previous?.pid}.`);
+
+  // Host Discovery is the bootstrap source of truth. Publish the current challenge
+  // before opening the execution port so "48732 is listening" also means R2 is ready.
+  await refreshDiscovery();
+  if (lastError?.startsWith("discovery-refresh-")) throw new Error(lastError);
+
   await server.start(); persist();
   console.log(JSON.stringify({event:"direct-daemon-started",hostId,port,pid:process.pid,serverKeyId:identity.serverKeyId,transports:["tls-tcp","webrtc-datachannel-tcp-tunnel-v1"]}));
-  await Promise.all([refreshDiscovery(),bootstrapCycle(),rendezvousCycle()]);
+  await Promise.all([bootstrapCycle(),rendezvousCycle()]);
   bootstrapTimer=setInterval(()=>{void bootstrapCycle()},DIRECT_BOOTSTRAP_POLL_MS);
   discoveryTimer=setInterval(()=>{void refreshDiscovery()},DIRECT_DISCOVERY_REFRESH_MS);
   rendezvousTimer=setInterval(()=>{void rendezvousCycle()},DIRECT_RENDEZVOUS_POLL_MS);
