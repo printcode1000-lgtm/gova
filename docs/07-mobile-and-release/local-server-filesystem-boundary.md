@@ -50,6 +50,8 @@ The local runner executes against the server-hosted workspace located at `/home/
 
 Local worktrees created by the runner are filesystem isolation mechanisms on the server. They must not be confused with new remote branches. Remote branch policy is defined separately and remains limited to the repository's recognized branches.
 
+Authenticated full-host-control jobs are not restricted to this workspace path. Their exact authority, verified runtime state, secret boundary, and operational limits are defined in `docs/07-mobile-and-release/local-runner-full-host-control.md`.
+
 ## Secrets And Scheduled Host Tasks
 
 Secrets such as local `.env` files, R2 credentials, systemd configuration, cron configuration, and scheduled host tasks must be treated according to their actual storage location. If they exist only on the local server, GitHub inspection alone cannot prove their current state or execution status.
