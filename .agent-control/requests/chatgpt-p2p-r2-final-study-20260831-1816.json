@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "chatgpt-p2p-r2-final-study-20260831-1816",
+  "agentId": "chatgpt",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt",
+    "commit_message": "chore: verify local p2p-link updater runtime state",
+    "verification": "none",
+    "shell_command": "set -euo pipefail; cd /home/hesham/p2p-link; echo '=== FINAL P2P R2 CHECK ==='; echo '--- __main__.py ---'; nl -ba p2p_link/__main__.py | head -220; echo '--- grep timing/update across actual source ---'; grep -RniE '(3600|hour|sleep|publish_registry|put_object|updated_at|headless|start\\(|Engine|PeerEngine)' p2p_link scripts docs --exclude='*.pyc' 2>/dev/null | sed -E '/(PASSWORD|TOKEN|SECRET|ACCESS_KEY|AUTHORIZATION|CREDENTIAL)/I s#^.*$#[sensitive-looking line suppressed]#' | head -300 || true; echo '--- external R2 env state ---'; ENVF=/home/hesham/.config/p2p-link/r2.env; if [ -f \"$ENVF\" ]; then echo 'exists=yes'; stat -c 'mode=%a owner=%U group=%G size=%s' \"$ENVF\"; sed -n -E 's/^[[:space:]]*(export[[:space:]]+)?([A-Za-z_][A-Za-z0-9_]*)=.*/name=\\2/p' \"$ENVF\" | sort -u; else echo 'exists=no'; fi; echo '--- service exact state ---'; systemctl --user status p2p-link.service --no-pager 2>&1 | sed -E '/(PASSWORD|TOKEN|SECRET|ACCESS_KEY|AUTHORIZATION|CREDENTIAL)/I s#^.*$#[sensitive-looking line suppressed]#' | head -120 || true; systemctl --user is-enabled p2p-link.service 2>&1 || true; systemctl --user is-active p2p-link.service 2>&1 || true; echo '--- installed launcher/autostart exact files ---'; for f in /home/hesham/.config/autostart/com.hesham.p2plink.desktop /home/hesham/.local/share/applications/com.hesham.p2plink.desktop /home/hesham/Desktop/com.hesham.p2plink.desktop /home/hesham/.config/systemd/user/p2p-link.service; do if [ -e \"$f\" ]; then echo \"exists $f\"; else echo \"missing $f\"; fi; done; echo '=== END FINAL CHECK ==='"
+  },
+  "createdAt": "2026-08-31T15:16:00.000Z"
+}
