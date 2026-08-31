@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-daemon-live-diagnostic-20260831-2405",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Inspect live direct daemon after canonical install",
+    "verification": "none",
+    "timeout_minutes": "10",
+    "execution_target": "isolated-worktree",
+    "shell_command": "set -euo pipefail\ngit show origin/agent-request/chatgpt:.agent-control/payloads/p2p-daemon-live-diagnostic.sh | bash"
+  },
+  "createdAt": "2026-08-31T21:04:20.000Z"
+}
