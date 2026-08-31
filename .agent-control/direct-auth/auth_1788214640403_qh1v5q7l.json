@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "requestId": "auth_1788214640403_qh1v5q7l",
+  "agentId": "chatgpt-sol",
+  "hostId": "hesham-hp-elitedesk-800-g2-twr",
+  "challenge": "ch_e027c53365270bc8da9a063a25d970b4202ff27ccf778a78",
+  "clientEphemeralPublicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VuAyEA4l0n+colz8cFuxFFk8LA3TvftBoMGRAcRalj3/p8tws=\n-----END PUBLIC KEY-----\n",
+  "requestedCapabilities": [
+    "inspect",
+    "execute",
+    "mutate-worktree",
+    "mutate-main",
+    "coordinate"
+  ],
+  "createdAt": "2026-08-31T22:17:20.403Z",
+  "expiresAt": "2026-08-31T22:22:20.403Z"
+}
