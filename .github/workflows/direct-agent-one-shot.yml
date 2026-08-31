@@ -12,9 +12,9 @@ permissions:
 jobs:
   finalize:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
-      - name: Patch, verify, and push final direct client
+      - name: Patch, verify, install, and push direct bootstrap
         shell: bash
         run: |
           set -euo pipefail
@@ -25,16 +25,129 @@ jobs:
           wt="$root/.local/direct-finalize-${GITHUB_RUN_ID}"
           rm -rf "$wt"
           git -C "$root" worktree add --detach "$wt" origin/main
-          cleanup() { git -C "$root" worktree remove --force "$wt" >/dev/null 2>&1 || true; }
-          trap cleanup EXIT
           ln -s "$root/node_modules" "$wt/node_modules"
+          bootstrap_pid=""
+          cleanup() {
+            if [ -n "$bootstrap_pid" ]; then kill "$bootstrap_pid" >/dev/null 2>&1 || true; fi
+            rm -f /tmp/gova-direct-status.json /tmp/gova-direct-exec.json /tmp/gova-direct-bootstrap-final.log
+            rm -f "$wt/node_modules" >/dev/null 2>&1 || true
+            git -C "$root" worktree remove --force "$wt" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
 
-          python3 - "$wt/scripts/local-agent-direct-remote.ts" <<'PY'
+          python3 - "$wt" <<'PY'
           from pathlib import Path
           import sys
-          p = Path(sys.argv[1])
+
+          wt = Path(sys.argv[1])
+
+          def replace(path, old, new):
+              p = wt / path
+              s = p.read_text()
+              if old not in s:
+                  raise SystemExit(f'expected text not found in {path}')
+              p.write_text(s.replace(old, new, 1))
+
+          replace(
+              'packages/local-agent-core/src/direct/bootstrap.ts',
+              'export const DIRECT_AUTH_RESULT_PREFIX = "direct-auth-results";',
+              'export const DIRECT_AUTH_RESULT_PREFIX = "direct-auth-results";\nexport const DIRECT_AUTH_RESULT_DIRECTORY = ".agent-control/direct-auth-results";',
+          )
+
+          p = wt / 'scripts/local-agent-direct-bootstrap.ts'
           s = p.read_text()
-          old = '''import {
+          s = s.replace(
+              'import { spawnSync } from "node:child_process";\n',
+              'import { spawnSync } from "node:child_process";\nimport { existsSync, rmSync } from "node:fs";\nimport { tmpdir } from "node:os";\nimport path from "node:path";\n',
+              1,
+          )
+          s = s.replace(
+              '  DIRECT_AUTH_BRANCH,\n  DIRECT_AUTH_DIRECTORY,\n',
+              '  DIRECT_AUTH_BRANCH,\n  DIRECT_AUTH_DIRECTORY,\n  DIRECT_AUTH_RESULT_DIRECTORY,\n',
+              1,
+          )
+          s = s.replace('  directAuthResultKey,\n', '', 1)
+          old_ota = '''import {
+            createOtaR2Client,
+            putOtaObject,
+          } from "../packages/ota-core/src/publishing/adapters/r2-storage.adapter";
+          import { loadOtaEnvironment } from "../packages/ota-core/src/publishing/config/ota-config";
+          '''
+          if old_ota not in s:
+              raise SystemExit('bootstrap OTA import block not found')
+          s = s.replace(old_ota, '', 1)
+          old_git = '''function git(args: string[]): string {
+            const result = spawnSync("git", args, { encoding: "utf8" });
+            if (result.status !== 0) throw new Error((result.stderr || result.stdout || `git ${args.join(" ")} failed`).trim());
+            return result.stdout;
+          }
+          '''
+          new_git = '''function git(args: string[], env: NodeJS.ProcessEnv = process.env, input?: string): string {
+            const result = spawnSync("git", args, { encoding: "utf8", env, input });
+            if (result.status !== 0) throw new Error((result.stderr || result.stdout || `git ${args.join(" ")} failed`).trim());
+            return result.stdout;
+          }
+          '''
+          if old_git not in s:
+              raise SystemExit('bootstrap git helper not found')
+          s = s.replace(old_git, new_git, 1)
+          old_publish = '''async function publishGrant(grant: DirectBootstrapGrant): Promise<void> {
+            loadOtaEnvironment();
+            await putOtaObject(
+              createOtaR2Client(),
+              directAuthResultKey(grant.hostId, grant.requestId),
+              `${JSON.stringify(grant, null, 2)}\\n`,
+              "application/json",
+              "no-store",
+            );
+          }
+          '''
+          new_publish = '''async function publishGrant(grant: DirectBootstrapGrant): Promise<void> {
+            const resultPath = `${DIRECT_AUTH_RESULT_DIRECTORY}/${grant.requestId}.json`;
+            const body = `${JSON.stringify(grant, null, 2)}\\n`;
+            for (let attempt = 0; attempt < 4; attempt += 1) {
+              git(["fetch", "--quiet", "origin", DIRECT_AUTH_BRANCH]);
+              const base = git(["rev-parse", `origin/${DIRECT_AUTH_BRANCH}`]).trim();
+              const existing = spawnSync("git", ["show", `origin/${DIRECT_AUTH_BRANCH}:${resultPath}`], { encoding: "utf8" });
+              if (existing.status === 0) {
+                try {
+                  const current = JSON.parse(existing.stdout) as DirectBootstrapGrant;
+                  if (current.sessionId === grant.sessionId && current.signature === grant.signature) return;
+                } catch { /* replace malformed/stale result */ }
+              }
+
+              const index = path.join(tmpdir(), `gova-direct-grant-${process.pid}-${Date.now()}-${attempt}`);
+              const env = {
+                ...process.env,
+                GIT_INDEX_FILE: index,
+                GIT_AUTHOR_NAME: "gova-direct-host",
+                GIT_AUTHOR_EMAIL: "gova-direct-host@users.noreply.github.com",
+                GIT_COMMITTER_NAME: "gova-direct-host",
+                GIT_COMMITTER_EMAIL: "gova-direct-host@users.noreply.github.com",
+              };
+              try {
+                git(["read-tree", `${base}^{tree}`], env);
+                const blob = git(["hash-object", "-w", "--stdin"], env, body).trim();
+                git(["update-index", "--add", "--cacheinfo", "100644", blob, resultPath], env);
+                const tree = git(["write-tree"], env).trim();
+                const commit = git(["commit-tree", tree, "-p", base, "-m", `Direct grant ${grant.requestId}`], env).trim();
+                const pushed = spawnSync("git", ["push", "--quiet", "origin", `${commit}:refs/heads/${DIRECT_AUTH_BRANCH}`], { encoding: "utf8", env });
+                if (pushed.status === 0) return;
+                if (attempt === 3) throw new Error((pushed.stderr || pushed.stdout || "grant push failed").trim());
+              } finally {
+                if (existsSync(index)) rmSync(index, { force: true });
+              }
+            }
+          }
+          '''
+          if old_publish not in s:
+              raise SystemExit('bootstrap publishGrant block not found')
+          p.write_text(s.replace(old_publish, new_publish, 1))
+
+          p = wt / 'scripts/local-agent-direct-remote.ts'
+          s = p.read_text()
+          s = s.replace('  directAuthResultKey,\n', '  DIRECT_AUTH_RESULT_DIRECTORY,\n', 1)
+          old_ota_remote = '''import {
             createOtaR2Client,
             deleteOtaObject,
             getOtaObjectBytes,
@@ -42,7 +155,7 @@ jobs:
             loadOtaEnvironment,
             putOtaObject,
           } from "@asol/ota-core/publishing";'''
-          new = '''import {
+          new_ota_remote = '''import {
             createOtaR2Client,
             deleteOtaObject,
             getOtaObjectBytes,
@@ -52,26 +165,82 @@ jobs:
             getOtaPublicBaseUrl,
             loadOtaEnvironment,
           } from "../packages/ota-core/src/publishing/config/ota-config";'''
-          if old not in s:
-              raise SystemExit('expected OTA publishing import block not found')
-          p.write_text(s.replace(old, new))
+          if old_ota_remote not in s:
+              raise SystemExit('remote OTA import block not found')
+          s = s.replace(old_ota_remote, new_ota_remote, 1)
+          start = s.index('async function waitGrant(')
+          end = s.index('\nasync function connectTls(', start)
+          new_wait = '''async function waitGrant(discovery:Discovery, requestId:string, timeoutMs=20_000):Promise<DirectBootstrapGrant>{
+            const resultPath=`${DIRECT_AUTH_RESULT_DIRECTORY}/${requestId}.json`;
+            const branch=discovery.directAgent.bootstrap.branch;
+            const until=Date.now()+timeoutMs;
+            while(Date.now()<until){
+              try{
+                git(["fetch","--quiet","origin",branch]);
+                const shown=spawnSync("git",["show",`origin/${branch}:${resultPath}`],{encoding:"utf8"});
+                if(shown.status===0){
+                  const grant=JSON.parse(shown.stdout) as DirectBootstrapGrant;
+                  if(grant.requestId!==requestId || grant.hostId!==discovery.host.hostId) throw new Error("Bootstrap grant identity metadata mismatch.");
+                  if(!verifySignedBootstrapGrant(grant,discovery.directAgent.serverPublicKey)) throw new Error("Bootstrap grant identity signature failed.");
+                  return grant;
+                }
+              }catch(error){ if(error instanceof Error && (error.message.includes("signature") || error.message.includes("mismatch"))) throw error; }
+              await sleep(500);
+            }
+            throw new Error("Timed out waiting for direct bootstrap grant.");
+          }
+          '''
+          s = s[:start] + new_wait + s[end:]
+          p.write_text(s)
+
+          p = wt / 'docs/07-mobile-and-release/direct-p2p-agent.md'
+          s = p.read_text()
+          needle = 'GitHub Actions are not part of normal direct command/result transport. R2 must never contain shell commands, patches, stdout, stderr, or general execution results.\n'
+          addition = needle + '\nBootstrap authorization is fully GitHub-scoped: requests are written under `.agent-control/direct-auth/` and signed grants are returned under `.agent-control/direct-auth-results/` on the permanent `agent-request/chatgpt` branch. This bootstrap traffic does not use GitHub Actions. R2 remains limited to Host Discovery and short-lived ICE/WebRTC rendezvous metadata.\n'
+          if needle not in s:
+              raise SystemExit('direct P2P documentation anchor not found')
+          p.write_text(s.replace(needle, addition, 1))
           PY
 
-          echo '=== daemon ==='
+          echo '=== pre-push verification ==='
+          systemctl --user is-active gova-direct-agent.service
+          ss -lnt | grep ':48732 '
+          cd "$root"
+          npx tsx "$wt/scripts/local-agent-direct-bootstrap.ts" --poll-ms=1000 >/tmp/gova-direct-bootstrap-final.log 2>&1 &
+          bootstrap_pid=$!
+          sleep 1
+          timeout 45 npx tsx "$wt/scripts/local-agent-direct-remote.ts" status | tee /tmp/gova-direct-status.json
+          timeout 45 npx tsx "$wt/scripts/local-agent-direct-remote.ts" exec -- "printf 'P2P_REMOTE_OK\\n'; hostname; pwd" | tee /tmp/gova-direct-exec.json
+          grep -q 'P2P_REMOTE_OK' /tmp/gova-direct-exec.json
+          echo '=== bootstrap log ==='
+          tail -20 /tmp/gova-direct-bootstrap-final.log || true
+          kill "$bootstrap_pid" >/dev/null 2>&1 || true
+          bootstrap_pid=""
+
+          rm -f "$wt/node_modules"
+          git -C "$wt" rm .github/workflows/direct-agent-one-shot.yml
+          git -C "$wt" add packages/local-agent-core/src/direct/bootstrap.ts scripts/local-agent-direct-bootstrap.ts scripts/local-agent-direct-remote.ts docs/07-mobile-and-release/direct-p2p-agent.md
+          git -C "$wt" -c user.name='gova-direct-finalizer' -c user.email='gova-direct-finalizer@users.noreply.github.com' commit -m 'Use GitHub-only bootstrap for direct P2P sessions'
+          git -C "$wt" push origin HEAD:main
+
+          echo '=== install final main on host ==='
+          git -C "$root" fetch --quiet origin main
+          if [ -n "$(git -C "$root" status --porcelain --untracked-files=no)" ]; then
+            echo 'canonical tracked workspace is dirty; refusing destructive reset'
+            git -C "$root" status --short
+            exit 1
+          fi
+          git -C "$root" checkout -q main
+          git -C "$root" reset --hard origin/main
+          systemctl --user restart gova-direct-agent.service
+          for i in $(seq 1 15); do
+            if [ "$(systemctl --user is-active gova-direct-agent.service || true)" = active ] && ss -lnt | grep -q ':48732 '; then break; fi
+            sleep 1
+          done
           systemctl --user is-active gova-direct-agent.service
           ss -lnt | grep ':48732 '
 
-          echo '=== official direct client status ==='
+          echo '=== final canonical direct exec ==='
           cd "$root"
-          timeout 45 npx tsx "$wt/scripts/local-agent-direct-remote.ts" status | tee /tmp/gova-direct-status.json
-          grep -E '"path"|"workspace"|"headSha"' /tmp/gova-direct-status.json || true
-
-          echo '=== official direct client exec ==='
-          timeout 45 npx tsx "$wt/scripts/local-agent-direct-remote.ts" exec -- "printf 'P2P_REMOTE_OK\\n'; hostname; pwd" | tee /tmp/gova-direct-exec.json
-          grep -q 'P2P_REMOTE_OK' /tmp/gova-direct-exec.json
-
-          rm -f "$wt/node_modules" /tmp/gova-direct-status.json /tmp/gova-direct-exec.json
-          git -C "$wt" rm .github/workflows/direct-agent-one-shot.yml
-          git -C "$wt" add scripts/local-agent-direct-remote.ts
-          git -C "$wt" -c user.name='gova-direct-finalizer' -c user.email='gova-direct-finalizer@users.noreply.github.com' commit -m 'Finalize direct P2P client runtime imports'
-          git -C "$wt" push origin HEAD:main
+          timeout 45 npx tsx scripts/local-agent-direct-remote.ts exec -- "printf 'P2P_MAIN_OK\\n'; hostname; pwd" | tee /tmp/gova-direct-exec.json
+          grep -q 'P2P_MAIN_OK' /tmp/gova-direct-exec.json
