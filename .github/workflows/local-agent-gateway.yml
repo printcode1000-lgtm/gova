@@ -12,6 +12,9 @@ on:
   push:
     branches:
       - "agent-request/**"
+    paths:
+      - ".agent-control/requests/**"
+      - ".agent-control/payloads/**"
 
 permissions:
   contents: write

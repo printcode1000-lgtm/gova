@@ -307,7 +307,8 @@
     "local-agent:direct:revoke-all": "npx tsx scripts/local-agent-direct-cli.ts revoke-all",
     "local-agent:direct:key:status": "npx tsx scripts/local-agent-direct-cli.ts key-status",
     "local-agent:direct:key:rotate": "npx tsx scripts/local-agent-direct-cli.ts key-rotate",
-    "local-agent:direct:kill-switch": "npx tsx scripts/local-agent-direct-cli.ts kill-switch"
+    "local-agent:direct:kill-switch": "npx tsx scripts/local-agent-direct-cli.ts kill-switch",
+    "local-agent:direct:remote": "npx tsx scripts/local-agent-direct-remote.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

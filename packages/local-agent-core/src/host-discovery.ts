@@ -5,6 +5,8 @@ import type { DirectCapability } from "./direct/capabilities";
 import { DIRECT_AUTH_BRANCH, DIRECT_AUTH_DIRECTORY } from "./direct/authorization";
 import { DIRECT_PROTOCOL_VERSION } from "./direct/protocol";
 import { directAuthResultKeyPrefix } from "./direct/bootstrap";
+import { DIRECT_RENDEZVOUS_PREFIX, DIRECT_RENDEZVOUS_TTL_MS } from "./direct/rendezvous";
+import { DIRECT_WEBRTC_TUNNEL_KIND } from "./direct/webrtc-tunnel";
 
 export const DEVICE_DISCOVERY_PORT_ENV = "ASOL_DEVICE_DISCOVERY_PORT";
 export const DEVICE_DISCOVERY_PASSWORD_ENV = "ASOL_DEVICE_DISCOVERY_PORT_PASSWORD";
@@ -53,6 +55,7 @@ export interface DeviceDiscoveryDocument {
   directAgent: {
     protocol: typeof DIRECT_PROTOCOL_VERSION;
     transport: "tls-tcp";
+    transports: Array<"tls-tcp" | typeof DIRECT_WEBRTC_TUNNEL_KIND>;
     port: number;
     serverKeyId: string;
     serverPublicKey: string;
@@ -65,6 +68,7 @@ export interface DeviceDiscoveryDocument {
     };
     capabilities: DirectCapability[];
     candidates: DirectCandidate[];
+    rendezvous: { prefix: string; ttlMs: number };
   };
 }
 
@@ -141,6 +145,7 @@ export function createDeviceDiscoveryDocument(input: {
     directAgent: {
       protocol: DIRECT_PROTOCOL_VERSION,
       transport: "tls-tcp",
+      transports: ["tls-tcp", DIRECT_WEBRTC_TUNNEL_KIND],
       port: input.directPort,
       serverKeyId: input.serverKeyId,
       serverPublicKey: input.serverPublicKey,
@@ -153,6 +158,7 @@ export function createDeviceDiscoveryDocument(input: {
       },
       capabilities: [...input.capabilities],
       candidates: input.candidates,
+      rendezvous: { prefix: `${DIRECT_RENDEZVOUS_PREFIX}/${input.hostId}`, ttlMs: DIRECT_RENDEZVOUS_TTL_MS },
     },
   };
 }
