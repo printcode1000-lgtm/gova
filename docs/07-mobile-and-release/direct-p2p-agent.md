@@ -226,6 +226,33 @@ with exit code `0`. The command itself was executed by the Direct Agent channel;
 
 This loopback verification proves the deployed Direct Agent protocol and execution path. Cross-network ICE/NAT traversal remains a separate network-topology verification and must not be inferred solely from the loopback result.
 
+## Local Runner fallback and recovery policy
+
+The GitHub self-hosted Local Runner control plane remains installed and supported, but it is **not the normal remote execution path**.
+
+The required operating order is:
+
+```text
+1. Direct Agent / P2P path = primary/default
+2. GitHub Local Runner = fallback/recovery only
+```
+
+Use the Local Runner through GitHub only when the Direct Agent cannot be used, for example when:
+
+- `gova-direct-agent.service` is down or cannot start;
+- Host Discovery is unavailable or stale;
+- bootstrap authorization cannot complete;
+- no direct TCP/LAN/WebRTC path can be established;
+- the Direct Agent needs repair, reinstall, restart, or recovery from a broken deployment.
+
+The retained fallback workflows include `local-agent-status.yml`, `local-agent-inspect.yml`, `local-agent-workspace.yml`, `local-agent-main.yml`, `local-agent-coordination.yml`, and `local-agent-gateway.yml`.
+
+The fallback must not silently replace a healthy Direct Agent path. If direct connectivity is healthy, normal `status`, `inspect`, `exec`, `patch`, coordination, and repository operations should use the Direct Agent instead of dispatching GitHub Actions.
+
+Using the fallback does not weaken repository safety: Local Runner execution must continue to use `@asol/local-agent-core`, the existing lock/worktree rules, secret boundaries, stale-lock recovery, and the permanent host-tool restrictions.
+
+After recovery, return to the Direct Agent as the default path and verify it with `npm run local-agent:direct:doctor` or the direct remote client before considering the incident closed.
+
 ## Operational rule
 
 Normal remote control should follow:
@@ -234,4 +261,4 @@ Normal remote control should follow:
 discover -> bootstrap -> connect -> authenticate -> operate -> close/revoke
 ```
 
-Do not route normal commands through GitHub Actions or R2. GitHub Actions remain available only for repository CI/deployment or explicitly retained recovery workflows, not as the Direct Agent command transport.
+Do not route normal commands through GitHub Actions or R2. GitHub Actions remain available only for repository CI/deployment or the explicitly retained Local Runner fallback/recovery path when the Direct Agent is unavailable.
