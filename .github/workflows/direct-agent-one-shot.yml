@@ -41,7 +41,7 @@ jobs:
           ss -lnt | grep ':48732 '
 
           cd "$root"
-          echo '=== official exec ==='
+          echo '=== official exec after event-loop fix ==='
           timeout 35 npx tsx scripts/local-agent-direct-remote.ts exec -- "printf 'P2P_MAIN_OK\\n'; hostname; pwd" | tee /tmp/gova-direct-final-exec.json
           grep -q 'P2P_MAIN_OK' /tmp/gova-direct-final-exec.json
           grep -q 'loopback:tcp:127.0.0.1:48732' /tmp/gova-direct-final-exec.json
