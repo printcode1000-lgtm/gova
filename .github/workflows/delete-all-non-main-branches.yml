@@ -1,0 +1,52 @@
+name: Delete all non-main branches
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/delete-all-non-main-branches.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  delete-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete every branch except the default branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          default_branch="$(gh api "repos/${GITHUB_REPOSITORY}" --jq '.default_branch')"
+          echo "Keeping default branch: ${default_branch}"
+
+          gh api --paginate "repos/${GITHUB_REPOSITORY}/branches?per_page=100" --jq '.[].name' |
+          while IFS= read -r branch; do
+            if [ "${branch}" = "${default_branch}" ]; then
+              continue
+            fi
+
+            encoded_branch="$(printf '%s' "${branch}" | jq -sRr @uri)"
+            echo "Deleting branch: ${branch}"
+            gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${encoded_branch}"
+          done
+
+      - name: Remove this temporary workflow
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          path='.github/workflows/delete-all-non-main-branches.yml'
+          default_branch="$(gh api "repos/${GITHUB_REPOSITORY}" --jq '.default_branch')"
+          sha="$(gh api "repos/${GITHUB_REPOSITORY}/contents/${path}?ref=${default_branch}" --jq '.sha')"
+          gh api --method DELETE "repos/${GITHUB_REPOSITORY}/contents/${path}" \
+            -f message='chore: remove temporary branch cleanup workflow' \
+            -f sha="${sha}" \
+            -f branch="${default_branch}"
