@@ -18274,6 +18274,32 @@
       ]
     },
     {
+      "id": "environment-key:GOVA_DIRECT_AGENT_DIR",
+      "kind": "environment-key",
+      "name": "GOVA_DIRECT_AGENT_DIR",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_direct_agent_dir",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:GOVA_HOST_ID",
+      "kind": "environment-key",
+      "name": "GOVA_HOST_ID",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_host_id",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:GOVA_HOST_PROFILE",
       "kind": "environment-key",
       "name": "GOVA_HOST_PROFILE",
@@ -32830,6 +32856,160 @@
       "tags": [
         "packages/local-agent-core/src/coordination-snapshot",
         "packages/local-agent-core/src/coordination-snapshot.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "kind": "source",
+      "name": "authorization.ts",
+      "path": "packages/local-agent-core/src/direct/authorization.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/authorization",
+        "packages/local-agent-core/src/direct/authorization.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "kind": "source",
+      "name": "candidates.ts",
+      "path": "packages/local-agent-core/src/direct/candidates.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/candidates",
+        "packages/local-agent-core/src/direct/candidates.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "source",
+      "name": "capabilities.ts",
+      "path": "packages/local-agent-core/src/direct/capabilities.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/capabilities",
+        "packages/local-agent-core/src/direct/capabilities.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/client.ts",
+      "kind": "source",
+      "name": "client.ts",
+      "path": "packages/local-agent-core/src/direct/client.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/client",
+        "packages/local-agent-core/src/direct/client.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "source",
+      "name": "crypto.ts",
+      "path": "packages/local-agent-core/src/direct/crypto.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/crypto",
+        "packages/local-agent-core/src/direct/crypto.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "source",
+      "name": "errors.ts",
+      "path": "packages/local-agent-core/src/direct/errors.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/errors",
+        "packages/local-agent-core/src/direct/errors.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/execution.ts",
+      "kind": "source",
+      "name": "execution.ts",
+      "path": "packages/local-agent-core/src/direct/execution.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/execution",
+        "packages/local-agent-core/src/direct/execution.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/local-agent-core/src/direct/index.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/index",
+        "packages/local-agent-core/src/direct/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "source",
+      "name": "paths.ts",
+      "path": "packages/local-agent-core/src/direct/paths.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/paths",
+        "packages/local-agent-core/src/direct/paths.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "source",
+      "name": "protocol.ts",
+      "path": "packages/local-agent-core/src/direct/protocol.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/protocol",
+        "packages/local-agent-core/src/direct/protocol.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "kind": "source",
+      "name": "replay-cache.ts",
+      "path": "packages/local-agent-core/src/direct/replay-cache.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/replay-cache",
+        "packages/local-agent-core/src/direct/replay-cache.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/session.ts",
+      "kind": "source",
+      "name": "session.ts",
+      "path": "packages/local-agent-core/src/direct/session.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/session",
+        "packages/local-agent-core/src/direct/session.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "kind": "source",
+      "name": "transport-types.ts",
+      "path": "packages/local-agent-core/src/direct/transport-types.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/transport-types",
+        "packages/local-agent-core/src/direct/transport-types.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/transport.ts",
+      "kind": "source",
+      "name": "transport.ts",
+      "path": "packages/local-agent-core/src/direct/transport.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/transport",
+        "packages/local-agent-core/src/direct/transport.ts",
         "ts"
       ]
     },
@@ -79016,6 +79196,90 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/local-agent-core/src/coordination-snapshot.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/client.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/execution.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/session.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/transport.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -154098,6 +154362,766 @@
       "to": "source:packages/local-agent-core/src/request-store.ts",
       "kind": "imports",
       "detail": "./request-store"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "imports",
+      "detail": "./capabilities"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "imports",
+      "detail": "./crypto"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "imports",
+      "detail": "./errors"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "imports",
+      "detail": "./protocol"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "kind": "imports",
+      "detail": "./replay-cache"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "source:packages/local-agent-core/src/direct/session.ts",
+      "kind": "imports",
+      "detail": "./session"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "to": "source:packages/local-agent-core/src/secret-paths.ts",
+      "kind": "imports",
+      "detail": "../secret-paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "imports",
+      "detail": "./errors"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/client.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/client.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/client.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/client.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/client.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/client.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/client.ts",
+      "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "imports",
+      "detail": "./crypto"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/client.ts",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "imports",
+      "detail": "./errors"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/client.ts",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "imports",
+      "detail": "./protocol"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "to": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "imports",
+      "detail": "./paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/errors.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/errors.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/errors.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/errors.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/errors.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/errors.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/agent-registry.ts",
+      "kind": "imports",
+      "detail": "../agent-registry"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "imports",
+      "detail": "./capabilities"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "imports",
+      "detail": "./errors"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "imports",
+      "detail": "./protocol"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/direct/session.ts",
+      "kind": "imports",
+      "detail": "./session"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/git.ts",
+      "kind": "imports",
+      "detail": "../git"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/lock-store.ts",
+      "kind": "imports",
+      "detail": "../lock-store"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/operation-log.ts",
+      "kind": "imports",
+      "detail": "../operation-log"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/paths.ts",
+      "kind": "imports",
+      "detail": "../paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/secret-paths.ts",
+      "kind": "imports",
+      "detail": "../secret-paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/worktree.ts",
+      "kind": "imports",
+      "detail": "../worktree"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "kind": "imports",
+      "detail": "./authorization"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "kind": "imports",
+      "detail": "./candidates"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "imports",
+      "detail": "./capabilities"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/client.ts",
+      "kind": "imports",
+      "detail": "./client"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "imports",
+      "detail": "./crypto"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "imports",
+      "detail": "./errors"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/execution.ts",
+      "kind": "imports",
+      "detail": "./execution"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "imports",
+      "detail": "./paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "imports",
+      "detail": "./protocol"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "kind": "imports",
+      "detail": "./replay-cache"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/session.ts",
+      "kind": "imports",
+      "detail": "./session"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/transport.ts",
+      "kind": "imports",
+      "detail": "./transport"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/paths.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/paths.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/paths.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/paths.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/paths.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/paths.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/paths.ts",
+      "to": "source:packages/local-agent-core/src/paths.ts",
+      "kind": "imports",
+      "detail": "../paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/paths.ts",
+      "to": "environment-key:GOVA_DIRECT_AGENT_DIR",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/paths.ts",
+      "to": "environment-key:GOVA_HOST_ID",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "to": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "imports",
+      "detail": "./capabilities"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "imports",
+      "detail": "./errors"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "to": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "imports",
+      "detail": "./paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "imports",
+      "detail": "./capabilities"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "imports",
+      "detail": "./errors"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "imports",
+      "detail": "./paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/session.ts",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "imports",
+      "detail": "./protocol"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "imports",
+      "detail": "./crypto"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "imports",
+      "detail": "./protocol"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "kind": "imports",
+      "detail": "./replay-cache"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "to": "source:packages/local-agent-core/src/direct/session.ts",
+      "kind": "imports",
+      "detail": "./session"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "imports",
+      "detail": "./capabilities"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "imports",
+      "detail": "./crypto"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "imports",
+      "detail": "./errors"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "source:packages/local-agent-core/src/direct/execution.ts",
+      "kind": "imports",
+      "detail": "./execution"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "imports",
+      "detail": "./paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "imports",
+      "detail": "./protocol"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "kind": "imports",
+      "detail": "./replay-cache"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/transport.ts",
+      "to": "source:packages/local-agent-core/src/direct/session.ts",
+      "kind": "imports",
+      "detail": "./session"
     },
     {
       "from": "source:packages/local-agent-core/src/git.ts",

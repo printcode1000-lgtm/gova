@@ -18274,6 +18274,32 @@
       ]
     },
     {
+      "id": "environment-key:GOVA_DIRECT_AGENT_DIR",
+      "kind": "environment-key",
+      "name": "GOVA_DIRECT_AGENT_DIR",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_direct_agent_dir",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:GOVA_HOST_ID",
+      "kind": "environment-key",
+      "name": "GOVA_HOST_ID",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_host_id",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:GOVA_HOST_PROFILE",
       "kind": "environment-key",
       "name": "GOVA_HOST_PROFILE",
@@ -32830,6 +32856,160 @@
       "tags": [
         "packages/local-agent-core/src/coordination-snapshot",
         "packages/local-agent-core/src/coordination-snapshot.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "kind": "source",
+      "name": "authorization.ts",
+      "path": "packages/local-agent-core/src/direct/authorization.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/authorization",
+        "packages/local-agent-core/src/direct/authorization.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "kind": "source",
+      "name": "candidates.ts",
+      "path": "packages/local-agent-core/src/direct/candidates.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/candidates",
+        "packages/local-agent-core/src/direct/candidates.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "source",
+      "name": "capabilities.ts",
+      "path": "packages/local-agent-core/src/direct/capabilities.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/capabilities",
+        "packages/local-agent-core/src/direct/capabilities.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/client.ts",
+      "kind": "source",
+      "name": "client.ts",
+      "path": "packages/local-agent-core/src/direct/client.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/client",
+        "packages/local-agent-core/src/direct/client.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "source",
+      "name": "crypto.ts",
+      "path": "packages/local-agent-core/src/direct/crypto.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/crypto",
+        "packages/local-agent-core/src/direct/crypto.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "source",
+      "name": "errors.ts",
+      "path": "packages/local-agent-core/src/direct/errors.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/errors",
+        "packages/local-agent-core/src/direct/errors.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/execution.ts",
+      "kind": "source",
+      "name": "execution.ts",
+      "path": "packages/local-agent-core/src/direct/execution.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/execution",
+        "packages/local-agent-core/src/direct/execution.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/local-agent-core/src/direct/index.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/index",
+        "packages/local-agent-core/src/direct/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "source",
+      "name": "paths.ts",
+      "path": "packages/local-agent-core/src/direct/paths.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/paths",
+        "packages/local-agent-core/src/direct/paths.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "source",
+      "name": "protocol.ts",
+      "path": "packages/local-agent-core/src/direct/protocol.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/protocol",
+        "packages/local-agent-core/src/direct/protocol.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/replay-cache.ts",
+      "kind": "source",
+      "name": "replay-cache.ts",
+      "path": "packages/local-agent-core/src/direct/replay-cache.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/replay-cache",
+        "packages/local-agent-core/src/direct/replay-cache.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/session.ts",
+      "kind": "source",
+      "name": "session.ts",
+      "path": "packages/local-agent-core/src/direct/session.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/session",
+        "packages/local-agent-core/src/direct/session.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/transport-types.ts",
+      "kind": "source",
+      "name": "transport-types.ts",
+      "path": "packages/local-agent-core/src/direct/transport-types.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/transport-types",
+        "packages/local-agent-core/src/direct/transport-types.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/transport.ts",
+      "kind": "source",
+      "name": "transport.ts",
+      "path": "packages/local-agent-core/src/direct/transport.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/transport",
+        "packages/local-agent-core/src/direct/transport.ts",
         "ts"
       ]
     },

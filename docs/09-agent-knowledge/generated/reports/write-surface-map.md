@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **374**
-Unproven gateway paths: **146**
+Detected write-like surfaces: **378**
+Unproven gateway paths: **150**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -94,6 +94,10 @@ Unproven gateway paths: **146**
 | `packages/gova-deployment-core/src/artifact-gate.ts` | `@asol/gova-deployment-core` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/hero-slider-core/src/server/home-hero-slider-service.ts` | `@asol/hero-slider-core` | save | `unproven` | NO | `` | development, web | high |
 | `packages/hero-slider-core/src/tests/index.test.ts` | `@asol/hero-slider-core` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/local-agent-core/src/direct/client.ts` | `@asol/local-agent-core` | delete, patch | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/local-agent-core/src/direct/crypto.ts` | `@asol/local-agent-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/local-agent-core/src/direct/replay-cache.ts` | `@asol/local-agent-core` | delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/local-agent-core/src/direct/transport.ts` | `@asol/local-agent-core` | delete, patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/local-agent-core/src/lock-store.ts` | `@asol/local-agent-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/map-core/src/AsolMap.tsx` | `@asol/map-core` | delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/native-core/src/adapters/emitter.ts` | `@asol/native-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
