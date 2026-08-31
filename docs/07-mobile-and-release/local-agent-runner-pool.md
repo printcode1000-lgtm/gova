@@ -173,9 +173,12 @@ Local worktrees remain valid because they are machine-local implementation detai
 | `lint` | `npm run lint` |
 | `none` | No built-in verification command. |
 
-`shell_command` is executed with `/bin/bash -lc` without an allowlist. It carries
-the full local OS authority of the runner user, so callers are responsible for
-keeping its output free of secret material.
+`shell_command` is executed with `/bin/bash -lc` without a general allowlist.
+Antigravity and `agy` are the permanent tool-level exception: requests that
+invoke either name are rejected before dispatch or shell execution, and Local
+Runner subprocesses also receive refusal shims for both names. Other commands
+carry the full local OS authority of the runner user, so callers are responsible
+for keeping their output free of secret material.
 
 ### How run steps are validated
 
