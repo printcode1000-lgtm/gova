@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "chatgpt-root-finalize-20260831-1919",
+  "agentId": "chatgpt",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt",
+    "commit_message": "chore: finalize canonical local clone sync",
+    "verification": "none",
+    "shell_command": "set -euo pipefail; ROOT=/home/hesham/gova; git -C \"$ROOT\" fetch --quiet origin main; for p in docs/09-agent-knowledge/generated/graphs/knowledge-graph.json docs/09-agent-knowledge/generated/graphs/search-index.json docs/09-agent-knowledge/generated/reports/graph-health.md; do git -C \"$ROOT\" restore --source=HEAD --staged --worktree -- \"$p\"; done; git -C \"$ROOT\" merge --ff-only origin/main; echo canonicalHead=$(git -C \"$ROOT\" rev-parse HEAD); echo '--- remaining local status ---'; git -C \"$ROOT\" status --short"
+  },
+  "createdAt": "2026-08-31T16:19:00Z"
+}
