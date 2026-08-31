@@ -1,5 +1,5 @@
-import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, rmSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { existsSync, rmSync } from "node:fs";
 import { hostname, tmpdir } from "node:os";
 import path from "node:path";
 import {
@@ -42,7 +42,8 @@ interface Discovery {
 
 function arg(name: string): string | undefined { const i=process.argv.indexOf(`--${name}`); return i>=0?process.argv[i+1]:undefined; }
 function sleep(ms:number){return new Promise(r=>setTimeout(r,ms))}
-function safeHostKey(){ return `host-discovery/${hostname().toLowerCase().replace(/[^a-z0-9._-]+/g,"-")}.json`; }
+function normalizedLocalHost(){ return hostname().toLowerCase().replace(/[^a-z0-9._-]+/g,"-").replace(/^-+|-+$/g,""); }
+function safeHostKey(){ return `host-discovery/${normalizedLocalHost()}.json`; }
 
 async function discover(): Promise<Discovery> {
   loadOtaEnvironment();
@@ -114,6 +115,11 @@ async function connectTls(discovery:Discovery, grant:DirectBootstrapGrant, keyPa
 }
 
 async function connectAuto(discovery:Discovery, grant:DirectBootstrapGrant, keyPair:ReturnType<typeof generateEphemeralKeyPair>):Promise<{client:DirectAgentClient;path:string;tunnel?:DirectWebRtcClientTunnel}>{
+  const sameHost=discovery.host.hostname.toLowerCase()===hostname().toLowerCase() || discovery.host.hostId===normalizedLocalHost();
+  if(sameHost){
+    try { const client=await connectTls(discovery,grant,keyPair,"127.0.0.1",discovery.directAgent.port); return {client,path:`loopback:tcp:127.0.0.1:${discovery.directAgent.port}`}; }
+    catch { /* continue through advertised direct candidates */ }
+  }
   const tcp=[...discovery.directAgent.candidates].filter(c=>c.protocol==="tcp" && c.type!=="loopback" && Date.parse(c.expiresAt)>Date.now()).sort((a,b)=>b.priority-a.priority);
   for(const candidate of tcp){
     try { const client=await connectTls(discovery,grant,keyPair,candidate.address,candidate.port); return {client,path:`${candidate.type}:tcp:${candidate.address}:${candidate.port}`}; }
