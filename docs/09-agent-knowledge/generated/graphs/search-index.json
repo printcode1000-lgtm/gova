@@ -6351,6 +6351,7 @@
         "@asol/hero-slider-core",
         "@asol/hero-slider-core/server",
         "@asol/local-agent-core",
+        "@asol/local-agent-core/direct",
         "@asol/local-agent-core/host",
         "@asol/local-agent-core/monitor",
         "@asol/map-core",
@@ -22564,11 +22565,13 @@
       "kind": "package",
       "name": "@asol/local-agent-core",
       "path": "packages/local-agent-core",
-      "summary": "local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./host, ./monitor",
+      "summary": "local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./direct, ./host, ./monitor",
       "tags": [
         ".",
+        "./direct",
         "./host",
         "./monitor",
+        "/direct",
         "/host",
         "/monitor",
         "@asol/local-agent-core",
@@ -32911,6 +32914,17 @@
       "tags": [
         "packages/local-agent-core/src/direct/crypto",
         "packages/local-agent-core/src/direct/crypto.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "kind": "source",
+      "name": "discovery.ts",
+      "path": "packages/local-agent-core/src/direct/discovery.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/discovery",
+        "packages/local-agent-core/src/direct/discovery.ts",
         "ts"
       ]
     },

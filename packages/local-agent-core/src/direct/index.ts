@@ -3,6 +3,7 @@ export * from "./candidates";
 export * from "./capabilities";
 export * from "./client";
 export * from "./crypto";
+export * from "./discovery";
 export * from "./errors";
 export * from "./execution";
 export * from "./paths";

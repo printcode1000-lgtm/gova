@@ -155,6 +155,30 @@ async function main(): Promise<void> {
   ]);
   assert.deepEqual(sorted.map((candidate) => candidate.type), ["lan", "ipv6", "public"]);
 
+  const discoveryModule = await import("../host-discovery");
+  const v2 = discoveryModule.createDeviceDiscoveryDocument({
+    port: 48731,
+    publicIp: "203.0.113.10",
+    hostId: "host-a",
+    directPort: 48732,
+    serverKeyId: identity.serverKeyId,
+    serverPublicKey: identity.publicKeyPem,
+    challenge: challengeA,
+    challengeExpiresAt: new Date(now + 600_000).toISOString(),
+    capabilities: ["inspect", "execute"],
+    candidates: [{ type: "lan", address: "192.168.1.2", port: 48732, protocol: "tcp", priority: 100, expiresAt: expiry }],
+    generatedAt: new Date(now),
+    addresses: [{ name: "eth0", address: "192.168.1.2", family: "IPv4", cidr: "192.168.1.2/24" }],
+  });
+  assert.equal(v2.schemaVersion, 2);
+  assert.equal(v2.discoveryHttp.execution, false);
+  assert.equal(v2.directAgent.protocol, "gova-direct/1");
+  assert.equal(v2.directAgent.bootstrap.branch, "agent-request/chatgpt");
+  const serializedDiscovery = JSON.stringify(v2);
+  for (const forbidden of ["username", "cwd", "mac", "totalMemoryMb", "freeMemoryMb", "passwordEnv", "privateKey"]) {
+    assert.equal(serializedDiscovery.includes(forbidden), false, `Host Discovery v2 must not publish ${forbidden}`);
+  }
+
   console.log("@asol/local-agent-core direct domain: all checks passed.");
 }
 

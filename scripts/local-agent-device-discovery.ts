@@ -6,6 +6,14 @@ import {
   resolveDeviceDiscoveryConfig,
 } from "@asol/local-agent-core";
 import {
+  collectDirectCandidates,
+  DEFAULT_ALLOWED_CAPABILITIES,
+  hostIdentifier,
+  loadOrCreateHostIdentityKey,
+  loadOrRotateDiscoveryChallenge,
+  resolveDirectAgentPort,
+} from "@asol/local-agent-core/direct";
+import {
   createOtaR2Client,
   getOtaPublicBaseUrl,
   loadOtaEnvironment,
@@ -23,7 +31,7 @@ async function readPublicIp(): Promise<string | null> {
         if (/^[a-f0-9:.]+$/i.test(value)) return value;
       }
     } catch {
-      // Try the next public-IP endpoint.
+      // Try next endpoint.
     } finally {
       clearTimeout(timeout);
     }
@@ -37,13 +45,7 @@ function hasFlag(name: string): boolean {
 
 async function publish(document: unknown, key: string): Promise<string> {
   loadOtaEnvironment();
-  await putOtaObject(
-    createOtaR2Client(),
-    key,
-    `${JSON.stringify(document, null, 2)}\n`,
-    "application/json",
-    "no-store",
-  );
+  await putOtaObject(createOtaR2Client(), key, `${JSON.stringify(document, null, 2)}\n`, "application/json", "no-store");
   return `${getOtaPublicBaseUrl().replace(/\/$/, "")}/${key}`;
 }
 
@@ -56,7 +58,6 @@ function serve(document: unknown, password: string, port: number): Promise<void>
       },
       password,
     );
-
     if (!authorized) {
       response.writeHead(401, {
         "content-type": "application/json; charset=utf-8",
@@ -65,16 +66,13 @@ function serve(document: unknown, password: string, port: number): Promise<void>
       response.end(`${JSON.stringify({ ok: false, error: "unauthorized" })}\n`);
       return;
     }
-
     response.writeHead(200, { "content-type": "application/json; charset=utf-8" });
     response.end(`${JSON.stringify({ ok: true, document }, null, 2)}\n`);
   });
-
   return new Promise((resolve, reject) => {
     server.once("error", reject);
     server.listen(port, "0.0.0.0", () => {
-      const address = server.address();
-      console.log(JSON.stringify({ listening: address, auth: "x-asol-port-password", passwordFromEnv: true }, null, 2));
+      console.log(JSON.stringify({ listening: server.address(), role: "discovery-only", execution: false }, null, 2));
       resolve();
     });
   });
@@ -83,7 +81,22 @@ function serve(document: unknown, password: string, port: number): Promise<void>
 async function main(): Promise<void> {
   const config = resolveDeviceDiscoveryConfig();
   const publicIp = await readPublicIp();
-  const document = createDeviceDiscoveryDocument({ port: config.port, publicIp });
+  const directPort = resolveDirectAgentPort();
+  const identity = loadOrCreateHostIdentityKey();
+  const challenge = loadOrRotateDiscoveryChallenge();
+  const candidates = await collectDirectCandidates({ port: directPort, publicIp, stunServers: [] });
+  const document = createDeviceDiscoveryDocument({
+    port: config.port,
+    publicIp,
+    hostId: hostIdentifier(),
+    directPort,
+    serverKeyId: identity.serverKeyId,
+    serverPublicKey: identity.publicKeyPem,
+    challenge: challenge.challenge,
+    challengeExpiresAt: challenge.expiresAt,
+    capabilities: [...DEFAULT_ALLOWED_CAPABILITIES],
+    candidates,
+  });
 
   if (hasFlag("dry-run")) {
     console.log(JSON.stringify({ dryRun: true, r2Key: config.r2Key, document }, null, 2));
@@ -91,8 +104,7 @@ async function main(): Promise<void> {
   }
 
   const url = await publish(document, config.r2Key);
-  console.log(JSON.stringify({ published: true, r2Key: config.r2Key, publicUrl: url }, null, 2));
-
+  console.log(JSON.stringify({ published: true, schemaVersion: 2, r2Key: config.r2Key, publicUrl: url }, null, 2));
   if (hasFlag("publish-only")) return;
   await serve(document, config.password, config.port);
 }

@@ -770,13 +770,22 @@ assert.equal(discoveryConfig.r2Key.endsWith(".json"), true);
 const discoveryDocument = createDeviceDiscoveryDocument({
   port: 12345,
   publicIp: "203.0.113.10",
+  hostId: "test-host",
+  directPort: 48732,
+  serverKeyId: "test-key-id",
+  serverPublicKey: "-----BEGIN PUBLIC KEY-----\ntest\n-----END PUBLIC KEY-----",
+  challenge: "ch_0123456789abcdef0123456789abcdef0123456789abcdef",
+  challengeExpiresAt: "2026-08-31T00:10:00.000Z",
+  capabilities: ["inspect"],
+  candidates: [],
   generatedAt: new Date("2026-08-31T00:00:00.000Z"),
   addresses: [
-    { name: "eth0", address: "192.168.1.10", family: "IPv4", cidr: "192.168.1.10/24", mac: "00:00:00:00:00:00" },
+    { name: "eth0", address: "192.168.1.10", family: "IPv4", cidr: "192.168.1.10/24" },
   ],
 });
-assert.equal(discoveryDocument.port.passwordEnv, DEVICE_DISCOVERY_PASSWORD_ENV);
-assert.deepEqual(discoveryDocument.network.urlCandidates, ["http://203.0.113.10:12345", "http://192.168.1.10:12345"]);
+assert.equal(discoveryDocument.schemaVersion, 2);
+assert.equal(discoveryDocument.discoveryHttp.execution, false);
+assert.deepEqual(discoveryDocument.network.discoveryUrlCandidates, ["http://203.0.113.10:12345", "http://192.168.1.10:12345"]);
 assert.equal(discoveryDocument.expiresAt, "2026-08-31T00:10:00.000Z");
 assert.equal(deviceDiscoveryAuthorized({ "x-asol-port-password": "secret" }, "secret"), true);
 assert.equal(deviceDiscoveryAuthorized({ "x-asol-port-password": "wrong" }, "secret"), false);

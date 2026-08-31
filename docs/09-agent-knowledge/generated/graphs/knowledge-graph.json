@@ -6351,6 +6351,7 @@
         "@asol/hero-slider-core",
         "@asol/hero-slider-core/server",
         "@asol/local-agent-core",
+        "@asol/local-agent-core/direct",
         "@asol/local-agent-core/host",
         "@asol/local-agent-core/monitor",
         "@asol/map-core",
@@ -22564,11 +22565,13 @@
       "kind": "package",
       "name": "@asol/local-agent-core",
       "path": "packages/local-agent-core",
-      "summary": "local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./host, ./monitor",
+      "summary": "local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./direct, ./host, ./monitor",
       "tags": [
         ".",
+        "./direct",
         "./host",
         "./monitor",
+        "/direct",
         "/host",
         "/monitor",
         "@asol/local-agent-core",
@@ -32911,6 +32914,17 @@
       "tags": [
         "packages/local-agent-core/src/direct/crypto",
         "packages/local-agent-core/src/direct/crypto.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "kind": "source",
+      "name": "discovery.ts",
+      "path": "packages/local-agent-core/src/direct/discovery.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/discovery",
+        "packages/local-agent-core/src/direct/discovery.ts",
         "ts"
       ]
     },
@@ -64828,6 +64842,12 @@
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/local-agent-core",
       "kind": "references",
+      "detail": "@asol/local-agent-core/direct"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/local-agent-core",
+      "kind": "references",
       "detail": "@asol/local-agent-core/host"
     },
     {
@@ -79243,6 +79263,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/discovery.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -135423,6 +135449,12 @@
     },
     {
       "from": "script:scripts/local-agent-device-discovery.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "imports",
+      "detail": "@asol/local-agent-core/direct"
+    },
+    {
+      "from": "script:scripts/local-agent-device-discovery.ts",
       "to": "package:@asol/ota-core",
       "kind": "imports",
       "detail": "@asol/ota-core/publishing"
@@ -154609,6 +154641,54 @@
       "detail": "./paths"
     },
     {
+      "from": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "imports",
+      "detail": "./crypto"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "to": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "imports",
+      "detail": "./paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "imports",
+      "detail": "./protocol"
+    },
+    {
       "from": "source:packages/local-agent-core/src/direct/errors.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -154793,6 +154873,12 @@
       "to": "source:packages/local-agent-core/src/direct/crypto.ts",
       "kind": "imports",
       "detail": "./crypto"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/discovery.ts",
+      "kind": "imports",
+      "detail": "./discovery"
     },
     {
       "from": "source:packages/local-agent-core/src/direct/index.ts",
@@ -155241,6 +155327,30 @@
       "from": "source:packages/local-agent-core/src/host-discovery.ts",
       "to": "package:@asol/local-agent-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/host-discovery.ts",
+      "to": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "kind": "imports",
+      "detail": "./direct/authorization"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/host-discovery.ts",
+      "to": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "kind": "imports",
+      "detail": "./direct/candidates"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/host-discovery.ts",
+      "to": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "imports",
+      "detail": "./direct/capabilities"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/host-discovery.ts",
+      "to": "source:packages/local-agent-core/src/direct/protocol.ts",
+      "kind": "imports",
+      "detail": "./direct/protocol"
     },
     {
       "from": "source:packages/local-agent-core/src/host-inventory.ts",
@@ -239475,6 +239585,12 @@
       "to": "source:packages/local-agent-core/src/direct/index.ts",
       "kind": "imports",
       "detail": "../direct/index"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "source:packages/local-agent-core/src/host-discovery.ts",
+      "kind": "imports",
+      "detail": "../host-discovery"
     },
     {
       "from": "test:packages/local-agent-core/src/tests/direct.test.ts",

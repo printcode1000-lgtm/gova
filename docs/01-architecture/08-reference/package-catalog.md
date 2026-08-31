@@ -266,7 +266,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/local-agent-core/` |
 | **Purpose** | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./host` · `./monitor` |
+| **Public Exports** | `.` · `./direct` · `./host` · `./monitor` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:local-agent-core` |
