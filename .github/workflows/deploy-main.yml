@@ -1,8 +1,7 @@
 # Dispatches main pushes to the production deployment sandbox. The local runner
 # is preferred; GitHub-hosted execution is used only after runner availability is
 # checked. No repository deployment secrets are exposed: GitHub OIDC
-# authenticates this exact workflow to the main application's narrow machine
-# endpoint.
+# authenticates this exact workflow to the stable control-plane machine endpoint.
 name: deploy-main
 
 on:
@@ -39,6 +38,9 @@ permissions:
 concurrency:
   group: asol-production-main
   cancel-in-progress: false
+
+env:
+  ASOL_CONTROL_DEPLOY_ENDPOINT: https://asol-control.vercel.app/api/super-admin/production-deploy/github
 
 jobs:
   select-runner:
@@ -84,17 +86,15 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const endpoint = 'https://gova-swart.vercel.app/api/super-admin/production-deploy/github';
+            const endpoint = process.env.ASOL_CONTROL_DEPLOY_ENDPOINT;
+            if (!endpoint) throw new Error('ASOL_CONTROL_DEPLOY_ENDPOINT is required.');
             const audience = 'asol-production-deploy';
             const pushedRevision = '${{ github.sha }}';
-            core.info(`Dispatching authenticated main revision ${pushedRevision}.`);
+            core.info(`Dispatching authenticated main revision ${pushedRevision} through ASOL Control.`);
             const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
             // The OIDC token is minted per request, and a release polls for the
-            // best part of an hour. A single timeout from the token service was
-            // therefore enough to kill a deployment that was running perfectly
-            // well — twice in a row, both times with "Failed to get ID Token".
-            // A transient token failure is not a deployment failure, so it is
-            // retried; only a persistent one is fatal.
+            // best part of an hour. A transient token failure is not a deployment
+            // failure, so it is retried; only a persistent one is fatal.
             const idToken = async () => {
               let lastError;
               for (let attempt = 1; attempt <= 4; attempt += 1) {
@@ -131,10 +131,8 @@ jobs:
                 continue;
               }
               // A 409 is only worth waiting on when it is the concurrency lock
-              // saying a release is already in flight. Retrying every 409 blindly
-              // meant a genuinely conflicting state was indistinguishable from
-              // "wait your turn", and the job spent the full 55-minute deadline
-              // re-asking a question that had already been answered.
+              // saying a release is already in flight. Any other conflict is a
+              // real rejection and fails immediately.
               if (response.status === 409) {
                 const body = await response.text();
                 let code;
@@ -177,17 +175,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const endpoint = 'https://gova-swart.vercel.app/api/super-admin/production-deploy/github';
+            const endpoint = process.env.ASOL_CONTROL_DEPLOY_ENDPOINT;
+            if (!endpoint) throw new Error('ASOL_CONTROL_DEPLOY_ENDPOINT is required.');
             const audience = 'asol-production-deploy';
             const pushedRevision = '${{ github.sha }}';
-            core.info(`Dispatching authenticated main revision ${pushedRevision}.`);
+            core.info(`Dispatching authenticated main revision ${pushedRevision} through ASOL Control.`);
             const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-            // The OIDC token is minted per request, and a release polls for the
-            // best part of an hour. A single timeout from the token service was
-            // therefore enough to kill a deployment that was running perfectly
-            // well — twice in a row, both times with "Failed to get ID Token".
-            // A transient token failure is not a deployment failure, so it is
-            // retried; only a persistent one is fatal.
+            // Same OIDC retry contract as the self-hosted path.
             const idToken = async () => {
               let lastError;
               for (let attempt = 1; attempt <= 4; attempt += 1) {
@@ -223,8 +217,6 @@ jobs:
                 await sleep(20_000);
                 continue;
               }
-              // Same rule as the primary path: wait only for the known
-              // already-running state, and fail loudly on any other conflict.
               if (response.status === 409) {
                 const body = await response.text();
                 let code;
