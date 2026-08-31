@@ -13722,6 +13722,7 @@
       "path": "docs/07-mobile-and-release/local-runner-full-host-control.md",
       "summary": "The Gova Local Runner is an authenticated host-control execution surface, not a repository-only sandbox.",
       "tags": [
+        "@asol/local-agent-core/host",
         "an",
         "authenticated",
         "control",
@@ -73662,6 +73663,12 @@
       "to": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
       "kind": "references",
       "detail": "docs/07-mobile-and-release/local-server-filesystem-boundary.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "to": "package:@asol/local-agent-core",
+      "kind": "references",
+      "detail": "@asol/local-agent-core/host"
     },
     {
       "from": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
@@ -135370,12 +135377,6 @@
       "to": "package:@asol/local-agent-core",
       "kind": "imports",
       "detail": "@asol/local-agent-core"
-    },
-    {
-      "from": "script:scripts/local-agent-watch.ts",
-      "to": "package:@asol/local-agent-core",
-      "kind": "imports",
-      "detail": "@asol/local-agent-core/host"
     },
     {
       "from": "script:scripts/local-agent-watch.ts",

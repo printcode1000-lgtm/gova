@@ -73,7 +73,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/google-play-store-assets-core` | package | 7 | 2 | 15 | 0 | 23 | 0 |
 | `@asol/gova-deployment-core` | package | 4 | 1 | 0 | 0 | 3 | 3 |
 | `@asol/hero-slider-core` | package | 7 | 2 | 139 | 0 | 21 | 1 |
-| `@asol/local-agent-core` | package | 4 | 2 | 0 | 0 | 25 | 0 |
+| `@asol/local-agent-core` | package | 5 | 2 | 0 | 0 | 24 | 0 |
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
 | `@asol/native-core` | package | 33 | 20 | 48 | 0 | 84 | 27 |
 | `@asol/notifications-composition` | package | 10 | 1 | 0 | 0 | 2 | 4 |
