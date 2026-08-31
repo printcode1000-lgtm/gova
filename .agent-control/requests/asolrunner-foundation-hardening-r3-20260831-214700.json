@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "asolrunner-foundation-hardening-r3-20260831-214700",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Harden local runner execution targets and stage telemetry",
+    "verification": "typecheck",
+    "shell_command": "set -euo pipefail\ngit fetch origin agent-request/chatgpt\npython3 - <<'PY'\nimport json\nimport subprocess\nfrom pathlib import Path\nraw = subprocess.check_output(['git','show','origin/agent-request/chatgpt:.agent-control/requests/asolrunner-foundation-hardening-20260831-212900.json'], text=True)\ndata = json.loads(raw)\ncmd = data['inputs']['shell_command']\ncmd = cmd.replace(r'.split(\"\\n\")', r'.split(\"\\\\n\")')\nscript = Path('/tmp/asolrunner-foundation-r3.sh')\nscript.write_text(cmd)\nPY\nbash /tmp/asolrunner-foundation-r3.sh"
+  },
+  "createdAt": "2026-08-31T18:47:00.000Z"
+}
