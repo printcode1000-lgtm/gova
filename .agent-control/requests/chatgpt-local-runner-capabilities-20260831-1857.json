@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "chatgpt-runner-cap-20260831-1857",
+  "agentId": "chatgpt",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt",
+    "commit_message": "chore: verify Local Runner host capabilities",
+    "verification": "none",
+    "shell_command": "set -u; echo '=== LOCAL RUNNER CAPABILITY PROBE ==='; echo \"user=$(id -un)\"; echo \"uid=$(id -u)\"; echo \"host=$(hostname)\"; if sudo -n true 2>/dev/null; then echo 'sudo_nopasswd=yes'; echo \"sudo_uid=$(sudo -n id -u)\"; else echo 'sudo_nopasswd=no'; fi; if sudo -n test -r /etc/shadow 2>/dev/null; then echo 'root_read=yes'; else echo 'root_read=no'; fi; probe=/var/tmp/gova-local-runner-capability-$$; if sudo -n sh -c \"umask 077; : > '$probe'\" 2>/dev/null && sudo -n test -f \"$probe\"; then echo 'root_write=yes'; sudo -n rm -f \"$probe\"; else echo 'root_write=no'; fi; if test -r /home/hesham; then echo 'home_read=yes'; else echo 'home_read=no'; fi; if test -w /home/hesham; then echo 'home_write=yes'; else echo 'home_write=no'; fi; for tool in systemctl apt-get crontab ip ss git node npm python3 docker; do if command -v \"$tool\" >/dev/null 2>&1; then echo \"tool.$tool=available\"; else echo \"tool.$tool=missing\"; fi; done; POLICY=/home/hesham/gova/.local/host-tools.json; if [ -r \"$POLICY\" ]; then node -e \"const fs=require('fs');try{const p=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));console.log('host_tool.antigravity_allowed='+(p?.antigravity?.allowed===true?'yes':'no'))}catch{console.log('host_tool.policy=unreadable')}\" \"$POLICY\"; else echo 'host_tool.policy=missing'; fi; if command -v antigravity >/dev/null 2>&1; then echo \"tool.antigravity_path=$(command -v antigravity)\"; else echo 'tool.antigravity_path=missing'; fi; if command -v agy >/dev/null 2>&1; then echo \"tool.agy_path=$(command -v agy)\"; else echo 'tool.agy_path=missing'; fi; echo '=== END PROBE ==='"
+  },
+  "createdAt": "2026-08-31T15:57:00Z"
+}
