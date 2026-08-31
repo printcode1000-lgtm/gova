@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "asolcutover-production-canonical-r2-20260831-190200",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Execute ASOL Control production cutover after preflight fixes",
+    "verification": "none",
+    "timeout_minutes": "55",
+    "execution_target": "canonical-host",
+    "shell_command": "set -euo pipefail\n[ -f .vercel/project.json ] || { echo 'missing canonical .vercel/project.json'; exit 44; }\necho \"cutover-start-sha=$(git rev-parse HEAD)\"\nNEXT_PUBLIC_ASOL_CONTROL_URL=https://asol-control.vercel.app NEXT_PUBLIC_ASOL_SUBMAIN_URL=https://asol-submain.vercel.app NEXT_PUBLIC_ASOL_SUB2MAIN_URL=https://asol-sub2main.vercel.app npm run deploy:all"
+  },
+  "createdAt": "2026-08-31T19:01:50.000Z"
+}
