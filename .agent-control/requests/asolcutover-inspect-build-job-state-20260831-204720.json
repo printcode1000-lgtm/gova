@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "asolcutover-inspect-build-job-state-20260831-204720",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-inspect",
+  "mode": "inspect",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "mode": "search",
+    "paths": ".backups/build-jobs",
+    "pattern": "running|queued|android-r8-validate"
+  },
+  "createdAt": "2026-08-31T17:47:20.000Z"
+}
