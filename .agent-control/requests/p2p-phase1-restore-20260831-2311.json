@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-phase1-restore-20260831-2311",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Add direct P2P protocol and session core",
+    "verification": "none",
+    "timeout_minutes": "30",
+    "execution_target": "isolated-worktree",
+    "shell_command": "set -euo pipefail\nbackup=/home/hesham/gova/.local/direct-agent-recovery/20260831T200000Z/direct-src\ntest \"$(find \"$backup\" -type f | wc -l)\" -eq 14\nrm -rf packages/local-agent-core/src/direct\ncp -a \"$backup\" packages/local-agent-core/src/direct\nfind packages/local-agent-core/src/direct -type f -exec chmod 644 {} +\nnpm run typecheck\nnpm run test:local-agent-core\nnpm run docs:generate\nnpm run architecture:check\nnpm run docs:ci"
+  },
+  "createdAt": "2026-08-31T20:11:10.000Z"
+}
