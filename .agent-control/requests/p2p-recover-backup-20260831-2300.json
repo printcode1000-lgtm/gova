@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-recover-backup-20260831-2300",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Back up partial direct P2P implementation",
+    "verification": "none",
+    "timeout_minutes": "15",
+    "execution_target": "isolated-worktree",
+    "shell_command": "set -euo pipefail\nroot=/home/hesham/gova\nbackup=$root/.local/direct-agent-recovery/20260831T200000Z\nmkdir -p \"$backup\"\nchmod 700 \"$root/.local/direct-agent-recovery\" \"$backup\"\ngit -C \"$root\" diff --binary > \"$backup/tracked.patch\"\nchmod 600 \"$backup/tracked.patch\"\nrm -rf \"$backup/direct-src\"\ncp -a \"$root/packages/local-agent-core/src/direct\" \"$backup/direct-src\"\nfind \"$backup/direct-src\" -type f -exec chmod 600 {} +\nprintf '%s\\n' '--- recovery backup ---'\nprintf 'path=%s\\n' \"$backup\"\nprintf 'trackedPatchBytes=%s\\n' \"$(wc -c < \"$backup/tracked.patch\")\"\nprintf 'directFiles=%s\\n' \"$(find \"$backup/direct-src\" -type f | wc -l)\"\nprintf '%s\\n' '--- partial direct filenames ---'\nfind \"$backup/direct-src\" -type f -printf '%P\\n' | sort\nprintf '%s\\n' '--- tracked diff stat ---'\ngit -C \"$root\" diff --stat\nprintf '%s\\n' '--- checksums ---'\nsha256sum \"$backup/tracked.patch\"\nfind \"$backup/direct-src\" -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum"
+  },
+  "createdAt": "2026-08-31T20:00:05.000Z"
+}
