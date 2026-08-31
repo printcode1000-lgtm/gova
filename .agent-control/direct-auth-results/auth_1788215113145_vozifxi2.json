@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "status": "granted",
+  "requestId": "auth_1788215113145_vozifxi2",
+  "sessionId": "sess_1788215131759_4e132818f9e06f30",
+  "agentId": "chatgpt-sol",
+  "hostId": "hesham-hp-elitedesk-800-g2-twr",
+  "serverKeyId": "4259caa19a3ea331ff40614dc189e2832df8e3203e746c9f803fbff9e5be7278",
+  "serverEphemeralPublicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VuAyEAiBztqjExNikOhO73UyyD5A8l2LYHiOC58pM6ZkYLGyo=\n-----END PUBLIC KEY-----\n",
+  "capabilities": [
+    "inspect",
+    "execute",
+    "mutate-worktree",
+    "mutate-main",
+    "coordinate"
+  ],
+  "createdAt": "2026-08-31T22:25:31.756Z",
+  "expiresAt": "2026-08-31T23:25:31.756Z",
+  "signature": "KWd2RsdIVG-TPCPSt_3KbGAcn5OQj5TEZH1qv0cJQSOj543wLiVV_7rocPAXP1r5uXR7PyAWnE706g9bQ1i-Cg"
+}
