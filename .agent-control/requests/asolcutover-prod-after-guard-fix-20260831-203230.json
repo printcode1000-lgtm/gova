@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "asolcutover-prod-after-guard-fix-20260831-203230",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Complete ASOL production cutover after guard isolation fixes",
+    "verification": "none",
+    "shell_command": "set -euo pipefail\ncd /home/hesham/gova\necho '=== canonical workspace pre-sync ==='\ngit status --short --untracked-files=no\ntest -z \"$(git status --porcelain --untracked-files=no)\"\ngit fetch --prune origin main\ntest \"$(git branch --show-current)\" = main\ngit pull --ff-only origin main\ntest \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/main)\"\necho head=$(git rev-parse HEAD)\necho '=== production cutover ==='\nNEXT_PUBLIC_ASOL_CONTROL_URL=https://asol-control.vercel.app NEXT_PUBLIC_ASOL_SUBMAIN_URL=https://asol-submain.vercel.app NEXT_PUBLIC_ASOL_SUB2MAIN_URL=https://asol-sub2main.vercel.app npm run deploy:all"
+  },
+  "createdAt": "2026-08-31T17:32:30.000Z"
+}
