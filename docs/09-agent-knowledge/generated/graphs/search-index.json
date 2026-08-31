@@ -53318,6 +53318,18 @@
       ]
     },
     {
+      "id": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "kind": "test",
+      "name": "direct.test.ts",
+      "path": "packages/local-agent-core/src/tests/direct.test.ts",
+      "tags": [
+        "packages/local-agent-core/src/tests/direct",
+        "packages/local-agent-core/src/tests/direct.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/local-agent-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",

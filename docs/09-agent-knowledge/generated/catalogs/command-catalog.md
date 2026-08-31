@@ -228,7 +228,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:image-upload-queue` | `Tooling` | 1 |  | 0 |
 | `npm run test:import-without-composition` | `Tooling` | 1 |  | 0 |
 | `npm run test:installation-bootstrap` | `Tooling` | 1 |  | 0 |
-| `npm run test:local-agent-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:local-agent-core` | `Tooling` | 2 |  | 0 |
 | `npm run test:local-agent-workflows` | `Tooling` | 1 |  | 0 |
 | `npm run test:map-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:marketplace-orders` | `Tooling` | 10 |  | 1 |

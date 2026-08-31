@@ -53318,6 +53318,18 @@
       ]
     },
     {
+      "id": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "kind": "test",
+      "name": "direct.test.ts",
+      "path": "packages/local-agent-core/src/tests/direct.test.ts",
+      "tags": [
+        "packages/local-agent-core/src/tests/direct",
+        "packages/local-agent-core/src/tests/direct.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/local-agent-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -58629,6 +58641,11 @@
       "from": "command:test:installation-bootstrap",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:local-agent-core",
+      "to": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "kind": "invokes"
     },
     {
       "from": "command:test:local-agent-core",
@@ -82454,6 +82471,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/hero-slider-core/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/local-agent-core/src/tests/direct.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -239416,6 +239439,52 @@
       "from": "test:packages/hero-slider-core/src/tests/index.test.ts",
       "to": "package:@asol/hero-slider-core",
       "kind": "tests"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "source:packages/local-agent-core/src/direct/index.ts",
+      "kind": "imports",
+      "detail": "../direct/index"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
+      "to": "environment-key:GOVA_DIRECT_AGENT_DIR",
+      "kind": "uses-environment"
     },
     {
       "from": "test:packages/local-agent-core/src/tests/index.test.ts",
