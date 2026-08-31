@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "chatgpt-full-host-20260831-1750",
+  "agentId": "chatgpt",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt",
+    "commit_message": "chore(local-agent): enable full host control",
+    "shell_command": "set -euo pipefail; printf '%s\\n' 'hesham ALL=(ALL:ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/gova-local-runner >/dev/null; sudo chmod 440 /etc/sudoers.d/gova-local-runner; sudo visudo -cf /etc/sudoers.d/gova-local-runner >/dev/null; mkdir -p /home/hesham/gova/.local; printf '%s\\n' '{\"antigravity\":{\"allowed\":true}}' > /home/hesham/gova/.local/host-tools.json; sudo -n true; test \"$(stat -c '%a' /etc/sudoers.d/gova-local-runner)\" = 440; grep -qx 'hesham ALL=(ALL:ALL) NOPASSWD: ALL' /etc/sudoers.d/gova-local-runner; git -C /home/hesham/gova fetch origin main; if [ -z \"$(git -C /home/hesham/gova status --porcelain)\" ]; then git -C /home/hesham/gova merge --ff-only origin/main; else printf '%s\\n' 'workspace-dirty-skip-sync'; fi; printf '%s\\n' 'full-host-control-ready'",
+    "verification": "none"
+  },
+  "createdAt": "2026-08-31T17:50:44+03:00"
+}
