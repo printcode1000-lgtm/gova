@@ -15,9 +15,17 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: agent-request/chatgpt
-          fetch-depth: 0
-      - name: Apply fixed two-branch migration
-        run: python3 .github/two_branch_policy_migration.py
+      - name: Apply migration in isolated local worktree
+        working-directory: /home/hesham/gova
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin agent-request/chatgpt
+          WT=/home/hesham/gova/.local/two-branch-policy-migration
+          git worktree remove --force "$WT" 2>/dev/null || true
+          rm -rf "$WT"
+          git worktree add --detach "$WT" origin/agent-request/chatgpt
+          cd "$WT"
+          python3 .github/two_branch_policy_migration.py
+          cd /home/hesham/gova
+          git worktree remove --force "$WT" 2>/dev/null || true
