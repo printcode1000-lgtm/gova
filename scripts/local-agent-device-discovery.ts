@@ -15,10 +15,12 @@ import {
 } from "@asol/local-agent-core/direct";
 import {
   createOtaR2Client,
+  putOtaObject,
+} from "../packages/ota-core/src/publishing/adapters/r2-storage.adapter";
+import {
   getOtaPublicBaseUrl,
   loadOtaEnvironment,
-  putOtaObject,
-} from "@asol/ota-core/publishing";
+} from "../packages/ota-core/src/publishing/config/ota-config";
 
 async function readPublicIp(): Promise<string | null> {
   for (const url of ["https://api.ipify.org", "https://ifconfig.me/ip", "https://icanhazip.com"]) {
