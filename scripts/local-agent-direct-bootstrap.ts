@@ -134,6 +134,11 @@ export async function runDirectBootstrapCycle(): Promise<number> {
     rotateDiscoveryChallenge();
     granted += 1;
     console.log(JSON.stringify({ bootstrap: "granted", requestId, sessionId: result.grant.sessionId, expiresAt: result.grant.expiresAt }));
+
+    // The TLS server shares this Node.js event loop. Stop the synchronous Git scan
+    // immediately after granting the newest request so the authorized client can
+    // complete its handshake without waiting behind historical bootstrap entries.
+    return granted;
   }
   return granted;
 }
