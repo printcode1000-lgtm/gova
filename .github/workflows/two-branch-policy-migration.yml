@@ -26,6 +26,7 @@ jobs:
           rm -rf "$WT"
           git worktree add --detach "$WT" origin/agent-request/chatgpt
           cd "$WT"
+          sed -i '260,268d' .github/two_branch_policy_migration.py
           python3 .github/two_branch_policy_migration.py
           cd /home/hesham/gova
           git worktree remove --force "$WT" 2>/dev/null || true
