@@ -4,10 +4,10 @@ import { hostname, tmpdir } from "node:os";
 import path from "node:path";
 import {
   DEFAULT_ALLOWED_CAPABILITIES,
+  DIRECT_AUTH_RESULT_DIRECTORY,
   DirectAgentClient,
   DirectWebRtcClientTunnel,
   createBootstrapAuthRequest,
-  directAuthResultKey,
   directRendezvousAnswerKey,
   directRendezvousOfferKey,
   generateEphemeralKeyPair,
@@ -22,10 +22,12 @@ import {
   createOtaR2Client,
   deleteOtaObject,
   getOtaObjectBytes,
+  putOtaObject,
+} from "../packages/ota-core/src/publishing/adapters/r2-storage.adapter";
+import {
   getOtaPublicBaseUrl,
   loadOtaEnvironment,
-  putOtaObject,
-} from "@asol/ota-core/publishing";
+} from "../packages/ota-core/src/publishing/config/ota-config";
 
 interface Discovery {
   expiresAt: string;
@@ -81,13 +83,22 @@ function publishAuthRequest(branch:string, directory:string, request:unknown): v
 }
 
 async function waitGrant(discovery:Discovery, requestId:string, timeoutMs=20_000):Promise<DirectBootstrapGrant>{
-  const url=`${getOtaPublicBaseUrl().replace(/\/$/,"")}/${directAuthResultKey(discovery.host.hostId,requestId)}`;
+  const resultPath=`${DIRECT_AUTH_RESULT_DIRECTORY}/${requestId}.json`;
+  const branch=discovery.directAgent.bootstrap.branch;
   const until=Date.now()+timeoutMs;
   while(Date.now()<until){
     try{
-      const res=await fetch(url,{cache:"no-store"});
-      if(res.ok){ const grant=await res.json() as DirectBootstrapGrant; if(!verifySignedBootstrapGrant(grant,discovery.directAgent.serverPublicKey)) throw new Error("Bootstrap grant identity signature failed."); return grant; }
-    }catch(error){ if(error instanceof Error && error.message.includes("signature")) throw error; }
+      git(["fetch","--quiet","origin",branch]);
+      const shown=spawnSync("git",["show",`origin/${branch}:${resultPath}`],{encoding:"utf8"});
+      if(shown.status===0){
+        const grant=JSON.parse(shown.stdout) as DirectBootstrapGrant;
+        if(grant.requestId!==requestId || grant.hostId!==discovery.host.hostId) throw new Error("Bootstrap grant identity metadata mismatch.");
+        if(!verifySignedBootstrapGrant(grant,discovery.directAgent.serverPublicKey)) throw new Error("Bootstrap grant identity signature failed.");
+        return grant;
+      }
+    }catch(error){
+      if(error instanceof Error && (error.message.includes("signature") || error.message.includes("mismatch"))) throw error;
+    }
     await sleep(500);
   }
   throw new Error("Timed out waiting for direct bootstrap grant.");
