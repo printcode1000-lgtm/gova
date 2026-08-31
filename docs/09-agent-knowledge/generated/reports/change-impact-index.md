@@ -81,7 +81,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/observability-core` | package | 8 | 1 | 138 | 0 | 23 | 5 |
 | `@asol/orders-composition` | package | 12 | 1 | 0 | 0 | 2 | 5 |
 | `@asol/orders-core` | package | 17 | 6 | 139 | 0 | 41 | 1 |
-| `@asol/ota-core` | package | 35 | 26 | 32 | 0 | 45 | 13 |
+| `@asol/ota-core` | package | 35 | 26 | 32 | 0 | 46 | 13 |
 | `@asol/page-save-core` | package | 29 | 3 | 0 | 0 | 8 | 0 |
 | `@asol/page-snapshot-core` | package | 8 | 1 | 0 | 0 | 3 | 0 |
 | `@asol/product-core` | package | 9 | 1 | 137 | 0 | 27 | 0 |

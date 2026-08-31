@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, statSync } from "node:fs";
 import path from "node:path";
 import { agentsDir, assessSwap, coordinationDir, DISPATCHABLE_WORKFLOWS, gitSoft, hasGithubToken, hostProfile, hostProfileName, isOpen, listAgents, listLocks, listOperations, listRequests, listRunners, locksDir, logsDir, maxConcurrentMutations, memoryFloorMb, memoryFloorReason, messagesDir, operationLogsDir, pendingReservationMb, readMemory, requestsDir, RUNNER_DIRECTORY_NAMES, RUNNER_GITHUB_NAMES, RUNNER_SERVICE_NAMES, runnerPoolDir, workflowExists, workspaceDir, worktreesDir } from "@asol/local-agent-core";
-import { companionRepositoryStates, hostToolState } from "@asol/local-agent-core/host";
+import { hostToolState } from "@asol/local-agent-core/host";
 import { probeRemoteHosts, readRemoteHostsCache } from "@asol/local-agent-core/monitor";
 /**
  * Health check for the whole local agent control plane.
@@ -223,20 +223,6 @@ function checkHostTools(): void {
   );
 }
 
-function checkCompanionRepositories(): void {
-  for (const repo of companionRepositoryStates()) {
-    assert(
-      `companion.${repo.name}`,
-      repo.exists && repo.originMatches && repo.entryPointExists,
-      `${repo.path} at ${repo.head ?? "unknown"}; entry ${repo.entryPoint}.`,
-      !repo.exists
-        ? `${repo.path} is missing; restore will clone ${repo.origin}.`
-        : `origin/entry mismatch: origin=${repo.currentOrigin ?? "(none)"}, entry=${repo.entryPointExists}.`,
-      "WARN",
-    );
-  }
-}
-
 async function checkRemoteHosts(): Promise<void> {
   let remotes = readRemoteHostsCache();
   try {
@@ -298,7 +284,6 @@ async function main(): Promise<void> {
   checkMemory();
   checkAbandonedOperations();
   checkHostTools();
-  checkCompanionRepositories();
   await checkRemoteHosts();
   await checkGithub();
 

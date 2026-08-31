@@ -1852,6 +1852,21 @@
       ]
     },
     {
+      "id": "command:local-agent:device:discover",
+      "kind": "command",
+      "name": "npm run local-agent:device:discover",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "device",
+        "discover",
+        "local-agent",
+        "local-agent:device:discover",
+        "npm",
+        "npm run local-agent:device:discover",
+        "run"
+      ]
+    },
+    {
       "id": "command:local-agent:dispatch:check",
       "kind": "command",
       "name": "npm run local-agent:dispatch:check",
@@ -1908,21 +1923,6 @@
         "npm run local-agent:host:restore",
         "restore",
         "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:p2p:sync",
-      "kind": "command",
-      "name": "npm run local-agent:p2p:sync",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "local-agent",
-        "local-agent:p2p:sync",
-        "npm",
-        "npm run local-agent:p2p:sync",
-        "p2p",
-        "run",
-        "sync"
       ]
     },
     {
@@ -13694,13 +13694,10 @@
         "scripts/local-agent-main-apply.ts",
         "scripts/local-agent-status",
         "scripts/local-agent-status.ts",
-        "scripts/p2p-link-gui",
-        "scripts/p2p-link-gui.sh",
         "scripts/tests/",
         "scripts/tests/local-agent-control-plane",
         "scripts/tests/local-agent-control-plane.test.ts",
         "self-hosted",
-        "sh",
         "src/app",
         "src/app/page",
         "src/app/page.tsx",
@@ -13714,6 +13711,76 @@
         "tsx",
         "work",
         "workflows"
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "kind": "document",
+      "name": "Local Runner Full Host Control",
+      "path": "docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "summary": "The self-hosted Local Runner executes on the local server, not inside a repository sandbox. `/home/hesham/` is host filesystem state and `/home/hesham/gova` is the local clone/workspace used by the runner; neither absolute path is a repository path.",
+      "tags": [
+        "/home/hesham/",
+        "/home/hesham/gova",
+        "absolute",
+        "and",
+        "by",
+        "clone/workspace",
+        "control",
+        "docs/07-mobile-and-release/local-runner-full-host-control",
+        "docs/07-mobile-and-release/local-runner-full-host-control.md",
+        "executes",
+        "filesystem",
+        "full",
+        "host",
+        "inside",
+        "is",
+        "local",
+        "local runner full host control",
+        "md",
+        "neither",
+        "not",
+        "on",
+        "path",
+        "repository",
+        "runner",
+        "sandbox",
+        "self-hosted",
+        "server",
+        "state",
+        "the",
+        "the self-hosted local runner executes on the local server, not inside a repository sandbox. `/home/hesham/` is host filesystem state and `/home/hesham/gova` is the local clone/workspace used by the runner; neither absolute path is a repository path.",
+        "used"
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+      "kind": "document",
+      "name": "Local Server Filesystem Boundary",
+      "path": "docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+      "summary": "This document defines the boundary between paths on the local server and paths inside the `gova` Git repository.",
+      "tags": [
+        "and",
+        "between",
+        "boundary",
+        "defines",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+        "document",
+        "filesystem",
+        "git",
+        "gova",
+        "inside",
+        "local",
+        "local server filesystem boundary",
+        "md",
+        "on",
+        "paths",
+        "repository",
+        "server",
+        "the",
+        "this",
+        "this document defines the boundary between paths on the local server and paths inside the `gova` git repository."
       ]
     },
     {
@@ -16916,6 +16983,45 @@
       "summary": "Server/tooling environment key name",
       "tags": [
         "asol_deploy_run_id",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_DEVICE_DISCOVERY_PORT",
+      "kind": "environment-key",
+      "name": "ASOL_DEVICE_DISCOVERY_PORT",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_device_discovery_port",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_DEVICE_DISCOVERY_PORT_PASSWORD",
+      "kind": "environment-key",
+      "name": "ASOL_DEVICE_DISCOVERY_PORT_PASSWORD",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_device_discovery_port_password",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_DEVICE_DISCOVERY_R2_KEY",
+      "kind": "environment-key",
+      "name": "ASOL_DEVICE_DISCOVERY_R2_KEY",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_device_discovery_r2_key",
         "environment",
         "server",
         "server tooling environment",
@@ -26944,6 +27050,17 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent-device-discovery.ts",
+      "kind": "script",
+      "name": "local-agent-device-discovery.ts",
+      "path": "scripts/local-agent-device-discovery.ts",
+      "tags": [
+        "scripts/local-agent-device-discovery",
+        "scripts/local-agent-device-discovery.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent-dispatch-check.ts",
       "kind": "script",
       "name": "local-agent-dispatch-check.ts",
@@ -27017,17 +27134,6 @@
       "tags": [
         "scripts/local-agent-main-apply",
         "scripts/local-agent-main-apply.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-p2p-sync.ts",
-      "kind": "script",
-      "name": "local-agent-p2p-sync.ts",
-      "path": "scripts/local-agent-p2p-sync.ts",
-      "tags": [
-        "scripts/local-agent-p2p-sync",
-        "scripts/local-agent-p2p-sync.ts",
         "ts"
       ]
     },
@@ -32683,17 +32789,6 @@
       ]
     },
     {
-      "id": "source:packages/local-agent-core/src/companion-repos.ts",
-      "kind": "source",
-      "name": "companion-repos.ts",
-      "path": "packages/local-agent-core/src/companion-repos.ts",
-      "tags": [
-        "packages/local-agent-core/src/companion-repos",
-        "packages/local-agent-core/src/companion-repos.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/local-agent-core/src/control-branch-namespaces.ts",
       "kind": "source",
       "name": "control-branch-namespaces.ts",
@@ -32745,6 +32840,17 @@
       "tags": [
         "packages/local-agent-core/src/github-api",
         "packages/local-agent-core/src/github-api.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/host-discovery.ts",
+      "kind": "source",
+      "name": "host-discovery.ts",
+      "path": "packages/local-agent-core/src/host-discovery.ts",
+      "tags": [
+        "packages/local-agent-core/src/host-discovery",
+        "packages/local-agent-core/src/host-discovery.ts",
         "ts"
       ]
     },
@@ -32855,17 +32961,6 @@
       "tags": [
         "packages/local-agent-core/src/paths",
         "packages/local-agent-core/src/paths.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/peer-sync.ts",
-      "kind": "source",
-      "name": "peer-sync.ts",
-      "path": "packages/local-agent-core/src/peer-sync.ts",
-      "tags": [
-        "packages/local-agent-core/src/peer-sync",
-        "packages/local-agent-core/src/peer-sync.ts",
         "ts"
       ]
     },

@@ -142,11 +142,11 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run lint` | `eslint .` |
 | `npm run local-agent:cleanup` | `npx tsx scripts/local-agent-cleanup.ts` |
 | `npm run local-agent:coordination` | `npx tsx scripts/local-agent-coordination.ts` |
+| `npm run local-agent:device:discover` | `npx tsx scripts/local-agent-device-discovery.ts` |
 | `npm run local-agent:dispatch:check` | `npx tsx scripts/local-agent-dispatch-check.ts` |
 | `npm run local-agent:doctor` | `npx tsx scripts/local-agent-doctor.ts` |
 | `npm run local-agent:host:backup` | `npx tsx scripts/local-agent-host-backup.ts` |
 | `npm run local-agent:host:restore` | `npx tsx scripts/local-agent-host-restore.ts` |
-| `npm run local-agent:p2p:sync` | `npx tsx scripts/local-agent-p2p-sync.ts` |
 | `npm run local-agent:status` | `npx tsx scripts/local-agent-status.ts` |
 | `npm run local-agent:watch` | `npx tsx scripts/local-agent-watch.ts` |
 | `npm run local-agent:watch:window` | `bash packages/local-agent-core/scripts/watch-window.sh` |
@@ -332,6 +332,9 @@ This catalog exposes command and environment **names only**. Environment assignm
 - `ASOL_BASE_PATH`
 - `ASOL_CAPACITOR_API_BASE_URL`
 - `ASOL_CORS_ORIGINS`
+- `ASOL_DEVICE_DISCOVERY_PORT`
+- `ASOL_DEVICE_DISCOVERY_PORT_PASSWORD`
+- `ASOL_DEVICE_DISCOVERY_R2_KEY`
 - `ASOL_IOS_BUNDLE_ID`
 - `ASOL_IOS_EXPORT_METHOD`
 - `ASOL_IOS_TEAM_ID`

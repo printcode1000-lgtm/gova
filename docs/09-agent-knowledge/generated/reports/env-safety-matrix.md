@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **269**
+Keys: **272**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -51,6 +51,9 @@ Keys: **269**
 | `ASOL_DEPLOY_REPOSITORY_URL` | server-only | unknown | `scripts/push-production-deploy-env.ts`, `services/control/src/app/api/health/route.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_REVISION_AT_START` | server-only | unknown | `scripts/deploy-all.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_RUN_ID` | server-only | unknown | `scripts/deploy-all.ts`, `scripts/gate-step-checkpoints.ts`, `scripts/tests/deploy-all-resume.test.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_DEVICE_DISCOVERY_PORT` | server-only | unknown | none | unclassified | missing/unknown consumers | npm run runtime:check:changed |
+| `ASOL_DEVICE_DISCOVERY_PORT_PASSWORD` | server-only | dangerous | none | unclassified | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_DEVICE_DISCOVERY_R2_KEY` | server-only | dangerous | none | object-storage | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_IOS_BUNDLE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `ASOL_IOS_EXPORT_METHOD` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_IOS_TEAM_ID` | server-only | unknown | `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
@@ -61,17 +64,17 @@ Keys: **269**
 | `ASOL_NOTIFICATION_GRANT_SECRET` | server-only | dangerous | `npm run test:follow`, `npm run test:notifications`, `scripts/probe-notifications-service.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_OTA_NATIVE_BASELINE` | server-only | unknown | `packages/ota-core/src/publishing/gate/native-gate.ts`, `packages/ota-core/src/tests/native-compatibility.test.ts` | ota/release | server-only | npm run runtime:check:changed |
 | `ASOL_OTA_PUBLIC_KEY` | server-only | dangerous | `packages/ota-core/src/publishing/config/ota-r2-target.ts` | ota/release | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
-| `ASOL_OTA_R2_ACCESS_KEY_ID` | server-only | unknown | `packages/local-agent-core/src/peer-sync.ts` | object-storage, ota/release | server-only | npm run runtime:check:changed |
+| `ASOL_OTA_R2_ACCESS_KEY_ID` | server-only | unknown | none | object-storage, ota/release | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_OTA_R2_ACCOUNT_ID` | server-only | unknown | none | object-storage, ota/release | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_OTA_R2_API_TOKEN` | server-only | dangerous | none | object-storage, ota/release | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
-| `ASOL_OTA_R2_BUCKET_NAME` | server-only | unknown | `packages/local-agent-core/src/peer-sync.ts`, `packages/ota-core/src/publishing/config/ota-config.ts` | object-storage, ota/release | server-only | npm run runtime:check:changed |
+| `ASOL_OTA_R2_BUCKET_NAME` | server-only | unknown | `packages/ota-core/src/publishing/config/ota-config.ts` | object-storage, ota/release | server-only | npm run runtime:check:changed |
 | `ASOL_OTA_R2_CATALOG_URI` | server-only | unknown | none | object-storage, ota/release | missing/unknown consumers | npm run runtime:check:changed |
-| `ASOL_OTA_R2_ENDPOINT` | server-only | unknown | `packages/local-agent-core/src/peer-sync.ts` | object-storage, ota/release | server-only | npm run runtime:check:changed |
+| `ASOL_OTA_R2_ENDPOINT` | server-only | unknown | none | object-storage, ota/release | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_OTA_R2_JURISDICTION` | server-only | unknown | `packages/ota-core/src/publishing/config/ota-r2-target.ts` | object-storage, ota/release | server-only | npm run runtime:check:changed |
-| `ASOL_OTA_R2_LOCATION` | server-only | unknown | `packages/local-agent-core/src/peer-sync.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` | object-storage, ota/release | server-only | npm run runtime:check:changed |
+| `ASOL_OTA_R2_LOCATION` | server-only | unknown | `packages/ota-core/src/publishing/config/ota-r2-target.ts` | object-storage, ota/release | server-only | npm run runtime:check:changed |
 | `ASOL_OTA_R2_PREFIX` | server-only | unknown | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` | object-storage, ota/release | server-only | npm run runtime:check:changed |
 | `ASOL_OTA_R2_PUBLIC_URL` | server-only | unknown | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` | object-storage, ota/release | server-only | npm run runtime:check:changed |
-| `ASOL_OTA_R2_SECRET_ACCESS_KEY` | server-only | dangerous | `packages/local-agent-core/src/peer-sync.ts` | object-storage, ota/release | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_OTA_R2_SECRET_ACCESS_KEY` | server-only | dangerous | none | object-storage, ota/release | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_OTA_R2_WAREHOUSE_NAME` | server-only | unknown | none | object-storage, ota/release | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_OTA_SIGNING_PRIVATE_KEY` | server-only | dangerous | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` | ota/release | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_PRODUCTION_ORIGIN` | server-only | unknown | `scripts/check-deployed-release.ts` | unclassified | server-only | npm run runtime:check:changed |

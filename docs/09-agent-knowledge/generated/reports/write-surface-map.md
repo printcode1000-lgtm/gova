@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **375**
-Unproven gateway paths: **147**
+Detected write-like surfaces: **374**
+Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -95,7 +95,6 @@ Unproven gateway paths: **147**
 | `packages/hero-slider-core/src/server/home-hero-slider-service.ts` | `@asol/hero-slider-core` | save | `unproven` | NO | `` | development, web | high |
 | `packages/hero-slider-core/src/tests/index.test.ts` | `@asol/hero-slider-core` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/local-agent-core/src/lock-store.ts` | `@asol/local-agent-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `packages/local-agent-core/src/peer-sync.ts` | `@asol/local-agent-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/map-core/src/AsolMap.tsx` | `@asol/map-core` | delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/native-core/src/adapters/emitter.ts` | `@asol/native-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/native-core/src/adapters/ota.adapter.ts` | `@asol/native-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |

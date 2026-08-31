@@ -49,6 +49,9 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_DEPLOY_REPOSITORY_URL` | server/tooling | 2 | `scripts/push-production-deploy-env.ts`, `services/control/src/app/api/health/route.ts` |
 | `ASOL_DEPLOY_REVISION_AT_START` | server/tooling | 1 | `scripts/deploy-all.ts` |
 | `ASOL_DEPLOY_RUN_ID` | server/tooling | 3 | `scripts/deploy-all.ts`, `scripts/gate-step-checkpoints.ts`, `scripts/tests/deploy-all-resume.test.ts` |
+| `ASOL_DEVICE_DISCOVERY_PORT` | server/tooling | 0 |  |
+| `ASOL_DEVICE_DISCOVERY_PORT_PASSWORD` | server/tooling | 0 |  |
+| `ASOL_DEVICE_DISCOVERY_R2_KEY` | server/tooling | 0 |  |
 | `ASOL_IOS_BUNDLE_ID` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_IOS_EXPORT_METHOD` | server/tooling | 0 |  |
 | `ASOL_IOS_TEAM_ID` | server/tooling | 1 | `src/core/config/server-env/server-env.values.turso-env.ts` |
@@ -59,17 +62,17 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_NOTIFICATION_GRANT_SECRET` | server/tooling | 5 | `npm run test:follow`, `npm run test:notifications`, `scripts/probe-notifications-service.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_OTA_NATIVE_BASELINE` | server/tooling | 2 | `packages/ota-core/src/publishing/gate/native-gate.ts`, `packages/ota-core/src/tests/native-compatibility.test.ts` |
 | `ASOL_OTA_PUBLIC_KEY` | server/tooling | 1 | `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
-| `ASOL_OTA_R2_ACCESS_KEY_ID` | server/tooling | 1 | `packages/local-agent-core/src/peer-sync.ts` |
+| `ASOL_OTA_R2_ACCESS_KEY_ID` | server/tooling | 0 |  |
 | `ASOL_OTA_R2_ACCOUNT_ID` | server/tooling | 0 |  |
 | `ASOL_OTA_R2_API_TOKEN` | server/tooling | 0 |  |
-| `ASOL_OTA_R2_BUCKET_NAME` | server/tooling | 2 | `packages/local-agent-core/src/peer-sync.ts`, `packages/ota-core/src/publishing/config/ota-config.ts` |
+| `ASOL_OTA_R2_BUCKET_NAME` | server/tooling | 1 | `packages/ota-core/src/publishing/config/ota-config.ts` |
 | `ASOL_OTA_R2_CATALOG_URI` | server/tooling | 0 |  |
-| `ASOL_OTA_R2_ENDPOINT` | server/tooling | 1 | `packages/local-agent-core/src/peer-sync.ts` |
+| `ASOL_OTA_R2_ENDPOINT` | server/tooling | 0 |  |
 | `ASOL_OTA_R2_JURISDICTION` | server/tooling | 1 | `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
-| `ASOL_OTA_R2_LOCATION` | server/tooling | 2 | `packages/local-agent-core/src/peer-sync.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
+| `ASOL_OTA_R2_LOCATION` | server/tooling | 1 | `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
 | `ASOL_OTA_R2_PREFIX` | server/tooling | 2 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
 | `ASOL_OTA_R2_PUBLIC_URL` | server/tooling | 2 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
-| `ASOL_OTA_R2_SECRET_ACCESS_KEY` | server/tooling | 1 | `packages/local-agent-core/src/peer-sync.ts` |
+| `ASOL_OTA_R2_SECRET_ACCESS_KEY` | server/tooling | 0 |  |
 | `ASOL_OTA_R2_WAREHOUSE_NAME` | server/tooling | 0 |  |
 | `ASOL_OTA_SIGNING_PRIVATE_KEY` | server/tooling | 2 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
 | `ASOL_PRODUCTION_ORIGIN` | server/tooling | 1 | `scripts/check-deployed-release.ts` |

@@ -587,56 +587,25 @@ The shims exit 127 for `antigravity` and `agy`. They do not remove
 `git` still work. The monitor's `a` key is the only write path for toggling this
 policy.
 
-## Peer Link
+## Host Discovery
 
-The pool spans two machines, and `p2p-link` is what joins them: it publishes STUN
-and LAN candidates to a Cloudflare R2 object, UDP hole-punches, and relays SSH and
-RDP over the punched path — which is what lets this host reach the laptop when the
-two are not on the same router and the `.local` mDNS name resolves to nothing.
+`npm run local-agent:device:discover` publishes a short-lived JSON discovery
+document to the OTA R2 bucket and starts a password-protected HTTP listener on
+the local host.
 
-It is a **companion repository**: referenced, never vendored. It is a Python GTK
-application with its own origin
-(`https://github.com/printcode1000-lgtm/p2p-link.git`) and its own history, so
-copying its source into a TypeScript package would fork it — two copies drifting,
-and a fix landing in whichever one the next person happened to open. What this
-repository records is where it belongs, where it comes from, and what proves it
-works: `COMPANION_REPOSITORIES` in `@asol/local-agent-core/host`.
+The command reads the listener password from
+`ASOL_DEVICE_DISCOVERY_PORT_PASSWORD`; the value must stay in local environment
+files or the calling shell and must not be committed. `ASOL_DEVICE_DISCOVERY_PORT`
+selects the TCP port, defaulting to `48731`, and
+`ASOL_DEVICE_DISCOVERY_R2_KEY` optionally overrides the R2 object key, defaulting
+to `host-discovery/<hostname>.json`.
 
-| Field | Value |
-|---|---|
-| Install path | `/home/hesham/p2p-link` (identical on every host by design) |
-| Origin | `https://github.com/printcode1000-lgtm/p2p-link.git` |
-| Entry point | `scripts/p2p-link-gui.sh` |
-
-### What reports it
-
-`npm run local-agent:doctor` reports `companion.p2p-link` with its `HEAD` and
-whether the entry point is present. `npm run local-agent:host:backup` captures its
-state into the host inventory, so a rebuilt machine knows it was supposed to be
-there.
-
-### Recovery
-
-`npm run local-agent:host:restore` handles the three cases separately, because
-they are not the same problem:
-
-| State | Action |
-|---|---|
-| Missing | clone it from its own origin |
-| Present, origin matches, clean | fetch and `merge --ff-only` |
-| Present, origin differs | **skip** and report the mismatch |
-| Present with uncommitted changes | **skip** and report the count |
-
-The last two are refusals on purpose. A companion checkout is a working directory
-on this machine, not a build artefact: a different origin may be a deliberate
-fork, and uncommitted changes are somebody's unfinished work. Restore reports
-either and stops rather than resolving it by destroying something.
-
-The fast-forward target is resolved by asking, in order, `origin/HEAD`, then the
-branch's own upstream, then `origin/main`. `origin/HEAD` is the obvious answer and
-what a fresh clone gets, but it is a local symbolic ref that real checkouts often
-lack — p2p-link did not have it, and asking for it unguarded aborted the whole
-restore on the one repository it exists to recover.
+The published document includes host identity, OS/runtime facts, non-internal
+network interface addresses, public-IP discovery when reachable, URL candidates,
+the selected port, and the password environment variable name. It never publishes
+the password value. Use `--dry-run` to print the document without opening a
+listener or writing to R2, and `--publish-only` to write R2 without keeping the
+listener open.
 
 ## Operation Logs
 

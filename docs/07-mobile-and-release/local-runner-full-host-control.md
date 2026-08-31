@@ -34,7 +34,6 @@ Host paths include:
 - cron state
 - local runner runtime directories
 - local environment and credential files
-- companion-repository clones
 
 Repository paths include:
 
