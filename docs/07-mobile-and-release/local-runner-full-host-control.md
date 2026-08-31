@@ -239,3 +239,7 @@ Current limits include:
 5. Do not infer host state from GitHub alone when the fact lives only on the server; verify it through the Local Runner.
 6. Do not reintroduce a Gova dependency, restore rule, sync command, or documentation contract for the removed `p2p-link` companion relationship unless the user explicitly requests a new architecture.
 7. Do not add Antigravity/`agy` wrappers, workflow steps, monitor toggles, shell execution paths, or local policy switches back into the Local Runner.
+
+## Direct P2P runtime
+
+The preferred post-bootstrap remote-control path is the persistent Gova Direct P2P Agent documented in `direct-p2p-agent.md`. GitHub Actions remain an administrative/bootstrap fallback and are not the normal command/result transport once a direct session is established.

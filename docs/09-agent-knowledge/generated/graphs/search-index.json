@@ -1882,6 +1882,203 @@
       ]
     },
     {
+      "id": "command:local-agent:direct:daemon",
+      "kind": "command",
+      "name": "npm run local-agent:direct:daemon",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "daemon",
+        "direct",
+        "local-agent",
+        "local-agent:direct:daemon",
+        "npm",
+        "npm run local-agent:direct:daemon",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:doctor",
+      "kind": "command",
+      "name": "npm run local-agent:direct:doctor",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "doctor",
+        "local-agent",
+        "local-agent:direct:doctor",
+        "npm",
+        "npm run local-agent:direct:doctor",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:install",
+      "kind": "command",
+      "name": "npm run local-agent:direct:install",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "install",
+        "local-agent",
+        "local-agent:direct:install",
+        "npm",
+        "npm run local-agent:direct:install",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:key:rotate",
+      "kind": "command",
+      "name": "npm run local-agent:direct:key:rotate",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "key",
+        "local-agent",
+        "local-agent:direct:key:rotate",
+        "npm",
+        "npm run local-agent:direct:key:rotate",
+        "rotate",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:key:status",
+      "kind": "command",
+      "name": "npm run local-agent:direct:key:status",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "key",
+        "local-agent",
+        "local-agent:direct:key:status",
+        "npm",
+        "npm run local-agent:direct:key:status",
+        "run",
+        "status"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:kill-switch",
+      "kind": "command",
+      "name": "npm run local-agent:direct:kill-switch",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "kill-switch",
+        "local-agent",
+        "local-agent:direct:kill-switch",
+        "npm",
+        "npm run local-agent:direct:kill-switch",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:restart",
+      "kind": "command",
+      "name": "npm run local-agent:direct:restart",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "local-agent",
+        "local-agent:direct:restart",
+        "npm",
+        "npm run local-agent:direct:restart",
+        "restart",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:revoke",
+      "kind": "command",
+      "name": "npm run local-agent:direct:revoke",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "local-agent",
+        "local-agent:direct:revoke",
+        "npm",
+        "npm run local-agent:direct:revoke",
+        "revoke",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:revoke-all",
+      "kind": "command",
+      "name": "npm run local-agent:direct:revoke-all",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "local-agent",
+        "local-agent:direct:revoke-all",
+        "npm",
+        "npm run local-agent:direct:revoke-all",
+        "revoke-all",
+        "run"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:sessions",
+      "kind": "command",
+      "name": "npm run local-agent:direct:sessions",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "local-agent",
+        "local-agent:direct:sessions",
+        "npm",
+        "npm run local-agent:direct:sessions",
+        "run",
+        "sessions"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:start",
+      "kind": "command",
+      "name": "npm run local-agent:direct:start",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "local-agent",
+        "local-agent:direct:start",
+        "npm",
+        "npm run local-agent:direct:start",
+        "run",
+        "start"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:status",
+      "kind": "command",
+      "name": "npm run local-agent:direct:status",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "local-agent",
+        "local-agent:direct:status",
+        "npm",
+        "npm run local-agent:direct:status",
+        "run",
+        "status"
+      ]
+    },
+    {
+      "id": "command:local-agent:direct:stop",
+      "kind": "command",
+      "name": "npm run local-agent:direct:stop",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "direct",
+        "local-agent",
+        "local-agent:direct:stop",
+        "npm",
+        "npm run local-agent:direct:stop",
+        "run",
+        "stop"
+      ]
+    },
+    {
       "id": "command:local-agent:dispatch:check",
       "kind": "command",
       "name": "npm run local-agent:dispatch:check",
@@ -13581,6 +13778,47 @@
         "test",
         "the",
         "ts"
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/direct-p2p-agent.md",
+      "kind": "document",
+      "name": "Gova Direct P2P Agent",
+      "path": "docs/07-mobile-and-release/direct-p2p-agent.md",
+      "summary": "The Direct P2P Agent is the preferred remote-control path for approved agents after bootstrap. It preserves the separation `GitHub = authorization bootstrap`, `R2 = discovery/rendezvous metadata`, `direct transport = commands/results`, and `@asol/local-agent-core = execution and ",
+      "tags": [
+        "@asol/local-agent-core",
+        "after",
+        "agent",
+        "agents",
+        "and",
+        "approved",
+        "authorization",
+        "bootstrap",
+        "commands/results",
+        "direct",
+        "discovery/rendezvous",
+        "docs/07-mobile-and-release/direct-p2p-agent",
+        "docs/07-mobile-and-release/direct-p2p-agent.md",
+        "execution",
+        "for",
+        "github",
+        "gova",
+        "gova direct p2p agent",
+        "is",
+        "it",
+        "md",
+        "metadata",
+        "p2p",
+        "path",
+        "preferred",
+        "preserves",
+        "r2",
+        "remote-control",
+        "separation",
+        "the",
+        "the direct p2p agent is the preferred remote-control path for approved agents after bootstrap. it preserves the separation `github = authorization bootstrap`, `r2 = discovery/rendezvous metadata`, `direct transport = commands/results`, and `@asol/local-agent-core = execution and ",
+        "transport"
       ]
     },
     {
@@ -27084,6 +27322,17 @@
       ]
     },
     {
+      "id": "script:scripts/install-local-agent-direct-service.ts",
+      "kind": "script",
+      "name": "install-local-agent-direct-service.ts",
+      "path": "scripts/install-local-agent-direct-service.ts",
+      "tags": [
+        "scripts/install-local-agent-direct-service",
+        "scripts/install-local-agent-direct-service.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/load-release-env.ts",
       "kind": "script",
       "name": "load-release-env.ts",
@@ -27135,6 +27384,28 @@
       "tags": [
         "scripts/local-agent-direct-bootstrap",
         "scripts/local-agent-direct-bootstrap.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent-direct-cli.ts",
+      "kind": "script",
+      "name": "local-agent-direct-cli.ts",
+      "path": "scripts/local-agent-direct-cli.ts",
+      "tags": [
+        "scripts/local-agent-direct-cli",
+        "scripts/local-agent-direct-cli.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent-direct-daemon.ts",
+      "kind": "script",
+      "name": "local-agent-direct-daemon.ts",
+      "path": "scripts/local-agent-direct-daemon.ts",
+      "tags": [
+        "scripts/local-agent-direct-daemon",
+        "scripts/local-agent-direct-daemon.ts",
         "ts"
       ]
     },
@@ -33039,6 +33310,17 @@
       "tags": [
         "packages/local-agent-core/src/direct/replay-cache",
         "packages/local-agent-core/src/direct/replay-cache.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/runtime.ts",
+      "kind": "source",
+      "name": "runtime.ts",
+      "path": "packages/local-agent-core/src/direct/runtime.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/runtime",
+        "packages/local-agent-core/src/direct/runtime.ts",
         "ts"
       ]
     },
@@ -53375,6 +53657,18 @@
       "tags": [
         "packages/hero-slider-core/src/tests/index",
         "packages/hero-slider-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/local-agent-core/src/tests/direct-runtime.test.ts",
+      "kind": "test",
+      "name": "direct-runtime.test.ts",
+      "path": "packages/local-agent-core/src/tests/direct-runtime.test.ts",
+      "tags": [
+        "packages/local-agent-core/src/tests/direct-runtime",
+        "packages/local-agent-core/src/tests/direct-runtime.test.ts",
         "test",
         "ts"
       ]

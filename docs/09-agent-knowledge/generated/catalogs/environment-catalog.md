@@ -50,7 +50,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_DEPLOY_REVISION_AT_START` | server/tooling | 1 | `scripts/deploy-all.ts` |
 | `ASOL_DEPLOY_RUN_ID` | server/tooling | 3 | `scripts/deploy-all.ts`, `scripts/gate-step-checkpoints.ts`, `scripts/tests/deploy-all-resume.test.ts` |
 | `ASOL_DEVICE_DISCOVERY_PORT` | server/tooling | 0 |  |
-| `ASOL_DEVICE_DISCOVERY_PORT_PASSWORD` | server/tooling | 0 |  |
+| `ASOL_DEVICE_DISCOVERY_PORT_PASSWORD` | server/tooling | 1 | `scripts/install-local-agent-direct-service.ts` |
 | `ASOL_DEVICE_DISCOVERY_R2_KEY` | server/tooling | 0 |  |
 | `ASOL_IOS_BUNDLE_ID` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_IOS_EXPORT_METHOD` | server/tooling | 0 |  |
@@ -148,10 +148,10 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | server/tooling | 1 | `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_AGENT_MEMORY_FLOOR_MB` | server/tooling | 2 | `packages/local-agent-core/src/admission.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_AGENT_STALE_LOCK_MS` | server/tooling | 2 | `packages/local-agent-core/src/lock-store.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
-| `GOVA_DIRECT_AGENT_DIR` | server/tooling | 3 | `packages/local-agent-core/src/direct/paths.ts`, `packages/local-agent-core/src/tests/direct-transport.test.ts`, `packages/local-agent-core/src/tests/direct.test.ts` |
+| `GOVA_DIRECT_AGENT_DIR` | server/tooling | 4 | `packages/local-agent-core/src/direct/paths.ts`, `packages/local-agent-core/src/tests/direct-runtime.test.ts`, `packages/local-agent-core/src/tests/direct-transport.test.ts`, `packages/local-agent-core/src/tests/direct.test.ts` |
 | `GOVA_HOST_ID` | server/tooling | 1 | `packages/local-agent-core/src/direct/paths.ts` |
 | `GOVA_HOST_PROFILE` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
-| `GOVA_LOCAL_WORKSPACE` | server/tooling | 3 | `scripts/local-agent-main-apply.ts`, `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_LOCAL_WORKSPACE` | server/tooling | 4 | `scripts/install-local-agent-direct-service.ts`, `scripts/local-agent-main-apply.ts`, `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_RUNNER_POOL_DIR` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
 | `HOME` | server/tooling | 2 | `packages/local-agent-core/src/host-inventory.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
 | `HOST` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |

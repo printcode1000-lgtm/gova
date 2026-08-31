@@ -56,7 +56,7 @@ async function publishGrant(grant: DirectBootstrapGrant): Promise<void> {
   );
 }
 
-async function cycle(): Promise<number> {
+export async function runDirectBootstrapCycle(): Promise<number> {
   const hostId = hostIdentifier();
   const identity = loadOrCreateHostIdentityKey();
   const replayCache = new ReplayCache();
@@ -100,10 +100,12 @@ async function main(): Promise<void> {
   const pollArg = process.argv.find((value) => value.startsWith("--poll-ms="));
   const pollMs = Math.max(1000, Number(pollArg?.split("=")[1] ?? 5000));
   do {
-    try { await cycle(); } catch (error) { console.error(error instanceof Error ? error.message : String(error)); }
+    try { await runDirectBootstrapCycle(); } catch (error) { console.error(error instanceof Error ? error.message : String(error)); }
     if (once) return;
     await new Promise((resolve) => setTimeout(resolve, pollMs));
   } while (true);
 }
 
-main().catch((error) => { console.error(error instanceof Error ? error.message : String(error)); process.exitCode = 1; });
+if (import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+  main().catch((error) => { console.error(error instanceof Error ? error.message : String(error)); process.exitCode = 1; });
+}
