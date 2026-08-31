@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-phase8b-webrtc-bootstrap-20260831-2407",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Integrate signed WebRTC signaling with direct bootstrap",
+    "verification": "none",
+    "timeout_minutes": "45",
+    "execution_target": "isolated-worktree",
+    "shell_command": "set -euo pipefail\ngit show origin/agent-request/chatgpt:.agent-control/payloads/p2p-phase8b-webrtc-bootstrap.sh | bash"
+  },
+  "createdAt": "2026-08-31T21:06:30.000Z"
+}
