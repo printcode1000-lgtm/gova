@@ -118,7 +118,7 @@ async function connectAuto(discovery:Discovery, grant:DirectBootstrapGrant, keyP
   const sameHost=discovery.host.hostname.toLowerCase()===hostname().toLowerCase() || discovery.host.hostId===normalizedLocalHost();
   if(sameHost){
     try { const client=await connectTls(discovery,grant,keyPair,"127.0.0.1",discovery.directAgent.port); return {client,path:`loopback:tcp:127.0.0.1:${discovery.directAgent.port}`}; }
-    catch { /* continue through advertised direct candidates */ }
+    catch(error) { throw error; }
   }
   const tcp=[...discovery.directAgent.candidates].filter(c=>c.protocol==="tcp" && c.type!=="loopback" && Date.parse(c.expiresAt)>Date.now()).sort((a,b)=>b.priority-a.priority);
   for(const candidate of tcp){
