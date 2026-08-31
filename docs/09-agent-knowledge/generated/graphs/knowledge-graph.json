@@ -243971,7 +243971,22 @@
     },
     {
       "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
+      "to": "environment-key:ASOL_DATA_SOURCE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
       "to": "environment-key:ASOL_MODE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
+      "to": "environment-key:ASOL_PROVISIONING",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
+      "to": "environment-key:GITHUB_ACTIONS",
       "kind": "uses-environment"
     },
     {
@@ -243992,6 +244007,11 @@
     {
       "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
       "to": "environment-key:VERCEL",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
+      "to": "environment-key:VERCEL_ENV",
       "kind": "uses-environment"
     },
     {
