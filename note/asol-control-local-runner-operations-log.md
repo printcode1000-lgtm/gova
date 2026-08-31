@@ -125,3 +125,14 @@ This is the durable incident and correct-behavior record for the ASOL Control cu
 ## Closure rule
 
 Do not mark the master ASOL plan complete from local gates alone. Completion requires the production cutover, production readiness/serving checks, deployed smoke, correct origin/data-plane behavior, final checkpoint/handoff update, and no unresolved rollback state.
+
+## Incident 11 — exact-file inspect patch broke TypeScript escaping
+
+**Symptom:** the first production cutover after the release-command fix failed immediately in parallel preflight: both `typecheck` and `lint` reported unterminated literals in `scripts/local-agent-inspect.ts`.
+
+**Root cause:** the generated patch for exact hidden-file inspection interpreted newline escape sequences while constructing TypeScript source, leaving physical newlines inside a regular-expression literal and string literals. The earlier verification for that change ran the release-command and local-agent suites plus `docs:ci`, but did not include global `typecheck`/`lint`, so the syntax defect escaped that narrower gate.
+
+**Recovery:** rewrite the whole `searchFiles` function with literal-safe source generation, then run global `typecheck`, global `lint`, exact-file inspect smoke, local-agent control-plane tests, docs generation, and docs CI before retrying production.
+
+**Do not repeat:** any generated TypeScript patch that contains backslash escapes must be validated by the global parser/typecheck and lint gates before it can become a production-cutover prerequisite.
+

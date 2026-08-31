@@ -75,31 +75,25 @@ function searchFiles(paths: string[]): string {
     try { matcher = new RegExp(pattern); }
     catch (error) { throw new Error(`Invalid search pattern: ${error instanceof Error ? error.message : String(error)}`); }
     for (const file of explicitFiles) {
-      const lines = readFileSync(path.join(workspace, file), "utf8").split(/?
-/);
+      const lines = readFileSync(path.join(workspace, file), "utf8").split(/\r?\n/);
       lines.forEach((line, index) => {
         if (matcher.test(line)) sections.push(`${file}:${index + 1}:${line}`);
       });
     }
   }
-  if (searchablePaths.length === 0) return sections.join("
-");
+  if (searchablePaths.length === 0) return sections.join("\n");
 
   const ripgrep = runCapture("rg", ["--line-number", "--column", "--no-heading", "--", pattern, ...searchablePaths], workspace);
-  if (ripgrep.status === 0) return [...sections, ripgrep.stdout].filter(Boolean).join("
-");
-  if (ripgrep.status === 1 && !ripgrep.stderr) return sections.join("
-");
+  if (ripgrep.status === 0) return [...sections, ripgrep.stdout].filter(Boolean).join("\n");
+  if (ripgrep.status === 1 && !ripgrep.stderr) return sections.join("\n");
 
   const grep = runCapture(
     "git",
     ["grep", "--line-number", "--no-color", "-I", "-e", pattern, "--", ...searchablePaths],
     workspace,
   );
-  if (grep.status === 0) return [...sections, grep.stdout].filter(Boolean).join("
-");
-  if (grep.status === 1) return sections.join("
-");
+  if (grep.status === 0) return [...sections, grep.stdout].filter(Boolean).join("\n");
+  if (grep.status === 1) return sections.join("\n");
   throw new Error(`Search failed: ${grep.stderr || ripgrep.stderr || "unknown error"}`);
 }
 
