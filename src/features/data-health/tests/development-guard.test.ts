@@ -10,6 +10,7 @@ const keys = [
   "NEXT_PUBLIC_ASOL_MODE",
   "ASOL_DATA_SOURCE",
   "ASOL_PROVISIONING",
+  "GITHUB_ACTIONS",
 ] as const;
 const original = Object.fromEntries(
   keys.map((key) => [key, process.env[key]]),
