@@ -26,6 +26,10 @@ import {
   vercelBuildNpmScriptViolations,
 } from "../vercel-deployment-guards";
 import { assertVercelBuildArtifact } from "../vercel-build-artifact-guard";
+import {
+  parseReleaseReadinessResponse,
+  releaseReadinessUrl,
+} from "../release-readiness-barrier";
 
 const ROOT = process.cwd();
 
@@ -43,6 +47,7 @@ const pkg = JSON.parse(read("package.json")) as {
 };
 const buildSource = read("scripts/vercel-deployment-build.ts");
 const guardSource = read("scripts/vercel-deployment-guards.ts");
+const deployWorkflowSource = read(".github/workflows/deploy-main.yml");
 
 assert.equal(
   vercelConfig.installCommand,
@@ -84,6 +89,48 @@ assert.deepEqual(
   "a correctness suite hidden behind an npm alias must be rejected",
 );
 assert.doesNotMatch(buildSource, /shell:\s*true/);
+
+// ── Exact-SHA release publication barrier ────────────────────────────────────
+// The Git-linked gova build and deploy workflow start concurrently. The build
+// must wait for control + six workload proofs before it creates the deployment
+// tree, otherwise a frontend can publish while its owned APIs are still old.
+const readinessCallIndex = buildSource.indexOf("await assertHostedGovaReleaseReady()");
+const govaTreeIndex = buildSource.indexOf("buildGovaDeploymentTree(ROOT)");
+assert.ok(readinessCallIndex >= 0, "build:vercel must call the exact-SHA readiness barrier.");
+assert.ok(govaTreeIndex > readinessCallIndex, "readiness must complete before any publishable gova tree is built.");
+assert.match(buildSource, /runtime !== "gova"/);
+
+const revision = "a".repeat(40);
+assert.equal(
+  releaseReadinessUrl("https://asol-control.vercel.app/", revision),
+  `https://asol-control.vercel.app/api/release-readiness/${revision}`,
+);
+assert.equal(parseReleaseReadinessResponse(revision, { revision, status: "pending" }), "pending");
+assert.equal(parseReleaseReadinessResponse(revision, { revision, status: "ready" }), "ready");
+assert.equal(parseReleaseReadinessResponse(revision, { revision, status: "failed" }), "failed");
+assert.throws(() => releaseReadinessUrl("https://asol-control.vercel.app", "short"), /InvalidRevision/);
+assert.throws(
+  () => parseReleaseReadinessResponse(revision, { revision: "b".repeat(40), status: "ready" }),
+  /RevisionMismatch/,
+);
+assert.throws(
+  () => parseReleaseReadinessResponse(revision, { revision, status: "succeeded" }),
+  /InvalidStatus/,
+);
+
+// The main-push dispatcher must talk only to the stable control alias. A
+// regression back to gova recreates the release race and keeps operational
+// Business API execution in the frontend deployment.
+assert.match(
+  deployWorkflowSource,
+  /ASOL_CONTROL_DEPLOY_ENDPOINT:\s*https:\/\/asol-control\.vercel\.app\/api\/super-admin\/production-deploy\/github/,
+);
+assert.doesNotMatch(deployWorkflowSource, /gova-swart\.vercel\.app\/api\/super-admin\/production-deploy\/github/);
+assert.equal(
+  [...deployWorkflowSource.matchAll(/const endpoint = process\.env\.ASOL_CONTROL_DEPLOY_ENDPOINT;/g)].length,
+  2,
+  "both self-hosted and GitHub-hosted paths must dispatch through ASOL Control.",
+);
 
 // ── Environment ownership is per runtime, never a union ──────────────────────
 //
