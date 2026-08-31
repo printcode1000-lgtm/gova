@@ -41,7 +41,6 @@ jobs:
           ss -lnt | grep ':48732 '
 
           cd "$root"
-          npx tsx scripts/local-agent-device-discovery.ts --publish-only
           echo '=== official status ==='
           timeout 35 npx tsx scripts/local-agent-direct-remote.ts status | tee /tmp/gova-direct-final-status.json
           grep -q 'loopback:tcp:127.0.0.1:48732' /tmp/gova-direct-final-status.json
