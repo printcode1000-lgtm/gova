@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-fast-live-proof-20260901-0043",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Run fast direct P2P live proof",
+    "verification": "none",
+    "timeout_minutes": "15",
+    "execution_target": "isolated-worktree",
+    "shell_command": "set -euo pipefail\nroot=/home/hesham/gova\ngit -C \"$root\" fetch origin main\ngit -C \"$root\" reset --hard origin/main\ncd \"$root\"\nnpm run local-agent:direct:install\nsystemctl --user enable --now gova-direct-agent.service\nsleep 2\necho '=== SERVICE ==='\nsystemctl --user is-active gova-direct-agent.service\necho '=== DIRECT STATUS ==='\nnpx tsx scripts/local-agent-direct-remote.ts status\necho '=== DIRECT EXEC ==='\nnpx tsx scripts/local-agent-direct-remote.ts exec -- \"printf 'P2P_DIRECT_OK\\n'; hostname; pwd\""
+  },
+  "createdAt": "2026-08-31T21:43:20.000Z"
+}
