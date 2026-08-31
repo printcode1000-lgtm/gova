@@ -1867,6 +1867,21 @@
       ]
     },
     {
+      "id": "command:local-agent:direct:bootstrap",
+      "kind": "command",
+      "name": "npm run local-agent:direct:bootstrap",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "bootstrap",
+        "direct",
+        "local-agent",
+        "local-agent:direct:bootstrap",
+        "npm",
+        "npm run local-agent:direct:bootstrap",
+        "run"
+      ]
+    },
+    {
       "id": "command:local-agent:dispatch:check",
       "kind": "command",
       "name": "npm run local-agent:dispatch:check",
@@ -27113,6 +27128,17 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent-direct-bootstrap.ts",
+      "kind": "script",
+      "name": "local-agent-direct-bootstrap.ts",
+      "path": "scripts/local-agent-direct-bootstrap.ts",
+      "tags": [
+        "scripts/local-agent-direct-bootstrap",
+        "scripts/local-agent-direct-bootstrap.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent-dispatch-check.ts",
       "kind": "script",
       "name": "local-agent-dispatch-check.ts",
@@ -32870,6 +32896,28 @@
       "tags": [
         "packages/local-agent-core/src/direct/authorization",
         "packages/local-agent-core/src/direct/authorization.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "kind": "source",
+      "name": "bootstrap-watcher.ts",
+      "path": "packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/bootstrap-watcher",
+        "packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "kind": "source",
+      "name": "bootstrap.ts",
+      "path": "packages/local-agent-core/src/direct/bootstrap.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/bootstrap",
+        "packages/local-agent-core/src/direct/bootstrap.ts",
         "ts"
       ]
     },
@@ -53332,6 +53380,18 @@
       ]
     },
     {
+      "id": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "kind": "test",
+      "name": "direct-transport.test.ts",
+      "path": "packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "tags": [
+        "packages/local-agent-core/src/tests/direct-transport",
+        "packages/local-agent-core/src/tests/direct-transport.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/local-agent-core/src/tests/direct.test.ts",
       "kind": "test",
       "name": "direct.test.ts",
@@ -57322,6 +57382,16 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:local-agent:direct:bootstrap",
+      "to": "script:scripts/local-agent-direct-bootstrap.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:local-agent:direct:bootstrap",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:local-agent:dispatch:check",
       "to": "script:scripts/local-agent-dispatch-check.ts",
       "kind": "invokes"
@@ -58655,6 +58725,11 @@
       "from": "command:test:installation-bootstrap",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:local-agent-core",
+      "to": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "kind": "invokes"
     },
     {
       "from": "command:test:local-agent-core",
@@ -79244,6 +79319,18 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/local-agent-core/src/direct/candidates.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -82502,6 +82589,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/local-agent-core/src/tests/direct.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -85683,6 +85776,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/local-agent-device-discovery.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent-direct-bootstrap.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -135460,6 +135559,23 @@
       "detail": "@asol/ota-core/publishing"
     },
     {
+      "from": "script:scripts/local-agent-direct-bootstrap.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/local-agent-direct-bootstrap.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "imports",
+      "detail": "@asol/local-agent-core/direct"
+    },
+    {
+      "from": "script:scripts/local-agent-direct-bootstrap.ts",
+      "to": "package:@asol/ota-core",
+      "kind": "imports",
+      "detail": "@asol/ota-core/publishing"
+    },
+    {
       "from": "script:scripts/local-agent-dispatch-check.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -154491,6 +154607,108 @@
       "detail": "../secret-paths"
     },
     {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "to": "source:packages/local-agent-core/src/direct/authorization.ts",
+      "kind": "imports",
+      "detail": "./authorization"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "to": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "kind": "imports",
+      "detail": "./bootstrap"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "imports",
+      "detail": "./crypto"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "source:packages/local-agent-core/src/direct/capabilities.ts",
+      "kind": "imports",
+      "detail": "./capabilities"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "source:packages/local-agent-core/src/direct/crypto.ts",
+      "kind": "imports",
+      "detail": "./crypto"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "source:packages/local-agent-core/src/direct/paths.ts",
+      "kind": "imports",
+      "detail": "./paths"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "to": "source:packages/local-agent-core/src/direct/session.ts",
+      "kind": "imports",
+      "detail": "./session"
+    },
+    {
       "from": "source:packages/local-agent-core/src/direct/candidates.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -154747,6 +154965,12 @@
       "from": "source:packages/local-agent-core/src/direct/execution.ts",
       "to": "package:@asol/local-agent-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/admission.ts",
+      "kind": "imports",
+      "detail": "../admission"
     },
     {
       "from": "source:packages/local-agent-core/src/direct/execution.ts",
@@ -154783,6 +155007,12 @@
       "to": "source:packages/local-agent-core/src/git.ts",
       "kind": "imports",
       "detail": "../git"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/execution.ts",
+      "to": "source:packages/local-agent-core/src/host-tools.ts",
+      "kind": "imports",
+      "detail": "../host-tools"
     },
     {
       "from": "source:packages/local-agent-core/src/direct/execution.ts",
@@ -154849,6 +155079,18 @@
       "to": "source:packages/local-agent-core/src/direct/authorization.ts",
       "kind": "imports",
       "detail": "./authorization"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "kind": "imports",
+      "detail": "./bootstrap-watcher"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "kind": "imports",
+      "detail": "./bootstrap"
     },
     {
       "from": "source:packages/local-agent-core/src/direct/index.ts",
@@ -155333,6 +155575,12 @@
       "to": "source:packages/local-agent-core/src/direct/authorization.ts",
       "kind": "imports",
       "detail": "./direct/authorization"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/host-discovery.ts",
+      "to": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "kind": "imports",
+      "detail": "./direct/bootstrap"
     },
     {
       "from": "source:packages/local-agent-core/src/host-discovery.ts",
@@ -239549,6 +239797,58 @@
       "from": "test:packages/hero-slider-core/src/tests/index.test.ts",
       "to": "package:@asol/hero-slider-core",
       "kind": "tests"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "source:packages/local-agent-core/src/direct/execution.ts",
+      "kind": "imports",
+      "detail": "../direct/execution"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "source:packages/local-agent-core/src/direct/index.ts",
+      "kind": "imports",
+      "detail": "../direct/index"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "to": "environment-key:GOVA_DIRECT_AGENT_DIR",
+      "kind": "uses-environment"
     },
     {
       "from": "test:packages/local-agent-core/src/tests/direct.test.ts",

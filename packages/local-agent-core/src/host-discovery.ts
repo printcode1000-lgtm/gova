@@ -4,6 +4,7 @@ import type { DirectCandidate } from "./direct/candidates";
 import type { DirectCapability } from "./direct/capabilities";
 import { DIRECT_AUTH_BRANCH, DIRECT_AUTH_DIRECTORY } from "./direct/authorization";
 import { DIRECT_PROTOCOL_VERSION } from "./direct/protocol";
+import { directAuthResultKeyPrefix } from "./direct/bootstrap";
 
 export const DEVICE_DISCOVERY_PORT_ENV = "ASOL_DEVICE_DISCOVERY_PORT";
 export const DEVICE_DISCOVERY_PASSWORD_ENV = "ASOL_DEVICE_DISCOVERY_PORT_PASSWORD";
@@ -60,6 +61,7 @@ export interface DeviceDiscoveryDocument {
       directory: typeof DIRECT_AUTH_DIRECTORY;
       challenge: string;
       challengeExpiresAt: string;
+      resultKeyPrefix: string;
     };
     capabilities: DirectCapability[];
     candidates: DirectCandidate[];
@@ -147,6 +149,7 @@ export function createDeviceDiscoveryDocument(input: {
         directory: DIRECT_AUTH_DIRECTORY,
         challenge: input.challenge,
         challengeExpiresAt: input.challengeExpiresAt,
+        resultKeyPrefix: directAuthResultKeyPrefix(input.hostId),
       },
       capabilities: [...input.capabilities],
       candidates: input.candidates,

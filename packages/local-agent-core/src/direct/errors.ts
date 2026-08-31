@@ -15,6 +15,7 @@ export const DIRECT_ERROR_CODES = [
   "session-expired",
   "session-revoked",
   "capability-denied",
+  "host-tool-denied",
   "replay-detected",
   "stale-request",
   "path-denied",

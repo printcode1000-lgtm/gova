@@ -52,3 +52,15 @@ export function loadOrRotateDiscoveryChallenge(now = Date.now(), ttlMs = DIRECT_
   writeFileSync(filePath, `${JSON.stringify(next, null, 2)}\n`, { encoding: "utf8", mode: DIRECT_FILE_MODE });
   return next;
 }
+
+export function rotateDiscoveryChallenge(now = Date.now(), ttlMs = DIRECT_DISCOVERY_TTL_MS): DirectDiscoveryChallenge {
+  ensureDirectDir(directRendezvousDir());
+  const next: DirectDiscoveryChallenge = {
+    schemaVersion: 1,
+    challenge: generateChallenge(),
+    generatedAt: new Date(now).toISOString(),
+    expiresAt: new Date(now + ttlMs).toISOString(),
+  };
+  writeFileSync(directDiscoveryChallengePath(), `${JSON.stringify(next, null, 2)}\n`, { encoding: "utf8", mode: DIRECT_FILE_MODE });
+  return next;
+}

@@ -279,7 +279,7 @@
     "local-agent:host:restore": "npx tsx scripts/local-agent-host-restore.ts",
     "local-agent:dispatch:check": "npx tsx scripts/local-agent-dispatch-check.ts",
     "local-agent:device:discover": "npx tsx scripts/local-agent-device-discovery.ts",
-    "test:local-agent-core": "npx tsx packages/local-agent-core/src/tests/index.test.ts && npx tsx packages/local-agent-core/src/tests/direct.test.ts",
+    "test:local-agent-core": "npx tsx packages/local-agent-core/src/tests/index.test.ts && npx tsx packages/local-agent-core/src/tests/direct.test.ts && npx tsx packages/local-agent-core/src/tests/direct-transport.test.ts",
     "test:local-agent-workflows": "npx tsx scripts/tests/local-agent-control-plane.test.ts",
     "test:notifications-core": "cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/notifications-core/src/tests/index.test.ts",
     "test:data-core": "npm run test:data-health-core && npm run test:backup-core && npm run test:sqlite-reconnect && npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts",
@@ -293,7 +293,8 @@
     "test:settings-notifications": "npx tsx src/features/settings/tests/notifications-settings-login-guard.test.ts && npx tsx src/features/settings/tests/notifications-settings-surface.test.ts",
     "test:account-deletion-schema": "cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-query-schema.contract.test.ts",
     "test:branding-core": "npm run branding:generate && npx tsx packages/branding-core/src/tests/index.test.ts",
-    "architecture:docs": "npx tsx scripts/architecture/generate-architecture-docs.ts"
+    "architecture:docs": "npx tsx scripts/architecture/generate-architecture-docs.ts",
+    "local-agent:direct:bootstrap": "npx tsx scripts/local-agent-direct-bootstrap.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

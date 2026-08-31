@@ -154,6 +154,7 @@ export function validateAndGrantBootstrapSession(
       capabilities: capCheck.capabilities,
       clientEphemeralPublicKey: validReq.clientEphemeralPublicKey,
       serverEphemeralPublicKey: serverEphemeral.publicKeyPem,
+      serverEphemeralPrivateKey: serverEphemeral.privateKeyPem,
     },
     now,
   );

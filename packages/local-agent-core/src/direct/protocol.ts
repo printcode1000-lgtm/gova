@@ -206,6 +206,9 @@ export function validateOperationPayload(
       if (typeof p.clientEphemeralPublicKey !== "string" || !p.clientEphemeralPublicKey.includes("PUBLIC KEY")) {
         return { valid: false, error: "handshake.request requires clientEphemeralPublicKey (PEM)." };
       }
+      if (typeof p.signature !== "string" || p.signature.length < 32) {
+        return { valid: false, error: "handshake.request requires a shared-secret proof." };
+      }
       return { valid: true };
     }
     case "handshake.response": {

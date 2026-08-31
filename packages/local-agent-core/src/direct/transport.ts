@@ -2,7 +2,7 @@ import { EventEmitter } from "node:events";
 import { createServer, Server as TlsServer, TLSSocket, connect as tlsConnect } from "node:tls";
 
 import { assertCapabilities, operationRequiredCapabilities } from "./capabilities";
-import { generateOrLoadTlsCredentials, loadOrCreateHostIdentityKey, signData, TlsCredentials } from "./crypto";
+import { createSharedSecretProof, deriveSharedSecret, directHandshakeProofMessage, directServerIdentityProofMessage, generateOrLoadTlsCredentials, loadOrCreateHostIdentityKey, signData, verifySharedSecretProof, TlsCredentials } from "./crypto";
 import { DirectAgentError } from "./errors";
 import {
   executeCoordinationDeclare,
@@ -159,10 +159,39 @@ export class DirectAgentServer extends EventEmitter {
             if (validSession.bootstrapRequestId !== payload.bootstrapRequestId) {
               throw new DirectAgentError("unauthorized", "Bootstrap request ID does not match session grant.");
             }
+            if (payload.clientEphemeralPublicKey !== validSession.clientEphemeralPublicKey) {
+              throw new DirectAgentError("unauthorized", "Client ephemeral key does not match the GitHub-authorized bootstrap key.");
+            }
+            if (!validSession.serverEphemeralPrivateKey) {
+              throw new DirectAgentError("unauthorized", "Session is missing its machine-local server ephemeral key.");
+            }
+            const timestampMs = Date.parse(req.timestamp);
+            if (!this.options.replayCache.checkAndRecordNonce(req.nonce, timestampMs)) {
+              throw new DirectAgentError("replay-detected", "Handshake nonce is duplicated or stale.");
+            }
+            if (!this.options.replayCache.checkAndUpdateSequence(validSession.sessionId, req.sequence)) {
+              throw new DirectAgentError("replay-detected", "Handshake sequence is not strictly increasing.");
+            }
+            const sharedSecret = deriveSharedSecret(validSession.serverEphemeralPrivateKey, validSession.clientEphemeralPublicKey);
+            const proofMessage = directHandshakeProofMessage({
+              sessionId: validSession.sessionId,
+              bootstrapRequestId: validSession.bootstrapRequestId,
+              challenge: validSession.consumedChallenge,
+              nonce: req.nonce,
+              clientEphemeralPublicKey: validSession.clientEphemeralPublicKey,
+            });
+            if (!verifySharedSecretProof(sharedSecret, proofMessage, payload.signature)) {
+              throw new DirectAgentError("unauthorized", "Client failed X25519 shared-secret proof.");
+            }
 
             session = validSession;
             const identityKey = loadOrCreateHostIdentityKey();
-            const challengeSignData = `${session.consumedChallenge}:${session.sessionId}:${req.nonce}`;
+            const challengeSignData = directServerIdentityProofMessage({
+              challenge: session.consumedChallenge,
+              sessionId: session.sessionId,
+              nonce: req.nonce,
+              serverEphemeralPublicKey: session.serverEphemeralPublicKey,
+            });
             const serverSig = signData(identityKey.privateKeyPem, challengeSignData);
 
             const responsePayload: DirectHandshakeResponsePayload = {
@@ -203,6 +232,9 @@ export class DirectAgentServer extends EventEmitter {
           const timestampMs = Date.parse(req.timestamp);
           if (!this.options.replayCache.checkAndRecordNonce(req.nonce, timestampMs)) {
             throw new DirectAgentError("replay-detected", `Duplicate or stale nonce detected: ${req.nonce}`);
+          }
+          if (!this.options.replayCache.checkAndUpdateSequence(session.sessionId, req.sequence)) {
+            throw new DirectAgentError("replay-detected", "Request sequence is not strictly increasing.");
           }
 
           // Capability check

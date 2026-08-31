@@ -19,6 +19,7 @@ export interface DirectSession {
   capabilities: DirectCapability[];
   clientEphemeralPublicKey: string;
   serverEphemeralPublicKey: string;
+  serverEphemeralPrivateKey?: string;
   createdAt: string;
   expiresAt: string;
   lastActivityAt: string;
@@ -35,6 +36,7 @@ export interface SessionGrantInput {
   capabilities: DirectCapability[];
   clientEphemeralPublicKey: string;
   serverEphemeralPublicKey: string;
+  serverEphemeralPrivateKey?: string;
   lifetimeMs?: number;
 }
 
@@ -70,6 +72,7 @@ export class SessionStore {
       capabilities: [...input.capabilities],
       clientEphemeralPublicKey: input.clientEphemeralPublicKey,
       serverEphemeralPublicKey: input.serverEphemeralPublicKey,
+      ...(input.serverEphemeralPrivateKey ? { serverEphemeralPrivateKey: input.serverEphemeralPrivateKey } : {}),
       createdAt,
       expiresAt,
       lastActivityAt: createdAt,

@@ -6,6 +6,8 @@ import path from "node:path";
 
 import { declareAgent, heartbeat, listAgents, AgentRecord, AgentSnapshot } from "../agent-registry";
 import { git, gitSoft, runCapture } from "../git";
+import { assertHostToolCommandAllowed, envWithHostToolShims } from "../host-tools";
+import { jobReserveMb, waitForAdmission } from "../admission";
 import { acquireLock, listLocks, releaseLock, LockConflictError, LockSnapshot } from "../lock-store";
 import { OperationLog } from "../operation-log";
 import { relativeInsideWorkspace, workspaceDir } from "../paths";
@@ -266,9 +268,31 @@ export async function executeExec(
     throw new DirectAgentError("invalid-message", "command is required for exec.");
   }
 
+  try {
+    assertHostToolCommandAllowed(payload.command);
+  } catch (error) {
+    throw new DirectAgentError("host-tool-denied", error instanceof Error ? error.message : String(error));
+  }
+
   const targetDir = resolveTargetDirectory(session, payload.cwd, payload.worktree);
   const timeoutMs = Math.min(payload.timeoutMs ?? DIRECT_LIMITS.defaultExecTimeoutMs, DIRECT_LIMITS.maxExecTimeoutMs);
   const startedAt = Date.now();
+  const operation = new OperationLog({
+    requestId, agentId: session.agentId, workflow: "direct-agent", targetMode: "direct-exec",
+    targetRef: "main", runId: requestId, verification: "direct", patchProvided: false, shellCommandProvided: true,
+    executionTarget: payload.worktree ? "isolated-worktree" : "canonical-host",
+  });
+  const admission = waitForAdmission();
+  operation.record.admissionWaitMs = admission.waitedMs;
+  if (!admission.admitted) {
+    operation.failAs("admission");
+    operation.write("failed", 1);
+    throw new DirectAgentError("memory-admission-denied", admission.reason ?? "Direct execution was not admitted.", undefined, true);
+  }
+  operation.record.reservedMb = jobReserveMb();
+  operation.record.admittedAt = new Date().toISOString();
+  operation.record.mutationStarted = true;
+  operation.write("running");
 
   sendEvent({
     protocol: "gova-direct/1",
@@ -293,15 +317,16 @@ export async function executeExec(
     try {
       child = spawn("/bin/bash", ["-lc", payload.command], {
         cwd: targetDir,
-        env: {
+        env: envWithHostToolShims({
           ...process.env,
           ...(payload.env ?? {}),
           GOVA_DIRECT_SESSION_ID: session.sessionId,
           GOVA_DIRECT_AGENT_ID: session.agentId,
-        },
+        }),
       });
     } catch (err) {
       cleanup();
+      operation.write("failed", 1);
       reject(new DirectAgentError("internal-error", `Failed to spawn process: ${String(err)}`));
       return;
     }
@@ -360,6 +385,7 @@ export async function executeExec(
 
     child.on("error", (err) => {
       cleanup();
+      operation.write("failed", 1);
       reject(new DirectAgentError("internal-error", `Child process error: ${err.message}`));
     });
 
@@ -367,6 +393,7 @@ export async function executeExec(
       cleanup();
       const durationMs = Date.now() - startedAt;
       const exitCode = signal ? 128 + 15 : code ?? 0;
+      operation.write(exitCode === 0 ? "success" : "failed", exitCode);
 
       if (abortSignal?.aborted) {
         sendEvent({

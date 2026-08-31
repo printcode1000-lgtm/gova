@@ -2,11 +2,13 @@ import { createPrivateKey, createPublicKey } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import {
   createHash,
+  createHmac,
   diffieHellman,
   generateKeyPairSync,
   hkdfSync,
   randomBytes,
   sign,
+  timingSafeEqual,
   verify,
 } from "node:crypto";
 import { chmodSync, existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -243,4 +245,52 @@ export function generateOrLoadTlsCredentials(forceNew = false): TlsCredentials {
     cert,
     fingerprint: computeKeyFingerprint(cert),
   };
+}
+
+
+export function directHandshakeProofMessage(input: {
+  sessionId: string;
+  bootstrapRequestId: string;
+  challenge: string;
+  nonce: string;
+  clientEphemeralPublicKey: string;
+}): string {
+  return JSON.stringify([
+    "gova-direct-handshake-v1",
+    input.sessionId,
+    input.bootstrapRequestId,
+    input.challenge,
+    input.nonce,
+    computeKeyFingerprint(input.clientEphemeralPublicKey),
+  ]);
+}
+
+export function createSharedSecretProof(sharedSecret: Buffer, message: string): string {
+  return createHmac("sha256", sharedSecret).update(message).digest("base64url");
+}
+
+export function verifySharedSecretProof(sharedSecret: Buffer, message: string, proof: string): boolean {
+  let actual: Buffer;
+  try {
+    actual = Buffer.from(proof, "base64url");
+  } catch {
+    return false;
+  }
+  const expected = createHmac("sha256", sharedSecret).update(message).digest();
+  return actual.length === expected.length && timingSafeEqual(actual, expected);
+}
+
+export function directServerIdentityProofMessage(input: {
+  challenge: string;
+  sessionId: string;
+  nonce: string;
+  serverEphemeralPublicKey: string;
+}): string {
+  return JSON.stringify([
+    "gova-direct-server-identity-v1",
+    input.challenge,
+    input.sessionId,
+    input.nonce,
+    computeKeyFingerprint(input.serverEphemeralPublicKey),
+  ]);
 }

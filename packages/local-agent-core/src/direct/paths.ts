@@ -107,3 +107,7 @@ export function ensureDirectDir(dirPath: string): string {
 export function directDiscoveryChallengePath(): string {
   return path.join(directRendezvousDir(), "discovery-challenge.json");
 }
+
+export function directBootstrapResultsDir(): string {
+  return path.join(directAgentDir(), "bootstrap-results");
+}

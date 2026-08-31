@@ -1867,6 +1867,21 @@
       ]
     },
     {
+      "id": "command:local-agent:direct:bootstrap",
+      "kind": "command",
+      "name": "npm run local-agent:direct:bootstrap",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "bootstrap",
+        "direct",
+        "local-agent",
+        "local-agent:direct:bootstrap",
+        "npm",
+        "npm run local-agent:direct:bootstrap",
+        "run"
+      ]
+    },
+    {
       "id": "command:local-agent:dispatch:check",
       "kind": "command",
       "name": "npm run local-agent:dispatch:check",
@@ -27113,6 +27128,17 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent-direct-bootstrap.ts",
+      "kind": "script",
+      "name": "local-agent-direct-bootstrap.ts",
+      "path": "scripts/local-agent-direct-bootstrap.ts",
+      "tags": [
+        "scripts/local-agent-direct-bootstrap",
+        "scripts/local-agent-direct-bootstrap.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent-dispatch-check.ts",
       "kind": "script",
       "name": "local-agent-dispatch-check.ts",
@@ -32870,6 +32896,28 @@
       "tags": [
         "packages/local-agent-core/src/direct/authorization",
         "packages/local-agent-core/src/direct/authorization.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "kind": "source",
+      "name": "bootstrap-watcher.ts",
+      "path": "packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/bootstrap-watcher",
+        "packages/local-agent-core/src/direct/bootstrap-watcher.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/bootstrap.ts",
+      "kind": "source",
+      "name": "bootstrap.ts",
+      "path": "packages/local-agent-core/src/direct/bootstrap.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/bootstrap",
+        "packages/local-agent-core/src/direct/bootstrap.ts",
         "ts"
       ]
     },
@@ -53327,6 +53375,18 @@
       "tags": [
         "packages/hero-slider-core/src/tests/index",
         "packages/hero-slider-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "kind": "test",
+      "name": "direct-transport.test.ts",
+      "path": "packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "tags": [
+        "packages/local-agent-core/src/tests/direct-transport",
+        "packages/local-agent-core/src/tests/direct-transport.test.ts",
         "test",
         "ts"
       ]

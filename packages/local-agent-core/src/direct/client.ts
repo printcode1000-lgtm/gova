@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import { connect as tlsConnect, TLSSocket } from "node:tls";
 
-import { EphemeralKeyPair, generateEphemeralKeyPair, generateNonce, generateRequestId } from "./crypto";
+import { createSharedSecretProof, deriveSharedSecret, directHandshakeProofMessage, directServerIdentityProofMessage, EphemeralKeyPair, generateEphemeralKeyPair, generateNonce, generateRequestId, verifyDataSignature } from "./crypto";
 import { DirectAgentError } from "./errors";
 import {
   DIRECT_PROTOCOL_VERSION,
@@ -22,6 +22,11 @@ export interface DirectClientConnectOptions {
   sessionId: string;
   bootstrapRequestId: string;
   clientKeyPair?: EphemeralKeyPair;
+  bootstrapChallenge: string;
+  serverEphemeralPublicKey: string;
+  expectedHostId: string;
+  expectedServerKeyId: string;
+  expectedServerIdentityPublicKey: string;
   rejectUnauthorized?: boolean;
 }
 
@@ -65,23 +70,44 @@ export class DirectAgentClient extends EventEmitter {
         },
         async () => {
           try {
+            const nonce = generateNonce();
+            const sharedSecret = deriveSharedSecret(this.keyPair.privateKeyPem, options.serverEphemeralPublicKey);
+            const proofMessage = directHandshakeProofMessage({
+              sessionId: this.sessionId,
+              bootstrapRequestId: options.bootstrapRequestId,
+              challenge: options.bootstrapChallenge,
+              nonce,
+              clientEphemeralPublicKey: this.keyPair.publicKeyPem,
+            });
             const handshakeReq: DirectRequestEnvelope<DirectHandshakeRequestPayload> = {
               protocol: DIRECT_PROTOCOL_VERSION,
               sessionId: this.sessionId,
               requestId: generateRequestId(),
               sequence: this.sequence++,
               timestamp: new Date().toISOString(),
-              nonce: generateNonce(),
+              nonce,
               type: "handshake.request",
               payload: {
                 bootstrapRequestId: options.bootstrapRequestId,
                 sessionId: this.sessionId,
                 clientEphemeralPublicKey: this.keyPair.publicKeyPem,
-                signature: "ephemeral-sig",
+                signature: createSharedSecretProof(sharedSecret, proofMessage),
               },
             };
 
             const response = await this.sendRequest<DirectHandshakeResponsePayload>(handshakeReq);
+            if (response.sessionId !== this.sessionId || response.serverIdentity.hostId !== options.expectedHostId || response.serverIdentity.serverKeyId !== options.expectedServerKeyId) {
+              throw new DirectAgentError("unauthorized", "Server identity does not match Host Discovery bootstrap metadata.");
+            }
+            const serverProofMessage = directServerIdentityProofMessage({
+              challenge: options.bootstrapChallenge,
+              sessionId: this.sessionId,
+              nonce,
+              serverEphemeralPublicKey: options.serverEphemeralPublicKey,
+            });
+            if (!verifyDataSignature(options.expectedServerIdentityPublicKey, serverProofMessage, response.serverIdentity.signature)) {
+              throw new DirectAgentError("unauthorized", "Server Ed25519 identity proof failed.");
+            }
             resolve(response);
           } catch (err) {
             reject(err);
