@@ -49,3 +49,7 @@ A path being reachable from a Local Runner command does not make that path part 
 ## Operational Invariant
 
 When the user authorizes a Local Runner task, agents must treat the runner as a host-control execution surface rather than a repository-only sandbox. The only standing boundaries are authenticated dispatch, the operating system's actual permissions, and prevention of secret leakage into GitHub. Additional command/path/tool allowlists must not be introduced unless the user explicitly changes this policy.
+
+## Runtime Activation
+
+Verified on the local server: the Local Runner account has passwordless sudo and authenticated Local Runner shell tasks have host-tool access enabled.
