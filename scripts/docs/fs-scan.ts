@@ -3,6 +3,8 @@ import { relative, resolve, sep } from 'path';
 
 export const REPO_ROOT = process.cwd();
 
+const IGNORED_FILES = new Set(['android/local.properties']);
+
 const IGNORED_DIRECTORIES = new Set([
   '.git',
   '.next',
@@ -60,6 +62,7 @@ export function walkFiles(
     for (const entry of readdirSync(absolute, { withFileTypes: true })) {
       if (entry.isDirectory() && shouldIgnoreDirectory(repoPath, entry.name)) continue;
       const child = normalizePath(`${repoPath}/${entry.name}`);
+      if (IGNORED_FILES.has(child)) continue;
       if (child.startsWith('docs/09-agent-knowledge/generated/')) continue;
       if (entry.isDirectory()) visit(child);
       else if (entry.isFile() && predicate(child)) result.push(child);
