@@ -1,0 +1,38 @@
+name: p2p-fast-probe
+
+on:
+  push:
+    branches:
+      - "agent-request/chatgpt"
+    paths:
+      - ".agent-control/probe/**"
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 3
+    steps:
+      - name: Prove direct P2P port and execution
+        working-directory: /home/hesham/gova
+        env:
+          GOVA_LOCAL_WORKSPACE: /home/hesham/gova
+          GOVA_DIRECT_AGENT_DIR: /home/hesham/gova/.local/direct-agent
+        run: |
+          set -euo pipefail
+          pkill -f 'p2p-direct-proof-no-state.ts' || true
+          git fetch --quiet origin agent-request/chatgpt
+          echo '=== LISTENER ==='
+          ss -lnt | grep ':48732 '
+          echo '=== TLS LOOPBACK ==='
+          timeout 4 openssl s_client -connect 127.0.0.1:48732 -tls1_3 -brief </dev/null 2>&1 | head -20 || true
+          lan="$(hostname -I | tr ' ' '\n' | grep '^192\.168\.' | head -1)"
+          echo "LAN=$lan"
+          if [ -n "$lan" ]; then
+            echo '=== TLS LAN ==='
+            timeout 4 openssl s_client -connect "$lan:48732" -tls1_3 -brief </dev/null 2>&1 | head -20 || true
+          fi
+          echo '=== AUTHENTICATED DIRECT EXEC ==='
+          git show origin/agent-request/chatgpt:.agent-control/payloads/p2p-direct-proof-no-state-20260901-0064.sh | timeout 45 bash
