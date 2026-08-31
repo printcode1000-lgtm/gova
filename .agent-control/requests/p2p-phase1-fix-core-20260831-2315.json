@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-phase1-fix-core-20260831-2315",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Add direct P2P protocol and session core",
+    "verification": "none",
+    "timeout_minutes": "30",
+    "execution_target": "isolated-worktree",
+    "shell_command": "set -euo pipefail\nb=/home/hesham/gova/.local/direct-agent-recovery/20260831T200000Z/direct-src\nrm -rf packages/local-agent-core/src/direct\ncp -a \"$b\" packages/local-agent-core/src/direct\nfind packages/local-agent-core/src/direct -type f -exec chmod 644 {} +\npython3 - <<'PY'\nfrom pathlib import Path\n\ncrypto=Path('packages/local-agent-core/src/direct/crypto.ts')\ns=crypto.read_text()\ns=s.replace('privateKey: { key: privateKeyPem, format: \"pem\", type: \"pkcs8\" },\\n    publicKey: { key: peerPublicKeyPem, format: \"pem\", type: \"spki\" },','privateKey: createPrivateKey(privateKeyPem),\\n    publicKey: createPublicKey(peerPublicKeyPem),')\ns=s.replace('const signature = sign(null, buffer, { key: privateKeyPem, format: \"pem\", type: \"pkcs8\" });','const signature = sign(null, buffer, privateKeyPem);')\ns=s.replace('return verify(null, buffer, { key: publicKeyPem, format: \"pem\", type: \"spki\" }, signature);','return verify(null, buffer, publicKeyPem, signature);')\ns=s.replace('directIdentityTlsCertPath()', 'directIdentityCertPath()')\nif 'createPrivateKey' not in s.split('\\n',20)[0:20]:\n    s='import { createPrivateKey, createPublicKey } from \"node:crypto\";\\n'+s\ncrypto.write_text(s)\n\nexecution=Path('packages/local-agent-core/src/direct/execution.ts')\ns=execution.read_text()\nif 'import { spawnSync } from \"node:child_process\";' not in s:\n    s='import { spawnSync } from \"node:child_process\";\\n'+s\ns=s.replace('child.stdout.on(\"data\",', 'child.stdout?.on(\"data\",')\ns=s.replace('child.stderr.on(\"data\",', 'child.stderr?.on(\"data\",')\ns=s.replace('const applyRes = runCapture(\"git\", [\"apply\", \"--whitespace=nowarn\", \"-\"], targetDir, payload.patch);','const applyRes = spawnSync(\"git\", [\"apply\", \"--whitespace=nowarn\", \"-\"], { cwd: targetDir, input: payload.patch, encoding: \"utf8\" });')\ns=s.replace('err.conflictingLock', 'err.holder')\nexecution.write_text(s)\n\nindex=Path('packages/local-agent-core/src/direct/index.ts')\ns=index.read_text().replace('export * from \"./transport-types\";\\n','')\nindex.write_text(s)\nPY\nnpm run typecheck\nnpm run test:local-agent-core\nnpm run docs:generate\nnpm run architecture:check\nnpm run docs:ci"
+  },
+  "createdAt": "2026-08-31T20:15:00.000Z"
+}
