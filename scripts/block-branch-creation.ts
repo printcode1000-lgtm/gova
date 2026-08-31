@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { CONTROL_PLANE_BRANCH_NAMESPACES } from '@asol/local-agent-core';
 
 /**
- * Blocks branch creation on GitHub for every ref except `main`.
+ * Blocks branch creation on GitHub for every ref except the two recognized branches.
  *
  * NOT a required-status-check ruleset. Pushes to `main` stay unrestricted.
  *
@@ -32,7 +32,8 @@ const DRY_RUN = process.argv.includes('--dry-run');
 const REMOVE = process.argv.includes('--remove');
 
 /** Stable name — the script finds an existing ruleset by it rather than creating duplicates. */
-const RULESET_NAME = 'main-only';
+const RULESET_NAME = 'fixed-two-branches';
+const LEGACY_RULESET_NAME = 'main-only';
 
 const API = 'https://api.github.com';
 
@@ -101,7 +102,7 @@ function requireToken(): string {
   return token;
 }
 
-/** Returns the id of the existing `main-only` ruleset, or null when there is none. */
+/** Returns the id of the fixed two-branch ruleset or its legacy main-only predecessor. */
 async function findRuleset(repository: string, token: string): Promise<number | null> {
   const response = await fetch(`${API}/repos/${repository}/rulesets`, {
     headers: headers(token),
@@ -110,7 +111,7 @@ async function findRuleset(repository: string, token: string): Promise<number | 
     throw new Error(`Could not list rulesets: ${response.status} ${await response.text()}`);
   }
   const rulesets = (await response.json()) as { id: number; name: string }[];
-  return rulesets.find((ruleset) => ruleset.name === RULESET_NAME)?.id ?? null;
+  return rulesets.find((ruleset) => ruleset.name === RULESET_NAME || ruleset.name === LEGACY_RULESET_NAME)?.id ?? null;
 }
 
 async function remove(repository: string, token: string): Promise<void> {
@@ -173,7 +174,7 @@ async function apply(repository: string, token: string, payload: RulesetPayload)
     live.enforcement === 'active' && (live.rules ?? []).some((rule) => rule.type === 'creation');
   console.log(
     blocking
-      ? '\nNew branches can no longer be created on GitHub. main is the only branch.'
+      ? '\nBranch creation is blocked for every ref except main and agent-request/chatgpt.'
       : '\nWARNING: the ruleset came back without an active creation rule. Check it on GitHub.',
   );
 }

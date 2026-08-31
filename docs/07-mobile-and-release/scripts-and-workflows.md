@@ -290,7 +290,7 @@ jobs are serialized by the workflow concurrency group.
 `local-agent-workspace.yml` is the controlled path for parallel remote edit
 requests. It is manually dispatched, runs only on the local `gova` runner pool,
 applies a supplied git diff through `scripts/local-agent-main-apply.ts`, runs one
-allowlisted verification command, commits, and pushes a `codex/agent-*` branch.
+allowlisted verification command, commits, and must not push a `codex/agent-*` branch; remote mutation is limited to `main` or `agent-request/chatgpt`.
 `local-agent-main.yml` is the serialized direct-`main` variant. A job may carry a
 patch, a shell command, both, or neither, so a shell-only job never has to
 fabricate a diff. Both use the local coordination channel documented in
@@ -299,13 +299,9 @@ GitHub-hosted fallback, cannot consume GitHub secrets, and refuse secret-bearing
 file paths.
 
 `local-agent-coordination.yml` is the shared identity, heartbeat, lock, and
-messaging surface, and republishes a sanitized snapshot to the output-only
-`agent-control` branch that cloud agents read.
+messaging surface, and keeps coordination snapshots machine-local; the remote `agent-control` branch is forbidden that cloud agents read.
 
-`local-agent-gateway.yml` is the dispatch gateway for agents without
-`workflow_dispatch` API access: it triggers on a push to an `agent-request/**`
-branch, validates the pushed request document, and performs the real dispatch
-with a credential that never leaves the machine.
+`local-agent-gateway.yml` must not be used to create disposable request branches. The permanent `agent-request/chatgpt` ref is not a request branch and must never be deleted by gateway cleanup. Any gateway path that requires a third remote ref is disabled by the fixed two-branch policy.
 
 Control-plane paths are excluded from `deploy-main.yml`, so a coordination change
 does not consume a production deployment.
@@ -323,22 +319,18 @@ A push to `main` must succeed regardless of what the code does. Local npm
 scripts and `deploy:all` preflight remain the reviewer. There is no required
 GitHub status check.
 
-## main is the only branch
+## Fixed two-branch repository model
 
-`main` is the sole branch of this repository. Ten others existed at one point and
-every one of them was created automatically by ephemeral development sessions.
-None held work that `main` did not already have; the largest diff among them was an empty commit pushed to
-retrigger CI. They were deleted in one sweep, and the rule is enforced locally
-from that point on.
+The repository has exactly two recognized remote branches:
 
-**`.githooks/pre-push.d/10-main-only`** rejects any push whose remote ref is not
-`refs/heads/main`. Branch *deletions* pass through — removing a stray branch is
-the outcome the check protects, not something to block.
+- `main` — production, release, and canonical integration.
+- `agent-request/chatgpt` — the permanent ChatGPT/OpenAI working branch.
 
-This is the enforcement layer, and its limit is worth stating plainly: it runs
-only in a checkout that has `core.hooksPath` set. A remote workspace or the
-GitHub web UI can still create a branch. The project-wide branch policy forbids
-that path; the hook covers the local checkout and nothing beyond it.
+This is the normal branch model, not an exception. No third remote branch may be created. Former control-plane patterns such as `codex/**`, other `agent-request/**` refs, and `agent-control` are not permitted remote namespaces. Isolation for other agents must stay local (for example, local worktrees) until work is intentionally written to one of the two recognized branches.
+
+`.githooks/pre-push.d/10-main-only` enforces the exact two-ref allowlist locally. The GitHub branch-creation ruleset enforces the same allowlist server-side with no wildcard exclusions and no bypass actors. Deletion of stray unauthorized branches remains possible for cleanup.
+
+`agent-request/chatgpt` is persistent and must never be treated as a disposable gateway/request branch. ChatGPT prepares work there; production still comes only from `main`.
 
 ## The pre-push hook
 

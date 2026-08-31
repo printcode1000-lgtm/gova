@@ -1,69 +1,77 @@
-# ADR-0006: main Is the Primary Production Branch
+# ADR-0006: Fixed Two-Branch Repository Model
 
 ## Status
 
-Accepted (2026-08), amended 2026-08-31
+Accepted (2026-08), finalized 2026-08-31
 
 ## Context
 
-Provider-generated ephemeral branches accumulated with no unique work. Multiple branches complicated remote workspace workflows where unpushed work is lost when containers terminate.
+The repository previously used a main-only policy while local-agent infrastructure temporarily allowed provider and control-plane branch namespaces. That model created branch accumulation and ambiguous branch ownership.
 
-The repository now has one explicitly authorized persistent working branch for ChatGPT. This is a deliberate exception, not a return to unrestricted feature-branch creation.
+The repository now has a permanent two-branch topology. This is the normal repository model, not an exception model.
 
 ## Decision
 
-1. **`main` remains the sole production and release branch** and the canonical source of truth.
-2. **`agent-request/chatgpt` is the dedicated persistent ChatGPT working branch.** It is reserved for work performed through the connected ChatGPT/OpenAI GitHub integration.
-3. Work may be prepared, reviewed, documented, and verified on `agent-request/chatgpt`; it must not be treated as a production or release source.
-4. Before starting new work on the ChatGPT branch, synchronize it with the current `main` when necessary. Only intentional, verified changes should later be integrated into `main`.
-5. No other persistent working branch is authorized by this decision unless the user explicitly requests one. Ruleset exclusions that technically permit infrastructure branch patterns do not by themselves authorize additional long-lived branches.
-6. Local enforcement in `.githooks/pre-push.d/10-main-only` still rejects ordinary local pushes to non-`main` refs. The dedicated ChatGPT branch is operated through the authenticated GitHub integration unless the local hook policy is separately and explicitly amended.
-7. The server-side GitHub `main-only` ruleset must continue to permit `main` and the infrastructure pattern containing `agent-request/chatgpt` while blocking unauthorized branch creation.
-8. Vercel `gova` production remains linked to `main`; the ChatGPT branch must never replace that production link.
-9. GitHub Actions has no general correctness CI. It runs path-filtered docs validation and, for every `main` push, an OIDC-authenticated dispatcher that deploys the pushed revision to all production targets without creating another commit or push. See [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
+1. The repository has exactly two recognized remote branches: `main` and `agent-request/chatgpt`.
+2. `main` is the canonical production and release branch and the source used by the GitHub-linked Vercel production deployment.
+3. `agent-request/chatgpt` is the canonical persistent ChatGPT working branch. It is a first-class project branch, not an exception, temporary branch, gateway branch, or disposable request branch.
+4. No third remote branch may be created for any reason. This includes feature branches, pull-request branches, provider-generated branches, `codex/**`, other `agent-request/**` refs, `agent-control`, rescue branches, staging branches, and temporary automation branches.
+5. Agents that need isolation may use local git worktrees or unpushed local refs, but remote publication is limited to the two recognized branches.
+6. ChatGPT work is prepared on `agent-request/chatgpt`; intentional verified work may later be integrated into `main`.
+7. Other agents may work directly against `main` according to project rules. They must never create a remote branch to obtain isolation.
+8. The pre-push hook and GitHub repository ruleset must enforce the exact two-ref allowlist. Namespace wildcards are forbidden.
+9. Historical filenames or command names containing `main-only` may remain only where renaming would break stable references; their behavior and documentation must implement this two-branch decision.
+10. No workflow, tool, MCP, skill, cloud agent, local agent, or automation may weaken this branch model without a new explicit user-authorized contract change.
 
-Push **to** `main` remains unrestricted (no branch protection, no required checks).
+## Recognized Branches
 
-## Dedicated ChatGPT Branch
+| Branch | Role | Lifecycle |
+|---|---|---|
+| `main` | Production, release, canonical integration | Permanent |
+| `agent-request/chatgpt` | Persistent ChatGPT/OpenAI working branch | Permanent |
 
-- Branch: `agent-request/chatgpt`
-- Owner/purpose: persistent workspace for ChatGPT-assisted repository work
-- Base: `main`
-- Production role: none
-- Expected lifecycle: long-lived; do not delete as routine cleanup unless the user explicitly requests deletion
-- Integration rule: keep work isolated here until it is intentionally promoted to `main`
-- Scope: code, tests, documentation, analysis artifacts, and other repository changes requested from ChatGPT
+These two branches are peers in repository legitimacy but have different runtime roles. Only `main` is a production/release source.
+
+## Forbidden Remote Refs
+
+Everything except the two exact refs above is forbidden. In particular, the following former patterns are not branch allowances:
+
+- `codex/**`
+- `agent-request/**` other than `agent-request/chatgpt`
+- `agent-control`
+- feature, staging, rescue, temporary, probe, release, or provider-generated branches
+
+## Enforcement
+
+- Local hook: `.githooks/pre-push.d/10-main-only` permits updates only to `refs/heads/main` and `refs/heads/agent-request/chatgpt`; deleting stray unauthorized branches remains allowed.
+- GitHub ruleset: active creation rule covers all branches and excludes exactly `refs/heads/main` and `refs/heads/agent-request/chatgpt`.
+- Ruleset bypass actors: none.
+- Wildcard exclusions are forbidden.
 
 ## Consequences
 
-- Positive: `main` stays the production source of truth while ChatGPT has a stable isolated workspace.
-- Positive: unfinished ChatGPT work does not need to be mixed into production history.
-- Negative: the ChatGPT branch can drift from `main`; synchronization is required before dependent work or promotion.
-- Negative: the existing local main-only pre-push hook does not support ordinary local pushes to this branch.
-- Provider-generated temporary branches remain undesirable and should be removed after their work is finished.
-
-Hooks that blocked pushes for dirty `public/sync_data` were removed; the preservation requirement remains documented as release policy instead of blocking every push.
+- Positive: branch ownership is deterministic and persistent.
+- Positive: ChatGPT has a stable isolated remote workspace without turning the repository into a feature-branch model.
+- Positive: branch leaks from tools or agents are rejected server-side.
+- Negative: remote branch-per-agent parallelism is intentionally unavailable; parallel isolation must remain local until work is integrated into one of the two recognized refs.
 
 ## Source Map
 
-- Hook: `.githooks/pre-push.d/10-main-only`
-- Dedicated ChatGPT branch: `refs/heads/agent-request/chatgpt`
-- Project-wide branch policy: [Scripts and Workflows](../../07-mobile-and-release/scripts-and-workflows.md)
-- GitHub CI: [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md)
-
-## Related Documents
-
-- [Architecture Tests](../07-enforcement/architecture-tests.md)
-- [docs/07-mobile-and-release/](../../07-mobile-and-release/)
+- Local hook: `.githooks/pre-push.d/10-main-only`
+- GitHub ruleset administration: `scripts/block-branch-creation.ts`
+- Branch allowlist constant: `packages/local-agent-core/src/control-branch-namespaces.ts`
+- Operational policy: [Scripts and Workflows](../../07-mobile-and-release/scripts-and-workflows.md)
+- GitHub policy: [GitHub CI Policy](../../07-mobile-and-release/github-ci-policy.md)
+- Local-agent operations: [Local Agent Runner Pool](../../07-mobile-and-release/local-agent-runner-pool.md)
 
 ## Change Impact
 
-`main` continues to be the only production/release branch. `agent-request/chatgpt` is the single explicitly documented persistent working-branch exception. Other branch creation remains disallowed unless explicitly authorized.
+Any code or workflow that tries to create a third remote ref is incompatible with the repository contract and must be changed, disabled, or kept local-only.
 
 ## Invariants
 
-1. Production and releases come only from `main`.
-2. Keep `agent-request/chatgpt` dedicated to ChatGPT work.
-3. Do not create additional persistent branches without explicit user authorization.
-4. Do not connect `agent-request/chatgpt` to the production Vercel deployment.
-5. Unpushed commits in ephemeral cloud workspaces can be lost on session end; persistent ChatGPT work should be stored on its dedicated branch.
+1. Exactly two remote branches exist: `main` and `agent-request/chatgpt`.
+2. Never create a third remote branch.
+3. Never treat `agent-request/chatgpt` as temporary or delete it as request cleanup.
+4. Production and releases come only from `main`.
+5. ChatGPT uses `agent-request/chatgpt` for persistent isolated work.

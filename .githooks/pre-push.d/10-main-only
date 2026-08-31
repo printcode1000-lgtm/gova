@@ -1,48 +1,40 @@
 #!/bin/sh
-#
-# Refuses to push any branch other than `main`.
-#
-# `main` is the only branch this repository has. Every branch that used to exist was
-# created automatically by ephemeral development sessions, and none of them carried work
-# that main did not already have. The cleanup is only worth doing once,
-# so the boundary is enforced here rather than remembered.
-#
-# Reads the `pre-push` ref lines from stdin, replayed by the dispatcher:
-#   <local ref> <local sha> <remote ref> <remote sha>
-#
-# Deletions (`git push origin --delete <branch>`) arrive with a zero local sha and are
-# allowed through: removing a stray branch is the outcome this check exists to protect.
-#
-# Full rationale: docs/07-mobile-and-release/scripts-and-workflows.md
+# Enforces the repository's fixed two-branch remote model.
+# Allowed remote refs:
+#   refs/heads/main
+#   refs/heads/agent-request/chatgpt
+# Everything else is rejected. Deleting a stray unauthorized branch is allowed.
 
 blocked=0
 
 while read -r _local_ref local_sha remote_ref _remote_sha; do
   [ -n "$remote_ref" ] || continue
 
-  # `main` carries the project. The three namespaces below are local agent
-  # control-plane machinery — isolated agent result branches, the inbound
-  # dispatch channel, and the output-only coordination snapshot — and each has to
-  # be creatable or parallel agents cannot work at all. The same list is excluded
-  # from the GitHub `main-only` ruleset in scripts/block-branch-creation.ts.
-  case "$remote_ref" in
-    refs/heads/main) continue ;;
-    refs/heads/codex/*) continue ;;
-    refs/heads/agent-request/*) continue ;;
-    refs/heads/agent-control) continue ;;
-  esac
-
   case "$local_sha" in
-    0000000000000000000000000000000000000000) continue ;;
+    0000000000000000000000000000000000000000)
+      case "$remote_ref" in
+        refs/heads/main|refs/heads/agent-request/chatgpt)
+          echo "pre-push: refusing to delete recognized branch '$remote_ref'." >&2
+          blocked=1
+          ;;
+        *) continue ;;
+      esac
+      continue
+      ;;
   esac
 
-  echo "pre-push: refusing to create or update '$remote_ref'." >&2
+  case "$remote_ref" in
+    refs/heads/main|refs/heads/agent-request/chatgpt) continue ;;
+  esac
+
+  echo "pre-push: refusing unauthorized remote branch '$remote_ref'." >&2
   blocked=1
 done
 
 if [ "$blocked" -ne 0 ]; then
   echo "" >&2
-  echo "main is the only branch in this repository. Commit to main and push that." >&2
+  echo "This repository has exactly two remote branches: main and agent-request/chatgpt." >&2
+  echo "Do not create or push any third branch." >&2
   exit 1
 fi
 

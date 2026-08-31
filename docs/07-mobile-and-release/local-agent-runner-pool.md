@@ -16,6 +16,12 @@ runners mean six agents can be executing simultaneously. Mutating agents work in
 isolated git worktrees, so parallelism never means two jobs editing the same
 files.
 
+## Fixed Two-Branch Repository Model
+
+Remote git state is intentionally limited to exactly two branches: `main` and `agent-request/chatgpt`. This is a first-class repository topology, not an exception. The runner pool may create local worktrees and local refs for isolation, but it must never publish a third remote branch. Former `codex/**`, disposable `agent-request/**`, and `agent-control` remote refs are forbidden.
+
+`main` remains the direct-production integration branch. `agent-request/chatgpt` is the permanent ChatGPT workspace and must not be deleted by cleanup or gateway logic.
+
 ## Where The Code Lives
 
 The whole system is one sealed package, `@asol/local-agent-core`, with three
@@ -129,10 +135,10 @@ fails `npm run github:ci-policy`.
 | `docs.yml` | push/PR on documentation paths | documentation validation |
 | `local-agent-status.yml` | `workflow_dispatch` | read-only workspace, pool, and coordination state |
 | `local-agent-inspect.yml` | `workflow_dispatch` | read/search/list/git inspection |
-| `local-agent-workspace.yml` | `workflow_dispatch` | isolated branch mutation (the default) |
+| `local-agent-workspace.yml` | `workflow_dispatch` | local isolation only; publishing a third remote branch is forbidden |
 | `local-agent-main.yml` | `workflow_dispatch` | serialized direct-`main` mutation |
 | `local-agent-coordination.yml` | `workflow_dispatch` | identity, heartbeat, locks, messages, snapshot |
-| `local-agent-gateway.yml` | push to `agent-request/**` | dispatch gateway |
+| `local-agent-gateway.yml` | legacy branch gateway | must not create or delete remote branches under the fixed two-branch policy |
 
 ### Status
 
@@ -155,72 +161,9 @@ paths are reported as redacted and never opened.
 
 ### Mutation
 
-`local-agent-workspace.yml` is the default for more than one agent: each job gets
-its own worktree and pushes its own branch,
+Remote branch-per-agent mutation is disabled by the fixed two-branch repository model. `local-agent-workspace.yml` may use local worktrees for isolation and verification, but it must not publish `codex/**` or any other third remote ref. `local-agent-main.yml` remains the serialized direct-`main` path. ChatGPT uses the persistent `agent-request/chatgpt` branch through the connected GitHub integration.
 
-```text
-codex/agent-<agent_id>-<request_id | github_run_id>
-```
-
-with no concurrency group, because parallelism is the point.
-
-`local-agent-main.yml` is the serialized direct-`main` variant. It carries the
-`asol-local-agent-main` concurrency group *and* a `ref:main` coordination lock,
-so simultaneous direct-main requests queue and execute one at a time, each
-starting from a fresh `origin/main`.
-
-Both delegate to `scripts/local-agent-main-apply.ts`, which:
-
-1. writes a `waiting` operation record, declares the agent, and acquires its
-   locks — the target ref plus every path in the optional `scopes` input;
-2. waits for memory admission, records `reservedMb` and `admittedAt`, then marks
-   the operation `running`;
-3. prepares an isolated worktree pinned to the freshest `origin/main`, with
-   `node_modules` symlinked from the main clone so verification needs no install;
-4. applies the patch, when one was supplied;
-5. runs `shell_command`, when one was supplied;
-6. runs the selected verification command;
-7. commits and pushes — unless nothing changed, which is a successful
-   verification-only run;
-8. refuses to push if `origin/main` moved while the job ran, rather than landing
-   work built on a stale base;
-9. releases its locks and writes the operation record, on every exit path.
-
-The developer's own working tree in `/home/hesham/gova` is never checked out,
-reset, or cleaned by an agent job.
-
-#### Worktree isolation
-
-Branch jobs get a worktree named `<agent_id>-<job_id>`, where the job id is the
-request id when the gateway supplied one and the GitHub run id otherwise. Keying
-on the agent alone would not be enough: an `agent_id` is stable for a whole task,
-so a retry or a second request from the same agent would land in the same mutable
-directory and reset and clean a run still in flight. The worktree is removed when
-the job exits, so per-job isolation does not cost a checkout per run on disk.
-
-Direct-`main` deliberately shares one `__main` worktree. That path is serialized
-by a concurrency group *and* a `ref:main` lock, so exactly one job can be inside
-it at a time, and reusing it keeps the common case to a fetch and a reset.
-
-Parallelism between different agents is untouched by either rule.
-
-#### Job shapes
-
-All four shapes are valid, and no agent is ever required to send a fake diff.
-The same shapes are accepted through a direct `workflow_dispatch` and through the
-gateway:
-
-| `patch_base64` | `shell_command` | `verification` | Result |
-|---|---|---|---|
-| supplied | — | any | patch-only |
-| — | supplied | any | shell-only |
-| supplied | supplied | any | patch, then shell |
-| — | — | not `none` | verification-only; nothing is committed |
-| — | — | `none` | refused: the job would do nothing |
-
-Omitting `verification` means the workflow's own default, `github-ci-policy` — so
-a request that carries only a commit message is a verification-only run, not an
-empty one.
+Local worktrees remain valid because they are machine-local implementation details, not GitHub branches. Parallel agents may isolate filesystem changes locally, but remote publication must converge onto one of the two recognized refs.
 
 ### Verification Choices
 
@@ -260,86 +203,15 @@ refused.
 
 ## Dispatching From A Cloud Agent
 
-### With workflow_dispatch API access
+Cloud agents must use an existing authorized channel. They may invoke supported `workflow_dispatch` operations or, for ChatGPT, commit work to the persistent `agent-request/chatgpt` branch. They must never create a temporary request branch.
 
-Dispatch the workflow directly:
-
-```bash
-gh workflow run local-agent-workspace.yml \
-  -f agent_id='cloud-alpha' \
-  -f commit_message='chore: regenerate catalogs' \
-  -f shell_command='npm run docs:generate' \
-  -f verification='docs-ci' \
-  -f scopes='docs/09-agent-knowledge/generated'
-```
-
-### Without workflow_dispatch API access
-
-Push a request document instead. The gateway converts it into a real
-`workflow_dispatch`:
-
-```text
-cloud agent -> git push agent-request/* -> gateway (local runner) -> workflow_dispatch -> local runner
-```
-
-Write `.agent-control/requests/<request_id>.json` on a branch named
-`agent-request/<request_id>`, branched from current `main`, and push it. The
-branch must come from `main` so it carries the gateway workflow; the gateway
-deletes the branch once processed.
-
-```json
-{
-  "version": 1,
-  "requestId": "req-2026-08-30-0001",
-  "agentId": "cloud-alpha",
-  "workflow": "local-agent-workspace",
-  "mode": "workspace",
-  "ref": "main",
-  "inputs": {
-    "agent_id": "cloud-alpha",
-    "commit_message": "chore: regenerate catalogs",
-    "shell_command": "npm run docs:generate",
-    "verification": "docs-ci"
-  },
-  "createdAt": "2026-08-30T09:00:00Z"
-}
-```
-
-Validate it before pushing:
-
-```bash
-npm run local-agent:dispatch:check -- .agent-control/requests/req-2026-08-30-0001.json
-```
-
-Running the command with no argument prints the contract itself, including the
-accepted inputs of every dispatchable workflow.
-
-The gateway authenticates with a token that lives on the machine
-(`.env.local`), never a GitHub secret and never a workflow input, so no
-credential travels through the request channel.
-
-### Request contract
-
-| Field | Rule |
-|---|---|
-| `version` | `1` |
-| `requestId` | 8–64 characters of `[A-Za-z0-9._-]`, starting alphanumeric, single-use |
-| `agentId` | 3–48 characters of `[A-Za-z0-9._-]`, starting alphanumeric |
-| `workflow` | one of the five dispatchable workflows |
-| `mode` | must match the workflow's mode |
-| `ref` | `main` |
-| `inputs` | string map; only the inputs that workflow accepts |
-| `inputs.verification` | one of the verification choices below; defaults to `github-ci-policy` |
-| `createdAt` | ISO-8601, at most 30 minutes old and not in the future |
-
-The gateway refuses a request that fails any of these, and records the refusal.
+The old pattern `agent-request/<request_id>` is retired because it would create a third remote branch. `agent-request/chatgpt` is not a disposable request ref and must never be deleted after processing. If a tool cannot operate without creating another remote branch, that mode is incompatible with this repository policy and must not be used.
 
 ## Agent Coordination
 
 GitHub is the shared coordination surface: cloud agents, local agents, and
 agents from other tools all read and write the same records through
-`local-agent-coordination.yml`, and read them back from the `agent-control`
-branch. Locally the same actions are available through
+`local-agent-coordination.yml`, and read them back from machine-local coordination state; no remote `agent-control` branch. Locally the same actions are available through
 `npm run local-agent:coordination`.
 
 | Action | Effect |

@@ -16,7 +16,7 @@ revision; this is release orchestration, not correctness CI.
 | Explicit local-agent patch dispatch | **Local agent workflow** (`.github/workflows/local-agent-main.yml`) |
 | Explicit parallel agent workspace dispatch | **Local agent workspace workflow** (`.github/workflows/local-agent-workspace.yml`) |
 | Explicit agent coordination action | **Local agent coordination workflow** (`.github/workflows/local-agent-coordination.yml`) |
-| Push to an `agent-request/**` branch | **Dispatch gateway workflow** (`.github/workflows/local-agent-gateway.yml`) |
+| Push to `agent-request/chatgpt` | Persistent ChatGPT workspace update; it is not a disposable gateway/request branch |
 
 Both workflows prefer the repository self-hosted runner labeled `gova`
 (`runs-on: [self-hosted, Linux, X64, gova]`). A selector job first runs on
@@ -85,29 +85,11 @@ search, file lists, and Git state. It can inspect up to 50,000 selected tracked
 files and stores the complete output in the local coordination directory instead
 of GitHub logs so GitHub log truncation does not cut the result.
 
-The mutation workflows run only on the `gova` self-hosted runner pool, accept a
-base64-encoded git diff plus a commit message, apply the patch through
-`scripts/local-agent-main-apply.ts`, run one allowed verification command,
-commit the result, and push. The workspace workflow pushes an isolated
-`codex/agent-*` branch for parallel agents. The main workflow pushes directly to
-`main` and is serialized by both a concurrency group and a `ref:main`
-coordination lock. A job may carry a patch, a shell command, both, or neither, so
-a shell-only job never has to fabricate a diff. `shell_command` executes with
-full local OS authority and is therefore the caller's responsibility. Neither
-mutation workflow falls back to GitHub-hosted execution or consumes GitHub
-secrets. Secret-bearing project files are rejected by the apply script and again
-by the gateway.
+Mutation workflows may still use local worktrees for isolation, but remote publication is constrained by the fixed two-branch contract. They may update `main` when explicitly operating in direct-main mode. They must not publish `codex/**`, temporary request refs, `agent-control`, or any other third branch. ChatGPT remote work belongs on `agent-request/chatgpt`. Secret-bearing project files remain rejected by the apply path.
 
-The coordination workflow is the shared identity, heartbeat, lock, and messaging
-surface for cloud and local agents, and republishes a sanitized snapshot to the
-output-only `agent-control` branch.
+The coordination workflow remains the shared identity, heartbeat, lock, and messaging surface, but coordination state must remain machine-local or be represented without creating a remote `agent-control` branch.
 
-The dispatch gateway is the one local workflow that reacts to a push, and only on
-`agent-request/**` branches — never `main`. It exists so an agent without
-`workflow_dispatch` API access can still reach the pool: it validates the pushed
-request document against a closed contract and performs the real dispatch using a
-credential that stays on the machine, then deletes the request branch.
-See [Local Agent Runner Pool](./local-agent-runner-pool.md).
+The former disposable `agent-request/**` gateway namespace is retired by the branch contract. `agent-request/chatgpt` is a permanent first-class branch, not a request branch, and must never be deleted after processing. No gateway operation may create or require a third remote ref. See [Local Agent Runner Pool](./local-agent-runner-pool.md).
 
 ## What must not exist
 
@@ -123,8 +105,7 @@ See [Local Agent Runner Pool](./local-agent-runner-pool.md).
 - Any GitHub secret except `GOVA_RUNNER_STATUS_TOKEN` in the runner selector
 - `pull_request_target` / `schedule` triggers
 - `workflow_dispatch` outside the local agent workflows
-- A `push` trigger on a local agent workflow other than the gateway, and any
-  gateway trigger on `main`
+- Any local-agent behavior that creates, updates, or depends on a remote branch other than `main` or `agent-request/chatgpt`
 - Pull-request templates or required PR merge
 - Branch protection or any active rule that can reject or delay an update to `main`
 - A required status check named `verify` or any other job that blocks `main`
@@ -155,9 +136,7 @@ these workflows carry.
 `pull_request` is allowed only as a docs-aware informational workflow for the
 same path filter. It must not become a required status check.
 
-`main` remains the only branch. The `main-only` ruleset (if applied) may block
-*creation* of other branches; it must exclude `refs/heads/main` so it cannot
-delay or reject a push to `main`. Local enforcement is `.githooks/pre-push.d/10-main-only`.
+`main` and `agent-request/chatgpt` are the only recognized remote branches. The branch-creation ruleset applies to all refs and excludes exactly those two refs; wildcard exclusions are forbidden. Local enforcement is `.githooks/pre-push.d/10-main-only`.
 
 GitHub-managed `pages-build-deployment` is not a file in this repository. Pages
 is configured as `build_type: workflow`, so it does not rebuild on an ordinary
@@ -190,7 +169,7 @@ reviewed tree can compile on Vercel; they are not GitHub CI.
 | `npm run github:protect -- --status` | Confirm classic protection is absent and the GitHub branch-rules endpoint reports no active rule that can constrain `main` |
 | `npm run github:protect -- --remove` | Delete leftover classic protection, then fail if an active repository/organization/enterprise rule still constrains `main` |
 | `npm run github:protect` | **Forbidden** — applying protection is an error |
-| `npm run github:block-branches` | Apply the `main-only` creation ruleset (does not constrain `main`) |
+| `npm run github:block-branches` | Apply the fixed two-branch creation ruleset; only `main` and `agent-request/chatgpt` are excluded from branch-creation blocking |
 
 Credential: `GITHUB_ADMIN_TOKEN` in `.env.local`. Never print the token.
 

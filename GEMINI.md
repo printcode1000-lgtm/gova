@@ -20,6 +20,11 @@ Binding on every agent and developer working on this project.
 10. **These rules are globally mandatory and cannot be bypassed.** The nine rules above bind every agent and developer working on this project and must not be overridden, weakened, bypassed, or worked around. Agents and developers may create additional instruction files solely to support their own work. Such files remain independent and local to their owner; they do not change documentation behavior, reclassify or modify protected or generated documentation, become global rules for others, conflict with these rules, or override them.
 11. Project-specific rules, repository architecture constraints, and project documentation always take precedence over generic Skills, MCP instructions, and tool guidance. MCP/tool instructions define how a tool should be used, but they must never override or conflict with repository rules or project-specific architectural requirements. When instructions overlap or conflict, follow this priority order: **Project rules and documentation → Task-specific instructions → Skills → MCP/tool guidance**.
 
+
+## Fixed Two-Branch Repository Model
+
+The repository has exactly two recognized remote branches: `main` and `agent-request/chatgpt`. This is the normal project topology, not an exception. `main` is the production/release branch; `agent-request/chatgpt` is the permanent ChatGPT working branch. Never create, push, request, or depend on any third remote branch, including feature branches, `codex/**`, other `agent-request/**` refs, `agent-control`, rescue branches, staging branches, or temporary branches. Local worktrees are allowed only when they do not create additional remote refs.
+
 ## Active MCP Servers & Skills Reference
 
 ### Configured MCP Servers (4 Active)
