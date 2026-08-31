@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "asol-adv2-20260901-0235",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Corrected ASOL control adversarial verification only",
+    "verification": "none",
+    "execution_target": "canonical-host",
+    "timeout_minutes": "55",
+    "shell_command": "set -euo pipefail\ncd /home/hesham/gova\ngit fetch --prune origin main\ntest \"$(git branch --show-current)\" = main\ntest \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/main)\"\ntest -z \"$(git status --porcelain --untracked-files=no)\"\necho \"HEAD=$(git rev-parse HEAD)\"\n\necho '=== CORRECT GOVA ARTIFACT ATTACK ==='\nrm -rf .tmp-gova-build\nnpm run gova:tree\n(cd .tmp-gova-build && ASOL_RUNTIME_ROLE=gova-frontend node ../node_modules/next/dist/bin/next build)\n./node_modules/.bin/tsx -e \"import { assertGovaArtifact } from '@asol/gova-deployment-core'; const r=assertGovaArtifact('.tmp-gova-build'); console.log('GOVA_ARTIFACT_API_FUNCTIONS='+r.apiFunctions.join(',')); if (r.apiFunctions.some((x)=>x !== 'health')) process.exit(72);\"\n\necho '=== GLOBAL FAIL-CLOSED GATES ==='\nnpm run typecheck\nnpm run lint\nnpm run architecture:check\nnpm run docs:ci\nnpm run verify:all\nnpm run test\n\necho '=== CORS ORIGIN SPOOF ATTACK ==='\nASOL_CORS_ORIGINS='https://trusted.example' ./node_modules/.bin/tsx -e \"import { NextRequest } from 'next/server'; import { proxy } from './src/proxy'; const req=new NextRequest('https://gova.example/api/products',{method:'OPTIONS',headers:{origin:'https://trusted.example.evil.tld','access-control-request-method':'GET'}}); const res=proxy(req); const reflected=res.headers.get('access-control-allow-origin'); console.log('SPOOF_REFLECTED='+String(reflected)); if (reflected === 'https://trusted.example.evil.tld') { console.error('FATAL_CORS_PREFIX_BYPASS'); process.exit(73); }\"\n\nrm -rf .tmp-gova-build\ntest \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/main)\"\ntest -z \"$(git status --porcelain --untracked-files=no)\"\necho 'ADVERSARIAL_VERIFICATION_2=PASS'"
+  },
+  "createdAt": "2026-08-31T23:35:00.000Z"
+}
