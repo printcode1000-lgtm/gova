@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "asolcutover-inspect-active-runner-log-20260831-205230",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-inspect",
+  "mode": "inspect",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "mode": "search",
+    "paths": ".local/github-runners/gova-coordination",
+    "pattern": "asolcutover-fix-release-runner-env-and-log-20260831-204050|33420934411|99582850263"
+  },
+  "createdAt": "2026-08-31T17:52:30.000Z"
+}
