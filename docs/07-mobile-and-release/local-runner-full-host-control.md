@@ -29,11 +29,11 @@ The following state was verified directly on the local server on 2026-08-31 with
 | `git` | available |
 | `node` / `npm` | available |
 | `python3` | available |
-| Antigravity | allowed; `/usr/local/bin/antigravity` |
-| `agy` | available; `/home/hesham/.local/bin/agy` |
+| Antigravity | **permanently forbidden by Local Runner policy** |
+| `agy` | **permanently forbidden by Local Runner policy** |
 | Docker CLI | not currently available |
 
-The Docker row is an availability fact, not a policy restriction. A tool that is not installed cannot be used until it is installed or otherwise made available.
+The Docker row is an availability fact, not a policy restriction. Antigravity/`agy` is different: even if its binaries are installed on the host, the Local Runner must refuse their use.
 
 ## Filesystem Boundary
 
@@ -65,11 +65,11 @@ The standing trust boundary is GitHub plus the local operating system:
 6. The Local Runner job then executes on a self-hosted runner carrying the `gova` label.
 7. Linux permissions remain authoritative once the shell is running; passwordless sudo currently provides root elevation.
 
-The authenticated `shell_command` is intentionally **not subject to a command allowlist**. Repository CI policy may constrain workflow source, but it does not reinterpret the user-supplied Local Runner shell command as a restricted CI command.
+The authenticated `shell_command` is intentionally **not subject to a general command allowlist**. There is one binding tool-level exception: **Antigravity and `agy` are permanently forbidden** and must be rejected before execution. Repository CI policy may constrain workflow source, but it does not otherwise reinterpret the user-supplied Local Runner shell command as a restricted CI command.
 
 ## Host-Level Capabilities
 
-Within an authenticated Local Runner job, ChatGPT can request shell operations across the host subject to the kernel, filesystem, installed software, hardware, and network actually available at execution time.
+Within an authenticated Local Runner job, ChatGPT can request shell operations across the host subject to the kernel, filesystem, installed software, hardware, network, and explicit Local Runner tool bans actually in force at execution time.
 
 ### Files and directories
 
@@ -112,8 +112,9 @@ The Local Runner can execute installed tooling including:
 - Git and repository commands;
 - Node.js and npm;
 - Python 3;
-- shell scripts and arbitrary executables available through the host;
-- Antigravity and `agy`, which are currently enabled by the machine-local host-tool policy.
+- shell scripts and arbitrary executables available through the host, **except tools explicitly forbidden by Local Runner policy**.
+
+Antigravity and `agy` are permanently forbidden regardless of whether their binaries are installed. They must not be invoked directly, through wrappers, through the monitor, or from a submitted `shell_command`.
 
 Docker is not currently present on the verified host.
 
@@ -150,9 +151,10 @@ For the direct-`main` mutation path:
 - a stale-base check refuses to push if `origin/main` moved during the job;
 - signals release locks and clean/reconcile worktree state;
 - the workflow has a 60-minute job timeout;
-- optional built-in verification is limited to the documented verification choices.
+- optional built-in verification is limited to the documented verification choices;
+- Antigravity/`agy` remains forbidden in every mutation mode.
 
-These are repository-integrity and host-stability controls. They are not shell command/path allowlists.
+These are repository-integrity and host-stability controls. They are not a general shell command/path allowlist.
 
 ## Remote Branch Policy
 
@@ -169,15 +171,19 @@ Any legacy code path that attempts to publish `codex/**`, `agent-control`, anoth
 
 ## Host Tools
 
-The Local Runner has a machine-local host-tool policy stored under `.local/host-tools.json`.
+Antigravity is a permanently denied Local Runner host tool. This is a binding repository policy, not a user-toggleable machine preference.
 
-The policy mechanism can install refusal shims for `antigravity` and `agy` when disabled. The current runtime state was verified as:
+Enforcement is defense in depth:
 
-- Antigravity policy: allowed
-- `antigravity`: `/usr/local/bin/antigravity`
-- `agy`: `/home/hesham/.local/bin/agy`
+- `.github/workflows/local-agent-main.yml` and `.github/workflows/local-agent-workspace.yml` contain no Antigravity setup, wrapper, or invocation step;
+- `@asol/local-agent-core/host` always reports Antigravity as disallowed;
+- a machine-local `.local/host-tools.json` file cannot enable it;
+- attempting `setHostToolAllowed(true)` or toggling the tool is refused;
+- PATH refusal shims for both `antigravity` and `agy` are always installed for Local Runner subprocess environments;
+- submitted login-shell commands are checked before execution and rejected when they request `antigravity` or `agy`;
+- the Local Agent monitor has no key or action that can enable the tool.
 
-Therefore authenticated full-host-control shell tasks currently have access to those tools.
+The presence of `/usr/local/bin/antigravity`, `/home/hesham/.local/bin/agy`, or any future installation of equivalent binaries does not grant Local Runner permission to invoke them.
 
 ## Host Discovery
 
@@ -210,7 +216,7 @@ This is host discovery, not a P2P companion-repository integration.
 
 ## Operational Limits
 
-Full Host Control means the authenticated shell is not artificially restricted to repository paths or a command allowlist. It does **not** mean unlimited execution independent of the platform.
+Full Host Control means the authenticated shell is not artificially restricted to repository paths or a general command allowlist. It does **not** mean unlimited execution independent of the platform or explicit Local Runner policy.
 
 Current limits include:
 
@@ -220,6 +226,7 @@ Current limits include:
 - mutation admission and cgroup memory controls protect the host from concurrent heavy work;
 - GitHub request validation and the fixed two-branch ruleset remain enforced;
 - secret-export protections remain enforced;
+- Antigravity/`agy` is forbidden even when installed;
 - unavailable software cannot be used until installed;
 - network operations depend on the actual network and external service availability.
 
@@ -227,7 +234,8 @@ Current limits include:
 
 1. Treat the Local Runner as a host-control surface for authenticated tasks, not as a repository sandbox.
 2. Treat `/home/hesham/...` as host paths and repository-relative names as Git paths.
-3. Do not introduce a command/path allowlist for authenticated full-host-control shell tasks unless the user explicitly changes this policy.
+3. Do not introduce a general command/path allowlist for authenticated full-host-control shell tasks unless the user explicitly changes this policy; **Antigravity/`agy` is the permanent explicit exception and must remain forbidden**.
 4. Preserve authentication, request validation, secret-export prevention, repository mutation guards, and the fixed two-branch policy.
 5. Do not infer host state from GitHub alone when the fact lives only on the server; verify it through the Local Runner.
 6. Do not reintroduce a Gova dependency, restore rule, sync command, or documentation contract for the removed `p2p-link` companion relationship unless the user explicitly requests a new architecture.
+7. Do not add Antigravity/`agy` wrappers, workflow steps, monitor toggles, shell execution paths, or local policy switches back into the Local Runner.
