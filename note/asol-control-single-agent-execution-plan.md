@@ -1,293 +1,169 @@
-# ASOL Control Migration — Single-Agent Execution Plan
+# ASOL Control — Atomic One-Shot Radical Cutover Contract
 
-> **Execution model:** one agent, one serial migration, no multi-agent coordination layer.
+> **Execution model:** one agent, one uninterrupted migration transaction, one final architecture. No multi-agent split, no migration phases, no dual-run architecture, no manual handoff, no “finish later” state, and no silent compatibility loss.
 >
-> **Audited baseline:** this plan was reconciled against `main` commit `760bac3dbda47c65336c1f8bb3f4d02e85408a8f` on 2026-08-31. The repository is the source of truth. If relevant code has changed since that commit, re-run the discovery steps below and update the implementation to the current code instead of forcing this note's baseline facts.
+> **Audited baseline:** `main` commit `ed0ce362b06fe6aba8adf1152e8a73b2b5af7c3f` on 2026-08-31. The repository at that exact revision is the baseline for every fact below. The implementation must re-read `main` immediately before editing and must regenerate machine inventories from the live tree if `main` has advanced.
 
 ## Mission
 
-Complete the migration from the current mixed `gova` server/application architecture to the following production architecture without losing existing behavior:
+Perform a **single radical cutover** from the current mixed `gova` application/server runtime to a distributed architecture in which:
 
-- `gova` is the **only GitHub-linked Vercel project** and becomes production **frontend-only**: pages, client/static assets, `/.well-known/**`, and `/api/health`.
-- `asol-control` becomes the **only operational control runtime** for deployment authority and administrative operations: production deployment endpoints, Vercel Sandbox orchestration, Super Admin server operations, system logs, and OTA administration.
-- The existing six product/workload deployments remain isolated and are reached directly by the browser/static/native clients:
-  - `notifications`
-  - `products`
-  - `orders`
-  - `profiles`
-  - `submain`
-  - `sub2main`
-- No application backend implements business behavior by calling another ASOL backend. The browser/native client is the cross-account bridge. The only exception is the **control deployment runner/Sandbox**, which may know deployment targets and may perform deployment/readiness/smoke verification as operational orchestration; that exception must never become a business-data backend bridge.
+- `gova` is the **only GitHub-linked Vercel project**;
+- `gova` contains the frontend/pages/static assets, `/.well-known/**`, `/api/health`, and only a **stateless transport-compatibility redirect boundary** required to keep already-running/installed clients working during and after the cutover;
+- `gova` contains **no Business API implementation, no business database/storage execution, no administrative server capability, and no business secret**;
+- `asol-control` is the operational control runtime for Super Admin server operations, system logs, OTA administration, build/release jobs, production deployment authority, Vercel Sandbox orchestration, callbacks, and release reporting;
+- the six workload runtimes remain isolated: `notifications`, `products`, `orders`, `profiles`, `submain`, `sub2main`;
+- new web/static/native clients call the owning runtime directly through one canonical route+method ownership registry;
+- application backends never call sibling ASOL backends to implement business behavior;
+- only the release-control plane may perform explicitly allowlisted cross-deployment operations: deployment/readiness/smoke verification and the existing terminal production-deploy notification delivery needed to preserve current behavior;
+- one Git SHA is the release unit across `control`, the six workloads, and the GitHub-built `gova` frontend.
 
-The migration must preserve current API behavior, status codes, response bodies, authorization rules, CORS behavior, notification-grant semantics, static/native routing, release behavior, architecture boundaries, and generated documentation unless this plan explicitly declares an intentional behavior change.
+The result must preserve every currently supported user flow, API success/error contract, authorization rule, request/response body, method, binary/multipart/stream behavior, notification behavior, static/native behavior, deployment behavior, and data invariant unless an intentional change is explicitly approved by the invoking instruction.
 
-## Execution authority and safety
+## What “one-shot” means
 
-1. This is a **single-agent** plan. Do not create agent-specific branches, worktrees, ownership handoffs, discussion files, or cross-agent review rings.
-2. Follow the repository's current rules first. Read `AGENTS.md` and the relevant documentation before editing. `main` is the repository's only normal branch; do not introduce a feature-branch/PR workflow for this migration.
-3. Inspect `git status` before editing and preserve unrelated user changes. Never reset, overwrite, or clean user work.
-4. Never print, commit, copy into `note/`, or expose secret values. Secret checks and reports are names-only (`present` / `missing`).
-5. Do not guess live Vercel project IDs, team IDs, owner email, domains, or the future `asol-control` production URL. Verify live values through the existing Vercel tooling/API before using them.
-6. Repository changes and local verification may proceed serially. **Live production deployment, destructive live Vercel environment deletion, credential rotation, and final push/cutover require explicit authorization in the execution session unless the invoking instruction explicitly grants those actions.**
-7. Do not weaken current quality or architecture gates to make the migration pass. Update a gate only when the architecture contract legitimately changes, and add focused regression coverage for that change.
-8. Do not hand-edit generated architecture/knowledge documentation. Update registries/sources and regenerate.
-9. Do not replace real source handlers with simplified migration stubs. The current `src/app/api/**/route.ts` handlers are part of the service-mirror source graph and must remain behaviorally real.
+This document contains an ordered execution sequence because distributed systems cannot be changed literally simultaneously. That order is **not a set of migration phases**. The agent executes it as one transaction from the current architecture to the final architecture:
 
----
+- no intermediate architecture is accepted as “done”;
+- no manual “continue?” checkpoint is inserted after execution starts;
+- no compatibility shim that requires a later removal is introduced;
+- no old backend remains as a hidden fallback;
+- every precondition is checked before the first irreversible production mutation;
+- once production mutation starts, failure triggers automatic rollback/compensation rather than a pause for instructions;
+- the agent reports completion only after the final production topology and all final smoke checks are proven.
 
-## Audited current-state facts
+When the user explicitly instructs an agent to **execute this plan**, that execution instruction is the authorization to perform the complete transaction described here, including the final `main` push/cutover and the live Vercel changes required by the plan. Do not ask for another confirmation in the middle. If the user asks only to inspect, plan, or prepare, do not perform the live transaction and do not call the migration complete.
 
-These facts describe the audited baseline and are important because several old assumptions are no longer true.
+## Hard compatibility truth
 
-### Accounts and declarations
+The baseline code does **not** allow an honest claim that Business APIs can simply disappear from the `gova` hostname with zero breakage:
 
-The current `@asol/account-declarations` registry has exactly seven declarations:
+- the current generic account bridge maps only part of the API surface;
+- unresolved browser routes currently fall back to the gova/main API origin;
+- current/open web tabs and already-built static/Android/iOS artifacts can therefore still address Business APIs through `gova`.
 
-- `gova`
-- `notifications`
-- `products`
-- `orders`
-- `profiles`
-- `submain`
-- `sub2main`
+A strict final state where `gova` returns only health/frontend and has **no compatibility transport boundary at all** is incompatible with “do not break any currently supported client” unless it is first proven that no supported client artifact or active bundle can address Business APIs through the old hostname. That cannot be assumed.
 
-There is currently **no** `control` declaration, no `@asol/account-declarations/control` export, no `services/control`, and no `packages/control-composition`.
+Therefore this plan makes the zero-business-logic solution explicit:
 
-`GOVA_DECLARATION` itself is intentionally minimal, but `gova-runtime-env-keys.ts` still models a full server runtime containing database, auth, R2, push, OTA, and other server-only environment families. `submain-runtime-env-keys.ts` currently inherits the broad gova runtime lists. That broad inheritance is incompatible with the target least-privilege architecture and must be replaced with ownership derived from actual route/import dependencies.
+- canonical Business API route functions are **not shipped in the gova production artifact**;
+- a tiny, secret-free, data-free transport boundary may remain in the gova request boundary solely to return `307` redirects from legacy Business API route+method requests to the canonical owner origin;
+- the redirect target is generated from the same route+method ownership registry used by new clients;
+- it never proxies a request body, calls another backend itself, reads a database, issues authorization, or implements business behavior;
+- it is permanent compatibility transport, not a transitional fallback, so the final architecture does not require a later cleanup phase;
+- `/api/health` stays local and is never redirected;
+- new clients never depend on this boundary.
 
-The declaration tests currently contain architecture-count assumptions such as seven declarations and fixed env-key counts for existing services. Do not preserve those counts blindly. Change the contract deliberately and make tests prove the new architecture.
+Before cutover, frozen pre-cutover client-routing fixtures must prove that `307` preserves the semantics of every currently supported legacy transport: normal JSON fetch, authenticated custom headers, multipart upload, binary download/navigation, SSE/EventSource, and every other transport found by the machine scan. If any supported transport cannot preserve its contract through a redirect, **no production mutation may start** until that compatibility problem is solved without reintroducing business execution into gova. The agent must fail closed rather than claim “100% no break” falsely.
 
-### Packages and compositions
+## Audited baseline facts at `ed0ce362b06fe6aba8adf1152e8a73b2b5af7c3f`
 
-The current architecture registry already contains more packages than some editable docs describe. Therefore **never perform a mechanical `41 -> 42` or similar count edit**. Derive package/composition counts from the current registries, add the new package, and regenerate the generated references.
+These are facts to reconcile against the live tree before editing, not guesses:
 
-There are currently six composition packages/seam entries:
+1. GitHub code search at this revision reports **120 `route.ts` files under `src/app/api`**. Do not migrate from a hand-maintained subset.
+2. `@asol/account-declarations` has seven declarations: `gova`, `notifications`, `products`, `orders`, `profiles`, `submain`, `sub2main`. There is no `control` declaration/export.
+3. There is no `services/control` and no `packages/control-composition`.
+4. `@asol/account-bridge` currently:
+   - knows `products | orders | profiles | submain | sub2main` in its generic route bridge;
+   - omits `PATCH` from its generic method union;
+   - uses partial exact-path maps;
+   - deliberately returns no service destination in local development;
+   - returns `null` for unclassified routes.
+5. `buildAsolApiUrl()` currently falls back from an unresolved service destination to the generic gova/main API base or page origin.
+6. `src/instrumentation.ts` invokes the full `registerAppServerPorts()` composition root, and that root registers storage, orders, system logs, OTA, notifications, data, and other business server capabilities. A truly frontend-only gova build must not carry that graph.
+7. `scripts/vercel-deployment-guards.ts` currently forms the hosted runtime key set from gova runtime keys **plus required env keys from every account declaration**. That must be replaced by per-runtime environment validation; otherwise gova cannot become least privilege.
+8. `.github/workflows/deploy-main.yml` currently posts GitHub OIDC deployment requests to `https://gova-swart.vercel.app/api/super-admin/production-deploy/github`.
+9. `deployExistingRevision()` currently starts the six isolated deployments and main verification with `Promise.allSettled`, so backend readiness and the GitHub-linked gova deployment are not ordered by an atomic readiness barrier.
+10. `control` is not part of the current release at all. Keeping it as a manual “separate operational action” would let control drift behind the SHA being served and is not acceptable.
+11. The production-deploy terminal callback currently delivers an in-app deployment notification even when no Super Admin browser is open. Removing that call would be a behavior regression.
+12. The current system-log client opens the stream using raw `EventSource` and a relative `/api/system-logs/stream` URL with session data in the query.
+13. Current Super Admin UI contains raw relative artifact download links, and API routes include binary/streaming and multipart surfaces. Baseline search finds `Content-Disposition`, `ReadableStream`, and `formData()` route behavior; the migration cannot assume JSON-only HTTP.
+14. The current Vercel build command is `npm run build:vercel`; it validates environment, runs the normal root `next build`, and has no per-SHA backend-readiness wait.
+15. The current remote deployment Sandbox is persistent and stores release state outside the serverless request. That property can be reused so a stable control alias can be redeployed while workflow polling continues, but the old/new control contract must be tested for compatibility.
 
-- `notifications-composition`
-- `orders-composition`
-- `products-composition`
-- `profiles-composition`
-- `submain-composition`
-- `sub2main-composition`
+## Non-negotiable final topology
 
-`control-composition` must be created using the same sealed-package pattern: a package manifest, one declared public door unless a second door is genuinely required, focused tests, architecture-registry registration, and only exact application seams that its runtime needs.
+### Vercel runtimes
 
-### Service mirrors
+Repository metadata must declare eight runtimes/accounts:
 
-The current mirror tooling explicitly knows six services. `scripts/sync-all-service-sources.ts` runs six sync scripts and `scripts/verify-service-mirrors.ts` verifies six uploads.
+1. `gova` — GitHub-linked frontend/public runtime; no Business API implementation.
+2. `control` / Vercel project `asol-control` — Git-disconnected operational control runtime.
+3. `notifications` — Git-disconnected notification runtime.
+4. `products` — Git-disconnected product/catalog read runtime.
+5. `orders` — Git-disconnected order-list read runtime.
+6. `profiles` — Git-disconnected profile/review/storage-read runtime.
+7. `submain` — Git-disconnected auth/account/search/cross-domain user workload runtime.
+8. `sub2main` — Git-disconnected seller/product/profile/storage-write runtime.
 
-`control` is **not a seventh product service**. It needs a control-runtime sync/verify/build path that can be included in aggregate verification without adding it to product-service loops or semantics. If shared tooling is generalized, model runtime kind explicitly instead of pretending control is a product service.
+Only `gova` may have Vercel Git integration.
 
-### Browser bridge
+### The six workload set stays exactly six
 
-The current generic `@asol/account-bridge` routing surface is partial:
-
-- generic `ServiceKey` currently covers `products`, `orders`, `profiles`, `submain`, and `sub2main`;
-- the generic HTTP method union currently omits `PATCH`;
-- only a limited set of current product/profile/order/search/write routes is mapped;
-- unresolved routes return `null`.
-
-Notifications are intentionally handled by a **separate notification-grant bridge** (`@asol/account-bridge/notifications`) that delivers signed grants from browser/native code to `/api/notifications/send` with `credentials: 'omit'`. Preserve this separate channel unless a deliberate, fully tested refactor proves a better equivalent. Do not casually fold notification grant delivery into the generic route table.
-
-### Current API fallback
-
-`buildAsolApiUrl()` currently resolves a mapped service origin and otherwise falls back to the main API base / page origin. `public-env.ts` still accepts legacy generic API base variables, including a server-side `ASOL_API_BASE_URL` fallback in client-safe configuration.
-
-This fallback must **not** survive for production/static/native business API routing. Development may keep an explicitly tested local same-origin fallback. Production, static export, Android, and iOS must fail clearly when a required destination origin is missing instead of sending the request to `gova`.
-
-### Current gova proxy
-
-`src/proxy.ts` currently applies API CORS and returns `204` for `OPTIONS`, but it does not shut down business APIs on gova production.
-
-The target shutdown must be centralized at the gova production boundary. Do not turn source route files into `410` handlers because the service mirror needs their real implementations.
-
-### Current deployment flow
-
-The current GitHub production workflow sends its OIDC-authenticated production-deploy request to the `gova` production endpoint. The release pipeline has phases:
-
-`preflight -> publish -> notifications -> products -> orders -> profiles -> submain -> sub2main -> main`
-
-`SERVICE_PHASE_IDS` contains exactly the six workload deployments. Preserve that distinction: `control` must not enter `SERVICE_PHASE_IDS`.
-
-`deploy:all` / `deploy:push` currently deploy selected isolated services and verify the GitHub-linked main project. After migration they must operate under control authority while continuing to treat `gova` as GitHub-built and verification-only; they must never create a second CLI production deployment of `gova` for the same revision.
-
-### Current production-deploy notification backend hop
-
-The current terminal deployment callback can create notification grants and then perform a server-side HTTP call to the notifications deployment. That is a real backend-to-backend application call and conflicts with the target isolation rule.
-
-This migration intentionally removes that server delivery hop. Preserve durable deployment status/logging and deployment email. When a Super Admin browser polls a terminal deployment, signed notification grants may still be attached and delivered through the existing browser notification bridge. A GitHub-triggered deployment that finishes while no browser is open is **not allowed to regain immediate in-app notification by adding another server-to-notifications fallback**.
-
-### Current static/native origins
-
-The current native/static configuration declares canonical origins for `gova` plus the six workloads, with `gova` still acting as a generic API base. It has no control origin.
-
-The target needs public origins for:
-
-- `gova` public web/health/assets role;
-- `notifications`;
-- `products`;
-- `orders`;
-- `profiles`;
-- `submain`;
-- `sub2main`;
-- `control`.
-
-`gova` must no longer be required as a generic business API base.
-
----
-
-## Target architecture and non-negotiable invariants
-
-### Vercel projects
-
-After the migration there are eight declared Vercel runtimes/accounts in repository metadata:
-
-1. `gova` — GitHub linked; frontend/pages/static/`.well-known`/health only.
-2. `control` / project `asol-control` — CLI/Sandbox managed; deployment authority + administrative operations.
-3. `notifications` — notification APIs and push delivery.
-4. `products` — product/catalog read workloads.
-5. `orders` — order-list read workload.
-6. `profiles` — profile/review/storage read workloads.
-7. `submain` — auth and cross-domain user workloads.
-8. `sub2main` — seller/product/profile/storage writes.
-
-Only `gova` may be Git-linked. The other seven projects must have no Git repository integration.
-
-### Six product/workload deployment targets stay six
-
-The following set remains the product/workload deployment set:
+The product/workload set remains exactly:
 
 `notifications`, `products`, `orders`, `profiles`, `submain`, `sub2main`.
 
-`control` is operational infrastructure and must not be added to:
+`control` must **not** be inserted into:
 
 - `SERVICE_PHASE_IDS`;
 - `ALL_DEPLOY_PUSH_TARGETS`;
-- six-service smoke loops;
-- product-service counts or labels.
+- six-workload labels/counts;
+- six-workload smoke loops that are specifically about product/workload services.
 
-Give control its own readiness/build/smoke/identity checks.
+However, **every full production release must also deploy/verify control at the same SHA through its own mandatory release step**. “Not a workload target” must never mean “updated manually later”.
 
-### Runtime isolation
+### No business federation
 
-For every application runtime (`gova`, six workloads, and the control **route runtime**):
+For application behavior:
 
-- no foreign Vercel deployment token;
-- no foreign team/project ID;
-- no mirrored full account-declaration barrel when only one account door is needed;
-- no sibling ASOL public URL in server runtime merely to call that sibling;
-- no backend `fetch`/HTTP client to implement business behavior through another ASOL deployment;
-- no sibling secret ownership.
+- browser/native -> owning runtime is allowed;
+- gova compatibility boundary -> HTTP redirect only is allowed;
+- service -> sibling service business HTTP is forbidden;
+- control route runtime -> sibling business HTTP is forbidden;
+- service -> gova business HTTP is forbidden;
+- gova -> service business HTTP is forbidden.
 
-The **control deployment worker/Sandbox** is the only administrative exception. It may hold the deployment credentials/metadata required to deploy the six workloads and may issue non-business readiness/smoke probes to verify the release. Keep that knowledge inside deployment tooling/Sandbox state; never serialize it in a control API response or browser bundle.
+The only cross-deployment operational exception is release control:
 
-### Identity and CORS
+- the persistent Sandbox/release worker may deploy accounts and perform readiness/smoke probes;
+- the production-deploy terminal reporting path may deliver the existing signed deployment-notification grant to the notifications runtime so unattended deployments still notify exactly as before;
+- this exception is allowlisted by exact code path and exact notifications endpoint and cannot be reused as a general HTTP client.
 
-Keep the existing cross-origin identity model:
+## Canonical route+method ownership registry
 
-- browser requests use `credentials: 'omit'`;
-- operations requiring identity carry the signed `x-asol-session-token` explicitly;
-- do not add cross-origin session cookies or `credentials: 'include'`;
-- keep the shared browser-request header contract in `@asol/service-runtime-core`;
-- every receiving origin must answer the preflight required by its methods and headers.
+Create one canonical **pure** route ownership door inside the existing bridge capability, for example `@asol/account-bridge/routes`. It must not import `native-core`, React, server env, account tokens, or application features. Both the client router and the gova compatibility redirect boundary consume this exact door.
 
-`OPTIONS` is a transport/CORS concern, not a business ownership record. A pathname split by method across two destinations may legitimately need successful preflight behavior on both receiving origins. Business methods, however, must each have exactly one owner.
+The registry is pattern+method based, not a loose pathname prefix table. It must support:
 
----
+- exact routes;
+- dynamic segments such as `[id]` and nested parameters;
+- query strings without making the query part of ownership;
+- normalized trailing slash handling;
+- encoded path parameters;
+- `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD` where actually exported;
+- `OPTIONS` as transport behavior on each receiving origin rather than as business ownership.
 
-## Required execution sequence
+Build a TypeScript-compiler/AST inventory of the live `src/app/api/**/route.ts` tree that detects exported HTTP handlers including direct functions, variables, aliases, and re-exports. The inventory test must fail when:
 
-### Phase 0 — Re-baseline the current repository before changing behavior
+- a current Business API route+method has no owner;
+- a Business API route+method has more than one owner;
+- an owner pattern matches a nonexistent method by mistake;
+- a new route appears without classification;
+- a dynamic route cannot be resolved deterministically;
+- a production business route resolves to gova.
 
-1. Read current project rules and relevant architecture/release/API/service-mirror docs.
-2. Record the current commit SHA and `git status`.
-3. Enumerate **all current** `src/app/api/**/route.ts` files from the filesystem; do not use an old count.
-4. Parse each route file using TypeScript/AST-aware logic and inventory every exported HTTP method, including:
-   - `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, `HEAD` if present;
-   - re-exported handlers;
-   - arrow/function-variable exports;
-   - dynamic route segments.
-5. Search the application for every API transport bypass:
-   - `fetch`;
-   - `EventSource`;
-   - `XMLHttpRequest` if any;
-   - `<a href="/api/...">` or navigation to `/api/...`;
-   - form actions;
-   - `window.location` to API paths;
-   - raw `/api/` literals.
-6. Audit server execution outside `src/app/api`:
-   - Server Components/pages/layouts importing repositories or database packages;
-   - Server Actions (`"use server"`);
-   - route handlers outside the normal API tree;
-   - server-only feature initialization that makes `gova` depend on business databases/services.
+Do not use a hardcoded route-file count as the long-term gate. The audited `120` count is evidence for this baseline only.
 
-**Deliverable inside code/tests, not another coordination note:** a machine-checked route+method inventory and a machine-checked list/guard for production client routing. This inventory becomes the source of truth for the migration.
+### Target ownership policy
 
-### Phase 1 — Add migration guards before moving routes
+Apply the following policy to the routes/methods that actually exist at execution time; the AST inventory is authoritative and any additional live route must be classified by its real capability before migration continues.
 
-Add focused tests/architecture checks that fail on the current undesired architecture and pass only as each migration step is completed:
-
-1. **Route classification completeness:** every current business route+method has exactly one destination; health and `.well-known` are not business routes; dev routes are development-only.
-2. **No production fallback:** a business route in web production/static/Android/iOS cannot resolve to `gova` or same-origin when its destination is missing.
-3. **Gova production shutdown:** every business API method, including preflight attempts, is blocked on gova production while health remains functional.
-4. **Account isolation:** service/control runtime graphs cannot contain foreign deployment credentials, project/team IDs, sibling backend URLs, or runtime HTTP calls to sibling ASOL services.
-5. **Control separation:** control is never included in the six product-service phase/deploy-target arrays.
-6. **Mirror contract parity:** each moved business handler preserves status, response shape/error code, auth rejection, method behavior, and required CORS behavior.
-7. **No server data path on gova:** add a static/architecture check that prevents production gova pages/server code from importing business repositories or other server-only data capability paths outside explicitly allowed health/build infrastructure.
-
-Do not make these tests depend on hardcoded route-file counts that will immediately rot.
-
-### Phase 2 — Create the control declaration, package, and runtime
-
-Create a real control account/runtime using current package conventions.
-
-#### Declaration
-
-Add `packages/account-declarations/src/accounts/control.ts` and `@asol/account-declarations/control`.
-
-Target identity fields:
-
-- `name: 'control'`
-- `project: 'asol-control'`
-- `tokenEnvVar: 'VERCEL_CONTROL_TOKEN'`
-- `teamIdEnvVar: 'VERCEL_CONTROL_ORG_ID'` when the verified live account requires a team fallback
-- `serviceDir: 'services/control'`
-
-The declaration interface currently requires an account email. **Resolve the real live Vercel owner/account email before populating it; never invent it.**
-
-Derive `requiredEnv` and `optionalEnv` from actual control route imports/capabilities. Do not copy the existing gova env list.
-
-Update the declarations barrel, package exports, type union, declaration tests, and all exhaustive display/registry maps.
-
-#### Control composition
-
-Create `@asol/control-composition` following the existing composition architecture:
-
-- private package;
-- declared package export(s);
-- focused tests;
-- imports `@asol/account-declarations/control`, never the deploy-engine barrel merely to read account metadata;
-- exact application seams only;
-- registers the runtime/config/data ports actually needed by control routes;
-- no broad feature barrels when an exact server seam is sufficient.
-
-Register it in `CAPABILITY_PACKAGES` and `COMPOSITION_FEATURE_SEAMS` with precise ownership/seams. Update `test:compositions` to execute the new control composition test. Regenerate architecture docs from registries.
-
-#### Control service
-
-Create `services/control` using the current generated-service Next.js packaging pattern. Give it its own `/api/health` / readiness behavior and a control-specific sync/verify/build path.
-
-Do not add control to the six product-service arrays. Aggregate commands may call a separate control step.
-
-### Phase 3 — Build the exact route+method ownership matrix
-
-Generate the matrix from the current route inventory. The following is the **target policy**, not permission to recreate removed historical routes. Apply it to methods/routes that actually exist; classify any additional current route by its real capability owner.
-
-| Current route/method family | Target runtime |
+| Route/method family | Final owner |
 |---|---|
 | `GET /api/health` | `gova` |
-| `/.well-known/**` | `gova` (not Business API) |
-| `/api/dev/**` | development-only; blocked in gova production |
+| `/.well-known/**` | `gova` public surface, not Business API |
+| `/api/dev/**` | local development only; never shipped as production Business API |
 | `/api/super-admin/**` | `control` |
 | `/api/system-logs/**` | `control` |
 | `/api/ota/admin/**` | `control` |
@@ -303,261 +179,413 @@ Generate the matrix from the current route inventory. The following is the **tar
 | `/api/specialty-chat/**` | `submain` |
 | `POST /api/orders/from-cart` | `submain` |
 | `POST /api/orders/custom-request-from-profile` | `submain` |
-| `GET /api/orders/[orderId]` | `submain` |
-| actual methods of `/api/orders/[orderId]/actions` | `submain` |
+| order detail/action methods under `/api/orders/[orderId]/**` | `submain` |
 | `GET /api/orders` | `orders` |
-| product read methods under `/api/products*` including review reads | `products` |
-| product write methods under `/api/products*` including helpful/reply | `sub2main` |
-| `GET /api/pharmacy-profile-catalog` | `products` |
-| write methods of `/api/pharmacy-profile-catalog` | `sub2main` |
-| profile read methods under `/api/profile/**`, including review reads | `profiles` |
-| profile write methods under `/api/profile/**`, including review helpful/reply | `sub2main` |
-| profile-owned storage reads | `profiles` |
-| storage upload/write/delete | `sub2main` |
+| product/catalog/review read methods | `products` |
+| product/catalog/review write/helpful/reply methods | `sub2main` |
+| profile/review/profile-storage read methods | `profiles` |
+| profile/review/profile-storage write methods | `sub2main` |
+| image/storage write/upload/delete methods | `sub2main` |
 
-Rules:
+For a route that spans several data domains, **co-locate the orchestration in one owning workload runtime and grant only the exact data capabilities that route genuinely needs**. Do not split one request into service-to-service business calls merely to make account boundaries look narrower.
 
-1. One business route+method -> one destination.
-2. No implicit `gova` destination for an unclassified business operation.
-3. Dynamic routes must be matched explicitly and tested.
-4. Add `PATCH` to the bridge method model if any current classified route exports it.
-5. Preserve the notification service's special `/api/notifications/send` grant-delivery surface even though it is intentionally absent from the normal ASOL API constant table.
-6. Treat `OPTIONS` separately as receiving-origin transport behavior.
+## Exhaustive transport inventory
 
-### Phase 4 — Expand client routing and eliminate production fallback
+Before changing any routing behavior, scan production source for every way a client can reach an API, including:
 
-1. Extend `@asol/account-bridge` with `control` public routing while preserving the separate notification grant bridge.
-2. Replace partial exact maps with a route classifier capable of the current exact and dynamic route set.
-3. Add `NEXT_PUBLIC_ASOL_CONTROL_URL` / `controlUrl` through:
-   - public env;
-   - account-bridge port shape;
-   - browser port registration;
-   - static/native build configuration;
-   - runtime tests.
-4. Remove server-only generic API fallback from client-safe `public-env` behavior.
-5. Change `buildAsolApiUrl()` so:
-   - local development may use explicitly tested same-origin fallback;
-   - web production/static/Android/iOS business calls require a classified destination and absolute origin;
-   - missing origin fails with a deterministic routing/configuration error;
-   - no production business call silently reaches gova.
-6. Preserve `credentials: 'omit'` and explicit auth headers.
-7. Audit and fix all bypasses found in Phase 0.
+- `AsolApiClient` JSON calls;
+- `getBinary` and raw binary fetch;
+- `postForm` / `FormData` / multipart uploads;
+- `EventSource` / SSE;
+- `ReadableStream` consumers;
+- `XMLHttpRequest` if present;
+- direct `fetch` calls;
+- `<a href="/api/...">` and generated artifact/download links;
+- `window.location`, `location.assign`, `window.open`, form actions, router/navigation to API URLs;
+- raw `/api/` literals;
+- service worker/background requests;
+- WebSocket/EventSource-like transports if later found;
+- server-side absolute ASOL URLs;
+- any helper that bypasses `buildAsolApiUrl()`.
 
-#### Required special client fixes
+Create a machine-enforced exception list for intentional non-`AsolApiClient` transports. Every listed exception must name its owner runtime and authentication mechanism. An unlisted direct API transport is a build failure.
 
-- **Super Admin artifact downloads:** the current Jobs UI uses a raw relative anchor for `/api/super-admin/.../artifacts/...`. A raw `<a>` cannot attach `x-asol-session-token`. Replace it with an authenticated control-origin binary download flow (`asolApi.getBinary()`/fetch-to-Blob or an equivalently secure signed-download contract). It must not fall back to gova.
-- **System-log streaming:** native browser `EventSource` cannot attach arbitrary auth headers. Move the stream to a control-origin mechanism that preserves authentication (for example authenticated fetch streaming if compatible with the current implementation, or a narrowly signed stream URL designed and tested for that purpose). Do not make the stream public and do not send it to gova.
+Known baseline special cases that must be handled explicitly include:
 
-### Phase 5 — Expand service mirrors while preserving handler behavior
+- Super Admin build artifact downloads;
+- Super Admin dev-cloud-backup downloads;
+- system-log `EventSource` streaming;
+- multipart image/upload routes;
+- streaming artifact responses.
 
-For each current route+method in the matrix:
+Do not make the system-log stream public. Native `EventSource` cannot attach arbitrary headers, so either retain a narrowly signed URL/query contract with equivalent validation at `control`, or replace it with authenticated fetch streaming while preserving reconnect/stream semantics. Do not send it to gova.
 
-1. Keep the canonical source implementation behavior intact.
-2. Add only the mirror entry points/composition seams necessary for its destination runtime.
-3. Run `services:sync` plus the control sync path.
-4. Verify module closure for every generated runtime.
-5. Compare source and destination handler contract using equivalent fixtures:
+Replace raw relative Super Admin download anchors with a control-origin authenticated binary/download flow for new clients. Legacy relative links are covered only by the tested gova redirect boundary.
+
+## Create `control` as a first-class isolated runtime
+
+Add `packages/account-declarations/src/accounts/control.ts` and the `@asol/account-declarations/control` export.
+
+Required declaration identity:
+
+- `name: 'control'`;
+- `project: 'asol-control'`;
+- `tokenEnvVar: 'VERCEL_CONTROL_TOKEN'`;
+- `teamIdEnvVar: 'VERCEL_CONTROL_ORG_ID'` only if the verified account scope requires it;
+- `serviceDir: 'services/control'`.
+
+Resolve the actual Vercel owner email/account and production alias through live Vercel tooling. Never invent them and never print tokens.
+
+Create `@asol/control-composition` using the current sealed composition conventions:
+
+- private independent package;
+- declared public door(s) only;
+- focused tests;
+- exact application seams only;
+- imports `@asol/account-declarations/control`, never a broad deploy-engine barrel merely for metadata;
+- registers only control runtime ports;
+- no broad feature barrel when an exact server seam is available.
+
+Register it in architecture registries and composition seam registries and regenerate generated architecture documents. Derive counts from registries rather than editing stale numeric prose.
+
+Create `services/control` using the existing generated-service pattern. Give it:
+
+- `/api/health`;
+- the migrated control-owned API routes;
+- a read-only release-readiness endpoint keyed by full Git SHA that exposes only `pending | ready | failed` and no secrets/logs;
+- control-specific sync, mirror-closure verify, build, smoke, and deploy commands.
+
+The control sync/build command may be called by aggregate release tooling, but control remains outside six-workload arrays.
+
+## Per-runtime environment ownership — no global hosted union
+
+Replace the current global hosted environment check with account-specific runtime manifests.
+
+The hosted build/runtime guard must know **which runtime it is validating** and check only that runtime’s declared requirements. It must be impossible for `gova` build validation to demand a key merely because another account declaration requires it.
+
+Requirements:
+
+- `gova`: public client origins/build metadata and narrowly proven public/health values only; no business DB, R2 write, auth signing, password recovery, notification provider, OTA admin, deployment, callback, mail, or foreign Vercel credentials;
+- `control`: only administrative/session/system-ops/OTA/release values proven by its route graph;
+- release Sandbox: deployment credentials and metadata needed to deploy/verify control + six workloads + verify gova, passed to the Sandbox/release tooling rather than serialized through HTTP responses;
+- `notifications`: notification DB/grant/provider values only;
+- read services: only their domain read/storage dependencies;
+- `submain`: only auth/user/search/cross-domain dependencies proven by its resulting graph;
+- `sub2main`: only seller/product/profile/storage-write dependencies proven by its resulting graph.
+
+Generate a names-only report from actual imports/declarations and fail if a runtime contains a foreign deployment token, foreign account metadata, or unnecessary secret family.
+
+## Remove every business server capability from the gova artifact
+
+A `410` guard alone is **not** the final architecture. The final Vercel artifact for gova must physically omit Business API functions.
+
+Implement a dedicated gova deployment build view from the canonical repository, using generated/deployment-tree tooling rather than rewriting source handlers into stubs:
+
+- canonical Business API source handlers remain real in the repository so service mirrors can consume them;
+- the gova production build view includes frontend/pages/static/public assets, `/.well-known/**`, `/api/health`, and the stateless compatibility redirect boundary only;
+- Business API route modules are omitted from the app tree that Vercel compiles for gova;
+- production dev routes are omitted;
+- gova uses a minimal server/instrumentation composition root that does not register data, storage, orders, system logs, OTA admin, notifications, or other business ports;
+- source generation must be deterministic and verified for drift.
+
+Add post-build artifact gates that inspect Next manifests and file traces and fail unless:
+
+- no Business API function exists under `.next/server/app/api` except health;
+- no production dev API exists;
+- no forbidden business capability package appears in a gova server trace;
+- no business database/storage/provider secret name is required by the gova trace/env manifest;
+- the redirect boundary imports only the pure route registry + public origin configuration and no business capability.
+
+The gova compatibility boundary must perform only route+method classification and `307` redirect. It must not use `fetch`, `AsolApiClient`, DB/storage code, notification code, or server secrets.
+
+## Eliminate routing fallback in every environment
+
+The final account bridge has **no generic business fallback to gova**, including local development.
+
+For web production, static export, Android, iOS, and local distributed development:
+
+- every Business API method resolves to exactly one owner from the canonical registry;
+- every owner has an explicit absolute origin for that runtime context;
+- missing owner/origin throws a deterministic configuration/routing error;
+- `buildAsolApiUrl()` never silently substitutes gova/page origin for a Business API;
+- `NEXT_PUBLIC_ASOL_API_BASE_URL`, legacy generic API URL keys, and `ASOL_API_BASE_URL` are not used as a Business API destination;
+- gova public-web/health origin is a separate concept from API ownership.
+
+Add `NEXT_PUBLIC_ASOL_CONTROL_URL`/`controlUrl` through public env, bridge ports, registration, static/native build configuration, deployed-origin resolution, and tests.
+
+### Local development must mirror production topology
+
+Remove `usesLocalDevelopmentFallback()` behavior that routes unresolved development traffic back to gova.
+
+Create one deterministic `dev:distributed` (or equivalent current naming) orchestration command that starts:
+
+- gova frontend;
+- control;
+- notifications;
+- products;
+- orders;
+- profiles;
+- submain;
+- sub2main;
+
+on centrally declared local origins/ports. The client bridge uses those origins exactly as production uses public origins. The command must handle startup order/readiness, teardown, stale PID/port recovery, and must not require `npm ci` per service. Local smoke must exercise at least one real owned route for every destination plus the gova health and compatibility redirect boundary.
+
+## Preserve identity and CORS exactly
+
+Keep the current cross-origin identity model:
+
+- `credentials: 'omit'`;
+- signed `x-asol-session-token` for authenticated operations;
+- no cross-origin session cookies;
+- no `credentials: 'include'`;
+- shared browser-request header contract from `@asol/service-runtime-core`;
+- CORS/preflight implemented on every receiving origin.
+
+`OPTIONS` belongs to each receiving transport origin and is not a second business owner. A pathname split by method across services must answer preflight appropriately on each service that receives one of its methods.
+
+Test success/failure preflights, authenticated/unauthenticated requests, custom headers, multipart requests, redirects from legacy gova, and dynamic paths.
+
+## Preserve production-deploy notification behavior
+
+Do **not** remove the current unattended terminal in-app deployment notification.
+
+Move the existing behavior from gova to the control/release plane and keep its exactly-once state:
+
+- terminal status persists;
+- logs persist;
+- callback authentication persists;
+- deployment email persists;
+- browser-observed signed grants remain deliverable through the existing browser/native notification grant bridge;
+- when no browser is open, the release-control path still delivers the terminal deployment notification as it does today;
+- `inAppNotified`/equivalent state prevents duplicate delivery.
+
+This is the one explicit operational cross-deployment notification exception. Enforce it with a narrow static allowlist: only the production-deploy terminal notification path may call the notifications send endpoint from release/control code. No generic sibling-ASOL absolute HTTP helper may be introduced.
+
+Control does not receive notification database or FCM/APNs/Web Push provider credentials merely for this operation; it uses the existing signed grant contract and the notifications service remains the push-delivery owner.
+
+## Make release publication safe for every direct `main` push
+
+The current race — GitHub-linked gova building while `deploy:revision` deploys services — must be removed.
+
+Introduce a **release-readiness barrier keyed by the full Git SHA** using the persistent release/Sandbox state already owned by the control plane (or an equivalently durable control-owned operational store if required by the implementation). The state must survive a control deployment and must be readable by the new control revision.
+
+The full release contract for a pushed SHA is:
+
+1. GitHub push creates the candidate SHA and starts both the gova Git build and the deployment workflow.
+2. The gova `build:vercel` command immediately enters a bounded readiness wait for that exact SHA **before producing a publishable frontend artifact**.
+3. The workflow calls the stable `asol-control` production alias, authenticated with the existing GitHub OIDC identity contract, to start `deploy:revision` for that exact SHA.
+4. The persistent Sandbox checks out the exact SHA and restores release secrets internally.
+5. The Sandbox deploys/verifies the **six workloads** for that SHA and deploys/verifies **control** for that SHA through a separate mandatory control step.
+6. Real route probes, not health alone, verify each workload; a control operational/auth-boundary probe verifies control.
+7. Only after all seven Git-disconnected runtimes are READY and their probes pass does the release state for that SHA become `ready`.
+8. The gova Vercel build observes `ready`, runs the gova-only deployment build, passes the no-Business-API artifact scan, and is allowed to complete/publish.
+9. The release worker waits for the GitHub-linked gova production deployment of the **same SHA** to become READY.
+10. Final deployed smoke exercises gova frontend/health/legacy redirects, control, and every workload origin.
+11. Only then is the release marked succeeded and terminal reporting sent.
+
+A `failed` release state makes the gova build fail closed so the previous production gova deployment remains active. A timeout is failure, never permission to publish.
+
+### Control self-update continuity
+
+A full release must update control when control inputs changed. The control alias that receives the request may therefore switch from revision N to N+1 while the Sandbox is still running.
+
+Add compatibility tests proving:
+
+- old control can start a Sandbox release for the candidate SHA;
+- candidate control can read/poll the existing persistent run state;
+- workflow GET polling continues across control alias promotion;
+- callback payload/state schema is backward/forward compatible for the transition;
+- callback lands successfully after control alias promotion;
+- no release lock is lost or duplicated during self-update.
+
+`control` remains outside workload arrays even though this top-level control deployment step is mandatory.
+
+### Readiness cannot be forged
+
+The gova build may call a read-only readiness endpoint that exposes only revision + status. The public endpoint cannot mutate release state. Only the authenticated control/Sandbox release path can mark a SHA ready. Validate full 40-character SHAs and bind readiness to the exact repository revision.
+
+### Targeted/manual deploys do not unblock gova
+
+Existing targeted service commands may remain for maintenance, but a partial/targeted deployment must **never** mark a full SHA ready for gova publication. Only the complete control + six workload proof may release the gova build barrier.
+
+## Automatic rollback/compensation — no pause after mutation starts
+
+Before the first live production mutation, capture names/IDs of the currently promoted production deployments/aliases for:
+
+- gova;
+- control if it already exists;
+- all six workloads.
+
+Do not print secret values.
+
+If any control/workload deployment or real probe fails before the SHA becomes ready:
+
+- mark the release failed;
+- keep/fail the gova build barrier so the old gova production deployment remains active;
+- automatically re-promote every workload/control project already changed in this transaction to its captured previous production deployment when the platform supports promotion rollback;
+- verify the restored endpoints before returning failure.
+
+If gova publishes but final deployed smoke fails:
+
+- automatically promote the captured previous gova production deployment;
+- restore the captured previous control/workload deployments as needed;
+- verify the restored topology;
+- mark the release failed and report the rollback.
+
+Do not remove old required secrets or rotate credentials until the new topology has passed all final smoke checks. Keep an encrypted restorable snapshot through the transaction. After success, perform the planned secret removals/rotations in the same execution and then rerun final names-only env checks and smoke. If secret cleanup fails, restore the previous credential state automatically and report failure rather than leaving a half-cleaned topology.
+
+## Mirror and behavior migration rules
+
+For every current Business API route+method:
+
+1. Preserve the canonical implementation; do not replace it with a simplified migration stub.
+2. Put it in the owning runtime’s mirror/deployment graph only.
+3. Register all required composition/data/config ports for that runtime, including Turso-only/remote-data-source behavior where required.
+4. Remove foreign package/env edges exposed by the mirror graph.
+5. Compare canonical-vs-deployed handler contract with equivalent fixtures:
    - success status/body;
    - validation/error code;
-   - authorization rejection;
-   - headers relevant to behavior;
-   - dynamic parameters;
-   - multipart/binary behavior where applicable;
-   - CORS/preflight at the receiving origin.
+   - auth rejection;
+   - headers that affect behavior;
+   - dynamic params;
+   - query behavior;
+   - multipart/binary/stream behavior;
+   - notification grants;
+   - CORS/preflight.
+6. Exercise a real deployed route that reaches each runtime’s data/capability; Vercel `READY` and `/api/health` alone are not proof.
 
-Do not write a shortened replacement handler merely because it is easier to mirror.
+Generalize service-mirror tooling so control can participate in aggregate sync/verify/build through an explicit runtime kind without pretending control is a seventh workload service.
 
-### Phase 6 — Move auth and administrative server dependencies to their real owners
+## Auth, account deletion, and cross-domain orchestration
 
-#### `submain`
+Move all current auth/account/contact/ads/follow/search/order-detail/order-action/specialty-chat/OTA-access methods assigned to `submain` without changing their contracts.
 
-Move/mirror all current auth/account/contact/ads/follow/search/order-detail/action/specialty-chat/OTA-access handlers required by the matrix.
+Derive `SUBMAIN_RUNTIME_REQUIRED_ENV_KEYS` and optional keys from the resulting graph; remove blanket inheritance from gova runtime env lists.
 
-Derive `SUBMAIN_RUNTIME_REQUIRED_ENV_KEYS` and optional keys from the actual resulting import graph. Remove the current blanket inheritance from gova runtime env lists.
+For account deletion or another operation that legitimately spans multiple data shards/domains, keep one authoritative owner runtime and give that owner the exact needed data ports/credentials. Do not create a chain of backend-to-backend business requests.
 
-Auth must carry its actual dependencies, including session signing/password recovery/user database dependencies **only when the current imports prove they are needed**. Do not distribute auth secrets to unrelated runtimes.
+Session signing, password recovery, user DB access, Super Admin identity checks, and notification grant issuance must remain with only the runtimes whose imports prove the need.
 
-#### `control`
+## Static export, OTA, Android, and iOS
 
-Move/mirror the current Super Admin, system-log, OTA-admin, production-deploy, release-console/build-job server surfaces required by the matrix.
+Add canonical public origins for all final destinations:
 
-Derive the control env list from actual imports. It will likely include some combination of Super Admin/session verification, system-ops storage, OTA administration, deployment/Sandbox, callback, and release email configuration; the exact list must come from code, not this sentence.
+- gova public web/health;
+- control;
+- notifications;
+- products;
+- orders;
+- profiles;
+- submain;
+- sub2main.
 
-Keep deployment-target credentials inside deployment tooling/Sandbox. Control HTTP responses must not expose target tokens, team IDs, project IDs, or secret material.
+Do not treat gova as a generic Business API base.
 
-#### Production-deploy notification change
+Update all static/native origin injection and validation surfaces, including current native defaults, OTA/static output configuration, runtime checks, deployed-origin resolution, and build scripts. Public URLs are not secrets, but use verified production aliases rather than guessed domains.
 
-Remove the current callback-side backend HTTP delivery to notifications. Do not replace it with another backend call.
+Tests must prove representative exact and dynamic routes for every owner in:
 
-Preserve:
+- web production;
+- static export;
+- Android;
+- iOS;
+- distributed local development.
 
-- terminal deployment status;
-- logs;
-- callback authentication;
-- deployment email behavior;
-- signed grants attached to a browser-observed/polled status where the current UI can deliver them using the browser notification bridge.
+Freeze a pre-cutover client routing fixture from the baseline and run every owned route+method through the legacy gova `307` compatibility boundary. This is required evidence that existing supported bundles are not broken by the radical cutover.
 
-Add a regression test proving no production-deploy server path performs a sibling ASOL HTTP call.
+## First control bootstrap without a broken revision
 
-### Phase 7 — Make `gova` truly frontend-only
+The first migration has a bootstrap problem: the current workflow points to gova, while the final workflow must point to control. Solve it inside the same transaction without ever committing a workflow that targets a nonexistent control endpoint.
 
-This phase is more than returning `410` from API paths.
+Before the final migration push:
 
-#### Production API guard
+1. verify the real Vercel account scope and whether `asol-control` exists;
+2. create it with the existing Git-disconnected project tooling if needed;
+3. deploy a seed control runtime from the exact migration candidate that already implements the stable GitHub OIDC deploy endpoint, readiness read endpoint, Sandbox state contract, callback contract, and health endpoint;
+4. verify it by its actual Vercel production alias and auth-boundary behavior;
+5. verify it has no Git integration;
+6. record that verified alias in the candidate’s public/control origin configuration and workflow endpoint;
+7. only then push the final migration commit to `main`.
 
-Extend the current centralized proxy/boundary so when:
+The pushed commit contains the final workflow that points directly to the already-verified stable control alias. There is no fallback to the old gova deploy endpoint and no later “switch workflow” phase.
 
-- `NODE_ENV === 'production'`, and
-- `ASOL_DEPLOYMENT_ACCOUNT === 'gova'`
+The seed is not an accepted intermediate architecture; it is a bootstrap precondition inside the one transaction and must be immediately superseded/verified by the exact final SHA through the normal release barrier.
 
-then:
+## Gova Git integration and build guard
 
-- `/api/health` remains functional;
-- every Business API request is blocked before its source handler executes;
-- `OPTIONS` to a Business API is also blocked on gova (successful preflight belongs on the owning service origin);
-- `/api/dev/**` cannot execute;
-- production-deploy paths may return the more specific `410` body `{ "error": "productionDeployMovedToControl" }`;
-- other moved business APIs return `410` with `{ "error": "apiMovedToService" }`;
-- query strings, trailing slashes, method variation, and preflight cannot bypass the guard;
-- `/.well-known/**` remains outside the Business API shutdown and continues to work.
+Keep `gova` as the only Git-linked project and retain repository policy that only deployable `main` pushes trigger a Vercel build.
 
-Do not modify the canonical source route implementations into 410 handlers.
+Change `build:vercel` so it performs, in order inside the same build command:
 
-#### Eliminate non-API server business execution
+- host/toolchain checks;
+- exact-SHA control readiness wait;
+- **gova-only** per-runtime environment validation;
+- deterministic gova deployment-tree generation;
+- Next build of that gova-only tree;
+- artifact route/trace/secret-owner scan;
+- function-size/upload guard.
 
-Use the Phase 0 audit to remove/move every remaining production gova server path that accesses business data or mutates state directly. Pages that currently depend on Server Components/Server Actions for business data must be converted to client/browser calls to the correct service or otherwise redesigned so the gova runtime has no business database dependency.
+It must not run the full correctness suite on Vercel; correctness remains proven by local/release gates. The readiness wait is release coordination, not application CI.
 
-The final gova production runtime must not need Turso business credentials, R2 write credentials, auth signing secrets, password-recovery secrets, push-provider secrets, OTA admin secrets, deployment/Sandbox credentials, or release mail/callback secrets.
+## Secret migration and final cleanup
 
-Keep only:
+Build a names-only env ownership report before live mutation. For each move/removal:
 
-- frontend/public build configuration;
-- public service origins needed by the browser bundle;
-- gova deployment identity such as `ASOL_DEPLOYMENT_ACCOUNT=gova` if used by the guard;
-- any narrowly proven server value needed for `/api/health` or non-business public association behavior.
+- prove destination import need;
+- prove destination value is present without printing it;
+- build/smoke destination;
+- remove obsolete source value only after final topology smoke;
+- rotate credentials that were unnecessarily present on gova or another runtime, using existing secret tooling;
+- refresh the encrypted secret archive;
+- verify all projects again names-only.
 
-Derive the exact retained names from imports and tests.
+No foreign Vercel token/team/project identifier may remain in an application runtime. Deployment target credentials belong to release tooling/Sandbox only.
 
-### Phase 8 — Refactor release/deployment authority to control
+## Cloud Accounts UI and documentation
 
-1. Move production-deploy HTTP ownership to control.
-2. Make control/Sandbox the owner of `deploy:all`, `deploy:push`, `deploy:revision`, production callbacks, and deployment secrets.
-3. Preserve the six workload deployment phase IDs exactly as six.
-4. Update stale text such as `submain`/`sub2main` being "full apps"; they are workload runtimes.
-5. Refactor `deploy:all` so the release behavior is:
-   - preflight;
-   - publish/push the intended `main` revision only when the command's current semantics require it;
-   - deploy/verify the six workload projects;
-   - wait for and verify the **GitHub-linked gova production deployment of the same SHA**;
-   - never CLI-deploy gova a second time.
-6. Keep `control` outside selectable product deploy targets. Control deployment/update is a separate operational action.
-7. Extend Vercel guards so:
-   - `gova` is the only project permitted to have Git integration;
-   - all other declared projects, including control, must be Git-disconnected;
-   - no service manifest/runtime carries foreign deployment account metadata.
-8. Update account checks, release state, smoke tooling, resume logic, runbook/gate contracts, and tests to the new `gova + six workloads + control` model while keeping control outside six-service loops.
+Update the Super Admin Cloud Accounts reference and rendered UI to reflect the exact final roles and verified public metadata. Client components must not contain secret values or secret variable names.
 
-### Phase 9 — Migrate static, OTA, Android, and iOS routing
+Update Turso/R2 reader descriptions so gova is removed wherever it no longer has runtime access.
 
-1. Add the verified control origin to canonical public platform defaults only after the real production alias is known.
-2. Update static/OTA output configuration to validate every required destination origin.
-3. Stop treating `NEXT_PUBLIC_ASOL_API_BASE_URL` / gova as the generic business API endpoint for static/native builds.
-4. Keep a gova public-web/health/assets origin if required, but separate that concept from Business API routing.
-5. Update `build:static:local`, Capacitor build scripts, OTA runtime config, native defaults, origin resolution, and runtime validation.
-6. Make runtime tests prove that representative routes for every destination resolve correctly in:
-   - web production;
-   - static export;
-   - Android;
-   - iOS.
-7. Update deployed-origin smoke behavior:
-   - each of the six workloads still gets a real workload/data probe;
-   - control gets a separate operational readiness/auth-boundary probe;
-   - gova is probed through health/frontend readiness, not a business-data route that is intentionally 410.
+Update the relevant English architecture/release/API/bridge/notification/environment documentation and diagrams. Modify registry/source documents, then regenerate generated architecture/docs; never hand-edit generated count/reference files.
 
-### Phase 10 — Bootstrap `asol-control` before workflow cutover
+The final docs must describe the permanent legacy transport redirect boundary accurately so future agents do not mistake it for a business fallback or delete it without first changing supported-client policy.
 
-This is an atomic cutover rule.
+## Required automated guards
 
-1. Before changing the GitHub workflow endpoint, verify the live Vercel account and whether project `asol-control` exists using existing Vercel primitives. Do not print token values.
-2. Ensure the control project has **no Git integration**. If creation is needed, use the existing project tooling that creates a Next.js project without Git integration.
-3. Deploy a seed/control candidate from the exact migration revision through the authorized CLI/Sandbox path.
-4. Capture the **actual production alias returned/verified by Vercel**. Never assume `https://asol-control.vercel.app`.
-5. Textually probe the deployed control health endpoint and the GitHub deploy endpoint's expected authentication boundary/status behavior. A 404 is not acceptable proof.
-6. Only after that seed is verified:
-   - set the canonical/public control origin used by clients/static/native;
-   - update the production GitHub workflow from the current gova deploy endpoint to the verified control origin + `/api/super-admin/production-deploy/github`;
-   - update callback base/origin assumptions;
-   - ensure the OIDC verifier still binds the exact repository/workflow/event/revision contract.
-7. There must never be a revision where the workflow points to an unverified/nonexistent control endpoint and there must be no fallback to the old gova production-deploy route.
+Add permanent gates for all of the following:
 
-The public control origin is not a secret, but it still must come from the verified seed deployment rather than a guessed domain.
+- complete route+method ownership from AST inventory;
+- no Business API owner `gova`;
+- pure route registry has no runtime/vendor/app dependencies;
+- no unclassified direct API transport;
+- no business same-origin fallback in any runtime mode;
+- distributed local dev uses explicit origins;
+- gova production build contains no Business API function except health;
+- gova server traces contain no forbidden business packages;
+- gova runtime env manifest contains no business secrets;
+- hosted env validation is per runtime, never a union of all declarations;
+- control exists in declaration/package/service/aggregate verification;
+- control is absent from six-workload arrays;
+- full release always deploys/verifies control separately at the same SHA;
+- gova build cannot publish before exact-SHA control+six readiness;
+- `deploy:revision` cannot verify main concurrently with unfinished backend/control deployment;
+- targeted deploy cannot mark a full release ready;
+- old/new control revisions share release state/callback contracts safely;
+- only gova may be Git-linked;
+- no application backend performs sibling ASOL business HTTP;
+- only the exact production-deploy notification operational exception is allowlisted;
+- terminal in-app deployment notification remains exactly-once even with no browser open;
+- CORS/OPTIONS works at every receiving origin;
+- legacy gova `307` compatibility works for every supported baseline transport;
+- Super Admin binary downloads work through control;
+- system-log stream works through control with authentication;
+- route source/mirror/deployed contract parity;
+- rollback metadata is captured before production mutation and rollback paths are testable without secret disclosure.
 
-### Phase 11 — Least-privilege Vercel environment migration
+## Verification surface
 
-Build an env ownership report from actual runtime imports and account declarations. Report **names only**.
-
-For every runtime key move/removal:
-
-1. prove the destination runtime actually imports/needs it;
-2. prove the destination key exists (`present` only, never value);
-3. build/sync/verify that runtime;
-4. exercise the relevant local/authorized route contract;
-5. only then remove the key from the previous runtime during an authorized live cleanup.
-
-Final ownership requirements:
-
-- `gova`: no business DB/R2/auth/push/OTA-admin/deployment secrets;
-- `submain`: only auth/user/search/order-detail/action/etc dependencies proven by its graph;
-- `sub2main`: only seller/product/profile/storage-write dependencies proven by its graph;
-- read services: only their domain data/storage dependencies;
-- notifications: only notification DB/grant/push-provider dependencies;
-- control route runtime: only administrative/session/system-ops/OTA/release dependencies proven by its graph;
-- control deployment runner/Sandbox: deployment credentials for the six targets and gova verification as the explicit operational exception.
-
-After an authorized successful cutover, rotate credentials that were broadly exposed during migration, remove obsolete values from all Vercel projects, refresh the encrypted local secret archive using existing secret tooling, and verify names-only state again.
-
-### Phase 12 — Cloud Accounts UI and documentation
-
-Update the Super Admin cloud-accounts reference/UI to reflect the final architecture. Keep the client component free of secret values and secret variable names.
-
-Display roles accurately:
-
-- `gova`: frontend/pages/static assets/`.well-known`/health; GitHub connected.
-- `asol-control`: deployment authority, Super Admin operations, system logs, OTA admin; not GitHub connected.
-- `submain`: auth/account/contact/ads/follow/search/order creation/detail/actions/specialty chat/OTA access according to the final route matrix.
-- `orders`: order-list read workload.
-- `sub2main`: seller/product/profile writes and uploads.
-- `products`: product/catalog/review reads according to final matrix.
-- `profiles`: profile/review/profile-storage reads according to final matrix.
-- `notifications`: notification APIs and delivery.
-
-Update Turso/R2 reader descriptions so `gova` is removed wherever it no longer has runtime access.
-
-Update relevant English documentation, including architecture/isolation, build gates, service bridge, notification bridge, cloud-account architecture, production deployment, deployment targets, environment variables, and diagrams.
-
-Run registry-driven generation (`architecture:docs` / `docs:generate` as appropriate). Never hand-edit generated reference files to repair counts.
-
----
-
-## CORS and route-contract requirements
-
-For every destination route:
-
-1. Use the shared `@asol/service-runtime-core` browser header contract.
-2. Advertise only the methods the destination actually receives plus `OPTIONS`.
-3. Preserve `x-asol-session-token` support.
-4. Do not add `Access-Control-Allow-Credentials`.
-5. Do not require a service runtime to know another Vercel project's identity just to validate CORS.
-6. Test authenticated and unauthenticated preflight/request pairs.
-7. For a pathname split by method between services, test each receiving origin independently.
-
-A successful Vercel `READY` state is not sufficient. The migrated route must answer its real contract.
-
----
-
-## Required verification commands
-
-Run the focused tests as they are created, then the repository's current gates. At minimum, keep these current command surfaces passing (update `package.json` only when a new control-specific test/aggregate must be wired in):
+Run focused migration tests continuously, then the full current repository gates. At minimum preserve/extend these command surfaces:
 
 ```bash
 npm run services:sync
@@ -590,67 +618,73 @@ npm run docs:ci
 npm run build
 ```
 
-Also add and run focused migration tests for:
+Add explicit commands/gates for:
 
-- exact current route+method classification;
-- gova production API shutdown;
-- no production/static/native same-origin fallback;
-- control-runtime mirror/build/readiness;
-- server-side account isolation and no sibling business HTTP calls;
-- production-deploy notification callback isolation;
-- control exclusion from six-service phase/deploy-target arrays;
-- authenticated Super Admin artifact download after control move;
-- authenticated system-log stream after control move;
-- source-vs-mirror route behavior parity;
-- gova server-data-import prohibition.
+- control sync/verify/build/smoke;
+- gova deployment-tree generation and artifact scan;
+- route ownership inventory;
+- client transport inventory;
+- legacy compatibility redirect matrix;
+- per-runtime env ownership;
+- release-readiness barrier;
+- control self-update continuity;
+- automatic rollback simulation.
 
-If a command name changes during the migration, update this execution surface and its package scripts consistently; do not silently skip an equivalent gate.
+Then run real deployed smoke after live cutover. A local build, Vercel `READY`, or health-only response is never sufficient by itself.
 
----
+## Final acceptance — all must be true in one completed execution
 
-## Final acceptance criteria
+Do not call the migration complete unless **every** item below is true simultaneously:
 
-Do not declare the migration complete until all of the following are true:
+1. The final production SHA is known and matches the intended migration commit.
+2. `gova` is the only Git-linked Vercel project.
+3. `control` and the six workloads are Git-disconnected.
+4. Repository metadata declares eight runtimes/accounts.
+5. The workload set remains exactly six and excludes control.
+6. The full release deploys/verifies control separately at the same SHA; control is not a manual-later task.
+7. Every live Business API route+method from the AST inventory has exactly one non-gova owner.
+8. New web/static/Android/iOS/local clients resolve every Business API directly to its owner with no gova fallback.
+9. The permanent gova compatibility boundary redirects legacy Business API route+method requests without executing business code and passes all frozen supported-client transport tests.
+10. `/api/health` and `/.well-known/**` remain functional on gova.
+11. The built gova artifact contains no Business API function other than health and no production dev API.
+12. Gova server traces/instrumentation do not register or import business DB/storage/orders/system-log/OTA-admin/notification/release capabilities.
+13. Gova production environment contains no business database/storage/auth/push/OTA/deployment/callback/mail secrets.
+14. Hosted environment validation is per runtime and gova no longer demands other accounts’ required env keys.
+15. `control` owns Super Admin/system-log/OTA-admin/release server surfaces and preserves their status/auth/download/stream contracts.
+16. Auth/account/search/order-detail/action/cross-domain user workloads operate from their declared owner without backend federation.
+17. CORS/preflight succeeds on every real receiving origin and cross-origin auth remains explicit-header + `credentials: 'omit'`.
+18. No application backend implements business behavior by calling another ASOL backend.
+19. The production-deploy terminal in-app notification still arrives exactly once when no browser is open; deployment email/status/logs also remain correct.
+20. The browser/native notification-grant bridge remains functional.
+21. The GitHub workflow calls the verified stable control alias, never the old gova deploy endpoint.
+22. The gova Git build for a SHA cannot publish until control + all six workloads for that SHA are READY and real probes pass.
+23. `deploy:revision` no longer races main verification against unfinished service/control deployment.
+24. Old->new control self-update preserves polling, callback, lock, and release state.
+25. A failed pre-publication release leaves/reinstates the previous production topology automatically.
+26. A failed post-publication smoke automatically restores the captured previous production topology.
+27. Static export, OTA, Android, and iOS contain the verified final origins and no generic gova Business API base dependency.
+28. Runtime env ownership is least privilege and verified names-only.
+29. Cloud Accounts UI and English/generated documentation match the live final architecture.
+30. All focused migration tests, full repository gates, and real deployed smoke pass.
+31. No live cutover, environment cleanup, credential rotation, or verification step is left “pending”. If the live transaction was not authorized/executed, report **not complete** rather than redefining completion.
+32. No current supported user flow, API contract, authorization rule, binary/multipart/stream behavior, notification behavior, or supported client routing behavior is lost.
 
-1. `gova` is the only GitHub-linked Vercel project.
-2. `control` and all six workload projects are Git-disconnected.
-3. Repository account metadata contains eight runtimes/accounts after migration, while the product/workload deployment set remains exactly six.
-4. Every current Business API route+method has exactly one correct business destination.
-5. `OPTIONS`/CORS succeeds on every receiving service origin that needs preflight.
-6. Web production, static export, Android, and iOS route directly to destination origins with no Business API fallback to gova.
-7. Auth works cross-origin through the existing explicit signed-session-header model; no cross-origin cookie dependency is introduced.
-8. Production gova returns `410` before executing all moved Business API handlers, including Business API `OPTIONS`; `/api/health` remains functional.
-9. `/.well-known/**` remains functional.
-10. No production gova page/Server Component/Server Action directly executes business database/storage logic.
-11. Gova production no longer owns business DB, R2 server, auth signing, push provider, OTA admin, deployment, callback, or release-mail secrets.
-12. `asol-control` owns deployment authority and the administrative route families defined by the final matrix.
-13. `deploy:all` deploys/verifies the six workloads and waits for/verifies the GitHub-built gova deployment at the same SHA; it does not CLI-deploy gova again.
-14. `control` is absent from `SERVICE_PHASE_IDS` and `ALL_DEPLOY_PUSH_TARGETS`.
-15. No application backend uses another ASOL backend to implement business behavior.
-16. Operational deployment smoke/readiness probes are confined to control deployment tooling/Sandbox and cannot become a business bridge.
-17. The existing browser/native notification grant bridge still works.
-18. Production-deploy callback no longer sends notification grants backend-to-backend; email/status remain correct and browser-observed grants remain deliverable.
-19. Super Admin, system-log, and OTA-admin clients reach control and preserve their authentication/download/stream semantics.
-20. Every runtime manifest/env set is least-privilege and validated names-only.
-21. Cloud Accounts UI and English documentation describe the actual final architecture and generated references match registries.
-22. All focused migration tests and the full required verification suite pass.
-23. The workflow is switched to control only after a verified control seed/production alias exists.
-24. No source route behavior, status code, error contract, authorization rule, or supported client flow is lost accidentally.
+## Final report
 
----
+Produce one concise final report only after the complete transaction finishes. Include:
 
-## Final execution report
+- audited baseline SHA and final SHA;
+- verified final runtime/project topology;
+- full generated route+method ownership report (paths/methods/owners only);
+- verified public origins only;
+- names-only per-runtime env ownership/presence report;
+- proof only gova is Git-linked;
+- control + six + gova exact-SHA release/readiness proof;
+- gova artifact scan proof;
+- legacy compatibility redirect proof;
+- verification commands/results;
+- real deployed smoke results;
+- rollback result if rollback was exercised;
+- credential cleanup/rotation completion status without values.
 
-At completion, produce one concise report containing:
-
-- baseline SHA and final SHA;
-- changed architecture summary;
-- final route+method destination matrix (names/paths only);
-- final runtime env ownership report (names and present/missing state only; no values);
-- proof that only gova is Git-linked;
-- verified public origins (public URLs only, no credentials);
-- verification commands and results;
-- any intentional behavior changes, especially production-deploy in-app notification timing;
-- any live cutover/rotation step that remains pending explicit authorization.
-
-Do not create another agent-coordination note. This file is the single migration instruction source.
+Do not produce a “partial success” completion report. If any acceptance criterion fails, the migration is not complete and the production transaction must already have been automatically rolled back or must never have crossed the publication barrier.
