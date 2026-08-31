@@ -4,9 +4,12 @@
 
 Operational behavior for privileged administration, catalog operations, cloud-account visibility, data health, monitoring, system/live logs, and user impersonation.
 
+These operations run in their own deployment, `asol-control`, not in the application. See [The Control Runtime](./control-runtime.md).
+
 ## Read First by Task
 
 - Catalog administration → [Catalog Studio](./catalog-studio.md)
+- Where operations actually run, release readiness, and rollback → [The Control Runtime](./control-runtime.md)
 - Cloud account topology/visibility → [Cloud Accounts Architecture](./cloud-accounts-architecture.md) and [Super Admin Cloud Accounts](./super-admin-cloud-accounts.md)
 - Data cleanup/health → [Data Health Module](./data-health-module.md)
 - Notification verification → [Notification Tests](./notification-tests.md)

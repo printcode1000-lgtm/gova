@@ -17,6 +17,14 @@
     "./server": {
       "types": "./src/server.ts",
       "default": "./src/server.ts"
+    },
+    "./session": {
+      "types": "./src/session.ts",
+      "default": "./src/session.ts"
+    },
+    "./super-admin": {
+      "types": "./src/super-admin.ts",
+      "default": "./src/super-admin.ts"
     }
   },
   "scripts": {

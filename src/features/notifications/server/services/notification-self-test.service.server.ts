@@ -13,7 +13,7 @@ import {
 } from "@asol/notifications-core";
 import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications";
 
-import { NotificationGrantCollector } from "./notification-grant-collector.server";
+import { NotificationGrantCollector } from "@asol/notifications-core/grant-collector";
 import { samePhone } from "@asol/auth-core/server";
 
 /**

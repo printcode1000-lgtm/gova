@@ -1,9 +1,9 @@
 import { createSseStream } from "@asol/system-logs-core/server";
 import { verifySignedSessionToken } from "@asol/auth-core/server";
 import { isSuperAdminIdentity } from "@/features/auth";
-import { registerSystemLogsCoreServerPorts } from '@/core/config/system-logs.server';
+import { registerControlSystemLogPersistence } from '@/features/system-logs/server';
 
-registerSystemLogsCoreServerPorts();
+registerControlSystemLogPersistence();
 
 function assertStreamAccess(request: Request) {
   const url = new URL(request.url);

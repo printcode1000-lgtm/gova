@@ -341,7 +341,7 @@ src/
 | **Public Doors** | `@/features/ota` · `@/features/ota/server` |
 | **Runtime Targets** | `web`, `server` |
 | **Capability Owners** | `@asol/ota-core` |
-| **Permitted Feature Dependencies** | `auth`, `categories`, `system-logs` |
+| **Permitted Feature Dependencies** | `auth`, `categories`, `super-admin`, `system-logs` |
 | **Surfaces** | browser=false · server=true · ui=false |
 
 ### page-save
@@ -497,7 +497,7 @@ src/
 | **Public Doors** | `@/features/release-commands` · `@/features/release-commands/ui` · `@/features/release-commands/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/notifications-core`, `@asol/release-core`, `@asol/vercel-deploy-core` |
-| **Permitted Feature Dependencies** | `auth`, `google-play-console`, `notifications` |
+| **Permitted Feature Dependencies** | `auth`, `google-play-console` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### seller-card
@@ -650,4 +650,4 @@ src/
 | Application features | 47 |
 | Features with UI door | 32 |
 | Features with server door | 26 |
-| Sealed capability packages | 42 |
+| Sealed capability packages | 44 |

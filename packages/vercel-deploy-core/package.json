@@ -18,6 +18,10 @@
       "types": "./src/remote-deploy-sandbox.ts",
       "default": "./src/remote-deploy-sandbox.ts"
     },
+    "./release-rollback": {
+      "types": "./src/release-rollback.ts",
+      "default": "./src/release-rollback.ts"
+    },
     "./github-push-identity": {
       "types": "./src/github-push-identity.ts",
       "default": "./src/github-push-identity.ts"

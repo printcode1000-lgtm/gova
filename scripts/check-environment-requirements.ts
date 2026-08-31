@@ -10,7 +10,7 @@ import {
   classifyHost,
   evidenceGapMessage,
 } from "./runtime-compatibility-policy";
-import { HOSTED_RUNTIME_ENV_KEYS } from "./vercel-deployment-guards";
+import { hostedRuntimeEnvKeys } from "./vercel-deployment-guards";
 
 dotenv.config({ path: ".env.local", quiet: true });
 dotenv.config({ path: ".env", quiet: true });
@@ -388,16 +388,21 @@ function checkProduction(): void {
   const missing = keys.filter((key) => !envConfigured(key));
   add({ scenario: "production", item: "Vercel account tokens", level: missing.length ? "CONFIGURE" : "OK", installed: `${keys.length - missing.length}/${keys.length} configured`, required: keys.join(", "), action: missing.length ? `Configure without committing: ${missing.join(", ")}.` : "No action." });
   add({ scenario: "production", item: "Vercel CLI", level: "INFO", installed: "project-pinned vercel@59.0.0", required: "vercel@59.0.0 from package.json / node_modules", action: "No global or npx CLI drift. Deployment scripts run the pinned local binary." });
-  const runtimeKeys = [...HOSTED_RUNTIME_ENV_KEYS];
-  const runtimeMissing = runtimeKeys.filter((key) => !envConfigured(key));
-  add({
-    scenario: "production",
-    item: "Production runtime configuration",
-    level: runtimeMissing.length ? "CONFIGURE" : "OK",
-    installed: `${runtimeKeys.length - runtimeMissing.length}/${runtimeKeys.length} required values configured`,
-    required: "Main/product/notification/order/profile databases, signing secrets, push key, and four public service origins",
-    action: runtimeMissing.length ? `Configure without committing: ${runtimeMissing.join(", ")}.` : "No action.",
-  });
+  // Per runtime, never a union: this report used to merge every account's keys
+  // and then tell whoever read it that gova was missing another deployment's
+  // database tokens.
+  for (const runtime of Object.keys(ACCOUNT_DECLARATIONS)) {
+    const runtimeKeys = [...hostedRuntimeEnvKeys(runtime)];
+    const runtimeMissing = runtimeKeys.filter((key) => !envConfigured(key));
+    add({
+      scenario: "production",
+      item: `Runtime configuration — ${runtime}`,
+      level: runtimeMissing.length ? "CONFIGURE" : "OK",
+      installed: `${runtimeKeys.length - runtimeMissing.length}/${runtimeKeys.length} required values configured`,
+      required: runtimeKeys.length ? runtimeKeys.join(", ") : "Nothing declared.",
+      action: runtimeMissing.length ? `Configure without committing: ${runtimeMissing.join(", ")}.` : "No action.",
+    });
+  }
 }
 
 function androidSdkRoot(): string | null {

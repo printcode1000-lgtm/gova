@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
+import { businessApiErrorStatus } from '@/core/api/business-api-error-status';
+
 /**
  * A running deployment is a business state, not a server fault.
  *
@@ -12,87 +14,83 @@ import { readFileSync } from 'node:fs';
  * 409 must stay quiet, and every other 409 must keep logging. Asserting only the
  * first half would let a future change silence real conflicts and still pass.
  *
- * Read as source rather than executed because the logging decision is a branch
- * in a module that pulls in Next server runtime, system-log persistence and dev
- * tracing. Importing all of that to observe one absent call would test the
- * harness, not the contract.
+ * The status table moved out of `api-response.ts` when the control runtime had
+ * to answer the same failures the same way, so the statuses are now asserted by
+ * calling the mapping rather than by reading branches out of a file. The logging
+ * decision stayed in `api-response.ts` — logging is not part of a pure mapping —
+ * and is still read as source: importing that module to observe one absent call
+ * pulls in the Next server runtime, system-log persistence, and dev tracing, and
+ * would test the harness rather than the contract.
  */
+const response = readFileSync('src/core/api/api-response.ts', 'utf8');
+const table = readFileSync('src/core/api/business-api-error-status.ts', 'utf8');
 
-const source = readFileSync('src/core/api/api-response.ts', 'utf8');
+// ── The lock still answers 409, and still never persists ─────────────────────
+const concurrency = businessApiErrorStatus('productionDeployAlreadyRunning');
+assert.equal(concurrency.status, 409, 'the lock has to answer 409');
+assert.equal(concurrency.code, 'productionDeployAlreadyRunning');
+assert.equal(
+  concurrency.skipPersistence,
+  true,
+  'the refusal must never land in the system log store',
+);
 
-/** Each `if (message === '…') { … }` block that returns a 409. */
-function branchesReturning409(): Array<{ code: string; body: string }> {
-  const found: Array<{ code: string; body: string }> = [];
-  const pattern = /if \(message === '([A-Za-z]+)'\) \{([\s\S]*?)\n  \}/g;
-  for (const match of source.matchAll(pattern)) {
-    const body = match[2]!;
-    if (/apiError\(message, 409/.test(body)) found.push({ code: match[1]!, body });
-  }
-  return found;
-}
-
-const branches = branchesReturning409();
-assert.ok(branches.length > 0, 'the 409 branches must be findable, or this test proves nothing');
-
-const expected = branches.find((branch) => branch.code === 'productionDeployAlreadyRunning');
-assert.ok(expected, 'the expected-concurrency branch must exist; the lock still has to answer 409');
-
-// Half one: the expected state stays quiet.
-assert.doesNotMatch(
-  expected.body,
-  /logMappedServiceError/,
+// ── Half one: the expected state stays quiet ─────────────────────────────────
+const quiet = /const quiet =([\s\S]*?);\n/.exec(response);
+assert.ok(quiet, 'the logging decision must be findable, or this test proves nothing');
+assert.match(
+  quiet[1]!,
+  /productionDeployAlreadyRunning/,
   'productionDeployAlreadyRunning must not log — it is the concurrency lock working, and the workflow polls it',
 );
-assert.match(
-  expected.body,
-  /skipPersistence: true/,
-  'it must still skip persistence, so the refusal never lands in the system log store',
-);
-assert.match(expected.body, /apiError\(message, 409/, 'and it must still answer 409, so the lock is still enforced');
 
-// Half two: everything else stays loud. This is what keeps the fix honest —
-// silencing failures generally would satisfy the first half on its own.
+// ── Half two: everything else stays loud ─────────────────────────────────────
 //
-// `productionDeployAlreadyRunning` is currently the ONLY branch returning 409, so
-// looping over the others proves nothing today; it is a forward guard for the day
-// a second conflict code is added. The assertion that has teeth right now is that
-// the sibling deploy branches, which represent real faults, still log.
-for (const branch of branches) {
-  if (branch.code === 'productionDeployAlreadyRunning') continue;
-  assert.match(
-    branch.body,
-    /logMappedServiceError\(error, message, 409\)/,
-    `${branch.code} returns 409 and must still be logged; an unexpected conflict has to stay observable`,
-  );
-}
+// This is what keeps the fix honest: silencing failures generally would satisfy
+// the first half on its own.
+assert.match(
+  response,
+  /if \(!quiet\) void logMappedServiceError\(error, mapped\.code, mapped\.status\)/,
+  'every failure that is not the concurrency state must still be reported',
+);
 
-const stillLogged = ['productionDeployCallbackRejected', 'productionDeployNotConfigured'];
-for (const code of stillLogged) {
-  const branch = new RegExp(`if \\(message === '${code}'\\) \\{([\\s\\S]*?)\\n  \\}`).exec(source);
-  assert.ok(branch, `${code} must still be handled`);
-  assert.match(
-    branch[1]!,
-    /logMappedServiceError/,
+// The sibling deploy states are real faults. They must keep their statuses and,
+// because they are not in the quiet condition, they keep logging.
+assert.equal(businessApiErrorStatus('productionDeployCallbackRejected').status, 403);
+assert.equal(businessApiErrorStatus('productionDeployNotConfigured').status, 503);
+for (const code of ['productionDeployCallbackRejected', 'productionDeployNotConfigured']) {
+  assert.equal(
+    quiet[1]!.includes(code),
+    false,
     `${code} is a real fault and must stay logged; quieting the concurrency state must not quiet its siblings`,
   );
 }
 
-// And the catch-all for anything unrecognised must still log, or a genuine
-// deployment failure would vanish along with the noise.
+// ── An unrecognised failure is still a reported 500 ──────────────────────────
+const unknown = businessApiErrorStatus('somethingNobodyMapped');
+assert.equal(unknown.status, 500);
+assert.equal(unknown.code, 'internalServerError');
 assert.match(
-  source,
+  response,
   /logServerSystemIssue|logMappedServiceError/,
   'the unmapped error path must still report',
 );
 
-// The code must remain a known business code, or `sanitizeApiErrorCodeForClient`
-// would rewrite it and the workflow's exact-match check on the response body
-// would silently stop recognising the state it waits for.
+// ── The code must stay a declared business code ──────────────────────────────
+//
+// Otherwise `sanitizeApiErrorCodeForClient` would rewrite it and the workflow's
+// exact-match check on the response body would silently stop recognising the
+// state it waits for.
 const codes = readFileSync('src/core/api/business-api-error-codes.ts', 'utf8');
 assert.match(
   codes,
   /'productionDeployAlreadyRunning'/,
   'the code must stay declared, so the client receives it verbatim and the workflow can match it',
+);
+assert.match(
+  table,
+  /productionDeployAlreadyRunning/,
+  'and the shared mapping must keep it, so control answers the workflow identically',
 );
 
 console.log('production deploy concurrency logging: all checks passed.');

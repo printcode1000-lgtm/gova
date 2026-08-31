@@ -2,7 +2,7 @@ import "server-only";
 
 import nodemailer from "nodemailer";
 
-import { getProductionDeployMailConfig } from "@/core/config/server-env";
+import { getProductionDeployMailConfig } from "@/core/config/control-env";
 import type { ProductionDeployEmail } from "@/features/release-commands/domain/production-deploy-report";
 
 /**

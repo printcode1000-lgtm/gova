@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+
+import { resolveRouteOwner } from "@asol/account-bridge/routes";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
@@ -86,10 +88,28 @@ const bridge = readFileSync(
   path.join(root, "packages", "account-bridge", "src", "index.ts"),
   "utf8",
 );
+// Ownership used to be three hand-written tables on the bridge itself. It is
+// now one registry keyed by method and pattern, so the assertion moved to the
+// decision rather than to a name that no longer exists.
 assert.match(
   stripComments(bridge),
-  /SUBMAIN_ROUTES/,
-  "The service bridge must declare submain-owned routes explicitly.",
+  /resolveRouteOwner\(method, pathOf\(route\)\)/,
+  "The service bridge must take ownership from the canonical registry.",
+);
+assert.equal(
+  resolveRouteOwner("GET", "/api/search/products"),
+  "submain",
+  "Search reads belong to submain, not products.",
+);
+assert.equal(
+  resolveRouteOwner("GET", "/api/products"),
+  "products",
+  "Product reads belong to this account.",
+);
+assert.equal(
+  resolveRouteOwner("POST", "/api/products"),
+  "sub2main",
+  "Product writes touch the profiles database, so they belong to the write account.",
 );
 assert.match(
   stripComments(bridge),

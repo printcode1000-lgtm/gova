@@ -89,8 +89,10 @@ const bridge = readFileSync(
 );
 assert.match(
   stripComments(bridge),
-  /method\.toUpperCase\(\)\s*!==\s*["']GET["']/,
-  "The service bridge must redirect GET only; a redirected write would reach an account that cannot serve it.",
+  /resolveRouteOwner\(method, pathOf\(route\)\)/,
+  "The bridge must take ownership from the canonical registry. It used to redirect GET only, " +
+    "which was a safe approximation while every write stayed on the main app; now writes have " +
+    "their own owners and a hardcoded method rule would send them to the wrong one.",
 );
 assert.match(
   stripComments(bridge),

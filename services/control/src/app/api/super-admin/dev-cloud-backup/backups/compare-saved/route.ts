@@ -1,0 +1,2 @@
+import { devCloudBackupService } from '@/control/dev-cloud-backup'; import { runControlSuperAdminJsonRoute } from '@/control/super-admin-route';
+export async function POST(request: Request) { return runControlSuperAdminJsonRoute<{ fileName?: unknown }, unknown>(request, ({ body }) => { const fileName = typeof body.fileName === 'string' ? body.fileName : ''; if (!fileName) throw new Error('devCloudBackupFileRequired'); return devCloudBackupService.compareSavedBackupWithCloud(fileName); }); }

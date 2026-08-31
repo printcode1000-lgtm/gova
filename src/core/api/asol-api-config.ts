@@ -1,5 +1,5 @@
 import { publicEnv, withBasePath } from '@/core/config/public-env';
-import { resolveServiceOrigin } from '@asol/account-bridge';
+import { resolveRequiredServiceOrigin } from '@asol/account-bridge';
 
 /**
  * ASOL API configuration — platform-agnostic.
@@ -18,14 +18,20 @@ export function resolveAsolApiBaseUrl(): string {
 /**
  * Where a request is addressed.
  *
- * A read that a service owns goes to that deployment when the browser bridge
- * says so; everything else goes to the main app. The bridge answers `null` on
- * the server, so a server-rendered request can never be pointed at another
- * account — the deployments must not call each other.
+ * Every Business API method resolves to exactly one owning deployment through
+ * the canonical registry, and to that deployment's configured origin. There is
+ * no fallback: an unowned method or a missing origin throws rather than being
+ * silently sent to the page origin, because that substitution is what let a
+ * business call reach gova after gova stopped implementing business routes.
+ *
+ * The bridge answers `null` on the server, so a server-rendered business
+ * request raises the same configuration error — the deployments must not call
+ * each other. Non-business paths (`/api/health`, `/api/dev/**`, public assets)
+ * are unowned by design and keep using the page origin.
  */
 export function buildAsolApiUrl(route: string, method = 'GET'): string {
   const normalizedRoute = route.startsWith('/') ? route : `/${route}`;
-  const serviceOrigin = resolveServiceOrigin(method, normalizedRoute);
+  const serviceOrigin = resolveRequiredServiceOrigin(method, normalizedRoute);
   const base = (serviceOrigin ?? resolveAsolApiBaseUrl()).replace(/\/$/, '');
   return `${base}${normalizedRoute}`;
 }

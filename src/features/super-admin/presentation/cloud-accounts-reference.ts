@@ -58,6 +58,11 @@ const VERCEL_DISPLAY: { readonly [K in AccountDeclaration["name"]]: VercelDispla
     githubConnected: true,
     updatedByAr: "push إلى GitHub",
   },
+  control: {
+    accountLabel: "asol-control",
+    servesAr: "عمليات السوبر أدمن والسجلات وOTA والنشر فقط",
+    githubConnected: false,
+  },
   submain: {
     accountLabel: "submain",
     servesAr:

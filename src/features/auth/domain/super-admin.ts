@@ -1,8 +1,7 @@
-import { samePhone } from "@asol/auth-core";
+import { samePhone, SUPER_ADMIN_PHONE, SUPER_ADMIN_UID } from "@asol/auth-core";
 import type { UserSession } from "@/features/auth/domain/session.entity";
 
-export const SUPER_ADMIN_UID = "usr_1782522385927_pwpl7rr";
-export const SUPER_ADMIN_PHONE = "+201026546550";
+export { SUPER_ADMIN_PHONE, SUPER_ADMIN_UID };
 
 export function isSuperAdmin(session: UserSession | null): boolean {
   return !!session && isSuperAdminIdentity(session.uid, session.phone);

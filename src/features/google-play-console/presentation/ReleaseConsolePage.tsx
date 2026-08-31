@@ -14,8 +14,9 @@ export function ReleaseConsolePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const allowed = !isLoading && isSuperAdmin(session);
-  const tabs = RELEASE_CONSOLE_TABS.filter((tab) => tab.enabled({ isSuperAdmin: allowed }))
-    .sort((left, right) => left.order - right.order);
+  const tabs = RELEASE_CONSOLE_TABS.filter((tab) => tab.enabled({ isSuperAdmin: allowed })).sort(
+    (left, right) => left.order - right.order,
+  );
   const requested = searchParams.get("tab") ?? "overview";
   const active = tabs.some((tab) => tab.id === requested) ? requested : "overview";
   const select = (id: string) => {
@@ -23,38 +24,58 @@ export function ReleaseConsolePage() {
     parameters.set("tab", id);
     router.replace(`?${parameters.toString()}`, { scroll: false });
   };
-  if (isLoading) return <main id="google-play-console.release-console-page.main" className="p-4 text-sm text-on-surface-variant">{t("releaseConsole.loading")}</main>;
-  if (!allowed) return <main id="google-play-console.release-console-page.main.2" className="mx-auto max-w-2xl p-6" dir={isRTL ? "rtl" : "ltr"}>
-    <div
-      id="google-play-console.release-console-page.div"
-      className="rounded-md bg-error-container p-4 text-on-error-container"
-    >
-      {t("releaseConsole.forbidden")}
-    </div>
-  </main>;
-  return (
-    <main id="google-play-console.release-console-page.main.3" className="asol-release-console mx-auto w-full max-w-7xl space-y-4 p-4 pb-24"
-      dir={isRTL ? "rtl" : "ltr"}>
-      <header
-        id="google-play-console.release-console-page.header"><h1
-        id="google-play-console.release-console-page.h1"
-        className="text-2xl font-semibold">{t("releaseConsole.title")}</h1
+  if (isLoading)
+    return (
+      <main id="google-play-console.release-console-page.main" className="p-4 text-sm text-on-surface-variant">
+        {t("releaseConsole.loading")}
+      </main>
+    );
+  if (!allowed)
+    return (
+      <main
+        id="google-play-console.release-console-page.main.2"
+        className="mx-auto max-w-2xl p-6"
+        dir={isRTL ? "rtl" : "ltr"}
       >
-        <p
-          id="google-play-console.release-console-page.p"
-          className="mt-1 text-sm text-on-surface-variant">{t("releaseConsole.subtitle")}</p></header
+        <div
+          id="google-play-console.release-console-page.div"
+          className="rounded-md bg-error-container p-4 text-on-error-container"
         >
+          {t("releaseConsole.forbidden")}
+        </div>
+      </main>
+    );
+  return (
+    <main
+      id="google-play-console.release-console-page.main.3"
+      className="asol-release-console mx-auto w-full max-w-7xl space-y-4 p-4 pb-24"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
+      <header id="google-play-console.release-console-page.header">
+        <h1 id="google-play-console.release-console-page.h1" className="text-2xl font-semibold">
+          {t("releaseConsole.title")}
+        </h1>
+        <p id="google-play-console.release-console-page.p" className="mt-1 text-sm text-on-surface-variant">
+          {t("releaseConsole.subtitle")}
+        </p>
+      </header>
       <Tabs value={active} onValueChange={select}>
         <TabsList
           id="google-play-console.release-console-page.tabs-list"
           className="flex h-auto w-full flex-wrap justify-start gap-1"
         >
-          {tabs.map((tab) => <TabsTrigger key={tab.id} value={tab.id} className="gap-2">
-            <tab.icon className="h-4 w-4" />{t(tab.labelKey)}</TabsTrigger>)}
+          {tabs.map((tab) => (
+            <TabsTrigger key={tab.id} value={tab.id} className="gap-2">
+              <tab.icon className="h-4 w-4" />
+              {t(tab.labelKey)}
+            </TabsTrigger>
+          ))}
         </TabsList>
-        {tabs.map((tab) => <TabsContent key={tab.id} value={tab.id} className="mt-4">
-          <tab.component />
-        </TabsContent>)}
+        {tabs.map((tab) => (
+          <TabsContent key={tab.id} value={tab.id} className="mt-4">
+            <tab.component />
+          </TabsContent>
+        ))}
       </Tabs>
     </main>
   );

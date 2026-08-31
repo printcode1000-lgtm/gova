@@ -10,7 +10,7 @@ import {
 import {
   appStoreConnectCredentialsAreReady,
   googlePlayCredentialsAreReady,
-} from "@asol/ota-core/publishing";
+} from "@asol/ota-core/release-console";
 import {
   PORTABLE_ARCHIVE_PATH,
   PORTABLE_RECOVERY_KEY_PATH,

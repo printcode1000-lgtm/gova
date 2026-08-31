@@ -18,6 +18,8 @@ export function registerAccountBridgePorts(): void {
       basePath: publicEnv.basePath,
       mode: publicEnv.mode,
       apiBaseUrl: publicEnv.apiBaseUrl,
+      controlUrl: publicEnv.controlUrl,
+      notificationsUrl: publicEnv.notificationsUrl,
       productsUrl: publicEnv.productsUrl,
       ordersUrl: publicEnv.ordersUrl,
       profilesUrl: publicEnv.profilesUrl,

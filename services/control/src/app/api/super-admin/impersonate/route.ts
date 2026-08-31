@@ -1,0 +1,2 @@
+import { superAdminUserService } from '@/control/super-admin-users'; import { runControlSuperAdminJsonRoute } from '@/control/super-admin-route';
+export async function POST(request: Request) { return runControlSuperAdminJsonRoute<{ targetUid?: unknown }, unknown>(request, ({ admin, body }) => { const targetUid = typeof body.targetUid === 'string' ? body.targetUid : ''; if (!targetUid || targetUid === admin.uid) throw new Error('invalidImpersonationTarget'); return superAdminUserService.impersonate({ adminUid: admin.uid, targetUid }); }); }

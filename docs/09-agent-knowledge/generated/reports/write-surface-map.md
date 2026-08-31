@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **367**
-Unproven gateway paths: **145**
+Detected write-like surfaces: **373**
+Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -32,6 +32,7 @@ Unproven gateway paths: **145**
 | `packages/backup-core/src/server/dev-cloud-backup-service.ts` | `@asol/backup-core` | create, update | `unproven` | NO | `` | development, web | high |
 | `packages/backup-core/src/server/r2-backup.repository.ts` | `@asol/backup-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
 | `packages/data-core/src/browser/asol-db/index.ts` | `@asol/data-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/data-core/src/control-ota.ts` | `@asol/data-core` | delete, insert, update | `unproven` | NO | `` | development, web | high |
 | `packages/data-core/src/core/data-source-registry.ts` | `@asol/data-core` | create, delete, insert, update | `unproven` | NO | `` | development, web | high |
 | `packages/data-core/src/core/database/abstract-database-client.ts` | `@asol/data-core` | delete, insert, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/data-core/src/core/database/database-client.interface.ts` | `@asol/data-core` | delete, insert, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
@@ -90,6 +91,7 @@ Unproven gateway paths: **145**
 | `packages/data-health-core/src/server/policy.ts` | `@asol/data-health-core` | update | `unproven` | NO | `` | development, web | high |
 | `packages/featured-marquee-core/src/server/featured-marquee-service.ts` | `@asol/featured-marquee-core` | save | `unproven` | NO | `` | development, web | high |
 | `packages/featured-marquee-core/src/tests/index.test.ts` | `@asol/featured-marquee-core` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/gova-deployment-core/src/artifact-gate.ts` | `@asol/gova-deployment-core` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/hero-slider-core/src/server/home-hero-slider-service.ts` | `@asol/hero-slider-core` | save | `unproven` | NO | `` | development, web | high |
 | `packages/hero-slider-core/src/tests/index.test.ts` | `@asol/hero-slider-core` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/local-agent-core/src/lock-store.ts` | `@asol/local-agent-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
@@ -121,7 +123,6 @@ Unproven gateway paths: **145**
 | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts` | `@asol/ota-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/ota-core/src/publishing/release/publish-release.ts` | `@asol/ota-core` | patch, publish, update, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/ota-core/src/runtime/outcome-logger.ts` | `@asol/ota-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/ota-core/src/runtime/release-service.server.ts` | `@asol/ota-core` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `packages/ota-core/src/runtime/revocation-service.ts` | `@asol/ota-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/ota-core/src/runtime/update-service.ts` | `@asol/ota-core` | delete | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/ota-core/src/tests/contract/app-edges.test.ts` | `@asol/ota-core` | delete | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -191,6 +192,7 @@ Unproven gateway paths: **145**
 | `src/app/api/super-admin/dev-cloud-backup/backups/create/route.ts` | `unknown` | create | `unproven` | NO | `/api/super-admin/dev-cloud-backup/backups/create` | development, web | high |
 | `src/app/dev/monitor/SchemaSyncPanel.tsx` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/core/composition/server-ports.ts` | `unknown` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
+| `src/core/composition/tests/ports-registry.test.ts` | `unknown` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/core/config/system-logs.server.ts` | `unknown` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/core/providers/query-provider.tsx` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/advertisements/presentation/HeroSliderEditor.tsx` | `advertisements` | delete, patch, save, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -216,6 +218,7 @@ Unproven gateway paths: **145**
 | `src/features/auth/presentation/hooks/use-login.ts` | `auth` | mutate, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/auth/presentation/hooks/use-register.ts` | `auth` | create, insert, mutate | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/auth/server/auth-core-bootstrap.server.ts` | `auth` | patch, update | `@asol/data-core` | yes | `` | development, web | medium |
+| `src/features/auth/server/services/account-deletion.bootstrap.server.ts` | `auth` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/cart/application/cart-store.ts` | `cart` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/cart/application/shipping-pricing.ts` | `cart` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/cart/domain/profile-fulfillment.entity.ts` | `cart` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -285,6 +288,8 @@ Unproven gateway paths: **145**
 | `src/features/orders/server/services/order-action-notifications.server.ts` | `orders` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/orders/server/services/order-progression.server.ts` | `orders` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/orders/server/services/order-shipping-bootstrap.server.ts` | `orders` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
+| `src/features/ota/server.ts` | `ota` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
+| `src/features/ota/server/admin.ts` | `ota` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/page-save/application/page-save-core-bootstrap.ts` | `page-save` | save | `@asol/page-save-core, @asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/page-save/application/utils/page-save-image-items.ts` | `page-save` | delete, save, upload | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/page-save/application/utils/page-save-operation-description.ts` | `page-save` | delete, save, upload | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -372,6 +377,7 @@ Unproven gateway paths: **145**
 | `src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts` | `super-admin` | save | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/server/services/super-admin-user-service.server.ts` | `super-admin` | delete | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/super-admin/tests/super-admin-user-deletion.test.ts` | `super-admin` | delete, save | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/system-logs/server/control-persistence.server.ts` | `system-logs` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/voice-input/application/voice-input-scanner.ts` | `voice-input` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/shared/installation/installation-bootstrap.ts` | `unknown` | update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/shared/layouts/AppSidebar.tsx` | `unknown` | save | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |

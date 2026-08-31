@@ -32,6 +32,9 @@
       "@asol/account-declarations/gova": [
         "./generated/packages/account-declarations/src/accounts/gova.ts"
       ],
+      "@asol/account-declarations/control": [
+        "./generated/packages/account-declarations/src/accounts/control.ts"
+      ],
       "@asol/account-declarations/notifications": [
         "./generated/packages/account-declarations/src/accounts/notifications.ts"
       ],
@@ -59,6 +62,12 @@
       "@asol/auth-core/server": [
         "./generated/packages/auth-core/src/server.ts"
       ],
+      "@asol/auth-core/session": [
+        "./generated/packages/auth-core/src/session.ts"
+      ],
+      "@asol/auth-core/super-admin": [
+        "./generated/packages/auth-core/src/super-admin.ts"
+      ],
       "@asol/catalog-core": [
         "./generated/packages/catalog-core/src/index.ts"
       ],
@@ -85,6 +94,15 @@
       ],
       "@asol/data-core/composition": [
         "./generated/packages/data-core/src/composition.ts"
+      ],
+      "@asol/data-core/control-system-logs": [
+        "./generated/packages/data-core/src/control-system-logs.ts"
+      ],
+      "@asol/data-core/control-ota": [
+        "./generated/packages/data-core/src/control-ota.ts"
+      ],
+      "@asol/data-core/ota-runtime": [
+        "./generated/packages/data-core/src/ota-runtime.ts"
       ],
       "@asol/data-core/data-health": [
         "./generated/packages/data-core/src/domains/data-health/index.server.ts"

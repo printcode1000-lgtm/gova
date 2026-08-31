@@ -2,12 +2,10 @@ import 'server-only';
 
 import './auth-core-ports.server';
 import {
-  AccountDeletionService,
   AuthOperationsService,
   type AuthUserRecord,
   type AuthUserRepositoryPort,
 } from '@asol/auth-core/server';
-import { imageStorageService } from '@/features/storage/server';
 import {
   createUserCommand,
   getUserByEmailQuery,
@@ -16,7 +14,6 @@ import {
   updateLastLoginCommand,
   updateUserCommand,
 } from '@asol/data-core/auth';
-import { accountDeletionRepository } from '@asol/data-core/account-deletion';
 import {
   EMPTY_STORE_DETAILS,
   getProfileSpecialtiesQuery,
@@ -68,13 +65,5 @@ export const authOperationsService = new AuthOperationsService(
         storeName,
       });
     },
-  },
-);
-
-export const accountDeletionService = new AccountDeletionService(
-  accountDeletionRepository,
-  {
-    deleteImage: (profileId, key) =>
-      imageStorageService.deleteImage(profileId, key),
   },
 );

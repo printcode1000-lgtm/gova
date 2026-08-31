@@ -3,10 +3,11 @@ import { isDevelopment } from '@/core/config';
 import { DEV_TRACE_HEADER } from '@asol/observability-core/dev-trace';
 import { getDevTrace, serializeDevTrace } from '@asol/observability-core/server';
 import { isQuietMappedServiceError } from '@/core/api/expected-business-error-codes';
+import { sanitizeApiErrorCodeForClient } from '@/core/api/business-api-error-codes';
 import {
-  KNOWN_BUSINESS_API_ERROR_CODES,
-  sanitizeApiErrorCodeForClient,
-} from '@/core/api/business-api-error-codes';
+  businessApiErrorStatus,
+  INVALID_JSON_BODY_STATUS,
+} from '@/core/api/business-api-error-status';
 import { logServerSystemIssue } from '@/features/system-logs/server';
 import { isErrorAlreadyLogged } from '@asol/system-logs-core/server';
 
@@ -88,102 +89,25 @@ function isJsonBodyParseError(error: unknown): boolean {
 
 export function mapServiceError(error: unknown): NextResponse {
   if (error instanceof InvalidJsonBodyError || isJsonBodyParseError(error)) {
-    return apiError('invalidJsonBody', 400);
+    return apiError(INVALID_JSON_BODY_STATUS.code, INVALID_JSON_BODY_STATUS.status);
   }
 
-  const message =
-    error instanceof Error ? error.message : 'Internal Server Error';
-  const knownCodes = KNOWN_BUSINESS_API_ERROR_CODES.filter(
-    (code) =>
-      ![
-        'forbidden',
-        'invalidJsonBody',
-        'internalServerError',
-        'unexpectedError',
-        'requestFailed',
-        'invalidLoginResponse',
-        'productionDeployAlreadyRunning',
-        'productionDeployNotConfigured',
-        'productionDeployCallbackRejected',
-      ].includes(code),
-  );
-  if (knownCodes.includes(message as (typeof knownCodes)[number])) {
-    if (!isQuietMappedServiceError(message)) {
-      void logMappedServiceError(error, message, 400);
-    }
-    return apiError(message, 400);
-  }
+  const message = error instanceof Error ? error.message : 'Internal Server Error';
+  const mapped = businessApiErrorStatus(message);
 
-  if (message === 'forbidden') {
-    void logMappedServiceError(error, message, 403);
-    return apiError(message, 403);
-  }
-
-  if (message === 'passwordRecoveryRateLimited') {
-    void logMappedServiceError(error, message, 429);
-    return apiError(message, 429);
-  }
-
-  if (message === 'contactRateLimited') {
-    void logMappedServiceError(error, message, 429);
-    return apiError(message, 429);
-  }
-  if (message === 'specialtyChatRateLimited') {
-    void logMappedServiceError(error, message, 429);
-    return apiError(message, 429);
-  }
-  if (message === 'accountDeletionSuperAdminForbidden') {
-    void logMappedServiceError(error, message, 403);
-    return apiError(message, 403);
-  }
-
-  // A release is one process at a time, and the console must be able to tell
-  // "someone else is deploying" from "the deploy failed".
+  // Two failures are business state rather than server fault and must not log.
   //
-  // This branch deliberately does NOT log. A second deploy arriving while one is
-  // running is the concurrency lock doing its job, so it is a business state and
-  // not a server fault; logging it made every poll of a running deployment emit
-  // a server.error event. `skipPersistence` already keeps it out of the store —
-  // the log call was the remaining noise. Every other 409 below still logs,
-  // because an unexpected conflict is exactly what must stay visible.
-  if (message === 'productionDeployAlreadyRunning') {
-    return apiError(message, 409, { skipPersistence: true });
-  }
-  if (message === 'productionDeployCallbackRejected') {
-    void logMappedServiceError(error, message, 403);
-    return apiError(message, 403);
-  }
-  if (message === 'productionDeployNotConfigured') {
-    void logMappedServiceError(error, message, 503);
-    return apiError(message, 503, { skipPersistence: true });
-  }
+  // A second deploy arriving while one is running is the concurrency lock doing
+  // its job; logging it made every poll of a running deployment emit a
+  // server.error event. `skipPersistence` already kept it out of the store — the
+  // log call was the remaining noise. Every other 409 still logs, because an
+  // unexpected conflict is exactly what must stay visible.
+  const quiet =
+    message === 'productionDeployAlreadyRunning' ||
+    (mapped.status === 400 && isQuietMappedServiceError(message));
+  if (!quiet) void logMappedServiceError(error, mapped.code, mapped.status);
 
-  if (message === 'passwordRecoveryNotConfigured') {
-    void logMappedServiceError(error, message, 503);
-    return apiError(message, 503, { skipPersistence: true });
-  }
-  if (message === 'sessionSigningSecretNotConfigured') {
-    void logMappedServiceError(error, message, 503);
-    return apiError(message, 503, { skipPersistence: true });
-  }
-  if (
-    message === 'mobilePushUnlockNotConfigured' ||
-    message === 'mobilePushCredentialBlobMissing'
-  ) {
-    void logMappedServiceError(error, message, 503);
-    return apiError(message, 503, { skipPersistence: true });
-  }
-  if (message === 'mobilePushCredentialBlobInvalid') {
-    void logMappedServiceError(error, message, 400);
-    return apiError(message, 400);
-  }
-  if (message === 'mobilePushCredentialBlobMismatch') {
-    void logMappedServiceError(error, message, 403);
-    return apiError(message, 403);
-  }
-
-  void logMappedServiceError(error, message, 500);
-  return apiError('internalServerError', 500, { skipPersistence: true });
+  return apiError(mapped.code, mapped.status, { skipPersistence: mapped.skipPersistence });
 }
 
 async function logMappedServiceError(

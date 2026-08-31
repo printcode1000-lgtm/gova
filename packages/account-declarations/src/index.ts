@@ -15,6 +15,7 @@
  * `src/tests/index.test.ts` enforces it.
  */
 import { GOVA_DECLARATION } from './accounts/gova';
+import { CONTROL_DECLARATION } from './accounts/control';
 import { SUBMAIN_DECLARATION } from './accounts/submain';
 import { SUB2MAIN_DECLARATION } from './accounts/sub2main';
 import { NOTIFICATIONS_DECLARATION } from './accounts/notifications';
@@ -23,7 +24,7 @@ import { ORDERS_DECLARATION } from './accounts/orders';
 import { PROFILES_DECLARATION } from './accounts/profiles';
 
 export interface AccountDeclaration {
-  name: 'gova' | 'submain' | 'sub2main' | 'notifications' | 'products' | 'orders' | 'profiles';
+  name: 'gova' | 'control' | 'submain' | 'sub2main' | 'notifications' | 'products' | 'orders' | 'profiles';
   project: string;
   /**
    * The Vercel login this account belongs to.
@@ -50,6 +51,7 @@ export interface AccountDeclaration {
 
 export {
   GOVA_DECLARATION,
+  CONTROL_DECLARATION,
   SUBMAIN_DECLARATION,
   SUB2MAIN_DECLARATION,
   NOTIFICATIONS_DECLARATION,
@@ -59,13 +61,24 @@ export {
 };
 
 export {
+  LOCAL_DEVELOPMENT_ACCOUNTS,
+  LOCAL_DEVELOPMENT_PORTS,
+  localDevelopmentOrigin,
+  localDevelopmentPublicEnv,
+  type LocalDevelopmentAccount,
+} from './accounts/local-development';
+
+export {
   GOVA_RUNTIME_REQUIRED_ENV_KEYS,
   GOVA_RUNTIME_OPTIONAL_ENV_KEYS,
+  GOVA_FRONTEND_REQUIRED_ENV_KEYS,
+  GOVA_FRONTEND_OPTIONAL_ENV_KEYS,
   GOVA_SHARD_DATABASE_NAMES,
 } from './accounts/gova-runtime-env-keys';
 
 export const ACCOUNT_DECLARATIONS: Record<string, AccountDeclaration> = {
   gova: GOVA_DECLARATION,
+  control: CONTROL_DECLARATION,
   submain: SUBMAIN_DECLARATION,
   sub2main: SUB2MAIN_DECLARATION,
   notifications: NOTIFICATIONS_DECLARATION,

@@ -159,3 +159,10 @@ export function deployAllScenarioArg(value: string): string {
   if (value.startsWith("from-")) return `--from-phase=${value.slice("from-".length)}`;
   return `--phase=${value}`;
 }
+
+/** Section copy for the deploy runbook page. */
+export const STATUS_SUMMARY_DESCRIPTION =
+  "نظرة سريعة على الفروع المفعّلة وحالة التنفيذ وسلوك الخطأ.";
+
+export const DEPLOY_PUSH_DESCRIPTION =
+  "المسار السريع: أسرار، commit، push، ثم تحقق Vercel للأهداف المختارة دون فحوصات build/test.";

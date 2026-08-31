@@ -1,0 +1,38 @@
+{
+  "name": "asol-control-service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22 <25",
+    "npm": ">=11 <12"
+  },
+  "scripts": {
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.1117.0",
+    "@aws-sdk/s3-request-presigner": "3.1117.0",
+    "@libsql/client": "0.17.4",
+    "@vercel/sandbox": "2.4.0",
+    "better-sqlite3": "13.0.3",
+    "drizzle-orm": "0.45.2",
+    "fflate": "0.8.3",
+    "google-auth-library": "11.0.2",
+    "jose": "5.9.6",
+    "libphonenumber-js": "1.13.12",
+    "next": "16.3.2",
+    "nodemailer": "9.0.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "server-only": "0.0.1",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "typescript": "5.9.3"
+  }
+}

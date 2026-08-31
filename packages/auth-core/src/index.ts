@@ -89,4 +89,6 @@ export {
   registerSuperAdminIdentity,
   isSuperAdminIdentity,
   isSuperAdminSession,
+  SUPER_ADMIN_UID,
+  SUPER_ADMIN_PHONE,
 } from './domain/super-admin';

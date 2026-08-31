@@ -47,17 +47,17 @@ export function AndroidReleasePathCard({
   return (
     <article id="google-play-console.android-release-path-card.article" className="rounded-md border bg-surface p-3">
       <label id="google-play-console.android-release-path-card.label" className="flex items-start gap-2">
-        <input id="google-play-console.android-release-path-card.input"
+        <input
+          id="google-play-console.android-release-path-card.input"
           checked={enabled}
           className="mt-1 h-4 w-4 accent-primary"
           type="checkbox"
           onChange={(event) => setEnabled(event.target.checked)}
         />
         <span id="google-play-console.android-release-path-card.span">
-          <span
-            id="google-play-console.android-release-path-card.span.2"
-            className="block font-semibold">{t(path.title)}</span
-          >
+          <span id="google-play-console.android-release-path-card.span.2" className="block font-semibold">
+            {t(path.title)}
+          </span>
           <span
             id="google-play-console.android-release-path-card.span.3"
             className="mt-1 block text-xs leading-5 text-on-surface-variant"
@@ -68,10 +68,13 @@ export function AndroidReleasePathCard({
       </label>
       <p
         id="google-play-console.android-release-path-card.p"
-        className="mt-3 text-sm leading-6 text-on-surface-variant">{t(path.description)}</p
+        className="mt-3 text-sm leading-6 text-on-surface-variant"
       >
+        {t(path.description)}
+      </p>
       <div id="google-play-console.android-release-path-card.div" className="mt-3 flex flex-wrap gap-2">
-        <Button id="google-play-console.android-release-path-card.button"
+        <Button
+          id="google-play-console.android-release-path-card.button"
           disabled={disabled}
           variant={path.danger ? "destructive" : "default"}
           onClick={() => void start({ commandId: path.id })}
@@ -101,7 +104,14 @@ export function AndroidReleasePathCard({
             t={t}
           />
         ))}
-        {running && job ? <StopButton id="google-play-console.android-release-path-card.stop-button" cancel={cancel} job={job} t={t} /> : null}
+        {running && job ? (
+          <StopButton
+            id="google-play-console.android-release-path-card.stop-button"
+            cancel={cancel}
+            job={job}
+            t={t}
+          />
+        ) : null}
       </div>
       <p
         id="google-play-console.android-release-path-card.p.2"

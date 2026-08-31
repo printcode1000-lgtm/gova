@@ -13,23 +13,35 @@ variable carries what.
 
 | Provider | Accounts | Holds |
 |---|---:|---|
-| Vercel | 7 | one deployment each |
+| Vercel | 8 | one deployment each |
 | Turso | 5 | 21 databases, 70 application tables |
 | Cloudflare R2 | 4 | 4 buckets |
 
-The number seven is not a coincidence: **one Vercel account per deployment.**
-`gova` is the full GitHub-linked application; the other six are isolated CLI
-services (including `submain` for search/cart/orders and `sub2main` for seller
-writes). Each read-only microservice holds data on its own Turso account; workload
-accounts hold only the credentials their routes need.
+The number eight is not a coincidence: **one Vercel account per deployment.**
+`gova` is the only GitHub-linked project and is now a frontend: pages, static
+assets, `/.well-known/**`, `/api/health`, and a stateless compatibility redirect
+boundary. `control` is the operational runtime — Super Admin server operations,
+System Logs, OTA administration, build and release jobs, and production
+deployment authority. The remaining six are the isolated workload services
+(including `submain` for search/cart/orders and `sub2main` for seller writes).
+
+Control is deliberately not one of the six. It holds deployment authority over
+them, so a command that deploys "all services" must not be able to redeploy the
+runtime performing the deploy — which is why `npm run control:deploy` is its own
+command and control never appears in a six-workload array.
+
+Each read-only microservice holds data on its own Turso account; workload
+accounts hold only the credentials their routes need, and `gova` now holds none
+of them. See [The control runtime](control-runtime.md).
 
 ---
 
-## Vercel — seven accounts
+## Vercel — eight accounts
 
 | Account | Email | Project | Serves | GitHub | Updated by |
 |---|---|---|---|---|---|
-| `hesham-101` | `print.code.1000@gmail.com` | `gova` | full app minus bridge-routed APIs: order detail `GET /api/orders/:id`, profile reviews, super-admin console | **connected** — every push redeploys | pushing to GitHub |
+| `hesham-101` | `print.code.1000@gmail.com` | `gova` | frontend, static assets, `/.well-known/**`, `/api/health`, and the compatibility redirect boundary. No Business API. | **connected** — every push redeploys | pushing to GitHub |
+| `hesham-101` | `print.code.1000@gmail.com` | `asol-control` | Super Admin server operations, System Logs, OTA administration, build/release jobs, production deployment authority, Vercel Sandbox orchestration, callbacks, release readiness | not connected | `npm run control:deploy` |
 | `submain` | `groupstenderximages@gmail.com` | `asol-submain` | search (`/api/search/*`), cart checkout, order creation (`POST /api/orders/from-cart`, `POST /api/orders/custom-request-from-profile`) | not connected | `npm run submain:deploy` |
 | `sub2main` | `tenderx.engineer100@gmail.com` | `asol-sub2main` | seller writes: product mutations, profile updates, storage uploads, pharmacy catalog | not connected | `npm run sub2main:deploy` |
 | `101-0902` | `bs.bid.story@gmail.com` | `asol-notifications` | push fan-out only | not connected | `npm run notifications:deploy` |

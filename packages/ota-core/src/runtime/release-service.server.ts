@@ -6,13 +6,12 @@ import { otaHttpApi } from '../ports';
 // its own code, and the re-export that made it work is what leaked `@asol/ota-core/publishing`
 // into all four service mirrors and broke their builds.
 import { getOtaApprovalServerConfig } from "../publishing/config/ota-r2-target";
-import { otaReleaseRepository } from "@asol/data-core/ota";
 import { compareOtaManifests } from "../domain/release/release-diff";
 import { compareOtaCanonicalStrings } from "../domain/release/canonical-order";
 import { isOtaRolloutEligible } from "../domain/release/rollout";
 import { isOtaVersion } from "../domain/versioning/version-ordering";
 import { summarizeOtaAdoption } from "../domain/release/adoption";
-import { otaIdentity, otaTelemetry } from "../ports";
+import { otaIdentity, otaReleaseRepository, otaTelemetry } from "../ports";
 import {
   canonicalOtaManifestPayload,
   legacyOtaManifestPayload,
@@ -143,7 +142,7 @@ export const otaReleaseService = {
       };
     }
 
-    const release = await otaReleaseRepository.getApproval(input.releaseId);
+    const release = await otaReleaseRepository().getApproval(input.releaseId);
     const approved = Boolean(
       release?.version === input.version && release.approved,
     );
@@ -171,13 +170,13 @@ export const otaReleaseService = {
   async getAdminDashboard(identity: OtaIdentity): Promise<OtaAdminDashboard> {
     assertAdmin(identity);
     const [history, audit, logs] = await Promise.all([
-      otaReleaseRepository.list(),
-      otaReleaseRepository.listAudit(),
+      otaReleaseRepository().list(),
+      otaReleaseRepository().listAudit(),
       otaTelemetry().list({ limit: 1000 }),
     ]);
     try {
       const manifest = await fetchCurrentManifest();
-      const release = await otaReleaseRepository.discover(manifest);
+      const release = await otaReleaseRepository().discover(manifest);
       return {
         manifestUrl: manifestUrl(),
         current: { release, manifest, signatureVerified: true },
@@ -203,10 +202,10 @@ export const otaReleaseService = {
     assertAdmin(input.identity);
     if (!input.baseReleaseId) throw new Error("otaBaseReleaseRequired");
     const target = await fetchCurrentManifest();
-    await otaReleaseRepository.discover(target);
+    await otaReleaseRepository().discover(target);
     if (input.baseReleaseId === target.releaseId)
       throw new Error("otaBaseReleaseMatchesCurrent");
-    const base = await otaReleaseRepository.getManifest(input.baseReleaseId);
+    const base = await otaReleaseRepository().getManifest(input.baseReleaseId);
     if (!base) throw new Error("otaReleaseNotFound");
     assertManifest(base);
     return compareOtaManifests(base, target);
@@ -223,8 +222,8 @@ export const otaReleaseService = {
     ) {
       throw new Error("otaReleaseNotCurrent");
     }
-    const release = await otaReleaseRepository.discover(manifest);
-    await otaReleaseRepository.setApproval({
+    const release = await otaReleaseRepository().discover(manifest);
+    await otaReleaseRepository().setApproval({
       releaseId: input.releaseId,
       version: input.version,
       approved: input.approved,

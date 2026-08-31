@@ -3,6 +3,7 @@ import { execSync } from 'child_process';
 console.log('🔄 Synchronizing generated service mirrors...');
 
 const scripts = [
+  'scripts/sync-control-service-sources.ts',
   'scripts/sync-notifications-service-sources.ts',
   'scripts/sync-products-service-sources.ts',
   'scripts/sync-orders-service-sources.ts',

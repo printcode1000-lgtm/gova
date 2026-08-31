@@ -41,6 +41,12 @@ export const LAYER_LABELS: Record<ArchitectureLayer, string> = {
 export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/core/config/runtime-context.server.ts',
   'src/core/config/public-env.ts',
+  // The seven public owner origins, read as literals so the bundler inlines
+  // them. It is the only thing the gova compatibility boundary imports.
+  'src/core/config/business-api-origins.ts',
+  // Which runtime this process is. Read here so the composition root can branch
+  // on the role without reading the environment itself.
+  'src/core/config/runtime-role.ts',
   'src/core/config/server-env.ts',
   'src/core/config/server-env.values.ts',
   'src/core/config/catalog-studio.server.ts',
@@ -52,6 +58,9 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/features/google-play-console/domain/development-guard.server.ts',
   'src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
   'src/features/data-health/tests/development-guard.test.ts',
+  // Sets the seven public owner origins to exercise the gova compatibility
+  // boundary; a boundary test that cannot vary its origins tests nothing.
+  'src/core/api/tests/compatibility-boundary.test.ts',
   'src/features/notifications/tests/mobile-push-crypto.test.ts',
   'src/features/notifications/tests/mobile-push-unlock.service.test.ts',
   // Spawns one child per case with `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` set or
@@ -72,10 +81,19 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
  * connector make the seal harder to read and, when one of them was a real duplicate, they drifted.
  * Neither backend can reach the other, so the hop happens on the device: it
  * carries a signed grant, sends no credentials, and holds no business logic.
+ *
+ * The third entry is the single allowlisted operational cross-deployment call.
+ * A production deploy started with no Super Admin browser open still has to
+ * deliver its terminal deployment notification, exactly as it does today. That
+ * one path posts the already-signed grant to the notifications runtime's send
+ * endpoint and nothing else: no notification database, no push provider
+ * credential, and no generic sibling-ASOL HTTP helper. It is allowlisted by
+ * exact file so it cannot grow into one.
  */
 export const ALLOWED_FETCH_FILES = new Set([
   'src/core/api/asol-http-transport.ts',
   'packages/account-bridge/src/notifications.ts',
+  'src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts',
 ]);
 
 /**

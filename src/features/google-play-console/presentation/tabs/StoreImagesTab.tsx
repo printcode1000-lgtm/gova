@@ -16,7 +16,12 @@ export function StoreImagesTab() {
   const { t } = useAdminArabic();
   const store = useStoreAssets();
   useStoreImagesPageSave(store, true);
-  if (!store.snapshot) return <div id="google-play-console.tabs.store-images-tab.div" className="p-4 text-sm">{t("releaseConsole.loading")}</div>;
+  if (!store.snapshot)
+    return (
+      <div id="google-play-console.tabs.store-images-tab.div" className="p-4 text-sm">
+        {t("releaseConsole.loading")}
+      </div>
+    );
   return (
     <section id="google-play-console.tabs.store-images-tab.section" className="space-y-4">
       <div
@@ -28,16 +33,20 @@ export function StoreImagesTab() {
           value={store.language}
           onChange={(event) => store.setLanguage(event.target.value)}
         />
-        <select id="google-play-console.tabs.store-images-tab.select"
+        <select
+          id="google-play-console.tabs.store-images-tab.select"
           className="h-10 rounded-md border bg-background px-3"
           value={store.imageType}
           onChange={(event) => store.setImageType(event.target.value as GooglePlayImageType)}
         >
           {GOOGLE_PLAY_IMAGE_TYPES.map((type) => (
-            <option key={type} value={type}>{t(`releaseConsole.imageTypes.${type}`)}</option>
+            <option key={type} value={type}>
+              {t(`releaseConsole.imageTypes.${type}`)}
+            </option>
           ))}
         </select>
-        <Input id="google-play-console.tabs.store-images-tab.input.2"
+        <Input
+          id="google-play-console.tabs.store-images-tab.input.2"
           type="file"
           accept="image/png,image/jpeg"
           multiple
@@ -85,19 +94,16 @@ export function StoreImagesTab() {
         ))}
       </div>
       <section id="google-play-console.tabs.store-images-tab.section.2" className="rounded-md border bg-surface p-4">
-        <h2
-          id="google-play-console.tabs.store-images-tab.h2"
-          className="mb-3 font-semibold">{t("releaseConsole.images.backups")}</h2
-        >
+        <h2 id="google-play-console.tabs.store-images-tab.h2" className="mb-3 font-semibold">
+          {t("releaseConsole.images.backups")}
+        </h2>
         <div id="google-play-console.tabs.store-images-tab.div.4" className="grid gap-2 md:grid-cols-2">
           {(store.snapshot.backups ?? []).map((backup) => (
             <div key={backup.name} className="flex items-center justify-between gap-2 rounded-md border p-2 text-sm">
-              <span className="min-w-0 truncate" dir="ltr">{backup.name}</span>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => store.stageBackupRestore(backup.name)}
-              >
+              <span className="min-w-0 truncate" dir="ltr">
+                {backup.name}
+              </span>
+              <Button size="sm" variant="outline" onClick={() => store.stageBackupRestore(backup.name)}>
                 <RotateCcw className="h-4 w-4" />
                 {t("releaseConsole.images.restore")}
               </Button>
@@ -109,11 +115,12 @@ export function StoreImagesTab() {
   );
 }
 
-function StoreImagePreview(props: { id: string; url: string; unavailableLabel: string; } & { id?: string }) {
+function StoreImagePreview(props: { id: string; url: string; unavailableLabel: string } & { id?: string }) {
   const [failed, setFailed] = React.useState(false);
   if (failed) {
     return (
-      <div id={props.id}
+      <div
+        id={props.id}
         className="flex h-28 items-center justify-center bg-muted px-2 text-center text-xs text-on-surface-variant"
       >
         {props.unavailableLabel}

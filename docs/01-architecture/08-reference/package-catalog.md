@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 42 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 44 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -42,7 +42,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/account-declarations/` |
 | **Purpose** | Deployment account declarations and routing metadata |
 | **Architectural Layer** | declarations |
-| **Public Exports** | `.` · `./gova` · `./notifications` · `./orders` · `./products` · `./profiles` · `./sub2main` · `./submain` |
+| **Public Exports** | `.` · `./control` · `./gova` · `./notifications` · `./orders` · `./products` · `./profiles` · `./sub2main` · `./submain` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:account-declarations` |
@@ -56,7 +56,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/account-bridge/` |
 | **Purpose** | Cross-account notification and identity bridging |
 | **Architectural Layer** | bridge |
-| **Public Exports** | `.` · `./notifications` |
+| **Public Exports** | `.` · `./notifications` · `./routes` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:account-bridge` |
@@ -70,7 +70,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/auth-core/` |
 | **Purpose** | Authentication and session identity |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./phone` · `./server` |
+| **Public Exports** | `.` · `./phone` · `./server` · `./session` · `./super-admin` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:auth-core` |
@@ -118,6 +118,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Test Gate** | `npm run test:catalog-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
+### @asol/control-composition
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/control-composition` |
+| **Folder** | `packages/control-composition/` |
+| **Purpose** | Composition root for the control account |
+| **Architectural Layer** | composition |
+| **Public Exports** | `.` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | yes |
+| **Test Gate** | `npm run test:compositions` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
 ### @asol/data-core
 
 | Field | Value |
@@ -126,7 +140,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/data-core/` |
 | **Purpose** | Database access, sharding, and domain repositories |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./data-health` · `./dev-cloud-backup` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` |
+| **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./control-ota` · `./control-system-logs` · `./data-health` · `./dev-cloud-backup` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./ota-runtime` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` |
 | **Infrastructure Privileges** | `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `drizzle-orm/better-sqlite3`, `drizzle-orm/libsql` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:data-core` |
@@ -216,6 +230,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Test Gate** | `npm run test:google-play-store-assets-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
+### @asol/gova-deployment-core
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/gova-deployment-core` |
+| **Folder** | `packages/gova-deployment-core/` |
+| **Purpose** | The gova deployment build view and its artifact gate |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run test:gova-deployment-core` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
 ### @asol/hero-slider-core
 
 | Field | Value |
@@ -280,7 +308,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/notifications-core/` |
 | **Purpose** | Push notification delivery (Web Push, FCM HTTP v1, APNs) |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./builder` · `./providers` · `./server` |
+| **Public Exports** | `.` · `./builder` · `./grant-collector` · `./grant-envelope` · `./grants` · `./providers` · `./server` |
 | **Infrastructure Privileges** | `web-push`, `google-auth-library` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:notifications-core` |
@@ -350,7 +378,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/ota-core/` |
 | **Purpose** | OTA publishing and update runtime |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./publishing` · `./server` |
+| **Public Exports** | `.` · `./admin` · `./publishing` · `./release-console` · `./server` |
 | **Infrastructure Privileges** | `@aws-sdk/client-s3`, `google-auth-library` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:ota-core` |
@@ -602,7 +630,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/vercel-deploy-core/` |
 | **Purpose** | Vercel deployment orchestration |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./github-push-identity` · `./remote-deploy-contracts` · `./remote-deploy-sandbox` |
+| **Public Exports** | `.` · `./github-push-identity` · `./release-rollback` · `./remote-deploy-contracts` · `./remote-deploy-sandbox` |
 | **Infrastructure Privileges** | `@vercel/sandbox`, `jose` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:vercel-deploy-core` |
@@ -612,4 +640,4 @@ This Markdown file is **generated** and verified by `architecture:check`.
 
 | Metric | Value |
 |---|---|
-| Packages | 42 |
+| Packages | 44 |

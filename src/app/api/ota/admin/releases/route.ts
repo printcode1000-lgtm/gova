@@ -2,11 +2,11 @@ import { apiSuccess, mapServiceError } from '@/core/api/api-response';
 import { otaReleaseService } from '@asol/ota-core/server';
 import type { SetOtaReleaseApprovalInput } from '@asol/ota-core';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
-import { registerOtaCoreServerPorts } from "@/features/ota/server";
+import { registerOtaAdminServerPorts } from "@/features/ota/server";
 
 // Supplies ota-core with the server-side log reader and the super-admin predicate.
 // Without it the release console would render with no adoption data and no admin.
-registerOtaCoreServerPorts();
+registerOtaAdminServerPorts();
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute('GET /api/ota/admin/releases', async () => {

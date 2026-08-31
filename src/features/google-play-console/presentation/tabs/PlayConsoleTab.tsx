@@ -28,12 +28,22 @@ export function PlayConsoleTab() {
           {t("releaseConsole.actions.refresh")}
         </Button>
       </div>
-      {error ? <div id="google-play-console.tabs.play-console-tab.div.2" className="rounded-md bg-error-container p-3 text-on-error-container">{error}</div> : null}
+      {error ? (
+        <div
+          id="google-play-console.tabs.play-console-tab.div.2"
+          className="rounded-md bg-error-container p-3 text-on-error-container"
+        >
+          {error}
+        </div>
+      ) : null}
       {snapshot ? (
         <>
           <div id="google-play-console.tabs.play-console-tab.div.3" className="grid gap-3 md:grid-cols-4">
-            <Metric id="google-play-console.tabs.play-console-tab.metric" label={t("releaseConsole.play.successfulEndpoints")}
-              value={snapshot.summary.successfulEndpoints} />
+            <Metric
+              id="google-play-console.tabs.play-console-tab.metric"
+              label={t("releaseConsole.play.successfulEndpoints")}
+              value={snapshot.summary.successfulEndpoints}
+            />
             <Metric
               id="google-play-console.tabs.play-console-tab.metric.2"
               label={t("releaseConsole.play.failedEndpoints")}
@@ -54,10 +64,9 @@ export function PlayConsoleTab() {
             id="google-play-console.tabs.play-console-tab.section.2"
             className="rounded-md border bg-surface p-4"
           >
-            <h2
-              id="google-play-console.tabs.play-console-tab.h2"
-              className="mb-3 font-semibold">{t("releaseConsole.play.connection")}</h2
-            >
+            <h2 id="google-play-console.tabs.play-console-tab.h2" className="mb-3 font-semibold">
+              {t("releaseConsole.play.connection")}
+            </h2>
             <dl className="grid gap-2">
               <InfoRow
                 id="google-play-console.tabs.play-console-tab.info-row"
@@ -65,23 +74,42 @@ export function PlayConsoleTab() {
                 value={snapshot.config.packageName}
                 ltr
               />
-              <InfoRow id="google-play-console.tabs.play-console-tab.info-row.2" label={t("releaseConsole.play.serviceAccount")}
-                value={snapshot.config.serviceAccountEmail || "-"} ltr />
-              <InfoRow id="google-play-console.tabs.play-console-tab.info-row.3" label={t("releaseConsole.play.projectId")}
-                value={snapshot.config.serviceAccountProjectId || "-"} ltr />
-              <InfoRow id="google-play-console.tabs.play-console-tab.info-row.4" label={t("releaseConsole.overview.credentialSource")}
-                value={snapshot.config.credentialSource} ltr />
+              <InfoRow
+                id="google-play-console.tabs.play-console-tab.info-row.2"
+                label={t("releaseConsole.play.serviceAccount")}
+                value={snapshot.config.serviceAccountEmail || "-"}
+                ltr
+              />
+              <InfoRow
+                id="google-play-console.tabs.play-console-tab.info-row.3"
+                label={t("releaseConsole.play.projectId")}
+                value={snapshot.config.serviceAccountProjectId || "-"}
+                ltr
+              />
+              <InfoRow
+                id="google-play-console.tabs.play-console-tab.info-row.4"
+                label={t("releaseConsole.overview.credentialSource")}
+                value={snapshot.config.credentialSource}
+                ltr
+              />
             </dl>
           </section>
           <div id="google-play-console.tabs.play-console-tab.div.4" className="grid gap-4 lg:grid-cols-2">
             {snapshot.endpoints.map((endpoint) => (
-              <EndpointCard key={endpoint.key} endpoint={endpoint}
+              <EndpointCard
+                key={endpoint.key}
+                endpoint={endpoint}
                 availableText={t("releaseConsole.play.available")}
-                unavailableText={t("releaseConsole.play.unavailable")} />
+                unavailableText={t("releaseConsole.play.unavailable")}
+              />
             ))}
           </div>
         </>
-      ) : <div id="google-play-console.tabs.play-console-tab.div.5" className="p-4 text-sm">{t("releaseConsole.loading")}</div>}
+      ) : (
+        <div id="google-play-console.tabs.play-console-tab.div.5" className="p-4 text-sm">
+          {t("releaseConsole.loading")}
+        </div>
+      )}
     </section>
   );
 }

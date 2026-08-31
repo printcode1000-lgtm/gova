@@ -36,6 +36,7 @@ export interface OtaLogEntry {
 }
 
 import type { OtaLogEntryInput } from "../domain/release/adoption";
+import type { OtaReleaseRepository } from '@asol/data-core/ota';
 
 export interface OtaTelemetryPort {
   /** Sends a batch of queued outcome logs. Failure is swallowed by the caller. */
@@ -61,6 +62,9 @@ export interface OtaIdentityPort {
   /** Whether the given identity is the super admin. Defaults to false: fail closed. */
   isSuperAdmin(uid: string, phone: string): boolean;
 }
+
+/** Exact persistence capability required only by OTA access and administration. */
+export interface OtaReleaseRepositoryPort extends OtaReleaseRepository {}
 
 
 export interface OtaHttpRequestOptions {
@@ -118,6 +122,7 @@ export interface OtaCorePorts {
   publicEnv: OtaPublicEnvPort;
   appVersions: OtaAppVersionsPort;
   categories: OtaCategoryCatalogPort;
+  releaseRepository: OtaReleaseRepositoryPort | null;
 }
 
 const noopTelemetry: OtaTelemetryPort = {
@@ -218,6 +223,7 @@ const portsDefaults = (): OtaCorePorts => ({
   publicEnv: unsetPublicEnv,
   appVersions: unsetAppVersions,
   categories: unsetCategories,
+  releaseRepository: null,
 });
 
 function portsState(): OtaCorePorts {
@@ -245,6 +251,7 @@ export function configureOtaCore(next: Partial<OtaCorePorts>): void {
     publicEnv: next.publicEnv ?? portsState().publicEnv,
     appVersions: next.appVersions ?? portsState().appVersions,
     categories: next.categories ?? portsState().categories,
+    releaseRepository: next.releaseRepository ?? portsState().releaseRepository,
   });
 }
 
@@ -254,6 +261,12 @@ export function otaTelemetry(): OtaTelemetryPort {
 
 export function otaIdentity(): OtaIdentityPort {
   return portsState().identity;
+}
+
+export function otaReleaseRepository(): OtaReleaseRepositoryPort {
+  const repository = portsState().releaseRepository;
+  if (!repository) throw new Error('otaCorePort: releaseRepository is not configured');
+  return repository;
 }
 
 /** Test helper: restores the safe defaults. */
@@ -266,6 +279,7 @@ export function resetOtaCorePorts(): void {
     publicEnv: unsetPublicEnv,
     appVersions: unsetAppVersions,
     categories: unsetCategories,
+    releaseRepository: null,
   });
 }
 

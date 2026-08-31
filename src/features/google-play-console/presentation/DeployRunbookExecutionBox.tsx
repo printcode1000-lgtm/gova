@@ -8,6 +8,12 @@ import { NativeCore } from "@asol/native-core";
 import { Option } from "./DeployRunbookControls";
 import { DeployRunbookCollapsible } from "./DeployRunbookCollapsible";
 
+import {
+  ALLOW_DOWNGRADE_HELP,
+  ALLOW_SCRATCH_HELP,
+  EXECUTION_BOX_DESCRIPTION,
+} from "./deploy-runbook-labels";
+
 export function ExecutionBox(props: {
   locked: boolean;
   activeJob: unknown;
@@ -33,7 +39,7 @@ export function ExecutionBox(props: {
       >
         <h2 id="google-play-console.deploy-runbook-execution-box.h2" className="font-semibold">التنفيذ</h2>
         <p id="google-play-console.deploy-runbook-execution-box.p" className="mt-1 text-xs text-on-surface-variant">
-          شغّل أو أوقف job النظام المحلي بعد مراجعة الأمر وعبارة التأكيد.
+          {EXECUTION_BOX_DESCRIPTION}
         </p>
       </header>
 
@@ -72,13 +78,13 @@ export function ExecutionBox(props: {
             checked={props.allowManifestDowngrade}
             onChange={props.setAllowManifestDowngrade}
             label="السماح بخفض manifest"
-            help="يتجاوز حماية خفض releaseId/version. لا تستخدمه إلا إذا كان الخفض مقصوداً."
+            help={ALLOW_DOWNGRADE_HELP}
           />
           <Option id="google-play-console.deploy-runbook-execution-box.option.3"
             checked={props.allowScratchFiles}
             onChange={props.setAllowScratchFiles}
             label="السماح بملفات scratch"
-            help="يسمح بنشر logs/tmp/scratchpad. الافتراضي يمنعها لأنها غالباً بقايا عمل."
+            help={ALLOW_SCRATCH_HELP}
           />
         </div>
       </DeployRunbookCollapsible>

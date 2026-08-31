@@ -1,4 +1,4 @@
-import { getProductionDeployCallbackBaseUrl } from "@/core/config/server-env";
+import { getProductionDeployCallbackBaseUrl } from "@/core/config/control-env";
 import { runSuperAdminJsonRoute, runSuperAdminRoute } from "@/features/super-admin/server";
 import {
   getProductionDeployStatus,

@@ -6,28 +6,33 @@ import { CheckSquare, Square } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import type { DeployRunbookPhaseView } from "./DeployRunbookTypes";
 import { DeployRunbookCollapsible } from "./DeployRunbookCollapsible";
+import { branchIdsFromRunbook, dangerousBranchIds, PhaseBlock } from "./DeployRunbookPhaseTree";
+
 import {
-  branchIdsFromRunbook,
-  dangerousBranchIds,
-  PhaseBlock,
-} from "./DeployRunbookPhaseTree";
+  PHASE_TREE_DESCRIPTION,
+  RUN_OPTIONS_DESCRIPTION,
+  RUN_OPTIONS_TITLE,
+  SCENARIO_FOOTNOTE,
+  SCENARIO_HELP,
+} from "./deploy-runbook-labels";
 
-const SELECT_BTN =
-  "h-auto w-full min-w-0 justify-start whitespace-normal py-2 text-left";
+const SELECT_BTN = "h-auto w-full min-w-0 justify-start whitespace-normal py-2 text-left";
 
-export function RunbookPanel(props: {
-  title: string;
-  description: string;
-  runbook: readonly DeployRunbookPhaseView[];
-  help: Record<string, string>;
-  selected: Set<string>;
-  setSelected: (next: Set<string>) => void;
-  scenarioLabel: string;
-  scenarioValue: string;
-  onScenarioChange: (value: string) => void;
-  scenarios: readonly (readonly [string, string])[];
-  extraOptions?: React.ReactNode;
-} & { id?: string }) {
+export function RunbookPanel(
+  props: {
+    title: string;
+    description: string;
+    runbook: readonly DeployRunbookPhaseView[];
+    help: Record<string, string>;
+    selected: Set<string>;
+    setSelected: (next: Set<string>) => void;
+    scenarioLabel: string;
+    scenarioValue: string;
+    onScenarioChange: (value: string) => void;
+    scenarios: readonly (readonly [string, string])[];
+    extraOptions?: React.ReactNode;
+  } & { id?: string },
+) {
   const toggle = (id: string) => {
     const next = new Set(props.selected);
     if (next.has(id)) next.delete(id);
@@ -48,7 +53,7 @@ export function RunbookPanel(props: {
 
       <DeployRunbookCollapsible
         title="وضع التشغيل"
-        description="يحدد السيناريو الأمر الأعلى؛ checkboxes الفروع تحدد ما يُنفَّذ داخل الشجرة."
+        description={SCENARIO_HELP}
       >
         <ScenarioSelect
           label={props.scenarioLabel}
@@ -68,51 +73,32 @@ export function RunbookPanel(props: {
         }
       >
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <Button
-            variant="outline"
-            className={SELECT_BTN}
-            onClick={() => props.setSelected(new Set(allIds))}
-          >
+          <Button variant="outline" className={SELECT_BTN} onClick={() => props.setSelected(new Set(allIds))}>
             <CheckSquare className="h-4 w-4 shrink-0" />
             تفعيل الكل
           </Button>
-          <Button
-            variant="outline"
-            className={SELECT_BTN}
-            onClick={() => props.setSelected(new Set())}
-          >
+          <Button variant="outline" className={SELECT_BTN} onClick={() => props.setSelected(new Set())}>
             <Square className="h-4 w-4 shrink-0" />
             تجاوز الكل
           </Button>
-          <Button
-            variant="outline"
-            className={SELECT_BTN}
-            onClick={() => props.setSelected(new Set(safeIds))}
-          >
+          <Button variant="outline" className={SELECT_BTN} onClick={() => props.setSelected(new Set(safeIds))}>
             الفروع الآمنة فقط
           </Button>
-          <Button
-            variant="outline"
-            className={SELECT_BTN}
-            onClick={() => props.setSelected(new Set(dangerousIds))}
-          >
+          <Button variant="outline" className={SELECT_BTN} onClick={() => props.setSelected(new Set(dangerousIds))}>
             الفروع الحساسة فقط
           </Button>
         </div>
       </DeployRunbookCollapsible>
 
       {props.extraOptions ? (
-        <DeployRunbookCollapsible
-          title="خيارات التشغيل"
-          description="سلوك التسلسل عند الأخطاء وتجاوز preflight."
-        >
+        <DeployRunbookCollapsible title={RUN_OPTIONS_TITLE} description={RUN_OPTIONS_DESCRIPTION}>
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">{props.extraOptions}</div>
         </DeployRunbookCollapsible>
       ) : null}
 
       <DeployRunbookCollapsible
         title="شجرة المراحل والفروع"
-        description="كل مرحلة قابلة للطي؛ داخلها أقسام ثم فروع تنفيذية بأوامر npm."
+        description={PHASE_TREE_DESCRIPTION}
         badge={
           <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
             {props.runbook.length} مراحل
@@ -121,13 +107,7 @@ export function RunbookPanel(props: {
       >
         <div className="space-y-3">
           {props.runbook.map((phase) => (
-            <PhaseBlock
-              key={phase.id}
-              phase={phase}
-              selected={props.selected}
-              help={props.help}
-              onToggle={toggle}
-            />
+            <PhaseBlock key={phase.id} phase={phase} selected={props.selected} help={props.help} onToggle={toggle} />
           ))}
         </div>
       </DeployRunbookCollapsible>
@@ -135,12 +115,14 @@ export function RunbookPanel(props: {
   );
 }
 
-export function Option(props: {
-  checked: boolean;
-  onChange: (value: boolean) => void;
-  label: string;
-  help: string;
-} & { id?: string }) {
+export function Option(
+  props: {
+    checked: boolean;
+    onChange: (value: boolean) => void;
+    label: string;
+    help: string;
+  } & { id?: string },
+) {
   return (
     <label id={props.id} className="block min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
       <span className="flex items-start gap-2">
@@ -152,9 +134,7 @@ export function Option(props: {
         />
         <span className="min-w-0 font-medium break-words">{props.label}</span>
       </span>
-      <span className="mt-1 block text-xs text-on-surface-variant break-words">
-        {props.help}
-      </span>
+      <span className="mt-1 block text-xs text-on-surface-variant break-words">{props.help}</span>
     </label>
   );
 }
@@ -174,11 +154,13 @@ function ScenarioSelect(props: {
         onChange={(event) => props.onChange(event.target.value)}
       >
         {props.scenarios.map(([value, label]) => (
-          <option key={value} value={value}>{label}</option>
+          <option key={value} value={value}>
+            {label}
+          </option>
         ))}
       </select>
       <span className="block text-xs text-on-surface-variant">
-        يحدد السيناريو الأمر الأعلى، بينما تحدد checkboxes الفروع المفعّلة داخل الشجرة.
+        {SCENARIO_FOOTNOTE}
       </span>
     </label>
   );

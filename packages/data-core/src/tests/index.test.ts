@@ -50,6 +50,14 @@ const EXPECTED_DOORS = [
   './marketplace-orders',
   './notifications',
   './ota',
+  // Split OTA release persistence: control reads the primary Turso database
+  // only, gova's OTA runtime keeps its own binding, and neither can reach the
+  // other's adapter through the shared './ota' door.
+  './control-ota',
+  './ota-runtime',
+  // System Logs persistence for the control runtime: the exact profile-shard
+  // adapter, with no other data source reachable from it.
+  './control-system-logs',
   './password-recovery',
   './pharmacy-profile-catalog',
   './product',

@@ -16,15 +16,17 @@ import {
   startRemoteDeployAll,
 } from "@asol/vercel-deploy-core/remote-deploy-sandbox";
 
-import { getProductionDeployCallbackSecret } from "@/core/config/server-env";
-import { SUPER_ADMIN_UID } from "@/features/auth";
-import { notificationsServer } from "@/features/notifications/server";
+import { SUPER_ADMIN_UID } from "@asol/auth-core";
+import { getProductionDeployCallbackSecret } from "@/core/config/control-env";
+import { withNotificationGrants } from "@asol/notifications-core/grant-envelope";
+import { NotificationGrantCollector } from "@asol/notifications-core/grant-collector";
 import {
   productionDeployEmail,
   productionDeployNotification,
 } from "@/features/release-commands/domain/production-deploy-report";
 import { sendProductionDeployEmail } from "@/features/release-commands/server/services/production-deploy-email.server";
 import { deliverProductionDeployNotificationGrants } from "@/features/release-commands/server/services/production-deploy-notification-delivery.server";
+
 
 /**
  * The super admin's production entry point to `deploy:all`.
@@ -74,7 +76,7 @@ export async function getProductionDeployStatus(adminUid: string): Promise<Remot
     return result;
   }
 
-  const grants = notificationsServer.createGrantIssuer(adminUid);
+  const grants = new NotificationGrantCollector(adminUid);
   const issued = grants.issue(
     productionDeployNotification({
       snapshot,
@@ -90,7 +92,7 @@ export async function getProductionDeployStatus(adminUid: string): Promise<Remot
       console.error("Failed to record the production deploy in-app notification.", error);
     });
   }
-  return notificationsServer.attachGrants(
+  return withNotificationGrants(
     { ...result, snapshot: { ...snapshot, inAppNotified: issued || snapshot.inAppNotified } },
     grants.toArray(),
   );
@@ -162,7 +164,7 @@ export async function handleProductionDeployCallback(input: {
   }
   if (!snapshot.inAppNotified) {
     try {
-      const grants = notificationsServer.createGrantIssuer(SUPER_ADMIN_UID);
+      const grants = new NotificationGrantCollector(SUPER_ADMIN_UID);
       grants.issue(productionDeployNotification({
         snapshot,
         uids: [SUPER_ADMIN_UID],

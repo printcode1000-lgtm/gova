@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **264**
+Keys: **269**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -43,11 +43,12 @@ Keys: **264**
 | `ASOL_CAPACITOR_API_BASE_URL` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_CATALOG_PUBLIC_ROOT` | server-only | unknown | `packages/catalog-core/src/server/validate-catalog-v3.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_CATALOG_ROOT` | server-only | unknown | `packages/catalog-core/src/server/validate-catalog-v3.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_CONTROL_SMOKE_PORT` | server-only | unknown | `scripts/smoke-control-service.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_CORS_ORIGINS` | server-only | unknown | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DATA_SOURCE` | server-only | unknown | `src/core/config/runtime-context.server.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_CALLBACK_SECRET` | server-only | dangerous | `scripts/run-remote-deploy-all.mjs` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_DEPLOY_CALLBACK_URL` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
-| `ASOL_DEPLOY_REPOSITORY_URL` | server-only | unknown | `scripts/push-production-deploy-env.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_DEPLOY_REPOSITORY_URL` | server-only | unknown | `scripts/push-production-deploy-env.ts`, `services/control/src/app/api/health/route.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_REVISION_AT_START` | server-only | unknown | `scripts/deploy-all.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_RUN_ID` | server-only | unknown | `scripts/deploy-all.ts`, `scripts/gate-step-checkpoints.ts`, `scripts/tests/deploy-all-resume.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_IOS_BUNDLE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
@@ -77,14 +78,15 @@ Keys: **264**
 | `ASOL_PROVISIONING` | server-only | unknown | `npm run db:provision:turso`, `npm run db:schema:sync`, `npm run db:schema:sync:release`, `packages/data-core/src/tooling/drop-factory-reset-tables.ts`, `packages/data-core/src/tooling/reset-advertisements-db.ts`, `packages/data-core/src/tooling/sync-users-sqlite-to-turso.ts`, `packages/storage-core/src/server/providers/provider-resolver.ts`, `packages/storage-core/src/tests/integration/parameterized-store.test.ts`, `scripts/provision-turso.ts`, `scripts/schema-sync.ts`, `scripts/setup-turso-db.ts`, `scripts/test-data-health-environment.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_RELEASE_CHECK_ATTEMPTS` | server-only | unknown | `scripts/check-deployed-release.ts` | ota/release | server-only | npm run runtime:check:changed |
 | `ASOL_REMOTE_DEPLOY_REQUEST_ID` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
-| `ASOL_REMOTE_DEPLOY_SANDBOX` | server-only | unknown | `scripts/check-environment-requirements.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_REMOTE_DEPLOY_SANDBOX` | server-only | unknown | `scripts/check-environment-requirements.ts`, `services/control/src/app/api/health/route.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_REMOTE_DEPLOY_SANDBOX_NAME` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_RUNTIME_ROLE` | server-only | dangerous | `src/core/config/runtime-role.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_SCHEMA_SYNC_EXACT` | server-only | unknown | `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server-only | unknown | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SERVICE_SMOKE_ONLY` | server-only | unknown | `scripts/check-service-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SERVICE_SMOKE_PORT` | server-only | unknown | `scripts/check-service-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SERVICE_SMOKE_REBUILD` | server-only | unknown | `scripts/deploy-all.ts`, `scripts/service-build-cache.ts`, `scripts/tests/deploy-all-resume.test.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `ASOL_SESSION_SIGNING_SECRET` | server-only | dangerous | `npm run test:follow`, `npm run test:notifications`, `packages/auth-core/src/ports/session-signing-secret.port.ts`, `scripts/probe-notifications-service.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_SESSION_SIGNING_SECRET` | server-only | dangerous | `npm run test:follow`, `npm run test:notifications`, `packages/auth-core/src/ports/session-signing-secret.port.ts`, `scripts/probe-notifications-service.ts`, `services/control/src/app/api/health/route.ts`, `services/control/src/control/super-admin-route.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_SMOKE_PORT` | server-only | unknown | `scripts/check-production-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_STATIC_PREVIEW_API_BASE_URL` | server-only | unknown | `packages/ota-core/scripts/serve-static.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_TEST_DEPLOY_TOKEN` | server-only | dangerous | `packages/release-core/src/tests/index.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
@@ -170,22 +172,25 @@ Keys: **264**
 | `LOCAL_AGENT_VERIFICATION` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCALAPPDATA` | server-only | unknown | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `NEXT_PHASE` | server-only | dangerous | `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `NEXT_PUBLIC_` | client-visible | allowed | `src/core/config/business-api-origins.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | allowed | `npm run build:static:local`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_APP_STORE_URL` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_BASE_PATH` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
+| `NEXT_PUBLIC_ASOL_CONTROL_URL` | client-visible | allowed | `src/core/api/tests/compatibility-boundary.test.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_MODE` | client-visible | allowed | `src/core/config/public-env.ts`, `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_NATIVE_VERSION` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
-| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | client-visible | allowed | `scripts/probe-notifications-service.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
-| `NEXT_PUBLIC_ASOL_ORDERS_URL` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
+| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | client-visible | allowed | `scripts/probe-notifications-service.ts`, `src/core/api/tests/compatibility-boundary.test.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
+| `NEXT_PUBLIC_ASOL_ORDERS_URL` | client-visible | allowed | `src/core/api/tests/compatibility-boundary.test.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` | client-visible | allowed | `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `src/core/config/public-env.ts` | ota/release | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY` | client-visible | allowed | `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `src/core/config/public-env.ts` | ota/release | client-visible | npm run runtime:check:changed |
-| `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
-| `NEXT_PUBLIC_ASOL_PROFILES_URL` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
+| `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | client-visible | allowed | `src/core/api/tests/compatibility-boundary.test.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
+| `NEXT_PUBLIC_ASOL_PROFILES_URL` | client-visible | allowed | `src/core/api/tests/compatibility-boundary.test.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
-| `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
-| `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
+| `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | client-visible | allowed | `src/core/api/tests/compatibility-boundary.test.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
+| `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | client-visible | allowed | `src/core/api/tests/compatibility-boundary.test.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
+| `NEXT_PUBLIC_ASOL_WEB_CONTENT_VERSION` | client-visible | allowed | `services/control/src/control/build-jobs.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_BASE_PATH` | client-visible | allowed | `packages/storage-core/src/server/providers/local-storage.provider.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_BUILD_ID` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_R2_PUBLIC_URL` | client-visible | allowed | `src/core/config/public-env.ts` | object-storage | client-visible | npm run runtime:check:changed |
@@ -214,7 +219,7 @@ Keys: **264**
 | `PRODUCT_R2_SECRET_ACCESS_KEY` | server-only | dangerous | `packages/storage-core/src/tests/integration/credential-isolation.test.ts`, `packages/storage-core/src/tests/unit/account-credentials.test.ts` | object-storage | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `PRODUCT_R2_WAREHOUSE_NAME` | server-only | unknown | none | object-storage | missing/unknown consumers | npm run runtime:check:changed |
 | `PROFILE_CORE_DATABASE_AUTH_TOKEN` | server-only | dangerous | none | vercel/database | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
-| `PROFILE_CORE_DATABASE_URL` | server-only | unknown | `services/sub2main/src/app/api/health/route.ts` | vercel/database | server-only | npm run runtime:check:changed |
+| `PROFILE_CORE_DATABASE_URL` | server-only | unknown | `services/control/src/app/api/health/route.ts`, `services/sub2main/src/app/api/health/route.ts` | vercel/database | server-only | npm run runtime:check:changed |
 | `R2_ACCESS_KEY_ID` | server-only | unknown | `packages/storage-core/src/tests/integration/credential-isolation.test.ts`, `packages/storage-core/src/tests/unit/account-credentials.test.ts` | object-storage | server-only | npm run runtime:check:changed |
 | `R2_ACCOUNT_ID` | server-only | unknown | `packages/storage-core/src/tests/unit/account-credentials.test.ts` | object-storage | server-only | npm run runtime:check:changed |
 | `R2_API_TOKEN` | server-only | dangerous | `packages/storage-core/src/tests/unit/account-credentials.test.ts` | object-storage | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
@@ -243,7 +248,7 @@ Keys: **264**
 | `TURSO_ADVERTISEMENTS_DATABASE_URL` | server-only | unknown | `packages/data-core/src/ports/runtime-config.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | vercel/database | server-only | npm run runtime:check:changed |
 | `TURSO_API_TOKEN` | server-only | dangerous | `scripts/provision-turso.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `TURSO_AUTH_TOKEN` | server-only | dangerous | `packages/data-core/src/ports/runtime-config.ts`, `packages/data-core/src/tooling/sync-users-sqlite-to-turso.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
-| `TURSO_DATABASE_URL` | server-only | unknown | `packages/data-core/src/ports/runtime-config.ts`, `packages/data-core/src/tooling/sync-users-sqlite-to-turso.ts`, `scripts/test-data-health-environment.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | vercel/database | server-only | npm run runtime:check:changed |
+| `TURSO_DATABASE_URL` | server-only | unknown | `packages/data-core/src/ports/runtime-config.ts`, `packages/data-core/src/tooling/sync-users-sqlite-to-turso.ts`, `scripts/test-data-health-environment.ts`, `services/control/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | vercel/database | server-only | npm run runtime:check:changed |
 | `TURSO_NOTIFICATIONS_API_TOKEN` | server-only | dangerous | none | vercel/database | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `TURSO_NOTIFICATIONS_AUTH_TOKEN` | server-only | dangerous | `packages/data-core/src/tooling/enforce-notification-token-cardinality.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `TURSO_NOTIFICATIONS_DATABASE_URL` | server-only | unknown | `packages/data-core/src/tooling/enforce-notification-token-cardinality.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | vercel/database | server-only | npm run runtime:check:changed |

@@ -5,6 +5,8 @@ import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync } 
 import { tmpdir } from "node:os";
 import path from "node:path";
 
+import { resolveRouteOwner } from "@asol/account-bridge/routes";
+
 /**
  * Guards the profiles service module.
  *
@@ -94,18 +96,27 @@ const bridge = stripComments(
 );
 assert.match(
   bridge,
-  /method\.toUpperCase\(\)\s*!==\s*["']GET["']/,
-  "The service bridge must redirect GET only; a redirected write would reach an account that cannot serve it.",
+  /resolveRouteOwner\(method, pathOf\(route\)\)/,
+  "The bridge must take ownership from the canonical registry. It used to redirect GET only, " +
+    "which was a safe approximation while every write stayed on the main app; now writes have " +
+    "their own owners and a hardcoded method rule would send them to the wrong one.",
 );
 assert.match(
   bridge,
   /isBrowser\(\)/,
   "The service bridge must be browser-only: server-side redirection would make the deployments call each other.",
 );
-assert.doesNotMatch(
-  bridge,
-  /"\/api\/profile\/reviews"/,
-  "/api/profile/reviews reads the product database too. It must not be routed to the profiles account.",
+// The bridge no longer carries route literals at all — ownership lives in the
+// registry — so the invariant is asserted where the decision is now made.
+assert.equal(
+  resolveRouteOwner("GET", "/api/profile/reviews"),
+  "profiles",
+  "/api/profile/reviews is a profile read.",
+);
+assert.equal(
+  resolveRouteOwner("POST", "/api/profile/reviews"),
+  "sub2main",
+  "Writing a review touches the product database, so it belongs to the write account, not profiles.",
 );
 
 // ── 5. generated/ must be reproducible from src/ ─────────────────────────────

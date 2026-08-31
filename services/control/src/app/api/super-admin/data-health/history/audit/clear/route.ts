@@ -1,0 +1,2 @@
+import { dataHealthService } from '@/control/data-health'; import { runControlSuperAdminJsonRoute } from '@/control/super-admin-route';
+export async function POST(request: Request) { return runControlSuperAdminJsonRoute<{ confirm?: unknown }, unknown>(request, ({ admin, body }) => dataHealthService.clearCleanupAudit({ adminUid: admin.uid, confirm: typeof body.confirm === 'string' ? body.confirm : '' })); }

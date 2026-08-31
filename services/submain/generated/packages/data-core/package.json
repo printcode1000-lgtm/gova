@@ -34,6 +34,18 @@
       "types": "./src/composition.ts",
       "default": "./src/composition.ts"
     },
+    "./control-system-logs": {
+      "types": "./src/control-system-logs.ts",
+      "default": "./src/control-system-logs.ts"
+    },
+    "./control-ota": {
+      "types": "./src/control-ota.ts",
+      "default": "./src/control-ota.ts"
+    },
+    "./ota-runtime": {
+      "types": "./src/ota-runtime.ts",
+      "default": "./src/ota-runtime.ts"
+    },
     "./data-health": {
       "types": "./src/domains/data-health/index.server.ts",
       "default": "./src/domains/data-health/index.server.ts"

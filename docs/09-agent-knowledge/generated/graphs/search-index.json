@@ -248,6 +248,20 @@
       ]
     },
     {
+      "id": "command:api:inventory",
+      "kind": "command",
+      "name": "npm run api:inventory",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "api",
+        "api:inventory",
+        "inventory",
+        "npm",
+        "npm run api:inventory",
+        "run"
+      ]
+    },
+    {
       "id": "command:app:init",
       "kind": "command",
       "name": "npm run app:init",
@@ -573,6 +587,76 @@
         "npm",
         "npm run ci:coverage",
         "run"
+      ]
+    },
+    {
+      "id": "command:control:build",
+      "kind": "command",
+      "name": "npm run control:build",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "build",
+        "control",
+        "control:build",
+        "npm",
+        "npm run control:build",
+        "run"
+      ]
+    },
+    {
+      "id": "command:control:deploy",
+      "kind": "command",
+      "name": "npm run control:deploy",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "control",
+        "control:deploy",
+        "deploy",
+        "npm",
+        "npm run control:deploy",
+        "run"
+      ]
+    },
+    {
+      "id": "command:control:smoke",
+      "kind": "command",
+      "name": "npm run control:smoke",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "control",
+        "control:smoke",
+        "npm",
+        "npm run control:smoke",
+        "run",
+        "smoke"
+      ]
+    },
+    {
+      "id": "command:control:sync",
+      "kind": "command",
+      "name": "npm run control:sync",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "control",
+        "control:sync",
+        "npm",
+        "npm run control:sync",
+        "run",
+        "sync"
+      ]
+    },
+    {
+      "id": "command:control:verify",
+      "kind": "command",
+      "name": "npm run control:verify",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "control",
+        "control:verify",
+        "npm",
+        "npm run control:verify",
+        "run",
+        "verify"
       ]
     },
     {
@@ -1165,6 +1249,35 @@
       ]
     },
     {
+      "id": "command:dev:distributed",
+      "kind": "command",
+      "name": "npm run dev:distributed",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "dev",
+        "dev:distributed",
+        "distributed",
+        "npm",
+        "npm run dev:distributed",
+        "run"
+      ]
+    },
+    {
+      "id": "command:dev:distributed:smoke",
+      "kind": "command",
+      "name": "npm run dev:distributed:smoke",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "dev",
+        "dev:distributed:smoke",
+        "distributed",
+        "npm",
+        "npm run dev:distributed:smoke",
+        "run",
+        "smoke"
+      ]
+    },
+    {
       "id": "command:docs:check",
       "kind": "command",
       "name": "npm run docs:check",
@@ -1303,6 +1416,20 @@
         "npm",
         "npm run doctor:environment:production",
         "production",
+        "run"
+      ]
+    },
+    {
+      "id": "command:env:ownership",
+      "kind": "command",
+      "name": "npm run env:ownership",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "env",
+        "env:ownership",
+        "npm",
+        "npm run env:ownership",
+        "ownership",
         "run"
       ]
     },
@@ -1594,6 +1721,50 @@
         "npm run github:protect",
         "protect",
         "run"
+      ]
+    },
+    {
+      "id": "command:gova:artifact:verify",
+      "kind": "command",
+      "name": "npm run gova:artifact:verify",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "artifact",
+        "gova",
+        "gova:artifact:verify",
+        "npm",
+        "npm run gova:artifact:verify",
+        "run",
+        "verify"
+      ]
+    },
+    {
+      "id": "command:gova:tree",
+      "kind": "command",
+      "name": "npm run gova:tree",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "gova",
+        "gova:tree",
+        "npm",
+        "npm run gova:tree",
+        "run",
+        "tree"
+      ]
+    },
+    {
+      "id": "command:gova:tree:check",
+      "kind": "command",
+      "name": "npm run gova:tree:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "gova",
+        "gova:tree:check",
+        "npm",
+        "npm run gova:tree:check",
+        "run",
+        "tree"
       ]
     },
     {
@@ -2758,6 +2929,20 @@
       ]
     },
     {
+      "id": "command:test:control",
+      "kind": "command",
+      "name": "npm run test:control",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "control",
+        "npm",
+        "npm run test:control",
+        "run",
+        "test",
+        "test:control"
+      ]
+    },
+    {
       "id": "command:test:data-core",
       "kind": "command",
       "name": "npm run test:data-core",
@@ -2979,6 +3164,20 @@
         "run",
         "test",
         "test:google-play-store-assets-core"
+      ]
+    },
+    {
+      "id": "command:test:gova-deployment-core",
+      "kind": "command",
+      "name": "npm run test:gova-deployment-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "gova-deployment-core",
+        "npm",
+        "npm run test:gova-deployment-core",
+        "run",
+        "test",
+        "test:gova-deployment-core"
       ]
     },
     {
@@ -6061,7 +6260,9 @@
         "<!-- generated file. do not edit by hand. source: packages/architecture-core registries (capability_packages, application_features). regenerate: npm run architecture:docs drift fails: npm run architecture:check -->",
         "@asol/account-bridge",
         "@asol/account-bridge/notifications",
+        "@asol/account-bridge/routes",
         "@asol/account-declarations",
+        "@asol/account-declarations/control",
         "@asol/account-declarations/gova",
         "@asol/account-declarations/notifications",
         "@asol/account-declarations/orders",
@@ -6073,12 +6274,15 @@
         "@asol/auth-core",
         "@asol/auth-core/phone",
         "@asol/auth-core/server",
+        "@asol/auth-core/session",
+        "@asol/auth-core/super-admin",
         "@asol/backup-core",
         "@asol/backup-core/server",
         "@asol/branding-core",
         "@asol/branding-core/tooling",
         "@asol/catalog-core",
         "@asol/catalog-core/server",
+        "@asol/control-composition",
         "@asol/data-core",
         "@asol/data-core/account-deletion",
         "@asol/data-core/advertisements",
@@ -6086,6 +6290,8 @@
         "@asol/data-core/auth/entities",
         "@asol/data-core/browser",
         "@asol/data-core/composition",
+        "@asol/data-core/control-ota",
+        "@asol/data-core/control-system-logs",
         "@asol/data-core/data-health",
         "@asol/data-core/dev-cloud-backup",
         "@asol/data-core/feature-flags",
@@ -6094,6 +6300,7 @@
         "@asol/data-core/marketplace-orders",
         "@asol/data-core/notifications",
         "@asol/data-core/ota",
+        "@asol/data-core/ota-runtime",
         "@asol/data-core/password-recovery",
         "@asol/data-core/pharmacy-profile-catalog",
         "@asol/data-core/pharmacy-profile-catalog/entities",
@@ -6124,6 +6331,7 @@
         "@asol/format-core",
         "@asol/google-play-store-assets-core",
         "@asol/google-play-store-assets-core/images",
+        "@asol/gova-deployment-core",
         "@asol/hero-slider-core",
         "@asol/hero-slider-core/server",
         "@asol/local-agent-core",
@@ -6137,6 +6345,9 @@
         "@asol/notifications-composition",
         "@asol/notifications-core",
         "@asol/notifications-core/builder",
+        "@asol/notifications-core/grant-collector",
+        "@asol/notifications-core/grant-envelope",
+        "@asol/notifications-core/grants",
         "@asol/notifications-core/providers",
         "@asol/notifications-core/server",
         "@asol/observability-core",
@@ -6145,7 +6356,9 @@
         "@asol/orders-composition",
         "@asol/orders-core",
         "@asol/ota-core",
+        "@asol/ota-core/admin",
         "@asol/ota-core/publishing",
+        "@asol/ota-core/release-console",
         "@asol/ota-core/server",
         "@asol/page-save-core",
         "@asol/page-snapshot-core",
@@ -6178,6 +6391,7 @@
         "@asol/trending-ribbon-core/server",
         "@asol/vercel-deploy-core",
         "@asol/vercel-deploy-core/github-push-identity",
+        "@asol/vercel-deploy-core/release-rollback",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
         "@asol/vercel-deploy-core/remote-deploy-sandbox",
         "application_features",
@@ -6211,6 +6425,7 @@
         "packages/backup-core/",
         "packages/branding-core/",
         "packages/catalog-core/",
+        "packages/control-composition/",
         "packages/data-core/",
         "packages/data-health-core/",
         "packages/dev-core/",
@@ -6218,6 +6433,7 @@
         "packages/featured-marquee-core/",
         "packages/format-core/",
         "packages/google-play-store-assets-core/",
+        "packages/gova-deployment-core/",
         "packages/hero-slider-core/",
         "packages/local-agent-core/",
         "packages/map-core/",
@@ -6278,6 +6494,7 @@
         "@asol/backup-core",
         "@asol/branding-core",
         "@asol/catalog-core",
+        "@asol/control-composition",
         "@asol/data-core",
         "@asol/data-core/browser",
         "@asol/data-core/marketplace-orders",
@@ -6294,6 +6511,7 @@
         "@asol/featured-marquee-core",
         "@asol/format-core",
         "@asol/google-play-store-assets-core",
+        "@asol/gova-deployment-core",
         "@asol/hero-slider-core",
         "@asol/local-agent-core",
         "@asol/map-core",
@@ -6307,6 +6525,7 @@
         "@asol/orders-core",
         "@asol/ota-core",
         "@asol/ota-core/publishing",
+        "@asol/ota-core/release-console",
         "@asol/page-save-core",
         "@asol/page-snapshot-core",
         "@asol/product-core",
@@ -6440,6 +6659,7 @@
         "@asol/backup-core",
         "@asol/branding-core",
         "@asol/catalog-core",
+        "@asol/control-composition",
         "@asol/data-core",
         "@asol/data-health-core",
         "@asol/dev-core",
@@ -6447,6 +6667,7 @@
         "@asol/featured-marquee-core",
         "@asol/format-core",
         "@asol/google-play-store-assets-core",
+        "@asol/gova-deployment-core",
         "@asol/hero-slider-core",
         "@asol/local-agent-core",
         "@asol/map-core",
@@ -6506,6 +6727,7 @@
         "packages/backup-core/",
         "packages/branding-core/",
         "packages/catalog-core/",
+        "packages/control-composition/",
         "packages/data-core/",
         "packages/data-health-core/",
         "packages/dev-core/",
@@ -6513,6 +6735,7 @@
         "packages/featured-marquee-core/",
         "packages/format-core/",
         "packages/google-play-store-assets-core/",
+        "packages/gova-deployment-core/",
         "packages/hero-slider-core/",
         "packages/local-agent-core/",
         "packages/map-core/",
@@ -11899,6 +12122,55 @@
       ]
     },
     {
+      "id": "document:docs/06-super-admin-and-operations/control-runtime.md",
+      "kind": "document",
+      "name": "The control runtime",
+      "path": "docs/06-super-admin-and-operations/control-runtime.md",
+      "summary": "Super Admin operations run in their own Vercel deployment, `asol-control`, and not in the application. This document is what that runtime is, what it owns, and how a release uses it.",
+      "tags": [
+        "@asol/account-bridge/routes",
+        "@asol/vercel-deploy-core/release-rollback",
+        "admin",
+        "and",
+        "application",
+        "asol-control",
+        "control",
+        "deployment",
+        "docs/06-super-admin-and-operations/control-runtime",
+        "docs/06-super-admin-and-operations/control-runtime.md",
+        "document",
+        "how",
+        "in",
+        "is",
+        "it",
+        "md",
+        "not",
+        "operations",
+        "own",
+        "owns",
+        "release",
+        "run",
+        "runtime",
+        "scripts/tests/control-service",
+        "scripts/tests/control-service.test.ts",
+        "services/control/generated/",
+        "src/core/api/business-api-error-status",
+        "src/core/api/business-api-error-status.ts",
+        "super",
+        "super admin operations run in their own vercel deployment, `asol-control`, and not in the application. this document is what that runtime is, what it owns, and how a release uses it.",
+        "test",
+        "that",
+        "the",
+        "the control runtime",
+        "their",
+        "this",
+        "ts",
+        "uses",
+        "vercel",
+        "what"
+      ]
+    },
+    {
       "id": "document:docs/06-super-admin-and-operations/data-health-module.md",
       "kind": "document",
       "name": "Data Health Module",
@@ -16526,6 +16798,19 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_CONTROL_SMOKE_PORT",
+      "kind": "environment-key",
+      "name": "ASOL_CONTROL_SMOKE_PORT",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_control_smoke_port",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_CORS_ORIGINS",
       "kind": "environment-key",
       "name": "ASOL_CORS_ORIGINS",
@@ -16987,6 +17272,19 @@
       "summary": "Server/tooling environment key name",
       "tags": [
         "asol_remote_deploy_sandbox_name",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_RUNTIME_ROLE",
+      "kind": "environment-key",
+      "name": "ASOL_RUNTIME_ROLE",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_runtime_role",
         "environment",
         "server",
         "server tooling environment",
@@ -18177,6 +18475,19 @@
       ]
     },
     {
+      "id": "environment-key:NEXT_PUBLIC_",
+      "kind": "environment-key",
+      "name": "NEXT_PUBLIC_",
+      "summary": "Client-visible environment key name",
+      "tags": [
+        "client",
+        "environment",
+        "next_public_",
+        "public",
+        "public client environment"
+      ]
+    },
+    {
       "id": "environment-key:NEXT_PUBLIC_ASOL_API_BASE_URL",
       "kind": "environment-key",
       "name": "NEXT_PUBLIC_ASOL_API_BASE_URL",
@@ -18211,6 +18522,19 @@
         "client",
         "environment",
         "next_public_asol_base_path",
+        "public",
+        "public client environment"
+      ]
+    },
+    {
+      "id": "environment-key:NEXT_PUBLIC_ASOL_CONTROL_URL",
+      "kind": "environment-key",
+      "name": "NEXT_PUBLIC_ASOL_CONTROL_URL",
+      "summary": "Client-visible environment key name",
+      "tags": [
+        "client",
+        "environment",
+        "next_public_asol_control_url",
         "public",
         "public client environment"
       ]
@@ -18380,6 +18704,19 @@
         "client",
         "environment",
         "next_public_asol_web_bundle_version",
+        "public",
+        "public client environment"
+      ]
+    },
+    {
+      "id": "environment-key:NEXT_PUBLIC_ASOL_WEB_CONTENT_VERSION",
+      "kind": "environment-key",
+      "name": "NEXT_PUBLIC_ASOL_WEB_CONTENT_VERSION",
+      "summary": "Client-visible environment key name",
+      "tags": [
+        "client",
+        "environment",
+        "next_public_asol_web_content_version",
         "public",
         "public client environment"
       ]
@@ -21603,11 +21940,13 @@
       "kind": "package",
       "name": "@asol/account-bridge",
       "path": "packages/account-bridge",
-      "summary": "Cross-account notification and identity bridging; Layer: bridge; Public exports: ., ./notifications",
+      "summary": "Cross-account notification and identity bridging; Layer: bridge; Public exports: ., ./notifications, ./routes",
       "tags": [
         ".",
         "./notifications",
+        "./routes",
         "/notifications",
+        "/routes",
         "@asol/account-bridge",
         "and",
         "bridge",
@@ -21624,9 +21963,10 @@
       "kind": "package",
       "name": "@asol/account-declarations",
       "path": "packages/account-declarations",
-      "summary": "Deployment account declarations and routing metadata; Layer: declarations; Public exports: ., ./gova, ./notifications, ./orders, ./products, ./profiles, ./sub2main, ./submain",
+      "summary": "Deployment account declarations and routing metadata; Layer: declarations; Public exports: ., ./control, ./gova, ./notifications, ./orders, ./products, ./profiles, ./sub2main, ./submain",
       "tags": [
         ".",
+        "./control",
         "./gova",
         "./notifications",
         "./orders",
@@ -21634,6 +21974,7 @@
         "./profiles",
         "./sub2main",
         "./submain",
+        "/control",
         "/gova",
         "/notifications",
         "/orders",
@@ -21676,13 +22017,17 @@
       "kind": "package",
       "name": "@asol/auth-core",
       "path": "packages/auth-core",
-      "summary": "Authentication and session identity; Layer: capability; Public exports: ., ./phone, ./server",
+      "summary": "Authentication and session identity; Layer: capability; Public exports: ., ./phone, ./server, ./session, ./super-admin",
       "tags": [
         ".",
         "./phone",
         "./server",
+        "./session",
+        "./super-admin",
         "/phone",
         "/server",
+        "/session",
+        "/super-admin",
         "@asol/auth-core",
         "and",
         "authentication",
@@ -21758,11 +22103,30 @@
       ]
     },
     {
+      "id": "package:@asol/control-composition",
+      "kind": "package",
+      "name": "@asol/control-composition",
+      "path": "packages/control-composition",
+      "summary": "Composition root for the control account; Layer: composition; Public exports: .",
+      "tags": [
+        ".",
+        "@asol/control-composition",
+        "account",
+        "composition",
+        "composition root for the control account",
+        "control",
+        "for",
+        "packages/control-composition",
+        "root",
+        "the"
+      ]
+    },
+    {
       "id": "package:@asol/data-core",
       "kind": "package",
       "name": "@asol/data-core",
       "path": "packages/data-core",
-      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling",
+      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-system-logs, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling",
       "tags": [
         ".",
         "./account-deletion",
@@ -21771,6 +22135,8 @@
         "./auth/entities",
         "./browser",
         "./composition",
+        "./control-ota",
+        "./control-system-logs",
         "./data-health",
         "./dev-cloud-backup",
         "./feature-flags",
@@ -21779,6 +22145,7 @@
         "./marketplace-orders",
         "./notifications",
         "./ota",
+        "./ota-runtime",
         "./password-recovery",
         "./pharmacy-profile-catalog",
         "./pharmacy-profile-catalog/entities",
@@ -21803,6 +22170,8 @@
         "/auth/entities",
         "/browser",
         "/composition",
+        "/control-ota",
+        "/control-system-logs",
         "/data-health",
         "/dev-cloud-backup",
         "/feature-flags",
@@ -21811,6 +22180,7 @@
         "/marketplace-orders",
         "/notifications",
         "/ota",
+        "/ota-runtime",
         "/password-recovery",
         "/pharmacy-profile-catalog",
         "/pharmacy-profile-catalog/entities",
@@ -21970,6 +22340,29 @@
       ]
     },
     {
+      "id": "package:@asol/gova-deployment-core",
+      "kind": "package",
+      "name": "@asol/gova-deployment-core",
+      "path": "packages/gova-deployment-core",
+      "summary": "The gova deployment build view and its artifact gate; Layer: capability; Public exports: .",
+      "tags": [
+        ".",
+        "@asol/gova-deployment-core",
+        "and",
+        "artifact",
+        "build",
+        "capability",
+        "deployment",
+        "gate",
+        "gova",
+        "its",
+        "packages/gova-deployment-core",
+        "the",
+        "the gova deployment build view and its artifact gate",
+        "view"
+      ]
+    },
+    {
       "id": "package:@asol/hero-slider-core",
       "kind": "package",
       "name": "@asol/hero-slider-core",
@@ -22112,13 +22505,19 @@
       "kind": "package",
       "name": "@asol/notifications-core",
       "path": "packages/notifications-core",
-      "summary": "Push notification delivery (Web Push, FCM HTTP v1, APNs); Layer: capability; Public exports: ., ./builder, ./providers, ./server",
+      "summary": "Push notification delivery (Web Push, FCM HTTP v1, APNs); Layer: capability; Public exports: ., ./builder, ./grant-collector, ./grant-envelope, ./grants, ./providers, ./server",
       "tags": [
         ".",
         "./builder",
+        "./grant-collector",
+        "./grant-envelope",
+        "./grants",
         "./providers",
         "./server",
         "/builder",
+        "/grant-collector",
+        "/grant-envelope",
+        "/grants",
         "/providers",
         "/server",
         "@asol/notifications-core",
@@ -22202,12 +22601,16 @@
       "kind": "package",
       "name": "@asol/ota-core",
       "path": "packages/ota-core",
-      "summary": "OTA publishing and update runtime; Layer: capability; Public exports: ., ./publishing, ./server",
+      "summary": "OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./publishing, ./release-console, ./server",
       "tags": [
         ".",
+        "./admin",
         "./publishing",
+        "./release-console",
         "./server",
+        "/admin",
         "/publishing",
+        "/release-console",
         "/server",
         "@asol/ota-core",
         "@aws-sdk/client-s3",
@@ -22571,13 +22974,15 @@
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
       "path": "packages/vercel-deploy-core",
-      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./remote-deploy-contracts, ./remote-deploy-sandbox",
+      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./release-rollback, ./remote-deploy-contracts, ./remote-deploy-sandbox",
       "tags": [
         ".",
         "./github-push-identity",
+        "./release-rollback",
         "./remote-deploy-contracts",
         "./remote-deploy-sandbox",
         "/github-push-identity",
+        "/release-rollback",
         "/remote-deploy-contracts",
         "/remote-deploy-sandbox",
         "@asol/vercel-deploy-core",
@@ -25656,6 +26061,17 @@
       ]
     },
     {
+      "id": "script:scripts/api-route-inventory.ts",
+      "kind": "script",
+      "name": "api-route-inventory.ts",
+      "path": "scripts/api-route-inventory.ts",
+      "tags": [
+        "scripts/api-route-inventory",
+        "scripts/api-route-inventory.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/architecture-check.ts",
       "kind": "script",
       "name": "architecture-check.ts",
@@ -25729,6 +26145,17 @@
       "tags": [
         "scripts/build-android-signed",
         "scripts/build-android-signed.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/build-gova-deployment-tree.ts",
+      "kind": "script",
+      "name": "build-gova-deployment-tree.ts",
+      "path": "scripts/build-gova-deployment-tree.ts",
+      "tags": [
+        "scripts/build-gova-deployment-tree",
+        "scripts/build-gova-deployment-tree.ts",
         "ts"
       ]
     },
@@ -25898,6 +26325,17 @@
       ]
     },
     {
+      "id": "script:scripts/deploy-control-service.ts",
+      "kind": "script",
+      "name": "deploy-control-service.ts",
+      "path": "scripts/deploy-control-service.ts",
+      "tags": [
+        "scripts/deploy-control-service",
+        "scripts/deploy-control-service.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/deploy-notifications-service.ts",
       "kind": "script",
       "name": "deploy-notifications-service.ts",
@@ -26004,6 +26442,17 @@
       "tags": [
         "scripts/deployed-origin-resolution",
         "scripts/deployed-origin-resolution.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/dev-distributed.ts",
+      "kind": "script",
+      "name": "dev-distributed.ts",
+      "path": "scripts/dev-distributed.ts",
+      "tags": [
+        "scripts/dev-distributed",
+        "scripts/dev-distributed.ts",
         "ts"
       ]
     },
@@ -26866,6 +27315,17 @@
       ]
     },
     {
+      "id": "script:scripts/runtime-env-ownership-report.ts",
+      "kind": "script",
+      "name": "runtime-env-ownership-report.ts",
+      "path": "scripts/runtime-env-ownership-report.ts",
+      "tags": [
+        "scripts/runtime-env-ownership-report",
+        "scripts/runtime-env-ownership-report.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/runtime/check.ts",
       "kind": "script",
       "name": "check.ts",
@@ -26943,6 +27403,17 @@
       ]
     },
     {
+      "id": "script:scripts/smoke-control-service.ts",
+      "kind": "script",
+      "name": "smoke-control-service.ts",
+      "path": "scripts/smoke-control-service.ts",
+      "tags": [
+        "scripts/smoke-control-service",
+        "scripts/smoke-control-service.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/stop-dev-server.ts",
       "kind": "script",
       "name": "stop-dev-server.ts",
@@ -26961,6 +27432,17 @@
       "tags": [
         "scripts/sync-all-service-sources",
         "scripts/sync-all-service-sources.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/sync-control-service-sources.ts",
+      "kind": "script",
+      "name": "sync-control-service-sources.ts",
+      "path": "scripts/sync-control-service-sources.ts",
+      "tags": [
+        "scripts/sync-control-service-sources",
+        "scripts/sync-control-service-sources.ts",
         "ts"
       ]
     },
@@ -27185,6 +27667,17 @@
       ]
     },
     {
+      "id": "script:scripts/verify-gova-artifact.ts",
+      "kind": "script",
+      "name": "verify-gova-artifact.ts",
+      "path": "scripts/verify-gova-artifact.ts",
+      "tags": [
+        "scripts/verify-gova-artifact",
+        "scripts/verify-gova-artifact.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/verify-project-secrets.ts",
       "kind": "script",
       "name": "verify-project-secrets.ts",
@@ -27204,6 +27697,16 @@
         "scripts/verify-service-mirrors",
         "scripts/verify-service-mirrors.ts",
         "ts"
+      ]
+    },
+    {
+      "id": "service:control",
+      "kind": "service",
+      "name": "control",
+      "path": "services/control",
+      "tags": [
+        "control",
+        "services/control"
       ]
     },
     {
@@ -27822,6 +28325,28 @@
       ]
     },
     {
+      "id": "source:packages/account-bridge/src/routes.ts",
+      "kind": "source",
+      "name": "routes.ts",
+      "path": "packages/account-bridge/src/routes.ts",
+      "tags": [
+        "packages/account-bridge/src/routes",
+        "packages/account-bridge/src/routes.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/account-declarations/src/accounts/control.ts",
+      "kind": "source",
+      "name": "control.ts",
+      "path": "packages/account-declarations/src/accounts/control.ts",
+      "tags": [
+        "packages/account-declarations/src/accounts/control",
+        "packages/account-declarations/src/accounts/control.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
       "kind": "source",
       "name": "gova-runtime-env-keys.ts",
@@ -27840,6 +28365,17 @@
       "tags": [
         "packages/account-declarations/src/accounts/gova",
         "packages/account-declarations/src/accounts/gova.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/account-declarations/src/accounts/local-development.ts",
+      "kind": "source",
+      "name": "local-development.ts",
+      "path": "packages/account-declarations/src/accounts/local-development.ts",
+      "tags": [
+        "packages/account-declarations/src/accounts/local-development",
+        "packages/account-declarations/src/accounts/local-development.ts",
         "ts"
       ]
     },
@@ -28584,6 +29120,28 @@
       ]
     },
     {
+      "id": "source:packages/auth-core/src/session.ts",
+      "kind": "source",
+      "name": "session.ts",
+      "path": "packages/auth-core/src/session.ts",
+      "tags": [
+        "packages/auth-core/src/session",
+        "packages/auth-core/src/session.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/auth-core/src/super-admin.ts",
+      "kind": "source",
+      "name": "super-admin.ts",
+      "path": "packages/auth-core/src/super-admin.ts",
+      "tags": [
+        "packages/auth-core/src/super-admin",
+        "packages/auth-core/src/super-admin.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/auth-core/src/validation/auth-schemas.ts",
       "kind": "source",
       "name": "auth-schemas.ts",
@@ -28785,6 +29343,17 @@
       ]
     },
     {
+      "id": "source:packages/control-composition/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/control-composition/src/index.ts",
+      "tags": [
+        "packages/control-composition/src/index",
+        "packages/control-composition/src/index.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/browser/asol-db-persister.ts",
       "kind": "source",
       "name": "asol-db-persister.ts",
@@ -28847,6 +29416,28 @@
       "tags": [
         "packages/data-core/src/composition",
         "packages/data-core/src/composition.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/control-ota.ts",
+      "kind": "source",
+      "name": "control-ota.ts",
+      "path": "packages/data-core/src/control-ota.ts",
+      "tags": [
+        "packages/data-core/src/control-ota",
+        "packages/data-core/src/control-ota.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/control-system-logs.ts",
+      "kind": "source",
+      "name": "control-system-logs.ts",
+      "path": "packages/data-core/src/control-system-logs.ts",
+      "tags": [
+        "packages/data-core/src/control-system-logs",
+        "packages/data-core/src/control-system-logs.ts",
         "ts"
       ]
     },
@@ -31106,6 +31697,17 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/ota-runtime.ts",
+      "kind": "source",
+      "name": "ota-runtime.ts",
+      "path": "packages/data-core/src/ota-runtime.ts",
+      "tags": [
+        "packages/data-core/src/ota-runtime",
+        "packages/data-core/src/ota-runtime.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/ports/product-search-fields.ts",
       "kind": "source",
       "name": "product-search-fields.ts",
@@ -31885,6 +32487,39 @@
       "tags": [
         "packages/google-play-store-assets-core/src/index",
         "packages/google-play-store-assets-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/gova-deployment-core/src/artifact-gate.ts",
+      "kind": "source",
+      "name": "artifact-gate.ts",
+      "path": "packages/gova-deployment-core/src/artifact-gate.ts",
+      "tags": [
+        "packages/gova-deployment-core/src/artifact-gate",
+        "packages/gova-deployment-core/src/artifact-gate.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/gova-deployment-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/gova-deployment-core/src/index.ts",
+      "tags": [
+        "packages/gova-deployment-core/src/index",
+        "packages/gova-deployment-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/gova-deployment-core/src/tree.ts",
+      "kind": "source",
+      "name": "tree.ts",
+      "path": "packages/gova-deployment-core/src/tree.ts",
+      "tags": [
+        "packages/gova-deployment-core/src/tree",
+        "packages/gova-deployment-core/src/tree.ts",
         "ts"
       ]
     },
@@ -34404,6 +35039,28 @@
       ]
     },
     {
+      "id": "source:packages/notifications-core/src/grant-collector.ts",
+      "kind": "source",
+      "name": "grant-collector.ts",
+      "path": "packages/notifications-core/src/grant-collector.ts",
+      "tags": [
+        "packages/notifications-core/src/grant-collector",
+        "packages/notifications-core/src/grant-collector.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/notifications-core/src/grant-envelope.ts",
+      "kind": "source",
+      "name": "grant-envelope.ts",
+      "path": "packages/notifications-core/src/grant-envelope.ts",
+      "tags": [
+        "packages/notifications-core/src/grant-envelope",
+        "packages/notifications-core/src/grant-envelope.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/notifications-core/src/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -35076,6 +35733,17 @@
       ]
     },
     {
+      "id": "source:packages/ota-core/src/admin.ts",
+      "kind": "source",
+      "name": "admin.ts",
+      "path": "packages/ota-core/src/admin.ts",
+      "tags": [
+        "packages/ota-core/src/admin",
+        "packages/ota-core/src/admin.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/ota-core/src/domain/release/adoption.ts",
       "kind": "source",
       "name": "adoption.ts",
@@ -35561,6 +36229,17 @@
       "tags": [
         "packages/ota-core/src/publishing/versioning/version-writer",
         "packages/ota-core/src/publishing/versioning/version-writer.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ota-core/src/release-console.ts",
+      "kind": "source",
+      "name": "release-console.ts",
+      "path": "packages/ota-core/src/release-console.ts",
+      "tags": [
+        "packages/ota-core/src/release-console",
+        "packages/ota-core/src/release-console.ts",
         "ts"
       ]
     },
@@ -37269,6 +37948,17 @@
       ]
     },
     {
+      "id": "source:packages/vercel-deploy-core/src/release-rollback.ts",
+      "kind": "source",
+      "name": "release-rollback.ts",
+      "path": "packages/vercel-deploy-core/src/release-rollback.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/release-rollback",
+        "packages/vercel-deploy-core/src/release-rollback.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
       "kind": "source",
       "name": "remote-deploy-contracts.ts",
@@ -37298,6 +37988,771 @@
       "tags": [
         "packages/vercel-deploy-core/src/vercel-deployment-monitor",
         "packages/vercel-deploy-core/src/vercel-deployment-monitor.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/next-env.d.ts",
+      "kind": "source",
+      "name": "next-env.d.ts",
+      "path": "services/control/next-env.d.ts",
+      "tags": [
+        "services/control/next-env",
+        "services/control/next-env.d.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/next.config.ts",
+      "kind": "source",
+      "name": "next.config.ts",
+      "path": "services/control/next.config.ts",
+      "tags": [
+        "config",
+        "services/control/next",
+        "services/control/next.config.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/health/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/health/route.ts",
+      "tags": [
+        "services/control/src/app/api/health/route",
+        "services/control/src/app/api/health/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/ota/admin/releases/diff/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/ota/admin/releases/diff/route.ts",
+      "tags": [
+        "services/control/src/app/api/ota/admin/releases/diff/route",
+        "services/control/src/app/api/ota/admin/releases/diff/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/ota/admin/releases/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/ota/admin/releases/route.ts",
+      "tags": [
+        "services/control/src/app/api/ota/admin/releases/route",
+        "services/control/src/app/api/ota/admin/releases/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/release-readiness/[revision]/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/release-readiness/[revision]/route.ts",
+      "tags": [
+        "/route",
+        "revision",
+        "services/control/src/app/api/release-readiness/",
+        "services/control/src/app/api/release-readiness/[revision]/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis/route.ts",
+      "tags": [
+        "/analysis/route",
+        "/artifacts/",
+        "jobid",
+        "name",
+        "services/control/src/app/api/super-admin/build-jobs/",
+        "services/control/src/app/api/super-admin/build-jobs/[jobid]/artifacts/[name]/analysis/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/build-jobs/[jobId]/artifacts/[name]/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/build-jobs/[jobId]/artifacts/[name]/route.ts",
+      "tags": [
+        "/artifacts/",
+        "/route",
+        "jobid",
+        "name",
+        "services/control/src/app/api/super-admin/build-jobs/",
+        "services/control/src/app/api/super-admin/build-jobs/[jobid]/artifacts/[name]/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/build-jobs/[jobId]/artifacts/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/build-jobs/[jobId]/artifacts/route.ts",
+      "tags": [
+        "/artifacts/route",
+        "jobid",
+        "services/control/src/app/api/super-admin/build-jobs/",
+        "services/control/src/app/api/super-admin/build-jobs/[jobid]/artifacts/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/build-jobs/[jobId]/cancel/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/build-jobs/[jobId]/cancel/route.ts",
+      "tags": [
+        "/cancel/route",
+        "jobid",
+        "services/control/src/app/api/super-admin/build-jobs/",
+        "services/control/src/app/api/super-admin/build-jobs/[jobid]/cancel/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/build-jobs/[jobId]/log/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/build-jobs/[jobId]/log/route.ts",
+      "tags": [
+        "/log/route",
+        "jobid",
+        "services/control/src/app/api/super-admin/build-jobs/",
+        "services/control/src/app/api/super-admin/build-jobs/[jobid]/log/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/build-jobs/analysis/compare/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/build-jobs/analysis/compare/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/build-jobs/analysis/compare/route",
+        "services/control/src/app/api/super-admin/build-jobs/analysis/compare/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/build-jobs/analysis/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/build-jobs/analysis/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/build-jobs/analysis/route",
+        "services/control/src/app/api/super-admin/build-jobs/analysis/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/build-jobs/catalog/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/build-jobs/catalog/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/build-jobs/catalog/route",
+        "services/control/src/app/api/super-admin/build-jobs/catalog/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/build-jobs/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/build-jobs/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/build-jobs/route",
+        "services/control/src/app/api/super-admin/build-jobs/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/cleanup/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/cleanup/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/cleanup/route",
+        "services/control/src/app/api/super-admin/data-health/cleanup/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/history/audit/clear/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/history/audit/clear/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/history/audit/clear/route",
+        "services/control/src/app/api/super-admin/data-health/history/audit/clear/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/history/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/history/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/history/route",
+        "services/control/src/app/api/super-admin/data-health/history/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/history/runs/clear/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/history/runs/clear/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/history/runs/clear/route",
+        "services/control/src/app/api/super-admin/data-health/history/runs/clear/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/orders/plan/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/orders/plan/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/orders/plan/route",
+        "services/control/src/app/api/super-admin/data-health/orders/plan/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/orders/purge/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/orders/purge/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/orders/purge/route",
+        "services/control/src/app/api/super-admin/data-health/orders/purge/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/orders/retry-images/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/orders/retry-images/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/orders/retry-images/route",
+        "services/control/src/app/api/super-admin/data-health/orders/retry-images/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/plan/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/plan/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/plan/route",
+        "services/control/src/app/api/super-admin/data-health/plan/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/quarantine/clear/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/quarantine/clear/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/quarantine/clear/route",
+        "services/control/src/app/api/super-admin/data-health/quarantine/clear/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/quarantine/delete/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/quarantine/delete/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/quarantine/delete/route",
+        "services/control/src/app/api/super-admin/data-health/quarantine/delete/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/quarantine/release/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/quarantine/release/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/quarantine/release/route",
+        "services/control/src/app/api/super-admin/data-health/quarantine/release/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/route",
+        "services/control/src/app/api/super-admin/data-health/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/data-health/schema/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/data-health/schema/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/data-health/schema/route",
+        "services/control/src/app/api/super-admin/data-health/schema/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/dev-cloud-backup/backups/compare-saved/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/dev-cloud-backup/backups/compare-saved/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/compare-saved/route",
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/compare-saved/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/dev-cloud-backup/backups/create/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/dev-cloud-backup/backups/create/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/create/route",
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/create/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/dev-cloud-backup/backups/delete/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/dev-cloud-backup/backups/delete/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/delete/route",
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/delete/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/dev-cloud-backup/backups/download/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/dev-cloud-backup/backups/download/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/download/route",
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/download/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/dev-cloud-backup/backups/inspect-saved/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/dev-cloud-backup/backups/inspect-saved/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/inspect-saved/route",
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/inspect-saved/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/dev-cloud-backup/backups/restore-saved/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/dev-cloud-backup/backups/restore-saved/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/restore-saved/route",
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/restore-saved/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/dev-cloud-backup/backups/update-saved/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/dev-cloud-backup/backups/update-saved/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/update-saved/route",
+        "services/control/src/app/api/super-admin/dev-cloud-backup/backups/update-saved/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/dev-cloud-backup/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/dev-cloud-backup/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/dev-cloud-backup/route",
+        "services/control/src/app/api/super-admin/dev-cloud-backup/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-console/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-console/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-console/route",
+        "services/control/src/app/api/super-admin/google-play-console/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/backups/restore/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/backups/restore/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/backups/restore/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/backups/restore/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/backups/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/backups/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/backups/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/backups/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/fastlane/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/fastlane/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/fastlane/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/fastlane/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/images/delete/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/images/delete/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/images/delete/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/images/delete/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/images/upload/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/images/upload/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/images/upload/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/images/upload/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/listings/delete/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/listings/delete/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/listings/delete/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/listings/delete/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/mapping/upload/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/mapping/upload/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/mapping/upload/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/mapping/upload/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/tracks/promote/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/tracks/promote/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/tracks/promote/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/tracks/promote/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/google-play-store-assets/tracks/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/google-play-store-assets/tracks/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/google-play-store-assets/tracks/route",
+        "services/control/src/app/api/super-admin/google-play-store-assets/tracks/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/impersonate/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/impersonate/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/impersonate/route",
+        "services/control/src/app/api/super-admin/impersonate/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/production-deploy/callback/route",
+        "services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/production-deploy/github/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/production-deploy/github/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/production-deploy/github/route",
+        "services/control/src/app/api/super-admin/production-deploy/github/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/production-deploy/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/production-deploy/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/production-deploy/route",
+        "services/control/src/app/api/super-admin/production-deploy/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/users/delete/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/users/delete/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/users/delete/route",
+        "services/control/src/app/api/super-admin/users/delete/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/users/search/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/users/search/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/users/search/route",
+        "services/control/src/app/api/super-admin/users/search/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/system-logs/ingest/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/system-logs/ingest/route.ts",
+      "tags": [
+        "services/control/src/app/api/system-logs/ingest/route",
+        "services/control/src/app/api/system-logs/ingest/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/system-logs/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/system-logs/route.ts",
+      "tags": [
+        "services/control/src/app/api/system-logs/route",
+        "services/control/src/app/api/system-logs/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/system-logs/stream/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/system-logs/stream/route.ts",
+      "tags": [
+        "services/control/src/app/api/system-logs/stream/route",
+        "services/control/src/app/api/system-logs/stream/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/system-logs/summary/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/system-logs/summary/route.ts",
+      "tags": [
+        "services/control/src/app/api/system-logs/summary/route",
+        "services/control/src/app/api/system-logs/summary/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/layout.tsx",
+      "kind": "source",
+      "name": "layout.tsx",
+      "path": "services/control/src/app/layout.tsx",
+      "tags": [
+        "services/control/src/app/layout",
+        "services/control/src/app/layout.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/build-jobs.ts",
+      "kind": "source",
+      "name": "build-jobs.ts",
+      "path": "services/control/src/control/build-jobs.ts",
+      "tags": [
+        "services/control/src/control/build-jobs",
+        "services/control/src/control/build-jobs.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/data-health.ts",
+      "kind": "source",
+      "name": "data-health.ts",
+      "path": "services/control/src/control/data-health.ts",
+      "tags": [
+        "services/control/src/control/data-health",
+        "services/control/src/control/data-health.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/dev-cloud-backup.ts",
+      "kind": "source",
+      "name": "dev-cloud-backup.ts",
+      "path": "services/control/src/control/dev-cloud-backup.ts",
+      "tags": [
+        "services/control/src/control/dev-cloud-backup",
+        "services/control/src/control/dev-cloud-backup.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/google-play.ts",
+      "kind": "source",
+      "name": "google-play.ts",
+      "path": "services/control/src/control/google-play.ts",
+      "tags": [
+        "services/control/src/control/google-play",
+        "services/control/src/control/google-play.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/operational-route.ts",
+      "kind": "source",
+      "name": "operational-route.ts",
+      "path": "services/control/src/control/operational-route.ts",
+      "tags": [
+        "services/control/src/control/operational-route",
+        "services/control/src/control/operational-route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/ota-admin.ts",
+      "kind": "source",
+      "name": "ota-admin.ts",
+      "path": "services/control/src/control/ota-admin.ts",
+      "tags": [
+        "services/control/src/control/ota-admin",
+        "services/control/src/control/ota-admin.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/release-readiness.ts",
+      "kind": "source",
+      "name": "release-readiness.ts",
+      "path": "services/control/src/control/release-readiness.ts",
+      "tags": [
+        "services/control/src/control/release-readiness",
+        "services/control/src/control/release-readiness.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/super-admin-route.ts",
+      "kind": "source",
+      "name": "super-admin-route.ts",
+      "path": "services/control/src/control/super-admin-route.ts",
+      "tags": [
+        "services/control/src/control/super-admin-route",
+        "services/control/src/control/super-admin-route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/super-admin-users.ts",
+      "kind": "source",
+      "name": "super-admin-users.ts",
+      "path": "services/control/src/control/super-admin-users.ts",
+      "tags": [
+        "services/control/src/control/super-admin-users",
+        "services/control/src/control/super-admin-users.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/control/system-logs.ts",
+      "kind": "source",
+      "name": "system-logs.ts",
+      "path": "services/control/src/control/system-logs.ts",
+      "tags": [
+        "services/control/src/control/system-logs",
+        "services/control/src/control/system-logs.ts",
         "ts"
       ]
     },
@@ -40174,6 +41629,17 @@
       ]
     },
     {
+      "id": "source:src/core/api/business-api-error-status.ts",
+      "kind": "source",
+      "name": "business-api-error-status.ts",
+      "path": "src/core/api/business-api-error-status.ts",
+      "tags": [
+        "src/core/api/business-api-error-status",
+        "src/core/api/business-api-error-status.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/core/api/expected-business-error-codes.ts",
       "kind": "source",
       "name": "expected-business-error-codes.ts",
@@ -40240,6 +41706,17 @@
       ]
     },
     {
+      "id": "source:src/core/composition/gova-frontend-ports.ts",
+      "kind": "source",
+      "name": "gova-frontend-ports.ts",
+      "path": "src/core/composition/gova-frontend-ports.ts",
+      "tags": [
+        "src/core/composition/gova-frontend-ports",
+        "src/core/composition/gova-frontend-ports.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/core/composition/NotificationsFeatureBridge.tsx",
       "kind": "source",
       "name": "NotificationsFeatureBridge.tsx",
@@ -40284,6 +41761,17 @@
       ]
     },
     {
+      "id": "source:src/core/config/business-api-origins.ts",
+      "kind": "source",
+      "name": "business-api-origins.ts",
+      "path": "src/core/config/business-api-origins.ts",
+      "tags": [
+        "src/core/config/business-api-origins",
+        "src/core/config/business-api-origins.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/core/config/catalog-studio.server.ts",
       "kind": "source",
       "name": "catalog-studio.server.ts",
@@ -40292,6 +41780,17 @@
         "server",
         "src/core/config/catalog-studio",
         "src/core/config/catalog-studio.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/core/config/control-env.ts",
+      "kind": "source",
+      "name": "control-env.ts",
+      "path": "src/core/config/control-env.ts",
+      "tags": [
+        "src/core/config/control-env",
+        "src/core/config/control-env.ts",
         "ts"
       ]
     },
@@ -40365,6 +41864,17 @@
       ]
     },
     {
+      "id": "source:src/core/config/runtime-role.ts",
+      "kind": "source",
+      "name": "runtime-role.ts",
+      "path": "src/core/config/runtime-role.ts",
+      "tags": [
+        "src/core/config/runtime-role",
+        "src/core/config/runtime-role.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/core/config/server-env.ts",
       "kind": "source",
       "name": "server-env.ts",
@@ -40401,6 +41911,19 @@
       ]
     },
     {
+      "id": "source:src/core/config/server-env/server-env.values.control-operations.ts",
+      "kind": "source",
+      "name": "server-env.values.control-operations.ts",
+      "path": "src/core/config/server-env/server-env.values.control-operations.ts",
+      "tags": [
+        "control-operations",
+        "src/core/config/server-env/server-env",
+        "src/core/config/server-env/server-env.values.control-operations.ts",
+        "ts",
+        "values"
+      ]
+    },
+    {
       "id": "source:src/core/config/server-env/server-env.values.production-deploy.ts",
       "kind": "source",
       "name": "server-env.values.production-deploy.ts",
@@ -40409,6 +41932,19 @@
         "production-deploy",
         "src/core/config/server-env/server-env",
         "src/core/config/server-env/server-env.values.production-deploy.ts",
+        "ts",
+        "values"
+      ]
+    },
+    {
+      "id": "source:src/core/config/server-env/server-env.values.system-logs.ts",
+      "kind": "source",
+      "name": "server-env.values.system-logs.ts",
+      "path": "src/core/config/server-env/server-env.values.system-logs.ts",
+      "tags": [
+        "src/core/config/server-env/server-env",
+        "src/core/config/server-env/server-env.values.system-logs.ts",
+        "system-logs",
         "ts",
         "values"
       ]
@@ -41355,6 +42891,19 @@
         "server",
         "src/features/auth/server/auth-core-ports",
         "src/features/auth/server/auth-core-ports.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/auth/server/services/account-deletion.bootstrap.server.ts",
+      "kind": "source",
+      "name": "account-deletion.bootstrap.server.ts",
+      "path": "src/features/auth/server/services/account-deletion.bootstrap.server.ts",
+      "tags": [
+        "bootstrap",
+        "server",
+        "src/features/auth/server/services/account-deletion",
+        "src/features/auth/server/services/account-deletion.bootstrap.server.ts",
         "ts"
       ]
     },
@@ -43144,6 +44693,28 @@
       ]
     },
     {
+      "id": "source:src/features/google-play-console/presentation/components/OtaReleaseReports.tsx",
+      "kind": "source",
+      "name": "OtaReleaseReports.tsx",
+      "path": "src/features/google-play-console/presentation/components/OtaReleaseReports.tsx",
+      "tags": [
+        "src/features/google-play-console/presentation/components/otareleasereports",
+        "src/features/google-play-console/presentation/components/otareleasereports.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/google-play-console/presentation/components/ReleaseCommandConfirmBlockers.tsx",
+      "kind": "source",
+      "name": "ReleaseCommandConfirmBlockers.tsx",
+      "path": "src/features/google-play-console/presentation/components/ReleaseCommandConfirmBlockers.tsx",
+      "tags": [
+        "src/features/google-play-console/presentation/components/releasecommandconfirmblockers",
+        "src/features/google-play-console/presentation/components/releasecommandconfirmblockers.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/google-play-console/presentation/components/ReleaseCommandConfirmDialog.tsx",
       "kind": "source",
       "name": "ReleaseCommandConfirmDialog.tsx",
@@ -43151,6 +44722,17 @@
       "tags": [
         "src/features/google-play-console/presentation/components/releasecommandconfirmdialog",
         "src/features/google-play-console/presentation/components/releasecommandconfirmdialog.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/google-play-console/presentation/components/ReleaseCommandSummary.tsx",
+      "kind": "source",
+      "name": "ReleaseCommandSummary.tsx",
+      "path": "src/features/google-play-console/presentation/components/ReleaseCommandSummary.tsx",
+      "tags": [
+        "src/features/google-play-console/presentation/components/releasecommandsummary",
+        "src/features/google-play-console/presentation/components/releasecommandsummary.tsx",
         "tsx"
       ]
     },
@@ -43217,6 +44799,17 @@
       "tags": [
         "src/features/google-play-console/presentation/deploy-runbook-copy",
         "src/features/google-play-console/presentation/deploy-runbook-copy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/google-play-console/presentation/deploy-runbook-labels.ts",
+      "kind": "source",
+      "name": "deploy-runbook-labels.ts",
+      "path": "src/features/google-play-console/presentation/deploy-runbook-labels.ts",
+      "tags": [
+        "src/features/google-play-console/presentation/deploy-runbook-labels",
+        "src/features/google-play-console/presentation/deploy-runbook-labels.ts",
         "ts"
       ]
     },
@@ -44160,17 +45753,6 @@
       ]
     },
     {
-      "id": "source:src/features/notifications/domain/notification-grant-envelope.ts",
-      "kind": "source",
-      "name": "notification-grant-envelope.ts",
-      "path": "src/features/notifications/domain/notification-grant-envelope.ts",
-      "tags": [
-        "src/features/notifications/domain/notification-grant-envelope",
-        "src/features/notifications/domain/notification-grant-envelope.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:src/features/notifications/domain/notification-metadata-validation.ts",
       "kind": "source",
       "name": "notification-metadata-validation.ts",
@@ -44619,18 +46201,6 @@
         "server",
         "src/features/notifications/server/services/notification-broadcast-service",
         "src/features/notifications/server/services/notification-broadcast-service.server.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/notifications/server/services/notification-grant-collector.server.ts",
-      "kind": "source",
-      "name": "notification-grant-collector.server.ts",
-      "path": "src/features/notifications/server/services/notification-grant-collector.server.ts",
-      "tags": [
-        "server",
-        "src/features/notifications/server/services/notification-grant-collector",
-        "src/features/notifications/server/services/notification-grant-collector.server.ts",
         "ts"
       ]
     },
@@ -45514,6 +47084,17 @@
       "tags": [
         "src/features/ota/server",
         "src/features/ota/server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/ota/server/admin.ts",
+      "kind": "source",
+      "name": "admin.ts",
+      "path": "src/features/ota/server/admin.ts",
+      "tags": [
+        "src/features/ota/server/admin",
+        "src/features/ota/server/admin.ts",
         "ts"
       ]
     },
@@ -49730,6 +51311,18 @@
       ]
     },
     {
+      "id": "source:src/features/system-logs/server/control-persistence.server.ts",
+      "kind": "source",
+      "name": "control-persistence.server.ts",
+      "path": "src/features/system-logs/server/control-persistence.server.ts",
+      "tags": [
+        "server",
+        "src/features/system-logs/server/control-persistence",
+        "src/features/system-logs/server/control-persistence.server.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/system-logs/server/services/persistent-system-log-service.server.ts",
       "kind": "source",
       "name": "persistent-system-log-service.server.ts",
@@ -49850,6 +51443,17 @@
       "tags": [
         "src/instrumentation",
         "src/instrumentation.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/middleware.ts",
+      "kind": "source",
+      "name": "middleware.ts",
+      "path": "src/middleware.ts",
+      "tags": [
+        "src/middleware",
+        "src/middleware.ts",
         "ts"
       ]
     },
@@ -50938,6 +52542,18 @@
       ]
     },
     {
+      "id": "test:packages/control-composition/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/control-composition/src/tests/index.test.ts",
+      "tags": [
+        "packages/control-composition/src/tests/index",
+        "packages/control-composition/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/data-core/src/core/database-runtime-policy.test.ts",
       "kind": "test",
       "name": "database-runtime-policy.test.ts",
@@ -51295,6 +52911,18 @@
       "tags": [
         "packages/google-play-store-assets-core/src/tests/index",
         "packages/google-play-store-assets-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/gova-deployment-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/gova-deployment-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/gova-deployment-core/src/tests/index",
+        "packages/gova-deployment-core/src/tests/index.test.ts",
         "test",
         "ts"
       ]
@@ -52332,6 +53960,18 @@
       ]
     },
     {
+      "id": "test:packages/vercel-deploy-core/src/tests/release-rollback.test.ts",
+      "kind": "test",
+      "name": "release-rollback.test.ts",
+      "path": "packages/vercel-deploy-core/src/tests/release-rollback.test.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/tests/release-rollback",
+        "packages/vercel-deploy-core/src/tests/release-rollback.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/architecture/application-features-attack.test.ts",
       "kind": "test",
       "name": "application-features-attack.test.ts",
@@ -52363,6 +54003,18 @@
       "tags": [
         "scripts/architecture/import-without-composition",
         "scripts/architecture/import-without-composition.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/control-service.test.ts",
+      "kind": "test",
+      "name": "control-service.test.ts",
+      "path": "scripts/tests/control-service.test.ts",
+      "tags": [
+        "scripts/tests/control-service",
+        "scripts/tests/control-service.test.ts",
         "test",
         "ts"
       ]
@@ -52602,6 +54254,18 @@
       "tags": [
         "src/app/api/notifications/test/send/route",
         "src/app/api/notifications/test/send/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/core/api/tests/compatibility-boundary.test.ts",
+      "kind": "test",
+      "name": "compatibility-boundary.test.ts",
+      "path": "src/core/api/tests/compatibility-boundary.test.ts",
+      "tags": [
+        "src/core/api/tests/compatibility-boundary",
+        "src/core/api/tests/compatibility-boundary.test.ts",
+        "test",
         "ts"
       ]
     },

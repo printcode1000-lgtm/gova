@@ -11,7 +11,7 @@ Machine-readable capability ownership reference. Each capability has exactly one
 
 ## Scope
 
-All 42 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
+All 44 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
 
 ## Source of Truth
 
@@ -45,7 +45,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Deployment account declarations and routing metadata |
 | **Owner Package** | `@asol/account-declarations` |
 | **Architectural Layer** | declarations |
-| **Public Gateway** | `@asol/account-declarations` · `@asol/account-declarations/gova` · `@asol/account-declarations/notifications` · `@asol/account-declarations/orders` · `@asol/account-declarations/products` · `@asol/account-declarations/profiles` · `@asol/account-declarations/sub2main` · `@asol/account-declarations/submain` |
+| **Public Gateway** | `@asol/account-declarations` · `@asol/account-declarations/control` · `@asol/account-declarations/gova` · `@asol/account-declarations/notifications` · `@asol/account-declarations/orders` · `@asol/account-declarations/products` · `@asol/account-declarations/profiles` · `@asol/account-declarations/sub2main` · `@asol/account-declarations/submain` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | none (pure logic or ports) |
@@ -63,7 +63,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Cross-account notification and identity bridging |
 | **Owner Package** | `@asol/account-bridge` |
 | **Architectural Layer** | bridge |
-| **Public Gateway** | `@asol/account-bridge` · `@asol/account-bridge/notifications` |
+| **Public Gateway** | `@asol/account-bridge` · `@asol/account-bridge/notifications` · `@asol/account-bridge/routes` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | none (pure logic or ports) |
@@ -81,7 +81,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Authentication and session identity |
 | **Owner Package** | `@asol/auth-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/auth-core` · `@asol/auth-core/phone` · `@asol/auth-core/server` |
+| **Public Gateway** | `@asol/auth-core` · `@asol/auth-core/phone` · `@asol/auth-core/server` · `@asol/auth-core/session` · `@asol/auth-core/super-admin` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | none (pure logic or ports) |
@@ -146,6 +146,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
+## Composition root for the control account
+
+| Field | Value |
+|---|---|
+| **Capability** | Composition root for the control account |
+| **Owner Package** | `@asol/control-composition` |
+| **Architectural Layer** | composition |
+| **Public Gateway** | `@asol/control-composition` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `src/core/composition/` + feature ports |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/control-composition/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
 ## Database access, sharding, and domain repositories
 
 | Field | Value |
@@ -153,7 +171,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Database access, sharding, and domain repositories |
 | **Owner Package** | `@asol/data-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/data-core` · `@asol/data-core/account-deletion` · `@asol/data-core/advertisements` · `@asol/data-core/auth` · `@asol/data-core/auth/entities` · `@asol/data-core/browser` · `@asol/data-core/composition` · `@asol/data-core/data-health` · `@asol/data-core/dev-cloud-backup` · `@asol/data-core/feature-flags` · `@asol/data-core/follow` · `@asol/data-core/follow/entities` · `@asol/data-core/marketplace-orders` · `@asol/data-core/notifications` · `@asol/data-core/ota` · `@asol/data-core/password-recovery` · `@asol/data-core/pharmacy-profile-catalog` · `@asol/data-core/pharmacy-profile-catalog/entities` · `@asol/data-core/product` · `@asol/data-core/product-search` · `@asol/data-core/product-search-fields` · `@asol/data-core/product-search/entities` · `@asol/data-core/product/entities` · `@asol/data-core/profile` · `@asol/data-core/profile/entities` · `@asol/data-core/provisioning` · `@asol/data-core/runtime-config` · `@asol/data-core/seller-discounts` · `@asol/data-core/seller-discounts/entities` · `@asol/data-core/super-admin` · `@asol/data-core/system-logs` · `@asol/data-core/telemetry` · `@asol/data-core/tooling` |
+| **Public Gateway** | `@asol/data-core` · `@asol/data-core/account-deletion` · `@asol/data-core/advertisements` · `@asol/data-core/auth` · `@asol/data-core/auth/entities` · `@asol/data-core/browser` · `@asol/data-core/composition` · `@asol/data-core/control-ota` · `@asol/data-core/control-system-logs` · `@asol/data-core/data-health` · `@asol/data-core/dev-cloud-backup` · `@asol/data-core/feature-flags` · `@asol/data-core/follow` · `@asol/data-core/follow/entities` · `@asol/data-core/marketplace-orders` · `@asol/data-core/notifications` · `@asol/data-core/ota` · `@asol/data-core/ota-runtime` · `@asol/data-core/password-recovery` · `@asol/data-core/pharmacy-profile-catalog` · `@asol/data-core/pharmacy-profile-catalog/entities` · `@asol/data-core/product` · `@asol/data-core/product-search` · `@asol/data-core/product-search-fields` · `@asol/data-core/product-search/entities` · `@asol/data-core/product/entities` · `@asol/data-core/profile` · `@asol/data-core/profile/entities` · `@asol/data-core/provisioning` · `@asol/data-core/runtime-config` · `@asol/data-core/seller-discounts` · `@asol/data-core/seller-discounts/entities` · `@asol/data-core/super-admin` · `@asol/data-core/system-logs` · `@asol/data-core/telemetry` · `@asol/data-core/tooling` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `drizzle-orm/better-sqlite3`, `drizzle-orm/libsql` |
@@ -272,6 +290,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
+## The gova deployment build view and its artifact gate
+
+| Field | Value |
+|---|---|
+| **Capability** | The gova deployment build view and its artifact gate |
+| **Owner Package** | `@asol/gova-deployment-core` |
+| **Architectural Layer** | capability |
+| **Public Gateway** | `@asol/gova-deployment-core` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `N/A` (capability must not import `@/`) |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/gova-deployment-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
 ## Hero slider UI capability
 
 | Field | Value |
@@ -351,7 +387,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Push notification delivery (Web Push, FCM HTTP v1, APNs) |
 | **Owner Package** | `@asol/notifications-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/notifications-core` · `@asol/notifications-core/builder` · `@asol/notifications-core/providers` · `@asol/notifications-core/server` |
+| **Public Gateway** | `@asol/notifications-core` · `@asol/notifications-core/builder` · `@asol/notifications-core/grant-collector` · `@asol/notifications-core/grant-envelope` · `@asol/notifications-core/grants` · `@asol/notifications-core/providers` · `@asol/notifications-core/server` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | `web-push`, `google-auth-library` |
@@ -441,7 +477,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | OTA publishing and update runtime |
 | **Owner Package** | `@asol/ota-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/ota-core` · `@asol/ota-core/publishing` · `@asol/ota-core/server` |
+| **Public Gateway** | `@asol/ota-core` · `@asol/ota-core/admin` · `@asol/ota-core/publishing` · `@asol/ota-core/release-console` · `@asol/ota-core/server` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | `@aws-sdk/client-s3`, `google-auth-library` |
@@ -765,7 +801,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Vercel deployment orchestration |
 | **Owner Package** | `@asol/vercel-deploy-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/vercel-deploy-core` · `@asol/vercel-deploy-core/github-push-identity` · `@asol/vercel-deploy-core/remote-deploy-contracts` · `@asol/vercel-deploy-core/remote-deploy-sandbox` |
+| **Public Gateway** | `@asol/vercel-deploy-core` · `@asol/vercel-deploy-core/github-push-identity` · `@asol/vercel-deploy-core/release-rollback` · `@asol/vercel-deploy-core/remote-deploy-contracts` · `@asol/vercel-deploy-core/remote-deploy-sandbox` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | `@vercel/sandbox`, `jose` |
@@ -780,9 +816,9 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 | Metric | Value |
 |---|---|
-| Sealed packages | 42 |
+| Sealed packages | 44 |
 | Layer `bridge` | 1 |
-| Layer `capability` | 33 |
-| Layer `composition` | 6 |
+| Layer `capability` | 34 |
+| Layer `composition` | 7 |
 | Layer `declarations` | 1 |
 | Layer `enforcement` | 1 |

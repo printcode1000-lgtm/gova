@@ -15,8 +15,8 @@ import type {
   SelfTestNotificationResult,
   SendNotificationToUsersInput,
 } from "@asol/notifications-core";
-import { withNotificationGrants } from "./domain/notification-grant-envelope";
-import { NotificationGrantCollector } from "./server/services/notification-grant-collector.server";
+import { withNotificationGrants } from "@asol/notifications-core/grant-envelope";
+import { NotificationGrantCollector } from "@asol/notifications-core/grant-collector";
 import {
   notificationBroadcastService,
   notificationSelfTestService,
@@ -162,7 +162,7 @@ export {
   readNotificationGrants,
   NOTIFICATION_GRANTS_KEY,
   type NotificationGrantCarrier,
-} from "./domain/notification-grant-envelope";
+} from "@asol/notifications-core/grant-envelope";
 export {
   NotificationError,
   NotificationErrorCodes,

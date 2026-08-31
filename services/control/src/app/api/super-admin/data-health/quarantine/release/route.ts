@@ -1,0 +1,2 @@
+import { dataHealthService } from '@/control/data-health'; import { runControlSuperAdminJsonRoute } from '@/control/super-admin-route';
+export async function POST(request: Request) { return runControlSuperAdminJsonRoute<{ quarantineId?: unknown }, unknown>(request, ({ admin, body }) => dataHealthService.releaseQuarantine({ adminUid: admin.uid, quarantineId: typeof body.quarantineId === 'string' ? body.quarantineId.trim() : '' })); }

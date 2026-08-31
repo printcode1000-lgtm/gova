@@ -1,0 +1,2 @@
+import { orderPurgeService } from '@/control/data-health'; import { runControlSuperAdminJsonRoute } from '@/control/super-admin-route';
+export async function POST(request: Request) { return runControlSuperAdminJsonRoute<{ planId?: unknown; confirmationText?: unknown }, unknown>(request, ({ admin, body }) => orderPurgeService.execute({ adminUid: admin.uid, planId: typeof body.planId === 'string' ? body.planId.trim() : '', confirmationText: typeof body.confirmationText === 'string' ? body.confirmationText : '' })); }

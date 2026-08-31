@@ -23,7 +23,12 @@ export function PlayTracksTab() {
   const [status, setStatus] = React.useState<"draft" | "inProgress" | "halted" | "completed">("draft");
   const [fraction, setFraction] = React.useState("");
   const [notes, setNotes] = React.useState("");
-  if (!tracks.snapshot) return <div id="google-play-console.tabs.play-tracks-tab.div" className="p-4 text-sm">{t("releaseConsole.loading")}</div>;
+  if (!tracks.snapshot)
+    return (
+      <div id="google-play-console.tabs.play-tracks-tab.div" className="p-4 text-sm">
+        {t("releaseConsole.loading")}
+      </div>
+    );
   const releaseNotes = notes ? [{ language: "en-US", text: notes }] : undefined;
   const update = async () => {
     return tracks.update({
@@ -44,8 +49,7 @@ export function PlayTracksTab() {
     notes,
     onUpdate: update,
   });
-  const promote = async () =>
-    tracks.promote({ fromTrack, toTrack, versionCode, releaseNotes });
+  const promote = async () => tracks.promote({ fromTrack, toTrack, versionCode, releaseNotes });
   const mapping = async (files: FileList | null) => {
     const file = files?.[0];
     if (!file) return false;
@@ -59,7 +63,9 @@ export function PlayTracksTab() {
       <div id="google-play-console.tabs.play-tracks-tab.div.2" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {(tracks.snapshot.tracks ?? []).map((item) => (
           <div key={item.track} className="rounded-md border bg-surface p-3">
-            <h2 className="font-semibold" dir="ltr">{item.track}</h2>
+            <h2 className="font-semibold" dir="ltr">
+              {item.track}
+            </h2>
             <pre className="mt-2 max-h-48 overflow-auto rounded-md bg-muted p-2 text-xs" dir="ltr">
               {JSON.stringify(item.releases, null, 2)}
             </pre>
@@ -71,33 +77,53 @@ export function PlayTracksTab() {
           id="google-play-console.tabs.play-tracks-tab.section.2"
           className="space-y-3 rounded-md border bg-surface p-4"
         >
-          <h2
-            id="google-play-console.tabs.play-tracks-tab.h2"
-            className="font-semibold">{t("releaseConsole.tracks.update")}</h2
-          >
+          <h2 id="google-play-console.tabs.play-tracks-tab.h2" className="font-semibold">
+            {t("releaseConsole.tracks.update")}
+          </h2>
           <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select" value={track} onChange={setTrack} />
-          <Input id="google-play-console.tabs.play-tracks-tab.input" value={versionCode} onChange={(event) => setVersionCode(event.target.value)}
-            placeholder={t("releaseConsole.tracks.versionCode")} dir="ltr" />
-          <select id="google-play-console.tabs.play-tracks-tab.select" className="h-10 w-full rounded-md border bg-background px-3" value={status}
-            onChange={(event) => setStatus(event.target.value as typeof status)}>
+          <Input
+            id="google-play-console.tabs.play-tracks-tab.input"
+            value={versionCode}
+            onChange={(event) => setVersionCode(event.target.value)}
+            placeholder={t("releaseConsole.tracks.versionCode")}
+            dir="ltr"
+          />
+          <select
+            id="google-play-console.tabs.play-tracks-tab.select"
+            className="h-10 w-full rounded-md border bg-background px-3"
+            value={status}
+            onChange={(event) => setStatus(event.target.value as typeof status)}
+          >
             {(["draft", "inProgress", "halted", "completed"] as const).map((value) => (
-              <option key={value} value={value}>{t(`releaseConsole.tracks.status.${value}`)}</option>
+              <option key={value} value={value}>
+                {t(`releaseConsole.tracks.status.${value}`)}
+              </option>
             ))}
           </select>
-          <Input id="google-play-console.tabs.play-tracks-tab.input.2" type="number" min="0" max="1" step="0.05" value={fraction}
+          <Input
+            id="google-play-console.tabs.play-tracks-tab.input.2"
+            type="number"
+            min="0"
+            max="1"
+            step="0.05"
+            value={fraction}
             onChange={(event) => setFraction(event.target.value)}
-            placeholder={t("releaseConsole.tracks.rollout")} />
-          <Textarea id="google-play-console.tabs.play-tracks-tab.textarea" value={notes} onChange={(event) => setNotes(event.target.value)}
-            placeholder={t("releaseConsole.tracks.changelog")} />
+            placeholder={t("releaseConsole.tracks.rollout")}
+          />
+          <Textarea
+            id="google-play-console.tabs.play-tracks-tab.textarea"
+            value={notes}
+            onChange={(event) => setNotes(event.target.value)}
+            placeholder={t("releaseConsole.tracks.changelog")}
+          />
         </section>
         <section
           id="google-play-console.tabs.play-tracks-tab.section.3"
           className="space-y-3 rounded-md border bg-surface p-4"
         >
-          <h2
-            id="google-play-console.tabs.play-tracks-tab.h2.2"
-            className="font-semibold">{t("releaseConsole.tracks.promote")}</h2
-          >
+          <h2 id="google-play-console.tabs.play-tracks-tab.h2.2" className="font-semibold">
+            {t("releaseConsole.tracks.promote")}
+          </h2>
           <div
             id="google-play-console.tabs.play-tracks-tab.div.4"
             className="grid grid-cols-[1fr_auto_1fr] items-center gap-2"
@@ -124,11 +150,11 @@ export function PlayTracksTab() {
           <label id="google-play-console.tabs.play-tracks-tab.label" className="block border-t pt-3 text-sm">
             <span
               id="google-play-console.tabs.play-tracks-tab.span"
-              className="mb-2 flex items-center gap-2 font-medium"><FileUp
-              id="google-play-console.tabs.play-tracks-tab.file-up"
-              className="h-4 w-4"
-            />
-              {t("releaseConsole.tracks.mapping")}</span>
+              className="mb-2 flex items-center gap-2 font-medium"
+            >
+              <FileUp id="google-play-console.tabs.play-tracks-tab.file-up" className="h-4 w-4" />
+              {t("releaseConsole.tracks.mapping")}
+            </span>
             <Input
               id="google-play-console.tabs.play-tracks-tab.input.3"
               type="file"
@@ -142,14 +168,25 @@ export function PlayTracksTab() {
   );
 }
 
-function TrackSelect({ id, value, onChange, }: {
+function TrackSelect({
+  id,
+  value,
+  onChange,
+}: {
   value: GooglePlayTrackName;
   onChange: (value: GooglePlayTrackName) => void;
 } & { id?: string }) {
   return (
-    <select id={id} className="h-10 w-full rounded-md border bg-background px-3" value={value}
-      onChange={(event) => onChange(event.target.value as GooglePlayTrackName)} dir="ltr">
-      {TRACKS.map((item) => <option key={item}>{item}</option>)}
+    <select
+      id={id}
+      className="h-10 w-full rounded-md border bg-background px-3"
+      value={value}
+      onChange={(event) => onChange(event.target.value as GooglePlayTrackName)}
+      dir="ltr"
+    >
+      {TRACKS.map((item) => (
+        <option key={item}>{item}</option>
+      ))}
     </select>
   );
 }

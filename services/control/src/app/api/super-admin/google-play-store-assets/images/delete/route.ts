@@ -1,0 +1,3 @@
+import { googlePlayStoreAssetsService } from '@/control/google-play'; import { runControlSuperAdminJsonRoute } from '@/control/super-admin-route';
+import type { GooglePlayImageType } from '@asol/google-play-store-assets-core';
+export async function POST(request: Request) { return runControlSuperAdminJsonRoute<{ language?: string; imageType?: string; imageId?: string }, unknown>(request, ({ body }) => { if (!body.imageId) throw new Error('googlePlayImageIdRequired'); return googlePlayStoreAssetsService.deleteImage({ language: body.language || 'ar', imageType: (body.imageType || 'icon') as GooglePlayImageType, imageId: body.imageId }); }); }

@@ -1,4 +1,3 @@
-import { usersDataSource } from "../../../core";
 import 'server-only';
 
 import { desc, eq } from 'drizzle-orm';
@@ -19,7 +18,7 @@ import type {
 } from '../entities';
 
 export class OtaReleaseRepository {
-  constructor(private readonly database: IDatabaseClient = usersDataSource) {}
+  constructor(private readonly database: IDatabaseClient) {}
 
   async getApproval(releaseId: string): Promise<{ version: string; approved: boolean; rolloutPercentage: number } | null> {
     const rows = await this.database.db
@@ -189,7 +188,10 @@ export class OtaReleaseRepository {
   }
 }
 
-export const otaReleaseRepository = new OtaReleaseRepository();
+/** The caller owns the exact database capability; this module never opens a global registry. */
+export function createOtaReleaseRepository(database: IDatabaseClient): OtaReleaseRepository {
+  return new OtaReleaseRepository(database);
+}
 
 /**
  * Capability lists come from the retained manifest, not from columns.
@@ -255,4 +257,3 @@ function toAuditEntry(row: OtaReleaseAuditEntity): OtaReleaseAuditEntry {
     createdAt: row.createdAt,
   };
 }
-

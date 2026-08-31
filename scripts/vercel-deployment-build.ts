@@ -6,6 +6,8 @@ import path from "node:path";
 import {
   assertVercelHostEnvironment,
   assertVercelRuntimeEnvironment,
+  foreignRuntimeEnvNames,
+  runtimeAccountFromEnv,
 } from "./vercel-deployment-guards";
 import { assertVercelBuildArtifact } from "./vercel-build-artifact-guard";
 
@@ -48,8 +50,20 @@ function main(): void {
   console.log("[vercel-build] Deployment/Smoke Guards only — not a correctness suite.");
   const host = assertVercelHostEnvironment();
   console.log(`[vercel-build] host Node ${host.nodeVersion} is within engines.`);
-  assertVercelRuntimeEnvironment();
-  console.log("[vercel-build] required hosted runtime keys are present (names only).");
+  const runtime = runtimeAccountFromEnv();
+  assertVercelRuntimeEnvironment(runtime);
+  console.log(`[vercel-build] required "${runtime}" runtime keys are present (names only).`);
+
+  // Names only, never values. A foreign secret does not fail the build — the
+  // project may legitimately carry an unrelated key — but it is the one signal
+  // that says a credential was copied into a deployment that cannot use it.
+  const foreign = foreignRuntimeEnvNames(runtime);
+  if (foreign.length > 0) {
+    console.warn(
+      `[vercel-build] "${runtime}" holds ${foreign.length} undeclared secret name(s): ` +
+        foreign.map((finding) => `${finding.name} (${finding.family})`).join(", "),
+    );
+  }
 
   console.log("[vercel-build] next build");
   run(process.execPath, [nextBin(), "build"]);

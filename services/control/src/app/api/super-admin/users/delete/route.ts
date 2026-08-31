@@ -1,0 +1,2 @@
+import { superAdminUserService } from '@/control/super-admin-users'; import { runControlSuperAdminJsonRoute } from '@/control/super-admin-route';
+export async function POST(request: Request) { return runControlSuperAdminJsonRoute<{ targetUid?: unknown }, unknown>(request, ({ admin, body }) => superAdminUserService.deleteUser({ adminUid: admin.uid, targetUid: typeof body.targetUid === 'string' ? body.targetUid : '' })); }

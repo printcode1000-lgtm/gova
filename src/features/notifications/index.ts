@@ -52,7 +52,7 @@ export {
   readNotificationGrants,
   NOTIFICATION_GRANTS_KEY,
   type NotificationGrantCarrier,
-} from "./domain/notification-grant-envelope";
+} from "@asol/notifications-core/grant-envelope";
 
 export {
   getNotificationGrantDeliveryIdentity,

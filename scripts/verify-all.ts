@@ -58,12 +58,18 @@ const STEPS: readonly Step[] = [
   { script: "test:image-upload-queue" },
   { script: "test:feature-flags" },
   { script: "test:composition-ports" },
+  // Carries the gova compatibility boundary: ownership, 307, and no fallback.
+  { script: "test:api-core" },
+  // The gova artifact's inputs: every omitted route has an owner, every kept one has none.
+  { script: "gova:tree:check" },
+  { script: "test:gova-deployment-core" },
+  // The control runtime's own contract: what it serves, and what it can reach.
+  { script: "test:control" },
   { script: "test:i18n-arabic-only-routes" },
   { script: "test:native-core" },
-  { script: "test:ota-compatibility" },
-  { script: "test:ota-delivery" },
-  { script: "test:ota-background" },
-  { script: "test:ota-hardening" },
+  // The four former ota-compatibility/delivery/background/hardening scripts were
+  // consolidated into the package suite; this runs all of them.
+  { script: "test:ota-core" },
   { script: "test:data-health" },
   { script: "test:dev-cloud-backup" },
 

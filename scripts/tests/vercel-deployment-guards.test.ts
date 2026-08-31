@@ -13,7 +13,9 @@ import path from "node:path";
 import {
   ALLOWED_VERCEL_NPM_SCRIPTS,
   FORBIDDEN_VERCEL_PROOF_COMMANDS,
-  HOSTED_RUNTIME_ENV_KEYS,
+  foreignRuntimeEnvNames,
+  hostedRuntimeEnvKeys,
+  runtimeAccountFromEnv,
   VERCEL_BUILD_COMMAND,
   VERCEL_BUILD_SCRIPT,
   VERCEL_INSTALL_COMMAND,
@@ -83,27 +85,53 @@ assert.deepEqual(
 );
 assert.doesNotMatch(buildSource, /shell:\s*true/);
 
-assert.ok(HOSTED_RUNTIME_ENV_KEYS.includes("TURSO_DATABASE_URL"));
-assert.ok(HOSTED_RUNTIME_ENV_KEYS.includes("SYSTEM_OPS_DATABASE_URL"));
-assert.ok(HOSTED_RUNTIME_ENV_KEYS.includes("ASOL_SESSION_SIGNING_SECRET"));
+// ── Environment ownership is per runtime, never a union ──────────────────────
+//
+// The old `HOSTED_RUNTIME_ENV_KEYS` merged every account's requirements, so a
+// gova build failed unless the gova project held another deployment's database
+// tokens. These assertions exist so that cannot come back.
+const govaKeys = hostedRuntimeEnvKeys("gova");
+assert.ok(govaKeys.includes("NEXT_PUBLIC_ASOL_CONTROL_URL"));
+for (const foreign of [
+  "TURSO_DATABASE_URL",
+  "SYSTEM_OPS_DATABASE_URL",
+  "ASOL_SESSION_SIGNING_SECRET",
+  "WEB_PUSH_VAPID_PRIVATE_KEY",
+  "R2_SECRET_ACCESS_KEY",
+]) {
+  assert.equal(
+    govaKeys.includes(foreign),
+    false,
+    `gova is a frontend and must not require ${foreign}; it has no code that can use it.`,
+  );
+}
+assert.ok(hostedRuntimeEnvKeys("control").includes("ASOL_SESSION_SIGNING_SECRET"));
 assert.equal(
-  HOSTED_RUNTIME_ENV_KEYS.some((key) => key.startsWith("VERCEL_") && key.endsWith("_TOKEN")),
+  hostedRuntimeEnvKeys("control").includes("NEXT_PUBLIC_ASOL_CONTROL_URL"),
   false,
-  "Hosted runtime keys are app/runtime credentials, not Vercel deploy tokens.",
+  "control does not redirect to itself.",
 );
 
-const filled = Object.fromEntries(HOSTED_RUNTIME_ENV_KEYS.map((key) => [key, "present"]));
-assert.deepEqual(missingHostedRuntimeEnvKeys(filled), []);
+for (const runtime of ["gova", "control", "notifications", "products", "orders", "profiles", "submain", "sub2main"] as const) {
+  assert.equal(
+    hostedRuntimeEnvKeys(runtime).some((key) => key.startsWith("VERCEL_") && key.endsWith("_TOKEN")),
+    false,
+    `${runtime} runtime keys are app credentials, not Vercel deploy tokens.`,
+  );
+}
+
+const filled = Object.fromEntries(govaKeys.map((key) => [key, "present"]));
+assert.deepEqual(missingHostedRuntimeEnvKeys("gova", filled), []);
 assert.deepEqual(
-  missingHostedRuntimeEnvKeys({ ...filled, TURSO_DATABASE_URL: "  " }),
-  ["TURSO_DATABASE_URL"],
+  missingHostedRuntimeEnvKeys("gova", { ...filled, NEXT_PUBLIC_ASOL_ORDERS_URL: "  " }),
+  ["NEXT_PUBLIC_ASOL_ORDERS_URL"],
 );
 assert.throws(
-  () => assertVercelRuntimeEnvironment({ ...filled, TURSO_AUTH_TOKEN: "" }),
-  /TURSO_AUTH_TOKEN/,
+  () => assertVercelRuntimeEnvironment("gova", { ...filled, NEXT_PUBLIC_ASOL_PROFILES_URL: "" }),
+  /NEXT_PUBLIC_ASOL_PROFILES_URL/,
 );
 try {
-  assertVercelRuntimeEnvironment({ ...filled, ASOL_SESSION_SIGNING_SECRET: "" });
+  assertVercelRuntimeEnvironment("control", { ASOL_SESSION_SIGNING_SECRET: "" });
   assert.fail("expected missing-key failure");
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -111,6 +139,34 @@ try {
   assert.equal(message.includes("present"), false);
   assert.doesNotMatch(message, /libsql:\/\//);
 }
+
+// ── Which runtime am I ───────────────────────────────────────────────────────
+assert.equal(runtimeAccountFromEnv({}), "gova");
+assert.equal(runtimeAccountFromEnv({ ASOL_RUNTIME_ACCOUNT: "control" }), "control");
+assert.throws(
+  () => runtimeAccountFromEnv({ ASOL_RUNTIME_ACCOUNT: "not-an-account" }),
+  /is not a declared account/,
+);
+
+// ── The foreign-secret report names keys and never values ────────────────────
+{
+  const findings = foreignRuntimeEnvNames("gova", {
+    ...filled,
+    TURSO_AUTH_TOKEN: "a-real-looking-secret",
+    R2_SECRET_ACCESS_KEY: "another-secret",
+    VERCEL_CONTROL_TOKEN: "a-deploy-token",
+    SOME_UNRELATED_SETTING: "fine",
+  });
+  const names = findings.map((finding) => finding.name).sort();
+  assert.deepEqual(names, ["R2_SECRET_ACCESS_KEY", "TURSO_AUTH_TOKEN", "VERCEL_CONTROL_TOKEN"]);
+  assert.equal(
+    findings.some((finding) => JSON.stringify(finding).includes("a-real-looking-secret")),
+    false,
+    "the report must be names-only so it can be pasted into an issue",
+  );
+  assert.ok(findings.find((finding) => finding.name === "TURSO_AUTH_TOKEN")?.declaredBy.includes("submain"));
+}
+assert.deepEqual(foreignRuntimeEnvNames("gova", filled), []);
 
 assert.equal(assertVercelHostEnvironment("v22.18.0").nodeCompatible, true);
 assert.equal(assertVercelHostEnvironment("v24.18.0").nodeCompatible, true);

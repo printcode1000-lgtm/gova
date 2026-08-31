@@ -14,6 +14,8 @@ export interface AccountBridgePublicEnv {
   basePath: string;
   mode: string;
   apiBaseUrl: string;
+  controlUrl: string;
+  notificationsUrl: string;
   productsUrl: string;
   ordersUrl: string;
   profilesUrl: string;
@@ -39,6 +41,8 @@ const UNCONFIGURED_ENV: AccountBridgePublicEnv = {
   basePath: '',
   mode: '',
   apiBaseUrl: '',
+  controlUrl: '',
+  notificationsUrl: '',
   productsUrl: '',
   ordersUrl: '',
   profilesUrl: '',

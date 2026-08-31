@@ -18,6 +18,7 @@ export const publicEnv = {
     process.env[LEGACY_API_URL_KEY]?.replace(/\/$/, "") ||
     process.env.ASOL_API_BASE_URL?.replace(/\/$/, "") ||
     "",
+  controlUrl: process.env.NEXT_PUBLIC_ASOL_CONTROL_URL?.replace(/\/$/, '') || '',
   publicWebOrigin:
     process.env.NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN?.replace(/\/$/, "") ||
     "https://gova-swart.vercel.app",

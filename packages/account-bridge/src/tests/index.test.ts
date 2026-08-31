@@ -1,9 +1,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'fs';
 import path from 'path';
 import {
-  READ_ROUTES,
-  SUBMAIN_ROUTES,
-  SUB2MAIN_ROUTES,
+  resolveRequiredServiceOrigin,
   resolveServiceOriginForRuntime,
   type AppDeployment,
   type AppPlatform,
@@ -200,6 +198,8 @@ function runRule0Tests(): void {
   // earlier version of this test looped over `platform` without ever reading
   // it, so it ran the same web case nine times and reported nine combinations.
   const ORIGINS = {
+    control: 'https://control.example.com',
+    notifications: 'https://notifications.example.com',
     products: 'https://products.example.com',
     orders: 'https://orders.example.com',
     profiles: 'https://profiles.example.com',
@@ -211,17 +211,16 @@ function runRule0Tests(): void {
   const deployments = ['local-development', 'web-production', 'static-export'] as const;
 
   /**
-   * The expectation is derived from `platform`, so a platform-blind
-   * implementation cannot satisfy every case. Native shells never stand down:
-   * they have no local server to fall back to.
+   * Every platform and every deployment resolves to the owner. There is no
+   * longer a case that answers `null`.
+   *
+   * This used to expect `null` for web × local-development, because development
+   * traffic fell back to the main app. That fallback is gone: local development
+   * now mirrors the production topology, so a developer exercises the same
+   * routing the browser will. A fallback that only exists in development is a
+   * fallback nobody tests until production.
    */
-  function expectedFor(platform: AppPlatform, deployment: AppDeployment): string | null {
-    const native = platform === 'android' || platform === 'ios';
-    if (!native && deployment === 'local-development') return null;
-    return ORIGINS.products;
-  }
-
-  let nativeDevCases = 0;
+  let cases = 0;
   for (const platform of platforms) {
     for (const deployment of deployments) {
       const runtime: ServiceBridgeRuntime = {
@@ -233,20 +232,20 @@ function runRule0Tests(): void {
         deployment,
         origins: { ...ORIGINS },
       };
-      const result = resolveServiceOriginForRuntime('GET', '/api/products', runtime);
-      const expected = expectedFor(platform, deployment);
       assert(
-        result === expected,
-        `T4: ${platform} × ${deployment} expected ${expected} but got ${result}`,
+        resolveServiceOriginForRuntime('GET', '/api/products', runtime) === ORIGINS.products,
+        `T4: ${platform} × ${deployment} must resolve the owning origin`,
       );
-      if (platform !== 'web' && deployment === 'local-development') nativeDevCases += 1;
+      // Ownership is per method: the same path writes to a different account.
+      assert(
+        resolveServiceOriginForRuntime('POST', '/api/products', runtime) === ORIGINS.sub2main,
+        `T4: ${platform} × ${deployment} must send the write to its own owner`,
+      );
+      cases += 1;
     }
   }
-  assert(
-    nativeDevCases === 2,
-    'T4: the android and ios local-development cases must both be exercised',
-  );
-  console.log('  ✔ T4: platform is part of the input and the expectation (9 real combinations).');
+  assert(cases === 9, 'T4: all nine platform × deployment combinations must be exercised');
+  console.log('  ✔ T4: every platform × deployment resolves the owner; no development fallback.');
 
   // ---------------------------------------------------------------- T5: Capacitor origin
   //
@@ -288,59 +287,63 @@ function runRule0Tests(): void {
 
   // ------------------------------------------------- T6b: the suite can catch its own bug
   //
-  // A platform-blind implementation — the exact bug this phase fixed — must
-  // fail at least one of the cases above. A suite that its own defect could not
-  // have caught is not a test.
-  function platformBlindResolve(
-    method: string,
-    route: string,
-    runtime: ServiceBridgeRuntime,
-  ): string | null {
-    if (!runtime.browser || runtime.developmentBuild) return null;
-    if (method.toUpperCase() !== 'GET') return null;
-    const service = READ_ROUTES[route];
-    return service ? runtime.origins[service] || null : null;
+  // A suite whose own defect could not have caught it is not a test. The defect
+  // this guards against is no longer platform-blindness — it is the fallback:
+  // an implementation that answers with the page origin when it cannot find an
+  // owner. That is what sent business calls back to gova after gova stopped
+  // implementing business routes, and it is silent, because the call succeeds
+  // until the day the route is gone.
+  function fallbackResolve(method: string, route: string, runtime: ServiceBridgeRuntime): string {
+    return resolveServiceOriginForRuntime(method, route, runtime) ?? 'https://gova.example.com';
   }
 
-  let blindFailures = 0;
-  for (const platform of platforms) {
-    for (const deployment of deployments) {
-      const runtime: ServiceBridgeRuntime = {
-        browser: true,
-        developmentBuild: deployment === 'local-development',
-        platform,
-        deployment,
-        origins: { ...ORIGINS },
-      };
-      if (
-        platformBlindResolve('GET', '/api/products', runtime) !==
-        expectedFor(platform, deployment)
-      ) {
-        blindFailures += 1;
-      }
-    }
-  }
+  const unownedRuntime: ServiceBridgeRuntime = {
+    browser: true,
+    developmentBuild: false,
+    platform: 'web',
+    deployment: 'web-production',
+    origins: { ...ORIGINS },
+  };
   assert(
-    blindFailures > 0,
-    'T6b: a platform-blind implementation must fail this suite; it did not, so the suite proves nothing',
+    fallbackResolve('GET', '/api/not-a-registered-route', unownedRuntime) === 'https://gova.example.com',
+    'T6b: the fallback implementation must be the thing that returns the page origin',
   );
-  console.log(`  ✔ T6b: platform-blind implementation fails ${blindFailures} case(s), as it must.`);
+  assert(
+    resolveServiceOriginForRuntime('GET', '/api/not-a-registered-route', unownedRuntime) === null,
+    'T6b: the real implementation must refuse to guess an owner',
+  );
+
+  // And the required resolver turns that refusal into a named configuration
+  // error, so a missing owner fails loudly at the call site instead of quietly
+  // addressing a deployment that no longer answers.
+  let threw = false;
+  try {
+    resolveRequiredServiceOrigin('GET', '/api/not-a-registered-route');
+  } catch {
+    threw = true;
+  }
+  assert(threw, 'T6b: an unowned business route must throw, never fall back');
+  console.log('  ✔ T6b: no fallback — an unowned business route refuses and then throws.');
 
   // ---------------------------------------------------------------- T7: Exact matching, never prefix
   const runtime: ServiceBridgeRuntime = {
     browser: true,
     developmentBuild: false,
-    origins: {
-      products: 'https://products.example.com',
-      orders: 'https://orders.example.com',
-      profiles: 'https://profiles.example.com',
-      submain: 'https://submain.example.com',
-      sub2main: 'https://sub2main.example.com',
-    },
+    origins: { ...ORIGINS },
   };
   assert(resolveServiceOriginForRuntime('GET', '/api/orders', runtime) === 'https://orders.example.com', 'T7: /api/orders matches orders');
-  assert(resolveServiceOriginForRuntime('GET', '/api/orders/12345', runtime) === null, 'T7: /api/orders/12345 returns null');
-  assert(resolveServiceOriginForRuntime('GET', '/api/orders/12345/items', runtime) === null, 'T7: /api/orders/12345/items returns null');
+  // A dynamic segment is part of the pattern, not a prefix: `/api/orders` is
+  // the orders list and belongs to the read account, while `/api/orders/<id>`
+  // and everything under it is a different owner. These used to answer `null`
+  // and fall back to gova; now each names its owner.
+  assert(
+    resolveServiceOriginForRuntime('GET', '/api/orders/12345', runtime) === 'https://submain.example.com',
+    'T7: /api/orders/12345 belongs to submain, not to the orders list account',
+  );
+  assert(
+    resolveServiceOriginForRuntime('GET', '/api/orders/12345/items', runtime) === 'https://submain.example.com',
+    'T7: everything under an order id follows the order',
+  );
   assert(
     resolveServiceOriginForRuntime('GET', '/api/search/sellers', runtime) === 'https://submain.example.com',
     'T7: /api/search/sellers routes to submain',
@@ -357,7 +360,24 @@ function runRule0Tests(): void {
     resolveServiceOriginForRuntime('POST', '/api/products', runtime) === 'https://sub2main.example.com',
     'T7: POST /api/products routes to sub2main',
   );
-  assert(resolveServiceOriginForRuntime('GET', '/api/profile/reviews', runtime) === null, 'T7: /api/profile/reviews returns null');
+  // Reads and writes of the same path split between two owners, and the
+  // registry is ordered most-specific-first so the write rule cannot swallow
+  // the read.
+  assert(
+    resolveServiceOriginForRuntime('GET', '/api/profile/reviews', runtime) === 'https://profiles.example.com',
+    'T7: GET /api/profile/reviews is a profile read',
+  );
+  assert(
+    resolveServiceOriginForRuntime('POST', '/api/profile/reviews', runtime) === 'https://sub2main.example.com',
+    'T7: POST /api/profile/reviews is a write and belongs to the write account',
+  );
+  // Control owns the administrative families outright, on every method.
+  for (const administrative of ['/api/super-admin/build-jobs', '/api/system-logs', '/api/ota/admin/releases']) {
+    assert(
+      resolveServiceOriginForRuntime('GET', administrative, runtime) === 'https://control.example.com',
+      `T7: ${administrative} belongs to control`,
+    );
+  }
 
   // Verify a prefix-based matcher would fail this test
   function prefixMatch(route: string): boolean {
@@ -368,7 +388,18 @@ function runRule0Tests(): void {
 
   // ---------------------------------------------------------------- T8: Exported surface is pinned
   const mainKeys = Object.keys(doorMain).sort();
-  assert(mainKeys.includes('resolveServiceOrigin') && mainKeys.includes('resolveServiceOriginForRuntime') && mainKeys.includes('READ_ROUTES') && mainKeys.includes('SUBMAIN_ROUTES') && mainKeys.includes('SUB2MAIN_ROUTES'), 'T8: Door . exports exact surface');
+  assert(
+    mainKeys.includes('resolveServiceOrigin') &&
+      mainKeys.includes('resolveServiceOriginForRuntime') &&
+      mainKeys.includes('resolveRequiredServiceOrigin') &&
+      mainKeys.includes('isNativePlatform'),
+    'T8: Door . exports exact surface',
+  );
+  // The three route tables are deliberately absent: ownership is the registry
+  // behind `./routes`, and a second copy on this door is how they drift.
+  for (const removed of ['READ_ROUTES', 'SUBMAIN_ROUTES', 'SUB2MAIN_ROUTES']) {
+    assert(!mainKeys.includes(removed), `T8: ${removed} must not come back; ownership lives in ./routes`);
+  }
 
   const notificationsKeys = Object.keys(doorNotifications).sort();
   assert(notificationsKeys.includes('deliverNotificationGrants') && notificationsKeys.includes('scheduleNotificationGrantDelivery'), 'T8: Door ./notifications exports exact surface');

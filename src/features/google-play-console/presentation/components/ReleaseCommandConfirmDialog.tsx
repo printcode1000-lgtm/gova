@@ -4,7 +4,6 @@ import * as React from "react";
 import { AlertTriangle } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -13,13 +12,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/ui/dialog";
-import type {
-  BuildCommandCatalogEntry,
-  BuildParameterName,
-} from "@asol/release-core/console";
+import type { BuildCommandCatalogEntry, BuildParameterName } from "@asol/release-core/console";
 import type { StartBuildJobInput } from "@asol/release-core/console";
 import type { ReleaseVersionSnapshot } from "@asol/release-core/console";
 import { Parameter } from "./CommandParameterFields";
+import { ReleaseCommandConfirmBlockers } from "./ReleaseCommandConfirmBlockers";
+import { ReleaseCommandSummary } from "./ReleaseCommandSummary";
 import { ReleaseCurrentVersions, ReleaseSelectedVersions } from "./ReleaseVersionSummary";
 
 /**
@@ -27,7 +25,13 @@ import { ReleaseCurrentVersions, ReleaseSelectedVersions } from "./ReleaseVersio
  * Nothing runs until the user confirms here.
  */
 export function ReleaseCommandConfirmDialog({
-  pending, catalog, versions, locked, t, onConfirm, onCancel,
+  pending,
+  catalog,
+  versions,
+  locked,
+  t,
+  onConfirm,
+  onCancel,
 }: {
   pending: StartBuildJobInput | null;
   catalog: readonly BuildCommandCatalogEntry[];
@@ -38,23 +42,24 @@ export function ReleaseCommandConfirmDialog({
   onCancel: () => void;
 }) {
   const command = catalog.find((item) => item.id === pending?.commandId);
-  const title = command ? t(command.documentation.titleKey) : pending?.commandId ?? "";
+  const title = command ? t(command.documentation.titleKey) : (pending?.commandId ?? "");
   const [phrase, setPhrase] = React.useState("");
   const [parameters, setParameters] = React.useState<Record<string, unknown>>({});
   const requiredPhrase = command?.confirmationPhrase ?? "";
   const minimumNativeVersionRequired = command?.id === "ota-publish";
-  const minimumNativeVersionSatisfied = !minimumNativeVersionRequired
-    || (typeof parameters.minimumNativeVersion === "string"
-      && parameters.minimumNativeVersion.trim().length > 0);
-  const requiredParametersSatisfied = !command || command.parameters.every((schema) => {
-    if (!("required" in schema) || !schema.required) return true;
-    const value = parameters[schema.name];
-    return value !== undefined && value !== "" && value !== null;
-  });
+  const minimumNativeVersionSatisfied =
+    !minimumNativeVersionRequired ||
+    (typeof parameters.minimumNativeVersion === "string" && parameters.minimumNativeVersion.trim().length > 0);
+  const requiredParametersSatisfied =
+    !command ||
+    command.parameters.every((schema) => {
+      if (!("required" in schema) || !schema.required) return true;
+      const value = parameters[schema.name];
+      return value !== undefined && value !== "" && value !== null;
+    });
   // A phrase already typed on the command card counts; otherwise ask here.
-  const phraseSatisfied = !requiredPhrase
-    || pending?.confirmationPhrase === requiredPhrase
-    || phrase === requiredPhrase;
+  const phraseSatisfied =
+    !requiredPhrase || pending?.confirmationPhrase === requiredPhrase || phrase === requiredPhrase;
 
   // Shortcut cards only provide the command id, while expanded command cards
   // may already provide parameter values. Keep both paths inside the same
@@ -70,8 +75,14 @@ export function ReleaseCommandConfirmDialog({
   };
 
   return (
-    <Dialog open={Boolean(pending)} onOpenChange={(open) => { if (!open) onCancel(); }}>
-      <DialogContent id="google-play-console.release-command-confirm-dialog.dialog-content"
+    <Dialog
+      open={Boolean(pending)}
+      onOpenChange={(open) => {
+        if (!open) onCancel();
+      }}
+    >
+      <DialogContent
+        id="google-play-console.release-command-confirm-dialog.dialog-content"
         className="max-h-[calc(100dvh-1rem)] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden sm:max-w-2xl"
         // A confirmation must be answered deliberately: clicking away or losing
         // focus never dismisses it, only the buttons below do.
@@ -80,41 +91,18 @@ export function ReleaseCommandConfirmDialog({
         onFocusOutside={(event) => event.preventDefault()}
       >
         <DialogHeader id="google-play-console.release-command-confirm-dialog.dialog-header">
-          <DialogTitle id="google-play-console.release-command-confirm-dialog.dialog-title">{t("releaseConsole.confirmRun.title")}</DialogTitle>
-          <DialogDescription id="google-play-console.release-command-confirm-dialog.dialog-description">{t("releaseConsole.confirmRun.body")}</DialogDescription>
+          <DialogTitle id="google-play-console.release-command-confirm-dialog.dialog-title">
+            {t("releaseConsole.confirmRun.title")}
+          </DialogTitle>
+          <DialogDescription id="google-play-console.release-command-confirm-dialog.dialog-description">
+            {t("releaseConsole.confirmRun.body")}
+          </DialogDescription>
         </DialogHeader>
         <div
           id="google-play-console.release-command-confirm-dialog.div"
           className="min-h-0 space-y-4 overflow-y-auto overscroll-contain pe-1 text-sm"
         >
-          <section
-            id="google-play-console.release-command-confirm-dialog.section"
-            className="space-y-2 rounded-lg border bg-surface-container-low p-3"
-          >
-            <p id="google-play-console.release-command-confirm-dialog.p" className="text-base font-bold">{title}</p>
-            {command ? <>
-              <p
-                id="google-play-console.release-command-confirm-dialog.p.2"
-                className="leading-6 text-on-surface-variant"
-              >
-                {t(command.documentation.descriptionKey)}
-              </p>
-              <div
-                id="google-play-console.release-command-confirm-dialog.div.2"
-                className="flex flex-wrap items-center gap-2 text-xs"
-              >
-                <code className="rounded-md bg-muted px-2 py-1" dir="ltr">
-                  npm run {command.script}
-                </code>
-                <span
-                  id="google-play-console.release-command-confirm-dialog.span"
-                  className="rounded-md bg-muted px-2 py-1"
-                >
-                  {t("releaseConsole.confirmRun.estimatedDuration")}: {command.estimatedDuration}
-                </span>
-              </div>
-            </> : null}
-          </section>
+          <ReleaseCommandSummary title={title} command={command} t={t} />
           <ReleaseCurrentVersions
             id="google-play-console.release-command-confirm-dialog.release-current-versions"
             versions={versions}
@@ -135,59 +123,54 @@ export function ReleaseCommandConfirmDialog({
           {command?.parameters.length ? (
             <div id="google-play-console.release-command-confirm-dialog.div.3" className="space-y-2">
               {command.parameters.map((schema) => (
-                <Parameter key={schema.name} command={command} schema={schema}
-                  value={parameters[schema.name]} t={t} onChange={changeParameter} />
+                <Parameter
+                  key={schema.name}
+                  command={command}
+                  schema={schema}
+                  value={parameters[schema.name]}
+                  t={t}
+                  onChange={changeParameter}
+                />
               ))}
             </div>
           ) : null}
-          {command ? <ReleaseSelectedVersions id="google-play-console.release-command-confirm-dialog.release-selected-versions" commandId={command.id}
-            versions={versions} parameters={parameters} t={t} /> : null}
-          {minimumNativeVersionRequired && !minimumNativeVersionSatisfied ? (
-            <p
-              id="google-play-console.release-command-confirm-dialog.p.4"
-              role="alert"
-              className="rounded-md bg-error-container p-2 text-on-error-container"
-            >
-              {t("releaseConsole.confirmRun.minimumNativeVersionRequired")}
-            </p>
+          {command ? (
+            <ReleaseSelectedVersions
+              id="google-play-console.release-command-confirm-dialog.release-selected-versions"
+              commandId={command.id}
+              versions={versions}
+              parameters={parameters}
+              t={t}
+            />
           ) : null}
-          {!requiredParametersSatisfied ? (
-            <p
-              id="google-play-console.release-command-confirm-dialog.p.5"
-              role="alert"
-              className="rounded-md bg-error-container p-2 text-on-error-container"
-            >
-              {t("releaseConsole.confirmRun.requiredParametersMissing")}
-            </p>
-          ) : null}
-          {requiredPhrase && pending?.confirmationPhrase !== requiredPhrase ? (
-            <div id="google-play-console.release-command-confirm-dialog.div.4" className="space-y-1">
-              <p id="google-play-console.release-command-confirm-dialog.p.6">{t("releaseConsole.build.confirmationExact").replace("{{phrase}}", requiredPhrase)}</p>
-              <Input id="google-play-console.release-command-confirm-dialog.input" value={phrase} placeholder={requiredPhrase} dir="ltr"
-                onChange={(event) => setPhrase(event.target.value)} />
-            </div>
-          ) : null}
-          {locked ? (
-            <p
-              id="google-play-console.release-command-confirm-dialog.p.7"
-              className="rounded-md bg-muted p-2">{t("releaseConsole.confirmRun.locked")}</p
-            >
-          ) : null}
+          <ReleaseCommandConfirmBlockers
+            minimumNativeVersionRequired={minimumNativeVersionRequired}
+            minimumNativeVersionSatisfied={minimumNativeVersionSatisfied}
+            requiredParametersSatisfied={requiredParametersSatisfied}
+            requiredPhrase={requiredPhrase}
+            confirmedPhrase={pending?.confirmationPhrase}
+            phrase={phrase}
+            onPhraseChange={setPhrase}
+            locked={locked}
+            t={t}
+          />
         </div>
         <DialogFooter id="google-play-console.release-command-confirm-dialog.dialog-footer" className="border-t pt-3">
-          <Button
-            id="google-play-console.release-command-confirm-dialog.button"
-            variant="outline"
-            onClick={onCancel}>{t("releaseConsole.confirmRun.cancel")}</Button
-          >
+          <Button id="google-play-console.release-command-confirm-dialog.button" variant="outline" onClick={onCancel}>
+            {t("releaseConsole.confirmRun.cancel")}
+          </Button>
           {/* Disabled while another job holds the page, so confirming late
               cannot start a second command. */}
-          <Button id="google-play-console.release-command-confirm-dialog.button.2" disabled={locked || !phraseSatisfied
-            || !minimumNativeVersionSatisfied || !requiredParametersSatisfied}
-            onClick={() => onConfirm({
-              parameters: { ...(pending?.parameters ?? {}), ...parameters },
-              ...(requiredPhrase ? { confirmationPhrase: requiredPhrase } : {}),
-            })}>
+          <Button
+            id="google-play-console.release-command-confirm-dialog.button.2"
+            disabled={locked || !phraseSatisfied || !minimumNativeVersionSatisfied || !requiredParametersSatisfied}
+            onClick={() =>
+              onConfirm({
+                parameters: { ...(pending?.parameters ?? {}), ...parameters },
+                ...(requiredPhrase ? { confirmationPhrase: requiredPhrase } : {}),
+              })
+            }
+          >
             {t("releaseConsole.confirmRun.confirm")}
           </Button>
         </DialogFooter>

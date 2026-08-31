@@ -132,10 +132,19 @@ function runTests(): void {
 
   // ---------------------------------------------------------------- no cross-account knowledge
   // Rule 0 at the data layer: a declaration may name only its own account.
+  //
+  // One exception, and it is an origin rather than a credential: the release
+  // plane's terminal deployment notification is the single allowlisted
+  // cross-deployment call, and it needs the address to post the already-signed
+  // grant to. Control receives no notification database and no push provider
+  // credential for it — the notifications runtime stays the delivery owner — so
+  // the rule below still catches a real notifications secret landing here.
+  const CROSS_ACCOUNT_ORIGIN_ALLOWLIST = new Set(['ASOL_NOTIFICATIONS_URL']);
   const isolatedServiceNames = ['notifications', 'products', 'orders', 'profiles'] as const;
   for (const declaration of Object.values(ACCOUNT_DECLARATIONS)) {
     if (declaration.name === 'gova' || declaration.name === 'submain' || declaration.name === 'sub2main') continue;
-    const keys = [...declaration.requiredEnv, ...declaration.optionalEnv];
+    const keys = [...declaration.requiredEnv, ...declaration.optionalEnv]
+      .filter((key) => !CROSS_ACCOUNT_ORIGIN_ALLOWLIST.has(key));
     for (const other of isolatedServiceNames) {
       if (other === declaration.name) continue;
       const foreign = keys.filter((key) => key.includes(other.toUpperCase()));

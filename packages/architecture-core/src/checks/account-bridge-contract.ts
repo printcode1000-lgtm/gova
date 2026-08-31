@@ -16,6 +16,17 @@ const VERCEL_DEPLOY_CORE_DOORS = new Set([
   '@asol/vercel-deploy-core/remote-deploy-sandbox',
 ]);
 
+/**
+ * Declared account-bridge doors. `notifications` is the client transport door;
+ * `routes` is the pure canonical route+method ownership registry, which carries
+ * no transport, no origin resolution, and no runtime state, so build-time
+ * inventories and every runtime may read it. Anything else is a deep import.
+ */
+const ACCOUNT_BRIDGE_DOORS = new Set([
+  '@asol/account-bridge/notifications',
+  '@asol/account-bridge/routes',
+]);
+
 export function checkAccountBridgeContract(filePath: string, content: string): void {
   const fileRel = rel(filePath);
 
@@ -54,7 +65,7 @@ export function checkAccountBridgeContract(filePath: string, content: string): v
       (imp.startsWith('@asol/vercel-deploy-core/') &&
         !VERCEL_DEPLOY_CORE_DOORS.has(imp)) ||
       imp.startsWith('@asol/service-mirror-core/') ||
-      (imp.startsWith('@asol/account-bridge/') && imp !== '@asol/account-bridge/notifications') ||
+      (imp.startsWith('@asol/account-bridge/') && !ACCOUNT_BRIDGE_DOORS.has(imp)) ||
       imp.startsWith('@asol/notifications-composition/') ||
       imp.startsWith('@asol/products-composition/') ||
       imp.startsWith('@asol/orders-composition/') ||

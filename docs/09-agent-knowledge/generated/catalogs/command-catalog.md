@@ -18,6 +18,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run android:push:sync-assets` | `Android`, `Tooling` | 1 |  | 0 |
 | `npm run android:r8:validate` | `Android`, `Tooling` | 1 |  | 0 |
 | `npm run android:r8:verify-release` | `Android`, `Tooling` | 5 |  | 0 |
+| `npm run api:inventory` | `Tooling` | 1 |  | 0 |
 | `npm run app:init` | `Tooling` | 3 |  | 0 |
 | `npm run architecture:check` | `Tooling` | 1 |  | 0 |
 | `npm run architecture:docs` | `Tooling` | 1 |  | 0 |
@@ -41,6 +42,11 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run catalog:validate` | `Tooling` | 2 |  | 0 |
 | `npm run category:validate` | `Tooling` | 1 |  | 0 |
 | `npm run ci:coverage` | `Tooling` | 1 |  | 0 |
+| `npm run control:build` | `Tooling` | 1 |  | 0 |
+| `npm run control:deploy` | `Tooling` | 1 |  | 0 |
+| `npm run control:smoke` | `Tooling` | 1 |  | 0 |
+| `npm run control:sync` | `Tooling` | 1 |  | 0 |
+| `npm run control:verify` | `Tooling` | 3 |  | 0 |
 | `npm run coordinator:email` | `Tooling` | 1 |  | 0 |
 | `npm run data-access:sync-public` | `Tooling` | 1 |  | 0 |
 | `npm run db:create:product` | `Tooling` | 1 |  | 0 |
@@ -81,6 +87,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run deploy:revision` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run dev` | `Development`, `Tooling` | 0 |  | 0 |
 | `npm run dev:checked` | `Development`, `Tooling` | 4 |  | 0 |
+| `npm run dev:distributed` | `Tooling` | 1 |  | 0 |
+| `npm run dev:distributed:smoke` | `Tooling` | 1 |  | 0 |
 | `npm run docs:check` | `Tooling` | 1 |  | 0 |
 | `npm run docs:ci` | `Tooling` | 1 |  | 0 |
 | `npm run docs:coverage` | `Tooling` | 1 |  | 0 |
@@ -91,6 +99,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run docs:runtime-coverage` | `Tooling` | 1 |  | 0 |
 | `npm run doctor:environment` | `Tooling` | 1 |  | 0 |
 | `npm run doctor:environment:production` | `Tooling` | 1 |  | 0 |
+| `npm run env:ownership` | `Tooling` | 1 |  | 0 |
 | `npm run fastlane` | `Tooling` | 1 |  | 0 |
 | `npm run fastlane:android:aab:signed` | `Android`, `Tooling` | 1 | `Android release package (APK/AAB)` | 0 |
 | `npm run fastlane:android:aab:signed:no-r8` | `Android`, `Tooling` | 1 | `Android release package (APK/AAB)` | 0 |
@@ -110,6 +119,9 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run github:block-branches` | `Tooling` | 1 |  | 0 |
 | `npm run github:ci-policy` | `Tooling` | 1 |  | 0 |
 | `npm run github:protect` | `Tooling` | 1 |  | 0 |
+| `npm run gova:artifact:verify` | `Tooling` | 1 |  | 0 |
+| `npm run gova:tree` | `Tooling` | 1 |  | 0 |
+| `npm run gova:tree:check` | `Tooling` | 1 |  | 0 |
 | `npm run intelligence:retrain` | `Tooling` | 1 |  | 0 |
 | `npm run ios:push:validate` | `iOS`, `Tooling` | 1 |  | 0 |
 | `npm run ios:spm:normalize` | `iOS`, `Tooling` | 1 |  | 0 |
@@ -177,7 +189,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:account-declarations` | `Tooling` | 1 |  | 0 |
 | `npm run test:account-deletion-registry` | `Tooling` | 1 |  | 0 |
 | `npm run test:account-deletion-schema` | `Tooling` | 1 |  | 1 |
-| `npm run test:api-core` | `Tooling` | 2 |  | 0 |
+| `npm run test:api-core` | `Tooling` | 3 |  | 0 |
 | `npm run test:architecture-core` | `Tooling` | 2 |  | 0 |
 | `npm run test:auth-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:auth-email-uniqueness` | `Tooling` | 1 |  | 1 |
@@ -192,6 +204,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:composition-ports` | `Tooling` | 1 |  | 0 |
 | `npm run test:compositions` | `Tooling` | 6 |  | 0 |
 | `npm run test:console-command-parity` | `Tooling` | 1 |  | 0 |
+| `npm run test:control` | `Tooling` | 1 |  | 0 |
 | `npm run test:data-core` | `Tooling` | 5 |  | 0 |
 | `npm run test:data-health` | `Tooling` | 4 |  | 1 |
 | `npm run test:data-health-core` | `Tooling` | 1 |  | 0 |
@@ -208,6 +221,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:follow` | `Tooling` | 1 |  | 3 |
 | `npm run test:format-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:google-play-store-assets-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:gova-deployment-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:hero-slider-core` | `Tooling` | 3 |  | 0 |
 | `npm run test:i18n-arabic-only-routes` | `Tooling` | 1 |  | 0 |
 | `npm run test:image-upload-queue` | `Tooling` | 1 |  | 0 |
@@ -267,7 +281,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:system-logs-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:trending-ribbon-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:turso-read-retry` | `Tooling` | 1 |  | 0 |
-| `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 1 |  | 0 |
+| `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 2 |  | 0 |
 | `npm run typecheck` | `Tooling` | 0 |  | 0 |
 | `npm run validate-storage-profiles` | `Tooling` | 1 |  | 0 |
 | `npm run validate:app-versions` | `Tooling` | 1 |  | 0 |

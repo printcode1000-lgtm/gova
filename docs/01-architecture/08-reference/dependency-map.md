@@ -82,6 +82,10 @@ ALLOWED_TO_IMPORT → `@asol/storage-core/server`
 
 `@asol/catalog-core` has no production `@asol/*` imports.
 
+### @asol/control-composition
+
+`@asol/control-composition` has no production `@asol/*` imports.
+
 ### @asol/data-core
 
 `@asol/data-core`
@@ -167,6 +171,10 @@ ALLOWED_TO_IMPORT → `@asol/trending-ribbon-core`
 ### @asol/google-play-store-assets-core
 
 `@asol/google-play-store-assets-core` has no production `@asol/*` imports.
+
+### @asol/gova-deployment-core
+
+`@asol/gova-deployment-core` has no production `@asol/*` imports.
 
 ### @asol/hero-slider-core
 
@@ -273,7 +281,7 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations/profiles`
 ALLOWED_TO_IMPORT → `@asol/env-core/process`
 
 `@asol/release-core`
-ALLOWED_TO_IMPORT → `@asol/ota-core/publishing`
+ALLOWED_TO_IMPORT → `@asol/ota-core/release-console`
 
 `@asol/release-core`
 ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
@@ -343,5 +351,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 42 |
+| Packages | 44 |
 | Import edges | 56 |

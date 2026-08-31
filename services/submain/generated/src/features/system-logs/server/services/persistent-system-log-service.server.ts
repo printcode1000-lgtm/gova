@@ -1,11 +1,11 @@
 import 'server-only';
 
-import { registerSystemLogsCoreServerPorts } from '@/core/config/system-logs.server';
+import { registerControlSystemLogPersistence } from '../control-persistence.server';
 import {
   persistentSystemLogService,
   logServerSystemIssue,
 } from '@asol/system-logs-core/server';
 
-registerSystemLogsCoreServerPorts();
+registerControlSystemLogPersistence();
 
 export { persistentSystemLogService, logServerSystemIssue };

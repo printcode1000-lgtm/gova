@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 268 |
+| command | 282 |
 | config | 12 |
-| document | 254 |
+| document | 255 |
 | domain | 10 |
-| environment-key | 264 |
+| environment-key | 269 |
 | external-dependency | 108 |
 | feature | 47 |
-| package | 42 |
+| package | 44 |
 | route | 177 |
 | runtime | 7 |
-| script | 145 |
-| service | 6 |
-| source | 2090 |
-| test | 225 |
+| script | 153 |
+| service | 7 |
+| source | 2188 |
+| test | 230 |
 
 ## Domains
 
@@ -44,30 +44,32 @@
 
 | Name | Path | Summary |
 |---|---|---|
-| @asol/account-bridge | `packages/account-bridge` | Cross-account notification and identity bridging; Layer: bridge; Public exports: ., ./notifications |
-| @asol/account-declarations | `packages/account-declarations` | Deployment account declarations and routing metadata; Layer: declarations; Public exports: ., ./gova, ./notifications, ./orders, ./products, ./profiles, ./sub2main, ./submain |
+| @asol/account-bridge | `packages/account-bridge` | Cross-account notification and identity bridging; Layer: bridge; Public exports: ., ./notifications, ./routes |
+| @asol/account-declarations | `packages/account-declarations` | Deployment account declarations and routing metadata; Layer: declarations; Public exports: ., ./control, ./gova, ./notifications, ./orders, ./products, ./profiles, ./sub2main, ./submain |
 | @asol/architecture-core | `packages/architecture-core` | Repository architecture contracts and static enforcement; Layer: enforcement; Public exports: . |
-| @asol/auth-core | `packages/auth-core` | Authentication and session identity; Layer: capability; Public exports: ., ./phone, ./server |
+| @asol/auth-core | `packages/auth-core` | Authentication and session identity; Layer: capability; Public exports: ., ./phone, ./server, ./session, ./super-admin |
 | @asol/backup-core | `packages/backup-core` | Backup orchestration over storage ports; Layer: capability; Public exports: ., ./server |
 | @asol/branding-core | `packages/branding-core` | App icon identity and generated branding assets; Layer: capability; Public exports: ., ./tooling |
 | @asol/catalog-core | `packages/catalog-core` | Category catalog domain; Layer: capability; Public exports: ., ./server |
-| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling |
+| @asol/control-composition | `packages/control-composition` | Composition root for the control account; Layer: composition; Public exports: . |
+| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-system-logs, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling |
 | @asol/data-health-core | `packages/data-health-core` | Schema health and data integrity checks; Layer: capability; Public exports: ., ./server |
 | @asol/dev-core | `packages/dev-core` | Developer-only tooling surfaces; Layer: capability; Public exports: ., ./server |
 | @asol/env-core | `packages/env-core` | Environment variable reading rules; Layer: capability; Public exports: ., ./files, ./process |
 | @asol/featured-marquee-core | `packages/featured-marquee-core` | Featured marquee UI capability; Layer: capability; Public exports: ., ./server |
 | @asol/format-core | `packages/format-core` | Formatting helpers with a single owner; Layer: capability; Public exports: . |
 | @asol/google-play-store-assets-core | `packages/google-play-store-assets-core` | Google Play store listing image assets; Layer: capability; Public exports: ., ./images |
+| @asol/gova-deployment-core | `packages/gova-deployment-core` | The gova deployment build view and its artifact gate; Layer: capability; Public exports: . |
 | @asol/hero-slider-core | `packages/hero-slider-core` | Hero slider UI capability; Layer: capability; Public exports: ., ./server |
 | @asol/local-agent-core | `packages/local-agent-core` | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./host, ./monitor |
 | @asol/map-core | `packages/map-core` | MapLibre map capability; Layer: capability; Public exports: . |
 | @asol/native-core | `packages/native-core` | Capacitor / native device capabilities; Layer: capability; Public exports: ., ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy |
 | @asol/notifications-composition | `packages/notifications-composition` | Composition root for the notifications account; Layer: composition; Public exports: . |
-| @asol/notifications-core | `packages/notifications-core` | Push notification delivery (Web Push, FCM HTTP v1, APNs); Layer: capability; Public exports: ., ./builder, ./providers, ./server |
+| @asol/notifications-core | `packages/notifications-core` | Push notification delivery (Web Push, FCM HTTP v1, APNs); Layer: capability; Public exports: ., ./builder, ./grant-collector, ./grant-envelope, ./grants, ./providers, ./server |
 | @asol/observability-core | `packages/observability-core` | Observability and telemetry ports; Layer: capability; Public exports: ., ./dev-trace, ./server |
 | @asol/orders-composition | `packages/orders-composition` | Composition root for the orders account; Layer: composition; Public exports: . |
 | @asol/orders-core | `packages/orders-core` | Order domain meaning and policies; Layer: capability; Public exports: . |
-| @asol/ota-core | `packages/ota-core` | OTA publishing and update runtime; Layer: capability; Public exports: ., ./publishing, ./server |
+| @asol/ota-core | `packages/ota-core` | OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./publishing, ./release-console, ./server |
 | @asol/page-save-core | `packages/page-save-core` | Mandatory gateway for page-authored persistence; Layer: capability; Public exports: . |
 | @asol/page-snapshot-core | `packages/page-snapshot-core` | Page snapshot capture and restore; Layer: capability; Public exports: . |
 | @asol/product-core | `packages/product-core` | Product domain logic; Layer: capability; Public exports: ., ./server |
@@ -85,7 +87,7 @@
 | @asol/submain-composition | `packages/submain-composition` | Composition root for the submain account; Layer: composition; Public exports: . |
 | @asol/system-logs-core | `packages/system-logs-core` | System log capture and persistence contract; Layer: capability; Public exports: ., ./server |
 | @asol/trending-ribbon-core | `packages/trending-ribbon-core` | Trending ribbon UI capability; Layer: capability; Public exports: ., ./server |
-| @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./remote-deploy-contracts, ./remote-deploy-sandbox |
+| @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./release-rollback, ./remote-deploy-contracts, ./remote-deploy-sandbox |
 
 ## Features
 
@@ -143,6 +145,7 @@
 
 | Name | Path | Summary |
 |---|---|---|
+| control | `services/control` |  |
 | notifications | `services/notifications` |  |
 | orders | `services/orders` |  |
 | products | `services/products` |  |

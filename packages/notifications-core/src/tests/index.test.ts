@@ -175,7 +175,7 @@ async function main(): Promise<void> {
     readFileSync(path.join(process.cwd(), 'packages/notifications-core/package.json'), 'utf8'),
   ) as { exports: Record<string, { default: string }> };
   /**
-   * Four doors, each with a reason it cannot be merged into another.
+   * Five doors, each with a reason it cannot be merged into another.
    *
    * Rule 2 asks for a small, fixed set — not for one. Every door here exists because
    * merging it into `.` caused a concrete failure:
@@ -185,9 +185,20 @@ async function main(): Promise<void> {
    * | `.` | Domain vocabulary. Browser-safe, and the app's own barrel re-exports it wholesale, so it must carry no implementation object. |
    * | `./builder` | `NotificationBuilder` and the template loader. Both halves construct notifications, but putting them on `.` leaked an implementation object into the app barrel and its boundary test failed. |
    * | `./server` | Delivery and the grant protocol. Pulls `google-auth-library`, `node:http2` and the provider SDKs. |
+   * | `./grants` | Signed grant issuance only. It must remain provider-free so release control can preserve its terminal notification contract without importing push delivery runtimes. |
    * | `./providers` | APNs and Web Push. They read credentials **at module load** — importing web-push calls `setVapidDetails` — so re-exporting them from `./server` made that door unopenable without a valid VAPID pair. |
+   * | `./grant-envelope` | How a signed grant travels in an API response body. Client-safe: no secret, no signing code, only the shape both sides agree on. It lived in the application until release control — which runs in the control deployment — needed it, and reaching it there was a deep cross-feature import. |
+   * | `./grant-collector` | Collects the grants a route wants to hand back. Pure over `.` and `./grants`; it lived beside the envelope and moved for the same reason. |
    */
-  const EXPECTED_DOORS = ['.', './server', './builder', './providers'];
+  const EXPECTED_DOORS = [
+    '.',
+    './server',
+    './grants',
+    './grant-envelope',
+    './grant-collector',
+    './builder',
+    './providers',
+  ];
   const doors = Object.keys(manifest.exports);
   assert(
     doors.length === EXPECTED_DOORS.length && EXPECTED_DOORS.every((d) => doors.includes(d)),
@@ -210,7 +221,7 @@ async function main(): Promise<void> {
     serverDoor.includes("import 'server-only'"),
     'the server door must import server-only so a client component importing it fails the build',
   );
-  console.log(`  ✔ Two doors declared, both real, server door guarded by server-only.`);
+  console.log(`  ✔ ${EXPECTED_DOORS.length} doors declared, all real, server door guarded by server-only.`);
 
   console.log('\n✅ All @asol/notifications-core tests passed!\n');
 }

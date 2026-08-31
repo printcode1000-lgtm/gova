@@ -182,6 +182,9 @@
       "@asol/google-play-store-assets-core/images": [
         "./packages/google-play-store-assets-core/src/images.ts"
       ],
+      "@asol/gova-deployment-core": [
+        "./packages/gova-deployment-core/src/index.ts"
+      ],
       "@asol/featured-marquee-core": [
         "./packages/featured-marquee-core/src/index.ts"
       ],

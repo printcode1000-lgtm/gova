@@ -100,3 +100,37 @@ export const GOVA_RUNTIME_OPTIONAL_ENV_KEYS = [
   'WEB_PUSH_VAPID_PRIVATE_KEY',
   'ASOL_CORS_ORIGINS',
 ] as const;
+
+/**
+ * What the gova frontend deployment actually requires.
+ *
+ * gova serves pages, static assets, `/api/health`, and the stateless
+ * compatibility redirect boundary. The boundary needs the owner origins to
+ * redirect to; nothing else in the deployment needs anything. The lists above
+ * remain the full-application set and are still what `submain` inherits, but a
+ * frontend must not be asked for a database URL, an R2 key, a signing secret, a
+ * mail password, or a push credential, because it has no code that can use one.
+ */
+export const GOVA_FRONTEND_REQUIRED_ENV_KEYS = [
+  'NEXT_PUBLIC_ASOL_CONTROL_URL',
+  'NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL',
+  'NEXT_PUBLIC_ASOL_PRODUCTS_URL',
+  'NEXT_PUBLIC_ASOL_ORDERS_URL',
+  'NEXT_PUBLIC_ASOL_PROFILES_URL',
+  'NEXT_PUBLIC_ASOL_SUBMAIN_URL',
+  'NEXT_PUBLIC_ASOL_SUB2MAIN_URL',
+] as const;
+
+export const GOVA_FRONTEND_OPTIONAL_ENV_KEYS = [
+  'ASOL_RUNTIME_ROLE',
+  'NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN',
+  'NEXT_PUBLIC_ASOL_APP_STORE_URL',
+  'NEXT_PUBLIC_ASOL_BASE_PATH',
+  'NEXT_PUBLIC_ASOL_MODE',
+  'NEXT_PUBLIC_BUILD_ID',
+  'NEXT_PUBLIC_R2_PUBLIC_URL',
+  'NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL',
+  'NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY',
+  'NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION',
+  'NEXT_PUBLIC_ASOL_NATIVE_VERSION',
+] as const;

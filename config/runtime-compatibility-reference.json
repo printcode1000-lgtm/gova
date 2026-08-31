@@ -160,7 +160,7 @@
     "tsx": "4.23.12",
     "typescript": "5.9.3"
   },
-  "packageLockDigest": "cc5ad4210cfb480248e1ea0a44844ce1f0a65fc9417d51b1c98339add9ed82ff",
+  "packageLockDigest": "a7aa1c4d5adcf2be6e364b3339b38815bb20131756ce7c5b94f9b67142aacdfc",
   "workspacePackages": {
     "account-bridge": "@asol/account-bridge@0.1.0",
     "account-declarations": "@asol/account-declarations@0.1.0",
@@ -169,6 +169,7 @@
     "backup-core": "@asol/backup-core@0.1.0",
     "branding-core": "@asol/branding-core@0.1.0",
     "catalog-core": "@asol/catalog-core@0.1.0",
+    "control-composition": "@asol/control-composition@0.1.0",
     "data-core": "@asol/data-core@0.1.0",
     "data-health-core": "@asol/data-health-core@0.1.0",
     "dev-core": "@asol/dev-core@0.1.0",
@@ -176,6 +177,7 @@
     "featured-marquee-core": "@asol/featured-marquee-core@0.1.0",
     "format-core": "@asol/format-core@0.1.0",
     "google-play-store-assets-core": "@asol/google-play-store-assets-core@0.1.0",
+    "gova-deployment-core": "@asol/gova-deployment-core@0.1.0",
     "hero-slider-core": "@asol/hero-slider-core@0.1.0",
     "local-agent-core": "@asol/local-agent-core@0.1.0",
     "map-core": "@asol/map-core@0.1.0",
@@ -206,6 +208,38 @@
     "vercel-deploy-core": "@asol/vercel-deploy-core@0.1.0"
   },
   "services": {
+    "control": {
+      "packageManager": "",
+      "engines": {
+        "node": ">=22 <25",
+        "npm": ">=11 <12"
+      },
+      "dependencies": {
+        "@aws-sdk/client-s3": "3.1117.0",
+        "@aws-sdk/s3-request-presigner": "3.1117.0",
+        "@libsql/client": "0.17.4",
+        "@vercel/sandbox": "2.4.0",
+        "better-sqlite3": "13.0.3",
+        "drizzle-orm": "0.45.2",
+        "fflate": "0.8.3",
+        "google-auth-library": "11.0.2",
+        "jose": "5.9.6",
+        "libphonenumber-js": "1.13.12",
+        "next": "16.3.2",
+        "nodemailer": "9.0.5",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "server-only": "0.0.1",
+        "zod": "4.4.3"
+      },
+      "devDependencies": {
+        "@types/node": "24.13.3",
+        "@types/react": "19.2.18",
+        "@types/react-dom": "19.2.5",
+        "typescript": "5.9.3"
+      },
+      "lockDigest": "7c84afa3a61c532a3d079e6625f4ef299c1d31a3747a6e5dd275c05551337ac0"
+    },
     "notifications": {
       "packageManager": "npm@11.19.0",
       "engines": {

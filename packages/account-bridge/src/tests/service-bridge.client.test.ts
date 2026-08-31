@@ -6,6 +6,8 @@ import {
 } from "@asol/account-bridge";
 
 const origins = {
+  control: "https://control.example",
+  notifications: "https://notifications.example",
   products: "https://products.example",
   orders: "https://orders.example",
   profiles: "https://profiles.example",
@@ -24,13 +26,16 @@ function runtime(overrides: Partial<ServiceBridgeRuntime> = {}): ServiceBridgeRu
   };
 }
 
+// Local development resolves the owner exactly as production does. It used to
+// answer `null` here and fall back to the main app, which meant a developer
+// never exercised the routing the browser would use.
 assert.equal(
   resolveServiceOriginForRuntime(
     "GET",
     "/api/products?id=local-product",
     runtime({ developmentBuild: true, deployment: "local-development" }),
   ),
-  null,
+  origins.products,
 );
 
 assert.equal(
@@ -58,6 +63,16 @@ assert.equal(
 assert.equal(
   resolveServiceOriginForRuntime("GET", "/api/search/products", runtime()),
   origins.submain,
+);
+
+// Control owns the administrative families on every method.
+assert.equal(
+  resolveServiceOriginForRuntime("POST", "/api/super-admin/build-jobs", runtime()),
+  origins.control,
+);
+assert.equal(
+  resolveServiceOriginForRuntime("GET", "/api/system-logs", runtime()),
+  origins.control,
 );
 
 assert.equal(

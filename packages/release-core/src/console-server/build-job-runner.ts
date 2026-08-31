@@ -10,9 +10,9 @@ import {
   readShippingPlatformsDeclaration,
   requireGooglePlayProductionNativeVersion,
   requireIosProductionNativeVersion,
-} from "@asol/ota-core/publishing";
+} from "@asol/ota-core/release-console";
 import { loadReleaseToolEnvironment } from "@asol/env-core/process";
-import { getOtaApprovalServerConfig } from "@asol/ota-core/publishing";
+import { getOtaApprovalServerConfig } from "@asol/ota-core/release-console";
 import { BUILD_COMMAND_CATALOG, findBuildCommand, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../console";
 import { nextBuildJobActivity, nextBuildJobStage } from "../console";
 import { assertBuildJobTransition, type BuildCommandReadiness, type BuildJobRecord, type PaginatedBuildJobs, type ReleaseVersionSnapshot, type StartBuildJobInput } from "../console";

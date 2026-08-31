@@ -16,6 +16,13 @@ module.exports = [
       '.devin/**',
       'tmp/**',
       '.local/**',
+      // Service mirrors are verbatim copies of already-linted source, written by
+      // scripts/sync-*-service-sources.ts. Linting the copy reports the original
+      // file's findings a second time under a path nobody can edit.
+      'services/*/generated/**',
+      // The gova deployment build view is a whole copy of the repository that
+      // lives only for the length of a build.
+      '.tmp-gova-build/**',
     ],
   },
   {

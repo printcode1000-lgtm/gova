@@ -14,6 +14,10 @@
       "types": "./src/accounts/gova.ts",
       "default": "./src/accounts/gova.ts"
     },
+    "./control": {
+      "types": "./src/accounts/control.ts",
+      "default": "./src/accounts/control.ts"
+    },
     "./notifications": {
       "types": "./src/accounts/notifications.ts",
       "default": "./src/accounts/notifications.ts"

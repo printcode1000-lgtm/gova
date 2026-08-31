@@ -7,12 +7,13 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **95**
+Owners scored: **98**
 Average coverage: **81%**
-Weak owners (<70%): **12**
+Weak owners (<70%): **13**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `packages/control-composition` | package | yes | yes | yes | yes | NO | NO | NO | yes | 63% |
 | `services/orders` | service | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `services/profiles` | service | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/account-bridge` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
@@ -30,6 +31,7 @@ Weak owners (<70%): **12**
 | `packages/dev-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/format-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/google-play-store-assets-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
+| `packages/gova-deployment-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/page-save-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/page-snapshot-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/product-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
@@ -38,6 +40,7 @@ Weak owners (<70%): **12**
 | `packages/service-runtime-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/signed-token-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/system-logs-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
+| `services/control` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/notifications` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/products` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/sub2main` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
@@ -58,7 +61,6 @@ Weak owners (<70%): **12**
 | `src/features/profile-working-hours` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/seller-card` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/settings` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
-| `src/features/super-admin` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/vehicle-catalog` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `packages/account-bridge` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/architecture-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -84,8 +86,6 @@ Weak owners (<70%): **12**
 | `src/features/advertisements` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/auth` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/cart` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
-| `src/features/data-health` | feature | yes | yes | yes | yes | NO | yes | yes | yes | 88% |
-| `src/features/dev-cloud-backup` | feature | yes | yes | yes | yes | NO | yes | yes | yes | 88% |
 | `src/features/favorites` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/follow` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/page-save` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -97,6 +97,7 @@ Weak owners (<70%): **12**
 | `src/features/sharing` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/specialty-chat` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/storage` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `src/features/super-admin` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/system-logs` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/auth-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/catalog-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
@@ -106,5 +107,7 @@ Weak owners (<70%): **12**
 | `packages/ota-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/release-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/storage-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
+| `src/features/data-health` | feature | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
+| `src/features/dev-cloud-backup` | feature | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `src/features/google-play-console` | feature | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `src/features/notifications` | feature | yes | yes | yes | yes | yes | yes | yes | yes | 100% |

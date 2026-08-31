@@ -32,6 +32,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run android:push:sync-assets` | `npx tsx packages/native-core/scripts/sync-android-push-assets.ts` |
 | `npm run android:r8:validate` | `npx tsx packages/native-core/scripts/validate-android-r8-policy.ts` |
 | `npm run android:r8:verify-release` | `npm run android:preflight && npm run android:push:sync-assets && npm run android:backup:validate && npm run android:r8:validate && npx tsx packages/native-core/scripts/verify-android-r8-release.ts` |
+| `npm run api:inventory` | `npx tsx scripts/api-route-inventory.ts` |
 | `npm run app:init` | `npx tsx scripts/generate-app-init-public.ts && npm run data-access:sync-public && npm run maplibre:sync` |
 | `npm run architecture:check` | `npx tsx scripts/architecture-check.ts` |
 | `npm run architecture:docs` | `npx tsx scripts/architecture/generate-architecture-docs.ts` |
@@ -55,6 +56,11 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run catalog:validate` | `npx tsx scripts/validate-catalog.ts && npm run test:catalog-display` |
 | `npm run category:validate` | `npx tsx scripts/validate-categories.ts` |
 | `npm run ci:coverage` | `npx tsx scripts/github-ci-policy.ts` |
+| `npm run control:build` | `npm run control:sync && npm --prefix services/control run build` |
+| `npm run control:deploy` | `npx tsx scripts/deploy-control-service.ts` |
+| `npm run control:smoke` | `npx tsx scripts/smoke-control-service.ts` |
+| `npm run control:sync` | `npx tsx scripts/sync-control-service-sources.ts` |
+| `npm run control:verify` | `npm run control:sync && npm run typecheck && npm run test:control` |
 | `npm run coordinator:email` | `npx tsx scripts/send-coordinator-completion-email.ts` |
 | `npm run data-access:sync-public` | `npx tsx scripts/sync-data-access-public-artifacts.ts` |
 | `npm run db:create:product` | `npx tsx packages/data-core/src/tooling/create-product-sqlite-db.ts` |
@@ -95,6 +101,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run deploy:revision` | `npx tsx scripts/deploy-revision.ts` |
 | `npm run dev` | `next dev --turbo --port 3001` |
 | `npm run dev:checked` | `npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --turbo --port 3001` |
+| `npm run dev:distributed` | `npx tsx scripts/dev-distributed.ts` |
+| `npm run dev:distributed:smoke` | `npx tsx scripts/dev-distributed.ts --smoke` |
 | `npm run docs:check` | `npx tsx scripts/docs/check.ts` |
 | `npm run docs:ci` | `npx tsx scripts/docs/docs-ci.ts` |
 | `npm run docs:coverage` | `npx tsx scripts/docs/coverage-cli.ts` |
@@ -105,6 +113,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run docs:runtime-coverage` | `npx tsx scripts/docs/runtime-coverage-cli.ts` |
 | `npm run doctor:environment` | `npx tsx scripts/check-environment-requirements.ts --scenario=all` |
 | `npm run doctor:environment:production` | `npx tsx scripts/check-environment-requirements.ts --scenario=production --skip-outdated` |
+| `npm run env:ownership` | `npx tsx scripts/runtime-env-ownership-report.ts` |
 | `npm run fastlane` | `npx tsx scripts/fastlane-runner.ts` |
 | `npm run fastlane:android:aab:signed` | `npx tsx scripts/fastlane-runner.ts android aab_signed` |
 | `npm run fastlane:android:aab:signed:no-r8` | `npx tsx scripts/fastlane-runner.ts android aab_signed_no_r8` |
@@ -124,6 +133,9 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run github:block-branches` | `npx tsx scripts/block-branch-creation.ts` |
 | `npm run github:ci-policy` | `npx tsx scripts/github-ci-policy.ts` |
 | `npm run github:protect` | `npx tsx scripts/protect-main-branch.ts` |
+| `npm run gova:artifact:verify` | `npx tsx scripts/verify-gova-artifact.ts` |
+| `npm run gova:tree` | `npx tsx scripts/build-gova-deployment-tree.ts` |
+| `npm run gova:tree:check` | `npx tsx scripts/build-gova-deployment-tree.ts --check` |
 | `npm run intelligence:retrain` | `npx tsx scripts/retrain-project-intelligence.ts` |
 | `npm run ios:push:validate` | `npx tsx packages/native-core/scripts/validate-ios-push-policy.ts` |
 | `npm run ios:spm:normalize` | `npx tsx packages/native-core/scripts/normalize-capacitor-spm-paths.ts` |
@@ -191,7 +203,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:account-declarations` | `npx tsx packages/account-declarations/src/tests/index.test.ts` |
 | `npm run test:account-deletion-registry` | `npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-registry.contract.test.ts` |
 | `npm run test:account-deletion-schema` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-query-schema.contract.test.ts` |
-| `npm run test:api-core` | `npx tsx src/core/api/tests/user-facing-api-error.test.ts && npx tsx src/core/api/tests/production-deploy-concurrency-logging.test.ts` |
+| `npm run test:api-core` | `npx tsx src/core/api/tests/user-facing-api-error.test.ts && npx tsx src/core/api/tests/production-deploy-concurrency-logging.test.ts && npx tsx src/core/api/tests/compatibility-boundary.test.ts` |
 | `npm run test:architecture-core` | `npx tsx packages/architecture-core/src/tests/index.test.ts && npx tsx scripts/architecture/application-features-attack.test.ts` |
 | `npm run test:auth-core` | `npx tsx packages/auth-core/src/tests/index.test.ts` |
 | `npm run test:auth-email-uniqueness` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/auth/tests/email-uniqueness.test.ts` |
@@ -206,6 +218,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:composition-ports` | `npx tsx src/core/composition/tests/ports-registry.test.ts` |
 | `npm run test:compositions` | `npm run test:notifications-composition && npm run test:products-composition && npm run test:orders-composition && npm run test:profiles-composition && npm run test:submain-composition && npm run test:sub2main-composition` |
 | `npm run test:console-command-parity` | `npx tsx src/features/release-commands/tests/console-command-parity.test.ts` |
+| `npm run test:control` | `npx tsx scripts/tests/control-service.test.ts` |
 | `npm run test:data-core` | `npm run test:data-health-core && npm run test:backup-core && npm run test:sqlite-reconnect && npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts` |
 | `npm run test:data-health` | `npx tsx scripts/test-data-health-environment.ts && cross-env NODE_OPTIONS=<redacted> npx tsx src/features/data-health/tests/development-guard.test.ts && npx tsx packages/data-core/src/domains/data-health/tests/data-health-policy.test.ts && cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/data-health/tests/order-purge.test.ts` |
 | `npm run test:data-health-core` | `npx tsx packages/data-health-core/src/tests/index.test.ts` |
@@ -222,6 +235,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:follow` | `cross-env NODE_OPTIONS=<redacted> ASOL_SESSION_SIGNING_SECRET=<redacted> ASOL_NOTIFICATION_GRANT_SECRET=<redacted> npx tsx src/features/follow/tests/follower-notification.test.ts` |
 | `npm run test:format-core` | `npx tsx packages/format-core/src/tests/index.test.ts` |
 | `npm run test:google-play-store-assets-core` | `npx tsx packages/google-play-store-assets-core/src/tests/index.test.ts` |
+| `npm run test:gova-deployment-core` | `npx tsx packages/gova-deployment-core/src/tests/index.test.ts` |
 | `npm run test:hero-slider-core` | `npx tsx packages/hero-slider-core/src/tests/index.test.ts && npx tsx src/features/advertisements/presentation/hero-slider.test.ts && npx tsx src/features/super-admin/presentation/super-admin-hero-slider-save.test.ts` |
 | `npm run test:i18n-arabic-only-routes` | `npx tsx scripts/test-i18n-arabic-only-routes.ts` |
 | `npm run test:image-upload-queue` | `npx tsx src/features/storage/tests/image-upload-queue.test.ts` |
@@ -281,7 +295,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:system-logs-core` | `npx tsx packages/system-logs-core/src/tests/index.test.ts` |
 | `npm run test:trending-ribbon-core` | `npx tsx packages/trending-ribbon-core/src/tests/index.test.ts` |
 | `npm run test:turso-read-retry` | `npx tsx packages/data-core/src/core/database/tests/turso-read-retry.test.ts` |
-| `npm run test:vercel-deploy-core` | `npx tsx packages/vercel-deploy-core/src/tests/index.test.ts` |
+| `npm run test:vercel-deploy-core` | `npx tsx packages/vercel-deploy-core/src/tests/index.test.ts && npx tsx packages/vercel-deploy-core/src/tests/release-rollback.test.ts` |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run validate-storage-profiles` | `npx tsx packages/storage-core/scripts/validate-storage-profiles.ts` |
 | `npm run validate:app-versions` | `npx tsx packages/ota-core/scripts/validate-app-versions.ts` |

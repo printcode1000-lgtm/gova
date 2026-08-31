@@ -6,6 +6,10 @@ import "server-only";
 import { configureOtaCore } from "@asol/ota-core";
 import { isSuperAdminIdentity } from "@/features/auth";
 import { persistentSystemLogService } from "@/features/system-logs/server";
+import { createMainOtaReleaseRepository } from '@asol/data-core/ota-runtime';
+
+/** OTA administration registration; control owns the capability, gova only routes to it. */
+export { registerOtaAdminServerPorts } from './server/admin';
 
 /**
  * The server half of the `@asol/ota-core` port registration.
@@ -47,5 +51,6 @@ export function registerOtaCoreServerPorts(): void {
       getCollections: () => categoryService.getCollections(),
       getCategoryTree: (categoryId) => categoryService.getCategoryTree(categoryId),
     },
+    releaseRepository: createMainOtaReleaseRepository(),
   });
 }

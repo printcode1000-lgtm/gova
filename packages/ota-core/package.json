@@ -17,6 +17,14 @@
     "./server": {
       "types": "./src/server.ts",
       "default": "./src/server.ts"
+    },
+    "./admin": {
+      "types": "./src/admin.ts",
+      "default": "./src/admin.ts"
+    },
+    "./release-console": {
+      "types": "./src/release-console.ts",
+      "default": "./src/release-console.ts"
     }
   },
   "scripts": {

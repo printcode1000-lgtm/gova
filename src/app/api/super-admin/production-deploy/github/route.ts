@@ -1,5 +1,5 @@
 import { apiError, apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { getProductionDeployCallbackBaseUrl } from "@/core/config/server-env";
+import { getProductionDeployCallbackBaseUrl } from "@/core/config/control-env";
 import { runTracedBusinessRoute } from "@/core/api/traced-route";
 import {
   getGitHubProductionDeployStatus,

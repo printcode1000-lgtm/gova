@@ -11,7 +11,7 @@ import type {
 import { getNotificationTestScenario } from '@asol/notifications-core';
 import { ListBroadcastRecipientsQuery } from '@asol/data-core/notifications';
 import { assertNotificationAdmin } from '../notification-admin-authorization';
-import { NotificationGrantCollector } from './notification-grant-collector.server';
+import { NotificationGrantCollector } from '@asol/notifications-core/grant-collector';
 
 export class NotificationBroadcastService {
   constructor(

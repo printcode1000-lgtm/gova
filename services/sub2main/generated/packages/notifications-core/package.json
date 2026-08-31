@@ -14,6 +14,18 @@
       "types": "./src/server.ts",
       "default": "./src/server.ts"
     },
+    "./grant-collector": {
+      "types": "./src/grant-collector.ts",
+      "default": "./src/grant-collector.ts"
+    },
+    "./grant-envelope": {
+      "types": "./src/grant-envelope.ts",
+      "default": "./src/grant-envelope.ts"
+    },
+    "./grants": {
+      "types": "./src/services/notification-grant.server.ts",
+      "default": "./src/services/notification-grant.server.ts"
+    },
     "./builder": {
       "types": "./src/builder.ts",
       "default": "./src/builder.ts"

@@ -13,6 +13,10 @@
     "./notifications": {
       "types": "./src/notifications.ts",
       "default": "./src/notifications.ts"
+    },
+    "./routes": {
+      "types": "./src/routes.ts",
+      "default": "./src/routes.ts"
     }
   },
   "scripts": {
