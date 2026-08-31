@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "requestId": "direct-p2p-phase1-20260831-2220",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Implement direct agent protocol foundation",
+    "verification": "none",
+    "timeout_minutes": "20",
+    "shell_command": "set -euo pipefail\ncd /home/hesham/gova\nPROMPT=$(cat <<'EOF'\nResume the CURRENT DIRTY canonical workspace produced by the previous timed-out direct-P2P implementation. This is a bounded phase; finish only the direct protocol/domain foundation and make it coherent quickly. Preserve the existing dirty work. Read note/gova-direct-p2p-agent-execution-plan.md sections 1-5 and inspect the files already created under packages/local-agent-core/src/direct/. Complete the core direct module only: closed protocol message types and validation, mature-crypto identity/session primitives using Node standard cryptography (no custom crypto), bootstrap authorization data model, expiry/revocation, replay cache, capabilities, transport types/errors, redacted structured result contracts, and package exports/architecture contract changes needed for the new door. Add/finish focused local-agent-core tests for validation, crypto/session lifecycle, freshness/replay and capability denial. Do NOT implement daemon, systemd, R2 publication cadence, NAT/STUN, broad docs, or global tests in this phase. Do not delete prior correct work. Return only after this foundation is internally coherent and focused tests are ready to run. Keep this iteration small enough to finish promptly.\nEOF\n)\nagy --dangerously-skip-permissions -p \"$PROMPT\"\nnpm run test:local-agent-core\nnpx tsc --noEmit\ngit add -A\nif ! git diff --cached --quiet; then git commit -m \"Implement direct agent protocol foundation\"; fi\ngit push origin main\ngit fetch --prune origin main\ntest \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/main)\"\ntest -z \"$(git status --porcelain --untracked-files=no)\""
+  },
+  "createdAt": "2026-08-31T19:20:34.000Z"
+}
