@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import path from "node:path";
 
 import { git, gitLines, gitSoft, runCapture } from "./git";
@@ -18,6 +18,21 @@ import { workspaceDir, worktreesDir } from "./paths";
  */
 
 export const MAIN_WORKTREE_SLUG = "__main";
+
+/**
+ * Gitignored client-runtime inputs needed by repository validation.
+ *
+ * They are copied, never symlinked: an agent may inspect or regenerate its
+ * private copy without being able to mutate the developer's canonical local
+ * file through the worktree. This is intentionally a tiny allowlist rather than
+ * `.env*`/credential mirroring; server secrets stay in the runner environment or
+ * the release secret archive and are never sprayed into every branch checkout.
+ */
+export const WORKTREE_LOCAL_RUNTIME_FILES = [
+  "ios/App/App/GoogleService-Info.plist",
+  "android/app/google-services.json",
+  "android/app/src/main/res/raw/custom_notification.mp3",
+] as const;
 
 /**
  * One worktree per *job*, not per agent.
@@ -126,6 +141,22 @@ export function linkWorktreeNodeModules(
   return { externalEntries, workspacePackages };
 }
 
+export function copyWorktreeLocalRuntimeFiles(
+  worktree: string,
+  root = workspaceDir(),
+): string[] {
+  const copied: string[] = [];
+  for (const relativePath of WORKTREE_LOCAL_RUNTIME_FILES) {
+    const source = path.join(root, relativePath);
+    if (!existsSync(source)) continue;
+    const destination = path.join(worktree, relativePath);
+    mkdirSync(path.dirname(destination), { recursive: true });
+    copyFileSync(source, destination);
+    copied.push(relativePath);
+  }
+  return copied;
+}
+
 /**
  * Materialise a clean worktree pinned to the freshest `origin/main`.
  */
@@ -147,6 +178,7 @@ export function prepareWorktree(slug: string): { worktree: string; baseSha: stri
     git(["clean", "-fd"], worktree);
   }
   linkWorktreeNodeModules(worktree, root);
+  copyWorktreeLocalRuntimeFiles(worktree, root);
   return { worktree, baseSha };
 }
 
