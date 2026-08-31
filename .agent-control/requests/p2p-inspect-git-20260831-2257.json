@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "requestId": "p2p-inspect-git-20260831-2257",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-inspect",
+  "mode": "inspect",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "mode": "git"
+  },
+  "createdAt": "2026-08-31T19:57:20.000Z"
+}
