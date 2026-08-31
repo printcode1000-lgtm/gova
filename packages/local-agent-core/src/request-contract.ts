@@ -30,13 +30,13 @@ export const DISPATCHABLE_WORKFLOWS = {
     file: "local-agent-workspace.yml",
     mode: "workspace",
     required: ["agent_id", "commit_message"] as const,
-    optional: ["patch_base64", "shell_command", "verification", "scopes"] as const,
+    optional: ["patch_base64", "shell_command", "verification", "scopes", "timeout_minutes"] as const,
   },
   "local-agent-main": {
     file: "local-agent-main.yml",
     mode: "main",
     required: ["agent_id", "commit_message"] as const,
-    optional: ["patch_base64", "shell_command", "verification", "scopes"] as const,
+    optional: ["patch_base64", "shell_command", "verification", "scopes", "execution_target", "timeout_minutes"] as const,
   },
   "local-agent-coordination": {
     file: "local-agent-coordination.yml",
@@ -140,6 +140,24 @@ function validateInputs(workflow: DispatchableWorkflow, inputs: Record<string, u
         : DEFAULT_VERIFICATION;
     if (!(ALLOWED_VERIFICATIONS as readonly string[]).includes(verification)) {
       errors.push(`inputs.verification must be one of: ${ALLOWED_VERIFICATIONS.join(", ")}.`);
+    }
+    const timeoutRaw = typeof inputs.timeout_minutes === "string" ? inputs.timeout_minutes.trim() : "";
+    if (timeoutRaw) {
+      const timeout = Number(timeoutRaw);
+      if (!Number.isInteger(timeout) || timeout < 1 || timeout > 55) {
+        errors.push("inputs.timeout_minutes must be an integer from 1 to 55.");
+      }
+    }
+    if (workflow === "local-agent-main") {
+      const executionTarget = typeof inputs.execution_target === "string" && inputs.execution_target.trim()
+        ? inputs.execution_target.trim()
+        : "isolated-worktree";
+      if (executionTarget !== "isolated-worktree" && executionTarget !== "canonical-host") {
+        errors.push('inputs.execution_target must be "isolated-worktree" or "canonical-host".');
+      }
+      if (executionTarget === "canonical-host" && hasPatch) {
+        errors.push("canonical-host execution does not accept patch_base64; host-bound commands must own their mutations.");
+      }
     }
     // A job with no patch and no shell is a verification-only run, which is a
     // real and useful shape: prove the tree still passes a check. It is only

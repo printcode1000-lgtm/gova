@@ -40,6 +40,19 @@ on:
         description: "Comma or newline separated paths to lock for the duration of this job."
         required: false
         type: string
+      execution_target:
+        description: "Execute in an isolated worktree or the canonical host checkout."
+        required: false
+        default: isolated-worktree
+        type: choice
+        options:
+          - isolated-worktree
+          - canonical-host
+      timeout_minutes:
+        description: "Per shell/verification command deadline, 1-55 minutes."
+        required: false
+        default: "15"
+        type: string
       request_id:
         description: "Dispatch request id, set by the gateway."
         required: false
@@ -71,6 +84,8 @@ jobs:
       LOCAL_AGENT_VERIFICATION: ${{ inputs.verification }}
       LOCAL_AGENT_SHELL_COMMAND: ${{ inputs.shell_command }}
       LOCAL_AGENT_SCOPES: ${{ inputs.scopes }}
+      LOCAL_AGENT_EXECUTION_TARGET: ${{ inputs.execution_target }}
+      LOCAL_AGENT_TIMEOUT_MINUTES: ${{ inputs.timeout_minutes }}
       LOCAL_AGENT_TARGET_MODE: main
     steps:
       - name: Isolate Antigravity project per worktree

@@ -45,6 +45,20 @@ const shellCommand = process.env.LOCAL_AGENT_SHELL_COMMAND?.trim() || "";
 const commitMessage = process.env.LOCAL_AGENT_COMMIT_MESSAGE?.trim() || "";
 const verification = process.env.LOCAL_AGENT_VERIFICATION?.trim() || "github-ci-policy";
 const requestedScopes = splitList(process.env.LOCAL_AGENT_SCOPES);
+const executionTarget = process.env.LOCAL_AGENT_EXECUTION_TARGET?.trim() === "canonical-host"
+  ? "canonical-host" as const
+  : "isolated-worktree" as const;
+const timeoutMinutesRaw = Number(process.env.LOCAL_AGENT_TIMEOUT_MINUTES || "15");
+const timeoutMinutes = Number.isInteger(timeoutMinutesRaw) && timeoutMinutesRaw >= 1 && timeoutMinutesRaw <= 55
+  ? timeoutMinutesRaw
+  : 15;
+const commandTimeoutMs = timeoutMinutes * 60_000;
+if (targetMode !== "main" && executionTarget === "canonical-host") {
+  fail("canonical-host execution is only valid for local-agent-main.");
+}
+if (executionTarget === "canonical-host" && patchBase64) {
+  fail("canonical-host execution refuses patch_base64; use an isolated worktree for repository edits.");
+}
 
 const verificationCommand = ALLOWED_VERIFICATION_COMMANDS.get(verification);
 if (!verificationCommand) fail(`Unsupported verification command: ${verification}.`);
@@ -72,6 +86,7 @@ const operation = new OperationLog({
   verification,
   patchProvided: patchText.length > 0,
   shellCommandProvided: shellCommand.length > 0,
+  executionTarget,
 });
 
 // Assigned once the worktree is chosen. The exit handler may fire before that —
@@ -193,32 +208,72 @@ if (admission.waitedMs > 0) console.log(`admitted after ${Math.round(admission.w
 // --- worktree ---------------------------------------------------------------
 
 const slug = worktreeSlug(targetMode, agentId, requestId ?? runId);
-worktreeName = slug;
-let prepared: { worktree: string; baseSha: string };
-try {
-  prepared = prepareWorktree(slug);
-} catch (error) {
-  abort(`Failed to prepare the agent worktree: ${error instanceof Error ? error.message : String(error)}`);
+let worktree: string;
+let baseSha: string;
+if (executionTarget === "canonical-host") {
+  operation.progress("canonical-preflight");
+  const canonical = path.resolve(process.env.GOVA_LOCAL_WORKSPACE || "/home/hesham/gova");
+  gitSoft(["fetch", "--prune", "origin", "main"], canonical);
+  const branch = gitSoft(["branch", "--show-current"], canonical).trim();
+  const head = gitSoft(["rev-parse", "HEAD"], canonical).trim();
+  const originMain = gitSoft(["rev-parse", "origin/main"], canonical).trim();
+  const trackedStatus = gitSoft(["status", "--porcelain", "--untracked-files=no"], canonical)
+    .split("\n").filter(Boolean);
+  operation.record.preGitState = { head: head || null, originMain: originMain || null, trackedStatus };
+  if (branch !== "main" || trackedStatus.length > 0 || !head || head !== originMain) {
+    operation.failAs("workspace");
+    abort(`canonical-host preflight refused: branch=${branch || "detached"}, trackedChanges=${trackedStatus.length}, head=${head}, originMain=${originMain}`);
+  }
+  worktree = canonical;
+  baseSha = head;
+  worktreeName = null;
+} else {
+  operation.progress("worktree-prepare");
+  worktreeName = slug;
+  let prepared: { worktree: string; baseSha: string };
+  try {
+    prepared = prepareWorktree(slug);
+  } catch (error) {
+    operation.failAs("workspace");
+    abort(`Failed to prepare the agent worktree: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  worktree = prepared.worktree;
+  baseSha = prepared.baseSha;
 }
-const worktree = prepared.worktree;
-const baseSha = prepared.baseSha;
 
 operation.record.startingSha = baseSha;
 operation.write("running");
+console.log(`executionTarget=${executionTarget}`);
 console.log(`worktree=${worktree}`);
 console.log(`targetRef=${targetRef}`);
 console.log(`startingSha=${baseSha}`);
+console.log(`commandTimeoutMinutes=${timeoutMinutes}`);
 
-function runIn(command: string, args: string[], extraEnv: Record<string, string> = {}): void {
+function runIn(
+  command: string,
+  args: string[],
+  extraEnv: Record<string, string> = {},
+  stage = command === "/bin/bash" ? "shell" : "command",
+): void {
+  operation.progress(stage);
+  operation.record.mutationStarted = stage === "shell" || operation.record.mutationStarted === true;
   const result = spawnSync(command, args, {
     cwd: worktree,
     env: envWithHostToolShims({ ...process.env, ...extraEnv }),
     stdio: "inherit",
+    timeout: commandTimeoutMs,
+    killSignal: "SIGTERM",
   });
+  if (result.error && (result.error as NodeJS.ErrnoException).code === "ETIMEDOUT") {
+    operation.failAs("timeout");
+    operation.record.failedCommand = stage;
+    abort(`Command timed out after ${timeoutMinutes} minute(s): ${stage}`, 124);
+  }
   if (result.status !== 0) {
     operation.record.failedCommand = command === "/bin/bash" ? "shell_command" : `${command} ${args.join(" ")}`;
     abort(`Command failed: ${operation.record.failedCommand}`, result.status ?? 1);
   }
+  operation.progress(`${stage}-complete`);
 }
 
 // --- patch ------------------------------------------------------------------
@@ -243,26 +298,53 @@ if (shellCommand) {
   runIn("/bin/bash", ["-lc", wrapLoginShellCommand(shellCommand)], {
     DOCS_CONTRACT_CHANGE: process.env.DOCS_CONTRACT_CHANGE || "1",
     GOVA_LOCAL_WORKSPACE: worktree,
-  });
+  }, "shell");
 }
 
-const changedFiles = gitLines(["status", "--porcelain"], worktree).map((line) => line.slice(3));
+const statusArgs = executionTarget === "canonical-host"
+  ? ["status", "--porcelain", "--untracked-files=no"]
+  : ["status", "--porcelain"];
+const changedFiles = gitLines(statusArgs, worktree).map((line) => line.slice(3));
 operation.record.changedFiles = changedFiles;
 operation.write("running");
+if (executionTarget === "canonical-host" && changedFiles.length > 0) {
+  operation.failAs("workspace");
+  abort(`canonical-host command left tracked changes; refusing implicit cleanup or commit: ${changedFiles.join(", ")}`);
+}
 
 // --- verification -----------------------------------------------------------
 
 if (verificationCommand.length > 0) {
   heartbeat(agentId, "verifying");
   const [command, ...args] = verificationCommand;
-  runIn(command!, args, { DOCS_CONTRACT_CHANGE: process.env.DOCS_CONTRACT_CHANGE || "1" });
+  runIn(command!, args, { DOCS_CONTRACT_CHANGE: process.env.DOCS_CONTRACT_CHANGE || "1" }, "verification");
 }
 
 // --- commit and push --------------------------------------------------------
 
+if (executionTarget === "canonical-host") {
+  operation.progress("canonical-postflight");
+  gitSoft(["fetch", "--prune", "origin", "main"], worktree);
+  const head = gitSoft(["rev-parse", "HEAD"], worktree).trim();
+  const originMain = gitSoft(["rev-parse", "origin/main"], worktree).trim();
+  const trackedStatus = gitSoft(["status", "--porcelain", "--untracked-files=no"], worktree)
+    .split("\n").filter(Boolean);
+  operation.record.postGitState = { head: head || null, originMain: originMain || null, trackedStatus };
+  if (trackedStatus.length > 0 || !head || head !== originMain) {
+    operation.failAs("workspace");
+    abort(`canonical-host postflight refused: trackedChanges=${trackedStatus.length}, head=${head}, originMain=${originMain}`);
+  }
+  operation.record.resultingSha = head;
+  operation.progress("complete");
+  operation.write("success", 0);
+  releaseHeld();
+  process.exit(0);
+}
+
 if (changedFiles.length === 0) {
   console.log("No changes to commit; verification-only run completed.");
   operation.record.resultingSha = baseSha;
+  operation.progress("complete");
   operation.write("success", 0);
   releaseHeld();
   process.exit(0);
@@ -271,7 +353,7 @@ if (changedFiles.length === 0) {
 git(["config", "user.name", "gova-local-agent"], worktree);
 git(["config", "user.email", "gova-local-agent@users.noreply.github.com"], worktree);
 runIn("git", ["add", "-A"]);
-runIn("git", ["commit", "-m", commitMessage]);
+runIn("git", ["commit", "-m", commitMessage], {}, "commit");
 const resultingSha = git(["rev-parse", "HEAD"], worktree);
 operation.record.resultingSha = resultingSha;
 operation.write("running");
@@ -290,7 +372,7 @@ if (currentOriginMain && currentOriginMain !== baseSha) {
 heartbeat(agentId, "pushing");
 // Fully qualified: the worktree is on a detached HEAD, so git cannot infer the
 // namespace of an unqualified destination and refuses to guess.
-runIn("git", ["push", "origin", `HEAD:refs/heads/${targetRef}`]);
+runIn("git", ["push", "origin", `HEAD:refs/heads/${targetRef}`], {}, "push");
 
 operation.write("success", 0);
 console.log(`resultingSha=${resultingSha}`);

@@ -56,6 +56,20 @@ export interface OperationRecord {
   reservedMb?: number;
   /** Set only after admission succeeds. */
   admittedAt?: string | null;
+  /** Where commands actually execute: repository-isolated worktree or canonical host checkout. */
+  executionTarget?: "isolated-worktree" | "canonical-host";
+  /** Current coarse execution stage, updated while the operation is live. */
+  stage?: string;
+  stageStartedAt?: string;
+  lastProgressAt?: string;
+  /** Stable failure family for automation and incident summaries. */
+  failureClass?: "admission" | "workspace" | "test-isolation" | "preflight" | "production-mutation" | "rollback" | "observability" | "timeout" | null;
+  /** True once the requested shell/patch can mutate project or host state. */
+  mutationStarted?: boolean;
+  preGitState?: { head: string | null; originMain: string | null; trackedStatus: string[] } | null;
+  postGitState?: { head: string | null; originMain: string | null; trackedStatus: string[] } | null;
+  rollbackResult?: string | null;
+  remediationSha?: string | null;
 }
 
 export interface OperationLogInit {
@@ -68,6 +82,7 @@ export interface OperationLogInit {
   verification: string;
   patchProvided: boolean;
   shellCommandProvided: boolean;
+  executionTarget?: "isolated-worktree" | "canonical-host";
 }
 
 /** A live operation record that rewrites its file on every state change. */
@@ -106,6 +121,16 @@ export class OperationLog {
       failedCommand: null,
       terminatedBy: null,
       admittedAt: null,
+      executionTarget: init.executionTarget ?? "isolated-worktree",
+      stage: "created",
+      stageStartedAt: new Date(now).toISOString(),
+      lastProgressAt: new Date(now).toISOString(),
+      failureClass: null,
+      mutationStarted: false,
+      preGitState: null,
+      postGitState: null,
+      rollbackResult: null,
+      remediationSha: null,
     };
     const name = `${safeIdentifier(init.targetRef, 80)}-${safeIdentifier(init.runId, 32)}.json`;
     this.filePath = path.join(operationLogsDir(), name);
@@ -116,9 +141,23 @@ export class OperationLog {
     return this.filePath;
   }
 
+  progress(stage: string): void {
+    const timestamp = new Date().toISOString();
+    this.record.stage = stage;
+    this.record.stageStartedAt = timestamp;
+    this.record.lastProgressAt = timestamp;
+    this.write(this.record.status);
+  }
+
+  failAs(failureClass: NonNullable<OperationRecord["failureClass"]>): void {
+    this.record.failureClass = failureClass;
+    this.record.lastProgressAt = new Date().toISOString();
+  }
+
   write(status: OperationStatus, exitCode: number | null = null): void {
     const completedAtMs = Date.now();
     this.record.status = status;
+    this.record.lastProgressAt = new Date(completedAtMs).toISOString();
     this.record.completedAt = isOpen(status) ? null : new Date(completedAtMs).toISOString();
     this.record.durationMs = completedAtMs - this.startedAtMs;
     if (exitCode !== null) this.record.exitCode = exitCode;

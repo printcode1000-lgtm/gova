@@ -39,6 +39,11 @@ on:
         description: "Comma or newline separated paths to lock for the duration of this job."
         required: false
         type: string
+      timeout_minutes:
+        description: "Per shell/verification command deadline, 1-55 minutes."
+        required: false
+        default: "15"
+        type: string
       request_id:
         description: "Dispatch request id, set by the gateway."
         required: false
@@ -70,6 +75,8 @@ jobs:
       LOCAL_AGENT_VERIFICATION: ${{ inputs.verification }}
       LOCAL_AGENT_SHELL_COMMAND: ${{ inputs.shell_command }}
       LOCAL_AGENT_SCOPES: ${{ inputs.scopes }}
+      LOCAL_AGENT_EXECUTION_TARGET: isolated-worktree
+      LOCAL_AGENT_TIMEOUT_MINUTES: ${{ inputs.timeout_minutes }}
       LOCAL_AGENT_TARGET_MODE: branch
     steps:
       - name: Isolate Antigravity project per worktree
