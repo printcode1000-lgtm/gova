@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "asolcutover-inspect-process-tree-20260831-211730",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-workspace",
+  "mode": "workspace",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Inspect active local runner process tree",
+    "verification": "none",
+    "shell_command": "set -euo pipefail\necho '=== relevant process tree ==='\nps -eo pid,ppid,etimes,stat,cmd --sort=etimes | grep -E 'local-agent-main-apply|release-commands|android:r8|gradle|java|tsx|npm|node' | grep -v grep | tail -n 160\necho '=== main worktree status ==='\ngit -C /home/hesham/gova/.local/agent-worktrees/__main status --short --untracked-files=no || true\necho '=== build job files in active worktree ==='\nfind /home/hesham/gova/.local/agent-worktrees/__main/.backups/build-jobs -maxdepth 1 -type f -printf '%f %s bytes\\n' 2>/dev/null | tail -n 40 || true"
+  },
+  "createdAt": "2026-08-31T18:17:30.000Z"
+}
