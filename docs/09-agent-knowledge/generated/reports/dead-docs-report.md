@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **93**
+Findings: **91**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -79,8 +79,6 @@ Findings: **93**
 | `missing-file` | `docs/05-platform-features/service-bridge-module.md` | `src/features/service-bridge/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/session-system.md` | `src/features/auth/services/session-api-service.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/voice-input-system.md` | `src/platform/speech/speech-recognition-adapter.ts` | documentation mentions a missing repository path |
-| `missing-file` | `docs/06-super-admin-and-operations/cloud-accounts-architecture.md` | `src/index.ts` | documentation mentions a missing repository path |
-| `missing-file` | `docs/06-super-admin-and-operations/cloud-accounts-architecture.md` | `src/notifications.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/06-super-admin-and-operations/notification-tests.md` | `src/features/notifications/domain/notification-test-scenarios.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/capacitor/android-push-notifications.md` | `scripts/sync-android-push-assets.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/capacitor/android-push-notifications.md` | `src/features/notifications/domain/notification-sound.ts` | documentation mentions a missing repository path |

@@ -12101,6 +12101,8 @@
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/account-bridge",
         "@asol/account-declarations",
+        "@asol/control-composition",
+        "@asol/gova-deployment-core",
         "@asol/notifications-composition",
         "@asol/orders-composition",
         "@asol/ota-core",
@@ -12125,6 +12127,9 @@
         "note",
         "operational",
         "packages/account-bridge/",
+        "packages/account-declarations/",
+        "packages/control-composition/",
+        "packages/gova-deployment-core/",
         "packages/notifications-composition/",
         "packages/orders-composition/",
         "packages/products-composition/",
@@ -12136,12 +12141,7 @@
         "reconstruction",
         "relationships",
         "relocated",
-        "src/index",
-        "src/index.ts",
-        "src/notifications",
-        "src/notifications.ts",
-        "the",
-        "ts"
+        "the"
       ]
     },
     {
@@ -28170,6 +28170,17 @@
       "tags": [
         "android/gradle/wrapper/gradle-wrapper",
         "android/gradle/wrapper/gradle-wrapper.properties",
+        "properties"
+      ]
+    },
+    {
+      "id": "source:android/local.properties",
+      "kind": "source",
+      "name": "local.properties",
+      "path": "android/local.properties",
+      "tags": [
+        "android/local",
+        "android/local.properties",
         "properties"
       ]
     },
@@ -71769,6 +71780,36 @@
     },
     {
       "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/account-declarations",
+      "kind": "references",
+      "detail": "packages/account-declarations/"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/control-composition",
+      "kind": "references",
+      "detail": "@asol/control-composition"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/control-composition",
+      "kind": "references",
+      "detail": "packages/control-composition/"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "references",
+      "detail": "@asol/gova-deployment-core"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "references",
+      "detail": "packages/gova-deployment-core/"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
       "to": "package:@asol/notifications-composition",
       "kind": "references",
       "detail": "@asol/notifications-composition"
@@ -72522,6 +72563,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
+      "to": "source:android/local.properties",
+      "kind": "references",
+      "detail": "android/local.properties"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
       "to": "source:packages/native-core/scripts/android-build-preflight.ts",
       "kind": "references",
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
@@ -73127,6 +73174,12 @@
       "to": "source:android/capacitor.settings.gradle",
       "kind": "references",
       "detail": "android/capacitor.settings.gradle"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
+      "to": "source:android/local.properties",
+      "kind": "references",
+      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
@@ -74040,6 +74093,12 @@
       "to": "script:scripts/android/gradle.ts",
       "kind": "references",
       "detail": "scripts/android/gradle.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
+      "to": "source:android/local.properties",
+      "kind": "references",
+      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
@@ -85908,6 +85967,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:android/gradle/wrapper/gradle-wrapper.properties",
+      "kind": "documents",
+      "detail": "android/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:android/local.properties",
       "kind": "documents",
       "detail": "android/"
     },
@@ -134012,6 +134077,11 @@
     },
     {
       "from": "script:scripts/deploy-all.ts",
+      "to": "environment-key:ASOL_DEPLOY_CALLBACK_SECRET",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/deploy-all.ts",
       "to": "environment-key:ASOL_DEPLOY_REVISION_AT_START",
       "kind": "uses-environment"
     },
@@ -134023,6 +134093,11 @@
     {
       "from": "script:scripts/deploy-all.ts",
       "to": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/deploy-all.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_CONTROL_URL",
       "kind": "uses-environment"
     },
     {
@@ -136700,6 +136775,11 @@
     },
     {
       "from": "source:android/gradle/wrapper/gradle-wrapper.properties",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:android/local.properties",
       "to": "runtime:android",
       "kind": "affects-runtime"
     },
@@ -175605,6 +175685,12 @@
       "to": "package:@asol/account-declarations",
       "kind": "imports",
       "detail": "@asol/account-declarations"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/index.ts",
+      "to": "source:packages/vercel-deploy-core/src/release-rollback.ts",
+      "kind": "imports",
+      "detail": "./release-rollback"
     },
     {
       "from": "source:packages/vercel-deploy-core/src/index.ts",

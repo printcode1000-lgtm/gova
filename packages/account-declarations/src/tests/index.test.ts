@@ -89,7 +89,7 @@ function runTests(): void {
     assert(declaration.project.length > 0, `${name}: has a project`);
     assert(declaration.tokenEnvVar.startsWith('VERCEL_'), `${name}: token var is a Vercel token`);
   }
-  console.log('  ✔ All seven declarations are well-formed.');
+  console.log('  ✔ All eight declarations are well-formed.');
 
   // ---------------------------------------------------------------- mirror entry points are real and canonical
   for (const declaration of Object.values(ACCOUNT_DECLARATIONS)) {

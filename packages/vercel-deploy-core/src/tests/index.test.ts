@@ -126,9 +126,12 @@ async function runTests(): Promise<void> {
   // Remote deploy contracts: the console and the sandbox runner agree on them,
   // so a stage dropped here silently breaks the production deploy timeline.
   const stages: readonly string[] = REMOTE_DEPLOY_ALL_STAGES;
-  for (const phase of ['preflight', 'publish', 'notifications', 'products', 'orders', 'profiles', 'submain', 'sub2main', 'main']) {
+  for (const phase of ['preflight', 'publish', 'control', 'notifications', 'products', 'orders', 'profiles', 'submain', 'sub2main', 'readiness', 'main']) {
     assert(stages.includes(phase), `Remote deploy stages must cover deploy:all phase "${phase}"`);
   }
+  assert(stages.indexOf('control') < stages.indexOf('notifications'), 'Control deploys before the six workloads');
+  assert(stages.indexOf('sub2main') < stages.indexOf('readiness'), 'Readiness is written after the six workloads');
+  assert(stages.indexOf('readiness') < stages.indexOf('main'), 'Gova main waits behind the readiness barrier');
   assert(stages.indexOf('preflight') < stages.indexOf('main'), 'Remote deploy stages keep pipeline order');
   assert(isRemoteDeployAllTerminal('succeeded') && isRemoteDeployAllTerminal('failed'), 'Terminal statuses');
   assert(!isRemoteDeployAllTerminal('running') && !isRemoteDeployAllTerminal('preparing'), 'Active statuses are not terminal');

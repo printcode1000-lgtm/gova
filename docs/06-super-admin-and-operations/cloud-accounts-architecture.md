@@ -133,17 +133,19 @@ the repository leaves the machine.
 
 ### Sealed Capability Packages
 
-The 7 Vercel account architecture is enforced and driven by sealed capability packages under `packages/`:
+The 8 Vercel runtime architecture is enforced and driven by sealed capability
+packages under `packages/`:
 
-1. **`@asol/vercel-deploy-core`** (`packages/vercel-deploy-core/`): Central account declaration registry (`GOVA_DECLARATION`, `NOTIFICATIONS_DECLARATION`, `PRODUCTS_DECLARATION`, `ORDERS_DECLARATION`, `PROFILES_DECLARATION`), GitHub-free project creation (`POST /v10/projects`), credential upserting, ephemeral Vercel CLI runner (`vercel@59.0.0`), and account deployment orchestrator.
+1. **`@asol/account-declarations`** (`packages/account-declarations/`): The names-only account declarations for `gova`, `control`, and the six workload runtimes, including project names, token variable names, service directories, and per-runtime environment ownership.
+2. **`@asol/vercel-deploy-core`** (`packages/vercel-deploy-core/`): GitHub-free project creation (`POST /v10/projects`), credential upserting, the pinned Vercel CLI runner (`vercel@59.0.0`), deployment monitoring, exact-SHA release state, and rollback.
 2. **`@asol/service-mirror-core`** (`packages/service-mirror-core/`): Shared import-graph mirror walker that builds `generated/src` and `generated/public` for the four read-only microservices while keeping baseline files byte-identical.
-3. **`@asol/account-bridge`** (`packages/account-bridge/`): Device-only inter-account channel (Rule 0) exported through exactly two doors:
-   - `.` -> `src/index.ts` (11-entry exact-match route table)
-   - `./notifications` -> `src/notifications.ts` (signed grant delivery)
+3. **`@asol/account-bridge`** (`packages/account-bridge/`): Pure route+method ownership registry plus the device-side inter-account channel. New clients use owner origins directly, and gova's compatibility boundary uses the same registry for stateless redirects.
 4. **`@asol/notifications-composition`** (`packages/notifications-composition/`): Composition layer re-exporting entry points for `asol-notifications`.
 5. **`@asol/products-composition`** (`packages/products-composition/`): Composition layer re-exporting entry points for `asol-products`.
 6. **`@asol/orders-composition`** (`packages/orders-composition/`): Composition layer re-exporting entry points for `asol-orders`.
 7. **`@asol/profiles-composition`** (`packages/profiles-composition/`): Composition layer re-exporting entry points for `asol-profiles`.
+8. **`@asol/control-composition`** (`packages/control-composition/`): Composition layer for the operational control runtime.
+9. **`@asol/gova-deployment-core`** (`packages/gova-deployment-core/`): Deterministic gova-only build view and post-build artifact gates that prove Business API handlers are absent from the frontend artifact.
 
 See [16. Deployment Targets](../07-mobile-and-release/deployment-targets.md),
 [Service Bridge Module](../05-platform-features/service-bridge-module.md),

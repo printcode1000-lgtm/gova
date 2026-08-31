@@ -72,6 +72,11 @@ Two public-read rules follow from that:
 A short SHA is refused with `400`. A barrier that guessed which commit you meant
 would be worse than one that is down.
 
+`deploy:all` publishes this row only after the irreversible release has deployed
+and observed `READY` for control and all six workloads. The GitHub-linked gova
+build waits on this row before it generates the gova-only build view, so the
+frontend can never publish ahead of the runtimes it redirects to.
+
 ## The error contract is shared, not restated
 
 Control answers the same status and the same body the application answered for

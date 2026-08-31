@@ -293,3 +293,27 @@ Blocker 3 needs a design decision that the preflight surfaced rather than a wiri
 - The release plane moved to `CONTROL_RUNTIME_OPTIONAL_ENV_KEYS`: control serves Super Admin, System Logs, and OTA administration without it and degrades to `productionDeployNotConfigured` rather than failing to start.
 - The declaration isolation test now allows exactly one cross-account **origin**, `ASOL_NOTIFICATIONS_URL`, with the reason stated: it is the address for the single allowlisted terminal-notification hop, carries no notification database and no push provider credential, and the rule still catches a real notifications secret landing on control.
 - Verification after the corrections: `typecheck`, `test:account-declarations`, `test:deployment-tools`, `docs:generate`, `architecture:check` (100%) all pass.
+
+## Completed stage 38 — release order, durable readiness publication, and automatic rollback wired
+
+The current `main` had advanced to `1d9d5243fcc2471fc92742bf9009dbcaddc7cdd2`, so execution continued from that SHA rather than the older instruction SHA. The working tree was clean before this stage.
+
+- `deploy:all` now has an explicit `control` phase between `publish` and the six workload phases. `control` remains outside `SERVICE_PHASE_IDS`, so six-workload loops still stay exactly six, but every full release deploys control at the same revision before any workload deployment.
+- A new `readiness` phase runs after `sub2main` and before `main`. It posts a signed control callback carrying a `ReleaseStateMutation` only after `READY` reports exist for control plus notifications, products, orders, profiles, submain, and sub2main. That writes the control-owned durable `control_release_state` row that `build:vercel` waits on before producing the gova-only artifact.
+- `deploy:all` captures rollback baselines for all eight runtimes before the Git push, and failures after production mutation now execute `rollbackToBaseline()` automatically rather than only printing manual instructions.
+- The Vercel Sandbox stage contract now includes `control` and `readiness`, matching the `deploy:all` phase order.
+- Documentation updated in `docs/06-super-admin-and-operations/control-runtime.md` and `docs/06-super-admin-and-operations/cloud-accounts-architecture.md`; generated knowledge was refreshed with `npm run docs:generate`.
+- Verification completed in this stage: `npm run test:deployment-tools`, `npm run test:release-core`, `npm run test:vercel-deploy-core`, `npm run typecheck`, `npm run lint` all pass. `npm run architecture:check` and `npm run docs:ci` initially failed only because generated docs were stale, then `npm run docs:generate` was run.
+- Exact next operation: rerun `npm run architecture:check`, `npm run docs:ci`, control sync/verify/build/smoke, gova tree/artifact verification, `npm run verify:all`, and then execute the live cutover if every gate is green.
+
+## Completed stage 39 — current-main repository gates green before live cutover
+
+Execution continued from `HEAD == origin/main == 1d9d5243fcc2471fc92742bf9009dbcaddc7cdd2`; this is newer than the older plan SHA and was treated as the intended current baseline. The working tree was clean before this stage's repository changes.
+
+- Cleaned the final misleading seven-account declaration text after `control` became an eighth Vercel declaration, while leaving the separate seven-owner-origin gova compatibility text intact.
+- `npm run test` completed all 96 gates.
+- `npm run verify:all` completed **41 passed, 0 failed, 0 skipped, 1 omitted**; the omitted gate is `ota:self-test`, which writes and deletes a live R2 object and needs the OTA signing key.
+- `npm run control:sync`, `npm run control:verify`, `npm run control:build`, and `npm run control:smoke` passed.
+- `npm run gova:tree`, the gova-only Next build inside `.tmp-gova-build`, and `npm run gova:artifact:verify` passed; the temporary build tree was removed afterward.
+- `npm run docs:generate`, `npm run docs:ci`, `npm run test:account-declarations`, and `npm run architecture:check` passed after the final wording cleanup. `architecture:check` still reports 167 native surfaces changed since the last store release, explicitly as non-failing OTA-publish context.
+- Exact next operation: run `npm run deploy:all` from this working tree so the publish, control deployment, six workload deployments, durable readiness callback, gova build, live release check, and deployed smoke run as one atomic cutover.

@@ -15,7 +15,7 @@ tree pulled `@asol/account-declarations` — whose entries carry
 `requiredEnv`/`optionalEnv` — into a static chunk, and
 `auditStaticMobilePushSecurity` failed the release over an inventory of server
 secret names. It lists
-every external account this project deploys to or stores data in: seven Vercel
+every external account this project deploys to or stores data in: eight Vercel
 accounts, five Turso accounts, and four Cloudflare R2 accounts (general,
 legacy products, apparel/pets products, OTA).
 

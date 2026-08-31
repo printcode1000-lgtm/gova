@@ -1,5 +1,5 @@
 /**
- * Layer 3 — the seven Vercel account declarations. Pure data, and nothing else.
+ * Layer 3 — the eight Vercel account declarations. Pure data, and nothing else.
  *
  * This package exists separately from `@asol/vercel-deploy-core` because the two are
  * different layers with different reasons to change: a declaration changes when an

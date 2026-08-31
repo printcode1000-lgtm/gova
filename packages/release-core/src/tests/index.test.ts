@@ -134,15 +134,17 @@ assert.deepEqual(
   [
     'preflight',
     'publish',
+    'control',
     'notifications',
     'products',
     'orders',
     'profiles',
     'submain',
     'sub2main',
+    'readiness',
     'main',
   ],
-  'The release order changed. Main deploys last because the services it calls must exist first, ' +
+  'The release order changed. Main deploys last because control and the services it calls must exist first, ' +
     'and preflight runs first because everything after it is irreversible.',
 );
 
@@ -159,12 +161,20 @@ for (const service of SERVICE_PHASE_IDS) {
     DEPLOY_ALL_PHASE_ORDER.indexOf('preflight') < DEPLOY_ALL_PHASE_ORDER.indexOf(service),
     'Nothing deploys before preflight.',
   );
+  assert.ok(
+    DEPLOY_ALL_PHASE_ORDER.indexOf('control') < DEPLOY_ALL_PHASE_ORDER.indexOf(service),
+    `${service} must deploy after control, which owns the release barrier.`,
+  );
+  assert.ok(
+    DEPLOY_ALL_PHASE_ORDER.indexOf(service) < DEPLOY_ALL_PHASE_ORDER.indexOf('readiness'),
+    `${service} must deploy before readiness can be published.`,
+  );
 }
 
 assert.equal(isDeployAllPhaseId('main'), true);
 assert.equal(isDeployAllPhaseId('nonsense'), false, 'An unknown --phase must not resume anything.');
 
-assert.deepEqual(phasesFrom('sub2main'), ['sub2main', 'main'], 'Resuming runs the rest, in order.');
+assert.deepEqual(phasesFrom('sub2main'), ['sub2main', 'readiness', 'main'], 'Resuming runs the rest, in order.');
 assert.deepEqual(phasesFrom('preflight'), [...DEPLOY_ALL_PHASE_ORDER]);
 assert.deepEqual(phasePrerequisites('preflight'), [], 'The first phase depends on nothing.');
 assert.deepEqual(

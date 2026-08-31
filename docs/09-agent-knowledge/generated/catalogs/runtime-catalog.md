@@ -9,7 +9,7 @@ The project has five mandatory application surfaces — Development, Web, Static
 
 | Runtime | Summary | Commands | Config | Consumed artifacts | Directly mapped source nodes |
 |---|---|---:|---:|---:|---:|
-| Android | Capacitor Android shell. Production consumes out/ as webDir and adds Android-native plugins, policies, resources, signing and store artifacts. | 32 | 3 | 2 | 1680 |
+| Android | Capacitor Android shell. Production consumes out/ as webDir and adds Android-native plugins, policies, resources, signing and store artifacts. | 32 | 3 | 2 | 1681 |
 | Development | Next.js development runtime on port 3001; Capacitor can optionally live-reload from it through CAPACITOR_SERVER_URL. | 2 | 2 | 0 | 2208 |
 | iOS | Capacitor iOS shell. Production consumes out/ as webDir and adds iOS-native plugins, entitlements, signing, archive and TestFlight/App Store behavior. | 13 | 3 | 2 | 1667 |
 | Independent services | Separately deployed service runtimes under services/*; they are not exercised by the root next start process. | 6 | 0 | 0 | 131 |

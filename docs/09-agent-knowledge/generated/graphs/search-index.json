@@ -12101,6 +12101,8 @@
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/account-bridge",
         "@asol/account-declarations",
+        "@asol/control-composition",
+        "@asol/gova-deployment-core",
         "@asol/notifications-composition",
         "@asol/orders-composition",
         "@asol/ota-core",
@@ -12125,6 +12127,9 @@
         "note",
         "operational",
         "packages/account-bridge/",
+        "packages/account-declarations/",
+        "packages/control-composition/",
+        "packages/gova-deployment-core/",
         "packages/notifications-composition/",
         "packages/orders-composition/",
         "packages/products-composition/",
@@ -12136,12 +12141,7 @@
         "reconstruction",
         "relationships",
         "relocated",
-        "src/index",
-        "src/index.ts",
-        "src/notifications",
-        "src/notifications.ts",
-        "the",
-        "ts"
+        "the"
       ]
     },
     {
@@ -28170,6 +28170,17 @@
       "tags": [
         "android/gradle/wrapper/gradle-wrapper",
         "android/gradle/wrapper/gradle-wrapper.properties",
+        "properties"
+      ]
+    },
+    {
+      "id": "source:android/local.properties",
+      "kind": "source",
+      "name": "local.properties",
+      "path": "android/local.properties",
+      "tags": [
+        "android/local",
+        "android/local.properties",
         "properties"
       ]
     },
