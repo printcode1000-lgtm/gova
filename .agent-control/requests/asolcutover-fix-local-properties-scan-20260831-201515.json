@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "asolcutover-fix-local-properties-scan-20260831-201515",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Exclude Android local properties from generated knowledge",
+    "verification": "docs-ci",
+    "shell_command": "set -euo pipefail\npython3 - <<'PY'\nfrom pathlib import Path\np = Path('scripts/docs/fs-scan.ts')\ns = p.read_text()\nanchor = \"const IGNORED_DIRECTORIES = new Set([\"\nif anchor not in s:\n    raise SystemExit('ignored directory anchor missing')\ns = s.replace(anchor, \"const IGNORED_FILES = new Set(['android/local.properties']);\\n\\n\" + anchor, 1)\nold = \"      const child = normalizePath(`${repoPath}/${entry.name}`);\\n      if (child.startsWith('docs/09-agent-knowledge/generated/')) continue;\"\nnew = \"      const child = normalizePath(`${repoPath}/${entry.name}`);\\n      if (IGNORED_FILES.has(child)) continue;\\n      if (child.startsWith('docs/09-agent-knowledge/generated/')) continue;\"\nif old not in s:\n    raise SystemExit('walk child anchor missing')\ns = s.replace(old, new, 1)\np.write_text(s)\nPY\necho '=== clean baseline ==='\nnpm run docs:generate\ngit diff --exit-code -- docs/09-agent-knowledge/generated\necho '=== android/local.properties invariance ==='\nprintf 'sdk.dir=/tmp/fake-sdk\\n' > android/local.properties\nnpm run docs:generate\ngit diff --exit-code -- docs/09-agent-knowledge/generated\nrm -f android/local.properties"
+  },
+  "createdAt": "2026-08-31T17:15:15.000Z"
+}
