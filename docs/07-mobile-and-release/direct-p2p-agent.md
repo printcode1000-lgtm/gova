@@ -37,6 +37,8 @@ The discovery HTTP listener remains discovery-only and never executes commands. 
 
 GitHub Actions are not part of normal direct command/result transport. R2 must never contain shell commands, patches, stdout, stderr, or general execution results.
 
+Bootstrap authorization is fully GitHub-scoped on the permanent `agent-request/chatgpt` branch. The client writes requests under `.agent-control/direct-auth/`, and the host returns the signed public handshake grant under `.agent-control/direct-auth-results/`. These bootstrap commits do not use GitHub Actions. Private session key material remains machine-local. R2 remains limited to Host Discovery and short-lived ICE/WebRTC rendezvous metadata.
+
 ## NAT traversal transport
 
 Cross-network direct connectivity uses WebRTC ICE with STUN and an ordered reliable DataChannel. The DataChannel is a byte tunnel around the existing TLS 1.3 direct protocol, so transport selection does not duplicate or weaken authentication, capabilities, replay protection, secret redaction, mutation safety, or operation logging. R2/GitHub carry only short-lived signaling/bootstrap metadata; command and result bytes stay on the selected ICE path.
