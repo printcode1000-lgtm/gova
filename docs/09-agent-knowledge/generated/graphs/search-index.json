@@ -28174,17 +28174,6 @@
       ]
     },
     {
-      "id": "source:android/local.properties",
-      "kind": "source",
-      "name": "local.properties",
-      "path": "android/local.properties",
-      "tags": [
-        "android/local",
-        "android/local.properties",
-        "properties"
-      ]
-    },
-    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",

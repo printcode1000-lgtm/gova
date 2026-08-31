@@ -28174,17 +28174,6 @@
       ]
     },
     {
-      "id": "source:android/local.properties",
-      "kind": "source",
-      "name": "local.properties",
-      "path": "android/local.properties",
-      "tags": [
-        "android/local",
-        "android/local.properties",
-        "properties"
-      ]
-    },
-    {
       "id": "source:android/settings.gradle",
       "kind": "source",
       "name": "settings.gradle",
@@ -72563,12 +72552,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
       "to": "source:packages/native-core/scripts/android-build-preflight.ts",
       "kind": "references",
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
@@ -73174,12 +73157,6 @@
       "to": "source:android/capacitor.settings.gradle",
       "kind": "references",
       "detail": "android/capacitor.settings.gradle"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
@@ -74093,12 +74070,6 @@
       "to": "script:scripts/android/gradle.ts",
       "kind": "references",
       "detail": "scripts/android/gradle.ts"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
@@ -85967,12 +85938,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:android/gradle/wrapper/gradle-wrapper.properties",
-      "kind": "documents",
-      "detail": "android/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:android/local.properties",
       "kind": "documents",
       "detail": "android/"
     },
@@ -136775,11 +136740,6 @@
     },
     {
       "from": "source:android/gradle/wrapper/gradle-wrapper.properties",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:android/local.properties",
       "to": "runtime:android",
       "kind": "affects-runtime"
     },
