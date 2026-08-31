@@ -42173,6 +42173,17 @@
       ]
     },
     {
+      "id": "source:src/core/config/test-env.ts",
+      "kind": "source",
+      "name": "test-env.ts",
+      "path": "src/core/config/test-env.ts",
+      "tags": [
+        "src/core/config/test-env",
+        "src/core/config/test-env.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/core/providers/query-provider.tsx",
       "kind": "source",
       "name": "query-provider.tsx",
@@ -186680,6 +186691,31 @@
       "kind": "uses-environment"
     },
     {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
       "from": "source:src/core/providers/query-provider.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -246126,6 +246162,12 @@
     },
     {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",
+      "to": "source:src/core/config/test-env.ts",
+      "kind": "imports",
+      "detail": "@/core/config/test-env"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/release-commands.test.ts",
       "to": "source:src/features/google-play-console/index.ts",
       "kind": "imports",
       "detail": "@/features/google-play-console"
@@ -246192,6 +246234,11 @@
     {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",
       "to": "package:@asol/vercel-deploy-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/release-commands.test.ts",
+      "to": "source:src/core/config/test-env.ts",
       "kind": "tests"
     },
     {
