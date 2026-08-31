@@ -42,14 +42,25 @@ jobs:
 
           cd "$root"
           echo '=== official status ==='
-          timeout 35 npx tsx scripts/local-agent-direct-remote.ts status | tee /tmp/gova-direct-final-status.json
+          set +e
+          timeout 30 npx tsx scripts/local-agent-direct-remote.ts status > /tmp/gova-direct-final-status.json 2> /tmp/gova-direct-final-status.err
+          status_code=$?
+          set -e
+          cat /tmp/gova-direct-final-status.json || true
+          cat /tmp/gova-direct-final-status.err >&2 || true
+          if [ "$status_code" -ne 0 ]; then
+            echo "status_exit=$status_code"
+            journalctl --user -u gova-direct-agent.service -n 80 --no-pager || true
+            exit "$status_code"
+          fi
           grep -q 'loopback:tcp:127.0.0.1:48732' /tmp/gova-direct-final-status.json
+
           echo '=== official exec ==='
-          timeout 35 npx tsx scripts/local-agent-direct-remote.ts exec -- "printf 'P2P_MAIN_OK\\n'; hostname; pwd" | tee /tmp/gova-direct-final-exec.json
+          timeout 30 npx tsx scripts/local-agent-direct-remote.ts exec -- "printf 'P2P_MAIN_OK\\n'; hostname; pwd" | tee /tmp/gova-direct-final-exec.json
           grep -q 'P2P_MAIN_OK' /tmp/gova-direct-final-exec.json
           grep -q 'loopback:tcp:127.0.0.1:48732' /tmp/gova-direct-final-exec.json
 
-          rm -f /tmp/gova-direct-final-status.json /tmp/gova-direct-final-exec.json
+          rm -f /tmp/gova-direct-final-status.json /tmp/gova-direct-final-status.err /tmp/gova-direct-final-exec.json
           git rm .github/workflows/direct-agent-one-shot.yml
           git -c user.name='gova-direct-finalizer' -c user.email='gova-direct-finalizer@users.noreply.github.com' commit -m 'Remove temporary direct P2P verification workflow'
           git push origin main
