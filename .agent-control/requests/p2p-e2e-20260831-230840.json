@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-e2e-20260831-230840",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Verify Direct Agent end-to-end connection",
+    "verification": "none",
+    "execution_target": "isolated-worktree",
+    "timeout_minutes": "5",
+    "shell_command": "set -euo pipefail\nexport GOVA_LOCAL_WORKSPACE=/home/hesham/gova\nexport GOVA_DIRECT_AGENT_DIR=/home/hesham/gova/.local/direct-agent\nresult=$(npx tsx scripts/local-agent-direct-remote.ts exec -- \"printf 'DIRECT_E2E_OK\\n'; hostname; pwd\")\nprintf '%s\\n' \"$result\"\nprintf '%s\\n' \"$result\" | grep -q 'DIRECT_E2E_OK'\nprintf '%s\\n' \"$result\" | grep -Eq '\"path\": \"(loopback|lan|webrtc):'"
+  },
+  "createdAt": "2026-08-31T23:08:40.000Z"
+}
