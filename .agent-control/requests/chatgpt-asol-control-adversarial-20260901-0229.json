@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "asol-adv-20260901-0229",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "ASOL control adversarial verification only",
+    "verification": "none",
+    "execution_target": "canonical-host",
+    "timeout_minutes": "55",
+    "shell_command": "set -euo pipefail\ncd /home/hesham/gova\necho '=== ADVERSARIAL ASOL CONTROL VERIFICATION ==='\ngit fetch --prune origin main\ntest \"$(git branch --show-current)\" = \"main\"\ntest \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/main)\"\ntest -z \"$(git status --porcelain --untracked-files=no)\"\necho \"HEAD=$(git rev-parse HEAD)\"\n\necho '--- route ownership / compatibility attack tests ---'\nnpm run api:inventory\nnpm run test:account-bridge\nnpm run test:api-core\n\necho '--- architectural isolation attack tests ---'\nnpm run test:architecture-core\nnpm run test:import-without-composition\nnpm run test:gova-deployment-core\nnpm run test:account-declarations\nnpm run env:ownership\n\necho '--- control runtime and release-plane attack tests ---'\nnpm run test:control\nnpm run test:deployment-tools\nnpm run test:vercel-deploy-core\nnpm run test:release-core\n\necho '--- construct gova-only deployment tree and attack its contents ---'\nrm -rf .tmp-gova-build\nnpm run gova:tree\ntest -d .tmp-gova-build\nif [ -d .tmp-gova-build/src/app/api ]; then\n  bad_routes=$(find .tmp-gova-build/src/app/api -type f -name 'route.ts' ! -path '*/api/health/route.ts' -print)\n  if [ -n \"$bad_routes\" ]; then\n    echo 'FATAL: business API route implementations leaked into gova deployment tree:'\n    printf '%s\\n' \"$bad_routes\"\n    exit 71\n  fi\nfi\nnpm run gova:artifact:verify\n\necho '--- full regression gates ---'\nnpm run typecheck\nnpm run lint\nnpm run architecture:check\nnpm run docs:ci\nnpm run verify:all\nnpm run test\n\necho '--- final fail-closed state ---'\ntest \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/main)\"\ntest -z \"$(git status --porcelain --untracked-files=no)\"\nrm -rf .tmp-gova-build\necho 'ADVERSARIAL_VERIFICATION=PASS'"
+  },
+  "createdAt": "2026-08-31T23:29:19.000Z"
+}
