@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "p2p-stun-probe-fixed-20260831-2352",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Probe STUN reachability for direct transport",
+    "verification": "none",
+    "timeout_minutes": "10",
+    "execution_target": "canonical-host",
+    "shell_command": "set -euo pipefail\ncd /home/hesham/gova\nnpx tsx -e '(async()=>{const m=await import(\"@asol/local-agent-core/direct\");const x=await m.discoverStunMappedEndpoint();console.log(JSON.stringify({stunReachable:Boolean(x),mappedIp:x?.ip??null,mappedPort:x?.port??null}));})().catch(e=>{console.error(e);process.exit(1)})'"
+  },
+  "createdAt": "2026-08-31T20:52:00.000Z"
+}
