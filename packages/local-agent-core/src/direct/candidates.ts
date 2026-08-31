@@ -221,8 +221,8 @@ export async function collectDirectCandidates(
     candidates.push({
       type: "stun",
       address: stunRes.ip,
-      port, // TCP direct port on host
-      protocol: "tcp",
+      port: stunRes.port,
+      protocol: "udp",
       priority: 70,
       expiresAt,
     });

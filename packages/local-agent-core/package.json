@@ -25,5 +25,8 @@
   },
   "scripts": {
     "test": "npx tsx src/tests/index.test.ts"
+  },
+  "dependencies": {
+    "werift": "0.24.4"
   }
 }

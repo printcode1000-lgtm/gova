@@ -69,7 +69,6 @@ Weak owners (<70%): **13**
 | `packages/featured-marquee-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/gova-deployment-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/hero-slider-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
-| `packages/local-agent-core` | package | yes | yes | yes | yes | yes | NO | yes | yes | 88% |
 | `packages/map-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/notifications-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/notifications-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -102,6 +101,7 @@ Weak owners (<70%): **13**
 | `packages/auth-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/catalog-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/data-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
+| `packages/local-agent-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/native-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/observability-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/ota-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |

@@ -21880,6 +21880,22 @@
       ]
     },
     {
+      "id": "external-dependency:werift",
+      "kind": "external-dependency",
+      "name": "werift",
+      "summary": "Declared dependency range observed: 0.24.4",
+      "tags": [
+        "0.24.4",
+        "24",
+        "dependency",
+        "external",
+        "external dependency npm package",
+        "npm",
+        "package",
+        "werift"
+      ]
+    },
+    {
       "id": "external-dependency:zod",
       "kind": "external-dependency",
       "name": "zod",
@@ -33367,6 +33383,17 @@
       "tags": [
         "packages/local-agent-core/src/direct/transport",
         "packages/local-agent-core/src/direct/transport.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "kind": "source",
+      "name": "webrtc-tunnel.ts",
+      "path": "packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/webrtc-tunnel",
+        "packages/local-agent-core/src/direct/webrtc-tunnel.ts",
         "ts"
       ]
     },
@@ -53694,6 +53721,18 @@
       "tags": [
         "packages/local-agent-core/src/tests/direct-transport",
         "packages/local-agent-core/src/tests/direct-transport.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "kind": "test",
+      "name": "direct-webrtc.test.ts",
+      "path": "packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "tags": [
+        "packages/local-agent-core/src/tests/direct-webrtc",
+        "packages/local-agent-core/src/tests/direct-webrtc.test.ts",
         "test",
         "ts"
       ]

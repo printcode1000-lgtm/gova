@@ -279,7 +279,7 @@
     "local-agent:host:restore": "npx tsx scripts/local-agent-host-restore.ts",
     "local-agent:dispatch:check": "npx tsx scripts/local-agent-dispatch-check.ts",
     "local-agent:device:discover": "npx tsx scripts/local-agent-device-discovery.ts",
-    "test:local-agent-core": "npx tsx packages/local-agent-core/src/tests/index.test.ts && npx tsx packages/local-agent-core/src/tests/direct.test.ts && npx tsx packages/local-agent-core/src/tests/direct-transport.test.ts && npx tsx packages/local-agent-core/src/tests/direct-runtime.test.ts",
+    "test:local-agent-core": "npx tsx packages/local-agent-core/src/tests/index.test.ts && npx tsx packages/local-agent-core/src/tests/direct.test.ts && npx tsx packages/local-agent-core/src/tests/direct-transport.test.ts && npx tsx packages/local-agent-core/src/tests/direct-runtime.test.ts && npx tsx packages/local-agent-core/src/tests/direct-webrtc.test.ts",
     "test:local-agent-workflows": "npx tsx scripts/tests/local-agent-control-plane.test.ts",
     "test:notifications-core": "cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/notifications-core/src/tests/index.test.ts",
     "test:data-core": "npm run test:data-health-core && npm run test:backup-core && npm run test:sqlite-reconnect && npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts",

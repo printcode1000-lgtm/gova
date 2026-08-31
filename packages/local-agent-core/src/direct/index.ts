@@ -14,3 +14,4 @@ export * from "./transport";
 export * from "./bootstrap";
 export * from "./bootstrap-watcher";
 export * from "./runtime";
+export * from "./webrtc-tunnel";

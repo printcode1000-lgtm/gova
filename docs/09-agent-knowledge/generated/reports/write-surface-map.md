@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **378**
-Unproven gateway paths: **150**
+Detected write-like surfaces: **379**
+Unproven gateway paths: **151**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -98,6 +98,7 @@ Unproven gateway paths: **150**
 | `packages/local-agent-core/src/direct/crypto.ts` | `@asol/local-agent-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/local-agent-core/src/direct/replay-cache.ts` | `@asol/local-agent-core` | delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/local-agent-core/src/direct/transport.ts` | `@asol/local-agent-core` | delete, patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/local-agent-core/src/direct/webrtc-tunnel.ts` | `@asol/local-agent-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/local-agent-core/src/lock-store.ts` | `@asol/local-agent-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/map-core/src/AsolMap.tsx` | `@asol/map-core` | delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/native-core/src/adapters/emitter.ts` | `@asol/native-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |

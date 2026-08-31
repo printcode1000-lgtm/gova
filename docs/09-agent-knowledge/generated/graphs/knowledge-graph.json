@@ -21880,6 +21880,22 @@
       ]
     },
     {
+      "id": "external-dependency:werift",
+      "kind": "external-dependency",
+      "name": "werift",
+      "summary": "Declared dependency range observed: 0.24.4",
+      "tags": [
+        "0.24.4",
+        "24",
+        "dependency",
+        "external",
+        "external dependency npm package",
+        "npm",
+        "package",
+        "werift"
+      ]
+    },
+    {
       "id": "external-dependency:zod",
       "kind": "external-dependency",
       "name": "zod",
@@ -33367,6 +33383,17 @@
       "tags": [
         "packages/local-agent-core/src/direct/transport",
         "packages/local-agent-core/src/direct/transport.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "kind": "source",
+      "name": "webrtc-tunnel.ts",
+      "path": "packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "tags": [
+        "packages/local-agent-core/src/direct/webrtc-tunnel",
+        "packages/local-agent-core/src/direct/webrtc-tunnel.ts",
         "ts"
       ]
     },
@@ -53699,6 +53726,18 @@
       ]
     },
     {
+      "id": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "kind": "test",
+      "name": "direct-webrtc.test.ts",
+      "path": "packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "tags": [
+        "packages/local-agent-core/src/tests/direct-webrtc",
+        "packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/local-agent-core/src/tests/direct.test.ts",
       "kind": "test",
       "name": "direct.test.ts",
@@ -59171,6 +59210,11 @@
     {
       "from": "command:test:local-agent-core",
       "to": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:local-agent-core",
+      "to": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
       "kind": "invokes"
     },
     {
@@ -79868,6 +79912,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/local-agent-core/src/git.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -83049,6 +83099,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -109001,6 +109057,17 @@
     {
       "from": "package:@asol/hero-slider-core",
       "to": "external-dependency:zod",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/local-agent-core",
+      "to": "external-dependency:werift",
+      "kind": "declares-dependency",
+      "detail": "dependencies:0.24.4"
+    },
+    {
+      "from": "package:@asol/local-agent-core",
+      "to": "external-dependency:werift",
       "kind": "imports"
     },
     {
@@ -155703,6 +155770,12 @@
       "detail": "./transport"
     },
     {
+      "from": "source:packages/local-agent-core/src/direct/index.ts",
+      "to": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "kind": "imports",
+      "detail": "./webrtc-tunnel"
+    },
+    {
       "from": "source:packages/local-agent-core/src/direct/paths.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -156047,6 +156120,54 @@
       "to": "source:packages/local-agent-core/src/direct/session.ts",
       "kind": "imports",
       "detail": "./session"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "to": "external-dependency:werift",
+      "kind": "imports",
+      "detail": "werift"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "to": "source:packages/local-agent-core/src/direct/candidates.ts",
+      "kind": "imports",
+      "detail": "./candidates"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "to": "source:packages/local-agent-core/src/direct/errors.ts",
+      "kind": "imports",
+      "detail": "./errors"
     },
     {
       "from": "source:packages/local-agent-core/src/git.ts",
@@ -240469,6 +240590,47 @@
       "from": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
       "to": "environment-key:GOVA_DIRECT_AGENT_DIR",
       "kind": "uses-environment"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "to": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
+      "kind": "imports",
+      "detail": "../direct/webrtc-tunnel"
+    },
+    {
+      "from": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "tests"
     },
     {
       "from": "test:packages/local-agent-core/src/tests/direct.test.ts",
