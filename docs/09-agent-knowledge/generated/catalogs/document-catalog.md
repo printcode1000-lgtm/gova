@@ -63,7 +63,7 @@ Searchable inventory of hand-written and generated-entry Markdown documents.
 | ADR-0003: SRP File Splits (2026-08) | `docs/01-architecture/09-decisions/ADR-0003-srp-file-splits-2026-08.md` | Accepted (2026-08) |
 | ADR-0004: UI Capability Packages (2026-08) | `docs/01-architecture/09-decisions/ADR-0004-ui-capability-packages-2026-08.md` | Accepted (2026-08) |
 | ADR-0005: Sealed Package Model | `docs/01-architecture/09-decisions/ADR-0005-sealed-package-model.md` | Accepted (2026-08, ongoing) |
-| ADR-0006: main Is the Only Branch | `docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md` | Accepted (2026-08) |
+| ADR-0006: Fixed Two-Branch Repository Model | `docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md` | Accepted (2026-08), finalized 2026-08-31 |
 | ADR-0007: Application Feature Consolidation under `src/features` | `docs/01-architecture/09-decisions/ADR-0007-application-feature-consolidation.md` | Accepted (2026-08), strengthened 2026-08-24 |
 | Architecture Decision Records | `docs/01-architecture/09-decisions/README.md` | Index of ADRs capturing significant architectural decisions. Agents consult ADRs when changing boundaries established by consolidation work. |
 | API Client Layer (AsolApiClient) | `docs/01-architecture/10-application-layers/api-client-layer.md` | The single HTTP transport boundary between client services and business API routes. |

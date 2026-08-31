@@ -10,7 +10,7 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 282 |
+| command | 283 |
 | config | 12 |
 | document | 255 |
 | domain | 10 |
@@ -20,9 +20,9 @@
 | package | 44 |
 | route | 177 |
 | runtime | 7 |
-| script | 153 |
+| script | 155 |
 | service | 7 |
-| source | 2190 |
+| source | 2191 |
 | test | 230 |
 
 ## Domains

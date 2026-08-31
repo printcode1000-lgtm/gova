@@ -146,6 +146,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run local-agent:doctor` | `npx tsx scripts/local-agent-doctor.ts` |
 | `npm run local-agent:host:backup` | `npx tsx scripts/local-agent-host-backup.ts` |
 | `npm run local-agent:host:restore` | `npx tsx scripts/local-agent-host-restore.ts` |
+| `npm run local-agent:p2p:sync` | `npx tsx scripts/local-agent-p2p-sync.ts` |
 | `npm run local-agent:status` | `npx tsx scripts/local-agent-status.ts` |
 | `npm run local-agent:watch` | `npx tsx scripts/local-agent-watch.ts` |
 | `npm run local-agent:watch:window` | `bash packages/local-agent-core/scripts/watch-window.sh` |

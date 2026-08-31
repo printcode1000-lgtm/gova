@@ -16,7 +16,7 @@ import path from "node:path";
 const sandbox = mkdtempSync(path.join(tmpdir(), "gova-control-plane-test-"));
 process.env.GOVA_AGENT_COORDINATION_DIR = sandbox;
 process.env.GOVA_AGENT_STALE_LOCK_MS = String(60 * 60 * 1000);
-import { acquireLock, assessSwap, isStale, prepareWorktree, removeWorktree, RESCUE_REF_NAMESPACE, worktreePath, buildCoordinationSnapshot, declareAgent, DEFAULT_HEARTBEAT_TTL_MS, DISPATCHABLE_WORKFLOWS, isOpen, isSecretPath, knownRequestIds, listAgents, listLocks, listMessages, listOperations, livenessOf, LockConflictError, lockId, looksLikeSecretValue, MAIN_WORKTREE_SLUG, MAX_REQUEST_AGE_MS, maxConcurrentMutations, memoryFloorFor, memoryFloorMb, ownerIsAlive, patchSecretViolations, pendingReservationMb, postMessage, readMemory, reconcileOrphanedOperations, recordRequest, recoverStaleLocks, releaseAgentLocks, releaseLock, scopesConflict, FLUSH_SAFETY_MARGIN_MB, SWAP_FLUSH_COMMAND, swapIsHealthy, validateDispatchRequest, waitForAdmission, worktreeSlug } from "@asol/local-agent-core";
+import { acquireLock, assessSwap, isStale, prepareWorktree, removeWorktree, RESCUE_REF_NAMESPACE, worktreePath, buildCoordinationSnapshot, declareAgent, DEFAULT_HEARTBEAT_TTL_MS, DISPATCHABLE_WORKFLOWS, isOpen, isSecretPath, knownRequestIds, listAgents, listLocks, listMessages, listOperations, livenessOf, LockConflictError, lockId, looksLikeSecretValue, MAIN_WORKTREE_SLUG, MAX_REQUEST_AGE_MS, maxConcurrentMutations, memoryFloorFor, memoryFloorMb, ownerIsAlive, patchSecretViolations, pendingReservationMb, postMessage, readMemory, reconcileOrphanedOperations, recordRequest, recoverStaleLocks, releaseAgentLocks, releaseLock, scopesConflict, FLUSH_SAFETY_MARGIN_MB, SWAP_FLUSH_COMMAND, swapIsHealthy, validateDispatchRequest, waitForAdmission, worktreeSlug, EMPTY_PEER_REGISTRY, resolveLocalRole, resolveLanIp, upsertPeerRecord } from "@asol/local-agent-core";
 import { envWithHostToolShims, hostToolAllowed, setHostToolAllowed, wrapLoginShellCommand } from "@asol/local-agent-core/host";
 import { buildWatchModel, EMPTY_GITHUB_SAMPLE, humanDuration, renderFrame, sshAliases, visibleLength } from "@asol/local-agent-core/monitor";
 
@@ -708,6 +708,42 @@ assert.equal(
 );
 
 assert.equal(assessSwap(null).verdict, "no-swap", "an unreadable /proc/meminfo recommends nothing");
+
+// --- peer sync ---------------------------------------------------------------
+
+assert.equal(resolveLocalRole("hesham-HP-EliteDesk-800-G2-TWR"), "desktop", "elitedesk resolves to desktop");
+assert.equal(resolveLocalRole("hesham-HP-EliteBook-840-G3"), "laptop", "elitebook resolves to laptop");
+assert.equal(resolveLocalRole("my-workstation-desk"), "desktop", "desk substring resolves to desktop");
+assert.equal(resolveLocalRole("some-other-laptop"), "laptop", "laptop substring resolves to laptop");
+
+const lan = resolveLanIp();
+assert.ok(typeof lan === "string" && lan.length > 0, "lan ip is resolved as a non-empty string");
+
+const reg1 = upsertPeerRecord(EMPTY_PEER_REGISTRY, "desktop", {
+  hostname: "desktop-host",
+  lan_ip: "192.168.1.100",
+  wan_ip: "203.0.113.1",
+  udp_port: 41234,
+  stun_ip: "",
+  stun_port: 41234,
+});
+
+assert.equal(reg1.desktop?.hostname, "desktop-host", "desktop record updated");
+assert.equal(reg1.desktop?.role, "desktop", "desktop role set");
+assert.ok(typeof reg1.desktop?.updated_at === "string", "updated_at set as string");
+assert.equal(reg1.laptop, null, "laptop record untouched in registry");
+
+const reg2 = upsertPeerRecord(reg1, "laptop", {
+  hostname: "laptop-host",
+  lan_ip: "192.168.1.101",
+  wan_ip: "203.0.113.1",
+  udp_port: 41234,
+  stun_ip: "",
+  stun_port: 41234,
+});
+
+assert.equal(reg2.desktop?.hostname, "desktop-host", "desktop record preserved");
+assert.equal(reg2.laptop?.hostname, "laptop-host", "laptop record added");
 
 // --- cleanup ------------------------------------------------------------------
 

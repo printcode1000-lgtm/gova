@@ -1911,6 +1911,21 @@
       ]
     },
     {
+      "id": "command:local-agent:p2p:sync",
+      "kind": "command",
+      "name": "npm run local-agent:p2p:sync",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "local-agent",
+        "local-agent:p2p:sync",
+        "npm",
+        "npm run local-agent:p2p:sync",
+        "p2p",
+        "run",
+        "sync"
+      ]
+    },
+    {
       "id": "command:local-agent:status",
       "kind": "command",
       "name": "npm run local-agent:status",
@@ -6938,23 +6953,29 @@
     {
       "id": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
       "kind": "document",
-      "name": "ADR-0006: main Is the Only Branch",
+      "name": "ADR-0006: Fixed Two-Branch Repository Model",
       "path": "docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
-      "summary": "Accepted (2026-08)",
+      "summary": "Accepted (2026-08), finalized 2026-08-31",
       "tags": [
         "2026-08",
+        "2026-08-31",
         "accepted",
-        "accepted (2026-08)",
+        "accepted (2026-08), finalized 2026-08-31",
         "adr-0006",
-        "adr-0006: main is the only branch",
-        "branch",
+        "adr-0006: fixed two-branch repository model",
         "docs/01-architecture/09-decisions/adr-0006-main-only-branch",
         "docs/01-architecture/09-decisions/adr-0006-main-only-branch.md",
-        "is",
-        "main",
+        "finalized",
+        "fixed",
         "md",
-        "only",
-        "the"
+        "model",
+        "packages/local-agent-core/src/control-branch-namespaces",
+        "packages/local-agent-core/src/control-branch-namespaces.ts",
+        "repository",
+        "scripts/block-branch-creation",
+        "scripts/block-branch-creation.ts",
+        "ts",
+        "two-branch"
       ]
     },
     {
@@ -13600,8 +13621,6 @@
         "scripts/docs/docs-ci.ts",
         "scripts/github-ci-policy",
         "scripts/github-ci-policy.ts",
-        "scripts/local-agent-main-apply",
-        "scripts/local-agent-main-apply.ts",
         "scripts/protect-main-branch",
         "scripts/protect-main-branch.ts",
         "scripts/runtime/check",
@@ -27002,6 +27021,17 @@
       ]
     },
     {
+      "id": "script:scripts/local-agent-p2p-sync.ts",
+      "kind": "script",
+      "name": "local-agent-p2p-sync.ts",
+      "path": "scripts/local-agent-p2p-sync.ts",
+      "tags": [
+        "scripts/local-agent-p2p-sync",
+        "scripts/local-agent-p2p-sync.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/local-agent-status.ts",
       "kind": "script",
       "name": "local-agent-status.ts",
@@ -27207,6 +27237,17 @@
       "tags": [
         "scripts/release-android",
         "scripts/release-android.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/release-readiness-barrier.ts",
+      "kind": "script",
+      "name": "release-readiness-barrier.ts",
+      "path": "scripts/release-readiness-barrier.ts",
+      "tags": [
+        "scripts/release-readiness-barrier",
+        "scripts/release-readiness-barrier.ts",
         "ts"
       ]
     },
@@ -32814,6 +32855,17 @@
       "tags": [
         "packages/local-agent-core/src/paths",
         "packages/local-agent-core/src/paths.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/local-agent-core/src/peer-sync.ts",
+      "kind": "source",
+      "name": "peer-sync.ts",
+      "path": "packages/local-agent-core/src/peer-sync.ts",
+      "tags": [
+        "packages/local-agent-core/src/peer-sync",
+        "packages/local-agent-core/src/peer-sync.ts",
         "ts"
       ]
     },
@@ -56976,6 +57028,16 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:local-agent:p2p:sync",
+      "to": "script:scripts/local-agent-p2p-sync.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:local-agent:p2p:sync",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:local-agent:status",
       "to": "script:scripts/local-agent-status.ts",
       "kind": "invokes"
@@ -66259,21 +66321,33 @@
     },
     {
       "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
-      "to": "document:docs/01-architecture/07-enforcement/architecture-tests.md",
-      "kind": "references",
-      "detail": "../07-enforcement/architecture-tests.md"
-    },
-    {
-      "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
       "to": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "kind": "references",
       "detail": "../../07-mobile-and-release/github-ci-policy.md"
     },
     {
       "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
+      "to": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
+      "kind": "references",
+      "detail": "../../07-mobile-and-release/local-agent-runner-pool.md"
+    },
+    {
+      "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
       "to": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
       "kind": "references",
       "detail": "../../07-mobile-and-release/scripts-and-workflows.md"
+    },
+    {
+      "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
+      "to": "script:scripts/block-branch-creation.ts",
+      "kind": "references",
+      "detail": "scripts/block-branch-creation.ts"
+    },
+    {
+      "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
+      "to": "source:packages/local-agent-core/src/control-branch-namespaces.ts",
+      "kind": "references",
+      "detail": "packages/local-agent-core/src/control-branch-namespaces.ts"
     },
     {
       "from": "document:docs/01-architecture/09-decisions/ADR-0007-application-feature-consolidation.md",
@@ -73316,12 +73390,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
-      "to": "script:scripts/local-agent-main-apply.ts",
-      "kind": "references",
-      "detail": "scripts/local-agent-main-apply.ts"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "to": "script:scripts/protect-main-branch.ts",
       "kind": "references",
       "detail": "scripts/protect-main-branch.ts"
@@ -78847,6 +78915,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/local-agent-core/src/paths.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/local-agent-core/src/peer-sync.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -85164,6 +85238,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent-p2p-sync.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/local-agent-status.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -85273,6 +85353,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/release-android.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/release-readiness-barrier.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -135068,6 +135154,17 @@
       "kind": "uses-environment"
     },
     {
+      "from": "script:scripts/local-agent-p2p-sync.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/local-agent-p2p-sync.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "imports",
+      "detail": "@asol/local-agent-core"
+    },
+    {
       "from": "script:scripts/local-agent-status.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -135510,6 +135607,11 @@
       "to": "script:scripts/release-stage.ts",
       "kind": "imports",
       "detail": "./release-stage"
+    },
+    {
+      "from": "script:scripts/release-readiness-barrier.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "script:scripts/release-service-smoke-probes.ts",
@@ -136111,6 +136213,12 @@
       "to": "package:@asol/gova-deployment-core",
       "kind": "imports",
       "detail": "@asol/gova-deployment-core"
+    },
+    {
+      "from": "script:scripts/vercel-deployment-build.ts",
+      "to": "script:scripts/release-readiness-barrier.ts",
+      "kind": "imports",
+      "detail": "./release-readiness-barrier"
     },
     {
       "from": "script:scripts/vercel-deployment-build.ts",
@@ -154158,6 +154266,12 @@
     },
     {
       "from": "source:packages/local-agent-core/src/index.ts",
+      "to": "source:packages/local-agent-core/src/peer-sync.ts",
+      "kind": "imports",
+      "detail": "./peer-sync"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/index.ts",
       "to": "source:packages/local-agent-core/src/request-contract.ts",
       "kind": "imports",
       "detail": "./request-contract"
@@ -154454,6 +154568,61 @@
     {
       "from": "source:packages/local-agent-core/src/paths.ts",
       "to": "environment-key:GOVA_RUNNER_POOL_DIR",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "package:@asol/local-agent-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "environment-key:ASOL_OTA_R2_ACCESS_KEY_ID",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "environment-key:ASOL_OTA_R2_BUCKET_NAME",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "environment-key:ASOL_OTA_R2_ENDPOINT",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "environment-key:ASOL_OTA_R2_LOCATION",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:packages/local-agent-core/src/peer-sync.ts",
+      "to": "environment-key:ASOL_OTA_R2_SECRET_ACCESS_KEY",
       "kind": "uses-environment"
     },
     {
@@ -242932,6 +243101,12 @@
     },
     {
       "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
+      "to": "script:scripts/release-readiness-barrier.ts",
+      "kind": "imports",
+      "detail": "../release-readiness-barrier"
+    },
+    {
+      "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
       "to": "script:scripts/vercel-build-artifact-guard.ts",
       "kind": "imports",
       "detail": "../vercel-build-artifact-guard"
@@ -242941,6 +243116,11 @@
       "to": "script:scripts/vercel-deployment-guards.ts",
       "kind": "imports",
       "detail": "../vercel-deployment-guards"
+    },
+    {
+      "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
+      "to": "script:scripts/release-readiness-barrier.ts",
+      "kind": "tests"
     },
     {
       "from": "test:scripts/tests/vercel-deployment-guards.test.ts",

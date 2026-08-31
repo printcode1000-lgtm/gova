@@ -132,6 +132,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run local-agent:doctor` | `Tooling` | 1 |  | 0 |
 | `npm run local-agent:host:backup` | `Tooling` | 1 |  | 0 |
 | `npm run local-agent:host:restore` | `Tooling` | 1 |  | 0 |
+| `npm run local-agent:p2p:sync` | `Tooling` | 1 |  | 0 |
 | `npm run local-agent:status` | `Tooling` | 1 |  | 0 |
 | `npm run local-agent:watch` | `Tooling` | 1 |  | 0 |
 | `npm run local-agent:watch:window` | `Tooling` | 0 |  | 0 |

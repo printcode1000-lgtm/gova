@@ -28,4 +28,5 @@ export * from "./request-contract";
 export * from "./request-store";
 export * from "./secret-paths";
 export * from "./swap-hygiene";
+export * from "./peer-sync";
 export * from "./worktree";
