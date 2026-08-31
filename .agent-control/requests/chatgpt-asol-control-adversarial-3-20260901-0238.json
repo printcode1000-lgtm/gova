@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "asol-adv3-20260901-0238",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "Collect remaining ASOL adversarial failures only",
+    "verification": "none",
+    "execution_target": "canonical-host",
+    "timeout_minutes": "55",
+    "shell_command": "set -uo pipefail\ncd /home/hesham/gova\ngit fetch --prune origin main\ntest \"$(git branch --show-current)\" = main || exit 90\ntest \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/main)\" || exit 91\ntest -z \"$(git status --porcelain --untracked-files=no)\" || exit 92\nfailures=0\nrun_gate() { label=\"$1\"; shift; echo \"=== GATE:$label ===\"; \"$@\"; rc=$?; echo \"GATE_RESULT:$label:$rc\"; if [ $rc -ne 0 ]; then failures=$((failures+1)); fi; }\n\nrun_gate cors-spoof env ASOL_CORS_ORIGINS=https://trusted.example ./node_modules/.bin/tsx -e \"import { NextRequest } from 'next/server'; import { proxy } from './src/proxy'; const req=new NextRequest('https://gova.example/api/products',{method:'OPTIONS',headers:{origin:'https://trusted.example.evil.tld','access-control-request-method':'GET'}}); const res=proxy(req); const reflected=res.headers.get('access-control-allow-origin'); console.log('SPOOF_REFLECTED='+String(reflected)); if (reflected === 'https://trusted.example.evil.tld') { console.error('FATAL_CORS_PREFIX_BYPASS'); process.exit(73); }\"\nrun_gate architecture npm run architecture:check\nrun_gate docs npm run docs:ci\nrun_gate verify-all npm run verify:all\nrun_gate test-all npm run test\nrun_gate control-sync npm run control:sync\nrun_gate control-verify npm run control:verify\nrun_gate control-build npm run control:build\nrun_gate control-smoke npm run control:smoke\n\necho \"ADVERSARIAL_FAILURE_COUNT=$failures\"\ntest \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/main)\" || exit 93\ntest -z \"$(git status --porcelain --untracked-files=no)\" || exit 94\nif [ $failures -ne 0 ]; then exit 95; fi\necho 'ADVERSARIAL_VERIFICATION_3=PASS'"
+  },
+  "createdAt": "2026-08-31T23:38:00.000Z"
+}
