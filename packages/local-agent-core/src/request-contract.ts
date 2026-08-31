@@ -71,6 +71,7 @@ export const MAX_REQUEST_FUTURE_MS = 5 * 60 * 1000;
 export const MAX_INPUT_VALUE_LENGTH = 200_000;
 const REQUEST_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{7,63}$/;
 const AGENT_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{2,47}$/;
+const FORBIDDEN_LOCAL_RUNNER_TOOL_PATTERN = /\b(?:antigravity|agy)\b/i;
 
 export interface DispatchRequest {
   version: number;
@@ -133,6 +134,9 @@ function validateInputs(workflow: DispatchableWorkflow, inputs: Record<string, u
   if (workflow === "local-agent-workspace" || workflow === "local-agent-main") {
     const hasPatch = typeof inputs.patch_base64 === "string" && inputs.patch_base64.trim().length > 0;
     const hasShell = typeof inputs.shell_command === "string" && inputs.shell_command.trim().length > 0;
+    if (hasShell && FORBIDDEN_LOCAL_RUNNER_TOOL_PATTERN.test(inputs.shell_command as string)) {
+      errors.push("inputs.shell_command requests Antigravity/agy, which is permanently forbidden by Local Runner policy.");
+    }
     // The workflow's own default applies when the request omits the input.
     const verification =
       typeof inputs.verification === "string" && inputs.verification.trim()
