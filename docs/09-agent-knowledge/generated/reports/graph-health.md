@@ -8,7 +8,7 @@
 | Metric | Value |
 |---|---:|
 | Graph version | 2 |
-| Nodes | 3847 |
+| Nodes | 3848 |
 | Edges | 34832 |
 | Dangling edges | 0 |
 | Owner nodes with dependency relationships | 97 / 98 |
@@ -23,7 +23,7 @@
 | config | 12 |
 | document | 258 |
 | domain | 10 |
-| environment-key | 276 |
+| environment-key | 277 |
 | external-dependency | 108 |
 | feature | 47 |
 | package | 44 |

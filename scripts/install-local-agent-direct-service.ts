@@ -3,12 +3,12 @@ import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "n
 import { homedir } from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { DIRECT_SYSTEMD_UNIT_NAME, directAgentDir, ensureDirectDir, renderDirectSystemdUnit } from "@asol/local-agent-core/direct";
+import { DIRECT_SYSTEMD_UNIT_NAME, ensureDirectDir, renderDirectSystemdUnit } from "@asol/local-agent-core/direct";
 
-const workspace=path.resolve(process.env.GOVA_LOCAL_WORKSPACE || process.cwd());
+const workspace=path.resolve(process.env.GOVA_DIRECT_SERVICE_WORKSPACE || process.cwd());
 const unitDir=path.join(homedir(),".config","systemd","user");
 const unitPath=path.join(unitDir,DIRECT_SYSTEMD_UNIT_NAME);
-const envFile=path.join(ensureDirectDir(directAgentDir()),"service.env");
+const envFile=path.join(ensureDirectDir(path.join(workspace,".local","direct-agent")),"service.env");
 mkdirSync(unitDir,{recursive:true});
 if(!existsSync(envFile)){
   const password=process.env.ASOL_DEVICE_DISCOVERY_PORT_PASSWORD || randomBytes(32).toString("base64url");

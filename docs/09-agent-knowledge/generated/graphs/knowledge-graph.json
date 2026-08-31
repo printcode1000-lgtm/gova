@@ -18541,6 +18541,19 @@
       ]
     },
     {
+      "id": "environment-key:GOVA_DIRECT_SERVICE_WORKSPACE",
+      "kind": "environment-key",
+      "name": "GOVA_DIRECT_SERVICE_WORKSPACE",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_direct_service_workspace",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:GOVA_HOST_ID",
       "kind": "environment-key",
       "name": "GOVA_HOST_ID",
@@ -135979,7 +135992,7 @@
     },
     {
       "from": "script:scripts/install-local-agent-direct-service.ts",
-      "to": "environment-key:GOVA_LOCAL_WORKSPACE",
+      "to": "environment-key:GOVA_DIRECT_SERVICE_WORKSPACE",
       "kind": "uses-environment"
     },
     {

@@ -149,9 +149,10 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `GOVA_AGENT_MEMORY_FLOOR_MB` | server/tooling | 2 | `packages/local-agent-core/src/admission.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_AGENT_STALE_LOCK_MS` | server/tooling | 2 | `packages/local-agent-core/src/lock-store.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_DIRECT_AGENT_DIR` | server/tooling | 4 | `packages/local-agent-core/src/direct/paths.ts`, `packages/local-agent-core/src/tests/direct-runtime.test.ts`, `packages/local-agent-core/src/tests/direct-transport.test.ts`, `packages/local-agent-core/src/tests/direct.test.ts` |
+| `GOVA_DIRECT_SERVICE_WORKSPACE` | server/tooling | 1 | `scripts/install-local-agent-direct-service.ts` |
 | `GOVA_HOST_ID` | server/tooling | 1 | `packages/local-agent-core/src/direct/paths.ts` |
 | `GOVA_HOST_PROFILE` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
-| `GOVA_LOCAL_WORKSPACE` | server/tooling | 4 | `scripts/install-local-agent-direct-service.ts`, `scripts/local-agent-main-apply.ts`, `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_LOCAL_WORKSPACE` | server/tooling | 3 | `scripts/local-agent-main-apply.ts`, `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_RUNNER_POOL_DIR` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
 | `HOME` | server/tooling | 2 | `packages/local-agent-core/src/host-inventory.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
 | `HOST` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
