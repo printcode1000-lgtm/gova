@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, rmSync, symlinkSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import path from "node:path";
 
 import { git, gitLines, gitSoft, runCapture } from "./git";
@@ -9,11 +9,12 @@ import { workspaceDir, worktreesDir } from "./paths";
  * Isolated git worktrees for mutating agents.
  *
  * `/home/hesham/gova` stays the one real clone: it owns the object store, the
- * remotes, and `node_modules`. Every mutation runs in a detached worktree under
- * `.local/agent-worktrees`, so parallel agents never share a checkout and the
- * developer's own working tree is never reset out from under them. Detached
- * heads are deliberate — a branch checked out in one worktree cannot be checked
- * out in another, and detaching sidesteps that entirely.
+ * remotes, and the installed third-party dependency cache. Every mutation runs
+ * in a detached worktree under `.local/agent-worktrees`, so parallel agents
+ * never share a checkout and the developer's own working tree is never reset
+ * out from under them. Detached heads are deliberate — a branch checked out in
+ * one worktree cannot be checked out in another, and detaching sidesteps that
+ * entirely.
  */
 
 export const MAIN_WORKTREE_SLUG = "__main";
@@ -42,23 +43,91 @@ export function worktreePath(slug: string): string {
   return path.join(worktreesDir(), slug);
 }
 
-function linkNodeModules(worktree: string): void {
-  const link = path.join(worktree, "node_modules");
-  if (existsSync(link)) return;
-  const target = path.join(workspaceDir(), "node_modules");
-  if (!existsSync(target)) return;
+interface PackageManifest {
+  name?: string;
+}
+
+function readPackageName(packageRoot: string): string | null {
   try {
-    symlinkSync(target, link, "dir");
+    const parsed = JSON.parse(readFileSync(path.join(packageRoot, "package.json"), "utf8")) as PackageManifest;
+    return typeof parsed.name === "string" && parsed.name.trim() ? parsed.name.trim() : null;
   } catch {
-    // A concurrent run created it first; either way the link now exists.
+    return null;
   }
 }
 
 /**
- * Materialise a clean worktree pinned to the freshest `origin/main`.
+ * Reuse the root third-party install without ever resolving an internal
+ * `@asol/*` workspace through the root checkout.
  *
- * The worktree is reused across runs of the same agent, which keeps the common
- * case to a fetch and a reset instead of a 440MB checkout.
+ * A whole-directory `node_modules` symlink looked cheap, but npm's workspace
+ * links inside it point back to `/home/hesham/gova/packages/*`. A branch
+ * worktree could therefore import one copy of a type from its own source and a
+ * second copy from main, producing false TypeScript incompatibilities and —
+ * worse — letting branch verification execute stale main code.
+ *
+ * The overlay keeps the speed property: every third-party top-level dependency
+ * is a symlink to the already-installed root cache, so no `npm ci` is needed per
+ * inspection/job. Only the `@asol` scope is rebuilt, with each workspace link
+ * targeting the package in this exact worktree. Unknown `@asol` entries, if npm
+ * ever installs one as a real external dependency, still fall back to the root
+ * cache instead of disappearing.
+ */
+export function linkWorktreeNodeModules(
+  worktree: string,
+  root = workspaceDir(),
+): { externalEntries: number; workspacePackages: number } {
+  const rootModules = path.join(root, "node_modules");
+  const worktreeModules = path.join(worktree, "node_modules");
+  if (!existsSync(rootModules)) return { externalEntries: 0, workspacePackages: 0 };
+
+  // This path belongs exclusively to an agent worktree. Rebuilding a few
+  // hundred symlinks is deterministic and avoids stale links after an npm
+  // install changes the root dependency tree. rmSync removes an old directory
+  // symlink itself; it does not traverse and delete the root target.
+  rmSync(worktreeModules, { recursive: true, force: true });
+  mkdirSync(worktreeModules, { recursive: true });
+
+  let externalEntries = 0;
+  for (const entry of readdirSync(rootModules, { withFileTypes: true })) {
+    if (entry.name === "@asol") continue;
+    symlinkSync(path.join(rootModules, entry.name), path.join(worktreeModules, entry.name));
+    externalEntries += 1;
+  }
+
+  const worktreeAsol = path.join(worktreeModules, "@asol");
+  mkdirSync(worktreeAsol, { recursive: true });
+  const linkedWorkspaceNames = new Set<string>();
+  let workspacePackages = 0;
+  const packageRoot = path.join(worktree, "packages");
+  if (existsSync(packageRoot)) {
+    for (const entry of readdirSync(packageRoot, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const packageDir = path.join(packageRoot, entry.name);
+      const packageName = readPackageName(packageDir);
+      if (!packageName?.startsWith("@asol/")) continue;
+      const shortName = packageName.slice("@asol/".length);
+      if (!shortName || shortName.includes("/")) continue;
+      symlinkSync(packageDir, path.join(worktreeAsol, shortName), "dir");
+      linkedWorkspaceNames.add(shortName);
+      workspacePackages += 1;
+    }
+  }
+
+  const rootAsol = path.join(rootModules, "@asol");
+  if (existsSync(rootAsol)) {
+    for (const entry of readdirSync(rootAsol, { withFileTypes: true })) {
+      if (linkedWorkspaceNames.has(entry.name)) continue;
+      symlinkSync(path.join(rootAsol, entry.name), path.join(worktreeAsol, entry.name));
+      externalEntries += 1;
+    }
+  }
+
+  return { externalEntries, workspacePackages };
+}
+
+/**
+ * Materialise a clean worktree pinned to the freshest `origin/main`.
  */
 export function prepareWorktree(slug: string): { worktree: string; baseSha: string } {
   const root = workspaceDir();
@@ -77,7 +146,7 @@ export function prepareWorktree(slug: string): { worktree: string; baseSha: stri
     git(["reset", "--hard", baseSha], worktree);
     git(["clean", "-fd"], worktree);
   }
-  linkNodeModules(worktree);
+  linkWorktreeNodeModules(worktree, root);
   return { worktree, baseSha };
 }
 
