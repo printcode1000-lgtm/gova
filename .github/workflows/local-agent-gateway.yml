@@ -32,5 +32,13 @@ jobs:
       GOVA_AGENT_COORDINATION_DIR: /home/hesham/gova/.local/github-runners/gova-coordination
       LOCAL_AGENT_REQUEST_BRANCH: ${{ github.ref_name }}
     steps:
+      - name: Repair missing local esbuild platform binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! node -e "require.resolve('@esbuild/linux-x64/package.json')" >/dev/null 2>&1; then
+            version="$(node -p "require('./node_modules/esbuild/package.json').version")"
+            npm install --no-save --package-lock=false --ignore-scripts "@esbuild/linux-x64@$version"
+          fi
       - name: Validate the request and dispatch the target workflow
         run: npx tsx scripts/local-agent-gateway.ts
