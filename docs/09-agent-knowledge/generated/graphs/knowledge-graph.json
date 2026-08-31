@@ -18403,6 +18403,19 @@
       ]
     },
     {
+      "id": "environment-key:LOCAL_AGENT_EXECUTION_TARGET",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_EXECUTION_TARGET",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_execution_target",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:LOCAL_AGENT_ID",
       "kind": "environment-key",
       "name": "LOCAL_AGENT_ID",
@@ -18553,6 +18566,19 @@
       "tags": [
         "environment",
         "local_agent_target_mode",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_TIMEOUT_MINUTES",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_TIMEOUT_MINUTES",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_timeout_minutes",
         "server",
         "server tooling environment",
         "tooling"
@@ -135260,7 +135286,17 @@
     },
     {
       "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:GOVA_LOCAL_WORKSPACE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
       "to": "environment-key:LOCAL_AGENT_COMMIT_MESSAGE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:LOCAL_AGENT_EXECUTION_TARGET",
       "kind": "uses-environment"
     },
     {
@@ -135296,6 +135332,11 @@
     {
       "from": "script:scripts/local-agent-main-apply.ts",
       "to": "environment-key:LOCAL_AGENT_TARGET_MODE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:LOCAL_AGENT_TIMEOUT_MINUTES",
       "kind": "uses-environment"
     },
     {

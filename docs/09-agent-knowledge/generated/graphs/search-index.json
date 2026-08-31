@@ -18403,6 +18403,19 @@
       ]
     },
     {
+      "id": "environment-key:LOCAL_AGENT_EXECUTION_TARGET",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_EXECUTION_TARGET",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_execution_target",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:LOCAL_AGENT_ID",
       "kind": "environment-key",
       "name": "LOCAL_AGENT_ID",
@@ -18553,6 +18566,19 @@
       "tags": [
         "environment",
         "local_agent_target_mode",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_TIMEOUT_MINUTES",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_TIMEOUT_MINUTES",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_timeout_minutes",
         "server",
         "server tooling environment",
         "tooling"

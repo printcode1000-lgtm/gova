@@ -149,7 +149,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `GOVA_AGENT_MEMORY_FLOOR_MB` | server/tooling | 2 | `packages/local-agent-core/src/admission.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_AGENT_STALE_LOCK_MS` | server/tooling | 2 | `packages/local-agent-core/src/lock-store.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_HOST_PROFILE` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
-| `GOVA_LOCAL_WORKSPACE` | server/tooling | 2 | `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_LOCAL_WORKSPACE` | server/tooling | 3 | `scripts/local-agent-main-apply.ts`, `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_RUNNER_POOL_DIR` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
 | `HOME` | server/tooling | 2 | `packages/local-agent-core/src/host-inventory.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
 | `HOST` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
@@ -158,6 +158,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `LC_ALL` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `LEGACY_PRODUCT_DATABASE_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-product-database.ts` |
 | `LOCAL_AGENT_COMMIT_MESSAGE` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
+| `LOCAL_AGENT_EXECUTION_TARGET` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_ID` | server/tooling | 2 | `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_INSPECT_MODE` | server/tooling | 1 | `scripts/local-agent-inspect.ts` |
 | `LOCAL_AGENT_INSPECT_PATHS` | server/tooling | 1 | `scripts/local-agent-inspect.ts` |
@@ -170,6 +171,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `LOCAL_AGENT_SHELL_COMMAND` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_STATUS_PATHS` | server/tooling | 1 | `scripts/local-agent-status.ts` |
 | `LOCAL_AGENT_TARGET_MODE` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
+| `LOCAL_AGENT_TIMEOUT_MINUTES` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_VERIFICATION` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCALAPPDATA` | server/tooling | 2 | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` |
 | `NEXT_PHASE` | server/tooling | 1 | `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |

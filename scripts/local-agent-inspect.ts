@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { ensureDir, git, gitSoft, heartbeat, inspectLogsDir, isSecretPath, relativeInsideWorkspace, runCapture, safeIdentifier, workspaceDir } from "@asol/local-agent-core";
 /**
@@ -64,17 +64,42 @@ function searchFiles(paths: string[]): string {
     .filter((item) => !isSecretPath(item));
   if (safePaths.length === 0) return "";
 
-  const ripgrep = runCapture("rg", ["--line-number", "--column", "--no-heading", "--", pattern, ...safePaths], workspace);
-  if (ripgrep.status === 0) return ripgrep.stdout;
-  if (ripgrep.status === 1 && !ripgrep.stderr) return "";
+  const explicitFiles = safePaths.filter((item) => {
+    const absolute = path.join(workspace, item);
+    return existsSync(absolute) && statSync(absolute).isFile();
+  });
+  const searchablePaths = safePaths.filter((item) => !explicitFiles.includes(item));
+  const sections: string[] = [];
+  if (explicitFiles.length > 0) {
+    let matcher: RegExp;
+    try { matcher = new RegExp(pattern); }
+    catch (error) { throw new Error(`Invalid search pattern: ${error instanceof Error ? error.message : String(error)}`); }
+    for (const file of explicitFiles) {
+      const lines = readFileSync(path.join(workspace, file), "utf8").split(/?
+/);
+      lines.forEach((line, index) => {
+        if (matcher.test(line)) sections.push(`${file}:${index + 1}:${line}`);
+      });
+    }
+  }
+  if (searchablePaths.length === 0) return sections.join("
+");
+
+  const ripgrep = runCapture("rg", ["--line-number", "--column", "--no-heading", "--", pattern, ...searchablePaths], workspace);
+  if (ripgrep.status === 0) return [...sections, ripgrep.stdout].filter(Boolean).join("
+");
+  if (ripgrep.status === 1 && !ripgrep.stderr) return sections.join("
+");
 
   const grep = runCapture(
     "git",
-    ["grep", "--line-number", "--no-color", "-I", "-e", pattern, "--", ...safePaths],
+    ["grep", "--line-number", "--no-color", "-I", "-e", pattern, "--", ...searchablePaths],
     workspace,
   );
-  if (grep.status === 0) return grep.stdout;
-  if (grep.status === 1) return "";
+  if (grep.status === 0) return [...sections, grep.stdout].filter(Boolean).join("
+");
+  if (grep.status === 1) return sections.join("
+");
   throw new Error(`Search failed: ${grep.stderr || ripgrep.stderr || "unknown error"}`);
 }
 

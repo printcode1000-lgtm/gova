@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **272**
+Keys: **274**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -151,7 +151,7 @@ Keys: **272**
 | `GOVA_AGENT_MEMORY_FLOOR_MB` | server-only | unknown | `packages/local-agent-core/src/admission.ts`, `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_AGENT_STALE_LOCK_MS` | server-only | unknown | `packages/local-agent-core/src/lock-store.ts`, `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_HOST_PROFILE` | server-only | unknown | `packages/local-agent-core/src/paths.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_LOCAL_WORKSPACE` | server-only | unknown | `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `GOVA_LOCAL_WORKSPACE` | server-only | unknown | `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts`, `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_RUNNER_POOL_DIR` | server-only | unknown | `packages/local-agent-core/src/paths.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `HOME` | server-only | unknown | `packages/local-agent-core/src/host-inventory.ts`, `packages/native-core/scripts/android-build-preflight.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `HOST` | server-only | unknown | `packages/ota-core/scripts/serve-static.ts` | unclassified | server-only | npm run runtime:check:changed |
@@ -160,6 +160,7 @@ Keys: **272**
 | `LC_ALL` | server-only | unknown | `scripts/fastlane-runner.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LEGACY_PRODUCT_DATABASE_URL` | server-only | unknown | `packages/data-core/src/tooling/migrate-product-database.ts` | vercel/database | server-only | npm run runtime:check:changed |
 | `LOCAL_AGENT_COMMIT_MESSAGE` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `LOCAL_AGENT_EXECUTION_TARGET` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCAL_AGENT_ID` | server-only | unknown | `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCAL_AGENT_INSPECT_MODE` | server-only | unknown | `scripts/local-agent-inspect.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCAL_AGENT_INSPECT_PATHS` | server-only | unknown | `scripts/local-agent-inspect.ts` | unclassified | server-only | npm run runtime:check:changed |
@@ -172,6 +173,7 @@ Keys: **272**
 | `LOCAL_AGENT_SHELL_COMMAND` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCAL_AGENT_STATUS_PATHS` | server-only | unknown | `scripts/local-agent-status.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCAL_AGENT_TARGET_MODE` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `LOCAL_AGENT_TIMEOUT_MINUTES` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCAL_AGENT_VERIFICATION` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCALAPPDATA` | server-only | unknown | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `NEXT_PHASE` | server-only | dangerous | `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |

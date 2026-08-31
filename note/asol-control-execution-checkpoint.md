@@ -317,3 +317,9 @@ Execution continued from `HEAD == origin/main == 1d9d5243fcc2471fc92742bf9009dbc
 - `npm run gova:tree`, the gova-only Next build inside `.tmp-gova-build`, and `npm run gova:artifact:verify` passed; the temporary build tree was removed afterward.
 - `npm run docs:generate`, `npm run docs:ci`, `npm run test:account-declarations`, and `npm run architecture:check` passed after the final wording cleanup. `architecture:check` still reports 167 native surfaces changed since the last store release, explicitly as non-failing OTA-publish context.
 - Exact next operation: run `npm run deploy:all` from this working tree so the publish, control deployment, six workload deployments, durable readiness callback, gova build, live release check, and deployed smoke run as one atomic cutover.
+
+## Local runner operational evidence
+
+- Durable incident and correct-behavior record: `note/asol-control-local-runner-operations-log.md`.
+- Runner hardening baseline: `988251462b0aa5dd95548980cde0859ffad42877`.
+- Every additional cutover runner failure must be appended there with symptom, root cause, recovery, and do-not-repeat behavior.

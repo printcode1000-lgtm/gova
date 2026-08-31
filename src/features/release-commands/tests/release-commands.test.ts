@@ -78,6 +78,38 @@ import {
   snapshotBuildOutputs,
 } from "@asol/release-core/console-artifacts";
 
+const SYNTHETIC_RUNTIME_KEYS = [
+  "NODE_ENV",
+  "ASOL_MODE",
+  "NEXT_PUBLIC_ASOL_MODE",
+  "VERCEL",
+  "VERCEL_ENV",
+  "ASOL_DATA_SOURCE",
+  "ASOL_PROVISIONING",
+  "GITHUB_ACTIONS",
+] as const;
+
+async function withSyntheticDevelopmentRuntime<T>(run: () => Promise<T>): Promise<T> {
+  const original = Object.fromEntries(
+    SYNTHETIC_RUNTIME_KEYS.map((key) => [key, process.env[key]]),
+  );
+  try {
+    for (const key of SYNTHETIC_RUNTIME_KEYS) delete process.env[key];
+    Object.assign(process.env, {
+      NODE_ENV: "development",
+      ASOL_MODE: "development",
+      ASOL_DATA_SOURCE: "local",
+    });
+    return await run();
+  } finally {
+    for (const key of SYNTHETIC_RUNTIME_KEYS) {
+      const value = original[key];
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  }
+}
+
 async function main() {
 const packageJson = JSON.parse(await readFile("package.json", "utf8")) as { scripts: Record<string, string> };
 const staticBuilderSource = await readFile("packages/ota-core/src/publishing/build/build-out.ts", "utf8");
@@ -686,8 +718,8 @@ try {
 } finally { await rm(temp, { recursive: true, force: true }); }
 
 await verifyPresentationStructure([adminAr]);
-await verifyRealRunnerSmokeTest();
-await verifyCancellationPaths();
+await withSyntheticDevelopmentRuntime(verifyRealRunnerSmokeTest);
+await withSyntheticDevelopmentRuntime(verifyCancellationPaths);
 await verifyArtifactCollection();
 await verifyProductionDeployConsole();
 
@@ -790,11 +822,17 @@ async function verifyCancellationPaths() {
       status: "running", queuedAt: new Date().toISOString(), startedAt: new Date().toISOString(),
       pid: child.pid, logPath: `.backups/build-jobs/${id}.log`,
     } as const;
-    await writeFile(path.join(jobDir, `${id}.json`), JSON.stringify(record));
-    if (tracked) trackBuildJobProcess(id, child);
-    const cancelled = await cancelBuildJob(id);
-    assert.equal(cancelled.status, "cancelled");
-    await rm(path.join(jobDir, `${id}.json`), { force: true });
+    const recordPath = path.join(jobDir, `${id}.json`);
+    await writeFile(recordPath, JSON.stringify(record));
+    try {
+      if (tracked) trackBuildJobProcess(id, child);
+      const cancelled = await cancelBuildJob(id);
+      assert.equal(cancelled.status, "cancelled");
+    } finally {
+      if (child.exitCode === null && child.signalCode === null) child.kill("SIGTERM");
+      child.unref();
+      await rm(recordPath, { force: true });
+    }
   }
   const logId = `job-${Date.now()}-log256`;
   await writeFile(path.join(jobDir, `${logId}.log`), "x".repeat(300 * 1024));

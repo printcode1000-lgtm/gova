@@ -89,3 +89,9 @@ No production deployment, rollback, alias change, or release-state callback occu
 - Keep `control` outside `SERVICE_PHASE_IDS`; the workload loops must remain exactly six.
 - Keep gova's seven public owner origins separate from the eight Vercel account declarations. The former is a frontend compatibility boundary, the latter is the deployment account registry.
 - If the local environment lacks the three public origins again, set them in the shell for the deploy command as shown above.
+
+## Local runner operational evidence
+
+- Durable incident and correct-behavior record: `note/asol-control-local-runner-operations-log.md`.
+- Runner hardening baseline: `988251462b0aa5dd95548980cde0859ffad42877`.
+- Every additional cutover runner failure must be appended there with symptom, root cause, recovery, and do-not-repeat behavior.
