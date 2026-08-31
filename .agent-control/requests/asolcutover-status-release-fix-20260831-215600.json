@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "requestId": "asolcutover-status-release-fix-20260831-215600",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-status",
+  "mode": "status",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol"
+  },
+  "createdAt": "2026-08-31T18:56:00.000Z"
+}
