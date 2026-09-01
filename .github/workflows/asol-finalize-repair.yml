@@ -27,5 +27,5 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin agent-request/chatgpt
-          git show origin/agent-request/chatgpt:scripts/asol-finalize-repair.sh > /tmp/asol-finalize-repair.sh
-          bash /tmp/asol-finalize-repair.sh
+          git show origin/agent-request/chatgpt:scripts/asol-finalize-retry.sh > /tmp/asol-finalize-retry.sh
+          bash /tmp/asol-finalize-retry.sh
