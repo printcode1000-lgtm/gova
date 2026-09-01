@@ -290,7 +290,7 @@ export async function listProjectEnv(
   teamId?: string,
 ): Promise<Array<{ id: string; key: string }>> {
   const response = await fetch(
-    withTeam(`https://api.vercel.com/v9/projects/${projectId}/env`, teamId),
+    withTeam(`https://api.vercel.com/v9/projects/${projectId}/env?limit=100`, teamId),
     { headers: buildHeaders(token) },
   );
   if (!response.ok) {

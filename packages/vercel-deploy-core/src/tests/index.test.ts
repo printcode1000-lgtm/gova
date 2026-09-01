@@ -106,6 +106,7 @@ async function runTests(): Promise<void> {
   // Test 5: Env upsert semantics (D4)
   assert(indexSource.includes("type: 'encrypted'"), 'D4: encrypted type used');
   assert(indexSource.includes("target: ['production', 'preview', 'development']"), 'D4: all targets included');
+  assert(indexSource.includes('/env?limit=100'), 'D4: project env listing covers the full gova env set before upsert/cleanup');
   assert(indexSource.includes("method: 'DELETE'"), 'D4: existing env deleted before creation');
   console.log('  ✔ Env upsert semantics verified (D4).');
 
