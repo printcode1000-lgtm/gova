@@ -3,13 +3,15 @@ set -Eeuo pipefail
 
 ROOT="${GOVA_LOCAL_WORKSPACE:-/home/hesham/gova}"
 BRANCH="${ASOL_REPAIR_BRANCH:-agent-request/chatgpt}"
-WT="$ROOT/.local/asol-long-repair"
+RUN_KEY="${GITHUB_RUN_ID:-$$}"
+WT="$ROOT/.local/asol-long-repair-$RUN_KEY"
 : "${GH_PUSH_TOKEN:?GH_PUSH_TOKEN is required}"
 REPO="https://x-access-token:${GH_PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
 echo "=== ASOL LONG REPAIR SESSION ==="
 echo "runner=$(hostname)"
 echo "branch=$BRANCH"
+echo "worktree=$WT"
 echo "main mutation is forbidden"
 
 if [[ "$BRANCH" != "agent-request/chatgpt" ]]; then
@@ -20,14 +22,20 @@ fi
 git -C "$ROOT" fetch origin "$BRANCH" main
 git -C "$ROOT" worktree remove --force "$WT" >/dev/null 2>&1 || true
 rm -rf "$WT"
-git -C "$ROOT" worktree add -B "$BRANCH" "$WT" "origin/$BRANCH"
+git -C "$ROOT" worktree add --detach "$WT" "origin/$BRANCH"
+cleanup() {
+  git -C "$ROOT" worktree remove --force "$WT" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
 cd "$WT"
 git remote set-url origin "$REPO"
 git config user.name gova-local-agent
 git config user.email gova-local-agent@users.noreply.github.com
 
-if [[ "$(git branch --show-current)" != "$BRANCH" ]]; then
-  echo "Refusing: current branch is not $BRANCH" >&2
+START_SHA="$(git rev-parse HEAD)"
+REMOTE_SHA="$(git rev-parse "origin/$BRANCH")"
+if [[ "$START_SHA" != "$REMOTE_SHA" ]]; then
+  echo "Refusing: worktree does not match origin/$BRANCH" >&2
   exit 91
 fi
 
