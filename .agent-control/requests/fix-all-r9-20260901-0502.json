@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "fix-all-r9-20260901-0502",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "createdAt": "2026-09-01T05:02:00Z",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "fix: complete ASOL cutover hardening [docs-contract-change]",
+    "verification": "none",
+    "timeout_minutes": "55",
+    "scopes": "src,scripts,packages/local-agent-core,packages/vercel-deploy-core,docs,.github/workflows,package.json",
+    "shell_command": "git fetch origin agent-request/chatgpt\ngit show FETCH_HEAD:.agent-control/payloads/fix-all-r9-20260901.sh > /tmp/gova-fix-all-r9-20260901.sh\nbash /tmp/gova-fix-all-r9-20260901.sh"
+  }
+}
