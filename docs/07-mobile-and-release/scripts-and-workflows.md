@@ -195,7 +195,7 @@ typechecking remain in local `npm run build` / `deploy:all` preflight.
 ## Service deployment checks
 
 Gova environment reconciliation requests up to 100 project environment entries before upsert and cleanup, so existing optional or legacy variables cannot be missed by the Vercel API default page size.
-Gova env reconciliation preserves existing Vercel target scopes when the same key has separate production, preview, or development entries; it updates every matching entry without widening its targets.
+Gova env reconciliation preserves existing Vercel target scopes and variable types (including Sensitive entries) when a key already exists; it updates every matching entry by value only, without widening targets or changing type.
 
 `npm run deploy:all` is organized as a runbook:
 phase → section → branch → one command. The phase order is still

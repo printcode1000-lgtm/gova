@@ -270,8 +270,8 @@ export async function writeProjectEnv(
           // Preserve each existing entry's target scope. Vercel permits the same
           // key in separate target entries; expanding one entry to all targets
           // collides with its siblings. PATCHing value/type only is atomic and
-          // keeps production/preview/development scopes exactly as configured.
-          body: JSON.stringify({ value, type: 'encrypted' }),
+          // keeps production/preview/development scopes and Sensitive/encrypted types exactly as configured.
+          body: JSON.stringify({ value }),
         },
       );
       if (!response.ok) {
