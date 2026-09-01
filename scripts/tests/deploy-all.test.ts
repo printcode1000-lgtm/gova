@@ -132,7 +132,7 @@ for (const phase of DEPLOY_ALL_RUNBOOK) {
   }
 }
 assert.match(formatRunbook(), /1\.1\.1 production-doctor: doctor:environment:production/);
-assert.match(formatRunbook(), /2\.3\.6 push-main: git:push main/);
+assert.match(formatRunbook(), /2\.3\.7 push-main: git:push main/);
 assert.match(
   formatRunbook(),
   /origin-main-current: git:fetch\+merge-base/,
@@ -213,7 +213,7 @@ assert.deepEqual(
 );
 assert.deepEqual(
   resolvePhasesToRun({ listPhases: false, fromPhase: "submain" }),
-  ["submain", "sub2main", "main"],
+  ["submain", "sub2main", "readiness", "main"],
 );
 
 // A changed source identity may widen validation, never silently keep a stale
@@ -260,6 +260,21 @@ assert.match(
   deployAllSource,
   /Promise\.allSettled\(phaseTasks\.map\(/,
   "deploy:all must start all Vercel targets before waiting for the combined report.",
+);
+assert.match(
+  deployAllSource,
+  /CONTROL_DEPLOY/,
+  "deploy:all must deploy control as its own mandatory phase.",
+);
+assert.match(
+  deployAllSource,
+  /publishReleaseReadiness/,
+  "deploy:all must publish durable exact-SHA readiness before main verification.",
+);
+assert.match(
+  deployAllSource,
+  /rollbackCapturedBaseline/,
+  "deploy:all must execute automatic rollback after production mutation failures.",
 );
 const environmentDoctor = readFileSync(new URL("../check-environment-requirements.ts", import.meta.url), "utf8");
 assert.match(
@@ -327,7 +342,7 @@ assert.equal(phaseOnly.phase.onlyPhase, "preflight");
 assert.deepEqual(resolvePhasesToRun(phaseOnly.phase), ["preflight"]);
 const fromPhase = parseArgv(["--from-phase=submain"]);
 assert.equal(fromPhase.phase.fromPhase, "submain");
-assert.deepEqual(resolvePhasesToRun(fromPhase.phase), ["submain", "sub2main", "main"]);
+assert.deepEqual(resolvePhasesToRun(fromPhase.phase), ["submain", "sub2main", "readiness", "main"]);
 const noSelector = parseArgv([]);
 assert.equal(noSelector.phase.resume, false, "A full release proves everything and consults no checkpoint.");
 assert.deepEqual(resolvePhasesToRun(noSelector.phase), [...DEPLOY_ALL_PHASE_ORDER]);

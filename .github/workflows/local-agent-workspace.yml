@@ -32,12 +32,17 @@ on:
           - lint
           - none
       shell_command:
-        description: "Optional shell command. Supply this, a patch, or both."
+        description: "Optional shell command. Antigravity/agy is permanently forbidden."
         required: false
         type: string
       scopes:
         description: "Comma or newline separated paths to lock for the duration of this job."
         required: false
+        type: string
+      timeout_minutes:
+        description: "Per shell/verification command deadline, 1-55 minutes."
+        required: false
+        default: "15"
         type: string
       request_id:
         description: "Dispatch request id, set by the gateway."
@@ -70,35 +75,9 @@ jobs:
       LOCAL_AGENT_VERIFICATION: ${{ inputs.verification }}
       LOCAL_AGENT_SHELL_COMMAND: ${{ inputs.shell_command }}
       LOCAL_AGENT_SCOPES: ${{ inputs.scopes }}
+      LOCAL_AGENT_EXECUTION_TARGET: isolated-worktree
+      LOCAL_AGENT_TIMEOUT_MINUTES: ${{ inputs.timeout_minutes }}
       LOCAL_AGENT_TARGET_MODE: branch
     steps:
-      - name: Isolate Antigravity project per worktree
-        shell: bash
-        run: |
-          real_agy="$(command -v agy || true)"
-          if [ -z "$real_agy" ]; then
-            exit 0
-          fi
-          wrapper_dir="$RUNNER_TEMP/gova-agy-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
-          mkdir -p "$wrapper_dir"
-          cat > "$wrapper_dir/agy" <<'EOF'
-          #!/usr/bin/env bash
-          set -euo pipefail
-          needs_project=0
-          has_project=0
-          for arg in "$@"; do
-            case "$arg" in
-              -p|--print|--prompt|--prompt-interactive) needs_project=1 ;;
-              --project|--project=*|--new-project|--new-project=*) has_project=1 ;;
-            esac
-          done
-          if [ "$needs_project" -eq 1 ] && [ "$has_project" -eq 0 ]; then
-            exec "$GOVA_REAL_AGY" --new-project "$@"
-          fi
-          exec "$GOVA_REAL_AGY" "$@"
-          EOF
-          chmod 700 "$wrapper_dir/agy"
-          echo "GOVA_REAL_AGY=$real_agy" >> "$GITHUB_ENV"
-          echo "$wrapper_dir" >> "$GITHUB_PATH"
       - name: Apply, verify, commit, and push the agent branch
         run: npx tsx scripts/local-agent-main-apply.ts

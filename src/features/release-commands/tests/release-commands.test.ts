@@ -6,6 +6,7 @@ import { existsSync } from "node:fs";
 import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { withTemporaryEnvironment } from "@/core/config/test-env";
 
 import { zipSync } from "fflate";
 
@@ -77,6 +78,10 @@ import {
   classifyEntry,
   snapshotBuildOutputs,
 } from "@asol/release-core/console-artifacts";
+
+async function withSyntheticDevelopmentRuntime<T>(run: () => Promise<T>): Promise<T> {
+  return withTemporaryEnvironment({ NODE_ENV: "development", ASOL_MODE: "development", NEXT_PUBLIC_ASOL_MODE: undefined, VERCEL: undefined, VERCEL_ENV: undefined, ASOL_DATA_SOURCE: "local", ASOL_PROVISIONING: undefined, GITHUB_ACTIONS: undefined }, run);
+}
 
 async function main() {
 const packageJson = JSON.parse(await readFile("package.json", "utf8")) as { scripts: Record<string, string> };
@@ -686,8 +691,8 @@ try {
 } finally { await rm(temp, { recursive: true, force: true }); }
 
 await verifyPresentationStructure([adminAr]);
-await verifyRealRunnerSmokeTest();
-await verifyCancellationPaths();
+await withSyntheticDevelopmentRuntime(verifyRealRunnerSmokeTest);
+await withSyntheticDevelopmentRuntime(verifyCancellationPaths);
 await verifyArtifactCollection();
 await verifyProductionDeployConsole();
 
@@ -790,11 +795,17 @@ async function verifyCancellationPaths() {
       status: "running", queuedAt: new Date().toISOString(), startedAt: new Date().toISOString(),
       pid: child.pid, logPath: `.backups/build-jobs/${id}.log`,
     } as const;
-    await writeFile(path.join(jobDir, `${id}.json`), JSON.stringify(record));
-    if (tracked) trackBuildJobProcess(id, child);
-    const cancelled = await cancelBuildJob(id);
-    assert.equal(cancelled.status, "cancelled");
-    await rm(path.join(jobDir, `${id}.json`), { force: true });
+    const recordPath = path.join(jobDir, `${id}.json`);
+    await writeFile(recordPath, JSON.stringify(record));
+    try {
+      if (tracked) trackBuildJobProcess(id, child);
+      const cancelled = await cancelBuildJob(id);
+      assert.equal(cancelled.status, "cancelled");
+    } finally {
+      if (child.exitCode === null && child.signalCode === null) child.kill("SIGTERM");
+      child.unref();
+      await rm(recordPath, { force: true });
+    }
   }
   const logId = `job-${Date.now()}-log256`;
   await writeFile(path.join(jobDir, `${logId}.log`), "x".repeat(300 * 1024));

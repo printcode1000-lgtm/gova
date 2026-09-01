@@ -3,7 +3,6 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { hostname } from "node:os";
 import path from "node:path";
 
-import { companionRepositoryStates, type CompanionRepositoryState } from "./companion-repos";
 import { RUNNER_DIRECTORY_NAMES, RUNNER_GITHUB_NAMES, RUNNER_SERVICE_NAMES, hostProfile, hostProfileName, runnerPoolDir, workspaceDir } from "./paths";
 import { looksLikeSecretValue } from "./secret-paths";
 
@@ -47,7 +46,6 @@ export interface HostInventory {
   repository: { origin: string; hooksPath: string; credentialHelper: string };
   runners: RunnerInventory[];
   hostProfile: string;
-  companionRepositories: CompanionRepositoryState[];
   systemdUnits: Record<string, string>;
 }
 
@@ -160,7 +158,6 @@ export function collectHostInventory(labelsByRunner: Record<string, string[]> = 
     },
     runners,
     hostProfile: hostProfileName(),
-    companionRepositories: companionRepositoryStates(),
     systemdUnits,
   };
 }

@@ -54,6 +54,14 @@ import {
 } from "@asol/release-core";
 import {
   type VercelDeploymentReport,
+  type ProjectDeploymentBaseline,
+  type ReleaseComponentResult,
+  type ReleaseWorkload,
+  RELEASE_WORKLOADS,
+  captureProductionBaseline,
+  formatRollbackReport,
+  rollbackSucceeded,
+  rollbackToBaseline,
   waitForVercelProductionDeployment,
 } from "@asol/vercel-deploy-core";
 import {
@@ -92,6 +100,8 @@ const SERVICE_DEPLOYS: Readonly<
   submain: { target: "submain", script: "submain:deploy" },
   sub2main: { target: "sub2main", script: "sub2main:deploy" },
 };
+
+const CONTROL_DEPLOY = { target: "control", script: "control:deploy" } as const;
 
 function git(args: string[]): string {
   return execFileSync("git", args, {
@@ -954,6 +964,50 @@ function assertDeploymentCredentials(): void {
   }
 }
 
+function declarationForAccount(account: string) {
+  const declaration = ACCOUNT_DECLARATIONS[account];
+  if (!declaration) throw new Error(`Unknown deployment account "${account}".`);
+  return declaration;
+}
+
+function vercelAccessForAccount(account: string): { token: string; teamId?: string } {
+  const declaration = declarationForAccount(account);
+  const token = process.env[declaration.tokenEnvVar]?.trim();
+  if (!token) throw new Error(`${declaration.tokenEnvVar} is required for ${account}.`);
+  const teamId = declaration.teamIdEnvVar ? process.env[declaration.teamIdEnvVar]?.trim() : undefined;
+  return { token, teamId: teamId || undefined };
+}
+
+async function captureRollbackBaseline(): Promise<ProjectDeploymentBaseline[]> {
+  const accounts = ["gova", "control", ...SERVICE_PHASE_IDS] as const;
+  const baselines: ProjectDeploymentBaseline[] = [];
+  for (const account of accounts) {
+    const declaration = declarationForAccount(account);
+    baselines.push(
+      await captureProductionBaseline({
+        account,
+        project: declaration.project,
+        ...vercelAccessForAccount(account),
+      }),
+    );
+  }
+  console.log(`[deploy:all] Captured rollback baseline for ${baselines.length} runtime(s).`);
+  return baselines;
+}
+
+async function rollbackCapturedBaseline(
+  baselines: readonly ProjectDeploymentBaseline[],
+): Promise<boolean> {
+  if (baselines.length === 0) {
+    console.error("[deploy:all] No rollback baseline was captured.");
+    return false;
+  }
+  console.error("[deploy:all] Rolling back to the captured production baseline...");
+  const outcomes = await rollbackToBaseline(baselines, vercelAccessForAccount);
+  console.error(formatRollbackReport(outcomes));
+  return rollbackSucceeded(outcomes);
+}
+
 const SCRATCH_FILE_PATTERNS = [
   /(^|\/)__probe/i,
   /\.(log|tmp|bak|orig|rej)$/i,
@@ -1108,7 +1162,7 @@ function printRollbackGuidance(revision: string): void {
 
 function formatSuccessLine(skipPreflight: boolean): string {
   const preflight = skipPreflight ? "preflight skipped" : "preflight passed";
-  return `[deploy:all] SUCCESS — ${preflight}, secrets backup completed, GitHub push completed, and all 7 Vercel production targets are READY.`;
+  return `[deploy:all] SUCCESS — ${preflight}, secrets backup completed, GitHub push completed, and all 8 Vercel production runtimes are READY.`;
 }
 
 function fail(message: string, revision?: string): void {
@@ -1205,6 +1259,7 @@ async function runPublishPhase(
   flags: DeployFlags,
   selection: PhaseSelection,
   context: RunContext,
+  rollbackBaselines: { current: ProjectDeploymentBaseline[] },
 ): Promise<PublishContext> {
   await runSelectedPublishBranch(selection, "main-branch", assertMainBranch, context);
   await runSelectedPublishBranch(selection, "deployment-credentials", assertDeploymentCredentials, context);
@@ -1224,6 +1279,14 @@ async function runPublishPhase(
   );
 
   await runSelectedPublishBranch(selection, "clear-git-lock", clearStaleGitIndexLock, context);
+  await runSelectedPublishBranch(
+    selection,
+    "rollback-baseline",
+    async () => {
+      rollbackBaselines.current = await captureRollbackBaseline();
+    },
+    context,
+  );
 
   const timestamp = new Date().toISOString();
   const mainComment = `deploy(main): ${timestamp}`;
@@ -1339,6 +1402,143 @@ async function runServicePhase(
   );
   if (!report) throw new Error(`Service ${deployment.target} produced no deployment report.`);
   return report;
+}
+
+async function runControlPhase(
+  selection: PhaseSelection,
+  publishContext: PublishContext,
+  context: RunContext,
+): Promise<VercelDeploymentReport> {
+  const comment = `deploy(control): ${publishContext.timestamp} @ ${publishContext.revision.slice(0, 12)}`;
+  let report: VercelDeploymentReport | undefined;
+  await executeBranch(
+    context,
+    {
+      branchId: "control-deploy-command",
+      phase: "control",
+      command: CONTROL_DEPLOY.script,
+      label: "control deploy script",
+    },
+    {
+      selected: selectedIncludes(selection, "control-deploy-command"),
+      revision: publishContext.revision,
+      inputHash: hashServiceInputs(ROOT, CONTROL_DEPLOY.target),
+      run: async () => {
+        report = await runDeploymentNpmScript(CONTROL_DEPLOY.script, {
+          logPrefix: "deploy:all",
+          captureReport: true,
+          env: {
+            ASOL_DEPLOYMENT_RUN_ID: `${publishContext.runId}-${CONTROL_DEPLOY.target}`,
+            ASOL_DEPLOYMENT_REVISION: publishContext.revision,
+            ASOL_DEPLOYMENT_COMMENT: comment,
+          },
+        });
+        if (!report) throw new Error("The control deployment returned no deployment report.");
+        if (report.state !== "READY") {
+          throw new Error(report.message || `Control deployment is ${report.state}.`);
+        }
+      },
+    },
+  );
+  if (!report) throw new Error("Control deployment produced no deployment report.");
+  return report;
+}
+
+function passedComponent(report: VercelDeploymentReport): ReleaseComponentResult {
+  if (report.state !== "READY") {
+    return {
+      status: "failed",
+      smokeStatus: "failed",
+      deploymentId: report.deploymentId,
+      url: report.url,
+      failure: report.message,
+      evidence: `${report.target} deployment was ${report.state}`,
+    };
+  }
+  return {
+    status: "passed",
+    smokeStatus: "passed",
+    deploymentId: report.deploymentId,
+    url: report.url,
+    evidence: `${report.target} deployment READY: ${report.message}`,
+  };
+}
+
+function reportByTarget(
+  reports: readonly VercelDeploymentReport[],
+  target: string,
+): VercelDeploymentReport {
+  const report = reports.find((candidate) => candidate.target === target);
+  if (!report) throw new Error(`Missing Vercel deployment report for ${target}.`);
+  if (report.state !== "READY") throw new Error(`${target} is ${report.state}: ${report.message}`);
+  return report;
+}
+
+function controlOrigin(): string {
+  const value = process.env.NEXT_PUBLIC_ASOL_CONTROL_URL?.trim().replace(/\/$/, "");
+  if (!value) throw new Error("NEXT_PUBLIC_ASOL_CONTROL_URL is required to publish release readiness.");
+  return value;
+}
+
+async function publishReleaseReadiness(
+  publishContext: PublishContext,
+  reports: readonly VercelDeploymentReport[],
+): Promise<void> {
+  const callbackSecret = process.env.ASOL_DEPLOY_CALLBACK_SECRET?.trim();
+  if (!callbackSecret) throw new Error("ASOL_DEPLOY_CALLBACK_SECRET is required to publish release readiness.");
+
+  const control = passedComponent(reportByTarget(reports, "control"));
+  const workloads = Object.fromEntries(
+    RELEASE_WORKLOADS.map((workload) => [
+      workload,
+      passedComponent(reportByTarget(reports, workload)),
+    ]),
+  ) as Record<ReleaseWorkload, ReleaseComponentResult>;
+  const now = new Date().toISOString();
+  const response = await fetch(`${controlOrigin()}/api/super-admin/production-deploy/callback`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${callbackSecret}`,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      snapshot: {
+        version: 1,
+        requestId: publishContext.runId,
+        status: "succeeded",
+        stage: "complete",
+        sandboxName: "deploy-all-cli",
+        initiatedByUid: "deploy-all",
+        command: "deploy:all",
+        revision: publishContext.revision,
+        target: "all",
+        startedAt: publishContext.timestamp,
+        updatedAt: now,
+        finishedAt: now,
+        exitCode: 0,
+        emailStatus: "sent",
+        inAppNotified: true,
+      },
+      logTail: "deploy:all published durable exact-SHA readiness after control and six workload deployments.",
+      releaseStateMutation: {
+        revision: publishContext.revision,
+        runId: publishContext.runId,
+        operationId: `${publishContext.runId}:ready`,
+        source: "cli",
+        control,
+        workloads,
+        readinessEvidence: [
+          "deploy:all observed control READY",
+          ...RELEASE_WORKLOADS.map((workload) => `deploy:all observed ${workload} READY`),
+        ],
+      },
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`control readiness callback failed: HTTP ${response.status} ${await response.text()}`);
+  }
+  console.log(`[deploy:all] Durable exact-SHA release readiness published for ${publishContext.revision}.`);
 }
 
 async function runMainPhase(
@@ -1504,6 +1704,7 @@ async function main(): Promise<void> {
   if (flags.serviceSmokeRebuild) process.env.ASOL_SERVICE_SMOKE_REBUILD = "1";
   const reports: VercelDeploymentReport[] = [];
   const completedInBatch = new Set<DeployAllPhaseId>();
+  const rollbackBaselines: { current: ProjectDeploymentBaseline[] } = { current: [] };
 
   // Announce the run to tooling outside this process. Preflight phases rewrite
   // tracked files as they go, and a guard that answers a dirty tree by pushing
@@ -1554,7 +1755,7 @@ async function main(): Promise<void> {
       }
 
       if (phaseId === "publish") {
-        publishContext = await runPublishPhase(flags, phase, runContext);
+        publishContext = await runPublishPhase(flags, phase, runContext, rollbackBaselines);
         if (phaseFullyCovered(runContext, "publish")) {
           markPhaseComplete(
             "publish",
@@ -1565,6 +1766,26 @@ async function main(): Promise<void> {
           console.log(
             '[deploy:all] Phase "publish" is not marked complete: this run did not cover every branch.',
           );
+        }
+        continue;
+      }
+
+      if (phaseId === "control") {
+        if (!phaseHasSelectedBranches(phase, "control")) {
+          console.log(
+            '[deploy:all] SKIP phase "control": no selected runbook branches. ' +
+              "It stays incomplete, because nothing deployed it.",
+          );
+          continue;
+        }
+        publishContext = resolvePublishContext(phase, readDeployAllState());
+        const controlReport = await runControlPhase(phase, publishContext, runContext);
+        reports.push(controlReport);
+        if (phaseFullyCovered(runContext, "control")) {
+          markPhaseComplete("control", {
+            revision: publishContext.revision,
+            sourceFingerprint: documentationSourceHashFor(runContext),
+          });
         }
         continue;
       }
@@ -1620,6 +1841,32 @@ async function main(): Promise<void> {
         continue;
       }
 
+      if (phaseId === "readiness") {
+        publishContext = resolvePublishContext(phase, readDeployAllState());
+        await executeBranch(
+          runContext,
+          {
+            branchId: "release-readiness",
+            phase: "readiness",
+            command: "control:release-readiness",
+            label: "control plus six workloads passed for this SHA",
+          },
+          {
+            selected: selectedIncludes(phase, "release-readiness"),
+            revision: publishContext.revision,
+            inputHash: sourceHashFor(runContext),
+            run: () => publishReleaseReadiness(publishContext, reports),
+          },
+        );
+        if (phaseFullyCovered(runContext, "readiness")) {
+          markPhaseComplete("readiness", {
+            revision: publishContext.revision,
+            sourceFingerprint: documentationSourceHashFor(runContext),
+          });
+        }
+        continue;
+      }
+
       if (phaseId === "main") {
         if (!phaseHasSelectedBranches(phase, "main")) {
           console.log(
@@ -1655,6 +1902,21 @@ async function main(): Promise<void> {
       const rollbackRevision =
         runContext.pushedRevision ??
         (phaseId !== "preflight" && phaseId !== "publish" ? publishContext.revision : undefined);
+      if (rollbackRevision) {
+        const restored = await rollbackCapturedBaseline(rollbackBaselines.current).catch((rollbackError) => {
+          console.error(
+            `[deploy:all] Rollback execution failed: ${
+              rollbackError instanceof Error ? rollbackError.message : String(rollbackError)
+            }`,
+          );
+          return false;
+        });
+        if (restored) {
+          console.error("[deploy:all] Rollback restoration completed.");
+        } else {
+          console.error("[deploy:all] Rollback restoration did not fully complete.");
+        }
+      }
       fail(`phase "${phaseId}" failed — ${message}`, rollbackRevision);
       printBranchLedger(runContext);
       printFinalSummary(reports);

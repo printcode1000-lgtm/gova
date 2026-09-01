@@ -2,7 +2,6 @@ import { existsSync, watch, writeFileSync, type FSWatcher } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { agentsDir, coordinationDir, ensureDir, hasGithubToken, listActiveJobs, listRunners, localRootDir, locksDir, messagesDir, operationLogsDir, requestsDir } from "@asol/local-agent-core";
-import { toggleHostToolAllowed } from "@asol/local-agent-core/host";
 import { buildWatchModel, EMPTY_GITHUB_SAMPLE, type GithubSample, PANEL_ORDER, type PanelKey, remoteHostsCachePath, renderFrame } from "@asol/local-agent-core/monitor";
 /**
  * A live view of the local server that never touches it.
@@ -73,8 +72,6 @@ function plainFrame(): string {
 function draw(): void {
   if (state.paused) return;
   state.dirty = false;
-  // Home the cursor and clear forward rather than clearing the whole screen:
-  // a full clear makes the frame flicker on every repaint.
   process.stdout.write(`\u001B[H\u001B[0J${frame()}\u001B[0J`);
 }
 
@@ -98,14 +95,6 @@ async function pollGithub(): Promise<void> {
   state.dirty = true;
 }
 
-/**
- * Watch the coordination directory for change.
- *
- * inotify is the whole reason this is cheap: nothing is read until something
- * actually happens. Where a watch cannot be established — an exotic filesystem,
- * an exhausted watch limit — the caller's slow interval still repaints, so the
- * monitor degrades instead of going blind.
- */
 function watchLocalSources(onChange: () => void): FSWatcher[] {
   const watchers: FSWatcher[] = [];
   const targets = [coordinationDir(), agentsDir(), locksDir(), messagesDir(), requestsDir(), operationLogsDir(), path.dirname(remoteHostsCachePath()), localRootDir()];
@@ -117,8 +106,6 @@ function watchLocalSources(onChange: () => void): FSWatcher[] {
       // A missing watch is not fatal; the repaint interval covers it.
     }
   }
-  // The coordination subdirectories are created lazily, so watch the parent for
-  // their arrival and pick them up without a restart.
   const parent = path.dirname(coordinationDir());
   if (existsSync(parent)) {
     try {
@@ -153,7 +140,6 @@ function bindKeys(quit: () => void): void {
     if (key === "q" || key === "\u0003") return quit();
     if (key === "p") state.paused = !state.paused;
     else if (key === "c") return copyFrame();
-    else if (key === "a") toggleHostToolAllowed();
     else if (key === "o") state.githubEnabled = !state.githubEnabled && hasGithubToken();
     else if (key === "\u001B") state.focus = null;
     else if (key >= "1" && key <= String(PANEL_ORDER.length)) state.focus = PANEL_ORDER[Number(key) - 1] ?? null;
@@ -183,7 +169,6 @@ async function main(): Promise<void> {
 
   const watchers = watchLocalSources(onLocalChange);
   const repaint = setInterval(() => {
-    // Elapsed timers keep moving even when nothing on disk changed.
     state.dirty = true;
     draw();
   }, FALLBACK_POLL_MS);

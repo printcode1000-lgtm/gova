@@ -306,8 +306,8 @@ const RENDERERS: Record<PanelKey, (model: WatchModel, options: RenderOptions) =>
 
 function renderFooter(options: RenderOptions): string {
   const keys = options.focus
-    ? `[esc] all panels  [p] ${options.paused ? "resume" : "pause"}  [o] github on/off  [c] copy frame  [a] antigravity  [q] quit`
-    : `[1-9] focus panel  [p] ${options.paused ? "resume" : "pause"}  [o] github on/off  [c] copy frame  [a] antigravity  [q] quit`;
+    ? `[esc] all panels  [p] ${options.paused ? "resume" : "pause"}  [o] github on/off  [c] copy frame  [q] quit`
+    : `[1-9] focus panel  [p] ${options.paused ? "resume" : "pause"}  [o] github on/off  [c] copy frame  [q] quit`;
   return paint(keys, "dim", options.color);
 }
 

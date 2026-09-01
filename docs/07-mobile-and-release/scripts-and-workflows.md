@@ -52,6 +52,7 @@ npm run local-agent:status
 npm run local-agent:coordination -- --action=status
 npm run local-agent:cleanup
 npm run local-agent:dispatch:check -- .agent-control/requests/<request_id>.json
+npm run local-agent:device:discover -- --dry-run
 
 # Schema & database
 npm run db:drizzle -- generate

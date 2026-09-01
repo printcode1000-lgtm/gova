@@ -37,7 +37,7 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
     label: "environment and Vercel accounts",
     branches: [
       branch("production-doctor", "production environment readiness", "doctor:environment:production", "npm"),
-      branch("vercel-account-access", "all seven Vercel account tokens", "vercel:accounts:check", "npm"),
+      branch("vercel-account-access", "all eight Vercel account tokens", "vercel:accounts:check", "npm"),
     ],
   },
   {
@@ -144,10 +144,24 @@ export const DEPLOY_ALL_RUNBOOK: readonly DeployAllRunbookPhase[] = [
         branches: [
           branch("clear-git-lock", "clear abandoned git lock only", "git:index-lock:clear-stale", "git"),
           branch("origin-main-current", "origin/main unchanged since preflight", "git:fetch+merge-base", "git"),
+          branch("rollback-baseline", "capture rollback deployment baseline", "vercel:capture-rollback-baseline", "vercel"),
           branch("stage-tree", "stage deployment tree", "git:add -A", "git", true),
           branch("commit-tree", "create deployment commit", "git:commit", "git", true),
           branch("verify-clean-tree", "verify committed tree is stable", "git:status --porcelain", "git"),
           branch("push-main", "push main to GitHub", "git:push main", "git", true),
+        ],
+      },
+    ],
+  },
+  {
+    id: "control",
+    label: "deploy mandatory control target",
+    sections: [
+      {
+        id: "control-deploy",
+        label: "Vercel CLI production deployment",
+        branches: [
+          branch("control-deploy-command", "control deploy script", "control:deploy", "npm", true),
         ],
       },
     ],
@@ -165,6 +179,25 @@ export const DEPLOY_ALL_RUNBOOK: readonly DeployAllRunbookPhase[] = [
       ],
     }),
   ),
+  {
+    id: "readiness",
+    label: "publish exact-SHA release readiness",
+    sections: [
+      {
+        id: "release-readiness",
+        label: "durable readiness barrier",
+        branches: [
+          branch(
+            "release-readiness",
+            "control plus six workloads passed for this SHA",
+            "control:release-readiness",
+            "vercel",
+            true,
+          ),
+        ],
+      },
+    ],
+  },
   {
     id: "main",
     label: "verify GitHub-linked main deployment",

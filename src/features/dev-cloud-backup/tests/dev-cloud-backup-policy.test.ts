@@ -16,6 +16,10 @@ const original = {
   nextPhase: process.env.NEXT_PHASE,
   publicMode: process.env.NEXT_PUBLIC_ASOL_MODE,
   vercel: process.env.VERCEL,
+  vercelEnv: process.env.VERCEL_ENV,
+  dataSource: process.env.ASOL_DATA_SOURCE,
+  provisioning: process.env.ASOL_PROVISIONING,
+  githubActions: process.env.GITHUB_ACTIONS,
 };
 
 function setEnv(values: Partial<typeof original>) {
@@ -28,6 +32,14 @@ function setEnv(values: Partial<typeof original>) {
   else process.env.NEXT_PUBLIC_ASOL_MODE = values.publicMode;
   if (values.vercel === undefined) delete process.env.VERCEL;
   else process.env.VERCEL = values.vercel;
+  if (values.vercelEnv === undefined) delete process.env.VERCEL_ENV;
+  else process.env.VERCEL_ENV = values.vercelEnv;
+  if (values.dataSource === undefined) delete process.env.ASOL_DATA_SOURCE;
+  else process.env.ASOL_DATA_SOURCE = values.dataSource;
+  if (values.provisioning === undefined) delete process.env.ASOL_PROVISIONING;
+  else process.env.ASOL_PROVISIONING = values.provisioning;
+  if (values.githubActions === undefined) delete process.env.GITHUB_ACTIONS;
+  else process.env.GITHUB_ACTIONS = values.githubActions;
 }
 
 try {
@@ -37,6 +49,10 @@ try {
     nextPhase: undefined,
     publicMode: undefined,
     vercel: undefined,
+    vercelEnv: undefined,
+    dataSource: undefined,
+    provisioning: undefined,
+    githubActions: undefined,
   });
   assert.equal(devCloudBackupEnvironment().allowed, true);
   assert.doesNotThrow(() => assertDevCloudBackupAllowed());
@@ -47,6 +63,10 @@ try {
     nextPhase: undefined,
     publicMode: undefined,
     vercel: undefined,
+    vercelEnv: undefined,
+    dataSource: undefined,
+    provisioning: undefined,
+    githubActions: undefined,
   });
   assert.equal(devCloudBackupEnvironment().allowed, false);
   assert.throws(() => assertDevCloudBackupAllowed(), /devCloudBackupDevelopmentOnly/);
@@ -57,6 +77,10 @@ try {
     nextPhase: undefined,
     publicMode: "static",
     vercel: undefined,
+    vercelEnv: undefined,
+    dataSource: undefined,
+    provisioning: undefined,
+    githubActions: undefined,
   });
   assert.equal(devCloudBackupEnvironment().allowed, false);
 
@@ -66,6 +90,10 @@ try {
     nextPhase: "phase-production-build",
     publicMode: undefined,
     vercel: undefined,
+    vercelEnv: undefined,
+    dataSource: undefined,
+    provisioning: undefined,
+    githubActions: undefined,
   });
   assert.equal(devCloudBackupEnvironment().allowed, false);
 
@@ -75,6 +103,10 @@ try {
     nextPhase: undefined,
     publicMode: undefined,
     vercel: "1",
+    vercelEnv: undefined,
+    dataSource: undefined,
+    provisioning: undefined,
+    githubActions: undefined,
   });
   assert.equal(devCloudBackupEnvironment().allowed, false);
 

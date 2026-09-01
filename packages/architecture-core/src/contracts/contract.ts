@@ -40,6 +40,7 @@ export const LAYER_LABELS: Record<ArchitectureLayer, string> = {
 
 export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/core/config/runtime-context.server.ts',
+  'src/core/config/test-env.ts',
   'src/core/config/public-env.ts',
   // The seven public owner origins, read as literals so the bundler inlines
   // them. It is the only thing the gova compatibility boundary imports.

@@ -2,7 +2,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { hostProfile, REPOSITORY_NAME, REPOSITORY_OWNER, resolveGithubToken, RUNNER_SERVICE_NAMES, runnerPoolDir, workspaceDir } from "@asol/local-agent-core";
-import { COMPANION_REPOSITORIES, HOST_BACKUP_DIRECTORY, SYSTEMD_USER_DIR } from "@asol/local-agent-core/host";
+import { HOST_BACKUP_DIRECTORY, SYSTEMD_USER_DIR } from "@asol/local-agent-core/host";
 /**
  * Rebuild the local server's host configuration from the captured backup.
  *
@@ -79,32 +79,6 @@ function downloadRunner(directory: string, version: string): void {
   mkdirSync(directory, { recursive: true });
   run("curl", ["-fsSL", "-o", path.join(directory, archive), url]);
   run("tar", ["xzf", archive], directory);
-}
-
-/**
- * The branch a companion checkout should fast-forward onto.
- *
- * `origin/HEAD` is the obvious answer and the one git sets on a fresh clone, but
- * it is a local symbolic ref that plenty of real checkouts simply do not have —
- * p2p-link did not — and asking for it there aborts the whole restore. So it is
- * tried first, then the branch's own upstream, then `origin/main`.
- */
-function companionUpstream(repoPath: string): string {
-  for (const args of [
-    ["rev-parse", "--abbrev-ref", "origin/HEAD"],
-    ["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"],
-  ]) {
-    try {
-      const value = execFileSync("git", ["-C", repoPath, ...args], {
-        encoding: "utf8",
-        stdio: ["ignore", "pipe", "ignore"],
-      }).trim();
-      if (value) return value;
-    } catch {
-      // Not configured in this checkout; try the next way of asking.
-    }
-  }
-  return "origin/main";
 }
 
 async function main(): Promise<void> {
@@ -196,32 +170,6 @@ async function main(): Promise<void> {
   for (const serviceName of RUNNER_SERVICE_NAMES) {
     if (!existsSync(path.join(SYSTEMD_USER_DIR, serviceName))) continue;
     step(`enable and start ${serviceName}`, () => run("systemctl", ["--user", "enable", "--now", serviceName]));
-  }
-
-  for (const repo of COMPANION_REPOSITORIES) {
-    if (!existsSync(path.join(repo.path, ".git"))) {
-      step(`clone companion repository ${repo.name}`, () => run("git", ["clone", repo.origin, repo.path]));
-      continue;
-    }
-    const currentOrigin = execFileSync("git", ["-C", repo.path, "remote", "get-url", "origin"], { encoding: "utf8" }).trim();
-    if (currentOrigin !== repo.origin) {
-      steps.push(`skipped: ${repo.name} origin is ${currentOrigin}; expected ${repo.origin}`);
-      continue;
-    }
-    // Never fast-forward over work that is not committed. A companion repository
-    // is a working checkout on this machine, not a build artefact: p2p-link was
-    // carrying an uncommitted credential fix when this was written, and a
-    // `merge --ff-only` would have refused mid-restore or, worse, been forced.
-    const dirty = execFileSync("git", ["-C", repo.path, "status", "--porcelain"], { encoding: "utf8" }).trim();
-    if (dirty) {
-      const count = dirty.split("\n").length;
-      steps.push(`skipped: ${repo.name} has ${count} uncommitted change(s); commit or stash them, then re-run`);
-      continue;
-    }
-    step(`fast-forward companion repository ${repo.name}`, () => {
-      run("git", ["-C", repo.path, "fetch", "--prune", "origin"]);
-      run("git", ["-C", repo.path, "merge", "--ff-only", companionUpstream(repo.path)]);
-    });
   }
 
   const lingerNeeded =

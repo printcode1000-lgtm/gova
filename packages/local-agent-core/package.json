@@ -6,9 +6,18 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
-    ".": { "types": "./src/index.ts", "default": "./src/index.ts" },
-    "./monitor": { "types": "./src/monitor.ts", "default": "./src/monitor.ts" },
-    "./host": { "types": "./src/host.ts", "default": "./src/host.ts" }
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./monitor": {
+      "types": "./src/monitor.ts",
+      "default": "./src/monitor.ts"
+    },
+    "./host": {
+      "types": "./src/host.ts",
+      "default": "./src/host.ts"
+    }
   },
   "scripts": {
     "test": "npx tsx src/tests/index.test.ts"

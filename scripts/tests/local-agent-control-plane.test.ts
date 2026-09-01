@@ -53,11 +53,29 @@ assert.deepEqual(localAgentInspectWorkflowViolations(workflow("local-agent-inspe
 assert.deepEqual(localAgentWorkflowViolations(workflow("local-agent-main.yml")), []);
 assert.deepEqual(localAgentWorkflowViolations(workflow("local-agent-workspace.yml")), []);
 
-// A shell block is still held to the forbidden-command list, so loosening the
-// block-scalar handling cannot smuggle a build or deploy into a runner job.
+// Antigravity/agy is a permanent Local Runner ban. The workflows may document
+// that fact in input descriptions, but they must never discover, wrap, export,
+// or execute the binaries themselves.
+for (const name of ["local-agent-main.yml", "local-agent-workspace.yml"]) {
+  const body = workflow(name);
+  for (const forbiddenFragment of ["command -v agy", "GOVA_REAL_AGY", "gova-agy-", "exec \"$GOVA_REAL_AGY\""]) {
+    assert.equal(
+      body.includes(forbiddenFragment),
+      false,
+      `${name} must not reintroduce Antigravity/agy runner integration: ${forbiddenFragment}`,
+    );
+  }
+}
+
+// A shell block is still held to the forbidden-command list even though the
+// production workflows no longer need one. Plant a synthetic block rather than
+// relying on a real block existing in the workflow.
 assert.match(
   localAgentWorkflowViolations(
-    workflow("local-agent-main.yml").replace("        run: |\n", "        run: |\n          npm run build\n"),
+    workflow("local-agent-main.yml").replace(
+      "    steps:\n",
+      "    steps:\n      - name: forbidden block probe\n        run: |\n          npm run build\n",
+    ),
   ).join(" "),
   /must not run npm run build/,
   "a forbidden command inside a shell block is still refused",
@@ -101,6 +119,5 @@ for (const contract of Object.values(DISPATCHABLE_WORKFLOWS)) {
     `${contract.file} must be a permanent workflow`,
   );
 }
-
 
 console.log("local agent workflow policy: all checks passed.");

@@ -6336,6 +6336,7 @@
         "@asol/hero-slider-core",
         "@asol/hero-slider-core/server",
         "@asol/local-agent-core",
+        "@asol/local-agent-core/direct",
         "@asol/local-agent-core/host",
         "@asol/local-agent-core/monitor",
         "@asol/map-core",
@@ -6938,23 +6939,29 @@
     {
       "id": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
       "kind": "document",
-      "name": "ADR-0006: main Is the Only Branch",
+      "name": "ADR-0006: Fixed Two-Branch Repository Model",
       "path": "docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
-      "summary": "Accepted (2026-08)",
+      "summary": "Accepted (2026-08), finalized 2026-08-31",
       "tags": [
         "2026-08",
+        "2026-08-31",
         "accepted",
-        "accepted (2026-08)",
+        "accepted (2026-08), finalized 2026-08-31",
         "adr-0006",
-        "adr-0006: main is the only branch",
-        "branch",
+        "adr-0006: fixed two-branch repository model",
         "docs/01-architecture/09-decisions/adr-0006-main-only-branch",
         "docs/01-architecture/09-decisions/adr-0006-main-only-branch.md",
-        "is",
-        "main",
+        "finalized",
+        "fixed",
         "md",
-        "only",
-        "the"
+        "model",
+        "packages/local-agent-core/src/control-branch-namespaces",
+        "packages/local-agent-core/src/control-branch-namespaces.ts",
+        "repository",
+        "scripts/block-branch-creation",
+        "scripts/block-branch-creation.ts",
+        "ts",
+        "two-branch"
       ]
     },
     {
@@ -12080,6 +12087,8 @@
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/account-bridge",
         "@asol/account-declarations",
+        "@asol/control-composition",
+        "@asol/gova-deployment-core",
         "@asol/notifications-composition",
         "@asol/orders-composition",
         "@asol/ota-core",
@@ -12104,6 +12113,9 @@
         "note",
         "operational",
         "packages/account-bridge/",
+        "packages/account-declarations/",
+        "packages/control-composition/",
+        "packages/gova-deployment-core/",
         "packages/notifications-composition/",
         "packages/orders-composition/",
         "packages/products-composition/",
@@ -12115,12 +12127,7 @@
         "reconstruction",
         "relationships",
         "relocated",
-        "src/index",
-        "src/index.ts",
-        "src/notifications",
-        "src/notifications.ts",
-        "the",
-        "ts"
+        "the"
       ]
     },
     {
@@ -13600,8 +13607,6 @@
         "scripts/docs/docs-ci.ts",
         "scripts/github-ci-policy",
         "scripts/github-ci-policy.ts",
-        "scripts/local-agent-main-apply",
-        "scripts/local-agent-main-apply.ts",
         "scripts/protect-main-branch",
         "scripts/protect-main-branch.ts",
         "scripts/runtime/check",
@@ -13669,19 +13674,18 @@
         "scripts/architecture-check.ts",
         "scripts/github-ci-policy",
         "scripts/github-ci-policy.ts",
+        "scripts/local-agent-gateway",
+        "scripts/local-agent-gateway.ts",
         "scripts/local-agent-inspect",
         "scripts/local-agent-inspect.ts",
         "scripts/local-agent-main-apply",
         "scripts/local-agent-main-apply.ts",
         "scripts/local-agent-status",
         "scripts/local-agent-status.ts",
-        "scripts/p2p-link-gui",
-        "scripts/p2p-link-gui.sh",
         "scripts/tests/",
         "scripts/tests/local-agent-control-plane",
         "scripts/tests/local-agent-control-plane.test.ts",
         "self-hosted",
-        "sh",
         "src/app",
         "src/app/page",
         "src/app/page.tsx",
@@ -13695,6 +13699,71 @@
         "tsx",
         "work",
         "workflows"
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "kind": "document",
+      "name": "Local Runner Full Host Control",
+      "path": "docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "summary": "The Gova Local Runner is an authenticated host-control execution surface, not a repository-only sandbox.",
+      "tags": [
+        "@asol/local-agent-core/host",
+        "an",
+        "authenticated",
+        "control",
+        "docs/07-mobile-and-release/local-runner-full-host-control",
+        "docs/07-mobile-and-release/local-runner-full-host-control.md",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+        "execution",
+        "full",
+        "gova",
+        "host",
+        "host-control",
+        "is",
+        "local",
+        "local runner full host control",
+        "md",
+        "not",
+        "repository-only",
+        "runner",
+        "sandbox",
+        "surface",
+        "the",
+        "the gova local runner is an authenticated host-control execution surface, not a repository-only sandbox."
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+      "kind": "document",
+      "name": "Local Server Filesystem Boundary",
+      "path": "docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+      "summary": "This document defines the boundary between paths on the local server and paths inside the `gova` Git repository.",
+      "tags": [
+        "and",
+        "between",
+        "boundary",
+        "defines",
+        "docs/07-mobile-and-release/local-runner-full-host-control",
+        "docs/07-mobile-and-release/local-runner-full-host-control.md",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+        "document",
+        "filesystem",
+        "git",
+        "gova",
+        "inside",
+        "local",
+        "local server filesystem boundary",
+        "md",
+        "on",
+        "paths",
+        "repository",
+        "server",
+        "the",
+        "this",
+        "this document defines the boundary between paths on the local server and paths inside the `gova` git repository."
       ]
     },
     {
@@ -18282,6 +18351,19 @@
       ]
     },
     {
+      "id": "environment-key:LOCAL_AGENT_EXECUTION_TARGET",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_EXECUTION_TARGET",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_execution_target",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:LOCAL_AGENT_ID",
       "kind": "environment-key",
       "name": "LOCAL_AGENT_ID",
@@ -18432,6 +18514,19 @@
       "tags": [
         "environment",
         "local_agent_target_mode",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_TIMEOUT_MINUTES",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_TIMEOUT_MINUTES",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_timeout_minutes",
         "server",
         "server tooling environment",
         "tooling"
@@ -27211,6 +27306,17 @@
       ]
     },
     {
+      "id": "script:scripts/release-readiness-barrier.ts",
+      "kind": "script",
+      "name": "release-readiness-barrier.ts",
+      "path": "scripts/release-readiness-barrier.ts",
+      "tags": [
+        "scripts/release-readiness-barrier",
+        "scripts/release-readiness-barrier.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/release-service-smoke-probes.ts",
       "kind": "script",
       "name": "release-service-smoke-probes.ts",
@@ -28027,17 +28133,6 @@
       "tags": [
         "android/gradle/wrapper/gradle-wrapper",
         "android/gradle/wrapper/gradle-wrapper.properties",
-        "properties"
-      ]
-    },
-    {
-      "id": "source:android/local.properties",
-      "kind": "source",
-      "name": "local.properties",
-      "path": "android/local.properties",
-      "tags": [
-        "android/local",
-        "android/local.properties",
         "properties"
       ]
     },
@@ -32638,17 +32733,6 @@
       "tags": [
         "packages/local-agent-core/src/agent-registry",
         "packages/local-agent-core/src/agent-registry.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/companion-repos.ts",
-      "kind": "source",
-      "name": "companion-repos.ts",
-      "path": "packages/local-agent-core/src/companion-repos.ts",
-      "tags": [
-        "packages/local-agent-core/src/companion-repos",
-        "packages/local-agent-core/src/companion-repos.ts",
         "ts"
       ]
     },
@@ -42010,6 +42094,17 @@
         "server",
         "src/core/config/system-logs",
         "src/core/config/system-logs.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/core/config/test-env.ts",
+      "kind": "source",
+      "name": "test-env.ts",
+      "path": "src/core/config/test-env.ts",
+      "tags": [
+        "src/core/config/test-env",
+        "src/core/config/test-env.ts",
         "ts"
       ]
     },
@@ -64436,6 +64531,12 @@
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/local-agent-core",
       "kind": "references",
+      "detail": "@asol/local-agent-core/direct"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/local-agent-core",
+      "kind": "references",
       "detail": "@asol/local-agent-core/host"
     },
     {
@@ -66259,21 +66360,33 @@
     },
     {
       "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
-      "to": "document:docs/01-architecture/07-enforcement/architecture-tests.md",
-      "kind": "references",
-      "detail": "../07-enforcement/architecture-tests.md"
-    },
-    {
-      "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
       "to": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "kind": "references",
       "detail": "../../07-mobile-and-release/github-ci-policy.md"
     },
     {
       "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
+      "to": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
+      "kind": "references",
+      "detail": "../../07-mobile-and-release/local-agent-runner-pool.md"
+    },
+    {
+      "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
       "to": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
       "kind": "references",
       "detail": "../../07-mobile-and-release/scripts-and-workflows.md"
+    },
+    {
+      "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
+      "to": "script:scripts/block-branch-creation.ts",
+      "kind": "references",
+      "detail": "scripts/block-branch-creation.ts"
+    },
+    {
+      "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
+      "to": "source:packages/local-agent-core/src/control-branch-namespaces.ts",
+      "kind": "references",
+      "detail": "packages/local-agent-core/src/control-branch-namespaces.ts"
     },
     {
       "from": "document:docs/01-architecture/09-decisions/ADR-0007-application-feature-consolidation.md",
@@ -71600,6 +71713,36 @@
     },
     {
       "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/account-declarations",
+      "kind": "references",
+      "detail": "packages/account-declarations/"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/control-composition",
+      "kind": "references",
+      "detail": "@asol/control-composition"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/control-composition",
+      "kind": "references",
+      "detail": "packages/control-composition/"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "references",
+      "detail": "@asol/gova-deployment-core"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "references",
+      "detail": "packages/gova-deployment-core/"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/cloud-accounts-architecture.md",
       "to": "package:@asol/notifications-composition",
       "kind": "references",
       "detail": "@asol/notifications-composition"
@@ -72353,12 +72496,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
       "to": "source:packages/native-core/scripts/android-build-preflight.ts",
       "kind": "references",
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
@@ -72967,12 +73104,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
       "to": "source:packages/native-core/scripts/android-build-preflight.ts",
       "kind": "references",
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
@@ -73316,12 +73447,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
-      "to": "script:scripts/local-agent-main-apply.ts",
-      "kind": "references",
-      "detail": "scripts/local-agent-main-apply.ts"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "to": "script:scripts/protect-main-branch.ts",
       "kind": "references",
       "detail": "scripts/protect-main-branch.ts"
@@ -73387,6 +73512,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
+      "to": "script:scripts/local-agent-gateway.ts",
+      "kind": "references",
+      "detail": "scripts/local-agent-gateway.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
       "to": "script:scripts/local-agent-inspect.ts",
       "kind": "references",
       "detail": "scripts/local-agent-inspect.ts"
@@ -73438,6 +73569,34 @@
       "to": "test:scripts/tests/local-agent-control-plane.test.ts",
       "kind": "references",
       "detail": "scripts/tests/local-agent-control-plane.test.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "to": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+      "kind": "references",
+      "detail": "docs/07-mobile-and-release/local-server-filesystem-boundary.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "to": "package:@asol/local-agent-core",
+      "kind": "references",
+      "detail": "@asol/local-agent-core/host"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+      "to": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "kind": "references",
+      "detail": "docs/07-mobile-and-release/local-runner-full-host-control.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
@@ -73861,12 +74020,6 @@
       "to": "script:scripts/android/gradle.ts",
       "kind": "references",
       "detail": "scripts/android/gradle.ts"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
-      "to": "source:android/local.properties",
-      "kind": "references",
-      "detail": "android/local.properties"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
@@ -78751,12 +78904,6 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/local-agent-core/src/agent-registry.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "source:packages/local-agent-core/src/companion-repos.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -85278,6 +85425,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/release-readiness-barrier.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/release-service-smoke-probes.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -85723,12 +85876,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:android/gradle/wrapper/gradle-wrapper.properties",
-      "kind": "documents",
-      "detail": "android/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:android/local.properties",
       "kind": "documents",
       "detail": "android/"
     },
@@ -133833,6 +133980,11 @@
     },
     {
       "from": "script:scripts/deploy-all.ts",
+      "to": "environment-key:ASOL_DEPLOY_CALLBACK_SECRET",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/deploy-all.ts",
       "to": "environment-key:ASOL_DEPLOY_REVISION_AT_START",
       "kind": "uses-environment"
     },
@@ -133844,6 +133996,11 @@
     {
       "from": "script:scripts/deploy-all.ts",
       "to": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/deploy-all.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_CONTROL_URL",
       "kind": "uses-environment"
     },
     {
@@ -135024,7 +135181,17 @@
     },
     {
       "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:GOVA_LOCAL_WORKSPACE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
       "to": "environment-key:LOCAL_AGENT_COMMIT_MESSAGE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:LOCAL_AGENT_EXECUTION_TARGET",
       "kind": "uses-environment"
     },
     {
@@ -135064,6 +135231,11 @@
     },
     {
       "from": "script:scripts/local-agent-main-apply.ts",
+      "to": "environment-key:LOCAL_AGENT_TIMEOUT_MINUTES",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/local-agent-main-apply.ts",
       "to": "environment-key:LOCAL_AGENT_VERIFICATION",
       "kind": "uses-environment"
     },
@@ -135093,12 +135265,6 @@
       "to": "package:@asol/local-agent-core",
       "kind": "imports",
       "detail": "@asol/local-agent-core"
-    },
-    {
-      "from": "script:scripts/local-agent-watch.ts",
-      "to": "package:@asol/local-agent-core",
-      "kind": "imports",
-      "detail": "@asol/local-agent-core/host"
     },
     {
       "from": "script:scripts/local-agent-watch.ts",
@@ -135510,6 +135676,11 @@
       "to": "script:scripts/release-stage.ts",
       "kind": "imports",
       "detail": "./release-stage"
+    },
+    {
+      "from": "script:scripts/release-readiness-barrier.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "script:scripts/release-service-smoke-probes.ts",
@@ -136114,6 +136285,12 @@
     },
     {
       "from": "script:scripts/vercel-deployment-build.ts",
+      "to": "script:scripts/release-readiness-barrier.ts",
+      "kind": "imports",
+      "detail": "./release-readiness-barrier"
+    },
+    {
+      "from": "script:scripts/vercel-deployment-build.ts",
       "to": "script:scripts/vercel-build-artifact-guard.ts",
       "kind": "imports",
       "detail": "./vercel-build-artifact-guard"
@@ -136493,11 +136670,6 @@
     },
     {
       "from": "source:android/gradle/wrapper/gradle-wrapper.properties",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:android/local.properties",
       "to": "runtime:android",
       "kind": "affects-runtime"
     },
@@ -153668,42 +153840,6 @@
       "detail": "./paths"
     },
     {
-      "from": "source:packages/local-agent-core/src/companion-repos.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/local-agent-core/src/companion-repos.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/local-agent-core/src/companion-repos.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/local-agent-core/src/companion-repos.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/local-agent-core/src/companion-repos.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/local-agent-core/src/companion-repos.ts",
-      "to": "package:@asol/local-agent-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/local-agent-core/src/companion-repos.ts",
-      "to": "source:packages/local-agent-core/src/git.ts",
-      "kind": "imports",
-      "detail": "./git"
-    },
-    {
       "from": "source:packages/local-agent-core/src/control-branch-namespaces.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -153938,12 +154074,6 @@
     },
     {
       "from": "source:packages/local-agent-core/src/host-inventory.ts",
-      "to": "source:packages/local-agent-core/src/companion-repos.ts",
-      "kind": "imports",
-      "detail": "./companion-repos"
-    },
-    {
-      "from": "source:packages/local-agent-core/src/host-inventory.ts",
       "to": "source:packages/local-agent-core/src/paths.ts",
       "kind": "imports",
       "detail": "./paths"
@@ -154035,12 +154165,6 @@
       "from": "source:packages/local-agent-core/src/host.ts",
       "to": "package:@asol/local-agent-core",
       "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/local-agent-core/src/host.ts",
-      "to": "source:packages/local-agent-core/src/companion-repos.ts",
-      "kind": "imports",
-      "detail": "./companion-repos"
     },
     {
       "from": "source:packages/local-agent-core/src/host.ts",
@@ -175418,6 +175542,12 @@
     },
     {
       "from": "source:packages/vercel-deploy-core/src/index.ts",
+      "to": "source:packages/vercel-deploy-core/src/release-rollback.ts",
+      "kind": "imports",
+      "detail": "./release-rollback"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/index.ts",
       "to": "source:packages/vercel-deploy-core/src/release-state.ts",
       "kind": "imports",
       "detail": "./release-state"
@@ -186400,6 +186530,31 @@
       "from": "source:src/core/config/system-logs.server.ts",
       "to": "environment-key:SYSTEM_LOGS_RETENTION_DAYS",
       "kind": "uses-environment"
+    },
+    {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/test-env.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
     },
     {
       "from": "source:src/core/providers/query-provider.tsx",
@@ -242932,6 +243087,12 @@
     },
     {
       "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
+      "to": "script:scripts/release-readiness-barrier.ts",
+      "kind": "imports",
+      "detail": "../release-readiness-barrier"
+    },
+    {
+      "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
       "to": "script:scripts/vercel-build-artifact-guard.ts",
       "kind": "imports",
       "detail": "../vercel-build-artifact-guard"
@@ -242941,6 +243102,11 @@
       "to": "script:scripts/vercel-deployment-guards.ts",
       "kind": "imports",
       "detail": "../vercel-deployment-guards"
+    },
+    {
+      "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
+      "to": "script:scripts/release-readiness-barrier.ts",
+      "kind": "tests"
     },
     {
       "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
@@ -243724,7 +243890,22 @@
     },
     {
       "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
+      "to": "environment-key:ASOL_DATA_SOURCE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
       "to": "environment-key:ASOL_MODE",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
+      "to": "environment-key:ASOL_PROVISIONING",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
+      "to": "environment-key:GITHUB_ACTIONS",
       "kind": "uses-environment"
     },
     {
@@ -243745,6 +243926,11 @@
     {
       "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
       "to": "environment-key:VERCEL",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
+      "to": "environment-key:VERCEL_ENV",
       "kind": "uses-environment"
     },
     {
@@ -245817,6 +246003,12 @@
     },
     {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",
+      "to": "source:src/core/config/test-env.ts",
+      "kind": "imports",
+      "detail": "@/core/config/test-env"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/release-commands.test.ts",
       "to": "source:src/features/google-play-console/index.ts",
       "kind": "imports",
       "detail": "@/features/google-play-console"
@@ -245883,6 +246075,11 @@
     {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",
       "to": "package:@asol/vercel-deploy-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/release-commands.test.ts",
+      "to": "source:src/core/config/test-env.ts",
       "kind": "tests"
     },
     {

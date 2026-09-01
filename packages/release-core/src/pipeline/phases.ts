@@ -1,12 +1,14 @@
 export const DEPLOY_ALL_PHASE_ORDER = [
   "preflight",
   "publish",
+  "control",
   "notifications",
   "products",
   "orders",
   "profiles",
   "submain",
   "sub2main",
+  "readiness",
   "main",
 ] as const;
 

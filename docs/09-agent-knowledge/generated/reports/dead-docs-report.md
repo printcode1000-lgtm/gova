@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **94**
+Findings: **91**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -79,8 +79,6 @@ Findings: **94**
 | `missing-file` | `docs/05-platform-features/service-bridge-module.md` | `src/features/service-bridge/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/session-system.md` | `src/features/auth/services/session-api-service.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/voice-input-system.md` | `src/platform/speech/speech-recognition-adapter.ts` | documentation mentions a missing repository path |
-| `missing-file` | `docs/06-super-admin-and-operations/cloud-accounts-architecture.md` | `src/index.ts` | documentation mentions a missing repository path |
-| `missing-file` | `docs/06-super-admin-and-operations/cloud-accounts-architecture.md` | `src/notifications.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/06-super-admin-and-operations/notification-tests.md` | `src/features/notifications/domain/notification-test-scenarios.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/capacitor/android-push-notifications.md` | `scripts/sync-android-push-assets.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/capacitor/android-push-notifications.md` | `src/features/notifications/domain/notification-sound.ts` | documentation mentions a missing repository path |
@@ -98,7 +96,6 @@ Findings: **94**
 | `missing-file` | `docs/07-mobile-and-release/capacitor/ota-update-system.md` | `src/features/super-admin/presentation/SuperAdminOtaReleasesPage.tsx` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/deployment-targets.md` | `packages/native-core/android/build/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/local-agent-runner-pool.md` | `packages/simulation-core` | documentation mentions a missing repository path |
-| `missing-file` | `docs/07-mobile-and-release/local-agent-runner-pool.md` | `scripts/p2p-link-gui.sh` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/release-and-secrets.md` | `scripts/lib/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/08-troubleshooting/problems/ota-publish-static-export-failures.md` | `scripts/ota-publish.ts` | documentation mentions a missing repository path |
 | `missing-package` | `docs/01-architecture/04-composition/dependency-wiring.md` | `@asol/my-feature-core` | documentation mentions unknown package @asol/my-feature-core |

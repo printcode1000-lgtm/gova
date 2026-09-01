@@ -6,15 +6,11 @@ channel that lets cloud and local agents work on Gova at the same time.
 
 ## Purpose
 
-`/home/hesham/gova` is the single project root. Everything the control plane
-needs at runtime lives beneath it, and every operation — inspection, mutation,
-verification, coordination — happens against that one clone.
+`/home/hesham/gova` is the Local Runner's primary Gova workspace root. It is the clone used for Git objects, dependencies, runner runtime state, coordination state, and repository worktrees.
 
-The pool lets several agents work concurrently without sharing one mutable
-checkout. Each runner takes one GitHub Actions job at a time, so six registered
-runners mean six agents can be executing simultaneously. Mutating agents work in
-isolated git worktrees, so parallelism never means two jobs editing the same
-files.
+It is **not** a host-security boundary. Authenticated full-host-control `shell_command` jobs may change directory outside `/home/hesham/gova` and operate elsewhere on the local server with the operating-system authority of the runner account, including passwordless `sudo` when required.
+
+Repository mutations still use isolated Git worktrees so concurrent agents do not share one mutable checkout. Host-level operations and repository-level isolation are separate concerns; see `local-runner-full-host-control.md` and `local-server-filesystem-boundary.md`.
 
 ## Fixed Two-Branch Repository Model
 
@@ -31,7 +27,7 @@ doors:
 |---|---|
 | `@asol/local-agent-core` | agents, locks, requests, worktrees, operation log, memory admission |
 | `@asol/local-agent-core/monitor` | the watch model, the pure renderer, remote-host probes |
-| `@asol/local-agent-core/host` | runner and systemd inventory, host tools, companion repositories |
+| `@asol/local-agent-core/host` | runner/systemd inventory and machine-local host-tool policy |
 
 ```text
 packages/local-agent-core/
@@ -138,7 +134,7 @@ fails `npm run github:ci-policy`.
 | `local-agent-workspace.yml` | `workflow_dispatch` | local isolation only; publishing a third remote branch is forbidden |
 | `local-agent-main.yml` | `workflow_dispatch` | serialized direct-`main` mutation |
 | `local-agent-coordination.yml` | `workflow_dispatch` | identity, heartbeat, locks, messages, snapshot |
-| `local-agent-gateway.yml` | legacy branch gateway | must not create or delete remote branches under the fixed two-branch policy |
+| `local-agent-gateway.yml` | push to permanent `agent-request/chatgpt` | validate request documents and dispatch Local Runner workflows without creating/deleting remote branches |
 
 ### Status
 
@@ -177,9 +173,12 @@ Local worktrees remain valid because they are machine-local implementation detai
 | `lint` | `npm run lint` |
 | `none` | No built-in verification command. |
 
-`shell_command` is executed with `/bin/bash -lc` without an allowlist. It carries
-the full local OS authority of the runner user, so callers are responsible for
-keeping its output free of secret material.
+`shell_command` is executed with `/bin/bash -lc` without a general allowlist.
+Antigravity and `agy` are the permanent tool-level exception: requests that
+invoke either name are rejected before dispatch or shell execution, and Local
+Runner subprocesses also receive refusal shims for both names. Other commands
+carry the full local OS authority of the runner user, so callers are responsible
+for keeping their output free of secret material.
 
 ### How run steps are validated
 
@@ -203,9 +202,15 @@ refused.
 
 ## Dispatching From A Cloud Agent
 
-Cloud agents must use an existing authorized channel. They may invoke supported `workflow_dispatch` operations or, for ChatGPT, commit work to the persistent `agent-request/chatgpt` branch. They must never create a temporary request branch.
+Cloud agents must use an existing authenticated surface. They must not create temporary remote branches.
 
-The old pattern `agent-request/<request_id>` is retired because it would create a third remote branch. `agent-request/chatgpt` is not a disposable request ref and must never be deleted after processing. If a tool cannot operate without creating another remote branch, that mode is incompatible with this repository policy and must not be used.
+For ChatGPT, the contents-write gateway is the permanent `agent-request/chatgpt` branch. A request document is written under `.agent-control/requests/`; `scripts/local-agent-gateway.ts` accepts that branch only, validates the closed request contract, and dispatches the requested Local Runner workflow using credentials that remain on the host.
+
+The permanent branch is never deleted after processing. Request IDs are recorded in machine-local coordination state and are single-use, so retained request files cannot execute twice. Requests must target `main`, must be fresh enough for the contract, and are rejected if their values look like secret material.
+
+Agents with Actions-write permission may call the supported `workflow_dispatch` surfaces directly. Read-only GitHub access alone cannot execute Local Runner work.
+
+Under the fixed two-branch policy, remote publication from `local-agent-workspace` to a generated `codex/**` branch is not a valid delivery path. Local worktrees remain valid for isolation, but remote delivery must stay on `main` or the permanent `agent-request/chatgpt` request branch as appropriate.
 
 ## Agent Coordination
 
@@ -224,7 +229,7 @@ agents from other tools all read and write the same records through
 | `recover-stale-locks` | reclaim every expired lock |
 | `message` | post a short note to one agent or to all |
 | `status` | read agents, locks, and messages |
-| `publish` | republish the snapshot to `agent-control` |
+| `publish` | legacy source path only; blocked by the fixed-two-branch ruleset and not a supported operation |
 
 ### Identity and work declaration
 
@@ -281,122 +286,43 @@ output.
 
 ### Reaching the channel from outside this machine
 
-Three tiers, and which one an agent can use depends entirely on what its
-credentials allow. Establish this *before* promising an agent that coordination
-will work:
+| The agent has | Supported route |
+|---|---|
+| A shell on this machine | `npm run local-agent:coordination` |
+| GitHub Actions write access | dispatch `local-agent-coordination.yml` |
+| GitHub contents write as ChatGPT | write a validated request to permanent `agent-request/chatgpt` |
+| Read-only GitHub access | no mutation/coordination write path |
 
-| The agent has | It uses | Can it declare, heartbeat, message? |
-|---|---|---|
-| A shell on this machine | `npm run local-agent:coordination` | yes |
-| A GitHub token with Actions write | `workflow_dispatch` on `local-agent-coordination.yml` | yes |
-| A GitHub connector with contents write only | the gateway: push a request file to `agent-request/**` | yes |
-| Read-only GitHub access | nothing | **no** — someone must relay for it |
+The contents-write gateway accepts `agent-request/chatgpt` only. It never creates or deletes a remote branch. Requests are single-use, time-limited, secret-scanned, and restricted to the closed dispatch contract.
 
-The third tier is the one that is easy to miss, and it is what
-`local-agent-gateway.yml` exists for; its own header says "Dispatch gateway for
-agents that cannot call the workflow_dispatch API." Write ONE file at
-`.agent-control/requests/<requestId>.json` on a branch named `agent-request/**`:
+### Coordination state visibility
 
-```json
-{
-  "version": 1,
-  "requestId": "cloud-deploy-msg-20260830-2116",
-  "agentId": "cloud-deploy",
-  "workflow": "local-agent-coordination",
-  "mode": "coordination",
-  "ref": "main",
-  "inputs": {
-    "agent_id": "cloud-deploy",
-    "action": "message",
-    "message_kind": "ready-for-merge",
-    "message_to": "local-lockfile",
-    "message_body": "at most 500 characters, no secrets"
-  },
-  "createdAt": "2026-08-30T21:16:30Z"
-}
-```
+Canonical coordination state is machine-local under `/home/hesham/gova/.local/github-runners/gova-coordination`. Agents read it through the local CLI or the dispatched status/coordination workflows.
 
-The contract is closed and refuses anything malformed: `requestId` is 8–64 of
-`[A-Za-z0-9._-]`, starts alphanumeric, and is **single use**; `createdAt` must be
-within 30 minutes and not in the future; `ref` must be `main`; only the inputs
-that workflow declares are accepted. The gateway validates, dispatches with a
-credential that never leaves this machine, and deletes the request branch.
-Nothing pushed there reaches `main`, so coordination traffic can never trigger a
-production deploy.
-
-### What a remote agent can and cannot change
-
-A gateway agent reaches the coordination channel, but changing files is a
-separate question. Its jobs run in a worktree detached at `origin/main`, **not**
-in this machine's working tree, so it cannot see uncommitted local work and
-cannot write into it. Its only delivery path is `local-agent-workspace`, which
-commits and pushes a `codex/*` branch for the local agent to merge.
-
-Telling such an agent "do not commit or push" therefore paralyses it — that
-instruction must always be scoped to `main`. A `codex/*` branch never reaches
-`main` and is excluded from the deployment workflow's path filter, which is
-exactly why the namespace exists.
-
-An agent that cannot push at all — an isolated sandbox with no network — can only
-deliver by returning file contents. Ask for **whole files**, not a unified diff:
-it cannot compile or test what it produces, and a hand-computed `@@` header is
-the usual way such a patch fails to apply.
-
-### Publishing only what is new
-
-Every coordination action offers to republish the snapshot, but a republish that
-says nothing is not free: it force-pushes a commit to `agent-control`, which puts
-a "recent pushes" banner on the repository and, until `vercel.json` was
-corrected, started a Vercel build that could only fail — that branch holds one
-JSON file and no `package.json`.
-
-So the snapshot is compared against what the branch already holds and skipped
-when the state is unchanged. The comparison ignores the clock: `generatedAt`
-moves on every call, and so do the derived elapsed times the snapshot computes
-for display — `heartbeatAgeMs`, `ageMs`, `durationMs`, `sampledAt`. A new
-timestamp over identical agents, locks, operations and messages is not news.
-
-The tracking ref is fetched first. `publishControlBranch` pushes a raw commit sha
-rather than a local branch, so it never updates `refs/remotes/origin/agent-control`
-— comparing against a stale ref skipped nothing at all on the first attempt.
-
-### Reading state from the cloud
-
-Every coordination action republishes a sanitized snapshot to the
-`agent-control` branch as `coordination-status.json`:
-
-```bash
-gh api repos/printcode1000-lgtm/gova/contents/coordination-status.json?ref=agent-control
-```
-
-The snapshot holds active agents, locks, recent messages, pending and completed
-requests, and recent operations. Host names, process ids, filesystem paths,
-patch bodies, shell command text, and input values are all excluded.
-
-`agent-control` is an output-only orphan branch, force-updated by git plumbing so
-no checkout is disturbed. Coordination traffic never lands on `main`, and pushing
-to `agent-control` triggers no workflow at all.
+The source tree still contains a legacy `publish` implementation that targets an `agent-control` branch. The active `fixed-two-branches` ruleset prevents creation of that third branch, so this path is not a supported control-plane capability and documentation must not rely on it. Remote repository state remains limited to `main` and `agent-request/chatgpt`.
 
 ## Parallelism And Conflict Prevention
 
-The default path for any agent that mutates code is its own branch. Direct-`main`
-work is the exception, and it is the only serialized path.
+Execution isolation is local-first. Repository mutation jobs use machine-local worktrees, while the only recognized remote Git branches remain `main` and `agent-request/chatgpt`.
+
+Direct-`main` mutation is serialized. Other Local Runner jobs may execute concurrently when they are read-only or otherwise admitted by the pool, but they must not publish a third remote ref.
 
 Explicit guards:
 
 | Risk | Guard |
 |---|---|
 | Two agents editing the same scope | conflicting scope locks are refused |
-| Overwriting another agent's branch | one branch per `agent_id` + `request_id` |
-| Stale checkout | every job resets its worktree to the freshest `origin/main` |
-| Push built on an outdated `main` | pre-push check refuses when `origin/main` moved |
-| Concurrent direct-`main` | concurrency group plus a single `ref:main` lock |
-| Lock leaked by a crash | the owning process is checked; a dead owner is stale at once, TTL as backstop |
-| Several jobs killed at once by memory pressure | admission control: a memory floor and a concurrency budget |
-| Record stuck reporting work that is not happening | abandoned operations are reconciled from the owning pid |
-| Duplicate `request_id` | the request ledger refuses a second use |
-| Replayed dispatch document | requests older than 30 minutes are refused |
-| Secret exfiltration | secret paths refused in patches, inspection, and messages |
+| Two jobs sharing one mutable checkout | each mutation operates in an isolated local worktree |
+| Publishing a third remote branch | active `fixed-two-branches` GitHub ruleset blocks its creation |
+| Stale checkout | mutation worktrees start from the freshest `origin/main` |
+| Push built on an outdated `main` | pre-push stale-base check refuses when `origin/main` moved |
+| Concurrent direct-`main` | GitHub concurrency group plus a single `ref:main` lock |
+| Lock leaked by a crash | owning process liveness is checked; TTL remains a backstop |
+| Several heavy jobs exhausting memory | admission control plus runner/slice memory limits |
+| Record stuck reporting dead work | orphaned operations are reconciled from process liveness |
+| Duplicate `request_id` | request ledger refuses a second use |
+| Replayed dispatch document | stale requests are refused |
+| Secret exfiltration | secret-bearing patches/inspection/messages/request values are refused or redacted |
 
 Every mutation records its starting and resulting SHA.
 
@@ -576,67 +502,16 @@ only write remains the explicit `a` key.
 
 ## Host Tools
 
-Antigravity is excluded by default. A missing or unreadable
-`.local/host-tools.json` means both `antigravity` and `agy` are refused.
-Refusing shims live in `.local/host-tool-shims`, are prepended to `PATH` for
-agent child processes, and are reasserted inside `bash -lc` commands after login
-profile setup.
+Host-tool policy is machine-local and stored at `.local/host-tools.json`. The implementation can prepend refusal shims for `antigravity` and `agy` when the policy disables them.
 
-The shims exit 127 for `antigravity` and `agy`. They do not remove
-`/usr/local/bin` or `~/.local/bin`, so unrelated binaries such as `node` and
-`git` still work. The monitor's `a` key is the only write path for toggling this
-policy.
+The current server state was verified on 2026-08-31:
 
-## Peer Link
+- `antigravity.allowed = true`
+- `antigravity` resolves to `/usr/local/bin/antigravity`
+- `agy` resolves to `/home/hesham/.local/bin/agy`
 
-The pool spans two machines, and `p2p-link` is what joins them: it publishes STUN
-and LAN candidates to a Cloudflare R2 object, UDP hole-punches, and relays SSH and
-RDP over the punched path — which is what lets this host reach the laptop when the
-two are not on the same router and the `.local` mDNS name resolves to nothing.
+Therefore the refusal shims are not an active restriction for authenticated full-host-control jobs. If the machine-local policy is changed later, `local-agent:doctor`/host-tool state must be checked again rather than assuming the current state.
 
-It is a **companion repository**: referenced, never vendored. It is a Python GTK
-application with its own origin
-(`https://github.com/printcode1000-lgtm/p2p-link.git`) and its own history, so
-copying its source into a TypeScript package would fork it — two copies drifting,
-and a fix landing in whichever one the next person happened to open. What this
-repository records is where it belongs, where it comes from, and what proves it
-works: `COMPANION_REPOSITORIES` in `@asol/local-agent-core/host`.
-
-| Field | Value |
-|---|---|
-| Install path | `/home/hesham/p2p-link` (identical on every host by design) |
-| Origin | `https://github.com/printcode1000-lgtm/p2p-link.git` |
-| Entry point | `scripts/p2p-link-gui.sh` |
-
-### What reports it
-
-`npm run local-agent:doctor` reports `companion.p2p-link` with its `HEAD` and
-whether the entry point is present. `npm run local-agent:host:backup` captures its
-state into the host inventory, so a rebuilt machine knows it was supposed to be
-there.
-
-### Recovery
-
-`npm run local-agent:host:restore` handles the three cases separately, because
-they are not the same problem:
-
-| State | Action |
-|---|---|
-| Missing | clone it from its own origin |
-| Present, origin matches, clean | fetch and `merge --ff-only` |
-| Present, origin differs | **skip** and report the mismatch |
-| Present with uncommitted changes | **skip** and report the count |
-
-The last two are refusals on purpose. A companion checkout is a working directory
-on this machine, not a build artefact: a different origin may be a deliberate
-fork, and uncommitted changes are somebody's unfinished work. Restore reports
-either and stops rather than resolving it by destroying something.
-
-The fast-forward target is resolved by asking, in order, `origin/HEAD`, then the
-branch's own upstream, then `origin/main`. `origin/HEAD` is the obvious answer and
-what a fresh clone gets, but it is a local symbolic ref that real checkouts often
-lack — p2p-link did not have it, and asking for it unguarded aborted the whole
-restore on the one repository it exists to recover.
 
 ## Operation Logs
 

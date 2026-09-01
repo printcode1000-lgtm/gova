@@ -43,8 +43,8 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_CATALOG_ROOT` | server/tooling | 1 | `packages/catalog-core/src/server/validate-catalog-v3.ts` |
 | `ASOL_CONTROL_SMOKE_PORT` | server/tooling | 1 | `scripts/smoke-control-service.ts` |
 | `ASOL_CORS_ORIGINS` | server/tooling | 4 | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts`, `src/core/config/cors-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
-| `ASOL_DATA_SOURCE` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
-| `ASOL_DEPLOY_CALLBACK_SECRET` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
+| `ASOL_DATA_SOURCE` | server/tooling | 2 | `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
+| `ASOL_DEPLOY_CALLBACK_SECRET` | server/tooling | 2 | `scripts/deploy-all.ts`, `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_DEPLOY_CALLBACK_URL` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_DEPLOY_REPOSITORY_URL` | server/tooling | 2 | `scripts/push-production-deploy-env.ts`, `services/control/src/app/api/health/route.ts` |
 | `ASOL_DEPLOY_REVISION_AT_START` | server/tooling | 1 | `scripts/deploy-all.ts` |
@@ -73,7 +73,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_OTA_R2_WAREHOUSE_NAME` | server/tooling | 0 |  |
 | `ASOL_OTA_SIGNING_PRIVATE_KEY` | server/tooling | 2 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
 | `ASOL_PRODUCTION_ORIGIN` | server/tooling | 1 | `scripts/check-deployed-release.ts` |
-| `ASOL_PROVISIONING` | server/tooling | 13 | `npm run db:provision:turso`, `npm run db:schema:sync:release`, `npm run db:schema:sync`, `scripts/provision-turso.ts`, `scripts/schema-sync.ts`, `scripts/setup-turso-db.ts` |
+| `ASOL_PROVISIONING` | server/tooling | 14 | `npm run db:provision:turso`, `npm run db:schema:sync:release`, `npm run db:schema:sync`, `scripts/provision-turso.ts`, `scripts/schema-sync.ts`, `scripts/setup-turso-db.ts` |
 | `ASOL_RELEASE_CHECK_ATTEMPTS` | server/tooling | 1 | `scripts/check-deployed-release.ts` |
 | `ASOL_REMOTE_DEPLOY_REQUEST_ID` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_REMOTE_DEPLOY_SANDBOX` | server/tooling | 2 | `scripts/check-environment-requirements.ts`, `services/control/src/app/api/health/route.ts` |
@@ -118,7 +118,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `FIREBASE_PROJECT_NUMBER` | server/tooling | 0 |  |
 | `FIREBASE_STORAGE_BUCKET` | server/tooling | 0 |  |
 | `GIT_INDEX_FILE` | server/tooling | 1 | `packages/local-agent-core/src/control-branch.ts` |
-| `GITHUB_ACTIONS` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
+| `GITHUB_ACTIONS` | server/tooling | 2 | `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `GITHUB_ADMIN_TOKEN` | server/tooling | 3 | `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts`, `packages/release-core/src/pipeline/push-main-branch.ts` |
 | `GITHUB_REF_NAME` | server/tooling | 1 | `scripts/local-agent-gateway.ts` |
 | `GITHUB_REPOSITORY` | server/tooling | 3 | `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts`, `packages/release-core/src/pipeline/push-main-branch.ts` |
@@ -146,7 +146,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `GOVA_AGENT_MEMORY_FLOOR_MB` | server/tooling | 2 | `packages/local-agent-core/src/admission.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_AGENT_STALE_LOCK_MS` | server/tooling | 2 | `packages/local-agent-core/src/lock-store.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_HOST_PROFILE` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
-| `GOVA_LOCAL_WORKSPACE` | server/tooling | 2 | `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
+| `GOVA_LOCAL_WORKSPACE` | server/tooling | 3 | `scripts/local-agent-main-apply.ts`, `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` |
 | `GOVA_RUNNER_POOL_DIR` | server/tooling | 1 | `packages/local-agent-core/src/paths.ts` |
 | `HOME` | server/tooling | 2 | `packages/local-agent-core/src/host-inventory.ts`, `packages/native-core/scripts/android-build-preflight.ts` |
 | `HOST` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
@@ -155,6 +155,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `LC_ALL` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `LEGACY_PRODUCT_DATABASE_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-product-database.ts` |
 | `LOCAL_AGENT_COMMIT_MESSAGE` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
+| `LOCAL_AGENT_EXECUTION_TARGET` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_ID` | server/tooling | 2 | `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_INSPECT_MODE` | server/tooling | 1 | `scripts/local-agent-inspect.ts` |
 | `LOCAL_AGENT_INSPECT_PATHS` | server/tooling | 1 | `scripts/local-agent-inspect.ts` |
@@ -167,6 +168,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `LOCAL_AGENT_SHELL_COMMAND` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_STATUS_PATHS` | server/tooling | 1 | `scripts/local-agent-status.ts` |
 | `LOCAL_AGENT_TARGET_MODE` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
+| `LOCAL_AGENT_TIMEOUT_MINUTES` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCAL_AGENT_VERIFICATION` | server/tooling | 1 | `scripts/local-agent-main-apply.ts` |
 | `LOCALAPPDATA` | server/tooling | 2 | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` |
 | `NEXT_PHASE` | server/tooling | 1 | `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
@@ -174,7 +176,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | 3 | `npm run build:static:local`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_APP_STORE_URL` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_BASE_PATH` | client-visible | 1 | `src/core/config/public-env.ts` |
-| `NEXT_PUBLIC_ASOL_CONTROL_URL` | client-visible | 3 | `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
+| `NEXT_PUBLIC_ASOL_CONTROL_URL` | client-visible | 4 | `scripts/deploy-all.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_MODE` | client-visible | 3 | `src/core/config/public-env.ts`, `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `NEXT_PUBLIC_ASOL_NATIVE_VERSION` | client-visible | 1 | `src/core/config/public-env.ts` |
@@ -263,7 +265,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `USER` | server/tooling | 2 | `scripts/local-agent-host-restore.ts`, `packages/local-agent-core/src/host-inventory.ts` |
 | `VERCEL` | server/tooling | 6 | `scripts/schema-sync.ts`, `scripts/test-data-health-environment.ts`, `packages/native-core/scripts/validate-ios-push-policy.ts`, `src/core/config/runtime-context.server.ts`, `src/features/data-health/tests/development-guard.test.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `VERCEL_ACCESS_TOKEN` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
-| `VERCEL_ENV` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
+| `VERCEL_ENV` | server/tooling | 2 | `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `VERCEL_NOTIFICATIONS_TOKEN` | server/tooling | 0 |  |
 | `VERCEL_ORDERS_TOKEN` | server/tooling | 0 |  |
 | `VERCEL_ORG_ID` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |

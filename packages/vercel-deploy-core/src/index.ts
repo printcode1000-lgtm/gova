@@ -13,6 +13,7 @@ import {
 export * from '@asol/account-declarations';
 export * from './vercel-deployment-monitor';
 export * from './release-state';
+export * from './release-rollback';
 
 export interface VercelHeaders {
   Authorization: string;

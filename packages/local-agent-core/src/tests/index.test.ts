@@ -181,6 +181,51 @@ assert.match(
   /would do nothing/,
   "only the genuinely empty job is refused",
 );
+assert.equal(
+  validateDispatchRequest(
+    validRequest({
+      workflow: "local-agent-main",
+      mode: "main",
+      inputs: {
+        agent_id: "a1",
+        commit_message: "host deploy",
+        shell_command: "npm run deploy:all",
+        execution_target: "canonical-host",
+        timeout_minutes: "55",
+        verification: "none",
+      },
+    }),
+  ).valid,
+  true,
+  "canonical-host shell execution validates when explicitly requested",
+);
+assert.match(
+  validateDispatchRequest(
+    validRequest({
+      workflow: "local-agent-main",
+      mode: "main",
+      inputs: {
+        agent_id: "a1",
+        commit_message: "unsafe host patch",
+        patch_base64: patchOnly,
+        execution_target: "canonical-host",
+      },
+    }),
+  ).errors.join(" "),
+  /does not accept patch_base64/,
+  "canonical-host refuses repository patches",
+);
+assert.match(
+  validateDispatchRequest(
+    validRequest({
+      workflow: "local-agent-main",
+      mode: "main",
+      inputs: { agent_id: "a1", commit_message: "x", shell_command: "echo x", timeout_minutes: "99" },
+    }),
+  ).errors.join(" "),
+  /integer from 1 to 55/,
+  "command deadlines are bounded below the workflow timeout",
+);
 assert.match(
   validateDispatchRequest(
     validRequest({
@@ -708,6 +753,7 @@ assert.equal(
 );
 
 assert.equal(assessSwap(null).verdict, "no-swap", "an unreadable /proc/meminfo recommends nothing");
+
 
 // --- cleanup ------------------------------------------------------------------
 

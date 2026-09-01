@@ -28,6 +28,17 @@
       }
     },
     {
+      "name": "Local Agent Monitor - نافذة مراقبة الوكلاء",
+      "request": "launch",
+      "type": "node-terminal",
+      "command": "/home/hesham/gova/packages/local-agent-core/scripts/watch-window.sh",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Local Agents",
+        "order": 1
+      }
+    },
+    {
       "name": "Secrets Key Init - تهيئة مفتاح النسخ المشفر",
       "request": "launch",
       "type": "node",

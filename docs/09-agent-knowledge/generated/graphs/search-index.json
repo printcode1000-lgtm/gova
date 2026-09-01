@@ -6336,6 +6336,7 @@
         "@asol/hero-slider-core",
         "@asol/hero-slider-core/server",
         "@asol/local-agent-core",
+        "@asol/local-agent-core/direct",
         "@asol/local-agent-core/host",
         "@asol/local-agent-core/monitor",
         "@asol/map-core",
@@ -6938,23 +6939,29 @@
     {
       "id": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
       "kind": "document",
-      "name": "ADR-0006: main Is the Only Branch",
+      "name": "ADR-0006: Fixed Two-Branch Repository Model",
       "path": "docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
-      "summary": "Accepted (2026-08)",
+      "summary": "Accepted (2026-08), finalized 2026-08-31",
       "tags": [
         "2026-08",
+        "2026-08-31",
         "accepted",
-        "accepted (2026-08)",
+        "accepted (2026-08), finalized 2026-08-31",
         "adr-0006",
-        "adr-0006: main is the only branch",
-        "branch",
+        "adr-0006: fixed two-branch repository model",
         "docs/01-architecture/09-decisions/adr-0006-main-only-branch",
         "docs/01-architecture/09-decisions/adr-0006-main-only-branch.md",
-        "is",
-        "main",
+        "finalized",
+        "fixed",
         "md",
-        "only",
-        "the"
+        "model",
+        "packages/local-agent-core/src/control-branch-namespaces",
+        "packages/local-agent-core/src/control-branch-namespaces.ts",
+        "repository",
+        "scripts/block-branch-creation",
+        "scripts/block-branch-creation.ts",
+        "ts",
+        "two-branch"
       ]
     },
     {
@@ -12080,6 +12087,8 @@
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/account-bridge",
         "@asol/account-declarations",
+        "@asol/control-composition",
+        "@asol/gova-deployment-core",
         "@asol/notifications-composition",
         "@asol/orders-composition",
         "@asol/ota-core",
@@ -12104,6 +12113,9 @@
         "note",
         "operational",
         "packages/account-bridge/",
+        "packages/account-declarations/",
+        "packages/control-composition/",
+        "packages/gova-deployment-core/",
         "packages/notifications-composition/",
         "packages/orders-composition/",
         "packages/products-composition/",
@@ -12115,12 +12127,7 @@
         "reconstruction",
         "relationships",
         "relocated",
-        "src/index",
-        "src/index.ts",
-        "src/notifications",
-        "src/notifications.ts",
-        "the",
-        "ts"
+        "the"
       ]
     },
     {
@@ -13600,8 +13607,6 @@
         "scripts/docs/docs-ci.ts",
         "scripts/github-ci-policy",
         "scripts/github-ci-policy.ts",
-        "scripts/local-agent-main-apply",
-        "scripts/local-agent-main-apply.ts",
         "scripts/protect-main-branch",
         "scripts/protect-main-branch.ts",
         "scripts/runtime/check",
@@ -13669,19 +13674,18 @@
         "scripts/architecture-check.ts",
         "scripts/github-ci-policy",
         "scripts/github-ci-policy.ts",
+        "scripts/local-agent-gateway",
+        "scripts/local-agent-gateway.ts",
         "scripts/local-agent-inspect",
         "scripts/local-agent-inspect.ts",
         "scripts/local-agent-main-apply",
         "scripts/local-agent-main-apply.ts",
         "scripts/local-agent-status",
         "scripts/local-agent-status.ts",
-        "scripts/p2p-link-gui",
-        "scripts/p2p-link-gui.sh",
         "scripts/tests/",
         "scripts/tests/local-agent-control-plane",
         "scripts/tests/local-agent-control-plane.test.ts",
         "self-hosted",
-        "sh",
         "src/app",
         "src/app/page",
         "src/app/page.tsx",
@@ -13695,6 +13699,71 @@
         "tsx",
         "work",
         "workflows"
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "kind": "document",
+      "name": "Local Runner Full Host Control",
+      "path": "docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "summary": "The Gova Local Runner is an authenticated host-control execution surface, not a repository-only sandbox.",
+      "tags": [
+        "@asol/local-agent-core/host",
+        "an",
+        "authenticated",
+        "control",
+        "docs/07-mobile-and-release/local-runner-full-host-control",
+        "docs/07-mobile-and-release/local-runner-full-host-control.md",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+        "execution",
+        "full",
+        "gova",
+        "host",
+        "host-control",
+        "is",
+        "local",
+        "local runner full host control",
+        "md",
+        "not",
+        "repository-only",
+        "runner",
+        "sandbox",
+        "surface",
+        "the",
+        "the gova local runner is an authenticated host-control execution surface, not a repository-only sandbox."
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+      "kind": "document",
+      "name": "Local Server Filesystem Boundary",
+      "path": "docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+      "summary": "This document defines the boundary between paths on the local server and paths inside the `gova` Git repository.",
+      "tags": [
+        "and",
+        "between",
+        "boundary",
+        "defines",
+        "docs/07-mobile-and-release/local-runner-full-host-control",
+        "docs/07-mobile-and-release/local-runner-full-host-control.md",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary",
+        "docs/07-mobile-and-release/local-server-filesystem-boundary.md",
+        "document",
+        "filesystem",
+        "git",
+        "gova",
+        "inside",
+        "local",
+        "local server filesystem boundary",
+        "md",
+        "on",
+        "paths",
+        "repository",
+        "server",
+        "the",
+        "this",
+        "this document defines the boundary between paths on the local server and paths inside the `gova` git repository."
       ]
     },
     {
@@ -18282,6 +18351,19 @@
       ]
     },
     {
+      "id": "environment-key:LOCAL_AGENT_EXECUTION_TARGET",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_EXECUTION_TARGET",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_execution_target",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:LOCAL_AGENT_ID",
       "kind": "environment-key",
       "name": "LOCAL_AGENT_ID",
@@ -18432,6 +18514,19 @@
       "tags": [
         "environment",
         "local_agent_target_mode",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:LOCAL_AGENT_TIMEOUT_MINUTES",
+      "kind": "environment-key",
+      "name": "LOCAL_AGENT_TIMEOUT_MINUTES",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "local_agent_timeout_minutes",
         "server",
         "server tooling environment",
         "tooling"
@@ -27211,6 +27306,17 @@
       ]
     },
     {
+      "id": "script:scripts/release-readiness-barrier.ts",
+      "kind": "script",
+      "name": "release-readiness-barrier.ts",
+      "path": "scripts/release-readiness-barrier.ts",
+      "tags": [
+        "scripts/release-readiness-barrier",
+        "scripts/release-readiness-barrier.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/release-service-smoke-probes.ts",
       "kind": "script",
       "name": "release-service-smoke-probes.ts",
@@ -28027,17 +28133,6 @@
       "tags": [
         "android/gradle/wrapper/gradle-wrapper",
         "android/gradle/wrapper/gradle-wrapper.properties",
-        "properties"
-      ]
-    },
-    {
-      "id": "source:android/local.properties",
-      "kind": "source",
-      "name": "local.properties",
-      "path": "android/local.properties",
-      "tags": [
-        "android/local",
-        "android/local.properties",
         "properties"
       ]
     },
@@ -32638,17 +32733,6 @@
       "tags": [
         "packages/local-agent-core/src/agent-registry",
         "packages/local-agent-core/src/agent-registry.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/companion-repos.ts",
-      "kind": "source",
-      "name": "companion-repos.ts",
-      "path": "packages/local-agent-core/src/companion-repos.ts",
-      "tags": [
-        "packages/local-agent-core/src/companion-repos",
-        "packages/local-agent-core/src/companion-repos.ts",
         "ts"
       ]
     },
@@ -42010,6 +42094,17 @@
         "server",
         "src/core/config/system-logs",
         "src/core/config/system-logs.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/core/config/test-env.ts",
+      "kind": "source",
+      "name": "test-env.ts",
+      "path": "src/core/config/test-env.ts",
+      "tags": [
+        "src/core/config/test-env",
+        "src/core/config/test-env.ts",
         "ts"
       ]
     },
