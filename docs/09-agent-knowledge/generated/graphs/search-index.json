@@ -26607,6 +26607,17 @@
       ]
     },
     {
+      "id": "script:scripts/deployment-commit-trailer.ts",
+      "kind": "script",
+      "name": "deployment-commit-trailer.ts",
+      "path": "scripts/deployment-commit-trailer.ts",
+      "tags": [
+        "scripts/deployment-commit-trailer",
+        "scripts/deployment-commit-trailer.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/dev-distributed.ts",
       "kind": "script",
       "name": "dev-distributed.ts",

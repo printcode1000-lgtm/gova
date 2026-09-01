@@ -26607,6 +26607,17 @@
       ]
     },
     {
+      "id": "script:scripts/deployment-commit-trailer.ts",
+      "kind": "script",
+      "name": "deployment-commit-trailer.ts",
+      "path": "scripts/deployment-commit-trailer.ts",
+      "tags": [
+        "scripts/deployment-commit-trailer",
+        "scripts/deployment-commit-trailer.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/dev-distributed.ts",
       "kind": "script",
       "name": "dev-distributed.ts",
@@ -85199,6 +85210,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/deployment-commit-trailer.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/dev-distributed.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -134179,9 +134196,9 @@
     },
     {
       "from": "script:scripts/deploy-all.ts",
-      "to": "script:scripts/docs/document-mutability.ts",
+      "to": "script:scripts/deployment-commit-trailer.ts",
       "kind": "imports",
-      "detail": "./docs/document-mutability"
+      "detail": "./deployment-commit-trailer"
     },
     {
       "from": "script:scripts/deploy-all.ts",
@@ -134348,6 +134365,12 @@
     },
     {
       "from": "script:scripts/deploy-push.ts",
+      "to": "script:scripts/deployment-commit-trailer.ts",
+      "kind": "imports",
+      "detail": "./deployment-commit-trailer"
+    },
+    {
+      "from": "script:scripts/deploy-push.ts",
       "to": "script:scripts/ensure-release-secrets-restored.ts",
       "kind": "imports",
       "detail": "./ensure-release-secrets-restored"
@@ -134430,6 +134453,17 @@
       "to": "package:@asol/native-core",
       "kind": "imports",
       "detail": "@asol/native-core"
+    },
+    {
+      "from": "script:scripts/deployment-commit-trailer.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/deployment-commit-trailer.ts",
+      "to": "script:scripts/docs/document-mutability.ts",
+      "kind": "imports",
+      "detail": "./docs/document-mutability"
     },
     {
       "from": "script:scripts/dev-distributed.ts",
@@ -243420,6 +243454,12 @@
     },
     {
       "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "imports",
+      "detail": "@asol/gova-deployment-core"
+    },
+    {
+      "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
       "to": "script:scripts/release-readiness-barrier.ts",
       "kind": "imports",
       "detail": "../release-readiness-barrier"
@@ -243435,6 +243475,11 @@
       "to": "script:scripts/vercel-deployment-guards.ts",
       "kind": "imports",
       "detail": "../vercel-deployment-guards"
+    },
+    {
+      "from": "test:scripts/tests/vercel-deployment-guards.test.ts",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "tests"
     },
     {
       "from": "test:scripts/tests/vercel-deployment-guards.test.ts",

@@ -172,6 +172,23 @@ created by hand keeps `framework: null`, and Vercel then treats a successful
 produces, and fails the deployment *after* the build passed. Existing projects
 are now converged onto `nextjs` on every deploy.
 
+## The gova build view and Vercel's output directory
+
+`build:vercel` generates `.tmp-gova-build/` — a deterministic copy of the
+repository with the Business API route trees left out — and runs `next build`
+**inside it**. The artifact therefore lands in `.tmp-gova-build/.next`, while
+Vercel's Next.js builder looks for `.next` at the project root.
+
+`vercel.json` sets `outputDirectory` to `.tmp-gova-build/.next` for exactly this
+reason. Without it a deployment fails with `NEXT_NO_ROUTES_MANIFEST` *after* a
+build that succeeded and passed every artifact scan — the isolation worked, the
+output was simply somewhere Vercel does not read. `vercel-deployment-guards.test.ts`
+pins the value against `GOVA_DEPLOYMENT_DIR` so the two cannot drift.
+
+This failure could only appear once a SHA actually crossed the readiness
+barrier; every earlier attempt failed before the gova build was allowed to
+publish, which is why it surfaced late.
+
 ## Verification
 
 A deployment reporting `READY` means the deployment exists, not that a request

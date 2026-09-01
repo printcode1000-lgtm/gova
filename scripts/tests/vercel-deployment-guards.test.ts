@@ -10,6 +10,7 @@ import {
 import os from "node:os";
 import path from "node:path";
 
+import { GOVA_DEPLOYMENT_DIR } from "@asol/gova-deployment-core";
 import {
   ALLOWED_VERCEL_NPM_SCRIPTS,
   FORBIDDEN_VERCEL_PROOF_COMMANDS,
@@ -40,6 +41,7 @@ function read(relativePath: string): string {
 const vercelConfig = JSON.parse(read("vercel.json")) as {
   installCommand?: string;
   buildCommand?: string;
+  outputDirectory?: string;
 };
 const pkg = JSON.parse(read("package.json")) as {
   scripts?: Record<string, string>;
@@ -59,6 +61,19 @@ assert.equal(
   VERCEL_BUILD_COMMAND,
   "Vercel must not run the local correctness gate (npm run build).",
 );
+/**
+ * `build:vercel` runs `next build` inside the generated gova build view, so the
+ * artifact lands in `<view>/.next` and not at the project root where Vercel's
+ * Next.js builder looks for it. Without this the deployment fails with
+ * `NEXT_NO_ROUTES_MANIFEST` after a build that succeeded and passed every
+ * artifact scan. See docs/07-mobile-and-release/release-commands.md.
+ */
+assert.equal(
+  vercelConfig.outputDirectory,
+  `${GOVA_DEPLOYMENT_DIR}/.next`,
+  "Vercel must read the gova build view's artifact, not the repository root.",
+);
+
 assert.equal(
   pkg.scripts?.[VERCEL_BUILD_SCRIPT],
   "npx tsx scripts/vercel-deployment-build.ts",
