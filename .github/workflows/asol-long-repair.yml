@@ -23,7 +23,7 @@ env:
 
 jobs:
   repair:
-    if: ${{ !startsWith(github.event.head_commit.message, '[asol-long-run]') }}
+    if: ${{ startsWith(github.event.head_commit.message, '[asol-long-run]') == false }}
     runs-on: self-hosted
     timeout-minutes: 330
     concurrency:
@@ -60,7 +60,6 @@ jobs:
             exit 91
           fi
 
-          # Never carry gateway request documents as repair source files.
           rm -rf .agent-control/requests
 
           stage_commit() {
@@ -151,7 +150,6 @@ jobs:
           stage_commit "complete control and deployment-tool gates"
 
           echo "=== Stage E: full repository verification ==="
-          # verify:all intentionally owns the repository-wide release contract.
           run_gate npm run verify:all
           run_gate npm test
           run_gate npm run docs:generate
