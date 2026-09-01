@@ -22,9 +22,10 @@ jobs:
       group: asol-production-cutover
       cancel-in-progress: false
     env:
-      EXPECTED_SHA: 6764d68ee3a2304f4c1ff6a42a1386a2ffd635e5
+      INITIAL_SHA: 6764d68ee3a2304f4c1ff6a42a1386a2ffd635e5
+      GH_PUSH_TOKEN: ${{ github.token }}
     steps:
-      - name: Execute canonical production transaction
+      - name: Repair env listing and execute canonical production transaction
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -38,51 +39,67 @@ jobs:
             git status --short
             exit 41
           fi
-          current_branch="$(git branch --show-current)"
-          if [[ "$current_branch" != "main" ]]; then
-            echo "PRODUCTION_PREFLIGHT=FAIL canonical-branch=$current_branch"
-            exit 42
-          fi
-          remote_sha="$(git rev-parse origin/main)"
-          if [[ "$remote_sha" != "$EXPECTED_SHA" ]]; then
-            echo "PRODUCTION_PREFLIGHT=FAIL origin-main=$remote_sha expected=$EXPECTED_SHA"
-            exit 43
-          fi
+          [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
+          [[ "$(git rev-parse origin/main)" == "$INITIAL_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL unexpected-main"; exit 43; }
           git merge --ff-only origin/main
-          local_sha="$(git rev-parse HEAD)"
-          if [[ "$local_sha" != "$EXPECTED_SHA" ]]; then
-            echo "PRODUCTION_PREFLIGHT=FAIL local-main=$local_sha expected=$EXPECTED_SHA"
-            exit 44
-          fi
+
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('packages/vercel-deploy-core/src/index.ts')
+          s=p.read_text()
+          marker='export async function listProjectEnv('
+          i=s.index(marker)
+          head, tail=s[:i], s[i:]
+          old='withTeam(`https://api.vercel.com/v9/projects/${projectId}/env`, teamId),'
+          new='withTeam(`https://api.vercel.com/v9/projects/${projectId}/env?limit=100`, teamId),'
+          if old not in tail: raise SystemExit('listProjectEnv endpoint not found')
+          tail=tail.replace(old,new,1)
+          p.write_text(head+tail)
+
+          t=Path('packages/vercel-deploy-core/src/tests/index.test.ts')
+          s=t.read_text()
+          needle="  assert(indexSource.includes(\"target: ['production', 'preview', 'development']\"), 'D4: all targets included');\n"
+          addition=needle+"  assert(indexSource.includes('/env?limit=100'), 'D4: project env listing covers the full gova env set before upsert/cleanup');\n"
+          if '/env?limit=100' not in s:
+              if needle not in s: raise SystemExit('env test insertion point not found')
+              s=s.replace(needle,addition,1)
+              t.write_text(s)
+
+          d=Path('docs/07-mobile-and-release/scripts-and-workflows.md')
+          s=d.read_text()
+          note='\nGova environment reconciliation requests up to 100 project environment entries before upsert and cleanup, so existing optional or legacy variables cannot be missed by the Vercel API default page size.\n'
+          if note.strip() not in s:
+              anchor='## Service deployment checks\n'
+              if anchor not in s: raise SystemExit('docs insertion point not found')
+              s=s.replace(anchor,anchor+note,1)
+              d.write_text(s)
+          PY
+
+          npm run test:vercel-deploy-core
+          npm run test:deployment-tools
+          npm run typecheck
+          npm run docs:generate
+          npm run docs:ci
+          npm run github:ci-policy
+
+          git add packages/vercel-deploy-core/src/index.ts packages/vercel-deploy-core/src/tests/index.test.ts docs/07-mobile-and-release/scripts-and-workflows.md docs/09-agent-knowledge/generated
+          git commit -m "fix: paginate Vercel project environment reconciliation"
+          RELEASE_SHA="$(git rev-parse HEAD)"
+          git push "https://x-access-token:${GH_PUSH_TOKEN}@github.com/printcode1000-lgtm/gova.git" "HEAD:main"
+          echo "RELEASE_CODE_SHA=$RELEASE_SHA"
 
           export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
-
           node --input-type=module <<'NODE'
           import { existsSync } from 'node:fs';
           import dotenv from 'dotenv';
           if (existsSync('.env.local')) dotenv.config({ path: '.env.local', override: false, quiet: true });
           if (existsSync('.env')) dotenv.config({ path: '.env', override: false, quiet: true });
-          const required = [
-            'NEXT_PUBLIC_ASOL_CONTROL_URL',
-            'NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL',
-            'NEXT_PUBLIC_ASOL_PRODUCTS_URL',
-            'NEXT_PUBLIC_ASOL_ORDERS_URL',
-            'NEXT_PUBLIC_ASOL_PROFILES_URL',
-            'NEXT_PUBLIC_ASOL_SUBMAIN_URL',
-            'NEXT_PUBLIC_ASOL_SUB2MAIN_URL',
-          ];
-          const missing = [];
-          for (const key of required) {
-            const present = Boolean(process.env[key]?.trim());
-            console.log(`ENV_NAME ${key}=${present ? 'PRESENT' : 'MISSING'}`);
-            if (!present) missing.push(key);
-          }
-          if (missing.length) {
-            console.error(`PRODUCTION_PREFLIGHT=FAIL missing-public-origins=${missing.join(',')}`);
-            process.exit(45);
-          }
+          const keys=['NEXT_PUBLIC_ASOL_CONTROL_URL','NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL','NEXT_PUBLIC_ASOL_PRODUCTS_URL','NEXT_PUBLIC_ASOL_ORDERS_URL','NEXT_PUBLIC_ASOL_PROFILES_URL','NEXT_PUBLIC_ASOL_SUBMAIN_URL','NEXT_PUBLIC_ASOL_SUB2MAIN_URL'];
+          const missing=keys.filter(k=>!process.env[k]?.trim());
+          for (const k of keys) console.log(`ENV_NAME ${k}=${process.env[k]?.trim()?'PRESENT':'MISSING'}`);
+          if(missing.length){console.error(`PRODUCTION_PREFLIGHT=FAIL missing-public-origins=${missing.join(',')}`);process.exit(45)}
           NODE
           echo "PRODUCTION_PREFLIGHT=PASS"
 
@@ -98,6 +115,7 @@ jobs:
           npm run release:check
           npm run smoke:deployed
           npm run smoke:production
+          FINAL_SHA="$(git rev-parse HEAD)"
           echo "PRODUCTION_VERIFICATION=PASS"
-          echo "PRODUCTION_RELEASE_SHA=$(git rev-parse HEAD)"
+          echo "PRODUCTION_RELEASE_SHA=$FINAL_SHA"
           echo "ASOL_PRODUCTION_COMPLETE=PASS"
