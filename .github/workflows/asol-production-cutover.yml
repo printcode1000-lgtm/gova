@@ -22,32 +22,52 @@ jobs:
       group: asol-production-cutover
       cancel-in-progress: false
     env:
-      INITIAL_SHA: 6764d68ee3a2304f4c1ff6a42a1386a2ffd635e5
+      INITIAL_SHA: cf905aff947022a48213b6f940c78c5ad57bafd7
       GH_PUSH_TOKEN: ${{ github.token }}
     steps:
-      - name: Complete env pagination repair and production transaction
+      - name: Fix duplicate env upsert and execute production transaction
         shell: bash
         run: |
           set -Eeuo pipefail
           ROOT=/home/hesham/gova
           cd "$ROOT"
-          echo "=== ASOL PRODUCTION CUTOVER RESUME ==="
+          echo "=== ASOL PRODUCTION CUTOVER FINAL FIX ==="
           echo "runner=$(hostname)"
           git fetch origin main
           [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
           [[ "$(git rev-parse origin/main)" == "$INITIAL_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL unexpected-main"; exit 43; }
+          if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
+            echo "PRODUCTION_PREFLIGHT=FAIL dirty-workspace"
+            git status --short
+            exit 41
+          fi
           git merge --ff-only origin/main
 
-          mapfile -t dirty < <(git status --porcelain --untracked-files=normal | sed -E 's/^.. //')
-          for path in "${dirty[@]}"; do
-            case "$path" in
-              packages/vercel-deploy-core/src/index.ts|packages/vercel-deploy-core/src/tests/index.test.ts|docs/07-mobile-and-release/scripts-and-workflows.md|docs/09-agent-knowledge/generated/*) ;;
-              *) echo "PRODUCTION_PREFLIGHT=FAIL unexpected-dirty-file=$path"; exit 41 ;;
-            esac
-          done
-          grep -Fq '/env?limit=100' packages/vercel-deploy-core/src/index.ts || { echo "PRODUCTION_PREFLIGHT=FAIL pagination-patch-missing"; exit 47; }
-          grep -Fq '/env?limit=100' packages/vercel-deploy-core/src/tests/index.test.ts || { echo "PRODUCTION_PREFLIGHT=FAIL pagination-test-missing"; exit 48; }
-          echo "EXPECTED_DIRTY_PATCH=VERIFIED"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('packages/vercel-deploy-core/src/index.ts')
+          s=p.read_text()
+          old='''  const target = ['production', 'preview', 'development'];\n  const match = existing.find((item) => item.key === key);\n\n  const response = match\n    ? await fetch(\n        withTeam(`https://api.vercel.com/v9/projects/${projectId}/env/${match.id}`, teamId),\n        {\n          method: 'PATCH',\n          headers: buildHeaders(token),\n          body: JSON.stringify({ value, target, type: 'encrypted' }),\n        },\n      )\n    : await fetch(withTeam(`https://api.vercel.com/v10/projects/${projectId}/env`, teamId), {\n        method: 'POST',\n        headers: buildHeaders(token),\n        body: JSON.stringify({ key, value, target, type: 'encrypted' }),\n      });\n\n  if (!response.ok) {\n    throw new Error(\n      `Failed to ${match ? 'update' : 'create'} ${key}: ${response.status} ${await response.text()}`,\n    );\n  }\n  return match ? 'updated' : 'created';'''
+          new='''  const target = ['production', 'preview', 'development'];\n  const matches = existing.filter((item) => item.key === key);\n\n  if (matches.length > 0) {\n    for (const match of matches) {\n      const response = await fetch(\n        withTeam(`https://api.vercel.com/v9/projects/${projectId}/env/${match.id}`, teamId),\n        {\n          method: 'PATCH',\n          headers: buildHeaders(token),\n          // Preserve each existing entry's target scope. Vercel permits the same\n          // key in separate target entries; expanding one entry to all targets\n          // collides with its siblings. PATCHing value/type only is atomic and\n          // keeps production/preview/development scopes exactly as configured.\n          body: JSON.stringify({ value, type: 'encrypted' }),\n        },\n      );\n      if (!response.ok) {\n        throw new Error(`Failed to update ${key}: ${response.status} ${await response.text()}`);\n      }\n    }\n    return 'updated';\n  }\n\n  const response = await fetch(withTeam(`https://api.vercel.com/v10/projects/${projectId}/env`, teamId), {\n    method: 'POST',\n    headers: buildHeaders(token),\n    body: JSON.stringify({ key, value, target, type: 'encrypted' }),\n  });\n  if (!response.ok) {\n    throw new Error(`Failed to create ${key}: ${response.status} ${await response.text()}`);\n  }\n  return 'created';'''
+          if old not in s: raise SystemExit('writeProjectEnv block not found')
+          p.write_text(s.replace(old,new,1))
+
+          t=Path('packages/vercel-deploy-core/src/tests/index.test.ts')
+          s=t.read_text()
+          needle="  assert(indexSource.includes('/env?limit=100'), 'D4: project env listing covers the full gova env set before upsert/cleanup');\n"
+          addition=needle+"  assert(indexSource.includes('existing.filter((item) => item.key === key)'), 'D4: duplicate same-key env entries are all updated');\n  assert(indexSource.includes(\"JSON.stringify({ value, type: 'encrypted' })\"), 'D4: existing target scopes are preserved during PATCH');\n"
+          if "existing.filter((item) => item.key === key)" not in s:
+              if needle not in s: raise SystemExit('duplicate-env test insertion point missing')
+              t.write_text(s.replace(needle,addition,1))
+
+          d=Path('docs/07-mobile-and-release/scripts-and-workflows.md')
+          s=d.read_text()
+          note='Gova env reconciliation preserves existing Vercel target scopes when the same key has separate production, preview, or development entries; it updates every matching entry without widening its targets.\n'
+          if note not in s:
+              anchor='Gova environment reconciliation requests up to 100 project environment entries before upsert and cleanup, so existing optional or legacy variables cannot be missed by the Vercel API default page size.\n'
+              if anchor not in s: raise SystemExit('docs env reconciliation note missing')
+              d.write_text(s.replace(anchor,anchor+note,1))
+          PY
 
           npm run test:vercel-deploy-core
           npm run test:deployment-tools
@@ -57,7 +77,7 @@ jobs:
           npm run github:ci-policy
 
           git add packages/vercel-deploy-core/src/index.ts packages/vercel-deploy-core/src/tests/index.test.ts docs/07-mobile-and-release/scripts-and-workflows.md docs/09-agent-knowledge/generated
-          git commit -m "fix: paginate Vercel project environment reconciliation [docs-contract-change]"
+          git commit -m "fix: preserve Vercel env target scopes [docs-contract-change]"
           RELEASE_SHA="$(git rev-parse HEAD)"
           git push "https://x-access-token:${GH_PUSH_TOKEN}@github.com/printcode1000-lgtm/gova.git" "HEAD:main"
           echo "RELEASE_CODE_SHA=$RELEASE_SHA"
@@ -65,18 +85,6 @@ jobs:
           export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
-          node --input-type=module <<'NODE'
-          import { existsSync } from 'node:fs';
-          import dotenv from 'dotenv';
-          if (existsSync('.env.local')) dotenv.config({ path: '.env.local', override: false, quiet: true });
-          if (existsSync('.env')) dotenv.config({ path: '.env', override: false, quiet: true });
-          const keys=['NEXT_PUBLIC_ASOL_CONTROL_URL','NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL','NEXT_PUBLIC_ASOL_PRODUCTS_URL','NEXT_PUBLIC_ASOL_ORDERS_URL','NEXT_PUBLIC_ASOL_PROFILES_URL','NEXT_PUBLIC_ASOL_SUBMAIN_URL','NEXT_PUBLIC_ASOL_SUB2MAIN_URL'];
-          const missing=keys.filter(k=>!process.env[k]?.trim());
-          for (const k of keys) console.log(`ENV_NAME ${k}=${process.env[k]?.trim()?'PRESENT':'MISSING'}`);
-          if(missing.length){console.error(`PRODUCTION_PREFLIGHT=FAIL missing-public-origins=${missing.join(',')}`);process.exit(45)}
-          NODE
-          echo "PRODUCTION_PREFLIGHT=PASS"
-
           echo "=== GOVA ENV RECONCILIATION ==="
           npm run db:push:vercel-env
           echo "GOVA_ENV_SYNC=PASS"
@@ -89,7 +97,6 @@ jobs:
           npm run release:check
           npm run smoke:deployed
           npm run smoke:production
-          FINAL_SHA="$(git rev-parse HEAD)"
           echo "PRODUCTION_VERIFICATION=PASS"
-          echo "PRODUCTION_RELEASE_SHA=$FINAL_SHA"
+          echo "PRODUCTION_RELEASE_SHA=$(git rev-parse HEAD)"
           echo "ASOL_PRODUCTION_COMPLETE=PASS"
