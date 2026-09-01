@@ -81,27 +81,29 @@ const SECRET_FAMILIES: readonly { family: string; test: (name: string) => boolea
 ];
 
 /**
- * Names the build platform injects, which are not this runtime's secrets.
+ * Prefixes this repository owns outright.
  *
- * A Vercel build container sets its own `VERCEL_*` and `AWS_*` variables — the
- * builder's endpoints, region, execution environment, OIDC token. They match the
- * `deployment credential` and `object storage` families by name, so the report
- * listed 125 of them on a gova project whose environment holds eleven public
- * origins and nothing else.
- *
- * That is the failure this report exists to prevent, inverted: a signal nobody
- * can read is a signal nobody will act on, and one real leaked credential in a
- * list of 125 platform names is invisible. The exclusions are exact names and
- * narrow prefixes owned by the platform, never a family-wide exemption.
+ * A name starting with one of these is ours no matter which account declares
+ * it, so it is reported even when no declaration lists it — an undeclared
+ * `TURSO_*` on a runtime is exactly the contamination this report exists for.
+ * The build platform never injects these.
  */
-const PLATFORM_INJECTED_ENV = [
-  /^VERCEL_(API_|BUILD|DEPLOYMENT_ID$|ENV$|GIT_|OIDC_TOKEN$|REGION$|SKEW_|TARGET_ENV$|URL$|BRANCH_URL$|PROJECT_PRODUCTION_URL$|AUTOMATION_BYPASS_SECRET$)/,
-  /^AWS_(EXECUTION_ENV|LAMBDA_|REGION|DEFAULT_REGION|ACCESS_KEY_ID|SECRET_ACCESS_KEY|SESSION_TOKEN|XRAY_)/,
-];
+const REPOSITORY_OWNED_ENV_PREFIXES = [
+  'ASOL_',
+  'TURSO_',
+  'R2_',
+  'SYSTEM_OPS_',
+  'PASSWORD_RECOVERY_',
+  'WEB_PUSH_',
+  'FIREBASE_',
+  'GOOGLE_PLAY_',
+  'APP_STORE_CONNECT_',
+  'SMTP_',
+  'GITHUB_TOKEN',
+] as const;
 
-/** Whether the build platform, not this project, put the name in the environment. */
-export function isPlatformInjectedEnvName(name: string): boolean {
-  return PLATFORM_INJECTED_ENV.some((pattern) => pattern.test(name));
+export function isRepositoryOwnedEnvName(name: string): boolean {
+  return REPOSITORY_OWNED_ENV_PREFIXES.some((prefix) => name.startsWith(prefix));
 }
 
 export interface ForeignEnvFinding {
@@ -127,14 +129,26 @@ export function foreignRuntimeEnvNames(
 
   for (const name of Object.keys(env).sort()) {
     if (own.has(name)) continue;
-    if (isPlatformInjectedEnvName(name)) continue;
     const family = SECRET_FAMILIES.find((entry) => entry.test(name))?.family;
     if (!family) continue;
+    // An account's Vercel token and team id are declared names too. Leaving them
+    // out made `VERCEL_CONTROL_TOKEN` look like a platform variable — the one
+    // class of finding the plan cares most about, since a deployment credential
+    // on an application runtime is never legitimate.
     const declaredBy = Object.entries(ACCOUNT_DECLARATIONS)
       .filter(([, other]) =>
         (other.requiredEnv as readonly string[]).includes(name) ||
-        (other.optionalEnv as readonly string[]).includes(name))
+        (other.optionalEnv as readonly string[]).includes(name) ||
+        other.tokenEnvVar === name ||
+        other.teamIdEnvVar === name)
       .map(([accountName]) => accountName);
+    // Reported when the repository owns the name: another account declares it,
+    // or it sits under one of our own prefixes. Everything else in a build
+    // container belongs to the platform — `VERCEL_ARTIFACTS_TOKEN`,
+    // `AWS_EXECUTION_ENV` and ninety more — and listing those buried the one
+    // finding that matters in a hundred that never mattered. Our own Vercel
+    // tokens are always a declaration's `tokenEnvVar`, so they are still caught.
+    if (declaredBy.length === 0 && !isRepositoryOwnedEnvName(name)) continue;
     findings.push({ name, family, declaredBy });
   }
   return findings;

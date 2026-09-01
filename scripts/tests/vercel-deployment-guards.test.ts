@@ -15,7 +15,6 @@ import {
   ALLOWED_VERCEL_NPM_SCRIPTS,
   FORBIDDEN_VERCEL_PROOF_COMMANDS,
   foreignRuntimeEnvNames,
-  isPlatformInjectedEnvName,
   hostedRuntimeEnvKeys,
   runtimeAccountFromEnv,
   VERCEL_BUILD_COMMAND,
@@ -274,49 +273,49 @@ assert.ok(pkg.engines?.node?.includes("<25"));
 /**
  * The leak report must stay readable.
  *
- * A Vercel build container injects its own `VERCEL_` and `AWS_` names, which match the
- * deployment-credential and object-storage families. Reporting them buried one
- * real leaked credential in 125 platform names. The exclusions are exact and
- * narrow: a real foreign secret must still be reported.
+ * A Vercel build container injects around a hundred of its own names that match
+ * the deployment-credential and object-storage families. Reporting them buried
+ * the one finding that matters. A name is reported when the repository owns it:
+ * another account declares it, or it sits under one of our own prefixes.
  */
 for (const platformName of [
   "VERCEL_OIDC_TOKEN",
+  "VERCEL_ARTIFACTS_TOKEN",
+  "VERCEL_ARTIFACTS_OWNER",
   "VERCEL_API_BUILD_CONTAINERS_ENDPOINT",
   "VERCEL_GIT_COMMIT_SHA",
   "VERCEL_REGION",
   "AWS_EXECUTION_ENV",
   "AWS_LAMBDA_FUNCTION_NAME",
 ]) {
-  assert.ok(
-    isPlatformInjectedEnvName(platformName),
+  assert.deepEqual(
+    foreignRuntimeEnvNames("gova", { [platformName]: "x" }).map((finding) => finding.name),
+    [],
     `${platformName} is injected by the build platform and must not be reported as a leak.`,
   );
 }
-for (const realSecret of [
+
+for (const ownedSecret of [
   "VERCEL_CONTROL_TOKEN",
   "VERCEL_NOTIFICATIONS_TOKEN",
-  "R2_API_TOKEN",
   "TURSO_AUTH_TOKEN",
-  "AWS_BUCKET_NAME",
+  "R2_API_TOKEN",
+  "ASOL_SESSION_SIGNING_SECRET",
+  "SYSTEM_OPS_DATABASE_URL",
 ]) {
-  assert.ok(
-    !isPlatformInjectedEnvName(realSecret),
-    `${realSecret} is a project credential and must still be reported when foreign.`,
+  assert.deepEqual(
+    foreignRuntimeEnvNames("gova", { [ownedSecret]: "x" }).map((finding) => finding.name),
+    [ownedSecret],
+    `${ownedSecret} belongs to this repository and must still be reported on gova.`,
   );
 }
+
 assert.deepEqual(
   foreignRuntimeEnvNames("gova", {
-    VERCEL_OIDC_TOKEN: "x",
-    AWS_EXECUTION_ENV: "x",
     NEXT_PUBLIC_ASOL_CONTROL_URL: "https://control.example",
   }).map((finding) => finding.name),
   [],
-  "A gova environment holding only platform names and its own origins reports nothing.",
-);
-assert.deepEqual(
-  foreignRuntimeEnvNames("gova", { VERCEL_CONTROL_TOKEN: "x" }).map((finding) => finding.name),
-  ["VERCEL_CONTROL_TOKEN"],
-  "A foreign deployment token on gova must still be reported.",
+  "gova's own declared origins are not findings.",
 );
 
 console.log("Vercel deployment/smoke guard contract tests passed.");
