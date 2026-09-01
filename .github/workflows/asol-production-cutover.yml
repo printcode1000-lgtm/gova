@@ -25,13 +25,13 @@ jobs:
       EXPECTED_SHA: 7502aac290e870868954f37bc31fed60c0aa7ea8
       GH_PUSH_TOKEN: ${{ github.token }}
     steps:
-      - name: Clean generated reports, fix smoke isolation, and finish cutover
+      - name: Fix server base path and smoke isolation, then finish cutover
         shell: bash
         run: |
           set -Eeuo pipefail
           ROOT=/home/hesham/gova
           cd "$ROOT"
-          echo "=== ASOL PRODUCTION CUTOVER — SMOKE FIX RESUME ==="
+          echo "=== ASOL PRODUCTION CUTOVER — SERVER BASE PATH FIX ==="
           echo "runner=$(hostname)"
           git fetch origin main
           [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
@@ -44,17 +44,18 @@ jobs:
           import re, subprocess, sys
           out = subprocess.check_output(['git','status','--porcelain','--untracked-files=normal'], text=True)
           paths = [line[3:] for line in out.splitlines() if line.strip()]
-          allowed = re.compile(r'^public/sync_data/(?:[a-z0-9-]+-)?schema-sync-report\.json$')
-          unexpected = [p for p in paths if not allowed.match(p)]
+          schema_report = re.compile(r'^public/sync_data/(?:[a-z0-9-]+-)?schema-sync-report\.json$')
+          allowed = [p for p in paths if schema_report.match(p) or p == 'scripts/check-production-smoke.ts']
+          unexpected = [p for p in paths if p not in allowed]
           if unexpected:
               print('PRODUCTION_PREFLIGHT=FAIL unexpected-dirty-files')
               for p in unexpected: print(p)
               sys.exit(41)
-          if paths:
-              subprocess.run(['git','restore','--worktree','--',*paths], check=True)
-              print(f'RESTORED_GENERATED_SCHEMA_REPORTS={len(paths)}')
+          if allowed:
+              subprocess.run(['git','restore','--worktree','--',*allowed], check=True)
+              print(f'RESTORED_KNOWN_RELEASE_ARTIFACTS={len(allowed)}')
           PY
-          [[ -z "$(git status --porcelain --untracked-files=normal)" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL dirty-after-generated-cleanup"; git status --short; exit 41; }
+          [[ -z "$(git status --porcelain --untracked-files=normal)" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL dirty-after-cleanup"; git status --short; exit 41; }
 
           export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
@@ -62,12 +63,23 @@ jobs:
 
           python3 - <<'PY'
           from pathlib import Path
+
+          # Server/Vercel builds inside a self-hosted GitHub Actions runner must
+          # remain rooted at /. Only static/GitHub Pages builds inherit /gova.
+          cfg = Path('next.config.ts')
+          s = cfg.read_text()
+          old = "const basePath = process.env.ASOL_BASE_PATH?.replace(/\\/$/, '') || (isGithubActions ? repositoryName : '');"
+          new = "const basePath = process.env.ASOL_BASE_PATH?.replace(/\\/$/, '') || (isGithubActions && isStatic ? repositoryName : '');"
+          if old not in s:
+              raise SystemExit('next.config basePath expression not found')
+          cfg.write_text(s.replace(old, new, 1))
+
           p = Path('scripts/check-production-smoke.ts')
           s = p.read_text()
           s = s.replace('import path from "node:path";\n', 'import path from "node:path";\nimport { createServer } from "node:net";\n', 1)
           s = s.replace('const PORT = Number(process.env.ASOL_SMOKE_PORT ?? 3210);\nconst BASE = `http://127.0.0.1:${PORT}`;\n', '', 1)
           old = '''function startServer(): ChildProcess {\n  const next = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");\n  return spawn(process.execPath, [next, "start", "-p", String(PORT)], {\n'''
-          new = '''async function resolveSmokePort(): Promise<number> {\n  const raw = process.env.ASOL_SMOKE_PORT;\n  const requested = raw === undefined ? 0 : Number(raw);\n  if (!Number.isInteger(requested) || requested < 0 || requested > 65535) {\n    throw new Error(`Invalid ASOL_SMOKE_PORT: ${raw}`);\n  }\n\n  return await new Promise<number>((resolve, reject) => {\n    const probe = createServer();\n    probe.once("error", (error) => {\n      reject(\n        new Error(\n          raw === undefined\n            ? `Unable to reserve an isolated smoke port: ${error.message}`\n            : `ASOL_SMOKE_PORT ${raw} is unavailable: ${error.message}`,\n        ),\n      );\n    });\n    probe.listen({ host: "127.0.0.1", port: requested, exclusive: true }, () => {\n      const address = probe.address();\n      if (!address || typeof address === "string") {\n        probe.close();\n        reject(new Error("Unable to resolve the reserved smoke port."));\n        return;\n      }\n      const selected = address.port;\n      probe.close((error) => (error ? reject(error) : resolve(selected)));\n    });\n  });\n}\n\nfunction startServer(port: number): ChildProcess {\n  const next = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");\n  return spawn(process.execPath, [next, "start", "-p", String(port)], {\n'''
+          new = '''async function resolveSmokePort(): Promise<number> {\n  const raw = process.env.ASOL_SMOKE_PORT;\n  const requested = raw === undefined ? 0 : Number(raw);\n  if (!Number.isInteger(requested) || requested < 0 || requested > 65535) {\n    throw new Error(`Invalid ASOL_SMOKE_PORT: ${raw}`);\n  }\n\n  return await new Promise<number>((resolve, reject) => {\n    const probe = createServer();\n    probe.once("error", (error) => {\n      reject(new Error(raw === undefined\n        ? `Unable to reserve an isolated smoke port: ${error.message}`\n        : `ASOL_SMOKE_PORT ${raw} is unavailable: ${error.message}`));\n    });\n    probe.listen({ host: "127.0.0.1", port: requested, exclusive: true }, () => {\n      const address = probe.address();\n      if (!address || typeof address === "string") {\n        probe.close();\n        reject(new Error("Unable to resolve the reserved smoke port."));\n        return;\n      }\n      const selected = address.port;\n      probe.close((error) => (error ? reject(error) : resolve(selected)));\n    });\n  });\n}\n\nfunction startServer(port: number): ChildProcess {\n  const next = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");\n  return spawn(process.execPath, [next, "start", "-p", String(port)], {\n'''
           if old not in s:
               raise SystemExit('startServer block not found')
           s = s.replace(old, new, 1)
@@ -81,20 +93,22 @@ jobs:
           p.write_text(s)
           PY
 
-          echo "=== FOCUSED SMOKE FIX VERIFICATION ==="
+          echo "=== FOCUSED CONFIG VERIFICATION ==="
           npm run typecheck
+          rm -rf .next
+          node node_modules/next/dist/bin/next build
           npm run smoke:production
-          echo "SMOKE_PORT_ISOLATION=PASS"
+          echo "SERVER_BASE_PATH_AND_SMOKE=PASS"
 
           npm run docs:generate
           rm -rf .tmp-gova-build
           npm run architecture:check
 
-          git add scripts/check-production-smoke.ts docs/09-agent-knowledge/generated
-          git commit -m "fix: isolate production smoke server port"
+          git add next.config.ts scripts/check-production-smoke.ts docs/09-agent-knowledge/generated
+          git commit -m "fix: keep server builds at root path"
           RELEASE_SHA="$(git rev-parse HEAD)"
           git push "https://x-access-token:${GH_PUSH_TOKEN}@github.com/printcode1000-lgtm/gova.git" "HEAD:main"
-          echo "SMOKE_FIX_RELEASE_SHA=$RELEASE_SHA"
+          echo "SERVER_FIX_RELEASE_SHA=$RELEASE_SHA"
 
           echo "=== RELEASE TRANSACTION RESUME FROM SMOKE ==="
           npm run deploy:all -- --from-branch=smoke --allow-empty
