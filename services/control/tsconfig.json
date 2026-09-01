@@ -300,6 +300,9 @@
       "@asol/vercel-deploy-core": [
         "./generated/packages/vercel-deploy-core/src/index.ts"
       ],
+      "@asol/vercel-deploy-core/project-env": [
+        "./generated/packages/vercel-deploy-core/src/project-env.ts"
+      ],
       "@asol/vercel-deploy-core/remote-deploy-contracts": [
         "./generated/packages/vercel-deploy-core/src/remote-deploy-contracts.ts"
       ],

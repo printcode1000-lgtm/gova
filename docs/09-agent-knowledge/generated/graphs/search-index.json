@@ -23072,15 +23072,17 @@
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
       "path": "packages/vercel-deploy-core",
-      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
+      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./project-env, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
       "tags": [
         ".",
         "./github-push-identity",
+        "./project-env",
         "./release-rollback",
         "./release-state",
         "./remote-deploy-contracts",
         "./remote-deploy-sandbox",
         "/github-push-identity",
+        "/project-env",
         "/release-rollback",
         "/release-state",
         "/remote-deploy-contracts",
@@ -28202,17 +28204,6 @@
         "ios/app/app/appdelegate",
         "ios/app/app/appdelegate.swift",
         "swift"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "source",
-      "name": "GoogleService-Info.plist",
-      "path": "ios/App/App/GoogleService-Info.plist",
-      "tags": [
-        "ios/app/app/googleservice-info",
-        "ios/app/app/googleservice-info.plist",
-        "plist"
       ]
     },
     {
@@ -38044,6 +38035,17 @@
       "tags": [
         "packages/vercel-deploy-core/src/index",
         "packages/vercel-deploy-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "kind": "source",
+      "name": "project-env.ts",
+      "path": "packages/vercel-deploy-core/src/project-env.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/project-env",
+        "packages/vercel-deploy-core/src/project-env.ts",
         "ts"
       ]
     },

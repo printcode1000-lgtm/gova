@@ -23072,15 +23072,17 @@
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
       "path": "packages/vercel-deploy-core",
-      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
+      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./project-env, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
       "tags": [
         ".",
         "./github-push-identity",
+        "./project-env",
         "./release-rollback",
         "./release-state",
         "./remote-deploy-contracts",
         "./remote-deploy-sandbox",
         "/github-push-identity",
+        "/project-env",
         "/release-rollback",
         "/release-state",
         "/remote-deploy-contracts",
@@ -28202,17 +28204,6 @@
         "ios/app/app/appdelegate",
         "ios/app/app/appdelegate.swift",
         "swift"
-      ]
-    },
-    {
-      "id": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "source",
-      "name": "GoogleService-Info.plist",
-      "path": "ios/App/App/GoogleService-Info.plist",
-      "tags": [
-        "ios/app/app/googleservice-info",
-        "ios/app/app/googleservice-info.plist",
-        "plist"
       ]
     },
     {
@@ -38044,6 +38035,17 @@
       "tags": [
         "packages/vercel-deploy-core/src/index",
         "packages/vercel-deploy-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "kind": "source",
+      "name": "project-env.ts",
+      "path": "packages/vercel-deploy-core/src/project-env.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/project-env",
+        "packages/vercel-deploy-core/src/project-env.ts",
         "ts"
       ]
     },
@@ -72581,12 +72583,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
-      "to": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "references",
-      "detail": "ios/App/App/GoogleService-Info.plist"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
       "to": "source:packages/account-bridge/src/mobile-push/fcm-message.ts",
       "kind": "references",
       "detail": "packages/account-bridge/src/mobile-push/fcm-message.ts"
@@ -81740,6 +81736,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/vercel-deploy-core/src/release-rollback.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -85910,12 +85912,6 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "source:ios/App/App/GoogleService-Info.plist",
-      "kind": "documents",
-      "detail": "ios/"
-    },
-    {
-      "from": "domain:mobile-and-release",
       "to": "source:ios/App/App/Info.plist",
       "kind": "documents",
       "detail": "ios/"
@@ -87333,6 +87329,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:packages/vercel-deploy-core/src/index.ts",
+      "kind": "documents",
+      "detail": "packages/vercel-deploy-core/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:packages/vercel-deploy-core/src/project-env.ts",
       "kind": "documents",
       "detail": "packages/vercel-deploy-core/"
     },
@@ -135426,15 +135428,21 @@
     },
     {
       "from": "script:scripts/push-vercel-turso-env.ts",
-      "to": "package:@asol/data-core",
+      "to": "package:@asol/account-declarations",
       "kind": "imports",
-      "detail": "@asol/data-core/provisioning"
+      "detail": "@asol/account-declarations"
     },
     {
       "from": "script:scripts/push-vercel-turso-env.ts",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/push-vercel-turso-env.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core/project-env"
     },
     {
       "from": "script:scripts/push-vercel-turso-env.ts",
@@ -136693,11 +136701,6 @@
     },
     {
       "from": "source:ios/App/App/AppDelegate.swift",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:ios/App/App/GoogleService-Info.plist",
       "to": "runtime:ios",
       "kind": "affects-runtime"
     },
@@ -175550,6 +175553,42 @@
       "to": "source:packages/vercel-deploy-core/src/vercel-deployment-monitor.ts",
       "kind": "imports",
       "detail": "./vercel-deployment-monitor"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "to": "source:packages/vercel-deploy-core/src/index.ts",
+      "kind": "imports",
+      "detail": "./index"
     },
     {
       "from": "source:packages/vercel-deploy-core/src/release-rollback.ts",
