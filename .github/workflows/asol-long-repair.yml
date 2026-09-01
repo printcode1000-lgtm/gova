@@ -25,4 +25,8 @@ jobs:
           GOVA_LOCAL_WORKSPACE: /home/hesham/gova
           ASOL_REPAIR_BRANCH: agent-request/chatgpt
           GH_PUSH_TOKEN: ${{ github.token }}
-        run: bash scripts/asol-long-repair.sh
+        run: |
+          set -euo pipefail
+          git fetch origin agent-request/chatgpt
+          git show origin/agent-request/chatgpt:scripts/asol-long-repair.sh > /tmp/asol-long-repair.sh
+          bash /tmp/asol-long-repair.sh
