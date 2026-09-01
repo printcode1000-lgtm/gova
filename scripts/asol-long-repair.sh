@@ -113,6 +113,16 @@ s=p.read_text()
 s=s.replace("  findProject,\n  listProjectEnv,\n  writeProjectEnv,\n} from '@asol/vercel-deploy-core';\nimport { deleteProjectEnv } from '@asol/vercel-deploy-core/project-env';",
             "  deleteProjectEnv,\n  findProject,\n  listProjectEnv,\n  writeProjectEnv,\n} from '@asol/vercel-deploy-core';")
 p.write_text(s)
+
+pkg=Path('package.json')
+s=pkg.read_text()
+old='"control:build": "npm run control:sync && npm --prefix services/control run build"'
+new='"control:build": "npm run control:sync && npm --prefix services/control ci --ignore-scripts && npm --prefix services/control run build"'
+if old in s:
+    s=s.replace(old,new)
+elif new not in s:
+    raise SystemExit('control:build script shape changed unexpectedly')
+pkg.write_text(s)
 PY
 run_gate npm run architecture:docs
 run_gate npm run docs:generate
@@ -125,7 +135,7 @@ run_gate npm run typecheck
 run_gate npm run lint
 run_gate npm run validate:error-logging
 run_gate npm run github:ci-policy
-stage_commit "close Vercel env package door and refresh architecture artifacts"
+stage_commit "make control build hermetic and refresh release artifacts"
 
 echo "=== Stage D: control and deployment tooling ==="
 run_gate npm run test:local-agent-core
