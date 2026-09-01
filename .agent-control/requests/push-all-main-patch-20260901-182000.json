@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "pushall-patch-20260901-182000",
+  "agentId": "chatgpt",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt",
+    "commit_message": "chore: publish all current local main changes",
+    "shell_command": "set -euo pipefail; repo=/home/hesham/gova; test \"$(git -C \"$repo\" branch --show-current)\" = main; git -C \"$repo\" fetch origin main; test -z \"$(git -C \"$repo\" status --porcelain)\"; test \"$(git -C \"$repo\" rev-list --count origin/main..HEAD)\" -ge 1; git -C \"$repo\" diff --binary origin/main..HEAD | git apply --index --binary -",
+    "verification": "none",
+    "execution_target": "isolated-worktree",
+    "timeout_minutes": "10"
+  },
+  "createdAt": "2026-09-01T18:20:00.000Z"
+}
