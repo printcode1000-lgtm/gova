@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "asol-complete-main-gates-20260901-0623",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "createdAt": "2026-09-01T06:23:00Z",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "chore: verify ASOL cutover completion gates",
+    "verification": "none",
+    "timeout_minutes": "55",
+    "scopes": "note,src,scripts,services,packages,docs,.github/workflows,package.json",
+    "shell_command": "set -euo pipefail\necho HEAD=$(git rev-parse HEAD)\necho '--- TOOLS ---'\n(command -v codex && codex --version) || true\n(command -v claude && claude --version) || true\nrun_gate(){ name=\"$1\"; shift; echo \"===== $name =====\"; set +e; \"$@\"; rc=$?; set -e; echo \"GATE:$name:$rc\"; }\nrun_gate architecture npm run architecture:check\nrun_gate notifications npm run test:notifications\nrun_gate ota_core npm run test:ota-core\nrun_gate control_verify npm run control:verify\nrun_gate control_build npm run control:build\nrun_gate control_smoke npm run control:smoke\nrun_gate vercel_deploy_core npm run test:vercel-deploy-core\nrun_gate deployment_tools npm run test:deployment-tools\nrun_gate typecheck npm run typecheck\nrun_gate lint npm run lint\nrun_gate github_policy npm run github:ci-policy\necho '--- STATUS ---'\ngit status --short\necho ASOL_COMPLETION_GATE_SCAN=DONE\n"
+  }
+}
