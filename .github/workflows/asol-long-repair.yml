@@ -19,7 +19,7 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 330
     steps:
-      - name: Run one long repair session on the local runner
+      - name: Resume one long repair session on the local runner
         shell: bash
         env:
           GOVA_LOCAL_WORKSPACE: /home/hesham/gova
@@ -28,5 +28,5 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin agent-request/chatgpt
-          git show origin/agent-request/chatgpt:scripts/asol-long-repair.sh > /tmp/asol-long-repair.sh
-          bash /tmp/asol-long-repair.sh
+          git show origin/agent-request/chatgpt:scripts/asol-long-repair-resume.sh > /tmp/asol-long-repair-resume.sh
+          bash /tmp/asol-long-repair-resume.sh
