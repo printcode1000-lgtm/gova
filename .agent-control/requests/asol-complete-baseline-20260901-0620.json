@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "asol-complete-baseline-20260901-0620",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "createdAt": "2026-09-01T06:20:30Z",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "chore: establish ASOL completion branch and baseline",
+    "verification": "none",
+    "timeout_minutes": "55",
+    "scopes": "note,src,scripts,services,packages,docs,.github/workflows,package.json",
+    "shell_command": "set -euo pipefail\nrepo=/home/hesham/gova\nbranch=fix-asol-control-complete\nwt=/tmp/gova-fix-asol-control-complete-baseline\ngit -C \"$repo\" fetch --prune origin main\nif ! git -C \"$repo\" ls-remote --exit-code --heads origin \"$branch\" >/dev/null 2>&1; then\n  git -C \"$repo\" push origin origin/main:refs/heads/$branch\nfi\ngit -C \"$repo\" fetch origin \"$branch\"\ngit -C \"$repo\" worktree remove --force \"$wt\" >/dev/null 2>&1 || true\nrm -rf \"$wt\"\ngit -C \"$repo\" worktree prune\ngit -C \"$repo\" worktree add --detach \"$wt\" \"origin/$branch\"\ncd \"$wt\"\necho ASOL_BRANCH=$(git rev-parse HEAD)\necho MAIN_HEAD=$(git rev-parse origin/main)\necho '--- PLAN ARTIFACTS ---'\ntest -f note/asol-control-single-agent-execution-plan.md && echo PLAN=present || echo PLAN=missing\ntest -d services/control && echo CONTROL_SERVICE=present || echo CONTROL_SERVICE=missing\ntest -d packages/control-composition && echo CONTROL_COMPOSITION=present || echo CONTROL_COMPOSITION=missing\necho '--- AGENT TOOLS ---'\n(command -v codex && codex --version) || true\n(command -v claude && claude --version) || true\necho '--- GATES ---'\nrun_gate(){ name=\"$1\"; shift; echo \"== $name ==\"; set +e; \"$@\"; rc=$?; set -e; echo \"GATE:$name:$rc\"; }\nrun_gate architecture npm run architecture:check\nrun_gate typecheck npm run typecheck\nrun_gate lint npm run lint\nrun_gate control_verify npm run control:verify\nrun_gate control_build npm run control:build\nrun_gate control_smoke npm run control:smoke\nrun_gate github_policy npm run github:ci-policy\necho '--- STATUS ---'\ngit status --short\necho ASOL_BASELINE_SCAN=DONE\n" 
+  }
+}
