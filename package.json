@@ -150,7 +150,7 @@
     "notifications:check:local": "npx tsx scripts/check-localhost-notifications.ts",
     "control:sync": "npx tsx scripts/sync-control-service-sources.ts",
     "control:verify": "npm run control:sync && npm run typecheck && npm run test:control",
-    "control:build": "npm run control:sync && npm --prefix services/control run build",
+    "control:build": "npm run control:sync && npm --prefix services/control ci --ignore-scripts && npm --prefix services/control run build",
     "control:smoke": "npx tsx scripts/smoke-control-service.ts",
     "control:deploy": "npx tsx scripts/deploy-control-service.ts",
     "test:control": "npx tsx scripts/tests/control-service.test.ts",
