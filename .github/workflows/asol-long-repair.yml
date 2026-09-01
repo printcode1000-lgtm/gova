@@ -1,5 +1,6 @@
 name: ASOL Long Repair
 
+# Temporary launch container; the running repair removes this file before policy gates.
 on:
   push:
     branches:
