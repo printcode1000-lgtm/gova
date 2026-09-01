@@ -1,110 +1,31 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'node:fs';
 import dotenv from 'dotenv';
-import { DATABASE_SHARD_NAMES, envPrefixForShard } from '@asol/data-core/provisioning';
+import { GOVA_DECLARATION } from '@asol/account-declarations';
 import {
   findProject,
   listProjectEnv,
   writeProjectEnv,
 } from '@asol/vercel-deploy-core';
+import { deleteProjectEnv } from '@asol/vercel-deploy-core/project-env';
 
-if (existsSync('.env.local')) {
-  dotenv.config({ path: '.env.local' });
-}
+if (existsSync('.env.local')) dotenv.config({ path: '.env.local' });
 dotenv.config({ path: '.env' });
 
-const LEGACY_TURSO_KEYS = [
-  'TURSO_DATABASE_URL',
-  'TURSO_AUTH_TOKEN',
-  'TURSO_PRODUCT_DATABASE_URL',
-  'TURSO_PRODUCT_AUTH_TOKEN',
-  'TURSO_ADVERTISEMENTS_DATABASE_URL',
-  'TURSO_ADVERTISEMENTS_AUTH_TOKEN',
-  // Separate Turso account. The main app still reads and writes device tokens
-  // and preferences; only push fan-out moves to the notifications deployment.
-  'TURSO_NOTIFICATIONS_DATABASE_URL',
-  'TURSO_NOTIFICATIONS_AUTH_TOKEN',
-] as const;
-
-const SHARD_TURSO_KEYS = DATABASE_SHARD_NAMES.flatMap((databaseName) => {
-  const prefix = envPrefixForShard(databaseName);
-  return [`${prefix}_DATABASE_URL`, `${prefix}_DATABASE_AUTH_TOKEN`];
-});
-
-/**
- * The two halves of the notifications split.
- *
- * `ASOL_NOTIFICATION_GRANT_SECRET` must be byte-identical to the value on the
- * notifications account — the main app signs the forwarded send with it and the
- * service verifies it — so it is pushed from the same `.env` that
- * `npm run notifications:deploy` reads. Drift here fails every send with a 403.
- */
-const NOTIFICATIONS_SERVICE_KEYS = [
-  // Signs the grants the browser carries to the notifications service. Must be
-  // byte-identical on both accounts or every grant is rejected as forged.
-  'ASOL_NOTIFICATION_GRANT_SECRET',
-  // Client-safe origin of the notifications service, baked into the bundle.
-  'NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL',
-  // Explicit, so the notification secrets no longer double as the session
-  // signing key. Without it, rotating one silently signs every user out.
-  'ASOL_SESSION_SIGNING_SECRET',
-  // Client-safe origin of the products service, baked into the bundle.
-  'NEXT_PUBLIC_ASOL_PRODUCTS_URL',
-  // Client-safe origin of the orders service, baked into the bundle.
-  'NEXT_PUBLIC_ASOL_ORDERS_URL',
-  // Client-safe origin of the profiles service, baked into the bundle.
-  'NEXT_PUBLIC_ASOL_PROFILES_URL',
-  // Where OTA releases live. Explicit because the OTA config no longer falls
-  // back to the product or general bucket — a fallback across accounts writes
-  // to the wrong one instead of failing, which is how 3,463 build artefacts
-  // ended up on the product account.
-  'ASOL_OTA_R2_PUBLIC_URL',
-  'ASOL_OTA_R2_PREFIX',
-  // The explicit manifest URL wins over the derived one in
-  // `getOtaApprovalServerConfig`, so leaving it out of this list does not make
-  // it unused — it makes it stale. It was still pointing at the retired mirror
-  // on the product account after OTA moved to its own account, which answers
-  // 404: the approval API could not read the manifest, and failing closed means
-  // nobody could install anything.
-  'NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL',
-  // Native outbound push: unlock key (server only) and encrypted Firebase blob.
-  // Provision locally with `npm run provision:mobile-push`.
-  'ASOL_MOBILE_PUSH_UNLOCK_KEY',
-  'ASOL_MOBILE_PUSH_CREDENTIAL_BLOB',
-  'NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB',
-] as const;
-
-const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;
-
-const OPTIONAL_VERCEL_KEYS = NOTIFICATIONS_SERVICE_KEYS;
-
-/**
- * The Vercel API layer lives in `@asol/vercel-deploy-core`, not here.
- *
- * This script used to carry its own `vercelFetch`, project lookup and env upsert — about
- * a hundred lines duplicating what the package already owns. Rule 1: one module holds the
- * logic in full. Two copies meant a change to Vercel's API, or to how tokens are handled,
- * had to be found in two places.
- */
 function requireToken(): string {
-  const token = process.env.VERCEL_TOKEN || process.env.VERCEL_ACCESS_TOKEN;
-  if (!token) {
-    throw new Error('VERCEL_TOKEN or VERCEL_ACCESS_TOKEN is required in .env.local');
-  }
+  const token = process.env.VERCEL_TOKEN?.trim() || process.env.VERCEL_ACCESS_TOKEN?.trim();
+  if (!token) throw new Error('VERCEL_TOKEN or VERCEL_ACCESS_TOKEN is required locally.');
   return token;
 }
 
-/** Team scope comes from the environment here; the service deploys resolve it from the API. */
 function teamScope(): string | undefined {
-  return process.env.VERCEL_ORG_ID || process.env.VERCEL_TEAM_ID || undefined;
+  return process.env.VERCEL_ORG_ID?.trim() || process.env.VERCEL_TEAM_ID?.trim() || undefined;
 }
 
 async function resolveProjectId(token: string, teamId?: string): Promise<string> {
-  const fromEnv = process.env.VERCEL_PROJECT_ID;
+  const fromEnv = process.env.VERCEL_PROJECT_ID?.trim();
   if (fromEnv) return fromEnv;
 
-  const projectName = process.env.VERCEL_PROJECT_NAME || 'gova';
-  // `findProject`, never `ensureProject`: pushing environment variables must not create a
-  // project because a name was mistyped.
+  const projectName = process.env.VERCEL_PROJECT_NAME?.trim() || GOVA_DECLARATION.project;
   const projectId = await findProject(token, projectName, teamId);
   if (!projectId) {
     throw new Error(
@@ -114,38 +35,55 @@ async function resolveProjectId(token: string, teamId?: string): Promise<string>
   return projectId;
 }
 
-async function main() {
-  const missing = VERCEL_KEYS.filter((key) => !process.env[key]?.trim());
+/**
+ * Reconcile the GitHub-linked gova project to its frontend-only declaration.
+ *
+ * Historical versions of this command pushed Turso, signing, R2, and push
+ * credentials into gova. The cutover makes that impossible: gova receives only
+ * the seven owner origins plus explicitly declared frontend-safe optional keys.
+ * Existing undeclared entries are deleted by id without reading or logging their
+ * values.
+ */
+async function main(): Promise<void> {
+  const missing = GOVA_DECLARATION.requiredEnv.filter((key) => !process.env[key]?.trim());
   if (missing.length > 0) {
-    throw new Error(`Missing local values for: ${missing.join(', ')}. Run npm run db:provision:turso first.`);
+    throw new Error(`Missing required gova frontend values: ${missing.join(', ')}.`);
   }
 
   const token = requireToken();
   const teamId = teamScope();
   const projectId = await resolveProjectId(token, teamId);
   const existing = await listProjectEnv(token, projectId, teamId);
+  const allowed = new Set<string>([
+    ...GOVA_DECLARATION.requiredEnv,
+    ...GOVA_DECLARATION.optionalEnv,
+  ]);
 
-  console.log(`Vercel project: ${projectId}`);
+  console.log(`Vercel gova project: ${projectId}`);
 
-  for (const key of VERCEL_KEYS) {
-    const value = process.env[key]!.trim();
+  for (const key of GOVA_DECLARATION.requiredEnv) {
+    const result = await writeProjectEnv(token, projectId, key, process.env[key]!.trim(), existing, teamId);
+    console.log(`✅ ${key}: ${result}`);
+  }
+
+  for (const key of GOVA_DECLARATION.optionalEnv) {
+    const value = process.env[key]?.trim();
+    if (!value) continue;
     const result = await writeProjectEnv(token, projectId, key, value, existing, teamId);
     console.log(`✅ ${key}: ${result}`);
   }
 
-  for (const key of OPTIONAL_VERCEL_KEYS) {
-    const value = process.env[key]?.trim();
-    if (value) {
-      const result = await writeProjectEnv(token, projectId, key, value, existing, teamId);
-      console.log(`✅ ${key} (Optional): ${result}`);
-    }
+  for (const entry of existing) {
+    if (allowed.has(entry.key)) continue;
+    await deleteProjectEnv(token, projectId, entry.id, teamId);
+    console.log(`🧹 removed undeclared gova env: ${entry.key}`);
   }
 
-  console.log('🎉 Turso env vars synced to Vercel (production, preview, development).');
-  console.log('   Redeploy the project for the build to pick them up.');
+  console.log('🎉 gova frontend environment reconciled to its declaration.');
+  console.log('   Redeploy gova after the seven owner runtimes are READY for the release SHA.');
 }
 
-main().catch((error) => {
-  console.error('❌ Failed to sync Vercel env:', error instanceof Error ? error.message : error);
+void main().catch((error) => {
+  console.error('❌ Failed to reconcile gova Vercel env:', error instanceof Error ? error.message : error);
   process.exit(1);
 });
