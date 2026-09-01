@@ -1,0 +1,97 @@
+name: ASOL Production Cutover
+
+on:
+  push:
+    branches:
+      - "agent-request/chatgpt"
+    paths:
+      - ".github/workflows/asol-production-cutover.yml"
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    working-directory: /home/hesham/gova
+
+jobs:
+  cutover:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 330
+    concurrency:
+      group: asol-production-cutover
+      cancel-in-progress: false
+    env:
+      EXPECTED_SHA: 6764d68ee3a2304f4c1ff6a42a1386a2ffd635e5
+    steps:
+      - name: Execute canonical production transaction
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ROOT=/home/hesham/gova
+          cd "$ROOT"
+          echo "=== ASOL PRODUCTION CUTOVER ==="
+          echo "runner=$(hostname)"
+          git fetch origin main
+          if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
+            echo "PRODUCTION_PREFLIGHT=FAIL dirty-canonical-workspace"
+            git status --short
+            exit 41
+          fi
+          current_branch="$(git branch --show-current)"
+          if [[ "$current_branch" != "main" ]]; then
+            echo "PRODUCTION_PREFLIGHT=FAIL canonical-branch=$current_branch"
+            exit 42
+          fi
+          remote_sha="$(git rev-parse origin/main)"
+          if [[ "$remote_sha" != "$EXPECTED_SHA" ]]; then
+            echo "PRODUCTION_PREFLIGHT=FAIL origin-main=$remote_sha expected=$EXPECTED_SHA"
+            exit 43
+          fi
+          git pull --ff-only origin main
+          local_sha="$(git rev-parse HEAD)"
+          if [[ "$local_sha" != "$EXPECTED_SHA" ]]; then
+            echo "PRODUCTION_PREFLIGHT=FAIL local-main=$local_sha expected=$EXPECTED_SHA"
+            exit 44
+          fi
+
+          required=(
+            NEXT_PUBLIC_ASOL_CONTROL_URL
+            NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL
+            NEXT_PUBLIC_ASOL_PRODUCTS_URL
+            NEXT_PUBLIC_ASOL_ORDERS_URL
+            NEXT_PUBLIC_ASOL_PROFILES_URL
+            NEXT_PUBLIC_ASOL_SUBMAIN_URL
+            NEXT_PUBLIC_ASOL_SUB2MAIN_URL
+          )
+          missing=()
+          for key in "${required[@]}"; do
+            value="${!key:-}"
+            if [[ -z "${value//[[:space:]]/}" ]]; then
+              missing+=("$key")
+              echo "ENV_NAME $key=MISSING"
+            else
+              echo "ENV_NAME $key=PRESENT"
+            fi
+          done
+          if (( ${#missing[@]} > 0 )); then
+            echo "PRODUCTION_PREFLIGHT=FAIL missing-public-origins=${missing[*]}"
+            exit 45
+          fi
+          echo "PRODUCTION_PREFLIGHT=PASS"
+
+          echo "=== GOVA ENV RECONCILIATION ==="
+          npm run db:push:vercel-env
+          echo "GOVA_ENV_SYNC=PASS"
+
+          echo "=== RELEASE TRANSACTION ==="
+          npm run deploy:all -- --allow-empty
+          echo "DEPLOY_ALL=PASS"
+
+          echo "=== LIVE RELEASE VERIFICATION ==="
+          npm run release:check
+          npm run smoke:deployed
+          npm run smoke:production
+          echo "PRODUCTION_VERIFICATION=PASS"
+          echo "PRODUCTION_RELEASE_SHA=$(git rev-parse HEAD)"
+          echo "ASOL_PRODUCTION_COMPLETE=PASS"
