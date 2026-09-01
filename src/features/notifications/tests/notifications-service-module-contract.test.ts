@@ -14,14 +14,13 @@ import path from "node:path";
  * 1. Nothing in the folder may import outside it. A stray `../../src` import
  *    passes locally — the files are right there — and fails only on Vercel,
  *    where the upload contains just this folder.
- * 2. `generated/` must be reproducible from `src/`. It is a mirror, not a fork:
- *    if it can drift, the two deployments can build different notification
- *    payloads from the same template.
+ * 2. `generated/` must be reproducible from `src/`. It is derived deployment
+ *    output and is intentionally ignored by Git, so the contract regenerates it
+ *    twice in isolated directories and requires byte-identical results.
  */
 
 const root = process.cwd();
 const serviceRoot = path.join(root, "services", "notifications");
-const generatedRoot = path.join(serviceRoot, "generated", "src");
 
 function filesBelow(directory: string): string[] {
   if (!existsSync(directory)) return [];
@@ -230,32 +229,31 @@ function fingerprint(directory: string): string {
   return hash.digest("hex");
 }
 
-const committed = fingerprint(generatedRoot);
-assert.notEqual(
-  committed,
-  createHash("sha256").digest("hex"),
-  "generated/src is empty — run `npx tsx scripts/sync-notifications-service-sources.ts` first.",
-);
-
-// Mirror into a throwaway directory rather than over the real one: a check that
-// repairs the drift it is looking for would only ever fail once.
-const probe = mkdtempSync(path.join(tmpdir(), "asol-notifications-sync-"));
-try {
+function generateMirror(out: string): void {
   execFileSync(
     process.execPath,
-    [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), "scripts/sync-notifications-service-sources.ts", "--out", probe],
+    [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), "scripts/sync-notifications-service-sources.ts", "--out", out],
     { cwd: root, stdio: "pipe", shell: false },
   );
+}
 
+const firstProbe = mkdtempSync(path.join(tmpdir(), "asol-notifications-sync-a-"));
+const secondProbe = mkdtempSync(path.join(tmpdir(), "asol-notifications-sync-b-"));
+try {
+  generateMirror(firstProbe);
+  generateMirror(secondProbe);
+
+  const first = fingerprint(path.join(firstProbe, "src"));
+  const empty = createHash("sha256").digest("hex");
+  assert.notEqual(first, empty, "notifications mirror generation produced an empty src tree.");
   assert.equal(
-    committed,
-    fingerprint(path.join(probe, "src")),
-    "services/notifications/generated is stale. Run " +
-      "`npx tsx scripts/sync-notifications-service-sources.ts` and redeploy: " +
-      "the mirror no longer matches src/.",
+    first,
+    fingerprint(path.join(secondProbe, "src")),
+    "services/notifications/generated is not reproducible from the same source tree.",
   );
 } finally {
-  rmSync(probe, { recursive: true, force: true });
+  rmSync(firstProbe, { recursive: true, force: true });
+  rmSync(secondProbe, { recursive: true, force: true });
 }
 
 console.log("Notifications service module contract passed.");
