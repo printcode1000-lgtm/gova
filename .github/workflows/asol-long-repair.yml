@@ -1,0 +1,32 @@
+name: ASOL Long Repair
+
+on:
+  push:
+    branches:
+      - "agent-request/chatgpt"
+    paths:
+      - ".github/workflows/asol-long-repair.yml"
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    working-directory: /home/hesham/gova
+
+jobs:
+  repair:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 330
+    steps:
+      - name: Run one long repair session on the local runner
+        shell: bash
+        env:
+          GOVA_LOCAL_WORKSPACE: /home/hesham/gova
+          ASOL_REPAIR_BRANCH: agent-request/chatgpt
+          GH_PUSH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin agent-request/chatgpt
+          git show origin/agent-request/chatgpt:scripts/asol-long-repair.sh > /tmp/asol-long-repair.sh
+          bash /tmp/asol-long-repair.sh
