@@ -48,36 +48,38 @@ jobs:
             echo "PRODUCTION_PREFLIGHT=FAIL origin-main=$remote_sha expected=$EXPECTED_SHA"
             exit 43
           fi
-          git pull --ff-only origin main
+          git merge --ff-only origin/main
           local_sha="$(git rev-parse HEAD)"
           if [[ "$local_sha" != "$EXPECTED_SHA" ]]; then
             echo "PRODUCTION_PREFLIGHT=FAIL local-main=$local_sha expected=$EXPECTED_SHA"
             exit 44
           fi
 
-          required=(
-            NEXT_PUBLIC_ASOL_CONTROL_URL
-            NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL
-            NEXT_PUBLIC_ASOL_PRODUCTS_URL
-            NEXT_PUBLIC_ASOL_ORDERS_URL
-            NEXT_PUBLIC_ASOL_PROFILES_URL
-            NEXT_PUBLIC_ASOL_SUBMAIN_URL
-            NEXT_PUBLIC_ASOL_SUB2MAIN_URL
-          )
-          missing=()
-          for key in "${required[@]}"; do
-            value="${!key:-}"
-            if [[ -z "${value//[[:space:]]/}" ]]; then
-              missing+=("$key")
-              echo "ENV_NAME $key=MISSING"
-            else
-              echo "ENV_NAME $key=PRESENT"
-            fi
-          done
-          if (( ${#missing[@]} > 0 )); then
-            echo "PRODUCTION_PREFLIGHT=FAIL missing-public-origins=${missing[*]}"
-            exit 45
-          fi
+          node --input-type=module <<'NODE'
+          import { existsSync } from 'node:fs';
+          import dotenv from 'dotenv';
+          if (existsSync('.env.local')) dotenv.config({ path: '.env.local', override: false });
+          if (existsSync('.env')) dotenv.config({ path: '.env', override: false });
+          const required = [
+            'NEXT_PUBLIC_ASOL_CONTROL_URL',
+            'NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL',
+            'NEXT_PUBLIC_ASOL_PRODUCTS_URL',
+            'NEXT_PUBLIC_ASOL_ORDERS_URL',
+            'NEXT_PUBLIC_ASOL_PROFILES_URL',
+            'NEXT_PUBLIC_ASOL_SUBMAIN_URL',
+            'NEXT_PUBLIC_ASOL_SUB2MAIN_URL',
+          ];
+          const missing = [];
+          for (const key of required) {
+            const present = Boolean(process.env[key]?.trim());
+            console.log(`ENV_NAME ${key}=${present ? 'PRESENT' : 'MISSING'}`);
+            if (!present) missing.push(key);
+          }
+          if (missing.length) {
+            console.error(`PRODUCTION_PREFLIGHT=FAIL missing-public-origins=${missing.join(',')}`);
+            process.exit(45);
+          }
+          NODE
           echo "PRODUCTION_PREFLIGHT=PASS"
 
           echo "=== GOVA ENV RECONCILIATION ==="
