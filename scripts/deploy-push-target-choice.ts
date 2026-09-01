@@ -27,7 +27,7 @@ const CHOICES = [
   {
     key: "0",
     target: "none" as const,
-    label: "GitHub + main only (no service account deploys)",
+    label: "Nothing (maintenance no-op — no commit, no push, no deploy)",
   },
   { key: "1", target: "notifications" as const, label: "Notifications (asol-notifications)" },
   { key: "2", target: "products" as const, label: "Products (asol-products)" },
@@ -46,7 +46,7 @@ const CHOICES = [
   {
     key: "7",
     target: "all" as const,
-    label: "All six isolated accounts (4 services + asol-submain + asol-sub2main)",
+    label: "Publish a release: control + all six isolated accounts + main",
   },
 ] as const;
 
@@ -148,14 +148,15 @@ export async function resolveServiceDeployTargets(
       [
         "deploy:push needs a deployment scope and there is no terminal to ask.",
         "",
-        "Pass one explicitly, for example:",
-        "  --vercel-target=main          GitHub + main only",
-        "  --vercel-target=none          same as main",
-        "  --vercel-target=notifications",
-        "  --vercel-target=all",
+        "Pass one explicitly:",
+        "  --vercel-target=all           publish a release: control + all six + main",
+        "  --vercel-target=products      maintenance: deploy that account only",
+        "  --vercel-target=none          maintenance no-op",
         "",
         `Service values: ${ALL_DEPLOY_PUSH_TARGETS.join(", ")}, all, main, or none.`,
-        "secrets:backup, GitHub push, and main Vercel verification always run.",
+        "Only the complete set publishes. A partial selection deploys the named",
+        "accounts from the current HEAD and does not commit, push, or mark a SHA",
+        "ready — see docs/07-mobile-and-release/release-commands.md.",
       ].join("\n"),
     );
   }

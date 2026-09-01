@@ -22,7 +22,7 @@ npm run db:schema:sync
 | System operations | `system-ops.db` | System-ops Turso shard (`hesham101`) | `profilesDataSource` | `SYSTEM_OPS_DATABASE_URL`, `SYSTEM_OPS_DATABASE_AUTH_TOKEN` |
 | Marketplace order shards | `orders-*.db` | Matching Turso shards (separate account `hesham104`) | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 
-`public/sync_data/sync_sqlite/system-ops.db` is gitignored. It is generated locally by `db:ensure`, holds runtime system logs and data-health records, and must not be committed. Other shard SQLite files remain tracked as schema sources.
+`public/sync_data/sync_sqlite/system-ops.db` is gitignored. It is generated locally by `db:ensure`, holds runtime system logs, data-health records, and release-barrier state, and must not be committed. Other shard SQLite files remain tracked as schema sources.
 
 Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
 
@@ -113,8 +113,20 @@ isolating them means profile traffic can never consume the quota that serves
 logins or the catalogue.
 
 `system-ops` is **not** one of them. It is split out of the same `profile.db`
-source, but it holds `system_logs` and the `data_health_*` tables — operational
-records, not profile data — so it stayed on `hesham101`.
+source, but it holds `system_logs`, the `data_health_*` tables, and
+`control_release_state` — operational records, not profile data — so it stayed
+on `hesham101`.
+
+`control_release_state` is the durable release barrier: one row per 40-character
+Git SHA, holding the per-runtime deployment and smoke results the gova build
+polls before it may publish. It is created by its own store on first use
+(`CREATE TABLE IF NOT EXISTS`), not by `db:ensure`, because the only runtime that
+touches it is `control` and the only writer is the authenticated release
+callback. See
+[control-runtime.md](../06-super-admin-and-operations/control-runtime.md) for
+how `ready` is derived and
+[release-commands.md](../07-mobile-and-release/release-commands.md) for who
+writes it.
 
 ### Layers
 

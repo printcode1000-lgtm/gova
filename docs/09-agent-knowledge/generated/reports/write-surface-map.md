@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **374**
+Detected write-like surfaces: **375**
 Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -31,6 +31,7 @@ Unproven gateway paths: **146**
 | `packages/auth-core/src/tests/index.test.ts` | `@asol/auth-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/backup-core/src/server/dev-cloud-backup-service.ts` | `@asol/backup-core` | create, update | `unproven` | NO | `` | development, web | high |
 | `packages/backup-core/src/server/r2-backup.repository.ts` | `@asol/backup-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
+| `packages/control-composition/src/index.ts` | `@asol/control-composition` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/data-core/src/browser/asol-db/index.ts` | `@asol/data-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/data-core/src/control-ota.ts` | `@asol/data-core` | delete, insert, update | `unproven` | NO | `` | development, web | high |
 | `packages/data-core/src/core/data-source-registry.ts` | `@asol/data-core` | create, delete, insert, update | `unproven` | NO | `` | development, web | high |

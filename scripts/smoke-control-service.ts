@@ -52,6 +52,24 @@ const PROBES: readonly Probe[] = [
     why: 'a control route rejects an unauthenticated caller through its own session seam',
   },
   {
+    // The one probe that reaches control's own storage.
+    //
+    // Every other probe here asserts an authorization refusal, and refusal
+    // happens before a handler touches a shard — so a runtime whose data layer
+    // cannot start passes all of them. Control shipped exactly that way once:
+    // an empty composition root, every data route 500, every gate green. See
+    // docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md.
+    //
+    // The release barrier reads the system-ops shard for an unknown revision.
+    // The `pending` assertion below is what makes this a data probe rather than
+    // a liveness probe: an unconfigured port makes the read throw, the endpoint
+    // converts the throw into `pending` with a 200, and only the log scan can
+    // then tell the two apart.
+    path: `/api/release-readiness/${'0'.repeat(40)}?asol-smoke=data`,
+    accept: [200],
+    why: "the release barrier reads control's own shard instead of failing closed",
+  },
+  {
     path: '/api/system-logs?limit=1',
     // System Logs is the one family that answers 401 for a missing session, as
     // the application does: its console must tell "sign in again" from "bad query".
@@ -140,6 +158,19 @@ async function main(): Promise<void> {
         }
       }
       console.log(`[control-smoke] ${response.status} ${probe.method ?? 'GET'} ${probe.path} — ${probe.why}`);
+    }
+
+    // A swallowed exception cannot be seen in a status code. `smoke:services`
+    // scans its server output for the same reason: a route may answer 200
+    // while a port it needed quietly threw behind a fallback.
+    const unconfigured = [...new Set(
+      [...log.join('').matchAll(/[\w.]+ is not configured/g)].map((match) => match[0]),
+    )];
+    if (unconfigured.length > 0) {
+      failures.push(
+        `control logged unregistered port(s) while answering the probes: ${unconfigured.join(', ')}\n` +
+          '    A control route that reaches data cannot work until its composition root registers them.',
+      );
     }
   } finally {
     server.kill('SIGTERM');

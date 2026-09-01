@@ -9,11 +9,10 @@ Runtime coverage is inherited from each owner's owned source/test/script nodes, 
 
 Owners scored: **98**
 Average coverage: **82%**
-Weak owners (<70%): **13**
+Weak owners (<70%): **12**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `packages/control-composition` | package | yes | yes | yes | yes | NO | NO | NO | yes | 63% |
 | `services/orders` | service | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `services/profiles` | service | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/account-bridge` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
@@ -65,6 +64,7 @@ Weak owners (<70%): **13**
 | `packages/architecture-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/backup-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/branding-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/control-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/env-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/featured-marquee-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/gova-deployment-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

@@ -81,6 +81,7 @@ repository started a server and asked it a question.
 | --- | --- | --- |
 | `smoke:production` | after `build` | five routes on the main app, each crossing a different composition root |
 | `smoke:services` | after `services:build` | one route per isolated account that reaches **that account's own data** |
+| `control:smoke` | after `control:build` | control's auth boundary **and** one route that reaches control's own shard |
 
 Health is deliberately not the probe: the fault leaves health green.
 
@@ -132,6 +133,45 @@ registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
 The general rule: when a deployment physically cannot serve one branch of a
 runtime choice, it pins that choice in code. Leaving it to configuration turns
 a guaranteed invariant into a variable that can be set wrong.
+
+## A fourth cause: control repeated it, and its gate could not see it
+
+`control` shipped with `registerControlServerPorts()` an empty function body,
+nothing calling it, and `@asol/control-composition` absent from the service's
+mirror altogether. Every control route that reaches a shard — release state,
+System Logs, OTA administration, data health, cloud backup — answered 500,
+while the deployment reported READY and `/api/health` stayed 200. The same
+shape as the original outage, on the one runtime the release plane depends on.
+
+It surfaced only when the gova build barrier needed it: `deploy:all` deployed
+control and the six workloads, then the release-readiness callback answered
+`HTTP 500 internalServerError` and the release rolled back. That callback was
+the first caller in the repository to ask control a question that touches data.
+
+**Why every gate stayed green** — and this is the part worth remembering:
+
+- `control:smoke`'s probes all asserted an **authorization refusal** (400 / 401
+  / 403). Authorization runs before the handler touches a shard, so every probe
+  passed against a runtime whose data layer could not start. A gate that only
+  proves "the request was rejected" cannot prove "the request could have been
+  served".
+- `/api/release-readiness/<sha>` **swallowed the exception by design** and
+  answered `200 {"status":"pending"}`. The reason is sound — that endpoint is
+  unauthenticated and must not leak configuration — but it made a broken store
+  indistinguishable from a revision that had not deployed yet.
+
+**Fix:** `@asol/control-composition` registers the runtime-config port with
+`forceRemoteDataSource: true`, and `services/control/src/instrumentation.ts`
+calls it once per server instance. The six workloads import their composition
+from each route; control has one composition and many routes, so it registers
+from instrumentation instead.
+
+**The gate lesson, generalized:** an authorization refusal is evidence that the
+identity seam is wired, and evidence of nothing else. Any runtime whose smoke
+probes are all rejections is a runtime nobody has actually asked for data. Every
+deployment's smoke must include at least one probe that reaches its own storage,
+and no probe may be allowed to convert an exception into a healthy-looking
+answer.
 
 ## If you see this again
 

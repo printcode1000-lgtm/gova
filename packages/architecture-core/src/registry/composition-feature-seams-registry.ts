@@ -10,6 +10,9 @@
  * deliberately forbidden.
  */
 export const COMPOSITION_FEATURE_SEAMS = {
+  'control-composition': [
+    '@/features/data/ports/data-core-runtime-config-ports',
+  ],
   'notifications-composition': [
     '@/features/data/ports/data-core-runtime-config-ports',
   ],

@@ -78,16 +78,27 @@ failure rolls back to the captured baseline automatically. The terminal callback
 then sends the super-admin push notification and email. A docs
 change additionally runs the path-filtered docs workflow. See
 [github-ci-policy.md](./github-ci-policy.md).
-Two commands still push `main` to production from a local `main` working tree:
+
+Two commands push `main` to production from a local `main` working tree:
 
 ```bash
 npm run deploy:all    # full preflight, then publish
 npm run deploy:push   # publish only — no lint/build/test gates
 ```
 
+Both publish through that same ordered transaction. A partial `--vercel-target=`
+selection is maintenance, not a release: `deploy:push` deploys the named
+accounts from the current `HEAD` and does not commit, push, or mark any SHA
+ready. Only the complete control + six workload proof may release the gova build
+barrier.
+
 The internal `npm run deploy:revision -- --revision=<sha>` command is reserved
 for the authenticated automation path. It requires a clean checkout at that
 exact full SHA and never stages, commits, or pushes.
+
+[release-commands.md](./release-commands.md) is the reference for all four
+commands, the transaction's ordering contract, the deployment commit's
+`[docs-contract-change]` stamping, and the deployment prerequisites.
 
 ### `deploy:all` — full release gate
 

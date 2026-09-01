@@ -9,10 +9,11 @@ The only exact application paths listed here belong to composition/service-mirro
 
 - `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`
 
-Current inventory: **29** exact composition seam path(s).
+Current inventory: **30** exact composition seam path(s).
 
 | Composition package | Exact application module |
 | --- | --- |
+| `control-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
 | `notifications-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
 | `orders-composition` | `@/features/auth/domain/super-admin` |
 | `orders-composition` | `@/features/data/ports/data-core-runtime-config-ports` |

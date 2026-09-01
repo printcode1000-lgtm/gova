@@ -75,14 +75,35 @@ assert.ok(compareVersions("0.1.15", "0.1.0") > 0);
 assert.equal(compareVersions("0.1.15", "0.1.15"), 0);
 assert.equal(RELEASE_MANIFEST, "public/asol-web-manifest.json");
 assert.equal(FAIL_PREFIX, "[deploy:push] FAILED —");
-assert.match(formatSuccessLine([]), /main Vercel production target is READY/);
-assert.match(formatSuccessLine(["products"]), /main and products/);
+assert.match(formatSuccessLine(), /control, 6 isolated Vercel production targets, and main are READY/);
 const deployPushSource = readFileSync(new URL("../deploy-push.ts", import.meta.url), "utf8");
+
+/**
+ * Publishing is one ordered transaction, and every path that publishes uses it.
+ * A partial target selection is maintenance and must never push `main`: the push
+ * starts the gova build, which then waits for a readiness a partial deploy is
+ * forbidden to mark.
+ */
+assert.doesNotMatch(
+  deployPushSource,
+  /Promise\.allSettled\(\[\s*deploySelectedAccounts\([^)]*\),\s*verifyMainDeployment\(/,
+  "No publish path may race main verification against unfinished backend deployments.",
+);
 assert.match(
   deployPushSource,
-  /Promise\.allSettled\(\[\s*deploySelectedAccounts\(/,
-  "deploy:push must start all selected isolated targets and main verification together.",
+  /if \(isolatedTargets\.length !== ALL_DEPLOY_PUSH_TARGETS\.length\) \{\s*await runTargetedMaintenanceDeploy\(/,
+  "A partial --vercel-target selection must divert to the maintenance path before any git write.",
 );
+const maintenanceBody = deployPushSource.slice(
+  deployPushSource.indexOf("async function runTargetedMaintenanceDeploy("),
+  deployPushSource.indexOf("async function verifyMainDeployment("),
+);
+for (const forbidden of ["pushMainBranch(", "publishReleaseReadiness(", '"commit"']) {
+  assert.ok(
+    !maintenanceBody.includes(forbidden),
+    `A targeted maintenance deploy must not reach ${forbidden}.`,
+  );
+}
 /**
  * `deploy:revision` is the GitHub-push release path. It must not race main
  * verification against unfinished backends, it must deploy control at the same
@@ -91,37 +112,31 @@ assert.match(
 const revisionStart = deployPushSource.indexOf("export async function deployExistingRevision(");
 const revisionBody = deployPushSource.slice(
   revisionStart,
-  deployPushSource.indexOf("function failedReportDetails(", revisionStart),
+  deployPushSource.indexOf("function verifyGitHubPush(", revisionStart),
 );
 assert.ok(revisionBody.length > 0, "deployExistingRevision must be readable as one block.");
-assert.doesNotMatch(
-  revisionBody,
-  /Promise\.allSettled\(\[\s*deploySelectedAccounts\([^)]*\),\s*verifyMainDeployment\(/,
-  "deploy:revision must verify main only after control and the six workloads are READY.",
-);
 assert.match(
   revisionBody,
-  /captureReleaseRollbackBaseline\(/,
-  "deploy:revision must capture a rollback baseline before the first production mutation.",
+  /runReleaseTransaction\(\{/,
+  "deploy:revision must publish through the shared release transaction, not its own order.",
 );
-assert.match(
-  revisionBody,
-  /deployControlRuntime\(/,
-  "deploy:revision must deploy control at the same SHA through its own step.",
+
+/** The transaction itself is where the ordering contract is enforced. */
+const transactionBody = deployPushSource.slice(
+  deployPushSource.indexOf("async function runReleaseTransaction("),
+  deployPushSource.indexOf("/**\n * Deploy a commit that is already on main"),
 );
-assert.match(
-  revisionBody,
-  /publishReleaseReadiness\(/,
-  "deploy:revision must publish exact-SHA readiness so the gova build can publish.",
-);
-assert.match(
-  revisionBody,
-  /rollbackReleaseBaseline\(/,
-  "A failed deploy:revision must roll back automatically instead of pausing.",
-);
+for (const [needle, why] of [
+  ["captureReleaseRollbackBaseline(", "capture a rollback baseline before the first production mutation"],
+  ["deployControlRuntime(", "deploy control at the same SHA through its own step"],
+  ["publishReleaseReadiness(", "publish exact-SHA readiness so the gova build can publish"],
+  ["rollbackReleaseBaseline(", "roll back automatically instead of pausing"],
+] as const) {
+  assert.ok(transactionBody.includes(needle), `The release transaction must ${why}.`);
+}
 assert.ok(
-  revisionBody.indexOf("publishReleaseReadiness(") <
-    revisionBody.indexOf("await verifyMainDeployment("),
+  transactionBody.indexOf("publishReleaseReadiness(") <
+    transactionBody.indexOf("await verifyMainDeployment("),
   "Readiness must be published before main verification waits for the gova deployment.",
 );
 

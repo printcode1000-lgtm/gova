@@ -13856,6 +13856,57 @@
       ]
     },
     {
+      "id": "document:docs/07-mobile-and-release/release-commands.md",
+      "kind": "document",
+      "name": "Release Commands",
+      "path": "docs/07-mobile-and-release/release-commands.md",
+      "summary": "Three commands publish a release, and one deploys a single account for maintenance. They differ in which gates run, not in what publishing means: **every path that publishes runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runReleaseTransaction`.",
+      "tags": [
+        "account",
+        "and",
+        "as",
+        "commands",
+        "defined",
+        "deploys",
+        "differ",
+        "docs/07-mobile-and-release/release-commands",
+        "docs/07-mobile-and-release/release-commands.md",
+        "every",
+        "for",
+        "gates",
+        "in",
+        "maintenance",
+        "md",
+        "means",
+        "not",
+        "once",
+        "one",
+        "ordered",
+        "path",
+        "publish",
+        "publishes",
+        "publishing",
+        "release",
+        "release commands",
+        "run",
+        "runreleasetransaction",
+        "runs",
+        "same",
+        "scripts/deploy-push",
+        "scripts/deploy-push.ts",
+        "single",
+        "that",
+        "the",
+        "they",
+        "three",
+        "three commands publish a release, and one deploys a single account for maintenance. they differ in which gates run, not in what publishing means: **every path that publishes runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runreleasetransaction`.",
+        "transaction",
+        "ts",
+        "what",
+        "which"
+      ]
+    },
+    {
       "id": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
       "kind": "document",
       "name": "Scripts & Workflows",
@@ -14089,6 +14140,7 @@
       "summary": "Every server route answers `internalServerError`. The server log carries:",
       "tags": [
         "500",
+        "@asol/control-composition",
         "@asol/data-core",
         "answers",
         "carries",
@@ -14106,6 +14158,8 @@
         "returns",
         "route",
         "server",
+        "services/control/src/instrumentation",
+        "services/control/src/instrumentation.ts",
         "src/instrumentation",
         "src/instrumentation.ts",
         "the",
@@ -38893,6 +38947,17 @@
       "tags": [
         "services/control/src/control/system-logs",
         "services/control/src/control/system-logs.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/instrumentation.ts",
+      "kind": "source",
+      "name": "instrumentation.ts",
+      "path": "services/control/src/instrumentation.ts",
+      "tags": [
+        "services/control/src/instrumentation",
+        "services/control/src/instrumentation.ts",
         "ts"
       ]
     },

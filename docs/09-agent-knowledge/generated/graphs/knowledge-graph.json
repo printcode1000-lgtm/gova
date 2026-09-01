@@ -13856,6 +13856,57 @@
       ]
     },
     {
+      "id": "document:docs/07-mobile-and-release/release-commands.md",
+      "kind": "document",
+      "name": "Release Commands",
+      "path": "docs/07-mobile-and-release/release-commands.md",
+      "summary": "Three commands publish a release, and one deploys a single account for maintenance. They differ in which gates run, not in what publishing means: **every path that publishes runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runReleaseTransaction`.",
+      "tags": [
+        "account",
+        "and",
+        "as",
+        "commands",
+        "defined",
+        "deploys",
+        "differ",
+        "docs/07-mobile-and-release/release-commands",
+        "docs/07-mobile-and-release/release-commands.md",
+        "every",
+        "for",
+        "gates",
+        "in",
+        "maintenance",
+        "md",
+        "means",
+        "not",
+        "once",
+        "one",
+        "ordered",
+        "path",
+        "publish",
+        "publishes",
+        "publishing",
+        "release",
+        "release commands",
+        "run",
+        "runreleasetransaction",
+        "runs",
+        "same",
+        "scripts/deploy-push",
+        "scripts/deploy-push.ts",
+        "single",
+        "that",
+        "the",
+        "they",
+        "three",
+        "three commands publish a release, and one deploys a single account for maintenance. they differ in which gates run, not in what publishing means: **every path that publishes runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runreleasetransaction`.",
+        "transaction",
+        "ts",
+        "what",
+        "which"
+      ]
+    },
+    {
       "id": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
       "kind": "document",
       "name": "Scripts & Workflows",
@@ -14089,6 +14140,7 @@
       "summary": "Every server route answers `internalServerError`. The server log carries:",
       "tags": [
         "500",
+        "@asol/control-composition",
         "@asol/data-core",
         "answers",
         "carries",
@@ -14106,6 +14158,8 @@
         "returns",
         "route",
         "server",
+        "services/control/src/instrumentation",
+        "services/control/src/instrumentation.ts",
         "src/instrumentation",
         "src/instrumentation.ts",
         "the",
@@ -38893,6 +38947,17 @@
       "tags": [
         "services/control/src/control/system-logs",
         "services/control/src/control/system-logs.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/instrumentation.ts",
+      "kind": "source",
+      "name": "instrumentation.ts",
+      "path": "services/control/src/instrumentation.ts",
+      "tags": [
+        "services/control/src/instrumentation",
+        "services/control/src/instrumentation.ts",
         "ts"
       ]
     },
@@ -67624,6 +67689,18 @@
     },
     {
       "from": "document:docs/02-data-and-storage/current-databases.md",
+      "to": "document:docs/06-super-admin-and-operations/control-runtime.md",
+      "kind": "references",
+      "detail": "../06-super-admin-and-operations/control-runtime.md"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/current-databases.md",
+      "to": "document:docs/07-mobile-and-release/release-commands.md",
+      "kind": "references",
+      "detail": "../07-mobile-and-release/release-commands.md"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/current-databases.md",
       "to": "feature:notifications",
       "kind": "references",
       "detail": "src/features/notifications/domain/web-push-config.ts"
@@ -73272,6 +73349,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "to": "document:docs/07-mobile-and-release/release-commands.md",
+      "kind": "references",
+      "detail": "./release-commands.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
       "to": "document:docs/08-troubleshooting/problems/vercel-function-size-release-console.md",
       "kind": "references",
       "detail": "../08-troubleshooting/problems/vercel-function-size-release-console.md"
@@ -73687,6 +73770,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/release-commands.md",
+      "kind": "references",
+      "detail": "./release-commands.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
       "to": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
       "kind": "references",
       "detail": "./scripts-and-workflows.md"
@@ -73779,6 +73868,41 @@
       "to": "script:scripts/ensure-release-secrets-restored.ts",
       "kind": "references",
       "detail": "scripts/ensure-release-secrets-restored.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "document:docs/07-mobile-and-release/deploy-all-resume-and-checkpoints.md",
+      "kind": "references",
+      "detail": "./deploy-all-resume-and-checkpoints.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "kind": "references",
+      "detail": "./deployment-targets.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "document:docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md",
+      "kind": "references",
+      "detail": "../08-troubleshooting/problems/every-server-route-500-unregistered-port.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "document:docs/09-agent-knowledge/document-mutability.md",
+      "kind": "references",
+      "detail": "../09-agent-knowledge/document-mutability.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "script:scripts/deploy-push.ts",
+      "kind": "references",
+      "detail": "scripts/deploy-push.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
@@ -73968,9 +74092,21 @@
     },
     {
       "from": "document:docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md",
+      "to": "package:@asol/control-composition",
+      "kind": "references",
+      "detail": "@asol/control-composition"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md",
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md",
+      "to": "source:services/control/src/instrumentation.ts",
+      "kind": "references",
+      "detail": "services/control/src/instrumentation.ts"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md",
@@ -87842,6 +87978,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/control/src/control/system-logs.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/control/src/instrumentation.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -107940,6 +108082,11 @@
     {
       "from": "package:@asol/catalog-core",
       "to": "external-dependency:zod",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/control-composition",
+      "to": "feature:data",
       "kind": "imports"
     },
     {
@@ -136542,6 +136689,11 @@
     },
     {
       "from": "service:control",
+      "to": "package:@asol/control-composition",
+      "kind": "imports"
+    },
+    {
+      "from": "service:control",
       "to": "package:@asol/data-core",
       "kind": "imports"
     },
@@ -141303,6 +141455,12 @@
       "from": "source:packages/control-composition/src/index.ts",
       "to": "package:@asol/control-composition",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/control-composition/src/index.ts",
+      "to": "source:src/features/data/ports/data-core-runtime-config-ports.ts",
+      "kind": "imports",
+      "detail": "@/features/data/ports/data-core-runtime-config-ports"
     },
     {
       "from": "source:packages/data-core/src/browser/asol-db-persister.ts",
@@ -177053,6 +177211,22 @@
       "to": "source:src/features/system-logs/server/control-persistence.server.ts",
       "kind": "imports",
       "detail": "@/features/system-logs/server/control-persistence.server"
+    },
+    {
+      "from": "source:services/control/src/instrumentation.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/control/src/instrumentation.ts",
+      "to": "service:control",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/control/src/instrumentation.ts",
+      "to": "package:@asol/control-composition",
+      "kind": "imports",
+      "detail": "@asol/control-composition"
     },
     {
       "from": "source:services/notifications/next-env.d.ts",

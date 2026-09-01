@@ -17,7 +17,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `catalog-studio` | feature | 2 | 1 | 3 | 0 | 0 | 7 |
 | `categories` | feature | 4 | 0 | 44 | 0 | 13 | 6 |
 | `contact` | feature | 1 | 0 | 2 | 0 | 0 | 8 |
-| `data` | feature | 1 | 0 | 2 | 0 | 6 | 3 |
+| `data` | feature | 1 | 0 | 2 | 0 | 7 | 3 |
 | `data-health` | feature | 1 | 1 | 14 | 0 | 1 | 11 |
 | `dev-cloud-backup` | feature | 2 | 1 | 9 | 0 | 1 | 9 |
 | `dev-tools` | feature | 1 | 0 | 1 | 0 | 0 | 8 |
@@ -63,7 +63,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/backup-core` | package | 7 | 2 | 137 | 0 | 11 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 50 | 0 | 8 | 1 |
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |
-| `@asol/control-composition` | package | 5 | 1 | 0 | 0 | 0 | 0 |
+| `@asol/control-composition` | package | 6 | 1 | 0 | 0 | 2 | 1 |
 | `@asol/data-core` | package | 56 | 25 | 144 | 0 | 170 | 20 |
 | `@asol/data-health-core` | package | 7 | 2 | 137 | 0 | 45 | 0 |
 | `@asol/dev-core` | package | 8 | 1 | 140 | 0 | 10 | 0 |
@@ -100,7 +100,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/system-logs-core` | package | 9 | 4 | 139 | 0 | 58 | 0 |
 | `@asol/trending-ribbon-core` | package | 6 | 1 | 136 | 0 | 11 | 1 |
 | `@asol/vercel-deploy-core` | package | 9 | 6 | 26 | 0 | 48 | 3 |
-| `control` | service | 2 | 0 | 0 | 0 | 0 | 16 |
+| `control` | service | 2 | 0 | 0 | 0 | 0 | 17 |
 | `notifications` | service | 6 | 0 | 0 | 0 | 0 | 3 |
 | `orders` | service | 4 | 0 | 0 | 0 | 0 | 4 |
 | `products` | service | 4 | 0 | 0 | 0 | 0 | 3 |

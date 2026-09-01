@@ -72,10 +72,7 @@ import {
   inspectNativeCompatibility,
   resolveNativeBaseline,
 } from "@asol/ota-core/publishing";
-import {
-  classifyDocumentationPath,
-  DOCS_CONTRACT_CHANGE_MARKER,
-} from "./docs/document-mutability";
+import { protectedDocumentationCommitArgs } from "./deployment-commit-trailer";
 import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
 import { loadReleaseEnvironment } from "./load-release-env";
 import { publishReleaseReadiness as publishExactShaReleaseReadiness } from "./release-readiness-publish";
@@ -978,18 +975,6 @@ async function rollbackCapturedBaseline(
   return rollbackReleaseBaseline(baselines, "[deploy:all]");
 }
 
-/**
- * The staged paths the documentation mutability registry classifies as
- * `protected`. Read from the index, not the working tree, so it describes
- * exactly what the deployment commit will contain.
- */
-function stagedProtectedDocumentationPaths(): string[] {
-  const staged = git(["diff", "--cached", "--name-only"]).split(/\r?\n/).filter(Boolean);
-  return staged.filter(
-    (repoPath) => classifyDocumentationPath(repoPath)?.classification === "protected",
-  );
-}
-
 const SCRATCH_FILE_PATTERNS = [
   /(^|\/)__probe/i,
   /\.(log|tmp|bak|orig|rej)$/i,
@@ -1293,17 +1278,7 @@ async function runPublishPhase(
       // commit this command just staged. The marker is stamped from what is
       // actually staged — never unconditionally, which would turn a blunt
       // repository-wide authorization switch on for every deployment.
-      const protectedPaths = stagedProtectedDocumentationPaths();
-      if (protectedPaths.length > 0) {
-        console.log(
-          `[deploy:all] ${protectedPaths.length} protected documentation path(s) staged: ` +
-            `${protectedPaths.join(", ")}`,
-        );
-        commitArgs.push(
-          "-m",
-          `${DOCS_CONTRACT_CHANGE_MARKER} Protected documentation contract updated by this release: ${protectedPaths.join(", ")}.`,
-        );
-      }
+      commitArgs.push(...protectedDocumentationCommitArgs(ROOT, "[deploy:all]"));
       if (flags.skipPreflight) {
         commitArgs.push(
           "-m",

@@ -20,6 +20,7 @@ import {
 } from "@asol/vercel-deploy-core";
 import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
+import { protectedDocumentationCommitArgs } from "./deployment-commit-trailer";
 import { loadReleaseEnvironment } from "./load-release-env";
 import { publishReleaseReadiness } from "./release-readiness-publish";
 import {
@@ -318,14 +319,45 @@ function printRollbackGuidance(revision: string): void {
   );
 }
 
-function formatSuccessLine(isolatedTargets: DeployPushTarget[]): string {
-  if (isolatedTargets.length === 0) {
-    return "[deploy:push] SUCCESS — secrets backup completed, GitHub push verified, and main Vercel production target is READY.";
-  }
-  if (isolatedTargets.length === 1) {
-    return `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and ${isolatedTargets[0]} Vercel production targets are READY.`;
-  }
-  return `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and ${isolatedTargets.length} selected isolated Vercel production targets are READY.`;
+function formatSuccessLine(): string {
+  return (
+    "[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; " +
+    `control, ${ALL_DEPLOY_PUSH_TARGETS.length} isolated Vercel production targets, ` +
+    "and main are READY, and exact-SHA release readiness is published."
+  );
+}
+
+/**
+ * A targeted deploy is maintenance, and maintenance never publishes.
+ *
+ * `deploy:push` used to push `main` for any selection, including
+ * `--vercel-target=none`. Under the release barrier that is a trap: the push
+ * starts the GitHub-linked gova build, the build waits for exact-SHA readiness
+ * that a partial deploy must never mark, and gova fails closed after the
+ * timeout. So a partial selection deploys the named accounts from the current
+ * HEAD and stops — no commit, no push, no readiness.
+ *
+ * `docs/07-mobile-and-release/release-commands.md` § "Targeted maintenance
+ * deploys" records the rule this enforces.
+ */
+async function runTargetedMaintenanceDeploy(
+  targets: readonly DeployPushTarget[],
+): Promise<void> {
+  const revision = git(["rev-parse", "HEAD"]);
+  const timestamp = new Date().toISOString();
+  const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
+  await ensureReleaseSecretsRestored("deploy:push");
+  await assertVercelAccountsForTargets(targets);
+  console.log(
+    `[deploy:push] Targeted maintenance deploy of ${targets.join(", ")} at ${revision.slice(0, 12)}. ` +
+      "main is not pushed and no SHA is marked ready.",
+  );
+  const reports = await deploySelectedAccounts({ targets, timestamp, revision, runId });
+  printFinalSummary(reports);
+  console.log(
+    `[deploy:push] SUCCESS — ${targets.length} maintenance target(s) READY. ` +
+      "Run deploy:all or deploy:push with the complete set to publish a release.",
+  );
 }
 
 async function verifyMainDeployment(input: {
@@ -409,10 +441,11 @@ async function deployControlRuntime(input: {
   timestamp: string;
   revision: string;
   runId: string;
+  logPrefix: string;
 }): Promise<VercelDeploymentReport> {
   const comment = `deploy(control): ${input.timestamp} @ ${input.revision.slice(0, 12)}`;
   const report = await runDeploymentNpmScript("control:deploy", {
-    logPrefix: "deploy:revision",
+    logPrefix: input.logPrefix.replace(/[[\]]/g, ""),
     captureReport: true,
     env: {
       ASOL_DEPLOYMENT_RUN_ID: `${input.runId}-control`,
@@ -434,6 +467,102 @@ async function deployControlRuntime(input: {
     throw failure;
   }
   return report;
+}
+
+/**
+ * The one ordered release transaction, shared by every path that publishes.
+ *
+ * Order is the contract, not a preference. `docs/07-mobile-and-release/release-commands.md`
+ * records why each step sits where it does; the short version is that the
+ * GitHub-linked gova build is blocked on exact-SHA readiness, so nothing may
+ * mark a SHA ready before control and all six workloads are READY, and main
+ * must not be verified while a backend is still deploying.
+ */
+async function runReleaseTransaction(input: {
+  readonly revision: string;
+  readonly timestamp: string;
+  readonly runId: string;
+  readonly mainComment: string;
+  readonly logPrefix: string;
+  readonly command: "deploy:revision" | "deploy:push";
+  readonly sandboxName: string;
+  readonly initiatedByUid: string;
+}): Promise<VercelDeploymentReport[]> {
+  const targets = [...ALL_DEPLOY_PUSH_TARGETS];
+
+  // Captured before the first production mutation so every later failure can
+  // re-promote what was live instead of pausing for instructions.
+  const baselines = await captureReleaseRollbackBaseline(input.logPrefix);
+
+  const reports: VercelDeploymentReport[] = [];
+  try {
+    // The six Git-disconnected workloads, then control as its own mandatory
+    // step. Control is never a seventh workload target, but a release that did
+    // not deploy it would serve a control revision behind the SHA.
+    reports.push(
+      ...(await deploySelectedAccounts({
+        targets,
+        timestamp: input.timestamp,
+        revision: input.revision,
+        runId: input.runId,
+      })),
+    );
+    reports.push(
+      await deployControlRuntime({
+        timestamp: input.timestamp,
+        revision: input.revision,
+        runId: input.runId,
+        logPrefix: input.logPrefix,
+      }),
+    );
+
+    // Only now may the GitHub-linked gova build publish: the barrier it waits on
+    // is this state, and nothing else in this process may mark the SHA ready.
+    await publishReleaseReadiness({
+      revision: input.revision,
+      runId: input.runId,
+      timestamp: input.timestamp,
+      command: input.command,
+      sandboxName: input.sandboxName,
+      initiatedByUid: input.initiatedByUid,
+      logTail: `${input.command} published durable exact-SHA readiness after control and six workload deployments.`,
+      logPrefix: input.logPrefix,
+      reports,
+    });
+
+    // Sequential on purpose. Verifying main while the backends were still
+    // deploying is what let a gova build publish against unfinished runtimes.
+    const mainReport = await verifyMainDeployment({
+      revision: input.revision,
+      comment: input.mainComment,
+    });
+    reports.unshift(mainReport);
+    if (mainReport.state !== "READY") {
+      throw new Error(`main deployment is ${mainReport.state}: ${mainReport.message}`);
+    }
+    return reports;
+  } catch (error) {
+    const partial = (error as { reports?: VercelDeploymentReport[] }).reports;
+    if (partial) reports.push(...partial);
+    printFinalSummary(reports);
+    const restored = await rollbackReleaseBaseline(baselines, input.logPrefix).catch(
+      (rollbackError) => {
+        console.error(
+          `${input.logPrefix} Rollback failed — ${rollbackError instanceof Error ? rollbackError.message : String(rollbackError)}`,
+        );
+        return false;
+      },
+    );
+    throw new Error(
+      [
+        error instanceof Error ? error.message : String(error),
+        restored
+          ? "Rolled back to the captured production baseline."
+          : "Rollback did not restore the captured production baseline.",
+        ...failedReportDetails(reports),
+      ].join("\n"),
+    );
+  }
 }
 
 /**
@@ -462,72 +591,16 @@ export async function deployExistingRevision(revision: string): Promise<void> {
   const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${normalizedRevision.slice(0, 12)}`;
   const mainComment = `deploy(revision): ${timestamp} @ ${normalizedRevision.slice(0, 12)}`;
 
-  // Captured before the first production mutation so every later failure can
-  // re-promote what was live instead of pausing for instructions.
-  const baselines = await captureReleaseRollbackBaseline("[deploy:revision]");
-
-  const reports: VercelDeploymentReport[] = [];
-  try {
-    // The six Git-disconnected workloads, then control as its own mandatory
-    // step. Control is never a seventh workload target, but a full release that
-    // did not deploy it would serve a control revision behind the SHA.
-    reports.push(
-      ...(await deploySelectedAccounts({
-        targets,
-        timestamp,
-        revision: normalizedRevision,
-        runId,
-      })),
-    );
-    reports.push(await deployControlRuntime({ timestamp, revision: normalizedRevision, runId }));
-
-    // Only now may the GitHub-linked gova build publish: the barrier it waits on
-    // is this state, and nothing else in this process may mark the SHA ready.
-    await publishReleaseReadiness({
-      revision: normalizedRevision,
-      runId,
-      timestamp,
-      command: "deploy:revision",
-      sandboxName: "deploy-revision-sandbox",
-      initiatedByUid: "github-push",
-      logTail:
-        "deploy:revision published durable exact-SHA readiness after control and six workload deployments.",
-      logPrefix: "[deploy:revision]",
-      reports,
-    });
-
-    // Sequential on purpose. Verifying main while the backends were still
-    // deploying is what let a gova build publish against unfinished runtimes.
-    const mainReport = await verifyMainDeployment({
-      revision: normalizedRevision,
-      comment: mainComment,
-    });
-    reports.unshift(mainReport);
-    if (mainReport.state !== "READY") {
-      throw new Error(`main deployment is ${mainReport.state}: ${mainReport.message}`);
-    }
-  } catch (error) {
-    const partial = (error as { reports?: VercelDeploymentReport[] }).reports;
-    if (partial) reports.push(...partial);
-    printFinalSummary(reports);
-    const restored = await rollbackReleaseBaseline(baselines, "[deploy:revision]").catch(
-      (rollbackError) => {
-        console.error(
-          `[deploy:revision] Rollback failed — ${rollbackError instanceof Error ? rollbackError.message : String(rollbackError)}`,
-        );
-        return false;
-      },
-    );
-    throw new Error(
-      [
-        error instanceof Error ? error.message : String(error),
-        restored
-          ? "Rolled back to the captured production baseline."
-          : "Rollback did not restore the captured production baseline.",
-        ...failedReportDetails(reports),
-      ].join("\n"),
-    );
-  }
+  const reports = await runReleaseTransaction({
+    revision: normalizedRevision,
+    timestamp,
+    runId,
+    mainComment,
+    logPrefix: "[deploy:revision]",
+    command: "deploy:revision",
+    sandboxName: "deploy-revision-sandbox",
+    initiatedByUid: "github-push",
+  });
 
   printFinalSummary(reports);
   console.log(
@@ -591,6 +664,13 @@ export const __testables = {
 async function main(): Promise<void> {
   const { flags, targetArgs } = parseArgv(process.argv.slice(2));
   const isolatedTargets = await resolveServiceDeployTargets(targetArgs);
+
+  // Publishing is all-or-nothing: control and all six workloads, or no push.
+  if (isolatedTargets.length !== ALL_DEPLOY_PUSH_TARGETS.length) {
+    await runTargetedMaintenanceDeploy(isolatedTargets);
+    return;
+  }
+
   await assertFastPublishReadiness(isolatedTargets, flags);
 
   try {
@@ -613,6 +693,7 @@ async function main(): Promise<void> {
       const commitArgs = flags.allowEmpty
         ? ["commit", "--allow-empty", "-m", mainComment]
         : ["commit", "-m", mainComment];
+      commitArgs.push(...protectedDocumentationCommitArgs(ROOT, "[deploy:push]"));
       execFileSync("git", commitArgs, {
         cwd: ROOT,
         stdio: "inherit",
@@ -658,41 +739,25 @@ async function main(): Promise<void> {
     return;
   }
 
-  const [isolatedOutcome, mainOutcome] = await Promise.allSettled([
-    deploySelectedAccounts({ targets: isolatedTargets, timestamp, revision, runId }),
-    verifyMainDeployment({ revision, comment: mainComment }),
-  ]);
-  const reports: VercelDeploymentReport[] =
-    isolatedOutcome.status === "fulfilled"
-      ? isolatedOutcome.value
-      : ((isolatedOutcome.reason as { reports?: VercelDeploymentReport[] }).reports ?? []);
-
-  if (isolatedOutcome.status === "rejected" || mainOutcome.status === "rejected") {
-    if (mainOutcome.status === "fulfilled") reports.unshift(mainOutcome.value);
-    if (reports.length > 0) printFinalSummary(reports);
-    const isolatedMessage =
-      isolatedOutcome.status === "rejected"
-        ? (isolatedOutcome.reason instanceof Error ? isolatedOutcome.reason.message : String(isolatedOutcome.reason))
-        : undefined;
-    const mainMessage =
-      mainOutcome.status === "rejected"
-        ? (mainOutcome.reason instanceof Error ? mainOutcome.reason.message : String(mainOutcome.reason))
-        : undefined;
-    fail([isolatedMessage, mainMessage].filter(Boolean).join(" | "), revision);
-    return;
-  }
-
-  const mainReport = mainOutcome.value;
-
-  reports.unshift(mainReport);
-  if (mainReport.state !== "READY") {
-    printFinalSummary(reports);
-    fail(`main deployment is ${mainReport.state}: ${mainReport.message}`, revision);
+  let reports: VercelDeploymentReport[];
+  try {
+    reports = await runReleaseTransaction({
+      revision,
+      timestamp,
+      runId,
+      mainComment,
+      logPrefix: "[deploy:push]",
+      command: "deploy:push",
+      sandboxName: "deploy-push-cli",
+      initiatedByUid: "deploy-push",
+    });
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error), revision);
     return;
   }
 
   printFinalSummary(reports);
-  console.log(formatSuccessLine(isolatedTargets));
+  console.log(formatSuccessLine());
 }
 
 /**
