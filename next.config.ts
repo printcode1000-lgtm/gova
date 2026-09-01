@@ -11,7 +11,7 @@ const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 const repositoryName = process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : '';
 
 const isStatic = process.env.ASOL_MODE === 'static';
-const basePath = process.env.ASOL_BASE_PATH?.replace(/\/$/, '') || (isGithubActions ? repositoryName : '');
+const basePath = process.env.ASOL_BASE_PATH?.replace(/\/$/, '') || (isGithubActions && isStatic ? repositoryName : '');
 const assetPrefix = basePath;
 const deterministicBuildId = process.env.ASOL_NEXT_BUILD_ID;
 

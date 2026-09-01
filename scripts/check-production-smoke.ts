@@ -2,6 +2,7 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { createServer } from "node:net";
 
 /**
  * Start the built server and ask it real questions.
@@ -28,8 +29,6 @@ import path from "node:path";
  * registration that fails to arrive shows up here rather than in production.
  * They are read-only and safe to call repeatedly.
  */
-const PORT = Number(process.env.ASOL_SMOKE_PORT ?? 3210);
-const BASE = `http://127.0.0.1:${PORT}`;
 const STARTUP_TIMEOUT_MS = 90_000;
 const REQUEST_TIMEOUT_MS = 30_000;
 
@@ -37,7 +36,7 @@ interface SmokeRoute {
   readonly path: string;
   /** Which port registration this request proves arrived. */
   readonly proves: string;
-  /** Codes that mean the handler ran. 401/403/404 are answers, not failures. */
+  /** Codes that prove the built boundary behaved as intended. Business routes must redirect without being followed. */
   readonly accept: readonly number[];
 }
 
@@ -49,43 +48,70 @@ const ROUTES: readonly SmokeRoute[] = [
   },
   {
     path: "/api/profile/store-details?uid=asol_smoke_probe",
-    proves: "data-core runtime config + profile shard routing",
-    accept: [200, 400, 404],
+    proves: "the compatibility boundary redirects profile reads to the profiles owner",
+    accept: [307],
   },
   {
     path: "/api/notifications/preferences?uid=asol_smoke_probe&phone=+200000000000",
-    proves: "notifications-core server config + notifications shard",
-    accept: [200, 400, 403, 404],
+    proves: "the compatibility boundary redirects notification reads to the notifications owner",
+    accept: [307],
   },
   {
     path: "/api/products?limit=1",
-    proves: "product capability through its own data source",
-    accept: [200, 400],
+    proves: "the compatibility boundary redirects product reads to the products owner",
+    accept: [307],
   },
   {
     path: "/api/system-logs",
-    proves: "system-logs-core port and observability wiring",
-    accept: [200, 401, 403],
+    proves: "the compatibility boundary redirects administrative logs to the control owner",
+    accept: [307],
   },
 ];
 
-function startServer(): ChildProcess {
+async function resolveSmokePort(): Promise<number> {
+  const raw = process.env.ASOL_SMOKE_PORT;
+  const requested = raw === undefined ? 0 : Number(raw);
+  if (!Number.isInteger(requested) || requested < 0 || requested > 65535) {
+    throw new Error(`Invalid ASOL_SMOKE_PORT: ${raw}`);
+  }
+
+  return await new Promise<number>((resolve, reject) => {
+    const probe = createServer();
+    probe.once("error", (error) => {
+      reject(new Error(raw === undefined
+        ? `Unable to reserve an isolated smoke port: ${error.message}`
+        : `ASOL_SMOKE_PORT ${raw} is unavailable: ${error.message}`));
+    });
+    probe.listen({ host: "127.0.0.1", port: requested, exclusive: true }, () => {
+      const address = probe.address();
+      if (!address || typeof address === "string") {
+        probe.close();
+        reject(new Error("Unable to resolve the reserved smoke port."));
+        return;
+      }
+      const selected = address.port;
+      probe.close((error) => (error ? reject(error) : resolve(selected)));
+    });
+  });
+}
+
+function startServer(port: number): ChildProcess {
   const next = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");
-  return spawn(process.execPath, [next, "start", "-p", String(PORT)], {
+  return spawn(process.execPath, [next, "start", "-p", String(port)], {
     cwd: process.cwd(),
     env: { ...process.env, NODE_ENV: "production" },
     stdio: ["ignore", "pipe", "pipe"],
   });
 }
 
-async function waitForReady(server: ChildProcess, log: string[]): Promise<void> {
+async function waitForReady(server: ChildProcess, log: string[], base: string): Promise<void> {
   const deadline = Date.now() + STARTUP_TIMEOUT_MS;
   server.stdout?.on("data", (chunk: Buffer) => log.push(chunk.toString()));
   server.stderr?.on("data", (chunk: Buffer) => log.push(chunk.toString()));
 
   while (Date.now() < deadline) {
     try {
-      const response = await fetch(`${BASE}/api/health`, {
+      const response = await fetch(`${base}/api/health`, {
         signal: AbortSignal.timeout(3_000),
       });
       if (response.status > 0) return;
@@ -106,18 +132,22 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  const port = await resolveSmokePort();
+  const base = `http://127.0.0.1:${port}`;
+  console.log(`[smoke] reserved isolated port ${port}`);
   const log: string[] = [];
-  const server = startServer();
+  const server = startServer(port);
   const failures: string[] = [];
 
   try {
-    await waitForReady(server, log);
+    await waitForReady(server, log, base);
 
     for (const route of ROUTES) {
       let status = 0;
       let body = "";
       try {
-        const response = await fetch(`${BASE}${route.path}`, {
+        const response = await fetch(`${base}${route.path}`, {
+          redirect: "manual",
           signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         });
         status = response.status;
