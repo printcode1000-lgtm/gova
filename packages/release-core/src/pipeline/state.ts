@@ -116,6 +116,35 @@ export function markPhaseComplete(
   return next;
 }
 
+/**
+ * Forget every deployment phase a rollback just undid.
+ *
+ * A rollback re-promotes the previous production deployment of control and the
+ * six workloads, so the run state's claim that those phases are complete for
+ * this revision stops being true the moment it succeeds. Left alone, the next
+ * resume skips the very deployments the rollback reverted and then fails with
+ * no deployment report — the release can never be retried without deleting
+ * state by hand.
+ *
+ * Preflight and publish survive: the commit is still pushed and the gates still
+ * passed, and neither is undone by promoting an older deployment.
+ */
+export function forgetRolledBackDeploymentPhases(): DeployAllRunState | undefined {
+  const current = readDeployAllState();
+  if (!current) return undefined;
+  const kept = current.completedPhases.filter(
+    (phase) => phase === "preflight" || phase === "publish",
+  );
+  if (kept.length === current.completedPhases.length) return current;
+  const next: DeployAllRunState = {
+    ...current,
+    completedPhases: kept,
+    lastUpdated: new Date().toISOString(),
+  };
+  writeDeployAllState(next);
+  return next;
+}
+
 export function assertPhasePrerequisites(
   phaseId: string,
   required: readonly string[],

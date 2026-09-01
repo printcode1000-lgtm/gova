@@ -20,6 +20,7 @@ import {
   decideResumeSafety,
   markDeployInFlight,
   markPhaseComplete,
+  forgetRolledBackDeploymentPhases,
   readDeployAllState,
   rebindDeployAllStateRevision,
 } from "@asol/release-core";
@@ -27,6 +28,7 @@ import {
   type BranchResumePlan,
   type DeployBranchCheckpoint,
   assertKnownBranchId,
+  clearBranchCheckpoints,
   assertPreflightGraphInvariants,
   buildPreflightGraph,
   decideCheckpointSkip,
@@ -1828,8 +1830,17 @@ async function main(): Promise<void> {
           );
           return false;
         });
+        // Whatever the rollback managed to restore, the deployments this run
+        // recorded as complete are no longer what production serves. Keeping
+        // those checkpoints would make the next resume skip them and fail with
+        // no deployment report.
+        forgetRolledBackDeploymentPhases();
+        clearBranchCheckpoints();
         if (restored) {
-          console.error("[deploy:all] Rollback restoration completed.");
+          console.error(
+            "[deploy:all] Rollback restoration completed. Deployment phases were reset; " +
+              "resume with: npm run deploy:all -- --from-phase=control",
+          );
         } else {
           console.error("[deploy:all] Rollback restoration did not fully complete.");
         }
