@@ -131,6 +131,9 @@
       "@asol/data-core/ota": [
         "./packages/data-core/src/domains/ota/index.server.ts"
       ],
+      "@asol/data-core/ota-runtime": [
+        "./packages/data-core/src/ota-runtime.ts"
+      ],
       "@asol/data-core/password-recovery": [
         "./packages/data-core/src/domains/password-recovery/index.server.ts"
       ],
