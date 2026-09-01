@@ -1,0 +1,31 @@
+name: ASOL Finalize Repair
+
+on:
+  push:
+    branches:
+      - "agent-request/chatgpt"
+    paths:
+      - ".github/workflows/asol-finalize-repair.yml"
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    working-directory: /home/hesham/gova
+
+jobs:
+  finalize:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 330
+    steps:
+      - name: Finalize ASOL candidate on local runner
+        shell: bash
+        env:
+          GOVA_LOCAL_WORKSPACE: /home/hesham/gova
+          GH_PUSH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin agent-request/chatgpt
+          git show origin/agent-request/chatgpt:scripts/asol-finalize-repair.sh > /tmp/asol-finalize-repair.sh
+          bash /tmp/asol-finalize-repair.sh
