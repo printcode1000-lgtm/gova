@@ -185,34 +185,6 @@ Enforcement is defense in depth:
 
 The presence of `/usr/local/bin/antigravity`, `/home/hesham/.local/bin/agy`, or any future installation of equivalent binaries does not grant Local Runner permission to invoke them.
 
-## Host Discovery
-
-The former Gova relationship to the external `p2p-link` companion repository has been removed from current `main`. Gova no longer owns a companion-repository restore/sync contract for that repository and no Local Runner command depends on it.
-
-Host discovery is now a Gova-owned Local Runner capability:
-
-```bash
-npm run local-agent:device:discover
-```
-
-It is implemented inside Gova and has no `p2p-link` repository dependency.
-
-Current behavior:
-
-- default TCP port: `48731`;
-- password source: `ASOL_DEVICE_DISCOVERY_PORT_PASSWORD`;
-- optional port override: `ASOL_DEVICE_DISCOVERY_PORT`;
-- optional R2 key override: `ASOL_DEVICE_DISCOVERY_R2_KEY`;
-- default R2 object: `host-discovery/<hostname>.json`;
-- discovery documents expire after 10 minutes;
-- documents contain host/runtime/network facts and URL candidates;
-- the password value is never included in the published discovery document;
-- `--dry-run` produces the document without R2 publication or a listener;
-- `--publish-only` publishes to R2 and exits;
-- normal mode publishes to R2 and starts a password-protected HTTP listener on `0.0.0.0:<port>`;
-- the listener accepts `x-asol-port-password` or Basic authentication using the configured password.
-
-This is host discovery, not a P2P companion-repository integration.
 
 ## Operational Limits
 
@@ -237,9 +209,4 @@ Current limits include:
 3. Do not introduce a general command/path allowlist for authenticated full-host-control shell tasks unless the user explicitly changes this policy; **Antigravity/`agy` is the permanent explicit exception and must remain forbidden**.
 4. Preserve authentication, request validation, secret-export prevention, repository mutation guards, and the fixed two-branch policy.
 5. Do not infer host state from GitHub alone when the fact lives only on the server; verify it through the Local Runner.
-6. Do not reintroduce a Gova dependency, restore rule, sync command, or documentation contract for the removed `p2p-link` companion relationship unless the user explicitly requests a new architecture.
 7. Do not add Antigravity/`agy` wrappers, workflow steps, monitor toggles, shell execution paths, or local policy switches back into the Local Runner.
-
-## Direct P2P runtime
-
-The preferred post-bootstrap remote-control path is the persistent Gova Direct P2P Agent documented in `direct-p2p-agent.md`. GitHub Actions remain an administrative/bootstrap fallback and are not the normal command/result transport once a direct session is established.

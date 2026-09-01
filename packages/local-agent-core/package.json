@@ -17,16 +17,9 @@
     "./host": {
       "types": "./src/host.ts",
       "default": "./src/host.ts"
-    },
-    "./direct": {
-      "types": "./src/direct/index.ts",
-      "default": "./src/direct/index.ts"
     }
   },
   "scripts": {
     "test": "npx tsx src/tests/index.test.ts"
-  },
-  "dependencies": {
-    "werift": "0.24.4"
   }
 }

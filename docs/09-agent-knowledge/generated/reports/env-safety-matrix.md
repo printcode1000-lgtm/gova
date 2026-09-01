@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **277**
+Keys: **271**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -51,9 +51,6 @@ Keys: **277**
 | `ASOL_DEPLOY_REPOSITORY_URL` | server-only | unknown | `scripts/push-production-deploy-env.ts`, `services/control/src/app/api/health/route.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_REVISION_AT_START` | server-only | unknown | `scripts/deploy-all.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_RUN_ID` | server-only | unknown | `scripts/deploy-all.ts`, `scripts/gate-step-checkpoints.ts`, `scripts/tests/deploy-all-resume.test.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `ASOL_DEVICE_DISCOVERY_PORT` | server-only | unknown | none | unclassified | missing/unknown consumers | npm run runtime:check:changed |
-| `ASOL_DEVICE_DISCOVERY_PORT_PASSWORD` | server-only | dangerous | `scripts/install-local-agent-direct-service.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
-| `ASOL_DEVICE_DISCOVERY_R2_KEY` | server-only | dangerous | none | object-storage | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_IOS_BUNDLE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `ASOL_IOS_EXPORT_METHOD` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_IOS_TEAM_ID` | server-only | unknown | `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
@@ -150,9 +147,6 @@ Keys: **277**
 | `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | server-only | unknown | `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_AGENT_MEMORY_FLOOR_MB` | server-only | unknown | `packages/local-agent-core/src/admission.ts`, `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_AGENT_STALE_LOCK_MS` | server-only | unknown | `packages/local-agent-core/src/lock-store.ts`, `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_DIRECT_AGENT_DIR` | server-only | unknown | `packages/local-agent-core/src/direct/paths.ts`, `packages/local-agent-core/src/tests/direct-runtime.test.ts`, `packages/local-agent-core/src/tests/direct-transport.test.ts`, `packages/local-agent-core/src/tests/direct.test.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_DIRECT_SERVICE_WORKSPACE` | server-only | unknown | `scripts/install-local-agent-direct-service.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_HOST_ID` | server-only | unknown | `packages/local-agent-core/src/direct/paths.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_HOST_PROFILE` | server-only | unknown | `packages/local-agent-core/src/paths.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_LOCAL_WORKSPACE` | server-only | unknown | `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts`, `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOVA_RUNNER_POOL_DIR` | server-only | unknown | `packages/local-agent-core/src/paths.ts` | unclassified | server-only | npm run runtime:check:changed |

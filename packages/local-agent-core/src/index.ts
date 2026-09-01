@@ -19,7 +19,6 @@ export * from "./control-branch-namespaces";
 export * from "./coordination-snapshot";
 export * from "./git";
 export * from "./github-api";
-export * from "./host-discovery";
 export * from "./json-store";
 export * from "./lock-store";
 export * from "./message-store";

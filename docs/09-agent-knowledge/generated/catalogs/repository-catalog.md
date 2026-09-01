@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 297 |
+| command | 282 |
 | config | 12 |
-| document | 258 |
+| document | 257 |
 | domain | 10 |
-| environment-key | 277 |
-| external-dependency | 109 |
+| environment-key | 271 |
+| external-dependency | 108 |
 | feature | 47 |
 | package | 44 |
 | route | 177 |
 | runtime | 7 |
-| script | 159 |
+| script | 154 |
 | service | 7 |
-| source | 2209 |
-| test | 234 |
+| source | 2189 |
+| test | 230 |
 
 ## Domains
 
@@ -61,7 +61,7 @@
 | @asol/google-play-store-assets-core | `packages/google-play-store-assets-core` | Google Play store listing image assets; Layer: capability; Public exports: ., ./images |
 | @asol/gova-deployment-core | `packages/gova-deployment-core` | The gova deployment build view and its artifact gate; Layer: capability; Public exports: . |
 | @asol/hero-slider-core | `packages/hero-slider-core` | Hero slider UI capability; Layer: capability; Public exports: ., ./server |
-| @asol/local-agent-core | `packages/local-agent-core` | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./direct, ./host, ./monitor |
+| @asol/local-agent-core | `packages/local-agent-core` | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./host, ./monitor |
 | @asol/map-core | `packages/map-core` | MapLibre map capability; Layer: capability; Public exports: . |
 | @asol/native-core | `packages/native-core` | Capacitor / native device capabilities; Layer: capability; Public exports: ., ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy |
 | @asol/notifications-composition | `packages/notifications-composition` | Composition root for the notifications account; Layer: composition; Public exports: . |

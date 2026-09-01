@@ -73,7 +73,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/google-play-store-assets-core` | package | 7 | 2 | 15 | 0 | 23 | 0 |
 | `@asol/gova-deployment-core` | package | 4 | 1 | 0 | 0 | 3 | 3 |
 | `@asol/hero-slider-core` | package | 7 | 2 | 139 | 0 | 21 | 1 |
-| `@asol/local-agent-core` | package | 5 | 6 | 0 | 0 | 29 | 1 |
+| `@asol/local-agent-core` | package | 5 | 2 | 0 | 0 | 23 | 0 |
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
 | `@asol/native-core` | package | 33 | 20 | 48 | 0 | 84 | 27 |
 | `@asol/notifications-composition` | package | 10 | 1 | 0 | 0 | 2 | 4 |
@@ -81,7 +81,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/observability-core` | package | 8 | 1 | 138 | 0 | 23 | 5 |
 | `@asol/orders-composition` | package | 12 | 1 | 0 | 0 | 2 | 5 |
 | `@asol/orders-core` | package | 17 | 6 | 139 | 0 | 41 | 1 |
-| `@asol/ota-core` | package | 35 | 26 | 32 | 0 | 48 | 13 |
+| `@asol/ota-core` | package | 35 | 26 | 32 | 0 | 45 | 13 |
 | `@asol/page-save-core` | package | 29 | 3 | 0 | 0 | 8 | 0 |
 | `@asol/page-snapshot-core` | package | 8 | 1 | 0 | 0 | 3 | 0 |
 | `@asol/product-core` | package | 9 | 1 | 137 | 0 | 27 | 0 |

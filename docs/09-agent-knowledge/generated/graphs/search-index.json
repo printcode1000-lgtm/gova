@@ -1852,233 +1852,6 @@
       ]
     },
     {
-      "id": "command:local-agent:device:discover",
-      "kind": "command",
-      "name": "npm run local-agent:device:discover",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "device",
-        "discover",
-        "local-agent",
-        "local-agent:device:discover",
-        "npm",
-        "npm run local-agent:device:discover",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:bootstrap",
-      "kind": "command",
-      "name": "npm run local-agent:direct:bootstrap",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "bootstrap",
-        "direct",
-        "local-agent",
-        "local-agent:direct:bootstrap",
-        "npm",
-        "npm run local-agent:direct:bootstrap",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:daemon",
-      "kind": "command",
-      "name": "npm run local-agent:direct:daemon",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "daemon",
-        "direct",
-        "local-agent",
-        "local-agent:direct:daemon",
-        "npm",
-        "npm run local-agent:direct:daemon",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:doctor",
-      "kind": "command",
-      "name": "npm run local-agent:direct:doctor",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "doctor",
-        "local-agent",
-        "local-agent:direct:doctor",
-        "npm",
-        "npm run local-agent:direct:doctor",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:install",
-      "kind": "command",
-      "name": "npm run local-agent:direct:install",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "install",
-        "local-agent",
-        "local-agent:direct:install",
-        "npm",
-        "npm run local-agent:direct:install",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:key:rotate",
-      "kind": "command",
-      "name": "npm run local-agent:direct:key:rotate",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "key",
-        "local-agent",
-        "local-agent:direct:key:rotate",
-        "npm",
-        "npm run local-agent:direct:key:rotate",
-        "rotate",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:key:status",
-      "kind": "command",
-      "name": "npm run local-agent:direct:key:status",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "key",
-        "local-agent",
-        "local-agent:direct:key:status",
-        "npm",
-        "npm run local-agent:direct:key:status",
-        "run",
-        "status"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:kill-switch",
-      "kind": "command",
-      "name": "npm run local-agent:direct:kill-switch",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "kill-switch",
-        "local-agent",
-        "local-agent:direct:kill-switch",
-        "npm",
-        "npm run local-agent:direct:kill-switch",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:restart",
-      "kind": "command",
-      "name": "npm run local-agent:direct:restart",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "local-agent",
-        "local-agent:direct:restart",
-        "npm",
-        "npm run local-agent:direct:restart",
-        "restart",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:revoke",
-      "kind": "command",
-      "name": "npm run local-agent:direct:revoke",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "local-agent",
-        "local-agent:direct:revoke",
-        "npm",
-        "npm run local-agent:direct:revoke",
-        "revoke",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:revoke-all",
-      "kind": "command",
-      "name": "npm run local-agent:direct:revoke-all",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "local-agent",
-        "local-agent:direct:revoke-all",
-        "npm",
-        "npm run local-agent:direct:revoke-all",
-        "revoke-all",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:sessions",
-      "kind": "command",
-      "name": "npm run local-agent:direct:sessions",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "local-agent",
-        "local-agent:direct:sessions",
-        "npm",
-        "npm run local-agent:direct:sessions",
-        "run",
-        "sessions"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:start",
-      "kind": "command",
-      "name": "npm run local-agent:direct:start",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "local-agent",
-        "local-agent:direct:start",
-        "npm",
-        "npm run local-agent:direct:start",
-        "run",
-        "start"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:status",
-      "kind": "command",
-      "name": "npm run local-agent:direct:status",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "local-agent",
-        "local-agent:direct:status",
-        "npm",
-        "npm run local-agent:direct:status",
-        "run",
-        "status"
-      ]
-    },
-    {
-      "id": "command:local-agent:direct:stop",
-      "kind": "command",
-      "name": "npm run local-agent:direct:stop",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "direct",
-        "local-agent",
-        "local-agent:direct:stop",
-        "npm",
-        "npm run local-agent:direct:stop",
-        "run",
-        "stop"
-      ]
-    },
-    {
       "id": "command:local-agent:dispatch:check",
       "kind": "command",
       "name": "npm run local-agent:dispatch:check",
@@ -13781,47 +13554,6 @@
       ]
     },
     {
-      "id": "document:docs/07-mobile-and-release/direct-p2p-agent.md",
-      "kind": "document",
-      "name": "Gova Direct P2P Agent",
-      "path": "docs/07-mobile-and-release/direct-p2p-agent.md",
-      "summary": "The Direct P2P Agent is the preferred remote-control path for approved agents after bootstrap. It preserves the separation `GitHub = authorization bootstrap`, `R2 = discovery/rendezvous metadata`, `direct transport = commands/results`, and `@asol/local-agent-core = execution and ",
-      "tags": [
-        "@asol/local-agent-core",
-        "after",
-        "agent",
-        "agents",
-        "and",
-        "approved",
-        "authorization",
-        "bootstrap",
-        "commands/results",
-        "direct",
-        "discovery/rendezvous",
-        "docs/07-mobile-and-release/direct-p2p-agent",
-        "docs/07-mobile-and-release/direct-p2p-agent.md",
-        "execution",
-        "for",
-        "github",
-        "gova",
-        "gova direct p2p agent",
-        "is",
-        "it",
-        "md",
-        "metadata",
-        "p2p",
-        "path",
-        "preferred",
-        "preserves",
-        "r2",
-        "remote-control",
-        "separation",
-        "the",
-        "the direct p2p agent is the preferred remote-control path for approved agents after bootstrap. it preserves the separation `github = authorization bootstrap`, `r2 = discovery/rendezvous metadata`, `direct transport = commands/results`, and `@asol/local-agent-core = execution and ",
-        "transport"
-      ]
-    },
-    {
       "id": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "kind": "document",
       "name": "GitHub CI Policy",
@@ -17241,45 +16973,6 @@
       ]
     },
     {
-      "id": "environment-key:ASOL_DEVICE_DISCOVERY_PORT",
-      "kind": "environment-key",
-      "name": "ASOL_DEVICE_DISCOVERY_PORT",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "asol_device_discovery_port",
-        "environment",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:ASOL_DEVICE_DISCOVERY_PORT_PASSWORD",
-      "kind": "environment-key",
-      "name": "ASOL_DEVICE_DISCOVERY_PORT_PASSWORD",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "asol_device_discovery_port_password",
-        "environment",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:ASOL_DEVICE_DISCOVERY_R2_KEY",
-      "kind": "environment-key",
-      "name": "ASOL_DEVICE_DISCOVERY_R2_KEY",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "asol_device_discovery_r2_key",
-        "environment",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
       "id": "environment-key:ASOL_IOS_BUNDLE_ID",
       "kind": "environment-key",
       "name": "ASOL_IOS_BUNDLE_ID",
@@ -18522,45 +18215,6 @@
       "tags": [
         "environment",
         "gova_agent_stale_lock_ms",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_DIRECT_AGENT_DIR",
-      "kind": "environment-key",
-      "name": "GOVA_DIRECT_AGENT_DIR",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_direct_agent_dir",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_DIRECT_SERVICE_WORKSPACE",
-      "kind": "environment-key",
-      "name": "GOVA_DIRECT_SERVICE_WORKSPACE",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_direct_service_workspace",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_HOST_ID",
-      "kind": "environment-key",
-      "name": "GOVA_HOST_ID",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_host_id",
         "server",
         "server tooling environment",
         "tooling"
@@ -21880,22 +21534,6 @@
       ]
     },
     {
-      "id": "external-dependency:werift",
-      "kind": "external-dependency",
-      "name": "werift",
-      "summary": "Declared dependency range observed: 0.24.4",
-      "tags": [
-        "0.24.4",
-        "24",
-        "dependency",
-        "external",
-        "external dependency npm package",
-        "npm",
-        "package",
-        "werift"
-      ]
-    },
-    {
       "id": "external-dependency:zod",
       "kind": "external-dependency",
       "name": "zod",
@@ -22847,13 +22485,11 @@
       "kind": "package",
       "name": "@asol/local-agent-core",
       "path": "packages/local-agent-core",
-      "summary": "local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./direct, ./host, ./monitor",
+      "summary": "local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./host, ./monitor",
       "tags": [
         ".",
-        "./direct",
         "./host",
         "./monitor",
-        "/direct",
         "/host",
         "/monitor",
         "@asol/local-agent-core",
@@ -27351,17 +26987,6 @@
       ]
     },
     {
-      "id": "script:scripts/install-local-agent-direct-service.ts",
-      "kind": "script",
-      "name": "install-local-agent-direct-service.ts",
-      "path": "scripts/install-local-agent-direct-service.ts",
-      "tags": [
-        "scripts/install-local-agent-direct-service",
-        "scripts/install-local-agent-direct-service.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "script:scripts/load-release-env.ts",
       "kind": "script",
       "name": "load-release-env.ts",
@@ -27391,50 +27016,6 @@
       "tags": [
         "scripts/local-agent-coordination",
         "scripts/local-agent-coordination.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-device-discovery.ts",
-      "kind": "script",
-      "name": "local-agent-device-discovery.ts",
-      "path": "scripts/local-agent-device-discovery.ts",
-      "tags": [
-        "scripts/local-agent-device-discovery",
-        "scripts/local-agent-device-discovery.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-direct-bootstrap.ts",
-      "kind": "script",
-      "name": "local-agent-direct-bootstrap.ts",
-      "path": "scripts/local-agent-direct-bootstrap.ts",
-      "tags": [
-        "scripts/local-agent-direct-bootstrap",
-        "scripts/local-agent-direct-bootstrap.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-direct-cli.ts",
-      "kind": "script",
-      "name": "local-agent-direct-cli.ts",
-      "path": "scripts/local-agent-direct-cli.ts",
-      "tags": [
-        "scripts/local-agent-direct-cli",
-        "scripts/local-agent-direct-cli.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-direct-daemon.ts",
-      "kind": "script",
-      "name": "local-agent-direct-daemon.ts",
-      "path": "scripts/local-agent-direct-daemon.ts",
-      "tags": [
-        "scripts/local-agent-direct-daemon",
-        "scripts/local-agent-direct-daemon.ts",
         "ts"
       ]
     },
@@ -33189,215 +32770,6 @@
       ]
     },
     {
-      "id": "source:packages/local-agent-core/src/direct/authorization.ts",
-      "kind": "source",
-      "name": "authorization.ts",
-      "path": "packages/local-agent-core/src/direct/authorization.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/authorization",
-        "packages/local-agent-core/src/direct/authorization.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/bootstrap-watcher.ts",
-      "kind": "source",
-      "name": "bootstrap-watcher.ts",
-      "path": "packages/local-agent-core/src/direct/bootstrap-watcher.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/bootstrap-watcher",
-        "packages/local-agent-core/src/direct/bootstrap-watcher.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/bootstrap.ts",
-      "kind": "source",
-      "name": "bootstrap.ts",
-      "path": "packages/local-agent-core/src/direct/bootstrap.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/bootstrap",
-        "packages/local-agent-core/src/direct/bootstrap.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/candidates.ts",
-      "kind": "source",
-      "name": "candidates.ts",
-      "path": "packages/local-agent-core/src/direct/candidates.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/candidates",
-        "packages/local-agent-core/src/direct/candidates.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/capabilities.ts",
-      "kind": "source",
-      "name": "capabilities.ts",
-      "path": "packages/local-agent-core/src/direct/capabilities.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/capabilities",
-        "packages/local-agent-core/src/direct/capabilities.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/client.ts",
-      "kind": "source",
-      "name": "client.ts",
-      "path": "packages/local-agent-core/src/direct/client.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/client",
-        "packages/local-agent-core/src/direct/client.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/crypto.ts",
-      "kind": "source",
-      "name": "crypto.ts",
-      "path": "packages/local-agent-core/src/direct/crypto.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/crypto",
-        "packages/local-agent-core/src/direct/crypto.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/discovery.ts",
-      "kind": "source",
-      "name": "discovery.ts",
-      "path": "packages/local-agent-core/src/direct/discovery.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/discovery",
-        "packages/local-agent-core/src/direct/discovery.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/errors.ts",
-      "kind": "source",
-      "name": "errors.ts",
-      "path": "packages/local-agent-core/src/direct/errors.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/errors",
-        "packages/local-agent-core/src/direct/errors.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/execution.ts",
-      "kind": "source",
-      "name": "execution.ts",
-      "path": "packages/local-agent-core/src/direct/execution.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/execution",
-        "packages/local-agent-core/src/direct/execution.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/index.ts",
-      "kind": "source",
-      "name": "index.ts",
-      "path": "packages/local-agent-core/src/direct/index.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/index",
-        "packages/local-agent-core/src/direct/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/paths.ts",
-      "kind": "source",
-      "name": "paths.ts",
-      "path": "packages/local-agent-core/src/direct/paths.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/paths",
-        "packages/local-agent-core/src/direct/paths.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/protocol.ts",
-      "kind": "source",
-      "name": "protocol.ts",
-      "path": "packages/local-agent-core/src/direct/protocol.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/protocol",
-        "packages/local-agent-core/src/direct/protocol.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/replay-cache.ts",
-      "kind": "source",
-      "name": "replay-cache.ts",
-      "path": "packages/local-agent-core/src/direct/replay-cache.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/replay-cache",
-        "packages/local-agent-core/src/direct/replay-cache.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/runtime.ts",
-      "kind": "source",
-      "name": "runtime.ts",
-      "path": "packages/local-agent-core/src/direct/runtime.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/runtime",
-        "packages/local-agent-core/src/direct/runtime.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/session.ts",
-      "kind": "source",
-      "name": "session.ts",
-      "path": "packages/local-agent-core/src/direct/session.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/session",
-        "packages/local-agent-core/src/direct/session.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/transport-types.ts",
-      "kind": "source",
-      "name": "transport-types.ts",
-      "path": "packages/local-agent-core/src/direct/transport-types.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/transport-types",
-        "packages/local-agent-core/src/direct/transport-types.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/transport.ts",
-      "kind": "source",
-      "name": "transport.ts",
-      "path": "packages/local-agent-core/src/direct/transport.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/transport",
-        "packages/local-agent-core/src/direct/transport.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/direct/webrtc-tunnel.ts",
-      "kind": "source",
-      "name": "webrtc-tunnel.ts",
-      "path": "packages/local-agent-core/src/direct/webrtc-tunnel.ts",
-      "tags": [
-        "packages/local-agent-core/src/direct/webrtc-tunnel",
-        "packages/local-agent-core/src/direct/webrtc-tunnel.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/local-agent-core/src/git.ts",
       "kind": "source",
       "name": "git.ts",
@@ -33416,17 +32788,6 @@
       "tags": [
         "packages/local-agent-core/src/github-api",
         "packages/local-agent-core/src/github-api.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/host-discovery.ts",
-      "kind": "source",
-      "name": "host-discovery.ts",
-      "path": "packages/local-agent-core/src/host-discovery.ts",
-      "tags": [
-        "packages/local-agent-core/src/host-discovery",
-        "packages/local-agent-core/src/host-discovery.ts",
         "ts"
       ]
     },
@@ -53697,54 +53058,6 @@
       "tags": [
         "packages/hero-slider-core/src/tests/index",
         "packages/hero-slider-core/src/tests/index.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:packages/local-agent-core/src/tests/direct-runtime.test.ts",
-      "kind": "test",
-      "name": "direct-runtime.test.ts",
-      "path": "packages/local-agent-core/src/tests/direct-runtime.test.ts",
-      "tags": [
-        "packages/local-agent-core/src/tests/direct-runtime",
-        "packages/local-agent-core/src/tests/direct-runtime.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:packages/local-agent-core/src/tests/direct-transport.test.ts",
-      "kind": "test",
-      "name": "direct-transport.test.ts",
-      "path": "packages/local-agent-core/src/tests/direct-transport.test.ts",
-      "tags": [
-        "packages/local-agent-core/src/tests/direct-transport",
-        "packages/local-agent-core/src/tests/direct-transport.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:packages/local-agent-core/src/tests/direct-webrtc.test.ts",
-      "kind": "test",
-      "name": "direct-webrtc.test.ts",
-      "path": "packages/local-agent-core/src/tests/direct-webrtc.test.ts",
-      "tags": [
-        "packages/local-agent-core/src/tests/direct-webrtc",
-        "packages/local-agent-core/src/tests/direct-webrtc.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:packages/local-agent-core/src/tests/direct.test.ts",
-      "kind": "test",
-      "name": "direct.test.ts",
-      "path": "packages/local-agent-core/src/tests/direct.test.ts",
-      "tags": [
-        "packages/local-agent-core/src/tests/direct",
-        "packages/local-agent-core/src/tests/direct.test.ts",
         "test",
         "ts"
       ]

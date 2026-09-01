@@ -512,32 +512,6 @@ The current server state was verified on 2026-08-31:
 
 Therefore the refusal shims are not an active restriction for authenticated full-host-control jobs. If the machine-local policy is changed later, `local-agent:doctor`/host-tool state must be checked again rather than assuming the current state.
 
-## Host Discovery
-
-Gova no longer depends on the removed `p2p-link` companion-repository relationship. Companion-repository inventory/restore, peer-sync code, and the old P2P sync command are not part of the current Local Runner contract.
-
-Current host discovery is implemented directly inside Gova:
-
-```bash
-npm run local-agent:device:discover
-```
-
-The command builds a short-lived discovery document from the local host, optionally publishes it to the existing OTA R2 storage surface, and can expose the same document through a password-protected HTTP listener.
-
-Key contract:
-
-- default port `48731`;
-- password from `ASOL_DEVICE_DISCOVERY_PORT_PASSWORD`;
-- port override through `ASOL_DEVICE_DISCOVERY_PORT`;
-- R2 key override through `ASOL_DEVICE_DISCOVERY_R2_KEY`;
-- default object `host-discovery/<hostname>.json`;
-- discovery expiry after 10 minutes;
-- published data includes host/runtime/network facts and URL candidates, never the password value;
-- `--dry-run` performs no R2 write and opens no listener;
-- `--publish-only` writes R2 and exits;
-- normal mode listens on `0.0.0.0:<port>` and requires the configured password.
-
-This is a Gova-owned host-discovery facility, not a dependency on an external P2P repository.
 
 ## Operation Logs
 

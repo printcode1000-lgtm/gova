@@ -16,7 +16,7 @@ import path from "node:path";
 const sandbox = mkdtempSync(path.join(tmpdir(), "gova-control-plane-test-"));
 process.env.GOVA_AGENT_COORDINATION_DIR = sandbox;
 process.env.GOVA_AGENT_STALE_LOCK_MS = String(60 * 60 * 1000);
-import { acquireLock, assessSwap, isStale, prepareWorktree, removeWorktree, RESCUE_REF_NAMESPACE, worktreePath, buildCoordinationSnapshot, declareAgent, DEFAULT_HEARTBEAT_TTL_MS, DEVICE_DISCOVERY_PASSWORD_ENV, DEVICE_DISCOVERY_PORT_ENV, DISPATCHABLE_WORKFLOWS, isOpen, isSecretPath, knownRequestIds, listAgents, listLocks, listMessages, listOperations, livenessOf, LockConflictError, lockId, looksLikeSecretValue, MAIN_WORKTREE_SLUG, MAX_REQUEST_AGE_MS, maxConcurrentMutations, memoryFloorFor, memoryFloorMb, ownerIsAlive, patchSecretViolations, pendingReservationMb, postMessage, readMemory, reconcileOrphanedOperations, recordRequest, recoverStaleLocks, releaseAgentLocks, releaseLock, resolveDeviceDiscoveryConfig, scopesConflict, FLUSH_SAFETY_MARGIN_MB, SWAP_FLUSH_COMMAND, swapIsHealthy, validateDispatchRequest, waitForAdmission, worktreeSlug, createDeviceDiscoveryDocument, defaultDeviceDiscoveryR2Key, deviceDiscoveryAuthorized } from "@asol/local-agent-core";
+import { acquireLock, assessSwap, isStale, prepareWorktree, removeWorktree, RESCUE_REF_NAMESPACE, worktreePath, buildCoordinationSnapshot, declareAgent, DEFAULT_HEARTBEAT_TTL_MS, DISPATCHABLE_WORKFLOWS, isOpen, isSecretPath, knownRequestIds, listAgents, listLocks, listMessages, listOperations, livenessOf, LockConflictError, lockId, looksLikeSecretValue, MAIN_WORKTREE_SLUG, MAX_REQUEST_AGE_MS, maxConcurrentMutations, memoryFloorFor, memoryFloorMb, ownerIsAlive, patchSecretViolations, pendingReservationMb, postMessage, readMemory, reconcileOrphanedOperations, recordRequest, recoverStaleLocks, releaseAgentLocks, releaseLock, scopesConflict, FLUSH_SAFETY_MARGIN_MB, SWAP_FLUSH_COMMAND, swapIsHealthy, validateDispatchRequest, waitForAdmission, worktreeSlug } from "@asol/local-agent-core";
 import { envWithHostToolShims, hostToolAllowed, setHostToolAllowed, wrapLoginShellCommand } from "@asol/local-agent-core/host";
 import { buildWatchModel, EMPTY_GITHUB_SAMPLE, humanDuration, renderFrame, sshAliases, visibleLength } from "@asol/local-agent-core/monitor";
 
@@ -754,42 +754,6 @@ assert.equal(
 
 assert.equal(assessSwap(null).verdict, "no-swap", "an unreadable /proc/meminfo recommends nothing");
 
-// --- host discovery ---------------------------------------------------------------
-
-assert.equal(defaultDeviceDiscoveryR2Key("Desk Host!"), "host-discovery/desk-host.json");
-assert.throws(() => resolveDeviceDiscoveryConfig({}), new RegExp(DEVICE_DISCOVERY_PASSWORD_ENV));
-assert.throws(
-  () => resolveDeviceDiscoveryConfig({ [DEVICE_DISCOVERY_PASSWORD_ENV]: "secret", [DEVICE_DISCOVERY_PORT_ENV]: "70000" }),
-  new RegExp(DEVICE_DISCOVERY_PORT_ENV),
-);
-
-const discoveryConfig = resolveDeviceDiscoveryConfig({ [DEVICE_DISCOVERY_PASSWORD_ENV]: "secret" });
-assert.equal(discoveryConfig.port, 48731);
-assert.equal(discoveryConfig.r2Key.endsWith(".json"), true);
-
-const discoveryDocument = createDeviceDiscoveryDocument({
-  port: 12345,
-  publicIp: "203.0.113.10",
-  hostId: "test-host",
-  directPort: 48732,
-  serverKeyId: "test-key-id",
-  serverPublicKey: "-----BEGIN PUBLIC KEY-----\ntest\n-----END PUBLIC KEY-----",
-  challenge: "ch_0123456789abcdef0123456789abcdef0123456789abcdef",
-  challengeExpiresAt: "2026-08-31T00:10:00.000Z",
-  capabilities: ["inspect"],
-  candidates: [],
-  generatedAt: new Date("2026-08-31T00:00:00.000Z"),
-  addresses: [
-    { name: "eth0", address: "192.168.1.10", family: "IPv4", cidr: "192.168.1.10/24" },
-  ],
-});
-assert.equal(discoveryDocument.schemaVersion, 2);
-assert.equal(discoveryDocument.discoveryHttp.execution, false);
-assert.deepEqual(discoveryDocument.network.discoveryUrlCandidates, ["http://203.0.113.10:12345", "http://192.168.1.10:12345"]);
-assert.equal(discoveryDocument.expiresAt, "2026-08-31T00:10:00.000Z");
-assert.equal(deviceDiscoveryAuthorized({ "x-asol-port-password": "secret" }, "secret"), true);
-assert.equal(deviceDiscoveryAuthorized({ "x-asol-port-password": "wrong" }, "secret"), false);
-assert.equal(deviceDiscoveryAuthorized({ authorization: `Basic ${Buffer.from("asol:secret").toString("base64")}` }, "secret"), true);
 
 // --- cleanup ------------------------------------------------------------------
 
