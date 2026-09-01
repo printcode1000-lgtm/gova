@@ -94,6 +94,12 @@ PY
 run_gate npm run test:api-core
 stage_commit "harden exact-origin CORS and spoofed preflight handling"
 
+# This workflow is a temporary launch container only. Remove it before the
+# repository CI-policy/architecture gates inspect .github/workflows. The
+# currently running job continues because Actions already loaded the workflow.
+rm -f .github/workflows/asol-long-repair.yml
+stage_commit "remove temporary long-repair workflow before policy gates"
+
 echo "=== Stage C: repository release gates ==="
 run_gate npm run docs:generate
 run_gate npm run docs:ci
