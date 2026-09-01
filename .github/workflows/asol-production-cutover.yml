@@ -22,16 +22,16 @@ jobs:
       group: asol-production-cutover
       cancel-in-progress: false
     env:
-      INITIAL_SHA: cf905aff947022a48213b6f940c78c5ad57bafd7
+      INITIAL_SHA: c673e2a595e8a88224dd444281058d299dbf8a67
       GH_PUSH_TOKEN: ${{ github.token }}
     steps:
-      - name: Fix duplicate env upsert and execute production transaction
+      - name: Preserve sensitive env types and execute production transaction
         shell: bash
         run: |
           set -Eeuo pipefail
           ROOT=/home/hesham/gova
           cd "$ROOT"
-          echo "=== ASOL PRODUCTION CUTOVER FINAL FIX ==="
+          echo "=== ASOL PRODUCTION CUTOVER SENSITIVE ENV FIX ==="
           echo "runner=$(hostname)"
           git fetch origin main
           [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
@@ -47,26 +47,26 @@ jobs:
           from pathlib import Path
           p=Path('packages/vercel-deploy-core/src/index.ts')
           s=p.read_text()
-          old='''  const target = ['production', 'preview', 'development'];\n  const match = existing.find((item) => item.key === key);\n\n  const response = match\n    ? await fetch(\n        withTeam(`https://api.vercel.com/v9/projects/${projectId}/env/${match.id}`, teamId),\n        {\n          method: 'PATCH',\n          headers: buildHeaders(token),\n          body: JSON.stringify({ value, target, type: 'encrypted' }),\n        },\n      )\n    : await fetch(withTeam(`https://api.vercel.com/v10/projects/${projectId}/env`, teamId), {\n        method: 'POST',\n        headers: buildHeaders(token),\n        body: JSON.stringify({ key, value, target, type: 'encrypted' }),\n      });\n\n  if (!response.ok) {\n    throw new Error(\n      `Failed to ${match ? 'update' : 'create'} ${key}: ${response.status} ${await response.text()}`,\n    );\n  }\n  return match ? 'updated' : 'created';'''
-          new='''  const target = ['production', 'preview', 'development'];\n  const matches = existing.filter((item) => item.key === key);\n\n  if (matches.length > 0) {\n    for (const match of matches) {\n      const response = await fetch(\n        withTeam(`https://api.vercel.com/v9/projects/${projectId}/env/${match.id}`, teamId),\n        {\n          method: 'PATCH',\n          headers: buildHeaders(token),\n          // Preserve each existing entry's target scope. Vercel permits the same\n          // key in separate target entries; expanding one entry to all targets\n          // collides with its siblings. PATCHing value/type only is atomic and\n          // keeps production/preview/development scopes exactly as configured.\n          body: JSON.stringify({ value, type: 'encrypted' }),\n        },\n      );\n      if (!response.ok) {\n        throw new Error(`Failed to update ${key}: ${response.status} ${await response.text()}`);\n      }\n    }\n    return 'updated';\n  }\n\n  const response = await fetch(withTeam(`https://api.vercel.com/v10/projects/${projectId}/env`, teamId), {\n    method: 'POST',\n    headers: buildHeaders(token),\n    body: JSON.stringify({ key, value, target, type: 'encrypted' }),\n  });\n  if (!response.ok) {\n    throw new Error(`Failed to create ${key}: ${response.status} ${await response.text()}`);\n  }\n  return 'created';'''
-          if old not in s: raise SystemExit('writeProjectEnv block not found')
-          p.write_text(s.replace(old,new,1))
+          old="body: JSON.stringify({ value, type: 'encrypted' }),"
+          new="body: JSON.stringify({ value }),"
+          if old not in s: raise SystemExit('existing env PATCH body not found')
+          s=s.replace(old,new,1)
+          s=s.replace("// keeps production/preview/development scopes exactly as configured.", "// keeps production/preview/development scopes and Sensitive/encrypted types exactly as configured.",1)
+          p.write_text(s)
 
           t=Path('packages/vercel-deploy-core/src/tests/index.test.ts')
           s=t.read_text()
-          needle="  assert(indexSource.includes('/env?limit=100'), 'D4: project env listing covers the full gova env set before upsert/cleanup');\n"
-          addition=needle+"  assert(indexSource.includes('existing.filter((item) => item.key === key)'), 'D4: duplicate same-key env entries are all updated');\n  assert(indexSource.includes(\"JSON.stringify({ value, type: 'encrypted' })\"), 'D4: existing target scopes are preserved during PATCH');\n"
-          if "existing.filter((item) => item.key === key)" not in s:
-              if needle not in s: raise SystemExit('duplicate-env test insertion point missing')
-              t.write_text(s.replace(needle,addition,1))
+          old_assert="  assert(indexSource.includes(\"JSON.stringify({ value, type: 'encrypted' })\"), 'D4: existing target scopes are preserved during PATCH');\n"
+          new_assert="  assert(indexSource.includes('body: JSON.stringify({ value })'), 'D4: existing target scopes and Sensitive/encrypted types are preserved during PATCH');\n"
+          if old_assert not in s: raise SystemExit('existing env PATCH test not found')
+          t.write_text(s.replace(old_assert,new_assert,1))
 
           d=Path('docs/07-mobile-and-release/scripts-and-workflows.md')
           s=d.read_text()
-          note='Gova env reconciliation preserves existing Vercel target scopes when the same key has separate production, preview, or development entries; it updates every matching entry without widening its targets.\n'
-          if note not in s:
-              anchor='Gova environment reconciliation requests up to 100 project environment entries before upsert and cleanup, so existing optional or legacy variables cannot be missed by the Vercel API default page size.\n'
-              if anchor not in s: raise SystemExit('docs env reconciliation note missing')
-              d.write_text(s.replace(anchor,anchor+note,1))
+          old='Gova env reconciliation preserves existing Vercel target scopes when the same key has separate production, preview, or development entries; it updates every matching entry without widening its targets.\n'
+          new='Gova env reconciliation preserves existing Vercel target scopes and variable types (including Sensitive entries) when a key already exists; it updates every matching entry by value only, without widening targets or changing type.\n'
+          if old not in s: raise SystemExit('env target docs note not found')
+          d.write_text(s.replace(old,new,1))
           PY
 
           npm run test:vercel-deploy-core
@@ -77,7 +77,7 @@ jobs:
           npm run github:ci-policy
 
           git add packages/vercel-deploy-core/src/index.ts packages/vercel-deploy-core/src/tests/index.test.ts docs/07-mobile-and-release/scripts-and-workflows.md docs/09-agent-knowledge/generated
-          git commit -m "fix: preserve Vercel env target scopes [docs-contract-change]"
+          git commit -m "fix: preserve Vercel sensitive env types [docs-contract-change]"
           RELEASE_SHA="$(git rev-parse HEAD)"
           git push "https://x-access-token:${GH_PUSH_TOKEN}@github.com/printcode1000-lgtm/gova.git" "HEAD:main"
           echo "RELEASE_CODE_SHA=$RELEASE_SHA"
