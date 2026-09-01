@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "chatgpt-docs-p2p-scan-20260901-0616",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "docs: verify no P2P references remain",
+    "verification": "none",
+    "timeout_minutes": "10",
+    "scopes": "docs",
+    "shell_command": "set -euo pipefail\npattern='p2p|peer[- ]to[- ]peer|direct[ -]?agent|direct-p2p|local-agent:direct|local-agent-direct|host[ -]?discovery|ASOL_DEVICE_DISCOVERY|GOVA_DIRECT_|48732|x25519|webrtc|ice/stun|stun/udp'\nhits=\"$(git grep -I -n -i -E \"$pattern\" -- docs || true)\"\nif [ -n \"$hits\" ]; then\n  printf '%s\\n' \"$hits\"\n  echo 'DOCS_P2P_REFERENCE_SCAN=dirty' >&2\n  exit 42\nfi\necho 'DOCS_P2P_REFERENCE_SCAN=clean'\n"
+  },
+  "createdAt": "2026-09-01T06:16:00.000Z"
+}
