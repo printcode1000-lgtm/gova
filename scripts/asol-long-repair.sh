@@ -79,28 +79,42 @@ new="""      return new NextResponse(null, {
           'Access-Control-Allow-Headers': BROWSER_REQUEST_HEADERS,
         },
       });"""
-if old in s:
-    s=s.replace(old,new)
+if old in s: s=s.replace(old,new)
 p.write_text(s)
 
 t=Path('src/core/api/tests/compatibility-boundary.test.ts')
 q=t.read_text()
 marker='''/** A preflight for a path gova still owns is not intercepted. */'''
 attack='''/** A suffix-spoofed origin must never be reflected, including on preflight. */\n{\n  const response = proxy(\n    new NextRequest("https://gova.example/api/products", {\n      method: "OPTIONS",\n      headers: { origin: "https://app.example.evil.tld" },\n    }),\n  );\n  assert.equal(response.status, 204);\n  assert.equal(response.headers.get("access-control-allow-origin"), null);\n}\n\n'''
-if attack not in q and marker in q:
-    q=q.replace(marker,attack+marker)
+if attack not in q and marker in q: q=q.replace(marker,attack+marker)
 t.write_text(q)
 PY
 run_gate npm run test:api-core
 stage_commit "harden exact-origin CORS and spoofed preflight handling"
 
-# This workflow is a temporary launch container only. Remove it before the
-# repository CI-policy/architecture gates inspect .github/workflows. The
-# currently running job continues because Actions already loaded the workflow.
 rm -f .github/workflows/asol-long-repair.yml
 stage_commit "remove temporary long-repair workflow before policy gates"
 
 echo "=== Stage C: repository release gates ==="
+python3 - <<'PY'
+from pathlib import Path
+idx=Path('packages/vercel-deploy-core/src/index.ts')
+s=idx.read_text()
+needle="export * from './release-rollback';\n"
+line="export { deleteProjectEnv } from './project-env';\n"
+if line not in s:
+    if needle not in s:
+        raise SystemExit('vercel-deploy-core root export insertion point missing')
+    s=s.replace(needle, needle+line)
+idx.write_text(s)
+
+p=Path('scripts/push-vercel-turso-env.ts')
+s=p.read_text()
+s=s.replace("  findProject,\n  listProjectEnv,\n  writeProjectEnv,\n} from '@asol/vercel-deploy-core';\nimport { deleteProjectEnv } from '@asol/vercel-deploy-core/project-env';",
+            "  deleteProjectEnv,\n  findProject,\n  listProjectEnv,\n  writeProjectEnv,\n} from '@asol/vercel-deploy-core';")
+p.write_text(s)
+PY
+run_gate npm run architecture:docs
 run_gate npm run docs:generate
 run_gate npm run docs:ci
 run_gate npm run runtime:check
@@ -111,7 +125,7 @@ run_gate npm run typecheck
 run_gate npm run lint
 run_gate npm run validate:error-logging
 run_gate npm run github:ci-policy
-stage_commit "refresh generated artifacts after security hardening"
+stage_commit "close Vercel env package door and refresh architecture artifacts"
 
 echo "=== Stage D: control and deployment tooling ==="
 run_gate npm run test:local-agent-core
@@ -126,6 +140,7 @@ stage_commit "complete control and deployment-tool gates"
 echo "=== Stage E: full repository verification ==="
 run_gate npm run verify:all
 run_gate npm test
+run_gate npm run architecture:docs
 run_gate npm run docs:generate
 run_gate npm run docs:ci
 run_gate npm run architecture:check
@@ -142,14 +157,8 @@ elif npm run | grep -q 'gova:artifact'; then
 fi
 
 echo "=== Stage G: independent adversarial checks ==="
-if grep -Fq 'origin.startsWith(entry)' src/proxy.ts; then
-  echo "CORS prefix bypass still present" >&2
-  exit 73
-fi
-if grep -Fq 'preflightFor(request' src/proxy.ts; then
-  echo "gova preflight still delegates to origin-reflecting helper" >&2
-  exit 74
-fi
+if grep -Fq 'origin.startsWith(entry)' src/proxy.ts; then echo "CORS prefix bypass still present" >&2; exit 73; fi
+if grep -Fq 'preflightFor(request' src/proxy.ts; then echo "gova preflight still delegates to origin-reflecting helper" >&2; exit 74; fi
 run_gate env \
   ASOL_CORS_ORIGINS=https://trusted.example \
   NEXT_PUBLIC_ASOL_CONTROL_URL=https://control.example \
