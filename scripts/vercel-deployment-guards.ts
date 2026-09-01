@@ -80,6 +80,30 @@ const SECRET_FAMILIES: readonly { family: string; test: (name: string) => boolea
   { family: 'store publishing', test: (name) => /^GOOGLE_PLAY_|^APP_STORE_CONNECT_/.test(name) },
 ];
 
+/**
+ * Names the build platform injects, which are not this runtime's secrets.
+ *
+ * A Vercel build container sets its own `VERCEL_*` and `AWS_*` variables — the
+ * builder's endpoints, region, execution environment, OIDC token. They match the
+ * `deployment credential` and `object storage` families by name, so the report
+ * listed 125 of them on a gova project whose environment holds eleven public
+ * origins and nothing else.
+ *
+ * That is the failure this report exists to prevent, inverted: a signal nobody
+ * can read is a signal nobody will act on, and one real leaked credential in a
+ * list of 125 platform names is invisible. The exclusions are exact names and
+ * narrow prefixes owned by the platform, never a family-wide exemption.
+ */
+const PLATFORM_INJECTED_ENV = [
+  /^VERCEL_(API_|BUILD|DEPLOYMENT_ID$|ENV$|GIT_|OIDC_TOKEN$|REGION$|SKEW_|TARGET_ENV$|URL$|BRANCH_URL$|PROJECT_PRODUCTION_URL$|AUTOMATION_BYPASS_SECRET$)/,
+  /^AWS_(EXECUTION_ENV|LAMBDA_|REGION|DEFAULT_REGION|ACCESS_KEY_ID|SECRET_ACCESS_KEY|SESSION_TOKEN|XRAY_)/,
+];
+
+/** Whether the build platform, not this project, put the name in the environment. */
+export function isPlatformInjectedEnvName(name: string): boolean {
+  return PLATFORM_INJECTED_ENV.some((pattern) => pattern.test(name));
+}
+
 export interface ForeignEnvFinding {
   name: string;
   family: string;
@@ -103,6 +127,7 @@ export function foreignRuntimeEnvNames(
 
   for (const name of Object.keys(env).sort()) {
     if (own.has(name)) continue;
+    if (isPlatformInjectedEnvName(name)) continue;
     const family = SECRET_FAMILIES.find((entry) => entry.test(name))?.family;
     if (!family) continue;
     const declaredBy = Object.entries(ACCOUNT_DECLARATIONS)
