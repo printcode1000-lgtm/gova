@@ -61,7 +61,8 @@ export async function runStoreProductionTruthTests(): Promise<void> {
     () =>
       resolveOtaNativeCompatibilityLine({
         declaration: declaration(true, true),
-        credentialsReady: { android: true, ios: false },
+        readers: { android: async () => "1.2.0" },
+        credentialsReady: { ios: false },
       }),
     (error: unknown) =>
       error instanceof PlatformTruthError &&
@@ -137,7 +138,8 @@ export async function runStoreProductionTruthTests(): Promise<void> {
   try {
     await resolveOtaNativeCompatibilityLine({
       declaration: declaration(true, true),
-      credentialsReady: { android: true, ios: false },
+      readers: { android: async () => "1.2.0" },
+      credentialsReady: { ios: false },
     });
     uploaded = true;
   } catch {
