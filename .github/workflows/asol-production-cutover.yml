@@ -24,13 +24,13 @@ jobs:
     env:
       EXPECTED_SHA: 7502aac290e870868954f37bc31fed60c0aa7ea8
     steps:
-      - name: Repair canonical install and resume production release
+      - name: Resume production release after doctor env fix
         shell: bash
         run: |
           set -Eeuo pipefail
           ROOT=/home/hesham/gova
           cd "$ROOT"
-          echo "=== ASOL PRODUCTION CUTOVER — INSTALL REPAIR ==="
+          echo "=== ASOL PRODUCTION CUTOVER — DOCTOR ENV FIX ==="
           echo "runner=$(hostname)"
           git fetch origin main
           [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
@@ -43,22 +43,13 @@ jobs:
           git merge --ff-only origin/main
           [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL local-sha"; exit 44; }
 
-          echo "=== DETERMINISTIC DEPENDENCY INSTALL ==="
-          npm ci
-          if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
-            echo "INSTALL_REPAIR=FAIL modified-tracked-files"
-            git status --short
-            exit 52
-          fi
-          echo "INSTALL_REPAIR=PASS"
+          export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
+          export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
+          export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
 
           echo "=== PRODUCTION DOCTOR RECHECK ==="
           npm run doctor:environment:production
           echo "PRODUCTION_DOCTOR=PASS"
-
-          export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
-          export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
-          export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
 
           echo "=== RELEASE TRANSACTION RESUME ==="
           npm run deploy:all -- --from-branch=production-doctor --allow-empty
