@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "asol-stage2-complete-20260901-0844",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "createdAt": "2026-09-01T08:43:00Z",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "verify ASOL stage 2 repair branch only",
+    "verification": "none",
+    "timeout_minutes": "55",
+    "scopes": "",
+    "shell_command": "set -euo pipefail\nroot=/home/hesham/gova\nbranch=agent-request/chatgpt\nrequest=.agent-control/requests/asol-stage2-complete-20260901-0844.json\ntmp=$(mktemp -d /tmp/asol-stage2-XXXXXX)\ncleanup() { git -C \"$root\" worktree remove --force \"$tmp\" >/dev/null 2>&1 || rm -rf \"$tmp\"; }\ntrap cleanup EXIT\ngit -C \"$root\" fetch origin \"$branch\"\nremote_sha=$(git -C \"$root\" rev-parse \"origin/$branch\")\ngit -C \"$root\" worktree add --detach \"$tmp\" \"$remote_sha\"\nif [ ! -e \"$tmp/node_modules\" ]; then ln -s \"$root/node_modules\" \"$tmp/node_modules\"; fi\ncd \"$tmp\"\nrm -f \"$request\"\necho STAGE2_BASE_SHA=$remote_sha\nnpm run services:sync\nnpm run docs:generate\nnpm run docs:ci\nnpm run runtime:check\nnpm run architecture:check\nnpm run test:notifications\nnpm run test:ota-core\nnpm run typecheck\nnpm run lint\nnpm run validate:error-logging\nnpm run github:ci-policy\ngit add -u\ngit add docs/09-agent-knowledge/generated 2>/dev/null || true\nif ! git diff --cached --quiet; then\n  git config user.name gova-local-agent\n  git config user.email gova-local-agent@users.noreply.github.com\n  git commit -m \"fix: complete ASOL stage 2 generated gates\"\n  git push origin HEAD:\"$branch\"\nfi\necho STAGE2_FINAL_SHA=$(git rev-parse HEAD)\necho ASOL_STAGE2=PASS\n"
+  }
+}
