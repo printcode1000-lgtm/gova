@@ -255,7 +255,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:profiles-module` | `Tooling` | 1 |  | 0 |
 | `npm run test:r2-storage` | `Tooling` | 1 |  | 0 |
 | `npm run test:registration-success-flow` | `Tooling` | 1 |  | 0 |
-| `npm run test:release-commands` | `Tooling` | 1 |  | 2 |
+| `npm run test:release-commands` | `Tooling` | 2 |  | 2 |
 | `npm run test:release-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:runtime-compatibility` | `Tooling` | 2 |  | 0 |
 | `npm run test:runtime-context` | `Tooling` | 2 |  | 0 |

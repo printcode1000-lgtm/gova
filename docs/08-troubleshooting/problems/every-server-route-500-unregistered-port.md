@@ -82,6 +82,7 @@ repository started a server and asked it a question.
 | `smoke:production` | after `build` | five routes on the main app, each crossing a different composition root |
 | `smoke:services` | after `services:build` | one route per isolated account that reaches **that account's own data** |
 | `control:smoke` | after `control:build` | control's auth boundary **and** one route that reaches control's own shard |
+| `architecture:check` | every run | that every `services/<account>` has a composition root, that the root registers the data-core runtime port, and that the service's own sources import it |
 
 Health is deliberately not the probe: the fault leaves health green.
 
@@ -165,6 +166,13 @@ the first caller in the repository to ask control a question that touches data.
 calls it once per server instance. The six workloads import their composition
 from each route; control has one composition and many routes, so it registers
 from instrumentation instead.
+
+A third gate was blind in a way worth naming: the isolated-deployment backend
+contract skipped any composition root that did not register the port at all —
+"a root that reaches no repository has nothing to pin". A root with an empty
+body reaches no repository, so `control` passed it. It now requires every
+deployed account to have a root, to register, and to be imported by the
+service's own sources; a root nothing imports never runs.
 
 **The gate lesson, generalized:** an authorization refusal is evidence that the
 identity seam is wired, and evidence of nothing else. Any runtime whose smoke

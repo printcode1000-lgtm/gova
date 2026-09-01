@@ -193,7 +193,7 @@
     "ota:publish": "npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts",
     "ota:revoke": "npx tsx scripts/ensure-release-command-secrets.ts ota-storage ota-signing && npx tsx packages/ota-core/scripts/ota-revoke.ts",
     "ota:check": "npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts --dry-run",
-    "test:release-commands": "cross-env NODE_ENV=development NODE_OPTIONS=--conditions=react-server npx tsx src/features/release-commands/tests/release-commands.test.ts",
+    "test:release-commands": "cross-env NODE_ENV=development NODE_OPTIONS=--conditions=react-server npx tsx src/features/release-commands/tests/release-commands.test.ts && npx tsx src/features/release-commands/tests/production-deploy-callback.test.ts",
     "test:console-command-parity": "npx tsx src/features/release-commands/tests/console-command-parity.test.ts",
     "test:deploy-runbook-execution": "npx tsx scripts/architecture/deploy-runbook-execution.test.ts",
     "ota:status": "npx tsx scripts/ensure-release-command-secrets.ts ota-storage && npx tsx packages/ota-core/scripts/ota-status.ts",

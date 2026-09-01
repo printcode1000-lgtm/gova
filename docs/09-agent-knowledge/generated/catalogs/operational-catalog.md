@@ -269,7 +269,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:profiles-module` | `npx tsx src/features/profile/tests/profiles-service-module-contract.test.ts` |
 | `npm run test:r2-storage` | `npx tsx packages/storage-core/scripts/validate-topology.ts` |
 | `npm run test:registration-success-flow` | `npx tsx src/features/auth/tests/registration-success-flow.test.ts` |
-| `npm run test:release-commands` | `cross-env NODE_ENV=<redacted> NODE_OPTIONS=<redacted> npx tsx src/features/release-commands/tests/release-commands.test.ts` |
+| `npm run test:release-commands` | `cross-env NODE_ENV=<redacted> NODE_OPTIONS=<redacted> npx tsx src/features/release-commands/tests/release-commands.test.ts && npx tsx src/features/release-commands/tests/production-deploy-callback.test.ts` |
 | `npm run test:release-core` | `npx tsx packages/release-core/src/tests/index.test.ts` |
 | `npm run test:runtime-compatibility` | `npx tsx scripts/tests/runtime-compatibility-reference.test.ts && npx tsx scripts/tests/runtime-compatibility-policy.test.ts` |
 | `npm run test:runtime-context` | `npx tsx scripts/test-runtime-context.ts && npx tsx packages/data-core/src/core/database-runtime-policy.test.ts` |

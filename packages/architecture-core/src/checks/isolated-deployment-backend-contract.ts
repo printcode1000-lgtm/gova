@@ -67,8 +67,86 @@ function checkStubNamesItsOwnService(): void {
   }
 }
 
+/**
+ * Every deployed account registers the port, and something calls its root.
+ *
+ * The pin check below only looked at roots that already registered, so a
+ * composition root with an empty body was skipped entirely — it had nothing to
+ * pin, so it passed. `control` shipped exactly that way: `registerControlServerPorts`
+ * was an empty function, nothing imported it, and every control route that
+ * reached a shard answered 500 while the deployment reported READY and every
+ * gate stayed green.
+ *
+ * Registering is not enough either. A root that registers at module scope only
+ * runs when something imports it, so the service must reach its composition
+ * from its own sources — through `instrumentation.ts` or from its routes.
+ *
+ * `docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md`
+ * records both halves of that outage.
+ */
+function checkDeployedAccountRegistersItsPorts(): void {
+  const servicesDir = join(ROOT, 'services');
+  if (!existsSync(servicesDir)) return;
+
+  for (const service of readdirSync(servicesDir)) {
+    const serviceSrc = join(servicesDir, service, 'src');
+    if (!existsSync(serviceSrc)) continue;
+
+    const folder = `${service}-composition`;
+    const entry = join(ROOT, 'packages', folder, 'src', 'index.ts');
+    if (!existsSync(entry)) {
+      addViolation(
+        'Isolated Deployment Backend',
+        join('services', service),
+        `services/${service} has no composition root at packages/${folder}.`,
+        'Every deployed account is a composition root: it must register the ports its routes use.',
+      );
+      continue;
+    }
+
+    if (!readFileSync(entry, 'utf8').includes(`${REGISTRAR}(`)) {
+      addViolation(
+        'Isolated Deployment Backend',
+        entry,
+        `${folder} never registers the data-core runtime port.`,
+        `Call ${REGISTRAR}({ ${PIN}: true }). Without it every route in services/${service} that reaches a shard answers 500 while /api/health stays 200.`,
+      );
+      continue;
+    }
+
+    if (!serviceReachesItsComposition(serviceSrc, folder)) {
+      addViolation(
+        'Isolated Deployment Backend',
+        join('services', service, 'src'),
+        `services/${service} never imports @asol/${folder}.`,
+        'A composition root that nothing imports never runs. Import it from the service\'s instrumentation.ts or from its routes.',
+      );
+    }
+  }
+}
+
+/** Whether any file under the service's own sources imports its composition. */
+function serviceReachesItsComposition(serviceSrc: string, folder: string): boolean {
+  const needle = `@asol/${folder}`;
+  const stack = [serviceSrc];
+  while (stack.length > 0) {
+    const current = stack.pop()!;
+    for (const item of readdirSync(current, { withFileTypes: true })) {
+      const full = join(current, item.name);
+      if (item.isDirectory()) {
+        stack.push(full);
+        continue;
+      }
+      if (!/\.tsx?$/.test(item.name)) continue;
+      if (readFileSync(full, 'utf8').includes(needle)) return true;
+    }
+  }
+  return false;
+}
+
 export function checkIsolatedDeploymentBackendContract(): void {
   checkStubNamesItsOwnService();
+  checkDeployedAccountRegistersItsPorts();
 
   for (const folder of isolatedCompositionFolders()) {
     const entry = join(ROOT, 'packages', folder, 'src', 'index.ts');
@@ -76,7 +154,8 @@ export function checkIsolatedDeploymentBackendContract(): void {
 
     const content = readFileSync(entry, 'utf8');
     // Only the roots that register the port are in scope. A composition package
-    // that reaches no repository has nothing to pin.
+    // that reaches no repository has nothing to pin. Whether a *deployed*
+    // account is allowed to reach nothing is checked above.
     if (!content.includes(`${REGISTRAR}(`)) continue;
     if (content.includes(PIN)) continue;
 

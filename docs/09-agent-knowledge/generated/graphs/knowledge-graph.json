@@ -55157,6 +55157,18 @@
       ]
     },
     {
+      "id": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "kind": "test",
+      "name": "production-deploy-callback.test.ts",
+      "path": "src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "tags": [
+        "src/features/release-commands/tests/production-deploy-callback",
+        "src/features/release-commands/tests/production-deploy-callback.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/release-commands/tests/release-commands.test.ts",
       "kind": "test",
       "name": "release-commands.test.ts",
@@ -59003,6 +59015,11 @@
       "from": "command:test:registration-success-flow",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:release-commands",
+      "to": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "kind": "invokes"
     },
     {
       "from": "command:test:release-commands",
@@ -96004,6 +96021,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/release-commands/tests/release-commands.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -105803,6 +105826,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/release-commands/tests/console-command-parity.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -246299,6 +246328,41 @@
     {
       "from": "test:src/features/release-commands/tests/console-command-parity.test.ts",
       "to": "package:@asol/release-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "to": "feature:release-commands",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
+      "to": "feature:release-commands",
       "kind": "tests"
     },
     {
