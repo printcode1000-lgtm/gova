@@ -7,13 +7,12 @@ import {
   ownedMethodsForPath,
   resolveRouteOwner,
 } from '@asol/account-bridge/routes';
-import { BROWSER_REQUEST_HEADERS, preflightFor } from '@asol/service-runtime-core';
+import { BROWSER_REQUEST_HEADERS } from '@asol/service-runtime-core';
 
 function isOriginAllowed(origin: string | null): boolean {
   if (!origin) return false;
   const allowed = getCorsOrigins();
-  if (allowed.includes('*')) return true;
-  return allowed.some((entry) => entry === origin || origin.startsWith(entry));
+  return allowed.includes('*') || allowed.includes(origin);
 }
 
 /**
@@ -26,19 +25,19 @@ function isOriginAllowed(origin: string | null): boolean {
  * overrides the `headers()` entry in `next.config.ts` for `/api/*`; that entry reads the same
  * constant.
  */
-
-function corsHeaders(origin: string | null): HeadersInit {
+function corsHeaders(origin: string | null): Record<string, string> {
   const headers: Record<string, string> = {
     'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': BROWSER_REQUEST_HEADERS,
     'Access-Control-Max-Age': '86400',
   };
 
-  if (origin && isOriginAllowed(origin)) {
+  const allowed = getCorsOrigins();
+  if (allowed.includes('*')) {
+    headers['Access-Control-Allow-Origin'] = '*';
+  } else if (origin && isOriginAllowed(origin)) {
     headers['Access-Control-Allow-Origin'] = origin;
     headers['Vary'] = 'Origin';
-  } else if (getCorsOrigins().includes('*')) {
-    headers['Access-Control-Allow-Origin'] = '*';
   }
 
   return headers;
@@ -59,14 +58,15 @@ export function proxy(request: NextRequest) {
       const allowedMethods = methods.includes('GET')
         ? [...new Set([...methods, 'HEAD', 'OPTIONS'])]
         : [...new Set([...methods, 'OPTIONS'])];
-      const response = preflightFor(request, {
-        methods: allowedMethods.join(', '),
-        headers: BROWSER_REQUEST_HEADERS,
+      return new NextResponse(null, {
+        status: 204,
+        headers: {
+          ...headers,
+          'Access-Control-Allow-Methods': allowedMethods.join(', '),
+          'Access-Control-Allow-Headers': BROWSER_REQUEST_HEADERS,
+          'Access-Control-Max-Age': '86400',
+        },
       });
-      for (const [key, value] of Object.entries(headers)) {
-        response.headers.set(key, value);
-      }
-      return response;
     }
     return new NextResponse(null, { status: 204, headers });
   }
