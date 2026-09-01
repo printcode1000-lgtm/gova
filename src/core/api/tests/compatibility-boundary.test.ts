@@ -17,8 +17,8 @@ delete process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL;
 
 import { config, proxy } from "@/proxy";
 
-function run(method: string, url: string): Response {
-  return proxy(new NextRequest(url, { method }));
+function run(method: string, url: string, headers?: HeadersInit): Response {
+  return proxy(new NextRequest(url, { method, headers }));
 }
 
 /** A control-owned route reaches control, method and body preserved by 307. */
@@ -72,6 +72,24 @@ for (const route of ["/api/health", "/api/dev/anything"]) {
   assert.equal(response.status, 502);
 }
 
+/** Exact allow-list entries are accepted on normal compatibility redirects. */
+{
+  const response = run("GET", "https://gova.example/api/products", {
+    origin: "https://app.example",
+  });
+  assert.equal(response.headers.get("access-control-allow-origin"), "https://app.example");
+  assert.equal(response.headers.get("vary"), "Origin");
+}
+
+/** An attacker-controlled host that merely starts with an allowed origin is rejected. */
+{
+  const response = run("GET", "https://gova.example/api/products", {
+    origin: "https://app.example.evil.tld",
+  });
+  assert.equal(response.status, 307);
+  assert.equal(response.headers.get("access-control-allow-origin"), null);
+}
+
 /**
  * gova answers the preflight itself: a browser never follows a redirect on one,
  * so a redirected preflight means the real request is never sent at all.
@@ -91,6 +109,36 @@ for (const route of ["/api/health", "/api/dev/anything"]) {
     assert.ok(methods.includes(method), `preflight omits ${method}`);
   }
   assert.match(response.headers.get("access-control-allow-headers") ?? "", /X-Asol-Session-Token/);
+}
+
+/** A malicious prefix origin is not reflected by the preflight path either. */
+{
+  const response = run("OPTIONS", "https://gova.example/api/products", {
+    origin: "https://app.example.evil.tld",
+  });
+  assert.equal(response.status, 204);
+  assert.equal(response.headers.get("access-control-allow-origin"), null);
+}
+
+/** Wildcard mode is explicit and returns `*` rather than reflecting arbitrary input. */
+{
+  const original = process.env.ASOL_CORS_ORIGINS;
+  process.env.ASOL_CORS_ORIGINS = "*";
+  try {
+    const response = run("GET", "https://gova.example/api/products", {
+      origin: "https://random.example",
+    });
+    assert.equal(response.headers.get("access-control-allow-origin"), "*");
+    assert.equal(response.headers.get("vary"), null);
+  } finally {
+    process.env.ASOL_CORS_ORIGINS = original;
+  }
+}
+
+/** Exact-origin mode does not invent CORS permission for requests without Origin. */
+{
+  const response = run("GET", "https://gova.example/api/products");
+  assert.equal(response.headers.get("access-control-allow-origin"), null);
 }
 
 /** A preflight for a path gova still owns is not intercepted. */
@@ -122,4 +170,4 @@ assert.deepEqual(config.matcher, "/api/:path*");
   assert.doesNotMatch(source, /DATABASE|TOKEN|SECRET|PASSWORD/);
 }
 
-console.log("  ✔ gova compatibility boundary: 307 by owner, no fallback, no capability.");
+console.log("  ✔ gova compatibility boundary: 307 by owner, exact CORS, no fallback, no capability.");
