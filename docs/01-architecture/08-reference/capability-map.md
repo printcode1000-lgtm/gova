@@ -333,7 +333,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking |
 | **Owner Package** | `@asol/local-agent-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/local-agent-core` · `@asol/local-agent-core/direct` · `@asol/local-agent-core/host` · `@asol/local-agent-core/monitor` |
+| **Public Gateway** | `@asol/local-agent-core` · `@asol/local-agent-core/host` · `@asol/local-agent-core/monitor` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | none (pure logic or ports) |

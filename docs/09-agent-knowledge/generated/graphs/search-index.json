@@ -6336,7 +6336,6 @@
         "@asol/hero-slider-core",
         "@asol/hero-slider-core/server",
         "@asol/local-agent-core",
-        "@asol/local-agent-core/direct",
         "@asol/local-agent-core/host",
         "@asol/local-agent-core/monitor",
         "@asol/map-core",

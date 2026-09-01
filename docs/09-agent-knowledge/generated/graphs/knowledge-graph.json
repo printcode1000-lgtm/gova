@@ -6336,7 +6336,6 @@
         "@asol/hero-slider-core",
         "@asol/hero-slider-core/server",
         "@asol/local-agent-core",
-        "@asol/local-agent-core/direct",
         "@asol/local-agent-core/host",
         "@asol/local-agent-core/monitor",
         "@asol/map-core",
@@ -64526,12 +64525,6 @@
       "to": "package:@asol/local-agent-core",
       "kind": "references",
       "detail": "@asol/local-agent-core"
-    },
-    {
-      "from": "document:docs/01-architecture/08-reference/capability-map.md",
-      "to": "package:@asol/local-agent-core",
-      "kind": "references",
-      "detail": "@asol/local-agent-core/direct"
     },
     {
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
