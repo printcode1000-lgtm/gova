@@ -13,37 +13,34 @@ defaults:
     working-directory: /home/hesham/gova
 
 jobs:
-  diagnose:
+  static-build-diagnostic:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 15
+    timeout-minutes: 120
     concurrency:
       group: asol-production-cutover
       cancel-in-progress: false
     steps:
-      - name: Read durable deploy state
+      - name: Reproduce only static build
         shell: bash
         run: |
           set -Eeuo pipefail
           cd /home/hesham/gova
-          echo "=== CUTOVER DURABLE STATE ==="
-          echo "runner=$(hostname)"
           git fetch origin main
-          echo "branch=$(git branch --show-current)"
-          echo "head=$(git rev-parse HEAD)"
-          echo "origin_main=$(git rev-parse origin/main)"
-          echo "--- git status ---"
-          git status --short
-          echo "--- run-state ---"
-          if [[ -f .deploy-all/run-state.json ]]; then cat .deploy-all/run-state.json; else echo MISSING; fi
-          echo "--- branch checkpoints (status only) ---"
-          if [[ -f .deploy-all/branch-checkpoints.json ]]; then
-            node - <<'NODE'
-          const fs=require('fs');
-          const p='.deploy-all/branch-checkpoints.json';
-          const d=JSON.parse(fs.readFileSync(p,'utf8'));
-          console.log(JSON.stringify({runId:d.runId,checkpoints:(d.checkpoints||[]).map(x=>({branchId:x.branchId,phase:x.phase,status:x.status,errorSummary:x.errorSummary,finishedAt:x.finishedAt,revision:x.revision}))},null,2));
-          NODE
-          else echo MISSING; fi
-          echo "--- in-flight ---"
-          if [[ -f .deploy-all/in-flight.lock ]]; then cat .deploy-all/in-flight.lock; else echo NONE; fi
-          echo "CUTOVER_DIAGNOSTIC_COMPLETE=PASS"
+          [[ "$(git branch --show-current)" == "main" ]]
+          [[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]]
+          python3 - <<'PY'
+          import re, subprocess, sys
+          out=subprocess.check_output(['git','status','--porcelain','--untracked-files=normal'],text=True)
+          paths=[line[3:] for line in out.splitlines() if line.strip()]
+          allowed=re.compile(r'^public/sync_data/(?:[a-z0-9-]+-)?schema-sync-report\.json$')
+          unexpected=[p for p in paths if not allowed.match(p)]
+          if unexpected:
+              print('STATIC_DIAGNOSTIC=FAIL unexpected-dirty-files')
+              print('\n'.join(unexpected)); sys.exit(41)
+          if paths: subprocess.run(['git','restore','--worktree','--',*paths],check=True)
+          PY
+          export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
+          export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
+          export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
+          npm run build:static
+          echo "STATIC_BUILD_DIAGNOSTIC=PASS"
