@@ -2,141 +2,48 @@ name: ASOL Production Cutover
 
 on:
   push:
-    branches:
-      - "agent-request/chatgpt"
-    paths:
-      - ".github/workflows/asol-production-cutover.yml"
+    branches: ["agent-request/chatgpt"]
+    paths: [".github/workflows/asol-production-cutover.yml"]
 
 permissions:
-  contents: write
+  contents: read
 
 defaults:
   run:
     working-directory: /home/hesham/gova
 
 jobs:
-  cutover:
+  diagnose:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 330
+    timeout-minutes: 15
     concurrency:
       group: asol-production-cutover
       cancel-in-progress: false
-    env:
-      EXPECTED_SHA: 7502aac290e870868954f37bc31fed60c0aa7ea8
-      GH_PUSH_TOKEN: ${{ github.token }}
     steps:
-      - name: Align built-server smoke with owner redirects and finish cutover
+      - name: Read durable deploy state
         shell: bash
         run: |
           set -Eeuo pipefail
-          ROOT=/home/hesham/gova
-          cd "$ROOT"
-          echo "=== ASOL PRODUCTION CUTOVER — REDIRECT SMOKE FIX ==="
+          cd /home/hesham/gova
+          echo "=== CUTOVER DURABLE STATE ==="
           echo "runner=$(hostname)"
           git fetch origin main
-          [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
-          [[ "$(git rev-parse origin/main)" == "$EXPECTED_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL unexpected-main"; exit 43; }
-          git merge --ff-only origin/main
-          [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL local-sha"; exit 44; }
-          rm -rf .tmp-gova-build
-
-          python3 - <<'PY'
-          import re, subprocess, sys
-          out = subprocess.check_output(['git','status','--porcelain','--untracked-files=normal'], text=True)
-          paths = [line[3:] for line in out.splitlines() if line.strip()]
-          schema_report = re.compile(r'^public/sync_data/(?:[a-z0-9-]+-)?schema-sync-report\.json$')
-          allowed_code = {'next.config.ts', 'scripts/check-production-smoke.ts'}
-          unexpected = [p for p in paths if p not in allowed_code and not schema_report.match(p)]
-          if unexpected:
-              print('PRODUCTION_PREFLIGHT=FAIL unexpected-dirty-files')
-              for p in unexpected: print(p)
-              sys.exit(41)
-          reports = [p for p in paths if schema_report.match(p)]
-          if reports:
-              subprocess.run(['git','restore','--worktree','--',*reports], check=True)
-              print(f'RESTORED_GENERATED_SCHEMA_REPORTS={len(reports)}')
-          PY
-
-          export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
-          export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
-          export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
-
-          python3 - <<'PY'
-          from pathlib import Path
-
-          cfg = Path('next.config.ts')
-          cfg_text = cfg.read_text()
-          old_cfg = "const basePath = process.env.ASOL_BASE_PATH?.replace(/\\/$/, '') || (isGithubActions ? repositoryName : '');"
-          new_cfg = "const basePath = process.env.ASOL_BASE_PATH?.replace(/\\/$/, '') || (isGithubActions && isStatic ? repositoryName : '');"
-          if old_cfg in cfg_text:
-              cfg.write_text(cfg_text.replace(old_cfg, new_cfg, 1))
-          elif new_cfg not in cfg_text:
-              raise SystemExit('server basePath fix is neither applied nor patchable')
-
-          p = Path('scripts/check-production-smoke.ts')
-          s = p.read_text()
-          # Apply the isolated-port fix idempotently if the previous failed run did not leave it in place.
-          if 'const PORT = Number(process.env.ASOL_SMOKE_PORT ?? 3210);' in s:
-              s = s.replace('import path from "node:path";\n', 'import path from "node:path";\nimport { createServer } from "node:net";\n', 1)
-              s = s.replace('const PORT = Number(process.env.ASOL_SMOKE_PORT ?? 3210);\nconst BASE = `http://127.0.0.1:${PORT}`;\n', '', 1)
-              old = '''function startServer(): ChildProcess {\n  const next = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");\n  return spawn(process.execPath, [next, "start", "-p", String(PORT)], {\n'''
-              new = '''async function resolveSmokePort(): Promise<number> {\n  const raw = process.env.ASOL_SMOKE_PORT;\n  const requested = raw === undefined ? 0 : Number(raw);\n  if (!Number.isInteger(requested) || requested < 0 || requested > 65535) {\n    throw new Error(`Invalid ASOL_SMOKE_PORT: ${raw}`);\n  }\n\n  return await new Promise<number>((resolve, reject) => {\n    const probe = createServer();\n    probe.once("error", (error) => {\n      reject(new Error(raw === undefined\n        ? `Unable to reserve an isolated smoke port: ${error.message}`\n        : `ASOL_SMOKE_PORT ${raw} is unavailable: ${error.message}`));\n    });\n    probe.listen({ host: "127.0.0.1", port: requested, exclusive: true }, () => {\n      const address = probe.address();\n      if (!address || typeof address === "string") {\n        probe.close();\n        reject(new Error("Unable to resolve the reserved smoke port."));\n        return;\n      }\n      const selected = address.port;\n      probe.close((error) => (error ? reject(error) : resolve(selected)));\n    });\n  });\n}\n\nfunction startServer(port: number): ChildProcess {\n  const next = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");\n  return spawn(process.execPath, [next, "start", "-p", String(port)], {\n'''
-              if old not in s: raise SystemExit('startServer block not found')
-              s = s.replace(old, new, 1)
-              s = s.replace('async function waitForReady(server: ChildProcess, log: string[]): Promise<void> {', 'async function waitForReady(server: ChildProcess, log: string[], base: string): Promise<void> {', 1)
-              s = s.replace('const response = await fetch(`${BASE}/api/health`, {', 'const response = await fetch(`${base}/api/health`, {', 1)
-              s = s.replace('  const log: string[] = [];\n  const server = startServer();\n', '  const port = await resolveSmokePort();\n  const base = `http://127.0.0.1:${port}`;\n  console.log(`[smoke] reserved isolated port ${port}`);\n  const log: string[] = [];\n  const server = startServer(port);\n', 1)
-              s = s.replace('    await waitForReady(server, log);', '    await waitForReady(server, log, base);', 1)
-              s = s.replace('const response = await fetch(`${BASE}${route.path}`, {', 'const response = await fetch(`${base}${route.path}`, {', 1)
-
-          replacements = [
-              ('proves: "data-core runtime config + profile shard routing",\n    accept: [200, 400, 404],', 'proves: "the compatibility boundary redirects profile reads to the profiles owner",\n    accept: [307],'),
-              ('proves: "notifications-core server config + notifications shard",\n    accept: [200, 400, 403, 404],', 'proves: "the compatibility boundary redirects notification reads to the notifications owner",\n    accept: [307],'),
-              ('proves: "product capability through its own data source",\n    accept: [200, 400],', 'proves: "the compatibility boundary redirects product reads to the products owner",\n    accept: [307],'),
-              ('proves: "system-logs-core port and observability wiring",\n    accept: [200, 401, 403],', 'proves: "the compatibility boundary redirects administrative logs to the control owner",\n    accept: [307],'),
-          ]
-          for old, new in replacements:
-              if old in s:
-                  s = s.replace(old, new, 1)
-              elif new not in s:
-                  raise SystemExit(f'smoke route contract not patchable: {old[:40]}')
-
-          route_fetch = '''const response = await fetch(`${base}${route.path}`, {\n          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),\n        });'''
-          manual_fetch = '''const response = await fetch(`${base}${route.path}`, {\n          redirect: "manual",\n          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),\n        });'''
-          if route_fetch in s:
-              s = s.replace(route_fetch, manual_fetch, 1)
-          elif manual_fetch not in s:
-              raise SystemExit('route fetch redirect mode not patchable')
-
-          old_comment = '/** Codes that mean the handler ran. 401/403/404 are answers, not failures. */'
-          new_comment = '/** Codes that prove the built boundary behaved as intended. Business routes must redirect without being followed. */'
-          s = s.replace(old_comment, new_comment, 1)
-          p.write_text(s)
-          PY
-
-          echo "=== FOCUSED REDIRECT SMOKE VERIFICATION ==="
-          npm run typecheck
-          npm run smoke:production
-          echo "BUILT_COMPATIBILITY_SMOKE=PASS"
-
-          npm run docs:generate
-          rm -rf .tmp-gova-build
-          npm run architecture:check
-
-          git add next.config.ts scripts/check-production-smoke.ts docs/09-agent-knowledge/generated
-          git commit -m "fix: align server smoke with owner redirects"
-          RELEASE_SHA="$(git rev-parse HEAD)"
-          git push "https://x-access-token:${GH_PUSH_TOKEN}@github.com/printcode1000-lgtm/gova.git" "HEAD:main"
-          echo "SMOKE_FIX_RELEASE_SHA=$RELEASE_SHA"
-
-          echo "=== RELEASE TRANSACTION RESUME FROM SMOKE ==="
-          npm run deploy:all -- --from-branch=smoke --allow-empty
-          echo "DEPLOY_ALL=PASS"
-
-          echo "=== LIVE RELEASE VERIFICATION ==="
-          npm run release:check
-          npm run smoke:deployed
-          npm run smoke:production
-          echo "PRODUCTION_VERIFICATION=PASS"
-          echo "PRODUCTION_RELEASE_SHA=$(git rev-parse HEAD)"
-          echo "ASOL_PRODUCTION_COMPLETE=PASS"
+          echo "branch=$(git branch --show-current)"
+          echo "head=$(git rev-parse HEAD)"
+          echo "origin_main=$(git rev-parse origin/main)"
+          echo "--- git status ---"
+          git status --short
+          echo "--- run-state ---"
+          if [[ -f .deploy-all/run-state.json ]]; then cat .deploy-all/run-state.json; else echo MISSING; fi
+          echo "--- branch checkpoints (status only) ---"
+          if [[ -f .deploy-all/branch-checkpoints.json ]]; then
+            node - <<'NODE'
+          const fs=require('fs');
+          const p='.deploy-all/branch-checkpoints.json';
+          const d=JSON.parse(fs.readFileSync(p,'utf8'));
+          console.log(JSON.stringify({runId:d.runId,checkpoints:(d.checkpoints||[]).map(x=>({branchId:x.branchId,phase:x.phase,status:x.status,errorSummary:x.errorSummary,finishedAt:x.finishedAt,revision:x.revision}))},null,2));
+          NODE
+          else echo MISSING; fi
+          echo "--- in-flight ---"
+          if [[ -f .deploy-all/in-flight.lock ]]; then cat .deploy-all/in-flight.lock; else echo NONE; fi
+          echo "CUTOVER_DIAGNOSTIC_COMPLETE=PASS"
