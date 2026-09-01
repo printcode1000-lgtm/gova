@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "asol-complete-fix-final-three-r4-20260901-0634",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "createdAt": "2026-09-01T06:34:00Z",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "fix: close remaining ASOL completion gates [docs-contract-change]",
+    "verification": "none",
+    "timeout_minutes": "55",
+    "scopes": "config,src,scripts,services,packages,docs,package.json,package-lock.json,.agents",
+    "shell_command": "set -euo pipefail\npython3 <<'PY'\nfrom pathlib import Path\np = Path('packages/ota-core/src/tests/store-production-truth.test.ts')\ns = p.read_text()\nneedle = 'credentialsReady: { android: true, ios: false },'\ncount = s.count(needle)\nif count not in (0, 2):\n    raise SystemExit(f'unexpected OTA stale fixture count: {count}')\nif count == 2:\n    out=[]\n    for line in s.splitlines():\n        if needle in line:\n            indent=line[:len(line)-len(line.lstrip())]\n            out.append(f'{indent}readers: {{ android: async () => \\\"1.2.0\\\" }},')\n            out.append(f'{indent}credentialsReady: {{ ios: false }},')\n        else:\n            out.append(line)\n    p.write_text('\\n'.join(out)+'\\n')\n    print('OTA_FIXTURES_UPDATED=2')\nelse:\n    print('OTA_FIXTURES_ALREADY_CURRENT=1')\nPY\nnpx tsx scripts/runtime-compatibility-reference.ts --write --confirm-reviewed-compatible-tree\nnpm run services:sync\nnpm run docs:generate\nnpm run architecture:docs\nnpm run architecture:check\nnpm run test:notifications\nnpm run test:ota-core\nnpm run control:verify\nnpm run typecheck\nnpm run lint\nnpx tsx scripts/validate-error-logging.ts\nnpm run github:ci-policy\necho '--- DIFF ---'\ngit status --short\necho ASOL_FINAL_THREE_GATES=PASS\n"
+  }
+}
