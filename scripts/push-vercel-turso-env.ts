@@ -2,11 +2,11 @@ import { existsSync } from 'node:fs';
 import dotenv from 'dotenv';
 import { GOVA_DECLARATION } from '@asol/account-declarations';
 import {
+  deleteProjectEnv,
   findProject,
   listProjectEnv,
   writeProjectEnv,
 } from '@asol/vercel-deploy-core';
-import { deleteProjectEnv } from '@asol/vercel-deploy-core/project-env';
 
 if (existsSync('.env.local')) dotenv.config({ path: '.env.local' });
 dotenv.config({ path: '.env' });

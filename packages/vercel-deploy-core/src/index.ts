@@ -14,6 +14,7 @@ export * from '@asol/account-declarations';
 export * from './vercel-deployment-monitor';
 export * from './release-state';
 export * from './release-rollback';
+export { deleteProjectEnv } from './project-env';
 
 export interface VercelHeaders {
   Authorization: string;

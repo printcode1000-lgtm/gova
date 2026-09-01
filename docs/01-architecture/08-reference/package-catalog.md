@@ -630,7 +630,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/vercel-deploy-core/` |
 | **Purpose** | Vercel deployment orchestration |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./github-push-identity` · `./release-rollback` · `./release-state` · `./remote-deploy-contracts` · `./remote-deploy-sandbox` |
+| **Public Exports** | `.` · `./github-push-identity` · `./project-env` · `./release-rollback` · `./release-state` · `./remote-deploy-contracts` · `./remote-deploy-sandbox` |
 | **Infrastructure Privileges** | `@vercel/sandbox`, `jose` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:vercel-deploy-core` |

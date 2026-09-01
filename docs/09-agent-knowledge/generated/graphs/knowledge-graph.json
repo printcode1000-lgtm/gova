@@ -6392,6 +6392,7 @@
         "@asol/trending-ribbon-core/server",
         "@asol/vercel-deploy-core",
         "@asol/vercel-deploy-core/github-push-identity",
+        "@asol/vercel-deploy-core/project-env",
         "@asol/vercel-deploy-core/release-rollback",
         "@asol/vercel-deploy-core/release-state",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
@@ -65019,6 +65020,12 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "references",
       "detail": "@asol/vercel-deploy-core/github-push-identity"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "references",
+      "detail": "@asol/vercel-deploy-core/project-env"
     },
     {
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
@@ -135440,12 +135447,6 @@
     },
     {
       "from": "script:scripts/push-vercel-turso-env.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/project-env"
-    },
-    {
-      "from": "script:scripts/push-vercel-turso-env.ts",
       "to": "environment-key:VERCEL_ACCESS_TOKEN",
       "kind": "uses-environment"
     },
@@ -175535,6 +175536,12 @@
       "to": "package:@asol/account-declarations",
       "kind": "imports",
       "detail": "@asol/account-declarations"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/index.ts",
+      "to": "source:packages/vercel-deploy-core/src/project-env.ts",
+      "kind": "imports",
+      "detail": "./project-env"
     },
     {
       "from": "source:packages/vercel-deploy-core/src/index.ts",

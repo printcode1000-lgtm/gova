@@ -6392,6 +6392,7 @@
         "@asol/trending-ribbon-core/server",
         "@asol/vercel-deploy-core",
         "@asol/vercel-deploy-core/github-push-identity",
+        "@asol/vercel-deploy-core/project-env",
         "@asol/vercel-deploy-core/release-rollback",
         "@asol/vercel-deploy-core/release-state",
         "@asol/vercel-deploy-core/remote-deploy-contracts",

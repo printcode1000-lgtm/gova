@@ -801,7 +801,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Vercel deployment orchestration |
 | **Owner Package** | `@asol/vercel-deploy-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/vercel-deploy-core` · `@asol/vercel-deploy-core/github-push-identity` · `@asol/vercel-deploy-core/release-rollback` · `@asol/vercel-deploy-core/release-state` · `@asol/vercel-deploy-core/remote-deploy-contracts` · `@asol/vercel-deploy-core/remote-deploy-sandbox` |
+| **Public Gateway** | `@asol/vercel-deploy-core` · `@asol/vercel-deploy-core/github-push-identity` · `@asol/vercel-deploy-core/project-env` · `@asol/vercel-deploy-core/release-rollback` · `@asol/vercel-deploy-core/release-state` · `@asol/vercel-deploy-core/remote-deploy-contracts` · `@asol/vercel-deploy-core/remote-deploy-sandbox` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | `@vercel/sandbox`, `jose` |
