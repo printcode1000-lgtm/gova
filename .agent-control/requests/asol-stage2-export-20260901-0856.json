@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "asol-stage2-export-20260901-0856",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "createdAt": "2026-09-01T08:56:00Z",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "export verified ASOL stage 2 files read only",
+    "verification": "none",
+    "timeout_minutes": "5",
+    "scopes": "",
+    "shell_command": "set -euo pipefail\nroot=/home/hesham/gova\nverified=826946fc\ngit -C \"$root\" cat-file -e \"$verified^{commit}\"\necho ASOL_STAGE2_FILES_BEGIN\ngit -C \"$root\" diff-tree --no-commit-id --name-status -r \"$verified\"\necho ASOL_STAGE2_FILES_END\nwhile IFS= read -r f; do\n  case \"$f\" in .agent-control/requests/*) continue ;; esac\n  echo \"ASOL_FILE_BEGIN:$f\"\n  git -C \"$root\" show \"$verified:$f\"\n  echo \"ASOL_FILE_END:$f\"\ndone < <(git -C \"$root\" diff-tree --no-commit-id --name-only -r \"$verified\")\n"
+  }
+}
