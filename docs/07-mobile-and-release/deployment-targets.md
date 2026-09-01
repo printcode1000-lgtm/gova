@@ -18,26 +18,29 @@
 The first four share **identical application code** — only environment
 configuration changes.
 
-## Seven Vercel accounts
+## Eight Vercel runtimes
 
-Five read-only or push-only targets are not the primary GitHub-linked main
-application. Normal product traffic crosses through browser-only bridges. The
-sole server-to-server exception is the terminal production-deploy callback: it
-may POST an already signed, single-use notification grant to the notifications
-service so the super-admin result does not depend on an open browser. Two additional accounts (`submain`, `sub2main`)
-host the same full application codebase for isolated UI work and are updated
-only through their CLI deploy commands.
+`gova` is the only GitHub-linked project. It serves the frontend, static assets,
+`/.well-known/**`, `/api/health`, and the stateless compatibility redirect
+boundary — it carries no Business API implementation, no business database or
+storage execution, and no business secret. `control` is the operational control
+runtime; the six workloads stay exactly six and `control` is never one of them.
 
-| | Main app | Submain app | Sub2main app | Notifications | Products | Orders | Profiles |
-|---|---|---|---|---|---|---|---|
-| Vercel project | `gova` | `asol-submain` | `asol-sub2main` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
-| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
-| Updated by | pushing to the repository | `npm run submain:deploy` | `npm run sub2main:deploy` | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
-| Uploaded files | the repository | the repository | `services/notifications/` | `services/products/` | `services/orders/` | `services/profiles/` |
-| Serves | production primary | isolated full-app staging | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
-| Turso account | `hesham101` (+ all shards via env) | same runtime env as `gova` | same runtime env as `gova` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
+Normal product traffic crosses browser-to-owner directly. The sole
+server-to-server exception is the terminal production-deploy callback: it may
+POST an already signed, single-use notification grant to the notifications
+service so the super-admin result does not depend on an open browser.
 
-The connectors are driven by seven sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, and `@asol/profiles-composition`. See [26-cloud-accounts.md](../06-super-admin-and-operations/cloud-accounts-architecture.md), [Notification Bridge Module](../05-platform-features/notification-bridge-module.md), and [Service Bridge Module](../05-platform-features/service-bridge-module.md).
+| | Main app | Control | Submain app | Sub2main app | Notifications | Products | Orders | Profiles |
+|---|---|---|---|---|---|---|---|---|
+| Vercel project | `gova` | `asol-control` | `asol-submain` | `asol-sub2main` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
+| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
+| Updated by | pushing to the repository | `npm run control:deploy` | `npm run submain:deploy` | `npm run sub2main:deploy` | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
+| Uploaded files | the gova deployment view | `services/control/` | the repository | the repository | `services/notifications/` | `services/products/` | `services/orders/` | `services/profiles/` |
+| Serves | frontend, `/api/health`, legacy `307` redirects | Super Admin operations, System Logs, OTA administration, release/readiness | isolated full-app staging | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
+| Turso account | none | `hesham101` primary + system-ops shard | same runtime env as `gova` | same runtime env as `gova` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
+
+The connectors are driven by sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/control-composition`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, `@asol/profiles-composition`, `@asol/submain-composition`, and `@asol/sub2main-composition`. See [26-cloud-accounts.md](../06-super-admin-and-operations/cloud-accounts-architecture.md), [Notification Bridge Module](../05-platform-features/notification-bridge-module.md), and [Service Bridge Module](../05-platform-features/service-bridge-module.md).
 
 Keep the main project's GitHub connection as it is. The deploy command runs the
 CLI with `services/notifications` as its working directory, so it writes that
@@ -63,9 +66,16 @@ to omit that target or make it a requirement of the main hosted build.
 ## One-command production deployment
 
 GitHub Actions is not a correctness gate. Every direct `git push origin main`
-dispatches `deploy:revision` for the authenticated pushed SHA. It deploys the
-six isolated projects and waits for the GitHub-linked main project, then sends
-the super-admin push notification and email from the terminal callback. A docs
+dispatches `deploy:revision` for the authenticated pushed SHA. In order, it
+captures the production rollback baseline for `gova`, `control`, and the six
+workloads; deploys the six isolated projects; deploys `control` at the same SHA
+through its own mandatory step; publishes durable exact-SHA release readiness to
+the control plane; and only then waits for the GitHub-linked main project. The
+gova build is blocked on that readiness (`build:vercel` waits before it produces
+a publishable artifact), so main is never verified against unfinished backends
+and a failed release leaves the previous gova production deployment active. Any
+failure rolls back to the captured baseline automatically. The terminal callback
+then sends the super-admin push notification and email. A docs
 change additionally runs the path-filtered docs workflow. See
 [github-ci-policy.md](./github-ci-policy.md).
 Two commands still push `main` to production from a local `main` working tree:

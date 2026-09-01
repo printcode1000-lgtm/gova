@@ -83,6 +83,48 @@ assert.match(
   /Promise\.allSettled\(\[\s*deploySelectedAccounts\(/,
   "deploy:push must start all selected isolated targets and main verification together.",
 );
+/**
+ * `deploy:revision` is the GitHub-push release path. It must not race main
+ * verification against unfinished backends, it must deploy control at the same
+ * SHA, and it is the only place that may release the gova build barrier.
+ */
+const revisionStart = deployPushSource.indexOf("export async function deployExistingRevision(");
+const revisionBody = deployPushSource.slice(
+  revisionStart,
+  deployPushSource.indexOf("function failedReportDetails(", revisionStart),
+);
+assert.ok(revisionBody.length > 0, "deployExistingRevision must be readable as one block.");
+assert.doesNotMatch(
+  revisionBody,
+  /Promise\.allSettled\(\[\s*deploySelectedAccounts\([^)]*\),\s*verifyMainDeployment\(/,
+  "deploy:revision must verify main only after control and the six workloads are READY.",
+);
+assert.match(
+  revisionBody,
+  /captureReleaseRollbackBaseline\(/,
+  "deploy:revision must capture a rollback baseline before the first production mutation.",
+);
+assert.match(
+  revisionBody,
+  /deployControlRuntime\(/,
+  "deploy:revision must deploy control at the same SHA through its own step.",
+);
+assert.match(
+  revisionBody,
+  /publishReleaseReadiness\(/,
+  "deploy:revision must publish exact-SHA readiness so the gova build can publish.",
+);
+assert.match(
+  revisionBody,
+  /rollbackReleaseBaseline\(/,
+  "A failed deploy:revision must roll back automatically instead of pausing.",
+);
+assert.ok(
+  revisionBody.indexOf("publishReleaseReadiness(") <
+    revisionBody.indexOf("await verifyMainDeployment("),
+  "Readiness must be published before main verification waits for the gova deployment.",
+);
+
 for (const entry of ["debug.log", "notes.tmp", "src/__probe__.ts", "scratchpad/out.txt"]) {
   assert.ok(
     SCRATCH_FILE_PATTERNS.some((pattern) => pattern.test(entry)),

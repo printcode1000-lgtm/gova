@@ -44,7 +44,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_CONTROL_SMOKE_PORT` | server/tooling | 1 | `scripts/smoke-control-service.ts` |
 | `ASOL_CORS_ORIGINS` | server/tooling | 4 | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts`, `src/core/config/cors-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `ASOL_DATA_SOURCE` | server/tooling | 2 | `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
-| `ASOL_DEPLOY_CALLBACK_SECRET` | server/tooling | 2 | `scripts/deploy-all.ts`, `scripts/run-remote-deploy-all.mjs` |
+| `ASOL_DEPLOY_CALLBACK_SECRET` | server/tooling | 2 | `scripts/release-readiness-publish.ts`, `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_DEPLOY_CALLBACK_URL` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_DEPLOY_REPOSITORY_URL` | server/tooling | 2 | `scripts/push-production-deploy-env.ts`, `services/control/src/app/api/health/route.ts` |
 | `ASOL_DEPLOY_REVISION_AT_START` | server/tooling | 1 | `scripts/deploy-all.ts` |
@@ -176,7 +176,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | 3 | `npm run build:static:local`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_APP_STORE_URL` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_BASE_PATH` | client-visible | 1 | `src/core/config/public-env.ts` |
-| `NEXT_PUBLIC_ASOL_CONTROL_URL` | client-visible | 4 | `scripts/deploy-all.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
+| `NEXT_PUBLIC_ASOL_CONTROL_URL` | client-visible | 4 | `scripts/release-readiness-publish.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_MODE` | client-visible | 3 | `src/core/config/public-env.ts`, `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `NEXT_PUBLIC_ASOL_NATIVE_VERSION` | client-visible | 1 | `src/core/config/public-env.ts` |

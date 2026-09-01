@@ -234,11 +234,12 @@
       },
       "devDependencies": {
         "@types/node": "24.13.3",
+        "@types/nodemailer": "8.0.1",
         "@types/react": "19.2.18",
         "@types/react-dom": "19.2.5",
         "typescript": "5.9.3"
       },
-      "lockDigest": "7c84afa3a61c532a3d079e6625f4ef299c1d31a3747a6e5dd275c05551337ac0"
+      "lockDigest": "693b52b913622e7ef38c5846b7ecfb23b5d125d24c0ba027d10a6afbf9ea77f0"
     },
     "notifications": {
       "packageManager": "npm@11.19.0",
@@ -266,7 +267,7 @@
         "@types/web-push": "3.6.4",
         "typescript": "5.9.3"
       },
-      "lockDigest": "e3c0526a2f4b5b5b1cbdee0dccb3e2d0deb72cd9429a306dadf6baa5e6574013"
+      "lockDigest": "c6bd39cdfc27003be10e30e9289cb4348d39410907172cb187ce085f8a3f06a6"
     },
     "orders": {
       "packageManager": "npm@11.19.0",
@@ -292,7 +293,7 @@
         "@types/react-dom": "19.2.5",
         "typescript": "5.9.3"
       },
-      "lockDigest": "4d580ff6b13744fe40511f323a74ed28044537dd7cdab81813f4b759920e6b6c"
+      "lockDigest": "c17a0a1949539b8a1ca401cd902566cf508a7e0fc0524d6b60eb064f63478b29"
     },
     "products": {
       "packageManager": "npm@11.19.0",
@@ -320,7 +321,7 @@
         "@types/react-dom": "19.2.5",
         "typescript": "5.9.3"
       },
-      "lockDigest": "2e70e688930392276eeef20fc7a5250229b02015a12bf81ee16730670879f331"
+      "lockDigest": "5fc50d6ad48a4bc4c12f862c6d3712e770d5fb9095545d142f26bf98eb1b56b7"
     },
     "profiles": {
       "packageManager": "npm@11.19.0",
@@ -348,7 +349,7 @@
         "@types/react-dom": "19.2.5",
         "typescript": "5.9.3"
       },
-      "lockDigest": "684cc644bcfa15117b8d41b6374ad05a3ac492b10b4368e7626b713672c7bb57"
+      "lockDigest": "8a29e798e924569016d131c5bb006a965310853efc5f97da58200bdde0748048"
     },
     "sub2main": {
       "packageManager": "npm@11.19.0",
@@ -379,7 +380,7 @@
         "@types/web-push": "3.6.4",
         "typescript": "5.9.3"
       },
-      "lockDigest": "f89ffbfb7e791e97c08ab4c8796f6b634a44a59caff56bb4e2ab9b567adc846f"
+      "lockDigest": "4358db6a7663fd0da2c22866a29b1bc76f2eb57bac9ee2301361496d95d861df"
     },
     "submain": {
       "packageManager": "npm@11.19.0",
@@ -410,7 +411,7 @@
         "@types/web-push": "3.6.4",
         "typescript": "5.9.3"
       },
-      "lockDigest": "a16ec95de3605bafd025aee66cf20edbb8518b92d39cfd12bf27702438b6bd98"
+      "lockDigest": "863f2367186978b1b0cc0fe148dc53dfd8aaa2f301fdecb7d01a7f4f4f16e9d2"
     }
   },
   "tools": {

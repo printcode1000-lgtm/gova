@@ -83,6 +83,7 @@ export type { NotificationChannel } from "./domain/notifications/channel-constan
 // ── Platform defaults (Domain naming) ─────────────────────────────────────
 export {
   API_BASE_URL,
+  CONTROL_BASE_URL,
   NOTIFICATIONS_BASE_URL,
   PRODUCTS_BASE_URL,
   ORDERS_BASE_URL,

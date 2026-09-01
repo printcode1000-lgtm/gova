@@ -10,6 +10,7 @@ import {
 import path from "node:path";
 import {
   API_BASE_URL,
+  CONTROL_BASE_URL,
   NOTIFICATIONS_BASE_URL,
   ORDERS_BASE_URL,
   PRODUCTS_BASE_URL,
@@ -124,6 +125,20 @@ export function assertStaticSubmainBaseUrl(): void {
   }
   process.env.NEXT_PUBLIC_ASOL_SUBMAIN_URL = submainBaseUrl;
   console.log(`Static submain base URL: ${submainBaseUrl}`);
+}
+
+export function assertStaticControlBaseUrl(): void {
+  const controlBaseUrl =
+    process.env.NEXT_PUBLIC_ASOL_CONTROL_URL?.replace(/\/$/, "") ||
+    CONTROL_BASE_URL.replace(/\/$/, "");
+  if (!/^https?:\/\/.+/.test(controlBaseUrl)) {
+    throw new Error(
+      "A static build needs an absolute control runtime URL, but none resolved. " +
+        "Set NEXT_PUBLIC_ASOL_CONTROL_URL, or fix CONTROL_BASE_URL.",
+    );
+  }
+  process.env.NEXT_PUBLIC_ASOL_CONTROL_URL = controlBaseUrl;
+  console.log(`Static control base URL: ${controlBaseUrl}`);
 }
 
 export function assertStaticSub2mainBaseUrl(): void {

@@ -1,6 +1,7 @@
 #!/usr/bin/env tsx
 import {
   API_BASE_URL,
+  CONTROL_BASE_URL,
   NOTIFICATIONS_BASE_URL,
   ORDERS_BASE_URL,
   PRODUCTS_BASE_URL,
@@ -27,6 +28,7 @@ import {
  */
 export const ACCOUNT_ORIGIN_ENV: Readonly<Record<string, string>> = {
   main: "NEXT_PUBLIC_ASOL_API_BASE_URL",
+  control: "NEXT_PUBLIC_ASOL_CONTROL_URL",
   profiles: "NEXT_PUBLIC_ASOL_PROFILES_URL",
   products: "NEXT_PUBLIC_ASOL_PRODUCTS_URL",
   orders: "NEXT_PUBLIC_ASOL_ORDERS_URL",
@@ -38,6 +40,7 @@ export const ACCOUNT_ORIGIN_ENV: Readonly<Record<string, string>> = {
 /** Canonical production origins, declared once in `@asol/native-core`. */
 export const ACCOUNT_CANONICAL_ORIGIN: Readonly<Record<string, string>> = {
   main: API_BASE_URL,
+  control: CONTROL_BASE_URL,
   profiles: PROFILES_BASE_URL,
   products: PRODUCTS_BASE_URL,
   orders: ORDERS_BASE_URL,

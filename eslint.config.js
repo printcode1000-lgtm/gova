@@ -23,6 +23,10 @@ module.exports = [
       // The gova deployment build view is a whole copy of the repository that
       // lives only for the length of a build.
       '.tmp-gova-build/**',
+      // Service builds parked by `services:build` for `smoke:services` to reuse.
+      // These are Turbopack outputs, not source: linting them fails the gate on
+      // the bundler's own generated runtime.
+      '.deploy-all/**',
     ],
   },
   {

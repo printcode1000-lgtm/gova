@@ -55,13 +55,6 @@ import {
 import {
   type VercelDeploymentReport,
   type ProjectDeploymentBaseline,
-  type ReleaseComponentResult,
-  type ReleaseWorkload,
-  RELEASE_WORKLOADS,
-  captureProductionBaseline,
-  formatRollbackReport,
-  rollbackSucceeded,
-  rollbackToBaseline,
   waitForVercelProductionDeployment,
 } from "@asol/vercel-deploy-core";
 import {
@@ -77,8 +70,17 @@ import {
   inspectNativeCompatibility,
   resolveNativeBaseline,
 } from "@asol/ota-core/publishing";
+import {
+  classifyDocumentationPath,
+  DOCS_CONTRACT_CHANGE_MARKER,
+} from "./docs/document-mutability";
 import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
 import { loadReleaseEnvironment } from "./load-release-env";
+import { publishReleaseReadiness as publishExactShaReleaseReadiness } from "./release-readiness-publish";
+import {
+  captureReleaseRollbackBaseline,
+  rollbackReleaseBaseline,
+} from "./release-rollback-baseline";
 
 loadReleaseEnvironment();
 
@@ -964,48 +966,26 @@ function assertDeploymentCredentials(): void {
   }
 }
 
-function declarationForAccount(account: string) {
-  const declaration = ACCOUNT_DECLARATIONS[account];
-  if (!declaration) throw new Error(`Unknown deployment account "${account}".`);
-  return declaration;
-}
-
-function vercelAccessForAccount(account: string): { token: string; teamId?: string } {
-  const declaration = declarationForAccount(account);
-  const token = process.env[declaration.tokenEnvVar]?.trim();
-  if (!token) throw new Error(`${declaration.tokenEnvVar} is required for ${account}.`);
-  const teamId = declaration.teamIdEnvVar ? process.env[declaration.teamIdEnvVar]?.trim() : undefined;
-  return { token, teamId: teamId || undefined };
-}
-
 async function captureRollbackBaseline(): Promise<ProjectDeploymentBaseline[]> {
-  const accounts = ["gova", "control", ...SERVICE_PHASE_IDS] as const;
-  const baselines: ProjectDeploymentBaseline[] = [];
-  for (const account of accounts) {
-    const declaration = declarationForAccount(account);
-    baselines.push(
-      await captureProductionBaseline({
-        account,
-        project: declaration.project,
-        ...vercelAccessForAccount(account),
-      }),
-    );
-  }
-  console.log(`[deploy:all] Captured rollback baseline for ${baselines.length} runtime(s).`);
-  return baselines;
+  return captureReleaseRollbackBaseline("[deploy:all]");
 }
 
 async function rollbackCapturedBaseline(
   baselines: readonly ProjectDeploymentBaseline[],
 ): Promise<boolean> {
-  if (baselines.length === 0) {
-    console.error("[deploy:all] No rollback baseline was captured.");
-    return false;
-  }
-  console.error("[deploy:all] Rolling back to the captured production baseline...");
-  const outcomes = await rollbackToBaseline(baselines, vercelAccessForAccount);
-  console.error(formatRollbackReport(outcomes));
-  return rollbackSucceeded(outcomes);
+  return rollbackReleaseBaseline(baselines, "[deploy:all]");
+}
+
+/**
+ * The staged paths the documentation mutability registry classifies as
+ * `protected`. Read from the index, not the working tree, so it describes
+ * exactly what the deployment commit will contain.
+ */
+function stagedProtectedDocumentationPaths(): string[] {
+  const staged = git(["diff", "--cached", "--name-only"]).split(/\r?\n/).filter(Boolean);
+  return staged.filter(
+    (repoPath) => classifyDocumentationPath(repoPath)?.classification === "protected",
+  );
 }
 
 const SCRATCH_FILE_PATTERNS = [
@@ -1306,6 +1286,22 @@ async function runPublishPhase(
     () => {
       console.log(`[deploy:all] Creating deployment commit: ${mainComment}`);
       const commitArgs = ["commit", "--allow-empty", "-m", mainComment];
+      // A release that carries a protected-contract documentation change must
+      // say so in its own commit, or the documentation gate denies the very
+      // commit this command just staged. The marker is stamped from what is
+      // actually staged — never unconditionally, which would turn a blunt
+      // repository-wide authorization switch on for every deployment.
+      const protectedPaths = stagedProtectedDocumentationPaths();
+      if (protectedPaths.length > 0) {
+        console.log(
+          `[deploy:all] ${protectedPaths.length} protected documentation path(s) staged: ` +
+            `${protectedPaths.join(", ")}`,
+        );
+        commitArgs.push(
+          "-m",
+          `${DOCS_CONTRACT_CHANGE_MARKER} Protected documentation contract updated by this release: ${protectedPaths.join(", ")}.`,
+        );
+      }
       if (flags.skipPreflight) {
         commitArgs.push(
           "-m",
@@ -1444,101 +1440,22 @@ async function runControlPhase(
   return report;
 }
 
-function passedComponent(report: VercelDeploymentReport): ReleaseComponentResult {
-  if (report.state !== "READY") {
-    return {
-      status: "failed",
-      smokeStatus: "failed",
-      deploymentId: report.deploymentId,
-      url: report.url,
-      failure: report.message,
-      evidence: `${report.target} deployment was ${report.state}`,
-    };
-  }
-  return {
-    status: "passed",
-    smokeStatus: "passed",
-    deploymentId: report.deploymentId,
-    url: report.url,
-    evidence: `${report.target} deployment READY: ${report.message}`,
-  };
-}
-
-function reportByTarget(
-  reports: readonly VercelDeploymentReport[],
-  target: string,
-): VercelDeploymentReport {
-  const report = reports.find((candidate) => candidate.target === target);
-  if (!report) throw new Error(`Missing Vercel deployment report for ${target}.`);
-  if (report.state !== "READY") throw new Error(`${target} is ${report.state}: ${report.message}`);
-  return report;
-}
-
-function controlOrigin(): string {
-  const value = process.env.NEXT_PUBLIC_ASOL_CONTROL_URL?.trim().replace(/\/$/, "");
-  if (!value) throw new Error("NEXT_PUBLIC_ASOL_CONTROL_URL is required to publish release readiness.");
-  return value;
-}
-
 async function publishReleaseReadiness(
   publishContext: PublishContext,
   reports: readonly VercelDeploymentReport[],
 ): Promise<void> {
-  const callbackSecret = process.env.ASOL_DEPLOY_CALLBACK_SECRET?.trim();
-  if (!callbackSecret) throw new Error("ASOL_DEPLOY_CALLBACK_SECRET is required to publish release readiness.");
-
-  const control = passedComponent(reportByTarget(reports, "control"));
-  const workloads = Object.fromEntries(
-    RELEASE_WORKLOADS.map((workload) => [
-      workload,
-      passedComponent(reportByTarget(reports, workload)),
-    ]),
-  ) as Record<ReleaseWorkload, ReleaseComponentResult>;
-  const now = new Date().toISOString();
-  const response = await fetch(`${controlOrigin()}/api/super-admin/production-deploy/callback`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${callbackSecret}`,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      snapshot: {
-        version: 1,
-        requestId: publishContext.runId,
-        status: "succeeded",
-        stage: "complete",
-        sandboxName: "deploy-all-cli",
-        initiatedByUid: "deploy-all",
-        command: "deploy:all",
-        revision: publishContext.revision,
-        target: "all",
-        startedAt: publishContext.timestamp,
-        updatedAt: now,
-        finishedAt: now,
-        exitCode: 0,
-        emailStatus: "sent",
-        inAppNotified: true,
-      },
-      logTail: "deploy:all published durable exact-SHA readiness after control and six workload deployments.",
-      releaseStateMutation: {
-        revision: publishContext.revision,
-        runId: publishContext.runId,
-        operationId: `${publishContext.runId}:ready`,
-        source: "cli",
-        control,
-        workloads,
-        readinessEvidence: [
-          "deploy:all observed control READY",
-          ...RELEASE_WORKLOADS.map((workload) => `deploy:all observed ${workload} READY`),
-        ],
-      },
-    }),
+  await publishExactShaReleaseReadiness({
+    revision: publishContext.revision,
+    runId: publishContext.runId,
+    timestamp: publishContext.timestamp,
+    command: "deploy:all",
+    sandboxName: "deploy-all-cli",
+    initiatedByUid: "deploy-all",
+    logTail:
+      "deploy:all published durable exact-SHA readiness after control and six workload deployments.",
+    logPrefix: "[deploy:all]",
+    reports,
   });
-  if (!response.ok) {
-    throw new Error(`control readiness callback failed: HTTP ${response.status} ${await response.text()}`);
-  }
-  console.log(`[deploy:all] Durable exact-SHA release readiness published for ${publishContext.revision}.`);
 }
 
 async function runMainPhase(

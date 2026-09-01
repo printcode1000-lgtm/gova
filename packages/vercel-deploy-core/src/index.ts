@@ -1,5 +1,5 @@
 import { execFileSync } from 'child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'path';
 import type { AccountDeclaration } from '@asol/account-declarations';
 import {
@@ -96,9 +96,10 @@ export async function ensureProject(token: string, projectName: string, teamId?:
     { headers: buildHeaders(token) },
   );
   if (found.ok) {
-    const data = (await found.json()) as { id: string };
+    const data = (await found.json()) as { id: string; framework?: string | null };
     await disconnectProjectGitLink(token, data.id, teamId);
     await disableProjectGitIntegrations(token, data.id, teamId);
+    await ensureProjectFramework(token, data.id, data.framework, teamId);
     console.log(`Project exists: ${projectName} (${data.id})`);
     return data.id;
   }
@@ -195,6 +196,37 @@ export async function deleteProject(
   }
   console.log(`Project deleted: ${projectName} (${project.id})`);
   return true;
+}
+
+/**
+ * `framework: nextjs` is set when this tool creates a project, and never checked
+ * again — so a project created by hand keeps `framework: null` forever. Vercel
+ * then treats a successful `next build` as a static build, looks for a `public`
+ * directory that a service never produces, and fails the deployment after the
+ * build passed. Repairing it here makes an existing project converge on the
+ * same settings a created one gets.
+ */
+export async function ensureProjectFramework(
+  token: string,
+  projectId: string,
+  framework: string | null | undefined,
+  teamId?: string,
+): Promise<void> {
+  if (framework === 'nextjs') return;
+  const response = await fetch(
+    withTeam(`https://api.vercel.com/v9/projects/${encodeURIComponent(projectId)}`, teamId),
+    {
+      method: 'PATCH',
+      headers: buildHeaders(token),
+      body: JSON.stringify({ framework: 'nextjs' }),
+    },
+  );
+  if (!response.ok) {
+    throw new Error(
+      `Failed to set the Next.js framework preset on project ${projectId}: ${response.status} ${await response.text()}`,
+    );
+  }
+  console.log(`Framework preset set to nextjs on project ${projectId}.`);
 }
 
 export async function disconnectProjectGitLink(
@@ -381,7 +413,36 @@ function resolvePinnedVercelCli(): string {
   return path.join(path.dirname(packageJsonPath), bin);
 }
 
+/**
+ * A stale `.vercel/project.json` beats `VERCEL_PROJECT_ID`.
+ *
+ * The CLI reads the on-disk link first, so a directory linked once to another
+ * project keeps deploying there no matter what the declaration says. That is how
+ * a control release reached a project named `control` while the declaration,
+ * workflow endpoint, and production alias all named `asol-control` — the deploy
+ * reported a project the rest of the system never talks to.
+ *
+ * The link is local, gitignored state, so a mismatch is discarded rather than
+ * repaired: the CLI relinks from `VERCEL_PROJECT_ID` on the next run.
+ */
+function discardMismatchedProjectLink(serviceDir: string, projectId: string): void {
+  const linkPath = path.join(serviceDir, '.vercel', 'project.json');
+  if (!existsSync(linkPath)) return;
+  let linkedId: string | undefined;
+  try {
+    linkedId = (JSON.parse(readFileSync(linkPath, 'utf8')) as { projectId?: string }).projectId;
+  } catch {
+    linkedId = undefined;
+  }
+  if (linkedId === projectId) return;
+  console.warn(
+    `[vercel] ${linkPath} points at project ${linkedId ?? 'unknown'}, not ${projectId}. Discarding the stale link.`,
+  );
+  rmSync(path.join(serviceDir, '.vercel'), { recursive: true, force: true });
+}
+
 export function runVercel(options: RunVercelOptions): void {
+  discardMismatchedProjectLink(options.serviceDir, options.projectId);
   const command = process.execPath;
   const commandArgs = [resolvePinnedVercelCli(), ...options.args];
 

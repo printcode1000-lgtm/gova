@@ -13496,6 +13496,7 @@
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/account-bridge",
+        "@asol/control-composition",
         "@asol/data-core",
         "@asol/native-core",
         "@asol/notifications-composition",
@@ -13504,6 +13505,8 @@
         "@asol/products-composition",
         "@asol/profiles-composition",
         "@asol/service-mirror-core",
+        "@asol/sub2main-composition",
+        "@asol/submain-composition",
         "@asol/vercel-deploy-core",
         "architectural",
         "architecture",
@@ -13542,6 +13545,7 @@
         "scripts/tests/vercelignore-contract.test.ts",
         "scripts/vercel-deployment-build",
         "scripts/vercel-deployment-build.ts",
+        "services/control/",
         "services/notifications",
         "services/notifications/",
         "services/orders/",
@@ -27315,6 +27319,28 @@
       "tags": [
         "scripts/release-readiness-barrier",
         "scripts/release-readiness-barrier.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/release-readiness-publish.ts",
+      "kind": "script",
+      "name": "release-readiness-publish.ts",
+      "path": "scripts/release-readiness-publish.ts",
+      "tags": [
+        "scripts/release-readiness-publish",
+        "scripts/release-readiness-publish.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/release-rollback-baseline.ts",
+      "kind": "script",
+      "name": "release-rollback-baseline.ts",
+      "path": "scripts/release-rollback-baseline.ts",
+      "tags": [
+        "scripts/release-rollback-baseline",
+        "scripts/release-rollback-baseline.ts",
         "ts"
       ]
     },

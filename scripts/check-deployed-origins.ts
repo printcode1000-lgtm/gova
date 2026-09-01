@@ -6,7 +6,8 @@ import {
 import { loadReleaseEnvironment } from "./load-release-env";
 import {
   bodyReportsUnconfiguredPort,
-  mainDeployedSmokeProbe,
+  controlDeployedSmokeProbe,
+  mainDeployedSmokeProbes,
   SERVICE_SMOKE_PROBES,
 } from "./release-service-smoke-probes";
 
@@ -38,36 +39,39 @@ interface OriginProbe {
   readonly accept: readonly number[];
   readonly method?: "GET" | "POST";
   readonly body?: unknown;
+  readonly expectRedirectToAccount?: string;
 }
 
 const ACCOUNT_ENV = ACCOUNT_ORIGIN_ENV;
 
+function toOriginProbe(probe: {
+  readonly service: string;
+  readonly path: string;
+  readonly accept: readonly number[];
+  readonly method?: "GET" | "POST";
+  readonly body?: unknown;
+  readonly expectRedirectToAccount?: string;
+}): OriginProbe {
+  const envVar = ACCOUNT_ENV[probe.service];
+  if (!envVar) {
+    throw new Error(`No NEXT_PUBLIC_ASOL_* env mapping for service "${probe.service}".`);
+  }
+  return {
+    account: probe.service,
+    envVar,
+    path: probe.path,
+    accept: probe.accept,
+    method: probe.method,
+    body: probe.body,
+    expectRedirectToAccount: probe.expectRedirectToAccount,
+  };
+}
+
 function buildProbes(): OriginProbe[] {
-  const main = mainDeployedSmokeProbe();
-  const serviceProbes = SERVICE_SMOKE_PROBES.map((probe) => {
-    const envVar = ACCOUNT_ENV[probe.service];
-    if (!envVar) {
-      throw new Error(`No NEXT_PUBLIC_ASOL_* env mapping for service "${probe.service}".`);
-    }
-    return {
-      account: probe.service,
-      envVar,
-      path: probe.path,
-      accept: probe.accept,
-      method: probe.method,
-      body: probe.body,
-    };
-  });
   return [
-    {
-      account: main.service,
-      envVar: ACCOUNT_ENV.main,
-      path: main.path,
-      accept: main.accept,
-      method: main.method,
-      body: main.body,
-    },
-    ...serviceProbes,
+    ...mainDeployedSmokeProbes().map(toOriginProbe),
+    toOriginProbe(controlDeployedSmokeProbe()),
+    ...SERVICE_SMOKE_PROBES.map(toOriginProbe),
   ];
 }
 
@@ -89,8 +93,23 @@ async function probeOrigin(probe: OriginProbe): Promise<string | null> {
       body: probe.body === undefined ? undefined : JSON.stringify(probe.body),
       signal: AbortSignal.timeout(30_000),
       cache: "no-store",
+      // Following a redirect would prove the owner answers and say nothing
+      // about the boundary that issued it.
+      redirect: probe.expectRedirectToAccount ? "manual" : "follow",
     });
     const body = (await response.text()).slice(0, 500);
+
+    if (probe.expectRedirectToAccount) {
+      const owner = resolveDeployedOrigin(probe.expectRedirectToAccount).origin;
+      const location = response.headers.get("location") ?? "";
+      if (!location.startsWith(owner)) {
+        return (
+          `${probe.account} ${probe.method ?? "GET"} ${url}\n` +
+          `    HTTP ${response.status} location "${location}" — expected the ` +
+          `${probe.expectRedirectToAccount} origin ${owner}`
+        );
+      }
+    }
 
     if (!probe.accept.includes(response.status)) {
       return (

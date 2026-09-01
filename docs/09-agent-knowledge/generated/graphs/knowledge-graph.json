@@ -13496,6 +13496,7 @@
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/account-bridge",
+        "@asol/control-composition",
         "@asol/data-core",
         "@asol/native-core",
         "@asol/notifications-composition",
@@ -13504,6 +13505,8 @@
         "@asol/products-composition",
         "@asol/profiles-composition",
         "@asol/service-mirror-core",
+        "@asol/sub2main-composition",
+        "@asol/submain-composition",
         "@asol/vercel-deploy-core",
         "architectural",
         "architecture",
@@ -13542,6 +13545,7 @@
         "scripts/tests/vercelignore-contract.test.ts",
         "scripts/vercel-deployment-build",
         "scripts/vercel-deployment-build.ts",
+        "services/control/",
         "services/notifications",
         "services/notifications/",
         "services/orders/",
@@ -27315,6 +27319,28 @@
       "tags": [
         "scripts/release-readiness-barrier",
         "scripts/release-readiness-barrier.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/release-readiness-publish.ts",
+      "kind": "script",
+      "name": "release-readiness-publish.ts",
+      "path": "scripts/release-readiness-publish.ts",
+      "tags": [
+        "scripts/release-readiness-publish",
+        "scripts/release-readiness-publish.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/release-rollback-baseline.ts",
+      "kind": "script",
+      "name": "release-rollback-baseline.ts",
+      "path": "scripts/release-rollback-baseline.ts",
+      "tags": [
+        "scripts/release-rollback-baseline",
+        "scripts/release-rollback-baseline.ts",
         "ts"
       ]
     },
@@ -73258,6 +73284,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "to": "package:@asol/control-composition",
+      "kind": "references",
+      "detail": "@asol/control-composition"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core"
@@ -73312,6 +73344,18 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "to": "package:@asol/sub2main-composition",
+      "kind": "references",
+      "detail": "@asol/sub2main-composition"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "to": "package:@asol/submain-composition",
+      "kind": "references",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "references",
       "detail": "@asol/vercel-deploy-core"
@@ -73351,6 +73395,12 @@
       "to": "script:scripts/vercel-deployment-build.ts",
       "kind": "references",
       "detail": "scripts/vercel-deployment-build.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "to": "service:control",
+      "kind": "references",
+      "detail": "services/control/"
     },
     {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",
@@ -85428,6 +85478,18 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/release-readiness-barrier.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/release-readiness-publish.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/release-rollback-baseline.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -133970,6 +134032,12 @@
     },
     {
       "from": "script:scripts/deploy-all.ts",
+      "to": "script:scripts/docs/document-mutability.ts",
+      "kind": "imports",
+      "detail": "./docs/document-mutability"
+    },
+    {
+      "from": "script:scripts/deploy-all.ts",
       "to": "script:scripts/ensure-release-secrets-restored.ts",
       "kind": "imports",
       "detail": "./ensure-release-secrets-restored"
@@ -133982,8 +134050,15 @@
     },
     {
       "from": "script:scripts/deploy-all.ts",
-      "to": "environment-key:ASOL_DEPLOY_CALLBACK_SECRET",
-      "kind": "uses-environment"
+      "to": "script:scripts/release-readiness-publish.ts",
+      "kind": "imports",
+      "detail": "./release-readiness-publish"
+    },
+    {
+      "from": "script:scripts/deploy-all.ts",
+      "to": "script:scripts/release-rollback-baseline.ts",
+      "kind": "imports",
+      "detail": "./release-rollback-baseline"
     },
     {
       "from": "script:scripts/deploy-all.ts",
@@ -133998,11 +134073,6 @@
     {
       "from": "script:scripts/deploy-all.ts",
       "to": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
-      "kind": "uses-environment"
-    },
-    {
-      "from": "script:scripts/deploy-all.ts",
-      "to": "environment-key:NEXT_PUBLIC_ASOL_CONTROL_URL",
       "kind": "uses-environment"
     },
     {
@@ -134140,6 +134210,18 @@
       "to": "script:scripts/load-release-env.ts",
       "kind": "imports",
       "detail": "./load-release-env"
+    },
+    {
+      "from": "script:scripts/deploy-push.ts",
+      "to": "script:scripts/release-readiness-publish.ts",
+      "kind": "imports",
+      "detail": "./release-readiness-publish"
+    },
+    {
+      "from": "script:scripts/deploy-push.ts",
+      "to": "script:scripts/release-rollback-baseline.ts",
+      "kind": "imports",
+      "detail": "./release-rollback-baseline"
     },
     {
       "from": "script:scripts/deploy-push.ts",
@@ -135683,6 +135765,44 @@
       "from": "script:scripts/release-readiness-barrier.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/release-readiness-publish.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/release-readiness-publish.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/release-readiness-publish.ts",
+      "to": "environment-key:ASOL_DEPLOY_CALLBACK_SECRET",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/release-readiness-publish.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_CONTROL_URL",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/release-rollback-baseline.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/release-rollback-baseline.ts",
+      "to": "package:@asol/account-declarations",
+      "kind": "imports",
+      "detail": "@asol/account-declarations"
+    },
+    {
+      "from": "script:scripts/release-rollback-baseline.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
     },
     {
       "from": "script:scripts/release-service-smoke-probes.ts",
