@@ -3,19 +3,16 @@ name: ASOL Long Repair
 on:
   push:
     branches:
-      - agent-request/chatgpt
+      - "agent-request/chatgpt"
     paths:
-      - '.github/workflows/asol-long-repair.yml'
-      - 'src/**'
-      - 'packages/**'
-      - 'services/**'
-      - 'scripts/**'
-      - 'docs/**'
-      - 'package.json'
-      - 'package-lock.json'
+      - ".github/workflows/asol-long-repair.yml"
 
 permissions:
   contents: write
+
+defaults:
+  run:
+    working-directory: /home/hesham/gova
 
 env:
   GOVA_LOCAL_WORKSPACE: /home/hesham/gova
@@ -23,12 +20,8 @@ env:
 
 jobs:
   repair:
-    if: ${{ startsWith(github.event.head_commit.message, '[asol-long-run]') == false }}
-    runs-on: self-hosted
+    runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 330
-    concurrency:
-      group: asol-long-repair-agent-branch
-      cancel-in-progress: false
     steps:
       - name: Single long local repair session
         shell: bash
@@ -80,9 +73,7 @@ jobs:
           }
 
           echo "=== Stage A: deterministic generated state ==="
-          if [[ ! -d node_modules ]]; then
-            npm ci --ignore-scripts
-          fi
+          if [[ ! -d node_modules ]]; then npm ci --ignore-scripts; fi
           run_gate npm run services:sync
           run_gate npm run docs:generate
           stage_commit "synchronize service mirrors and generated knowledge"
@@ -110,20 +101,17 @@ jobs:
           'Access-Control-Allow-Headers': BROWSER_REQUEST_HEADERS,
         },
       });"""
-          if old in s:
-              s=s.replace(old,new)
+          if old in s: s=s.replace(old,new)
           p.write_text(s)
 
           t=Path('src/core/api/tests/compatibility-boundary.test.ts')
           q=t.read_text()
           marker='''/** A preflight for a path gova still owns is not intercepted. */'''
           attack='''/** A suffix-spoofed origin must never be reflected, including on preflight. */\n{\n  const response = proxy(\n    new NextRequest("https://gova.example/api/products", {\n      method: "OPTIONS",\n      headers: { origin: "https://app.example.evil.tld" },\n    }),\n  );\n  assert.equal(response.status, 204);\n  assert.equal(response.headers.get("access-control-allow-origin"), null);\n}\n\n'''
-          if attack not in q and marker in q:
-              q=q.replace(marker,attack+marker)
+          if attack not in q and marker in q: q=q.replace(marker,attack+marker)
           t.write_text(q)
           PY
           run_gate npm run test:api-core
-          run_gate env ASOL_CORS_ORIGINS=https://trusted.example npx tsx src/core/api/tests/compatibility-boundary.test.ts
           stage_commit "harden exact-origin CORS and spoofed preflight handling"
 
           echo "=== Stage C: repository release gates ==="
@@ -168,23 +156,13 @@ jobs:
           fi
 
           echo "=== Stage G: independent adversarial checks ==="
-          if grep -Fq 'origin.startsWith(entry)' src/proxy.ts; then
-            echo 'CORS prefix bypass still present' >&2
-            exit 73
-          fi
-          if grep -Fq 'preflightFor(request' src/proxy.ts; then
-            echo 'gova preflight still delegates to origin-reflecting helper' >&2
-            exit 74
-          fi
+          if grep -Fq 'origin.startsWith(entry)' src/proxy.ts; then exit 73; fi
+          if grep -Fq 'preflightFor(request' src/proxy.ts; then exit 74; fi
           run_gate env ASOL_CORS_ORIGINS=https://trusted.example NEXT_PUBLIC_ASOL_CONTROL_URL=https://control.example NEXT_PUBLIC_ASOL_PRODUCTS_URL=https://products.example NEXT_PUBLIC_ASOL_SUB2MAIN_URL=https://sub2main.example NEXT_PUBLIC_ASOL_SUBMAIN_URL=https://submain.example NEXT_PUBLIC_ASOL_ORDERS_URL=https://orders.example NEXT_PUBLIC_ASOL_PROFILES_URL=https://profiles.example npx tsx src/core/api/tests/compatibility-boundary.test.ts
 
-          echo "=== Stage H: production preflight only (no main mutation) ==="
-          if npm run | grep -q 'gova:env:sync'; then
-            echo 'gova:env:sync exists; production env mutation deferred until final cutover authorization on main.'
-          fi
+          echo "=== Stage H: production preflight only ==="
           if npm run | grep -q 'deploy:doctor'; then npm run deploy:doctor || true; fi
           if npm run | grep -q 'deploy:preflight'; then npm run deploy:preflight || true; fi
-
           stage_commit "finalize verified ASOL repair candidate"
           echo "ASOL_LONG_REPAIR=PASS"
           echo "FINAL_BRANCH_SHA=$(git rev-parse HEAD)"
