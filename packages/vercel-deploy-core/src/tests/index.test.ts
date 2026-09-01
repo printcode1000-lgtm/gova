@@ -107,6 +107,8 @@ async function runTests(): Promise<void> {
   assert(indexSource.includes("type: 'encrypted'"), 'D4: encrypted type used');
   assert(indexSource.includes("target: ['production', 'preview', 'development']"), 'D4: all targets included');
   assert(indexSource.includes('/env?limit=100'), 'D4: project env listing covers the full gova env set before upsert/cleanup');
+  assert(indexSource.includes('existing.filter((item) => item.key === key)'), 'D4: duplicate same-key env entries are all updated');
+  assert(indexSource.includes("JSON.stringify({ value, type: 'encrypted' })"), 'D4: existing target scopes are preserved during PATCH');
   assert(indexSource.includes("method: 'DELETE'"), 'D4: existing env deleted before creation');
   console.log('  ✔ Env upsert semantics verified (D4).');
 

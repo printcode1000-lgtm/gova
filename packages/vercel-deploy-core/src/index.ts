@@ -258,29 +258,38 @@ export async function writeProjectEnv(
   teamId?: string,
 ): Promise<EnvUpsertResult> {
   const target = ['production', 'preview', 'development'];
-  const match = existing.find((item) => item.key === key);
+  const matches = existing.filter((item) => item.key === key);
 
-  const response = match
-    ? await fetch(
+  if (matches.length > 0) {
+    for (const match of matches) {
+      const response = await fetch(
         withTeam(`https://api.vercel.com/v9/projects/${projectId}/env/${match.id}`, teamId),
         {
           method: 'PATCH',
           headers: buildHeaders(token),
-          body: JSON.stringify({ value, target, type: 'encrypted' }),
+          // Preserve each existing entry's target scope. Vercel permits the same
+          // key in separate target entries; expanding one entry to all targets
+          // collides with its siblings. PATCHing value/type only is atomic and
+          // keeps production/preview/development scopes exactly as configured.
+          body: JSON.stringify({ value, type: 'encrypted' }),
         },
-      )
-    : await fetch(withTeam(`https://api.vercel.com/v10/projects/${projectId}/env`, teamId), {
-        method: 'POST',
-        headers: buildHeaders(token),
-        body: JSON.stringify({ key, value, target, type: 'encrypted' }),
-      });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to ${match ? 'update' : 'create'} ${key}: ${response.status} ${await response.text()}`,
-    );
+      );
+      if (!response.ok) {
+        throw new Error(`Failed to update ${key}: ${response.status} ${await response.text()}`);
+      }
+    }
+    return 'updated';
   }
-  return match ? 'updated' : 'created';
+
+  const response = await fetch(withTeam(`https://api.vercel.com/v10/projects/${projectId}/env`, teamId), {
+    method: 'POST',
+    headers: buildHeaders(token),
+    body: JSON.stringify({ key, value, target, type: 'encrypted' }),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to create ${key}: ${response.status} ${await response.text()}`);
+  }
+  return 'created';
 }
 
 /** Lists a project's environment variables. */
