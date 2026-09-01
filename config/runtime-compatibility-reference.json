@@ -160,7 +160,7 @@
     "tsx": "4.23.12",
     "typescript": "5.9.3"
   },
-  "packageLockDigest": "4887ae9ef22576a6e5d46717f7d827afb0aa2e9f82298e11d58b0ca97ded50b1",
+  "packageLockDigest": "a7aa1c4d5adcf2be6e364b3339b38815bb20131756ce7c5b94f9b67142aacdfc",
   "workspacePackages": {
     "account-bridge": "@asol/account-bridge@0.1.0",
     "account-declarations": "@asol/account-declarations@0.1.0",
