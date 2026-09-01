@@ -6,28 +6,31 @@ on:
     paths: [".github/workflows/asol-production-cutover.yml"]
 
 permissions:
-  contents: read
+  contents: write
 
 defaults:
   run:
     working-directory: /home/hesham/gova
 
 jobs:
-  static-build-diagnostic:
+  fix-static-and-resume:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 120
+    timeout-minutes: 180
     concurrency:
       group: asol-production-cutover
       cancel-in-progress: false
     steps:
-      - name: Reproduce only static build
+      - name: Fix static build and resume cutover
         shell: bash
+        env:
+          GH_PUSH_TOKEN: ${{ github.token }}
         run: |
           set -Eeuo pipefail
           cd /home/hesham/gova
           git fetch origin main
           [[ "$(git branch --show-current)" == "main" ]]
-          [[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]]
+          git merge --ff-only origin/main
+
           python3 - <<'PY'
           import re, subprocess, sys
           out=subprocess.check_output(['git','status','--porcelain','--untracked-files=normal'],text=True)
@@ -35,12 +38,44 @@ jobs:
           allowed=re.compile(r'^public/sync_data/(?:[a-z0-9-]+-)?schema-sync-report\.json$')
           unexpected=[p for p in paths if not allowed.match(p)]
           if unexpected:
-              print('STATIC_DIAGNOSTIC=FAIL unexpected-dirty-files')
+              print('STATIC_FIX=FAIL unexpected-dirty-files')
               print('\n'.join(unexpected)); sys.exit(41)
-          if paths: subprocess.run(['git','restore','--worktree','--',*paths],check=True)
+          if paths:
+              subprocess.run(['git','restore','--worktree','--',*paths],check=True)
           PY
+
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tsconfig.json')
+          s=p.read_text()
+          if '"@asol/data-core/ota-runtime"' not in s:
+              needle='''      "@asol/data-core/ota": [\n        "./packages/data-core/src/domains/ota/index.server.ts"\n      ],\n'''
+              replacement=needle+'''      "@asol/data-core/ota-runtime": [\n        "./packages/data-core/src/ota-runtime.ts"\n      ],\n'''
+              if needle not in s:
+                  raise SystemExit('STATIC_FIX=FAIL ota path anchor not found')
+              p.write_text(s.replace(needle,replacement,1))
+          print('STATIC_FIX=PATH_MAPPING_READY')
+          PY
+
           export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
+
+          npm run typecheck
+          DOCS_CONTRACT_CHANGE=1 npm run docs:generate
+          DOCS_CONTRACT_CHANGE=1 npm run docs:ci
+          npm run architecture:check
           npm run build:static
-          echo "STATIC_BUILD_DIAGNOSTIC=PASS"
+          echo "STATIC_BUILD_FIX=PASS"
+
+          git add tsconfig.json docs
+          if ! git diff --cached --quiet; then
+            git -c user.name='ChatGPT Local Runner' -c user.email='actions@users.noreply.github.com' commit -m 'fix: keep static build package identity hermetic'
+            git push "https://x-access-token:${GH_PUSH_TOKEN}@github.com/printcode1000-lgtm/gova.git" HEAD:main
+          fi
+
+          RELEASE_SHA="$(git rev-parse HEAD)"
+          echo "RELEASE_SHA=${RELEASE_SHA}"
+          npm run deploy:all -- --from-branch=static-build --allow-empty | tee /tmp/asol-production-final.log
+          grep -F 'ASOL_PRODUCTION_COMPLETE=PASS' /tmp/asol-production-final.log
+          echo 'ASOL_PRODUCTION_COMPLETE=PASS'
