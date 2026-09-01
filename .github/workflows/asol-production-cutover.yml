@@ -85,14 +85,14 @@ jobs:
           }
           NODE
 
-          for origin in "$NEXT_PUBLIC_ASOL_CONTROL_URL" "$NEXT_PUBLIC_ASOL_SUBMAIN_URL" "$NEXT_PUBLIC_ASOL_SUB2MAIN_URL"; do
-            code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 "$origin/api/health")"
-            if [[ "$code" != "200" ]]; then
-              echo "PRODUCTION_PREFLIGHT=FAIL canonical-origin-health=$code"
-              exit 46
-            fi
-            echo "CANONICAL_ORIGIN_HEALTH=200"
-          done
+          readiness_code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 "$NEXT_PUBLIC_ASOL_CONTROL_URL/api/release-readiness/0000000000000000000000000000000000000000")"
+          if [[ "$readiness_code" != "200" ]]; then
+            echo "PRODUCTION_PREFLIGHT=FAIL control-readiness=$readiness_code"
+            exit 46
+          fi
+          echo "CONTROL_READINESS=200"
+          npm run smoke:deployed
+          echo "DEPLOYED_ORIGIN_PREFLIGHT=PASS"
           echo "PRODUCTION_PREFLIGHT=PASS"
 
           echo "=== GOVA ENV RECONCILIATION ==="
