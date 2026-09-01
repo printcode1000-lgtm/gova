@@ -55,11 +55,15 @@ jobs:
             exit 44
           fi
 
+          export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
+          export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
+          export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
+
           node --input-type=module <<'NODE'
           import { existsSync } from 'node:fs';
           import dotenv from 'dotenv';
-          if (existsSync('.env.local')) dotenv.config({ path: '.env.local', override: false });
-          if (existsSync('.env')) dotenv.config({ path: '.env', override: false });
+          if (existsSync('.env.local')) dotenv.config({ path: '.env.local', override: false, quiet: true });
+          if (existsSync('.env')) dotenv.config({ path: '.env', override: false, quiet: true });
           const required = [
             'NEXT_PUBLIC_ASOL_CONTROL_URL',
             'NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL',
@@ -80,6 +84,15 @@ jobs:
             process.exit(45);
           }
           NODE
+
+          for origin in "$NEXT_PUBLIC_ASOL_CONTROL_URL" "$NEXT_PUBLIC_ASOL_SUBMAIN_URL" "$NEXT_PUBLIC_ASOL_SUB2MAIN_URL"; do
+            code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 "$origin/api/health")"
+            if [[ "$code" != "200" ]]; then
+              echo "PRODUCTION_PREFLIGHT=FAIL canonical-origin-health=$code"
+              exit 46
+            fi
+            echo "CANONICAL_ORIGIN_HEALTH=200"
+          done
           echo "PRODUCTION_PREFLIGHT=PASS"
 
           echo "=== GOVA ENV RECONCILIATION ==="
