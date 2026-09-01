@@ -30,7 +30,10 @@ const infoPlist = read("ios/App/App/Info.plist");
 const capAppSpm = read("ios/App/CapApp-SPM/Package.swift");
 const capacitorConfig = read("capacitor.config.ts");
 const envExample = read(".env.example");
-const firebaseConfig = read("ios/App/App/GoogleService-Info.plist");
+const firebaseConfigPath = "ios/App/App/GoogleService-Info.plist";
+const firebaseConfig = existsSync(path.resolve(firebaseConfigPath))
+  ? read(firebaseConfigPath)
+  : null;
 const customNotificationSound = path.resolve(
   "ios",
   "App",
@@ -192,22 +195,21 @@ for (const [key, value] of [
   requireText(envExample, `${key}=${value}`, `${key} identity is incorrect.`);
 }
 
-for (const [key, value] of [
-  ["BUNDLE_ID", expected.bundleId],
-  ["PROJECT_ID", expected.firebaseProjectId],
-  ["GCM_SENDER_ID", expected.firebaseProjectNumber],
-  ["GOOGLE_APP_ID", expected.firebaseAppId],
-] as const) {
-  requireText(
-    firebaseConfig,
-    `<key>${key}</key>`,
-    `GoogleService-Info.plist is missing ${key}.`,
-  );
-  requireText(
-    firebaseConfig,
-    `<string>${value}</string>`,
-    `GoogleService-Info.plist ${key} identity is incorrect.`,
-  );
+if (firebaseConfig) {
+  for (const [key, value] of [
+    ["BUNDLE_ID", expected.bundleId],
+    ["PROJECT_ID", expected.firebaseProjectId],
+    ["GCM_SENDER_ID", expected.firebaseProjectNumber],
+    ["GOOGLE_APP_ID", expected.firebaseAppId],
+  ] as const) {
+    requireText(firebaseConfig, `<key>${key}</key>`, `GoogleService-Info.plist is missing ${key}.`);
+    requireText(firebaseConfig, `<string>${value}</string>`, `GoogleService-Info.plist ${key} identity is incorrect.`);
+  }
+} else {
+  const gitignore = read(".gitignore");
+  if (!gitignore.split(/\r?\n/).some((line) => line.trim() === firebaseConfigPath)) {
+    errors.push("GoogleService-Info.plist is absent and must be explicitly gitignored.");
+  }
 }
 
 // Firebase Cloud Messaging is the unified delivery path for Android and Apple,
