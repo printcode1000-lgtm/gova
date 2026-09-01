@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "pushall-main-20260901-181700",
+  "agentId": "chatgpt",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt",
+    "commit_message": "chore: publish current local main",
+    "shell_command": "set -euo pipefail; repo=/home/hesham/gova; test \"$(git -C \"$repo\" branch --show-current)\" = main; git -C \"$repo\" fetch origin main; test -z \"$(git -C \"$repo\" status --porcelain)\"; git -C \"$repo\" push origin HEAD:main",
+    "verification": "none",
+    "execution_target": "isolated-worktree",
+    "timeout_minutes": "10"
+  },
+  "createdAt": "2026-09-01T18:17:00.000Z"
+}
