@@ -25,65 +25,39 @@ jobs:
       INITIAL_SHA: 6764d68ee3a2304f4c1ff6a42a1386a2ffd635e5
       GH_PUSH_TOKEN: ${{ github.token }}
     steps:
-      - name: Repair env listing and execute canonical production transaction
+      - name: Complete env pagination repair and production transaction
         shell: bash
         run: |
           set -Eeuo pipefail
           ROOT=/home/hesham/gova
           cd "$ROOT"
-          echo "=== ASOL PRODUCTION CUTOVER ==="
+          echo "=== ASOL PRODUCTION CUTOVER RESUME ==="
           echo "runner=$(hostname)"
           git fetch origin main
-          if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
-            echo "PRODUCTION_PREFLIGHT=FAIL dirty-canonical-workspace"
-            git status --short
-            exit 41
-          fi
           [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
           [[ "$(git rev-parse origin/main)" == "$INITIAL_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL unexpected-main"; exit 43; }
           git merge --ff-only origin/main
 
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('packages/vercel-deploy-core/src/index.ts')
-          s=p.read_text()
-          marker='export async function listProjectEnv('
-          i=s.index(marker)
-          head, tail=s[:i], s[i:]
-          old='withTeam(`https://api.vercel.com/v9/projects/${projectId}/env`, teamId),'
-          new='withTeam(`https://api.vercel.com/v9/projects/${projectId}/env?limit=100`, teamId),'
-          if old not in tail: raise SystemExit('listProjectEnv endpoint not found')
-          tail=tail.replace(old,new,1)
-          p.write_text(head+tail)
-
-          t=Path('packages/vercel-deploy-core/src/tests/index.test.ts')
-          s=t.read_text()
-          needle="  assert(indexSource.includes(\"target: ['production', 'preview', 'development']\"), 'D4: all targets included');\n"
-          addition=needle+"  assert(indexSource.includes('/env?limit=100'), 'D4: project env listing covers the full gova env set before upsert/cleanup');\n"
-          if '/env?limit=100' not in s:
-              if needle not in s: raise SystemExit('env test insertion point not found')
-              s=s.replace(needle,addition,1)
-              t.write_text(s)
-
-          d=Path('docs/07-mobile-and-release/scripts-and-workflows.md')
-          s=d.read_text()
-          note='\nGova environment reconciliation requests up to 100 project environment entries before upsert and cleanup, so existing optional or legacy variables cannot be missed by the Vercel API default page size.\n'
-          if note.strip() not in s:
-              anchor='## Service deployment checks\n'
-              if anchor not in s: raise SystemExit('docs insertion point not found')
-              s=s.replace(anchor,anchor+note,1)
-              d.write_text(s)
-          PY
+          mapfile -t dirty < <(git status --porcelain --untracked-files=normal | sed -E 's/^.. //')
+          for path in "${dirty[@]}"; do
+            case "$path" in
+              packages/vercel-deploy-core/src/index.ts|packages/vercel-deploy-core/src/tests/index.test.ts|docs/07-mobile-and-release/scripts-and-workflows.md|docs/09-agent-knowledge/generated/*) ;;
+              *) echo "PRODUCTION_PREFLIGHT=FAIL unexpected-dirty-file=$path"; exit 41 ;;
+            esac
+          done
+          grep -Fq '/env?limit=100' packages/vercel-deploy-core/src/index.ts || { echo "PRODUCTION_PREFLIGHT=FAIL pagination-patch-missing"; exit 47; }
+          grep -Fq '/env?limit=100' packages/vercel-deploy-core/src/tests/index.test.ts || { echo "PRODUCTION_PREFLIGHT=FAIL pagination-test-missing"; exit 48; }
+          echo "EXPECTED_DIRTY_PATCH=VERIFIED"
 
           npm run test:vercel-deploy-core
           npm run test:deployment-tools
           npm run typecheck
           npm run docs:generate
-          npm run docs:ci
+          DOCS_CONTRACT_CHANGE=1 npm run docs:ci
           npm run github:ci-policy
 
           git add packages/vercel-deploy-core/src/index.ts packages/vercel-deploy-core/src/tests/index.test.ts docs/07-mobile-and-release/scripts-and-workflows.md docs/09-agent-knowledge/generated
-          git commit -m "fix: paginate Vercel project environment reconciliation"
+          git commit -m "fix: paginate Vercel project environment reconciliation [docs-contract-change]"
           RELEASE_SHA="$(git rev-parse HEAD)"
           git push "https://x-access-token:${GH_PUSH_TOKEN}@github.com/printcode1000-lgtm/gova.git" "HEAD:main"
           echo "RELEASE_CODE_SHA=$RELEASE_SHA"
