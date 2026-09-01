@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "requestId": "chatgpt-verify-p2p-code-clean-20260901-0620",
+  "agentId": "chatgpt-sol",
+  "workflow": "local-agent-main",
+  "mode": "main",
+  "ref": "main",
+  "inputs": {
+    "agent_id": "chatgpt-sol",
+    "commit_message": "chore: verify removed networking stack is absent",
+    "verification": "none",
+    "timeout_minutes": "20",
+    "scopes": "packages,scripts,apps,services,docs,.github,.agents,package.json,package-lock.json,.env.example",
+    "shell_command": "set -euo pipefail\n\necho '=== HEAD ==='\ngit rev-parse HEAD\n\necho '=== suspicious tracked paths ==='\npaths=\"$(git ls-files | grep -Ei '(^|/)(p2p|direct-agent|local-agent-direct|host-discovery|device-discovery|webrtc)([-_./]|$)' || true)\"\nif [ -n \"$paths\" ]; then printf '%s\\n' \"$paths\"; echo 'TRACKED_PATH_SCAN=dirty' >&2; exit 51; fi\necho 'TRACKED_PATH_SCAN=clean'\n\necho '=== suspicious tracked text ==='\npattern='p2p-link|direct[ -]?p2p|direct[ -]?agent|local-agent:direct|local-agent-direct|host[ -]?discovery|device[ -]?discovery|ASOL_DEVICE_DISCOVERY|GOVA_DIRECT_|48732|x25519|webrtc|werift|direct-auth-results|direct-auth/'\nhits=\"$(git grep -I -n -i -E \"$pattern\" -- . ':!package-lock.json' || true)\"\nif [ -n \"$hits\" ]; then printf '%s\\n' \"$hits\"; echo 'TRACKED_TEXT_SCAN=dirty' >&2; exit 52; fi\necho 'TRACKED_TEXT_SCAN=clean'\n\necho '=== lockfile/dependency scan ==='\nif grep -Ein '\"werift\"|node_modules/werift|node_modules/@werift|x25519|direct-p2p|local-agent-direct' package-lock.json; then echo 'LOCKFILE_SCAN=dirty' >&2; exit 53; fi\necho 'LOCKFILE_SCAN=clean'\n\necho '=== package contract scan ==='\nnode - <<'NODE'\nconst fs = require('fs');\nconst root = JSON.parse(fs.readFileSync('package.json','utf8'));\nconst local = JSON.parse(fs.readFileSync('packages/local-agent-core/package.json','utf8'));\nconst rootText = JSON.stringify(root).toLowerCase();\nconst localText = JSON.stringify(local).toLowerCase();\nconst banned = ['local-agent:direct','local-agent-direct','device:discover','werift','./direct'];\nfor (const token of banned) {\n  if (rootText.includes(token) || localText.includes(token)) {\n    console.error('PACKAGE_CONTRACT_SCAN=dirty token=' + token);\n    process.exit(54);\n  }\n}\nconsole.log('PACKAGE_CONTRACT_SCAN=clean');\nNODE\n\necho '=== retained Local Runner checks ==='\ntest -f .github/workflows/local-agent-gateway.yml\ntest -f .github/workflows/local-agent-main.yml\ntest -f scripts/local-agent-gateway.ts\ntest -f scripts/local-agent-main-apply.ts\ntest -f packages/local-agent-core/src/request-contract.ts\nnpm run test:local-agent-core\nnpm run test:local-agent-workflows\n\necho 'P2P_CODE_REMOVAL_VERIFICATION=clean'\n"
+  },
+  "createdAt": "2026-09-01T06:20:00.000Z"
+}
