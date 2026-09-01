@@ -24,13 +24,13 @@ jobs:
     env:
       EXPECTED_SHA: 7502aac290e870868954f37bc31fed60c0aa7ea8
     steps:
-      - name: Resume env cleanup and production transaction
+      - name: Repair canonical install and resume production release
         shell: bash
         run: |
           set -Eeuo pipefail
           ROOT=/home/hesham/gova
           cd "$ROOT"
-          echo "=== ASOL PRODUCTION CUTOVER RESUME AFTER RATE LIMIT ==="
+          echo "=== ASOL PRODUCTION CUTOVER — INSTALL REPAIR ==="
           echo "runner=$(hostname)"
           git fetch origin main
           [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
@@ -43,28 +43,25 @@ jobs:
           git merge --ff-only origin/main
           [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL local-sha"; exit 44; }
 
+          echo "=== DETERMINISTIC DEPENDENCY INSTALL ==="
+          npm ci
+          if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
+            echo "INSTALL_REPAIR=FAIL modified-tracked-files"
+            git status --short
+            exit 52
+          fi
+          echo "INSTALL_REPAIR=PASS"
+
+          echo "=== PRODUCTION DOCTOR RECHECK ==="
+          npm run doctor:environment:production
+          echo "PRODUCTION_DOCTOR=PASS"
+
           export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
 
-          echo "=== GOVA ENV RECONCILIATION ==="
-          env_ok=0
-          for attempt in 1 2 3; do
-            echo "GOVA_ENV_SYNC_ATTEMPT=$attempt"
-            if npm run db:push:vercel-env; then
-              env_ok=1
-              break
-            fi
-            if [[ "$attempt" -lt 3 ]]; then
-              echo "GOVA_ENV_SYNC_RETRY_AFTER_RATE_WINDOW=65s"
-              sleep 65
-            fi
-          done
-          [[ "$env_ok" == "1" ]] || { echo "GOVA_ENV_SYNC=FAIL"; exit 51; }
-          echo "GOVA_ENV_SYNC=PASS"
-
-          echo "=== RELEASE TRANSACTION ==="
-          npm run deploy:all -- --allow-empty
+          echo "=== RELEASE TRANSACTION RESUME ==="
+          npm run deploy:all -- --from-branch=production-doctor --allow-empty
           echo "DEPLOY_ALL=PASS"
 
           echo "=== LIVE RELEASE VERIFICATION ==="
