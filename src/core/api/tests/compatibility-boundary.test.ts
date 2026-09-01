@@ -141,6 +141,18 @@ for (const route of ["/api/health", "/api/dev/anything"]) {
   assert.equal(response.headers.get("access-control-allow-origin"), null);
 }
 
+/** A suffix-spoofed origin must never be reflected, including on preflight. */
+{
+  const response = proxy(
+    new NextRequest("https://gova.example/api/products", {
+      method: "OPTIONS",
+      headers: { origin: "https://app.example.evil.tld" },
+    }),
+  );
+  assert.equal(response.status, 204);
+  assert.equal(response.headers.get("access-control-allow-origin"), null);
+}
+
 /** A preflight for a path gova still owns is not intercepted. */
 {
   const response = proxy(new NextRequest("https://gova.example/api/health", { method: "OPTIONS" }));
