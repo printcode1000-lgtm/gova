@@ -10,6 +10,10 @@
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./project-env": {
+      "types": "./src/project-env.ts",
+      "default": "./src/project-env.ts"
+    },
     "./remote-deploy-contracts": {
       "types": "./src/remote-deploy-contracts.ts",
       "default": "./src/remote-deploy-contracts.ts"
