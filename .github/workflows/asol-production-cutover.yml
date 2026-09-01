@@ -25,13 +25,13 @@ jobs:
       EXPECTED_SHA: 7502aac290e870868954f37bc31fed60c0aa7ea8
       GH_PUSH_TOKEN: ${{ github.token }}
     steps:
-      - name: Fix smoke isolation and finish production cutover
+      - name: Clean generated reports, fix smoke isolation, and finish cutover
         shell: bash
         run: |
           set -Eeuo pipefail
           ROOT=/home/hesham/gova
           cd "$ROOT"
-          echo "=== ASOL PRODUCTION CUTOVER — SMOKE FIX ==="
+          echo "=== ASOL PRODUCTION CUTOVER — SMOKE FIX RESUME ==="
           echo "runner=$(hostname)"
           git fetch origin main
           [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
@@ -40,11 +40,21 @@ jobs:
           [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL local-sha"; exit 44; }
 
           rm -rf .tmp-gova-build
-          if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
-            echo "PRODUCTION_PREFLIGHT=FAIL dirty-workspace"
-            git status --short
-            exit 41
-          fi
+          python3 - <<'PY'
+          import re, subprocess, sys
+          out = subprocess.check_output(['git','status','--porcelain','--untracked-files=normal'], text=True)
+          paths = [line[3:] for line in out.splitlines() if line.strip()]
+          allowed = re.compile(r'^public/sync_data/(?:[a-z0-9-]+-)?schema-sync-report\.json$')
+          unexpected = [p for p in paths if not allowed.match(p)]
+          if unexpected:
+              print('PRODUCTION_PREFLIGHT=FAIL unexpected-dirty-files')
+              for p in unexpected: print(p)
+              sys.exit(41)
+          if paths:
+              subprocess.run(['git','restore','--worktree','--',*paths], check=True)
+              print(f'RESTORED_GENERATED_SCHEMA_REPORTS={len(paths)}')
+          PY
+          [[ -z "$(git status --porcelain --untracked-files=normal)" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL dirty-after-generated-cleanup"; git status --short; exit 41; }
 
           export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
