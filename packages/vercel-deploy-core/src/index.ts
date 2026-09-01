@@ -102,6 +102,8 @@ export async function ensureProject(token: string, projectName: string, teamId?:
     return data.id;
   }
 
+  // No git repository field: the project stays disconnected from GitHub on
+  // purpose, so only this command can change what is deployed.
   const created = await fetch(withTeam('https://api.vercel.com/v10/projects', teamId), {
     method: 'POST',
     headers: buildHeaders(token),
@@ -116,6 +118,14 @@ export async function ensureProject(token: string, projectName: string, teamId?:
   return data.id;
 }
 
+/**
+ * Finds an existing project by name. **Never creates one.**
+ *
+ * Deliberately separate from `ensureProject`: the four service accounts are meant to be
+ * created on first deploy, but a script that only pushes environment variables must not
+ * conjure a project because a name was mistyped. An orphaned Vercel project created by a
+ * typo is quiet, billable, and easy to miss.
+ */
 export async function findProject(
   token: string,
   projectName: string,
@@ -229,6 +239,15 @@ export async function disableProjectGitIntegrations(
 
 export type EnvUpsertResult = 'created' | 'updated';
 
+/**
+ * Writes one environment variable, reporting whether it existed.
+ *
+ * `PATCH` on an existing variable rather than delete-then-create: it keeps the variable's
+ * id stable, and it means a failure mid-run cannot leave the project with the value
+ * missing entirely. `upsertEnv` below is the delete-then-create form used by the service
+ * deploys, where the project may have been created moments earlier and there is nothing
+ * to preserve.
+ */
 export async function writeProjectEnv(
   token: string,
   projectId: string,
@@ -278,23 +297,6 @@ export async function listProjectEnv(
   }
   const data = (await response.json()) as { envs?: Array<{ id: string; key: string }> };
   return data.envs ?? [];
-}
-
-/** Deletes one project environment entry by its stable Vercel env id. */
-export async function deleteProjectEnv(
-  token: string,
-  projectId: string,
-  envId: string,
-  teamId?: string,
-): Promise<void> {
-  const response = await fetch(
-    withTeam(`https://api.vercel.com/v9/projects/${projectId}/env/${envId}`, teamId),
-    { method: 'DELETE', headers: buildHeaders(token) },
-  );
-  if (response.status === 404) return;
-  if (!response.ok) {
-    throw new Error(`Failed to delete project environment entry: ${response.status} ${await response.text()}`);
-  }
 }
 
 export async function upsertEnv(
@@ -377,6 +379,11 @@ export function runVercel(options: RunVercelOptions): void {
     ...process.env,
     VERCEL_PROJECT_ID: options.projectId,
     VERCEL_TOKEN: options.token,
+    // The Vercel CLI reads the local repository and attaches commit metadata to every
+    // upload, which the dashboard renders as a GitHub source row (`Source: main <sha>`).
+    // Only the GitHub-linked gova project may look Git-sourced, and runVercel serves the
+    // GitHub-free accounts exclusively, so Git is pointed at a path that cannot exist:
+    // the CLI metadata probe fails and the deployment is uploaded without commit data.
     GIT_DIR: path.join(options.serviceDir, '.asol-no-git-metadata'),
   };
   if (options.teamId) childEnv.VERCEL_ORG_ID = options.teamId;
@@ -420,21 +427,133 @@ export async function deployAccountService(options: DeployAccountServiceOptions)
 
   const teamId = await resolveAccountTeamId(declaration, env, token);
   const projectId = await ensureProject(token, declaration.project, teamId);
-  const project = await getProject(token, declaration.project, teamId);
-  assertProjectNotGitLinked(project, declaration.project);
 
-  syncSources();
-
-  const existing = await listProjectEnv(token, projectId, teamId);
+  console.log('\nSyncing environment variables:');
   for (const key of declaration.requiredEnv) {
-    await writeProjectEnv(token, projectId, key, env[key]!, existing, teamId);
+    await upsertEnv(token, projectId, key, env[key]!, teamId);
   }
   for (const key of declaration.optionalEnv) {
     const value = env[key];
-    if (value) await writeProjectEnv(token, projectId, key, value, existing, teamId);
+    if (value) await upsertEnv(token, projectId, key, value, teamId);
+    else console.log(`  skip ${key} (not set locally)`);
   }
 
-  runVercel({ args: ['--prod', '--yes'], projectId, serviceDir, token, teamId });
+  console.log(`\nMirroring shared modules into ${declaration.serviceDir}/generated...`);
+  syncSources();
+
+  console.log(`\nUploading ${declaration.serviceDir} and building remotely...`);
+  const runId = env.ASOL_DEPLOYMENT_RUN_ID?.trim() || `${declaration.name}-${Date.now()}`;
+  const revision = env.ASOL_DEPLOYMENT_REVISION?.trim() || 'standalone';
+  const comment =
+    env.ASOL_DEPLOYMENT_COMMENT?.trim() ||
+    `${declaration.name} production deploy ${new Date().toISOString()}`;
+
+  runVercel({
+    args: [
+      'deploy',
+      '--prod',
+      '--yes',
+      ...vercelDeploymentMetadata({ target: declaration.name, comment, runId, revision }),
+    ],
+    projectId,
+    serviceDir,
+    token,
+    teamId,
+  });
+
+  const report = await waitForVercelProductionDeployment({
+    token,
+    project: declaration.project,
+    target: declaration.name,
+    account: teamId ?? 'personal',
+    comment,
+    teamId,
+    runId,
+  });
+
+  printDeploymentReport(report);
+  if (report.state !== 'READY') {
+    throw new Error(`Vercel verification failed: ${report.message}`);
+  }
 }
 
-export { printDeploymentReport, vercelDeploymentMetadata, waitForVercelProductionDeployment };
+export interface DeployAccountRootAppOptions {
+  declaration: AccountDeclaration;
+  env?: Record<string, string | undefined>;
+}
+
+/**
+ * Deploy a full-application account from the repository root.
+ *
+ * Used for secondary application hosts that are never GitHub-linked. The upload
+ * includes the whole monorepo; Vercel builds the main Next.js application from it.
+ */
+export async function deployAccountRootApp(
+  options: DeployAccountRootAppOptions,
+): Promise<void> {
+  const { declaration } = options;
+  const env = options.env ?? process.env;
+
+  if (!declaration.deployFromRepositoryRoot) {
+    throw new Error(`Account ${declaration.name} is not declared for repository-root deploy`);
+  }
+
+  const token = env[declaration.tokenEnvVar];
+  if (!token) {
+    throw new Error(`${declaration.tokenEnvVar} is missing from environment`);
+  }
+
+  const missing = declaration.requiredEnv.filter((key) => !env[key]?.trim());
+  if (missing.length > 0) {
+    throw new Error(`Missing required environment values: ${missing.join(', ')}`);
+  }
+
+  const repositoryRoot = process.cwd();
+  const teamId = await resolveAccountTeamId(declaration, env, token);
+  const projectId = await ensureProject(token, declaration.project, teamId);
+
+  console.log('\nSyncing environment variables:');
+  for (const key of declaration.requiredEnv) {
+    await upsertEnv(token, projectId, key, env[key]!.trim(), teamId);
+  }
+  for (const key of declaration.optionalEnv) {
+    const value = env[key]?.trim();
+    if (value) await upsertEnv(token, projectId, key, value, teamId);
+    else console.log(`  skip ${key} (not set locally)`);
+  }
+
+  console.log(`\nUploading repository root and building remotely (${declaration.project})...`);
+  const runId = env.ASOL_DEPLOYMENT_RUN_ID?.trim() || `${declaration.name}-${Date.now()}`;
+  const revision = env.ASOL_DEPLOYMENT_REVISION?.trim() || 'standalone';
+  const comment =
+    env.ASOL_DEPLOYMENT_COMMENT?.trim() ||
+    `${declaration.name} production deploy ${new Date().toISOString()}`;
+
+  runVercel({
+    args: [
+      'deploy',
+      '--prod',
+      '--yes',
+      ...vercelDeploymentMetadata({ target: declaration.name, comment, runId, revision }),
+    ],
+    projectId,
+    serviceDir: repositoryRoot,
+    token,
+    teamId,
+  });
+
+  const report = await waitForVercelProductionDeployment({
+    token,
+    project: declaration.project,
+    target: declaration.name,
+    account: teamId ?? 'personal',
+    comment,
+    teamId,
+    runId,
+  });
+
+  printDeploymentReport(report);
+  if (report.state !== 'READY') {
+    throw new Error(`Vercel verification failed: ${report.message}`);
+  }
+}
