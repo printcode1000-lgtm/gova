@@ -22,71 +22,45 @@ jobs:
       group: asol-production-cutover
       cancel-in-progress: false
     env:
-      INITIAL_SHA: c673e2a595e8a88224dd444281058d299dbf8a67
-      GH_PUSH_TOKEN: ${{ github.token }}
+      EXPECTED_SHA: 7502aac290e870868954f37bc31fed60c0aa7ea8
     steps:
-      - name: Preserve sensitive env types and execute production transaction
+      - name: Resume env cleanup and production transaction
         shell: bash
         run: |
           set -Eeuo pipefail
           ROOT=/home/hesham/gova
           cd "$ROOT"
-          echo "=== ASOL PRODUCTION CUTOVER SENSITIVE ENV FIX ==="
+          echo "=== ASOL PRODUCTION CUTOVER RESUME AFTER RATE LIMIT ==="
           echo "runner=$(hostname)"
           git fetch origin main
           [[ "$(git branch --show-current)" == "main" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL not-main"; exit 42; }
-          [[ "$(git rev-parse origin/main)" == "$INITIAL_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL unexpected-main"; exit 43; }
+          [[ "$(git rev-parse origin/main)" == "$EXPECTED_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL unexpected-main"; exit 43; }
           if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
             echo "PRODUCTION_PREFLIGHT=FAIL dirty-workspace"
             git status --short
             exit 41
           fi
           git merge --ff-only origin/main
-
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('packages/vercel-deploy-core/src/index.ts')
-          s=p.read_text()
-          old="body: JSON.stringify({ value, type: 'encrypted' }),"
-          new="body: JSON.stringify({ value }),"
-          if old not in s: raise SystemExit('existing env PATCH body not found')
-          s=s.replace(old,new,1)
-          s=s.replace("// keeps production/preview/development scopes exactly as configured.", "// keeps production/preview/development scopes and Sensitive/encrypted types exactly as configured.",1)
-          p.write_text(s)
-
-          t=Path('packages/vercel-deploy-core/src/tests/index.test.ts')
-          s=t.read_text()
-          old_assert="  assert(indexSource.includes(\"JSON.stringify({ value, type: 'encrypted' })\"), 'D4: existing target scopes are preserved during PATCH');\n"
-          new_assert="  assert(indexSource.includes('body: JSON.stringify({ value })'), 'D4: existing target scopes and Sensitive/encrypted types are preserved during PATCH');\n"
-          if old_assert not in s: raise SystemExit('existing env PATCH test not found')
-          t.write_text(s.replace(old_assert,new_assert,1))
-
-          d=Path('docs/07-mobile-and-release/scripts-and-workflows.md')
-          s=d.read_text()
-          old='Gova env reconciliation preserves existing Vercel target scopes when the same key has separate production, preview, or development entries; it updates every matching entry without widening its targets.\n'
-          new='Gova env reconciliation preserves existing Vercel target scopes and variable types (including Sensitive entries) when a key already exists; it updates every matching entry by value only, without widening targets or changing type.\n'
-          if old not in s: raise SystemExit('env target docs note not found')
-          d.write_text(s.replace(old,new,1))
-          PY
-
-          npm run test:vercel-deploy-core
-          npm run test:deployment-tools
-          npm run typecheck
-          npm run docs:generate
-          DOCS_CONTRACT_CHANGE=1 npm run docs:ci
-          npm run github:ci-policy
-
-          git add packages/vercel-deploy-core/src/index.ts packages/vercel-deploy-core/src/tests/index.test.ts docs/07-mobile-and-release/scripts-and-workflows.md docs/09-agent-knowledge/generated
-          git commit -m "fix: preserve Vercel sensitive env types [docs-contract-change]"
-          RELEASE_SHA="$(git rev-parse HEAD)"
-          git push "https://x-access-token:${GH_PUSH_TOKEN}@github.com/printcode1000-lgtm/gova.git" "HEAD:main"
-          echo "RELEASE_CODE_SHA=$RELEASE_SHA"
+          [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]] || { echo "PRODUCTION_PREFLIGHT=FAIL local-sha"; exit 44; }
 
           export NEXT_PUBLIC_ASOL_CONTROL_URL="${NEXT_PUBLIC_ASOL_CONTROL_URL:-https://asol-control.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUBMAIN_URL="${NEXT_PUBLIC_ASOL_SUBMAIN_URL:-https://asol-submain.vercel.app}"
           export NEXT_PUBLIC_ASOL_SUB2MAIN_URL="${NEXT_PUBLIC_ASOL_SUB2MAIN_URL:-https://asol-sub2main.vercel.app}"
+
           echo "=== GOVA ENV RECONCILIATION ==="
-          npm run db:push:vercel-env
+          env_ok=0
+          for attempt in 1 2 3; do
+            echo "GOVA_ENV_SYNC_ATTEMPT=$attempt"
+            if npm run db:push:vercel-env; then
+              env_ok=1
+              break
+            fi
+            if [[ "$attempt" -lt 3 ]]; then
+              echo "GOVA_ENV_SYNC_RETRY_AFTER_RATE_WINDOW=65s"
+              sleep 65
+            fi
+          done
+          [[ "$env_ok" == "1" ]] || { echo "GOVA_ENV_SYNC=FAIL"; exit 51; }
           echo "GOVA_ENV_SYNC=PASS"
 
           echo "=== RELEASE TRANSACTION ==="
