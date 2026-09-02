@@ -2555,6 +2555,20 @@
       ]
     },
     {
+      "id": "command:smoke:owned-reads",
+      "kind": "command",
+      "name": "npm run smoke:owned-reads",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run smoke:owned-reads",
+        "owned-reads",
+        "run",
+        "smoke",
+        "smoke:owned-reads"
+      ]
+    },
+    {
       "id": "command:smoke:production",
       "kind": "command",
       "name": "npm run smoke:production",
@@ -14611,6 +14625,8 @@
         "request",
         "returns",
         "route",
+        "scripts/check-owned-route-reads",
+        "scripts/check-owned-route-reads.ts",
         "scripts/route-ownership-coverage",
         "scripts/route-ownership-coverage.ts",
         "scripts/tests/route-ownership-coverage",
@@ -26462,6 +26478,17 @@
       "tags": [
         "scripts/check-localhost-notifications",
         "scripts/check-localhost-notifications.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/check-owned-route-reads.ts",
+      "kind": "script",
+      "name": "check-owned-route-reads.ts",
+      "path": "scripts/check-owned-route-reads.ts",
+      "tags": [
+        "scripts/check-owned-route-reads",
+        "scripts/check-owned-route-reads.ts",
         "ts"
       ]
     },

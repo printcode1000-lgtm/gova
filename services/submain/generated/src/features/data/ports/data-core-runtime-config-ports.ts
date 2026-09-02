@@ -58,8 +58,19 @@ export function registerDataCoreRuntimeConfigPorts(
   options: DataCoreRuntimeConfigPortOptions = {},
 ): void {
   configureDataCoreRuntimeConfig({
-    isDevelopment,
-    isDevRuntime,
+    isDevelopment: options.forceRemoteDataSource ? false : isDevelopment,
+    // Pinning the data source was not enough. The per-database Turso guards ask
+    // `isDevRuntime()`, not the data source, and refuse a remote read whenever
+    // the runtime still calls itself development — so an isolated account with
+    // `dataSource: 'remote'` answered
+    // "Turso advertisements DB cannot be accessed during development runtime"
+    // on every advertisements read while /api/health stayed 200.
+    //
+    // A deployment that cannot run SQLite is not a development runtime, whatever
+    // the environment says. The account states both halves of the invariant, or
+    // it states neither: leaving one to configuration is what made the first
+    // half insufficient.
+    isDevRuntime: options.forceRemoteDataSource ? () => false : isDevRuntime,
     isProvisioningContext,
     getServerRuntimeContext: () =>
       options.forceRemoteDataSource

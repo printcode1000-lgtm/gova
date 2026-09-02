@@ -170,7 +170,7 @@ Unproven gateway paths: **146**
 | `packages/storage-image-manager-core/src/services/image-upload-queue.ts` | `@asol/storage-image-manager-core` | delete, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/storage-image-manager-core/src/tests/index.test.ts` | `@asol/storage-image-manager-core` | upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/sub2main-composition/src/index.ts` | `@asol/sub2main-composition` | create, delete, update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/submain-composition/src/index.ts` | `@asol/submain-composition` | delete | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `packages/submain-composition/src/index.ts` | `@asol/submain-composition` | delete | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/system-logs-core/src/browser/memory-store.ts` | `@asol/system-logs-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/system-logs-core/src/server/persistent-log-service.ts` | `@asol/system-logs-core` | delete | `unproven` | NO | `` | development, web | high |
 | `packages/system-logs-core/src/server/stream-hub.ts` | `@asol/system-logs-core` | delete | `unproven` | NO | `` | development, web | high |

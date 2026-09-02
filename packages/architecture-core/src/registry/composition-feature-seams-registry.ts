@@ -60,6 +60,7 @@ export const COMPOSITION_FEATURE_SEAMS = {
     '@/features/advertisements/server/services/trending-ribbon-service.server',
     '@/features/specialty-chat/server/services/specialty-chat-service.server',
     '@/features/notifications/server/services/notification-service.bootstrap.server',
+    '@/features/storage/ports/storage-core-ports',
     '@/features/product-search/server/services/product-search-service.server',
     '@/features/product-search/server/services/product-search-fields.server',
     '@/features/auth/domain/super-admin',

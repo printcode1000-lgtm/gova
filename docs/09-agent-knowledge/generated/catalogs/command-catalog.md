@@ -176,7 +176,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run services:build` | `Tooling` | 1 |  | 0 |
 | `npm run services:sync` | `Tooling` | 1 |  | 0 |
 | `npm run services:verify` | `Tooling` | 1 |  | 0 |
-| `npm run smoke:deployed` | `Tooling` | 1 |  | 0 |
+| `npm run smoke:deployed` | `Tooling` | 2 |  | 0 |
+| `npm run smoke:owned-reads` | `Tooling` | 1 |  | 0 |
 | `npm run smoke:production` | `Tooling` | 1 |  | 0 |
 | `npm run smoke:services` | `Tooling` | 1 |  | 0 |
 | `npm run start` | `Tooling`, `Web` | 0 |  | 0 |

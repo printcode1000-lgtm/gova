@@ -2555,6 +2555,20 @@
       ]
     },
     {
+      "id": "command:smoke:owned-reads",
+      "kind": "command",
+      "name": "npm run smoke:owned-reads",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run smoke:owned-reads",
+        "owned-reads",
+        "run",
+        "smoke",
+        "smoke:owned-reads"
+      ]
+    },
+    {
       "id": "command:smoke:production",
       "kind": "command",
       "name": "npm run smoke:production",
@@ -14611,6 +14625,8 @@
         "request",
         "returns",
         "route",
+        "scripts/check-owned-route-reads",
+        "scripts/check-owned-route-reads.ts",
         "scripts/route-ownership-coverage",
         "scripts/route-ownership-coverage.ts",
         "scripts/tests/route-ownership-coverage",
@@ -26462,6 +26478,17 @@
       "tags": [
         "scripts/check-localhost-notifications",
         "scripts/check-localhost-notifications.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/check-owned-route-reads.ts",
+      "kind": "script",
+      "name": "check-owned-route-reads.ts",
+      "path": "scripts/check-owned-route-reads.ts",
+      "tags": [
+        "scripts/check-owned-route-reads",
+        "scripts/check-owned-route-reads.ts",
         "ts"
       ]
     },
@@ -58283,6 +58310,21 @@
     },
     {
       "from": "command:smoke:deployed",
+      "to": "script:scripts/check-owned-route-reads.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:smoke:deployed",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:smoke:owned-reads",
+      "to": "script:scripts/check-owned-route-reads.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:smoke:owned-reads",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -74899,6 +74941,12 @@
     },
     {
       "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "script:scripts/check-owned-route-reads.ts",
+      "kind": "references",
+      "detail": "scripts/check-owned-route-reads.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
       "to": "script:scripts/route-ownership-coverage.ts",
       "kind": "references",
       "detail": "scripts/route-ownership-coverage.ts"
@@ -85705,6 +85753,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/check-localhost-notifications.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/check-owned-route-reads.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -109890,6 +109944,11 @@
     {
       "from": "package:@asol/submain-composition",
       "to": "feature:specialty-chat",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
+      "to": "feature:storage",
       "kind": "imports"
     },
     {
@@ -135035,6 +135094,29 @@
       "from": "script:scripts/check-localhost-notifications.ts",
       "to": "environment-key:ASOL_LOCAL_ORIGIN",
       "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/check-owned-route-reads.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/check-owned-route-reads.ts",
+      "to": "script:scripts/deployed-origin-resolution.ts",
+      "kind": "imports",
+      "detail": "./deployed-origin-resolution"
+    },
+    {
+      "from": "script:scripts/check-owned-route-reads.ts",
+      "to": "script:scripts/load-release-env.ts",
+      "kind": "imports",
+      "detail": "./load-release-env"
+    },
+    {
+      "from": "script:scripts/check-owned-route-reads.ts",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "imports",
+      "detail": "./route-ownership-coverage"
     },
     {
       "from": "script:scripts/check-production-smoke.ts",
@@ -176001,6 +176083,12 @@
       "to": "source:src/features/specialty-chat/server/services/specialty-chat-service.server.ts",
       "kind": "imports",
       "detail": "@/features/specialty-chat/server/services/specialty-chat-service.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/storage/ports/storage-core-ports.ts",
+      "kind": "imports",
+      "detail": "@/features/storage/ports/storage-core-ports"
     },
     {
       "from": "source:packages/system-logs-core/src/browser/capture-coordinator.ts",

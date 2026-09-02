@@ -143,7 +143,7 @@
     "smoke:services": "npx tsx scripts/check-service-smoke.ts",
     "release:check": "npx tsx scripts/check-deployed-release.ts",
     "smoke:production": "npx tsx scripts/check-production-smoke.ts",
-    "smoke:deployed": "npx tsx scripts/check-deployed-origins.ts",
+    "smoke:deployed": "npx tsx scripts/check-deployed-origins.ts && npx tsx scripts/check-owned-route-reads.ts",
     "vercel:function-size:check": "npx tsx scripts/check-vercel-function-size.ts",
     "deploy:redeploy-main": "npx tsx scripts/redeploy-main-vercel.ts",
     "db:migrate:users": "npx tsx packages/data-core/src/tooling/apply-users-migrations.ts",
@@ -293,7 +293,8 @@
     "test:account-deletion-schema": "cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-query-schema.contract.test.ts",
     "test:branding-core": "npm run branding:generate && npx tsx packages/branding-core/src/tests/index.test.ts",
     "architecture:docs": "npx tsx scripts/architecture/generate-architecture-docs.ts",
-    "test:route-ownership": "npx tsx scripts/tests/route-ownership-coverage.test.ts"
+    "test:route-ownership": "npx tsx scripts/tests/route-ownership-coverage.test.ts",
+    "smoke:owned-reads": "npx tsx scripts/check-owned-route-reads.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

@@ -31,6 +31,17 @@ export const sellerErrorResponse = http.errorResponse;
 export function businessErrorResponse(request: Request, error: unknown): Response {
   const message = error instanceof Error ? error.message : 'internalServerError';
   const mapped = businessApiErrorStatus(message);
+  // An unmapped failure is a server fault, and the client is told nothing about
+  // it on purpose. It is logged here because a swallowed 500 is invisible: the
+  // same silence hid an unregistered port on the control runtime until a
+  // release callback happened to hit it, and it is what the account smoke gate
+  // scans for. See docs/08-troubleshooting/problems/owned-route-not-shipped.md.
+  if (mapped.status >= 500) {
+    console.error(
+      `[${new URL(request.url).pathname}] unmapped failure:`,
+      error instanceof Error ? (error.stack ?? error.message) : String(error),
+    );
+  }
   return Response.json(
     { error: mapped.code },
     { status: mapped.status, headers: corsHeaders(request) },

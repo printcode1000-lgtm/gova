@@ -202,3 +202,5 @@ for what happens when it does not.
 | `smoke:services` | one route per workload that reaches that account's own data |
 | `control:smoke` | control's auth boundary, plus a release-barrier read of its own shard, plus a scan of the server log for unregistered ports |
 | `smoke:deployed` | the deployed origins: gova health, a legacy `307` redirect that must not be followed, control's auth boundary, and each workload's data route |
+| `smoke:owned-reads` | **every** owned GET route on every account, against production. A `4xx` passes — the handler ran and refused; a `5xx`, or an unconfigured-port body behind a `200`, fails. Runs as part of `smoke:deployed`. |
+| `test:route-ownership` | every owned route+method is shipped by its owner, and the known-unshipped backlog only shrinks |

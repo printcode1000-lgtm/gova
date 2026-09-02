@@ -65,6 +65,60 @@ directions:
 backlog. **Every line in it is a live production 404.** Never add one: a new
 unshipped route is a new outage, and the gate exists to refuse it.
 
+## A second failure the same gap hid: pinned data source, unpinned runtime
+
+Shipping the handler is not enough if the account cannot reach its database.
+
+Every isolated composition root calls
+`registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true })`, which
+pins `dataSource` to `remote`. The per-database Turso guards do not read the
+data source — they read `isDevRuntime()` — so an account with a pinned remote
+source still refused every advertisements read with:
+
+```
+Turso advertisements DB cannot be accessed during development runtime.
+```
+
+Health stayed `200`, the deployment reported `READY`, and the route answered
+`500 internalServerError` with the reason swallowed. The same shape as every
+other outage in this family.
+
+**Fix:** `forceRemoteDataSource` now pins `isDevRuntime` and `isDevelopment` too.
+A deployment that cannot run SQLite is not a development runtime, whatever the
+environment says — an account states both halves of that invariant or neither.
+Leaving one half to configuration is exactly what made the first half
+insufficient.
+
+## What now sweeps the whole surface
+
+`npm run smoke:owned-reads` (`scripts/check-owned-route-reads.ts`, and part of
+`smoke:deployed`) asks **every owned GET route on every account**, against the
+real production origins.
+
+It exists because the per-account smoke gates probe one route each. That proves
+an account is alive; it cannot prove the account can serve the surface it owns,
+and three separate outages lived in that gap — the unregistered control ports,
+the 63 unshipped pairs, and the unpinned dev runtime above.
+
+The rules that make it readable:
+
+- **Reads only.** A `GET` has no side effect, so the whole owned surface can be
+  swept against production without writing anything.
+- **A `4xx` is a pass.** It means the handler ran and refused, which is what an
+  unauthenticated or parameterless probe should get.
+- **A `5xx` is a failure**, and so is a body naming an unconfigured port behind a
+  `200`. Only those say the route could not run at all.
+
+It found three failures on its first run, one of which was a status-mapping bug
+nobody had noticed: control's log stream reported `sessionTokenInvalid` as a
+`500`, turning a rejected request into a server fault. Routes answer through the
+shared `businessApiErrorStatus` mapping for this reason — a two-branch guess in
+one route drifts from the application the moment a third error code exists.
+
+Service routes also log any unmapped `5xx` before returning it
+(`businessErrorResponse`), so a swallowed server fault is visible in the
+deployment's own output rather than only in a status code.
+
 ## Working the backlog down
 
 For each pair, decide which of the two facts is wrong:

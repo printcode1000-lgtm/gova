@@ -23,6 +23,7 @@ import { configureOrdersCore } from '@asol/orders-core';
 import { isSuperAdminIdentity } from '@/features/auth/domain/super-admin';
 import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-core-runtime-config-ports';
 import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/ports/data-core-specialty-catalog-port';
+import { registerStorageCorePorts } from '@/features/storage/ports/storage-core-ports';
 
 export type {
   ProductSearchFilters,
@@ -167,6 +168,10 @@ export function assertSubmainEnv(env: NodeJS.ProcessEnv = process.env): void {
 registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
 // This account reads profile rows, so it also needs the specialty-column catalog.
 registerDataCoreSpecialtyCatalogPort();
+// The home surfaces resolve stored image keys through `@asol/storage-core`, and
+// its HTTP gateway is a port. Without it every advertisements read answered 500
+// while /api/health stayed 200 — the same shape as an unregistered data port.
+registerStorageCorePorts();
 
 export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRuntime {
   configureOrdersCore({ identity: { isSuperAdminIdentity } });
