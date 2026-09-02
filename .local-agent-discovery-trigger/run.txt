@@ -1,1 +1,1 @@
-rerun final real codex monitor verification after helper-chain reset
+final real codex monitor verification - main must remain unchanged
