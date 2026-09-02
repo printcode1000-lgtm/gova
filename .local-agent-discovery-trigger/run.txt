@@ -1,1 +1,1 @@
-retry full verification after canonical main ref fix
+final deterministic real codex cleanup verification
