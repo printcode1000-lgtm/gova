@@ -1,1 +1,1 @@
-real codex diagnostic with refusal output
+real codex diagnostic without unavailable bubblewrap
