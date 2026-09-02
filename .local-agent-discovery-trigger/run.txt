@@ -1,1 +1,1 @@
-deep locate codex installation
+inspect installed codex cli contract
