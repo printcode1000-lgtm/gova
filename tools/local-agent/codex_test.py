@@ -145,8 +145,8 @@ def main():
 Read the relevant docs before editing. Inspect only tools/local-agent/monitor.py, tools/local-agent/selftest.py, tools/local-agent/install.sh and their direct behavior. Find one concrete robustness/usability issue in the new persistent local-agent monitor or self-test and implement the SMALLEST safe improvement.
 Constraints: do not modify anything outside tools/local-agent/; do not push, fetch, merge, rebase, create remote branches, edit workflows, or touch main/integration refs. Do not install dependencies. Do not delete the gateway runtime or user data. Run python3 -m py_compile on Python files you changed and run `python3 tools/local-agent/monitor.py --once`. Then git add only your changed tools/local-agent files and create one local commit with message `test(local-agent): Codex real-worker improvement`. End by printing `CODEX_REAL_WORKER_DONE` followed by the commit SHA and a one-line summary."""
         cmd = " ".join([
-            shlex.quote(str(codex)), "exec", "-C", shlex.quote(str(cw)),
-            "--sandbox", "workspace-write", "--ask-for-approval", "never",
+            shlex.quote(str(codex)), "--ask-for-approval", "never", "exec",
+            "-C", shlex.quote(str(cw)), "--sandbox", "workspace-write",
             "--ephemeral", "--color", "never", shlex.quote(prompt),
         ])
         _, started = call("POST", "/v1/exec/start", {"agent_id": codex_agent, "task_id": codex_task, "command": cmd})
