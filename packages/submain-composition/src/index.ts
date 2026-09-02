@@ -14,10 +14,14 @@ import { homeHeroSliderService } from '@/features/advertisements/server/services
 import { featuredMarqueeService } from '@/features/advertisements/server/services/featured-marquee-service.server';
 import { featuredTrendingRibbonService } from '@/features/advertisements/server/services/trending-ribbon-service.server';
 import { specialtyChatService } from '@/features/specialty-chat/server/services/specialty-chat-service.server';
+import { loadOrderDetailForActor } from '@/features/orders/application/order-detail-loader.server';
+import { executeOrderAction } from '@/features/orders/application/order-actions.server';
 import {
+  notificationBroadcastService,
   notificationSelfTestService,
   notificationTokenService,
 } from '@/features/notifications/server/services/notification-service.bootstrap.server';
+import { assertSuperAdminRequest } from '@/features/super-admin/server/services/super-admin-auth.server';
 import { passwordRecoveryService } from '@/features/password-recovery/server/services/password-recovery-service.server';
 import { configureOrdersCore } from '@asol/orders-core';
 import { isSuperAdminIdentity } from '@/features/auth/domain/super-admin';
@@ -104,6 +108,22 @@ export interface SubmainDeviceTask {
   listAccountDevices: typeof notificationTokenService.listForAccount;
   removeDeviceToken: typeof notificationTokenService.remove;
   sendSelfTest: typeof notificationSelfTestService.send;
+  /** The Super Admin broadcast test: a verified session decides who may send it. */
+  sendBroadcastTest: typeof notificationBroadcastService.sendTest;
+  assertSuperAdmin: typeof assertSuperAdminRequest;
+}
+
+/**
+ * Order detail and the actions taken on it.
+ *
+ * This account already creates orders, and the detail read joins order shards
+ * with a profile snapshot per participant — both of which it holds. The loader
+ * is the application's own function, not a copy, so the two origins cannot
+ * answer the same order differently.
+ */
+export interface SubmainOrderTask {
+  loadDetail: typeof loadOrderDetailForActor;
+  executeAction: typeof executeOrderAction;
 }
 
 export interface SubmainCartTask {
@@ -134,6 +154,7 @@ export interface SubmainRuntime {
   social: SubmainSocialTask;
   advertisements: SubmainAdvertisementsTask;
   devices: SubmainDeviceTask;
+  orders: SubmainOrderTask;
   passwordRecovery: SubmainPasswordRecoveryTask;
   cart: SubmainCartTask;
   catalog: SubmainCatalogTask;
@@ -205,6 +226,12 @@ export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRun
       listAccountDevices: (identity) => notificationTokenService.listForAccount(identity),
       removeDeviceToken: (input) => notificationTokenService.remove(input),
       sendSelfTest: (input) => notificationSelfTestService.send(input),
+      sendBroadcastTest: (input) => notificationBroadcastService.sendTest(input),
+      assertSuperAdmin: assertSuperAdminRequest,
+    },
+    orders: {
+      loadDetail: (orderId, searchParams) => loadOrderDetailForActor(orderId, searchParams),
+      executeAction: (orderId, input) => executeOrderAction(orderId, input),
     },
     passwordRecovery: {
       requestCode: (input, ip) => passwordRecoveryService.requestCode(input, ip),

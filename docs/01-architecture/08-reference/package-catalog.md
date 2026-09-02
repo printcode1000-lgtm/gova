@@ -378,7 +378,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/ota-core/` |
 | **Purpose** | OTA publishing and update runtime |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./admin` · `./publishing` · `./release-console` · `./server` |
+| **Public Exports** | `.` · `./admin` · `./ports` · `./publishing` · `./release-console` · `./server` |
 | **Infrastructure Privileges** | `@aws-sdk/client-s3`, `google-auth-library` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:ota-core` |

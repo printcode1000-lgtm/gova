@@ -27,6 +27,9 @@ export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
   // session signing to a push fan-out runtime.
   { owner: 'submain', pattern: '/api/notifications/devices', methods: ALL },
   { owner: 'submain', pattern: '/api/notifications/test/self', methods: ALL },
+  // The Super Admin broadcast test verifies a session too, so it joins the two
+  // above on the account that holds the signing secret.
+  { owner: 'submain', pattern: '/api/notifications/test/send', methods: ALL },
   { owner: 'notifications', pattern: '/api/notifications/**', methods: ALL },
   { owner: 'submain', pattern: '/api/ota/access', methods: ['POST'] },
   { owner: 'submain', pattern: '/api/account/**', methods: ALL },

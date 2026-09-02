@@ -25,6 +25,10 @@
     "./release-console": {
       "types": "./src/release-console.ts",
       "default": "./src/release-console.ts"
+    },
+    "./ports": {
+      "types": "./src/ports/index.ts",
+      "default": "./src/ports/index.ts"
     }
   },
   "scripts": {

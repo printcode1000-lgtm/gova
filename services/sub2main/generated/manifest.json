@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T03:18:45.599Z",
+  "generatedAt": "2026-09-02T05:52:04.462Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 428,
+  "fileCount": 429,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -393,6 +393,7 @@
     "src/features/notifications/server/services/notification-token-service.server.ts",
     "src/features/orders/application/order-action-grants.server.ts",
     "src/features/orders/application/order-actions.server.ts",
+    "src/features/orders/application/order-detail-loader.server.ts",
     "src/features/orders/application/services/order-party-helpers.ts",
     "src/features/orders/server.ts",
     "src/features/orders/server/services/order-action-grants.server.ts",

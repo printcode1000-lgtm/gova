@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T03:33:33.942Z",
+  "generatedAt": "2026-09-02T05:51:38.260Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 471,
+  "fileCount": 473,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -428,6 +428,7 @@
     "src/features/orders/application/order-action-grants.server.ts",
     "src/features/orders/application/order-actions.server.ts",
     "src/features/orders/application/order-data-refresh.ts",
+    "src/features/orders/application/order-detail-loader.server.ts",
     "src/features/orders/application/services/order-party-helpers.ts",
     "src/features/orders/index.ts",
     "src/features/orders/ports/orders-core-ports.ts",
@@ -480,6 +481,7 @@
     "src/features/storage/ports/storage-core-ports.ts",
     "src/features/storage/server.ts",
     "src/features/storage/server/services/image-storage-service.bootstrap.server.ts",
+    "src/features/super-admin/server/services/super-admin-auth.server.ts",
     "src/features/system-logs/server.ts",
     "src/features/system-logs/server/control-persistence.server.ts",
     "src/features/system-logs/server/services/persistent-system-log-service.server.ts"

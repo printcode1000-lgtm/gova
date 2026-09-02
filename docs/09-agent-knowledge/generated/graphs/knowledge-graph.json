@@ -6401,6 +6401,7 @@
         "@asol/orders-core",
         "@asol/ota-core",
         "@asol/ota-core/admin",
+        "@asol/ota-core/ports",
         "@asol/ota-core/publishing",
         "@asol/ota-core/release-console",
         "@asol/ota-core/server",
@@ -14621,6 +14622,9 @@
       "tags": [
         "307",
         "404",
+        "@asol/data-core/notifications",
+        "@asol/notifications-composition",
+        "@asol/ota-core",
         "@asol/submain-composition",
         "a browser request to a business api returns `404`. following it shows two hops:",
         "a route's owner does not ship it: `307` then `404`",
@@ -22845,14 +22849,16 @@
       "kind": "package",
       "name": "@asol/ota-core",
       "path": "packages/ota-core",
-      "summary": "OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./publishing, ./release-console, ./server",
+      "summary": "OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./ports, ./publishing, ./release-console, ./server",
       "tags": [
         ".",
         "./admin",
+        "./ports",
         "./publishing",
         "./release-console",
         "./server",
         "/admin",
+        "/ports",
         "/publishing",
         "/release-console",
         "/server",
@@ -40038,6 +40044,32 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "tags": [
+        "/actions/route",
+        "orderid",
+        "services/submain/src/app/api/orders/",
+        "services/submain/src/app/api/orders/[orderid]/actions/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/orders/[orderId]/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/orders/[orderId]/route.ts",
+      "tags": [
+        "/route",
+        "orderid",
+        "services/submain/src/app/api/orders/",
+        "services/submain/src/app/api/orders/[orderid]/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/orders/custom-request-from-profile/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -47441,6 +47473,18 @@
       "tags": [
         "src/features/orders/application/order-data-refresh",
         "src/features/orders/application/order-data-refresh.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "kind": "source",
+      "name": "order-detail-loader.server.ts",
+      "path": "src/features/orders/application/order-detail-loader.server.ts",
+      "tags": [
+        "server",
+        "src/features/orders/application/order-detail-loader",
+        "src/features/orders/application/order-detail-loader.server.ts",
         "ts"
       ]
     },
@@ -55047,6 +55091,17 @@
       "tags": [
         "services/submain/src/app/api/notifications/test/self/route",
         "services/submain/src/app/api/notifications/test/self/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "kind": "test",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/test/send/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/test/send/route",
+        "services/submain/src/app/api/notifications/test/send/route.ts",
         "ts"
       ]
     },
@@ -65471,6 +65526,12 @@
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/ota-core",
       "kind": "references",
+      "detail": "@asol/ota-core/ports"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/ota-core",
+      "kind": "references",
       "detail": "@asol/ota-core/publishing"
     },
     {
@@ -74973,6 +75034,24 @@
       "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "@asol/data-core/notifications"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "package:@asol/notifications-composition",
+      "kind": "references",
+      "detail": "@asol/notifications-composition"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "package:@asol/ota-core",
+      "kind": "references",
+      "detail": "@asol/ota-core"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
@@ -89231,6 +89310,18 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/orders/[orderId]/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/app/api/orders/custom-request-from-profile/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -89712,6 +89803,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:services/submain/src/app/api/notifications/test/send/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -93995,6 +94092,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/orders/application/services/order-party-helpers.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -97350,6 +97453,12 @@
     {
       "from": "domain:products-and-commerce",
       "to": "source:src/features/orders/application/order-data-refresh.ts",
+      "kind": "documents",
+      "detail": "src/features/orders/"
+    },
+    {
+      "from": "domain:products-and-commerce",
+      "to": "source:src/features/orders/application/order-detail-loader.server.ts",
       "kind": "documents",
       "detail": "src/features/orders/"
     },
@@ -103925,6 +104034,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/orders/application/services/order-party-helpers.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -109980,6 +110095,11 @@
     },
     {
       "from": "package:@asol/submain-composition",
+      "to": "feature:orders",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
       "to": "feature:password-recovery",
       "kind": "imports"
     },
@@ -109996,6 +110116,11 @@
     {
       "from": "package:@asol/submain-composition",
       "to": "feature:storage",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
+      "to": "feature:super-admin",
       "kind": "imports"
     },
     {
@@ -115148,7 +115273,13 @@
     },
     {
       "from": "route:/api/orders/[orderId]:handler",
-      "to": "feature:categories",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/[orderId]:handler",
+      "to": "feature:notifications",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -115179,12 +115310,6 @@
     {
       "from": "route:/api/orders/[orderId]:handler",
       "to": "package:@asol/backup-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/orders/[orderId]:handler",
-      "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -115251,12 +115376,6 @@
     {
       "from": "route:/api/orders/[orderId]:handler",
       "to": "package:@asol/product-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/orders/[orderId]:handler",
-      "to": "package:@asol/signed-token-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -137981,6 +138100,11 @@
     },
     {
       "from": "service:submain",
+      "to": "feature:orders",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
       "to": "feature:password-recovery",
       "kind": "imports"
     },
@@ -138007,6 +138131,11 @@
     {
       "from": "service:submain",
       "to": "package:@asol/hero-slider-core",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
+      "to": "package:@asol/notifications-core",
       "kind": "imports"
     },
     {
@@ -176103,6 +176232,18 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/orders/application/order-actions.server.ts",
+      "kind": "imports",
+      "detail": "@/features/orders/application/order-actions.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "kind": "imports",
+      "detail": "@/features/orders/application/order-detail-loader.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
       "to": "source:src/features/password-recovery/server/services/password-recovery-service.server.ts",
       "kind": "imports",
       "detail": "@/features/password-recovery/server/services/password-recovery-service.server"
@@ -176136,6 +176277,12 @@
       "to": "source:src/features/storage/ports/storage-core-ports.ts",
       "kind": "imports",
       "detail": "@/features/storage/ports/storage-core-ports"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/super-admin/server/services/super-admin-auth.server.ts",
+      "kind": "imports",
+      "detail": "@/features/super-admin/server/services/super-admin-auth.server"
     },
     {
       "from": "source:packages/system-logs-core/src/browser/capture-coordinator.ts",
@@ -180305,6 +180452,56 @@
       "detail": "../../../lib/http"
     },
     {
+      "from": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "to": "source:src/features/orders/application/order-actions.server.ts",
+      "kind": "imports",
+      "detail": "@/features/orders/application/order-actions.server"
+    },
+    {
+      "from": "source:services/submain/src/app/api/orders/[orderId]/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/orders/[orderId]/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/orders/[orderId]/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/orders/[orderId]/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
       "from": "source:services/submain/src/app/api/orders/custom-request-from-profile/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -181745,18 +181942,6 @@
     },
     {
       "from": "source:src/app/api/orders/[orderId]/route.ts",
-      "to": "package:@asol/data-core",
-      "kind": "imports",
-      "detail": "@asol/data-core/marketplace-orders"
-    },
-    {
-      "from": "source:src/app/api/orders/[orderId]/route.ts",
-      "to": "package:@asol/orders-core",
-      "kind": "imports",
-      "detail": "@asol/orders-core"
-    },
-    {
-      "from": "source:src/app/api/orders/[orderId]/route.ts",
       "to": "source:src/app/api/orders/order-api-helpers.ts",
       "kind": "imports",
       "detail": "../order-api-helpers"
@@ -181775,15 +181960,9 @@
     },
     {
       "from": "source:src/app/api/orders/[orderId]/route.ts",
-      "to": "source:src/features/profile/server.ts",
+      "to": "source:src/features/orders/server.ts",
       "kind": "imports",
-      "detail": "@/features/profile/server"
-    },
-    {
-      "from": "source:src/app/api/orders/[orderId]/route.ts",
-      "to": "source:src/features/system-logs/server.ts",
-      "kind": "imports",
-      "detail": "@/features/system-logs/server"
+      "detail": "@/features/orders/server"
     },
     {
       "from": "source:src/app/api/orders/custom-request-from-profile/route.ts",
@@ -210903,6 +211082,51 @@
       "detail": "@asol/notifications-core"
     },
     {
+      "from": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "to": "feature:orders",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "to": "external-dependency:server-only",
+      "kind": "imports",
+      "detail": "server-only"
+    },
+    {
+      "from": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/marketplace-orders"
+    },
+    {
+      "from": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "to": "package:@asol/orders-core",
+      "kind": "imports",
+      "detail": "@asol/orders-core"
+    },
+    {
+      "from": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "to": "source:src/features/profile/server.ts",
+      "kind": "imports",
+      "detail": "@/features/profile/server"
+    },
+    {
+      "from": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "to": "source:src/features/system-logs/server.ts",
+      "kind": "imports",
+      "detail": "@/features/system-logs/server"
+    },
+    {
       "from": "source:src/features/orders/application/services/order-party-helpers.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -212914,6 +213138,12 @@
       "to": "source:src/features/orders/application/order-actions.server.ts",
       "kind": "imports",
       "detail": "./application/order-actions.server"
+    },
+    {
+      "from": "source:src/features/orders/server.ts",
+      "to": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "kind": "imports",
+      "detail": "./application/order-detail-loader.server"
     },
     {
       "from": "source:src/features/orders/server.ts",
@@ -245905,6 +246135,49 @@
     },
     {
       "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "to": "service:submain",
+      "kind": "tests"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "imports",
+      "detail": "@asol/notifications-core"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "tests"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
       "to": "service:submain",
       "kind": "tests"
     },

@@ -181,7 +181,6 @@ Unproven gateway paths: **146**
 | `src/app/api/advertisements/featured-marquee/route.ts` | `unknown` | save | `unproven` | NO | `/api/advertisements/featured-marquee` | development, web | high |
 | `src/app/api/advertisements/home-hero-slider/route.ts` | `unknown` | save | `unproven` | NO | `/api/advertisements/home-hero-slider` | development, web | high |
 | `src/app/api/advertisements/trending-ribbon/route.ts` | `unknown` | save | `unproven` | NO | `/api/advertisements/trending-ribbon` | development, web | high |
-| `src/app/api/orders/[orderId]/route.ts` | `unknown` | write-like | `@asol/data-core` | yes | `/api/orders/[orderId]` | development, web | medium |
 | `src/app/api/orders/custom-request-from-profile/route.ts` | `unknown` | write-like | `@asol/data-core, @asol/storage-core` | yes | `/api/orders/custom-request-from-profile` | development, web | medium |
 | `src/app/api/orders/from-cart/route.ts` | `unknown` | write-like | `@asol/data-core` | yes | `/api/orders/from-cart` | development, web | medium |
 | `src/app/api/orders/route.ts` | `unknown` | write-like | `@asol/data-core` | yes | `/api/orders` | development, web | medium |
@@ -286,6 +285,7 @@ Unproven gateway paths: **146**
 | `src/features/onboarding/presentation/sections/ProductForm.tsx` | `onboarding` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/onboarding/presentation/sections/store-identity-section.tsx` | `onboarding` | save | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/orders/application/order-actions.server.ts` | `orders` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
+| `src/features/orders/application/order-detail-loader.server.ts` | `orders` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/orders/server/services/order-action-notifications.server.ts` | `orders` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/orders/server/services/order-progression.server.ts` | `orders` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/orders/server/services/order-shipping-bootstrap.server.ts` | `orders` | write-like | `@asol/data-core` | yes | `` | development, web | medium |

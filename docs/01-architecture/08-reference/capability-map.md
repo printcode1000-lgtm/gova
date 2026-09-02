@@ -477,7 +477,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | OTA publishing and update runtime |
 | **Owner Package** | `@asol/ota-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/ota-core` · `@asol/ota-core/admin` · `@asol/ota-core/publishing` · `@asol/ota-core/release-console` · `@asol/ota-core/server` |
+| **Public Gateway** | `@asol/ota-core` · `@asol/ota-core/admin` · `@asol/ota-core/ports` · `@asol/ota-core/publishing` · `@asol/ota-core/release-console` · `@asol/ota-core/server` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | `@aws-sdk/client-s3`, `google-auth-library` |

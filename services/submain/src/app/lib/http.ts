@@ -111,3 +111,53 @@ export function featureFlagErrorResponse(request: Request, error: unknown): Resp
   }
   return Response.json({ error: message }, { status, headers: corsHeaders(request) });
 }
+
+/**
+ * The order families' own mapping, ported exactly.
+ *
+ * `/api/orders/:orderId` and its actions do not use the shared mapping: they
+ * read the *shape* of the message — a `409` for "already"/"expired"/"cannot
+ * switch", a `404` for "not found", a `403` for "Forbidden" or "only …", a `401`
+ * for `userNotFound`, and a `400` for "required"/"invalid"/"must". Answering any
+ * of those as a `500` at a new origin would turn a caller's mistake into a
+ * server fault, which is what moving the route must never do.
+ */
+export function orderDetailErrorResponse(request: Request, error: unknown): Response {
+  const message = error instanceof Error ? error.message : 'Internal Server Error';
+  const status = orderErrorStatus(message);
+  if (status >= 500) {
+    console.error(
+      `[${new URL(request.url).pathname}] unmapped failure:`,
+      error instanceof Error ? (error.stack ?? error.message) : String(error),
+    );
+  }
+  return Response.json({ error: message }, { status, headers: corsHeaders(request) });
+}
+
+function orderErrorStatus(message: string): number {
+  if (message === 'invalidJsonBody') return 400;
+  if (message === 'userNotFound') return 401;
+  if (message === 'Forbidden' || message.includes('only')) return 403;
+  if (message.includes('not found') || message.includes('notFound')) return 404;
+  if (
+    message.includes('already') ||
+    message.includes('awaiting') ||
+    message.includes('expired') ||
+    message.includes('cannot be replaced') ||
+    message.includes('cannot switch') ||
+    message.includes('not accepting') ||
+    message.includes('Use the unified')
+  ) {
+    return 409;
+  }
+  if (
+    message.includes('required') ||
+    message.includes('invalid') ||
+    message.includes('must') ||
+    message.includes('does not') ||
+    message.includes('Delivery carrier required')
+  ) {
+    return 400;
+  }
+  return 500;
+}

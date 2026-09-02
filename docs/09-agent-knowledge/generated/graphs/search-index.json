@@ -6401,6 +6401,7 @@
         "@asol/orders-core",
         "@asol/ota-core",
         "@asol/ota-core/admin",
+        "@asol/ota-core/ports",
         "@asol/ota-core/publishing",
         "@asol/ota-core/release-console",
         "@asol/ota-core/server",
@@ -14621,6 +14622,9 @@
       "tags": [
         "307",
         "404",
+        "@asol/data-core/notifications",
+        "@asol/notifications-composition",
+        "@asol/ota-core",
         "@asol/submain-composition",
         "a browser request to a business api returns `404`. following it shows two hops:",
         "a route's owner does not ship it: `307` then `404`",
@@ -22845,14 +22849,16 @@
       "kind": "package",
       "name": "@asol/ota-core",
       "path": "packages/ota-core",
-      "summary": "OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./publishing, ./release-console, ./server",
+      "summary": "OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./ports, ./publishing, ./release-console, ./server",
       "tags": [
         ".",
         "./admin",
+        "./ports",
         "./publishing",
         "./release-console",
         "./server",
         "/admin",
+        "/ports",
         "/publishing",
         "/release-console",
         "/server",
@@ -40038,6 +40044,32 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/orders/[orderId]/actions/route.ts",
+      "tags": [
+        "/actions/route",
+        "orderid",
+        "services/submain/src/app/api/orders/",
+        "services/submain/src/app/api/orders/[orderid]/actions/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/orders/[orderId]/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/orders/[orderId]/route.ts",
+      "tags": [
+        "/route",
+        "orderid",
+        "services/submain/src/app/api/orders/",
+        "services/submain/src/app/api/orders/[orderid]/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/orders/custom-request-from-profile/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -47441,6 +47473,18 @@
       "tags": [
         "src/features/orders/application/order-data-refresh",
         "src/features/orders/application/order-data-refresh.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "kind": "source",
+      "name": "order-detail-loader.server.ts",
+      "path": "src/features/orders/application/order-detail-loader.server.ts",
+      "tags": [
+        "server",
+        "src/features/orders/application/order-detail-loader",
+        "src/features/orders/application/order-detail-loader.server.ts",
         "ts"
       ]
     },
@@ -55047,6 +55091,17 @@
       "tags": [
         "services/submain/src/app/api/notifications/test/self/route",
         "services/submain/src/app/api/notifications/test/self/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "kind": "test",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/test/send/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/test/send/route",
+        "services/submain/src/app/api/notifications/test/send/route.ts",
         "ts"
       ]
     },

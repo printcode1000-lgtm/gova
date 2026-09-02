@@ -261,6 +261,9 @@
       "@asol/ota-core/release-console": [
         "./generated/packages/ota-core/src/release-console.ts"
       ],
+      "@asol/ota-core/ports": [
+        "./generated/packages/ota-core/src/ports/index.ts"
+      ],
       "@asol/release-core": [
         "./generated/packages/release-core/src/index.ts"
       ],

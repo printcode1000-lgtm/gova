@@ -22,8 +22,8 @@
 | runtime | 7 |
 | script | 160 |
 | service | 7 |
-| source | 2229 |
-| test | 234 |
+| source | 2232 |
+| test | 235 |
 
 ## Domains
 
@@ -69,7 +69,7 @@
 | @asol/observability-core | `packages/observability-core` | Observability and telemetry ports; Layer: capability; Public exports: ., ./dev-trace, ./server |
 | @asol/orders-composition | `packages/orders-composition` | Composition root for the orders account; Layer: composition; Public exports: . |
 | @asol/orders-core | `packages/orders-core` | Order domain meaning and policies; Layer: capability; Public exports: . |
-| @asol/ota-core | `packages/ota-core` | OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./publishing, ./release-console, ./server |
+| @asol/ota-core | `packages/ota-core` | OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./ports, ./publishing, ./release-console, ./server |
 | @asol/page-save-core | `packages/page-save-core` | Mandatory gateway for page-authored persistence; Layer: capability; Public exports: . |
 | @asol/page-snapshot-core | `packages/page-snapshot-core` | Page snapshot capture and restore; Layer: capability; Public exports: . |
 | @asol/product-core | `packages/product-core` | Product domain logic; Layer: capability; Public exports: ., ./server |

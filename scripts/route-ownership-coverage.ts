@@ -42,21 +42,28 @@ export interface OwnedRoute {
 /**
  * Route+method pairs whose owner does not ship a handler.
  *
- * What remains, and why:
+ * What remains, and why. Both are package-level separations, not missing
+ * handlers, and each is its own change:
  *
- * - **notifications (9).** They reach the account's database through
- *   `notificationsServer.execute`, a general command dispatcher. Exposing it
- *   from the composition would pull the users repository onto an account that
- *   must never hold it — the composition says so in its own comment. Each needs
- *   a narrow, named function on `@asol/notifications-composition` instead.
- * - **`/api/orders/[orderId]` and its actions (2).** The handler joins order
- *   shards, profile snapshots and system logging; transcribing it into a mirror
- *   would fork a long contract. Extract the handler into a shared server module
- *   both the canonical route and the mirror call.
- * - **`POST /api/ota/access` (1).** `@/features/ota/server` imports `@/core/api`,
- *   a client door, so mirroring it drags react-query and the Capacitor adapters
- *   into a server deployment. The OTA feature's server seam has to be separated
- *   from its client one first.
+ * **The eight notification surfaces.** `notifications-service-module-contract`
+ * forbids `@asol/notifications-composition` from reaching
+ * `@/features/notifications` at all: the delivery core is a sealed package, and
+ * its import surface is the deployment's file surface. The handlers those routes
+ * need — token registration, push preferences, broadcast, the mobile-push
+ * unlock — still live in the application feature. Serving them from this account
+ * means moving those services into the sealed package, not widening the
+ * composition. Reimplementing them against `@asol/data-core/notifications`
+ * instead would fork the contract into two copies that drift.
+ *
+ * **`POST /api/ota/access`.** The access check needs `configureOtaCore` and
+ * `otaReleaseService`, and every door that reaches them also reaches
+ * `@asol/ota-core`'s client half — the OTA adapter, the query persister, six
+ * Capacitor packages. `services:sync` refuses the account, correctly: a server
+ * deployment must not carry native adapters. Narrowing one door at a time did
+ * not converge, because the client and server halves of that package are not
+ * separated.
+ *
+ * Both are live 404s, and both are tracked here rather than hidden.
  *
  * Each line is a live production 404. Delete a line when the owner ships it —
  * never add one: a new unshipped route is a new outage, and the gate exists to
@@ -72,9 +79,6 @@ export const KNOWN_UNSHIPPED: readonly string[] = [
   "GET /api/notifications/preferences",
   "POST /api/notifications/preferences",
   "POST /api/notifications/recipient-tokens",
-  "POST /api/notifications/test/send",
-  "GET /api/orders/[orderId]",
-  "POST /api/orders/[orderId]/actions",
   "POST /api/ota/access",
 ];
 

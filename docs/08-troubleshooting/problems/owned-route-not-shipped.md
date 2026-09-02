@@ -153,6 +153,32 @@ each is a real answer to *who decides the status*:
 2. it uses a named responder that is not one of the generic ones;
 3. it decides inline, with an explicit non-2xx status literal.
 
+## When the owner is right and the route still cannot move
+
+Two of the remaining entries are not missing handlers. They are package
+boundaries doing their job, and the fix is a separation, not a widening.
+
+**The notification surfaces.** `notifications-service-module-contract` forbids
+`@asol/notifications-composition` from reaching `@/features/notifications` at
+all — the delivery core is a sealed package, and its import surface *is* the
+deployment's file surface. Token registration, push preferences, broadcast and
+the mobile-push unlock still live in the application feature, so serving them
+from `asol-notifications` means moving those services into the sealed package.
+Reimplementing them against `@asol/data-core/notifications` would be worse: two
+copies of one contract, drifting from the first edit onwards.
+
+**`POST /api/ota/access`.** Every door that reaches `configureOtaCore` and
+`otaReleaseService` also reaches `@asol/ota-core`'s client half — the OTA
+adapter, the query persister, six Capacitor packages — and `services:sync`
+refuses the account. It is right to: a server deployment must not carry native
+adapters. Narrowing one door at a time did not converge, because the package's
+client and server halves are not separated.
+
+Both refusals came from gates that already existed, and both are correct. The
+lesson is the one this whole document is about, in the other direction: when a
+guard refuses a move, the answer is to separate the capability, never to widen
+the account until the guard goes quiet.
+
 ## Working the backlog down
 
 For each pair, decide which of the two facts is wrong:

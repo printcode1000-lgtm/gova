@@ -47,7 +47,6 @@ Weak owners (<70%): **11**
 | `src/features/contact` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/data` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/onboarding` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
-| `src/features/orders` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/page-snapshot` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/pharmacy-profile-catalog` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/product-card` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
@@ -87,6 +86,7 @@ Weak owners (<70%): **11**
 | `src/features/favorites` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/feature-flags` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/follow` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `src/features/orders` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/page-save` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/password-recovery` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/product` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
