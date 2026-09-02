@@ -202,8 +202,8 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `OLD_R2_PUBLIC_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-r2-image-public-url.ts` |
 | `ORDERS_CORE_DATABASE_AUTH_TOKEN` | server/tooling | 0 |  |
 | `ORDERS_CORE_DATABASE_URL` | server/tooling | 1 | `services/submain/src/app/api/health/route.ts` |
-| `PASSWORD_RECOVERY_GMAIL_APP_PASSWORD` | server/tooling | 2 | `scripts/send-coordinator-completion-email.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
-| `PASSWORD_RECOVERY_GMAIL_USER` | server/tooling | 2 | `scripts/send-coordinator-completion-email.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
+| `PASSWORD_RECOVERY_GMAIL_APP_PASSWORD` | server/tooling | 3 | `scripts/send-coordinator-completion-email.ts`, `scripts/send-migration-completion-email.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
+| `PASSWORD_RECOVERY_GMAIL_USER` | server/tooling | 3 | `scripts/send-coordinator-completion-email.ts`, `scripts/send-migration-completion-email.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `PASSWORD_RECOVERY_SIGNING_SECRET` | server/tooling | 1 | `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `PATH` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `PORT` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |

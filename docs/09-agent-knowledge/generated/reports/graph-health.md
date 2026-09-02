@@ -8,8 +8,8 @@
 | Metric | Value |
 |---|---:|
 | Graph version | 2 |
-| Nodes | 3858 |
-| Edges | 34941 |
+| Nodes | 3859 |
+| Edges | 34948 |
 | Dangling edges | 0 |
 | Owner nodes with dependency relationships | 98 / 98 |
 | Mandatory application runtime nodes | 5 / 5 |
@@ -29,7 +29,7 @@
 | package | 44 |
 | route | 177 |
 | runtime | 7 |
-| script | 160 |
+| script | 161 |
 | service | 7 |
 | source | 2232 |
 | test | 235 |
@@ -38,18 +38,18 @@
 
 | Kind | Count |
 |---|---:|
-| affects-runtime | 10850 |
+| affects-runtime | 10851 |
 | belongs-to | 2342 |
 | configured-by | 16 |
 | consumes | 6 |
 | contains | 359 |
 | declares-dependency | 98 |
-| documents | 5008 |
-| imports | 8855 |
+| documents | 5009 |
+| imports | 8858 |
 | invokes | 397 |
 | produces | 18 |
 | references | 2360 |
 | related-to | 3497 |
 | targets-runtime | 383 |
 | tests | 340 |
-| uses-environment | 412 |
+| uses-environment | 414 |

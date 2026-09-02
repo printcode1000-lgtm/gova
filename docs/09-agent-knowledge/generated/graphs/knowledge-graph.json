@@ -27712,6 +27712,17 @@
       ]
     },
     {
+      "id": "script:scripts/send-migration-completion-email.ts",
+      "kind": "script",
+      "name": "send-migration-completion-email.ts",
+      "path": "scripts/send-migration-completion-email.ts",
+      "tags": [
+        "scripts/send-migration-completion-email",
+        "scripts/send-migration-completion-email.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/service-build-cache.ts",
       "kind": "script",
       "name": "service-build-cache.ts",
@@ -86538,6 +86549,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/send-migration-completion-email.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/service-build-cache.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -137482,6 +137499,39 @@
     },
     {
       "from": "script:scripts/send-coordinator-completion-email.ts",
+      "to": "environment-key:PASSWORD_RECOVERY_GMAIL_USER",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/send-migration-completion-email.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/send-migration-completion-email.ts",
+      "to": "external-dependency:dotenv",
+      "kind": "imports",
+      "detail": "dotenv"
+    },
+    {
+      "from": "script:scripts/send-migration-completion-email.ts",
+      "to": "external-dependency:nodemailer",
+      "kind": "imports",
+      "detail": "nodemailer"
+    },
+    {
+      "from": "script:scripts/send-migration-completion-email.ts",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "imports",
+      "detail": "./route-ownership-coverage"
+    },
+    {
+      "from": "script:scripts/send-migration-completion-email.ts",
+      "to": "environment-key:PASSWORD_RECOVERY_GMAIL_APP_PASSWORD",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/send-migration-completion-email.ts",
       "to": "environment-key:PASSWORD_RECOVERY_GMAIL_USER",
       "kind": "uses-environment"
     },

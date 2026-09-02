@@ -27712,6 +27712,17 @@
       ]
     },
     {
+      "id": "script:scripts/send-migration-completion-email.ts",
+      "kind": "script",
+      "name": "send-migration-completion-email.ts",
+      "path": "scripts/send-migration-completion-email.ts",
+      "tags": [
+        "scripts/send-migration-completion-email",
+        "scripts/send-migration-completion-email.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/service-build-cache.ts",
       "kind": "script",
       "name": "service-build-cache.ts",
