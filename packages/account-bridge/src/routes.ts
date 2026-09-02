@@ -21,6 +21,12 @@ export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
   { owner: 'control', pattern: '/api/super-admin/**', methods: ALL },
   { owner: 'control', pattern: '/api/system-logs/**', methods: ALL },
   { owner: 'control', pattern: '/api/ota/admin/**', methods: ALL },
+  // Two notification surfaces need a verified session as well as the
+  // notifications database, and `asol-notifications` holds only the second.
+  // They move to the account that already holds both rather than granting
+  // session signing to a push fan-out runtime.
+  { owner: 'submain', pattern: '/api/notifications/devices', methods: ALL },
+  { owner: 'submain', pattern: '/api/notifications/test/self', methods: ALL },
   { owner: 'notifications', pattern: '/api/notifications/**', methods: ALL },
   { owner: 'submain', pattern: '/api/ota/access', methods: ['POST'] },
   { owner: 'submain', pattern: '/api/account/**', methods: ALL },
@@ -41,7 +47,13 @@ export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
   { owner: 'sub2main', pattern: '/api/products', methods: WRITE },
   { owner: 'products', pattern: '/api/products/**', methods: READ },
   { owner: 'products', pattern: '/api/products', methods: READ },
-  { owner: 'sub2main', pattern: '/api/profile/reviews/**', methods: WRITE },
+  // Profile reviews read the product database as well as the profile shards, and
+  // `asol-profiles` holds no product credentials — the read cannot live with the
+  // other profile reads. `asol-sub2main` holds both, so it owns the whole family.
+  // Ownership follows the capability; widening an account's secrets to match a
+  // routing choice is how least privilege is lost.
+  { owner: 'sub2main', pattern: '/api/profile/reviews/**', methods: ALL },
+  { owner: 'sub2main', pattern: '/api/profile/reviews', methods: ALL },
   { owner: 'sub2main', pattern: '/api/profile/**', methods: WRITE },
   { owner: 'profiles', pattern: '/api/profile/**', methods: READ },
   { owner: 'sub2main', pattern: '/api/pharmacy-profile-catalog', methods: WRITE },

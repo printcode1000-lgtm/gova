@@ -75,14 +75,40 @@ for (const file of filesBelow(path.join(serviceRoot, "src", "app", "api"))) {
   }
 }
 
-// ── 3. Routes that read beyond the profile shards must NOT live here ─────────
+// ── 3. Routes this account cannot serve must NOT live here ───────────────────
 
-for (const absent of ["reviews", "store-images", "discounts", "editor"]) {
+/**
+ * The rule, restated after the cutover.
+ *
+ * It used to end "they belong to the main app". That destination no longer
+ * exists: gova ships no Business API, so every route lives on the account whose
+ * credentials it needs, and "not here" now has to name where instead.
+ *
+ * `reviews` reads the product database as well as the profile shards and this
+ * account holds no product credential — it belongs to `sub2main`, which holds
+ * both, and the route registry says so. `editor` is a write, and this account is
+ * read-only.
+ *
+ * `discounts` and `store-images` were on this list too, and the reason given for
+ * them was wrong. `listSellerDiscounts` reads `sellerDiscountRepository` and
+ * nothing else — the `profile-promotions` shard this account already holds.
+ * `getStoreImages` reads the profile shard and then asks image storage whether
+ * each key still exists, which is a read against the R2 credentials this account
+ * already holds. Both are served here.
+ */
+for (const absent of ["reviews", "editor"]) {
   assert.ok(
     !existsSync(path.join(serviceRoot, "src", "app", "api", "profile", absent)),
-    `/api/profile/${absent} reads or writes beyond the profile shards — reviews and ` +
-      "discounts touch the product database, store-images and editor go through " +
-      "image storage. They belong to the main app.",
+    `/api/profile/${absent} needs a capability this account does not hold: reviews ` +
+      "reads the product database (owned by sub2main) and editor is a write.",
+  );
+}
+
+for (const present of ["discounts", "store-images"]) {
+  assert.ok(
+    existsSync(path.join(serviceRoot, "src", "app", "api", "profile", present)),
+    `/api/profile/${present} is owned by this account and must ship here — an owner ` +
+      "that ships no handler is a production 404.",
   );
 }
 
@@ -108,15 +134,26 @@ assert.match(
 );
 // The bridge no longer carries route literals at all — ownership lives in the
 // registry — so the invariant is asserted where the decision is now made.
+// Reviews are the one profile family this account cannot serve at all: the read
+// joins product-derived data, and `asol-profiles` holds no product credential.
+// Read and write both belong to the account that holds both databases — the
+// registry had the read here, and it answered 404 in production because the
+// handler could never live here.
 assert.equal(
   resolveRouteOwner("GET", "/api/profile/reviews"),
-  "profiles",
-  "/api/profile/reviews is a profile read.",
+  "sub2main",
+  "Reading a review touches the product database, so it belongs to the account that holds it.",
 );
 assert.equal(
   resolveRouteOwner("POST", "/api/profile/reviews"),
   "sub2main",
   "Writing a review touches the product database, so it belongs to the write account, not profiles.",
+);
+// The reads this account genuinely owns still resolve here.
+assert.equal(
+  resolveRouteOwner("GET", "/api/profile/store-details"),
+  "profiles",
+  "A pure profile-shard read stays with the profile account.",
 );
 
 // ── 5. generated/ must be reproducible from src/ ─────────────────────────────

@@ -3,6 +3,8 @@ import * as serverEnv from '@/core/config/server-env';
 import { profileService } from '@/features/profile/server/services/profile-service.bootstrap.server';
 import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-core-runtime-config-ports';
 import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/ports/data-core-specialty-catalog-port';
+import { sellerDiscountService } from '@/features/seller-discounts/server/services/seller-discount-service.server';
+import { imageStorageService } from '@/features/storage/server/services/image-storage-service.bootstrap.server';
 
 export interface ProfilesRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */
@@ -36,6 +38,8 @@ registerDataCoreSpecialtyCatalogPort();
  */
 export interface ProfilesDatabaseTask {
   profiles: typeof profileService;
+  /** Seller discounts live on the `profile-promotions` shard this account holds. */
+  sellerDiscounts: typeof sellerDiscountService;
 }
 
 /**
@@ -48,6 +52,8 @@ export interface ProfilesDatabaseTask {
  */
 export interface ProfilesImageTask {
   readonly writeAccess: false;
+  /** Key-to-URL and per-profile limits: reads only, no bucket mutation. */
+  getProfile: typeof imageStorageService.getProfile;
 }
 
 export interface ProfilesConfigTask {
@@ -82,8 +88,8 @@ export function assertProfilesEnv(env: NodeJS.ProcessEnv = process.env): void {
 export function createProfilesRuntime(_config?: ProfilesRuntimeConfig): ProfilesRuntime {
   return {
     accountName: PROFILES_DECLARATION.project,
-    database: { profiles: profileService },
-    images: { writeAccess: false },
+    database: { profiles: profileService, sellerDiscounts: sellerDiscountService },
+    images: { writeAccess: false, getProfile: (profileId) => imageStorageService.getProfile(profileId) },
     config: { serverEnv },
   };
 }

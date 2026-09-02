@@ -33,6 +33,10 @@ export const COMPOSITION_FEATURE_SEAMS = {
   ],
   'profiles-composition': [
     '@/features/profile/server/services/profile-service.bootstrap.server',
+    // Seller discounts read the `profile-promotions` shard, and the storage
+    // read turns a stored key into a URL — both credentials this account holds.
+    '@/features/seller-discounts/server/services/seller-discount-service.server',
+    '@/features/storage/server/services/image-storage-service.bootstrap.server',
     '@/features/data/ports/data-core-runtime-config-ports',
     '@/features/data/ports/data-core-specialty-catalog-port',
   ],
@@ -43,6 +47,19 @@ export const COMPOSITION_FEATURE_SEAMS = {
     // recovery, and holds the session signing secret and users database.
     '@/features/auth/server/services/auth-service.bootstrap.server',
     '@/features/password-recovery/server/services/password-recovery-service.server',
+    // The workloads that moved here with their routes. Each is an exact service
+    // door, not a feature barrel: a barrel would widen the mirror graph to
+    // capabilities this account has no credential for.
+    '@/features/auth/server/services/account-deletion.bootstrap.server',
+    '@/features/auth/server/session-request.server',
+    '@/features/contact/server/services/contact-service.server',
+    '@/features/feature-flags/server/services/feature-flag-service.server',
+    '@/features/follow/server/services/follow-service.bootstrap.server',
+    '@/features/advertisements/server/services/home-hero-slider-service.server',
+    '@/features/advertisements/server/services/featured-marquee-service.server',
+    '@/features/advertisements/server/services/trending-ribbon-service.server',
+    '@/features/specialty-chat/server/services/specialty-chat-service.server',
+    '@/features/notifications/server/services/notification-service.bootstrap.server',
     '@/features/product-search/server/services/product-search-service.server',
     '@/features/product-search/server/services/product-search-fields.server',
     '@/features/auth/domain/super-admin',
@@ -52,6 +69,10 @@ export const COMPOSITION_FEATURE_SEAMS = {
   ],
   'sub2main-composition': [
     '@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server',
+    // Reviews: this account holds both the product and profile databases the
+    // read and the write need, so it owns both families end to end.
+    '@/features/product/server/services/product-review-service.server',
+    '@/features/profile/server/services/profile-review-service.server',
     '@/features/product/server/services/product-service.server',
     '@/features/profile/server/services/profile-service.bootstrap.server',
     '@/features/storage/server/services/image-storage-service.bootstrap.server',

@@ -1,5 +1,5 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
-import type { UpdateProfileInput } from '@/features/auth';
+import type { UpdateProfileInput } from '@/features/auth/domain/profile.entity';
 import { extractSessionToken } from '@asol/auth-core/server';
 
 import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';

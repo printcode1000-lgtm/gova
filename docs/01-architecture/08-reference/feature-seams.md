@@ -9,7 +9,7 @@ The only exact application paths listed here belong to composition/service-mirro
 
 - `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`
 
-Current inventory: **32** exact composition seam path(s).
+Current inventory: **46** exact composition seam path(s).
 
 | Composition package | Exact application module |
 | --- | --- |
@@ -27,11 +27,23 @@ Current inventory: **32** exact composition seam path(s).
 | `products-composition` | `@/features/data/ports/data-core-specialty-catalog-port` |
 | `products-composition` | `@/features/product-search/domain/product-search.types` |
 | `profiles-composition` | `@/features/profile/server/services/profile-service.bootstrap.server` |
+| `profiles-composition` | `@/features/seller-discounts/server/services/seller-discount-service.server` |
+| `profiles-composition` | `@/features/storage/server/services/image-storage-service.bootstrap.server` |
 | `profiles-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
 | `profiles-composition` | `@/features/data/ports/data-core-specialty-catalog-port` |
 | `submain-composition` | `@/features/cart/server/services/cart-catalogue-pricing.server` |
 | `submain-composition` | `@/features/auth/server/services/auth-service.bootstrap.server` |
 | `submain-composition` | `@/features/password-recovery/server/services/password-recovery-service.server` |
+| `submain-composition` | `@/features/auth/server/services/account-deletion.bootstrap.server` |
+| `submain-composition` | `@/features/auth/server/session-request.server` |
+| `submain-composition` | `@/features/contact/server/services/contact-service.server` |
+| `submain-composition` | `@/features/feature-flags/server/services/feature-flag-service.server` |
+| `submain-composition` | `@/features/follow/server/services/follow-service.bootstrap.server` |
+| `submain-composition` | `@/features/advertisements/server/services/home-hero-slider-service.server` |
+| `submain-composition` | `@/features/advertisements/server/services/featured-marquee-service.server` |
+| `submain-composition` | `@/features/advertisements/server/services/trending-ribbon-service.server` |
+| `submain-composition` | `@/features/specialty-chat/server/services/specialty-chat-service.server` |
+| `submain-composition` | `@/features/notifications/server/services/notification-service.bootstrap.server` |
 | `submain-composition` | `@/features/product-search/server/services/product-search-service.server` |
 | `submain-composition` | `@/features/product-search/server/services/product-search-fields.server` |
 | `submain-composition` | `@/features/auth/domain/super-admin` |
@@ -39,6 +51,8 @@ Current inventory: **32** exact composition seam path(s).
 | `submain-composition` | `@/features/data/ports/data-core-specialty-catalog-port` |
 | `submain-composition` | `@/features/product-search/domain/product-search.types` |
 | `sub2main-composition` | `@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server` |
+| `sub2main-composition` | `@/features/product/server/services/product-review-service.server` |
+| `sub2main-composition` | `@/features/profile/server/services/profile-review-service.server` |
 | `sub2main-composition` | `@/features/product/server/services/product-service.server` |
 | `sub2main-composition` | `@/features/profile/server/services/profile-service.bootstrap.server` |
 | `sub2main-composition` | `@/features/storage/server/services/image-storage-service.bootstrap.server` |

@@ -6354,6 +6354,7 @@
         "@asol/local-agent-core/monitor",
         "@asol/map-core",
         "@asol/native-core",
+        "@asol/native-core/capability-keys",
         "@asol/native-core/platform-globals",
         "@asol/native-core/scripts/android-build-preflight",
         "@asol/native-core/scripts/validate-android-r8-policy",
@@ -22647,12 +22648,14 @@
       "kind": "package",
       "name": "@asol/native-core",
       "path": "packages/native-core",
-      "summary": "Capacitor / native device capabilities; Layer: capability; Public exports: ., ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy",
+      "summary": "Capacitor / native device capabilities; Layer: capability; Public exports: ., ./capability-keys, ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy",
       "tags": [
         ".",
+        "./capability-keys",
         "./platform-globals",
         "./scripts/android-build-preflight",
         "./scripts/validate-android-r8-policy",
+        "/capability-keys",
         "/platform-globals",
         "/scripts/android-build-preflight",
         "/scripts/validate-android-r8-policy",
@@ -39339,6 +39342,17 @@
       ]
     },
     {
+      "id": "source:services/profiles/src/app/api/profile/discounts/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/profiles/src/app/api/profile/discounts/route.ts",
+      "tags": [
+        "services/profiles/src/app/api/profile/discounts/route",
+        "services/profiles/src/app/api/profile/discounts/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/profiles/src/app/api/profile/fulfillment-settings/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39372,6 +39386,17 @@
       ]
     },
     {
+      "id": "source:services/profiles/src/app/api/profile/store-images/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/profiles/src/app/api/profile/store-images/route.ts",
+      "tags": [
+        "services/profiles/src/app/api/profile/store-images/route",
+        "services/profiles/src/app/api/profile/store-images/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/profiles/src/app/api/profile/users-by-specialty/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39379,6 +39404,19 @@
       "tags": [
         "services/profiles/src/app/api/profile/users-by-specialty/route",
         "services/profiles/src/app/api/profile/users-by-specialty/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",
+      "tags": [
+        "/route",
+        "profileid",
+        "services/profiles/src/app/api/storage/profiles/",
+        "services/profiles/src/app/api/storage/profiles/[profileid]/route.ts",
         "ts"
       ]
     },
@@ -39461,6 +39499,39 @@
       ]
     },
     {
+      "id": "source:services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/products/reviews/helpful/route",
+        "services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/products/reviews/reply/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/products/reviews/reply/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/products/reviews/reply/route",
+        "services/sub2main/src/app/api/products/reviews/reply/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/products/reviews/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/products/reviews/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/products/reviews/route",
+        "services/sub2main/src/app/api/products/reviews/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/sub2main/src/app/api/products/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39527,6 +39598,39 @@
       ]
     },
     {
+      "id": "source:services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/profile/reviews/helpful/route",
+        "services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/profile/reviews/reply/route",
+        "services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/profile/reviews/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/profile/reviews/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/profile/reviews/route",
+        "services/sub2main/src/app/api/profile/reviews/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/sub2main/src/app/api/profile/specialties/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39556,6 +39660,19 @@
       "tags": [
         "services/sub2main/src/app/api/profile/store-images/route",
         "services/sub2main/src/app/api/profile/store-images/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/storage/images/[imageKey]/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/storage/images/[imageKey]/route.ts",
+      "tags": [
+        "/route",
+        "imagekey",
+        "services/sub2main/src/app/api/storage/images/",
+        "services/sub2main/src/app/api/storage/images/[imagekey]/route.ts",
         "ts"
       ]
     },
@@ -39634,6 +39751,83 @@
         "config",
         "services/submain/next",
         "services/submain/next.config.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/account/delete/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/account/delete/route.ts",
+      "tags": [
+        "services/submain/src/app/api/account/delete/route",
+        "services/submain/src/app/api/account/delete/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/featured-marquee/route",
+        "services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/featured-marquee/version/route",
+        "services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/home-hero-slider/route",
+        "services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/home-hero-slider/version/route",
+        "services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/trending-ribbon/route",
+        "services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/trending-ribbon/version/route",
+        "services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
         "ts"
       ]
     },
@@ -39726,6 +39920,61 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/contact/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/contact/route.ts",
+      "tags": [
+        "services/submain/src/app/api/contact/route",
+        "services/submain/src/app/api/contact/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/feature-flags/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/feature-flags/route.ts",
+      "tags": [
+        "services/submain/src/app/api/feature-flags/route",
+        "services/submain/src/app/api/feature-flags/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/follow/notifications/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/follow/notifications/route.ts",
+      "tags": [
+        "services/submain/src/app/api/follow/notifications/route",
+        "services/submain/src/app/api/follow/notifications/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/follow/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/follow/route.ts",
+      "tags": [
+        "services/submain/src/app/api/follow/route",
+        "services/submain/src/app/api/follow/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/follow/status/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/follow/status/route.ts",
+      "tags": [
+        "services/submain/src/app/api/follow/status/route",
+        "services/submain/src/app/api/follow/status/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/health/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39733,6 +39982,17 @@
       "tags": [
         "services/submain/src/app/api/health/route",
         "services/submain/src/app/api/health/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/devices/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/devices/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/devices/route",
+        "services/submain/src/app/api/notifications/devices/route.ts",
         "ts"
       ]
     },
@@ -39788,6 +40048,72 @@
       "tags": [
         "services/submain/src/app/api/search/sellers/route",
         "services/submain/src/app/api/search/sellers/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/messages/route",
+        "services/submain/src/app/api/specialty-chat/messages/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/preferences/route",
+        "services/submain/src/app/api/specialty-chat/preferences/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/product-conversations/route",
+        "services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/profile-conversations/route",
+        "services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/receipts/route",
+        "services/submain/src/app/api/specialty-chat/receipts/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/requests/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/requests/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/requests/route",
+        "services/submain/src/app/api/specialty-chat/requests/route.ts",
         "ts"
       ]
     },
@@ -54661,6 +54987,17 @@
       ]
     },
     {
+      "id": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "kind": "test",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/test/self/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/test/self/route",
+        "services/submain/src/app/api/notifications/test/self/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/app/api/notifications/test/self/route.ts",
       "kind": "test",
       "name": "route.ts",
@@ -64896,6 +65233,12 @@
       "to": "package:@asol/native-core",
       "kind": "references",
       "detail": "@asol/native-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/native-core",
+      "kind": "references",
+      "detail": "@asol/native-core/capability-keys"
     },
     {
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
@@ -88439,6 +88782,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/profiles/src/app/api/profile/discounts/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/profiles/src/app/api/profile/fulfillment-settings/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -88457,7 +88806,19 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/profiles/src/app/api/profile/store-images/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/profiles/src/app/api/profile/users-by-specialty/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -88505,6 +88866,24 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/sub2main/src/app/api/products/reviews/reply/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/sub2main/src/app/api/products/reviews/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/sub2main/src/app/api/products/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -88541,6 +88920,24 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/sub2main/src/app/api/profile/reviews/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/sub2main/src/app/api/profile/specialties/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -88554,6 +88951,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/sub2main/src/app/api/profile/store-images/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/sub2main/src/app/api/storage/images/[imageKey]/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -88596,6 +88999,48 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/submain/next.config.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/account/delete/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -88649,7 +89094,43 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/contact/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/feature-flags/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/follow/notifications/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/follow/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/follow/status/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/app/api/health/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/notifications/devices/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -88680,6 +89161,42 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/app/api/search/sellers/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/specialty-chat/requests/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -89090,6 +89607,12 @@
       "to": "test:scripts/tests/vercelignore-contract.test.ts",
       "kind": "documents",
       "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "kind": "documents",
+      "detail": "services/"
     },
     {
       "from": "domain:overview",
@@ -109171,6 +109694,16 @@
     },
     {
       "from": "package:@asol/profiles-composition",
+      "to": "feature:seller-discounts",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/profiles-composition",
+      "to": "feature:storage",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/profiles-composition",
       "to": "package:@asol/account-declarations",
       "kind": "imports"
     },
@@ -109301,6 +109834,11 @@
     },
     {
       "from": "package:@asol/submain-composition",
+      "to": "feature:advertisements",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
       "to": "feature:auth",
       "kind": "imports"
     },
@@ -109316,7 +109854,27 @@
     },
     {
       "from": "package:@asol/submain-composition",
+      "to": "feature:contact",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
       "to": "feature:data",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
+      "to": "feature:feature-flags",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
+      "to": "feature:follow",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
+      "to": "feature:notifications",
       "kind": "imports"
     },
     {
@@ -109327,6 +109885,11 @@
     {
       "from": "package:@asol/submain-composition",
       "to": "feature:product-search",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
+      "to": "feature:specialty-chat",
       "kind": "imports"
     },
     {
@@ -137249,6 +137812,16 @@
     },
     {
       "from": "service:sub2main",
+      "to": "feature:product",
+      "kind": "imports"
+    },
+    {
+      "from": "service:sub2main",
+      "to": "feature:profile",
+      "kind": "imports"
+    },
+    {
+      "from": "service:sub2main",
       "to": "package:@asol/service-runtime-core",
       "kind": "imports"
     },
@@ -137269,6 +137842,16 @@
     },
     {
       "from": "service:submain",
+      "to": "feature:contact",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
+      "to": "feature:follow",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
       "to": "feature:password-recovery",
       "kind": "imports"
     },
@@ -137279,7 +137862,22 @@
     },
     {
       "from": "service:submain",
+      "to": "feature:specialty-chat",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
       "to": "package:@asol/auth-core",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
+      "to": "package:@asol/hero-slider-core",
       "kind": "imports"
     },
     {
@@ -137290,6 +137888,11 @@
     {
       "from": "service:submain",
       "to": "package:@asol/submain-composition",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
+      "to": "package:@asol/trending-ribbon-core",
       "kind": "imports"
     },
     {
@@ -171569,6 +172172,18 @@
       "detail": "@/features/profile/server/services/profile-service.bootstrap.server"
     },
     {
+      "from": "source:packages/profiles-composition/src/index.ts",
+      "to": "source:src/features/seller-discounts/server/services/seller-discount-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/seller-discounts/server/services/seller-discount-service.server"
+    },
+    {
+      "from": "source:packages/profiles-composition/src/index.ts",
+      "to": "source:src/features/storage/server/services/image-storage-service.bootstrap.server.ts",
+      "kind": "imports",
+      "detail": "@/features/storage/server/services/image-storage-service.bootstrap.server"
+    },
+    {
       "from": "source:packages/release-core/src/console-artifacts.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -175191,9 +175806,21 @@
     },
     {
       "from": "source:packages/sub2main-composition/src/index.ts",
+      "to": "source:src/features/product/server/services/product-review-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/product/server/services/product-review-service.server"
+    },
+    {
+      "from": "source:packages/sub2main-composition/src/index.ts",
       "to": "source:src/features/product/server/services/product-service.server.ts",
       "kind": "imports",
       "detail": "@/features/product/server/services/product-service.server"
+    },
+    {
+      "from": "source:packages/sub2main-composition/src/index.ts",
+      "to": "source:src/features/profile/server/services/profile-review-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/profile/server/services/profile-review-service.server"
     },
     {
       "from": "source:packages/sub2main-composition/src/index.ts",
@@ -175257,15 +175884,45 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/advertisements/server/services/featured-marquee-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/advertisements/server/services/featured-marquee-service.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/advertisements/server/services/home-hero-slider-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/advertisements/server/services/home-hero-slider-service.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/advertisements/server/services/trending-ribbon-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/advertisements/server/services/trending-ribbon-service.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
       "to": "source:src/features/auth/domain/super-admin.ts",
       "kind": "imports",
       "detail": "@/features/auth/domain/super-admin"
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/auth/server/services/account-deletion.bootstrap.server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server/services/account-deletion.bootstrap.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
       "to": "source:src/features/auth/server/services/auth-service.bootstrap.server.ts",
       "kind": "imports",
       "detail": "@/features/auth/server/services/auth-service.bootstrap.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/auth/server/session-request.server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server/session-request.server"
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
@@ -175281,6 +175938,12 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/contact/server/services/contact-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/contact/server/services/contact-service.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
       "to": "source:src/features/data/ports/data-core-runtime-config-ports.ts",
       "kind": "imports",
       "detail": "@/features/data/ports/data-core-runtime-config-ports"
@@ -175290,6 +175953,24 @@
       "to": "source:src/features/data/ports/data-core-specialty-catalog-port.ts",
       "kind": "imports",
       "detail": "@/features/data/ports/data-core-specialty-catalog-port"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/feature-flags/server/services/feature-flag-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/feature-flags/server/services/feature-flag-service.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/follow/server/services/follow-service.bootstrap.server.ts",
+      "kind": "imports",
+      "detail": "@/features/follow/server/services/follow-service.bootstrap.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",
+      "kind": "imports",
+      "detail": "@/features/notifications/server/services/notification-service.bootstrap.server"
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
@@ -175314,6 +175995,12 @@
       "to": "source:src/features/product-search/server/services/product-search-service.server.ts",
       "kind": "imports",
       "detail": "@/features/product-search/server/services/product-search-service.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/specialty-chat/server/services/specialty-chat-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/specialty-chat/server/services/specialty-chat-service.server"
     },
     {
       "from": "source:packages/system-logs-core/src/browser/capture-coordinator.ts",
@@ -178143,6 +178830,28 @@
       "detail": "../../../lib/http"
     },
     {
+      "from": "source:services/profiles/src/app/api/profile/discounts/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/profile/discounts/route.ts",
+      "to": "service:profiles",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/profile/discounts/route.ts",
+      "to": "package:@asol/profiles-composition",
+      "kind": "imports",
+      "detail": "@asol/profiles-composition"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/profile/discounts/route.ts",
+      "to": "source:services/profiles/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
       "from": "source:services/profiles/src/app/api/profile/fulfillment-settings/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -178204,6 +178913,28 @@
     },
     {
       "from": "source:services/profiles/src/app/api/profile/store-details/route.ts",
+      "to": "source:services/profiles/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/profile/store-images/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/profile/store-images/route.ts",
+      "to": "service:profiles",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/profile/store-images/route.ts",
+      "to": "package:@asol/profiles-composition",
+      "kind": "imports",
+      "detail": "@asol/profiles-composition"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/profile/store-images/route.ts",
       "to": "source:services/profiles/src/app/lib/http.ts",
       "kind": "imports",
       "detail": "../../../lib/http"
@@ -178235,6 +178966,28 @@
       "to": "source:src/features/profile/domain/profile-query-requests.ts",
       "kind": "imports",
       "detail": "@/features/profile/domain/profile-query-requests"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",
+      "to": "service:profiles",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",
+      "to": "package:@asol/profiles-composition",
+      "kind": "imports",
+      "detail": "@asol/profiles-composition"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",
+      "to": "source:services/profiles/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
     },
     {
       "from": "source:services/profiles/src/app/layout.tsx",
@@ -178350,6 +179103,78 @@
       "to": "source:src/app/api/pharmacy-profile-catalog/route.ts",
       "kind": "imports",
       "detail": "@/app/api/pharmacy-profile-catalog/route"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+      "to": "service:sub2main",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+      "to": "package:@asol/sub2main-composition",
+      "kind": "imports",
+      "detail": "@asol/sub2main-composition"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+      "to": "source:services/sub2main/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/reply/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/reply/route.ts",
+      "to": "service:sub2main",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/reply/route.ts",
+      "to": "package:@asol/sub2main-composition",
+      "kind": "imports",
+      "detail": "@asol/sub2main-composition"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/reply/route.ts",
+      "to": "source:services/sub2main/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/route.ts",
+      "to": "service:sub2main",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/route.ts",
+      "to": "package:@asol/sub2main-composition",
+      "kind": "imports",
+      "detail": "@asol/sub2main-composition"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/route.ts",
+      "to": "source:services/sub2main/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/products/reviews/route.ts",
+      "to": "source:src/features/product/domain/product-review.entity.ts",
+      "kind": "imports",
+      "detail": "@/features/product/domain/product-review.entity"
     },
     {
       "from": "source:services/sub2main/src/app/api/products/route.ts",
@@ -178484,6 +179309,78 @@
       "detail": "@/app/api/profile/fulfillment-settings/route"
     },
     {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+      "to": "service:sub2main",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+      "to": "package:@asol/sub2main-composition",
+      "kind": "imports",
+      "detail": "@asol/sub2main-composition"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+      "to": "source:services/sub2main/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+      "to": "service:sub2main",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+      "to": "package:@asol/sub2main-composition",
+      "kind": "imports",
+      "detail": "@asol/sub2main-composition"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+      "to": "source:services/sub2main/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/route.ts",
+      "to": "service:sub2main",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/route.ts",
+      "to": "package:@asol/sub2main-composition",
+      "kind": "imports",
+      "detail": "@asol/sub2main-composition"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/route.ts",
+      "to": "source:services/sub2main/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/profile/reviews/route.ts",
+      "to": "source:src/features/profile/domain/profile-review.entity.ts",
+      "kind": "imports",
+      "detail": "@/features/profile/domain/profile-review.entity"
+    },
+    {
       "from": "source:services/sub2main/src/app/api/profile/specialties/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -178550,6 +179447,28 @@
       "detail": "@/app/api/profile/store-images/route"
     },
     {
+      "from": "source:services/sub2main/src/app/api/storage/images/[imageKey]/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/storage/images/[imageKey]/route.ts",
+      "to": "service:sub2main",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/storage/images/[imageKey]/route.ts",
+      "to": "package:@asol/sub2main-composition",
+      "kind": "imports",
+      "detail": "@asol/sub2main-composition"
+    },
+    {
+      "from": "source:services/sub2main/src/app/api/storage/images/[imageKey]/route.ts",
+      "to": "source:services/sub2main/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
       "from": "source:services/sub2main/src/app/api/storage/images/upload/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -178596,6 +179515,12 @@
       "to": "package:@asol/service-runtime-core",
       "kind": "imports",
       "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "source:services/sub2main/src/app/lib/http.ts",
+      "to": "source:src/core/api/business-api-error-status.ts",
+      "kind": "imports",
+      "detail": "@/core/api/business-api-error-status"
     },
     {
       "from": "source:services/sub2main/src/instrumentation.ts",
@@ -178655,6 +179580,190 @@
       "detail": "next"
     },
     {
+      "from": "source:services/submain/src/app/api/account/delete/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/account/delete/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/account/delete/route.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:services/submain/src/app/api/account/delete/route.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "source:services/submain/src/app/api/account/delete/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/account/delete/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "imports",
+      "detail": "@asol/featured-marquee-core"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "imports",
+      "detail": "@asol/hero-slider-core"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "to": "package:@asol/trending-ribbon-core",
+      "kind": "imports",
+      "detail": "@asol/trending-ribbon-core"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
       "from": "source:services/submain/src/app/api/auth/check-phone/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -178846,9 +179955,9 @@
     },
     {
       "from": "source:services/submain/src/app/api/auth/profile/route.ts",
-      "to": "source:src/features/auth/index.ts",
+      "to": "source:src/features/auth/domain/profile.entity.ts",
       "kind": "imports",
-      "detail": "@/features/auth"
+      "detail": "@/features/auth/domain/profile.entity"
     },
     {
       "from": "source:services/submain/src/app/api/auth/register/route.ts",
@@ -178877,6 +179986,140 @@
       "to": "source:services/submain/src/app/lib/http.ts",
       "kind": "imports",
       "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/contact/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/contact/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/contact/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/contact/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/contact/route.ts",
+      "to": "source:src/features/contact/application/types.ts",
+      "kind": "imports",
+      "detail": "@/features/contact/application/types"
+    },
+    {
+      "from": "source:services/submain/src/app/api/feature-flags/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/feature-flags/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/feature-flags/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/feature-flags/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/notifications/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/notifications/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/notifications/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/notifications/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/notifications/route.ts",
+      "to": "source:src/features/follow/domain/follow.types.ts",
+      "kind": "imports",
+      "detail": "@/features/follow/domain/follow.types"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/route.ts",
+      "to": "source:src/features/follow/domain/follow.types.ts",
+      "kind": "imports",
+      "detail": "@/features/follow/domain/follow.types"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/status/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/status/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/status/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/status/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/follow/status/route.ts",
+      "to": "source:src/features/follow/domain/follow.types.ts",
+      "kind": "imports",
+      "detail": "@/features/follow/domain/follow.types"
     },
     {
       "from": "source:services/submain/src/app/api/health/route.ts",
@@ -178903,6 +180146,28 @@
       "from": "source:services/submain/src/app/api/health/route.ts",
       "to": "environment-key:TURSO_PRODUCT_DATABASE_URL",
       "kind": "uses-environment"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
     },
     {
       "from": "source:services/submain/src/app/api/orders/custom-request-from-profile/route.ts",
@@ -179031,6 +180296,174 @@
       "to": "source:src/features/product-search/domain/product-search.request.ts",
       "kind": "imports",
       "detail": "@/features/product-search/domain/product-search.request"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "to": "source:src/features/specialty-chat/domain/types.ts",
+      "kind": "imports",
+      "detail": "@/features/specialty-chat/domain/types"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "to": "source:src/features/specialty-chat/domain/types.ts",
+      "kind": "imports",
+      "detail": "@/features/specialty-chat/domain/types"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "to": "source:src/features/specialty-chat/domain/types.ts",
+      "kind": "imports",
+      "detail": "@/features/specialty-chat/domain/types"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "to": "source:src/features/specialty-chat/domain/types.ts",
+      "kind": "imports",
+      "detail": "@/features/specialty-chat/domain/types"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "to": "source:src/features/specialty-chat/domain/types.ts",
+      "kind": "imports",
+      "detail": "@/features/specialty-chat/domain/types"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/requests/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/requests/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/requests/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/requests/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/specialty-chat/requests/route.ts",
+      "to": "source:src/features/specialty-chat/domain/types.ts",
+      "kind": "imports",
+      "detail": "@/features/specialty-chat/domain/types"
     },
     {
       "from": "source:services/submain/src/app/layout.tsx",
@@ -197466,7 +198899,7 @@
       "from": "source:src/features/feature-flags/application/definitions.ts",
       "to": "package:@asol/native-core",
       "kind": "imports",
-      "detail": "@asol/native-core"
+      "detail": "@asol/native-core/capability-keys"
     },
     {
       "from": "source:src/features/feature-flags/application/definitions.ts",
@@ -197598,7 +199031,7 @@
       "from": "source:src/features/feature-flags/application/types.ts",
       "to": "package:@asol/native-core",
       "kind": "imports",
-      "detail": "@asol/native-core"
+      "detail": "@asol/native-core/capability-keys"
     },
     {
       "from": "source:src/features/feature-flags/index.ts",
@@ -244302,6 +245735,38 @@
       "from": "test:scripts/tests/vercelignore-contract.test.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "tests"
+    },
+    {
+      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "to": "service:submain",
+      "kind": "tests"
     },
     {
       "from": "test:src/app/api/notifications/test/self/route.ts",

@@ -9,14 +9,13 @@ Runtime coverage is inherited from each owner's owned source/test/script nodes, 
 
 Owners scored: **98**
 Average coverage: **82%**
-Weak owners (<70%): **12**
+Weak owners (<70%): **11**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | `services/orders` | service | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `services/profiles` | service | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/account-bridge` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
-| `src/features/contact` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/dev-tools` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/home` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/location` | feature | yes | yes | NO | yes | yes | NO | NO | yes | 63% |
@@ -42,12 +41,11 @@ Weak owners (<70%): **12**
 | `services/notifications` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/products` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/sub2main` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
-| `services/submain` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `src/features/app-reset` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/catalog-studio` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/categories` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
+| `src/features/contact` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/data` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
-| `src/features/feature-flags` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/onboarding` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/orders` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/page-snapshot` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
@@ -82,10 +80,12 @@ Weak owners (<70%): **12**
 | `packages/submain-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/trending-ribbon-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/vercel-deploy-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `services/submain` | service | yes | yes | yes | yes | NO | yes | yes | yes | 88% |
 | `src/features/advertisements` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/auth` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/cart` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/favorites` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `src/features/feature-flags` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/follow` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/page-save` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/password-recovery` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

@@ -364,8 +364,16 @@ function runRule0Tests(): void {
   // registry is ordered most-specific-first so the write rule cannot swallow
   // the read.
   assert(
-    resolveServiceOriginForRuntime('GET', '/api/profile/reviews', runtime) === 'https://profiles.example.com',
-    'T7: GET /api/profile/reviews is a profile read',
+    resolveServiceOriginForRuntime('GET', '/api/profile/store-details', runtime) === 'https://profiles.example.com',
+    'T7: GET /api/profile/store-details is a profile read',
+  );
+  // Profile reviews are the exception, and deliberately so: the read touches the
+  // product database as well as the profile shards, and `asol-profiles` holds no
+  // product credentials. Ownership follows the capability, so the whole family
+  // — read and write — belongs to the account that has both.
+  assert(
+    resolveServiceOriginForRuntime('GET', '/api/profile/reviews', runtime) === 'https://sub2main.example.com',
+    'T7: GET /api/profile/reviews belongs to the account holding both databases',
   );
   assert(
     resolveServiceOriginForRuntime('POST', '/api/profile/reviews', runtime) === 'https://sub2main.example.com',

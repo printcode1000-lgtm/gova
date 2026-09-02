@@ -5,6 +5,19 @@ import { productSearchService } from '@/features/product-search/server/services/
 import { getEnabledProductSearchFields } from '@/features/product-search/server/services/product-search-fields.server';
 import { categoryService } from '@/features/categories';
 import { authService } from '@/features/auth/server/services/auth-service.bootstrap.server';
+import { accountDeletionService } from '@/features/auth/server/services/account-deletion.bootstrap.server';
+import { assertSignedInRequest } from '@/features/auth/server/session-request.server';
+import { contactService } from '@/features/contact/server/services/contact-service.server';
+import { featureFlagService } from '@/features/feature-flags/server/services/feature-flag-service.server';
+import { followService } from '@/features/follow/server/services/follow-service.bootstrap.server';
+import { homeHeroSliderService } from '@/features/advertisements/server/services/home-hero-slider-service.server';
+import { featuredMarqueeService } from '@/features/advertisements/server/services/featured-marquee-service.server';
+import { featuredTrendingRibbonService } from '@/features/advertisements/server/services/trending-ribbon-service.server';
+import { specialtyChatService } from '@/features/specialty-chat/server/services/specialty-chat-service.server';
+import {
+  notificationSelfTestService,
+  notificationTokenService,
+} from '@/features/notifications/server/services/notification-service.bootstrap.server';
 import { passwordRecoveryService } from '@/features/password-recovery/server/services/password-recovery-service.server';
 import { configureOrdersCore } from '@asol/orders-core';
 import { isSuperAdminIdentity } from '@/features/auth/domain/super-admin';
@@ -54,6 +67,44 @@ export interface SubmainPasswordRecoveryTask {
   resetPassword: typeof passwordRecoveryService.resetPassword;
 }
 
+/** Account deletion, contact, feature flags, follow and specialty chat. */
+export interface SubmainAccountTask {
+  delete: typeof accountDeletionService.delete;
+  assertSignedIn: typeof assertSignedInRequest;
+}
+
+export interface SubmainMessagingTask {
+  contact: typeof contactService;
+  specialtyChat: typeof specialtyChatService;
+}
+
+export interface SubmainSocialTask {
+  follow: typeof followService;
+  featureFlags: typeof featureFlagService;
+}
+
+/** The three home surfaces an operator edits and every visitor reads. */
+export interface SubmainAdvertisementsTask {
+  homeHeroSlider: typeof homeHeroSliderService;
+  featuredMarquee: typeof featuredMarqueeService;
+  trendingRibbon: typeof featuredTrendingRibbonService;
+}
+
+/**
+ * The two notification surfaces that need a verified session.
+ *
+ * They live here rather than on `asol-notifications` because they need the
+ * session signing secret *and* the notifications database, and this account is
+ * the only one holding both. The alternative was granting session signing to an
+ * account that only fans out pushes, which widens the blast radius of the one
+ * secret every authenticated request depends on.
+ */
+export interface SubmainDeviceTask {
+  listAccountDevices: typeof notificationTokenService.listForAccount;
+  removeDeviceToken: typeof notificationTokenService.remove;
+  sendSelfTest: typeof notificationSelfTestService.send;
+}
+
 export interface SubmainCartTask {
   resolveCartPrices: typeof resolveCartPrices;
 }
@@ -77,6 +128,11 @@ export interface SubmainRuntime {
   accountName: string;
   search: SubmainSearchTask;
   auth: SubmainAuthTask;
+  account: SubmainAccountTask;
+  messaging: SubmainMessagingTask;
+  social: SubmainSocialTask;
+  advertisements: SubmainAdvertisementsTask;
+  devices: SubmainDeviceTask;
   passwordRecovery: SubmainPasswordRecoveryTask;
   cart: SubmainCartTask;
   catalog: SubmainCatalogTask;
@@ -128,6 +184,22 @@ export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRun
       logout: () => authService.logout(),
       checkPhone: (phone) => authService.checkPhone(phone),
       updateProfile: (input) => authService.updateProfile(input),
+    },
+    account: {
+      delete: (input) => accountDeletionService.delete(input),
+      assertSignedIn: assertSignedInRequest,
+    },
+    messaging: { contact: contactService, specialtyChat: specialtyChatService },
+    social: { follow: followService, featureFlags: featureFlagService },
+    advertisements: {
+      homeHeroSlider: homeHeroSliderService,
+      featuredMarquee: featuredMarqueeService,
+      trendingRibbon: featuredTrendingRibbonService,
+    },
+    devices: {
+      listAccountDevices: (identity) => notificationTokenService.listForAccount(identity),
+      removeDeviceToken: (input) => notificationTokenService.remove(input),
+      sendSelfTest: (input) => notificationSelfTestService.send(input),
     },
     passwordRecovery: {
       requestCode: (input, ip) => passwordRecoveryService.requestCode(input, ip),

@@ -200,6 +200,9 @@
       "@asol/env-core/process": [
         "./generated/packages/env-core/src/domain/load-release-environment.ts"
       ],
+      "@asol/format-core": [
+        "./generated/packages/format-core/src/index.ts"
+      ],
       "@asol/observability-core": [
         "./generated/packages/observability-core/src/index.ts"
       ],

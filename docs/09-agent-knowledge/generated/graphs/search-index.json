@@ -6354,6 +6354,7 @@
         "@asol/local-agent-core/monitor",
         "@asol/map-core",
         "@asol/native-core",
+        "@asol/native-core/capability-keys",
         "@asol/native-core/platform-globals",
         "@asol/native-core/scripts/android-build-preflight",
         "@asol/native-core/scripts/validate-android-r8-policy",
@@ -22647,12 +22648,14 @@
       "kind": "package",
       "name": "@asol/native-core",
       "path": "packages/native-core",
-      "summary": "Capacitor / native device capabilities; Layer: capability; Public exports: ., ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy",
+      "summary": "Capacitor / native device capabilities; Layer: capability; Public exports: ., ./capability-keys, ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy",
       "tags": [
         ".",
+        "./capability-keys",
         "./platform-globals",
         "./scripts/android-build-preflight",
         "./scripts/validate-android-r8-policy",
+        "/capability-keys",
         "/platform-globals",
         "/scripts/android-build-preflight",
         "/scripts/validate-android-r8-policy",
@@ -39339,6 +39342,17 @@
       ]
     },
     {
+      "id": "source:services/profiles/src/app/api/profile/discounts/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/profiles/src/app/api/profile/discounts/route.ts",
+      "tags": [
+        "services/profiles/src/app/api/profile/discounts/route",
+        "services/profiles/src/app/api/profile/discounts/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/profiles/src/app/api/profile/fulfillment-settings/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39372,6 +39386,17 @@
       ]
     },
     {
+      "id": "source:services/profiles/src/app/api/profile/store-images/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/profiles/src/app/api/profile/store-images/route.ts",
+      "tags": [
+        "services/profiles/src/app/api/profile/store-images/route",
+        "services/profiles/src/app/api/profile/store-images/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/profiles/src/app/api/profile/users-by-specialty/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39379,6 +39404,19 @@
       "tags": [
         "services/profiles/src/app/api/profile/users-by-specialty/route",
         "services/profiles/src/app/api/profile/users-by-specialty/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",
+      "tags": [
+        "/route",
+        "profileid",
+        "services/profiles/src/app/api/storage/profiles/",
+        "services/profiles/src/app/api/storage/profiles/[profileid]/route.ts",
         "ts"
       ]
     },
@@ -39461,6 +39499,39 @@
       ]
     },
     {
+      "id": "source:services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/products/reviews/helpful/route",
+        "services/sub2main/src/app/api/products/reviews/helpful/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/products/reviews/reply/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/products/reviews/reply/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/products/reviews/reply/route",
+        "services/sub2main/src/app/api/products/reviews/reply/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/products/reviews/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/products/reviews/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/products/reviews/route",
+        "services/sub2main/src/app/api/products/reviews/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/sub2main/src/app/api/products/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39527,6 +39598,39 @@
       ]
     },
     {
+      "id": "source:services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/profile/reviews/helpful/route",
+        "services/sub2main/src/app/api/profile/reviews/helpful/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/profile/reviews/reply/route",
+        "services/sub2main/src/app/api/profile/reviews/reply/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/profile/reviews/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/profile/reviews/route.ts",
+      "tags": [
+        "services/sub2main/src/app/api/profile/reviews/route",
+        "services/sub2main/src/app/api/profile/reviews/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/sub2main/src/app/api/profile/specialties/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39556,6 +39660,19 @@
       "tags": [
         "services/sub2main/src/app/api/profile/store-images/route",
         "services/sub2main/src/app/api/profile/store-images/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/sub2main/src/app/api/storage/images/[imageKey]/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/sub2main/src/app/api/storage/images/[imageKey]/route.ts",
+      "tags": [
+        "/route",
+        "imagekey",
+        "services/sub2main/src/app/api/storage/images/",
+        "services/sub2main/src/app/api/storage/images/[imagekey]/route.ts",
         "ts"
       ]
     },
@@ -39634,6 +39751,83 @@
         "config",
         "services/submain/next",
         "services/submain/next.config.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/account/delete/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/account/delete/route.ts",
+      "tags": [
+        "services/submain/src/app/api/account/delete/route",
+        "services/submain/src/app/api/account/delete/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/featured-marquee/route",
+        "services/submain/src/app/api/advertisements/featured-marquee/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/featured-marquee/version/route",
+        "services/submain/src/app/api/advertisements/featured-marquee/version/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/home-hero-slider/route",
+        "services/submain/src/app/api/advertisements/home-hero-slider/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/home-hero-slider/version/route",
+        "services/submain/src/app/api/advertisements/home-hero-slider/version/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/trending-ribbon/route",
+        "services/submain/src/app/api/advertisements/trending-ribbon/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
+      "tags": [
+        "services/submain/src/app/api/advertisements/trending-ribbon/version/route",
+        "services/submain/src/app/api/advertisements/trending-ribbon/version/route.ts",
         "ts"
       ]
     },
@@ -39726,6 +39920,61 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/contact/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/contact/route.ts",
+      "tags": [
+        "services/submain/src/app/api/contact/route",
+        "services/submain/src/app/api/contact/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/feature-flags/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/feature-flags/route.ts",
+      "tags": [
+        "services/submain/src/app/api/feature-flags/route",
+        "services/submain/src/app/api/feature-flags/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/follow/notifications/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/follow/notifications/route.ts",
+      "tags": [
+        "services/submain/src/app/api/follow/notifications/route",
+        "services/submain/src/app/api/follow/notifications/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/follow/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/follow/route.ts",
+      "tags": [
+        "services/submain/src/app/api/follow/route",
+        "services/submain/src/app/api/follow/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/follow/status/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/follow/status/route.ts",
+      "tags": [
+        "services/submain/src/app/api/follow/status/route",
+        "services/submain/src/app/api/follow/status/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/health/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39733,6 +39982,17 @@
       "tags": [
         "services/submain/src/app/api/health/route",
         "services/submain/src/app/api/health/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/devices/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/devices/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/devices/route",
+        "services/submain/src/app/api/notifications/devices/route.ts",
         "ts"
       ]
     },
@@ -39788,6 +40048,72 @@
       "tags": [
         "services/submain/src/app/api/search/sellers/route",
         "services/submain/src/app/api/search/sellers/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/messages/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/messages/route",
+        "services/submain/src/app/api/specialty-chat/messages/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/preferences/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/preferences/route",
+        "services/submain/src/app/api/specialty-chat/preferences/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/product-conversations/route",
+        "services/submain/src/app/api/specialty-chat/product-conversations/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/profile-conversations/route",
+        "services/submain/src/app/api/specialty-chat/profile-conversations/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/receipts/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/receipts/route",
+        "services/submain/src/app/api/specialty-chat/receipts/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/specialty-chat/requests/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/specialty-chat/requests/route.ts",
+      "tags": [
+        "services/submain/src/app/api/specialty-chat/requests/route",
+        "services/submain/src/app/api/specialty-chat/requests/route.ts",
         "ts"
       ]
     },
@@ -54657,6 +54983,17 @@
         "scripts/tests/vercelignore-contract",
         "scripts/tests/vercelignore-contract.test.ts",
         "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "kind": "test",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/test/self/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/test/self/route",
+        "services/submain/src/app/api/notifications/test/self/route.ts",
         "ts"
       ]
     },

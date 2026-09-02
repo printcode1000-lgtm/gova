@@ -42,67 +42,40 @@ export interface OwnedRoute {
 /**
  * Route+method pairs whose owner does not ship a handler.
  *
+ * What remains, and why:
+ *
+ * - **notifications (9).** They reach the account's database through
+ *   `notificationsServer.execute`, a general command dispatcher. Exposing it
+ *   from the composition would pull the users repository onto an account that
+ *   must never hold it — the composition says so in its own comment. Each needs
+ *   a narrow, named function on `@asol/notifications-composition` instead.
+ * - **`/api/orders/[orderId]` and its actions (2).** The handler joins order
+ *   shards, profile snapshots and system logging; transcribing it into a mirror
+ *   would fork a long contract. Extract the handler into a shared server module
+ *   both the canonical route and the mirror call.
+ * - **`POST /api/ota/access` (1).** `@/features/ota/server` imports `@/core/api`,
+ *   a client door, so mirroring it drags react-query and the Capacitor adapters
+ *   into a server deployment. The OTA feature's server seam has to be separated
+ *   from its client one first.
+ *
  * Each line is a live production 404. Delete a line when the owner ships it —
  * never add one: a new unshipped route is a new outage, and the gate exists to
  * refuse it. `docs/08-troubleshooting/problems/owned-route-not-shipped.md`
  * records what the backlog is and how to work it down.
  */
 export const KNOWN_UNSHIPPED: readonly string[] = [
-  "POST /api/account/delete",
-  "GET /api/advertisements/featured-marquee",
-  "PUT /api/advertisements/featured-marquee",
-  "GET /api/advertisements/featured-marquee/version",
-  "GET /api/advertisements/home-hero-slider",
-  "PUT /api/advertisements/home-hero-slider",
-  "GET /api/advertisements/home-hero-slider/version",
-  "GET /api/advertisements/trending-ribbon",
-  "PUT /api/advertisements/trending-ribbon",
-  "GET /api/advertisements/trending-ribbon/version",
-  "POST /api/contact",
-  "GET /api/feature-flags",
-  "PUT /api/feature-flags",
-  "DELETE /api/follow",
-  "POST /api/follow",
-  "POST /api/follow/notifications",
-  "GET /api/follow/status",
   "GET /api/notifications/broadcast/recipients",
   "POST /api/notifications/broadcast/send",
   "DELETE /api/notifications/device-token",
   "POST /api/notifications/device-token",
-  "DELETE /api/notifications/devices",
-  "GET /api/notifications/devices",
   "POST /api/notifications/mobile-push/unlock",
   "GET /api/notifications/preferences",
   "POST /api/notifications/preferences",
   "POST /api/notifications/recipient-tokens",
-  "POST /api/notifications/test/self",
   "POST /api/notifications/test/send",
   "GET /api/orders/[orderId]",
   "POST /api/orders/[orderId]/actions",
   "POST /api/ota/access",
-  "DELETE /api/products/reviews",
-  "POST /api/products/reviews",
-  "PUT /api/products/reviews",
-  "POST /api/products/reviews/helpful",
-  "DELETE /api/products/reviews/reply",
-  "POST /api/products/reviews/reply",
-  "GET /api/profile/discounts",
-  "DELETE /api/profile/reviews",
-  "GET /api/profile/reviews",
-  "POST /api/profile/reviews",
-  "PUT /api/profile/reviews",
-  "POST /api/profile/reviews/helpful",
-  "DELETE /api/profile/reviews/reply",
-  "POST /api/profile/reviews/reply",
-  "GET /api/profile/store-images",
-  "POST /api/specialty-chat/messages",
-  "POST /api/specialty-chat/preferences",
-  "POST /api/specialty-chat/product-conversations",
-  "POST /api/specialty-chat/profile-conversations",
-  "POST /api/specialty-chat/receipts",
-  "POST /api/specialty-chat/requests",
-  "DELETE /api/storage/images/[imageKey]",
-  "GET /api/storage/profiles/[profileId]",
 ];
 
 /** Every route.ts a service ships, mapped to the methods it exports. */

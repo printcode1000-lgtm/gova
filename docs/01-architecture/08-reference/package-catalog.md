@@ -294,7 +294,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/native-core/` |
 | **Purpose** | Capacitor / native device capabilities |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./platform-globals` · `./scripts/android-build-preflight` · `./scripts/validate-android-r8-policy` |
+| **Public Exports** | `.` · `./capability-keys` · `./platform-globals` · `./scripts/android-build-preflight` · `./scripts/validate-android-r8-policy` |
 | **Infrastructure Privileges** | `@capacitor/cli`, `@capacitor/core`, `@capacitor/action-sheet`, `@capacitor/app`, `@capacitor/browser`, `@capacitor/camera`, `@capacitor/clipboard`, `@capacitor/device`, `@capacitor/dialog`, `@capacitor/filesystem`, `@capacitor/geolocation`, `@capacitor/haptics`, `@capacitor/keyboard`, `@capacitor/local-notifications`, `@capacitor/network`, `@capacitor/preferences`, `@capacitor/push-notifications`, `@capacitor/screen-orientation`, `@capacitor/share`, `@capacitor/splash-screen`, `@capacitor/status-bar`, `@capacitor/text-zoom`, `@capacitor/toast`, `@capacitor-mlkit/barcode-scanning`, `@capawesome/capacitor-file-picker`, `@capgo/capacitor-speech-recognition` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:native-core` |

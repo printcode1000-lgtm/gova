@@ -3,6 +3,8 @@ import * as serverEnv from '@/core/config/server-env';
 import { categoryService } from '@/features/categories';
 import { pharmacyProfileCatalogService } from '@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server';
 import { productService } from '@/features/product/server/services/product-service.server';
+import { productReviewService } from '@/features/product/server/services/product-review-service.server';
+import { profileReviewService } from '@/features/profile/server/services/profile-review-service.server';
 import { profileService } from '@/features/profile/server/services/profile-service.bootstrap.server';
 import { imageStorageService } from '@/features/storage/server/services/image-storage-service.bootstrap.server';
 import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-core-runtime-config-ports';
@@ -19,10 +21,20 @@ export interface Sub2mainRuntimeConfig {
 
 export interface Sub2mainProfileTask {
   service: typeof profileService;
+  /**
+   * Profile reviews, read and write.
+   *
+   * The read joins product-derived data, so it cannot live with the other
+   * profile reads on `asol-profiles` — that account holds no product
+   * credential. This one holds both databases, so it owns the whole family.
+   */
+  reviews: typeof profileReviewService;
 }
 
 export interface Sub2mainProductsTask {
   service: typeof productService;
+  /** Product reviews: create, update, delete, helpful votes and seller replies. */
+  reviews: typeof productReviewService;
 }
 
 export interface Sub2mainStorageTask {
@@ -86,8 +98,8 @@ registerDataCoreSpecialtyCatalogPort();
 export function createSub2mainRuntime(_config?: Sub2mainRuntimeConfig): Sub2mainRuntime {
   return {
     accountName: SUB2MAIN_DECLARATION.project,
-    profile: { service: profileService },
-    products: { service: productService },
+    profile: { service: profileService, reviews: profileReviewService },
+    products: { service: productService, reviews: productReviewService },
     storage: { images: imageStorageService, writeAccess: true },
     catalog: {
       categories: categoryService,

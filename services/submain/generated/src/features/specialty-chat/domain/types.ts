@@ -1,0 +1,89 @@
+export const SPECIALTY_CHAT_KINDS = {
+  Request: "specialty_request",
+  ProductRequest: "product_conversation_request",
+  ProfileRequest: "profile_conversation_request",
+  Message: "specialty_message",
+  Receipt: "specialty_receipt",
+} as const;
+
+export interface SpecialtyChatIdentity {
+  uid: string;
+  phone: string;
+  sessionToken: string;
+}
+
+export interface SendSpecialtyRequestInput {
+  identity: SpecialtyChatIdentity;
+  requestId: string;
+  mainCategoryId: number;
+  subcategoryId: number;
+  mainCategoryName: string;
+  subcategoryName: string;
+  message: string;
+}
+
+export interface SendSpecialtyRequestResult {
+  requestId: string;
+  matchedUsers: number;
+  /**
+   * Providers this request was authorised for.
+   *
+   * Not "accepted by a push provider": the server no longer sends. It signs one
+   * grant per reachable provider and the browser delivers them, so the highest
+   * claim it can honestly make is how many it authorised. Provider acceptance
+   * is not knowable here any more.
+   */
+  grantedUsers: number;
+  /** Providers whose notification reached or was queued by a push transport. */
+  deliveredUsers?: number;
+  unavailableUsers: number;
+  /** Signed grants for the browser bridge to deliver. */
+  notificationGrants?: string[];
+}
+
+export interface StartProductConversationInput {
+  identity: SpecialtyChatIdentity;
+  requestId: string;
+  sellerUid: string;
+  productId: string;
+  productName: string;
+  message: string;
+}
+
+export interface StartProductConversationResult {
+  requestId: string;
+  sellerUid: string;
+  capability: string;
+  notificationGrants?: string[];
+}
+
+export interface StartProfileConversationInput {
+  identity: SpecialtyChatIdentity;
+  requestId: string;
+  sellerUid: string;
+  storeName: string;
+  message: string;
+}
+
+export type StartProfileConversationResult = StartProductConversationResult;
+
+export interface SendSpecialtyMessageInput {
+  identity: SpecialtyChatIdentity;
+  messageId: string;
+  capability: string;
+  message: string;
+}
+
+export interface SpecialtyChatPreferences {
+  specialtyRequestsEnabled: boolean;
+  productConversationsEnabled: boolean;
+}
+
+export type SpecialtyChatPreferenceChanges = Partial<SpecialtyChatPreferences>;
+
+export interface SendSpecialtyReceiptInput {
+  identity: SpecialtyChatIdentity;
+  capability: string;
+  targetMessageId: string;
+  status: "received" | "read";
+}

@@ -22,12 +22,12 @@ is listed as `gova/dev` and answered wherever the request lands.
 | --- | --- | --- | ---: | ---: | ---: |
 | `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 59 | 59 | 0 |
 | `gova/dev` | — | — | 8 | 8 | 0 |
-| `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 13 | 1 | 12 |
+| `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 10 | 1 | 9 |
 | `orders` | `asol-orders` | `NEXT_PUBLIC_ASOL_ORDERS_URL` | 1 | 1 | 0 |
 | `products` | `asol-products` | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | 3 | 3 | 0 |
-| `profiles` | `asol-profiles` | `NEXT_PUBLIC_ASOL_PROFILES_URL` | 9 | 5 | 4 |
-| `sub2main` | `asol-sub2main` | `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | 26 | 13 | 13 |
-| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 39 | 13 | 26 |
+| `profiles` | `asol-profiles` | `NEXT_PUBLIC_ASOL_PROFILES_URL` | 8 | 8 | 0 |
+| `sub2main` | `asol-sub2main` | `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | 27 | 27 | 0 |
+| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 42 | 39 | 3 |
 
 ## `control`
 
@@ -117,14 +117,11 @@ routes, which are omitted from the production artifact entirely.
 | `POST` | `/api/notifications/broadcast/send` | **unshipped (tracked)** |
 | `DELETE` | `/api/notifications/device-token` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/device-token` | **unshipped (tracked)** |
-| `DELETE` | `/api/notifications/devices` | **unshipped (tracked)** |
-| `GET` | `/api/notifications/devices` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/mobile-push/unlock` | **unshipped (tracked)** |
 | `GET` | `/api/notifications/preferences` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/preferences` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/recipient-tokens` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/send` | shipped |
-| `POST` | `/api/notifications/test/self` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/test/send` | **unshipped (tracked)** |
 
 ## `orders`
@@ -146,14 +143,13 @@ routes, which are omitted from the production artifact entirely.
 | Method | Route | Status |
 | --- | --- | --- |
 | `GET` | `/api/profile/contacts` | shipped |
-| `GET` | `/api/profile/discounts` | **unshipped (tracked)** |
+| `GET` | `/api/profile/discounts` | shipped |
 | `GET` | `/api/profile/fulfillment-settings` | shipped |
-| `GET` | `/api/profile/reviews` | **unshipped (tracked)** |
 | `GET` | `/api/profile/specialties` | shipped |
 | `GET` | `/api/profile/store-details` | shipped |
-| `GET` | `/api/profile/store-images` | **unshipped (tracked)** |
+| `GET` | `/api/profile/store-images` | shipped |
 | `GET` | `/api/profile/users-by-specialty` | shipped |
-| `GET` | `/api/storage/profiles/[profileId]` | **unshipped (tracked)** |
+| `GET` | `/api/storage/profiles/[profileId]` | shipped |
 
 ## `sub2main`
 
@@ -163,43 +159,44 @@ routes, which are omitted from the production artifact entirely.
 | `DELETE` | `/api/products` | shipped |
 | `POST` | `/api/products` | shipped |
 | `PUT` | `/api/products` | shipped |
-| `DELETE` | `/api/products/reviews` | **unshipped (tracked)** |
-| `POST` | `/api/products/reviews` | **unshipped (tracked)** |
-| `PUT` | `/api/products/reviews` | **unshipped (tracked)** |
-| `POST` | `/api/products/reviews/helpful` | **unshipped (tracked)** |
-| `DELETE` | `/api/products/reviews/reply` | **unshipped (tracked)** |
-| `POST` | `/api/products/reviews/reply` | **unshipped (tracked)** |
+| `DELETE` | `/api/products/reviews` | shipped |
+| `POST` | `/api/products/reviews` | shipped |
+| `PUT` | `/api/products/reviews` | shipped |
+| `POST` | `/api/products/reviews/helpful` | shipped |
+| `DELETE` | `/api/products/reviews/reply` | shipped |
+| `POST` | `/api/products/reviews/reply` | shipped |
 | `PUT` | `/api/profile/contacts` | shipped |
 | `PUT` | `/api/profile/discounts` | shipped |
 | `POST` | `/api/profile/discounts/quote` | shipped |
 | `PUT` | `/api/profile/editor` | shipped |
 | `PUT` | `/api/profile/fulfillment-settings` | shipped |
-| `DELETE` | `/api/profile/reviews` | **unshipped (tracked)** |
-| `POST` | `/api/profile/reviews` | **unshipped (tracked)** |
-| `PUT` | `/api/profile/reviews` | **unshipped (tracked)** |
-| `POST` | `/api/profile/reviews/helpful` | **unshipped (tracked)** |
-| `DELETE` | `/api/profile/reviews/reply` | **unshipped (tracked)** |
-| `POST` | `/api/profile/reviews/reply` | **unshipped (tracked)** |
+| `DELETE` | `/api/profile/reviews` | shipped |
+| `GET` | `/api/profile/reviews` | shipped |
+| `POST` | `/api/profile/reviews` | shipped |
+| `PUT` | `/api/profile/reviews` | shipped |
+| `POST` | `/api/profile/reviews/helpful` | shipped |
+| `DELETE` | `/api/profile/reviews/reply` | shipped |
+| `POST` | `/api/profile/reviews/reply` | shipped |
 | `PUT` | `/api/profile/specialties` | shipped |
 | `PUT` | `/api/profile/store-details` | shipped |
 | `PUT` | `/api/profile/store-images` | shipped |
-| `DELETE` | `/api/storage/images/[imageKey]` | **unshipped (tracked)** |
+| `DELETE` | `/api/storage/images/[imageKey]` | shipped |
 | `POST` | `/api/storage/images/upload` | shipped |
 
 ## `submain`
 
 | Method | Route | Status |
 | --- | --- | --- |
-| `POST` | `/api/account/delete` | **unshipped (tracked)** |
-| `GET` | `/api/advertisements/featured-marquee` | **unshipped (tracked)** |
-| `PUT` | `/api/advertisements/featured-marquee` | **unshipped (tracked)** |
-| `GET` | `/api/advertisements/featured-marquee/version` | **unshipped (tracked)** |
-| `GET` | `/api/advertisements/home-hero-slider` | **unshipped (tracked)** |
-| `PUT` | `/api/advertisements/home-hero-slider` | **unshipped (tracked)** |
-| `GET` | `/api/advertisements/home-hero-slider/version` | **unshipped (tracked)** |
-| `GET` | `/api/advertisements/trending-ribbon` | **unshipped (tracked)** |
-| `PUT` | `/api/advertisements/trending-ribbon` | **unshipped (tracked)** |
-| `GET` | `/api/advertisements/trending-ribbon/version` | **unshipped (tracked)** |
+| `POST` | `/api/account/delete` | shipped |
+| `GET` | `/api/advertisements/featured-marquee` | shipped |
+| `PUT` | `/api/advertisements/featured-marquee` | shipped |
+| `GET` | `/api/advertisements/featured-marquee/version` | shipped |
+| `GET` | `/api/advertisements/home-hero-slider` | shipped |
+| `PUT` | `/api/advertisements/home-hero-slider` | shipped |
+| `GET` | `/api/advertisements/home-hero-slider/version` | shipped |
+| `GET` | `/api/advertisements/trending-ribbon` | shipped |
+| `PUT` | `/api/advertisements/trending-ribbon` | shipped |
+| `GET` | `/api/advertisements/trending-ribbon/version` | shipped |
 | `GET` | `/api/auth/check-phone` | shipped |
 | `POST` | `/api/auth/login` | shipped |
 | `POST` | `/api/auth/logout` | shipped |
@@ -208,13 +205,16 @@ routes, which are omitted from the production artifact entirely.
 | `POST` | `/api/auth/password-recovery/verify` | shipped |
 | `PUT` | `/api/auth/profile` | shipped |
 | `POST` | `/api/auth/register` | shipped |
-| `POST` | `/api/contact` | **unshipped (tracked)** |
-| `GET` | `/api/feature-flags` | **unshipped (tracked)** |
-| `PUT` | `/api/feature-flags` | **unshipped (tracked)** |
-| `DELETE` | `/api/follow` | **unshipped (tracked)** |
-| `POST` | `/api/follow` | **unshipped (tracked)** |
-| `POST` | `/api/follow/notifications` | **unshipped (tracked)** |
-| `GET` | `/api/follow/status` | **unshipped (tracked)** |
+| `POST` | `/api/contact` | shipped |
+| `GET` | `/api/feature-flags` | shipped |
+| `PUT` | `/api/feature-flags` | shipped |
+| `DELETE` | `/api/follow` | shipped |
+| `POST` | `/api/follow` | shipped |
+| `POST` | `/api/follow/notifications` | shipped |
+| `GET` | `/api/follow/status` | shipped |
+| `DELETE` | `/api/notifications/devices` | shipped |
+| `GET` | `/api/notifications/devices` | shipped |
+| `POST` | `/api/notifications/test/self` | shipped |
 | `GET` | `/api/orders/[orderId]` | **unshipped (tracked)** |
 | `POST` | `/api/orders/[orderId]/actions` | **unshipped (tracked)** |
 | `POST` | `/api/orders/custom-request-from-profile` | shipped |
@@ -223,9 +223,9 @@ routes, which are omitted from the production artifact entirely.
 | `GET` | `/api/search/fields` | shipped |
 | `GET` | `/api/search/products` | shipped |
 | `GET` | `/api/search/sellers` | shipped |
-| `POST` | `/api/specialty-chat/messages` | **unshipped (tracked)** |
-| `POST` | `/api/specialty-chat/preferences` | **unshipped (tracked)** |
-| `POST` | `/api/specialty-chat/product-conversations` | **unshipped (tracked)** |
-| `POST` | `/api/specialty-chat/profile-conversations` | **unshipped (tracked)** |
-| `POST` | `/api/specialty-chat/receipts` | **unshipped (tracked)** |
-| `POST` | `/api/specialty-chat/requests` | **unshipped (tracked)** |
+| `POST` | `/api/specialty-chat/messages` | shipped |
+| `POST` | `/api/specialty-chat/preferences` | shipped |
+| `POST` | `/api/specialty-chat/product-conversations` | shipped |
+| `POST` | `/api/specialty-chat/profile-conversations` | shipped |
+| `POST` | `/api/specialty-chat/receipts` | shipped |
+| `POST` | `/api/specialty-chat/requests` | shipped |

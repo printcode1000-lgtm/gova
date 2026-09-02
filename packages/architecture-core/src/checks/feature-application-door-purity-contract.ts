@@ -24,6 +24,20 @@ const BROWSER_POISON = [
   '@asol/data-core/browser',
   '@asol/native-core',
 ];
+
+/**
+ * Doors under a poisoned package that carry no browser or native runtime.
+ *
+ * `@asol/native-core` is poison because its barrel reaches the Capacitor
+ * adapters. `./capability-keys` is a frozen record of capability names and the
+ * union type over them — no import of any kind — and the feature-flag
+ * definitions need exactly that to name the capabilities a flag gates. Mirroring
+ * the barrel for it dragged six Capacitor packages into a server deployment.
+ *
+ * Exactness is the safety property: a door is listed here only when it imports
+ * nothing, and a prefix is never listed.
+ */
+const SERVER_SAFE_DOORS = new Set(['@asol/native-core/capability-keys']);
 const CLIENT_DIRECTIVE = /^\s*['"]use client['"]\s*;?/m;
 
 interface ServiceFeatureEntry {
@@ -121,6 +135,7 @@ function collectServiceFeatureEntries(): ServiceFeatureEntry[] {
 }
 
 function browserPoison(specifier: string): string | null {
+  if (SERVER_SAFE_DOORS.has(specifier)) return null;
   for (const poison of BROWSER_POISON) {
     if (specifier === poison || specifier.startsWith(`${poison}/`)) {
       return specifier;

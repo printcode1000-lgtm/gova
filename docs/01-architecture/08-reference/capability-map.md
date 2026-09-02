@@ -369,7 +369,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Capacitor / native device capabilities |
 | **Owner Package** | `@asol/native-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/native-core` · `@asol/native-core/platform-globals` · `@asol/native-core/scripts/android-build-preflight` · `@asol/native-core/scripts/validate-android-r8-policy` |
+| **Public Gateway** | `@asol/native-core` · `@asol/native-core/capability-keys` · `@asol/native-core/platform-globals` · `@asol/native-core/scripts/android-build-preflight` · `@asol/native-core/scripts/validate-android-r8-policy` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | `@capacitor/cli`, `@capacitor/core`, `@capacitor/action-sheet`, `@capacitor/app`, `@capacitor/browser`, `@capacitor/camera`, `@capacitor/clipboard`, `@capacitor/device`, `@capacitor/dialog`, `@capacitor/filesystem`, `@capacitor/geolocation`, `@capacitor/haptics`, `@capacitor/keyboard`, `@capacitor/local-notifications`, `@capacitor/network`, `@capacitor/preferences`, `@capacitor/push-notifications`, `@capacitor/screen-orientation`, `@capacitor/share`, `@capacitor/splash-screen`, `@capacitor/status-bar`, `@capacitor/text-zoom`, `@capacitor/toast`, `@capacitor-mlkit/barcode-scanning`, `@capawesome/capacitor-file-picker`, `@capgo/capacitor-speech-recognition` |

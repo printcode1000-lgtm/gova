@@ -22,8 +22,8 @@
 | runtime | 7 |
 | script | 159 |
 | service | 7 |
-| source | 2200 |
-| test | 232 |
+| source | 2229 |
+| test | 233 |
 
 ## Domains
 
@@ -63,7 +63,7 @@
 | @asol/hero-slider-core | `packages/hero-slider-core` | Hero slider UI capability; Layer: capability; Public exports: ., ./server |
 | @asol/local-agent-core | `packages/local-agent-core` | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./host, ./monitor |
 | @asol/map-core | `packages/map-core` | MapLibre map capability; Layer: capability; Public exports: . |
-| @asol/native-core | `packages/native-core` | Capacitor / native device capabilities; Layer: capability; Public exports: ., ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy |
+| @asol/native-core | `packages/native-core` | Capacitor / native device capabilities; Layer: capability; Public exports: ., ./capability-keys, ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy |
 | @asol/notifications-composition | `packages/notifications-composition` | Composition root for the notifications account; Layer: composition; Public exports: . |
 | @asol/notifications-core | `packages/notifications-core` | Push notification delivery (Web Push, FCM HTTP v1, APNs); Layer: capability; Public exports: ., ./builder, ./grant-collector, ./grant-envelope, ./grants, ./providers, ./server |
 | @asol/observability-core | `packages/observability-core` | Observability and telemetry ports; Layer: capability; Public exports: ., ./dev-trace, ./server |

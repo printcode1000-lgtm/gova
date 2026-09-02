@@ -206,8 +206,35 @@
       "@asol/env-core/process": [
         "./generated/packages/env-core/src/domain/load-release-environment.ts"
       ],
+      "@asol/featured-marquee-core": [
+        "./generated/packages/featured-marquee-core/src/index.ts"
+      ],
+      "@asol/featured-marquee-core/server": [
+        "./generated/packages/featured-marquee-core/src/server.ts"
+      ],
       "@asol/format-core": [
         "./generated/packages/format-core/src/index.ts"
+      ],
+      "@asol/hero-slider-core": [
+        "./generated/packages/hero-slider-core/src/index.ts"
+      ],
+      "@asol/hero-slider-core/server": [
+        "./generated/packages/hero-slider-core/src/server.ts"
+      ],
+      "@asol/native-core": [
+        "./generated/packages/native-core/src/index.ts"
+      ],
+      "@asol/native-core/platform-globals": [
+        "./generated/packages/native-core/src/domain/platform/platform-globals.ts"
+      ],
+      "@asol/native-core/scripts/validate-android-r8-policy": [
+        "./generated/packages/native-core/scripts/validate-android-r8-policy.ts"
+      ],
+      "@asol/native-core/scripts/android-build-preflight": [
+        "./generated/packages/native-core/scripts/android-build-preflight.ts"
+      ],
+      "@asol/native-core/capability-keys": [
+        "./generated/packages/native-core/src/domain/capabilities/capability-keys.ts"
       ],
       "@asol/notifications-core": [
         "./generated/packages/notifications-core/src/index.ts"
@@ -277,6 +304,12 @@
       ],
       "@asol/system-logs-core/server": [
         "./generated/packages/system-logs-core/src/server.ts"
+      ],
+      "@asol/trending-ribbon-core": [
+        "./generated/packages/trending-ribbon-core/src/index.ts"
+      ],
+      "@asol/trending-ribbon-core/server": [
+        "./generated/packages/trending-ribbon-core/src/server.ts"
       ]
     }
   },
