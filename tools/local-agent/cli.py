@@ -46,7 +46,7 @@ def main():
     a=rsp.add_parser('restore'); a.add_argument('archive'); a.add_argument('target_root')
     x=p.parse_args()
     if x.cmd=='recovery':
-        script=Path(__file__).with_name('recovery.py')
+        script=Path(__file__).resolve().with_name('recovery.py')
         argv=[sys.executable,str(script),x.recovery_cmd]
         if x.recovery_cmd=='create':
             argv.append(x.archive)
