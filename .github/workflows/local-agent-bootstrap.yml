@@ -13,22 +13,20 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Discover local Codex and monitor
+      - name: Locate actual Codex and old monitor launcher
         shell: bash
         run: |
           set -euo pipefail
-          echo '=== machine/session ==='
-          echo "USER=$(id -un) UID=$(id -u)"
-          printf 'DISPLAY=%s\nWAYLAND_DISPLAY=%s\nXDG_SESSION_TYPE=%s\nXDG_CURRENT_DESKTOP=%s\n' "${DISPLAY:-}" "${WAYLAND_DISPLAY:-}" "${XDG_SESSION_TYPE:-}" "${XDG_CURRENT_DESKTOP:-}"
-          echo '=== codex ==='
-          command -v codex || true
-          codex --version || true
-          codex --help 2>&1 | head -n 120 || true
-          echo '=== terminals ==='
-          for x in gnome-terminal x-terminal-emulator konsole xfce4-terminal xterm; do command -v "$x" || true; done
-          echo '=== monitor candidates: processes ==='
-          ps -ef | grep -Ei 'local.agent|agent.monitor|gova.agent|monitor' | grep -v grep || true
-          echo '=== monitor candidates: local files ==='
-          find /home/hesham/.local/bin /home/hesham/.local/share /home/hesham/gova -maxdepth 4 -type f \( -iname '*agent*monitor*' -o -iname '*local*agent*' \) -print 2>/dev/null | head -n 200 || true
-          echo '=== local-agent installed commands ==='
-          ls -la /home/hesham/.local/bin 2>/dev/null | grep -Ei 'gova|agent|monitor|codex' || true
+          echo '=== desktop launcher ==='
+          cat /home/hesham/.local/share/applications/gova-agent-monitor.desktop 2>/dev/null || true
+          echo '=== login-shell path ==='
+          bash -lic 'printf "PATH=%s\n" "$PATH"; type -a codex || true; command -v codex || true' 2>/dev/null || true
+          echo '=== vscode/openai extensions ==='
+          find /home/hesham/.vscode /home/hesham/.vscode-server /home/hesham/.config/Code /home/hesham/.local /opt -maxdepth 7 -type f \( -name codex -o -name 'codex-*' \) -perm -u+x -print 2>/dev/null | head -n 100 || true
+          find /home/hesham/.vscode /home/hesham/.vscode-server /home/hesham/.config/Code -maxdepth 5 -type d -iname '*openai*' -print 2>/dev/null | head -n 100 || true
+          echo '=== npm/global candidates ==='
+          find /home/hesham/.npm /home/hesham/.local /opt/node-v24.20.0-linux-x64 -maxdepth 7 \( -type f -o -type l \) -name codex -print 2>/dev/null | head -n 100 || true
+          echo '=== old watch source/head ==='
+          sed -n '1,260p' /home/hesham/gova/scripts/local-agent-watch.ts 2>/dev/null || true
+          echo '=== shell profiles codex/path references ==='
+          grep -nEi 'codex|PATH=' /home/hesham/.bashrc /home/hesham/.profile /home/hesham/.bash_profile /home/hesham/.zshrc 2>/dev/null | head -n 150 || true
