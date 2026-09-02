@@ -10,3 +10,4 @@
 - The only Local Runner GitHub workflow is `local-agent-bootstrap.yml`, which is manual bootstrap/reinstall only.
 - The retired request branch, dispatch workflows, `.agent-control`, `@asol/local-agent-core`, and `scripts/local-agent-*.ts` control plane have been removed.
 - Normal completion integrates local commits through the gateway into `integration`; promotion from `integration` to `main` is separate and deliberate.
+- Reinstalling the gateway always restarts the systemd service so the running process loads the newly installed runtime code.
