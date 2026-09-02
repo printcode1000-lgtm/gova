@@ -3,6 +3,7 @@ import argparse
 import concurrent.futures
 import json
 import os
+import sqlite3
 import subprocess
 import time
 import urllib.error
@@ -16,6 +17,7 @@ AUTH_FILE = Path(os.environ.get('GOVA_AGENT_AUTH_FILE', '/home/hesham/.config/go
 REPO = Path(os.environ.get('GOVA_AGENT_REPO', '/home/hesham/gova')).resolve()
 WORKTREE_ROOT = Path(os.environ.get('GOVA_AGENT_WORKTREES', '/home/hesham/gova-agents')).resolve()
 INTEGRATION_WT = WORKTREE_ROOT / 'integration'
+RUNTIME_DB = Path(os.environ.get('GOVA_AGENT_RUNTIME', '/home/hesham/.local/share/gova-agent-runtime')) / 'runtime.sqlite3'
 
 
 def auth_key():
@@ -104,6 +106,34 @@ def commit_probe(worktree, probe_rel, text):
 
 def remove_workspace(agent, task):
     call('POST', '/v1/workspace/remove', {'agent_id': agent, 'task_id': task, 'force': True})
+
+
+def purge_runtime(tag):
+    if not RUNTIME_DB.exists():
+        return
+    c = sqlite3.connect(RUNTIME_DB, timeout=5)
+    c.execute('PRAGMA busy_timeout=5000')
+    c.execute('BEGIN IMMEDIATE')
+    like = f'%{tag}%'
+    task_ids = [r[0] for r in c.execute('SELECT id FROM tasks WHERE id LIKE ?', (like,)).fetchall()]
+    agent_ids = [r[0] for r in c.execute('SELECT id FROM agents WHERE id LIKE ?', (like,)).fetchall()]
+    for tid in task_ids:
+        c.execute('DELETE FROM handoffs WHERE task_id=?', (tid,))
+        c.execute('DELETE FROM events WHERE task_id=?', (tid,))
+        c.execute('DELETE FROM commands WHERE task_id=?', (tid,))
+        c.execute('DELETE FROM locks WHERE task_id=?', (tid,))
+        c.execute('DELETE FROM tasks WHERE id=?', (tid,))
+    for aid in agent_ids:
+        c.execute('DELETE FROM messages WHERE sender=? OR recipient=?', (aid, aid))
+        c.execute('DELETE FROM events WHERE agent_id=?', (aid,))
+        c.execute('DELETE FROM sessions WHERE agent_id=?', (aid,))
+        try:
+            c.execute('DELETE FROM agent_profiles WHERE agent_id=?', (aid,))
+        except sqlite3.OperationalError:
+            pass
+        c.execute('DELETE FROM agents WHERE id=?', (aid,))
+    c.commit()
+    c.close()
 
 
 def main():
@@ -257,6 +287,7 @@ def main():
     if active_selftest_locks:
         raise RuntimeError(f'selftest locks leaked: {active_selftest_locks}')
     results['cleanup_no_lock_leaks'] = 'pass'
+    purge_runtime(tag)
 
     print(json.dumps({'ok': True, 'tag': tag, 'results': results}, indent=2, ensure_ascii=False))
 
