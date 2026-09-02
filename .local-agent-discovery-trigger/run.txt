@@ -1,1 +1,1 @@
-rerun complete recovery validation after installed CLI path fix
+rerun complete recovery validation after installer readiness fix
