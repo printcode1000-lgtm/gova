@@ -2,18 +2,19 @@
 set -euo pipefail
 repo="${GOVA_AGENT_REPO:-$(cd "$(dirname "$0")/../.." && pwd)}"
 runtime_src="$repo/tools/local-agent"
-# The repository is public and normal agent reads must never depend on a stale
-# interactive Git credential. Publishing is handled separately by the gateway's
-# authenticated GitHub API path, so disable Git credential helpers for origin.
-git -C "$repo" remote set-url origin https://github.com/printcode1000-lgtm/gova.git
-git -C "$repo" config --local credential.helper ''
-git -C "$repo" config --local credential.https://github.com.helper ''
 mkdir -p /home/hesham/.local/lib/gova-agent /home/hesham/.local/bin /home/hesham/.config/gova-agent /home/hesham/.local/share/gova-agent-runtime /home/hesham/gova-agents /home/hesham/.local/share/applications
 install -m 0755 "$runtime_src/gateway.py" /home/hesham/.local/lib/gova-agent/gateway.py
 install -m 0755 "$runtime_src/cli.py" /home/hesham/.local/lib/gova-agent/cli.py
 install -m 0755 "$runtime_src/monitor.py" /home/hesham/.local/lib/gova-agent/monitor.py
+install -m 0755 "$runtime_src/git_credential.py" /home/hesham/.local/lib/gova-agent/git_credential.py
 ln -sfn /home/hesham/.local/lib/gova-agent/cli.py /home/hesham/.local/bin/gova-agent
 ln -sfn /home/hesham/.local/lib/gova-agent/monitor.py /home/hesham/.local/bin/gova-agent-monitor
+# Git reads must not depend on stale desktop credentials. Publishing remains on
+# the gateway's GitHub API path; this helper resolves the local runtime token at
+# request time and never writes the token to Git config or disk.
+git -C "$repo" remote set-url origin https://github.com/printcode1000-lgtm/gova.git
+git -C "$repo" config --local --unset-all credential.helper 2>/dev/null || true
+git -C "$repo" config --local credential.helper /home/hesham/.local/lib/gova-agent/git_credential.py
 # Retire the old @asol/local-agent-core watch process and replace its desktop
 # launcher in-place. The new monitor is a read-only view of the persistent DB.
 pkill -f 'scripts/local-agent-watch.ts' 2>/dev/null || true
