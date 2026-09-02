@@ -6,6 +6,7 @@ mkdir -p /home/hesham/.local/lib/gova-agent /home/hesham/.local/bin /home/hesham
 install -m 0755 "$runtime_src/gateway.py" /home/hesham/.local/lib/gova-agent/gateway.py
 install -m 0755 "$runtime_src/cli.py" /home/hesham/.local/lib/gova-agent/cli.py
 install -m 0755 "$runtime_src/monitor.py" /home/hesham/.local/lib/gova-agent/monitor.py
+install -m 0755 "$runtime_src/recovery.py" /home/hesham/.local/lib/gova-agent/recovery.py
 install -m 0755 "$runtime_src/git_credential.py" /home/hesham/.local/lib/gova-agent/git_credential.py
 ln -sfn /home/hesham/.local/lib/gova-agent/cli.py /home/hesham/.local/bin/gova-agent
 ln -sfn /home/hesham/.local/lib/gova-agent/monitor.py /home/hesham/.local/bin/gova-agent-monitor
