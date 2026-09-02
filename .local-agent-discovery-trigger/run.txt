@@ -1,1 +1,1 @@
-validate complete local-agent disaster recovery bundle
+rerun complete recovery validation after installed CLI path fix
