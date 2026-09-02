@@ -1,1 +1,1 @@
-inspect installed codex cli contract
+run final real codex monitor verification
