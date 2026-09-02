@@ -13,7 +13,7 @@ new2="policy, n = re.subn(r'  const localAgentInspectPath[\\s\\S]*?  const prote
 if old1 not in s or old2 not in s: raise SystemExit('expected finalizer regex replacement fragment not found')
 s=s.replace(old1,new1,1).replace(old2,new2,1)
 registry_anchor="    # The ruleset utility now has exactly two recognized refs and no package dependency.\n"
-registry_block=r'''    # Remove the retired package from the canonical capability ownership registry.
+registry_block=r"""    # Remove the retired package from the canonical capability ownership registry.
     capability_path = ROOT/'packages/architecture-core/src/registry/capability-registry.ts'
     capability = capability_path.read_text(encoding='utf8')
     capability, removed_capability = re.subn(r"\n  \{\n    folder: 'local-agent-core',[\s\S]*?\n  \},", '', capability, count=1)
@@ -75,7 +75,7 @@ registry_block=r'''    # Remove the retired package from the canonical capabilit
             md.write_text(text, encoding='utf8')
     phase('legacy-documentation-retired')
 
-'''
+"""
 if registry_anchor not in s: raise SystemExit('expected ruleset anchor not found')
 s=s.replace(registry_anchor,registry_block+registry_anchor,1)
 anchor='    # Modernize the GitHub CI policy without touching its docs/deploy policy logic.\n'
