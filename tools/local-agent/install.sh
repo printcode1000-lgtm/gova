@@ -2,10 +2,30 @@
 set -euo pipefail
 repo="${GOVA_AGENT_REPO:-$(cd "$(dirname "$0")/../.." && pwd)}"
 runtime_src="$repo/tools/local-agent"
-mkdir -p /home/hesham/.local/lib/gova-agent /home/hesham/.local/bin /home/hesham/.config/gova-agent /home/hesham/.local/share/gova-agent-runtime /home/hesham/gova-agents
+mkdir -p /home/hesham/.local/lib/gova-agent /home/hesham/.local/bin /home/hesham/.config/gova-agent /home/hesham/.local/share/gova-agent-runtime /home/hesham/gova-agents /home/hesham/.local/share/applications
 install -m 0755 "$runtime_src/gateway.py" /home/hesham/.local/lib/gova-agent/gateway.py
 install -m 0755 "$runtime_src/cli.py" /home/hesham/.local/lib/gova-agent/cli.py
+install -m 0755 "$runtime_src/monitor.py" /home/hesham/.local/lib/gova-agent/monitor.py
 ln -sfn /home/hesham/.local/lib/gova-agent/cli.py /home/hesham/.local/bin/gova-agent
+ln -sfn /home/hesham/.local/lib/gova-agent/monitor.py /home/hesham/.local/bin/gova-agent-monitor
+# Retire the old @asol/local-agent-core watch process and replace its desktop
+# launcher in-place. The new monitor is a read-only view of the persistent DB.
+pkill -f 'scripts/local-agent-watch.ts' 2>/dev/null || true
+cat > /home/hesham/.local/share/applications/gova-agent-monitor.desktop <<'DESKTOP'
+[Desktop Entry]
+Type=Application
+Name=Gova Local Agent Monitor
+Comment=Live local/cloud agent tasks, processes, worktrees and branches
+Exec=/home/hesham/.local/bin/gova-agent-monitor
+Icon=utilities-system-monitor
+Terminal=true
+Categories=Development;Monitor;
+Keywords=gova;agents;codex;cloud;worktree;
+DESKTOP
+chmod 0644 /home/hesham/.local/share/applications/gova-agent-monitor.desktop
+if command -v update-desktop-database >/dev/null 2>&1; then
+  update-desktop-database /home/hesham/.local/share/applications >/dev/null 2>&1 || true
+fi
 if [ ! -s /home/hesham/.config/gova-agent/auth ]; then
   python3 - <<'AUTH'
 from pathlib import Path
