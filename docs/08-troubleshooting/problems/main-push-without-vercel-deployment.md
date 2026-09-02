@@ -12,69 +12,74 @@ No production deployment matching this run was found on Vercel.
 
 `git ls-remote` confirms the commit is on `origin/main`. Vercel's deployment
 list contains **no record at all** for that SHA — not `QUEUED`, not `CANCELED`,
-nothing — while deployments for other branches keep appearing.
+nothing.
+
+It is intermittent. In one afternoon, two `main` pushes deployed normally and
+two produced no record, with no difference in what they changed: one of the
+commits that *did* deploy was an `--allow-empty` commit that changed nothing at
+all, while both missing ones changed tracked files.
 
 ## What it is not
 
-Each of these was checked and ruled out:
+Each of these was checked against the Vercel API and ruled out:
 
 | Suspected | Ruled out by |
 | --- | --- |
 | The project lost its Git link | `link.type: github`, correct repo, `productionBranch: main`, `gitProviderOptions.createDeployments: enabled`, not paused |
-| The `ignoreCommand` skipped the build | A skip records a `CANCELED` deployment — that is exactly what the other branch's pushes produce. No `CANCELED` record exists for the missing SHAs |
-| Vercel deduplicated an unchanged tree | The commits changed tracked files. And the opposite case deployed fine: an `--allow-empty` commit that changed **nothing** built and reached `READY` |
-| Webhooks are broken | Other branches produced deployments continuously throughout the same window |
+| The `ignoreCommand` skipped the build | A skip still records a `CANCELED` deployment. No record of any state exists for the missing SHAs |
+| Vercel deduplicated an unchanged tree | The missing commits changed tracked files, and an empty commit deployed fine — the discriminator is not content |
+| Webhooks are broken | Deployments from other branches kept appearing throughout the same window |
 
-## What it is
+## What is not known
 
-Deployment **contention from a branch that should not exist**.
+**The cause is on Vercel's side and is not visible through the API.** Nothing in
+this repository explains it, and no repository change has been made to work
+around it.
 
-`CLAUDE.md` recognises exactly two remote branches: `main` and
-`agent-request/chatgpt`. A third, `integration`, was being pushed roughly every
-fifteen minutes. Every one of those pushes creates a deployment that the
-`ignoreCommand` then cancels — real deployment records, competing for the same
-project.
+One correlation was observed — the missing pushes fell in a window when the
+`integration` branch was being pushed every few minutes — but it does not
+survive scrutiny and **should not be treated as the cause**. `integration` never
+deploys: the `ignoreCommand` cancels every one of its deployments by design, so
+its records represent builds that never ran and never competed for a publish.
+Correlation in time is not evidence of contention.
 
-The correlation is exact:
-
-| Time | Branch activity | `main` deployment |
-| --- | --- | --- |
-| 06:45 | quiet | created, `READY` |
-| 07:02 | `integration` churning | **none** |
-| 09:5x | `integration` churning | **none** |
-| 10:28 | quiet | created, `BUILDING` |
-
-`main` deploys when the project is quiet and is lost when the third branch is
-churning. Vercel's internal reason for dropping the event is not visible through
-the API; the correlation is, and it is the actionable fact.
+`integration` is a deliberate branch for local runner work and tests. Nothing is
+pushed from it to `main` today, though that may change. It is not the problem and
+must not be removed.
 
 ## What to do
 
-1. **Remove the unauthorised branch.** `npm run github:block-branches` installs
-   the GitHub ruleset that refuses creation of any ref except the two recognised
-   branches. It deliberately excludes `refs/heads/main`, so it can never delay a
-   release push. Deleting the existing `integration` branch is a separate,
-   deliberate act — something is actively pushing to it, and that writer should
-   be stopped first.
-2. **Re-run `deploy:push`.** The failure is safe by construction: the release
-   fails closed, the readiness it published is withdrawn, and the previous
-   production deployment keeps serving.
+Re-run `npm run deploy:push`. The failure is transient: the same commit deploys
+on a later attempt.
 
 ## Why the failure is safe
 
-A missing frontend deployment used to be the dangerous case: the seven backends
-were `READY` at the new SHA and readiness stayed `ready`, so a build that arrived
-late — after the rollback re-promoted the previous backends — would publish a
-frontend over backends from a different SHA.
+A missing frontend deployment used to be the dangerous case. The seven backends
+were `READY` at the new SHA and the published readiness stayed `ready`, so a
+build arriving late — after the rollback re-promoted the previous backends —
+would publish a frontend over backends from a different SHA. That is exactly what
+happened once, and the topology had to be realigned by hand with an extra
+release.
 
-The transaction now withdraws the readiness before it rolls anything back, and
-an explicit failure outranks a derived readiness permanently for that revision.
-See `docs/07-mobile-and-release/release-commands.md` § "Why the order is the
-contract".
+The transaction now withdraws the readiness before it rolls anything back, and an
+explicit failure outranks a derived readiness permanently for that revision. A
+late build for the failed SHA fails closed, and the previous production
+deployment keeps serving. Verified live: the failed revision's barrier reads
+`failed` while the deployed revision still reads `ready`.
 
-That retraction needed two halves, and shipping only the first taught the lesson
-this whole troubleshooting section keeps repeating: the callback logged
-`readiness withdrawn` while the barrier kept answering `ready`, because the
-durable status was derived from components that had all passed. **A log line
-saying a thing happened is not evidence that it happened.** Read the barrier
-back.
+## Two lessons this cost
+
+**A log line saying a thing happened is not evidence that it happened.** The
+first retraction attempt logged `readiness withdrawn` while the barrier kept
+answering `ready`: the durable status was *derived* from the components, all of
+which had passed, so a derived `ready` came straight back. Only reading the
+barrier back exposed it. `test:vercel-deploy-core` now asserts the read, not the
+write.
+
+**A correlation is not a cause, and naming one as the cause has a price.** The
+first version of this document blamed the `integration` branch and recommended
+removing it. That recommendation was wrong twice over: the branch is intentional,
+and its deployments never run. A troubleshooting document that names the wrong
+cause sends the next reader — human or agent — down the same wrong path with more
+confidence than they would have had on their own. Where the cause is unknown,
+this document says so.

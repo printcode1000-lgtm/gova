@@ -14484,8 +14484,6 @@
         "deploy",
         "deployment",
         "deploys",
-        "docs/07-mobile-and-release/release-commands",
-        "docs/07-mobile-and-release/release-commands.md",
         "docs/08-troubleshooting/problems/main-push-without-vercel-deployment",
         "docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
         "exact-sha",
