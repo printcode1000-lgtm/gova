@@ -144,11 +144,33 @@ def main():
         prompt = """You are a real local validation worker inside an isolated Gova Git worktree.
 Read the relevant local-agent runtime documentation before editing. You MUST edit tools/local-agent/selftest.py in this run; a prose-only answer is a failed task.
 Concrete defect: tools/local-agent/selftest.py leaves its generated sim-* agents/tasks/messages/events in the persistent SQLite runtime after a successful run, so the new monitor accumulates stale test agents. Implement the SMALLEST safe fix so a successful self-test removes only records created by that self-test tag while preserving unrelated runtime records and preserving the printed JSON result.
-You may inspect tools/local-agent/selftest.py, tools/local-agent/codex_test.py, tools/local-agent/gateway.py, tools/local-agent/monitor.py and the relevant docs. Modify ONLY tools/local-agent/selftest.py.
+You may inspect tools/local-agent/selftest.py, tools/local-agent/codex_test.py, tools/local-agent/gateway.py, tools/local-agent/monitor.py and the relevant docs. Modify ONLY tools/local-agent/selftest.py in the current worktree. Do not access or edit /home/hesham/gova directly.
 Constraints: do not push, fetch, merge, rebase, create remote branches, edit workflows, or touch main/integration refs. Do not install dependencies. Do not delete unrelated gateway runtime or user data. Do not git add or commit; leave the actual source edit in the worktree for the trusted harness to review and commit safely. Run `python3 -m py_compile tools/local-agent/selftest.py` and `python3 tools/local-agent/monitor.py --once`. Verify with `git diff -- tools/local-agent/selftest.py` that a real patch remains. End only after that diff is non-empty by printing `CODEX_REAL_WORKER_DONE` and a one-line summary of the exact cleanup you implemented."""
+
+        # This Ubuntu host disables the user-namespace operation Bubblewrap needs,
+        # so Codex workspace-write cannot execute even `pwd`. Run Codex without
+        # its bwrap sandbox, but strip GitHub credentials and override Git's
+        # credential helper/push URL for the model process. The trusted harness
+        # still enforces the exact changed path before it commits anything.
+        no_push_env = [
+            "env",
+            "-u", "GITHUB_TOKEN",
+            "-u", "GOVA_LOCAL_DISPATCH_TOKEN",
+            "-u", "GITHUB_ADMIN_TOKEN",
+            "-u", "GOVA_RUNNER_STATUS_TOKEN",
+            "GIT_TERMINAL_PROMPT=0",
+            "GIT_CONFIG_COUNT=3",
+            "GIT_CONFIG_KEY_0=credential.helper",
+            "GIT_CONFIG_VALUE_0=",
+            "GIT_CONFIG_KEY_1=credential.helper",
+            "GIT_CONFIG_VALUE_1=!false",
+            "GIT_CONFIG_KEY_2=remote.origin.pushurl",
+            "GIT_CONFIG_VALUE_2=disabled://gova-no-push",
+        ]
         cmd = " ".join([
+            *(shlex.quote(x) for x in no_push_env),
             shlex.quote(str(codex)), "--ask-for-approval", "never", "exec",
-            "-C", shlex.quote(str(cw)), "--sandbox", "workspace-write",
+            "-C", shlex.quote(str(cw)), "--sandbox", "danger-full-access",
             "--ephemeral", "--color", "never", shlex.quote(prompt),
         ])
         _, started = call("POST", "/v1/exec/start", {"agent_id": codex_agent, "task_id": codex_task, "command": cmd})
